@@ -2,72 +2,121 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D307C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 01:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60ADFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 02:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D95D122C9C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 01:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3872022B51
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 02:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595209719;
-	bh=hRoIi2eCqfbW2de0T3+kDxi6NFvBxXfhMeYbYRAa3no=;
+	s=default; t=1595211103;
+	bh=PgDcAq+4nyz4PbXB7ez/Cs907K+I0Hwh/nXW03+MYaE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k72MKJZrUaH/PNPJzyvGBnIxBjctemoXPnad2dwTbTMNUUNpuYbROf/C3hKILN/q1
-	 5tf3U8M+UCWXMBn04Uc41x7UIwGf5e5WWxk6sTSfzqlF1wAWpHIxYs2J9Fi+QBAp0S
-	 m9mmVJe+PCum2nv07RGKX7H/sWBZrx3e28eAMROE=
+	b=lxiMu5ZlQB6KF9hlqDbxPhPQFyBnKDkgrcEx6g9VOEBXCgDqgNhwO0xuQBU7kZo2u
+	 oFrDa7zMldcKZOfpK+s8meKXoADaK9XvUAdSpjwHYpUwaV6109xiv+Pt9e7piZAzPJ
+	 Zw3DCUamkatQHmcSyjvZefOgih28Lu86R8hJtsw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGTBsj (ORCPT
+        id S1726530AbgGTCLm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 21:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
+        Sun, 19 Jul 2020 22:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726830AbgGTBsj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 19 Jul 2020 21:48:39 -0400
+        id S1726225AbgGTCLm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 19 Jul 2020 22:11:42 -0400
 Received: from dragon (unknown [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EA982250E;
-        Mon, 20 Jul 2020 01:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15472208B3;
+        Mon, 20 Jul 2020 02:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595209718;
-        bh=hRoIi2eCqfbW2de0T3+kDxi6NFvBxXfhMeYbYRAa3no=;
+        s=default; t=1595211101;
+        bh=PgDcAq+4nyz4PbXB7ez/Cs907K+I0Hwh/nXW03+MYaE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EulR9DgEueoo2etA22ijlu4EO0SImdmaUpCOHChD0KIYtmGraIws66uSednBuEVAF
-         submbq3KXl1Xrq7OAUfJ1W9vInln+mx398/L15Kqk5FG4UTiFfJKQ98d/SMvFbfvhf
-         BdkPrA8UebytsFvz9Z9zDDZnEnwUbW2tRX4gtCpM=
-Date:   Mon, 20 Jul 2020 09:48:24 +0800
+        b=xYYOIPhjYHhrVPbinYr1Yu+dMXz1s1oqP1orozIz0nqL8+BlHf4G6rTrMRoHCqrfc
+         yG4A/mlQ25vMLDKLq6LssLNpRR+ieh7scg5n3dK6hVfNRIUzlZ6nTKBrVGfUVRAsEr
+         cn1ufSU/UGfA1eXN/Rqddi2dwmloZUaIMBK65mHA=
+Date:   Mon, 20 Jul 2020 10:11:26 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        rjones@gateworks.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4] ARM: dts: imx6qdl-gw: add Gateworks System Controller
- support
-Message-ID: <20200720014823.GA11560@dragon>
-References: <1592497149-22526-1-git-send-email-tharvey@gateworks.com>
- <1594913755-5661-1-git-send-email-tharvey@gateworks.com>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/3] ARM: dts: colibri-imx7: add usb dual-role switch
+ capability
+Message-ID: <20200720021125.GC11560@dragon>
+References: <20200710132423.497230-1-philippe.schenker@toradex.com>
+ <20200710132423.497230-3-philippe.schenker@toradex.com>
+ <73240ab0-5069-40c5-4ade-7fcc2207dfaf@pengutronix.de>
+ <c76c0fd056512a3f8e24bf06e7bb7e1650090609.camel@toradex.com>
+ <7e6f8135-120f-0831-20ad-25648ea646b8@pengutronix.de>
+ <83b230cef109e1a413ab1036c21ad763a1d127eb.camel@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594913755-5661-1-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <83b230cef109e1a413ab1036c21ad763a1d127eb.camel@toradex.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 08:35:55AM -0700, Tim Harvey wrote:
-> Add Gateworks System Controller support to Gateworks Ventana boards:
-> - add dt bindings for GSC mfd driver and hwmon driver for ADC's and
->   fan controllers.
-> - add dt bindings for gpio-keys driver for push-button and interrupt events
+On Tue, Jul 14, 2020 at 08:20:34AM +0000, Philippe Schenker wrote:
+> On Tue, 2020-07-14 at 09:55 +0200, Ahmad Fatoum wrote:
+> > Hello Philippe,
+> > 
+> > On 7/13/20 1:53 PM, Philippe Schenker wrote:
+> > > On Mon, 2020-07-13 at 11:46 +0200, Ahmad Fatoum wrote:
+> > > > Hello Philippe,
+> > > > 
+> > > > > +	extcon_usbc_det: usbc_det {
+> > > > > +		compatible = "linux,extcon-usb-gpio";
+> > > > 
+> > > > According to 4602f3bff266 ("usb: common: add USB GPIO based
+> > > > connection
+> > > > detection driver"):
+> > > > "the old way using extcon to support USB Dual-Role switch is now
+> > > > deprecated
+> > > >  when use Type-B connector."
+> > > > 
+> > > > Have you considered using a compatible = "gpio-usb-b-connector"
+> > > > child
+> > > > node instead?
+> > > > 
+> > > > Cheers,
+> > > > Ahmad
+> > > 
+> > > Thanks for the Hint Ahmad,
+> > > 
+> > > I already tried and just now tried again but it doesn't work on our
+> > > hardware. Are you sure this works with chipidea driver?
+> > 
+> > I haven't, just wanted to point its existence out in case you didn't
+> > know.
+> > Seems we need to call of_platform_populate somewhere in the driver.
+> > Unsure what other changes are necessary.
 > 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> Yep, thanks for that! It seems like that need to be really called as I
+> can't get a probe of the new usb connector driver. I quickly grepped
+> through code and saw that tegra USB driver is calling
+> of_platform_populate and they also use that gpio-usb-b-connector.
+> 
+> > 
+> > > Should this new usb-connector stuff work in general with every old
+> > > driver?
+> > 
+> > If the driver support isn't there yet, I think use of extcon is fine
+> > as is.
 
-Applied, thanks.
+Shouldn't we improve chipidea driver to get it work with gpio-usb-b-connector?
+
+Shawn
