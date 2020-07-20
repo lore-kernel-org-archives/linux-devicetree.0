@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBD5C433F1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA466C433ED
 	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9FE20674
+	by mail.kernel.org (Postfix) with ESMTP id CB8F120674
 	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="UcP5zdYg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="paxzgtsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgGTHyy (ORCPT
+        id S1728193AbgGTHyz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:54:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
+        Mon, 20 Jul 2020 03:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbgGTHyy (ORCPT
+        with ESMTP id S1728007AbgGTHyy (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 03:54:54 -0400
 Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2125C0619D2
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:54:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 089C5C0619D5
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:54:54 -0700 (PDT)
 Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 190F41FECC;
-        Mon, 20 Jul 2020 07:45:00 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 55CB31FEB8;
+        Mon, 20 Jul 2020 07:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595231103; bh=JQPKVllLBhjegV8oJ4/3W4Dq3jbR4Ki6pJQ0tsIkbus=;
+        t=1595231070; bh=sL+0XAIzu0/LOrmDjtTFFPTjHeACIyQGmpKsnyrWTbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcP5zdYgnNjqWjgyXOUFxxE2au/BJgpu+BZxvJyy0LkKw5yM1G2koAxT2P59M7IXj
-         pf6QtfVs0jdUgEfOeR2QQ9JCNB2AhpBtUkD1RbMGAV+R36zIh9vwjK5RyHzpIQKI37
-         nNodzXKkPbbCcpFRf2jNeHnojHlygLJvlLyQR2MfhzwokXFxai9b76xQuDaowd13sD
-         vlgXpxgbC6X4q+DnXhCrFursWHf9RX05he0i1304vE0h2uhXxJIUmL2RxPZpLoiO8D
-         c9Ob2q2Gnc38gy03meWBq7YAB8aCL6v0fgOlTqr+fgCMOtEDwhDZAf0CRyN8+Q/3/w
-         NN/D/3r77Gvgw==
+        b=paxzgtsuOAiaW2XDeJQIMam3r9YE2G+mVDT9tXHnKTZbCaL6bA/kkzzbRnzCjdMeb
+         O69tv4zpMFGV6dGJlyIw6o5mVmRf5qwNa/LQvoDePAgT163z32ikIo8VrIrigxFmA2
+         2afSKLve/xMIM51SzBgn/ra1daKEvzfUgnbOOmPOntf3itgfY7sftwg5JKRYllYhYN
+         x+Q7m8VPLY6Ka0hpLNRtc64HxlwMA+oY8/jkqmk8t3YDU449gP1g29m6kYiR3C4XKd
+         K/zc8wXi14e/m0hfkgTpLJXri1KGaYvV3iimYePN/AaYlSs6djPgiNynJK//nsqefH
+         lC2kzE08TDCYw==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -45,12 +45,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhc@lemote.com>,
         Frank Rowand <frowand.list@gmail.com>,
         Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] MIPS: Loongson64: Add ISA node for LS7A PCH
-Date:   Mon, 20 Jul 2020 15:42:38 +0800
-Message-Id: <20200720074249.596364-6-jiaxun.yang@flygoat.com>
+Subject: [PATCH 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+Date:   Mon, 20 Jul 2020 15:42:35 +0800
+Message-Id: <20200720074249.596364-3-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.28.0.rc1
 In-Reply-To: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
 References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
@@ -61,33 +61,128 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Although currently we're not enabling any ISA device in devicetree,
-but this node is required to express the ranges of address reserved
-for ISA.
+Previously, we're hardcoding resserved ISA I/O Space in code, now
+we're processing reverved I/O via DeviceTree directly. Using the ranges
+property to determine the size and address of reserved I/O space.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/boot/dts/loongson/ls7a-pch.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/mips/loongson64/init.c | 85 ++++++++++++++++++++++++++-----------
+ 1 file changed, 60 insertions(+), 25 deletions(-)
 
-diff --git a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-index 1c286bb8c703..724929ea3f5f 100644
---- a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-@@ -19,6 +19,13 @@ pic: interrupt-controller@10000000 {
- 			#interrupt-cells = <2>;
- 		};
+diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+index 59ddadace83f..028d7b324ec2 100644
+--- a/arch/mips/loongson64/init.c
++++ b/arch/mips/loongson64/init.c
+@@ -7,6 +7,8 @@
+ #include <linux/irqchip.h>
+ #include <linux/logic_pio.h>
+ #include <linux/memblock.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ #include <asm/bootinfo.h>
+ #include <asm/traps.h>
+ #include <asm/smp-ops.h>
+@@ -63,41 +65,74 @@ void __init prom_free_prom_memory(void)
+ {
+ }
  
-+		isa {
-+			compatible = "isa";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges = <1 0 0 0x18000000 0x20000>;
-+		};
+-static __init void reserve_pio_range(void)
++static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, phys_addr_t addr,
++			     resource_size_t	size)
+ {
++	int ret = 0;
+ 	struct logic_pio_hwaddr *range;
++	unsigned long vaddr;
+ 
+ 	range = kzalloc(sizeof(*range), GFP_ATOMIC);
+ 	if (!range)
+-		return;
++		return -ENOMEM;
+ 
+-	range->fwnode = &of_root->fwnode;
+-	range->size = MMIO_LOWER_RESERVED;
+-	range->hw_start = LOONGSON_PCIIO_BASE;
++	range->fwnode = fwnode;
++	range->size = size;
++	range->hw_start = addr;
+ 	range->flags = LOGIC_PIO_CPU_MMIO;
+ 
+-	if (logic_pio_register_range(range)) {
+-		pr_err("Failed to reserve PIO range for legacy ISA\n");
+-		goto free_range;
++	ret = logic_pio_register_range(range);
++	if (ret) {
++		kfree(range);
++		return ret;
++	}
 +
- 		pci@1a000000 {
- 			compatible = "loongson,ls7a-pci";
- 			device_type = "pci";
++	/* Legacy ISA must placed at the start of PCI_IOBASE */
++	if (range->io_start != 0) {
++		logic_pio_unregister_range(range);
++		kfree(range);
++		return -EINVAL;
+ 	}
+ 
+-	if (WARN(range->io_start != 0,
+-			"Reserved PIO range does not start from 0\n"))
+-		goto unregister;
+-
+-	/*
+-	 * i8259 would access I/O space, so mapping must be done here.
+-	 * Please remove it when all drivers can be managed by logic_pio.
+-	 */
+-	ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
+-				LOONGSON_PCIIO_BASE,
+-				pgprot_device(PAGE_KERNEL));
+-
+-	return;
+-unregister:
+-	logic_pio_unregister_range(range);
+-free_range:
+-	kfree(range);
++	vaddr = PCI_IOBASE + range->io_start;
++
++	ioremap_page_range(vaddr, vaddr + size, addr, pgprot_device(PAGE_KERNEL));
++
++	return 0;
++}
++
++static __init void reserve_pio_range(void)
++{
++	struct device_node *np;
++
++	for_each_node_by_name(np, "isa") {
++		struct of_pci_range range;
++		struct of_pci_range_parser parser;
++
++		pr_info("ISA Bridge: %pOF\n", np);
++
++		if (of_pci_range_parser_init(&parser, np)) {
++			pr_info("Failed to parse resources.\n");
++			break;
++		}
++
++		for_each_of_pci_range(&parser, &range) {
++			switch (range.flags & IORESOURCE_TYPE_BITS) {
++			case IORESOURCE_IO:
++				pr_info(" IO 0x%016llx..0x%016llx\n",
++					range.cpu_addr,
++					range.cpu_addr + range.size - 1);
++				if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
++					pr_warn("Failed to reserve legacy IO in Logic PIO\n");
++				break;
++			case IORESOURCE_MEM:
++				pr_info(" MEM 0x%016llx..0x%016llx\n",
++					range.cpu_addr,
++					range.cpu_addr + range.size - 1);
++				break;
++			}
++		}
++	}
+ }
+ 
+ void __init arch_init_irq(void)
 -- 
 2.28.0.rc1
 
