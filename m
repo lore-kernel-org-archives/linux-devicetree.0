@@ -2,167 +2,103 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CD6C43458
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334C4C43457
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5092920656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:18:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bViycVFx"
+	by mail.kernel.org (Postfix) with ESMTP id 03014206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595262763;
+	bh=yqlDf7fN/QLqWmc3udzm7E6RBXgv5NpGLgWaVfr5Qtw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W9zyXajk6uyrESzpB5YMttk1h5BGaUG6Uq9Ly24ABZWhVCbJhu+9Bo70C7vNO19s9
+	 yZm1wwCI63ChcOEA2dDNGNAkUH4UUKutphhlBADI816GVjr5125HG6kU2M7F6GWijR
+	 GQk7XYenteZ+MVh9K6k5O3zFouNic96Eymrrzjm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388159AbgGTQNw (ORCPT
+        id S2388883AbgGTQci (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388168AbgGTQNt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 12:13:49 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85222C061794;
-        Mon, 20 Jul 2020 09:13:49 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id c80so97163wme.0;
-        Mon, 20 Jul 2020 09:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YGGS+lJpiE0eLgk6zkqUqROfE8WRidPw66ft3m8PrAw=;
-        b=bViycVFx8iriZx27qZBxJSpd3rB14eEO3Ix1ovgt1PvsYFN1OKJMePH2P6SrHpf4ED
-         L5gN+i7f30DD0zUxuhUEegm1GGQ3EwDcwMSEgZt1CIiWmT/ZyY9AVWmh2uRKW8N9h1kl
-         IgN/sHJdsOU4LmICiOdrzBtNL8OtD4rENHbVcbpZyMM061QrCiSlvnrNXBFibemfTjBG
-         Lehc8ImZr+MWMxuxNWqx6s83kYDNJNZz3v2bDdDn+KUaz6B7//hhtwq3db8Z7wV+5eDO
-         uozjqa4rTkiVyDVyf4Ays0tyfTlg06YjzGSslK3JAdFQS0KDf9aYVpUIufefWx2dIjg4
-         M7bA==
+        Mon, 20 Jul 2020 12:32:38 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35245 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731808AbgGTQch (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 12:32:37 -0400
+Received: by mail-io1-f65.google.com with SMTP id v8so18270263iox.2;
+        Mon, 20 Jul 2020 09:32:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YGGS+lJpiE0eLgk6zkqUqROfE8WRidPw66ft3m8PrAw=;
-        b=UFbtbKbLWf4O4e6dBIct8M7Yq4MxaURs/LopocwMUN9J1aAL2/MbL41t+4ZJiUQaS+
-         mFHpWUm1Dym35GikgiURnzRCa5USyjjmSiX/3S1V0iJ+O0iVc0B8p/Hy/KbefQhJw70q
-         uqn320khM7fhl8ff9nScw0EBvjvrFz8k7FWOObuUt6St1b77dcreaDfnoCVBk5D7/Jxs
-         7sCWe1bqgW/62xINHoz6PmKfxA1GxBwVGOxS5NcoyQT1imGuGt2gteXUsiTdrSAYFp4k
-         Zo8wdUisG5xZuG8ObYaBSXf8rosKLfr+uX8B4DutDJaU6llHCibAQ6PHDwZohrJxvHu5
-         eK7w==
-X-Gm-Message-State: AOAM530f2W9K1l2vW+kpJQ3KzBpJ4k8HOMwPET464kbbkRPEnzrnfb8B
-        twAxvZtiAvy7AHEZXu1t1fQ=
-X-Google-Smtp-Source: ABdhPJw9IDtKuHVh4un4iPMF4LNiPzwqgzZ73RwATsGe8QmFlE85s3PsZxWK0uEjjI9rY0din4fQRQ==
-X-Received: by 2002:a05:600c:21cb:: with SMTP id x11mr73928wmj.141.1595261628261;
-        Mon, 20 Jul 2020 09:13:48 -0700 (PDT)
-Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
-        by smtp.gmail.com with ESMTPSA id 207sm55718wme.13.2020.07.20.09.13.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 09:13:47 -0700 (PDT)
-Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
- <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
- <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
- <1594872242.11090.8.camel@mtkswgap22>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <742eefe1-954b-eb3f-98b7-469833df729a@gmail.com>
-Date:   Mon, 20 Jul 2020 18:13:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yQyvs1jRHaG4iCDzDf8+qWStV4fhrEVZDcK1+1MvdZw=;
+        b=ffUUXhgl8xxspbPMTooZU2d7B4r17cpo6A9CTfFnq94BrfIi7vzstq7va/c0S0uB0t
+         NpL1p1+Q1Uo5xCCennh53Fmaq0mSuyIKepPP8quROzY9M5H2WBIWk++QmOeenBTVJqX3
+         kcN5Wtd0dnngvGKYzNxAOfhfRqfRcvQrIovgua9EiDDPyr1j4vruW30DKOM4y+ciOHv+
+         PXOZs7POL9n0wn58lq2bMVe271C6lcYjFyN+Eg02Bc7S+hydD04L/erqwMzFc9sfHrJe
+         ME6zOx7QU0hC1n1kW8aAWC+e+kSwV2KCw4JYKz8nH1AbXe+EIQKIdEk6/rqdct49UdKb
+         L0Ig==
+X-Gm-Message-State: AOAM532sQLGgyDuAqJ9XC3BIEIJWmftyzpD0QphuciiXNcnzPEfsrdr4
+        Bto2SuhgozTvGLdMc5N/dG5F+dJQgw==
+X-Google-Smtp-Source: ABdhPJwknigBOGgNYAdUjh4u6rS8PisVTTSLhhXo4Mpm0o84omeZS5Hi+Wkk+jC2ZNgZWLbPh0RBwg==
+X-Received: by 2002:a5d:964b:: with SMTP id d11mr6997577ios.30.1595262756173;
+        Mon, 20 Jul 2020 09:32:36 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v7sm563525iol.53.2020.07.20.09.32.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 09:32:35 -0700 (PDT)
+Received: (nullmailer pid 2625208 invoked by uid 1000);
+        Mon, 20 Jul 2020 16:32:34 -0000
+Date:   Mon, 20 Jul 2020 10:32:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        laurent.pinchart@ideasonboard.com, slongerbeam@gmail.com
+Subject: Re: [PATCH 01/13] dt-bindings: media: ov5640: Convert to json-schema
+Message-ID: <20200720163234.GA2624150@bogus>
+References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
+ <20200717132859.237120-2-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <1594872242.11090.8.camel@mtkswgap22>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717132859.237120-2-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, 17 Jul 2020 15:28:47 +0200, Jacopo Mondi wrote:
+> Convert the ov5640 bindings document to json-schema.
+> 
+> This commit ports the existing bindings, clean up patches
+> will follow.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5640.txt  |  92 ---------
+>  .../devicetree/bindings/media/i2c/ov5640.yaml | 181 ++++++++++++++++++
+>  2 files changed, 181 insertions(+), 92 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> 
 
 
-On 16/07/2020 06:04, Hanks Chen wrote:
-> On Tue, 2020-07-14 at 20:14 +0200, Matthias Brugger wrote:
->>
->> On 14/07/2020 11:20, Hanks Chen wrote:
->>> this adds initial MT6779 dts settings for board support,
->>> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
->>>
->>> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
->>> ---
->>>    arch/arm64/boot/dts/mediatek/Makefile       |   1 +
->>>    arch/arm64/boot/dts/mediatek/mt6779-evb.dts |  31 +++
->>>    arch/arm64/boot/dts/mediatek/mt6779.dtsi    | 271 ++++++++++++++++++++
->>>    3 files changed, 303 insertions(+)
->>>    create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->>>    create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
->>>
->> [...]
->>> +
->>> +		uart0: serial@11002000 {
->>> +			compatible = "mediatek,mt6779-uart",
->>> +				     "mediatek,mt6577-uart";
->>> +			reg = <0 0x11002000 0 0x400>;
->>> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
->>> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
->>> +			clock-names = "baud", "bus";
->>> +			status = "disabled";
->>> +		};
->>> +
->>> +		uart1: serial@11003000 {
->>> +			compatible = "mediatek,mt6779-uart",
->>> +				     "mediatek,mt6577-uart";
->>> +			reg = <0 0x11003000 0 0x400>;
->>> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
->>> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
->>> +			clock-names = "baud", "bus";
->>> +			status = "disabled";
->>> +		};
->>> +
->>> +		uart2: serial@11004000 {
->>> +			compatible = "mediatek,mt6779-uart",
->>> +				     "mediatek,mt6577-uart";
->>> +			reg = <0 0x11004000 0 0x400>;
->>> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
->>> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
->>> +			clock-names = "baud", "bus";
->>> +			status = "disabled";
->>> +		};
->>
->> Devicetree describes the HW we have. As far as I know, we have 4 UARTs on
->> MT6779. So we should list them all here.
->>
-> 
-> Actually, We have only 3 UARTs HW on MT6779, but have 4 UART clk in
-> header file of clk.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Correct, I got confused by the four clocks.
-With that clarified I'm fine with the patch and will take it as soon as the 
-clock driver patch is accepted.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/ti,cal.example.dt.yaml: camera-sensor@3c: 'DOVDD-supply' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/ti,cal.example.dt.yaml: camera-sensor@3c: 'AVDD-supply' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/ti,cal.example.dt.yaml: camera-sensor@3c: 'DVDD-supply' is a required property
 
-Regards,
-Matthias
 
-> CLK_INFRA_UART3 is a dummy clk interface, it has no effect on the
-> operation of the read/write instruction.
-> 
-> If you think it is not good, I can remove it in the header file of clk.
-> 
-> Thanks
-> 
->> Regards,
->> Matthias
-> 
+See https://patchwork.ozlabs.org/patch/1331124
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
