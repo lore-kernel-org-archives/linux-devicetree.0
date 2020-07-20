@@ -2,114 +2,146 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310BDC433F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 11:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F342C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 11:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D0E22B4E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 11:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B992073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 11:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595243549;
-	bh=9Yy+1VjcfL5aQqBqsh+BDfHhT28teG125L+0sNy5ehc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=K/Uhto3PmTBX/N3gQNBMepdt4UjOEX2SyYlrs95hptDD0smvClVvmYM/iPmLDLVmQ
-	 ya0L29oTGbMYWMFW5mZQRc1xGduVb4iVjw96L715XSkoo3D+vSOGVvEFdg4QhuLlbu
-	 OAItlKcRP3ouLmaVhBySB5OVYQPxrDpf0Xm89ITM=
+	s=default; t=1595243802;
+	bh=h/+3Px8t9dUzIXFkpxr1WT1l9Hilocmlm4Pl2hk5x+M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CTSett7fzEebR9UNsE5Uo2jbomk4FSrhDb3Q/GOR+Y059FYEdA/ERXytboxtRMBxQ
+	 OAdVKu8jJsYqlojR1u7HiPLvOo217z0ckEvYCseN5gsCDuL251HInzkYc17uKMNdZe
+	 GiSlSP6D/hgKVWtpV9CEI5tEVT63bsBFVDnvpzds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgGTLMO (ORCPT
+        id S1727870AbgGTLQj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 07:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52084 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 07:16:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727094AbgGTLMN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 07:12:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1727790AbgGTLQi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 07:16:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 689E92073A;
-        Mon, 20 Jul 2020 11:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A2062073A;
+        Mon, 20 Jul 2020 11:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595243533;
-        bh=9Yy+1VjcfL5aQqBqsh+BDfHhT28teG125L+0sNy5ehc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=hAnDisAU5CkKAmHpE/TlDXaSa61cF0JA6RYkNQwVsbS2KHEPnHbsA064m/XFR1u/T
-         z//PW9qlfb6Lwl2oAr78zQ6ONpyQ79rnqVCxfhGpQ0WbjKfNRt5Zp9J68zrYhDPdF8
-         wriqqXI+iRwPMIMpW2FBryFhRaNOpStEuiSEMfmY=
-Date:   Mon, 20 Jul 2020 12:12:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     devicetree@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-spi@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-In-Reply-To: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 00/20] Add support for [H]SCIF/TMU/CMT/THS/SDHI/MSIOF/CAN[FD]/I2C/IIC/RWDT on R8A774E1
-Message-Id: <159524352070.8289.9628744508547399473.b4-ty@kernel.org>
+        s=default; t=1595243798;
+        bh=h/+3Px8t9dUzIXFkpxr1WT1l9Hilocmlm4Pl2hk5x+M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EK1m5F1T8VF8+PkE6ofWtSbn78yiYNdbyDFUcbIAhi0Jfnau4AwihFw2U0V3XF6Sm
+         SJqircjgWTVfWQheYVkgI1NEtiM5ONi1ZZTLZBfEUOEu9d41VeYuADN39yBvTL0JRu
+         /mj134CnFPs4ySguORQKiVs96Ha+pvk98qdbqC1A=
+Date:   Mon, 20 Jul 2020 12:16:33 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     robh+dt@kernel.org, dragos.bogdan@analog.com,
+        darius.berghe@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: iio: gyro: Add DT binding doc for
+ ADXRS290
+Message-ID: <20200720121633.7a9e5cd7@archlinux>
+In-Reply-To: <20200715092821.14625-1-nish.malpani25@gmail.com>
+References: <20200715092821.14625-1-nish.malpani25@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Jul 2020 12:08:50 +0100, Lad Prabhakar wrote:
-> This patch series enables support for following on RZ/G2H SoC,
-> * CPU OPP
-> * THS
-> * CMT/TMU
-> * I2C/IIC
-> * MSIOF
-> * RWDT
-> * SDHI
-> * SCIF/HSCIF
-> * CAN/CANFD
+On Wed, 15 Jul 2020 14:58:21 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
+
+> Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
 > 
-> [...]
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+> ---
+>  .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 52 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+> new file mode 100644
+> index 000000000000..a997d945fdb0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2020 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
+> +
+> +maintainers:
+> +  - Nishant Malpani <nish.malpani25@gmail.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adxrs290
 
-Applied to
+I think we can use const here as only one item currently.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 5000000
+> +
+> +  spi-cpol: true
+> +
+> +  spi-cpha: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-max-frequency
+> +  - spi-cpol
+> +  - spi-cpha
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        gyro@0 {
+> +                   compatible = "adi,adxrs290";
+> +                   reg = <0>;
+> +                   spi-max-frequency = <5000000>;
+> +                   spi-cpol;
+> +                   spi-cpha;
+> +        };
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index dd02cfc410e8..0bb8ac90fba1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Supported
+>  F:	drivers/iio/gyro/adxrs290.c
+> +F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+>  
+>  ANALOG DEVICES INC ASOC CODEC DRIVERS
+>  M:	Lars-Peter Clausen <lars@metafoo.de>
 
-Thanks!
-
-[1/1] spi: renesas,sh-msiof: Add r8a774e1 support
-      commit: b4f7f5f5470588e45e5d004f1dc4887af20f18c0
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
