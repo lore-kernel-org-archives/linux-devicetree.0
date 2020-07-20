@@ -2,95 +2,95 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65211C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 17:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAEEC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 18:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC9722482
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 17:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5292A22B4E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 18:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ktxiedt9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kMmJlhlJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgGTR3E (ORCPT
+        id S1730330AbgGTSNI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 13:29:04 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16682 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbgGTR3E (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 13:29:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f15d3e80001>; Mon, 20 Jul 2020 10:27:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 20 Jul 2020 10:29:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 20 Jul 2020 10:29:04 -0700
-Received: from [10.2.53.86] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
- 2020 17:29:03 +0000
-Subject: Re: [PATCH v2 2/2] arm64: tegra: Add the GPU on Tegra194
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Debarshi Dutta <ddutta@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200716143341.545804-1-thierry.reding@gmail.com>
- <20200716143341.545804-2-thierry.reding@gmail.com>
-X-Nvconfidentiality: public
-From:   Terje Bergstrom <tbergstrom@nvidia.com>
-Message-ID: <de024331-cc7a-42ac-6b03-4ac8eb3af351@nvidia.com>
-Date:   Mon, 20 Jul 2020 10:29:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 20 Jul 2020 14:13:08 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48530 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729921AbgGTSNI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 14:13:08 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KICESd057699;
+        Mon, 20 Jul 2020 13:12:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595268734;
+        bh=7tyvgaL+fW83SAUmCUViLrsnXQp4Obzw1ixykaV8ISI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=kMmJlhlJy1WGDQkBsH0rhk1gjbXR46eDnqxStJo9yR8e4XCwYmGToZAVzASCBP1ap
+         Zwj8fcEuBSfB/3IQDcbdF9NkrjPeF52a626LqwoKSRehTDiA4uIhQBdUQaBVHwieZk
+         VPR3y0MW1Qc98QUs6Vm/0vqk5piLefkipNQiQux0=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KICE8Q091024;
+        Mon, 20 Jul 2020 13:12:14 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 13:12:14 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 13:12:14 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KICEuK064305;
+        Mon, 20 Jul 2020 13:12:14 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 2/2] ASoC: tas2770: Fix reset gpio property name
+Date:   Mon, 20 Jul 2020 13:12:02 -0500
+Message-ID: <20200720181202.31000-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720181202.31000-1-dmurphy@ti.com>
+References: <20200720181202.31000-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200716143341.545804-2-thierry.reding@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595266024; bh=ac8zO61pbb5tpf5xClufOhOCk2EwcuyOQ6iixGYE1yE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=ktxiedt9++tvbzE8plmar2iBg/wSKwH8tDjfvLXANC4Q5FHgP6f5RUsFSKxtcGkXx
-         hq3A9gVhAp1miwXjv0rKlhj85j9KF6ihsxZzJucitn7cR/SJljzv8iEyg7zfjiZ7ge
-         2GzG3HRfkYUVm7mefv6NBL9wI8f+UuKNNFska5ikgC0TqIfVDgkFN9y/FU4YrLopgw
-         lodQyB4A6CLZRzX08mNaL3TbIBnoY3noVILnEnN+mnD8VFY6CaXEP0A4q2c449iCER
-         wJebR/fILchznAMK6Ur2LKa5TQ7NLpxB7tztaBq2gc9pZTfGprq8YM4zGNqri6cKM0
-         QyEI1sfIB2Pxg==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/16/2020 7:33 AM, Thierry Reding wrote:
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> index 98c366ab4aab..14da0793be69 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> @@ -1395,6 +1395,39 @@ sor3: sor@15bc0000 {
->   				nvidia,interface = <3>;
->   			};
->   		};
-> +
-> +		gpu@17000000 {
-> +			compatible = "nvidia,gv11b";
-> +			reg = <0x17000000 0x10000000>,
-> +			      <0x18000000 0x10000000>;
+Fix the reset property name when allocating the GPIO descriptor.
+The gpiod_get_optional appends either the -gpio or -gpios suffix to the
+name.
 
-Hi,
+Fixes: 1a476abc723e6 ("tas2770: add tas2770 smart PA kernel driver")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ sound/soc/codecs/tas2770.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I noticed a typo here. The sizes of the resources have one zero too 
-many. Should be 0x1000000.
-
-Terje
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 4538b2d0216f..1eb9b77439eb 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -759,8 +759,7 @@ static int tas2770_i2c_probe(struct i2c_client *client,
+ 		}
+ 	}
+ 
+-	tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev,
+-							  "reset-gpio",
++	tas2770->reset_gpio = devm_gpiod_get_optional(tas2770->dev, "reset",
+ 						      GPIOD_OUT_HIGH);
+ 	if (IS_ERR(tas2770->reset_gpio)) {
+ 		if (PTR_ERR(tas2770->reset_gpio) == -EPROBE_DEFER) {
+-- 
+2.27.0
 
