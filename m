@@ -1,152 +1,112 @@
-Return-Path: <SRS0=PhKm=A6=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5269C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3677C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 00:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFCBA21744
-	for <linux-devicetree@archiver.kernel.org>; Sun, 19 Jul 2020 22:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3EB72177B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 00:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="N3H6X4pT"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fzU6c7HE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgGSWbf (ORCPT
+        id S1726854AbgGTAmy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 18:31:35 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:38139 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgGSWbe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 18:31:34 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B5C8F22FEC;
-        Mon, 20 Jul 2020 00:31:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595197891;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h4N28ZYWIcbmHLT9PzLmmIKU9hPLYoVHxRdShOC5C/M=;
-        b=N3H6X4pTPOFXN6bxZLOMhel7mRPg4vOcbE8OI1ADuH7cXiYE+9ibZZV3pFhuM7xrRn33ch
-        mX6K7klggfZZgIqkaS9Gtjt15lU60QqayRU7HmZ37umopWGQglE5lXEsck7mXnLfvPn0bh
-        A1ddZKFhuuBU1Zomb0T/y9yJvuTsELo=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 20 Jul 2020 00:31:29 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Sun, 19 Jul 2020 20:42:54 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:43426 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726596AbgGTAmx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 20:42:53 -0400
+X-UUID: f7892d90758046f4a2dcfa39cccf7045-20200720
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=OMHVu4Vv9sCJUK0p044FX4mimvQ4OPPgAjHgDXynXG0=;
+        b=fzU6c7HEQ19PHOYmU7BkHNObcmz68gw3bDI+TpvKI3KcNSaDDkDcgyRfCUUha5UY9BzVw0gWbk75cesW1YfEye1FBG5l42qXcMxlihRHR269EtLrHzr9aven4+FpbOqKjeCB4MV12xC6Jhpy8dC66LQxpinaEA0rHXEQmHtHn9o=;
+X-UUID: f7892d90758046f4a2dcfa39cccf7045-20200720
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1498844878; Mon, 20 Jul 2020 08:42:45 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 20 Jul 2020 08:42:43 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 20 Jul 2020 08:42:42 +0800
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 02/13] mfd: add simple regmap based I2C driver
-In-Reply-To: <20200717090656.GF3165313@dell>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-3-michael@walle.cc> <20200717090656.GF3165313@dell>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <52d85ea1ddc488762df547168e2001e9@walle.cc>
-X-Sender: michael@walle.cc
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>
+CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: [PATCH v7 1/4] mmc: mediatek: add MT6779 MMC driver support
+Date:   Mon, 20 Jul 2020 08:42:36 +0800
+Message-ID: <1595205759-5825-2-git-send-email-chun-hung.wu@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1595205759-5825-1-git-send-email-chun-hung.wu@mediatek.com>
+References: <1595205759-5825-1-git-send-email-chun-hung.wu@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: B6EBCB46A8EA91B71316FD7623CD65C69AAFCEB4EAB4B11A9B768E2F0E489B012000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-07-17 11:06, schrieb Lee Jones:
-> On Mon, 06 Jul 2020, Michael Walle wrote:
-> 
->> There are I2C devices which contain several different functions but
->> doesn't require any special access functions. For these kind of 
->> drivers
->> an I2C regmap should be enough.
->> 
->> Create an I2C driver which creates an I2C regmap and enumerates its
->> children. If a device wants to use this as its MFD core driver, it has
->> to add an individual compatible string. It may provide its own regmap
->> configuration.
->> 
->> Subdevices can use dev_get_regmap() on the parent to get their regmap
->> instance.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->> Changes since v4:
->>  - new patch. Lee, please bear with me. I didn't want to delay the
->>    new version (where a lot of remarks on the other patches were
->>    addressed) even more, just because we haven't figured out how
->>    to deal with the MFD part. So for now, I've included this one.
->> 
->>  drivers/mfd/Kconfig          |  9 +++++++
->>  drivers/mfd/Makefile         |  1 +
->>  drivers/mfd/simple-mfd-i2c.c | 50 
->> ++++++++++++++++++++++++++++++++++++
->>  3 files changed, 60 insertions(+)
->>  create mode 100644 drivers/mfd/simple-mfd-i2c.c
->> 
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 33df0837ab41..f1536a710aca 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -1162,6 +1162,15 @@ config MFD_SI476X_CORE
->>  	  To compile this driver as a module, choose M here: the
->>  	  module will be called si476x-core.
->> 
->> +config MFD_SIMPLE_MFD_I2C
->> +	tristate "Simple regmap based I2C devices"
-> 
-> Doesn't look like tristate to me.
-> 
-> Haven't you made this builtin only?
+QWRkIG5ldyBjb2RlIHRvIHN1cHBvcnQgTVQ2Nzc5IG1tYyBkcml2ZXIuDQoNClNpZ25lZC1vZmYt
+Ynk6IENodW4tSHVuZyBXdSA8Y2h1bi1odW5nLnd1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZl
+cnMvbW1jL2hvc3QvbXRrLXNkLmMgfCAxMyArKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
+IDEzIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNk
+LmMgYi9kcml2ZXJzL21tYy9ob3N0L210ay1zZC5jDQppbmRleCAzOWU3ZmM1Li5lZDM3YTNjIDEw
+MDY0NA0KLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYw0KKysrIGIvZHJpdmVycy9tbWMv
+aG9zdC9tdGstc2QuYw0KQEAgLTUzOCw2ICs1MzgsMTggQEAgc3RydWN0IG1zZGNfaG9zdCB7DQog
+CS51c2VfaW50ZXJuYWxfY2QgPSB0cnVlLA0KIH07DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBt
+dGtfbW1jX2NvbXBhdGlibGUgbXQ2Nzc5X2NvbXBhdCA9IHsNCisJLmNsa19kaXZfYml0cyA9IDEy
+LA0KKwkuaHM0MDBfdHVuZSA9IGZhbHNlLA0KKwkucGFkX3R1bmVfcmVnID0gTVNEQ19QQURfVFVO
+RTAsDQorCS5hc3luY19maWZvID0gdHJ1ZSwNCisJLmRhdGFfdHVuZSA9IHRydWUsDQorCS5idXN5
+X2NoZWNrID0gdHJ1ZSwNCisJLnN0b3BfY2xrX2ZpeCA9IHRydWUsDQorCS5lbmhhbmNlX3J4ID0g
+dHJ1ZSwNCisJLnN1cHBvcnRfNjRnID0gdHJ1ZSwNCit9Ow0KKw0KIHN0YXRpYyBjb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkIG1zZGNfb2ZfaWRzW10gPSB7DQogCXsgLmNvbXBhdGlibGUgPSAibWVk
+aWF0ZWssbXQ4MTM1LW1tYyIsIC5kYXRhID0gJm10ODEzNV9jb21wYXR9LA0KIAl7IC5jb21wYXRp
+YmxlID0gIm1lZGlhdGVrLG10ODE3My1tbWMiLCAuZGF0YSA9ICZtdDgxNzNfY29tcGF0fSwNCkBA
+IC01NDcsNiArNTU5LDcgQEAgc3RydWN0IG1zZGNfaG9zdCB7DQogCXsgLmNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ3NjIyLW1tYyIsIC5kYXRhID0gJm10NzYyMl9jb21wYXR9LA0KIAl7IC5jb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10ODUxNi1tbWMiLCAuZGF0YSA9ICZtdDg1MTZfY29tcGF0fSwN
+CiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDc2MjAtbW1jIiwgLmRhdGEgPSAmbXQ3NjIw
+X2NvbXBhdH0sDQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LW1tYyIsIC5kYXRh
+ID0gJm10Njc3OV9jb21wYXR9LA0KIAl7fQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
+bXNkY19vZl9pZHMpOw0KLS0gDQoxLjkuMQ0K
 
-Mh yeah, I forgot to change it to module in the driver. I don't
-know whats better though, have it tristate or just offer a boolean
-option because it should be small anyway. What do you think?
-My interrupt driver will force it to boolean anyway.
-
-> 
->> +	depends on I2C
->> +	select MFD_CORE
-> 
-> Why?
-
-leftover :( I'll remove it.
-
-
->> +	select REGMAP_I2C
->> +	help
->> +	  This is a consolidated driver for all MFD devices which are
->> +	  basically just a regmap bus driver.
-> 
-> Please expand on this.  I think it deserves greater explanation.
-
-ok.
-
-> 
->>  config MFD_SM501
->>  	tristate "Silicon Motion SM501"
->>  	depends on HAS_DMA
-
--- 
--michael
