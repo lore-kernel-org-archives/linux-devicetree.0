@@ -2,240 +2,152 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9208FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848E1C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C17420702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA2020702
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QePSCcK4"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="G9Gz7b85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgGTH5B (ORCPT
+        id S1726699AbgGTIG1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:57:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgGTH5B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 03:57:01 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DFAC061794
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f2so16785957wrp.7
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
-        b=QePSCcK44UIZmJ+7DxfyU1stV2IDfXAudhLIu4v/IMxSh8Vo2pcJb27KTvxXFjLFM+
-         LP8YkYzbjZCsk/yVjQmLbGiUNJlrC+f5jBGzNKpOcuuVqIO/0ByNOIBahGxYYJACP2S3
-         YnVWBTQCVl4dIsL5SGS9oj+oida3cWbwMSWqgU9xEeWzzNRKWLxhQo8k1vngaN8p8Ai+
-         1qy3Rsc9bLjsIo4w14Ok0AXZZOc1A/mf+OFmTDYpjhvPP24VV0cMrhFHYssj1HWuQDY+
-         x2Q+4NL4p4WOe4sLAIhsnWrJwh397PCWL/9S69t6WBIJIQb6N9ZBW7XYcBznB/t8mVHQ
-         Cwwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
-        b=pxtZbhghO8RBlfvrQMOkK04y0kLwDj+iqPXZQxm7Nnu+vnLux2k71b6v9iv1OFvBFC
-         Ut+9J2fLj6bJDlpVqyUzmgzmqUM4oHY8k5SRNlp3F7WS/pIKbq9KvT/0FCKIzYoh42KU
-         exUzMgqyz5skwlZkHYE0InoAYrTnvfpv5Wxb9tsJCpqeBzeI+w5tTnFb2/4dl6sX0Y/c
-         VqgXv4XQJwXwT8pWIfE+qs+PQeCWh+NUSipUVCIpAkT3aY06BJfvuI85q8pmxwjswzF8
-         UenZtFPamN2ovu+75eIojnHenz4Or5khL9oOVglcA0S2wI3/KyYRbFS3KPS3LcWjgAiK
-         8jwg==
-X-Gm-Message-State: AOAM531osHz0C7TrEMUaZxahRIsmBD33XWoZU9WRZHy4gVCZBBsNTiDB
-        GGOPoURNG9JAiZQKsAKSyD6uwA==
-X-Google-Smtp-Source: ABdhPJzE09wAmkmLbE0ZLSzAWTmKyq12TseLHzepWKU2Mh0MBwqpfoiX9ZxPvEJ9HRW9CPX/lIlSjA==
-X-Received: by 2002:a5d:61c8:: with SMTP id q8mr11044972wrv.160.1595231819481;
-        Mon, 20 Jul 2020 00:56:59 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
-        by smtp.googlemail.com with ESMTPSA id h11sm7223446wrb.68.2020.07.20.00.56.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 00:56:58 -0700 (PDT)
-Subject: Re: [PATCH v8 1/2] dt-bindings: timer: Add Ingenic X1000 OST
- bindings.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, paul@crapouillou.net
-References: <20200719114247.56100-1-zhouyanjie@wanyeetech.com>
- <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <53448115-2aa0-0aa0-03d8-a5993e8c84e9@linaro.org>
-Date:   Mon, 20 Jul 2020 09:56:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 20 Jul 2020 04:06:27 -0400
+Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:53216
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbgGTIG0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 04:06:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dk5uqkE27ATbG91Q2EASEeV8PmX5RRuJPcjYke7RAqpDfPEp9v8fb4/Xe5dEnaw+fk+TmuCSIWRB1jCaZQqok2Yk8Eaf3iW0h6FtooY+yJlT/KyU7y4hb/EfWtv/qFs4ava/MJ5H9xvT8+4wOV2X0rF+rVEGcPOmQWlB4A/Zj/YnRT6xkUOWv9QaSdjqPpiLzFBLGVu2YYNaAYHmkTrDFmiHfjK8Z7dIiliE3RIYfYyYMmK+q1Lb40GRxDooL66gLU4jLZW/aAD38AktSYOYNjWMYNjELVSrotUpuOlgsKql23kHsaQlB2Q2pEghL6pKxzbzIvtMfaQyCNmz9Lnyuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yP4d0VpOex5Z6qYkvlIGx3wQBh3pbDR9g+3h5cbexyY=;
+ b=BXhKrLv5vFt0lZDJqTq44FUVZylsA7NozsJzKf7U16tO8qRRsoUKzSa+fXgimQXw315vKUCxuDuMrhj9rsZQlWYID4zavBjo/xXa8QXsEgIxDLf25rDlZBNZJWjJrxpCI+124HKlszJsyRC7b+jzMsbdBmEBfzoYavilpZHn3pIquCiOs7sciHvhDYM5oeW0h5BndtalNqSO6Mj+CU4nXYagFB+EBeRdsecvo1KfMIAHD9jhheQJ5nvmEy24kS3YvEmd3s9LsEsKPE8voot2eQRFA9M1X0X5eQkDkn19BCmpfm92AzOlF24tVOERy0YAETr0L1PcKdYgcR/IBvIyBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yP4d0VpOex5Z6qYkvlIGx3wQBh3pbDR9g+3h5cbexyY=;
+ b=G9Gz7b85qr9044NjR61uHwMon0Ke57e5J2bX4NQHQ26jmg/0SERRZ0lBFRvx6bQ5igJI9ktq4qiw+TCKHT/CuWsArpSpxTGtSNkfSjUM4jiNSDk5s+Bk35OOMmL2Lh4klEAXIbW9c/r/w8kIBtx8wDeUG9vMtdxRsdbWVb0dLEI=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM6PR04MB4165.eurprd04.prod.outlook.com (2603:10a6:209:44::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Mon, 20 Jul
+ 2020 08:06:21 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
+ 08:06:21 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Philippe Schenker <philippe.schenker@toradex.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     Jun Li <jun.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v2 2/3] usb: chipidea: imx: support disabling runtime-pm
+Thread-Topic: [PATCH v2 2/3] usb: chipidea: imx: support disabling runtime-pm
+Thread-Index: AQHWWfIPNKRf0OmdJ0GCrPpelAWmTKkHzuSggAChQYCAB2sK0IAARhSAgAAC5LA=
+Date:   Mon, 20 Jul 2020 08:06:21 +0000
+Message-ID: <AM7PR04MB715721D95968DDB78B45A3AF8B7B0@AM7PR04MB7157.eurprd04.prod.outlook.com>
+References: <20200714151822.250783-1-philippe.schenker@toradex.com>
+         <20200714151822.250783-2-philippe.schenker@toradex.com>
+         <AM7PR04MB7157793C6395C200DF5646C98B7E0@AM7PR04MB7157.eurprd04.prod.outlook.com>
+         <08251297f72fe745be43205d0a73631f009681cc.camel@toradex.com>
+         <AM7PR04MB71572600CE73140FE13CB17C8B7B0@AM7PR04MB7157.eurprd04.prod.outlook.com>
+ <163befb5f97724a1279a33023980da3264f0c00e.camel@toradex.com>
+In-Reply-To: <163befb5f97724a1279a33023980da3264f0c00e.camel@toradex.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: toradex.com; dkim=none (message not signed)
+ header.d=none;toradex.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cc71eed7-245a-48ea-4e91-08d82c83ca05
+x-ms-traffictypediagnostic: AM6PR04MB4165:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB4165548AE08370AF09D9E9B78B7B0@AM6PR04MB4165.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3vtqnGpFnuTFnnLCcXEMD+TQGr3ROr92wcDa0WwYeHloR3j+A8K7CTrwyG72f5bpP9GYy65F6iWYi8KS+MyBcQ9FCKQuN9t/TjlYqr1hnOQwg0VYOwH2yhISWC3QNpg/hJ301c2flVLSrCbE8Afctb8/SZzdBTTsIN2r+jzcZoBFqI9DnVLC47EqQQLtBkGuf5VpLvEizEngrVPpzo2xSp47vPgbb8LQ/s+Ev6XwB2evGSlBR+IJVl1dNbMTSS6t6ZIe+DxuXCHTE0uMD00pZIKU0H0lTLZrvbGHSEKe/WfWlr2INjh3aD2OclNZx7BbvlK1AuQqkwjzSKGmYuK+mQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(346002)(396003)(366004)(2906002)(7696005)(8936002)(64756008)(5660300002)(76116006)(66446008)(186003)(52536014)(66946007)(66556008)(66476007)(86362001)(71200400001)(9686003)(33656002)(44832011)(4326008)(54906003)(110136005)(6506007)(7416002)(26005)(478600001)(8676002)(83380400001)(316002)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: td21z0aiHHczWatx9125/BjrjVBI3t05guDCH3iVcmhlw5Q5cXJgEYPd+agSI2PtYX4NwOo5K2sNXjebKvDrHGLBeK0nNlIOqC12flTcP7GJhpCDAQyeTU6vmNrekSwyOoJN2HXqkHIjJ+NgiPtck6x0N8MBuNIjKekiDwZFzc53yb0SjjYKvjcAsHyA7IRF5UabzHcNWHy0wDBjaP74InrqCndNQcheZYZWWhesAX3Ps5x4MOQCAT7SeuiNwsjLRVl1/BnL7aYubBIJhLikAeRrLjYUBcfZ1nPWC6ywThp7h40kxS42suPHUmcKD81QakO8kGPNoXNneHZOMogi6tYxmoKFNTNPs+o/fAT1bMmTUBXK7TFSka/SHeXJ1DznYb8/9yVxmusT4ShXOoGASuth2p98FWpd9X/HelpRtNwEP2OzBXQiY+kYmXQm8lZdnp7YcTwiHm4QeYy/vLCVXQhJLKDfI7sOwGnME/T6wxw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc71eed7-245a-48ea-4e91-08d82c83ca05
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 08:06:21.3403
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7PeAEyRF/yqqYYBYaZJTJAmvQ0AeM0gamU/sNDliwWUwciWm9l+GRDudtc1FrBWMKE0VEciSGtuL1JxXr/orlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4165
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/07/2020 13:42, 周琰杰 (Zhou Yanjie) wrote:
-> Add the OST bindings for the X10000 SoC from Ingenic.
-
-
-Description: [v8,1/2] dt-bindings: timer: Add Ingenic X1000 OST bindings.
-Applying: dt-bindings: timer: Add Ingenic X1000 OST bindings.
-.git/rebase-apply/patch:91: space before tab in indent.
-    		compatible = "ingenic,x1000-ost";
-.git/rebase-apply/patch:92: space before tab in indent.
-    		reg = <0x12000000 0x3c>;
-.git/rebase-apply/patch:94: space before tab in indent.
-    		#clock-cells = <1>;
-.git/rebase-apply/patch:96: space before tab in indent.
-    		clocks = <&cgu X1000_CLK_OST>;
-.git/rebase-apply/patch:97: space before tab in indent.
-    		clock-names = "ost";
-warning: squelched 3 whitespace errors
-warning: 8 lines add whitespace errors.
-
-
-> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Notes:
->     v1->v2:
->     No change.
->     
->     v2->v3:
->     Fix wrong parameters in "clocks".
->     
->     v3->v4:
->     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
->     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
->     3.Modify the description in "ingenic,sysost.yaml".
->     
->     v4->v5:
->     No change.
->     
->     v5->v6:
->     1.Drop "oneOf" and the blank line.
->     2.Add "additionalProperties: false".
->     
->     v6->v7:
->     No change.
->     
->     v7->v8:
->     No change.
-> 
->  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
->  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
->  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> new file mode 100644
-> index 000000000000..1dae2e538725
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
-> +
-> +maintainers:
-> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> +
-> +description:
-> +  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
-> +  and one or more 32bit timers for clockevent.
-> +
-> +properties:
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  compatible:
-> +    enum:
-> +      - ingenic,x1000-ost
-> +      - ingenic,x2000-ost
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ost
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#clock-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/x1000-cgu.h>
-> +
-> +    ost: timer@12000000 {
-> +    		compatible = "ingenic,x1000-ost";
-> +    		reg = <0x12000000 0x3c>;
-> +
-> +    		#clock-cells = <1>;
-> +
-> +    		clocks = <&cgu X1000_CLK_OST>;
-> +    		clock-names = "ost";
-> +
-> +    		interrupt-parent = <&cpuintc>;
-> +    		interrupts = <3>;
-> +    	};
-> +...
-> diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
-> new file mode 100644
-> index 000000000000..9ac88e90babf
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/ingenic,sysost.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides clock numbers for the ingenic,tcu DT binding.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
-> +
-> +#define OST_CLK_PERCPU_TIMER	0
-> +#define OST_CLK_GLOBAL_TIMER	1
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
-> 
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+IA0KPiBPbiBNb24sIDIwMjAtMDctMjAgYXQgMDM6NDQgKzAwMDAsIFBldGVyIENoZW4gd3JvdGU6
+DQo+ID4NCj4gPiA+IE9uIFdlZCwgMjAyMC0wNy0xNSBhdCAwMDo1MSArMDAwMCwgUGV0ZXIgQ2hl
+biB3cm90ZToNCj4gPiA+ID4gPiBUaGUgVG9yYWRleCBDb2xpYnJpIGlNWDZVTEwgYm9hcmQgaGFz
+IGEgc3BlY2lhbCBVU0IgaGFyZHdhcmUNCj4gPiA+ID4gPiBkZXNpZ24uDQo+ID4gPiA+ID4gV2l0
+aCBydW50aW1lLXBtIGVuYWJsZWQgVVNCIHJlc2V0IGl0c2VsZiBjb250aW51b3VzbHkuDQo+ID4g
+PiA+ID4gRnVydGhlcm1vcmUNCj4gPiA+ID4gPiB0aGUgT1RHIHBvcnQgaXMgYWxzbyBub3QgZW51
+bWVyYXRpbmcgZGV2aWNlcyBpZiB0aGUgQ2hpcGlkZWEgSVANCj4gPiA+ID4gPiBpcyBpbiBydW50
+aW1lIHNsZWVwIG1vZGUgYW5kIGEgZGV2aWNlIG9yIGhvc3QgZ2V0cyBwbHVnZ2VkIGluLg0KPiA+
+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IEhpIFBoaWxpcHBlLA0KPiA+ID4gPg0KPiA+ID4gPiBZ
+b3UgbWF5IGRlc2NyaWJlIHRoZSBkZXRhaWwgd2hhdCdzIHRoZSBzcGVjaWFsIFVTQiBoYXJkd2Fy
+ZSBkZXNpZ24NCj4gPiA+ID4gZm9yIHlvdXIgYm9hcmQsDQo+ID4gPg0KPiA+ID4gSWYgSSBvbmx5
+IGtuZXcgdGhlIHJvb3QtY2F1c2Ugb2YgdGhhdCBwcm9ibGVtIC0gdW5mb3J0dW5hdGVseSBJDQo+
+ID4gPiBkb24ndC4NCj4gPiA+IFRoYXQncyBhbHNvIHdoeSBJIGhhdmUgc3VjaCBhIGhhcmQgdGlt
+ZSB0byBkZXNjcmliZSBpdC4NCj4gPiA+DQo+ID4gPiA+IGFuZCB3aHkgaXQgY2F1c2VzIHRoZSBw
+cm9ibGVtLCBhbmQgd2h5IGRpc2FibGUgcnVudGltZSBwbSBjb3VsZA0KPiA+ID4gPiBmaXggdGhp
+cyBpc3N1ZSwgdGhlbiwNCj4gPiA+DQo+ID4gPiBJIGNhbm5vdCBwcm92aWRlIHRoZSAnd2h5JyBw
+YXJ0IHlldC4gSSdsbCB0cnkgc29tZXRoaW5nIG1vcmUgYW5kDQo+ID4gPiBob3BlIEkgY2FuIHBy
+b3ZpZGUgeW91IGd1eXMgd2l0aCB0aGUgZXhhY3QgZGVzY3JpcHRpb24uDQo+ID4gPg0KPiA+ID4g
+PiB0aGUgb3RoZXIgdXNlcnMgY291bGQga25vdyBpZiBpdCBjb3VsZCBhcHBseSB0byB0aGVpciBw
+bGF0Zm9ybXMgb3INCj4gPiA+ID4gbm90IGluIGZ1dHVyZS4NCj4gPiA+DQo+ID4gPiBJIG9ubHkg
+Zm91bmQgb3V0IGFib3V0IGl0IGJlY2F1c2UgeW91IHdlcmUgcG9pbnRpbmcgbWUgaW4gdGhhdA0K
+PiA+ID4gZGlyZWN0aW9uLiBJIGRlYnVnZ2VkIGZvciBob3VycyBub3cgYW5kIGRpZG4ndCBjYW1l
+IHRvIHRoZQ0KPiA+ID4gcm9vdC1jYXVzZSBvZiB0aGUgaXNzdWUuIEkgdGhpbmsgdG8gcmVhbGx5
+IHVuZGVyc3RhbmQgaXQgSSB3b3VsZA0KPiA+ID4gbmVlZCB0byBrbm93IG11Y2ggbW9yZSBhYm91
+dCB0aGUgQ2hpcGlkZWEgSVAuDQo+ID4gPg0KPiA+ID4gSSdsbCBnZXQgYmFjayB0byB5b3UgZ3V5
+cyB3aXRoIGEgcHJvcG9zYWwgZm9yIGEgbmV3IGRlc2NyaXB0aW9uLg0KPiA+ID4NCj4gPg0KPiA+
+IFBoaWxpcHBlLCBpcyBpdCBwb3NzaWJsZSB0byBzaGFyZSB5b3VyIFVTQiBoYXJkd2FyZSBkZXNp
+Z24gYXQgNlVMTD8NCj4gDQo+IEl0J3MgYWN0dWFsbHkgcHJldHR5IHNpbXBsZTogV2UgaGF2ZSBv
+biBVU0JfT1RHMV9WQlVTIGEgMXVGIGNhcGFjaXRvciBhbmQNCj4gKzMuMFYgb24gVkREX1VTQl9D
+QVAgdG9nZXRoZXIgd2l0aCAxMDBuIGFuZCAxMHUgYnlwYXNzIGNhcHMuIE5vdyB0aGUgYmlnDQo+
+IHByb2JsZW0gaXMgdGhhdCB0aGUgZHJpdmVyIGNhbiBub3QgZGV0ZWN0IHRoZSA1ViBvbiBWQlVT
+IHNpZ25hbC4NCj4gDQoNCkNvdWxkIHlvdSBjb25maXJtIGl0IGRvZXMgbm90IHNlZSBWQlVTIGF0
+IHJlZ2lzdGVyIE9UR1NDPyBJZiBpdCBpcywgaG93IGNhbiBpdCB3b3JrIHdpdGggcnVudGltZQ0K
+ZGlzYWJsZWQsIHRoZSBVU0JDTUQuUlMgc2V0dGluZyAoY2lfaGRyY19nYWRnZXRfY29ubmVjdCBp
+cyBjYWxsZWQpIGRlcGVuZHMgb24gVkJVUy4NCg0KUGV0ZXINCg0KPiBJIHRyaWVkIHRvICdpbmpl
+Y3QnIDVWIHRvIHRoYXQgcGluIGxhc3Qgd2VlayBhbmQgdGhpbmdzIGdvdCByZWFsbHkgYmV0dGVy
+IHdpdGggcnVudGltZS1wbS4NCj4gQnV0IEkgc3RpbGwgdGhpbmtzIGRpc2FibGluZyBpdCBmb3Ig
+b3VyIGJvYXJkIHdvdWxkIG1ha2Ugc2Vuc2UuDQo+IA0KPiBJJ2xsIHNlbmQgYSBuZXcgZGVzY3Jp
+cHRpb24gdG9kYXkgd2hlcmUgSSB0cnkgdG8gcG9pbnQgdG8gVkJVUyBzaWduYWwgbm90IGNvbm5l
+Y3RlZC4NCj4gDQo+IFBoaWxpcHBlDQo+IA0KPiA+IEFuZCBob3cgY2lfaGRyY19nYWRnZXRfY29u
+bmVjdCBpcyBjYWxsZWQgd2hlbiB0aGUgcnVudGltZSBwbSBpcw0KPiA+IGRpc2FibGVkPw0KPiA+
+DQo+ID4gVGhhbmtzLA0KPiA+IFBldGVyDQo+ID4NCg==
