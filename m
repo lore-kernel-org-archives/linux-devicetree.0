@@ -2,142 +2,186 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E3EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37674C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4887A2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1712222BF3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oETbVh/7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bU8EMgFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgGTI5x (ORCPT
+        id S1728169AbgGTJFH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:57:53 -0400
-Received: from mail-am6eur05on2062.outbound.protection.outlook.com ([40.107.22.62]:56064
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727849AbgGTI5x (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 04:57:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hGrplbeK1r/LJ3tYZnrdrjYETKOUtVqDFXebzJDtTWifqrVoTTm8N2mz+cpZ8QIl4NKuk+pxVGhMD0hmEZbTQWle/b6YlViHGxrulZv75mLu/GaSAsHt4x5Xg93Z0vWjlD4ch73j0lWTOMctG/Te1IoX6u6wUmeSGUW3ExKw5+C88y28iKwAlg42ixcWD9hm8V3KXGXNmJAFkg5XNNqDQk5uyQ/1y7pDlYOgh7pSso7Rh6AZDFh6IgGo7G8B0g2RSQpbNXy58p8+/xXFC0m04jURxGftuRrcFMyN7tqyx6rz6KzffHC0Byp1ko2v3zkMAbSmPOz9V+uxdCzfpXZA1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rFJKmSxRTsCECSUSr790C3gHc+aQr2rYWV3gPA0MYdU=;
- b=Ff3WehpMiOy3XCYaCIQMMLiZlgUOCpV5XjXOMgq4H2QGYMcX7XrqUCKFXAcHxxnzFBe2opQEDWsBiGNw+uVEpOErhi5ThyVDFv+tdUQl18a3geTGpJHVMchJ8/OM1mI9YeoLmwBxVO9/Hreb2G54JSNm3SGnTQ+b6moyVCqBhflFGGEK9gPiM/vK/Xn3Zy63zPjj/URnrtKhuTcHr+lHWuOQE58Y6HBS1NmBmoWbZQDNNKBznuKHQEqwGJ2gwMTiUD3Y9ZEzsY2Y+VzbnK6FK9R2EgPHuloXL0UERbIS3dP8wXkNqG0MgdOtc3GNIHP6Vq+wum6IlAtFxNdiF6zc8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rFJKmSxRTsCECSUSr790C3gHc+aQr2rYWV3gPA0MYdU=;
- b=oETbVh/7as/TDji7w3fow3JZu4ARrCHf7IzXBqdNCylK2Tc2A+UUBNWV4mIBoFuSQJhaUqc93j5T1ghsu2aL4RywZVyD0WpEdSx5uT6RWDuQdJadOfKk5NyecPGoYiI0J8qGimyLzTQBYVM5fRzB4QrdNZtaDZqYe1U0Gj2cqOg=
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
- by DBBPR04MB6251.eurprd04.prod.outlook.com (2603:10a6:10:cd::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Mon, 20 Jul
- 2020 08:57:49 +0000
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::7564:54a2:a35e:1066]) by DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::7564:54a2:a35e:1066%9]) with mapi id 15.20.3195.025; Mon, 20 Jul 2020
- 08:57:48 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     John Garry <john.garry@huawei.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH V1 RESEND 2/3] bindings/perf/imx-ddr: update compatible
- string
-Thread-Topic: [PATCH V1 RESEND 2/3] bindings/perf/imx-ddr: update compatible
- string
-Thread-Index: AQHWKC/LO755BEKmCkS2ni7qgOxph6kI3soAgAe3nRA=
-Date:   Mon, 20 Jul 2020 08:57:48 +0000
-Message-ID: <DB8PR04MB679528762BB39926FBCDE36EE67B0@DB8PR04MB6795.eurprd04.prod.outlook.com>
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-3-qiangqing.zhang@nxp.com>
- <1f530ea9-c294-64ec-fd10-54129e0b4845@huawei.com>
-In-Reply-To: <1f530ea9-c294-64ec-fd10-54129e0b4845@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3ad86501-db6f-4c4b-2c00-08d82c8afa4f
-x-ms-traffictypediagnostic: DBBPR04MB6251:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DBBPR04MB62519BCB44C6CD3461F7F2DBE67B0@DBBPR04MB6251.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nit/KQXoKEeykgKXSNO/thi1pcYOjiA5jbORI+n4knecXhJ1bxveODuCtBUI8sEUWKrBkZ69RAsmgDIhzAVuAwCBEs/wQm3vNLXWcwZtENFBqBvQuQl2sUoECbRS4EaqJZzNtAltpcDAod6TCTcDhZ9w4UImpAWlmc5wE0X3L7NB9+uA1ElivDG+5++mYkw8weHMS+mO7mpCW9cLcr6ZO8odiAQvp2i1SxGexvn6FS1InK/ixyqtudhvUgxdhHmkEmYfBl+Jk0rl9xpk/UZZXWRsOi3OBX7rxgxdx7V7tqtqGu3nqAOIQstImMhKe2s6CzQkyfKevub5UZY8sx7N5w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(346002)(39860400002)(396003)(15650500001)(9686003)(52536014)(478600001)(54906003)(6506007)(53546011)(83380400001)(316002)(4326008)(5660300002)(71200400001)(110136005)(7696005)(55016002)(66446008)(64756008)(66556008)(66476007)(66946007)(8936002)(8676002)(2906002)(86362001)(33656002)(186003)(26005)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 9g1ywMGNux3Emxhn9/mtj1u1JWdn0PCHRNo6I5CGBHVDOSuDFvu1mT/qtjM3oqEbEdKa8kL3xHfZ5F4EtlvRQkL7L1m+XyJhseByimVZ/0JOj5Rd2HnvslZv1otin9x0BbhMV81QBX+Mxe6a147rXK47SlSD3v9DgppkzqtCkBG3aUZOkqcSkE1YFYikaZqWLJfbEW09FwOTw9REvv1cJ32rLXvgcg22ERrbEUnKQeO3zcH9tLfL6bCwlmnDbSoWNtJ+/W5tWOtojKx11zyWyQ4dPKgvWVQclvPIWk5jwNdYiyXKTRrDVXRoywNArHbq3FmTO3V3KOGqzSulNsiyJrRVWirOseSbBHMpLB421gyLvTRLcWV2g4ws0TSxSt6IZ9beyN/pDu+X8iM0ZV8KhgxgR0X2wBsv3i5TvbU93YsY8SCMdV2LXYz1qq07j+3nm8bhwzjIHNZXP5ubuMDvMG/Kr0Rxh/DVOnG/gQBOuOY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 20 Jul 2020 05:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgGTJFG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 05:05:06 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B9E9C0619D2
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:05:06 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so17001008wrl.8
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DkRWC0cI8O7GbXOYyHnGL5QyWF9IbOGv2nZauF5wCkI=;
+        b=bU8EMgFph/+KkpB7s9feIuGmNFweYyoKifyCutks+uAGpXf0FdKEY221dDMC3pPPwE
+         EPkm1IKadr74GCklQzZfCzYiRvTrA13cuP+tlXZk6Oe5X9gotE0Y+WlClqT1cPrDC4OM
+         7jmWVUA8x9OunWjWq9OJ8SarD2APdKH/QtcZV5e+VnQflCvT1hJdUE6lpE65l3tBdT7l
+         nb+mQR++sRVlL/ajK5nBUJuVjt8vGtSP6iA28jN4WtD4+dXXapcXVl52DnbCiEwxs6eS
+         MQC2pHVUz5nCy6TOdB4yzYWTviKb8UQbCcdAvXUmWBDeH96GVHAo2pNgsvwKblF3jOCT
+         u1WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DkRWC0cI8O7GbXOYyHnGL5QyWF9IbOGv2nZauF5wCkI=;
+        b=GyldaWayJZ8Z/P51QIqiJlbacGUcN0QiSQds50OrvWYlOK8kFhi7VOhOIjevC/ss75
+         t5F9KyUdPmnBk/UwS6eqE6zujlSsAyB44jwNJqLbFYuYwyZ7zmh4npYq4y4jgp+Q+bsp
+         l52NecMfDWfpOFRhi+qVIuaAb6RAiW7qHJDdMTqD7QfvUiOajqsCY8WYb92Y9uW0OhCs
+         g0oKaIp/alObWZGuWSMBAyVoYuBhr03AGQV2znvRdIZeMhK9UziaMKXzFghelWpcaAWD
+         mid6WkHBttzbTl++wPs5+lN5ehb43iTLHV8RYrXX+0/bZmgpcfq1QaP/MV/ZNsZ9XaQy
+         NSdg==
+X-Gm-Message-State: AOAM532iyzMx8WAqJkyEjkpjbl+HwnerDeM3BrFj8K17X3pIdMxlkm3z
+        mMLoGKFVIvIujgXpYnEYlBIowg==
+X-Google-Smtp-Source: ABdhPJxjaq34hzFmwVQqgEd8EEjoU54tk8kNmyK8IbWqdlkGCdZ95EJD2792qPaZuzt6PY2tbOPt+w==
+X-Received: by 2002:adf:a15c:: with SMTP id r28mr1900499wrr.151.1595235905139;
+        Mon, 20 Jul 2020 02:05:05 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id z1sm31934372wru.30.2020.07.20.02.05.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jul 2020 02:05:04 -0700 (PDT)
+Subject: Re: [PATCH v5 0/4] nvmem: qfprom: Patches for fuse blowing on
+ Qualcomm SoCs
+To:     Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     sparate@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        mturney@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>, dhavalp@codeaurora.org,
+        rnayak@codeaurora.org, mkurumel@codeaurora.org,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200710143520.1206846-1-dianders@chromium.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <3aff0624-b698-4711-aaa1-6d2fb661b085@linaro.org>
+Date:   Mon, 20 Jul 2020 10:05:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6795.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ad86501-db6f-4c4b-2c00-08d82c8afa4f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2020 08:57:48.7864
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z+BjRcYwAGgx9N+1nJWWVbRRPMW/0pLt9IkvOr0v1KU7oq3Zr+6xhRXHJE9HS1dHyz8d7uuM+fMgNZHR7atWNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB6251
+In-Reply-To: <20200710143520.1206846-1-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
-Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMOW5tDfmnIgxNeaXpSAxOTowNA0KPiBUbzog
-Sm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT47IHdpbGxAa2VybmVsLm9yZzsN
-Cj4gbWFyay5ydXRsYW5kQGFybS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgc2hhd25ndW9Aa2Vy
-bmVsLm9yZw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBW
-MSBSRVNFTkQgMi8zXSBiaW5kaW5ncy9wZXJmL2lteC1kZHI6IHVwZGF0ZSBjb21wYXRpYmxlDQo+
-IHN0cmluZw0KPiANCj4gT24gMTIvMDUvMjAyMCAwODozMSwgSm9ha2ltIFpoYW5nIHdyb3RlOg0K
-PiA+IFVwZGF0ZSBjb21wYXRpYmxlIHN0cmluZyBhY2NvcmRpbmcgdG8gZHJpdmVyIGNoYW5nZS5g
-DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb2FraW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0Bu
-eHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BlcmYvZnNsLWlteC1kZHIudHh0IHwgNCArKystDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgMyBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BlcmYvZnNsLWlteC1kZHIudHh0DQo+ID4gYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGVyZi9mc2wtaW14LWRkci50eHQNCj4g
-PiBpbmRleCA3ODIyYTgwNmVhMGEuLmIyN2ExZDRmZWM3OCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGVyZi9mc2wtaW14LWRkci50eHQNCj4gPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGVyZi9mc2wtaW14LWRkci50
-eHQNCj4gPiBAQCAtNCw3ICs0LDkgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPg0KPiANCj4g
-SGkgSm9ha2ltLA0KPiANCj4gPiAgIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZjoNCj4g
-PiAgIAkiZnNsLGlteDgtZGRyLXBtdSINCj4gPiAtCSJmc2wsaW14OG0tZGRyLXBtdSINCj4gPiAr
-CSJmc2wsaW14OG1xLWRkci1wbXUiDQo+ID4gKwkiZnNsLGlteDhtbS1kZHItcG11Ig0KPiANCj4g
-SSBub3RpY2VkIHRoYXQgc29tZSBvZiB0aGUgY29tcGF0IHN0cmluZ3MgYmVpbmcgYWRkZWQgYXJl
-IHVzZWQgaW4gaW14IGR0c2kgZmlsZXMNCj4gdG9kYXk6DQo+IA0KPiBqb2huQGxvY2FsaG9zdDp+
-L2xpbnV4PiBnaXQgZ3JlcCAiZnNsLGlteDhtbS1kZHItcG11Ig0KPiBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9pbXg4bW0uZHRzaTogIGNvbXBhdGlibGUgPQ0KPiAiZnNsLGlteDhtbS1k
-ZHItcG11IiwgImZzbCxpbXg4bS1kZHItcG11IjsNCj4gDQo+IEFueSBzcGVjaWZpYyByZWFzb24g
-d2h5IHRoZXkgYXJlIG5vdCBkZXNjcmliZWQgaW4gdGhlIGR0IGJpbmRpbmdzIGFscmVhZHk/DQo+
-IA0KPiBJIGRvbid0IGZvbGxvdyBkdCBzbyBtdWNoIGFueW1vcmUsIHNvIGRvbid0IGtub3cgdGhl
-IHBvbGljaWVzLg0KDQpIaSBKb2huLA0KDQpXaGF0IEkgZGlkIGlzIG5vdCBzdGFuZGFyZCwgYW55
-IGNvbXBhdCBzdHJpbmcgaW4gZHRzIGZpbGUgc2hvdWxkIGJlIGRlc2NyaWJlZCBpbiB0aGUgZHQg
-YmluZGluZ3MuIEkgd2lsbCBrZWVwIGluIG1pbmQuDQoNCkJlc3QgUmVnYXJkcywNCkpvYWtpbSBa
-aGFuZw0KPiA+ICsJImZzbCxpbXg4bW4tZGRyLXBtdSINCj4gDQo+IFRoYW5rcywNCj4gSm9obg0K
-DQo=
+
+
+On 10/07/2020 15:35, Douglas Anderson wrote:
+> This series enables blowing of fuses on Qualcomm SoCs by extending the
+> existing qfprom driver with write support.
+> 
+> A few notes:
+> - Though I don't have any firsthand knowledge of it, it's my
+>    understanding that these changes could be used on any Qualcomm SoC.
+>    However, it's likely not very useful on most boards because the
+>    bootloader protects against this.  Thus the write support here is
+>    likely only useful with a cooperating bootloader.
+> - Blowing fuses is truly a one-way process.  If you mess around with
+>    this and do something wrong you could irreparably brick your chip.
+>    You have been warned.
+> 
+> Versions 1 and 2 of this series were posted by Ravi Kumar Bokka.  I
+> posted version 3 containing my changes / fixups with his consent.  I
+> have left authorship as Ravi but added my own Signed-off-by.
+> 
+> Version 4 is a minor spin over version 3.
+> 
+> Version 5 is an even more minor spin and just bumps up some timings to
+> fix a failure reported by Ravi on one device.  I've collected Rob
+> Herring's reviews and (as far as I know) this is ready to land.
+> 
+> Changes in v5:
+> - QFPROM_FUSE_BLOW_POLL_US 10 => 100
+> - QFPROM_FUSE_BLOW_TIMEOUT_US 100 => 1000
+> 
+> Changes in v4:
+> - Maintainer now listed as Srinivas.
+> - Example under "soc" to get #address-cells and #size-cells.
+> - Clock name is "core", not "sec".
+> - Example under "soc" to get #address-cells and #size-cells.
+> - Only get clock/regulator if all address ranges are provided.
+> - Don't use optional version of clk_get now.
+> - Clock name is "core", not "sec".
+> - Cleaned up error message if couldn't get clock.
+> - Fixed up minor version mask.
+> - Use GENMASK to generate masks.
+> - Clock name is "core", not "sec".
+> 
+> Changes in v3:
+> - Split conversion to yaml into separate patch new in v3.
+> - Use 'const' for compatible instead of a 1-entry enum.
+> - Changed filename to match compatible string.
+> - Add #address-cells and #size-cells to list of properties.
+> - Fixed up example.
+> - Add an extra reg range (at 0x6000 offset for SoCs checked)
+> - Define two options for reg: 1 item or 4 items.
+> - No reg-names.
+> - Add "clocks" and "clock-names" to list of properties.
+> - Clock is now "sec", not "secclk".
+> - Add "vcc-supply" to list of properties.
+> - Fixed up example.
+> - Don't provide "reset" value for things; just save/restore.
+> - Use the major/minor version read from 0x6000.
+> - Reading should still read "corrected", not "raw".
+> - Added a sysfs knob to allow you to read "raw" instead of "corrected"
+> - Simplified the SoC data structure.
+> - No need for quite so many levels of abstraction for clocks/regulator.
+> - Don't set regulator voltage.  Rely on device tree to make sure it's right.
+> - Properly undo things in the case of failure.
+> - Don't just keep enabling the regulator over and over again.
+> - Enable / disable the clock each time
+> - Polling every 100 us but timing out in 10 us didn't make sense; swap.
+> - No reason for 100 us to be SoC specific.
+> - No need for reg-names.
+> - We shouldn't be creating two separate nvmem devices.
+> - Name is now 'efuse' to match what schema checker wants.
+> - Reorganized ranges to match driver/bindings changes.
+> - Added 4th range as per driver/binding changes.
+> - No more reg-names as per driver/binding changes.
+> - Clock name is now just "sec" as per driver/binding changes.
+> 
+> Ravi Kumar Bokka (4):
+>    dt-bindings: nvmem: qfprom: Convert to yaml
+>    dt-bindings: nvmem: Add properties needed for blowing fuses
+>    nvmem: qfprom: Add fuse blowing support
+
+Applied above 3 with merge conflict fixed.
+dts patches should go via arm-soc tree, Bjorn could pick that up!
+
+
+Thanks,
+srini
+>    arm64: dts: qcom: sc7180: Add properties to qfprom for fuse blowing
+> 
+>   .../bindings/nvmem/qcom,qfprom.yaml           |  96 ++++++
+>   .../devicetree/bindings/nvmem/qfprom.txt      |  35 --
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts       |   4 +
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi          |  10 +-
+>   drivers/nvmem/qfprom.c                        | 314 +++++++++++++++++-
+>   5 files changed, 411 insertions(+), 48 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+> 
