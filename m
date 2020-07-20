@@ -2,182 +2,96 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D6BC433FE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AF4C433F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E832070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71894206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjmqZtkt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Sr/8cI1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgGTPnj (ORCPT
+        id S1729699AbgGTQoe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729188AbgGTPni (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 11:43:38 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90191C061794;
-        Mon, 20 Jul 2020 08:43:37 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f139so25644644wmf.5;
-        Mon, 20 Jul 2020 08:43:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=autVWWtMkcWJD2mnHeXx5OQfP35st6FKtCjEISqTu28=;
-        b=JjmqZtktLvk5Qc3N7R2sS1d6oGjjgW6kfwGPqn1Syigos8hcDhGKPO5zhOGp+p3mdM
-         7oFKNkkQZHy4DktD0yhGa/K5vU5uaVMuJjOzPVn+5YIFKs57KtNwbZbuRvelWsEaccIw
-         zvfTew212u4gLW5o5Px6DA8QVeHMU1ytQhfyDQrdJkrZXhBXGRmM8Lrx+Vnn29D5nKJA
-         NVj5ydC0Wf/yr/gH3kB+6lCRjT5wi6q/7Wfow+gFR8X8oIg1LvNCY9qKphQA1W8OPhZ7
-         qbmvTMCpGd6c734qKKg3v1DXdQBwVnv0ndrx1jbr275X5hPbR8dk3/R7fplUPwwA13g9
-         iwpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=autVWWtMkcWJD2mnHeXx5OQfP35st6FKtCjEISqTu28=;
-        b=JZYPmGnfhJTBst3WuOULUS4sxXOO0nLCmEfHsdxrsg8JLyC3pdeGJJPgFCL7gPn8MR
-         ntXvSB2AFOV59MDOTw7AJQp8Zzdcmie5OS6FyWEaAyzAXtLTPs+GSHU3WCw036YKaTZp
-         WIKlkOKWhxwOggzPJdrjwVPFaKWlXXCpmyz2qEdSC1NXdWtxNfXGJoSOfE9AnFPRVvb8
-         OYSwvEZiNhddF8C6wBntEv0lfZEDkk+uG3R31Qp0Out3pHYUi/FeoeubH6z9gOkMUvPN
-         TYVg9V70QoyxkbMjeLAPMa00MI39scJ2dhXm0TzcNLpOjTSSMe5hh/0myQhvNzLNTGJ0
-         RWWA==
-X-Gm-Message-State: AOAM5322DzB+zY9d5mZpblMNXubBuYTB7JtdGsOU4bcdwacSWeBkoR3i
-        htTjxX2zhwOiJ60NWk93TnqafshCBag=
-X-Google-Smtp-Source: ABdhPJzHR5BO0TIk52hY7BBc/k3XRAgpQOahFxFCGnpt58cP2vReN2cLRt0KiZXlFZBCmuhiMR+Qaw==
-X-Received: by 2002:a7b:c857:: with SMTP id c23mr23660652wml.155.1595259815959;
-        Mon, 20 Jul 2020 08:43:35 -0700 (PDT)
-Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
-        by smtp.gmail.com with ESMTPSA id e5sm16981210wrc.37.2020.07.20.08.43.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2020 08:43:35 -0700 (PDT)
-Subject: Re: [PATCH v7 2/4] mmc: mediatek: refine msdc timeout api
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>, mirq-linux@rere.qmqm.pl,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
+        Mon, 20 Jul 2020 12:44:34 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:64768 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729937AbgGTPlm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595259701; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=zyH7f0j1Zl1XaF/dWFxsiYKuhloakssbIQW2PQAFye8=; b=Sr/8cI1j2zFAP28Hw/00c0JaVB1mJS+2DmKIkujaJgJJ7fHe2ywAIznnK5OZRO3ciHfMpaJI
+ WPh2XL45TiYjMQ1gXpu/ZV8hDFwLCwpgWBxBWNHuNSB/3LEwfagx256c1KhMsjz3GDH+Hec0
+ P1+CTqa8NHRrqkyZTUA9rS7L3SU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
+ 5f15bb35d50c36e72976c794 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D8D91C43469; Mon, 20 Jul 2020 15:41:34 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AB58C43395;
+        Mon, 20 Jul 2020 15:41:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AB58C43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <1595205759-5825-1-git-send-email-chun-hung.wu@mediatek.com>
- <1595205759-5825-3-git-send-email-chun-hung.wu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <eb1d5973-55f2-3fb4-bf9c-03b98bd6955b@gmail.com>
-Date:   Mon, 20 Jul 2020 17:43:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v10 13/13] arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+Date:   Mon, 20 Jul 2020 09:40:47 -0600
+Message-Id: <20200720154047.3611092-14-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <1595205759-5825-3-git-send-email-chun-hung.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+split pagetables and per-instance pagetables for drm/msm.
 
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-On 20/07/2020 02:42, Chun-Hung Wu wrote:
-> Extract msdc timeout api common part to have
-> better code architecture and avoid redundant code.
-> 
-> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 759cdd0b002b..d883144360aa 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3981,7 +3981,7 @@ opp-257000000 {
+ 		};
+ 
+ 		adreno_smmu: iommu@5040000 {
+-			compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
++			compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
+ 			reg = <0 0x5040000 0 0x10000>;
+ 			#iommu-cells = <1>;
+ 			#global-interrupts = <2>;
+-- 
+2.25.1
 
-> ---
->   drivers/mmc/host/mtk-sd.c | 32 ++++++++++++++++++++++----------
->   1 file changed, 22 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index ed37a3c..347ed72 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -723,21 +723,21 @@ static void msdc_unprepare_data(struct msdc_host *host, struct mmc_request *mrq)
->   	}
->   }
->   
-> -/* clock control primitives */
-> -static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
-> +static u64 msdc_timeout_cal(struct msdc_host *host, u64 ns, u64 clks)
->   {
-> -	u32 timeout, clk_ns;
-> +	u64 timeout, clk_ns;
->   	u32 mode = 0;
->   
-> -	host->timeout_ns = ns;
-> -	host->timeout_clks = clks;
->   	if (host->mmc->actual_clock == 0) {
->   		timeout = 0;
->   	} else {
-> -		clk_ns  = 1000000000UL / host->mmc->actual_clock;
-> -		timeout = (ns + clk_ns - 1) / clk_ns + clks;
-> +		clk_ns  = 1000000000ULL;
-> +		do_div(clk_ns, host->mmc->actual_clock);
-> +		timeout = ns + clk_ns - 1;
-> +		do_div(timeout, clk_ns);
-> +		timeout += clks;
->   		/* in 1048576 sclk cycle unit */
-> -		timeout = (timeout + (0x1 << 20) - 1) >> 20;
-> +		timeout = DIV_ROUND_UP(timeout, (0x1 << 20));
->   		if (host->dev_comp->clk_div_bits == 8)
->   			sdr_get_field(host->base + MSDC_CFG,
->   				      MSDC_CFG_CKMOD, &mode);
-> @@ -747,9 +747,21 @@ static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
->   		/*DDR mode will double the clk cycles for data timeout */
->   		timeout = mode >= 2 ? timeout * 2 : timeout;
->   		timeout = timeout > 1 ? timeout - 1 : 0;
-> -		timeout = timeout > 255 ? 255 : timeout;
->   	}
-> -	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, timeout);
-> +	return timeout;
-> +}
-> +
-> +/* clock control primitives */
-> +static void msdc_set_timeout(struct msdc_host *host, u64 ns, u64 clks)
-> +{
-> +	u64 timeout;
-> +
-> +	host->timeout_ns = ns;
-> +	host->timeout_clks = clks;
-> +
-> +	timeout = msdc_timeout_cal(host, ns, clks);
-> +	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC,
-> +		      (u32)(timeout > 255 ? 255 : timeout));
->   }
->   
->   static void msdc_gate_clock(struct msdc_host *host)
-> 
