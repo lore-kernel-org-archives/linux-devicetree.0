@@ -2,342 +2,118 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF35C433F7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2E1C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52D9207FC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298ED207FC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dc64ernl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eHHyHpMA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mh/wpx6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgGTMuz (ORCPT
+        id S1726483AbgGTNMS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:50:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57562 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728508AbgGTMum (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 08:50:42 -0400
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595249440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kulnhH+Wp4rDHvCAGfQEYy4bp3CPSW8DxLhT13DzSG8=;
-        b=dc64ernlezMvJDAwK8mW6wWA+vCj45qSoyLT9B6Y0PCV772IwkeLtH+HQq1bjYGISxfs2a
-        2aX0QT+LOw5FRj+SpR7+rSrA45JF+0aQByPCOYPs83qWfaAA0fvjOydyu6i/hD5TxphM31
-        ngWfqu6LPskunKe065H62/N9Mo9F1m0tgQxtMT5AjARLoP4C6XQP4KtBMK1OQ/A9R4hPse
-        M60A4UkwJ/TEUVCftPUCrKWYAPLQGTlwMHPR1f/7tEWhGgDarf1cAMGob740tl3AIp6wS+
-        QmvdhdDDSgUuZ0rMj1h5QdQKOmB7e9iGX5rSEeIkPQntlmKhIdfcyOhtNUI8xg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595249440;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kulnhH+Wp4rDHvCAGfQEYy4bp3CPSW8DxLhT13DzSG8=;
-        b=eHHyHpMA5gl7o7yItOR2RwjP5eq1tadpR8WUnmbyLLm7MhdOd6n9X4eHx7FUR2aE8hgoVg
-        vEVbrQVV/JYV2yDQ==
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, Kurt Kanzenbach <kurt@linutronix.de>
-Subject: [PATCH v2 2/3] dt-bindings: net: dsa: Let dsa.txt refer to dsa.yaml
-Date:   Mon, 20 Jul 2020 14:49:38 +0200
-Message-Id: <20200720124939.4359-3-kurt@linutronix.de>
-In-Reply-To: <20200720124939.4359-1-kurt@linutronix.de>
-References: <20200720124939.4359-1-kurt@linutronix.de>
+        Mon, 20 Jul 2020 09:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbgGTNMS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 09:12:18 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 228C1C061794;
+        Mon, 20 Jul 2020 06:12:18 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f2so17770660wrp.7;
+        Mon, 20 Jul 2020 06:12:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I74xvJtzsjaudxa1pxR363b/RUGO1Y/C083f203Hn7A=;
+        b=Mh/wpx6se2TY3xjfuT4WtX01b4++wFyyvqYyF5kKVHeRaqzaZcp1UF4lbZGxMPjE5Z
+         c7B4tfEtirkSpO22dByuNkIFDkkhmaT4evS6BrE6jltrjTDdva3p256bmEXRF9B3/Jsf
+         qREOo8z6eJDoMVdQfShivC+YISM78l8jiFZnQJ70p2J6FlCBgTv3y404DYyZS5uVx6Av
+         /bXgNO83O8w1hbqrkjQhoPz6DDH27d8tjgC2Gu3xHMqEVhfjDlObJwTLBDpgXynJMqFE
+         ty9Sb0KXjH/TLOUAzW4jGQgikuR6volcQ53gYsb69BbF7CsTnXqIxPXsacGAERh1j0xz
+         V6ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I74xvJtzsjaudxa1pxR363b/RUGO1Y/C083f203Hn7A=;
+        b=XT33Pz/TO+9fFvYOGVRqlizK7bQuZk3ggL4xOiW0a09WAX/tQaedTGyihyMmZebsfU
+         7JI04zDPiobwyJ9o2rRb0oHNO7SVg2LHhmcbZcA0LPEFlSrimfTRB2hE8Ox3/03YG6qY
+         VLgbQ41Zulh2VKlN0iNBeVpm2P5QGXXXRV5SzL6EzK8ZnsRaRxnIwhs+vbtNdrII975c
+         M1nSdi3mJ3zpllD1hSptf6J3SmBtnunUMJeM2oHCfbq3Eo9Um1HAVuGR8kuEriKV9C7O
+         JzCLOLHiRTwIpRNw7uNbBr5k5RxsaqLpVWs/aDAL3OY7MlKOVytmxjKTBmKJAKNAKHgo
+         6isg==
+X-Gm-Message-State: AOAM533PaP5FzLdMIYx+h+m6xcpo8nsSQI0l7tB0EFdSg7Mlz44UMNiX
+        HTI2TM+2g/2fUrnRQvAgMJA=
+X-Google-Smtp-Source: ABdhPJw9OqceBedFy/lUsoQxaiIvRQLMWn8OErAt8tUirgIKJSf/VYRP2xcZNP10zxf5lKN91cSXbw==
+X-Received: by 2002:adf:f542:: with SMTP id j2mr22255065wrp.61.1595250736743;
+        Mon, 20 Jul 2020 06:12:16 -0700 (PDT)
+Received: from skynet.lan (67.red-88-15-120.dynamicip.rima-tde.net. [88.15.120.67])
+        by smtp.gmail.com with ESMTPSA id j24sm2725293wrb.49.2020.07.20.06.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 06:12:16 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     jonas.gorski@gmail.com, kishon@ti.com, vkoul@kernel.org,
+        robh+dt@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
+        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v8 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
+Date:   Mon, 20 Jul 2020 15:12:07 +0200
+Message-Id: <20200720131209.1236590-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The DSA bindings have been converted to YAML. Therefore, the old text style
-documentation should refer to that one.
+Add BCM63xx USBH PHY driver for BMIPS.
 
-The text file can be removed completely once all the existing DSA switch
-bindings have been converted as well.
+v8: readd Simon as author and remove his email address from the source code.
+v7: remove Simon from authors and introduce changes suggested by Rob:
+  - Move clock conditions to the main section.
+  - Set missing additionalProperties to false.
+v6: introduce changes suggested by Rob and Vinod:
+ - Remove BMIPS_GENERIC default from kconfig.
+ - Print registered message as debug.
+ - Add another if case to device tree binding for SoCs with just 1 clock.
+ - Ignored "additionalProperties: false" suggestion since it triggers a
+  warning. This has been reported, but I haven't received any answer yet.
+v5: use devm_reset_control_get_exclusive.
+v4: fix dt-bindings documentation and improve device mode config.
+v3: introduce changes suggested by Florian:
+ - Add support for device mode.
+v2: introduce changes suggested by Florian:
+ - phy-cells changed to 1.
+ - Drop OF dependency (use device_get_match_data).
+ - Drop __initconst from variant tables.
+ - Use devm_clk_get_optional.
 
-Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
----
- .../devicetree/bindings/net/dsa/dsa.txt       | 255 +-----------------
- 1 file changed, 1 insertion(+), 254 deletions(-)
+Álvaro Fernández Rojas (2):
+  dt-bindings: phy: add bcm63xx-usbh bindings
+  phy: bcm63xx-usbh: Add BCM63xx USBH driver
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-index f66bb7ecdb82..bf7328aba330 100644
---- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-@@ -1,257 +1,4 @@
- Distributed Switch Architecture Device Tree Bindings
- ----------------------------------------------------
- 
--Switches are true Linux devices and can be probed by any means. Once
--probed, they register to the DSA framework, passing a node
--pointer. This node is expected to fulfil the following binding, and
--may contain additional properties as required by the device it is
--embedded within.
--
--Required properties:
--
--- ports		: A container for child nodes representing switch ports.
--
--Optional properties:
--
--- dsa,member	: A two element list indicates which DSA cluster, and position
--		  within the cluster a switch takes. <0 0> is cluster 0,
--		  switch 0. <0 1> is cluster 0, switch 1. <1 0> is cluster 1,
--		  switch 0. A switch not part of any cluster (single device
--		  hanging off a CPU port) must not specify this property
--
--The ports container has the following properties
--
--Required properties:
--
--- #address-cells	: Must be 1
--- #size-cells		: Must be 0
--
--Each port children node must have the following mandatory properties:
--- reg			: Describes the port address in the switch
--
--An uplink/downlink port between switches in the cluster has the following
--mandatory property:
--
--- link			: Should be a list of phandles to other switch's DSA
--			  port. This port is used as the outgoing port
--			  towards the phandle ports. The full routing
--			  information must be given, not just the one hop
--			  routes to neighbouring switches.
--
--A CPU port has the following mandatory property:
--
--- ethernet		: Should be a phandle to a valid Ethernet device node.
--                          This host device is what the switch port is
--			  connected to.
--
--A user port has the following optional property:
--
--- label			: Describes the label associated with this port, which
--                          will become the netdev name.
--
--Port child nodes may also contain the following optional standardised
--properties, described in binding documents:
--
--- phy-handle		: Phandle to a PHY on an MDIO bus. See
--			  Documentation/devicetree/bindings/net/ethernet.txt
--			  for details.
--
--- phy-mode		: See
--			  Documentation/devicetree/bindings/net/ethernet.txt
--			  for details.
--
--- fixed-link		: Fixed-link subnode describing a link to a non-MDIO
--			  managed entity. See
--			  Documentation/devicetree/bindings/net/fixed-link.txt
--			  for details.
--
--The MAC address will be determined using the optional properties
--defined in ethernet.txt.
--
--Example
--
--The following example shows three switches on three MDIO busses,
--linked into one DSA cluster.
--
--&mdio1 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	switch0: switch0@0 {
--		compatible = "marvell,mv88e6085";
--		reg = <0>;
--
--		dsa,member = <0 0>;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			port@0 {
--				reg = <0>;
--				label = "lan0";
--			};
--
--			port@1 {
--				reg = <1>;
--				label = "lan1";
--				local-mac-address = [00 00 00 00 00 00];
--			};
--
--			port@2 {
--				reg = <2>;
--				label = "lan2";
--			};
--
--			switch0port5: port@5 {
--				reg = <5>;
--				phy-mode = "rgmii-txid";
--				link = <&switch1port6
--					&switch2port9>;
--				fixed-link {
--					speed = <1000>;
--					full-duplex;
--				};
--			};
--
--			port@6 {
--				reg = <6>;
--				ethernet = <&fec1>;
--				fixed-link {
--					speed = <100>;
--					full-duplex;
--				};
--			};
--		};
--	};
--};
--
--&mdio2 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	switch1: switch1@0 {
--		compatible = "marvell,mv88e6085";
--		reg = <0>;
--
--		dsa,member = <0 1>;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			port@0 {
--				reg = <0>;
--				label = "lan3";
--				phy-handle = <&switch1phy0>;
--			};
--
--			port@1 {
--				reg = <1>;
--				label = "lan4";
--				phy-handle = <&switch1phy1>;
--			};
--
--			port@2 {
--				reg = <2>;
--				label = "lan5";
--				phy-handle = <&switch1phy2>;
--			};
--
--			switch1port5: port@5 {
--				reg = <5>;
--				link = <&switch2port9>;
--				phy-mode = "rgmii-txid";
--				fixed-link {
--					speed = <1000>;
--					full-duplex;
--				};
--			};
--
--			switch1port6: port@6 {
--				reg = <6>;
--				phy-mode = "rgmii-txid";
--				link = <&switch0port5>;
--				fixed-link {
--					speed = <1000>;
--					full-duplex;
--				};
--			};
--		};
--		mdio-bus {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			switch1phy0: switch1phy0@0 {
--				reg = <0>;
--			};
--			switch1phy1: switch1phy0@1 {
--				reg = <1>;
--			};
--			switch1phy2: switch1phy0@2 {
--				reg = <2>;
--			};
--		};
--	 };
--};
--
--&mdio4 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	switch2: switch2@0 {
--		compatible = "marvell,mv88e6085";
--		reg = <0>;
--
--		dsa,member = <0 2>;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			port@0 {
--				reg = <0>;
--				label = "lan6";
--			};
--
--			port@1 {
--				reg = <1>;
--				label = "lan7";
--			};
--
--			port@2 {
--				reg = <2>;
--				label = "lan8";
--			};
--
--			port@3 {
--				reg = <3>;
--				label = "optical3";
--				fixed-link {
--					speed = <1000>;
--					full-duplex;
--					link-gpios = <&gpio6 2
--					      GPIO_ACTIVE_HIGH>;
--				};
--			};
--
--			port@4 {
--				reg = <4>;
--				label = "optical4";
--				fixed-link {
--					speed = <1000>;
--					full-duplex;
--					link-gpios = <&gpio6 3
--					      GPIO_ACTIVE_HIGH>;
--				};
--			};
--
--			switch2port9: port@9 {
--				reg = <9>;
--				phy-mode = "rgmii-txid";
--				link = <&switch1port5
--					&switch0port5>;
--				fixed-link {
--					speed = <1000>;
--					full-duplex;
--				};
--			};
--		};
--	};
--};
-+See Documentation/devicetree/bindings/net/dsa/dsa.yaml for the documenation.
+ .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   |  79 +++
+ drivers/phy/broadcom/Kconfig                  |   8 +
+ drivers/phy/broadcom/Makefile                 |   1 +
+ drivers/phy/broadcom/phy-bcm63xx-usbh.c       | 457 ++++++++++++++++++
+ 4 files changed, 545 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
+ create mode 100644 drivers/phy/broadcom/phy-bcm63xx-usbh.c
+
 -- 
-2.20.1
+2.27.0
 
