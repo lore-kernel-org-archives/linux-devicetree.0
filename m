@@ -6,107 +6,113 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 230D8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6196BC433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19DA22B51
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430062176B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595272521;
-	bh=y7vjF/7Gg0I1ck7MMsCAO02jGh/RyFblscWzzPbMNTY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2usPS7ROTyD7HAMxJUBnm627L+3XwAlCcHgQGWodXeIfSlLXPV6u6wxQV+3vr7s4I
-	 kAqM0LNbGIHmmqFupIJH/cRxRqdDcOoIw8oR1nDKpqWGBirmgHvL5UeU+iYdfq85j0
-	 Yzy54Z34NrHHGEHPsdLzurFAE305mkzgG/WjbxYQ=
+	s=default; t=1595272612;
+	bh=EHwMPy6IQXswdK67BjR0rYM+TV1MliZGzMuMoUzDj4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uEx2X0QuIgR49olhZot+fHUEWyvLu6I9EE3+PjdYTAkDTyl86siVUC2++fAUtmN4d
+	 k2EzB58KwDddxR9+JgFk68dMEKyz63KgZyYvWYJ+K6tj/UMkedHomW23SaGfh19tEr
+	 dCPTurnY+6s0LP7ekgQYur2NRsQJM5wdqLtX1nMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgGTTPU (ORCPT
+        id S1730674AbgGTTQv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbgGTTPT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 15:15:19 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B6A622B51;
-        Mon, 20 Jul 2020 19:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595272519;
-        bh=y7vjF/7Gg0I1ck7MMsCAO02jGh/RyFblscWzzPbMNTY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RFu8cSEQvecMwBh39qwG5H5zY+mfq5FmgFW9pAi1aAPgLmqfb8s1g8NFs+hmwEcuP
-         r28JVhuAtnMFTscgbaDhTTbV6u8UajCLiq6hiu8uV1sn4h3LCW267xLRwYulgIJHXY
-         c6FRcJPLzrqQM1toSZTDjrhPXQD3O9q30hs3GuzA=
-Received: by mail-oi1-f169.google.com with SMTP id l63so15197606oih.13;
-        Mon, 20 Jul 2020 12:15:19 -0700 (PDT)
-X-Gm-Message-State: AOAM533unQJ2wZrcxgp3juu4dx2PVOJifqQTK6la5D2dyD71EE0WluZy
-        apuUxU+ZvzUQQl92rJzEfOx/ov5eIuHvY2JmyQ==
-X-Google-Smtp-Source: ABdhPJxJt9eB3LJsFXU6KUnTkSdkYxCVHUD4AW2u4MEtSuMgxN9FUFdmQ/V73vIzN2u7Age2BlV1QCfDkUb0wEfouYk=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr625735oiw.147.1595272518900;
- Mon, 20 Jul 2020 12:15:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200717144132.2206-1-laurentiu.palcu@oss.nxp.com>
- <20200717144132.2206-5-laurentiu.palcu@oss.nxp.com> <20200720164927.GA2650420@bogus>
- <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
-In-Reply-To: <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
+        Mon, 20 Jul 2020 15:16:51 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38212 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgGTTQv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 15:16:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id l1so18783685ioh.5;
+        Mon, 20 Jul 2020 12:16:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9DxOFAwGubvLaH0SqU66V6v/xpX2Y+fOYrMivn+O2rE=;
+        b=TpxbEuYwAIDqfVTyQqh/8n1U1xazDQx9aSCeUA5Axd/+P+DYqwYV1ExLSrl3xyxfPF
+         1jOwib+16hfUv1GyseOvrLJJd+zQCNI4IAbuxebNpSEPUplJCLMjaCb6zHLCd15P/57K
+         I+g2NfBmnQ6MfyYxRWjDG6u10jE3XfK6DJ+0W9pnAUU4rrxIXB/h52Y4xp/YOvWsbgfV
+         VZV1WEfILQC4xPYGMMXFjFivOdQdyAkcVoJ6eP8o0DHUVescs8ghUmJSjoEsRgm4LrHa
+         fvBaZfOoJwfOETUbImdwiQ3M2jgCfV1+C4sAsWKkrQTbGXJC7MpHL1ZqRnmBY41xNczc
+         Rb+w==
+X-Gm-Message-State: AOAM532Z4ImUJwRmMQfBDE5hZdl1HaF672C4Y8OGHouR5TO3cqdDFZtO
+        zvIA2Hn8/3qE7nqgnYVDPg==
+X-Google-Smtp-Source: ABdhPJwDvnqCPn7Oyfjjd7gooOxNb+wsLKuQ9z1lj2cFeSgqmv+cp/N9EzVRFmsyv9yv5gtVlK7fZw==
+X-Received: by 2002:a02:c789:: with SMTP id n9mr2187151jao.40.1595272610287;
+        Mon, 20 Jul 2020 12:16:50 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y12sm9224404ilg.84.2020.07.20.12.16.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 12:16:49 -0700 (PDT)
+Received: (nullmailer pid 2845221 invoked by uid 1000);
+        Mon, 20 Jul 2020 19:16:48 -0000
+Date:   Mon, 20 Jul 2020 13:16:48 -0600
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 20 Jul 2020 13:15:06 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLbYvekVe_YeCKYCDO69RtTTNBoJQ9X1n=K_ToGwrMVXg@mail.gmail.com>
-Message-ID: <CAL_JsqLbYvekVe_YeCKYCDO69RtTTNBoJQ9X1n=K_ToGwrMVXg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] dt-bindings: display: imx: add bindings for DCSS
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        devicetree@vger.kernel.org, lukas@mntmn.com,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        manivannan.sadhasivam@linaro.org, cristian.ciocaltea@gmail.com,
+        andre.przywara@arm.com, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        dan.j.williams@intel.com, afaerber@suse.de,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v7 01/10] dt-bindings: dmaengine: convert Actions Semi
+ Owl SoCs bindings to yaml
+Message-ID: <20200720191648.GA2844925@bogus>
+References: <1595180527-11320-1-git-send-email-amittomer25@gmail.com>
+ <1595180527-11320-2-git-send-email-amittomer25@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595180527-11320-2-git-send-email-amittomer25@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 10:55 AM Laurentiu Palcu
-<laurentiu.palcu@oss.nxp.com> wrote:
->
-> Hi Rob,
->
-> On Mon, Jul 20, 2020 at 10:49:27AM -0600, Rob Herring wrote:
-> > On Fri, 17 Jul 2020 17:41:29 +0300, Laurentiu Palcu wrote:
-> > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > >
-> > > Add bindings for iMX8MQ Display Controller Subsystem.
-> > >
-> > > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > > ---
-> > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
-> > >  1 file changed, 104 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> > >
-> >
-> >
-> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > there's no need to repost patches *only* to add the tags. The upstream
-> > maintainer will do that for acks received on the version they apply.
-> >
-> > If a tag was not added on purpose, please state why and what changed.
->
-> Well, I kind of did exactly that... in the cover letter. I stated
-> clearly why this patch needs another look... :/
+On Sun, 19 Jul 2020 23:11:58 +0530, Amit Singh Tomar wrote:
+> Converts the device tree bindings for the Actions Semi Owl SoCs DMA
+> Controller over to YAML schemas.
+> 
+> It also adds new compatible string "actions,s700-dma".
+> 
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> ---
+> Changes since v6:
+> 	* No change.
+> Changes since v5:
+>         * Removed Rob's Reviewed-by tag as his bot found errors
+>           running 'make dt_binding_check'.
+>         * Fixed the errore reported by Rob's bot, adjusting the reg
+>           property in example.
+> Changes since v4:
+>         * Added Rob's Reviewed-by tag.
+>         * Re-order it from 05/10 to 01/10.
+> Changes since v3:
+>         * No change.
+> Changes since v2:
+>         * Addressed Rob's comments:
+>            - removed unnecessary description.
+>            - added unevaluatedProperties
+>            - added relevant information about
+>              dma-channels and dma-request
+>         * Added power-domain property.
+> Change since v1:
+>         * Updated the description field to reflect
+>           only the necessary information.
+>         * replaced the maxItems field with description for each
+>           controller attribute(except interrupts).
+>         * Replaced the clock macro with number to keep the example
+>           as independent as possible.
+> ---
+>  Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
+>  Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
+>  2 files changed, 79 insertions(+), 47 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
+> 
 
-Put information closest to where it applies which is this patch. I
-don't read cover letters typically.
-
-R-by still stands.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
