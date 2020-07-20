@@ -2,166 +2,345 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E917CC433F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2F6C433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C329522CF6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BE222CBE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nYUDInkC"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nJej+TK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbgGTPlY (ORCPT
+        id S1732624AbgGTQCH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:41:24 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12601 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729190AbgGTPlV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:41:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595259680; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=mgZPX/ORqnPLBZAJTpnFrkYtIjx2TWoOg4J5PqIxq8Y=; b=nYUDInkC95SuoNlbFL0F6RgtkEnYPNgkuM9FhqKJXkLd1tFeVGwJHoTr/RC1paoxH944W4y1
- 7IkTuL5eFvkBgKEUJu+QR5FJoRUpYZO4k7HsONPQk4GyJTYhvv/tiYaHef1GGD7iZzCcK+KJ
- FVmViFeo97dJATiznDu5LrFUkXE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f15bb1603c8596cdb481f19 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:10
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 18A44C433CB; Mon, 20 Jul 2020 15:41:06 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C7775C433C6;
-        Mon, 20 Jul 2020 15:40:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C7775C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>, Joerg Roedel <joro@8bytes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Rob Clark <robdclark@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v10 00/13] iommu/arm-smmu: Add Adreno SMMU specific implementation
-Date:   Mon, 20 Jul 2020 09:40:34 -0600
-Message-Id: <20200720154047.3611092-1-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
+        Mon, 20 Jul 2020 12:02:07 -0400
+Received: from mail-mw2nam12on2084.outbound.protection.outlook.com ([40.107.244.84]:17633
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730824AbgGTQCG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:02:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T3qTqd+iB1pZcYz2xIxqclSN3UVD+WQPlM/UUpr0H3cyKHXt+SS4s0LfRLRo/Wx0KpQiBtRRS64G5E2scgmQ+wUQp54GAlHuPYgIR/FkHe70UfV20cEj69cEmnau+1FBm8JleETthZzmn2Vm7sqCHWjv14BBl+cy/TYlLHI58IOZ6Z0Ju3dMnVYb7xmVkWjd9lHozwg2E9J+jdI/zc7ICsEcVH9qX5bAsJ638/zu9LmeFCVYCvWizJXDwBd/JjKbMjI1oVSzPhVBdKbVdKqmHxtAGnbaIJTaTgtloFsSO9928EGz3GFJttjYFV8BN8218IpZTc2RZV6sFDb9UPpl0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MvlFlS2v9Mu+0bBwJ9GMqsVwteCLhvO6xXBmXIwN0BY=;
+ b=IBjQjQ3Az0jz8/KRSNQBfRAL7kG5XBX/o1fn5zHWfD5PRdt2v3aYoi0jslbaxm1EskGjT/G3sR0PyFwPd+OE0MYW/loSvgTpp6tR+kRu957TEt0cH825z/urdPmsF1csPv8Bt+e3DC3hL8gv5hDqtNrjA7ghCxySaIcD7CKycI7h+B8IVWfNYei1vRGZ8OOCANZ3GhsAFod3FvxvwEDVzW3AN2CnRlWCTXC6FHBP455cJ37EYNaFw4LwcUWxWBqQu0KrzQ02mQoi1CpbOZ0GpUtn+se5zXbeJrAc7OVtqI7wl8HR4uRqb0vHcvlPMGnoBjUEw4HLxe77S2hlUYJQrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MvlFlS2v9Mu+0bBwJ9GMqsVwteCLhvO6xXBmXIwN0BY=;
+ b=nJej+TK5vz8XmnwuQrFhEcwnGqt7zmjEed+GoB7AuRyrd/uO4IQZ2pytTZrJC06/rrmLt8coaqIDIP2NmMtyYtBivqGPcUNKCC/b/MIHFxVVGDnkVlhAGDIUNdQSExL5x7nhAbGXCCfTWexomouLjGu8Sn9TIKjLQUXp/GzOKoE=
+Authentication-Results: jms.id.au; dkim=none (message not signed)
+ header.d=none;jms.id.au; dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB4582.namprd12.prod.outlook.com (2603:10b6:208:26b::18)
+ by MN2PR12MB4189.namprd12.prod.outlook.com (2603:10b6:208:1d8::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.17; Mon, 20 Jul
+ 2020 16:02:03 +0000
+Received: from MN2PR12MB4582.namprd12.prod.outlook.com
+ ([fe80::7d2d:b00b:bac4:a66b]) by MN2PR12MB4582.namprd12.prod.outlook.com
+ ([fe80::7d2d:b00b:bac4:a66b%7]) with mapi id 15.20.3195.024; Mon, 20 Jul 2020
+ 16:02:03 +0000
+From:   Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+To:     joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, robh+dt@kernel.org
+Cc:     Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+Subject: [PATCH 1/1] ARM:dts:aspeed: Initial device tree for AMD EthanolX
+Date:   Mon, 20 Jul 2020 11:01:47 -0500
+Message-Id: <20200720160147.22339-1-supreeth.venkatesh@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM3PR12CA0128.namprd12.prod.outlook.com
+ (2603:10b6:0:51::24) To MN2PR12MB4582.namprd12.prod.outlook.com
+ (2603:10b6:208:26b::18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from BMCDEV-02.amd.com (165.204.78.1) by DM3PR12CA0128.namprd12.prod.outlook.com (2603:10b6:0:51::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18 via Frontend Transport; Mon, 20 Jul 2020 16:02:02 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.78.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7ae39265-ec20-4e4d-ae88-08d82cc63e05
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4189:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB41892777A12BBA91C318001B967B0@MN2PR12MB4189.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /+87qw9zlKVMTLN4EwS2hq2ElwaXJEs1vxSyT5HacmBwxZzRtXPHbexwHHG6uwmQm5M8I43IYyTpvJhD/h6tCV3ghvc0F0ZQ2bLP7Aq82/7EcRc1v8cAR9Us6/DUL9cJGtRG4tJG/S8pwpPF43qW2LlmKZuPp3LMVYT2zIrebyL1qbRFt6WYws8DfqfGRbRBbCxKRPBzX+523sHFiSYwJW5YlzjM/s3yk1FPWCWVopnr1ZU/c0yDpMb7IcCMSyPPLRlWHL3NtBPDlfrq9MGP+zpx2COVVDbcXce6H9C6gaSyaSDVZU+/dgytPJsbwFHk
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4582.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(376002)(136003)(346002)(39860400002)(2906002)(83380400001)(8676002)(36756003)(66556008)(66476007)(66946007)(5660300002)(86362001)(1076003)(4326008)(316002)(478600001)(44832011)(8936002)(6486002)(52116002)(7696005)(26005)(956004)(2616005)(186003)(16526019)(6666004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: GUmDsJsmZTHINoHmEQhwNmt3CEUIaJE+sbZtz6xyOBSgqWO85TSnBol2yWBsa4tg3KAuLvM3xEKHPr2hnijYfMEFC5YmV68bjARheLMBaZeLh2JOxCM+gGIqWVwcpait80Z+hj4oHPAZcb4jZ2bYY6rYoHW3l7AGltkKkqVGE26wNil0s0xnPSo2C6VlxrZHDy9HVQ5uqnWI9Wgq7a4wdNyU7HmyaqPxf5lh8zyrK+L60F+efEOkGW/WVNmxxunPiw590pL2ORbcsmrqitUxl79fGfYejGkrAj1FPqQgELWs6d63+tluBWNNMNnYJwpIctBhlapyLrSd8BVQnyJp+bgiVTRsD1Wuhp2PfTFFhdb7GRTmhaudqyDnRp9nrKUeAIax1qE5z2Bz5ivbFZvPEnYxcIQ9ZM1cmpgzryk+Vh/Q9URkMpyREzlK0HK2xFFod+2bcxyF5PKMdcwDQQdWwXnVPIFRIS1C03U/bb1MSqw=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ae39265-ec20-4e4d-ae88-08d82cc63e05
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4582.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 16:02:03.1220
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6jrWtmUZrnERaES9LC31i86W9TCAKO1aMYSfbaUe0kuu0buJuQ96edN5WHb4zgt3HJ3vKKiA1uYIupTYq3oatQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4189
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-(reworded the summary to reflect ongoing changes in the code)
+Initial introduction of AMD EthanolX platform equipped with an
+Aspeed ast2500 BMC manufactured by AMD.
 
-This series adds an Adreno SMMU implementation to arm-smmu to allow GPU hardware
-pagetable switching.
+AMD EthanolX platform is an AMD customer reference board with an
+Aspeed ast2500 BMC manufactured by AMD.
+This adds AMD EthanolX device tree file including the flash layout
+used by EthanolX BMC machines.
 
-The Adreno GPU has built in capabilities to switch the TTBR0 pagetable during
-runtime to allow each individual instance or application to have its own
-pagetable.  In order to take advantage of the HW capabilities there are certain
-requirements needed of the SMMU hardware.
+This also adds an entry of AMD EthanolX device tree file in Makefile.
 
-This series adds support for an Adreno specific arm-smmu implementation. The new
-implementation 1) ensures that the GPU domain is always assigned context bank 0,
-2) enables split pagetable support (TTBR1) so that the instance specific
-pagetable can be swapped while the global memory remains in place and 3) shares
-the current pagetable configuration with the GPU driver to allow it to create
-its own io-pgtable instances.
+Signed-off-by: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+---
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts | 209 ++++++++++++++++++
+ 2 files changed, 210 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
 
-The series then adds the drm/msm code to enable these features. For targets that
-support it allocate new pagetables using the io-pgtable configuration shared by
-the arm-smmu driver and swap them in during runtime.
-
-This version of the series merges the previous patchset(s) [1] and [2]
-with the following improvements:
-
-  - arm-smmu: add implementation hook to allocate context banks
-  - arm-smmu: Match the GPU domain by stream ID instead of compatible string
-  - arm-smmu: Make DOMAIN_ATTR_PGTABLE_CFG bi-directional. The leaf driver
-    queries the configuration to create a pagetable and then sends the newly
-    created configuration back to the smmu-driver to enable TTBR0
-  - drm/msm: Add context reference counting for submissions
-  - drm/msm: Use dummy functions to skip TLB operations on per-instance
-    pagetables
-
-[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045653.html
-[2] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045659.html
-
-
-Jordan Crouse (13):
-  iommu/arm-smmu: Pass io-pgtable config to implementation specific
-    function
-  iommu/arm-smmu: Add support for split pagetables
-  iommu/arm-smmu: Add implementation hooks to configure contexts
-  iommu/arm-smmu-qcom: Add implementation for the adreno GPU SMMU
-  iommu: Add a domain attribute to get/set a pagetable configuration
-  iommu/arm-smmu-qcom: Get and set the pagetable config for split
-    pagetables
-  dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
-  drm/msm: Add a context pointer to the submitqueue
-  drm/msm: Set the global virtual address range from the IOMMU domain
-  drm/msm: Add support to create a local pagetable
-  drm/msm: Add support for private address space instances
-  drm/msm/a6xx: Add support for per-instance pagetables
-  arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
-
- .../devicetree/bindings/iommu/arm,smmu.yaml   |   4 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |   2 +-
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c         |  12 +-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c         |  58 ++++-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h         |   1 +
- drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  18 +-
- drivers/gpu/drm/msm/adreno/adreno_gpu.h       |   3 +-
- drivers/gpu/drm/msm/msm_drv.c                 |  16 +-
- drivers/gpu/drm/msm/msm_drv.h                 |  13 ++
- drivers/gpu/drm/msm/msm_gem.h                 |   1 +
- drivers/gpu/drm/msm/msm_gem_submit.c          |   8 +-
- drivers/gpu/drm/msm/msm_gem_vma.c             |   9 +
- drivers/gpu/drm/msm/msm_gpu.c                 |  26 ++-
- drivers/gpu/drm/msm/msm_gpu.h                 |  12 +-
- drivers/gpu/drm/msm/msm_gpummu.c              |   2 +-
- drivers/gpu/drm/msm/msm_iommu.c               | 198 +++++++++++++++++-
- drivers/gpu/drm/msm/msm_mmu.h                 |  16 +-
- drivers/gpu/drm/msm/msm_ringbuffer.h          |   1 +
- drivers/gpu/drm/msm/msm_submitqueue.c         |   8 +-
- drivers/iommu/arm-smmu-impl.c                 |   6 +-
- drivers/iommu/arm-smmu-qcom.c                 | 130 +++++++++++-
- drivers/iommu/arm-smmu.c                      | 108 +++++-----
- drivers/iommu/arm-smmu.h                      |  65 +++++-
- include/linux/iommu.h                         |   1 +
- 24 files changed, 619 insertions(+), 99 deletions(-)
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d6dfdf73e66b..55ed881d2ebc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1281,6 +1281,7 @@ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-ast2500-evb.dtb \
+ 	aspeed-ast2600-evb.dtb \
++	aspeed-bmc-amd-ethanolx.dtb \
+ 	aspeed-bmc-arm-centriq2400-rep.dtb \
+ 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
+ 	aspeed-bmc-facebook-cmm.dtb \
+diff --git a/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
+new file mode 100644
+index 000000000000..dcabdfc08172
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
+@@ -0,0 +1,209 @@
++// SPDX-License-Identifier: Apache-2.0
++// Copyright (c) 2020 AMD Inc.
++// Author: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "AMD EthanolX BMC";
++	compatible = "amd,ethanolx-bmc", "aspeed,ast2500";
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++	};
++	aliases {
++		serial0 = &uart1;
++		serial4 = &uart5;
++	};
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++	leds {
++		compatible = "gpio-leds";
++
++		fault {
++			gpios = <&gpio ASPEED_GPIO(A, 2) GPIO_ACTIVE_LOW>;
++		};
++
++		identify {
++			gpios = <&gpio ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
++		};
++	};
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>, <&adc 4>;
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++
++&mac0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
++		 <&syscon ASPEED_CLK_MAC1RCLK>;
++	clock-names = "MACCLK", "RCLK";
++};
++
++&uart1 {
++	//Host Console
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++		     &pinctrl_rxd1_default>;
++};
++
++&uart5 {
++	//BMC Console
++	status = "okay";
++};
++
++&adc {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default
++		     &pinctrl_adc1_default
++		     &pinctrl_adc2_default
++		     &pinctrl_adc3_default
++		     &pinctrl_adc4_default>;
++};
++
++// Thermal Sensors
++&i2c7 {
++	status = "okay";
++
++	lm75a@48 {
++		compatible = "national,lm75a";
++		reg = <0x48>;
++	};
++
++	lm75a@49 {
++		compatible = "national,lm75a";
++		reg = <0x49>;
++	};
++
++	lm75a@4a {
++		compatible = "national,lm75a";
++		reg = <0x4a>;
++	};
++
++	lm75a@4b {
++		compatible = "national,lm75a";
++		reg = <0x4b>;
++	};
++
++	lm75a@4c {
++		compatible = "national,lm75a";
++		reg = <0x4c>;
++	};
++
++	lm75a@4d {
++		compatible = "national,lm75a";
++		reg = <0x4d>;
++	};
++
++	lm75a@4e {
++		compatible = "national,lm75a";
++		reg = <0x4e>;
++	};
++
++	lm75a@4f {
++		compatible = "national,lm75a";
++		reg = <0x4f>;
++	};
++};
++
++&kcs1 {
++	status = "okay";
++	kcs_addr = <0x60>;
++};
++
++&kcs2 {
++	status = "okay";
++	kcs_addr = <0x62>;
++};
++
++&kcs4 {
++	status = "okay";
++	kcs_addr = <0x97DE>;
++};
++
++&lpc_snoop {
++	status = "okay";
++	snoop-ports = <0x80>;
++};
++
++&lpc_ctrl {
++	//Enable lpc clock
++	status = "okay";
++};
++
++&pwm_tacho {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default
++	&pinctrl_pwm1_default
++	&pinctrl_pwm2_default
++	&pinctrl_pwm3_default
++	&pinctrl_pwm4_default
++	&pinctrl_pwm5_default
++	&pinctrl_pwm6_default
++	&pinctrl_pwm7_default>;
++
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++
++	fan@1 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++
++	fan@2 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++
++	fan@3 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
++	};
++
++	fan@4 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
++	};
++
++	fan@5 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
++	};
++
++	fan@6 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
++	};
++
++	fan@7 {
++		reg = <0x07>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
++	};
++};
++
++
++
 -- 
-2.25.1
+2.17.1
 
