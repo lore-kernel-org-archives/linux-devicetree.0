@@ -2,104 +2,95 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003D8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661EBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C033822B4E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595283791;
-	bh=POZiBwDIvDGG/iE1XNPde1Rvx1qw+5xNMnBSOIHMKrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tfn577RKQIJN2hLD0ZZD9D26jQoUQKEsRb7Ro3XZwiHDickCXeUYu9Mcj5z6NLz7Y
-	 DVHCZAKQe1KlYLAXDLmBMXzyy2bXmA61kphKmFtx57H+8YQ2uhYkcgsfdw9s+bJQJc
-	 9ga4vcPraU69gwnpYb3D2DUO5np6+6PgjVXsWLcc=
+	by mail.kernel.org (Postfix) with ESMTP id 41E17206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rCeOpitt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgGTWXL (ORCPT
+        id S1728072AbgGTWYI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:23:11 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44123 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGTWXK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 18:23:10 -0400
-Received: by mail-io1-f67.google.com with SMTP id i4so19261594iov.11;
-        Mon, 20 Jul 2020 15:23:10 -0700 (PDT)
+        Mon, 20 Jul 2020 18:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727038AbgGTWYG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 18:24:06 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8241AC061794
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 15:24:06 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id 88so9032109wrh.3
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 15:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=h/iiGE/hMDHwo1jMRtAjhSPPyBiqm3USAufgg0bvzlA=;
+        b=rCeOpittQdYPYWCf6wlX+oHYRzPRTkTJhX1U6fWNKWkX4ANROneKyoy68EKrZIn4jX
+         blMBSkuOmxef6fQhYQ99Kwrb9HSLILNxN7kI7N2nG90ibGgKs+ktVc2JhLCXhIsIIAyf
+         ZuQE8JLHWZDvwfyuT279I6XGAqA5WbsXz62oxHHh0w3ntl9yCsmh5e/0Px4tNC6NLXx+
+         4cvCgN/SDSR3x2o9NkttFcwYRmb9+P13kMSs7kjRIrfSuimk5+63ag7kvvfvizvAMmFF
+         2VcVuEqgaGUt3wmrc6PxD0KaeABfdaamdDw+/oeu30je2546HZKLysQFjyaLrD7rhI+j
+         ORvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+CUr9tHT5PVLHwGkmwIOpkcnunWXimE18rjDQkGp1Yk=;
-        b=FZU6XCNWbEcG/HIhv2DPTYvx0269GDOvkwpSoOqVyOjrLjUN3BAf3B4t6XuVp2HQ0B
-         7Aj6WUcQ+VvJuDSYFkKrU52PivVPpv4zunuq8fW+xNVwx/lxU1Trp0v+GUyaRHDxsUQ5
-         ysFzUmjLWQMs1yU5cdn5Cc9EeusDUlsSE52yRCbeN0qrsUU7XDa3FoRHgXnEvNLa2bWk
-         /HmTt5YdXDmcFc9goXt2f8BNctsz751pwj7EC4cNh28dmV5eRqrx3qZNFlL8Z8zyObdx
-         Uxetsg/eN3W5Wld5xtbV2ql780GhupbnGCzayEKF1tDknh//PSuK0fwmdjB16W6LJixu
-         eKvQ==
-X-Gm-Message-State: AOAM532z21eTdnlrtQ2kZIjUZtcrpzpSJBt/4zlGfbhLxK9/fyPFdaEK
-        NYwh/SgvaF4O8ylPZ4m758sQYJOExQ==
-X-Google-Smtp-Source: ABdhPJwllR6kKvpNlj5U5ToaaUpZ/6dIW7JrJ1q8wXwbwU6yDnrnrQ4MzKOwoZKQo+WbuWg/9TAoaw==
-X-Received: by 2002:a05:6638:1495:: with SMTP id j21mr3018281jak.136.1595283790071;
-        Mon, 20 Jul 2020 15:23:10 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b14sm9767511ilg.86.2020.07.20.15.23.08
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=h/iiGE/hMDHwo1jMRtAjhSPPyBiqm3USAufgg0bvzlA=;
+        b=U+jeYyXcYyfup9S0UCJpX5FU4alJxNYoZ6niADyGMyqPMIEYMu6P1D2Ao4sdIOv6+h
+         ms/ynlQLMtGtG1MekoBxVT6vLnSp1bqH0NDWdITOm6vxoQT4DSSEjnzWUKEdbaWAvw56
+         WrbKsYPRdUTn0TdYWTD5L8Vv6XK1x0zWyHhmdfiQXFsKNMMNFPp7crZc/e5ZlI+8T0sF
+         QgquotAsiaN62wqAdoKZZJzG/pvuyuayHl9dP/tYN+g5U8Y5YWuEn2JUXHhyfj/my2Q3
+         DqVLdV6xcds04rwLzqV3e1U71qZpZwVijMWzBNXDqyLR65YAtaen6OWqIKPX43Ku/k6/
+         CIwA==
+X-Gm-Message-State: AOAM530Npf+QLPbz12QBnPvh1NJHOXXxjfzN6a3Kzir93hbtF3ZGU2WX
+        4n1Dh2W75XT9ueFXguBQmEBDlQ==
+X-Google-Smtp-Source: ABdhPJxOqcn9joaabrwtIlsBoWejqjHNRkfkhbpEwfhZXef4rnzEUWmKjXGUKtqWnxuyo80g7c7+Nw==
+X-Received: by 2002:a5d:6a8b:: with SMTP id s11mr2034828wru.222.1595283845126;
+        Mon, 20 Jul 2020 15:24:05 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id c194sm1129294wme.8.2020.07.20.15.24.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 15:23:09 -0700 (PDT)
-Received: (nullmailer pid 3057835 invoked by uid 1000);
-        Mon, 20 Jul 2020 22:23:07 -0000
-Date:   Mon, 20 Jul 2020 16:23:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-i3c@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Conor Culhane <conor.culhane@silvaco.com>,
-        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>
-Subject: Re: [PATCH 1/4] dt-bindings: Add vendor prefix for Silvaco
-Message-ID: <20200720222307.GA3056749@bogus>
-References: <20200709080159.2178-1-miquel.raynal@bootlin.com>
+        Mon, 20 Jul 2020 15:24:04 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH] arm64: dts: meson: misc fixups for w400 dtsi
+In-Reply-To: <20200718052950.3707-1-christianshewitt@gmail.com>
+References: <20200718052950.3707-1-christianshewitt@gmail.com>
+Date:   Mon, 20 Jul 2020 15:24:01 -0700
+Message-ID: <7hd04pakqm.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200709080159.2178-1-miquel.raynal@bootlin.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 10:01:56AM +0200, Miquel Raynal wrote:
-> Silvaco, Inc. is an EDA provider of software tools used for process
-> and device development and for analog/mixed-signal, power IC and
-> memory design [1].
-> 
-> [1] https://www.silvaco.com/company/profile/profile.html
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 9aeab66be85f..5933966db783 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -1004,6 +1004,8 @@ patternProperties:
->      description: Shenzhen Sunchip Technology Co., Ltd
->    "^SUNW,.*":
->      description: Sun Microsystems, Inc
-> +  "^svc,.*":
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
-Why not 'silvaco'?
+> Current devices using the W400 dtsi show mmc tuning errors:
+>
+> [12483.917391] mmc0: tuning execution failed: -5
+> [30535.551221] mmc0: tuning execution failed: -5
+> [35359.953671] mmc0: tuning execution failed: -5
+> [35561.875332] mmc0: tuning execution failed: -5
+> [61733.348709] mmc0: tuning execution failed: -5
+>
+> Removing "sd-uhs-sdr50" from the SDIO node prevents this. We also add
+> keep-power-in-suspend to the SDIO node and fix an indentation.
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 
-> +    description: Silvaco, Inc.
->    "^swir,.*":
->      description: Sierra Wireless
->    "^syna,.*":
-> -- 
-> 2.20.1
-> 
+This could use a Fixes tag so it can be backported to stable
+
+Kevin
