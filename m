@@ -2,81 +2,127 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAE6C433F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7B4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E97822BF3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595226991;
-	bh=G8QKIIPp5D4K8kA/4r2aQzDTcpoqiOLy2Z0bz9pLapc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QQlHwrkd6I7BDxv0xiwO/cx6t41+lxN++1flcWHbbKN0nUdGSPXdE2Dpu+HCHIWVt
-	 taavmRkZ8/Ryot05jBVcA/K09ZtIcjkBjCcaDLcmJKH1DoW0aeN3nQzZ/6gLuDZxiq
-	 I9r5kI97izS3xccKpOyzSM8PtGNFh3eYz1iY1LIw=
+	by mail.kernel.org (Postfix) with ESMTP id 04FDD22CB2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgGTGga (ORCPT
+        id S1726989AbgGTG5p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgGTGg3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:36:29 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C195920709;
-        Mon, 20 Jul 2020 06:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595226988;
-        bh=G8QKIIPp5D4K8kA/4r2aQzDTcpoqiOLy2Z0bz9pLapc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nBFRWN4wCbNdNNdFP/mf6w4VUKv5HBcMFBn5nomZjwH+fumLcehyvFrJ6jH9JQvHR
-         JxFsvy4D00XgAwF0QS/XApUT+dv74ujDXrAukRJo3IeT3yyY2TpWTHco5oBmJ9MuDz
-         1+QKf3jQpAbOuSmZbWpaisjBmBLnXMbycc7bj4oQ=
-Date:   Mon, 20 Jul 2020 12:06:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 12/20] dt-bindings: dma: renesas,usb-dmac: Add binding
- for r8a774e1
-Message-ID: <20200720063625.GG12965@vkoul-mobl>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 20 Jul 2020 02:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgGTG5p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 02:57:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28945C0619D2
+        for <devicetree@vger.kernel.org>; Sun, 19 Jul 2020 23:57:45 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jxPjv-00026Q-NH; Mon, 20 Jul 2020 08:57:31 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jxPjv-0000j4-1T; Mon, 20 Jul 2020 08:57:31 +0200
+Date:   Mon, 20 Jul 2020 08:57:32 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     robh+dt@kernel.org, kernel@pengutronix.de, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH for v5.9] ARM: dts: efm32: Replace HTTP links with HTTPS
+ ones
+Message-ID: <20200720065732.pudnfzn4eyu33eig@pengutronix.de>
+References: <20200719095958.57555-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="igplwgecwcj5vega"
 Content-Disposition: inline
-In-Reply-To: <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200719095958.57555-1-grandmaster@al2klimov.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16-07-20, 18:18, Lad Prabhakar wrote:
-> Add binding for R8A774E1 SoC (RZ/G2H).
 
-Applied, thanks
+--igplwgecwcj5vega
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-~Vinod
+Hello,
+
+On Sun, Jul 19, 2020 at 11:59:58AM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>=20
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+
+I would have described this in prose instead. (Something like: Replace
+http: URL scheme with https:. As of today the old and new URLs result in
+the same content to be accessed.)
+
+Other than that:
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+> diff --git a/arch/arm/mach-efm32/Makefile.boot b/arch/arm/mach-efm32/Make=
+file.boot
+> index cec195d4fcba..5dde7328a7a9 100644
+> --- a/arch/arm/mach-efm32/Makefile.boot
+> +++ b/arch/arm/mach-efm32/Makefile.boot
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  # Empty file waiting for deletion once Makefile.boot isn't needed any mo=
+re.
+>  # Patch waits for application at
+> -# http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=3D7889/=
+1 .
+> +# https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=3D7889=
+/1 .
+
+:-|
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--igplwgecwcj5vega
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8VQFkACgkQwfwUeK3K
+7AmsZQf/RhLZJkQ45VLwZJmaOR12/ZsWU29kLWYvQv3peDjl6mF7vNG3TjaZwD4G
+DN8R92udQ+T/TRm2PnJ6+p8O1/aQNN7373Bh8x5k/MOTHqDFrxy9gKeTsMRTBXK4
+oiaZh0r91vB7DEHVkr8UuIFsme91ItVtWhKuTy/C06N4OyzX/yKIFKbcscMq/xQO
+OpzmvbhS8RDCJBo9rPG0V1cRzR9FVQVIG8aty/q0n0bFtYJ+ZhdiKsvS6mKMlsCA
+tUd9JqW04TMzADHQmolWJOm35YkzaDG6RHigNP7vYjxJW74S2iy5bkgXcgk/SVUc
+ApdMaoGFBMGrfOhs2coGjxaeu7foGA==
+=NbK5
+-----END PGP SIGNATURE-----
+
+--igplwgecwcj5vega--
