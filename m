@@ -2,44 +2,45 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42907C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93953C433EA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C492080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FD322B4D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 08:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="Ri/H0muT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="BjA6CNnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgGTIyZ (ORCPT
+        id S1727113AbgGTIy1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 04:54:25 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.216]:9918 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgGTIyZ (ORCPT
+        Mon, 20 Jul 2020 04:54:27 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:26062 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgGTIyZ (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 04:54:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1595235259;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1595235262;
         s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=xqJHKDQXHXSYGgAHeCQ5gU1+hglEAoSnM1eZwD+RaOM=;
-        b=Ri/H0muT/7+8aiGTgvzmbYgTtAzFSWBFF+yBq7mwijcs1pK0G0j0xIy+Roi1IjU5Yu
-        aP0k/fbSOksXGbIqtRI660Kn3tMyZkIEL39xqB8MnhnHM0bJilJcuXzJotCd/wT0Kfmn
-        7VYUvqkZhAIx6ObzZayhd6lnEtmxUFfffaBI/b16XAO8rqyFJK37Myv9qvkgI1a6+OfL
-        UAFFq4hFN6e31609RcYGrHwfpNvLr9HWymMV9rwfdzSTBI7aLTqqeQp35XC7YmD0H2SY
-        N0AZ1APcGZ4PLHHWfTMg10DsgrNn08raEK2755mDo9hXjcqn+QvWXz+HMagyTeRq541Y
-        0QCQ==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=NInr2D0dwMPC+kO5dWmv8Z6xjbIzLaZOm/bqLcHIy1A=;
+        b=BjA6CNnUVanH4JMoZAR0rQT5zadD1PAivZEAvsE8q8HF9YAVbxv7pLmalsuo6ANI5U
+        E96DeiurTb98z3hqfunBj2An1Wym3GPkz2q2tHywlVmo3DQ8qyb6ysTCMU+jAGpdSsWv
+        rnxH1ouoPsPHwVf66yffmPTDFz4FMVjXdagmqoIbbpPQZe8C9ghTAxdHa4yrTkgYTg7t
+        JAaTLMkS02zxnumP1bsY9UDpxxFakJcfHSZuF0d70ST9bMgcz0lH1wWs5lVkMDc+W6gK
+        gygtbQhkN7DLVYAcvOymLCVfUHt8NAjr5NXYDxm4PEn2JAZbZdCNbhALZb3rSaXEt8i3
+        verQ==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4G6NeHYC"
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id Y0939ew6K8sHdgC
+        with ESMTPSA id Y0939ew6K8sKdgI
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Mon, 20 Jul 2020 10:54:17 +0200 (CEST)
+        Mon, 20 Jul 2020 10:54:20 +0200 (CEST)
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -47,10 +48,12 @@ Cc:     Stephan Gerhold <stephan@gerhold.net>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         ~postmarketos/upstreaming@lists.sr.ht
-Subject: [PATCH 00/10] Convert MSM8916 boards to use labels, reduce duplication
-Date:   Mon, 20 Jul 2020 10:53:56 +0200
-Message-Id: <20200720085406.6716-1-stephan@gerhold.net>
+Subject: [PATCH 06/10] arm64: dts: qcom: pm8916: Add resin node
+Date:   Mon, 20 Jul 2020 10:54:02 +0200
+Message-Id: <20200720085406.6716-7-stephan@gerhold.net>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200720085406.6716-1-stephan@gerhold.net>
+References: <20200720085406.6716-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -58,40 +61,150 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Board device trees for newer SoCs reference labels to override properties
-for components of the SoC. This patch series converts all MSM8916 boards to
-use the same style.
+Right now we define the entire pm8916 resin node separately in
+the board-specific device tree part, including the interrupt that
+belongs to PM8916.
 
-Additionally, in the second part of the series I attempt to reduce duplication
-within the MSM8916 board device trees a bit. If we keep copying a large number
-of properties to each and every board of a SoC then (in my opinion)
-it makes sense to consider if those can be shared in some include.
+As a feature of the PMIC it should be declared in pm8916.dtsi,
+disabled by default. Like all other optional components it can then
+by enabled and configured in the board-specific device tree part.
 
-This will make it easier to add new boards in the future.
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi     | 19 +++++--------------
+ .../boot/dts/qcom/msm8916-longcheer-l8150.dts | 18 +++++-------------
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 18 +++++-------------
+ arch/arm64/boot/dts/qcom/pm8916.dtsi          |  8 ++++++++
+ 4 files changed, 23 insertions(+), 40 deletions(-)
 
-Stephan Gerhold (10):
-  arm64: dts: qcom: apq8016-sbc: Remove properties that are already
-    default
-  arm64: dts: qcom: msm8916: Declare sound node in msm8916.dtsi
-  arm64: dts: qcom: apq8016-sbc: Define leds outside of soc node
-  arm64: dts: qcom: msm8916: Add more labels
-  arm64: dts: qcom: msm8916: Use labels in board device trees
-  arm64: dts: qcom: pm8916: Add resin node
-  arm64: dts: qcom: msm8916: Move PM8916-specific parts to
-    msm8916-pm8916.dtsi
-  arm64: dts: qcom: msm8916: Move more supplies to msm8916-pm8916.dtsi
-  arm64: dts: qcom: msm8916: Set default pinctrl for blsp1_uart1/2
-  arm64: dts: qcom: msm8916: Move common USB properties to msm8916.dtsi
-
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi     | 900 ++++++++----------
- .../boot/dts/qcom/msm8916-longcheer-l8150.dts | 108 +--
- arch/arm64/boot/dts/qcom/msm8916-mtp.dtsi     |  14 +-
- arch/arm64/boot/dts/qcom/msm8916-pm8916.dtsi  |  79 ++
- .../qcom/msm8916-samsung-a2015-common.dtsi    | 130 +--
- arch/arm64/boot/dts/qcom/msm8916.dtsi         |  99 +-
- arch/arm64/boot/dts/qcom/pm8916.dtsi          |   8 +
- 7 files changed, 625 insertions(+), 713 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8916-pm8916.dtsi
-
---
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 89cc53ddf6b5..0627ef9bd54a 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -323,6 +323,11 @@ &lpass {
+ 	status = "okay";
+ };
+ 
++&pm8916_resin {
++	status = "okay";
++	linux,code = <KEY_VOLUMEDOWN>;
++};
++
+ &pronto {
+ 	status = "okay";
+ };
+@@ -393,20 +398,6 @@ codec {
+ 	};
+ };
+ 
+-&spmi_bus {
+-	pm8916_0: pm8916@0 {
+-		pon@800 {
+-			resin {
+-				compatible = "qcom,pm8941-resin";
+-				interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+-				debounce = <15625>;
+-				bias-pull-up;
+-				linux,code = <KEY_VOLUMEDOWN>;
+-			};
+-		};
+-	};
+-};
+-
+ &usb {
+ 	status = "okay";
+ 	extcon = <&usb_id>, <&usb_id>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+index 68d89a8acbcf..90ce0f96eda4 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+@@ -61,6 +61,11 @@ &blsp1_uart2 {
+ 	pinctrl-1 = <&blsp1_uart2_sleep>;
+ };
+ 
++&pm8916_resin {
++	status = "okay";
++	linux,code = <KEY_VOLUMEDOWN>;
++};
++
+ &pronto {
+ 	status = "okay";
+ };
+@@ -89,19 +94,6 @@ &sdhc_2 {
+ 	non-removable;
+ };
+ 
+-&spmi_bus {
+-	pm8916@0 {
+-		pon@800 {
+-			volume-down {
+-				compatible = "qcom,pm8941-resin";
+-				interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+-				bias-pull-up;
+-				linux,code = <KEY_VOLUMEDOWN>;
+-			};
+-		};
+-	};
+-};
+-
+ &usb {
+ 	status = "okay";
+ 	dr_mode = "peripheral";
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+index 89b1418eeeb4..c6eb0b0cd849 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -138,6 +138,11 @@ &dsi_phy0 {
+ 	vddio-supply = <&pm8916_l6>;
+ };
+ 
++&pm8916_resin {
++	status = "okay";
++	linux,code = <KEY_VOLUMEDOWN>;
++};
++
+ &pronto {
+ 	status = "okay";
+ };
+@@ -166,19 +171,6 @@ &sdhc_2 {
+ 	cd-gpios = <&msmgpio 38 GPIO_ACTIVE_LOW>;
+ };
+ 
+-&spmi_bus {
+-	pm8916@0 {
+-		pon@800 {
+-			volume-down {
+-				compatible = "qcom,pm8941-resin";
+-				interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+-				bias-pull-up;
+-				linux,code = <KEY_VOLUMEDOWN>;
+-			};
+-		};
+-	};
+-};
+-
+ &usb {
+ 	status = "okay";
+ 	extcon = <&muic>, <&muic>;
+diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+index 0bcdf0471107..c3f62090aff7 100644
+--- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
+@@ -33,6 +33,14 @@ pwrkey {
+ 				linux,code = <KEY_POWER>;
+ 			};
+ 
++			pm8916_resin: resin {
++				compatible = "qcom,pm8941-resin";
++				interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
++				debounce = <15625>;
++				bias-pull-up;
++				status = "disabled";
++			};
++
+ 			watchdog {
+ 				compatible = "qcom,pm8916-wdt";
+ 				interrupts = <0x0 0x8 6 IRQ_TYPE_EDGE_RISING>;
+-- 
 2.27.0
+
