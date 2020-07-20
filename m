@@ -2,141 +2,166 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E62C433E8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E917CC433F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 228E422CB1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259259;
-	bh=c/hjOojMTg3TNs8kx9IKYYH+HETNBY0OjLn1K7YlN4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CG5/sSYPwYyS7j/A4ytPn5Sw3soo8DKTfXc3+h/n/2L8Blok9jLcUp9wU7hdnuQIT
-	 kru0JyoDzO1Eg/uJtIBU6XnYdiCS5I3t31QTVirYU2sisH4XBUBJyxysehdl1xGkaq
-	 Ec91DzBAMJZVaQ+YDBcGh1PNfAk5CzPUYr3pBkZM=
+	by mail.kernel.org (Postfix) with ESMTP id C329522CF6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nYUDInkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgGTPeS (ORCPT
+        id S1729880AbgGTPlY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54266 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:41:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:12601 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgGTPeQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:34:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729190AbgGTPlV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:41:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595259680; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=mgZPX/ORqnPLBZAJTpnFrkYtIjx2TWoOg4J5PqIxq8Y=; b=nYUDInkC95SuoNlbFL0F6RgtkEnYPNgkuM9FhqKJXkLd1tFeVGwJHoTr/RC1paoxH944W4y1
+ 7IkTuL5eFvkBgKEUJu+QR5FJoRUpYZO4k7HsONPQk4GyJTYhvv/tiYaHef1GGD7iZzCcK+KJ
+ FVmViFeo97dJATiznDu5LrFUkXE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f15bb1603c8596cdb481f19 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 20 Jul 2020 15:41:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 18A44C433CB; Mon, 20 Jul 2020 15:41:06 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE98222C9D;
-        Mon, 20 Jul 2020 15:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259255;
-        bh=c/hjOojMTg3TNs8kx9IKYYH+HETNBY0OjLn1K7YlN4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jL3QpF7M/yHNP/7k2IedRR+xDd57JWgIlNQuItFwKeKF0i6B4XZhno5DnLE6v3yS8
-         r8S1AYm/l1voF1muUjyl4sOydD9FZLyHmQ1ZrOTemwhdAv5cp2AbSKf0o6qpngdVb/
-         ZGoa7A2NbW7NYzpRLuXG8hvtITFqu8jI+E2Uuw0A=
-Date:   Mon, 20 Jul 2020 17:34:00 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        balajib@linux.microsoft.com, bauerman@linux.ibm.com,
-        robh@kernel.org
-Subject: Re: [PATCH V3 6/6] Add the property used for carrying forward the
- IMA measurement logs and update the code to use the defined property string.
-Message-ID: <20200720153400.GC1481119@kroah.com>
-References: <20200720152342.337990-1-prsriva@linux.microsoft.com>
- <20200720152342.337990-7-prsriva@linux.microsoft.com>
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C7775C433C6;
+        Mon, 20 Jul 2020 15:40:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C7775C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Eric Anholt <eric@anholt.net>, Joerg Roedel <joro@8bytes.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v10 00/13] iommu/arm-smmu: Add Adreno SMMU specific implementation
+Date:   Mon, 20 Jul 2020 09:40:34 -0600
+Message-Id: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720152342.337990-7-prsriva@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 08:23:42AM -0700, Prakhar Srivastava wrote:
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+(reworded the summary to reflect ongoing changes in the code)
 
-Again, subject line, no changelog :(
+This series adds an Adreno SMMU implementation to arm-smmu to allow GPU hardware
+pagetable switching.
 
-> ---
->  arch/arm64/kernel/machine_kexec_file.c | 19 ++++++++++---------
->  arch/powerpc/kexec/ima.c               |  8 +++++---
->  2 files changed, 15 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index 066670c43626..59058901e641 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -24,14 +24,15 @@
->  #include <asm/byteorder.h>
->  
->  /* relevant device tree properties */
-> -#define FDT_PROP_KEXEC_ELFHDR	"linux,elfcorehdr"
-> -#define FDT_PROP_MEM_RANGE	"linux,usable-memory-range"
-> -#define FDT_PROP_INITRD_START	"linux,initrd-start"
-> -#define FDT_PROP_INITRD_END	"linux,initrd-end"
-> -#define FDT_PROP_BOOTARGS	"bootargs"
-> -#define FDT_PROP_KASLR_SEED	"kaslr-seed"
-> -#define FDT_PROP_RNG_SEED	"rng-seed"
-> -#define RNG_SEED_SIZE		128
-> +#define FDT_PROP_KEXEC_ELFHDR		"linux,elfcorehdr"
-> +#define FDT_PROP_MEM_RANGE		"linux,usable-memory-range"
-> +#define FDT_PROP_INITRD_START		"linux,initrd-start"
-> +#define FDT_PROP_INITRD_END		"linux,initrd-end"
-> +#define FDT_PROP_BOOTARGS		"bootargs"
-> +#define FDT_PROP_KASLR_SEED		"kaslr-seed"
-> +#define FDT_PROP_RNG_SEED		"rng-seed"
-> +#define FDT_PROP_IMA_KEXEC_BUFFER	"linux,ima-kexec-buffer"
-> +#define RNG_SEED_SIZE			128
+The Adreno GPU has built in capabilities to switch the TTBR0 pagetable during
+runtime to allow each individual instance or application to have its own
+pagetable.  In order to take advantage of the HW capabilities there are certain
+requirements needed of the SMMU hardware.
 
-Why did you reformat all of these?
+This series adds support for an Adreno specific arm-smmu implementation. The new
+implementation 1) ensures that the GPU domain is always assigned context bank 0,
+2) enables split pagetable support (TTBR1) so that the instance specific
+pagetable can be swapped while the global memory remains in place and 3) shares
+the current pagetable configuration with the GPU driver to allow it to create
+its own io-pgtable instances.
 
->  
->  const struct kexec_file_ops * const kexec_file_loaders[] = {
->  	&kexec_image_ops,
-> @@ -157,7 +158,7 @@ static int setup_dtb(struct kimage *image,
->  	if (image->arch.ima_buffer_size > 0) {
->  
->  		ret = fdt_appendprop_addrrange(dtb, 0, off,
-> -				"linux,ima-kexec-buffer",
-> +				FDT_PROP_IMA_KEXEC_BUFFER,
->  				image->arch.ima_buffer_addr,
->  				image->arch.ima_buffer_size);
->  		if (ret)
-> diff --git a/arch/powerpc/kexec/ima.c b/arch/powerpc/kexec/ima.c
-> index a9e4e9f04273..7d6c43b2eacb 100644
-> --- a/arch/powerpc/kexec/ima.c
-> +++ b/arch/powerpc/kexec/ima.c
-> @@ -12,6 +12,8 @@
->  #include <linux/memblock.h>
->  #include <linux/libfdt.h>
->  
-> +#define FDT_PROP_IMA_KEXEC_BUFFER	"linux,ima-kexec-buffer"
-> +
+The series then adds the drm/msm code to enable these features. For targets that
+support it allocate new pagetables using the io-pgtable configuration shared by
+the arm-smmu driver and swap them in during runtime.
 
-Why are you mixing arm64 and powerpc patches together that do not do the
-same thing???
+This version of the series merges the previous patchset(s) [1] and [2]
+with the following improvements:
 
-Shouldn't there be a common place for these strings and not spread out
-all over the kernel in random places?
+  - arm-smmu: add implementation hook to allocate context banks
+  - arm-smmu: Match the GPU domain by stream ID instead of compatible string
+  - arm-smmu: Make DOMAIN_ATTR_PGTABLE_CFG bi-directional. The leaf driver
+    queries the configuration to create a pagetable and then sends the newly
+    created configuration back to the smmu-driver to enable TTBR0
+  - drm/msm: Add context reference counting for submissions
+  - drm/msm: Use dummy functions to skip TLB operations on per-instance
+    pagetables
 
-thanks,
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045653.html
+[2] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045659.html
 
-greg k-h
+
+Jordan Crouse (13):
+  iommu/arm-smmu: Pass io-pgtable config to implementation specific
+    function
+  iommu/arm-smmu: Add support for split pagetables
+  iommu/arm-smmu: Add implementation hooks to configure contexts
+  iommu/arm-smmu-qcom: Add implementation for the adreno GPU SMMU
+  iommu: Add a domain attribute to get/set a pagetable configuration
+  iommu/arm-smmu-qcom: Get and set the pagetable config for split
+    pagetables
+  dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+  drm/msm: Add a context pointer to the submitqueue
+  drm/msm: Set the global virtual address range from the IOMMU domain
+  drm/msm: Add support to create a local pagetable
+  drm/msm: Add support for private address space instances
+  drm/msm/a6xx: Add support for per-instance pagetables
+  arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |   4 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   2 +-
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c         |  12 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c         |  58 ++++-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h         |   1 +
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  18 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h       |   3 +-
+ drivers/gpu/drm/msm/msm_drv.c                 |  16 +-
+ drivers/gpu/drm/msm/msm_drv.h                 |  13 ++
+ drivers/gpu/drm/msm/msm_gem.h                 |   1 +
+ drivers/gpu/drm/msm/msm_gem_submit.c          |   8 +-
+ drivers/gpu/drm/msm/msm_gem_vma.c             |   9 +
+ drivers/gpu/drm/msm/msm_gpu.c                 |  26 ++-
+ drivers/gpu/drm/msm/msm_gpu.h                 |  12 +-
+ drivers/gpu/drm/msm/msm_gpummu.c              |   2 +-
+ drivers/gpu/drm/msm/msm_iommu.c               | 198 +++++++++++++++++-
+ drivers/gpu/drm/msm/msm_mmu.h                 |  16 +-
+ drivers/gpu/drm/msm/msm_ringbuffer.h          |   1 +
+ drivers/gpu/drm/msm/msm_submitqueue.c         |   8 +-
+ drivers/iommu/arm-smmu-impl.c                 |   6 +-
+ drivers/iommu/arm-smmu-qcom.c                 | 130 +++++++++++-
+ drivers/iommu/arm-smmu.c                      | 108 +++++-----
+ drivers/iommu/arm-smmu.h                      |  65 +++++-
+ include/linux/iommu.h                         |   1 +
+ 24 files changed, 619 insertions(+), 99 deletions(-)
+
+-- 
+2.25.1
+
