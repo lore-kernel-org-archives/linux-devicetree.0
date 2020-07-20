@@ -2,137 +2,95 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4979C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE35C433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 17:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A277A207DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 16:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF4D20729
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 17:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="A0z6xpUw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oRB58usa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgGTQzq (ORCPT
+        id S1729270AbgGTRBa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 12:55:46 -0400
-Received: from mail-am6eur05on2081.outbound.protection.outlook.com ([40.107.22.81]:27233
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728894AbgGTQzp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 12:55:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eu5AZXhy8CiOuGHY5CXUAj4hQto3FxHz0KZQYHkExg8Xha6GnZQv22FuAP+kai5U6xFto/P6hakYZK8TViYUbBLFyhCrq7O2zgFTcsYWm/E+Z6cAgCh9SAmnkdnbTzev+oADnm2q3XNyQvIiczfboAGCgo4OH+zLTM0MKbTUrgsCOjYyD3jD5C5CRTtatMhO28SwPd25LRhYuCfrj0hsZO/iImW/dlDNvfO98GLnIXyUvhv+CimCAZd2iJu0DZmSa1S6y+Ks/4e99cDa/gZHm+mzTE5QdVzOu3z6VczIsJQeXcQbmtSMlsjhz6fPwmwaK3C3iiQPnsBP7M5g6jEahw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DelM3/pjuO4Si8rqX3dy5uh5+5XXUCQdbUflbvJ+07A=;
- b=TGbrGADzI9O6HqMJ84ks5mp/qxdBdJjhuiUhpgBJKM+st6Ruh1CR5AYlQIoFkU+dGLkuKxEkVgAp0sJX25mm0i6KjOhOOTmMLZvQI+qA1+g/9bL1MnvCnhS7P2+j0GJMPQvzTeUKfzRTHV+/eUct3WRmGu6dw3FoV7JYBEYXOS+8SLx/fOxLTtKDQR2+VDvYP11VxD8NC2hfuLlanDp7cOWkbf7gtj8j/FfQWOOSzeB06ROKBlDUh8oduZ0l7Gm20i91eJG1Cn+4Ii712HDmCZDO9Oi41RA1zBNZWNjg9DrGICntsilZq7yyCHlVCU81czAK4zt0MGCaEPWGGoEuxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DelM3/pjuO4Si8rqX3dy5uh5+5XXUCQdbUflbvJ+07A=;
- b=A0z6xpUwxI/O30fZV06MWrUW/gA1TdNVQdkvAXoMzIysR9elPYjcZE1e4DQmegyaDhqEZXMTrbjcnxJ5Dwtk8f13EmwgeTNI6LveJGVM0aVTwQosD6ApPy4LRRiJvBjHRL3Ih6qOVYrPIz0rMKLOcfe14VyNQquPQpjNhPk1Bnk=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR0402MB2736.eurprd04.prod.outlook.com
- (2603:10a6:800:b1::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.24; Mon, 20 Jul
- 2020 16:55:41 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3195.024; Mon, 20 Jul 2020
- 16:55:41 +0000
-Date:   Mon, 20 Jul 2020 19:55:37 +0300
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        devicetree@vger.kernel.org, lukas@mntmn.com,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>, agx@sigxcpu.org
-Subject: Re: [PATCH v6 4/4] dt-bindings: display: imx: add bindings for DCSS
-Message-ID: <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
-References: <20200717144132.2206-1-laurentiu.palcu@oss.nxp.com>
- <20200717144132.2206-5-laurentiu.palcu@oss.nxp.com>
- <20200720164927.GA2650420@bogus>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720164927.GA2650420@bogus>
-User-Agent: NeoMutt/20171215
-X-ClientProxiedBy: AM3PR05CA0089.eurprd05.prod.outlook.com
- (2603:10a6:207:1::15) To VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27)
+        Mon, 20 Jul 2020 13:01:30 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8966 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbgGTRB3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 13:01:29 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f15cddb0000>; Mon, 20 Jul 2020 10:01:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 20 Jul 2020 10:01:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 20 Jul 2020 10:01:27 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
+ 2020 17:01:27 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 20 Jul 2020 17:01:27 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f15cdc9000a>; Mon, 20 Jul 2020 10:01:03 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <luca@lucaceresoli.net>, <leonl@leopardimaging.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/3] media: i2c: imx274: Fix Y_OUT_SIZE register setting
+Date:   Mon, 20 Jul 2020 10:01:32 -0700
+Message-ID: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141 (83.217.231.2) by AM3PR05CA0089.eurprd05.prod.outlook.com (2603:10a6:207:1::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.19 via Frontend Transport; Mon, 20 Jul 2020 16:55:39 +0000
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 31f90c2d-f735-460c-b71f-08d82ccdbc16
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB2736:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB273677C3461D01EB1B85C7F3BE7B0@VI1PR0402MB2736.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ms6qWBxE5AiqsENu+F64WyJdJdV1bzMv3LnjER0uC21jBjNP7yRg0w6sR46GMVK0EhUZnj9CoHbu2f2at7d+cu6XS3dlAmP5UK4yW9TXtm/jD0ibliv0EKOjOk+wAVKwFEaTMMYZo8myB5b1fhxBztnfD9hrbGZqyT2zOPfQBuI0UFAaMk2mvGVy24raivJ2u8nlatzMGwTYw6/0QnjvVNzvXdhu26tB9rQ1NqMF1UmrfnEhPu3t+B2tnhsaP+UF31kpaxY/k68qPMc6ZN0JhtfehdB+qfsq64ARGPObG/NB9gxpCURN7bhHhgei9vyqjEIU4Q4bGT+damIkZ9tU5A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(66476007)(66556008)(8676002)(44832011)(2906002)(6496006)(478600001)(9686003)(4326008)(186003)(8936002)(16526019)(26005)(66946007)(52116002)(55016002)(6916009)(5660300002)(4744005)(1076003)(33716001)(3716004)(7416002)(316002)(956004)(86362001)(54906003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: gvfsB/lIxavmnB19EYLxajQqutyxGE1Aa+egv3RmqnlDd9GQEQ2jkQmaioqr3zfz8Te0UocIf2ghGva06XdiHjVU0SKItmz9WIkYEErg/P/EaDRlo6c0biXgJy+SlSGG7fINzot+FpdSD2qHuKAmv0ubFQmFsvAdwh39NwDQjHjbYKkd73VAfZ5eybowATsz0YeS42CKcIn2RUizcrulrhmMP/6Q1sNKHwdGXKdnSQLNycQcPXxMllPeH1fK8dRA6E2EsSWy/s+dwhinKWGydExXb1JuqaDcSj7b+XnK8NMTHJ9dNd2G0AdasrS/a2BCFU/NKxprJlLHBaPLQNR1q4C746YBOaonwO/73m5nePrcgOMdX1rvhbp/kV+o8hXuC8FFX10qyap3YRzjEXSWeBpFzCmmmqEYBh4yMfE3FNwM47Yxl+7vtcyzN2PdMATueeGDy80kx8RJty8ByTtpUG9Zf+8/vnVIaUThmkmpQk0=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31f90c2d-f735-460c-b71f-08d82ccdbc16
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2020 16:55:41.0866
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KgoDyZJYNbodAx6FUmy2gKlK++2PEZTRFiwZdhE5I9WiughmWxId32xMdtf+Q1h1QLTqguiHssGHzJsGf0ctnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2736
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595264475; bh=DLvQ6chRzbjeKicuQdxuqVcpH3d1W/1R1Kay/NtRj70=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=oRB58usaUszFh373ZNkh1jIAkt/msLEvJFPqta47sM7I+lUbqmv7qO9AiVuctVxHg
+         TfZFPQVnT0s9D4OpJckVHs1MUr1gUaFjMQ0o42MnfpdISZnqRQUWow2jxjSpHzHbIC
+         +QSLg+/amRB4Dlmw6hNGllVlGpQPmHyIsGbga4x2mMTpmCiBTLNwbDR6ZfTZ/ZuTCX
+         I8JmDslw/VkgE4WDfwh0FhcxY9m/WbxsFAavGuNcvy/m4E2XpU1qDwD10SnRavhq01
+         Dxv8uS3cuPyG1rJ39xhlgGOBPYo+c0ZDWk3h1PvlMCfEMrP96UQXdFb1mo83OCWMlY
+         a4sgcoB+l0J3A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+As per Sony IMX274 Y_OUT_SIZE should be the height of effective
+image output from the sensor which are the actual total lines
+sent over MIPI CSI to receiver.
 
-On Mon, Jul 20, 2020 at 10:49:27AM -0600, Rob Herring wrote:
-> On Fri, 17 Jul 2020 17:41:29 +0300, Laurentiu Palcu wrote:
-> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > 
-> > Add bindings for iMX8MQ Display Controller Subsystem.
-> > 
-> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > ---
-> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
-> >  1 file changed, 104 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> > 
-> 
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
+So, Y_OUT_SIZE should be same as crop height and this patch fixes it.
 
-Well, I kind of did exactly that... in the cover letter. I stated
-clearly why this patch needs another look... :/
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/media/i2c/imx274.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-laurentiu
+diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
+index e6aa9f3..55869ff 100644
+--- a/drivers/media/i2c/imx274.c
++++ b/drivers/media/i2c/imx274.c
+@@ -1163,7 +1163,7 @@ static int imx274_apply_trimming(struct stimx274 *imx274)
+ 		(-imx274->crop.top / 2) : (imx274->crop.top / 2);
+ 	v_cut = (IMX274_MAX_HEIGHT - imx274->crop.height) / 2;
+ 	write_v_size = imx274->crop.height + 22;
+-	y_out_size   = imx274->crop.height + 14;
++	y_out_size   = imx274->crop.height;
+ 
+ 	err = imx274_write_mbreg(imx274, IMX274_HMAX_REG_LSB, hmax, 2);
+ 	if (!err)
+-- 
+2.7.4
+
