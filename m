@@ -2,64 +2,136 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34FFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557EEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7ACA22B4E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5FA22482
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dhNCD1DM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgGTPLy (ORCPT
+        id S1726492AbgGTPXy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:11:54 -0400
-Received: from out28-123.mail.aliyun.com ([115.124.28.123]:46705 "EHLO
-        out28-123.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgGTPLy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 11:11:54 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3714854|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0808012-0.000171859-0.919027;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I4tlHnB_1595257890;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I4tlHnB_1595257890)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Mon, 20 Jul 2020 23:11:44 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     daniel.lezcano@linaro.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v9 0/2] Add support for the OST in Ingenic X1000.
-Date:   Mon, 20 Jul 2020 23:11:04 +0800
-Message-Id: <20200720151106.112807-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 20 Jul 2020 11:23:54 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47582 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGTPXy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 11:23:54 -0400
+Received: from prsriva-linux.hsd1.wa.comcast.net (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E4CDC20B4909;
+        Mon, 20 Jul 2020 08:23:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E4CDC20B4909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595258633;
+        bh=px+LpIYdzoDCqRn/AtnTcyp6tay3vEYvhWXD+wh+zDI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dhNCD1DMzrmLzQURopWP8dGFqQ74moJD0UypJyZSvQJB13lKSdn8RoZphRa7/2bch
+         6tRfEml1w8K7lxp4M+B5ofn8EhJYgMVBOB30TuK5XLg44747pVSBxtn4IGxH5foACW
+         +UwWQC7BBVE6zlqsk8SeNpYh0EIfK/4dB+WNjY3A=
+From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
+To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, robh+dt@kernel.org,
+        frowand.list@gmail.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, vincenzo.frascino@arm.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
+        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
+        tao.li@vivo.com, christophe.leroy@c-s.fr,
+        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
+        prsriva@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        balajib@linux.microsoft.com, bauerman@linux.ibm.com,
+        robh@kernel.org
+Subject: [PATCH V3 0/6] Add support to carry forward the IMA measurement logs
+Date:   Mon, 20 Jul 2020 08:23:36 -0700
+Message-Id: <20200720152342.337990-1-prsriva@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v8->v9:
-Fix warning while applying.
+Integrgity Measurement Architecture(IMA) during kexec(kexec file load)
+verifies the kernel signature and measures the signature of the kernel.
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: timer: Add Ingenic X1000 OST bindings.
-  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+The signature in the measuremnt logs is used to verfiy the 
+authenticity of the kernel in the subsequent kexec'd session, however in
+the current implementation IMA measurement logs are not carried over thus
+remote attesation cannot verify the signature of the running kernel.
 
- .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
- drivers/clocksource/Kconfig                        |  12 +-
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/ingenic-sysost.c               | 539 +++++++++++++++++++++
- include/dt-bindings/clock/ingenic,sysost.h         |  12 +
- 5 files changed, 626 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
- create mode 100644 drivers/clocksource/ingenic-sysost.c
- create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+Adding support to arm64 to carry over the IMA measurement logs over kexec.
+
+Add a new chosen node entry linux,ima-kexec-buffer to hold the address and
+the size of the memory reserved to carry the IMA measurement log.
+Refactor existing powerpc code to be used by amr64 as well.  
+
+Changelog:
+
+v3:
+Breakup patches further into separate patches.
+  - Refactoring non architecture specific code out of powerpc
+  - Update powerpc related code to use fdt functions
+  - Update IMA buffer read related code to use of functions
+  - Add support to store the memory information of the IMA measurement logs 
+    to be carried forward.
+  - Update the property strings to align with documented nodes
+    https://github.com/devicetree-org/dt-schema/pull/46
+
+v2:
+  Break patches into separate patches.
+  - Powerpc related Refactoring
+  - Updating the docuemntation for chosen node
+  - Updating arm64 to support IMA buffer pass
+
+v1:
+  Refactoring carrying over IMA measuremnet logs over Kexec. This patch
+    moves the non-architecture specific code out of powerpc and adds to
+    security/ima.(Suggested by Thiago)
+  Add Documentation regarding the ima-kexec-buffer node in the chosen
+    node documentation
+
+v0:
+  Add a layer of abstraction to use the memory reserved by device tree
+    for ima buffer pass.
+  Add support for ima buffer pass using reserved memory for arm64 kexec.
+    Update the arch sepcific code path in kexec file load to store the
+    ima buffer in the reserved memory. The same reserved memory is read
+    on kexec or cold boot.
+
+Prakhar Srivastava (6):
+  Refactoring powerpc code to be made available to other architectures
+  Update remove_ima_buffer code to use functions from libfdt reducing
+    wrappers functions.
+  Update function do_get_kexec_buffer to use of_* functions, and
+    reducing wrapper functions.
+  Add support in arm64 to store the memory information of the IMA
+    measurement log in the kimage used for kexec.
+  Update the Kconfig to support carrying forward the IMA Measurement log
+    and and update the setup_dtb call to add the linux,ima-kexec-buffer
+    property to the DTB.
+  Add the property used for carrying forward the IMA measurement logs
+    and update the code to use the defined property string.
+
+ arch/arm64/Kconfig                     |   1 +
+ arch/arm64/include/asm/ima.h           |  17 ++++
+ arch/arm64/include/asm/kexec.h         |   3 +
+ arch/arm64/kernel/machine_kexec_file.c |  45 +++++++--
+ arch/powerpc/include/asm/ima.h         |   3 -
+ arch/powerpc/kexec/ima.c               | 123 ++++++-------------------
+ security/integrity/ima/ima_kexec.c     |  81 ++++++++++++++++
+ 7 files changed, 168 insertions(+), 105 deletions(-)
+ create mode 100644 arch/arm64/include/asm/ima.h
 
 -- 
-2.11.0
+2.25.1
 
