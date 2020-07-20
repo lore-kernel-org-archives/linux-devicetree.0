@@ -2,85 +2,240 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482B3C433F2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9208FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 299FF20674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C17420702
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="QGiHRvim"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QePSCcK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgGTHyz (ORCPT
+        id S1726389AbgGTH5B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
+        Mon, 20 Jul 2020 03:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgGTHyy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 03:54:54 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E96FCC0619D4
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:54:53 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 28B571FECA;
-        Mon, 20 Jul 2020 07:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595231092; bh=7kyPXpWNdFxYWiKuEJD7T9ohyci+Zzk/Mord055cn14=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QGiHRvimFif+6ui1w210g82PhjIKuMgNS5QzoufU1NHVbu2NXXuET4esRqDaDy3dD
-         eYnFJkQbyJXF0VXoT8gbhElokXEQ9FPF9tGb3/OQ96/lJy2ZV2Wx6GYXAecHFYyzCq
-         qTrvUMiO7Y09xv9rgoTdwz9hwaS4GmIe+VWaHd1M6+kj68DQh5TcH5ZJfLFIWX5qrO
-         82Hm+sk4J8cUbZYD+1R6IptCHlSHeSxpRL0QFWZjVP+udWJoTvCNjlUePtXXVWZ6Ni
-         TmZ5iQns4oVaa03gBJBV34MRUGw0h7wGl51NFEa7taJR0V5mbPlhmLGfmTg5+HDCEf
-         ZsKdB0FE5icdg==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] MIPS: Loongson64: DTS: Fix ISA range for RS780E PCH
-Date:   Mon, 20 Jul 2020 15:42:37 +0800
-Message-Id: <20200720074249.596364-5-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.28.0.rc1
-In-Reply-To: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
-References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
+        with ESMTP id S1726030AbgGTH5B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 03:57:01 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DFAC061794
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f2so16785957wrp.7
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:57:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
+        b=QePSCcK44UIZmJ+7DxfyU1stV2IDfXAudhLIu4v/IMxSh8Vo2pcJb27KTvxXFjLFM+
+         LP8YkYzbjZCsk/yVjQmLbGiUNJlrC+f5jBGzNKpOcuuVqIO/0ByNOIBahGxYYJACP2S3
+         YnVWBTQCVl4dIsL5SGS9oj+oida3cWbwMSWqgU9xEeWzzNRKWLxhQo8k1vngaN8p8Ai+
+         1qy3Rsc9bLjsIo4w14Ok0AXZZOc1A/mf+OFmTDYpjhvPP24VV0cMrhFHYssj1HWuQDY+
+         x2Q+4NL4p4WOe4sLAIhsnWrJwh397PCWL/9S69t6WBIJIQb6N9ZBW7XYcBznB/t8mVHQ
+         Cwwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XKQtYvYGtM0N/Ct4CJlyU+ij1I7Ll/jDSuKe/r+tpV8=;
+        b=pxtZbhghO8RBlfvrQMOkK04y0kLwDj+iqPXZQxm7Nnu+vnLux2k71b6v9iv1OFvBFC
+         Ut+9J2fLj6bJDlpVqyUzmgzmqUM4oHY8k5SRNlp3F7WS/pIKbq9KvT/0FCKIzYoh42KU
+         exUzMgqyz5skwlZkHYE0InoAYrTnvfpv5Wxb9tsJCpqeBzeI+w5tTnFb2/4dl6sX0Y/c
+         VqgXv4XQJwXwT8pWIfE+qs+PQeCWh+NUSipUVCIpAkT3aY06BJfvuI85q8pmxwjswzF8
+         UenZtFPamN2ovu+75eIojnHenz4Or5khL9oOVglcA0S2wI3/KyYRbFS3KPS3LcWjgAiK
+         8jwg==
+X-Gm-Message-State: AOAM531osHz0C7TrEMUaZxahRIsmBD33XWoZU9WRZHy4gVCZBBsNTiDB
+        GGOPoURNG9JAiZQKsAKSyD6uwA==
+X-Google-Smtp-Source: ABdhPJzE09wAmkmLbE0ZLSzAWTmKyq12TseLHzepWKU2Mh0MBwqpfoiX9ZxPvEJ9HRW9CPX/lIlSjA==
+X-Received: by 2002:a5d:61c8:: with SMTP id q8mr11044972wrv.160.1595231819481;
+        Mon, 20 Jul 2020 00:56:59 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
+        by smtp.googlemail.com with ESMTPSA id h11sm7223446wrb.68.2020.07.20.00.56.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Jul 2020 00:56:58 -0700 (PDT)
+Subject: Re: [PATCH v8 1/2] dt-bindings: timer: Add Ingenic X1000 OST
+ bindings.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, paul@crapouillou.net
+References: <20200719114247.56100-1-zhouyanjie@wanyeetech.com>
+ <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <53448115-2aa0-0aa0-03d8-a5993e8c84e9@linaro.org>
+Date:   Mon, 20 Jul 2020 09:56:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200719114247.56100-2-zhouyanjie@wanyeetech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ranges should express the actual physical address on bus.
+On 19/07/2020 13:42, 周琰杰 (Zhou Yanjie) wrote:
+> Add the OST bindings for the X10000 SoC from Ingenic.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-index d4c803d74036..99174b52dfb8 100644
---- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-@@ -25,7 +25,7 @@ isa {
- 			compatible = "isa";
- 			#address-cells = <2>;
- 			#size-cells = <1>;
--			ranges = <1 0 0 0 0x4000>;
-+			ranges = <1 0 0 0x18000000 0x4000>;
- 
- 			rtc0: rtc@70 {
- 				compatible = "motorola,mc146818";
+Description: [v8,1/2] dt-bindings: timer: Add Ingenic X1000 OST bindings.
+Applying: dt-bindings: timer: Add Ingenic X1000 OST bindings.
+.git/rebase-apply/patch:91: space before tab in indent.
+    		compatible = "ingenic,x1000-ost";
+.git/rebase-apply/patch:92: space before tab in indent.
+    		reg = <0x12000000 0x3c>;
+.git/rebase-apply/patch:94: space before tab in indent.
+    		#clock-cells = <1>;
+.git/rebase-apply/patch:96: space before tab in indent.
+    		clocks = <&cgu X1000_CLK_OST>;
+.git/rebase-apply/patch:97: space before tab in indent.
+    		clock-names = "ost";
+warning: squelched 3 whitespace errors
+warning: 8 lines add whitespace errors.
+
+
+> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> Notes:
+>     v1->v2:
+>     No change.
+>     
+>     v2->v3:
+>     Fix wrong parameters in "clocks".
+>     
+>     v3->v4:
+>     1.Rename "ingenic,ost.yaml" to "ingenic,sysost.yaml".
+>     2.Rename "ingenic,ost.h" to "ingenic,sysost.h".
+>     3.Modify the description in "ingenic,sysost.yaml".
+>     
+>     v4->v5:
+>     No change.
+>     
+>     v5->v6:
+>     1.Drop "oneOf" and the blank line.
+>     2.Add "additionalProperties: false".
+>     
+>     v6->v7:
+>     No change.
+>     
+>     v7->v8:
+>     No change.
+> 
+>  .../devicetree/bindings/timer/ingenic,sysost.yaml  | 63 ++++++++++++++++++++++
+>  include/dt-bindings/clock/ingenic,sysost.h         | 12 +++++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+>  create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+> new file mode 100644
+> index 000000000000..1dae2e538725
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/ingenic,sysost.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
+> +
+> +maintainers:
+> +  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> +
+> +description:
+> +  The SYSOST in an Ingenic SoC provides one 64bit timer for clocksource
+> +  and one or more 32bit timers for clockevent.
+> +
+> +properties:
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  compatible:
+> +    enum:
+> +      - ingenic,x1000-ost
+> +      - ingenic,x2000-ost
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: ost
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#clock-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/x1000-cgu.h>
+> +
+> +    ost: timer@12000000 {
+> +    		compatible = "ingenic,x1000-ost";
+> +    		reg = <0x12000000 0x3c>;
+> +
+> +    		#clock-cells = <1>;
+> +
+> +    		clocks = <&cgu X1000_CLK_OST>;
+> +    		clock-names = "ost";
+> +
+> +    		interrupt-parent = <&cpuintc>;
+> +    		interrupts = <3>;
+> +    	};
+> +...
+> diff --git a/include/dt-bindings/clock/ingenic,sysost.h b/include/dt-bindings/clock/ingenic,sysost.h
+> new file mode 100644
+> index 000000000000..9ac88e90babf
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/ingenic,sysost.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides clock numbers for the ingenic,tcu DT binding.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +
+> +#define OST_CLK_PERCPU_TIMER	0
+> +#define OST_CLK_GLOBAL_TIMER	1
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
+> 
+
+
 -- 
-2.28.0.rc1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
