@@ -2,101 +2,100 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05358C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656F3C4346E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C717322B4E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595248920;
-	bh=4yz1mHQSyMFEDoN52XWPGE0sCqO1YBjUJNDznb4FZdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oC5RNWLaQK+7A5uVtxKcHQO6q194CsJYSzityj7yAsbDdh2CJeqb80AOZU0Ei67Mg
-	 Icy57PTZ2atDx/VwJ9NzXrg2UBzVBposKLKYkS7PdXTtN3kcAbVUx3MesiAk9w8FiJ
-	 lyueVycDV9x10Yntp4nY2Va0HCRelcH+qO3HjLvk=
+	by mail.kernel.org (Postfix) with ESMTP id 40B522073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:50:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1P3qiOfe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uPFNfunp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgGTMmA (ORCPT
+        id S1728883AbgGTMum (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbgGTMmA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 08:42:00 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB9862070A;
-        Mon, 20 Jul 2020 12:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595248919;
-        bh=4yz1mHQSyMFEDoN52XWPGE0sCqO1YBjUJNDznb4FZdg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VseEDFQ8rEDcT17+j/uOZo8OcutPYZrPvWjr5SdDIH2nX6u4LzPK7X/C/vmuWYXwn
-         QCeqnuoKgaRJBP0dWQ/+sOo4/35uuKv405eVGypPmL0vX+sZrobHQFSC5XLeGrFgna
-         C3snPJxPTvDNZnq4zBER1Vmny7BF0Q5/o3loy6Rw=
-Date:   Mon, 20 Jul 2020 18:11:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     ansuelsmth@gmail.com
-Cc:     'Andy Gross' <agross@codeaurora.org>,
-        'Jonathan McDowell' <noodles@earth.li>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Kishon Vijay Abraham I' <kishon@ti.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: R: [PATCH v10 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy
- driver
-Message-ID: <20200720124155.GI12965@vkoul-mobl>
-References: <20200717131635.11076-1-ansuelsmth@gmail.com>
- <20200720062545.GC12965@vkoul-mobl>
- <010801d65e90$d57d2b60$80778220$@gmail.com>
+        Mon, 20 Jul 2020 08:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728858AbgGTMum (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 08:50:42 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2643BC061794;
+        Mon, 20 Jul 2020 05:50:42 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595249439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6+BzVRvbBqejxHDmGLD/drz5+sgjSBkrPrmMnAHy3U0=;
+        b=1P3qiOfeLhHz+38cMTzC2Jtn9V8F7C/GmBn9Kef4LNSiAs7Euymq1yQ7FmpT+GGBPc/eJH
+        smdERbKO8N4pn0WsXcTSmV8GxYm1Fy0pk2sUzWyNMFWKvNCA5X7cjQxReohJM3DgHpmKj/
+        ybVjVltmJtUOiEswqrme6pd2jyPyBSJESX0h5MilDDzuXTNM3/KHtsItZcUdIORtkDctlT
+        SV90HrTr0wBYo2ScGHdecRKtXIWQImqnkpcnfKifQJi9sXwFy9lqY0uCZ4RDZtqeVgN0TQ
+        53HkTotvNdwGvjjgYyY4OSRS78iUxL7gaIrYbiR6E+tpriwTV8tgDQ6+r7up5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595249439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6+BzVRvbBqejxHDmGLD/drz5+sgjSBkrPrmMnAHy3U0=;
+        b=uPFNfunpnA3LELZYbJ5wt5ophNF5yFGPcVNvAeqi0cCUaLE5cWO6cXV4Ave5ljNRtY9aW7
+        o+7jivPLQ0swMZDw==
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, Kurt Kanzenbach <kurt@linutronix.de>
+Subject: [PATCH v2 0/3] Add DSA yaml binding
+Date:   Mon, 20 Jul 2020 14:49:36 +0200
+Message-Id: <20200720124939.4359-1-kurt@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <010801d65e90$d57d2b60$80778220$@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-20, 14:25, ansuelsmth@gmail.com wrote:
-> 
-> 
-> > -----Messaggio originale-----
-> > Da: Vinod Koul <vkoul@kernel.org>
-> > Inviato: lunedì 20 luglio 2020 08:26
-> > A: Ansuel Smith <ansuelsmth@gmail.com>
-> > Cc: Andy Gross <agross@codeaurora.org>; Jonathan McDowell
-> > <noodles@earth.li>; Andy Gross <agross@kernel.org>; Bjorn Andersson
-> > <bjorn.andersson@linaro.org>; Kishon Vijay Abraham I <kishon@ti.com>;
-> > Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> > <mark.rutland@arm.com>; linux-arm-msm@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; devicetree@vger.kernel.org
-> > Oggetto: Re: [PATCH v10 1/2] phy: qualcomm: add qcom ipq806x dwc usb
-> > phy driver
-> > 
-> > On 17-07-20, 15:16, Ansuel Smith wrote:
-> > > This has lost in the original push for the dwc3 qcom driver.
-> > > This is needed for ipq806x SoC as without this the usb ports
-> > > doesn't work at all.
-> > 
-> > Applied both, thanks
-> > 
-> > My script found below errors with W=1, can you please send fixes for
-> > these
-> > 
-> 
-> Since you applied them should I send a new patch or a v11 of 
-> this patchset?
+Hi,
 
-new patches... Updates on top of phy-next please
+as discussed [1] [2] it makes sense to add a DSA yaml binding. This is the
+second version and contains now two ways of specifying the switch ports: Either
+by "ports" or by "ethernet-ports". That is why the third patch also adjusts the
+DSA core for it.
+
+Tested in combination with the hellcreek.yaml file.
+
+Changes since v1:
+
+ * Use select to not match unrelated switches
+ * Allow ethernet-port(s)
+ * List ethernet-controller properties
+ * Include better description
+ * Let dsa.txt refer to dsa.yaml
+
+Thanks,
+Kurt
+
+[1] - https://lkml.kernel.org/netdev/449f0a03-a91d-ae82-b31f-59dfd1457ec5@gmail.com/
+[2] - https://lkml.kernel.org/netdev/20200710090618.28945-1-kurt@linutronix.de/
+
+Kurt Kanzenbach (3):
+  dt-bindings: net: dsa: Add DSA yaml binding
+  dt-bindings: net: dsa: Let dsa.txt refer to dsa.yaml
+  net: dsa: of: Allow ethernet-ports as encapsulating node
+
+ .../devicetree/bindings/net/dsa/dsa.txt       | 255 +-----------------
+ .../devicetree/bindings/net/dsa/dsa.yaml      |  92 +++++++
+ net/dsa/dsa2.c                                |   8 +-
+ 3 files changed, 99 insertions(+), 256 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/dsa.yaml
 
 -- 
-~Vinod
+2.20.1
+
