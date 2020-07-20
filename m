@@ -2,92 +2,143 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD191C433E8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250AEC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5A44207FC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0450920734
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 12:25:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t3cWRbwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgGTMVH convert rfc822-to-8bit (ORCPT
+        id S1728614AbgGTMZY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 08:21:07 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:32999 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgGTMVG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 08:21:06 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M7JrG-1juCT63Gf6-007j4f; Mon, 20 Jul 2020 14:21:04 +0200
-Received: by mail-qk1-f182.google.com with SMTP id z15so8193088qki.10;
-        Mon, 20 Jul 2020 05:21:04 -0700 (PDT)
-X-Gm-Message-State: AOAM533ithWRD6Gv/yS3ySVZQWpH2Ee5Al0wJnqfzEI4CJ1n+FiGWbc2
-        A7To4/S700mp6SLZ0Nhe0ACYXyBN8pi2Q3iiU+A=
-X-Google-Smtp-Source: ABdhPJxnDaps2mzwyIsQu5vg0Fu3YsCdpchsfKZVpyRu8MsSM9Gcl79g+mqxBm6tfbp35cPwGB+thoVnqL5sOIIyG+c=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr21267846qkf.394.1595247663277;
- Mon, 20 Jul 2020 05:21:03 -0700 (PDT)
+        Mon, 20 Jul 2020 08:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728460AbgGTMZX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 08:25:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8723FC061794;
+        Mon, 20 Jul 2020 05:25:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so17680898wrp.2;
+        Mon, 20 Jul 2020 05:25:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=ELSjM6rlMt2XdyL11rGbFkrQrMLysUTdi5Cru78vLr4=;
+        b=t3cWRbwP0CDJpWVls5HKPGw+65RlzeuddYZvYTsdtOuPBT089BluvpfF76NEBnmwJ5
+         d1gDaUAsjN/f1OcorOwBEy7McQXlzgQl/6hvemrxWg2lmEA8jJvmbxTsGRydI+mPe2oY
+         Yh88X0dkpjrtZhimdmN+DVAcB0mkDuRohcn7jm3nQ5+jKw61TFMNUFSZ3h9LfX7Osc3V
+         vvVewww/82r6ERvGdP5o/l6pK99ZmPMocgPDWNJaPbVsHoTRzYrENFQsVkpC3Jz2BB8p
+         zBX5XlIdoZIRDji34XK1cRmJKZZmLIRCoDco87iOIbAOrGDVo26yP23Pud3LkQ5SJJoA
+         js3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=ELSjM6rlMt2XdyL11rGbFkrQrMLysUTdi5Cru78vLr4=;
+        b=XHx/8C+b1X6IlvjY0DYGM56j1E4g/0/pdj3DBrlX27SxCPRA8dN5RvZ8H2DnopfrF8
+         UBZmenWy8fK1zDaOqaYF8rvRuYWOP3Vj2rXNCikbPEJoXzHB2idoA51B6KmAK3EUa1tG
+         JYeuBAKLLAZ2PFbyW9tV/8tZwbTY2DrHtPAjyL3pqTnV3F0QtP9TIOLHQn9152c2zUhN
+         nO/VAY6Asv7HKhisuS2zj6zoqEvDhgXKE/1JH+W06Rdhp3iUe5HoZJiFWObLuorz8Htn
+         4tFoL/UTj/ANJRoSav4sg4dTZv3KnCrS8bI0LfLdKrYrD3LJ+YMuKtah1HcuWMhpjv4e
+         ovTA==
+X-Gm-Message-State: AOAM5308OQHpuo9lypqKMvRGhKH4c5oXF2nFbsEf+zZoXEpH18hhok7w
+        bOivKopvDFYxstjsvYT3s2A=
+X-Google-Smtp-Source: ABdhPJymyDug8FuVmigPY+dchNAS0DbDRtwqJ3R0ox3vu55uMZvHGBFGlKF2KLgDWpgAUTwT1hjrnA==
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr21333896wrv.162.1595247922208;
+        Mon, 20 Jul 2020 05:25:22 -0700 (PDT)
+Received: from AnsuelXPS (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
+        by smtp.gmail.com with ESMTPSA id 5sm30567674wmk.9.2020.07.20.05.25.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jul 2020 05:25:21 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Vinod Koul'" <vkoul@kernel.org>
+Cc:     "'Andy Gross'" <agross@codeaurora.org>,
+        "'Jonathan McDowell'" <noodles@earth.li>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Kishon Vijay Abraham I'" <kishon@ti.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200717131635.11076-1-ansuelsmth@gmail.com> <20200720062545.GC12965@vkoul-mobl>
+In-Reply-To: <20200720062545.GC12965@vkoul-mobl>
+Subject: R: [PATCH v10 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy driver
+Date:   Mon, 20 Jul 2020 14:25:18 +0200
+Message-ID: <010801d65e90$d57d2b60$80778220$@gmail.com>
 MIME-Version: 1.0
-References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
- <20200720074249.596364-4-jiaxun.yang@flygoat.com> <CAK8P3a13vZJyOGZ1FpS98ytVC57P6NgmQpSfhf2h9b7meQLtcw@mail.gmail.com>
- <d927b5b6-e33e-4a94-c997-b1794dbde411@flygoat.com>
-In-Reply-To: <d927b5b6-e33e-4a94-c997-b1794dbde411@flygoat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 20 Jul 2020 14:20:46 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2=qrp6x4yLUXhQU2MwcMa4HpEzAdVs_zW8f14GZ-_zqQ@mail.gmail.com>
-Message-ID: <CAK8P3a2=qrp6x4yLUXhQU2MwcMa4HpEzAdVs_zW8f14GZ-_zqQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:cD2rRfBF59CX61+zemVyUHT3Z9YhsV3/Z+NHlrBTDAPsD74CR0L
- nyOgRYZuZYWmOQ2dgYtQBxgKLiR8eRiobdfquNJBUmWhlELJvehIDi1zkyxyrSWStMdLGnE
- OgRNitBOvmix2W8l+2rfol9HM+hEQ56iSqiLcrpSXrvCKcscoKnYp791ja9DCybxgedZtJj
- zct3LJCXapc7Sq1jzSQVg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i+f8y2Tjuhc=:mVrdaKEhHPMW8V6+dV4jQW
- ROk0WSCY8QIJdWAhzb6FXwEw7ggXgk1TmicrFRJx/FbseVg95qETX7IeNgLWpmFsBU9oXB2KQ
- csYOxouwX/KSa5ivE5iyS6CwBATpJS9lV/I/aS0DkBrvJHc7gOziL56qd26INwBZx9j7FSdtN
- paje5DUiViHp+Y7GrMNVq8EbT7+mQI19nOoMtMxVRFMbtgUBqPGHkey2/3hnFlCwQ7tKoQZq7
- JHwjcPX9kkHabQbbj9a3hPRfTZBERjAt+5P5yNrkwz0SulYAbtw7GuvM0jxlW7sReuYOpL1rw
- R1J2+5jJfdHcU7vsltqFIQT9I0j2Etkm6PyA+2b3CxXU0X4ZJY2iqdY6kX2thMvfh/qSPubwf
- 4EbBVR/LBuDN6bNEK7bMK6Pz4/cZTKeYHUQWto4uRE2wF8/TU9jnGR2a7wSVfRdGCnqMcvo0M
- 5uZ/7hpe99LyFrq0dvdeW10hgz13M/yKZ9z3gV4zA6o3TWMwwk/UnQvQ6CqZCS/23oytKm5/z
- PMINa6JaSTx2DRLr5ELMtRvvk82D6oe4A69D1aENJejMgMK+nkNEBUMnagtPjLJJ9vgQRvrK6
- S2pc7HpF03GBBl6QfHJJ8Vcni+Q0RHQVrAqvkS+C1Jl3az715Edj5QqtswBH7f3u81zNODgWU
- hMriL68NeNzDwdu1LhEcF+I0ShqCJBshf6VPziZUKYcpEjtQ3gp0uJ+2bCbwHDzffbzYTwmNn
- DMuF0ZNtpMncFCq8zJg23yjCmmKn4Tpu09yQYTn2pO4xHWxPSQGPQPCFij+xpBeKCYEWCtRe7
- 444JyFoq3lqVFA0wVJBPXHJMBoHvtQqG5z7M5/34zXqnFcJ5gzBUuxVZlPekUPeBqyn7u0Piq
- t6PQqlLRePlGHr7BTjTwjYrP2EG5tlvb9S5CHPxfcieit9A5UJ/F26YEmP3A9sY02hbL5w0Xf
- GoD1xswEp58IHmLgdsMsJPzKOCu3u+nyn5+ajvCZGjpZzjaiMgU7y
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQKLq5LK6XpGPjFtHIkX7iDhCC2HpAHU9eHTp5cie8A=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 2:07 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> 在 2020/7/20 下午6:45, Arnd Bergmann 写道:
-> > On Mon, Jul 20, 2020 at 9:44 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> >> It can be very big on LS7A PCH systems.
-> > In practice, one should rarely need more than a few kb worth of
-> > port numbers, unless you expect to see hundreds of legacy PCI
-> > devices.
-> I must blame stupid hardware design here. The LPC Controller (for ISA
-> device) can eat
-> up to 0x20000 IO BAR, and we can't resize it. Thus we have to enlarge
-> the I/O Space.
 
-Ok, I see.
 
-       Arnd
+> -----Messaggio originale-----
+> Da: Vinod Koul <vkoul@kernel.org>
+> Inviato: luned=EC 20 luglio 2020 08:26
+> A: Ansuel Smith <ansuelsmth@gmail.com>
+> Cc: Andy Gross <agross@codeaurora.org>; Jonathan McDowell
+> <noodles@earth.li>; Andy Gross <agross@kernel.org>; Bjorn Andersson
+> <bjorn.andersson@linaro.org>; Kishon Vijay Abraham I <kishon@ti.com>;
+> Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; linux-arm-msm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Oggetto: Re: [PATCH v10 1/2] phy: qualcomm: add qcom ipq806x dwc usb
+> phy driver
+>=20
+> On 17-07-20, 15:16, Ansuel Smith wrote:
+> > This has lost in the original push for the dwc3 qcom driver.
+> > This is needed for ipq806x SoC as without this the usb ports
+> > doesn't work at all.
+>=20
+> Applied both, thanks
+>=20
+> My script found below errors with W=3D1, can you please send fixes for
+> these
+>=20
+
+Since you applied them should I send a new patch or a v11 of=20
+this patchset?
+
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'phy_dwc3' not described in
+> 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'offset' not described in 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'mask' not described in 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function
+> parameter or member 'val' not described in 'usb_phy_write_readback'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function
+> parameter or member 'phy_dwc3' not described in 'usb_ss_write_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function
+> parameter or member 'addr' not described in 'usb_ss_write_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function
+> parameter or member 'val' not described in 'usb_ss_write_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function
+> parameter or member 'phy_dwc3' not described in 'usb_ss_read_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function
+> parameter or member 'addr' not described in 'usb_ss_read_phycreg'
+> drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function
+> parameter or member 'val' not described in 'usb_ss_read_phycreg'
+>=20
+> --
+> ~Vinod
+
