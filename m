@@ -2,110 +2,82 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ABBC433F4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 00:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF1FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 01:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D8E2250E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 00:43:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nZRDTWr3"
+	by mail.kernel.org (Postfix) with ESMTP id 5626321744
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 01:10:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgGTAmw (ORCPT
+        id S1726856AbgGTBKO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 19 Jul 2020 20:42:52 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:40906 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726312AbgGTAmv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 20:42:51 -0400
-X-UUID: c46ce339d45c4d388c09cfcd1ab30a55-20200720
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=FaqUdYxqi1XjkwCj1byDtXnVHu3nPZv58uEtqHctoQA=;
-        b=nZRDTWr33CGvAhssr2lkL1TfnZATu1W6t085u7HJekr0LaK0WmyKwKNPP1RnchMIUrMjgzQvGzIQFa6WakMLsN4JEqLCGTCOo9hYBFJ6+EY2KYeDVfhaokteUr26JS8DHKG/IFf+EWpSd6xEYlhg27wXvRKY8J9TZ4ixeo96fz8=;
-X-UUID: c46ce339d45c4d388c09cfcd1ab30a55-20200720
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 297892602; Mon, 20 Jul 2020 08:42:44 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 20 Jul 2020 08:42:42 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 20 Jul 2020 08:42:42 +0800
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>
-CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: [PATCH v7 0/4] mmc: mediatek: add mmc cqhci support
-Date:   Mon, 20 Jul 2020 08:42:35 +0800
-Message-ID: <1595205759-5825-1-git-send-email-chun-hung.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 1F865C90232599EFD426CA02B8A9A03CDAD99D6D654D6106C365D8346E3413832000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 19 Jul 2020 21:10:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgGTBKO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 19 Jul 2020 21:10:14 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1854C0619D2;
+        Sun, 19 Jul 2020 18:10:14 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8B9861284827B;
+        Sun, 19 Jul 2020 18:10:13 -0700 (PDT)
+Date:   Sun, 19 Jul 2020 18:10:12 -0700 (PDT)
+Message-Id: <20200719.181012.2032747244788963553.davem@davemloft.net>
+To:     rmk+kernel@armlinux.org.uk
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        martin.p.rowe@gmail.com, devicetree@vger.kernel.org,
+        gregory.clement@bootlin.com, kuba@kernel.org, jason@lakedaemon.net,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        robh+dt@kernel.org, sebastian.hesselbarth@gmail.com,
+        vivien.didelot@gmail.com
+Subject: Re: [PATCH net] net: dsa: mv88e6xxx: fix in-band AN link
+ establishment
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <E1jx73b-0006mh-Ox@rmk-PC.armlinux.org.uk>
+References: <E1jx73b-0006mh-Ox@rmk-PC.armlinux.org.uk>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 19 Jul 2020 18:10:14 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgcHJvdmlkZXMgTWVkaWFUZWsgY3FoY2kgaW1wbGVtZW50YXRpb25zIGFzIGJl
-bG93Og0KICAtIFJlZmluZSBtc2RjIHRpbWVvdXQgYXBpIHRvIHJlZHVjZSByZWR1bmRhbnQgY29k
-ZQ0KICAtIE1lZGlhVGVrIGNvbW1hbmQgcXVldWUgc3VwcG9ydA0KICAtIGR0LWJpbmRpbmdzIGZv
-ciBtdDY3NzkNCg0KdjEgLT4gdjI6DQogIC0gQWRkIG1vcmUgcGF0Y2ggZGV0YWlscyBpbiBjb21t
-aXQgbWVzc2FnZQ0KICAtIFNlcGFyYXRlIG1zZGMgdGltZW91dCBhcGkgcmVmaW5lIHRvIGluZGl2
-aWR1YWwgcGF0Y2gNCg0KdjIgLT4gdjM6DQogIC0gUmVtb3ZlIENSLUlkLCBDaGFuZ2UtSWQgYW5k
-IEZlYXR1cmUgaW4gcGF0Y2hlcw0KICAtIEFkZCBTaWduZWQtb2ZmLWJ5IGluIHBhdGNoZXMNCg0K
-djMgLT4gdjQ6DQogIC0gUmVmaW5lIENRRSBiaW5kaW5ncyBpbiBtbWNfb2ZfcGFyc2UgKFVsZiBI
-YW5zc29uKQ0KICAtIFJlbW92ZSByZWR1bmRhbnQgaG9zdCBDUUUgYmluZGluZ3MgKExpbnV4IFdh
-bGxlaWopDQoNCnY0IC0+IHY1Og0KICAtIEFkZCBBY2tlZC1ieSBhbmQgbW9yZSBtYWludGFpbmVy
-cw0KDQp2NSAtPiB2NjoNCiAgLSBNb3ZlIENRRSBiaW5kaW5ncyBiYWNrIHRvIHZlbmRvciBkcml2
-ZXINCiAgLSBBZGQgbXQ2Nzc5IG1tYyBzdXBwb3J0IGFzIGFuIGluZGl2aWR1YWwgcGF0Y2gNCiAg
-LSBFcnJvciBoYW5kbGluZyBmb3IgY3FfaG9zdCBkZXZtX2t6YWxsbygpDQoNCnY2IC0+IHY3Og0K
-ICAtIFNlbGVjdCBNTUNfQ1FIQ0kgZm9yIE1NQ19NVEsNCiAgLSBSZW1vdmUgdW5uZWNlc3Nhcnkg
-b3B0aW9uIE1NQ19DUUhDSSBpbiBtdGstc2QuYw0KICAtIEFkZCBlcnJvciBoYW5kbGluZyBmb3Ig
-Y3FoY2lfaW5pdCgpDQogIC0gVXNlIG5hdGl2ZSBjcWhjaSBkdC1iaW5kaW5ncyAnc3VwcG9ydHMt
-Y3FlJw0KDQpDaHVuLUh1bmcgV3UgKDQpOg0KICBbMS80XSBtbWM6IG1lZGlhdGVrOiBhZGQgTVQ2
-Nzc5IE1NQyBkcml2ZXIgc3VwcG9ydA0KICBbMi80XSBtbWM6IG1lZGlhdGVrOiByZWZpbmUgbXNk
-YyB0aW1lb3V0IGFwaQ0KICBbMy80XSBtbWM6IG1lZGlhdGVrOiBjb21tYW5kIHF1ZXVlIHN1cHBv
-cnQNCiAgWzQvNF0gZHQtYmluZGluZ3M6IG1tYzogbWVkaWF0ZWs6IEFkZCBkb2N1bWVudCBmb3Ig
-bXQ2Nzc5DQoNCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1zZC50
-eHQgfCAgIDEgKw0KIGRyaXZlcnMvbW1jL2hvc3QvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgMSArDQogZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYyAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgMTYwICsrKysrKysrKysrKysrKysrKysrKy0tDQogMyBmaWxlcyBjaGFuZ2VkLCAx
-NTIgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQoNCi0tIA0KMS45LjENCg==
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Date: Sun, 19 Jul 2020 12:00:35 +0100
 
+> If in-band negotiation or fixed-link modes are specified for a DSA
+> port, the DSA code will force the link down during initialisation. For
+> fixed-link mode, this is fine, as phylink will manage the link state.
+> However, for in-band mode, phylink expects the PCS to detect link,
+> which will not happen if the link is forced down.
+> 
+> There is a related issue that in in-band mode, the link could come up
+> while we are making configuration changes, so we should force the link
+> down prior to reconfiguring the interface mode.
+> 
+> This patch addresses both issues.
+> 
+> Fixes: 3be98b2d5fbc ("net: dsa: Down cpu/dsa ports phylink will control")
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+
+Applied and queued up for -stable,  but:
+
+> @@ -664,6 +664,7 @@ static void mv88e6xxx_mac_config(struct dsa_switch *ds, int port,
+>  				 const struct phylink_link_state *state)
+>  {
+>  	struct mv88e6xxx_chip *chip = ds->priv;
+> +	struct mv88e6xxx_port *p = &chip->ports[port];
+>  	int err;
+
+I fixed the reverse christmas tree breakage here by moving the 'p'
+assignment into the function body.
