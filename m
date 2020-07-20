@@ -2,119 +2,109 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDB5C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C82BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E9822B4E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595286985;
-	bh=UBL56L6DvPiSUqINrljfh24/NIVhD1aet891CEeilBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vg5MC50HOR6N1FkjjJb1UK4LCXJFamuOyHLc4Zxrc6hx3uCxiGo3p7e5xCXOnIQqa
-	 EDvabLCXaiG7zGy6UivH/WHaLSKbnGdQhFlhaLI1eJyp6HHKln4lvmTGasbqRUvW8x
-	 rljyPhOqg5kX1ToYrMngY7xEYKqMGjGA7ACgbuSk=
+	by mail.kernel.org (Postfix) with ESMTP id 3C3BB2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:26:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HJ/gl9Wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgGTXQY (ORCPT
+        id S1726390AbgGTX0d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:16:24 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35236 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgGTXQY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 19:16:24 -0400
-Received: by mail-il1-f193.google.com with SMTP id t18so14802832ilh.2;
-        Mon, 20 Jul 2020 16:16:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rvvIyeI/O+OX0a15wh7KP70spFPqxmPPVr5citgRAhs=;
-        b=UGRCgJKNn13PfCTux4RmUX76QQ2o+k/hYpeKsNN4ElZD1tFH4ZIdgdk3cc2d+dVOo0
-         EtNQk4tJRjFUJgan/MLfysa2fDdBO78xvSn+LBZbkc0a2/QTO+G3VP0ngHkmwnc/UXlB
-         PLGAOaOPDREGvljzxBNHoTikcbjZkkTOVuK+PYBhfqvCAq0Q1pVLljgZrxmWe/kbajie
-         QWTyBUFefStViyF0V89DgHY8SZjm2sx+EnlEmlLH4LxzVe8wkieflQxXhFy9syucvAXU
-         eI6jo1ggu4f3kWIywuhiENLIgpUuDeYRlNV/7/FFcxUhduAof85Fe4ZqoepTULtH3OqD
-         z/Bg==
-X-Gm-Message-State: AOAM5334kGTIHEixfxqawB0/Kv/xOyiwo+zK22i2OJO94JRgZJnNY+HO
-        4yA/xikqaG8JPqAR/3CvgA==
-X-Google-Smtp-Source: ABdhPJyshFo0omA3xHohlTk0hyWSZGLg6Id03dPze2mNf5c56JFT/g2414OvfN4EWj1udjb5SIybmw==
-X-Received: by 2002:a92:3407:: with SMTP id b7mr17598958ila.66.1595286983360;
-        Mon, 20 Jul 2020 16:16:23 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h11sm9515742ilh.69.2020.07.20.16.16.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 16:16:22 -0700 (PDT)
-Received: (nullmailer pid 3136375 invoked by uid 1000);
-        Mon, 20 Jul 2020 23:16:21 -0000
-Date:   Mon, 20 Jul 2020 17:16:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
-        cui.zhang@mediatek.com, chao.hao@mediatek.com,
-        ming-fan.chen@mediatek.com
-Subject: Re: [PATCH 04/21] dt-binding: mediatek: Add binding for mt8192 IOMMU
- and SMI
-Message-ID: <20200720231621.GA3106350@bogus>
-References: <20200711064846.16007-1-yong.wu@mediatek.com>
- <20200711064846.16007-5-yong.wu@mediatek.com>
+        Mon, 20 Jul 2020 19:26:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57030 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgGTX0d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 19:26:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KNQQUp126401;
+        Mon, 20 Jul 2020 18:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595287586;
+        bh=wF6WhftYpfnYBX0J8FroMAAxX2oGr5JH/Sy0gngDAQE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HJ/gl9WpBPKLP2N3e10x4sgs4qC19hCsqP5TkyS1yPl4i1u+BCf50ROad0S0312O/
+         JZ6aUKG+GeUx+tb+vaBoBG2heRPSQG6TkNlnq8Fb3DLxZHFbDNFGWNXtvBKJUeaOka
+         E3GJOpmAo2Qu+nqNaqCF8m4O2/6WFGN/gsNvUzOc=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KNQQ6c046734
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 18:26:26 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 18:26:26 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 18:26:26 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KNQQZX006261;
+        Mon, 20 Jul 2020 18:26:26 -0500
+Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+References: <20200717234800.9423-1-s-anna@ti.com>
+ <20200717234800.9423-4-s-anna@ti.com> <20200720221718.GA2899451@bogus>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <4968835e-2ba5-dcd8-93b9-c3e33aabb0a9@ti.com>
+Date:   Mon, 20 Jul 2020 18:26:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200711064846.16007-5-yong.wu@mediatek.com>
+In-Reply-To: <20200720221718.GA2899451@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 02:48:29PM +0800, Yong Wu wrote:
-> This patch adds decriptions for mt8192 IOMMU and SMI.
+On 7/20/20 5:17 PM, Rob Herring wrote:
+> On Fri, 17 Jul 2020 18:47:57 -0500, Suman Anna wrote:
+>> Add a bindings document that lists the common TI SCI properties
+>> used by the K3 R5F and DSP remoteproc devices.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
+>> v3: https://patchwork.kernel.org/patch/11602317/
+>>
+>>   .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
+>>   1 file changed, 48 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>>
 > 
-> mt8192 also is MTK IOMMU gen2 which uses ARM Short-Descriptor translation
-> table format. The M4U-SMI HW diagram is as below:
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
 > 
->                           EMI
->                            |
->                           M4U
->                            |
->                       ------------
->                        SMI Common
->                       ------------
->                            |
->   +-------+------+------+----------------------+-------+
->   |       |      |      |       ......         |       |
->   |       |      |      |                      |       |
-> larb0   larb1  larb2  larb4     ......      larb19   larb20
-> disp0   disp1   mdp    vdec                   IPE      IPE
-> 
-> All the connections are HW fixed, SW can NOT adjust it.
-> 
-> mt8192 M4U support 0~16GB iova range. we preassign different engines
-> into different iova ranges:
-> 
-> domain-id  module     iova-range                  larbs
->    0       disp        0 ~ 4G                      larb0/1
->    1       vcodec      4G ~ 8G                     larb4/5/7
->    2       cam/mdp     8G ~ 12G             larb2/9/11/13/14/16/17/18/19/20
->    3       CCU0    0x4000_0000 ~ 0x43ff_ffff     larb13: port 9/10
->    4       CCU1    0x4400_0000 ~ 0x47ff_ffff     larb14: port 4/5
+> If a tag was not added on purpose, please state why and what changed.
 
-You probably want to use dma-ranges for defining these 
-address restrictions. 
+Rob,
 
-How is the domain-id used or needed?
+You seem to have added your Reviewed-by tag by mistake on this 
+particular patch [1], that's why I actually dropped it.
 
-Rob 
+I do use pwclient, so the tags do get picked up automatically for my 
+newer versions.
+
+regards
+Suman
+
+[1] https://patchwork.kernel.org/comment/23484127/
