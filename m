@@ -2,92 +2,119 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D96C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDB5C433E2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 832D622B4E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E9822B4E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595285964;
-	bh=exfrltRkMKfcqhwjcfhhMCD57ePahXv30qxF3x0OcLo=;
+	s=default; t=1595286985;
+	bh=UBL56L6DvPiSUqINrljfh24/NIVhD1aet891CEeilBs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0ZlkGQpH+O9KzkMpgeu5eb/YPIepn1BOpkm0Cz30Du+GkbiUW4+sllBfmSXOmPy51
-	 Xq/yi4BX2BB1W/Uc7gWF2ovyhH/vl7knISr5GLn5TWQoxRnAe1SDi/SYaxGAUkLGNs
-	 NbCeFdX10MAkcPzrWF4d36LKkaAN3rOj7H8BGB9Y=
+	b=Vg5MC50HOR6N1FkjjJb1UK4LCXJFamuOyHLc4Zxrc6hx3uCxiGo3p7e5xCXOnIQqa
+	 EDvabLCXaiG7zGy6UivH/WHaLSKbnGdQhFlhaLI1eJyp6HHKln4lvmTGasbqRUvW8x
+	 rljyPhOqg5kX1ToYrMngY7xEYKqMGjGA7ACgbuSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGTW7Y (ORCPT
+        id S1726611AbgGTXQY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:59:24 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39544 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726021AbgGTW7V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 18:59:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id z6so1884452iow.6;
-        Mon, 20 Jul 2020 15:59:21 -0700 (PDT)
+        Mon, 20 Jul 2020 19:16:24 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35236 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbgGTXQY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 19:16:24 -0400
+Received: by mail-il1-f193.google.com with SMTP id t18so14802832ilh.2;
+        Mon, 20 Jul 2020 16:16:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ybLjdJnNEzw3PjLa+ida62upYueSqoAHLo8Hga07AFI=;
-        b=KjxnXsTuF7xJlLymnRibjL4U/e4e9qLJaw6dXBW+uYMii+WUaGFUGL28juDj6/kTBN
-         ae7a7dg1/pd6ppAxcPtA/6Cjodw5bbvUetB6Ltrbu6Lmvhin/ilEpcTFv8+sFJ/0j7ek
-         yeMJJSuvoXph7Ox7FfZzW37rPkMA+AZLUIJ/nOpxqbUMIVXZhJGua1C5fj9/MKpTFZs0
-         D7IjXnWcGYAKM2r06dWDAAYp7W+u3WaoDDL9N+23jtMdMdGdp82XdSznDDeTj0xOIWYx
-         3JOhm+jtdcaHNDmYXukmgh3kipLkoxTj5ww116m7hS13THTYPCq+WN77awMClMd9g4dk
-         cU4g==
-X-Gm-Message-State: AOAM533nUxrlJyzryNfGdx4uJrlA7fwhlNYpohITzsB++4SXzEI/88m/
-        H8HBTlXjPbGlQ2abRi/KGlhvKeb4cw==
-X-Google-Smtp-Source: ABdhPJzLaIZ/SR4wIJfqeFdccTnBBLnUptFgZ037ZPt4d8W2AdS6R04ewjeU1fu4LJgmATuLmvJZEA==
-X-Received: by 2002:a05:6602:2f89:: with SMTP id u9mr25210319iow.126.1595285960921;
-        Mon, 20 Jul 2020 15:59:20 -0700 (PDT)
+        bh=rvvIyeI/O+OX0a15wh7KP70spFPqxmPPVr5citgRAhs=;
+        b=UGRCgJKNn13PfCTux4RmUX76QQ2o+k/hYpeKsNN4ElZD1tFH4ZIdgdk3cc2d+dVOo0
+         EtNQk4tJRjFUJgan/MLfysa2fDdBO78xvSn+LBZbkc0a2/QTO+G3VP0ngHkmwnc/UXlB
+         PLGAOaOPDREGvljzxBNHoTikcbjZkkTOVuK+PYBhfqvCAq0Q1pVLljgZrxmWe/kbajie
+         QWTyBUFefStViyF0V89DgHY8SZjm2sx+EnlEmlLH4LxzVe8wkieflQxXhFy9syucvAXU
+         eI6jo1ggu4f3kWIywuhiENLIgpUuDeYRlNV/7/FFcxUhduAof85Fe4ZqoepTULtH3OqD
+         z/Bg==
+X-Gm-Message-State: AOAM5334kGTIHEixfxqawB0/Kv/xOyiwo+zK22i2OJO94JRgZJnNY+HO
+        4yA/xikqaG8JPqAR/3CvgA==
+X-Google-Smtp-Source: ABdhPJyshFo0omA3xHohlTk0hyWSZGLg6Id03dPze2mNf5c56JFT/g2414OvfN4EWj1udjb5SIybmw==
+X-Received: by 2002:a92:3407:: with SMTP id b7mr17598958ila.66.1595286983360;
+        Mon, 20 Jul 2020 16:16:23 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k14sm9856274ion.17.2020.07.20.15.59.17
+        by smtp.gmail.com with ESMTPSA id h11sm9515742ilh.69.2020.07.20.16.16.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 15:59:19 -0700 (PDT)
-Received: (nullmailer pid 3106187 invoked by uid 1000);
-        Mon, 20 Jul 2020 22:59:16 -0000
-Date:   Mon, 20 Jul 2020 16:59:16 -0600
+        Mon, 20 Jul 2020 16:16:22 -0700 (PDT)
+Received: (nullmailer pid 3136375 invoked by uid 1000);
+        Mon, 20 Jul 2020 23:16:21 -0000
+Date:   Mon, 20 Jul 2020 17:16:21 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     iommu@lists.linux-foundation.org,
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        devicetree@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, chao.hao@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        youlin.pei@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>,
+        Will Deacon <will@kernel.org>,
         Evan Green <evgreen@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@google.com>, Joerg Roedel <joro@8bytes.org>,
-        srv_heupstream@mediatek.com, anan.sun@mediatek.com,
-        ming-fan.chen@mediatek.com, Will Deacon <will@kernel.org>,
-        cui.zhang@mediatek.com
-Subject: Re: [PATCH 02/21] dt-binding: memory: mediatek: Extend LARB_NR_MAX
- to 32
-Message-ID: <20200720225916.GA3106142@bogus>
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        cui.zhang@mediatek.com, chao.hao@mediatek.com,
+        ming-fan.chen@mediatek.com
+Subject: Re: [PATCH 04/21] dt-binding: mediatek: Add binding for mt8192 IOMMU
+ and SMI
+Message-ID: <20200720231621.GA3106350@bogus>
 References: <20200711064846.16007-1-yong.wu@mediatek.com>
- <20200711064846.16007-3-yong.wu@mediatek.com>
+ <20200711064846.16007-5-yong.wu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200711064846.16007-3-yong.wu@mediatek.com>
+In-Reply-To: <20200711064846.16007-5-yong.wu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 11 Jul 2020 14:48:27 +0800, Yong Wu wrote:
-> Extend the max larb number definition as mt8192 has larb_nr over 16.
+On Sat, Jul 11, 2020 at 02:48:29PM +0800, Yong Wu wrote:
+> This patch adds decriptions for mt8192 IOMMU and SMI.
 > 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  include/dt-bindings/memory/mtk-smi-larb-port.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> mt8192 also is MTK IOMMU gen2 which uses ARM Short-Descriptor translation
+> table format. The M4U-SMI HW diagram is as below:
 > 
+>                           EMI
+>                            |
+>                           M4U
+>                            |
+>                       ------------
+>                        SMI Common
+>                       ------------
+>                            |
+>   +-------+------+------+----------------------+-------+
+>   |       |      |      |       ......         |       |
+>   |       |      |      |                      |       |
+> larb0   larb1  larb2  larb4     ......      larb19   larb20
+> disp0   disp1   mdp    vdec                   IPE      IPE
+> 
+> All the connections are HW fixed, SW can NOT adjust it.
+> 
+> mt8192 M4U support 0~16GB iova range. we preassign different engines
+> into different iova ranges:
+> 
+> domain-id  module     iova-range                  larbs
+>    0       disp        0 ~ 4G                      larb0/1
+>    1       vcodec      4G ~ 8G                     larb4/5/7
+>    2       cam/mdp     8G ~ 12G             larb2/9/11/13/14/16/17/18/19/20
+>    3       CCU0    0x4000_0000 ~ 0x43ff_ffff     larb13: port 9/10
+>    4       CCU1    0x4400_0000 ~ 0x47ff_ffff     larb14: port 4/5
 
-Acked-by: Rob Herring <robh@kernel.org>
+You probably want to use dma-ranges for defining these 
+address restrictions. 
+
+How is the domain-id used or needed?
+
+Rob 
