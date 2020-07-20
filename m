@@ -2,110 +2,150 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B50C433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37883C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62AA2208E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vUBM16Je"
+	by mail.kernel.org (Postfix) with ESMTP id 1E772208E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgGTJl6 (ORCPT
+        id S1727769AbgGTJsP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
+        Mon, 20 Jul 2020 05:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728114AbgGTJl5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 05:41:57 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FCEBC061794
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:41:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id d17so19535873ljl.3
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=twhRHN8GmGnSaOWdhFH407w2bJQWN/XspQavxD2E7NU=;
-        b=vUBM16JedblSszCmKcUOtNNCpBXv3CIhGha5f39iVCq+GLQjc1+5sjVAf3MGajt6eb
-         js3i3eEdyXIM2MQPvSQWiAbe6gPeB4YjU2Sab0OH0PF9+7BZ1Hfg3dMIm6fiTGmnLQGE
-         WN52jmOtjrzVTwhA5TpOoRi5fzEqLaC3gBn8SKr5iixPXGEf8j0ueAKU4MbazsVA6aRf
-         FyvYHaaSBU57IPmfcX0ILw4NWbPu9l8TUYzGeGQoqnmJtc7HHBIKatEXj/thpaDFX2WV
-         Aokyu21j7CqO9w7d6xuJ7PUwJIG1UxxaIPnap6CCEB8zRyeuqnRZ3bACsucfj0UgkFkX
-         fSxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=twhRHN8GmGnSaOWdhFH407w2bJQWN/XspQavxD2E7NU=;
-        b=AVB3avOin2vlC+Xfsb9JZc89MCgl+jXqf21cbqOgXKhna8hVAI9nGdMV4YTZqzkR1h
-         zlrAN1val+kMtySuhk7TTg0CdY5Ehe5MBkf8fg0CKC7mK5U4jJZiehpF99/NRi/yaAE3
-         lhgm3Hh7A4/hLIEzXr587aD0QKyg+Bb0CdqQJho4DziT03IVuFZkhsdTR2QpT38fTsdQ
-         aJATkRm6DZj3PVwvPpIan9mz7d/ruFOWzRnG5kQ2YfUP7M+b3f3yj0/mrxZaisULhJnS
-         8gkJgctuLIt+hsQUJISDymfUzkG6GrJlVzUSz6gHYwvK25yQXRNK00Q1tTj3daAI2tNC
-         O31g==
-X-Gm-Message-State: AOAM533Pp3WAlFnKcbi3tZeVS89o+FFoPcgfxXf+DOmRSPslQ/uanvcn
-        IQ2iRRCGXLkrUO46YQCJJHSoBQzqPCYts9UTj8eGVg==
-X-Google-Smtp-Source: ABdhPJzp2xsR54WZ1Ot/7m0WsiusF7Y4zChVz+CNR+5Bym/Dcaq3ISLURbaFVL1WyVZW8pynmK9Y5DvEDxM1d6oFID4=
-X-Received: by 2002:a2e:9b8c:: with SMTP id z12mr10226971lji.35.1595238115661;
- Mon, 20 Jul 2020 02:41:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com>
-In-Reply-To: <20200716022817.30439-2-ansuelsmth@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 20 Jul 2020 15:11:44 +0530
-Message-ID: <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
+        with ESMTP id S1727062AbgGTJsP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 05:48:15 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A803C061794
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:48:15 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jxSP6-0006bt-2a; Mon, 20 Jul 2020 11:48:12 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jxSP5-0006ci-8k; Mon, 20 Jul 2020 11:48:11 +0200
+Message-ID: <b1073a020623a5bda99c74d3b424a498d59b9ec3.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] reset: reset-zynqmp: Added support for Versal
+ platform
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com,
+        saikrishna12468@gmail.com
+Date:   Mon, 20 Jul 2020 11:48:11 +0200
+In-Reply-To: <1594708149-29944-3-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+References: <1594708149-29944-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+         <1594708149-29944-3-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
->
-> Add support for child probing needed for tsens driver that share the
-> seme regs of gcc for this platform.
-
-Typo: same
-
-
->
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+On Tue, 2020-07-14 at 11:59 +0530, Sai Krishna Potthuri wrote:
+> Updated the reset driver to support Versal platform.
+> As part of adding Versal support
+> - Added Versal specific compatible string.
+> - Reset Id and number of resets are different for Versal and ZynqMP,
+> hence taken care of these two based on compatible string.
+> 
+> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
 > ---
->  drivers/clk/qcom/gcc-ipq806x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
-> index a8456e09c44d..d6b7adb4be38 100644
-> --- a/drivers/clk/qcom/gcc-ipq806x.c
-> +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> @@ -3089,7 +3089,7 @@ static int gcc_ipq806x_probe(struct platform_device *pdev)
->         regmap_write(regmap, 0x3cf8, 8);
->         regmap_write(regmap, 0x3d18, 8);
->
-> -       return 0;
-> +       return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+>  drivers/reset/reset-zynqmp.c | 24 ++++++++++++++++++++----
+>  1 file changed, 20 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/reset/reset-zynqmp.c b/drivers/reset/reset-zynqmp.c
+> index 373ea8d4f7a1..17aa4532ec5e 100644
+> --- a/drivers/reset/reset-zynqmp.c
+> +++ b/drivers/reset/reset-zynqmp.c
+> @@ -12,9 +12,11 @@
+>  
+>  #define ZYNQMP_NR_RESETS (ZYNQMP_PM_RESET_END - ZYNQMP_PM_RESET_START)
+>  #define ZYNQMP_RESET_ID ZYNQMP_PM_RESET_START
+> +#define VERSAL_NR_RESETS	95
+>  
+>  struct zynqmp_reset_data {
+>  	struct reset_controller_dev rcdev;
+> +	u32 reset_id;
+>  };
+>  
+>  static inline struct zynqmp_reset_data *
+> @@ -26,23 +28,28 @@ to_zynqmp_reset_data(struct reset_controller_dev *rcdev)
+>  static int zynqmp_reset_assert(struct reset_controller_dev *rcdev,
+>  			       unsigned long id)
+>  {
+> -	return zynqmp_pm_reset_assert(ZYNQMP_RESET_ID + id,
+> +	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
+> +
+> +	return zynqmp_pm_reset_assert(priv->reset_id + id,
+>  				      PM_RESET_ACTION_ASSERT);
 >  }
->
->  static struct platform_driver gcc_ipq806x_driver = {
-> --
-> 2.27.0
->
+>  
+>  static int zynqmp_reset_deassert(struct reset_controller_dev *rcdev,
+>  				 unsigned long id)
+>  {
+> -	return zynqmp_pm_reset_assert(ZYNQMP_RESET_ID + id,
+> +	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
+> +
+> +	return zynqmp_pm_reset_assert(priv->reset_id + id,
+>  				      PM_RESET_ACTION_RELEASE);
+>  }
+>  
+>  static int zynqmp_reset_status(struct reset_controller_dev *rcdev,
+>  			       unsigned long id)
+>  {
+> +	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
+>  	int val, err;
+>  
+> -	err = zynqmp_pm_reset_get_status(ZYNQMP_RESET_ID + id, &val);
+> +	err = zynqmp_pm_reset_get_status(priv->reset_id + id, &val);
+>  	if (err)
+>  		return err;
+>  
+> @@ -52,7 +59,9 @@ static int zynqmp_reset_status(struct reset_controller_dev *rcdev,
+>  static int zynqmp_reset_reset(struct reset_controller_dev *rcdev,
+>  			      unsigned long id)
+>  {
+> -	return zynqmp_pm_reset_assert(ZYNQMP_RESET_ID + id,
+> +	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
+> +
+> +	return zynqmp_pm_reset_assert(priv->reset_id + id,
+>  				      PM_RESET_ACTION_PULSE);
+>  }
+>  
+> @@ -76,13 +85,20 @@ static int zynqmp_reset_probe(struct platform_device *pdev)
+>  	priv->rcdev.ops = &zynqmp_reset_ops;
+>  	priv->rcdev.owner = THIS_MODULE;
+>  	priv->rcdev.of_node = pdev->dev.of_node;
+> +	priv->reset_id = ZYNQMP_RESET_ID;
+>  	priv->rcdev.nr_resets = ZYNQMP_NR_RESETS;
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +				    "xlnx,versal-reset")) {
+
+It would be better to use of_match_device and static const initalization
+data for this.
+
+> +		priv->reset_id = 0;
+> +		priv->rcdev.nr_resets = VERSAL_NR_RESETS;
+
+This won't work. All your reset ids are greater than 95, and this driver
+is using the default of_xlate callback, so of_reset_simple_xlate will
+fail all reset control requests with -EINVAL.
+
+regards
+Philipp
