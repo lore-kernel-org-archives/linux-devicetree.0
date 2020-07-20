@@ -2,235 +2,122 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F54AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 21:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257E1C433EA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19827208E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 21:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CF222C9D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 21:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595281058;
+	bh=ngBgYryhRrbUSwezXCMKxVoZ+YtUstZLZkhj22QczNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wpVCf0Wj/kiPTcFGCYtAwFyn03yc3sd8nLRVOkPPC0nUiKH/odLuNNariDstqUogT
+	 G+8qWEk+gV70zlgzdlEUh9PZUCxqzBS43rChG3QwBUUNyiyCElHFcaPfhLuCuxZPao
+	 9o9ojRwTwjywGNRPfnzBsmz9asqrYkuMbnoixJbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgGTV1J (ORCPT
+        id S1727093AbgGTVhg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 17:27:09 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:47398 "EHLO smtp.al2klimov.de"
+        Mon, 20 Jul 2020 17:37:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbgGTV1J (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:27:09 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 97B68BC19F;
-        Mon, 20 Jul 2020 21:27:03 +0000 (UTC)
-Subject: Re: [PATCH] firmware: ti_sci: Replace HTTP links with HTTPS ones
-To:     Tero Kristo <t-kristo@ti.com>, nm@ti.com, ssantosh@kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, p.zabel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        id S1727048AbgGTVhb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:37:31 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 384D422BEF;
+        Mon, 20 Jul 2020 21:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595281051;
+        bh=ngBgYryhRrbUSwezXCMKxVoZ+YtUstZLZkhj22QczNQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0UjyQUPINUK+aTDE3YDe/9ALKCXvL7mp1Ld2eOthebLPphlCSaQUg0ocT188wh7Rn
+         1VXSKSog/8i6zjizbfx13q0XJJpEyxDswPIlX4POd7uQntOK1+73b2HYAcoHCLA2CR
+         WEDPycUNW52HuCFBtidAV2BKJjk+U8Ue+T4LqUG4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-References: <20200718105538.9542-1-grandmaster@al2klimov.de>
- <7b6caa87-8672-b5d5-ef8d-2fd38a4b53e6@ti.com>
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Message-ID: <03ad792e-a345-ee3d-02e5-19e489e25787@al2klimov.de>
-Date:   Mon, 20 Jul 2020 23:27:02 +0200
+Subject: [PATCH AUTOSEL 5.7 12/40] ARM: dts: n900: remove mmc1 card detect gpio
+Date:   Mon, 20 Jul 2020 17:36:47 -0400
+Message-Id: <20200720213715.406997-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
+References: <20200720213715.406997-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <7b6caa87-8672-b5d5-ef8d-2fd38a4b53e6@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Merlijn Wajer <merlijn@wizzup.org>
 
+[ Upstream commit ed3e98e919aaaa47e9d9f8a40c3f6f4a22577842 ]
 
-Am 20.07.20 um 09:32 schrieb Tero Kristo:
-> Hi Alexander,
-Hi,
+Instead, expose the key via the input framework, as SW_MACHINE_COVER
 
-> 
-> One comment below.
-> 
-> On 18/07/2020 13:55, Alexander A. Klimov wrote:
->> Rationale:
->> Reduces attack surface on kernel devs opening the links for MITM
->> as HTTPS traffic is much harder to manipulate.
->>
->> Deterministic algorithm:
->> For each file:
->>    If not .svg:
->>      For each line:
->>        If doesn't contain `\bxmlns\b`:
->>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->>       If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->>              If both the HTTP and HTTPS versions
->>              return 200 OK and serve the same content:
->>                Replace HTTP with HTTPS.
->>
->> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
->> ---
->>   Continuing my work started at 93431e0607e5.
->>   See also: git log --oneline '--author=Alexander A. Klimov 
->> <grandmaster@al2klimov.de>' v5.7..master
->>
->>   If there are any URLs to be removed completely
->>   or at least not (just) HTTPSified:
->>   Just clearly say so and I'll *undo my change*.
->>   See also: https://lkml.org/lkml/2020/6/27/64
->>
->>   If there are any valid, but yet not changed URLs:
->>   See: https://lkml.org/lkml/2020/6/26/837
->>
->>   If you apply the patch, please let me know.
->>
->>
->>   .../devicetree/bindings/interrupt-controller/ti,sci-intr.txt    | 2 +-
->>   drivers/firmware/ti_sci.c                                       | 2 +-
->>   drivers/firmware/ti_sci.h                                       | 2 +-
->>   drivers/irqchip/irq-ti-sci-inta.c                               | 2 +-
->>   drivers/irqchip/irq-ti-sci-intr.c                               | 2 +-
->>   drivers/reset/reset-ti-sci.c                                    | 2 +-
->>   include/linux/soc/ti/ti_sci_inta_msi.h                          | 2 +-
->>   include/linux/soc/ti/ti_sci_protocol.h                          | 2 +-
->>   8 files changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git 
->> a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt 
->> b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> index 1a8718f8855d..178fca08278f 100644
->> --- 
->> a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> +++ 
->> b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->> @@ -55,7 +55,7 @@ Required Properties:
->>               corresponds to a range of host irqs.
->>   For more details on TISCI IRQ resource management refer:
->> -http://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
->> +https://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
->>   Example:
->>   --------
->> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
->> index 4126be9e3216..53cee17d0115 100644
->> --- a/drivers/firmware/ti_sci.c
->> +++ b/drivers/firmware/ti_sci.c
->> @@ -2,7 +2,7 @@
->>   /*
->>    * Texas Instruments System Control Interface Protocol Driver
->>    *
->> - * Copyright (C) 2015-2016 Texas Instruments Incorporated - 
->> http://www.ti.com/
->> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - 
->> https://www.ti.com/
->>    *    Nishanth Menon
->>    */
->> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
->> index f0d068c03944..57cd04062994 100644
->> --- a/drivers/firmware/ti_sci.h
->> +++ b/drivers/firmware/ti_sci.h
->> @@ -6,7 +6,7 @@
->>    * The system works in a message response protocol
->>    * See: http://processors.wiki.ti.com/index.php/TISCI for details
-> 
-> ^^^^
-> 
-> You should probably replace that one as well to be https while doing the 
-> rest of the changes, even though the wiki is being deprecated during 
-> this year.
-Don't worry, I'll run another scan anyway to cover newly added URLs.
-Do you require this additional change for applying this patch?
+The chip-detect GPIO is actually detecting if the cover is closed.
+Technically it's possible to use the SD card with open cover. The
+only downside is risk of battery falling out and user being able
+to physically remove the card.
 
-> 
-> -Tero
-> 
->>    *
->> - * Copyright (C)  2015-2016 Texas Instruments Incorporated - 
->> http://www.ti.com/
->> + * Copyright (C)  2015-2016 Texas Instruments Incorporated - 
->> https://www.ti.com/
->>    */
->>   #ifndef __TI_SCI_H
->> diff --git a/drivers/irqchip/irq-ti-sci-inta.c 
->> b/drivers/irqchip/irq-ti-sci-inta.c
->> index 7e3ebf6ed2cd..85de19fe9b6e 100644
->> --- a/drivers/irqchip/irq-ti-sci-inta.c
->> +++ b/drivers/irqchip/irq-ti-sci-inta.c
->> @@ -2,7 +2,7 @@
->>   /*
->>    * Texas Instruments' K3 Interrupt Aggregator irqchip driver
->>    *
->> - * Copyright (C) 2018-2019 Texas Instruments Incorporated - 
->> http://www.ti.com/
->> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - 
->> https://www.ti.com/
->>    *    Lokesh Vutla <lokeshvutla@ti.com>
->>    */
->> diff --git a/drivers/irqchip/irq-ti-sci-intr.c 
->> b/drivers/irqchip/irq-ti-sci-intr.c
->> index 59d51a20bbd8..5ea148faf2ab 100644
->> --- a/drivers/irqchip/irq-ti-sci-intr.c
->> +++ b/drivers/irqchip/irq-ti-sci-intr.c
->> @@ -2,7 +2,7 @@
->>   /*
->>    * Texas Instruments' K3 Interrupt Router irqchip driver
->>    *
->> - * Copyright (C) 2018-2019 Texas Instruments Incorporated - 
->> http://www.ti.com/
->> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - 
->> https://www.ti.com/
->>    *    Lokesh Vutla <lokeshvutla@ti.com>
->>    */
->> diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
->> index bf68729ab729..b799aefad547 100644
->> --- a/drivers/reset/reset-ti-sci.c
->> +++ b/drivers/reset/reset-ti-sci.c
->> @@ -1,7 +1,7 @@
->>   /*
->>    * Texas Instrument's System Control Interface (TI-SCI) reset driver
->>    *
->> - * Copyright (C) 2015-2017 Texas Instruments Incorporated - 
->> http://www.ti.com/
->> + * Copyright (C) 2015-2017 Texas Instruments Incorporated - 
->> https://www.ti.com/
->>    *    Andrew F. Davis <afd@ti.com>
->>    *
->>    * This program is free software; you can redistribute it and/or modify
->> diff --git a/include/linux/soc/ti/ti_sci_inta_msi.h 
->> b/include/linux/soc/ti/ti_sci_inta_msi.h
->> index 11fb5048f5f6..e3aa8b14612e 100644
->> --- a/include/linux/soc/ti/ti_sci_inta_msi.h
->> +++ b/include/linux/soc/ti/ti_sci_inta_msi.h
->> @@ -2,7 +2,7 @@
->>   /*
->>    * Texas Instruments' K3 TI SCI INTA MSI helper
->>    *
->> - * Copyright (C) 2018-2019 Texas Instruments Incorporated - 
->> http://www.ti.com/
->> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - 
->> https://www.ti.com/
->>    *    Lokesh Vutla <lokeshvutla@ti.com>
->>    */
->> diff --git a/include/linux/soc/ti/ti_sci_protocol.h 
->> b/include/linux/soc/ti/ti_sci_protocol.h
->> index 9531ec823298..0fc452dd96d4 100644
->> --- a/include/linux/soc/ti/ti_sci_protocol.h
->> +++ b/include/linux/soc/ti/ti_sci_protocol.h
->> @@ -2,7 +2,7 @@
->>   /*
->>    * Texas Instruments System Control Interface Protocol
->>    *
->> - * Copyright (C) 2015-2016 Texas Instruments Incorporated - 
->> http://www.ti.com/
->> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - 
->> https://www.ti.com/
->>    *    Nishanth Menon
->>    */
->>
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. 
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The behaviour of SD card not being available when the device is
+open is unexpected and creates more problems than it solves. There
+is a high chance, that more people accidentally break their rootfs
+by opening the case without physically removing the card.
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
+Link: https://lore.kernel.org/r/20200612125402.18393-3-merlijn@wizzup.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/omap3-n900.dts | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 4089d97405c95..3dbcae3d60d28 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -105,6 +105,14 @@ proximity_sensor {
+ 			linux,code = <SW_FRONT_PROXIMITY>;
+ 			linux,can-disable;
+ 		};
++
++		machine_cover {
++			label = "Machine Cover";
++			gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_MACHINE_COVER>;
++			linux,can-disable;
++		};
+ 	};
+ 
+ 	isp1707: isp1707 {
+@@ -819,10 +827,6 @@ &mmc1 {
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	vmmc-supply = <&vmmc1>;
+ 	bus-width = <4>;
+-	/* For debugging, it is often good idea to remove this GPIO.
+-	   It means you can remove back cover (to reboot by removing
+-	   battery) and still use the MMC card. */
+-	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
+ };
+ 
+ /* most boards use vaux3, only some old versions use vmmc2 instead */
+-- 
+2.25.1
+
