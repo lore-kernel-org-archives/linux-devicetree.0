@@ -2,59 +2,60 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52361C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 10:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868BDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 11:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3258F2068F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 10:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6168522BF3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 11:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Ly3MetxY"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="OrN32bn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgGTK40 (ORCPT
+        id S1728395AbgGTLCy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:56:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51542 "EHLO
+        Mon, 20 Jul 2020 07:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728475AbgGTK4Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 06:56:25 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8A9C061794
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 03:56:25 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b92so9910680pjc.4
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 03:56:25 -0700 (PDT)
+        with ESMTP id S1728232AbgGTLCy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 07:02:54 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B1CC061794
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 04:02:54 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l63so10120815pge.12
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 04:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nSOMoYdoeN3ixxkr9HyJ0ziUQqzOG9TSyjql14cVs8g=;
-        b=Ly3MetxYtUoLy7ynvT0emxlziJSTT/D0jOHRm5pDALE3DZJaM8QzJ2qCR3ODASwLZY
-         u67HLCCTU4JjwUIKlm7QI6xbux4D0bYILmWDp7keoxSrJ5TEwIQzu4n5reDvv8ehElJn
-         0VCESqXe1wWf+PEz5fnyZhjm3g3ze4X0aMeb0=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nE2C5G9azmjt7+W5WypzQU7MH/oEmdhAcqvQRmdBylE=;
+        b=OrN32bn1NLV16DqlcAg6lzQE2YeAojK5jFDLALPUOg2KRPpv/YIV7iQ0c//+WbvOxy
+         E2dSu40efbgjfG8KMFeADvWMwgu83b+SVTErIsqYw0qckAAuE6LIhb9pc4cJLdwYRhuJ
+         DeCh+/uQLtRMQ13kbNIGis2fG1nUBijMGZg+g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nSOMoYdoeN3ixxkr9HyJ0ziUQqzOG9TSyjql14cVs8g=;
-        b=SBKUBkhe9gmdjFRuyeztMgbNaObWeff3SnhhTdNOin1VW1LEMwr5dgp0Dbox6O/U7s
-         f3e3rh3k2blvT5Z/DOREv9BZFuT1yJiqV7Q7bKO6DoDlmzFrCiVXO3UL0FqDcFL681FX
-         5qkMZ+/8kW+wahrkI42GjxuLWCCCMsaIRKXHbQRdhpnDmx0RsiAC2UM9mW+v5BwPCZEb
-         Y26dHBN31/cHAwVMQHKv9bwMmokJh3t8PGIItzH2cU1quatChmbLB/rRqxLH8jPW4vTe
-         uLV/jhGYIHkHJegI9jzMRh5DIQIANiZxR9aPB533FtVJa+/1qIT2DihDDoxm7+XjM1hZ
-         F2wg==
-X-Gm-Message-State: AOAM533Pv0ZMTSIH15l0HzKAbVpQffLNmvXcAJyaK8YEkxO4BtFSW5Ca
-        lX9fb6Cu81XjDadEaao/sNTK3g==
-X-Google-Smtp-Source: ABdhPJxtpGiGl5nfJ/WlbO97twEDAKENawlViepi1t92UU+FBph92dN8QPL/JfxxH5UeJmFl+YUKrg==
-X-Received: by 2002:a17:90b:2350:: with SMTP id ms16mr14056450pjb.127.1595242585402;
-        Mon, 20 Jul 2020 03:56:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nE2C5G9azmjt7+W5WypzQU7MH/oEmdhAcqvQRmdBylE=;
+        b=WxTLRdXONLt/oalNP3N/rKnpek9Fi5dtn2+y1FTjUSJjXwnSolloN5Nnbufngz+L/F
+         okx6MDG4b4DdNIiMV0kX/9bGMOH/RBn4fIecS+VrIYZb6ZPyLOOrXgsnNParJ1TmXbDL
+         1rwNy13WcRBW7N/vqJCAXBr4Z4HEmUQpgaHF6NG7mjoZ+AddealwL3a9J6lOEJ7dwwmr
+         X7Y6/nlKYWk11WRgRM2iEYgUgTv7ypD0AaK58qX4oeCdejEg5uVrqyjfdS1NgcOgmQHO
+         7QxqDfIOKLlTIiztbprvhOTZXIGcTLtQlkyeEUAAFY6R+6GHv0xe/VOu8lsw+dEBG5RS
+         06bA==
+X-Gm-Message-State: AOAM533BBJOuY2L853jG+j5Q0PWD3CtjKivyJecqPpCNaXJtFeYLORZx
+        LGmqif+6SQVVwN/CjrrAUBjbdA==
+X-Google-Smtp-Source: ABdhPJzfZGwcRqJ/2TJ7XK9B7mq5al4xcTrrQMO1xpDhX5tStOastAhCSymLPYlFkDb/+SJbR5N7wA==
+X-Received: by 2002:a63:757:: with SMTP id 84mr18562219pgh.275.1595242973437;
+        Mon, 20 Jul 2020 04:02:53 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:8c21:db7b:4558:fba3])
-        by smtp.gmail.com with ESMTPSA id j5sm13984721pgi.42.2020.07.20.03.56.14
+        by smtp.gmail.com with ESMTPSA id o10sm11445876pjs.27.2020.07.20.04.02.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 03:56:24 -0700 (PDT)
+        Mon, 20 Jul 2020 04:02:52 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
@@ -64,12 +65,10 @@ Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/3] arm64: dts: rockchip: Add Radxa ROCK Pi 4C support
-Date:   Mon, 20 Jul 2020 16:25:31 +0530
-Message-Id: <20200720105531.367671-3-jagan@amarulasolutions.com>
+Subject: [PATCH 1/3] ARM: dts: rockchip: Add USB for RockPI N8/N10
+Date:   Mon, 20 Jul 2020 16:32:28 +0530
+Message-Id: <20200720110230.367985-1-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200720105531.367671-1-jagan@amarulasolutions.com>
-References: <20200720105531.367671-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -77,87 +76,202 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rock PI 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enabled
-GPIO pin change compared to 4B, 4C.
+Radxa dalang carrier board has 2x USB 2.0 and 1x USB 3.0
+ports.
 
-So, add or enable difference nodes/properties in 4C dts
-by including common dtsi.
+This patch adds support to enable all these USB ports for
+N10 and N8 combinations SBCs.
+
+Note that the USB 3.0 port on RockPI N8 combination works
+as USB 2.0 OTG since it is driven from RK3288.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm64/boot/dts/rockchip/Makefile         |  1 +
- .../boot/dts/rockchip/rk3399-rock-pi-4c.dts   | 51 +++++++++++++++++++
- 2 files changed, 52 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
+Note:
+- depends on https://lkml.org/lkml/2020/7/20/446
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 8832d05c2571..02cdb3c4a6c1 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -35,6 +35,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4a.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4b.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
-new file mode 100644
-index 000000000000..9d07ebd1ec82
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Radxa Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
+ arch/arm/boot/dts/rk3288-vmarc-som.dtsi       | 42 ++++++++++
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    | 18 +++++
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 78 +++++++++++++++++++
+ 3 files changed, 138 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-vmarc-som.dtsi b/arch/arm/boot/dts/rk3288-vmarc-som.dtsi
+index 0bcb9f067d66..abe3c01d13aa 100644
+--- a/arch/arm/boot/dts/rk3288-vmarc-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-vmarc-som.dtsi
+@@ -267,4 +267,46 @@ sdmmc_cmd: sdmmc-cmd {
+ 			rockchip,pins = <6 RK_PC5 1 &pcfg_pull_up_drv_8ma>;
+ 		};
+ 	};
 +
-+/dts-v1/;
-+#include "rk3399-rock-pi-4.dtsi"
++	vbus_host {
++		usb1_en_oc: usb1-en-oc {
++			rockchip,pins = <0 RK_PC1 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
 +
-+/ {
-+	model = "Radxa ROCK Pi 4C";
-+	compatible = "radxa,rockpi4", "rockchip,rk3399";
-+};
-+
-+&sdio0 {
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
-+		interrupt-names = "host-wake";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_host_wake_l>;
++	vbus_typec {
++		usb0_en_oc: usb0-en-oc {
++			rockchip,pins = <0 RK_PB5 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
 +	};
 +};
 +
-+&uart0 {
++&usbphy {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host1 {
++	status = "okay";
++};
++
++&usb_otg {
++	status = "okay";
++};
++
++&vbus_host {
++	enable-active-high;
++	gpio = <&gpio0 RK_PC1 GPIO_ACTIVE_HIGH>; /* USB1_EN_OC# */
++};
++
++&vbus_typec {
++	enable-active-high;
++	gpio = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>; /* USB0_EN_OC# */
+ };
+diff --git a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+index 450e5bb5af0b..d2b6ead148a2 100644
+--- a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
++++ b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+@@ -33,6 +33,24 @@ vcc5v0_sys: vcc5v0-sys-regulator {
+ 		regulator-max-microvolt = <5000000>;
+ 		vin-supply = <&vcc12v_dcin>;
+ 	};
++
++	vbus_host: vbus-host {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb1_en_oc>;
++		regulator-name = "vbus_host"; /* HOST-5V */
++		regulator-always-on;
++		vin-supply = <&vcc5v0_sys>;
++	};
++
++	vbus_typec: vbus-typec {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb0_en_oc>;
++		regulator-name = "vbus_typec";
++		regulator-always-on;
++		vin-supply = <&vcc5v0_sys>;
++	};
+ };
+ 
+ &gmac {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+index 37ed95d5f7e9..111d6cf9a4e6 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+@@ -304,6 +304,18 @@ pmic_int_l: pmic-int-l {
+ 			rockchip,pins = <1 RK_PC2 0 &pcfg_pull_up>;
+ 		};
+ 	};
++
++	vbus_host {
++		usb1_en_oc: usb1-en-oc {
++			rockchip,pins = <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++
++	vbus_typec {
++		usb0_en_oc: usb0-en-oc {
++			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
+ };
+ 
+ &pmu_io_domains {
+@@ -324,8 +336,74 @@ &sdmmc {
+ 	max-frequency = <150000000>;
+ };
+ 
++&tcphy0 {
++	status = "okay";
++};
++
+ &tsadc {
+ 	rockchip,hw-tshut-mode = <1>;
+ 	rockchip,hw-tshut-polarity = <1>;
+ 	status = "okay";
+ };
++
++&u2phy0 {
 +	status = "okay";
 +
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
++	u2phy0_otg: otg-port {
++		phy-supply = <&vbus_typec>;
++		status = "okay";
++	};
++
++	u2phy0_host: host-port {
++		phy-supply = <&vbus_host>;
++		status = "okay";
 +	};
 +};
 +
-+&vcc5v0_host {
-+	gpio = <&gpio3 RK_PD6 GPIO_ACTIVE_HIGH>;
++
++&u2phy1 {
++	status = "okay";
++
++	u2phy1_host: host-port {
++		phy-supply = <&vbus_host>;
++		status = "okay";
++	};
 +};
 +
-+&vcc5v0_host_en {
-+	rockchip,pins = <3 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&usbdrd3_0 {
++	status = "okay";
++};
++
++&usbdrd_dwc3_0 {
++	status = "okay";
++};
++
++&vbus_host {
++	enable-active-high;
++	gpio = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>; /* USB1_EN_OC# */
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb1_en_oc>;
++};
++
++&vbus_typec {
++	enable-active-high;
++	gpio = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>; /* USB0_EN_OC# */
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_en_oc>;
 +};
 -- 
 2.25.1
