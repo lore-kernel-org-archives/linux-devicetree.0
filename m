@@ -2,106 +2,111 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B70C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230D8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8ABF22B4E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:06:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ejfi+Hoz"
+	by mail.kernel.org (Postfix) with ESMTP id F19DA22B51
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 19:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595272521;
+	bh=y7vjF/7Gg0I1ck7MMsCAO02jGh/RyFblscWzzPbMNTY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2usPS7ROTyD7HAMxJUBnm627L+3XwAlCcHgQGWodXeIfSlLXPV6u6wxQV+3vr7s4I
+	 kAqM0LNbGIHmmqFupIJH/cRxRqdDcOoIw8oR1nDKpqWGBirmgHvL5UeU+iYdfq85j0
+	 Yzy54Z34NrHHGEHPsdLzurFAE305mkzgG/WjbxYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgGTTGL (ORCPT
+        id S1729445AbgGTTPU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 15:06:11 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33308 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbgGTTGL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 15:06:11 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06KJ5r7H112895;
-        Mon, 20 Jul 2020 14:05:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595271953;
-        bh=N75Wh7ZzcWXLgwUMfugPduR0KXHPJ9OzKFWdt1ltmt8=;
-        h=From:To:CC:Subject:Date;
-        b=ejfi+HozrSt109jvnNblVQdeKIxvRY8O72pEX1XKjATmUKMKz1ltFbucdxqFiNwxh
-         TiAyRuHE4RYwumqB901UOWEZNXm49UwpXwmk/qbhcn9c/h5A+6waFtxC+7+KXkpuW+
-         8Yhf9iXrAeTxrM6FevZJ6MaxlliGQhO3PzZZ5b2Q=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06KJ5rov055290
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jul 2020 14:05:53 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
- Jul 2020 14:05:53 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 20 Jul 2020 14:05:52 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06KJ5qhS075552;
-        Mon, 20 Jul 2020 14:05:52 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
-        <marek.behun@nic.cz>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH] leds: multicolor: Fix camel case in documentation
-Date:   Mon, 20 Jul 2020 14:05:47 -0500
-Message-ID: <20200720190547.4735-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 20 Jul 2020 15:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727833AbgGTTPT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 15:15:19 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6A622B51;
+        Mon, 20 Jul 2020 19:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595272519;
+        bh=y7vjF/7Gg0I1ck7MMsCAO02jGh/RyFblscWzzPbMNTY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RFu8cSEQvecMwBh39qwG5H5zY+mfq5FmgFW9pAi1aAPgLmqfb8s1g8NFs+hmwEcuP
+         r28JVhuAtnMFTscgbaDhTTbV6u8UajCLiq6hiu8uV1sn4h3LCW267xLRwYulgIJHXY
+         c6FRcJPLzrqQM1toSZTDjrhPXQD3O9q30hs3GuzA=
+Received: by mail-oi1-f169.google.com with SMTP id l63so15197606oih.13;
+        Mon, 20 Jul 2020 12:15:19 -0700 (PDT)
+X-Gm-Message-State: AOAM533unQJ2wZrcxgp3juu4dx2PVOJifqQTK6la5D2dyD71EE0WluZy
+        apuUxU+ZvzUQQl92rJzEfOx/ov5eIuHvY2JmyQ==
+X-Google-Smtp-Source: ABdhPJxJt9eB3LJsFXU6KUnTkSdkYxCVHUD4AW2u4MEtSuMgxN9FUFdmQ/V73vIzN2u7Age2BlV1QCfDkUb0wEfouYk=
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr625735oiw.147.1595272518900;
+ Mon, 20 Jul 2020 12:15:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200717144132.2206-1-laurentiu.palcu@oss.nxp.com>
+ <20200717144132.2206-5-laurentiu.palcu@oss.nxp.com> <20200720164927.GA2650420@bogus>
+ <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
+In-Reply-To: <20200720165537.kwlxwrtlmlijhuoh@fsr-ub1864-141>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 20 Jul 2020 13:15:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLbYvekVe_YeCKYCDO69RtTTNBoJQ9X1n=K_ToGwrMVXg@mail.gmail.com>
+Message-ID: <CAL_JsqLbYvekVe_YeCKYCDO69RtTTNBoJQ9X1n=K_ToGwrMVXg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] dt-bindings: display: imx: add bindings for DCSS
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        devicetree@vger.kernel.org, lukas@mntmn.com,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix the camel case of MultiColor to Multicolor.
+On Mon, Jul 20, 2020 at 10:55 AM Laurentiu Palcu
+<laurentiu.palcu@oss.nxp.com> wrote:
+>
+> Hi Rob,
+>
+> On Mon, Jul 20, 2020 at 10:49:27AM -0600, Rob Herring wrote:
+> > On Fri, 17 Jul 2020 17:41:29 +0300, Laurentiu Palcu wrote:
+> > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > >
+> > > Add bindings for iMX8MQ Display Controller Subsystem.
+> > >
+> > > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > > ---
+> > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
+> > >  1 file changed, 104 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> > >
+> >
+> >
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> >
+> > If a tag was not added on purpose, please state why and what changed.
+>
+> Well, I kind of did exactly that... in the cover letter. I stated
+> clearly why this patch needs another look... :/
 
-Fixes: f5a6eb5c5e38 ("leds: multicolor: Introduce a multicolor class definition")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/leds/leds-class-multicolor.rst | 2 +-
- drivers/leds/Kconfig                         | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Put information closest to where it applies which is this patch. I
+don't read cover letters typically.
 
-diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
-index 6204f391fd40..c57b98bfd387 100644
---- a/Documentation/leds/leds-class-multicolor.rst
-+++ b/Documentation/leds/leds-class-multicolor.rst
-@@ -1,7 +1,7 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
- ====================================
--MultiColor LED handling under Linux
-+Multicolor LED handling under Linux
- ====================================
- 
- Description
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index a2c72212ddfc..1de6e8e264a0 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -31,7 +31,7 @@ config LEDS_CLASS_FLASH
- 	  as a module.
- 
- config LEDS_CLASS_MULTICOLOR
--	tristate "LED MultiColor Class Support"
-+	tristate "LED Multicolor Class Support"
- 	depends on LEDS_CLASS
- 	help
- 	  This option enables the multicolor LED sysfs class in /sys/class/leds.
--- 
-2.27.0
+R-by still stands.
 
+Rob
