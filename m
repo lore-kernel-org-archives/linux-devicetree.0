@@ -2,41 +2,41 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A22C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D3CC433EA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38F322482
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273C420674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Up3OW7br"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ASX+t96h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgGTHtx (ORCPT
+        id S1728009AbgGTHyy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:49:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50286 "EHLO
+        Mon, 20 Jul 2020 03:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgGTHtx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 03:49:53 -0400
-X-Greylist: delayed 343 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 20 Jul 2020 00:49:53 PDT
+        with ESMTP id S1726521AbgGTHyy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 03:54:54 -0400
 Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA03C061794
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:49:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD10C061794
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 00:54:53 -0700 (PDT)
 Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id C2CAA1FEB4;
-        Mon, 20 Jul 2020 07:44:06 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 6B7C71FEC7;
+        Mon, 20 Jul 2020 07:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595231049; bh=1agkTCChFFKEns9U88+0HkPfubwkBpH/BY7hu2/r318=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Up3OW7briPnLfjQc3Bd4wcOMg9f+uxow15iQh1aTiwSkdXVLeSi6EC001B4MxsCE4
-         SRF08D6CL0wEFkUtmt/WmeJ4SBhCBm5ub29YkA/f/5WtdtltGbAoZ6Ik4uO+b5LvMU
-         reMlv4fE8R49YLJdtp7nYt9HmOaphBKIpCHRzj1ib16MDOyLFHCLic6yYfBp77EKSB
-         rsJZzxR78mwHFiDuDN3xKlWaSXs7+wbz+Riy0RZR1Qpa1UGxD2CUldoxXSfLpBux99
-         u4tWpqY5ge2eCi+1OBh5xK8NH74Y697vjVPRPXDn0Ee7YWgBjXFpxn2lO1gjbFI4kl
-         9bMZWpUAUMDHw==
+        t=1595231081; bh=cp+frRMJbDSmQF0aHJsiydb5cvCrlCDWTwGZKrqtUy0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ASX+t96hntqJaytBufC3nJUDijiewiMVBuDyDErO8UE5xAmylMffgM2To0T5GKkTo
+         0uE9D73nBInSL4OYPqNdZ/dJszcqZwWANaEY3JKAclGO08/MSEwhuwflbKCjHp/z3f
+         tkdj2eDUGOl/DcvBe8Qs1aaq02E9CJIBtNIHK1fZrgo1/RUc7twgA6+DhvvnyctMaq
+         8td2uxoQmYYk1q7n4aj+d1s7Znu4JxID8pTFHyBpQrEWTYSG49I5pDHcmJLFx7LEgW
+         EhYEpxTYZdRUFxLNEfOVARYnr0OT1P3k76NFkRFJI8sAFbN57arWt9XqB/9Tbcnuyh
+         6G5eUZqRy9udg==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -49,10 +49,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-Date:   Mon, 20 Jul 2020 15:42:33 +0800
-Message-Id: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
+Subject: [PATCH 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+Date:   Mon, 20 Jul 2020 15:42:36 +0800
+Message-Id: <20200720074249.596364-4-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -60,32 +62,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+It can be very big on LS7A PCH systems.
 
-This series convert reservation of Loongson64 Logic PIO into DeviceTree based
-method.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/include/asm/io.h                     | 3 ++-
+ arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-It can be used to replace Huacai's
-"MIPS: Loongson64: Reserve legacy MMIO space according to bridge type".
-
-Thanks.
-
-Jiaxun Yang (5):
-  of_address: Add bus type match for pci ranges parser
-  MIPS: Loongson64: Process ISA Node in DeviceTree
-  MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-  MIPS: Loongson64: DTS: Fix ISA range for RS780E PCH
-  MIPS: Loongson64: Add ISA node for LS7A PCH
-
- arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |  7 ++
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  2 +-
- arch/mips/include/asm/io.h                    |  3 +-
- .../mips/include/asm/mach-loongson64/spaces.h |  3 +-
- arch/mips/loongson64/init.c                   | 85 +++++++++++++------
- drivers/of/address.c                          | 15 +++-
- include/linux/of_address.h                    |  3 +
- 7 files changed, 85 insertions(+), 33 deletions(-)
-
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 346fffd9e972..0072489325fa 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -50,8 +50,9 @@
+ # define __relaxed_ioswabq ioswabq
+ 
+ /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
+-
++#ifndef IO_SPACE_LIMIT
+ #define IO_SPACE_LIMIT 0xffff
++#endif
+ 
+ /*
+  * On MIPS I/O ports are memory mapped, so we access them using normal
+diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
+index 3de0ac9d8829..b99b43854929 100644
+--- a/arch/mips/include/asm/mach-loongson64/spaces.h
++++ b/arch/mips/include/asm/mach-loongson64/spaces.h
+@@ -11,8 +11,7 @@
+ #define PCI_IOSIZE	SZ_16M
+ #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
+ 
+-/* Reserved at the start of PCI_IOBASE for legacy drivers */
+-#define MMIO_LOWER_RESERVED	0x10000
++#define IO_SPACE_LIMIT 0x00ffffff
+ 
+ #include <asm/mach-generic/spaces.h>
+ #endif
 -- 
 2.28.0.rc1
 
