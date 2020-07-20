@@ -2,97 +2,109 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D72FC433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 10:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BB1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 10:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B8E21775
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 10:01:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uEn13EOK"
+	by mail.kernel.org (Postfix) with ESMTP id 390F421775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 10:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgGTKB4 (ORCPT
+        id S1728068AbgGTKDn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 06:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728044AbgGTKBz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 06:01:55 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F86C0619D2
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 03:01:55 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id a23so7216761pfk.13
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 03:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IBVdyP/pegZa7dgnXrwm5PyIQ+8xTCyFcnvPtdN5UVI=;
-        b=uEn13EOKkQKFmK34APcGHbkL6i0Bc78BZn67EQvfn41Fc9a/MMheX8xL7adrdOlRhe
-         hA2C2jqTAw/OZQy5HoNYNIepnDobJJplfM9mycMWrip+JIS2XLNFGzIzAkuRh7ZUhaG8
-         y3q1VEXw7Cn2jnWMWlkYLFIpb7vCyn0pJ33WI7EQYk3hsxdmVtgX94P5euF9A6tqDoUy
-         fwdDQqX4/TzfjC/i4+SRlySFWwVcW1jE+qt8KCTytCVjIiEMnvJzZtfSBYFKDvA8QMk1
-         h9tKOxaoLTZRumfefxVu+hY8zE/HdKWaHTcyuBxVMhuwcc6fx/+CCeheDEyf3gKcMOxQ
-         qvEA==
+        Mon, 20 Jul 2020 06:03:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40977 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbgGTKDn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 06:03:43 -0400
+Received: by mail-io1-f68.google.com with SMTP id p205so16911446iod.8;
+        Mon, 20 Jul 2020 03:03:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IBVdyP/pegZa7dgnXrwm5PyIQ+8xTCyFcnvPtdN5UVI=;
-        b=iXNxWUU2NgHzWbGL0gfPkjVUH8nx9Oi/I6lXFG8fdpPdGLcLYAiyGo2M0r0X0O6J3I
-         5Mnjv1STz+6p3B2LbcO6mEZM3hC79NYe0UT6v79GUJPBS9ksq9vYA/XTk+LCRjiQVuRJ
-         m/7ZjJPSnav+ulkacdKTeq2Malm59e8NzzUqtJGuW3yAD/FW703CM+HDS5BHaYSOVpIv
-         OfBVNUFb+fLooR6XzqewLng1omwLmf9JKxT9AwIZ5ILADcYpQyJn5jqQcG0rCJPFebDm
-         pknH6e1c5u318wKJ6tWRGK5CIHkEluKmRTL9RGgsSrP8J8aoXEoWEB4H18QzZGfy6Pwo
-         Mu1A==
-X-Gm-Message-State: AOAM533oXVfqQW5iDXDyj10tOjhzu/Rbi/efCGQGcP9pf09KKTWBkGti
-        0jkmRc9D37lLtTR3NMkhGvsJRg==
-X-Google-Smtp-Source: ABdhPJzhEikt8tP6/CpS6b+B437wPhrsq9S5Jz+w2SuVdMMdAy5NITpEubsktWnoJlAezd0lmVwv8A==
-X-Received: by 2002:a62:cd89:: with SMTP id o131mr18638388pfg.195.1595239314908;
-        Mon, 20 Jul 2020 03:01:54 -0700 (PDT)
-Received: from localhost ([223.179.133.67])
-        by smtp.gmail.com with ESMTPSA id g8sm14821824pgr.70.2020.07.20.03.01.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jul 2020 03:01:53 -0700 (PDT)
-Date:   Mon, 20 Jul 2020 15:31:31 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-Message-ID: <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu>
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LfMkjlve+umafu2b9kaq1QVtcg2fakCMAu1E0vZcPhc=;
+        b=L1haK1uD9caSQVSsNJLCTSf+iLrUF4V7UD2uqcFTtjV5PoTzs/UZpJmgZido5cQ5iV
+         6/awqHHcR2/ED85fYyjjvx+UWN5poE1Yf31Jwb7oUL+0l5Ni4c17ZKXBtorf03sDBean
+         zZb4P8LEBIDjTNss69FaPW9m1ZKiFtHz4BKgIfOg+3s6h+XkcUDiYFJJPcaoB6Q6IQxG
+         Bz0gKI7VXYFP0bJSSww5qAmCrWCE0LN8k9Kps04AXxmZ35fPnfq1Ygb9I9NKfUzTfkBi
+         eCYdiQ/ADo3FRd4TTmOYSJITPyQkyu+j5CV5RgqLH9oM2fsaAZ8aAqvTQ6j9iR/ZdVIe
+         jESg==
+X-Gm-Message-State: AOAM530BYgWfgN8TwA9VMVFQclLz/7nqaGZKfcFcdR/rKKQByHdbrSTy
+        zFYR1I5ep6uxYQCWjNCh1ljB5vJEZ0ZFm+HIPxU=
+X-Google-Smtp-Source: ABdhPJwRZzzyScQp7O3xKTtSgAG6gq0krXRSgOszXlAIMTPuEofrPLkeLRuQhYQZDANrjByvsOVuFe155zXEsy/unbo=
+X-Received: by 2002:a6b:ba03:: with SMTP id k3mr15176905iof.72.1595239422312;
+ Mon, 20 Jul 2020 03:03:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-4-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200720074249.596364-4-jiaxun.yang@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Mon, 20 Jul 2020 18:03:30 +0800
+Message-ID: <CAAhV-H5sYFUnzgdJwV1SUpfJeZPMTsUVP3i-R0sebi2y9oW_cg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15-07-20, 08:36, Rob Clark wrote:
-> I can take the first two into msm-next, the 3rd will need to wait
-> until dev_pm_opp_set_bw() lands
+Hi, Jiaxun,
 
-You can base that on a8351c12c6c7 in linux-next, I will make sure not to rebase
-it anymore.
+On Mon, Jul 20, 2020 at 3:45 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> It can be very big on LS7A PCH systems.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/include/asm/io.h                     | 3 ++-
+>  arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+> index 346fffd9e972..0072489325fa 100644
+> --- a/arch/mips/include/asm/io.h
+> +++ b/arch/mips/include/asm/io.h
+> @@ -50,8 +50,9 @@
+>  # define __relaxed_ioswabq ioswabq
+>
+>  /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
+> -
+> +#ifndef IO_SPACE_LIMIT
+>  #define IO_SPACE_LIMIT 0xffff
+> +#endif
+>
+>  /*
+>   * On MIPS I/O ports are memory mapped, so we access them using normal
+> diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
+> index 3de0ac9d8829..b99b43854929 100644
+> --- a/arch/mips/include/asm/mach-loongson64/spaces.h
+> +++ b/arch/mips/include/asm/mach-loongson64/spaces.h
+> @@ -11,8 +11,7 @@
+>  #define PCI_IOSIZE     SZ_16M
+>  #define MAP_BASE       (PCI_IOBASE + PCI_IOSIZE)
+>
+> -/* Reserved at the start of PCI_IOBASE for legacy drivers */
+> -#define MMIO_LOWER_RESERVED    0x10000
+> +#define IO_SPACE_LIMIT 0x00ffffff
+Maybe using 0xffffff is better?
 
--- 
-viresh
+Huacai
+>
+>  #include <asm/mach-generic/spaces.h>
+>  #endif
+> --
+> 2.28.0.rc1
+>
