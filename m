@@ -6,86 +6,84 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD61AC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3F8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9313222C7B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AEA2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 22:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595285193;
-	bh=Yq5cppkLEyB4xjT28k0hj/m0n3+dZOUndlbFvZwh7rE=;
+	s=default; t=1595285354;
+	bh=Q+9W96XM0mdVFQK7BCNGQKpP/psvW5eBqzx0/XhwQCI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1eN3MZ/g1/A6pkQNpcAbvI1dC3Z3S3Y5GrDJqwryIlTQbVZ68llGiZptZR9tC+jKU
-	 X11qezL2Tp9VaVJ2utnYAshTARub1Ur1DBgxB47VNeq2pCJ+wyJp80hpODssJIIVoJ
-	 mP7I7Osmz7zXaBv6BBYtSPEiVy/DJhjgDItYm1lU=
+	b=ChPHYUmIe4pMdQzVcKtetLefe9tM2M2ewJg1RCPtpK9YIcBBp979bsprytJpNUtHA
+	 2GB1zwdjlqZdtQXCAUP5LNEFpk4AlcQS755eT5T2Lmnse//F7amlULubGUKeozHnUn
+	 dFB95sXf/V6OSK+KuN1ChNHBzzyxEW35kMygMatg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgGTWqd (ORCPT
+        id S1726030AbgGTWtO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 18:46:33 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36352 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgGTWqc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 18:46:32 -0400
-Received: by mail-il1-f195.google.com with SMTP id x9so14767037ila.3;
-        Mon, 20 Jul 2020 15:46:32 -0700 (PDT)
+        Mon, 20 Jul 2020 18:49:14 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37628 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgGTWtN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 18:49:13 -0400
+Received: by mail-io1-f68.google.com with SMTP id v6so19371299iob.4;
+        Mon, 20 Jul 2020 15:49:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=n9jtHQhmJ9vnaRzIOJakaFNOOyCU7YAeTdIn4HLZ5bQ=;
-        b=aAFjIbB1chzMmOZI2ppL8DthrgYKl/7FYfm6vT+3V4WzRYWUekQlDxnDLLx+q0CkCS
-         8CUTXPZtHU1tqhybnoVOnc1SszHmMeIirfdHMqkRyXKRYaVCo5w2qL3s+hhKbU2gWO1J
-         U5xCAwAQ71GisLCpu658MFLcq91AOAFA0q1+4Ulow6Bn981EZDEWhs8lkV05sRU38lO7
-         lhiccK8vOyZ1bWsjWDO2r6F+NnSa04dn96ZKTO4g4F8sXUQHU/ljtgccz1W4k7cxSRXI
-         Gi3rLN01bfS/oysqA+4Zj2FXR8fBLblBP4JbTo0VfAmL7Kc/RSd1XBs929B6ZjmXL93v
-         QsLQ==
-X-Gm-Message-State: AOAM530I06RbJ9Hxe7D3TWd9iRNB1UBtWY8uwGoVxbLjtmSzQWdSxF9M
-        Ysi4qnev7VitPIXCy8RmLg==
-X-Google-Smtp-Source: ABdhPJzVh3S3uWf0UwezYlOIfVX+Le1gi9aULgqWdJhxQanjUjHDx92tg4vW2P3lTQAVN318Syhr9A==
-X-Received: by 2002:a92:da46:: with SMTP id p6mr25686471ilq.48.1595285191700;
-        Mon, 20 Jul 2020 15:46:31 -0700 (PDT)
+        bh=LID56iHwZMP0VoZCB6NI9xhlSxo80lQVl96V5jSbArE=;
+        b=G7dgkLLoWvID//D1GQedGbnYLCD1BlfO36Y+0U3cD+PbWMgF1ZzxsLMlIjtQyyrnW2
+         wazrP7mVg6TwcpiBf3/mzi5vkauRrwycsg7ZtCAQMh7PVYaz18duNwaEZEYntN1VxuJG
+         RM5mxuQH4RctYtjfRRBFyYE6IICbEkAQUG02RoJwlMc2CVr8LygMGzvvyKcfeAUxlsyq
+         rT15/szlPBBYTBGXdfSn9Z2+8X3OKuRCEJqRXHxyaxyOY8wfy5vxttSNKE9Hg0impsC6
+         msBkQFpXfd9XpqsJCIYXECl2Cr8kLd9W2rm1Z7S/xTOK49N8e3WGTRksBLx9iDFv9J6q
+         8F9w==
+X-Gm-Message-State: AOAM533XTk8JegNiDGUzYix2YWHl3sDH6WCbERDqyyWOTpLEDF+jHHbG
+        tvlGRgo+oBUPQgGh78zMSQ==
+X-Google-Smtp-Source: ABdhPJxsZ1/O+yZSWlinkffOk4WHkw8nlWSNtNLvOLRgbe2vt1jf34WKMe0ZpImwH9bcGfdNWStJEQ==
+X-Received: by 2002:a6b:1449:: with SMTP id 70mr25146746iou.153.1595285352861;
+        Mon, 20 Jul 2020 15:49:12 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n1sm9492447ilo.68.2020.07.20.15.46.29
+        by smtp.gmail.com with ESMTPSA id z9sm9660322ilz.45.2020.07.20.15.49.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 15:46:30 -0700 (PDT)
-Received: (nullmailer pid 3088914 invoked by uid 1000);
-        Mon, 20 Jul 2020 22:46:29 -0000
-Date:   Mon, 20 Jul 2020 16:46:29 -0600
+        Mon, 20 Jul 2020 15:49:12 -0700 (PDT)
+Received: (nullmailer pid 3092500 invoked by uid 1000);
+        Mon, 20 Jul 2020 22:49:09 -0000
+Date:   Mon, 20 Jul 2020 16:49:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     ulf.hansson@linaro.org, wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH] dt-bindings: mmc: renesas,sdhi: convert to YAML
-Message-ID: <20200720224629.GA3088865@bogus>
-References: <1594363883-22154-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+        devicetree@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, ilias.apalodimas@linaro.org,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v1 7/8] dt-bindings: Add vendor prefix for Hirschmann
+Message-ID: <20200720224909.GA3092466@bogus>
+References: <20200710113611.3398-1-kurt@linutronix.de>
+ <20200710113611.3398-8-kurt@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594363883-22154-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20200710113611.3398-8-kurt@linutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jul 2020 15:51:23 +0900, Yoshihiro Shimoda wrote:
-> Convert Renesas SDHI SD/MMC controller document to YAML.
+On Fri, 10 Jul 2020 13:36:10 +0200, Kurt Kanzenbach wrote:
+> Hirschmann is building devices for automation and networking. Add them to the
+> vendor prefixes.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
 > ---
->  Almost all node names in Renesas dtsi files have "sd@" name, but these should
->  be "mmc@". So converting the node names by using the following commands
->  is easy to check this patch :)
->   sed -i "s/sd@/mmc@/" arch/arm/boot/dts/*
->   sed -i "s/sd@/mmc@/" arch/arm64/boot/dts/renesas/*
-> 
->  r8a77470-iwg23s-sbc.dts doesn't seem to follow the document though...
-> 
->  .../devicetree/bindings/mmc/renesas,sdhi.txt       | 114 ------------
->  .../devicetree/bindings/mmc/renesas,sdhi.yaml      | 191 +++++++++++++++++++++
->  2 files changed, 191 insertions(+), 114 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
