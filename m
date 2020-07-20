@@ -2,104 +2,119 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AC7C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8D4C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A6F2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595239029;
-	bh=bYF8x8T+NOYxWZCxmZtD7bG4+5sVpYYxLLih0BIYenY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CS1EyF46SehxCzy8X2F6WhLESZJ+AnXhJVcX0ZXXpy2q5kqo+HxQkI/bllUWbUwPY
-	 h+kBVBX1rYH2EwreepW2JdeapjkYGQVzL3x9zoXAKXHXCcaVwdileBBfy7TbRrbzv7
-	 lrTGXqtlvdNhLoQ8EixOPzbKRo+emEydjvZs2q+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 9834A22BF3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:58:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ili5auLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgGTJ5I (ORCPT
+        id S1728367AbgGTJ6A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:57:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbgGTJ5I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:57:08 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8B2820734;
-        Mon, 20 Jul 2020 09:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595239027;
-        bh=bYF8x8T+NOYxWZCxmZtD7bG4+5sVpYYxLLih0BIYenY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lYwLi/CkaFlBla38GLo8xOn6xBYHfq2cODfLE0754tTPPi8nTeeGutBGl4n7LIoCU
-         +LgKvxr5h18LO7rNGeTeT9rDnDUVACHr2/s2Fzc/PUb0H2CLQdqW6HgXn7cm56/uM1
-         dLMacy+FasIVm20WsOpUUBYSkW5ZP2h6Ck+grryE=
-Date:   Mon, 20 Jul 2020 10:57:03 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/2] input: ADC joystick driver & DT bindings
-Message-ID: <20200720105703.53b5e0b7@archlinux>
-In-Reply-To: <20200719221103.91644-1-contact@artur-rojek.eu>
-References: <20200719221103.91644-1-contact@artur-rojek.eu>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 Jul 2020 05:58:00 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13456 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728077AbgGTJ57 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 05:57:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f156a300000>; Mon, 20 Jul 2020 02:56:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 20 Jul 2020 02:57:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 20 Jul 2020 02:57:59 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
+ 2020 09:57:56 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 20 Jul 2020 09:57:56 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f156aa20000>; Mon, 20 Jul 2020 02:57:56 -0700
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <vkoul@kernel.org>, <kishon@ti.com>
+CC:     <thierry.reding@gmail.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Nagarjuna Kristam" <nkristam@nvidia.com>
+Subject: [PATCH V5 0/7] Tegra XUSB charger detect support
+Date:   Mon, 20 Jul 2020 15:25:41 +0530
+Message-ID: <1595238948-20531-1-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595238960; bh=aFkfjJ9bCYehKWw/qILt0k8Q+GjYO21Yl9FLA4DbOlY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=ili5auLRqsGjE+nhxZNVimJ+32Zdx9lTV3ZGopQ1+fAypSC2zkbXa4Z2SXNXDa1dh
+         zuREwftAwWXV5BD9NncTxh6lh0HkAN1I01zFSvhTq6ZWhWrAg9jLcOLyCBGJGR1AO1
+         oUGiDMth1/jJH70xNTIdMNiE6cpcYGtThqYNNO+9tVhTU11iW3/FyCzXwJnITUOeDo
+         lVuztB9TUQzRrnvT6u/6/fH3bWLAMZp3sJjJBh7cFRD0SJ9Houbbc4L8MOSIEwqyLq
+         CT/8QH+aHeVK1VPdCkw5yEApSLevTKNNIvlszmmZ67qpUxbqxe0znaJx6zkZxdo2Ck
+         xZYG/ZXZF9+zw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jul 2020 00:11:01 +0200
-Artur Rojek <contact@artur-rojek.eu> wrote:
+This patch series adds charger detect support on XUSB hardware used in
+Tegra210 and Tegra186 SoCs.
 
-> Hi all,
-> 
-> this series is a continuation of adc-joystick changes split from:
-> https://lore.kernel.org/linux-iio/20200709152200.10039-1-contact@artur-rojek.eu/
-> 
-> Rob, the bindings example in patch 1/2 depends on changes introduced
-> in another patchset, still to be merged:
-> https://lore.kernel.org/linux-iio/20200719205307.87385-4-contact@artur-rojek.eu/  
-> Your scripts will most likely fail to validate this. You have already
-> reviewed this patch when it was still part of the aforementioned series.
+This patchset is composed with :
+ - dt bindings of XUSB Pad Controller
+ - Tegra XUSB device mode driver to add vbus_draw support 
+ - Tegra PHY driver for charger detect support
 
-I've just taken v9 of the dependency into iio.git as an immutable branch based on 5.8
+Tests done:
+ - Connect USB cable from ubuntu host to micro-B port of DUT to detect
+   SDP_TYPE charger
+ - Connect USB cable from external powered USB hub(which inturn connects
+   to ubuntu host) to micro-B port of DUT to detect CDP_TYPE charger.
+ - Connect USB cable from USB charger to micro-B port of DUT to detect
+   DCP_TYPE charger.
+DUT: Jetson-tx1, Jetson tx2.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git ib-5.8-jz47xx-ts
+V5:
+ - Fixed kernel robot warnings to updated functions as static.
+V4:
+ - Added ACKed-by details for PHY driver.
+ - Used BIT macro instead of (1 << index) usage as suggested by Chunfeng Yun.
+V3:
+ - Added ACKed-by details for PHY driver and DT changes.
+ - Functions and its arguments are aligned.
+ - Tabs are used for alignment of MACRO's
+ - For vbus_draw USDC callback, usb_phy set_power error is propogated.
+ - Fixed various comments given by thierry.
+V2:
+ - Added ACKed-by details for DT patches.
+ - All patches rebased.
 
-Thanks,
+Nagarjuna Kristam (7):
+  dt-bindings: phy: tegra-xusb: Add charger-detect property
+  phy: tegra: xusb: Add support for UTMI pad power control
+  phy: tegra: xusb: Add USB2 pad power control support for Tegra210
+  phy: tegra: xusb: Add soc ops API to enable UTMI PAD protection
+  phy: tegra: xusb: Add support for charger detect
+  phy: tegra: xusb: Enable charger detect for Tegra186
+  phy: tegra: xusb: Enable charger detect for Tegra210
 
-Jonathan
+ .../bindings/phy/nvidia,tegra124-xusb-padctl.txt   |   4 +
+ drivers/phy/tegra/Makefile                         |   2 +-
+ drivers/phy/tegra/cd.c                             | 283 +++++++++++++++++++++
+ drivers/phy/tegra/xusb-tegra186.c                  |  92 +++++--
+ drivers/phy/tegra/xusb-tegra210.c                  | 223 +++++++++++-----
+ drivers/phy/tegra/xusb.c                           |  80 ++++++
+ drivers/phy/tegra/xusb.h                           |  22 ++
+ 7 files changed, 621 insertions(+), 85 deletions(-)
+ create mode 100644 drivers/phy/tegra/cd.c
 
-> 
-> Cheers,
-> Artur
-> 
-> Artur Rojek (2):
->   dt-bindings: input: Add docs for ADC driven joystick.
->   input: joystick: Add ADC attached joystick driver.
-> 
->  .../bindings/input/adc-joystick.yaml          | 121 +++++++++
->  drivers/input/joystick/Kconfig                |  10 +
->  drivers/input/joystick/Makefile               |   1 +
->  drivers/input/joystick/adc-joystick.c         | 253 ++++++++++++++++++
->  4 files changed, 385 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
->  create mode 100644 drivers/input/joystick/adc-joystick.c
-> 
+-- 
+2.7.4
 
