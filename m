@@ -2,117 +2,89 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648BDC433F8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E492C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF4B22B4D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595252338;
-	bh=czVg5VP9cic+HNMM9EeJP1WPX3dNun3L9ybH81L69GU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2rqoaRWz9Iyz1fBY26ry/kBythSdqGypqk3mLns6YY4pyhWArjfJncsJsKDhmwP/E
-	 owAArkMZIKLQncsdZk0OQb64RjwdiWko2q2uVXbobSomn4siuFfw3Db0mp7uYvlUdq
-	 BvQ94y3o59S9wWzmy+XWx29C3QLPRrapU7nP6qO0=
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0522B4D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 13:44:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gDzDOvQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgGTNi5 (ORCPT
+        id S1726782AbgGTNow (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 09:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgGTNi5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 09:38:57 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC63422CAF;
-        Mon, 20 Jul 2020 13:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595252336;
-        bh=czVg5VP9cic+HNMM9EeJP1WPX3dNun3L9ybH81L69GU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jITVCBjAUt2cPaPDVBBKtC66dsFGpZkRHHVtvGaHcFY4mt6+CHsnnrq3FPq5A9yIy
-         QSrH4PalL86AcHlQ0uBw9M1q1ba3oTJFUaNx7ey77ZGUdVR5a8YPFbKcWSa0LjW9lZ
-         wd+QY+Wx460OdY9EMF3JvTwKUcDtaTdJ/Hdbdbec=
-Date:   Mon, 20 Jul 2020 14:38:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v6 0/5] Microchip TCB Capture driver
-Message-ID: <20200720143851.2fced464@archlinux>
-In-Reply-To: <20200715213003.GD23553@piout.net>
-References: <20200706114347.174452-1-kamel.bouhara@bootlin.com>
-        <20200712143534.278ea3c7@archlinux>
-        <20200715213003.GD23553@piout.net>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 20 Jul 2020 09:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgGTNow (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 09:44:52 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B1B7C0619D4
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 06:44:52 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id x9so20282631ljc.5
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 06:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0vO68nr1oafNwbzKJtL1z+v3Q79Ll6AjKZYEDPEkEqA=;
+        b=gDzDOvQVpHdpkFi+NKXmKxqtjDztY58daL5twni4C6h+4EIfUnnCEVpJnbP1mFUICj
+         ftLbeXMGXm/usp1RNih5XSmgFuVtZJ+ZnqLqBA0agifNxd8p0HXSXH+AelR/XG+33Y+x
+         9pU+L/8++f7ZN4IQVW32a+JB9jcKmK22ZM1k9W4uxgbSUV6bUgXzwe6VNyIQWQ72epQR
+         KXWhMmMee5//axfodVg4+2rO/wFyAGRboX16N6qHc7EqKzNQcfjGuJq4Ao31jvM3pdko
+         812rlnF21uNKT0slPs0BX+7XZc+nrb8fX8k89HpyfQz4TjL6sYX/P875IZz1wlZ+gcFy
+         X3SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0vO68nr1oafNwbzKJtL1z+v3Q79Ll6AjKZYEDPEkEqA=;
+        b=AglqwKviC6KCYwvXD4RGxKTxZfiG1S63Qs+bzzvRu/9jzumAAEJg1kUgn09LzMncDe
+         CAz6whV8UNzXk8o28lbLIFj2jtb/o0j+G71hOsCzJhTEkc9/0TWjG3DJqk+KlmlhA9sn
+         tlHGmcysr8S8gAZcqlhT7FEhJoWsw0VJpNKdGo9uHibJPaYsVNxEAE2kG+hlr+NKpLw6
+         M7A1Z3lW8FOAapzpL4zm2Lacnhr1bZY9sIPf5d4Q55eGtWJztaPfMu3UjFqVakob7XWx
+         Ab1vqaN53P8Sm+YzoASNJkBbs2QVNCwjhOnA6YNLa3rIOlPZrWHSgmwion77fp7uz0fp
+         mOnA==
+X-Gm-Message-State: AOAM531MwY96aIE7ZyRSWkTX0xOci4HUsl0sPKddk0Tu0ACDBpuzI25x
+        rCsAUAv1Exy34WshJYKV63xS95dQ7k9jsrv55nT+C89oYysJ2w==
+X-Google-Smtp-Source: ABdhPJySfFYuk5Weu3/vs14ZXY0Z6epyKH9PCACT2lfCO23uU15IBzL/KHbXUx3xmTmx0XKEsAPHVqSROnnw++1dxGc=
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr9939702ljc.104.1595252690371;
+ Mon, 20 Jul 2020 06:44:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200716233229.208750-1-paul@crapouillou.net>
+In-Reply-To: <20200716233229.208750-1-paul@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 20 Jul 2020 15:44:39 +0200
+Message-ID: <CACRpkdaqcAXh9qyjH_W+mwP-+KJw7jPaNx=LQYV505s9nReV-A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: ingenic,pinctrl: Support pinmux/pinconf nodes
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 15 Jul 2020 23:30:03 +0200
-Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
+On Fri, Jul 17, 2020 at 1:32 AM Paul Cercueil <paul@crapouillou.net> wrote:
 
-> Hi Jonathan,
-> 
-> On 12/07/2020 14:35:34+0100, Jonathan Cameron wrote:
-> > On Mon,  6 Jul 2020 13:43:42 +0200
-> > Kamel Bouhara <kamel.bouhara@bootlin.com> wrote:
-> >   
-> > > Hello,
-> > > 
-> > > Here is a new counter driver to support Microchip TCB capture devices.
-> > > 
-> > > Each SoC has two TCB blocks, each one including three independent
-> > > channels.The following series adds support for two counter modes:
-> > > increase and quadrature decoder.
-> > > 
-> > > As for the atmel clocksource and pwm, the counter driver needs to fill
-> > > some tcb capabilities in order to operate with the right configuration.
-> > > This is achieved in first patch of this series.
-> > > 
-> > > Please feel free to comment.  
-> > 
-> > As far as I can see we have all the necessary acks etc and it looks
-> > good to me as well.
-> > 
-> > Shall I do an immutable branch with the whole lot or should we split it
-> > up?  Patches 1 and 5 need to go through the same tree, but bindings
-> > could go via another route.  I'm also fine if the whole lot goes
-> > via the appropriate soc tree if that is easier.
-> >   
-> 
-> I think the best would be an immutable branch as I have another series
-> that depends on the three preliminary patches that should go through the
-> clocksource/tip tree this cycle:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20200710230813.1005150-1-alexandre.belloni@bootlin.com/
-I've pushed applied the patches to an immutable branch
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=ib-5.8-tcb
-and merged that into the togreg branch of iio.git which is pushed out as testing or
-the autobuilders to play with it.
+> Add YAML to describe the pinmux/pinconf sub-nodes of the pinctrl IP on
+> Ingenic SoCs.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> In-Reply-To: CAL_Jsq+nHZsbOMPpXC7NWp1etgVL57Q+o=gr6BJ6ijAq1pLJUw@mail.gmail.com
 
-Thanks,
+Thanks for fixing!!
+For some reason this does not apply on my pinctrl "devel"
+branch, am I missing something?
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
 
-Jonathan
-
-> 
-> 
-
+Yours,
+Linus Walleij
