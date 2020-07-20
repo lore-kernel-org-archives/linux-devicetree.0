@@ -5,128 +5,139 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF06C433FC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAA1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE6B42176B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D80208E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obAnsss+"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="B2lHbtZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgGTJX7 (ORCPT
+        id S1727844AbgGTJio (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgGTJX6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 05:23:58 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E40C0619D2
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:23:58 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id j18so21542359wmi.3
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nLaI7SKqPmkCBwaiQh58vRC+ysbWJDB3m7E0+rdbv3A=;
-        b=obAnsss+nlP86FHUb5s8+uhL+5pjtkD9xG7fKn6GelmnWvgY5KoRp1oFKBAn6v7D+b
-         g7DeUgSySgnCm60xJRk70mknhnE6CJ6o3xJau2iJKzn+AIHm20LUovbz3dceaOpxBh7I
-         +cypOtf3PFEyOqirsvSURucYoXT/maPOH9uDyJML3pT/5eAfFwjBSmyzohUR3zJoZNvq
-         MGMMgPTPamiXiczSfsPl+F6xNfyr6diNyM2/bvzOyO2ZGsp+QGXzcwNZlNDqFtgHMtjm
-         WyZLRlV56zGG4G986rk93+Pt1WFwvB1d3eRcth5Ac0k99brZVLmR/pDPdvGsSFlEHPhY
-         nyOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nLaI7SKqPmkCBwaiQh58vRC+ysbWJDB3m7E0+rdbv3A=;
-        b=RTsuXBXvTJAPqNJpgOhvPgW1gpuRyPc1FWH87/o333pe58ubJN7qZg0INtl391BZ6i
-         iiVvA1CNdT1D0U1GtGV+yZHrw86GGWB278iDvH3ALl/w2yyszDMCkTEZVWD8Cxb/pLXl
-         PzkUdutkH3kmoklK08rjRJzl+NOuO35fPZH5UjVgvHm9ncDnPswyOvd9Z1yKxq9CMefh
-         +FVVSDsaOyCi9/N9Iwzqyq5O7iw665vteKwXI9TQJ5af3NC2cw6IxMHGKftm/tepB8eN
-         PEqbTU+QO/SIXPg+voBJohl/sOX7T3XNYDfn9uHHiHrxwEiNQQgml3uHwWlKwc8Ut2Iu
-         i2PQ==
-X-Gm-Message-State: AOAM533VLmbpg7QMwqMATcFYMA+jJvaupHFv7/lo2UKozrssENz3GAVF
-        dmgtxCOznDCTGMYppdcs1WYQdQ==
-X-Google-Smtp-Source: ABdhPJzkFoxqVa8pR1mDs4a+spsOvWgEprH0ioCHkRabVmP8EVd/JeUsi1P9xaCGElP2GWdbnfXVag==
-X-Received: by 2002:a1c:59c2:: with SMTP id n185mr21663373wmb.104.1595237037144;
-        Mon, 20 Jul 2020 02:23:57 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id c17sm17623763wrc.42.2020.07.20.02.23.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 Jul 2020 02:23:56 -0700 (PDT)
-Subject: Re: [PATCH v4 06/16] dt-bindings: nvmem: SID: add binding for A100's
- SID controller
-To:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
-        mripard@kernel.org, wens@csie.org, devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com
-References: <cover.1594708863.git.frank@allwinnertech.com>
- <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <76773e96-7a63-1362-dcf9-8cc49e386603@linaro.org>
-Date:   Mon, 20 Jul 2020 10:23:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 20 Jul 2020 05:38:44 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48162 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726520AbgGTJin (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 05:38:43 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K9MgFI017123;
+        Mon, 20 Jul 2020 11:38:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=lC/LymgalsLxxn7CqvsDbLQJCr894y+aoN1Rm4+7KFI=;
+ b=B2lHbtZgdj+u9WxQ68HEI/gS7/Z6eRdJaSi0mfGaOMbatZ1z9rMWQWn4GzR0qeO50ycY
+ TiUjpfpwqmTMnc9JOFHouSKPbThhLA50opdyH507nGH0RLC1FLJtACNSznORxknYSY2i
+ fLj3ACREU2o1kKxTYNft5iLv0mGJEWWtKB2UO4wlTPvO6U3UE/RKWDQqWUMfnmXIhz5u
+ 0npGd1vsXUjyFiWFfyWM8eEo5LhQuK7i7yoMEm4Z1WMenrye9nY1Mxxf4VrN82557cUs
+ eEtCazhSqDwD3civFpNN0lVi49nZ28VbghP657uXePejNwTBJSsGrppIeJvCSbj5U40e eA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bsagr125-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 11:38:31 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C6925100034;
+        Mon, 20 Jul 2020 11:38:30 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A7FE82B3E71;
+        Mon, 20 Jul 2020 11:38:30 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
+ 2020 11:38:30 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Mon, 20 Jul 2020 11:38:30 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min
+ frequency property
+Thread-Topic: [PATCH v7 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min
+ frequency property
+Thread-Index: AQHWT6e/b2wyFUUnLkaf//MXpHPgJqj/oKMAgAC3YwCAANDPAIAPCWCA
+Date:   Mon, 20 Jul 2020 09:38:30 +0000
+Message-ID: <fee98476-c92c-579a-ac33-323a5f5feb76@st.com>
+References: <20200701130129.30961-1-benjamin.gaignard@st.com>
+ <20200701130129.30961-2-benjamin.gaignard@st.com>
+ <20200709203718.GA837160@bogus> <20e4907a-f218-3e43-1111-7d4b9ee6d945@st.com>
+ <CAL_Jsq+VgXTJy1SQr6B63kLZ3wcRMe4YfYiRNCT6s=gUO_tmTw@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+VgXTJy1SQr6B63kLZ3wcRMe4YfYiRNCT6s=gUO_tmTw@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E726284C4B29AA4DA03C09973C9F53CF@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_05:2020-07-17,2020-07-20 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 14/07/2020 08:08, Frank Lee wrote:
-> From: Yangtao Li <frank@allwinnertech.com>
-> 
-> Add a binding for A100's SID controller.
-> 
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> ---
-
-Applied thanks,
-srini
->   .../nvmem/allwinner,sun4i-a10-sid.yaml        | 19 +++++++++++--------
->   1 file changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-> index daf1321d76ad..6687ab720304 100644
-> --- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-> +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-> @@ -15,14 +15,17 @@ allOf:
->   
->   properties:
->     compatible:
-> -    enum:
-> -      - allwinner,sun4i-a10-sid
-> -      - allwinner,sun7i-a20-sid
-> -      - allwinner,sun8i-a83t-sid
-> -      - allwinner,sun8i-h3-sid
-> -      - allwinner,sun50i-a64-sid
-> -      - allwinner,sun50i-h5-sid
-> -      - allwinner,sun50i-h6-sid
-> +    oneOf:
-> +      - const: allwinner,sun4i-a10-sid
-> +      - const: allwinner,sun7i-a20-sid
-> +      - const: allwinner,sun8i-a83t-sid
-> +      - const: allwinner,sun8i-h3-sid
-> +      - const: allwinner,sun50i-a64-sid
-> +      - items:
-> +          - const: allwinner,sun50i-a100-sid
-> +          - const: allwinner,sun50i-a64-sid
-> +      - const: allwinner,sun50i-h5-sid
-> +      - const: allwinner,sun50i-h6-sid
->   
->     reg:
->       maxItems: 1
-> 
+DQoNCk9uIDcvMTAvMjAgMTA6MDEgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBGcmksIEp1
+bCAxMCwgMjAyMCBhdCAxOjMzIEFNIEJlbmphbWluIEdBSUdOQVJEDQo+IDxiZW5qYW1pbi5nYWln
+bmFyZEBzdC5jb20+IHdyb3RlOg0KPj4NCj4+DQo+PiBPbiA3LzkvMjAgMTA6MzcgUE0sIFJvYiBI
+ZXJyaW5nIHdyb3RlOg0KPj4+IE9uIFdlZCwgSnVsIDAxLCAyMDIwIGF0IDAzOjAxOjI3UE0gKzAy
+MDAsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPj4+PiBEb2N1bWVudCBzdCxzdG0zMi1kY21p
+LW1pbi1mcmVxdWVuY3kgcHJvcGVydHkgd2hpY2ggaXMgdXNlZCB0bw0KPj4+PiByZXF1ZXN0IENQ
+VXMgbWluaW11bSBmcmVxdWVuY3kgd2hlbiBzdHJlYW1pbmcgZnJhbWVzLg0KPj4+Pg0KPj4+PiBT
+aWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29t
+Pg0KPj4+PiAtLS0NCj4+Pj4gICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
+ZGlhL3N0LHN0bTMyLWRjbWkueWFtbCB8IDggKysrKysrKysNCj4+Pj4gICAgMSBmaWxlIGNoYW5n
+ZWQsIDggaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWRjbWkueWFtbCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zdCxzdG0zMi1kY21pLnlhbWwNCj4+Pj4g
+aW5kZXggM2ZlNzc4Y2I1Y2MzLi4wNWNhODVhMjQxMWEgMTAwNjQ0DQo+Pj4+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zdCxzdG0zMi1kY21pLnlhbWwNCj4+
+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMy
+LWRjbWkueWFtbA0KPj4+PiBAQCAtNDQsNiArNDQsMTMgQEAgcHJvcGVydGllczoNCj4+Pj4gICAg
+ICAgICAgYmluZGluZ3MgZGVmaW5lZCBpbg0KPj4+PiAgICAgICAgICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuDQo+Pj4+DQo+Pj4+
+ICsgIHN0LHN0bTMyLWRjbWktbWluLWZyZXF1ZW5jeToNCj4+Pj4gKyAgICBkZXNjcmlwdGlvbjog
+RENNSSBtaW5pbXVtIENQVXMgZnJlcXVlbmN5IHJlcXVpcmVtZW50IChpbiBLSHopLg0KPj4+PiAr
+ICAgIGFsbE9mOg0KPj4+PiArICAgICAgLSAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZp
+bml0aW9ucy91aW50MzINCj4+Pj4gKyAgICAgIC0gbWluaW11bTogMA0KPj4+PiArICAgICAgLSBk
+ZWZhdWx0OiAwDQo+Pj4gSSB0aGluayB0aGlzIGlzIHF1ZXN0aW9uYWJsZSB0byBiZSBpbiBEVCBh
+bmQgaWYgaXQgaXMsIGl0J3Mgc29tZXRoaW5nDQo+Pj4gdGhhdCdzIGhhcmRseSBzcGVjaWZpYyB0
+byBTVCBvciB0aGlzIGJsb2NrLiBJSVJDLCB3ZSBhbHJlYWR5IGhhdmUgYSB3YXkNCj4+PiB0byBz
+cGVjaWZ5IG1pbmltdW0gT1BQcy4NCj4+IFRoaXMgYmluZGluZyBpcyBvbmx5IG5lZWRlZCBvbiBz
+b21lIFNUTTMyIFNvQyB3aGVuIERWRlMgaXMgYWN0aXZhdGVkDQo+PiB3aXRoIGxvdyBmcmVxdWVu
+Y3kgc2V0dGluZyBpbiBvcHAuIFRoZSB2YWx1ZSBhbHNvIGRlcGVuZHMgb2YgdGhlIHRhcmdldGVk
+DQo+PiB2aWRlbyBmb3JtYXQgYW5kIGZyYW1lcmF0ZS4NCj4gQXMgdGhvc2UgMiB0aGluZ3MgYXJl
+IG5vdCBpbiB0aGUgRFQsIHRoZW4gbmVpdGhlciBzaG91bGQgdGhpcyB2YWx1ZSBiZS4NCj4NCj4+
+IEl0IGlzIG5vdCBhbiBvcHAgYmVjYXVzZSBpdCBkb2Vzbid0IGRlZmluZSBhIHZvbHRhZ2UtY3Vy
+cmVudC1mcmVxdWVuY3kNCj4+IGNvbWJpbmF0aW9uDQo+PiBidXQgb25seSBzZXQgYSBtaW5pbXVt
+IHRhcmdldCBmb3IgdGhlIENQVXMgZnJlcXVlbmN5IHRvIGd1YXJhbnR5IGEgZ29vZA0KPj4gcmVh
+Y3Rpb24NCj4+IHRpbWUgd2hlbiBoYW5kbGluZyBJUlFzIGZvciB0aGUgc2Vuc29yLg0KPiBPUFBz
+IGNhbiBiZSBmcmVxdWVuY3kgb25seS4gVGhpcyBpcyBwcmV0dHkgY2xlYXJseSBkZWZpbmluZyB0
+aGUgQ1BVDQo+IG11c3QgT3BlcmF0ZSBhdCBhIGNlcnRhaW4gbWluaW11bSBQZXJmb3JtYW5jZSBQ
+b2ludC4NCkhpIFJvYiwNCg0KTXkgZ29hbCBoZXJlIHdhc24ndCB0byBkZWZpbmUgYW4gT1BQIGZv
+ciB0aGUgQ1BVIHNpbmNlIGl0IGlzIHRoZSBjYW1lcmEgDQppbnRlcmZhY2Ugbm9kZQ0KYnV0IHRv
+IGF2b2lkIGxldCB0aGUgQ1BVIGdvIHRvIGRvd24uDQpJIGhhdmVuJ3QgZm91bmQgaG93IHRvIHVz
+ZSBPUFAgYmluZGluZ3MsIGNhbiB5b3UgcHJvdmlkZSBtZSBoaW50cyBvciANCmV4YW1wbGVzIG9m
+IGhvdw0KSSBzaG91bGQgZG8gaXQ/DQoNClRoYW5rcywNCkJlbmphbWluDQoNCj4NCj4gUm9iDQo=
