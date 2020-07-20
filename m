@@ -8,133 +8,125 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD85AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF06C433FC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 870732176B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6B42176B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 09:23:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FCelGv/m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="obAnsss+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgGTJVy (ORCPT
+        id S1728226AbgGTJX7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 05:21:54 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35179 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726736AbgGTJVx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 05:21:53 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06K9EfOc031975;
-        Mon, 20 Jul 2020 11:21:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=GN+yMTwPABdvVS7FhpTsm1OeMf5cbjvKozUPn7B/wV0=;
- b=FCelGv/muQ0iz9iNtNePn+kuqHIZ8Ao19lKMbdtwbZvONG8p5URLzO+HDLjxYVjsAkrr
- iYNd8jksWV6jSPgbNjqhj+kfsYStKHyjBz5H4Dv4WpBeSkJPmvgtl1POi6wsNWOfWs6j
- 1G2hvOnj9oCcQC035VphHI+hz96+vd1IWwLmb6i41dGEFM+IX0S6I8MniOgS8zacoj7X
- yr3SpFFR56k8oZO4sFDog1LHox4AaxzuktXEeiUNnfW/F8wi91MwOWMFbgXwO43PhuUT
- NcXeLG8HhHHe8mdKtTbWBBkcc2/aaNPwp6UqLWfURIay/QtgSxI7i4HdKb37m4+UIMHg oQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bs6uqvpb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 11:21:36 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F301A10002A;
-        Mon, 20 Jul 2020 11:21:35 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF5FC2B33A4;
-        Mon, 20 Jul 2020 11:21:35 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 20 Jul
- 2020 11:21:35 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Mon, 20 Jul 2020 11:21:35 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stefano.stabellini@xilinx.com" <stefano.stabellini@xilinx.com>,
-        "tomase@xilinx.com" <tomase@xilinx.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 3/5] dt-bindings: bus: Add STM32 ETZPC firewall
- controller
-Thread-Topic: [PATCH v4 3/5] dt-bindings: bus: Add STM32 ETZPC firewall
- controller
-Thread-Index: AQHWT6sXiDhFwJxpJEGLijki4gqejakFrtAAgAp+pQA=
-Date:   Mon, 20 Jul 2020 09:21:35 +0000
-Message-ID: <98aef908-ddbb-4bcd-1880-02f2583059c6@st.com>
-References: <20200701132523.32533-1-benjamin.gaignard@st.com>
- <20200701132523.32533-4-benjamin.gaignard@st.com>
- <20200713170542.GA384390@bogus>
-In-Reply-To: <20200713170542.GA384390@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4A487863F4E9234D83FD1BD592691EB8@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 20 Jul 2020 05:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbgGTJX6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 05:23:58 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E40C0619D2
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:23:58 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id j18so21542359wmi.3
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 02:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nLaI7SKqPmkCBwaiQh58vRC+ysbWJDB3m7E0+rdbv3A=;
+        b=obAnsss+nlP86FHUb5s8+uhL+5pjtkD9xG7fKn6GelmnWvgY5KoRp1oFKBAn6v7D+b
+         g7DeUgSySgnCm60xJRk70mknhnE6CJ6o3xJau2iJKzn+AIHm20LUovbz3dceaOpxBh7I
+         +cypOtf3PFEyOqirsvSURucYoXT/maPOH9uDyJML3pT/5eAfFwjBSmyzohUR3zJoZNvq
+         MGMMgPTPamiXiczSfsPl+F6xNfyr6diNyM2/bvzOyO2ZGsp+QGXzcwNZlNDqFtgHMtjm
+         WyZLRlV56zGG4G986rk93+Pt1WFwvB1d3eRcth5Ac0k99brZVLmR/pDPdvGsSFlEHPhY
+         nyOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nLaI7SKqPmkCBwaiQh58vRC+ysbWJDB3m7E0+rdbv3A=;
+        b=RTsuXBXvTJAPqNJpgOhvPgW1gpuRyPc1FWH87/o333pe58ubJN7qZg0INtl391BZ6i
+         iiVvA1CNdT1D0U1GtGV+yZHrw86GGWB278iDvH3ALl/w2yyszDMCkTEZVWD8Cxb/pLXl
+         PzkUdutkH3kmoklK08rjRJzl+NOuO35fPZH5UjVgvHm9ncDnPswyOvd9Z1yKxq9CMefh
+         +FVVSDsaOyCi9/N9Iwzqyq5O7iw665vteKwXI9TQJ5af3NC2cw6IxMHGKftm/tepB8eN
+         PEqbTU+QO/SIXPg+voBJohl/sOX7T3XNYDfn9uHHiHrxwEiNQQgml3uHwWlKwc8Ut2Iu
+         i2PQ==
+X-Gm-Message-State: AOAM533VLmbpg7QMwqMATcFYMA+jJvaupHFv7/lo2UKozrssENz3GAVF
+        dmgtxCOznDCTGMYppdcs1WYQdQ==
+X-Google-Smtp-Source: ABdhPJzkFoxqVa8pR1mDs4a+spsOvWgEprH0ioCHkRabVmP8EVd/JeUsi1P9xaCGElP2GWdbnfXVag==
+X-Received: by 2002:a1c:59c2:: with SMTP id n185mr21663373wmb.104.1595237037144;
+        Mon, 20 Jul 2020 02:23:57 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id c17sm17623763wrc.42.2020.07.20.02.23.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jul 2020 02:23:56 -0700 (PDT)
+Subject: Re: [PATCH v4 06/16] dt-bindings: nvmem: SID: add binding for A100's
+ SID controller
+To:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <76773e96-7a63-1362-dcf9-8cc49e386603@linaro.org>
+Date:   Mon, 20 Jul 2020 10:23:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_05:2020-07-17,2020-07-20 signatures=0
+In-Reply-To: <6899200489cb4236650ba90646057874b82ed6b7.1594708864.git.frank@allwinnertech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCk9uIDcvMTMvMjAgNzowNSBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFdlZCwgSnVs
-IDAxLCAyMDIwIGF0IDAzOjI1OjIxUE0gKzAyMDAsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0K
-Pj4gRG9jdW1lbnQgU1RNMzIgRVRaUEMgZmlyZXdhbGwgY29udHJvbGxlciBiaW5kaW5ncw0KPj4N
-Cj4+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBz
-dC5jb20+DQo+PiAtLS0NCj4+ICAgLi4uL2JpbmRpbmdzL2J1cy9zdG0zMi9zdCxzdG0zMi1ldHpw
-Yy55YW1sICAgICAgICAgfCA0NiArKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIDEgZmlsZSBj
-aGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYnVzL3N0bTMyL3N0LHN0bTMyLWV0enBjLnlhbWwN
-Cj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2J1
-cy9zdG0zMi9zdCxzdG0zMi1ldHpwYy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2J1cy9zdG0zMi9zdCxzdG0zMi1ldHpwYy55YW1sDQo+PiBuZXcgZmlsZSBtb2RlIDEw
-MDY0NA0KPj4gaW5kZXggMDAwMDAwMDAwMDAwLi5kOTI4NjVmZGE0MGMNCj4+IC0tLSAvZGV2L251
-bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9idXMvc3RtMzIv
-c3Qsc3RtMzItZXR6cGMueWFtbA0KPj4gQEAgLTAsMCArMSw0NiBAQA0KPj4gKyMgU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkNCj4+ICslWUFNTCAxLjIN
-Cj4+ICstLS0NCj4+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2J1cy9zdG0z
-Mi9zdCxzdG0zMi1ldHpwYy55YW1sIw0KPj4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9y
-Zy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KPj4gKw0KPj4gK3RpdGxlOiBTVE0zMiBFeHRlbmRl
-ZCBUcnVzdFpvbmUgUHJvdGVjdGlvbiBjb250cm9sbGVyDQo+PiArDQo+PiArbWFpbnRhaW5lcnM6
-DQo+PiArICAtIEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+
-PiArDQo+PiArZGVzY3JpcHRpb246IFNUTWljcm9lbGVjdHJvbmljcydzIFNUTTMyIGZpcmV3YWxs
-IGJ1cyBjb250cm9sbGVyIGltcGxlbWVudGF0aW9uDQo+PiArDQo+PiArYWxsT2Y6DQo+PiArICAt
-ICRyZWY6ICJmaXJld2FsbC1wcm92aWRlci55YW1sIyINCj4+ICsgIC0gJHJlZjogL3NjaGVtYXMv
-c2ltcGxlLWJ1cy55YW1sIw0KPiBZb3VyIGJ1cyBoYXMgY29udHJvbHMvc2V0dXAsIGl0J3Mgbm90
-IGEgc2ltcGxlLWJ1cy4NCj4NCj4gRG8geW91IGV4cGVjdCBhbiBvbGQga2VybmVsIG9yIG9uZSB3
-aXRoIHN1cHBvcnQgZm9yICJzdCxzdG0zMi1ldHpwYy1idXMiDQo+IGRpc2FibGVkIHRvIHdvcms/
-IEhvdydzIGl0IGdvaW5nIHRvIGtub3cgaWYgY2VydGFpbiBub2RlcyBjYW4ndCBiZQ0KPiBhY2Nl
-c3NlZCB3aXRob3V0IHRoYXQgc3VwcG9ydD8NCkl0IGFscmVhZHkgd29ya3Mgd2l0aCBzaW1wbGUg
-YnVzLg0KVGhlIGdvYWwgYmVoaW5kIGltcGxlbWVudGluZyBmaXJld2FsbCBidXMgY29udHJvbGxl
-cnMgaXMgdG8gZXhwb3NlIHRoaXMgDQppbiB0aGUgRFQNCnJhdGhlciB0aGFuIGhpZGUgaXQgaW4g
-dGhlIGJvb3Qgc3RhZ2VzLg0KDQo+DQo+PiArDQo+PiArcHJvcGVydGllczoNCj4+ICsgIGNvbXBh
-dGlibGU6DQo+PiArICAgIGNvbnRhaW5zOg0KPj4gKyAgICAgIGVudW06DQo+PiArICAgICAgICAt
-IHN0LHN0bTMyLWV0enBjLWJ1cw0KPj4gKw0KPj4gKyAgcmVnOg0KPj4gKyAgIG1heEl0ZW1zOiAx
-DQo+PiArDQo+PiArICAnI2ZpcmV3YWxsLWNlbGxzJzoNCj4+ICsgICAgY29uc3Q6IDINCj4+ICsN
-Cj4+ICtyZXF1aXJlZDoNCj4+ICsgIC0gY29tcGF0aWJsZQ0KPj4gKyAgLSByZWcNCj4+ICsgIC0g
-JyNmaXJld2FsbC1jZWxscycNCj4+ICsNCj4+ICtleGFtcGxlczoNCj4+ICsgIC0gfA0KPj4gKyAg
-ICBzb2NANWMwMDcwMDAgew0KPj4gKyAgICAgIGNvbXBhdGlibGUgPSAic3Qsc3RtMzItZXR6cGMt
-YnVzIiwgInNpbXBsZS1idXMiOw0KPj4gKyAgICAgIHJlZyA9IDwweDVjMDA3MDAwIDB4NDAwPjsN
-Cj4+ICsgICAgICAjZmlyZXdhbGwtY2VsbHMgPSA8Mj47DQo+PiArICAgICAgI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47DQo+PiArICAgICAgI3NpemUtY2VsbHMgPSA8MT47DQo+PiArICAgICAgcmFuZ2Vz
-Ow0KPj4gKyAgICB9Ow0KPj4gKw0KPj4gKy4uLg0KPj4gLS0gDQo+PiAyLjE1LjANCj4+DQo=
+
+
+On 14/07/2020 08:08, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
+> 
+> Add a binding for A100's SID controller.
+> 
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> ---
+
+Applied thanks,
+srini
+>   .../nvmem/allwinner,sun4i-a10-sid.yaml        | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> index daf1321d76ad..6687ab720304 100644
+> --- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+> @@ -15,14 +15,17 @@ allOf:
+>   
+>   properties:
+>     compatible:
+> -    enum:
+> -      - allwinner,sun4i-a10-sid
+> -      - allwinner,sun7i-a20-sid
+> -      - allwinner,sun8i-a83t-sid
+> -      - allwinner,sun8i-h3-sid
+> -      - allwinner,sun50i-a64-sid
+> -      - allwinner,sun50i-h5-sid
+> -      - allwinner,sun50i-h6-sid
+> +    oneOf:
+> +      - const: allwinner,sun4i-a10-sid
+> +      - const: allwinner,sun7i-a20-sid
+> +      - const: allwinner,sun8i-a83t-sid
+> +      - const: allwinner,sun8i-h3-sid
+> +      - const: allwinner,sun50i-a64-sid
+> +      - items:
+> +          - const: allwinner,sun50i-a100-sid
+> +          - const: allwinner,sun50i-a64-sid
+> +      - const: allwinner,sun50i-h5-sid
+> +      - const: allwinner,sun50i-h6-sid
+>   
+>     reg:
+>       maxItems: 1
+> 
