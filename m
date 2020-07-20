@@ -2,44 +2,44 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455AEC433E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E62C433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC7322CB1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228E422CB1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 15:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595259258;
-	bh=nLwxoIlN783R9Fo19IjMWj9CH391cj+TIRpYLnLTxNY=;
+	s=default; t=1595259259;
+	bh=c/hjOojMTg3TNs8kx9IKYYH+HETNBY0OjLn1K7YlN4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VgOr+AfBTZZHDCa45nFksaS2Khpp7/QoXBnvA2ShOL5xW8WfgGJbysXDZldXnx/7i
-	 rG8/ObHYHApeR4MOUTWRnqTPBRLUZSsyaR4TM5Dfo8nQQoNoh7WaEpWOcd3O7vCDx3
-	 pz+gm/0vEt4peluCJ/hl0coA9OWO1al1qBn5hA3A=
+	b=CG5/sSYPwYyS7j/A4ytPn5Sw3soo8DKTfXc3+h/n/2L8Blok9jLcUp9wU7hdnuQIT
+	 kru0JyoDzO1Eg/uJtIBU6XnYdiCS5I3t31QTVirYU2sisH4XBUBJyxysehdl1xGkaq
+	 Ec91DzBAMJZVaQ+YDBcGh1PNfAk5CzPUYr3pBkZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgGTPeL (ORCPT
+        id S1728351AbgGTPeS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 11:34:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54072 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 11:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgGTPeL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:34:11 -0400
+        id S1726012AbgGTPeQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 11:34:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F11D22482;
-        Mon, 20 Jul 2020 15:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE98222C9D;
+        Mon, 20 Jul 2020 15:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595259250;
-        bh=nLwxoIlN783R9Fo19IjMWj9CH391cj+TIRpYLnLTxNY=;
+        s=default; t=1595259255;
+        bh=c/hjOojMTg3TNs8kx9IKYYH+HETNBY0OjLn1K7YlN4Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cqz5JRdnhyb3jPzhFKGOsCod8cxLMaGqEO36AyPT+HW1HD2GwQBOCKkLBVUwSGDcg
-         qvp88ivbEBOmSbAAhAHxMVDPTMd1X4xRZ61x45j2bs2dNLRstbeiugEFS5P5fPNaaU
-         OL0M9CCrP1Q34hmaMM0hawutLd0IMAOIH3W50UVw=
-Date:   Mon, 20 Jul 2020 17:32:02 +0200
+        b=jL3QpF7M/yHNP/7k2IedRR+xDd57JWgIlNQuItFwKeKF0i6B4XZhno5DnLE6v3yS8
+         r8S1AYm/l1voF1muUjyl4sOydD9FZLyHmQ1ZrOTemwhdAv5cp2AbSKf0o6qpngdVb/
+         ZGoa7A2NbW7NYzpRLuXG8hvtITFqu8jI+E2Uuw0A=
+Date:   Mon, 20 Jul 2020 17:34:00 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
 Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -56,29 +56,86 @@ Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
         nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
         balajib@linux.microsoft.com, bauerman@linux.ibm.com,
         robh@kernel.org
-Subject: Re: [PATCH V3 2/6] Update remove_ima_buffer code to use functions
- from libfdt reducing wrappers functions.
-Message-ID: <20200720153202.GA1481119@kroah.com>
+Subject: Re: [PATCH V3 6/6] Add the property used for carrying forward the
+ IMA measurement logs and update the code to use the defined property string.
+Message-ID: <20200720153400.GC1481119@kroah.com>
 References: <20200720152342.337990-1-prsriva@linux.microsoft.com>
- <20200720152342.337990-3-prsriva@linux.microsoft.com>
+ <20200720152342.337990-7-prsriva@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720152342.337990-3-prsriva@linux.microsoft.com>
+In-Reply-To: <20200720152342.337990-7-prsriva@linux.microsoft.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 08:23:38AM -0700, Prakhar Srivastava wrote:
+On Mon, Jul 20, 2020 at 08:23:42AM -0700, Prakhar Srivastava wrote:
 > Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
 
-I know I refuse patches without any changelog texts, perhaps other
-maintainers are more lax...
+Again, subject line, no changelog :(
 
-ALso, your subject lines are really odd, look at how almost all other
-patches do it, we have hundreds of thousands of examples to choose from
-:)
+> ---
+>  arch/arm64/kernel/machine_kexec_file.c | 19 ++++++++++---------
+>  arch/powerpc/kexec/ima.c               |  8 +++++---
+>  2 files changed, 15 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index 066670c43626..59058901e641 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -24,14 +24,15 @@
+>  #include <asm/byteorder.h>
+>  
+>  /* relevant device tree properties */
+> -#define FDT_PROP_KEXEC_ELFHDR	"linux,elfcorehdr"
+> -#define FDT_PROP_MEM_RANGE	"linux,usable-memory-range"
+> -#define FDT_PROP_INITRD_START	"linux,initrd-start"
+> -#define FDT_PROP_INITRD_END	"linux,initrd-end"
+> -#define FDT_PROP_BOOTARGS	"bootargs"
+> -#define FDT_PROP_KASLR_SEED	"kaslr-seed"
+> -#define FDT_PROP_RNG_SEED	"rng-seed"
+> -#define RNG_SEED_SIZE		128
+> +#define FDT_PROP_KEXEC_ELFHDR		"linux,elfcorehdr"
+> +#define FDT_PROP_MEM_RANGE		"linux,usable-memory-range"
+> +#define FDT_PROP_INITRD_START		"linux,initrd-start"
+> +#define FDT_PROP_INITRD_END		"linux,initrd-end"
+> +#define FDT_PROP_BOOTARGS		"bootargs"
+> +#define FDT_PROP_KASLR_SEED		"kaslr-seed"
+> +#define FDT_PROP_RNG_SEED		"rng-seed"
+> +#define FDT_PROP_IMA_KEXEC_BUFFER	"linux,ima-kexec-buffer"
+> +#define RNG_SEED_SIZE			128
+
+Why did you reformat all of these?
+
+>  
+>  const struct kexec_file_ops * const kexec_file_loaders[] = {
+>  	&kexec_image_ops,
+> @@ -157,7 +158,7 @@ static int setup_dtb(struct kimage *image,
+>  	if (image->arch.ima_buffer_size > 0) {
+>  
+>  		ret = fdt_appendprop_addrrange(dtb, 0, off,
+> -				"linux,ima-kexec-buffer",
+> +				FDT_PROP_IMA_KEXEC_BUFFER,
+>  				image->arch.ima_buffer_addr,
+>  				image->arch.ima_buffer_size);
+>  		if (ret)
+> diff --git a/arch/powerpc/kexec/ima.c b/arch/powerpc/kexec/ima.c
+> index a9e4e9f04273..7d6c43b2eacb 100644
+> --- a/arch/powerpc/kexec/ima.c
+> +++ b/arch/powerpc/kexec/ima.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/memblock.h>
+>  #include <linux/libfdt.h>
+>  
+> +#define FDT_PROP_IMA_KEXEC_BUFFER	"linux,ima-kexec-buffer"
+> +
+
+Why are you mixing arm64 and powerpc patches together that do not do the
+same thing???
+
+Shouldn't there be a common place for these strings and not spread out
+all over the kernel in random places?
 
 thanks,
 
