@@ -6,83 +6,77 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F08C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706DC433FC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 268A822482
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F131A207EA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 06:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595226351;
-	bh=yfBTJcyyrH2HG3I5sIo8rfUoGpnlWKju/GhSCrKwek0=;
+	s=default; t=1595226922;
+	bh=dSA7isO+QYUdRXlFaO4ozzuMLnDndmLPst08UeF/CSs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sKTto2fDlmm2HXitZIyUbLJbTIq0tN53kOQihQQR8aS6xg/825bsbGc9fVz5LoR0v
-	 9ISkNU6biqYRIQaOeM+n3ZoNB1Mo8lNvs9qyi8ls3FW2lUKRsNWrnb9DYfbhIMfUTR
-	 FFym09f/EOsEOIRgTaT6/9d0pR8eYtUeoT/1xSp8=
+	b=vCBXnk3TGapB8tmQ6XhekEsxYOGtlfLfmiAjH4Qg8LIlF8v37fSm9sGveZ1ObhbSr
+	 tI2tAifTvpCv/EEdaG7WZlxA81d+LBlfKidzVYx7jP/A6GVOX6hMzsg0vZS7KnY68t
+	 WXdyUfmB5HGsqZQ2eQHVf2jc/Ugnkr+PhZBZfS/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgGTGZu (ORCPT
+        id S1727115AbgGTGfQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 02:25:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36538 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 02:35:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgGTGZu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:25:50 -0400
+        id S1726938AbgGTGfP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 02:35:15 -0400
 Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03FE621775;
-        Mon, 20 Jul 2020 06:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B17208E4;
+        Mon, 20 Jul 2020 06:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595226350;
-        bh=yfBTJcyyrH2HG3I5sIo8rfUoGpnlWKju/GhSCrKwek0=;
+        s=default; t=1595226915;
+        bh=dSA7isO+QYUdRXlFaO4ozzuMLnDndmLPst08UeF/CSs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BqI77YOjr+uQQAWCUQmmNgTEMrBVTKcMKHuuQo3fiYfT5aSEtZKIDOOoqUZM05ctk
-         ENadw/WpuDhAn2bW4RuXw09GehAUL3yKcXh5jRR1gI7a27qCXjNpMkOu7egPCDSTui
-         v6aTrEquTDFO05cnjTuF6weF8AXgkOQdhWlrMg2Q=
-Date:   Mon, 20 Jul 2020 11:55:45 +0530
+        b=Z/NGDlcGEobtMUBV/xHUm8KvVSv34AW/RTRspaqsEkIiTcdnw63M2D3nWWQh5mq4q
+         z96XQ4Ue0gvvpj1wEoBWc2Prhjp2nRpoOvan2Fkl8qcLs2slpX3TPFzKfjDJg2If+m
+         37PT2JCk1J8diRsM8Y3YsBc1WxMK7WQ3mLMmQeDc=
+Date:   Mon, 20 Jul 2020 12:05:11 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@codeaurora.org>,
-        Jonathan McDowell <noodles@earth.li>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v10 1/2] phy: qualcomm: add qcom ipq806x dwc usb phy
- driver
-Message-ID: <20200720062545.GC12965@vkoul-mobl>
-References: <20200717131635.11076-1-ansuelsmth@gmail.com>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 05/20] dt-bindings: phy: renesas,usb2-phy: Add r8a774e1
+ support
+Message-ID: <20200720063511.GE12965@vkoul-mobl>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717131635.11076-1-ansuelsmth@gmail.com>
+In-Reply-To: <1594919915-5225-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17-07-20, 15:16, Ansuel Smith wrote:
-> This has lost in the original push for the dwc3 qcom driver.
-> This is needed for ipq806x SoC as without this the usb ports
-> doesn't work at all.
+On 16-07-20, 18:18, Lad Prabhakar wrote:
+> Document SoC specific bindings for RZ/G2H (r8a774e1) SoC.
 
-Applied both, thanks
-
-My script found below errors with W=1, can you please send fixes for
-these
-
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function parameter or member 'phy_dwc3' not described in 'usb_phy_write_readback'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function parameter or member 'offset' not described in 'usb_phy_write_readback'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function parameter or member 'mask' not described in 'usb_phy_write_readback'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:140: warning: Function parameter or member 'val' not described in 'usb_phy_write_readback'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function parameter or member 'phy_dwc3' not described in 'usb_ss_write_phycreg'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function parameter or member 'addr' not described in 'usb_ss_write_phycreg'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:182: warning: Function parameter or member 'val' not described in 'usb_ss_write_phycreg'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function parameter or member 'phy_dwc3' not described in 'usb_ss_read_phycreg'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function parameter or member 'addr' not described in 'usb_ss_read_phycreg'
-drivers/phy/qualcomm/phy-qcom-ipq806x-usb.c:219: warning: Function parameter or member 'val' not described in 'usb_ss_read_phycreg'
+Applied, thanks
 
 -- 
 ~Vinod
