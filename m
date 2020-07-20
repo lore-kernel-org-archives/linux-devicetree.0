@@ -2,73 +2,138 @@ Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B91DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27301C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0B12176B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079D822B4E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 07:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="i2JU3TRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgGTHn7 (ORCPT
+        id S1725845AbgGTHtx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 03:43:59 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46619 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726015AbgGTHn6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 03:43:58 -0400
-Received: from [78.134.114.177] (port=42258 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jxQSp-0001Yt-L9; Mon, 20 Jul 2020 09:43:55 +0200
-Subject: Re: [PATCH v2 2/3] dt-bindings: media: imx274: Add optional input
- clock and supplies
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, leonl@leopardimaging.com, robh+dt@kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 20 Jul 2020 03:49:53 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:41416 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTHtx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 03:49:53 -0400
+X-Greylist: delayed 344 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Jul 2020 03:49:53 EDT
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 9FD911FEB6;
+        Mon, 20 Jul 2020 07:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1595231059; bh=ppF9iNqy67ZPTRkf1vgXb7LZOcBdhZaOBonX3SkJVGw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i2JU3TROrrt5CtDbCpBqWqSRfK4eBGwmdFElYgPYXy1S3RSqspe+tko2+cz0YR82b
+         Ml5JpRvDueZxRWhiOZlo55fRNkUHFK/kbm8pnGaQv4/zvDw10jJWEi9ohJgVaeYveM
+         DgwizZEuQ6L4M8NdNTROuTIcv6nRNGUNrKKsok/sBJ1EVu3UXwcPxvowYtU8x0SuTa
+         G/xXUQGStVk4by1UQesLgnGTedQeQonW3IJTOhseOLBZtNBI0kqEXMmpn1P7s15Mg6
+         q3XAngsjMxzmjdir2izIl4NDbOyY7g3AKi1mgjnw1V10SySRX85c8IJoeraL5y6aB6
+         mgDILXBUw0hMA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1595013322-15077-1-git-send-email-skomatineni@nvidia.com>
- <1595013322-15077-2-git-send-email-skomatineni@nvidia.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <75b7e3bb-cdc1-a266-09cb-3eedd79d198d@lucaceresoli.net>
-Date:   Mon, 20 Jul 2020 09:43:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: [PATCH 1/5] of_address: Add bus type match for pci ranges parser
+Date:   Mon, 20 Jul 2020 15:42:34 +0800
+Message-Id: <20200720074249.596364-2-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <1595013322-15077-2-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17/07/20 21:15, Sowjanya Komatineni wrote:
-> This patch adds IMX274 optional external clock input and voltage
-> supplies to device tree bindings.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+So the parser can be used to parse range property of different bus
+types, such as ISA bus.
 
-Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+As they're all using PCI-like method of range property, there is no need
+start a new parser.
 
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ drivers/of/address.c       | 15 +++++++++++----
+ include/linux/of_address.h |  3 +++
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 8eea3f6e29a4..250c91767648 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -702,6 +702,10 @@ static int parser_init(struct of_pci_range_parser *parser,
+ 	parser->ns = of_bus_n_size_cells(node);
+ 	parser->dma = !strcmp(name, "dma-ranges");
+ 
++	parser->bus = of_match_bus(node);
++	if (!parser->bus)
++		return -ENOENT;
++
+ 	parser->range = of_get_property(node, name, &rlen);
+ 	if (parser->range == NULL)
+ 		return -ENOENT;
+@@ -732,6 +736,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 	int na = parser->na;
+ 	int ns = parser->ns;
+ 	int np = parser->pna + na + ns;
++	int bus_na = 0;
+ 
+ 	if (!range)
+ 		return NULL;
+@@ -739,8 +744,10 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 	if (!parser->range || parser->range + np > parser->end)
+ 		return NULL;
+ 
+-	if (parser->na == 3)
+-		range->flags = of_bus_pci_get_flags(parser->range);
++	parser->bus->count_cells(parser->node, &bus_na, NULL);
++
++	if (parser->na == bus_na)
++		range->flags = parser->bus->get_flags(parser->range);
+ 	else
+ 		range->flags = 0;
+ 
+@@ -761,8 +768,8 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 		u32 flags = 0;
+ 		u64 pci_addr, cpu_addr, size;
+ 
+-		if (parser->na == 3)
+-			flags = of_bus_pci_get_flags(parser->range);
++		if (parser->na == bus_na)
++			flags = parser->bus->get_flags(parser->range);
+ 		pci_addr = of_read_number(parser->range, na);
+ 		if (parser->dma)
+ 			cpu_addr = of_translate_dma_address(parser->node,
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 763022ed3456..3929b4637033 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -6,8 +6,11 @@
+ #include <linux/of.h>
+ #include <linux/io.h>
+ 
++struct of_bus;
++
+ struct of_pci_range_parser {
+ 	struct device_node *node;
++	struct of_bus *bus;
+ 	const __be32 *range;
+ 	const __be32 *end;
+ 	int na;
 -- 
-Luca
+2.28.0.rc1
+
