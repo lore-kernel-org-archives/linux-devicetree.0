@@ -2,98 +2,90 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B439C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81322C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 425E52077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595348002;
-	bh=6yp0dejYr/pxxfUqZk82RY/7Bg+S6u9JX5ToVgpRB70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u5HXgqmnIGZd1GUVBmSVjtA1H/b4X+/OajAn/FZR6x/wavaIVbphb82MYmVFWm5ds
-	 juPXIEHT1IDrgV3HM/PYe5JynDY7ECYnG3Cv+NJ3orCAi67qjCARv2sMHGoxPlVkUj
-	 W+osy97IAygNTARvn4SfBbUWZMwV/G4YJtvXDq2E=
+	by mail.kernel.org (Postfix) with ESMTP id 5226E20771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:21:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ymm00dD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbgGUQNV (ORCPT
+        id S1727778AbgGUQVG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:13:21 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41873 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgGUQNU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:13:20 -0400
-Received: by mail-il1-f195.google.com with SMTP id q3so16871086ilt.8;
-        Tue, 21 Jul 2020 09:13:20 -0700 (PDT)
+        Tue, 21 Jul 2020 12:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgGUQVG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:21:06 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F063C061794;
+        Tue, 21 Jul 2020 09:21:06 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id dg28so15697284edb.3;
+        Tue, 21 Jul 2020 09:21:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=OHn7hEjFb/8SBXPDh1+DgoRQWsuvdjNe2+U9AyALG4o=;
+        b=Ymm00dD9F2MasO44D8/wTfY1on9EmII3e6c5icTnGDjY49MsIFNKckv4IZwX+ryogf
+         GRb1dqFZQCLJj0kOlfQ+/ioq9eSG3gXCeDvzxIkQ3XhNVRYELEvEWCTRfL41X2oFvkFJ
+         6B+e20IzO63huP1rpSd2WjArWZ25Qb3gIIWlfNwKP5mOav3z7CoBOoIoQhiYBALvUL52
+         BYB+4ZQb63i8kAb2LtDh/0/iF3bUWc3Th+eULyeWS+cGaSLe5tkqpkhazu1sKFawBxHm
+         fQZv5FoabAu9gg8akYzMCY6Fw5v7Hb5iimAkyb1YL8YKZPr0UHqJfXw85J3Bl5e2ND/y
+         4o2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3hEvd6e5qQIyO2q50icuN5FjIQ5q4rwekadksksXza4=;
-        b=FoSg4oj+xbTGpENAvqh3FefVJNVTa9QVT++v1Ohdv0D7Mom9ootnHgLnly9OexqzCq
-         9Rdt6NX/uBHLHHyoXMs5ZuPa/um7y8pyxCzU2D4RlrmbsqDa3N1l3Sy+BtN9qyAyYdpo
-         xSJ9ZBJjYadFSZHKk3mOm9E0RG4G+TWvDVUjvMti1PB+xBmEp9OJ9aPWB7/2Mc1cER5j
-         hTUcPusuTclHm/4Ifr9Wy89X0o0k82uBR2e6MDmBhpdnkQQhUg4Jk/KlI7zmSrZYpUSN
-         il+3AricB2ispAV8va/eVCI+skzwZz/sgJ/RFB2ZznV6KuObzFHmL/HlsFDNsenCT7dd
-         lKoA==
-X-Gm-Message-State: AOAM532zQ3YonK9v2ApmJg0V0JvAmHAGfSTcrduaomVJ9VxqqN7RU02M
-        PAn96CyF3B0DR0+y/ibVLw==
-X-Google-Smtp-Source: ABdhPJwZyjj1eCmbDB8qodPjQFtYDmTZBEcJbwfaZKYhQLlgyU4nhZLjz4sJOcRtVBR5wxuFep/Rtw==
-X-Received: by 2002:a92:58d6:: with SMTP id z83mr28467802ilf.186.1595347999985;
-        Tue, 21 Jul 2020 09:13:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b14sm10999389ilg.86.2020.07.21.09.13.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:13:18 -0700 (PDT)
-Received: (nullmailer pid 393136 invoked by uid 1000);
-        Tue, 21 Jul 2020 16:13:17 -0000
-Date:   Tue, 21 Jul 2020 10:13:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     robh+dt@kernel.org, andrew@aj.id.au, joel@jms.id.au,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, lee.jones@linaro.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: aspeed-lpc: Replace HTTP links with
- HTTPS ones
-Message-ID: <20200721161317.GA393067@bogus>
-References: <CACPK8Xc_iwvRtUVjY8G8rS8UbZf6-Q6FTGaNweJXk06A=Y459Q@mail.gmail.com>
- <20200720212110.64214-1-grandmaster@al2klimov.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=OHn7hEjFb/8SBXPDh1+DgoRQWsuvdjNe2+U9AyALG4o=;
+        b=o32R44laedXCQoK+YjeInT50P1QspspQ/j9TIEET6qf9tqvrb5rnxYQ/mIUGYgihGf
+         Zk7RMGw/otBjbnOezMldrpt5/CRsJXWVqtcUpSvlTe0xH8U0PPembi5F9Fovat/gdGlI
+         1xbGVzy5iluOuA7G6KVKox/KTOOv9iDkuaqdGPqWYnEtLEMooGfc5j2m7gWc+YypVYpZ
+         ssyx26b5dcCvtMFQgrOR3Fjp4ZPxURxWmTHI5alqgwOiMQADtdviQPpRbNVH/6rHkRLG
+         nXMYTBzKyNwKEMvf5dj8ikOWFAF4HxBVo0WFNiyzVgJx8QY1UkVoWbDhHXw1iMZrRIXu
+         x6BQ==
+X-Gm-Message-State: AOAM533q43LJthqcqI0IRoEnOJvscHsSb7b2HVWwjpa4RGOjzdRbcXE0
+        VemRosHxSzjDadPQAcB29eG5Pq3AKa6gP4p2BUno+zTqnZw=
+X-Google-Smtp-Source: ABdhPJwlkQdsmXiGVJuT5fBMSRufgvGnNFQJWXPQYp7JmU26Bood8ogKvJRBt/XX6NId4d0K7v9nUTgHvmnJoTuh4oY=
+X-Received: by 2002:a05:6402:202e:: with SMTP id ay14mr26654583edb.233.1595348465062;
+ Tue, 21 Jul 2020 09:21:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720212110.64214-1-grandmaster@al2klimov.de>
+References: <20200704122809.73794-1-konradybcio@gmail.com> <20200704130922.GB21333@willie-the-truck>
+ <20200705033511.GR388985@builder.lan> <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
+ <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Tue, 21 Jul 2020 18:20:29 +0200
+Message-ID: <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+To:     Konrad Dybcio <konradybcio@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jul 2020 23:21:10 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  v2: Left only links to be only HTTPSified.
-> 
->  Documentation/devicetree/bindings/mfd/aspeed-lpc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+>The current
+>focus has been on moving more of the SMMU specific bits into the arm-smmu-qcom
+>implementation [1] and I think that is the right way to go.
 
-Applied, thanks!
+Pardon if I overlooked something obvious, but I can't seem to find a
+clean way for implementing qcom,skip-init in arm-smmu-qcom, as neither
+the arm_smmu_test_smr_masks nor the probe function seem to be
+alterable with arm_smmu_impl. I'm open to your ideas guys.
+
+Konrad
