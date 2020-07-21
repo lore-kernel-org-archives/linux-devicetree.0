@@ -8,67 +8,77 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A042EC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139F7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7545E2073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C9F20771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:53:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBBl1cIQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eek7cfh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgGUSTo (ORCPT
+        id S1727000AbgGUSxm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
+        Tue, 21 Jul 2020 14:53:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGUSTn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 14:19:43 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1AE5C061794;
-        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d7so1842390plq.13;
-        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
+        with ESMTP id S1726960AbgGUSxl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 14:53:41 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF96C061794;
+        Tue, 21 Jul 2020 11:53:41 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f12so22644541eja.9;
+        Tue, 21 Jul 2020 11:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Wr3/k+1ex6fptAAVFMs6oDFrFt7DqcfgHz1IZTNoliM=;
-        b=gBBl1cIQ2RaGy6mgApwpDBftoKfmP/is4EdoquHSFl7/kBk9I+aupEmuq/QMNerRj/
-         rVYgORnZWckQUFGzNobePsGUuMkfsdXZNpVEDAdaZqmMpMW0E8Kk1zoQSqqtZP/P9Usj
-         nxpByUvfLQftyEslbPq2N7ZFDnQJloM5CMa5yxxjgvhLux8LnSAit6HYPxBHjV8NBTFU
-         SxAitVjZN0bMSBUPnTPyGCuwrTvDECweKvqKvFGoDmbiv3rhy8oNwWIaZkpgsI+YP1LV
-         bQ85fWyp6hyaJyTs5l0nQ6B5sipgLH/qHkeZXEwtLqfM49DrenGacjozgpvnMCNlBIH6
-         iaAw==
+        bh=TnSVvBPLgxOr7Okxa4+yFdbMwIKkVndKbRuepRfY/Zs=;
+        b=eek7cfh8H0FIKKTKyBOBHTZXYqIWxEk2P6Dapr54GUi+cu4HMdvEVwngy6fLz1aDzg
+         U0nFCc4ud2FYMXTUQrRiT3tbHejhwGgihOl42ahAgrjrWuM+I6d+6HakuuuzNG5ftqYA
+         xuCEbud/W7cgGEpDBQ5xy/W+JlSt3RtlznZhLpdcwEYoAyVWbDcCOYYwBrNxKEgeoOMC
+         6FDXsMt+noVatUZPGb7f1gVvQIHr5TUNngAYmHT2s7tnARRznT1CYQ4c0RqU9o93V5wz
+         509Oa0X8gkl6SAoeDJ4Kup24jKoQqX8R2+/nUcXa20nn62TkcC4RLCZ7amX1hKN/LYhJ
+         nd8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Wr3/k+1ex6fptAAVFMs6oDFrFt7DqcfgHz1IZTNoliM=;
-        b=TOxUz7oqWA3h73/keLLN4J69gQjShG+iSKU+pFM46p1k/yIL/f9IU8vFRo1tYtTtOY
-         p+YbultjSI39KSWdy2eYtOpHr/LhNL6Eb6nBBpWzQeKE6SMC9yuF8v6aHCwejTS5VRq9
-         TV0IzPWwbIAW1dQOn/T8jcGKZDibp5pY+11OejEhQwxZvMAGsYVkqPomK5zUCXHwgG2X
-         x3W1c9gMqvEp9Zn/7ZLPBx1hV6p/Ey3bizks/sxvts8vaTR07Yi/sdHkpZ6lwi+YG/Dj
-         wAnDGTB00G0MxW6AhFzd0w5WuysFnTzCnnNHzL7UjR7rWmaHdieTYq+0vbB/KWiGHsbG
-         x6rA==
-X-Gm-Message-State: AOAM5332pZwyTOJHspabL6X/0dq8JLw8lrVjcVtYZcmVmw0YxlLlP4M/
-        fGkhoy0BaM3J1rS9KulnOoMEsRTi3oQ=
-X-Google-Smtp-Source: ABdhPJw9ba4fbeXIwYrqUneCu5yvlWJc9CNkBFnQGg5lLtiNaY4tWxFusGuxYmwInBZh74p/3Yg8xw==
-X-Received: by 2002:a17:902:8f8b:: with SMTP id z11mr8794167plo.49.1595355583486;
-        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:593:314e:d028:8959:a8a3:a7bc])
-        by smtp.gmail.com with ESMTPSA id c134sm21054948pfc.115.2020.07.21.11.19.42
+        bh=TnSVvBPLgxOr7Okxa4+yFdbMwIKkVndKbRuepRfY/Zs=;
+        b=coRf4wJI8Rh1ItClLp4utGOuQwLkeGBPwogMY7slXBQM4npE8un8nLwZq5cLxzbaWH
+         MEbZSfYuKgVkHKj1U7/2nO8J5UmO+EMDmVZuhHVuldaSXxMWMoARNVzsrZeAQbUHNqZS
+         EKcIGFCovFEcIS9ocZV/wo242/Kq6ylOj2FLsuBIHTFcfjSuJXksFycqfXp74MQz1FG7
+         fljWcsifggYKf2g8Y6ztfoa99AQUTIbP7PY8x10BTlJaSNF8qwQ/xsCKjVZnQEbfOW98
+         ht6HkxomTE6aAJWlSG55hXp/QgYLRPo2e+z6dXixLf6voCv0loftBv8RyJ60YMIcC++P
+         SfEw==
+X-Gm-Message-State: AOAM532kl+jW3RRLtZw+hCbaq5p4uORU7bdTdgtuWML1y+V0NXiw+pkl
+        QXzAlhz9YewbGQQCm6CpCG0=
+X-Google-Smtp-Source: ABdhPJziAjyw97m/l3cd7CXgr1VWPs/5ficOCx+UJ5aQJNaPKvKkhN4gy0cXRhfSU6uY54k9dE/I3Q==
+X-Received: by 2002:a17:906:7c8:: with SMTP id m8mr26420200ejc.527.1595357618581;
+        Tue, 21 Jul 2020 11:53:38 -0700 (PDT)
+Received: from blackhead.home ([2a01:112f:a1c:7900:7316:ce1e:7b0b:6bd7])
+        by smtp.gmail.com with ESMTPSA id f10sm17585506edr.69.2020.07.21.11.53.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 11:19:42 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Tue, 21 Jul 2020 11:53:38 -0700 (PDT)
+From:   Marcin Sloniewski <marcin.sloniewski@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
         devicetree@vger.kernel.org,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH v2 2/2] dt-bindings: iio: gyro: Add DT binding doc for ADXRS290
-Date:   Tue, 21 Jul 2020 23:49:37 +0530
-Message-Id: <20200721181937.27101-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/3] dt-bindings: vendor-prefixes: add Seeed Studio
+Date:   Tue, 21 Jul 2020 20:53:12 +0200
+Message-Id: <20200721185317.208722-1-marcin.sloniewski@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -76,92 +86,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
+Add the "seeed" vendor prefix for Seeed Technology Co., Ltd
+Website: https://www.seeedstudio.com/
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v2:
-  - use 'const' instead of 'enum' while setting the compatible string
-    since only a single item is expected
-  - add 'additionalProperties: false'
----
- .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 53 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-new file mode 100644
-index 000000000000..61adb2c2454b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2020 Analog Devices Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
-+
-+maintainers:
-+  - Nishant Malpani <nish.malpani25@gmail.com>
-+
-+description: |
-+  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
-+
-+properties:
-+  compatible:
-+    const: adi,adxrs290
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 5000000
-+
-+  spi-cpol: true
-+
-+  spi-cpha: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - spi-max-frequency
-+  - spi-cpol
-+  - spi-cpha
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        gyro@0 {
-+                   compatible = "adi,adxrs290";
-+                   reg = <0>;
-+                   spi-max-frequency = <5000000>;
-+                   spi-cpol;
-+                   spi-cpha;
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dd02cfc410e8..0bb8ac90fba1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
- L:	linux-iio@vger.kernel.org
- S:	Supported
- F:	drivers/iio/gyro/adxrs290.c
-+F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
- 
- ANALOG DEVICES INC ASOC CODEC DRIVERS
- M:	Lars-Peter Clausen <lars@metafoo.de>
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9aeab66be85f..7dd03b3e9d3c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -902,6 +902,8 @@ patternProperties:
+     description: Schindler
+   "^seagate,.*":
+     description: Seagate Technology PLC
++  "^seeed,.*":
++    description: Seeed Technology Co., Ltd
+   "^seirobotics,.*":
+     description: Shenzhen SEI Robotics Co., Ltd
+   "^semtech,.*":
 -- 
-2.20.1
+2.27.0
 
