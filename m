@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0E6C433E5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF4AC433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43B7D2080D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55482080D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qhn+goWZ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="pAphUZe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgGUIFB (ORCPT
+        id S1728716AbgGUIF5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51206 "EHLO
+        Tue, 21 Jul 2020 04:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgGUIFB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 04:05:01 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC19C061794
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:04:59 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s10so20167393wrw.12
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:04:59 -0700 (PDT)
+        with ESMTP id S1728536AbgGUIF4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 04:05:56 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 550C4C061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:05:56 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so20242814wrw.1
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:autocrypt:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=jH582tZI6uRuRluRLJ1yaUOrVLa2oSwk31A/3gi6CBo=;
-        b=qhn+goWZ+r9/CvzPeQA2c9DX8yBjbzF+VAYUnDfUEA2NUc4vqel4YLyjScXZ7rJPhz
-         tyYt1sI0OKEojK8iWd3X+EXcMmG5B6FYeMeMJ6owGc6vzxOOAJmwCQXJJRUfPDONaJOQ
-         e0ES/19Ty0uY5liQBRYdLZty62sufA0QjEzYpV/iGiL40rfituwYGj14VlI5hW0xt/Er
-         Wo1k9tKQyUGo2eyweViCwsjJojDZqQqzuyk3ix6dpx2jKyUqWMvCTl8v6FAsZeCW7peV
-         PUpiuJSb/4/340ZP7sOeKvR0VScMjjD5rczWnjJh4fmJxAhQEAqK3juQC84yjUMl4PDi
-         4pyw==
+        bh=V1/WiSj/e4KNtzTBAgt0YeCvDXNH1b4xS3BHNVivhP4=;
+        b=pAphUZe4DCNQ+qe/JtdmhPcxLhem9rq19kUwRZETAt6pf1t/CrSNeo6SvSwociaUuT
+         jIMq0LF5zfHxa683D2D4hXuuwk8CvXSLGUp9flaeCGItc4gmPrVjQamc52LwRgRHY+Ak
+         wGhjflknuLgAh/lZugPe3W53uMlPLZxhfzWbvpsm41Bs+kQ7H2p2xHP51qyrcH7z/cR6
+         +TADGPCT/ftmYZEYt9cyL7MPvD+A6foVvbPFGVXub3gPk9jYNy1T7RAIwbJpa5+drAkX
+         EN0tXHf5LbPB2+cNzxjCTZAa4nPi8o0warGsGw6akADLRUSHDwbuMxZtpXw0VkAjv5B3
+         QKQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=jH582tZI6uRuRluRLJ1yaUOrVLa2oSwk31A/3gi6CBo=;
-        b=B4o8zH+DZ9ym0WGg3Ol75FE8carij/u6J6ZlQMBjLIf1NeBFWgzj3xIz2g+Jsr4SP+
-         MGmBaTbJRoc0WY8VVfJJsRNWHjaZmq2Jvoq5grkVrgwc06xn3NwwEpLSoAhWQFY3HXFv
-         +5seKsFiZytFFL2HpB1xLpgmEdH2hb5UOLm1RwjcW5euS0owV0+Rf3uHLWwI+NElBxRE
-         1nyZj3r+lix7Mvj4mbvGHe7WI2Rluw55DJPlBhc2b9Q40gwLSRfOilMCTu7J/zJm9AgN
-         Bcja4mWtN80FETbKLJrE0Hl3Az7ctuR+d9Y48hhhAfMdaqi+W1mf4m2KqGVj8wcVmVUz
-         ePlw==
-X-Gm-Message-State: AOAM532xB1+N3T5FiOAw3u819rIHJoi3JQCYPGYdFxfSRytfW1OYIbV4
-        rzUrRoKfg/gdBJdeeRWvPoTydA==
-X-Google-Smtp-Source: ABdhPJxJjIbYwsnQ8YA5xqxSU5HameIXdQxOsPC6KBiP3Vrt3krT9PW4cndCH1Z9BXlRrdEL/+2GOA==
-X-Received: by 2002:a5d:4c8a:: with SMTP id z10mr25148029wrs.384.1595318698528;
-        Tue, 21 Jul 2020 01:04:58 -0700 (PDT)
+        bh=V1/WiSj/e4KNtzTBAgt0YeCvDXNH1b4xS3BHNVivhP4=;
+        b=rtiTfH7DMg7lkL10hEpZmlGTtfSPG1I68oh/jJWMQajGaHmi3+PSIh4PK/nu27KRVM
+         sgtI+ht0tcdPkDr7RGX7TMPebpCm7ZRA5xJwDtGAzHajTcGK2dG96qM9JrLp+USuCn6X
+         dMIa/JQ+xUOTmECitBymo5U1R/5HkdRNpuqk8HtQtgVojB1HTTo06gaBo6mK0KtXqhJZ
+         T+ybPrcoD+Ntvii8VI1yxwNqDwTi5C7m5URN9ZqMg96ssTUynx3AvqJyG9c8j0tULA7A
+         P7MHlNMWe6KZYWa4+Tv2mYChSTEvJjejibX/Sv1Hb/qHPSJgYqgaUsj8ObLgwy+Etlff
+         yxXw==
+X-Gm-Message-State: AOAM531Gk1vI4tYByx1qMy/67kmcHinKrBT5J60Tnd//UCCct75P7knu
+        urJcj7d5HUQ5MbOgmkwCEpYATg==
+X-Google-Smtp-Source: ABdhPJxVagj8kEvl9/UFCcw3KbVwV2SWsU3D7wYzRagQ0nooo02Sg3CrHfgNArZpWFGgMMKlrj4vDw==
+X-Received: by 2002:adf:ee0b:: with SMTP id y11mr26958008wrn.360.1595318754914;
+        Tue, 21 Jul 2020 01:05:54 -0700 (PDT)
 Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y77sm2628302wmd.36.2020.07.21.01.04.57
+        by smtp.gmail.com with ESMTPSA id g144sm2215674wme.2.2020.07.21.01.05.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2020 01:04:57 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] arm64: dts: meson: add support for the WeTek Core
+        Tue, 21 Jul 2020 01:05:53 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] arm64: dts: meson: add support for the WeTek Core
  2
 To:     Christian Hewitt <christianshewitt@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,8 +68,8 @@ To:     Christian Hewitt <christianshewitt@gmail.com>,
         Kevin Hilman <khilman@baylibre.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200718094400.1185-1-christianshewitt@gmail.com>
- <20200718094400.1185-2-christianshewitt@gmail.com>
+References: <20200719021421.7959-1-christianshewitt@gmail.com>
+ <20200719021421.7959-3-christianshewitt@gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -121,12 +121,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <eeb5e882-adc6-5cdd-a107-c855d9977f1e@baylibre.com>
-Date:   Tue, 21 Jul 2020 10:04:57 +0200
+Message-ID: <84f58117-f088-71a6-e6dc-fd81a3e8bcd6@baylibre.com>
+Date:   Tue, 21 Jul 2020 10:05:53 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200718094400.1185-2-christianshewitt@gmail.com>
+In-Reply-To: <20200719021421.7959-3-christianshewitt@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -135,7 +135,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18/07/2020 11:44, Christian Hewitt wrote:
+On 19/07/2020 04:14, Christian Hewitt wrote:
 > The WeTek Core2 is a commercial device based on the Amlogic Q200 reference
 > design but with the following differences:
 > 
@@ -166,7 +166,7 @@ On 18/07/2020 11:44, Christian Hewitt wrote:
 >  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-odroid-c4.dtb
 > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
 > new file mode 100644
-> index 000000000000..b81f90015bd0
+> index 000000000000..ec794c134c15
 > --- /dev/null
 > +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dts
 > @@ -0,0 +1,87 @@
@@ -251,7 +251,7 @@ On 18/07/2020 11:44, Christian Hewitt wrote:
 > +
 > +	bluetooth {
 > +		compatible = "brcm,bcm43438-bt";
-> +		enable-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+> +		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
 > +		max-speed = <2000000>;
 > +		clocks = <&wifi32k>;
 > +		clock-names = "lpo";
