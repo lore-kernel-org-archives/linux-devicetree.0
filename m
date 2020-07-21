@@ -2,94 +2,70 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A916CC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 12:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C78C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 12:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB752073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 12:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F07222BEF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 12:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oo0eXSGL"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oOkEf3hA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgGUMVa (ORCPT
+        id S1726636AbgGUMXk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 08:21:30 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41014 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgGUMV3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 08:21:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LCLIdm066971;
-        Tue, 21 Jul 2020 07:21:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595334078;
-        bh=yQL5Tmkn/eZZMGfKuxJupf7ECdBCQmtXrTbqOCW8/Bk=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=oo0eXSGL7+Sf0+uGTStvD0B5ds14C2GYluTWyxFJjoRx29DaYENg/GLN0iybioK7Q
-         8YLwzNX7rLIfnJoljbP8Eirw1p++mOeapKBvKwo/U3MVCESSU/0NefiAn2usdFSA6j
-         r8wl83CSrd5wFXGUurEy8Y3PNxCFekmBSmkZCOhw=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LCLIrh044350
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 07:21:18 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 07:21:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 07:21:18 -0500
-Received: from [10.250.32.229] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LCLHKG087778;
-        Tue, 21 Jul 2020 07:21:17 -0500
-Subject: Re: [PATCH] leds: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200713145115.35121-1-grandmaster@al2klimov.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <9df2b017-7d9e-02d1-5dab-bfc58c3f8d17@ti.com>
-Date:   Tue, 21 Jul 2020 07:21:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 08:23:40 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:59813 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728557AbgGUMXk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 08:23:40 -0400
+X-UUID: 40f2cfce92c94a44a2a1fcc5608db344-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fjg7nMNQVLp7jHAziQfjeWpWwhYiATooWUXF/1IXayU=;
+        b=oOkEf3hAxACP+8aU9ajnmJQ3VHqbsBO0NGaLnQXHUcXsipANTE7t6Zl92VIp4XVBFsWPOtxlwGX5YBrbiIzo5InMM5k5MLVQTIX2a2aFosDIlmAHMcXWl67glxeoOo0uL62kqy+FFqw7V5z7om5RdZamuS8xFg6gxweBzsFtQxU=;
+X-UUID: 40f2cfce92c94a44a2a1fcc5608db344-20200721
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <leilk.liu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 768022660; Tue, 21 Jul 2020 20:23:29 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
+ 2020 20:23:28 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 20:23:26 +0800
+Message-ID: <1595334144.31408.0.camel@mhfsdcap03>
+Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
+From:   lei liu <leilk.liu@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-spi@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
+Date:   Tue, 21 Jul 2020 20:22:24 +0800
+In-Reply-To: <20200721094859.GB4845@sirena.org.uk>
+References: <20200721024819.7150-1-leilk.liu@mediatek.com>
+         <20200721094859.GB4845@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200713145115.35121-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-SNTS-SMTP: 68EB313837D36780FC0EDA997D82074C7AB48D5FE3646CEC1E13DEF30727FA492000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+T24gVHVlLCAyMDIwLTA3LTIxIGF0IDEwOjQ4ICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBUdWUsIEp1bCAyMSwgMjAyMCBhdCAxMDo0ODoxOUFNICswODAwLCBMZWlsayBMaXUgd3JvdGU6
+DQo+ID4gRnJvbTogImxlaWxrLmxpdSIgPGxlaWxrLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gDQo+
+ID4gQWRkIGEgRFQgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUgTVQ4MTkyIHNvYy4NCj4g
+DQo+IEknZCBleHBlY3QgdG8gc2VlIGEgbWF0Y2hpbmcgZHJpdmVyIHBhdGNoLg0KDQpPSyxJJ2xs
+IHNlbmQgcGF0Y2ggdjIuIFRoYW5rcy4NCg==
 
-On 7/13/20 9:51 AM, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
->
-> Deterministic algorithm:
-> For each file:
->    If not .svg:
->      For each line:
->        If doesn't contain `\bxmlns\b`:
->          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->              If both the HTTP and HTTPS versions
->              return 200 OK and serve the same content:
->                Replace HTTP with HTTPS.
->
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-
-Acked-by: Dan Murphy <dmurphy@ti.com>
-
-Thanks for the update
