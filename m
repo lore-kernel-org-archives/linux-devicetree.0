@@ -2,90 +2,197 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A67AC433E6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 21:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA64C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 21:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC4D20720
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 21:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E6C20729
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 21:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Qt3KHO5l"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YOUL4cnK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbgGUVOu (ORCPT
+        id S1731046AbgGUVgH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 17:14:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32938 "EHLO
+        Tue, 21 Jul 2020 17:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730304AbgGUVOu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 17:14:50 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D3EC0619DB
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 14:14:49 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t11so41236pfq.11
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 14:14:49 -0700 (PDT)
+        with ESMTP id S1731174AbgGUVgH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 17:36:07 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224E0C0619DD
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 14:36:07 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so69032pje.0
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 14:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=oSUWq982rBlWRI7hOTohIn18y5KqsT4lbUPrCubS9rQ=;
-        b=Qt3KHO5lvvUtQ8imVFOJ2VhAHOnvuWrMPARwSJIhErVMtjHNHMP5M58cIfz/ydEO3b
-         N8xJ6iroaX2XUBw+nW75h1JxrT0xcFO4rM4GGxT7PAtvL8GWT+6Yac0aO1mgkDSn7+YX
-         redNFf1wwK4hKomJtf+QYgF8/WFKRQFzX0RlPrYYMx9X1PdVztVvmiV38Zh2VpIw7NGy
-         nREPu12wtWIThP59O6Tza0z4xgsHIsButqmIlRK7WclqPsQCRBL3SZYFc0Y++V59JbUb
-         CUQEx5/xboqbc242yoVwbC6nDqv0hBljzLPz9BcwTSKLY/G+4AhD62tWPRwhPfYGFONa
-         hKVg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QnFBaTSg1O0oHUaCso2bk1qAOV9FQ15i24q2Wj9c11M=;
+        b=YOUL4cnKo2x3TaJ+BAr/95ETT6x9gObK2WQYwFGJgK/9RUBdjb9MfbaMiHffHRHyKC
+         LGPxmxmDr3JtJgytD9mZPSCsbbH8QO2j0gNH8SXz+CGy6SykntBW6W3e46GhrYKLD/as
+         8vk+cPDlyjlX5x6BntZR1v6ykrBCcA+fBZIkA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oSUWq982rBlWRI7hOTohIn18y5KqsT4lbUPrCubS9rQ=;
-        b=KgYucuptm8uv7CIDBu4f7QHMEXUAmgERCJsEHvyraKDByVsA+DduViUd6tOoP4swxJ
-         NMcx+yafayIHHK6sJudz99KZOVTU4PJhujUeD+ooQvoPRI+ZtIWhtJyh5L7oAkMiDHZD
-         kIBYm6QZ+3JyjleNXi09M5jsbaerNxqYXZknmBUctZxTeF+CQWAivzzl+guyp4ROa0UJ
-         sNN+QUbxwAdKkdu0VOTBycHAb1Gtm3PLrQ3ZEo85NxvW/6D5rPQgOZJUKrb1MZ2yIvc9
-         mXr9AfY7yy1RrzMDyEw8Ak5Y453SSDRW+nwkjZLx7Ia5mNfYIWJzRPbFjs7yIt6n362Y
-         wKcA==
-X-Gm-Message-State: AOAM530gOMZwXXZuzQcjh+3OWgAzlrdiJ3EgtSql6ULJTfK1PHWbDQN2
-        0bszvgxlSmQ7n8xCLQvs3Z4z5A==
-X-Google-Smtp-Source: ABdhPJyQntzppnYI6sfe3fXSIfegwAdBnN0ZD8OF2gPFZ9fMv/PTK9G75ha/vG9as5mIrSCMEF0NMg==
-X-Received: by 2002:a62:2b85:: with SMTP id r127mr24357616pfr.239.1595366089357;
-        Tue, 21 Jul 2020 14:14:49 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id cv7sm3966952pjb.9.2020.07.21.14.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 14:14:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Christian Hewitt <christianshewitt@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QnFBaTSg1O0oHUaCso2bk1qAOV9FQ15i24q2Wj9c11M=;
+        b=WZ+nbjj7U0ts//H4mG7+ugesegB/adEsbQNt4DFlyfr9eznPF9GBC7iIOUbWKGVbDm
+         DnZYpIYFVOxg88nKu8+tQTi0MLsXXXJOoBn8Nkajo9sCVViLQywwFGuPEBKdTAsPT1Us
+         KZOJLGO6b6asMNFXgRXKN78lbLSvPs6wuJVPy72SySMeVuzYHjWM7ym8kZVwblKmgC/W
+         YyN+rj9t2NIX3gAutxm1+1sDJ1wLYFt6OooRz2lzIVEf/PSxzvFVK39VV4DIVRPq+3jy
+         SbQi6l/Vywx/yi+S0GxXUBxWx+jBcR/SmKdRekBuaJk3Gs9SDX1JhvyDDjeZPUNQMFjC
+         zCDQ==
+X-Gm-Message-State: AOAM533TN4UiJTOZhjEHIeFfT9Zga6zd1D2DonbedTayHPYFfbryZDpE
+        LJjlWE5FK+cdZLGavPn1ptKPkw==
+X-Google-Smtp-Source: ABdhPJwTp73CGx2NZOG1F3slWn6h4XRPSmBMoPPr4bTFkCrHZLbZxCeKsBovc096clKCXXQIzGNjEA==
+X-Received: by 2002:a17:902:7c8b:: with SMTP id y11mr10339693pll.142.1595367366620;
+        Tue, 21 Jul 2020 14:36:06 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id b4sm21711441pfo.137.2020.07.21.14.36.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 14:36:05 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 14:36:04 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: meson: update spifc node name on Khadas VIM3/VIM3L
-Date:   Tue, 21 Jul 2020 14:14:44 -0700
-Message-Id: <159536607959.30777.2083924894013034325.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200718054505.4165-1-christianshewitt@gmail.com>
-References: <20200718054505.4165-1-christianshewitt@gmail.com>
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] usb: dwc3: core: Host wake up support from system
+ suspend
+Message-ID: <20200721213604.GW3191083@google.com>
+References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
+ <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 18 Jul 2020 05:45:05 +0000, Christian Hewitt wrote:
-> The VIM3/VIM3L Boards use w25q128 not w25q32 - this is a cosmetic change
-> only - the device probes fine with the current device-tree.
+Hi Sandeep,
 
-Applied, thanks!
+On Thu, Jul 09, 2020 at 12:40:15AM +0530, Sandeep Maheswaram wrote:
+> Avoiding phy powerdown in host mode so that it can be wake up by devices.
+> Added need_phy_for_wakeup flag to distinugush resume path and hs_phy_flags
+> to check connection status and set phy mode and  configure interrupts.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  drivers/usb/dwc3/core.c | 47 ++++++++++++++++++++++++++++++++++++++++-------
+>  drivers/usb/dwc3/core.h |  2 ++
+>  2 files changed, 42 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..eb7c225 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,12 +31,14 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+>  
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+>  
+>  #include "debug.h"
+> +#include "../host/xhci.h"
+>  
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
+>  
+> @@ -1627,10 +1629,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
+>  	return ret;
+>  }
+>  
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
+> +{
+> +
+> +	int i, num_ports;
+> +	u32 reg;
+> +	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
+> +	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
+> +
+> +	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
 
-[1/1] arm64: dts: meson: update spifc node name on Khadas VIM3/VIM3L
-      commit: d57c69ca6d4ab890e8edac5c8e10c7c2b54d500c
+Where is hs_phy_flags initialized? As far as I can tell it isn't, hence when
+dwc3_set_phy_speed_flags() is executed the first time it is 0 (from
+devm_kzalloc()), and after the '&=' it is still 0. The next time it will have
+whatever value it was set to in the below loop, which is then cleared by
+the '&='. It seems you could as well just write 'dwc->hs_phy_flags = 0',
+which is clearer, unless the field is used in some other way that isn't
+obvious to me.
 
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
+> +
+> +	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
+> +
+> +	num_ports = HCS_MAX_PORTS(reg);
+> +	for (i = 0; i < num_ports; i++) {
+> +		reg = readl(&xhci_hcd->op_regs->port_status_base + i * 0x04);
+> +		if (reg & PORT_PE) {
+> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
+> +			else if (DEV_LOWSPEED(reg))
+> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
+
+Is another entry for DEV_SUPERSPEED needed?
+
+> +		}
+> +	}
+> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
+> +}
+> +
+>  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+>  {
+>  	unsigned long	flags;
+>  	u32 reg;
+> +	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
+>  
+>  	switch (dwc->current_dr_role) {
+>  	case DWC3_GCTL_PRTCAP_DEVICE:
+> @@ -1643,9 +1671,12 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+>  		dwc3_core_exit(dwc);
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+> +		dwc3_set_phy_speed_flags(dwc);
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			dwc3_core_exit(dwc);
+> -			break;
+> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +				dwc->need_phy_for_wakeup = true;
+> +			else
+> +				dwc->need_phy_for_wakeup = false;
+>  		}
+>  
+>  		/* Let controller to suspend HSPHY before PHY driver suspends */
+> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			ret = dwc3_core_init_for_resume(dwc);
+> -			if (ret)
+> -				return ret;
+> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+> -			break;
+> +			if (!dwc->need_phy_for_wakeup) {
+> +				ret = dwc3_core_init_for_resume(dwc);
+
+Before this patch we had the combo dwc3_core_exit() / dwc3_core_init_for_resume(),
+now it is only dwc3_core_init_for_resume() for !dwc->need_phy_for_wakeup.
+Doesn't this cause trouble with enable counts, e.g. with clk_bulk_prepare_enable()
+being called in dwc3_core_init_for_resume(), without the corresponding
+clk_bulk_disable_unprepare() calls in dwc3_core_exit()?
