@@ -7,234 +7,114 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF853C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60FBC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2EB20717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FD120709
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595297265;
-	bh=+ts4zy5C6VLaAdZUBa4hYy3VRNpbixHGF/DyON4s8UE=;
+	s=default; t=1595297430;
+	bh=mpSYOJaRe2HqbXPdJ82PWIpqASuHVIFRJawi1rvbTE8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HhGWS7Xs/LxwVNLsfoiqnV9zvJr7AAiINh912z10w4PTj+KznJgS+/tYu3RNZo8tT
-	 8R0GIXJYuE3GYvS5EbDf++jJ6cJdsGbOx2Ilzj9vDRfFxqBBGecmU5AqYb7Ykp6j4V
-	 64zeWAUc3hXK4aWXHNB5CO72Ji0EegWz4okDnmY8=
+	b=g2PBUqlrLk4UM3DOjd5zvLCF/XlfnvavgMLfZfU7tBZdISYjEmdHQOrR9H55oqgiR
+	 iRkrlyDNE8xEOZeS1YJa7Z50rVyYje8GKZ75OAP4w8Gj7htDJIA74fg7RI4JHfEAl1
+	 A3EPoPA4kX/xKdXovpsEA5He6gkU5wOYdXuc/Byk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgGUCHp (ORCPT
+        id S1726042AbgGUCKa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:07:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44120 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgGUCHo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 22:07:44 -0400
-Received: by mail-io1-f68.google.com with SMTP id i4so19690990iov.11;
-        Mon, 20 Jul 2020 19:07:43 -0700 (PDT)
+        Mon, 20 Jul 2020 22:10:30 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40837 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgGUCK3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 22:10:29 -0400
+Received: by mail-io1-f67.google.com with SMTP id l17so19700423iok.7
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 19:10:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hTY3veWiVTWEBJAoyzuJVm52NubnJ7An2M9eukUiOrU=;
-        b=bP7ehV63k7eG3CeWp8qPLq4RlpfXmdUy81yDTSg05LNzpg/nORQPnun9ogbZoEditE
-         W3Qr/LNVJD/rn16Knj6JJIK2MhVxmNc46ZaWaK3oG3kibjVB3RUdg7cX1R2wxFkgDsKF
-         zQpvEgNb43pzIA5pv0z/Ay40i3v8sZSfmOCUnAZVeYK5kS1orA7ViCRR1MprZO+1iOPB
-         6gBuIhsZQtiub4qL5LZ9Tg5kSzRTTbc4hZsxzOSpO8ho4M2/qx9npBH3Et1fseZKeZzq
-         FrH1hwSm3BjkJy6NAs4PqZGZ+s++GyjysklsPd+5fueRpyNtpxJy/g+iIbP1EnxZ+Qz2
-         +jsA==
-X-Gm-Message-State: AOAM532/xf4yHsIdQ7ilpB0KMMQZ0+XUNms6zTLpN3DpGH7Tr8vb2XRX
-        uqHeruVDknxKCf2Zn18rew==
-X-Google-Smtp-Source: ABdhPJw8swEl/2Nq6F7rvsd0KLS7MVckYcnrFaXBYa4pxsQXXVmksaVj5LWsPyjhiP+nS3XxXuFNgw==
-X-Received: by 2002:a5e:a60d:: with SMTP id q13mr25571264ioi.199.1595297263389;
-        Mon, 20 Jul 2020 19:07:43 -0700 (PDT)
+        bh=/46L/c6KjZBA8UxcNLwuQWdQYtMpxrAX9cV63irRY9g=;
+        b=pBvadwdBGq6jmyrEBlbNtTTYdx4GtMlVTaq89H8wnDHDSBeFOUMBU8/mPrFcWBBas0
+         42U0wAJj2Y+zuscNlNvDA0Ig6NBilsSAa7FPb2nIc6eeGXTtF8XyWDSwDSLADt311Rta
+         x0cFDQdyOllOjpAuZI7k4rKH0NeNzhWxzfUJQvCn3Hm9lUzdaEaIAWNnerMqgtSIZhbx
+         F8/RYDgDAQDYouQxONPVHPitr6wT7rAw6lrf8HDDSvicdr4f1QTFVdLvggIpBvTshvMp
+         rG1WVeGZABpgymDnfslsipZLUueGTIfF8/pSsLSQUxL/nhAuqLBgkvQK+a6gk+92Ynli
+         D2aA==
+X-Gm-Message-State: AOAM531zR1Gwcy+CSimodkG4gXnXh1AG3v5MKtLVUgJBcu/chc81YdWs
+        e4Lllco/2CPDssVtedcFHA==
+X-Google-Smtp-Source: ABdhPJwTmQpxHmmOzo0iMaN1uJwnfUhSB9KfvOR2nPHFEjoe2wxlJnhzE2QElfxxyztGC0KuU6qdQg==
+X-Received: by 2002:a6b:b54e:: with SMTP id e75mr25929429iof.31.1595297428957;
+        Mon, 20 Jul 2020 19:10:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n10sm446926iom.21.2020.07.20.19.07.41
+        by smtp.gmail.com with ESMTPSA id l18sm9842201ill.56.2020.07.20.19.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 19:07:42 -0700 (PDT)
-Received: (nullmailer pid 3382159 invoked by uid 1000);
-        Tue, 21 Jul 2020 02:07:40 -0000
-Date:   Mon, 20 Jul 2020 20:07:40 -0600
+        Mon, 20 Jul 2020 19:10:28 -0700 (PDT)
+Received: (nullmailer pid 3386425 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:10:26 -0000
+Date:   Mon, 20 Jul 2020 20:10:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com,
-        saikrishna12468@gmail.com
-Subject: Re: [PATCH 1/2] dt-bindings: reset: Updated binding for Versal reset
- driver
-Message-ID: <20200721020740.GA3376303@bogus>
-References: <1594708149-29944-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <1594708149-29944-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Siarhei Siamashka <siarhei.siamashka@gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: display: panel-dpi: Add bits-per-color
+ property
+Message-ID: <20200721021026.GA3382460@bogus>
+References: <20200714071305.18492-1-wens@kernel.org>
+ <20200714071305.18492-2-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594708149-29944-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+In-Reply-To: <20200714071305.18492-2-wens@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:59:08AM +0530, Sai Krishna Potthuri wrote:
-> Added documentation and Versal reset indices to describe
-> about Versal reset driver bindings.
+On Tue, Jul 14, 2020 at 03:13:01PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+> Some LCD panels do not support 24-bit true color, or 8bits per channel
+> RGB. Many low end ones only support up to 6 bits per channel natively.
+
+This should be implied by the panel's compatible property.
+
+> Add a device tree property to describe the native bit depth of the
+> panel. This is separate from the bus width or format of the connection
+> to the display output.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
->  .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
->  2 files changed, 112 insertions(+), 4 deletions(-)
->  create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
+>  .../devicetree/bindings/display/panel/panel-dpi.yaml          | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
-> index 27a45fe5ecf1..ed836868dbf1 100644
-> --- a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
-> @@ -1,7 +1,7 @@
->  --------------------------------------------------------------------------
-> - =  Zynq UltraScale+ MPSoC reset driver binding =
-> + =  Zynq UltraScale+ MPSoC and Versal reset driver binding =
->  --------------------------------------------------------------------------
-> -The Zynq UltraScale+ MPSoC has several different resets.
-> +The Zynq UltraScale+ MPSoC and Versal has several different resets.
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+> index 0cd74c8dab42..8eb013fb1969 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
+> @@ -26,6 +26,9 @@ properties:
+>    height-mm: true
+>    label: true
+>    panel-timing: true
+> +  bits-per-color:
+> +    description:
+> +      Shall contain an integer describing the number of bits per color.
+>    port: true
+>    power-supply: true
+>    reset-gpios: true
+> @@ -42,6 +45,7 @@ examples:
+>      panel {
+>          compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
+>          label = "osddisplay";
+> +        bits-per-color = <8>;
+>          power-supply = <&vcc_supply>;
+>          backlight = <&backlight>;
 >  
->  See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
->  about zynqmp resets.
-> @@ -10,7 +10,8 @@ Please also refer to reset.txt in this directory for common reset
->  controller binding usage.
->  
->  Required Properties:
-> -- compatible:	"xlnx,zynqmp-reset"
-> +- compatible:	"xlnx,zynqmp-reset" for Zynq UltraScale+ MPSoC platform
-> +		"xlnx,versal-reset" for Versal platform
->  - #reset-cells:	Specifies the number of cells needed to encode reset
->  		line, should be 1
->  
-> @@ -37,8 +38,10 @@ Device nodes that need access to reset lines should
->  specify them as a reset phandle in their corresponding node as
->  specified in reset.txt.
->  
-> -For list of all valid reset indicies see
-> +For list of all valid reset indices for Zynq UltraScale+ MPSoC see
->  <dt-bindings/reset/xlnx-zynqmp-resets.h>
-> +For list of all valid reset indices for Versal see
-> +<dt-bindings/reset/xlnx-versal-resets.h>
->  
->  Example:
->  
-> diff --git a/include/dt-bindings/reset/xlnx-versal-resets.h b/include/dt-bindings/reset/xlnx-versal-resets.h
-> new file mode 100644
-> index 000000000000..895424e9b0e5
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/xlnx-versal-resets.h
-> @@ -0,0 +1,105 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + *  Copyright (C) 2020 Xilinx, Inc.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_VERSAL_RESETS_H
-> +#define _DT_BINDINGS_VERSAL_RESETS_H
-> +
-> +#define VERSAL_RST_PMC_POR			(0xc30c001U)
-
-Perhaps some explanation on the numbering as ZynqMP seems to be just an 
-index.
-
-> +#define VERSAL_RST_PMC				(0xc410002U)
-> +#define VERSAL_RST_PS_POR			(0xc30c003U)
-> +#define VERSAL_RST_PL_POR			(0xc30c004U)
-> +#define VERSAL_RST_NOC_POR			(0xc30c005U)
-> +#define VERSAL_RST_FPD_POR			(0xc30c006U)
-> +#define VERSAL_RST_ACPU_0_POR			(0xc30c007U)
-> +#define VERSAL_RST_ACPU_1_POR			(0xc30c008U)
-> +#define VERSAL_RST_OCM2_POR			(0xc30c009U)
-> +#define VERSAL_RST_PS_SRST			(0xc41000aU)
-> +#define VERSAL_RST_PL_SRST			(0xc41000bU)
-> +#define VERSAL_RST_NOC				(0xc41000cU)
-> +#define VERSAL_RST_NPI				(0xc41000dU)
-> +#define VERSAL_RST_SYS_RST_1			(0xc41000eU)
-> +#define VERSAL_RST_SYS_RST_2			(0xc41000fU)
-> +#define VERSAL_RST_SYS_RST_3			(0xc410010U)
-> +#define VERSAL_RST_FPD				(0xc410011U)
-> +#define VERSAL_RST_PL0				(0xc410012U)
-> +#define VERSAL_RST_PL1				(0xc410013U)
-> +#define VERSAL_RST_PL2				(0xc410014U)
-> +#define VERSAL_RST_PL3				(0xc410015U)
-> +#define VERSAL_RST_APU				(0xc410016U)
-> +#define VERSAL_RST_ACPU_0			(0xc410017U)
-> +#define VERSAL_RST_ACPU_1			(0xc410018U)
-> +#define VERSAL_RST_ACPU_L2			(0xc410019U)
-> +#define VERSAL_RST_ACPU_GIC			(0xc41001aU)
-> +#define VERSAL_RST_RPU_ISLAND			(0xc41001bU)
-> +#define VERSAL_RST_RPU_AMBA			(0xc41001cU)
-> +#define VERSAL_RST_R5_0				(0xc41001dU)
-> +#define VERSAL_RST_R5_1				(0xc41001eU)
-> +#define VERSAL_RST_SYSMON_PMC_SEQ_RST		(0xc41001fU)
-> +#define VERSAL_RST_SYSMON_PMC_CFG_RST		(0xc410020U)
-> +#define VERSAL_RST_SYSMON_FPD_CFG_RST		(0xc410021U)
-> +#define VERSAL_RST_SYSMON_FPD_SEQ_RST		(0xc410022U)
-> +#define VERSAL_RST_SYSMON_LPD			(0xc410023U)
-> +#define VERSAL_RST_PDMA_RST1			(0xc410024U)
-> +#define VERSAL_RST_PDMA_RST0			(0xc410025U)
-> +#define VERSAL_RST_ADMA				(0xc410026U)
-> +#define VERSAL_RST_TIMESTAMP			(0xc410027U)
-> +#define VERSAL_RST_OCM				(0xc410028U)
-> +#define VERSAL_RST_OCM2_RST			(0xc410029U)
-> +#define VERSAL_RST_IPI				(0xc41002aU)
-> +#define VERSAL_RST_SBI				(0xc41002bU)
-> +#define VERSAL_RST_LPD				(0xc41002cU)
-> +#define VERSAL_RST_QSPI				(0xc10402dU)
-> +#define VERSAL_RST_OSPI				(0xc10402eU)
-> +#define VERSAL_RST_SDIO_0			(0xc10402fU)
-> +#define VERSAL_RST_SDIO_1			(0xc104030U)
-> +#define VERSAL_RST_I2C_PMC			(0xc104031U)
-> +#define VERSAL_RST_GPIO_PMC			(0xc104032U)
-> +#define VERSAL_RST_GEM_0			(0xc104033U)
-> +#define VERSAL_RST_GEM_1			(0xc104034U)
-> +#define VERSAL_RST_SPARE			(0xc104035U)
-> +#define VERSAL_RST_USB_0			(0xc104036U)
-> +#define VERSAL_RST_UART_0			(0xc104037U)
-> +#define VERSAL_RST_UART_1			(0xc104038U)
-> +#define VERSAL_RST_SPI_0			(0xc104039U)
-> +#define VERSAL_RST_SPI_1			(0xc10403aU)
-> +#define VERSAL_RST_CAN_FD_0			(0xc10403bU)
-> +#define VERSAL_RST_CAN_FD_1			(0xc10403cU)
-> +#define VERSAL_RST_I2C_0			(0xc10403dU)
-> +#define VERSAL_RST_I2C_1			(0xc10403eU)
-> +#define VERSAL_RST_GPIO_LPD			(0xc10403fU)
-> +#define VERSAL_RST_TTC_0			(0xc104040U)
-> +#define VERSAL_RST_TTC_1			(0xc104041U)
-> +#define VERSAL_RST_TTC_2			(0xc104042U)
-> +#define VERSAL_RST_TTC_3			(0xc104043U)
-> +#define VERSAL_RST_SWDT_FPD			(0xc104044U)
-> +#define VERSAL_RST_SWDT_LPD			(0xc104045U)
-> +#define VERSAL_RST_USB				(0xc104046U)
-> +#define VERSAL_RST_DPC				(0xc208047U)
-> +#define VERSAL_RST_PMCDBG			(0xc208048U)
-> +#define VERSAL_RST_DBG_TRACE			(0xc208049U)
-> +#define VERSAL_RST_DBG_FPD			(0xc20804aU)
-> +#define VERSAL_RST_DBG_TSTMP			(0xc20804bU)
-> +#define VERSAL_RST_RPU0_DBG			(0xc20804cU)
-> +#define VERSAL_RST_RPU1_DBG			(0xc20804dU)
-> +#define VERSAL_RST_HSDP				(0xc20804eU)
-> +#define VERSAL_RST_DBG_LPD			(0xc20804fU)
-> +#define VERSAL_RST_CPM_POR			(0xc30c050U)
-> +#define VERSAL_RST_CPM				(0xc410051U)
-> +#define VERSAL_RST_CPMDBG			(0xc208052U)
-> +#define VERSAL_RST_PCIE_CFG			(0xc410053U)
-> +#define VERSAL_RST_PCIE_CORE0			(0xc410054U)
-> +#define VERSAL_RST_PCIE_CORE1			(0xc410055U)
-> +#define VERSAL_RST_PCIE_DMA			(0xc410056U)
-> +#define VERSAL_RST_CMN				(0xc410057U)
-> +#define VERSAL_RST_L2_0				(0xc410058U)
-> +#define VERSAL_RST_L2_1				(0xc410059U)
-> +#define VERSAL_RST_ADDR_REMAP			(0xc41005aU)
-> +#define VERSAL_RST_CPI0				(0xc41005bU)
-> +#define VERSAL_RST_CPI1				(0xc41005cU)
-> +#define VERSAL_RST_XRAM				(0xc30c05dU)
-> +#define VERSAL_RST_AIE_ARRAY			(0xc10405eU)
-> +#define VERSAL_RST_AIE_SHIM			(0xc10405fU)
-> +
-> +#endif
 > -- 
-> 2.17.1
+> 2.27.0
 > 
