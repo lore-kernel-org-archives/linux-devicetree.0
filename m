@@ -2,110 +2,266 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDE9C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDF4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6EC207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LQHyZUWB"
+	by mail.kernel.org (Postfix) with ESMTP id E7DDB20792
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595301942;
+	bh=RABhCOC89MZhVuLxs3cnNJ3H6w6Ka5FamAwpLDmI4pg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wTwJh0UrVx3eDqRYUS7hekgqnY2MQOz++hrTy186y9CzviOKlsZ7LyPXz9rJV0wtH
+	 +rU2XOByl5pu0BijBx27qetMY08jCMNpH5pqHwxE36sL8PRtDyLgRLHOEPFPwkPCYP
+	 aK3/vD50HaFU3UKi9ZpKMy4hpyH0w8YQ2tccxAUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgGUDY4 (ORCPT
+        id S1725857AbgGUDZl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:24:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgGUDYz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:24:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731ABC0619D5
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 20:24:55 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s189so11276407pgc.13
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 20:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xEKJp/jVsPRX4UpWt8HfxSdWbSchkUleBYjVnsTaofA=;
-        b=LQHyZUWBvXVCW395DzCgA0Dhe5iVnTk00XHZfa9Y30Fi6a7xuBBwh8d/I2OiyxQi8O
-         +LA8HvHeYdFDOzs4BqC3u3SV8ITPjtTbJFB8rSBrsk5B9SfjlOOghCWPQ2HCeWTEw5It
-         R7Yq+EdLhhwajEl5phhZ0NpX/S8XoLKNpSthc2i5xLCERwf8ohqeWqd93eJzunZtDWpC
-         wxlBW46cFDuL3s+EbbViTlFSPFuZ/CxjYL7oDjdoKeSHoZVhk1lgTqI9fwmdg2LZ0woA
-         yl/MBm9Qb8WXF8FkLvcb1DUI6Owzq7zAgMNx9EDlZwu4lJ033QNTwmrXOozbT5lNJcRS
-         71aA==
+        Mon, 20 Jul 2020 23:25:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34416 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbgGUDZk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:25:40 -0400
+Received: by mail-io1-f66.google.com with SMTP id q74so19929979iod.1;
+        Mon, 20 Jul 2020 20:25:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xEKJp/jVsPRX4UpWt8HfxSdWbSchkUleBYjVnsTaofA=;
-        b=LxkZZomDLCoW9pO+7ipp7cbIwkf5ccagKe3lGB7scBRRF9sCoS7vy+zwajQlDYC/oy
-         9uxRgC9A9XJkAdBP14R+AtmQbTa+j2ysWKgKL9sYubhBM4OFhCw6+gMg2X5OhjU/XSIn
-         +ZdCdACU2vvsiA3ZeLH4mw9QQfX7qamOd5Y0deueyqDJB40fp/ps5OB6oh0JVABwjxHZ
-         IzpOaZcO5l+89YD1DJ1QHogh7hN2XeNJ+wygf3Kxn7+4QA8SnRDCP8UixXm2fq3kY3eL
-         kOv9BBj0rcj5dEColoXXI4AC+NBAsmE2YdQIPPq/XzCPb2iCg+11bB2Y3DbCj5rf+kbH
-         FxuQ==
-X-Gm-Message-State: AOAM533XqoKLW1o/SHev2Xpsc8HS2c4CknFbz1plEF3f983PY27ijnqe
-        MnCSUIderwHXqoi26BVeWBEkHQ==
-X-Google-Smtp-Source: ABdhPJzzJUvTTt3zYg8Ad9nFkak4Z6dshzvJaAVPO+PpmMtkXDtOIXzZcz5rd02eSZR/emH7oCtbLw==
-X-Received: by 2002:a65:4bc8:: with SMTP id p8mr20871536pgr.418.1595301895018;
-        Mon, 20 Jul 2020 20:24:55 -0700 (PDT)
-Received: from localhost ([223.179.133.67])
-        by smtp.gmail.com with ESMTPSA id e18sm18353912pff.37.2020.07.20.20.24.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 Jul 2020 20:24:53 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 08:54:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-Message-ID: <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu>
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
- <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu>
- <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=PbmHXiUgYZ7K3k3+4SC1dxQ0M9qSdVSxsuVwkOW5+Ow=;
+        b=kdcyTZrdm44HBnXC9CerCLcMLYi1ecm0OmRxEB8f30NZI435BlzTnMIwXCnlclcrRs
+         iXUbVvRuAvT8VnyEDLJ8qp6sbUjDqC0cIQY0fTXRnwuaauuYnuZGV1uuKBnRjH3CgS6j
+         6sjAFqZbWYO6wF2W+ddRRKgV/KOI9B23b++N5ezvp9iJVZ1SJzSwNi6Py4OHtdJAnpXC
+         i43LbeUvgeI3g6M+tBO/KQE48aspgOe4w8SdKh4F2gXjj71jmr+dsXIQf1iDszeH2e4z
+         EEYq+ic0BPdZ+HwhHu2RVrnL2KRcGaD1qakYIaejASmv3dIXFEZhjRitGd1fQyZKc/WB
+         kNGw==
+X-Gm-Message-State: AOAM532SWFYVFGh9OUNDVYERviQ8nG7Avz1vaoJggrUokE8vJW6jgbkb
+        yTKAcQHEgfbtK1tspjR7iw==
+X-Google-Smtp-Source: ABdhPJycudUTQZUWHZqdt3WKQxrt/MH89xE6iuGVYnrVJSrbXkzUig2eq2rAIRTz4FYtbGGk+4363w==
+X-Received: by 2002:a05:6602:1610:: with SMTP id x16mr25769599iow.68.1595301939583;
+        Mon, 20 Jul 2020 20:25:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p12sm9772317ilj.16.2020.07.20.20.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 20:25:38 -0700 (PDT)
+Received: (nullmailer pid 3491686 invoked by uid 1000);
+        Tue, 21 Jul 2020 03:25:36 -0000
+Date:   Mon, 20 Jul 2020 21:25:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        dianders@chromium.org, heiko@sntech.de,
+        Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: power: rockchip: Convert to json-schema
+Message-ID: <20200721032536.GA3476792@bogus>
+References: <20200715170216.2875868-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20200715170216.2875868-1-enric.balletbo@collabora.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-20, 08:03, Rob Clark wrote:
-> On Mon, Jul 20, 2020 at 3:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 15-07-20, 08:36, Rob Clark wrote:
-> > > I can take the first two into msm-next, the 3rd will need to wait
-> > > until dev_pm_opp_set_bw() lands
-> >
-> > You can base that on a8351c12c6c7 in linux-next, I will make sure not to rebase
-> > it anymore.
-
-This was 5.8-rc1 + 2 patches for OPP. That's all.
-
-> >
+On Wed, Jul 15, 2020 at 07:02:16PM +0200, Enric Balletbo i Serra wrote:
+> Convert the soc/rockchip/power_domain.txt binding document to json-schema
+> and move to the power bindings directory.
 > 
-> I can't really base on something newer than drm-next
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+>  .../power/rockchip,power-controller.yaml      | 154 ++++++++++++++++++
+>  .../bindings/soc/rockchip/power_domain.txt    | 136 ----------------
+>  2 files changed, 154 insertions(+), 136 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+> new file mode 100644
+> index 000000000000..af50cf2b3e63
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+> @@ -0,0 +1,154 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/rockchip,power-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip Power Domains
+> +
+> +maintainers:
+> +  - Caesar Wang <wxt@rock-chips.com>
+> +  - Heiko Stuebner <heiko@sntech.de>
+> +
+> +description: |
+> +  Rockchip processors include support for multiple power domains which can be
+> +  powered up/down by software based on different application scenes to save power.
+> +
+> +  Power domains contained within power-controller node are generic power domain
+> +  providers documented in Documentation/devicetree/bindings/power/power-domain.yaml.
+> +
+> +  IP cores belonging to a power domain should contain a 'power-domains'
+> +  property that is a phandle for the power domain node representing the domain.
+> +
+> +properties:
+> +  power-controller:
+> +    type: object
+> +    description: List of power domains provided by this controller.
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - rockchip,px30-power-controller
+> +          - rockchip,rk3036-power-controller
+> +          - rockchip,rk3066-power-controller
+> +          - rockchip,rk3128-power-controller
+> +          - rockchip,rk3188-power-controller
+> +          - rockchip,rk3228-power-controller
+> +          - rockchip,rk3288-power-controller
+> +          - rockchip,rk3328-power-controller
+> +          - rockchip,rk3366-power-controller
+> +          - rockchip,rk3368-power-controller
+> +          - rockchip,rk3399-power-controller
+> +
+> +      reg:
+> +        description: |
+> +          Power domain index. Valid values are defined in:
+> +          "include/dt-bindings/power/px30-power.h" - for PX30 type power domain.
+> +          "include/dt-bindings/power/rk3036-power.h" - for RK3036 type power domain.
+> +          "include/dt-bindings/power/rk3066-power.h" - for RK3066 type power domain.
+> +          "include/dt-bindings/power/rk3128-power.h" - for RK3128 type power domain.
+> +          "include/dt-bindings/power/rk3188-power.h" - for RK3188 type power domain.
+> +          "include/dt-bindings/power/rk3228-power.h" - for RK3228 type power domain.
+> +          "include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
+> +          "include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
+> +          "include/dt-bindings/power/rk3366-power.h" - for RK3366 type power domain.
+> +          "include/dt-bindings/power/rk3368-power.h" - for RK3368 type power domain.
+> +          "include/dt-bindings/power/rk3399-power.h" - for RK3399 type power domain.
+> +        maxItems: 1
+> +
+> +      clocks:
+> +        description: |
+> +          A number of phandles to clocks that need to be enabled while power domain
+> +          switches state.
+> +      pm_qos:
+> +        description: |
+> +          A number of phandles to qos blocks which need to be saved and restored
+> +          while power domain switches state.
+> +
+> +      power-supply: true
+> +
+> +    required:
+> +      - compatible
+> +      - reg
 
-But you need the OPP dependency, isn't it ?
+You need:
 
--- 
-viresh
+       additionalProperties: false
+
+(with indentation). Then you will get a bunch of errors as you are 
+missing a level of nodes. The 'power-controller' node doesn't have 
+'reg' for example. You'll need to use 'patternProperties' with '^pd_'.
+
+And to describe the nested power domains, you have to describe yet 
+another level. You can do a $ref with something like:
+
+$ref: '#/properties/power-controller/patternProperties/^pd_'
+
+That creates a circular reference though and I'm not sure what will 
+happen. :)
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/rk3399-cru.h>
+> +    #include <dt-bindings/power/rk3399-power.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        qos_iep: qos@ffa98000 {
+> +            compatible = "syscon";
+
+This will generate a warning now. 'syscon' should not be used alone.
+
+> +            reg = <0x0 0xffa98000 0x0 0x20>;
+> +        };
+> +
+> +        qos_rga_r: qos@ffab0000 {
+> +            compatible = "syscon";
+> +            reg = <0x0 0xffab0000 0x0 0x20>;
+> +        };
+> +
+> +        qos_rga_w: qos@ffab0080 {
+> +            compatible = "syscon";
+> +            reg = <0x0 0xffab0080 0x0 0x20>;
+> +        };
+> +
+> +        qos_video_m0: qos@ffab8000 {
+> +            compatible = "syscon";
+> +            reg = <0x0 0xffab8000 0x0 0x20>;
+> +        };
+> +
+> +        qos_video_m1_r: qos@ffac0000 {
+> +            compatible = "syscon";
+> +            reg = <0x0 0xffac0000 0x0 0x20>;
+> +        };
+> +
+> +        qos_video_m1_w: qos@ffac0080 {
+> +            compatible = "syscon";
+> +            reg = <0x0 0xffac0080 0x0 0x20>;
+> +        };
+> +
+> +        power-management@ff310000 {
+> +            compatible = "rockchip,rk3399-pmu", "syscon", "simple-mfd";
+> +            reg = <0x0 0xff310000 0x0 0x1000>;
+> +
+> +            power-controller {
+> +                compatible = "rockchip,rk3399-power-controller";
+> +                #power-domain-cells = <1>;
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                /* These power domains are grouped by VD_CENTER */
+> +                pd_iep@RK3399_PD_IEP {
+> +                    reg = <RK3399_PD_IEP>;
+> +                    clocks = <&cru ACLK_IEP>,
+> +                             <&cru HCLK_IEP>;
+> +                    pm_qos = <&qos_iep>;
+> +                };
+> +                pd_rga@RK3399_PD_RGA {
+> +                    reg = <RK3399_PD_RGA>;
+> +                    clocks = <&cru ACLK_RGA>,
+> +                             <&cru HCLK_RGA>;
+> +                    pm_qos = <&qos_rga_r>,
+> +                             <&qos_rga_w>;
+> +                };
+> +                pd_vcodec@RK3399_PD_VCODEC {
+> +                    reg = <RK3399_PD_VCODEC>;
+> +                    clocks = <&cru ACLK_VCODEC>,
+> +                             <&cru HCLK_VCODEC>;
+> +                    pm_qos = <&qos_video_m0>;
+> +                };
+> +                pd_vdu@RK3399_PD_VDU {
+> +                    reg = <RK3399_PD_VDU>;
+> +                    clocks = <&cru ACLK_VDU>,
+> +                             <&cru HCLK_VDU>;
+> +                    pm_qos = <&qos_video_m1_r>,
+> +                             <&qos_video_m1_w>;
+> +                };
+> +            };
+> +        };
+> +    };
