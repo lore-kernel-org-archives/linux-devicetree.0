@@ -2,206 +2,72 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9213C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 00:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B26C433ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 00:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A061B2080D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 00:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0940F208E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 00:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595291256;
-	bh=c6SZiY+whgjX+KRRviicz0UCk9I8GfA5MfRpG2BBP94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UAqchIUrprFAYZBtkMV1jFB7V/d+NZGtjvZQQLE6gsdW3CjjJYXwxigPjFy/g4pZP
-	 RRca3W0+j5P+ZMcWhIO6yLxxqACe6uFewOMHMtacoF54b64R64zEsyxDhgUNkOXldq
-	 FF20nk4EnnRwjPoBapk/ymdwn/LfoSnmg7O/ML3c=
+	s=default; t=1595291950;
+	bh=mwZKvG+01y2ShgeBeoa9RMB1Bx/jUGES7yJ7dxJ92wQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=1pGskmq2UwYpnpVI7N7mKYYieJadZSGS2i2KF+vdF5xFNze25Im3VJZVxMGt78VY0
+	 879crP96JgRPG1WZFvGL6zZwe98pmq3R11GXnJPwDAzoZm1GDygmJwFYYvQHt2zJvf
+	 2QZz9WRmwnNktrE+b9C6G0onAEBm4X3DkrMgpX70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgGUA1g (ORCPT
+        id S1726021AbgGUAjC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 20:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56066 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 20:39:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727119AbgGUA1f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 20:27:35 -0400
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728127AbgGUAjB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:39:01 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ACB82080D;
-        Tue, 21 Jul 2020 00:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67535208E4;
+        Tue, 21 Jul 2020 00:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595291255;
-        bh=c6SZiY+whgjX+KRRviicz0UCk9I8GfA5MfRpG2BBP94=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h25Ur3YjDXsIffNXZbUEBviwLUlanTRFbhwbcg8s+C+yYrfFTYIWsit+7qQSc+V8s
-         8O1o15xWRghSS3gfayQfZmw7lGcP6klqpEGdE6Jl4feXp8b0tUvfLKezUjoZEAcstW
-         D8t7q8kYE+tLgxEgh745NuSPqBpOJ99ojzMEhBuA=
-Received: by mail-ot1-f50.google.com with SMTP id 72so13757859otc.3;
-        Mon, 20 Jul 2020 17:27:35 -0700 (PDT)
-X-Gm-Message-State: AOAM533IcDoMSj7MN3QdD7Br4oeEdjzymF5zSDoRS/20KGj4eReK0Dfk
-        BHhecWyOt1xOHekWBeBQVoelk0nCDNSRK0Bfzg==
-X-Google-Smtp-Source: ABdhPJy1WG7lsLgsUdYuKa9S5Q9mvAiX/mi4NprNl1cvMY0HgadPJ9FKGMIqdUm5qCrPvLhnJyKu659d9wOYC469eCU=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr20951382otb.107.1595291254348;
- Mon, 20 Jul 2020 17:27:34 -0700 (PDT)
+        s=default; t=1595291941;
+        bh=mwZKvG+01y2ShgeBeoa9RMB1Bx/jUGES7yJ7dxJ92wQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=VzsUSpUNum/ISB0NVT4N0zXSNrFlbwDylNiu0lA2s93tr3uqcQ9reMibtCaKNkOqg
+         0S4C+yydEFCUSUtef4oUTdneQZrA/vyxY04FZT2R50Qq5kfE52EWKVCFNCBv4dQwWQ
+         milHt6vZ9gz/gS07LquBtvkKgxIRtTbUzio3VqdA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-3-jiaxun.yang@flygoat.com>
-In-Reply-To: <20200720074249.596364-3-jiaxun.yang@flygoat.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 20 Jul 2020 18:27:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLOVwgFGm82EA+rs2Skjv_=xuuW1V_Asnu2yHHqdy6CvA@mail.gmail.com>
-Message-ID: <CAL_JsqLOVwgFGm82EA+rs2Skjv_=xuuW1V_Asnu2yHHqdy6CvA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594877570-9280-1-git-send-email-sivaprak@codeaurora.org>
+References: <1594877570-9280-1-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH] clk: qcom: ipq8074: Add correct index for PCIe clocks
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org
+Date:   Mon, 20 Jul 2020 17:39:00 -0700
+Message-ID: <159529194068.3847286.12937961081804827485@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 1:54 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->
-> Previously, we're hardcoding resserved ISA I/O Space in code, now
-> we're processing reverved I/O via DeviceTree directly. Using the ranges
-> property to determine the size and address of reserved I/O space.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Quoting Sivaprakash Murugesan (2020-07-15 22:32:50)
+> The PCIe clocks GCC_PCIE0_AXI_S_BRIDGE_CLK, GCC_PCIE0_RCHNG_CLK_SRC,
+> GCC_PCIE0_RCHNG_CLK are wrongly added to the gcc reset group.
+>=20
+> Move them to the gcc clock group.
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > ---
->  arch/mips/loongson64/init.c | 85 ++++++++++++++++++++++++++-----------
->  1 file changed, 60 insertions(+), 25 deletions(-)
->
-> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-> index 59ddadace83f..028d7b324ec2 100644
-> --- a/arch/mips/loongson64/init.c
-> +++ b/arch/mips/loongson64/init.c
-> @@ -7,6 +7,8 @@
->  #include <linux/irqchip.h>
->  #include <linux/logic_pio.h>
->  #include <linux/memblock.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <asm/bootinfo.h>
->  #include <asm/traps.h>
->  #include <asm/smp-ops.h>
-> @@ -63,41 +65,74 @@ void __init prom_free_prom_memory(void)
->  {
->  }
->
-> -static __init void reserve_pio_range(void)
-> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, phys_addr_t addr,
-> +                            resource_size_t    size)
->  {
-> +       int ret = 0;
->         struct logic_pio_hwaddr *range;
-> +       unsigned long vaddr;
->
->         range = kzalloc(sizeof(*range), GFP_ATOMIC);
->         if (!range)
-> -               return;
-> +               return -ENOMEM;
->
-> -       range->fwnode = &of_root->fwnode;
-> -       range->size = MMIO_LOWER_RESERVED;
-> -       range->hw_start = LOONGSON_PCIIO_BASE;
-> +       range->fwnode = fwnode;
-> +       range->size = size;
-> +       range->hw_start = addr;
->         range->flags = LOGIC_PIO_CPU_MMIO;
->
-> -       if (logic_pio_register_range(range)) {
-> -               pr_err("Failed to reserve PIO range for legacy ISA\n");
-> -               goto free_range;
-> +       ret = logic_pio_register_range(range);
-> +       if (ret) {
-> +               kfree(range);
-> +               return ret;
-> +       }
-> +
-> +       /* Legacy ISA must placed at the start of PCI_IOBASE */
-> +       if (range->io_start != 0) {
-> +               logic_pio_unregister_range(range);
-> +               kfree(range);
-> +               return -EINVAL;
->         }
->
-> -       if (WARN(range->io_start != 0,
-> -                       "Reserved PIO range does not start from 0\n"))
-> -               goto unregister;
-> -
-> -       /*
-> -        * i8259 would access I/O space, so mapping must be done here.
-> -        * Please remove it when all drivers can be managed by logic_pio.
-> -        */
-> -       ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
-> -                               LOONGSON_PCIIO_BASE,
-> -                               pgprot_device(PAGE_KERNEL));
-> -
-> -       return;
-> -unregister:
-> -       logic_pio_unregister_range(range);
-> -free_range:
-> -       kfree(range);
-> +       vaddr = PCI_IOBASE + range->io_start;
-> +
-> +       ioremap_page_range(vaddr, vaddr + size, addr, pgprot_device(PAGE_KERNEL));
-> +
-> +       return 0;
-> +}
-> +
-> +static __init void reserve_pio_range(void)
-> +{
-> +       struct device_node *np;
-> +
-> +       for_each_node_by_name(np, "isa") {
-> +               struct of_pci_range range;
-> +               struct of_pci_range_parser parser;
 
-Use of_range, of_range_parser instead of PCI variant.
-
-> +
-> +               pr_info("ISA Bridge: %pOF\n", np);
-> +
-> +               if (of_pci_range_parser_init(&parser, np)) {
-> +                       pr_info("Failed to parse resources.\n");
-> +                       break;
-> +               }
-> +
-> +               for_each_of_pci_range(&parser, &range) {
-
-for_each_of_range()
-
-We need to add a define for of_range_parser_init too.
-
-> +                       switch (range.flags & IORESOURCE_TYPE_BITS) {
-> +                       case IORESOURCE_IO:
-> +                               pr_info(" IO 0x%016llx..0x%016llx\n",
-> +                                       range.cpu_addr,
-> +                                       range.cpu_addr + range.size - 1);
-> +                               if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
-> +                                       pr_warn("Failed to reserve legacy IO in Logic PIO\n");
-> +                               break;
-> +                       case IORESOURCE_MEM:
-> +                               pr_info(" MEM 0x%016llx..0x%016llx\n",
-> +                                       range.cpu_addr,
-> +                                       range.cpu_addr + range.size - 1);
-> +                               break;
-> +                       }
-> +               }
-> +       }
->  }
->
->  void __init arch_init_irq(void)
-> --
-> 2.28.0.rc1
->
+Applied to clk-next
