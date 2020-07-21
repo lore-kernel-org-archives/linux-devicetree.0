@@ -2,138 +2,287 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD63C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2CDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E05208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zv/sNEUL"
+	by mail.kernel.org (Postfix) with ESMTP id ADA482072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725984AbgGUHQQ (ORCPT
+        id S1727782AbgGUHp2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:16:16 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:19422 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbgGUHQQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 03:16:16 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L77RKS010258;
-        Tue, 21 Jul 2020 09:16:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=73dAVS9zUnqZ8WATP62hAGazNOj36cZliVUS8oX7h4U=;
- b=zv/sNEUL05QFtuyXeubVy9UghJ47mfJ+LITSloTtydnx8AyIyOUG90UXZDK5nh6WlYj4
- yCGAMF4CrYHmVG8tPA5lDMnXLLjhU3fouCZXgYuJBnUEDeiVPiylOXf7ncEAI5rhGhde
- Ab6eUKuu8qTh9IC0Yvyq4MzBMrXZHHnjrMQDOcxXj5OTlwn7iN/kqXTObosvjFYfIUpn
- 5w/82ZpxNwgbePUmSVpJt/pV5mXw8iLDVSDCnOhy6mnjC/tiu31tJxRmVXbHAYlH9Xq3
- J/lvBl+eUZTeAdV05MAZZI0sYAnddRZp97gdGAXmXQoIwC/x6Ah3bySZUHqpH+dnXeZJ 4A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bsfpcana-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 09:16:03 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EF3FB10002A;
-        Tue, 21 Jul 2020 09:16:02 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF0CA220CCB;
-        Tue, 21 Jul 2020 09:16:02 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
- 2020 09:16:02 +0200
-Subject: Re: [PATCH] ARM: dts: stm32: cosmetic update in
- stm32mp15-pinctrl.dtsi
-To:     Patrick Delaunay <patrick.delaunay@st.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200616153329.15148-1-patrick.delaunay@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <b18bd7f8-f63c-13ad-6220-f7745600a7a6@st.com>
-Date:   Tue, 21 Jul 2020 09:16:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200616153329.15148-1-patrick.delaunay@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+        Tue, 21 Jul 2020 03:45:28 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:13786 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbgGUHp1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 03:45:27 -0400
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 21 Jul 2020 00:45:27 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Jul 2020 00:45:24 -0700
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Jul 2020 13:15:01 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 8221F2BA8; Tue, 21 Jul 2020 13:15:00 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: [PATCH v9 1/2] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+Date:   Tue, 21 Jul 2020 13:14:48 +0530
+Message-Id: <1595317489-18432-2-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595317489-18432-1-git-send-email-sanm@codeaurora.org>
+References: <1595317489-18432-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Patrick
+Add interconnect support in dwc3-qcom driver to vote for bus
+bandwidth.
 
-On 6/16/20 5:33 PM, Patrick Delaunay wrote:
-> Use tabs where possible and remove multiple blanks lines.
-> 
-> Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
-> ---
-> 
->   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
-> 
+This requires for two different paths - from USB to
+DDR. The other is from APPS to USB.
 
-Applied on stm32-next.
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/usb/dwc3/dwc3-qcom.c | 127 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 125 insertions(+), 2 deletions(-)
 
-Thanks.
-Alex
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index e1e78e9..82e08ff 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/extcon.h>
++#include <linux/interconnect.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+@@ -43,6 +44,14 @@
+ #define SDM845_QSCRATCH_SIZE			0x400
+ #define SDM845_DWC3_CORE_SIZE			0xcd00
+ 
++/* Interconnect path bandwidths in MBps */
++#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
++#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
++#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
++#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
++#define APPS_USB_AVG_BW 0
++#define APPS_USB_PEAK_BW MBps_to_icc(40)
++
+ struct dwc3_acpi_pdata {
+ 	u32			qscratch_base_offset;
+ 	u32			qscratch_base_size;
+@@ -76,6 +85,8 @@ struct dwc3_qcom {
+ 	enum usb_dr_mode	mode;
+ 	bool			is_suspended;
+ 	bool			pm_suspended;
++	struct icc_path		*icc_path_ddr;
++	struct icc_path		*icc_path_apps;
+ };
+ 
+ static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
+@@ -190,6 +201,101 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
+ 	return 0;
+ }
+ 
++/* Bandwidth levels are set in dwc3_qcom_interconnect_init ,
++ * so just "enable" interconnects.
++ */
++static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
++{
++	int ret;
++
++	ret = icc_enable(qcom->icc_path_ddr);
++	if (ret)
++		return ret;
++
++	ret = icc_enable(qcom->icc_path_apps);
++	if (ret)
++		return ret;
++
++	return ret;
++}
++
++/*Disabling the interconnect, will set the bandwidth to 0 */
++static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
++{
++	int ret;
++
++	ret = icc_disable(qcom->icc_path_ddr);
++	if (ret)
++		return ret;
++
++	ret = icc_disable(qcom->icc_path_apps);
++	if (ret)
++		return ret;
++
++	return ret;
++}
++
++/**
++ * dwc3_qcom_interconnect_init() - Get interconnect path handles
++ * and set bandwidhth.
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ */
++static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
++{
++	struct device *dev = qcom->dev;
++	int ret;
++
++	qcom->icc_path_ddr = of_icc_get(dev, "usb-ddr");
++	if (IS_ERR(qcom->icc_path_ddr)) {
++		dev_err(dev, "failed to get usb-ddr path: %ld\n",
++			PTR_ERR(qcom->icc_path_ddr));
++		return PTR_ERR(qcom->icc_path_ddr);
++	}
++
++	qcom->icc_path_apps = of_icc_get(dev, "apps-usb");
++	if (IS_ERR(qcom->icc_path_apps)) {
++		dev_err(dev, "failed to get apps-usb path: %ld\n",
++				PTR_ERR(qcom->icc_path_apps));
++		return PTR_ERR(qcom->icc_path_apps);
++	}
++
++	if (usb_get_maximum_speed(&qcom->dwc3->dev) >= USB_SPEED_SUPER ||
++			usb_get_maximum_speed(&qcom->dwc3->dev) == USB_SPEED_UNKNOWN)
++		ret = icc_set_bw(qcom->icc_path_ddr,
++			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
++	else
++		ret = icc_set_bw(qcom->icc_path_ddr,
++			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
++
++	if (ret) {
++		dev_err(dev, "failed to set bandwidth for usb-ddr path: %d\n", ret);
++		return ret;
++	}
++
++	ret = icc_set_bw(qcom->icc_path_apps,
++		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
++
++	if (ret) {
++		dev_err(dev, "failed to set bandwidth for apps-usb path: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++/**
++ * dwc3_qcom_interconnect_exit() - Release interconnect path handles
++ * @qcom:			Pointer to the concerned usb core.
++ *
++ * This function is used to release interconnect path handle.
++ */
++static void dwc3_qcom_interconnect_exit(struct dwc3_qcom *qcom)
++{
++	icc_put(qcom->icc_path_ddr);
++	icc_put(qcom->icc_path_apps);
++}
++
+ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
+ {
+ 	if (qcom->hs_phy_irq) {
+@@ -239,7 +345,7 @@ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ {
+ 	u32 val;
+-	int i;
++	int i, ret;
+ 
+ 	if (qcom->is_suspended)
+ 		return 0;
+@@ -251,6 +357,10 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--)
+ 		clk_disable_unprepare(qcom->clks[i]);
+ 
++	ret = dwc3_qcom_interconnect_disable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to disable interconnect: %d\n", ret);
++
+ 	qcom->is_suspended = true;
+ 	dwc3_qcom_enable_interrupts(qcom);
+ 
+@@ -276,6 +386,10 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 		}
+ 	}
+ 
++	ret = dwc3_qcom_interconnect_enable(qcom);
++	if (ret)
++		dev_warn(qcom->dev, "failed to enable interconnect: %d\n", ret);
++
+ 	/* Clear existing events from PHY related to L2 in/out */
+ 	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
+ 			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
+@@ -285,6 +399,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+ 	return 0;
+ }
+ 
++
++
+ static irqreturn_t qcom_dwc3_resume_irq(int irq, void *data)
+ {
+ 	struct dwc3_qcom *qcom = data;
+@@ -638,6 +754,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 		goto depopulate;
+ 	}
+ 
++	ret = dwc3_qcom_interconnect_init(qcom);
++	if (ret)
++		goto depopulate;
++
+ 	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
+ 
+ 	/* enable vbus override for device mode */
+@@ -647,7 +767,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	/* register extcon to override sw_vbus on Vbus change later */
+ 	ret = dwc3_qcom_register_extcon(qcom);
+ 	if (ret)
+-		goto depopulate;
++		goto interconnect_exit;
+ 
+ 	device_init_wakeup(&pdev->dev, 1);
+ 	qcom->is_suspended = false;
+@@ -657,6 +777,8 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++interconnect_exit:
++	dwc3_qcom_interconnect_exit(qcom);
+ depopulate:
+ 	if (np)
+ 		of_platform_depopulate(&pdev->dev);
+@@ -687,6 +809,7 @@ static int dwc3_qcom_remove(struct platform_device *pdev)
+ 	}
+ 	qcom->num_clocks = 0;
+ 
++	dwc3_qcom_interconnect_exit(qcom);
+ 	reset_control_assert(qcom->resets);
+ 
+ 	pm_runtime_allow(dev);
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-> diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-> index 7eb858732d6d..7d351757f2f8 100644
-> --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-> @@ -210,8 +210,8 @@
->   				 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH_RGMII_TXD3 */
->   				 <STM32_PINMUX('B', 11, ANALOG)>, /* ETH_RGMII_TX_CTL */
->   				 <STM32_PINMUX('C', 1, ANALOG)>, /* ETH_MDC */
-> -			         <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
-> -			         <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
-> +				 <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
-> +				 <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RGMII_RXD0 */
->   				 <STM32_PINMUX('C', 5, ANALOG)>, /* ETH_RGMII_RXD1 */
->   				 <STM32_PINMUX('H', 6, ANALOG)>, /* ETH_RGMII_RXD2 */
->   				 <STM32_PINMUX('H', 7, ANALOG)>, /* ETH_RGMII_RXD3 */
-> @@ -453,7 +453,7 @@
->   	i2c5_pins_b: i2c5-1 {
->   		pins {
->   			pinmux = <STM32_PINMUX('D', 0, AF4)>, /* I2C5_SCL */
-> -			         <STM32_PINMUX('D', 1, AF4)>; /* I2C5_SDA */
-> +				 <STM32_PINMUX('D', 1, AF4)>; /* I2C5_SDA */
->   			bias-disable;
->   			drive-open-drain;
->   			slew-rate = <0>;
-> @@ -463,7 +463,7 @@
->   	i2c5_sleep_pins_b: i2c5-sleep-1 {
->   		pins {
->   			pinmux = <STM32_PINMUX('D', 0, ANALOG)>, /* I2C5_SCL */
-> -			         <STM32_PINMUX('D', 1, ANALOG)>; /* I2C5_SDA */
-> +				 <STM32_PINMUX('D', 1, ANALOG)>; /* I2C5_SDA */
->   		};
->   	};
->   
-> @@ -1072,7 +1072,6 @@
->   		};
->   	};
->   
-> -
->   	sai2a_pins_b: sai2a-1 {
->   		pins1 {
->   			pinmux = <STM32_PINMUX('I', 6, AF10)>,	/* SAI2_SD_A */
-> 
