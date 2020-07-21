@@ -2,114 +2,216 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3358C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0462C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 843AE208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HbebthKh"
+	by mail.kernel.org (Postfix) with ESMTP id CD28020792
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595302412;
+	bh=9HI1pUn9jONTwhdZhN5qt8fCBBfsHz1Gxdf3NregWQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tgghVWLi5w7fvftQLxNbbOG5uM4EhDRqE4tyKjwn7rbNNpoBGwZ8mh7C8lVnKbROr
+	 OZC5E4GYALVkd4+ZFfEaYO0EAm03alZ7uX821Nm7LNfg3wBWANpC87n9x5BIFEpZDH
+	 vKFnHL4Pd1XG1l/xFgTFW9qXd3EJbra7w7td2Pns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgGUD3Q (ORCPT
+        id S1726089AbgGUDdc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:29:16 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:11938 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727849AbgGUD3P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:29:15 -0400
-X-UUID: 0efb29e786b24d63a65f5cad76c89a81-20200721
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=p5edfquzkRU6ceVF49k8bWT2pebXpZwumAzJ3c92oME=;
-        b=HbebthKhqHugyLTk15GvvmaBqFjYhFtClpzYngY/SmiLNBq/GO0AdNBaIn6OJ4ukjfPqo5PAxuKOZ/tIYTUrEMmUPoqvdfZmVZszdBAke37RjKmcJRXjtL9ocfe1pBuCoK2wxM3Dt6x65LkKHdSdOy8ABs8E5i066/qJw25bsTo=;
-X-UUID: 0efb29e786b24d63a65f5cad76c89a81-20200721
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 574409423; Tue, 21 Jul 2020 11:29:02 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
- (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
- 2020 11:28:59 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 21 Jul 2020 11:28:58 +0800
-Message-ID: <1595302076.16172.49.camel@mhfsdcap03>
-Subject: Re: Re: [PATCH 04/21] dt-binding: mediatek: Add binding for mt8192
- IOMMU and SMI
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <youlin.pei@mediatek.com>, <devicetree@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <cui.zhang@mediatek.com>, <srv_heupstream@mediatek.com>,
-        <chao.hao@mediatek.com>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        "Tomasz Figa" <tfiga@google.com>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <ming-fan.chen@mediatek.com>, <anan.sun@mediatek.com>,
-        Will Deacon <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 21 Jul 2020 11:27:56 +0800
-In-Reply-To: <20200720231621.GA3106350@bogus>
-References: <20200711064846.16007-1-yong.wu@mediatek.com>
-         <20200711064846.16007-5-yong.wu@mediatek.com>
-         <20200720231621.GA3106350@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 20 Jul 2020 23:33:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39676 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgGUDdb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:33:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id z6so2391892iow.6;
+        Mon, 20 Jul 2020 20:33:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FIsq5aS0lflR5eoGS5qg3+rJGrp+o2lfnvyRp1tDhhA=;
+        b=ELs0jonetSEQpe74Bb1hdst8HjmiOlsJkH9XNwtyZjshzN0cZjVgkiUpMYgaB2s+pS
+         SIzms5j9UmijKOB+b2jSYSNqM8Jwnvhx0O23tOmb0gtrEN8jqCsLrzH/k610M4OR0Rnt
+         I9YaWFLdkUtww9L9fM7HzUBJh6QHxM9QIR7EwTKqaq5lFN2Rhf6oHP0beoASMwUVUtxZ
+         k5WLe+QR0i8+Pu437zY6a3N3xjM2Q+VViCWw3mvoDZ4r1O/fiCFrw/iIWvT8u6onM4DZ
+         TK0Y6xil0SOvRhZTYro/mK+Gtik3Osjel2WFmQ9Pdli/iQsA1XWLyDaw94zi/V55i1K8
+         Bt+g==
+X-Gm-Message-State: AOAM531IY9DM0PEDeiszV+Hk8D+h0QCqGVRivM0pVzU947KudPPrM8Di
+        sDQhc9uJCt89+6xmqHo0IA==
+X-Google-Smtp-Source: ABdhPJxLzxwkSBFgFvKAURG7gHM0n9OP8gTt/FOr/k7nGl4P1U3thGEkKqvgI5H750H/QtxdXFHIqw==
+X-Received: by 2002:a05:6602:2d12:: with SMTP id c18mr25892320iow.13.1595302410706;
+        Mon, 20 Jul 2020 20:33:30 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id g1sm9885914ilk.51.2020.07.20.20.33.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 20:33:29 -0700 (PDT)
+Received: (nullmailer pid 3502407 invoked by uid 1000);
+        Tue, 21 Jul 2020 03:33:28 -0000
+Date:   Mon, 20 Jul 2020 21:33:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: panel: Add bindings for Tianma
+ nt36672a panel
+Message-ID: <20200721033328.GA3492972@bogus>
+References: <20200716153858.526-1-sumit.semwal@linaro.org>
+ <20200716153858.526-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D49D8E756E183EDB1F2B9E9AB572BFF9AED4A4D42C576D30129F7E826088FE652000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716153858.526-2-sumit.semwal@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTIwIGF0IDE3OjE2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gU2F0LCBKdWwgMTEsIDIwMjAgYXQgMDI6NDg6MjlQTSArMDgwMCwgWW9uZyBXdSB3cm90ZToN
-Cj4gPiBUaGlzIHBhdGNoIGFkZHMgZGVjcmlwdGlvbnMgZm9yIG10ODE5MiBJT01NVSBhbmQgU01J
-Lg0KPiA+IA0KPiA+IG10ODE5MiBhbHNvIGlzIE1USyBJT01NVSBnZW4yIHdoaWNoIHVzZXMgQVJN
-IFNob3J0LURlc2NyaXB0b3IgdHJhbnNsYXRpb24NCj4gPiB0YWJsZSBmb3JtYXQuIFRoZSBNNFUt
-U01JIEhXIGRpYWdyYW0gaXMgYXMgYmVsb3c6DQo+ID4gDQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICBFTUkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICBNNFUNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
-DQo+ID4gICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLQ0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgU01JIENvbW1vbg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAtLS0tLS0t
-LS0tLS0NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICArLS0tLS0tLSst
-LS0tLS0rLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLSsNCj4gPiAgIHwgICAg
-ICAgfCAgICAgIHwgICAgICB8ICAgICAgIC4uLi4uLiAgICAgICAgIHwgICAgICAgfA0KPiA+ICAg
-fCAgICAgICB8ICAgICAgfCAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICB8DQo+
-ID4gbGFyYjAgICBsYXJiMSAgbGFyYjIgIGxhcmI0ICAgICAuLi4uLi4gICAgICBsYXJiMTkgICBs
-YXJiMjANCj4gPiBkaXNwMCAgIGRpc3AxICAgbWRwICAgIHZkZWMgICAgICAgICAgICAgICAgICAg
-SVBFICAgICAgSVBFDQo+ID4gDQo+ID4gQWxsIHRoZSBjb25uZWN0aW9ucyBhcmUgSFcgZml4ZWQs
-IFNXIGNhbiBOT1QgYWRqdXN0IGl0Lg0KPiA+IA0KPiA+IG10ODE5MiBNNFUgc3VwcG9ydCAwfjE2
-R0IgaW92YSByYW5nZS4gd2UgcHJlYXNzaWduIGRpZmZlcmVudCBlbmdpbmVzDQo+ID4gaW50byBk
-aWZmZXJlbnQgaW92YSByYW5nZXM6DQo+ID4gDQo+ID4gZG9tYWluLWlkICBtb2R1bGUgICAgIGlv
-dmEtcmFuZ2UgICAgICAgICAgICAgICAgICBsYXJicw0KPiA+ICAgIDAgICAgICAgZGlzcCAgICAg
-ICAgMCB+IDRHICAgICAgICAgICAgICAgICAgICAgIGxhcmIwLzENCj4gPiAgICAxICAgICAgIHZj
-b2RlYyAgICAgIDRHIH4gOEcgICAgICAgICAgICAgICAgICAgICBsYXJiNC81LzcNCj4gPiAgICAy
-ICAgICAgIGNhbS9tZHAgICAgIDhHIH4gMTJHICAgICAgICAgICAgIGxhcmIyLzkvMTEvMTMvMTQv
-MTYvMTcvMTgvMTkvMjANCj4gPiAgICAzICAgICAgIENDVTAgICAgMHg0MDAwXzAwMDAgfiAweDQz
-ZmZfZmZmZiAgICAgbGFyYjEzOiBwb3J0IDkvMTANCj4gPiAgICA0ICAgICAgIENDVTEgICAgMHg0
-NDAwXzAwMDAgfiAweDQ3ZmZfZmZmZiAgICAgbGFyYjE0OiBwb3J0IDQvNQ0KPiANCj4gWW91IHBy
-b2JhYmx5IHdhbnQgdG8gdXNlIGRtYS1yYW5nZXMgZm9yIGRlZmluaW5nIHRoZXNlIA0KPiBhZGRy
-ZXNzIHJlc3RyaWN0aW9ucy4gDQoNClllcy4gUGxlYXNlIHNlZSB0aGUgY29tbWl0IG1lc3NhZ2Ug
-b2YgWzE4LzIxXSBpbiB0aGlzIHBhdGNoc2V0Lg0KDQo+IA0KPiBIb3cgaXMgdGhlIGRvbWFpbi1p
-ZCB1c2VkIG9yIG5lZWRlZD8NCg0KSGVyZSB3ZSBhc3NpZ24gZGlmZmVyZW50IGxhcmIvcG9ydHMg
-aW4gZGlmZmVyZW50IGlvdmEgcmFuZ2VzLg0KSW4gdGhlIGlvbW11IGRyaXZlciwgd2Ugd2lsbCBs
-aXN0IHRoZSBpb3ZhIHJhbmdlcyBhcyBhYm92ZSBhbmQgdXNlIHRoZQ0KZG9tYWluLWlkIHRvIGdl
-dCB0aGUgZGV0YWlsZWQgaW92YSByYW5nZSwgdGhlbiBjcmVhdGUgYSBpb21tdSBkb21haW4gZm9y
-DQplYWNoIGEgaW92YSByYW5nZS4NCg0KRm9yIHRoZSBpb21tdSBtYXN0ZXJzLCBpdCBvbmx5IG5l
-ZWQgdXNlIGl0cyBzcGVjaWFsIHBvcnQgaW4gaXRzIGR0c2kNCm5vZGUsIHRoZW4gdGhlIGlvdmEg
-Z290IGZyb20gZG1hX2FsbG9jX2F0dHJzIGZvciB0aGF0IGRldmljZSB3aWxsIGxvY2F0ZQ0KaW4g
-dGhlIHNwZWNpYWwgaW92YSByYW5nZXMuDQoNCj4gDQo+IFJvYiANCj4gDQo+IF9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LW1lZGlhdGVrIG1h
-aWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsNCg0K
+On Thu, Jul 16, 2020 at 09:08:57PM +0530, Sumit Semwal wrote:
+> The nt36672a panel from Tianma is a FHD+ panel with a resolution of 1080x2246
+> and 6.18 inches size. It is found in some of the Poco F1 phones.
+> 
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> ---
+>  .../display/panel/tianma,nt36672a.yaml        | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+> new file mode 100644
+> index 000000000000..3c583ca926ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+> @@ -0,0 +1,110 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/tianma,nt36672a.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Tianma model NT36672A DSI Panel display driver
+> +
+> +maintainers:
+> +  - Sumit Semwal <sumit.semwal@linaro.org>
+> +
+> +description: |
+> +  The nt36672a panel from Tianma is a FHD+ LCD display panel with a resolution
+> +  of 1080x2246. It is a video mode DSI panel.
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: tianma,nt36672a
+> +
+> +  reg:
+> +    description: DSI virtual channel of the peripheral
+> +
+> +  reset-gpios:
+> +    description: phandle of gpio for reset line - This should be 8mA, gpio
+> +      can be configured using mux, pinctrl, pinctrl-names (active high)
+> +
+> +  vddio-supply:
+> +    description: phandle of the regulator that provides the supply voltage
+> +      Power IC supply
+> +
+> +  vddpos-supply:
+> +    description: phandle of the positive boost supply regulator
+> +
+> +  vddneg-supply:
+> +    description: phandle of the negative boost supply regulator
+> +
+> +  pinctrl-names:
+> +    description: Pinctrl for panel active and suspend
+> +
+> +  pinctrl-0:
+> +    description: Active pinctrls
+> +
+> +  pinctrl-1:
+> +    description: Suspend pinctrls
 
+I think the pinctrl should go in the DSI controller node, not the 
+display unless it is settings for 'reset-gpios'.
+
+> +
+> +  ports:
+> +    type: object
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description: DSI input port driven by master DSI
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +        required:
+> +          - reg
+
+For a single port, you can do just 'port' (without ports node).
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vddi0-supply
+> +  - vddpos-supply
+> +  - vddneg-supply
+> +  - reset-gpios
+> +  - pinctrl-names
+> +  - pinctrl-0
+> +  - pinctrl-1
+> +  - ports
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |+
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    dsi0 {
+
+dsi {
+
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      panel@0 {
+> +        compatible = "tianma,nt36672a";
+> +        reg = <0>;
+> +        vddi0-supply = <&vreg_l14a_1p88>;
+> +        vddpos-supply = <&lab>;
+> +        vddneg-supply = <&ibb>;
+> +
+> +        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
+> +
+> +        pinctrl-names = "panel_active", "panel_suspend";
+> +        pinctrl-0 = <&sde_dsi_active>;
+> +        pinctrl-1 = <&sde_dsi_suspend>;
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            tianma_nt36672a_in_0: endpoint {
+> +              remote-endpoint = <&dsi0_out>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.27.0
+> 
