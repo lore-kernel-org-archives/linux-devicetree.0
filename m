@@ -2,165 +2,314 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E079C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCA6C433F7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FCD20658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13076206E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:30:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxA+ofaV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZnnrxRa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgGUL2p (ORCPT
+        id S1729852AbgGULaZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
+        Tue, 21 Jul 2020 07:30:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729722AbgGUL2p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 07:28:45 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283D9C061794
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:28:45 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o8so2452969wmh.4
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:28:45 -0700 (PDT)
+        with ESMTP id S1727768AbgGULaX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 07:30:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E03AC061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:30:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b6so20820744wrs.11
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4TOLW2imB3rsMZepinPh8jkYmxmq6wzr9xbAWaAB63E=;
-        b=zxA+ofaVwdl1bgNC13zN9ubxqHC9ewBBFt+NnKG2h8XDElraUcs8hoO7/q7zF2Yg34
-         QmQ8jfkqyfb2Bkbbu9KNvYZpTSBzFtcg2JwlKSHR60ZRl9bUVELDmjyBfasdmAhQdXgq
-         PE6MvfWaYT3PJv46TQIXdtpbH44y7um8SFGrXcNMYM16TDfD/rgKWEZyiV+mNTPsJKgK
-         0qp/LLknorODSNsIgwkyLxHgbqETiKwOfAzWazzQv+cAbP7yNKacslNMXFNbwdqwTDm+
-         xmP3Q05/LOa1PZrMl1I1tFxtlneod5QopL6jJhffKklyh2wBHqyecIgrZbv5XaITUF/L
-         9NEw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lDCzyRG0rg1IT+D0XJL6mCguANQqA8rXobavVZvW96Y=;
+        b=ZnnrxRa4si/xuCUdSQINme4yglZDejh1OO0DnrcmRn5h18itVyWY4KRvRkI/WNZ/Ll
+         E/VPLadw2MbujNKNCVgXWitzmPWRAKdk5XTCel3V5qpcX6FGrqmGTmm4p15DMboso/NS
+         FV4C1to8Pfy/qNsRbWTocSYQZzf6KtgCql62o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4TOLW2imB3rsMZepinPh8jkYmxmq6wzr9xbAWaAB63E=;
-        b=Dv0EBuSA6X1h24BsdOqzc3vebROU+m0rYWj0ZCt2aVPoXE0Gef0opTLlobzGSa/aQl
-         5BB8c9dul7E5Il3W4duwkzHW+C8M3qkPsUGcdKWgFC6luE8H3PTTsQuPMWh23JnLzgGW
-         r4rBajm4j0L7edlz7j4tKqKz9SGiwQrNyvLtqKYTFtbwoUgGrQrD8S56oSAOPpA3glK/
-         ACH5LYvL/ZelxvG6pf+e47KLfs3k1sOqSTMvh/w7w575FwsAQsSMF/P5ZkS2vrJMkrI2
-         pJMgwKNJu3gXJjUWTWhdTAhT3MJhfbiRBcEVVyOzqDV7Xd9sz72De2PAq9GFSpR6QZ9K
-         t9Ew==
-X-Gm-Message-State: AOAM532yywmDNrD/q1BTUnv8Pw6FKIjaSaThXG7wZXWqZudeswyghUnH
-        59lRQn0dPqosLX3x2MXTe0NxHXRwr61uiA==
-X-Google-Smtp-Source: ABdhPJxD0h2M/2DjFqCYE+/h1ypZKlgo6FcZAnC0ULNYW3repPMTnleiqfIwBksS16IjOuUgYaKaGQ==
-X-Received: by 2002:a1c:f616:: with SMTP id w22mr3482710wmc.44.1595330923806;
-        Tue, 21 Jul 2020 04:28:43 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 22sm3336707wmb.11.2020.07.21.04.28.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 04:28:43 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 12:28:41 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2 v1] dt-bindings: backlight: Add Kinetic KTD253
- bindings
-Message-ID: <20200721112841.jxocq26yxhwy3gag@holly.lan>
-References: <20200720203506.3883129-1-linus.walleij@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lDCzyRG0rg1IT+D0XJL6mCguANQqA8rXobavVZvW96Y=;
+        b=jdcm+BogTs/OCUwN8/M5xzqrMuT2yxJE58xw1KP2Pt2+Y08nPMTL4212BR1dcw4dkE
+         QbbSzE1e8zSZ0vDyFF5VhgANv9A+gXEK3t2B12dZ2MElPE6D4bz2gqNxjAWZ7ddB33ee
+         hmJ6fg9BfK5C1CBpaOgyRYsMN1ZgCHxe4gzvo+ieNGTL7eZQsABPAFtdb2vHiGdl/UOp
+         mFlZrP6XQ11U12YS2rKYSuYtjJzj0BAGoYsNm1cUSepfyGkp64qxdb1qVCyKY9PmRe1R
+         DpNqc3dY7fYw9RqiY4mJp6Mw4RnY2QyekM9HWj+hzuy8YLrZRUUG20UJT/ZF1PKiwPP2
+         Cing==
+X-Gm-Message-State: AOAM533jnsceJpnf9okhQou/5pUz5A2yR3kja22Rzw8zShsh4tMIQl0z
+        gWHnOBx6hUQXsJwoz4RPF315oFq9HTLpveejKGi3mw==
+X-Google-Smtp-Source: ABdhPJwbrVnmzJ0PnXN6sJ8jR7GyGTkbutQcRFVK+AheZaDBzYwZNbSJrjKJ1Gle1sfdgNlgwcpeGqJ0VnvJV9KH3Mw=
+X-Received: by 2002:a05:6000:1209:: with SMTP id e9mr12809989wrx.404.1595331021943;
+ Tue, 21 Jul 2020 04:30:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720203506.3883129-1-linus.walleij@linaro.org>
+References: <20200717120207.3471030-1-cychiang@chromium.org> <CAD=FV=XFayyvT-b9C3f4pXNkboH7kb7ikyi9qJxmNvowOfkjqQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=XFayyvT-b9C3f4pXNkboH7kb7ikyi9qJxmNvowOfkjqQ@mail.gmail.com>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Tue, 21 Jul 2020 19:29:55 +0800
+Message-ID: <CAFv8NwLpVCy4CY8_h0qd7aAEPmaKa3gQYmA3sT1b9fs6fxwtLA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Taniya Das <tdas@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 10:35:05PM +0200, Linus Walleij wrote:
-> This adds device tree bindings for the Kinetic KTD253
-> white LED backlight driver.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../leds/backlight/kinetic,ktd253.yaml        | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-> new file mode 100644
-> index 000000000000..610bf9a0e270
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/backlight/kinetic,ktd253.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Kinetic Technologies KTD253 one-wire backlight
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +description: |
-> +  The Kinetic Technologies KTD253 is a white LED backlight that is
-> +  controlled by a single GPIO line. If you just turn on the backlight
-> +  it goes to maximum backlight then you can set the level of backlight
-> +  using pulses on the enable wire.
-> +
-> +properties:
-> +  compatible:
-> +    const: kinetic,ktd253
-> +
-> +  gpios:
-> +    description: GPIO to use to enable/disable and dim the backlight.
-> +    maxItems: 1
-> +
-> +  default-brightness:
-> +    description: Default brightness level on boot. 0 is off.
-> +    minimum: 0
-> +    maximum: 255
-> +
-> +  max-brightness:
-> +    description: Maximum brightness that is allowed during runtime.
-> +    minimum: 0
-> +    maximum: 255
+On Fri, Jul 17, 2020 at 11:03 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
 
-[I ended up dropping this into this thread... but it applies to both
-patches]
+Thanks for the review!
 
-I'm a bit sceptical of having a max-brightness in the DT and a driver
-defined lookup table in the driver itself. That doesn't make a whole lot
-of sense to me since the maximum brightness here is basically relies on
-knowing what scale the Linux driver has opted to implement in its tables.
+> On Fri, Jul 17, 2020 at 5:02 AM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
+> >
+> > Add devicetree bindings documentation file for sc7180 sound card.
+> >
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> > ---
+> >  .../bindings/sound/qcom,sc7180.yaml           | 123 ++++++++++++++++++
+> >  1 file changed, 123 insertions(+)
+>
+> A bit of a mechanical review since my audio knowledge is not strong.
+>
+>
+> >  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> > new file mode 100644
+> > index 000000000000..d60d2880d991
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> > @@ -0,0 +1,123 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
+> > +
+> > +maintainers:
+> > +  - Rohit kumar <rohitkr@codeaurora.org>
+> > +  - Cheng-Yi Chiang <cychiang@chromium.org>
+> > +
+> > +description: |
+> > +  This binding describes the SC7180 sound card, which uses LPASS for audio.
+>
+> nit: you don't need the pipe at the end of the "description" line.
+> That means that newlines are important and you don't need it.
+>
+>
+Thanks for the explanation. Fixed in v2.
+> > +definitions:
+>
+> I haven't yet seen much yaml using definitions like this.  It feels
+> like overkill for some of these properties, especially ones that are
+> only ever used once in the "properties:" section and are/or are really
+> simple.
+>
+>
+ACK. In v2 I only kept dai definition and removed others.
 
-I think there are two options here.
+> > +  link-name:
+> > +    description: Indicates dai-link name and PCM stream name.
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    maxItems: 1
+> > +
+> > +  dai:
+> > +    type: object
+> > +    properties:
+> > +      sound-dai:
+> > +        maxItems: 1
+> > +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +        description: phandle array of the codec or CPU DAI
+> > +
+> > +    required:
+> > +      - sound-dai
+> > +
+> > +  unidirectional:
+> > +    description: Specify direction of unidirectional dai link.
+> > +                 0 for playback only. 1 for capture only.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>
+> So if the property isn't there then it's _not_ unidirectional and if
+> it is there then this specifies the direction, right?  I almost wonder
+> if this should just be two boolean properties, like:
+>
+> playback-only;
+> capture-only;
+>
+> ...but I guess I'd leave it to Rob and/or Mark to say what they liked
+> better.  In any case if you keep it how you have it then you should
+> use yaml to force it to be either 0 or 1 if present.
+>
+>
+ACK
+Use playback-only and capture-only in v2 instead.
 
-1. Throw away the brightness table in the driver and expose the hardware
-   steps directly (maybe using allowing properties such as
-   max-brightness = 24 if the top 8 values cannot be distinguished
-   visually).
+> > +
+> > +properties:
+> > +  compatible:
+> > +    contains:
+> > +      enum:
+> > +        - qcom,sc7180-sndcard
+>
+> Just:
+>
+> properties:
+>   compatible:
+>     const: qcom,sc7180-sndcard
+>
+>
 
-2. Implement a brightness table in the DT if there really is a need
-   to linearize the feel of the slider. In that case max-brightness
-   can be inferred from the maximum value in the table.
+Fixed in v2.
 
-Note that #2 is absolutely *not* the same as the tables in pwm_bl.c
-(which are used to map a very wide linear scale on the hardware into a
-smaller logarithmic interface for software to use). For this driver
-the driver's lookup table is used to present an oversized
-scale to software and quantizing it in the driver (using variably sized
-quantums) to create a hardware value.
+>
+> > +  audio-routing:
+> > +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> > +    description: |-
+> > +      A list of the connections between audio components. Each entry is a
+> > +      pair of strings, the first being the connection's sink, the second
+> > +      being the connection's source.
+>
+> You don't need the "|-" after the "description:".  That says newlines
+> are important but strip the newline from the end.
+>
+Fixed in v2.
+>
+> > +  model:
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    description: User specified audio sound card name
+> > +
+> > +patternProperties:
+> > +  "^dai-link-[0-9]+$":
+> > +    description: |
+> > +      Each subnode represents a dai link. Subnodes of each dai links would be
+> > +      cpu/codec dais.
+>
+> From looking at "simple-card.yaml", I'm gonna guess that instead of
+> encoding the link number in the name of the node that you should
+> actually use a unit address and a reg in the subnodes.
 
-This can be useful if the hardware's perceptual response feels *really*
-lumpy but often results in sliders with dead zones (because they do not
-"snap" to the hardware intervals). Looking at the gaps in the driver I'm
-suspect the table is not worth the effort (the difference in the deltas
-is pretty modest) but I'm happy to contradicted by someone with access
-to the hardware!
+Thanks for the explanation. Fixed in v2.
+I think this naming is better, although there is no usage in the
+machine driver for the reg.
 
+>
+> ...also, again your description doesn't need the "|" at the end.
+> Maybe <https://yaml-multiline.info/> will be useful to you?
+>
+>
 
-Daniel.
+Thanks for the explanation and the pointer!
+
+> > +    type: object
+> > +
+> > +    properties:
+> > +      link-name:
+> > +        $ref: "#/definitions/link-name"
+> > +
+> > +      unidirectional:
+> > +        $ref: "#/definitions/unidirectional"
+> > +
+> > +      cpu:
+> > +        $ref: "#/definitions/dai"
+> > +
+> > +      codec:
+> > +        $ref: "#/definitions/dai"
+> > +
+> > +    required:
+> > +      - link-name
+> > +      - cpu
+> > +      - codec
+> > +
+> > +    additionalProperties: false
+> > +
+> > +examples:
+> > +
+> > +  - |
+> > +    snd {
+>
+> Can you use the full node name "sound" here?
+>
+>
+Fixed in v2.
+> > +        compatible = "qcom,sc7180-sndcard";
+> > +        model = "sc7180-snd-card";
+> > +
+> > +        pinctrl-names = "default";
+> > +        pinctrl-0 = <&sec_mi2s_active &sec_mi2s_dout_active
+> > +                     &sec_mi2s_ws_active &pri_mi2s_active
+> > +                     &pri_mi2s_dout_active &pri_mi2s_ws_active
+> > +                     &pri_mi2s_din_active &pri_mi2s_mclk_active>;
+>
+> I think pinctrl is usually not in the dt examples.
+>
+Fixed in v2.
+
+> ...also, shouldn't the mi2s pinctrl be in the i2s nodes, not in the
+> overall sound node?
+
+Yes. Thanks for pointing this out. Fixed in dts file in chromium.
+
+>
+>
+> > +        audio-routing =
+> > +                    "Headphone Jack", "HPOL",
+> > +                    "Headphone Jack", "HPOR";
+> > +
+> > +        dai-link-0 {
+> > +            link-name = "MultiMedia0";
+> > +            cpu {
+> > +                sound-dai = <&lpass_cpu 0>;
+> > +            };
+> > +
+> > +            codec {
+> > +                sound-dai = <&alc5682 0>;
+> > +            };
+> > +        };
+> > +
+> > +        dai-link-1 {
+> > +            link-name = "MultiMedia1";
+> > +            unidirectional = <0>;
+> > +            cpu {
+> > +                sound-dai = <&lpass_cpu 1>;
+> > +            };
+> > +
+> > +            codec {
+> > +                sound-dai = <&max98357a>;
+> > +            };
+> > +        };
+> > +    };
+> > --
+> > 2.28.0.rc0.105.gf9edc3c819-goog
+> >
