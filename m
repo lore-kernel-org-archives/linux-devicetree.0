@@ -2,172 +2,178 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E1DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABE1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD4020792
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CFF2072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="shpVXeSI"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mNovSMgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgGUJOX (ORCPT
+        id S1728345AbgGUJUY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgGUJOW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 05:14:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006B9C061794
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 02:14:21 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c80so2080563wme.0
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 02:14:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=E59bzjWg+c0MHaEx1BoDiS6FYfnfwzF0HRnaYqe7suo=;
-        b=shpVXeSITBS4EKpVLrwdRPEWjlOdVZI6BidG4XTDQW2+wUhpxQei7Cuxq6CAnmZCsU
-         S/XaADtHoPl0JNTWMqPJmyDNcqdqFQoX4dVjaxya+6vjdpsQrUUDNk1JN6qkztUdDqcb
-         UU866k5p6jMaXdiScY9oJhZZoqvCKO7jIf/88rqW6zragfQ16AfDocaKie1uU10/JLh4
-         4c5Vr8Ya6KJd/QZBZxVPOJO/qyaWggf4F497tvpmbOlG0f27ZUdJxnnb1rm5/39fEdxF
-         reN5whVwlaP3VIGiYNYmlENFVk/uplllFInFLw8FmPTVYwQGLHzQQPOlZv8buvlNcmuI
-         /DxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=E59bzjWg+c0MHaEx1BoDiS6FYfnfwzF0HRnaYqe7suo=;
-        b=BLSeTcotc9LinQABx9EPFPcuVNpCkFv6w2RpAto1b0wKfb5XZVyghOhLr3f/bbUXa9
-         aOPePzyCXN9Nc5Ukd8PLE37AAEORSN8HvBjOq+A+yOzf1LtqqqrrW+7n2aR3jPgNRiI+
-         ppxYEAspKUxsxNe5lgwpij//AkhvrffI4aTT2o6juBeH/kNG189XUShxN8Pdu8VUqWVh
-         hh1OBHUSPcBJd29Cpgf4EUzIik+p2YSK0u4Jqz/CxFo8Q6VDrwth3gmxGlXm3FYYbn52
-         zSkf+Dxm7sD2PUFIjbB3O/cwYQ0uUxE7udQVKMY7ztevuAJVFdZrCQTD6xvrZ18IsP6P
-         US/g==
-X-Gm-Message-State: AOAM5303J2881nBhYgCFDXkLgfnKSlmFm79IF/145upRrl+SbqrOTo8y
-        l5ehI8ojZ7NwW0/vijbjrq8D/A==
-X-Google-Smtp-Source: ABdhPJxBbU7EYiACWX6oiDhUp9tR7cuERyVtBjdHxSpkHaSwpStuHoOiCT3EbUH505j9OOrf0KN24A==
-X-Received: by 2002:a05:600c:282:: with SMTP id 2mr3402783wmk.168.1595322860725;
-        Tue, 21 Jul 2020 02:14:20 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m9sm2516472wml.45.2020.07.21.02.14.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 02:14:19 -0700 (PDT)
-References: <20200719141034.8403-1-christianshewitt@gmail.com> <20200719141034.8403-4-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Dongjin Kim <tobetter@hardkernel.com>
-Subject: Re: [PATCH 3/3] arm64: dts: meson: add support for the ODROID-N2+
-In-reply-to: <20200719141034.8403-4-christianshewitt@gmail.com>
-Date:   Tue, 21 Jul 2020 11:14:19 +0200
-Message-ID: <1jo8o98c2c.fsf@starbuckisacylon.baylibre.com>
+        Tue, 21 Jul 2020 05:20:24 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18402 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726607AbgGUJUX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 05:20:23 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L9CtxF007329;
+        Tue, 21 Jul 2020 11:19:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=q4cJixvw6MNxKZShEfqVrQUezj6sONSFD+NAWmLsois=;
+ b=mNovSMgTc5zsIlYiUcYJgltIUoSElkk14PWIyKhUge2mllSNXADiD0UPI8214JyLM532
+ 2UibEmXshAtF1Bieutt63KjvnHu6uzrrt+Zuw2GMWPuqsnMbpVZRcwPm5bgLai0pMK2D
+ n8VzT4zPaGVUdjSut0/TKqyPmalTi+fqhIQA2RyRnDRTDB0YRK5IhKctJ4l+rpGxgLgR
+ EwYO4Dq/3earbrQuYugDxAAmIf7tZy+vjMXIapkBaI9WaeVdx3GYZXW6NCfEV3xIUR2U
+ 7vcvPfl1RfZfGolZ2gjnHTlsU0rj31ZxXVc/CCeRHnD/ZPiHKF27vSXqWGAtwrYpGXmU UA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bs6uvykr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 11:19:51 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE35310002A;
+        Tue, 21 Jul 2020 11:19:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 76D8F2A8DA8;
+        Tue, 21 Jul 2020 11:19:48 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
+ 2020 11:19:47 +0200
+Subject: Re: [PATCH v5 0/8] Enable ili9341 and l3gd20 on stm32f429-disco
+To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
+        <p.zabel@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
+        <thierry.reding@gmail.com>, <sam@ravnborg.org>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <mturquette@baylibre.com>, <sboyd@kernel.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-clk@vger.kernel.org>
+References: <broonie@kernel.org>
+ <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <198ad79c-ab12-55f0-814f-afc454a7e8ef@st.com>
+Date:   Tue, 21 Jul 2020 11:19:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1590378062-7965-1-git-send-email-dillon.minfei@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Dillon
 
-On Sun 19 Jul 2020 at 16:10, Christian Hewitt <christianshewitt@gmail.com> wrote:
+On 5/25/20 5:40 AM, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
+> 
+> V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX'
+> for SPI_SIMPLEX_RX mode on stm32 spi controller.
+> 
+> V5:
+> 1 instead of add send dummy data out under SIMPLEX_RX mode,
+>     add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
+> 2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
+> 'SPI_3WIRE' mode
+> 
 
-> HardKernel ODROID-N2+ uses an Amlogic S922X rev. C chip capable of higher
-> clock speeds than the original ODROID-N2. Hardkernel supports the big cpu
-> cluster at 2.4GHz and the little cpu cluster at 2.0GHz. Opp points and
-> regulator changess are from the HardKernel Linux kernel sources.
->
-> Suggested-by: Dongjin Kim <tobetter@hardkernel.com>
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
->  .../dts/amlogic/meson-g12b-odroid-n2-plus.dts | 53 +++++++++++++++++++
->  2 files changed, 54 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 5cac4d1d487d..6dc508b80133 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking-pro.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2-plus.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
-> new file mode 100644
-> index 000000000000..99e96be509f8
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 BayLibre, SAS
-> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-g12b-odroid-n2.dtsi"
-> +
-> +/ {
-> +	compatible = "hardkernel,odroid-n2-plus", "amlogic,s922x", "amlogic,g12b";
-> +	model = "Hardkernel ODROID-N2+";
-> +
-> +	vddcpu_a: regulator-vddcpu-a {
-> +		regulator-min-microvolt = <680000>;
-> +		regulator-max-microvolt = <1040000>;
-> +
-> +		pwms = <&pwm_ab 0 1500 0>;
-> +	};
-> +
-> +	vddcpu_b: regulator-vddcpu-b {
-> +		regulator-min-microvolt = <680000>;
-> +		regulator-max-microvolt = <1040000>;
-> +
-> +		pwms = <&pwm_AO_cd 1 1500 0>;
-> +	};
-> +
-> +	cpu_opp_table_0: opp-table-0 {
-> +		opp-1908000000 {
-> +			opp-hz = /bits/ 64 <1908000000>;
-> +			opp-microvolt = <1030000>;
-> +		};
-> +
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <1040000>;
-> +		};
-> +	};
-> +
-> +	cpub_opp_table_1: opp-table-1 {
-> +		opp-2304000000 {
-> +			opp-hz = /bits/ 64 <2304000000>;
-> +			opp-microvolt = <1030000>;
-> +		};
-> +
-> +		opp-2400000000 {
-> +			opp-hz = /bits/ 64 <2400000000>;
-> +			opp-microvolt = <1040000>;
-> +		};
-> +	};
+Concerning DT patches, they look goods for me. However I'll merge them 
+when drivers parts will be merged.
 
-Are this opp specific to the N2+ or S922x rev C ?
-If it is the latter, shouldn't these be in s922x-revC dtsi ?
+regards
+Alex
 
-> +};
-> +
 
+
+> V4:
+> According to alexandre torgue's suggestion, combine ili9341 and
+> l3gd20's modification on stm32f429-disco board to one patchset.
+> 
+> Changes:
+> 
+> ili9341:
+> 
+> 1 update ili9341 panel driver according to Linus's suggestion
+> 2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
+> 3 merge l3gd20's change to this patchset
+> 
+> V3:
+> 1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
+>    to support serial spi & parallel rgb interface in one driver.
+> 2 update ilitek,ili9341.yaml dts binding documentation.
+> 3 update stm32f429-disco dts binding
+> 
+> V2:
+> 1 verify ilitek,ili9341.yaml with make O=../linux-stm32
+>    dt_binding_check
+>    DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+>    ilitek,ili9341.yaml
+> 
+> V1:
+> 1 add ili9341 drm panel driver
+> 2 add ltdc, spi5 controller for stm32f429-disco
+> 3 add ltdc, spi5 pin map for stm32f429-disco
+> 4 add docs about ili9341
+> 5 fix ltdc driver loading hang in clk set rate bug
+> 
+> 
+> L3gd20:
+> V3:
+> 1 merge stm32f429-disco dtbs binding with ili9341 part
+> 
+> V2:
+> 1 insert blank line at stm32f420-disco.dts line 143
+> 2 add more description for l3gd20 in commit message
+> 
+> V1:
+> 1 enable spi5 controller on stm32f429-disco (dts)
+> 2 add spi5 pinmap for stm32f429-disco  (dts)
+> 3 add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+> 
+> 
+> dillon min (8):
+>    ARM: dts: stm32: Add dma config for spi5
+>    ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
+>    ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on
+>      stm32429-disco board
+>    dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+>    clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate,
+>      fix duplicated ltdc clock register to 'clk_core' case ltdc's clock
+>        turn off by clk_disable_unused()
+>    drm/panel: Add ilitek ili9341 panel driver
+>    spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+>    spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
+>      be     coexit with 'SPI_3WIRE' mode
+> 
+>   .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+>   arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+>   arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+>   arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+>   drivers/clk/clk-stm32f4.c                          |    7 +-
+>   drivers/gpu/drm/panel/Kconfig                      |   12 +
+>   drivers/gpu/drm/panel/Makefile                     |    1 +
+>   drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1301 ++++++++++++++++++++
+>   drivers/spi/spi-stm32.c                            |   19 +-
+>   drivers/spi/spi.c                                  |    3 +-
+>   10 files changed, 1521 insertions(+), 9 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+>   create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> 
