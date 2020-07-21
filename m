@@ -2,321 +2,188 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B59C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBDFC433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8BC2080D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E989E2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ra1p4Van"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aomBaqjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgGULgk (ORCPT
+        id S1729778AbgGULj4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55718 "EHLO
+        Tue, 21 Jul 2020 07:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgGULgj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 07:36:39 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8236CC0619D9
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:36:39 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g75so2467461wme.5
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:36:39 -0700 (PDT)
+        with ESMTP id S1728071AbgGULjz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 07:39:55 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8A2C061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:39:55 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 184so2562350wmb.0
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Yj1qnl1WLfnKvv1xFJMIVkm5J+E8pmta5ysPZcg545M=;
-        b=Ra1p4VangqmV7CM2mbg0ENHiGKAvqOGmm3QzHbwuXOK6VwYR47xfLyfWeo4Z9vQOKG
-         xNLUEYZ4KalALdotcQoLjc0oegPpaaIMiry4Npz1FVNm4E1sHQQ7RwqhFy+x89bkbaVN
-         1cIXj7j9IG5jR3Ki9Dshx719g4/0p3B0VXkOQ=
+        bh=0J627pM80T7+XlutPkaKlOVr/z1gAAVKrENSM8VXItA=;
+        b=aomBaqjhstgNyLO0iG3oISEZgsZDk7I+CDVjJSDyjcwaHIcVOM0K5+HMK231PboQEK
+         A2/ll23OKsSMzr4PBzWM/DbQPDdAXv8woUbnirpcylvahf9sCXpntRikrd5FDy6LQZ2B
+         SmTb9NoSOXZFwQaGSGnrM85rIzJ/RYWvzWs9TqfX4QDozPArJJYYN0fR+XV8WYEazdak
+         fqfgAyk+tRfLhx++g8eDu4I6cSvQqVY7/E7HpFo2iRa2PN0jocZFSwPjXCv94ELTWkDr
+         ll6e0eO5qV6cSOnljZYyuajsWMjDhHTcfa6BE6Fz+nVCFLQK3gnfas6LdEJB9o1fiMwF
+         ZjAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Yj1qnl1WLfnKvv1xFJMIVkm5J+E8pmta5ysPZcg545M=;
-        b=WhpnzCNtf/XhMX/XEwuatS2Ev8WyW9CiH46acpjtyNR4gWA7wjxUUiOre5z7WLLEin
-         nuY6pFlQTyQxiiQMSKAWsSSmzMJ17WmEIsKdXVGwE4VSar5Ki+7csUZ2d0rZ5JEjd14Y
-         jqtWfW6N/0kffXzVf8gXksP0w1H+kGFqEfxREuwSIUBGgr8sZ/+PpK0IMSq1uxaXgDIx
-         v/zEue5+uM7UPCJ/2QUv+rFH1hBP/dWtnfXc/Ls0w5RtsD0LtCVtFYM2AXMy8iLcMqVh
-         M1+BbqTSEsCM0yajlX7VM9e9E6mPO0Q8WO8QQPPfPF563C7R7x6ns5X8tXvqn29XinGp
-         1T3g==
-X-Gm-Message-State: AOAM530akKX0fYUTFyBk3L4e09MXavfDwGsdYaBl8xRDXE9YsNAQTw5M
-        DG+YSzcB3InJHUk5f6aUs2jasjvNtNipq65Z70wwYw==
-X-Google-Smtp-Source: ABdhPJwh6lTkGfTci7wgoDwi1kHu85IEqFzskg/QiL2w0OvgAKxpMaamWsYAIfpujP6j1Keo8EsqOTDtjZZF3ildGPU=
-X-Received: by 2002:a1c:6246:: with SMTP id w67mr3574806wmb.42.1595331397735;
- Tue, 21 Jul 2020 04:36:37 -0700 (PDT)
+        bh=0J627pM80T7+XlutPkaKlOVr/z1gAAVKrENSM8VXItA=;
+        b=fLKpMIFxMPV8Yogxyo6rQsWB0maqI+60fiAaOC7suyHD2++1bEJJEsXzGh+dXEtHLc
+         DMIhwwckzQ7d8YAetqRpuie5rV4Fht0UXWtmtIuqlLdEGBvSHJbNuXLgYWTnobs0TnDu
+         Rw2ACnBjgBc+0U44o2XKVTamuWMQgjTyjf1hZFtcpl3TG1NeLf1YiQXo5EoNQSjYQhao
+         p1U6vbzgX2JtUZ5hI4CD0nPKxutbMV8ISHHE4mYrJ9quIbwO203pvu/jAr8eabjJF9eq
+         D74f8Lgfe40J4k2KHl5lOro1cUB3yMmULIVBfKw9YaEi/q1yeA7as3MRj1CsmIdQ2uP6
+         Ty5g==
+X-Gm-Message-State: AOAM530Lp0bl4el62aOTVnMHGGqJJbYtHJcc27NAj6DOctPh6sudiP0N
+        pQB/1tZgcRczlwdZYUSPL3H+GECjJ3YdcLZ46yUXRg==
+X-Google-Smtp-Source: ABdhPJynaPKpbU6Sa4qfZHuvA4C6P4PN6EGPDdcoeLrQHPieARti1aWDcQP+/gphRMVoWP2V8oJ4kkwKrU/hwUWo/t4=
+X-Received: by 2002:a1c:2d91:: with SMTP id t139mr3589796wmt.3.1595331593814;
+ Tue, 21 Jul 2020 04:39:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200717120207.3471030-1-cychiang@chromium.org>
- <20200717120207.3471030-2-cychiang@chromium.org> <CA+Px+wV211AhRVTecU7OS6uP2AQw7v7Gu5x41L4dgW3xR8mA-A@mail.gmail.com>
-In-Reply-To: <CA+Px+wV211AhRVTecU7OS6uP2AQw7v7Gu5x41L4dgW3xR8mA-A@mail.gmail.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Tue, 21 Jul 2020 19:36:10 +0800
-Message-ID: <CAFv8Nw+n9nQio7-3GS0sYrj58D9+Rpq39u4RTDJ0rVgvKtdj1A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ASoC: qcom: sc7180: Add machine driver for sound card registration
-To:     Tzung-Bi Shih <tzungbi@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-5-anup.patel@wdc.com>
+ <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
+In-Reply-To: <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 21 Jul 2020 17:09:41 +0530
+Message-ID: <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
         Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Ajit Pandey <ajitp@codeaurora.org>
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Emil Renner Berhing <kernel@esmil.dk>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tzung-Bi,
-Thanks for the review!
-On Mon, Jul 20, 2020 at 10:47 AM Tzung-Bi Shih <tzungbi@google.com> wrote:
+On Tue, Jul 21, 2020 at 6:45 AM Atish Patra <atishp@atishpatra.org> wrote:
 >
-> On Fri, Jul 17, 2020 at 8:02 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> > diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
+> On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
+> >
+> > We add DT bindings documentation for CLINT device.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> > Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> > ---
+> >  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
 > > new file mode 100644
-> > index 000000000000..cbe6b487d432
+> > index 000000000000..8ad115611860
 > > --- /dev/null
-> > +++ b/sound/soc/qcom/sc7180.c
-> > @@ -0,0 +1,410 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> > + *
-> > + * sc7180.c -- ALSA SoC Machine driver for SC7180
-> > + */
-> Use "//" for all lines (see https://lkml.org/lkml/2020/5/14/332).
+> > +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> > @@ -0,0 +1,58 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: SiFive Core Local Interruptor
+> > +
+> > +maintainers:
+> > +  - Palmer Dabbelt <palmer@dabbelt.com>
+> > +  - Anup Patel <anup.patel@wdc.com>
+> > +
+> > +description:
+> > +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
+> > +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
+> > +  interrupts. It directly connects to the timer and inter-processor interrupt
+> > +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
+> > +  interrupt controller is the parent interrupt controller for CLINT device.
+> > +  The clock frequency of CLINT is specified via "timebase-frequency" DT
+> > +  property of "/cpus" DT node. The "timebase-frequency" DT property is
+> > +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: sifive,clint0
+> > +      - const: sifive,fu540-c000-clint
+> > +
+> > +    description:
+> > +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
+> > +      Supported compatible strings are -
+> > +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
+> > +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
+> > +      CLINT v0 IP block with no chip integration tweaks.
+> > +      Please refer to sifive-blocks-ip-versioning.txt for details
+> > +
 >
+> As the DT binding suggests that the clint device should be named as "sifive,**",
+> I think we should change the DT property in kendryte dts as well.
 
-Thanks for the pointer. Fixed in v2.
-
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/of_device.h>
-> > +#include <sound/core.h>
-> > +#include <sound/pcm.h>
-> > +#include <sound/pcm_params.h>
-> > +#include <sound/jack.h>
-> > +#include <sound/soc.h>
-> > +#include <uapi/linux/input-event-codes.h>
-> > +#include <dt-bindings/sound/sc7180-lpass.h>
-> > +#include "../codecs/rt5682.h"
-> > +#include "common.h"
-> > +#include "lpass.h"
-> Insert a blank line in between <...> and "..." and sort the list
-> alphabetically to make it less likely to conflict.
-
-Fixed in v2.
+Okay, I will do it as a separate patch.
 
 >
-> > +static int sc7180_snd_hw_params(struct snd_pcm_substream *substream,
-> > +                               struct snd_pcm_hw_params *params)
-> > +{
-> Dummy function?  Or is it still work in progress?
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts-extended:
+> > +    minItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts-extended
+> > +
+> > +examples:
+> > +  - |
+> > +    clint@2000000 {
+> > +      compatible = "sifive,clint0", "sifive,fu540-c000-clint";
+> > +      interrupts-extended = <&cpu1intc 3 &cpu1intc 7
+> > +                             &cpu2intc 3 &cpu2intc 7
+> > +                             &cpu3intc 3 &cpu3intc 7
+> > +                             &cpu4intc 3 &cpu4intc 7>;
+> > +       reg = <0x2000000 0x4000000>;
+> > +    };
+> > +...
+> > --
+> > 2.25.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
 >
-Removed in v2.
+> Otherwise,
+>
+> Reviewed-by: Atish Patra <atish.patra@wdc.com>
+>
+> --
+> Regards,
+> Atish
 
-> > +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +       int ret = 0;
-> > +
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
->
-Removed in v2.
-> > +static int sc7180_dai_init(struct snd_soc_pcm_runtime *rtd)
-> > +{
-> > +       struct snd_soc_component *component;
-> > +       struct snd_soc_card *card = rtd->card;
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-> > +       struct sc7180_snd_data *pdata = snd_soc_card_get_drvdata(card);
-> > +       struct snd_jack *jack;
-> > +       int rval;
-> > +
-> > +       if (!pdata->jack_setup) {
-> > +               rval = snd_soc_card_jack_new(
-> > +                               card, "Headset Jack",
-> > +                               SND_JACK_HEADSET |
-> > +                               SND_JACK_HEADPHONE |
-> > +                               SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-> > +                               SND_JACK_BTN_2 | SND_JACK_BTN_3,
-> > +                               &pdata->jack, NULL, 0);
-> > +
-> > +               if (rval < 0) {
-> > +                       dev_err(card->dev, "Unable to add Headphone Jack\n");
-> > +                       return rval;
-> > +               }
-> > +
-> > +               jack = pdata->jack.jack;
-> > +
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
-> > +               snd_jack_set_key(jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
-> > +               pdata->jack_setup = true;
-> This block is something I don't expect to be in "dai_init" (i.e. there
-> is only 1 headset jack, why do we need to run the code for n times).
->
-Thanks for the suggestion. In v2 I am using aux device so this
-function is cleaned up to be specific to aux device for jack
-detection.
-
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               jack  = pdata->jack.jack;
-> > +               component = codec_dai->component;
-> > +
-> > +               jack->private_data = component;
-> > +               jack->private_free = sc7180_jack_free;
-> > +               rval = snd_soc_component_set_jack(component,
-> > +                                                 &pdata->jack, NULL);
-> > +               if (rval != 0 && rval != -EOPNOTSUPP) {
-> > +                       dev_warn(card->dev, "Failed to set jack: %d\n", rval);
-> > +                       return rval;
-> > +               }
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
->
-Removed in v2.
-> > +static int sc7180_snd_startup(struct snd_pcm_substream *substream)
-> > +{
-> > +       unsigned int codec_dai_fmt = SND_SOC_DAIFMT_CBS_CFS;
-> > +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +       struct snd_soc_card *card = rtd->card;
-> > +       struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-> > +       int ret;
-> > +
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               codec_dai_fmt |= SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_I2S;
-> If the format is fixed, could it put somewhere statically?
->
-Fixed in v2.
-> > +               if (++data->pri_mi2s_clk_count == 1) {
-> Don't it need to be atomic?
->
-soc_pcm_open and soc_pcm_close are protected by card->pcm_mutex so
-they will happen in sequence.
-
-> > +                       snd_soc_dai_set_sysclk(cpu_dai,
-> > +                                              LPASS_MCLK0,
-> > +                                              DEFAULT_MCLK_RATE,
-> > +                                              SNDRV_PCM_STREAM_PLAYBACK);
-> > +               }
-> > +               snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-> > +
-> > +               /* Configure PLL1 for codec */
-> > +               ret = snd_soc_dai_set_pll(codec_dai, 0, RT5682_PLL1_S_MCLK,
-> > +                                         DEFAULT_MCLK_RATE, RT5682_PLL1_FREQ);
-> > +               if (ret < 0) {
-> > +                       dev_err(rtd->dev, "can't set codec pll: %d\n", ret);
-> > +                       return ret;
-> > +               }
-> > +
-> > +               /* Configure sysclk for codec */
-> > +               ret = snd_soc_dai_set_sysclk(codec_dai, RT5682_SCLK_S_PLL1,
-> > +                                            RT5682_PLL1_FREQ,
-> > +                                            SND_SOC_CLOCK_IN);
-> > +               if (ret < 0)
-> > +                       dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n",
-> > +                               ret);
-> > +
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
-Fixed in v2
->
-> > +static void  sc7180_snd_shutdown(struct snd_pcm_substream *substream)
-> > +{
-> > +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +       struct snd_soc_card *card = rtd->card;
-> > +       struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-> > +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> > +
-> > +       switch (cpu_dai->id) {
-> > +       case MI2S_PRIMARY:
-> > +               if (--data->pri_mi2s_clk_count == 0) {
-> Atomic?
-ditto
->
-> > +                       snd_soc_dai_set_sysclk(cpu_dai,
-> > +                                              LPASS_MCLK0,
-> > +                                              0,
-> > +                                              SNDRV_PCM_STREAM_PLAYBACK);
-> > +               }
-> > +               break;
-> > +       case MI2S_SECONDARY:
-> > +               break;
-> > +       default:
-> > +               pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-> -EINVAL.
->
-not needed since this returns void
-> > +static int sc7180_snd_platform_probe(struct platform_device *pdev)
-> > +{
-> > +       struct snd_soc_card *card;
-> > +       struct sc7180_snd_data *data;
-> > +       struct device *dev = &pdev->dev;
-> > +       int ret;
-> > +
-> > +       card = kzalloc(sizeof(*card), GFP_KERNEL);
-> > +       if (!card)
-> > +               return -ENOMEM;
-> Looks like you don't need to allocate the card in runtime.  Also you
-> need to use the devm version if needed.
->
-Thanks for the great suggestion. In v2 I am using a static sound card.
-Also, use devm wherever possible to greatly simplify the code.
-
-> > +       /* Allocate the private data */
-> > +       data = kzalloc(sizeof(*data), GFP_KERNEL);
-> Use devm.
->
-Fixed in v2.
-> > +       card->dapm_widgets = sc7180_snd_widgets;
-> > +       card->num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets);
-> Can the struct snd_soc_card allocate statically?
->
-Fixed in v2.
-> > +       sc7180_add_ops(card);
-> > +       ret = snd_soc_register_card(card);
-> devm.
->
->
-> I didn't dive into the logic too much.  Would need another round
-> review if any newer version.
-
-Thanks again.
+Regards,
+Anup
