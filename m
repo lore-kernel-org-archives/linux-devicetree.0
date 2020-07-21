@@ -2,199 +2,166 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4740CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A042EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25C2F2073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7545E2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 18:19:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="etA+ocCP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBBl1cIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgGUSR4 (ORCPT
+        id S1729090AbgGUSTo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 14:17:56 -0400
-Received: from nbd.name ([46.4.11.11]:35694 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728153AbgGUSR4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 14:17:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7ybedw7b+1HrL+2gV+0HQyzMIL57L2oQSZ9AJ4WhJ/8=; b=etA+ocCPk0lRv78CP0xdDOTdNR
-        dkYP7zAAChHoP2OAkAVxAeTOv2Fj7d3MUHTRF6sMFW6llRza5eE0RspEP4eiBb9AxFSJWiYBBBkm/
-        vYoqQOBEB7NCYPUsw+jF+pZ+7+JtkhQR7G5k3cIF425MVwO08vRvEbOxANpX4aYOOTCE=;
-Received: from p54ae9e66.dip0.t-ipconnect.de ([84.174.158.102] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1jxwpr-0003bf-CP; Tue, 21 Jul 2020 20:17:51 +0200
-Subject: Re: [PATCH v3 1/4] dt-bindings: net: wireless: mt76: add power-limits
- node
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        evelyn.tsai@mediatek.com, Shayne Chen <shayne.chen@mediatek.com>
-References: <20200715130134.34988-1-nbd@nbd.name>
- <20200721030416.GA3448943@bogus>
-From:   Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <1fb272a4-1b7a-d054-4c63-7fef1237e269@nbd.name>
-Date:   Tue, 21 Jul 2020 20:17:50 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Tue, 21 Jul 2020 14:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgGUSTn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 14:19:43 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1AE5C061794;
+        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d7so1842390plq.13;
+        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wr3/k+1ex6fptAAVFMs6oDFrFt7DqcfgHz1IZTNoliM=;
+        b=gBBl1cIQ2RaGy6mgApwpDBftoKfmP/is4EdoquHSFl7/kBk9I+aupEmuq/QMNerRj/
+         rVYgORnZWckQUFGzNobePsGUuMkfsdXZNpVEDAdaZqmMpMW0E8Kk1zoQSqqtZP/P9Usj
+         nxpByUvfLQftyEslbPq2N7ZFDnQJloM5CMa5yxxjgvhLux8LnSAit6HYPxBHjV8NBTFU
+         SxAitVjZN0bMSBUPnTPyGCuwrTvDECweKvqKvFGoDmbiv3rhy8oNwWIaZkpgsI+YP1LV
+         bQ85fWyp6hyaJyTs5l0nQ6B5sipgLH/qHkeZXEwtLqfM49DrenGacjozgpvnMCNlBIH6
+         iaAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wr3/k+1ex6fptAAVFMs6oDFrFt7DqcfgHz1IZTNoliM=;
+        b=TOxUz7oqWA3h73/keLLN4J69gQjShG+iSKU+pFM46p1k/yIL/f9IU8vFRo1tYtTtOY
+         p+YbultjSI39KSWdy2eYtOpHr/LhNL6Eb6nBBpWzQeKE6SMC9yuF8v6aHCwejTS5VRq9
+         TV0IzPWwbIAW1dQOn/T8jcGKZDibp5pY+11OejEhQwxZvMAGsYVkqPomK5zUCXHwgG2X
+         x3W1c9gMqvEp9Zn/7ZLPBx1hV6p/Ey3bizks/sxvts8vaTR07Yi/sdHkpZ6lwi+YG/Dj
+         wAnDGTB00G0MxW6AhFzd0w5WuysFnTzCnnNHzL7UjR7rWmaHdieTYq+0vbB/KWiGHsbG
+         x6rA==
+X-Gm-Message-State: AOAM5332pZwyTOJHspabL6X/0dq8JLw8lrVjcVtYZcmVmw0YxlLlP4M/
+        fGkhoy0BaM3J1rS9KulnOoMEsRTi3oQ=
+X-Google-Smtp-Source: ABdhPJw9ba4fbeXIwYrqUneCu5yvlWJc9CNkBFnQGg5lLtiNaY4tWxFusGuxYmwInBZh74p/3Yg8xw==
+X-Received: by 2002:a17:902:8f8b:: with SMTP id z11mr8794167plo.49.1595355583486;
+        Tue, 21 Jul 2020 11:19:43 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:593:314e:d028:8959:a8a3:a7bc])
+        by smtp.gmail.com with ESMTPSA id c134sm21054948pfc.115.2020.07.21.11.19.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 11:19:42 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: [PATCH v2 2/2] dt-bindings: iio: gyro: Add DT binding doc for ADXRS290
+Date:   Tue, 21 Jul 2020 23:49:37 +0530
+Message-Id: <20200721181937.27101-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200721030416.GA3448943@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-21 05:04, Rob Herring wrote:
-> On Wed, Jul 15, 2020 at 03:01:34PM +0200, Felix Fietkau wrote:
->> This subnode can be used to set per-rate tx power limits either per
->> country code / regdomain or globally.
->> These limits are typically provided by the device manufacturers and are
->> used to limit sideband emissions and stay within regulatory limits
->> 
->> Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
->> Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
->> Signed-off-by: Felix Fietkau <nbd@nbd.name>
->> ---
->> v3:
->>  - fix S-o-b order
->> v2:
->>  - merge 802.11ax rate changes from Shayne's patch
->>  - document txs-delta property
-> 
-> This is an extensive enough change that I think it needs to be in schema 
-> format.
-Okay, I will convert the existing file soon and then add these changes
-afterwards.
+Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
 
->>  .../bindings/net/wireless/mediatek,mt76.txt   | 59 +++++++++++++++++++
->>  1 file changed, 59 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> index ab7e7a00e534..e4859c974ef4 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> @@ -36,6 +36,7 @@ Optional nodes:
->>  - led: Properties for a connected LED
->>    Optional properties:
->>      - led-sources: See Documentation/devicetree/bindings/leds/common.txt
->> +- power-limits: contains per-regdomain/channel rate power limit subnodes
->>  
->>  &pcie {
->>  	pcie0 {
->> @@ -76,3 +77,61 @@ wmac: wmac@18000000 {
->>  
->>  	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
->>  };
->> +
->> +
->> +Subnodes of power-limits:
->> +
->> +Properties:
->> +- country: One or more country codes, as used by the cfg80211 regdomain code
-> 
-> What are the values? cfg80211 is a Linux thing and doesn't belong in 
-> bindings.
-I'll change the description to leave out cfg80211.
-It's a simple alpha2 country code.
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+---
 
->> +- regdomain: "FCC", "ETSI" or "JP"
-> 
-> These aren't implied by the country code?
-You use either country code or regdomain.
+Changes in v2:
+  - use 'const' instead of 'enum' while setting the compatible string
+    since only a single item is expected
+  - add 'additionalProperties: false'
+---
+ .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 53 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
 
->> +If neither country, nor regdomain is specified, the power limits node is used
->> +as a fallback when no other subnode matches.
->> +
->> +Subnodes txpower-2g, txpower-5g:
->> +
->> +Properties:
->> +- channels: pairs of first and last channel number
-> 
-> What's the range in terms of channel numbers and pairs?
-802.11 channel numbers (0-255)
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+new file mode 100644
+index 000000000000..61adb2c2454b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2020 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
++
++maintainers:
++  - Nishant Malpani <nish.malpani25@gmail.com>
++
++description: |
++  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
++
++properties:
++  compatible:
++    const: adi,adxrs290
++
++  reg:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 5000000
++
++  spi-cpol: true
++
++  spi-cpha: true
++
++required:
++  - compatible
++  - reg
++  - spi-max-frequency
++  - spi-cpol
++  - spi-cpha
++
++additionalProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        gyro@0 {
++                   compatible = "adi,adxrs290";
++                   reg = <0>;
++                   spi-max-frequency = <5000000>;
++                   spi-cpol;
++                   spi-cpha;
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dd02cfc410e8..0bb8ac90fba1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ F:	drivers/iio/gyro/adxrs290.c
++F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+ 
+ ANALOG DEVICES INC ASOC CODEC DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
+-- 
+2.20.1
 
->> +- cck: 4 half-dBm per-rate power limit values
->> +- ofdm: 8 half-dBm per-rate power limit values
->> +- mcs:
->> +	sets of per-rate power limit values for 802.11n/802.11ac rates for
->> +	multiple channel bandwidth settings.
->> +	Each set starts with the number of channel bandwidth settings for
->> +	which the rate set applies, followed by either 8 (MT7603/MT7628) or
->> +	10 (all other chips) power limit values.
->> +	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
-> 
-> The example only has 2 sets, so which channels are they?
-The format is <number_of_sets set_data>, so a set starting with <3 ...>
-would contain the values for 20, 40 and 80 MHz and you'd add another one
-with <1 ...> to describe 160 MHz.
-Sets often contain the same data for multiple channel bandwidths, so
-this reduces duplication.
-
->> +- ru:
->> +	sets of per-rate power limit values for 802.11ax rates for multiple
->> +	channel bandwidth or resource unit settings.
->> +	Each set starts with the number of channel bandwidth or resource unit
->> +	settings for which the rate set applies, followed by 12 power limit
->> +	values. The order of the channel resource unit settings is:
->> +	RU26, RU52, RU106, RU242/SU20, RU484/SU40, RU996/SU80, RU2x996/SU160.
-> 
-> Could be 8-bit? Doesn't really matter much for the example, but what's 
-> the worst/typical case?
-Yes, 8 bit would also work.
-
->> +- txs-delta: half-dBm power delta for different numbers of antennas (1, 2, ...)
->> +
->> +
->> +power-limit example:
->> +
->> +power-limits {
->> +	r0 {
-> 
-> What's 'r0'? Not documented.
-> 
->> +		regdomain = "FCC";
->> +		txpower-5g {
->> +			r1 {
-> 
-> What's 'r1' and 'r2'? Not documented.
-You add an arbitrary number of subnodes (I just used r0, r1, ...)
-containing rules with the documented properties.
-
-- Felix
