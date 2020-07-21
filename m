@@ -8,55 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD243C433F4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3273CC43458
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B23A2207BB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089DF20771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZLISQ8gB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NfiM+yEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgGUQcP (ORCPT
+        id S1730467AbgGUQc0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:32:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44704 "EHLO
+        Tue, 21 Jul 2020 12:32:26 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44758 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgGUQcO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:32:14 -0400
+        with ESMTP id S1727058AbgGUQcY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:32:24 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWCZo009455;
-        Tue, 21 Jul 2020 11:32:12 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWNAV009509;
+        Tue, 21 Jul 2020 11:32:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595349132;
-        bh=VXQVYB3wzJZWQT9GPM/H2pXNrk9WfmlT/oWF5ORcuqY=;
-        h=From:To:CC:Subject:Date;
-        b=ZLISQ8gBnfpEgWRKBMAQZ99+D9fIOsDzyqQ2M7TEjzc46/TCtB7ph6PkNAiGN8s9K
-         iMYkemgOMItg6Di+LqUQ32j6suxcisVJIa6zJH2Ryhy6OXgbGy2Rz4/1VZ1L3QFz+d
-         umMoPS4Tz9WxPcQIm5H6FMluGRlDdS9mGyK5xv/Y=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LGWCKs039721
+        s=ti-com-17Q1; t=1595349143;
+        bh=gh4EtzX5Dz3uIry+K7fUw1sjey0K57y22u9kC6AyAjE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=NfiM+yEoe37I9g54wiEFY7CUSxtJq/xeZuqMomrJ9AbMWxtq+Ma4GTWsmZgBMig3j
+         Ud0nVK2ApQeGTOKLSeF7TQ5xD6VsdBrtVAsBWyRawX5bJtfsPPNBGIn8UqQ3pLqcfX
+         noiucNa0OD6/ATzYB6AdXeQZsESFEMkFdCdPC6GY=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06LGWNea039894
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 11:32:12 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 21 Jul 2020 11:32:23 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 11:32:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 11:32:23 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 11:32:12 -0500
+ Frontend Transport; Tue, 21 Jul 2020 11:32:22 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWCAt027900;
-        Tue, 21 Jul 2020 11:32:12 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06LGWMPn044914;
+        Tue, 21 Jul 2020 11:32:22 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
 CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <robh@kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 1/4] dt-bindings: power: Add BQ27561 compatible
-Date:   Tue, 21 Jul 2020 11:32:03 -0500
-Message-ID: <20200721163206.25438-1-dmurphy@ti.com>
+Subject: [PATCH v3 3/4] dt-bindings: power: Add BQ28z610 compatible
+Date:   Tue, 21 Jul 2020 11:32:05 -0500
+Message-ID: <20200721163206.25438-3-dmurphy@ti.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200721163206.25438-1-dmurphy@ti.com>
+References: <20200721163206.25438-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,7 +68,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Texas Instruments bq27561 battery monitor to the bq27xxx
+Add the Texas Instruments bq28z610 battery monitor to the bq27xxx
 binding.
 
 Acked-by: Rob Herring <robh@kernel.org>
@@ -76,14 +78,14 @@ Signed-off-by: Dan Murphy <dmurphy@ti.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-index 03d1020a2e47..51cb1f685dcf 100644
+index 51cb1f685dcf..d74c99c21604 100644
 --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
 +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-@@ -49,6 +49,7 @@ properties:
-       - ti,bq27426
+@@ -50,6 +50,7 @@ properties:
        - ti,bq27441
        - ti,bq27621
-+      - ti,bq27561
+       - ti,bq27561
++      - ti,bq28z610
  
    reg:
      maxItems: 1
