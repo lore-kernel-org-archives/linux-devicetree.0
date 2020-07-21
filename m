@@ -6,99 +6,158 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B226CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDA0C433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8401120672
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7910E2072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595324441;
-	bh=1h+1GwE7hycFxjfYabzIepvpJdN7SRC2PKRbHoqdfyY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BkOwGL1/zVZsT1hg1y6TK3m3xWjTme47xHS8dwafBAUzy3Xlol4VxDo5pNMOFwNCD
-	 Q9B0KZwsE7lKswMyYV5aEK62GS09WogKlRyiZCqBJTR1UCWUK8YpJTrMcRNila3i+j
-	 z+iGDH3VVoe2shRkrUWOHGmaHszsX5hSRDvnNZTA=
+	s=default; t=1595324887;
+	bh=fewzulx0sXM9hu4e0oE2cq/l0SHIfo9dR9WvWfCLC38=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=oyodoJ1XklmWCj3sIDen/Uad+eIRhmcm6rD+xcM7JJQQz+aRScAmzNiDH1UlICOKb
+	 wwIgg0McSl/jMYEof0ZeX1c+V5wf3eQWQUGpJC853ntD0hlCb4UCiv82UoofuKkYCN
+	 JtqEmms32y3ElGwr3eo0el9DQDmTbAO5sU69oNJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgGUJkl (ORCPT
+        id S1729010AbgGUJsH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgGUJkk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:40:40 -0400
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EF720B1F
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 09:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595324440;
-        bh=1h+1GwE7hycFxjfYabzIepvpJdN7SRC2PKRbHoqdfyY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=J4U7lTxP5CPf34ZMzQ0rqY8I+kAGHCPBLjtoorIK4vqedXL2mOGl+IRYh/N3kUIX5
-         Sgjzv4hMOE/YeDvWBd52DX1VJ3VsWWlHBRD6L9SmEpZd8/BJ7d144OWbi07o7IXizh
-         SnlqhWn1rTSyPQtwoCQRARIiz9qPuL88kLW/DbTk=
-Received: by mail-lj1-f177.google.com with SMTP id z24so23324725ljn.8
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 02:40:39 -0700 (PDT)
-X-Gm-Message-State: AOAM532zVNQXWhGZWBts2iN2MPnjcRKu01R6y5q56mKZ22RtWqF9a43c
-        1C5qvhYqKCvN8FnUmCH+4QwMylDztxGhsKZPygg=
-X-Google-Smtp-Source: ABdhPJztnP32RRtDsgpLBdJTMG2Xrxbs0KhILV9JrQ/K/yISWSE0z+EYbvdc+2v7/fcnB210sYBlWmctvBNrRhTMV8U=
-X-Received: by 2002:a2e:99cf:: with SMTP id l15mr12651424ljj.294.1595324438214;
- Tue, 21 Jul 2020 02:40:38 -0700 (PDT)
+        Tue, 21 Jul 2020 05:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728963AbgGUJsG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 05:48:06 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B941C061794;
+        Tue, 21 Jul 2020 02:48:06 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id i19so6086515lfj.8;
+        Tue, 21 Jul 2020 02:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=7wunV2ExdV89dWEoZPnYy/3JPsFVGoQ7tDA3ou4ObdQ=;
+        b=sPMrBqUcqLyd18Nf5OihoaB26bn/O/uwHcKyIMuRfy1j5mV9D83Dx3qQqiI53LjZ39
+         WErNKKJHGPufEGjgj/epsZLv3T6gcHrFoP8EmLZqfm1hK93jUvSDZa5AVZKDBUMz1X/5
+         59h4CstrQhEoG6cNF+Web7BLarRz2jg7BavRxiMN5URiV7it6uAnHEOsP1skd0NhPw3v
+         gzv7siKwnAVpoxUlMDS1ZbjUUjtF0OmZ23xFbImBRoKJhnxl/1nQ1fJjns9LwwkWE6R1
+         uKWYXwmnluw9B7VBzCgn1kDIhHoo1Mf90mMRFCdOn+A3EhmJBuJrXuxdz8Si9v0BsC8f
+         IV/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=7wunV2ExdV89dWEoZPnYy/3JPsFVGoQ7tDA3ou4ObdQ=;
+        b=p4inFEd41ohnUGfQT5Za+pndOrx+Yg0Tofkx78hh4AwvmM1Plap/gkikWWkkc90QLx
+         bwECWzE4793hhLqy8R1o60svvJm2D1ycW/GCdCoQduQL5GcdE0FjRjY0td+7Rb/UeggW
+         GIJ6sWGJvAX0Y+98wS3JQ7++TIYU4Yf46JMVkb0UfxiKKNgbkrAxu0mE79h0fNThBI4X
+         UK8X01FprcVP08pbh0iSQEL/DG3k5neszmXwSFXG/odbauycW6oB3jIXFgKpJ7uBsUxa
+         mLaMZtud3U2l22amyHLncPD5/HJyjLjF9rz1Ll8ppEEbbS8a83A5YNZ52gMZ9HjMZXaG
+         F3Yg==
+X-Gm-Message-State: AOAM5330prt6x+hvY1QKOxmUCJlWfT05xFtVI9MLszysjObEJQabmJ3S
+        oqeQY5UH5+xcLCrn7WTGR4crDhUcLuRfpA==
+X-Google-Smtp-Source: ABdhPJynB8qlKtpSomVyCX1Z2Rp34rWVjRCdLC/W6YvpOF2RYCUh8DCFP3S2yyWzCBX+v+Px3ubKIg==
+X-Received: by 2002:a05:6512:74f:: with SMTP id c15mr13283968lfs.26.1595324884741;
+        Tue, 21 Jul 2020 02:48:04 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id d23sm4964236lfm.85.2020.07.21.02.48.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 02:48:03 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        John Youn <John.Youn@synopsys.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 3/4] usb: dwc3: Add device property sgl-trb-cache-size-quirk
+In-Reply-To: <2f61133b-319d-80dc-f3f3-7e08e0228953@synopsys.com>
+References: <cover.1590415123.git.joglekar@synopsys.com> <83eba2e9f0069f20ccc94537e3b99cbaec209441.1590415123.git.joglekar@synopsys.com> <5534d9d6-5452-dade-e46e-f4b0910becdb@synopsys.com> <877dvhqh2e.fsf@kernel.org> <2f61133b-319d-80dc-f3f3-7e08e0228953@synopsys.com>
+Date:   Tue, 21 Jul 2020 12:47:59 +0300
+Message-ID: <878sfdp5bk.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200714071305.18492-1-wens@kernel.org> <20200714071305.18492-2-wens@kernel.org>
- <20200721021026.GA3382460@bogus> <20200721092333.yr3wwmrxwz5rvpam@gilmour.lan>
-In-Reply-To: <20200721092333.yr3wwmrxwz5rvpam@gilmour.lan>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Tue, 21 Jul 2020 17:40:26 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64=RozBti+ww1Pi56AcKu8RvCN1u7KhfQM8tXRUu4mnWQ@mail.gmail.com>
-Message-ID: <CAGb2v64=RozBti+ww1Pi56AcKu8RvCN1u7KhfQM8tXRUu4mnWQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: display: panel-dpi: Add bits-per-color property
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Siarhei Siamashka <siarhei.siamashka@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 5:23 PM Maxime Ripard <maxime@cerno.tech> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Tejas Joglekar <Tejas.Joglekar@synopsys.com> writes:
+
+> Hi Rob,
 >
-> On Mon, Jul 20, 2020 at 08:10:26PM -0600, Rob Herring wrote:
-> > On Tue, Jul 14, 2020 at 03:13:01PM +0800, Chen-Yu Tsai wrote:
-> > > From: Chen-Yu Tsai <wens@csie.org>
-> > >
-> > > Some LCD panels do not support 24-bit true color, or 8bits per channel
-> > > RGB. Many low end ones only support up to 6 bits per channel natively.
-> >
-> > This should be implied by the panel's compatible property.
->
-> I'm not sure it should, or at least it's not sufficient. Some panels
-> while 24 bits capable might only have the higher bits connected to save
-> off a couple of pins per color, in which case we should probably
-> describe that somehow.
+> On 7/6/2020 12:13 PM, Felipe Balbi wrote:
+>>=20
+>> Hi,
+>>=20
+>> Tejas Joglekar <Tejas.Joglekar@synopsys.com> writes:
+>>>> @@ -95,6 +95,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+>>>>  	if (dwc->usb2_lpm_disable)
+>>>>  		props[prop_idx++] =3D PROPERTY_ENTRY_BOOL("usb2-lpm-disable");
+>>>>=20=20
+>>>> +	if (dwc->sgl_trb_cache_size_quirk)
+>>>> +		props[prop_idx++] =3D
+>>>> +			PROPERTY_ENTRY_BOOL("sgl-trb-cache-size-quirk");
+>>>> +
+>>>>  	/**
+>>>>  	 * WORKAROUND: dwc3 revisions <=3D3.00a have a limitation
+>>>>  	 * where Port Disable command doesn't work.
+>>>>
+>>> Does this implementation looks good to you? Rob has some concerned over=
+ the DT entries,
+>>> you suggested using compatible string with this quirk addition.
+>>> Can you please brief about how you would like to have this quirk implem=
+ented?
+>>> I can send the updated patch. My patch series is pending for merge just=
+ because of the
+>>> DT and quirk issue. Can you please help?
+>>=20
+>> Yeah, you need to get into an agreement with Rob :-) I don't mind having
+>> extra DT flags for things which can't be detected in runtime, Rob
+>> disagrees.
+>>=20
+> The compatible string is not suitable option as it does not work with pla=
+tform drivers
+> with PCI based system. Also Synopsys controllers IP version register is n=
+ot visible to xhci
+> driver and hence we don't have separate compatible string for each Synops=
+ys version on the
+> xhci driver side.=20
+> Due to which I depend on DT flag addition for the quirk. Can we add these=
+ DT flags and quirk?
 
-The bus format stuff that was added then removed might be better suited
-for what you have in mind. Right now that's put in the simple panel
-driver, but it likely doesn't belong there, since the bus format is
-also related to the hardware integration, signal routing as you mentioned,
-and not just a property of the panel itself.
+As I said, I'm well aware of the situation regarding usage of compatible
+strings and the fact that dwc3 must work on PCI and non-PCI systems (I
+wrote the thing as it is after all). The person blocking new quirk flags
+is Rob, not me. You need to convince Rob that this is the way to go.
 
-Nevertheless, what I'm looking for can be achieved using bus format
-as well. Given that I have no datasheet for the panel in the device
-I'm upstreaming, and only a vague part number to go with, describing
-it as a bus format modifier rather than a property of the panel might
-be safer.
+Rob, ball's in your court. Sorry.
 
-So I'll just drop the two patches regarding bit depth for now.
+=2D-=20
+balbi
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-ChenYu
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8Wuc8ACgkQzL64meEa
+mQajFg/+OrB8kftTAnhyjxcw+b5fL1n7lUgHqcXF1BNTWFia0/tfNkcW/XNjbPbv
+V50OdZ4SUdOQGvrmALzxGve+SSs55QLvRfA+e3VzAL9KYpDXLmp+3habfuIRHgDC
+JojlvbYKWevMma727Oj5vrdmbLmoLpivT1kcf5+RT+AXS1P8ujWKwj4nnMQgO0KZ
+FAVKSMB84Uam3sEn49eBFxGJNipdl3M1NBI/E39RTN9MaF9Y56cKMWtXC+VqZ+DQ
+bU0OiBs+YJHIgwfAB3kXk5lF/uuKc9TgAkDPT4XOoMPLVgWi25ZdZSdtI1wXeaxv
+cgiIEY/XUaQMij9+8Wr0Ii87gpLQmRDavANp/7xZRfh5DA/WuPuGpyjabMqkucX5
+hG+FUXv1IGqI1pdwzWlFqS1v2bJUjWEp2iZaXMbq5mmuS9KBgWfm32KsTMDcsrbC
+h76U09ljSIZfVfvtp/+Nroy2RkwPSRoRxmeujcB7gIksH0A9+1dCvco9WjewfHHq
+LDx8MVYOnt0fguKFVVwiebkTlgE17/z89mqFCP1jjFWg96+iwbcUuDdOvl3khPkV
+qxjf8eg0PxwsHunCSlHRA997QmtXckyQdrLyb3j2n6sd0E0+gAdxmL+m9O1/59qQ
+71CLZaeVgojR1Y0esRLVh4r9O6lFV+JCaUyzir/e23fRGahnJ7Y=
+=kiWu
+-----END PGP SIGNATURE-----
+--=-=-=--
