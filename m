@@ -7,89 +7,91 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3478C433E7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B44AC433FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE3B207FC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1EF2075B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595296974;
-	bh=ecnDErcPl+ds+DlyJx1vjZxfo1zMEmJjLJF8xnNbVoc=;
+	s=default; t=1595296999;
+	bh=fxhi3TaR7fdeXNdX+9DGO5TrZu3rxIGdGIpUgsboGK4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AYorYunkcq+GIdeZcecZOS+XP5QZ86ap0sbFqXydavek4YzNy2FNf7FH5Agt/HJY3
-	 8882tVxQbPa3dkcRKRIx9itVIU+dqBuD6ur+TmHBX2jVGE4T6XHM1E/qdypPcFFuPd
-	 pV2nEwoZuu0X24vbfXFM7qmwl6VCd9agGBIZXgr4=
+	b=WeD7Q7PaglB3QHYqn0zMh9gwxDYlKuVfeY7eXAEzKpB4U9/qsk5bgjQDTohU83phv
+	 Wg7MmxWsYiG0L0KmZWbvS2pGi6HlZxRt0bpePXXcAHTtUYbqlmkT590Uz6nIbBvQfW
+	 8blICcrG8ri6uSAIlni4H5o8oQTZ3wdmsKIO4rn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgGUCCy (ORCPT
+        id S1726928AbgGUCDP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:02:54 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38359 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUCCx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 22:02:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id l1so19717958ioh.5;
-        Mon, 20 Jul 2020 19:02:53 -0700 (PDT)
+        Mon, 20 Jul 2020 22:03:15 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40308 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgGUCDO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 22:03:14 -0400
+Received: by mail-il1-f195.google.com with SMTP id e18so15070181ilr.7;
+        Mon, 20 Jul 2020 19:03:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ler81PLDj8c/ETj2nxI+bIOhjpg0lok1Sis4qfEHFDg=;
-        b=g+u5Qu0aD6S79h5wDbe7jh0y9l9WVsEvt1oDlu1g+Fp4c0xnTa6EpdGxer2zY7PIxq
-         jEzLe/s9jmRDSzYQxwfP0ine52JH1wcVSIVAc3SqIRJwTknrL3yqgKSlTS5sLKDGzpGZ
-         3wcY4ZTqRTwEhEsCarVO4FpLC3Lytt+CoZfJqXjFS7nbI8+nrYZoyybguieaM9AB7Jts
-         1pUS8m0uGlhpvDlqxaT63RaQx8GD309CWERl0jh/939kKcPeytzxthxLS3rI4JNmm0q2
-         ewqHKmppsqVYKyhsJ9vHv6YQft2TIl8YSN0EJfp6l83GUUPA2N7LrhbDVH+0hRrQ1SBb
-         4Diw==
-X-Gm-Message-State: AOAM533Y9qFiEBY1A/unNSXJzVNDRFowrF7X4RezJ5PP066O9EMgQByB
-        OBtPU0N5m4ebn3y8d3V2EQ==
-X-Google-Smtp-Source: ABdhPJwZCe2h4AviiyvIFBGlgC05v7ot4+I1iDQiZQydaBNoQO+wiOKKAdBuVl53L7vk3LV4pAgx3A==
-X-Received: by 2002:a05:6602:2fd5:: with SMTP id v21mr25481598iow.41.1595296972677;
-        Mon, 20 Jul 2020 19:02:52 -0700 (PDT)
+        bh=NI0Hxq+b23u61HCgb6cNvKoXwQP7jMZ4BvjN9EOpDkY=;
+        b=lr1YtpAgVkUMHWVBrWztp1yWPkXXJcTDFsiuzJyH3+D0yPid/7pqtAixu5dU+nAsBZ
+         BQZLG1pxLRcP90KBzQ8BZ8daiZkJ4qdZ0IDQKjpvfdSsCufg/4MW0hGJelwCrm/vGuWx
+         +HHoloWbOexcbvdGrfElFFGKXp49LUI1UQsWu08L3SELCoroGPAeISLJ+cssbbsbEYhC
+         A5nH3DLQYxrxKQDEIkNX8KgGvIFVFAjH0aJHUh8vpJeZoC359NlHVnOzkasYXt4a/cfl
+         J/quffiJKMWrit3n76YuGot8i1s1lXLuyQPIDoy9s1RixJyII5LJyh8ImS+ItcWaCJUs
+         elIg==
+X-Gm-Message-State: AOAM530h0Ict9s7GnspqruN893aUbGidMELdcvlNyD2y7Qb4dZ6FJRyd
+        tiYrqUD7GNcZviDtV3NfqA==
+X-Google-Smtp-Source: ABdhPJzmsRID8T/oluWCq8KPBMnZBgnmkwCQskK/tjvFgX/rIZQhMljjjrf1/cVgMwDrcoB6A8xwkg==
+X-Received: by 2002:a92:77d2:: with SMTP id s201mr26324309ilc.256.1595296993570;
+        Mon, 20 Jul 2020 19:03:13 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w7sm7795817iov.1.2020.07.20.19.02.50
+        by smtp.gmail.com with ESMTPSA id h5sm9883666ilq.22.2020.07.20.19.03.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 19:02:52 -0700 (PDT)
-Received: (nullmailer pid 3375633 invoked by uid 1000);
-        Tue, 21 Jul 2020 02:02:50 -0000
-Date:   Mon, 20 Jul 2020 20:02:50 -0600
+        Mon, 20 Jul 2020 19:03:12 -0700 (PDT)
+Received: (nullmailer pid 3376169 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:03:09 -0000
+Date:   Mon, 20 Jul 2020 20:03:09 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
+Cc:     Magnus Damm <magnus.damm@gmail.com>, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        iommu@lists.linux-foundation.org,
-        linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 6/9] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1
- support
-Message-ID: <20200721020250.GA3375580@bogus>
+        Vinod Koul <vkoul@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        iommu@lists.linux-foundation.org, Jakub Kicinski <kuba@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 8/9] dt-bindings: net: renesas,ravb: Add support for
+ r8a774e1 SoC
+Message-ID: <20200721020309.GA3376098@bogus>
 References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Jul 2020 22:35:17 +0100, Lad Prabhakar wrote:
-> Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
-> relevant dt-bindings.
+On Mon, 13 Jul 2020 22:35:19 +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
+> Document RZ/G2H (R8A774E1) SoC bindings.
+> 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
