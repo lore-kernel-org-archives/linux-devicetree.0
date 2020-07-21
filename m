@@ -2,353 +2,134 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FF1C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6309C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C07182072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+VQdbPn"
+	by mail.kernel.org (Postfix) with ESMTP id 9FBCA2080D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595324031;
+	bh=tf6ZMhs/JC7o39Wk5Sgc0mvXEIqXB+JBcQ4m5d951NA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=GW+XFgMEDB1p3aeyA+PmnzN2Z4/JoQY2FX5WW2AkEFIcmXDg3bXOrkN7ZuJGTaiTN
+	 vtGneDnR17tB8faeFeI+HW0W5QPlz1yzJW9guyrgxBI7GTRWprBZ7PBtbHFYczWkVM
+	 r5T1qalDOvXdz/biGvu5qRm5EpEMXxH4DKFVp5LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726089AbgGUJ1j (ORCPT
+        id S1726607AbgGUJdv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
+        Tue, 21 Jul 2020 05:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbgGUJ1g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 05:27:36 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999E6C0619D8
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 02:27:35 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b79so4825200qkg.9
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 02:27:35 -0700 (PDT)
+        with ESMTP id S1726109AbgGUJdu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 05:33:50 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54EA3C061794;
+        Tue, 21 Jul 2020 02:33:50 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id x9so23315758ljc.5;
+        Tue, 21 Jul 2020 02:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DOUOyhEXYy+mFY4wX1elRvpk/b4iwOOSpeaE0g0UYT0=;
-        b=l+VQdbPnwaXNy8KTtlkuAw05dOdR22m9cpX3v1c0wXHGUFwABtMSKKz/bCh95/xOvZ
-         el7CvES8n0Z06cd7eulSa9BKM3k0vGPm6o2tNZzVLSuDmuqptPCKerqTheTwKlryqER+
-         HsrIl25l252bwyeEyPDrxfBOARdMax2Oxc7BQpuDcFpklvpgOPR8KFfglf0UHcpa3siq
-         3Aig813Bt+FYEG4IH4GdgL4Ze3CwMqzHvJcvQgMqmNPFBcM1utMCfKKZso+0noagmjK9
-         HXReDhy3ubedJCJN1IN/ouk9Mxqzc4n2vAEhUhXRqhgq0epeVc2BfepIT/9YWijmau8u
-         hGsw==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=H9OhidrR5GwaDx7LdnN3XVSRHXGq+Bmjj5l/pD+T9jk=;
+        b=SDQlOZ7bFq09vzSvuDSYV9oNaEPZIPUFqveaPvO0TRSOX+5d0R2A98aKiQlnNHSpJr
+         ru7KWvSzwpA7AWMpbgT7htw7RAeanCgFn5bVMuvifU1hSDuOm4CMFwIgmvgmOI1tz6yj
+         5gg+UdnUCQLYGkII0/8KcGvBEXmsni1VA8msdS6cNBYIaoDs86AcZ0fpRe9jEsvx+OwR
+         jqnboADHN0e+m1w7eSpt35hHWdf4OI0eAJ/sane8+LdJGdNSFKAG6COEcwi9c2xB20VD
+         qs+WS8Bs/aW5h3oX8OvXnlPr7NTJqpGVeE96DRGSRzijjpDhUqEai/b2syF2qwqMM/iv
+         ZPBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DOUOyhEXYy+mFY4wX1elRvpk/b4iwOOSpeaE0g0UYT0=;
-        b=qiooC0XqTJGRW7rmfqvhCjjoF3ah5+Q1CExDCDPfsmnKDBJZfHfvRHe31ZnyWje5Ln
-         CNKQiSkO46OvcfF+5WrsatiPi+cCUoORIB3zKRru06x6qb1iBc9fnDqxgzhL7BvCxgeK
-         058+UMParIOwaGOFYsn412Tked7t/IEAmZkZrsdLtzjSIdbPOvfc67frXxSsU2yGemJe
-         Hi8pxx/cdyOMAR4fcsYiu4SdA3Xb7eDB60/amSK1I+Gr6AxjGbK/dBqhuxWyU/+M7/dE
-         9rBD0O9ZFBdr118f692J3Gl3HLRhG2+Qu9okFq4jYAOdEZ5dJNG7VWnQT2VyQghDn8O3
-         gz6w==
-X-Gm-Message-State: AOAM5325sp3WJMsz7I+xtlD7YqpIvrVqV9QWAcWUvxqcypfuSe0FHcRK
-        cYxsO1mQVTQbDn2ww2vS5oFxQ0WRaP7roKXx2DF1zQ==
-X-Google-Smtp-Source: ABdhPJyaeGg6r+6dXtRnMgUeD7HJuEYHGBjsTvloAVbpMgna1hllHKWaXJLbYDua1AZHue81pBZWVerRGHcC+oJP16o=
-X-Received: by 2002:a05:620a:4ca:: with SMTP id 10mr5498681qks.306.1595323654602;
- Tue, 21 Jul 2020 02:27:34 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=H9OhidrR5GwaDx7LdnN3XVSRHXGq+Bmjj5l/pD+T9jk=;
+        b=YFldZTHOuO8Gl50UChT2C/HGWt5ub/fWuHm68RK7qjANn27mK+ssxUISLU9dkxwv+L
+         bOkkyvoTuXbec36avcbIvTHW2jOZCHnIhdWIxCyx3oQjk9Q0a6ZSK+aqKCBSApvodVI2
+         WCKnK7QV86GLGstmWfBUJzyo3ObtXukGlHVz2SH5J3P6OUnjYDWrU7Zs/yUUgc9yEeFA
+         dhBzffXX0Y2dqb0JeMh/FoBnerZQkh2rdNbH83+fetNQkL5XBXPNlwjWzepYOadKtC+L
+         y11PeaJrdTB2CLm4SSYnFtr/5XsFdM88cxsgFRrAXM30ZLy+lM0x6Riyc1c6+2N9qnxH
+         muww==
+X-Gm-Message-State: AOAM530gqfJhSCRtWOzkjVPQCU996L2mt8Tno4DiDTYmva27t53aueRy
+        I/h5+/LifwF1pHEzSY7cVznyxPmwJEjEmg==
+X-Google-Smtp-Source: ABdhPJwcw0HnE8axTsimOyA7XwYSPXVkGvMqpHntMdEsAtB+Fs0AFylRhtLZhnw3ra+Kcy6QbmCoWw==
+X-Received: by 2002:a2e:9855:: with SMTP id e21mr13129280ljj.424.1595324028411;
+        Tue, 21 Jul 2020 02:33:48 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id m1sm4960969lfa.22.2020.07.21.02.33.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 02:33:47 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Sasi Kumar <sasi.kumar@broadcom.com>
+Subject: Re: [PATCH 0/7] usb: bdc: Updates and fixes to the USB BDC driver
+In-Reply-To: <20200717152307.36705-1-alcooperx@gmail.com>
+References: <20200717152307.36705-1-alcooperx@gmail.com>
+Date:   Tue, 21 Jul 2020 12:33:42 +0300
+Message-ID: <87h7u1p5zd.fsf@kernel.org>
 MIME-Version: 1.0
-References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
- <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org> <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
- <12db6d22c12369b6d64f410aa2434b03@kernel.org> <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
- <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org> <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
- <f11097c321b62e7f8ba904dc2907d4e0@kernel.org> <3501f3a6-0613-df1c-2c6d-5ac4610a226d@ti.com>
- <CAMxfBF6G5haTLp7+DqB5D6uHhTNfftk8SVMYpsh0VQGztJEm9w@mail.gmail.com> <87ft9qxqqk.wl-maz@kernel.org>
-In-Reply-To: <87ft9qxqqk.wl-maz@kernel.org>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Tue, 21 Jul 2020 11:27:23 +0200
-Message-ID: <CAMxfBF6-d1uj2-E+3EPO2hysE06La_nrk+HSgmYvwgE82EanFw@mail.gmail.com>
-Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
- for PRUSS interrupts
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-First of all thank you very much for your review. I apologize in
-advance if the description below is too verbose or not detailed
-enough.
 
-On Fri, 17 Jul 2020 at 14:36, Marc Zyngier <maz@kernel.org> wrote:
->
-> Suman, Grzegorz,
->
-> On Wed, 15 Jul 2020 14:38:05 +0100,
-> Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org> wrote:
-> >
-> > Hi Marc,
-> >
-> > > On 7/8/20 5:47 AM, Marc Zyngier wrote:
-> > > > On 2020-07-08 08:04, Grzegorz Jaszczyk wrote:
-> > > >> On Sun, 5 Jul 2020 at 22:45, Marc Zyngier <maz@kernel.org> wrote:
-> > > >>>
-> > > >>> On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
-> > > >>> > On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
-> > > >>> >>
-> > > >>> >> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
-> > > >>>
-> > > >>> [...]
-> > > >>>
-> > > >>> >> It still begs the question: if the HW can support both edge and level
-> > > >>> >> triggered interrupts, why isn't the driver supporting this diversity?
-> > > >>> >> I appreciate that your HW may only have level interrupts so far, but
-> > > >>> >> what guarantees that this will forever be true? It would imply a
-> > > >>> >> change
-> > > >>> >> in the DT binding, which isn't desirable.
-> > > >>> >
-> > > >>> > Ok, I've got your point. I will try to come up with something later
-> > > >>> > on. Probably extending interrupt-cells by one and passing interrupt
-> > > >>> > type will be enough for now. Extending this driver to actually support
-> > > >>> > it can be handled later if needed. Hope it works for you.
-> > > >>>
-> > > >>> Writing a set_type callback to deal with this should be pretty easy.
-> > > >>> Don't delay doing the right thing.
-> > > >>
-> > > >> Ok.
-> > >
-> > > Sorry for the typo in my comment causing this confusion.
-> > >
-> > > The h/w actually doesn't support the edge-interrupts. Likewise, the
-> > > polarity is always high. The individual register bit descriptions
-> > > mention what the bit values 0 and 1 mean, but there is additional
-> > > description in the TRMs on all the SoCs that says
-> > > "always write 1 to the bits of this register" for PRUSS_INTC_SIPR(x) and
-> > > "always write 0 to the bits of this register" for PRUSS_INTC_SITR(x).
-> > > FWIW, these are also the reset values.
-> > >
-> > > Eg: AM335x TRM - https://www.ti.com/lit/pdf/spruh73
-> > > Please see Section 4.4.2.5 and the register descriptions in 4.5.3.49,
-> > > 4.5.3.51. Please also see Section 4.4.2.3 that explains the PRUSS INTC
-> > > methodology.
-> > >
-> > > >>
-> > > >>>
-> > > >>> [...]
-> > > >>>
-> > > >>> >> >> > +             hwirq = hipir & GENMASK(9, 0);
-> > > >>> >> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
-> > > >>> >> >>
-> > > >>> >> >> And this is where I worry. You seems to have a single irqdomain
-> > > >>> >> >> for all the muxes. Are you guaranteed that you will have no
-> > > >>> >> >> overlap between muxes? And please use irq_find_mapping(), as
-> > > >>> >> >> I have top-secret plans to kill irq_linear_revmap().
-> > > >>> >> >
-> > > >>> >> > Regarding irq_find_mapping - sure.
-> > > >>> >> >
-> > > >>> >> > Regarding irqdomains:
-> > > >>> >> > It is a single irqdomain since the hwirq (system event) can be
-> > > >>> mapped
-> > > >>> >> > to different irq_host (muxes). Patch #6
-> > > >>> >> > https://lkml.org/lkml/2020/7/2/616 implements and describes how
-> > > >>> input
-> > > >>> >> > events can be mapped to some output host interrupts through 2
-> > > >>> levels
-> > > >>> >> > of many-to-one mapping i.e. events to channel mapping and
-> > > >>> channels to
-> > > >>> >> > host interrupts. Mentioned implementation ensures that specific
-> > > >>> system
-> > > >>> >> > event (hwirq) can be mapped through PRUSS specific channel into a
-> > > >>> >> > single host interrupt.
-> > > >>> >>
-> > > >>> >> Patch #6 is a nightmare of its own, and I haven't fully groked it
-> > > >>> yet.
-> > > >>> >> Also, this driver seems to totally ignore the 2-level routing. Where
-> > > >>> >> is it set up? map/unmap in this driver do exactly *nothing*, so
-> > > >>> >> something somewhere must set it up.
-> > > >>> >
-> > > >>> > The map/unmap is updated in patch #6 and it deals with those 2-level
-> > > >>> > routing setup. Map is responsible for programming the Channel Map
-> > > >>> > Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
-> > > >>> > provided configuration from the one parsed in the xlate function.
-> > > >>> > Unmap undo whatever was done on the map. More details can be found in
-> > > >>> > patch #6.
-> > > >>> >
-> > > >>> > Maybe it would be better to squash patch #6 with this one so it would
-> > > >>> > be less confusing. What is your advice?
-> > > >>>
-> > > >>> So am I right in understanding that without patch #6, this driver does
-> > > >>> exactly nothing? If so, it has been a waste of review time.
-> > > >>>
-> > > >>> Please split patch #6 so that this driver does something useful
-> > > >>> for Linux, without any of the PRU interrupt routing stuff. I want
-> > > >>> to see a Linux-only driver that works and doesn't rely on any other
-> > > >>> exotic feature.
-> > > >>>
-> > > >>
-> > > >> Patch #6 provides PRU specific 2-level routing setup. This step is
-> > > >> required and it is part of the entire patch-set. Theoretically routing
-> > > >> setup could be done by other platform driver (not irq one) or e.g. by
-> > > >> PRU firmware. In such case this driver would be functional without
-> > > >> patch #6 but I do not think it would be proper.
-> > > >
-> > > > Then this whole driver is non-functional until the last patch that
-> > > > comes with the PRU-specific "value-add".
-> > >
-> > > It is all moot actually and the interrupts work only when the PRU
-> > > remoteproc/clients have invoked the irq_create_fwspec_mapping()
-> > > for all of the desired system events. It does not make much difference
-> > > if it was a separate patch or squashed in, patch #6 is a replacement for
-> > > the previous logic, and since it was complex, it was done in a separate
-> > > patch to better explain the usage (same reason on v1 and v2 as
-> > > well).
->
-> It may make no difference to you, but it does for me, as I'm the lucky
-> idiot reviewing this code. So I am going to say it again: please keep
-> anything that only exists for the PRU subsystem benefit out of the
-> initial patches.
->
-> I want to see something that works for Linux, and only for Linux. Once
-> we have that working, we'll see to add more stuff. But stop throwing
-> the PRU business into the early patches, as all you are achieving is
-> to delay the whole thing.
->
-> > >
-> > > >
-> > > > [...]
-> > > >
-> > > >> I am open to any suggestion if there is a better way of handling
-> > > >> 2-level routing. I will also appreciate if you could elaborate about
-> > > >> issues that you see with patch #6.
-> > > >
-> > > > The two level routing has to be part of this (or another) irqchip
-> > > > driver (specially given that it appears to me like another set of
-> > > > crossbar). There should only be a *single* binding for all interrupts,
-> > > > including those targeting the PRU (you seem to have two).
-> > > >
-> > >
-> > > Yeah, there hasn't been a clean way of doing this. Our previous attempt
-> > > was to do this through custom exported functions so that the PRU
-> > > remoteproc driver can set these up correctly, but that was shot down and
-> > > this is the direction we are pointed to.
-> > >
-> > > We do want to leverage the "interrupts" property in the PRU user nodes
-> > > instead of inventing our own paradigm through a non-irqchip driver, and
-> > > at the same time, be able to configure this at the run time only when
-> > > that PRU driver is running, and remove the mappings once that driver is
-> > > removed allowing another PRU application/driver. We treat PRUs as an
-> > > exclusive resource, so everything needs to go along with an appropriate
-> > > client user.
-> >
-> > I will just add an explanation about interrupt binding. So actually
-> > there is one dt-binding defined in yaml (interrupt-cells = 1). The
-> > reason why you see xlate allowing to proceed with 1 or 3 parameters is
-> > because linux can change the PRU firmware at run-time (thorough linux
-> > remoteproc framework) and different firmware may require different
-> > kinds of interrupt mapping. Therefore during firmware load, the new
-> > mapping is created through irq_create_fwspec_mapping() and in this
-> > case 3 parameters are passed: system event, channel and host irq.
-> > Similarly the mapping is disposed during remoteproc stop by invoking
-> > irq_dispose_mapping. This allows to create new mapping, in the same
-> > way, for next firmware loaded through Linux remote-proc at runtime
-> > (depending on the needs of new remoteproc firmware).
-> >
-> > On the other hand dt-bindings defines interrupt-cells = 1, so when the
-> > interrupt is registered the xlate function (proceed with 1 parameter)
-> > checks if this event already has valid mapping - if yes we are fine,
-> > if not we return -EINVAL.
->
-> It means that interrupts declared in DT get their two-level routing
-> via the kernel driver, while PRU interrupts get their routing via some
-> external blob that Linux is not in control of?
+Hi,
 
-Actually with the current approach all two-level routing goes through
-this linux driver. The interrupts that should be routed to PRU are
-described in remoteproc firmware resource table [1] and it is under
-Linux remoteproc driver control. In general, the resource table
-contains system resources that the remote processor requires before it
-should be powered on. We treat the interrupt mapping (described in the
-resource table, which is a dedicated elf section defined in [1]) as
-one of system resources that linux has to provide before we power on
-the PRU core. Therefore the remoteproce driver will parse the resource
-table and trigger irq_create_fwspec_mapping() after validating
-resource table content.
-
-[1] https://www.kernel.org/doc/Documentation/remoteproc.txt (Binary
-Firmware Structure)
-
+Al Cooper <alcooperx@gmail.com> writes:
+> Updates and fixes to the Broadcom USB BDC driver.
 >
-> If so, this looks broken. What if you get a resource allocation
-> conflict because the kernel and the blob are stepping into each
-> other's toes? Why should an end-point client decide on the routing of
-> the interrupt?
-
-The code in the pruss_intc_map function checks if there are no
-allocation conflicts: e.g. if the sysevent is already assigned it will
-throw -EBUSY. Similarly when some channel was already assigned to
-host_irq and a different assignment is requested it will again throw
--EBUSY.
-
+> Al Cooper (4):
+>   dt-bindings: usb: bdc: Update compatible strings
+>   usb: bdc: Add compatible string for new style USB DT nodes
+>   usb: bdc: Adb shows offline after resuming from S2
+>   usb: bdc: driver runs out of buffer descriptors on large ADB transfers
 >
-> All the end-point should provide is the ID of the input signal, and to
-> which PRU this is routed. Interrupts described in DT should have the
-> exact same model (input signal, target). All the intermediate routing
-> logic should be handled by the Linux driver for *all* interrupts in
-> the system.
+> Danesh Petigara (1):
+>   usb: bdc: Halt controller on suspend
+>
+> Florian Fainelli (1):
+>   usb: bdc: Use devm_clk_get_optional()
+>
+> Sasi Kumar (1):
+>   bdc: Fix bug causing crash after multiple disconnects
 
-There is one issue with this approach: the channel number corresponds
-to the priority as described in TRM and PRU core firmware relies on
-those priorities. Because the interrupt routing for the PRU core will
-also go through this linux interrupt driver I think we have to stick
-with 3 parameter descriptions.
+What should we do here? There are few comments which seem
+unresolved. Are we getting a new version?
 
->
-> >
-> > >
-> > > > And the non-CPU interrupt code has to be in its own patch, because
-> > > > it is pretty borderline anyway (I'm still not completely convinced
-> > > > this is Linux's job).
-> > >
-> > > The logic for non-CPU interrupt code is exactly the same as the CPU
-> > > interrupt code, as they are all setup through the
-> > > irq_create_fwspec_mapping(). The CPU-specific pieces are primarily the
-> > > chained interrupt handling.
-> > >
-> > > We have already argued internally about the last part, but our firmware
-> > > developers literally don't have any IRAM space (we have a lot of
-> > > Industrial protocols working out of 4K/8K memory), and have pushed all
-> > > one-time setup to the OS running (Linux or otherwise) on the main ARM
-> > > core, and INTC is one among the other many such settings. Every word in
-> > > Instruction RAM was crucial for them.
->
-> And that's fine. Just push *all* of it into Linux, and not just the
-> programming of the registers.
->
-> > >
-> > > So, we are all ears if there is still an elegant way of doing this. Look
-> > > forward to any suggestions you may have.
-> >
-> > Yes, the non-CPU logic is exactly the same as the CPU interrupt code
-> > as Suman described. There is no distinction between routing setup for
-> > main CPU and PRU core, both use exactly the same logic, just different
-> > numbers are passed through  irq_create_fwspec_mapping.
->
-> It obviously isn't the same at the moment. You have two distinct code
-> paths, two ways to describe a mapping, and a potential resource
-> allocation issue.
->
+=2D-=20
+balbi
 
-Ok, I will get rid of the two distinct code paths in the xlate
-function (in patch#6) and change the #interrupt-cells to 3 which and
-describe the entire interrupt routing in DT for interrupts targeted to
-the main CPU. Please let me know if you have any further comments.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thank you,
-Grzegorz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8WtnYACgkQzL64meEa
+mQbgmRAApjEv4sPoy9DHfKAs4nJ1OcfivuXfGsdfBWCG4IJweHKB+MPPZLVwam1/
+w61d4KPH9EZZl+68JQV8Z7CoDQMEa6hKhf/12t+xhxdagBLhJbANQ4TpGuL2/QRx
+jHR47DvcQ3P2GbDiqwEuTP01XZuz1g97Bp9TON7KlKq7hqr5pCR8m/DUCLI5ZIEe
+W9dQKwDhRR9zmpptkh1JSNRdQ6F0CAucCtplxPrfg7FdoxBnr4m9nwZkWgcoe6o3
+IAoZ0UbEuaEHEnsBIiiJ3kWL1w7d/JClEC01P3H2kX+HUYvrslYGm1tvlyx/eXUB
+p4PiXz601s1XheCOFrgL2wkT5TjX+iGBnDdAZV9jAWR0vfH2zfbdq4+xqchAxsqv
+t0zHiTF6U2lI+J1VJXNlpoXz7LesgMawv9OK8euvHW0fvYQOM7QW7BO9Q3cb1PSm
+oQZj/IqLM8InIylbxwA8ucs7sMj2skkLwgVHpolAjRWEyqSh8d2WQq/QWGC2gsni
+4fg4w5Uq/bzQ+lDw/zNu4zcCyigSGZdJSD0MjvjH357ahWGpopxECKdU7LrK1XU4
+GF6Vndt+TG/TRo/1jVdjhQAw6i2bKE3NFV0du2OW534I5yLneYD42L4QTMiNaoc6
+8SkaibwYayTfO0x6ckWdaW+VU7CIg/z6IfxgaMd+T/Rdjs6zzeY=
+=FSV/
+-----END PGP SIGNATURE-----
+--=-=-=--
