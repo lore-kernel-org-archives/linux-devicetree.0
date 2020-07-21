@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67FBC433EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CE7C433EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C4120720
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6481B20717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595321557;
-	bh=AvrWomrOItpeCrbu57V6/xnDp8Pumll1n0l/9GBrPvc=;
+	s=default; t=1595321555;
+	bh=0BmSIHJeo2wcTRiuEf/6+C3xly89h+A1vf4whOdCRB0=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=vPHAWCdr5kf5irjUDBOeCTwqOoWG4sYmezLszpnnVTrCFYA1kJjusW1C3YIRjNH4y
-	 Cd7oFHtjvyZt9IE7WmaNGeV1EWpUOpUWCGSmIWKKJnuzctjvRjm5EVEfRqDOEENRkk
-	 u0rMay2ZlO98sujXofZRqXuTujdblHv9LowmuF2Y=
+	b=L8u9vh+OEfdhvQPyXMs8AyocWfwaJDVqNFJhJ9hYkInbigIyHh1mm/qZNmPvSYGHl
+	 O/ahhSEDe7NBJ0THOY1glc14lsCe+IvS3uw9el0xa/fLzYIqWXcI5+MizVp8yE8poP
+	 3bxIl/ZNCNnhLMWSlW4eFDOlqZQHpeT0S+c+RNeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgGUIwh (ORCPT
+        id S1728876AbgGUIwb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59612 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 04:52:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbgGUIwg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:52:36 -0400
+        id S1728850AbgGUIwb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 04:52:31 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4806820717;
-        Tue, 21 Jul 2020 08:52:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BBB20717;
+        Tue, 21 Jul 2020 08:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595321556;
-        bh=AvrWomrOItpeCrbu57V6/xnDp8Pumll1n0l/9GBrPvc=;
+        s=default; t=1595321551;
+        bh=0BmSIHJeo2wcTRiuEf/6+C3xly89h+A1vf4whOdCRB0=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=wmCZUkUPpuhQleeO8yl9p5grFdCSoJsgVYWVJfv2SyixDcU0GVzBNiSmVaIcRwWAe
-         ZaypqruaBfIrVPHQG0ONqltjzkoT+Sv7lykV8+kGnKNJg8uGem/x+pQEjQDvGB4709
-         rRldL2AU45t8hJt+2/vFSTK18LzQj7Mmg7/cHceU=
+        b=AkRp3nOByQTzcnnomfqy0CytNP7Hz5PoOkUc+LPtjXOECcZLBbjzKKWDpS51XfMu1
+         xIWP9OcSIRqUdKBewtsq3eTkJzTmMitCkWC2brXHv4xXrVIpl7B5s6mK3H61zqsrOI
+         5zeRzGIUWOub3QOov2KVyJUQojN/A3cv687rYzrg=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3fba2e6f0edfac97cb8c6ce60f95c24852578eac.1593788312.git.cristian.ciocaltea@gmail.com>
-References: <cover.1593788312.git.cristian.ciocaltea@gmail.com> <3fba2e6f0edfac97cb8c6ce60f95c24852578eac.1593788312.git.cristian.ciocaltea@gmail.com>
-Subject: Re: [PATCH v3 5/6] clk: actions: Add Actions S500 SoC Reset Management Unit support
+In-Reply-To: <daf615160b3be9f38dcf7926cc82128c9c2d73e3.1593788312.git.cristian.ciocaltea@gmail.com>
+References: <cover.1593788312.git.cristian.ciocaltea@gmail.com> <daf615160b3be9f38dcf7926cc82128c9c2d73e3.1593788312.git.cristian.ciocaltea@gmail.com>
+Subject: Re: [PATCH v3 4/6] dt-bindings: reset: Add binding constants for Actions S500 RMU
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
@@ -55,19 +55,20 @@ To:     Andreas =?utf-8?q?F=C3=A4rber?= <afaerber@suse.de>,
         Michael Turquette <mturquette@baylibre.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 21 Jul 2020 01:52:35 -0700
-Message-ID: <159532155563.3847286.2008458191107142489@swboyd.mtv.corp.google.com>
+Date:   Tue, 21 Jul 2020 01:52:30 -0700
+Message-ID: <159532155027.3847286.9653491370230964734@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Cristian Ciocaltea (2020-07-03 10:05:11)
-> Add Reset Management Unit (RMU) support for Actions Semi S500 SoC.
+Quoting Cristian Ciocaltea (2020-07-03 10:05:10)
+> Add device tree binding constants for Actions Semi S500 SoC Reset
+> Management Unit (RMU).
 >=20
 > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
 
 Applied to clk-next
