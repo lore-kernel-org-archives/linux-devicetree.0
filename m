@@ -7,85 +7,85 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06D1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2616C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2CD2073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B072D2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="0iOol61m"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="nDMU+vQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgGULoD (ORCPT
+        id S1727940AbgGULtQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 07:44:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56856 "EHLO
+        Tue, 21 Jul 2020 07:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728269AbgGULoC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 07:44:02 -0400
+        with ESMTP id S1726755AbgGULtQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 07:49:16 -0400
 Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA73C061794
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:44:02 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f18so20931653wrs.0
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:44:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FED8C0619D8
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:49:15 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so20891731wru.6
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:49:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S8KZzDda9edvjFBOlGjuGRmYMPyPlcqvYLeB8aIs6P4=;
-        b=0iOol61mueyGeN/+5vIGdNF7qNFaGQ10xYB28DqGeD2HA6twlcLhJKFXpIllxMAxj7
-         ECXVoAauufksXRH63XkAhgaeoW0iMKsq+UIDbWjE3arVfcdvNgnC6a0Ez3BfRYtksa6q
-         RW1hDC7LJQauFF2MRobig4TO57CxeXoZX7u02KdOXTrcI27Fb06Huu6k6070/n+iRMhX
-         ISySfSCsRpb2t9sccd/g3O/8KanYG7A1lmFCcIKkh7DxpGkImiA1U6a8epc1ZN5IHrM3
-         rRlMebI5OcJdHhq9eJb2Fw3UFxFDm7+L1JeErpuEXSfeLTByJFxeJ8SVqKcFwK6lUMk0
-         YrJQ==
+         :cc:content-transfer-encoding;
+        bh=YhhhVF8z1SLInJUZAiDAnUC6bgocyhhgqr0w45WOgKE=;
+        b=nDMU+vQzOjCBxZoK6uTXWTLLlkjbn/xqdnt0a9+YzT7k59y3jQCMaQAe+lzs4f1Las
+         XDwKkAOt7VTkpqUppn/Ui+XJtYhVaSXB0vyxysiL4kRDOisE/ROVpZ3AoIZdTplZBmqu
+         Lhhk9rAkBsz8ok9kvWiUTc+PNvZ6t5yWrw5aJ+Kwzrc6DEqD1Bdq5gpDmnH2flD+V2/1
+         Xt+HuqKywm++0CeGmTJDxv9g4hdcRFwvkolInSoU/r0RMWb2MXaDyVkcFHyvNA6zKHZs
+         GR6cOef7oKX74v1/UyuvC3SjbMs+8wP7Q7TBvDEbEOm6e2vukNUll5XyaWU/AaSnmzXX
+         cFRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S8KZzDda9edvjFBOlGjuGRmYMPyPlcqvYLeB8aIs6P4=;
-        b=YP0oMAVzUuIHA8e5VzGJmYs/GF/FriXjv6YzYy/ibAnMZDQovH96beG1WQAUCj2dUA
-         4XReZekE9AbBCCqMc1GxQAXbWRGOl1mtAS8JUQ6xDeyjNivOPQimCTfq8b5oJGfSn8jc
-         7kdNf9aVlbF9DwAHnNYcIJhzNUQbkYVTleci37OB89YUcrJaslDtbrGnYcHhZYM3lAKO
-         wwWyMWKgsoQzRw+lciRlfQ6YPvwNgHFBbPGF6p7ZzO2AQ9G+cEDzK6xWlID1sNxCMrLA
-         PA7z8QjkxjOyzZ0xmHhutOGIk0zQqfhBLxwPnct1ALTWcSfBFzx4+qbSGl4i/VTtJaCf
-         kntw==
-X-Gm-Message-State: AOAM531C4tww3Jo7dQhi2kxQFjZefho/unasC+oV6U+jOS0PUC90DOZc
-        qsb6MvWjXcJsaqOaca4dHnL0qsB0lpC01msUqbRe8g==
-X-Google-Smtp-Source: ABdhPJxGJx2s1J28uAxaxwyjHtpdxOmqIjh1a7g5BBb7OCBYYK6qgmzRo0DnQ9UdUP8GKGtvCU1rM/RZQq8lh4VvNeE=
-X-Received: by 2002:adf:9203:: with SMTP id 3mr9695194wrj.144.1595331840654;
- Tue, 21 Jul 2020 04:44:00 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YhhhVF8z1SLInJUZAiDAnUC6bgocyhhgqr0w45WOgKE=;
+        b=juj/AfK2iIGrdTr7uT0h9dFY0YpBT/s4cyjNTOBldIM+tGH0OVdVSK3pGCrHBVVKtd
+         Uj9aUjiE8vkHYC/IMznCFivz7zWjMOsd48wCbsNMNCP40eLAHs+bM76bZngwmTYCnw3P
+         c3cs2h7jJxbSSr5MCkmHjB6iJIA8BYzONqoSSszYWpy/ESQ5Fp4N/Q1P9vvOsM1vWf4N
+         SyVeGgwMuodpX/Mnot/2GJLclm73X3ycLTYbNEvWk/p6IVQH6Z/0V3Thd1foIdBu7QVA
+         zQJ6PQbF9HjKWixQkW0gOIZk8TnjRg82Fk1plJzqse3bVhYRnbTsjsYgqctLDjV3JGO4
+         4sCQ==
+X-Gm-Message-State: AOAM530zxZQ72d6NjOnRvqS6xCz6OpQeSk415r+aZFTe9+JLi73ADBBo
+        SLJdZKWCoQ6Khhf0z2W8X1R5263q+/L0bAuXZD7k0sX5VHc=
+X-Google-Smtp-Source: ABdhPJwnJ+R0C8R5YU7vymVo3liRSIKqHF7p4MjG+BEHOSmembqsmAxdRbwISiIAZG5h1Pdnx0zrtLa0KOAKAefsGPE=
+X-Received: by 2002:adf:9203:: with SMTP id 3mr9713351wrj.144.1595332154204;
+ Tue, 21 Jul 2020 04:49:14 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-3-anup.patel@wdc.com>
- <CAOnJCUL=LSEfK67GbZ6c0NjEpHmpWq3HM1odgU=bo5JAjAGO2A@mail.gmail.com>
-In-Reply-To: <CAOnJCUL=LSEfK67GbZ6c0NjEpHmpWq3HM1odgU=bo5JAjAGO2A@mail.gmail.com>
+ <63f65ddd-b7c4-b8fd-151c-a77e8c87efed@linaro.org>
+In-Reply-To: <63f65ddd-b7c4-b8fd-151c-a77e8c87efed@linaro.org>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 21 Jul 2020 17:13:48 +0530
-Message-ID: <CAAhSdy1AJAp7WOMPhJRk9ahs2Puhpct2nb+ZDz02iYG2NVP1rA@mail.gmail.com>
+Date:   Tue, 21 Jul 2020 17:19:02 +0530
+Message-ID: <CAAhSdy2oGAk6A6=SwgCgZ+trmzCMRPOCiB6ibDTL2A_1sUu1og@mail.gmail.com>
 Subject: Re: [PATCH v4 2/4] clocksource/drivers: Add CLINT timer driver
-To:     Atish Patra <atishp@atishpatra.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Anup Patel <anup.patel@wdc.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
         Atish Patra <atish.patra@wdc.com>,
         Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Emil Renner Berhing <kernel@esmil.dk>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 6:41 AM Atish Patra <atishp@atishpatra.org> wrote:
+On Tue, Jul 21, 2020 at 4:32 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 >
-> On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
-> >
+> On 17/07/2020 09:50, Anup Patel wrote:
 > > We add a separate CLINT timer driver for Linux RISC-V M-mode (i.e.
 > > RISC-V NoMMU kernel).
 > >
@@ -113,320 +113,73 @@ On Tue, Jul 21, 2020 at 6:41 AM Atish Patra <atishp@atishpatra.org> wrote:
 > > --- a/drivers/clocksource/Kconfig
 > > +++ b/drivers/clocksource/Kconfig
 > > @@ -658,6 +658,15 @@ config RISCV_TIMER
-> >           is accessed via both the SBI and the rdcycle instruction.  This is
-> >           required for all RISC-V systems.
+> >         is accessed via both the SBI and the rdcycle instruction.  This=
+ is
+> >         required for all RISC-V systems.
 > >
 > > +config CLINT_TIMER
-> > +       bool "Timer for the RISC-V platform"
-> > +       depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
-> > +       select TIMER_PROBE
-> > +       select TIMER_OF
-> > +       help
-> > +         This option enables the CLINT timer for RISC-V systems. The CLINT
-> > +         driver is usually used for NoMMU RISC-V systems.
-> > +
-> >  config CSKY_MP_TIMER
-> >         bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
-> >         depends on CSKY
-> > diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> > index bdda1a2e4097..18e700e703a0 100644
-> > --- a/drivers/clocksource/Makefile
-> > +++ b/drivers/clocksource/Makefile
-> > @@ -87,6 +87,7 @@ obj-$(CONFIG_CLKSRC_ST_LPC)           += clksrc_st_lpc.o
-> >  obj-$(CONFIG_X86_NUMACHIP)             += numachip.o
-> >  obj-$(CONFIG_ATCPIT100_TIMER)          += timer-atcpit100.o
-> >  obj-$(CONFIG_RISCV_TIMER)              += timer-riscv.o
-> > +obj-$(CONFIG_CLINT_TIMER)              += timer-clint.o
-> >  obj-$(CONFIG_CSKY_MP_TIMER)            += timer-mp-csky.o
-> >  obj-$(CONFIG_GX6605S_TIMER)            += timer-gx6605s.o
-> >  obj-$(CONFIG_HYPERV_TIMER)             += hyperv_timer.o
-> > diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
-> > new file mode 100644
-> > index 000000000000..e1698efa73a1
-> > --- /dev/null
-> > +++ b/drivers/clocksource/timer-clint.c
-> > @@ -0,0 +1,231 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > + *
-> > + * Most of the M-mode (i.e. NoMMU) RISC-V systems usually have a
-> > + * CLINT MMIO timer device.
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "clint: " fmt
-> > +#include <linux/bitops.h>
-> > +#include <linux/clocksource.h>
-> > +#include <linux/clockchips.h>
-> > +#include <linux/cpu.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/sched_clock.h>
-> > +#include <linux/io-64-nonatomic-lo-hi.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/smp.h>
-> > +
-> > +#define CLINT_IPI_OFF          0
-> > +#define CLINT_TIMER_CMP_OFF    0x4000
-> > +#define CLINT_TIMER_VAL_OFF    0xbff8
-> > +
-> > +/* CLINT manages IPI and Timer for RISC-V M-mode  */
-> > +static u32 __iomem *clint_ipi_base;
-> > +static u64 __iomem *clint_timer_cmp;
-> > +static u64 __iomem *clint_timer_val;
-> > +static unsigned long clint_timer_freq;
-> > +static unsigned int clint_timer_irq;
-> > +
-> > +static void clint_send_ipi(const struct cpumask *target)
-> > +{
-> > +       unsigned int cpu;
-> > +
-> > +       for_each_cpu(cpu, target)
-> > +               writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
-> > +}
-> > +
-> > +static void clint_clear_ipi(void)
-> > +{
-> > +       writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id()));
-> > +}
-> > +
-> > +static struct riscv_ipi_ops clint_ipi_ops = {
-> > +       .ipi_inject = clint_send_ipi,
-> > +       .ipi_clear = clint_clear_ipi,
-> > +};
-> > +
-> > +#ifdef CONFIG_64BIT
-> > +#define clint_get_cycles()     readq_relaxed(clint_timer_val)
-> > +#else
-> > +#define clint_get_cycles()     readl_relaxed(clint_timer_val)
-> > +#define clint_get_cycles_hi()  readl_relaxed(((u32 *)clint_timer_val) + 1)
-> > +#endif
-> > +
-> > +#ifdef CONFIG_64BIT
-> > +static u64 notrace clint_get_cycles64(void)
-> > +{
-> > +       return clint_get_cycles();
-> > +}
-> > +#else /* CONFIG_64BIT */
-> > +static u64 notrace clint_get_cycles64(void)
-> > +{
-> > +       u32 hi, lo;
-> > +
-> > +       do {
-> > +               hi = clint_get_cycles_hi();
-> > +               lo = clint_get_cycles();
-> > +       } while (hi != clint_get_cycles_hi());
-> > +
-> > +       return ((u64)hi << 32) | lo;
-> > +}
-> > +#endif /* CONFIG_64BIT */
-> > +
-> > +static u64 clint_rdtime(struct clocksource *cs)
-> > +{
-> > +       return clint_get_cycles64();
-> > +}
-> > +
-> > +static struct clocksource clint_clocksource = {
-> > +       .name           = "clint_clocksource",
-> > +       .rating = 300,
+> > +     bool "Timer for the RISC-V platform"
+> > +     depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
+> > +     select TIMER_PROBE
+> > +     select TIMER_OF
+> > +     help
+> > +       This option enables the CLINT timer for RISC-V systems. The CLI=
+NT
+> > +       driver is usually used for NoMMU RISC-V systems.
 >
-> nit: Not aligned with other structure members.
->
-> > +       .mask           = CLOCKSOURCE_MASK(64),
-> > +       .flags          = CLOCK_SOURCE_IS_CONTINUOUS,
-> > +       .read           = clint_rdtime,
-> > +};
-> > +
-> > +static int clint_clock_next_event(unsigned long delta,
-> > +                                  struct clock_event_device *ce)
-> > +{
-> > +       void __iomem *r = clint_timer_cmp +
-> > +                         cpuid_to_hartid_map(smp_processor_id());
-> > +
-> > +       csr_set(CSR_IE, IE_TIE);
-> > +       writeq_relaxed(clint_get_cycles64() + delta, r);
-> > +       return 0;
-> > +}
-> > +
-> > +static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
-> > +       .name                   = "clint_clockevent",
-> > +       .features               = CLOCK_EVT_FEAT_ONESHOT,
-> > +       .rating         = 100,
-> > +       .set_next_event = clint_clock_next_event,
->
-> nit: Not aligned with other structure members.
+> V3 has a comment about fixing the Kconfig option.
 
-Okay, will update.
+I have removed "default y" from the Kconfig option as-per your suggestions.
 
-> > +};
-> > +
-> > +static DEFINE_PER_CPU(bool, clint_clock_event_registered);
-> > +
-> > +static int clint_timer_starting_cpu(unsigned int cpu)
-> > +{
-> > +       bool *registered = per_cpu_ptr(&clint_clock_event_registered, cpu);
-> > +       struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
-> > +
-> > +       if (!(*registered)) {
-> > +               ce->cpumask = cpumask_of(cpu);
-> > +               clockevents_config_and_register(ce, clint_timer_freq, 200,
-> > +                                                ULONG_MAX);
->
-> Is there a specific reason to choose different values from the timer-riscv ?
-> The min_delta is set to 100 and max_delta is set to 0x7fffffff in
-> timer-riscv driver.
-
-Not really, I will update. I think it's better to use 100 and ULONG_MAX to
-have fewer magic values.
+I looked at other Timer Kconfig options. Most of them have menuconfig name.
+Also, we can certainly have different timer MMIO timer drivers in future. D=
+o
+you still insist on making this kconfig option totally silent ??
 
 >
-> > +               *registered = true;
-> > +       }
-> > +
-> > +       enable_percpu_irq(clint_timer_irq,
-> > +                         irq_get_trigger_type(clint_timer_irq));
-> > +       return 0;
-> > +}
-> > +
-> > +static int clint_timer_dying_cpu(unsigned int cpu)
-> > +{
-> > +       disable_percpu_irq(clint_timer_irq);
-> > +       return 0;
-> > +}
-> > +
-> > +static irqreturn_t clint_timer_interrupt(int irq, void *dev_id)
-> > +{
-> > +       struct clock_event_device *evdev = this_cpu_ptr(&clint_clock_event);
-> > +
-> > +       csr_clear(CSR_IE, IE_TIE);
-> > +       evdev->event_handler(evdev);
-> > +
-> > +       return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int __init clint_timer_init_dt(struct device_node *np)
-> > +{
-> > +       int rc;
-> > +       u32 i, nr_irqs;
-> > +       void __iomem *base;
-> > +       struct of_phandle_args oirq;
-> > +
-> > +       /*
-> > +        * Ensure that CLINT device interrupts are either RV_IRQ_TIMER or
-> > +        * RV_IRQ_SOFT. If it's anything else then we ignore the device.
-> > +        */
-> > +       nr_irqs = of_irq_count(np);
-> > +       for (i = 0; i < nr_irqs; i++) {
-> > +               if (of_irq_parse_one(np, i, &oirq)) {
-> > +                       pr_err("%pOFP: failed to parse irq %d.\n", np, i);
-> > +                       continue;
-> > +               }
-> > +
-> > +               if ((oirq.args_count != 1) ||
-> > +                   (oirq.args[0] != RV_IRQ_TIMER &&
-> > +                    oirq.args[0] != RV_IRQ_SOFT)) {
-> > +                       pr_err("%pOFP: invalid irq %d (hwirq %d)\n",
-> > +                              np, i, oirq.args[0]);
-> > +                       return -ENODEV;
-> > +               }
-> > +
-> > +               /* Find parent irq domain and map timer irq */
-> > +               if (!clint_timer_irq &&
-> > +                   oirq.args[0] == RV_IRQ_TIMER &&
-> > +                   irq_find_host(oirq.np))
-> > +                       clint_timer_irq = irq_of_parse_and_map(np, i);
-> > +       }
-> > +
-> > +       /* If CLINT timer irq not found then fail */
-> > +       if (!clint_timer_irq) {
-> > +               pr_err("%pOFP: timer irq not found\n", np);
-> > +               return -ENODEV;
-> > +       }
-> > +
-> > +       base = of_iomap(np, 0);
-> > +       if (!base) {
-> > +               pr_err("%pOFP: could not map registers\n", np);
-> > +               return -ENODEV;
-> > +       }
-> > +
-> > +       clint_ipi_base = base + CLINT_IPI_OFF;
-> > +       clint_timer_cmp = base + CLINT_TIMER_CMP_OFF;
-> > +       clint_timer_val = base + CLINT_TIMER_VAL_OFF;
-> > +       clint_timer_freq = riscv_timebase;
-> > +
-> > +       pr_info("%pOFP: timer running at %ld Hz\n", np, clint_timer_freq);
-> > +
-> > +       rc = clocksource_register_hz(&clint_clocksource, clint_timer_freq);
-> > +       if (rc) {
-> > +               iounmap(base);
-> > +               pr_err("%pOFP: clocksource register failed [%d]\n", np, rc);
-> > +               return rc;
-> > +       }
-> > +
-> > +       sched_clock_register(clint_get_cycles64, 64, clint_timer_freq);
-> > +
-> > +       rc = request_percpu_irq(clint_timer_irq, clint_timer_interrupt,
-> > +                                "clint-timer", &clint_clock_event);
-> > +       if (rc) {
-> > +               iounmap(base);
-> > +               pr_err("registering percpu irq failed [%d]\n", rc);
-> > +               return rc;
-> > +       }
-> > +
-> > +       rc = cpuhp_setup_state(CPUHP_AP_CLINT_TIMER_STARTING,
-> > +                               "clockevents/clint/timer:starting",
-> > +                               clint_timer_starting_cpu,
-> > +                               clint_timer_dying_cpu);
-> > +       if (rc) {
-> > +               free_irq(clint_timer_irq, &clint_clock_event);
-> > +               iounmap(base);
-> > +               pr_err("%pOFP: cpuhp setup state failed [%d]\n", np, rc);
-> > +               return rc;
+> [ ... ]
 >
-> All the iounmap & return statements can be moved to a goto at the end
-> of the function.
+> > +{
+> > +     bool *registered =3D per_cpu_ptr(&clint_clock_event_registered, c=
+pu);
+> > +     struct clock_event_device *ce =3D per_cpu_ptr(&clint_clock_event,=
+ cpu);
+> > +
+> > +     if (!(*registered)) {
+> > +             ce->cpumask =3D cpumask_of(cpu);
+> > +             clockevents_config_and_register(ce, clint_timer_freq, 200=
+,
+> > +                                              ULONG_MAX);
+> > +             *registered =3D true;
+> > +     }
+>
+>
+> I was unsure about the clockevents_config_and_register() multiple calls
+> when doing the comment. It seems like it is fine to call it several
+> times and that is done in several places like riscv or arch_arm_timer.
+>
+> It is probably safe to drop the 'registered' code here, sorry for the
+> confusion.
 
-Okay, will update.
+Okay, will revert these changes.
 
 >
-> > +       }
-> > +
-> > +       riscv_set_ipi_ops(&clint_ipi_ops);
-> > +       clint_clear_ipi();
-> > +
-> > +       return 0;
+> > +     enable_percpu_irq(clint_timer_irq,
+> > +                       irq_get_trigger_type(clint_timer_irq));
+> > +     return 0;
 > > +}
 > > +
-> > +TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
-> > +TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
-> > diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> > index 191772d4a4d7..1451f4625833 100644
-> > --- a/include/linux/cpuhotplug.h
-> > +++ b/include/linux/cpuhotplug.h
-> > @@ -132,6 +132,7 @@ enum cpuhp_state {
-> >         CPUHP_AP_MIPS_GIC_TIMER_STARTING,
-> >         CPUHP_AP_ARC_TIMER_STARTING,
-> >         CPUHP_AP_RISCV_TIMER_STARTING,
-> > +       CPUHP_AP_CLINT_TIMER_STARTING,
-> >         CPUHP_AP_CSKY_TIMER_STARTING,
-> >         CPUHP_AP_HYPERV_TIMER_STARTING,
-> >         CPUHP_AP_KVM_STARTING,
-> > --
-> > 2.25.1
-> >
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
 >
+> [ ... ]
 >
 >
 > --
-> Regards,
-> Atish
+> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for AR=
+M SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
 
 Regards,
 Anup
