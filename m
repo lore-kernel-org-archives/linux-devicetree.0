@@ -2,128 +2,204 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21082C433E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF98C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7BA92068F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778B12068F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hiukbOV+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zIIeo0cQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgGUIOU (ORCPT
+        id S1726734AbgGUIS3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:14:20 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56918 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725984AbgGUIOU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:14:20 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L8CxxX017868;
-        Tue, 21 Jul 2020 10:14:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=vLvdjebn18vp1iXjDc73XEAirigA9VZVa85se3b0xmw=;
- b=hiukbOV++/qLbPbEsXN2qdfvVHhOJdKMoN+jfWRNz9iPx9+75sqaWfZRKP0E765c7tbw
- PxQwYUxPoW1iK9lqHE9AkUp615w+L/G9OxqAqYQZSIwU6vg1b1hBimcCGMxssRnSYGHN
- EFkBInhKNW0spWaMu14Du1o3fORUGrVor6AsM3yLTSBduQTV8cPlI1yrvFoLvlb50Aux
- KC3IauLU6X9TmgnwgiZA9crvF9/CoAXy3Asu2WR1WkPC5IAA2XNU15Ci+rTp0/+Bh1vb
- lCBkWbPgwowQgSVx5Tx/LP3fzcR3i2XzRYAgJZFY2c+HEbsTx90HHcfyXR8loHk4FHKk xg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bsagvsuv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 10:14:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0C9E010002A;
-        Tue, 21 Jul 2020 10:14:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EC3562A4D9E;
-        Tue, 21 Jul 2020 10:14:09 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
- 2020 10:14:09 +0200
-Subject: Re: [PATCH] ARM: dts: stm32: configure i2c5 support on
- stm32mp15xx-dkx
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@kernel.org>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
-        <mcoquelin.stm32@gmail.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1592904672-12781-1-git-send-email-alain.volmat@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <073d551e-1624-62fe-5bf3-45ee26894600@st.com>
-Date:   Tue, 21 Jul 2020 10:14:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 04:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGUIS2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 04:18:28 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E06BC061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:18:27 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a6so1650899wmm.0
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:18:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=uFols3Vwy8k+lqla1bufgTAtZft6D6LnLJ5Qc7u5vII=;
+        b=zIIeo0cQiwEviByTgiHHNai5h5U5Rf782O2PWltyl3GbkQSbOanQbppvj3h0oSMWs1
+         aKSrWnY895L/0WDPl4eqql+Hc2jz4xYDL0cdoy7YLcodAvW9U6dso7m3+X/fR6OvZPxe
+         K3jQymDXl1HhwsU/GFhhOtifl9XS+5QmAMgmvmPSAzQwQHjUhu8317u7r4ZBuMnXt+TM
+         FqP3+uK46+hYVyNzneHw/6aWzl0SSfzURKz2ovPhosS9ayCOBpw6vP4j2Pf3ABflegml
+         mZAdA/jq7a4B1jlXP95xs2NEXfBdEr5tenut24DCP3N02+31flVpnC63sNnQViGAjXFA
+         GFaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=uFols3Vwy8k+lqla1bufgTAtZft6D6LnLJ5Qc7u5vII=;
+        b=nC2A+qPf8/cgtL3M9y9UUOEnbvgbQIVFdOaeROEMnCI2aYEd/kkyCLFa9bX6iY5ipb
+         hrCuk2R/vVnB/HFCG9I/EpqP6v+Affsz3joICxCXX9AnbBQBNSYy9hbFtYyo8F5D4LEc
+         dP3W9n8+j56RrVXhMo6romhADm1mwu8AhlsDjh1b/c/HWPgZJdWS3a/Aitz4exVkzyxH
+         RNjsWSOhue+bUx7OX0mCoCknbzm8RUVhxZMlatBrox8xemnUIC+9LAoMet+0EZgjhqh4
+         swNQ+PxedP0PHecleVkK+9sOxgkeXu4iX6E9qedc4HxBfHQaiVvFLYzBk1dz08xY9oaa
+         W0UA==
+X-Gm-Message-State: AOAM530KT0TDf1IC8HZc0tt9HUjnunJzQlseMMVriBNmi5CmvV9+9yUx
+        uW5o6c+t/SccEB9gSJbVTrRYww==
+X-Google-Smtp-Source: ABdhPJxaxh+KiYHr8PnZ0bN843vkvicXfutHx9gtMYIJpxCBwkEhTh9yheXqd/6ys9g0Xahm9ORLDg==
+X-Received: by 2002:a7b:ca52:: with SMTP id m18mr2924047wml.92.1595319506349;
+        Tue, 21 Jul 2020 01:18:26 -0700 (PDT)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id u20sm2313872wmc.42.2020.07.21.01.18.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 01:18:25 -0700 (PDT)
+References: <20200718065739.7802-1-christianshewitt@gmail.com> <20200718065739.7802-5-christianshewitt@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/12] arm64: dts: meson: add audio playback to nexbox-a1
+In-reply-to: <20200718065739.7802-5-christianshewitt@gmail.com>
+Date:   Tue, 21 Jul 2020 10:18:25 +0200
+Message-ID: <1jwo2x8eni.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <1592904672-12781-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alain
 
-On 6/23/20 11:31 AM, Alain Volmat wrote:
-> From: Fabrice Gasnier <fabrice.gasnier@st.com>
-> 
-> Configure I2C5 on stm32mp15 DK boards. It's available and can be used on:
-> - Arduino connector
-> - GPIO expansion connector
-> Keep it disabled by default, so the pins are kept in their initial state to
-> lower power consumption. This way they can also be used as GPIO.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+On Sat 18 Jul 2020 at 08:57, Christian Hewitt <christianshewitt@gmail.com> wrote:
+
+> Add initial support is limited to HDMI i2s and SPDIF (LPCM).
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> index fcf50131e5fe..e69aba9830b3 100644
-> --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> @@ -361,6 +361,19 @@
->   	};
->   };
->   
-> +&i2c5 {
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&i2c5_pins_a>;
-> +	pinctrl-1 = <&i2c5_sleep_pins_a>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	clock-frequency = <400000>;
-> +	/* spare dmas for other usage */
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +	status = "disabled";
+>  .../boot/dts/amlogic/meson-gxm-nexbox-a1.dts  | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> index 83eca3af44ce..faca6fafc164 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> @@ -10,6 +10,7 @@
+>  /dts-v1/;
+>  
+>  #include "meson-gxm.dtsi"
+> +#include <dt-bindings/sound/meson-aiu.h>
+>  
+>  / {
+>  	compatible = "nexbox,a1", "amlogic,s912", "amlogic,meson-gxm";
+> @@ -24,11 +25,37 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	spdif_dit: audio-codec-0 {
+> +		#sound-dai-cells = <0>;
+> +		compatible = "linux,spdif-dit";
+> +		status = "okay";
+> +		sound-name-prefix = "DIT";
+> +	};
+> +
+>  	memory@0 {
+>  		device_type = "memory";
+>  		reg = <0x0 0x0 0x0 0x80000000>;
+>  	};
+>  
+> +	vddio_ao18: regulator-vddio_ao18 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDIO_AO18";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	hdmi_5v: regulator-hdmi-5v {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "HDMI_5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +
+> +		gpio = <&gpio GPIOH_3 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
+
+Please explain how this is related to change decribed in the commit
+description.
+
+> +
+>  	vddio_boot: regulator-vddio-boot {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "VDDIO_BOOT";
+> @@ -75,6 +102,59 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	sound {
+> +		compatible = "amlogic,gx-sound-card";
+> +		model = "GXM-NEXBOX-A1";
+> +		assigned-clocks = <&clkc CLKID_MPLL0>,
+> +				  <&clkc CLKID_MPLL1>,
+> +				  <&clkc CLKID_MPLL2>;
+> +		assigned-clock-parents = <0>, <0>, <0>;
+> +		assigned-clock-rates = <294912000>,
+> +				       <270950400>,
+> +				       <393216000>;
+> +		status = "okay";
+> +
+> +		dai-link-0 {
+> +			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
+> +		};
+> +
+> +		dai-link-1 {
+> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_FIFO>;
+> +		};
+> +
+> +		dai-link-2 {
+> +			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
+> +			dai-format = "i2s";
+> +			mclk-fs = <256>;
+> +
+> +			codec-0 {
+> +				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
+> +			};
+> +		};
+> +
+> +		dai-link-3 {
+> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_ENCODER>;
+> +
+> +			codec-0 {
+> +				sound-dai = <&spdif_dit>;
+> +			};
+> +		};
+> +
+> +		dai-link-4 {
+> +			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
+> +
+> +			codec-0 {
+> +				sound-dai = <&hdmi_tx>;
+> +			};
+> +		};
+> +	};
 > +};
 > +
->   &i2s2 {
->   	clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
->   	clock-names = "pclk", "i2sclk", "x8k", "x11k";
-> 
+> +&aiu {
+> +	status = "okay";
+> +	pinctrl-0 = <&spdif_out_h_pins>;
+> +	pinctrl-names = "default";
+>  };
+>  
+>  &cec_AO {
 
-Applied on stm32-next.
-
-Thanks.
-Alex
