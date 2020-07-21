@@ -2,85 +2,78 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167D6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA49EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF402072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:12:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595297560;
-	bh=lFWFB9acgBee4FwfIQIHackO8P12QCLUR+ZzZT1zeTE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I2UztxTjd02VOmUS+yBzDUNsGtcK7zlEoGVTi+xC2ItH/J3ZxAhYZuZpDRsC1Er03
-	 IlSyIkiKG5Ml1oQTAOAkAYCT1+6N3AKm4XoYBVG65CIIjbrkVtxDp1lK5mRbX2WEdY
-	 Rdc8enhiYfF/yuUKL0anCqYnwuUbw3KzRYC8UGgY=
+	by mail.kernel.org (Postfix) with ESMTP id AF93220734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:25:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bsiAFEmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgGUCMk (ORCPT
+        id S1726042AbgGUCZg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:12:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37361 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbgGUCMk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 22:12:40 -0400
-Received: by mail-il1-f196.google.com with SMTP id r12so15097023ilh.4;
-        Mon, 20 Jul 2020 19:12:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i0xPj1Ho5fgI9khsratqKQQfk1V9sIVhizjOEkVa748=;
-        b=cGhyjAWfGioRDqxPPsVTH1u/+cRblJQbUph+6nEGQk4qkGHWjfPgtpHmgIgVH4WCi4
-         qacPHI6YuOBT8U02VYORkqu0e3apOeZVdbJyYs7LBccLU7DR1gAxYtDXy6JArqpI6pvk
-         bH98c7K9ByHyEsJvgjqLqe+2XcsMnsIUeO90NTJV2NSElaC/NWCIoc1EtfToxDkU/UOT
-         NWoUzN8uDq1AjWKjqlI9T5STp0ik69ZCkcSxyHDmLL6IiQfYITKN1qo910hLHUnkbXof
-         hXPOCnHBaNCSSJCFKVD4QSBqpeQ9EtES0rA55HNu2h9Ufi+d7a/F5syOZ4Rcy+n+QUvY
-         Azpg==
-X-Gm-Message-State: AOAM532/OxFQZNwuH2lBYK3rdc9xsg9pr5mOFvUh8Z0ekirvL2JKEYnH
-        8fVX+2CPHpppXXYPQykeBw==
-X-Google-Smtp-Source: ABdhPJxc5qAtpL5dkkvN8ISGEBQRIsmkLgRH1g0yx9Vu3KumL5n3keb5UonNgQK+wNW9RJA4XJh0eQ==
-X-Received: by 2002:a92:bd0f:: with SMTP id c15mr24981493ile.95.1595297559165;
-        Mon, 20 Jul 2020 19:12:39 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b2sm9841835ilf.0.2020.07.20.19.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 19:12:38 -0700 (PDT)
-Received: (nullmailer pid 3391247 invoked by uid 1000);
-        Tue, 21 Jul 2020 02:12:37 -0000
-Date:   Mon, 20 Jul 2020 20:12:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Argus Lin <argus.lin@mediatek.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: mediatek: add compatible for
- MT6873/8192 pwrap
-Message-ID: <20200721021237.GA3391199@bogus>
-References: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1594720432-19586-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Mon, 20 Jul 2020 22:25:36 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:50592 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725862AbgGUCZf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 22:25:35 -0400
+X-UUID: b82cacbb97414d5596c3337b478f1a9f-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=s/3wonDz1KdEZ8pSKDFcXqt6/o4RelDaDAIyV791UxU=;
+        b=bsiAFEmu0UVLwBjX86OHEYBnYX/qx3/03L1N3xQ/zdXjfoWXXiv5Pf3RsbaVJx5HD0LSuUJpaY9LgJdMzKMA3YpDsXXpAXgba3GXRyUas9GJcJAgMljUf5pgkx0oy1aHIc2Cl9LR1CIpK04+mwUqhGN6CnFdz2tNFcqV+GvmnRw=;
+X-UUID: b82cacbb97414d5596c3337b478f1a9f-20200721
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <fengping.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 706762059; Tue, 21 Jul 2020 10:25:31 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 21 Jul 2020 10:25:29 +0800
+Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 10:25:28 +0800
+From:   Fengping yu <fengping.yu@mediatek.com>
+To:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mattijs Korpershoek <mkorpershoek@baylibre.com>
+CC:     <linux-input@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v15] Add matrix keypad driver support Mediatek SoCs 
+Date:   Tue, 21 Jul 2020 10:23:21 +0800
+Message-ID: <20200721022324.21898-1-fengping.yu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594720432-19586-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 791BD00D05F3F631098B4F917B8A164A3A32B05A5D575B4CFDFE6764A7BD256E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 14 Jul 2020 17:53:51 +0800, Hsin-Hsiung Wang wrote:
-> This adds dt-binding documentation of pwrap for Mediatek MT6873/8192
-> SoCs Platform.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+DQpDaGFuZ2Ugc2luY2UgdjE0Og0KLSBhZGQgUFRSX0VSUiB0byByZXNvbHZlIGNvbXBpbGVyIHdh
+cm5pbmcNCi0gYWRkIElSUUZfT05FU0hPVCBmbGFnICB0byByZXF1ZXN0X2lycQ0KDQoNCmZlbmdw
+aW5nLnl1ICgzKToNCiAgZHQtYmluZGluZ3M6IEFkZCBrZXlwYWQgZGV2aWNldHJlZSBkb2N1bWVu
+dGF0aW9uDQogIGRyaXZlcnM6IGlucHV0OmtleWJvYXJkOiBBZGQgbXRrIGtleXBhZCBkcml2ZXIN
+CiAgY29uZmlnczogZGVmY29uZmlnOiBBZGQgQ09ORklHX0tFWUJPQVJEX01US19LUEQ9bQ0KDQog
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sICAgIHwgIDk2ICsrKysr
+KysrDQogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAx
+ICsNCiBkcml2ZXJzL2lucHV0L2tleWJvYXJkL0tjb25maWcgICAgICAgICAgICAgICAgfCAgMTEg
+Kw0KIGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMSAr
+DQogZHJpdmVycy9pbnB1dC9rZXlib2FyZC9tdGsta3BkLmMgICAgICAgICAgICAgIHwgMjA5ICsr
+KysrKysrKysrKysrKysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgMzE4IGluc2VydGlvbnMoKykNCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0
+L210ay1rcGQueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2lucHV0L2tleWJvYXJk
+L210ay1rcGQuYw0KDQotLQ0KMi4xOC4wDQoNCg==
 
-Acked-by: Rob Herring <robh@kernel.org>
