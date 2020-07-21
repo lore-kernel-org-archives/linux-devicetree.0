@@ -2,367 +2,372 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427EEC433E6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7447C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F62220B1F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881BF2072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:52:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aao1nkXd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rfhiyP3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbgGUTmr (ORCPT
+        id S1730960AbgGUTwg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
+        Tue, 21 Jul 2020 15:52:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730804AbgGUTmp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 15:42:45 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F019C0619DA
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 12:42:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id j11so25342156ljo.7
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 12:42:45 -0700 (PDT)
+        with ESMTP id S1730887AbgGUTwf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 15:52:35 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59095C0619DB
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 12:52:35 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d7so1942332plq.13
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 12:52:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wrpTMg2zAV9QqF774s4OLo9SafzffQOIarEy4OxxC38=;
-        b=aao1nkXdd0giPcYNgb2H915hfiHKnZzLMtyAh6l+yaaGNKMLyDLdm0494HxeexDyyr
-         /pPhIFy/WnhsxZv2CUq/eCIL4RnQADRBvagkRzinl6Q6vtoczDIvWJlSbOMXrvXdrOmq
-         +WJwpgBiDv+0vD/PPHB2jZby/3e1KPF/HqDdw1Q/M6WXjF6WgVODVH21jRfN3kQJJVKR
-         1u+RAXjSbomr0zIEDevAdnQhnpqqTcyFSezcQytZoUSC8Bz9VCeGeG2gzB8TyZcJeX2q
-         YkcMCgOpDVbXRnq8/jp2B84bhIO0nc1XbRymsVvg+8WrX5gHwHYQQPATqi3+CO5GQZbc
-         OEaQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WWOGUf1kHIiZX7y4u7rmFiomLqHyARFcqwJuvoXcMNk=;
+        b=rfhiyP3u6vwY/JZIYnypfUnHTIqtwwe0z1tGlVlsZYJXQrTca4FpjajkOPoqP4MBv4
+         YJaWhaTlZqZ50d5lttvcLHmPJjQDFitAbxzuLwcueiVHMb5W0HeejC6sLTrw7SGnTSEb
+         jJYvL3b+j1bFcKvRuI/eAub9OVnexXHZUK2usbF7mC6hoyve352osdA7+2f0qQLm7HjH
+         h8JyYVESjmyookj0wVyt9cDE+vpH9DqQ8VIdU7AVCSPqVmTjQQbphenjFVRPVmgLYqGy
+         QTlZ2MbykLgbMb2sHCpKUOe/ASzYv9r5MTyEvQCJx9ovgdse47eBGNFbI7A+fUaJw8vz
+         +p0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wrpTMg2zAV9QqF774s4OLo9SafzffQOIarEy4OxxC38=;
-        b=JXgNiLw7Ev7MchYB11lC8PEqwfrT4HHkHUK7F4QyWSXp1eCbBCtPzJ+SbC5UTA0QD8
-         JeSYUN0OtEt2ef+Ikae19sGHzxT1O/XPPT9nJ3cjCFQFBo0GhN2Yg8fUdkUzlVMDV8FN
-         mS8TNqDwwfKO+srib5k5E9y1fDcLkHICrhEJQtavW5kxxErxifRALlP5aLFLTiQsR84k
-         q2JfC8NYy96JODCAYizsiNePL9N65tqqc19hAo8zA81sykHgLrQnvXz7NpL9RcT8sM3F
-         xOtBzRQSZ/OCBTfEBTGyucZjuvtHCBtBHyh1yVgiaeEHdftuhLhs+uUWTftV61YkmFGl
-         5wTA==
-X-Gm-Message-State: AOAM531UahntfYQ1qUKMpkiAHEl7YnS5+1v1zs7d2VU5BuO/w9wmaUb8
-        wty5quHanoeVoZ0HCsb7mPz6DC5FsSkBeX8RU32fCQ==
-X-Google-Smtp-Source: ABdhPJy6X8KKJPPxi2bDRgfGOPSkFT4NXybe5YXwJ2C+JJMhwUBqMty93n/kSKdw44jRBwzV4c6pOXbX3rgundsaRGo=
-X-Received: by 2002:a2e:3602:: with SMTP id d2mr14072116lja.152.1595360563589;
- Tue, 21 Jul 2020 12:42:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WWOGUf1kHIiZX7y4u7rmFiomLqHyARFcqwJuvoXcMNk=;
+        b=gswnDqWtuf9/fioj9UP5jSt2LhiFZBC/NNRO8hIEnsldHyLSmCR81jh2uDGAv75z0F
+         ltp9rheVF+eZV07v5p1aaycHbAuTvbJy1JDjITiaWH1BSdwVY9WbiLJgqsX5xWlPNTwz
+         qV5ulbo/SndrlswrQsaD3XXVitwlmBrbqDO0/X5RR3vRRZDVjL4iL9DpqBFIYIahC1d9
+         OtSX3CTO3nBtL5hh7s6mRcygfJLjsWpDWBwqeFSMWqb2uUHOpxXS1Zid0zZoPsESIkrE
+         CJOIqVuUj16oBw7QvyY6GHfp0A2cL5ba+dEGfr63rQR8XLZVW7iODHwaRlhugbATs17s
+         0+1w==
+X-Gm-Message-State: AOAM530I3UhbiBQ6EBeQ/17ik/pYlmdROsywr9mHGl68kTzvEdqorUKX
+        PAqe6bkfb8iYn+p5ssWvv8SZFw==
+X-Google-Smtp-Source: ABdhPJxSpHhoC0P/xl32RjvhmPPxC24UmOEw2dw+81HzbqPJfi4ZAFLQim072r+FaSNw8gBd7wcetA==
+X-Received: by 2002:a17:90a:f014:: with SMTP id bt20mr6510921pjb.135.1595361154719;
+        Tue, 21 Jul 2020 12:52:34 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id o10sm3875159pjs.27.2020.07.21.12.52.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 12:52:33 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 13:52:31 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Alexandre Bailon <abailon@baylibre.com>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] remoteproc: mtk_vpu_rproc: Add support of JTAG
+Message-ID: <20200721195231.GA1227776@xps15>
+References: <20200713132927.24925-1-abailon@baylibre.com>
+ <20200713132927.24925-4-abailon@baylibre.com>
 MIME-Version: 1.0
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-6-ansuelsmth@gmail.com>
- <CAP245DUGM7BgNvBEXvgA6xFiNr0a4BFhSorYwkyRDN5r99y=8w@mail.gmail.com> <006001d65f94$39e5d350$adb179f0$@gmail.com>
-In-Reply-To: <006001d65f94$39e5d350$adb179f0$@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 22 Jul 2020 01:12:32 +0530
-Message-ID: <CAP245DVusaFFCQ=0kT_HoBq=4O9+QpmqTMXi4Fn3SN+bd9+r9A@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] drivers: thermal: tsens: add interrupt support for
- 9860 driver
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713132927.24925-4-abailon@baylibre.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 12:52 AM <ansuelsmth@gmail.com> wrote:
->
->
->
-> > -----Messaggio originale-----
-> > Da: Amit Kucheria <amit.kucheria@linaro.org>
-> > Inviato: luned=C3=AC 20 luglio 2020 11:41
-> > A: Ansuel Smith <ansuelsmth@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>; Andy Gross <agross@kernel.org>;
-> > Bjorn Andersson <bjorn.andersson@linaro.org>; Zhang Rui
-> > <rui.zhang@intel.com>; Daniel Lezcano <daniel.lezcano@linaro.org>;
-> > Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
-> > <sboyd@kernel.org>; Linux PM list <linux-pm@vger.kernel.org>; linux-arm=
--
-> > msm <linux-arm-msm@vger.kernel.org>; DTML
-> > <devicetree@vger.kernel.org>; Linux Kernel Mailing List <linux-
-> > kernel@vger.kernel.org>; linux-clk <linux-clk@vger.kernel.org>
-> > Oggetto: Re: [PATCH v4 5/7] drivers: thermal: tsens: add interrupt supp=
-ort
-> > for 9860 driver
-> >
-> > Hi Ansuel,
-> >
-> > Thanks for this patch.
-> >
-> > On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com>
-> > wrote:
-> > >
-> > > Add interrupt support for 9860 tsens driver used to set thermal trip
-> > > point for the system.
-> >
-> > typo: 8960
-> >
-> > You've used the names 8960 and ipq8064 interchangeably throughout the
-> > series. AFAICT, msm8960, ipq8064 and apq8064 use the same IP version
-> > of tsens. Please use 8960 in all patches, descriptions and dt-binding.
-> > to reflect the filename for the driver.
-> > Then add ipq8064 and apq8064 in a comment in the driver like here to
-> > show that the driver also supports these other SoCs:
-> > https://elixir.bootlin.com/linux/v5.8-
-> > rc4/source/drivers/thermal/qcom/tsens-v0_1.c#L328
-> >
-> > You can also add a new compatible string for ipq8064 as a separate
-> > patch at the end of the series.
-> >
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > ---
-> > >  drivers/thermal/qcom/tsens-8960.c | 197
-> > +++++++++++++++++++++++++++---
-> > >  drivers/thermal/qcom/tsens.h      |   3 +
-> > >  2 files changed, 186 insertions(+), 14 deletions(-)
-> > >
-> > > diff --git a/drivers/thermal/qcom/tsens-8960.c
-> > b/drivers/thermal/qcom/tsens-8960.c
-> > > index 45788eb3c666..20d0bfb10f1f 100644
-> > > --- a/drivers/thermal/qcom/tsens-8960.c
-> > > +++ b/drivers/thermal/qcom/tsens-8960.c
-> > > @@ -8,6 +8,7 @@
-> > >  #include <linux/bitops.h>
-> > >  #include <linux/regmap.h>
-> > >  #include <linux/mfd/syscon.h>
-> > > +#include <linux/interrupt.h>
-> > >  #include <linux/thermal.h>
-> > >  #include "tsens.h"
-> > >
-> > > @@ -27,7 +28,6 @@
-> > >  /* CNTL_ADDR bitmasks */
-> > >  #define EN                     BIT(0)
-> > >  #define SW_RST                 BIT(1)
-> > > -#define SENSOR0_EN             BIT(3)
-> > >  #define SLP_CLK_ENA            BIT(26)
-> > >  #define SLP_CLK_ENA_8660       BIT(24)
-> > >  #define MEASURE_PERIOD         1
-> > > @@ -41,14 +41,26 @@
-> > >
-> > >  #define THRESHOLD_ADDR         0x3624
-> > >  /* THRESHOLD_ADDR bitmasks */
-> > > +#define THRESHOLD_MAX_CODE             0x20000
-> > > +#define THRESHOLD_MIN_CODE             0
-> > >  #define THRESHOLD_MAX_LIMIT_SHIFT      24
-> > >  #define THRESHOLD_MIN_LIMIT_SHIFT      16
-> > >  #define THRESHOLD_UPPER_LIMIT_SHIFT    8
-> > >  #define THRESHOLD_LOWER_LIMIT_SHIFT    0
-> > > +#define THRESHOLD_MAX_LIMIT_MASK       (THRESHOLD_MAX_CODE
-> > << \
-> > > +                                               THRESHOLD_MAX_LIMIT_S=
-HIFT)
-> > > +#define THRESHOLD_MIN_LIMIT_MASK       (THRESHOLD_MAX_CODE <<
-> > \
-> > > +                                               THRESHOLD_MIN_LIMIT_S=
-HIFT)
-> > > +#define THRESHOLD_UPPER_LIMIT_MASK     (THRESHOLD_MAX_CODE
-> > << \
-> > > +                                               THRESHOLD_UPPER_LIMIT=
-_SHIFT)
-> > > +#define THRESHOLD_LOWER_LIMIT_MASK     (THRESHOLD_MAX_CODE
-> > << \
-> > > +                                               THRESHOLD_LOWER_LIMIT=
-_SHIFT)
-> > >
-> > >  /* Initial temperature threshold values */
-> > > -#define LOWER_LIMIT_TH         0x50
-> > > -#define UPPER_LIMIT_TH         0xdf
-> > > +#define LOWER_LIMIT_TH_8960    0x50
-> > > +#define UPPER_LIMIT_TH_8960    0xdf
-> > > +#define LOWER_LIMIT_TH_8064    0x9d /* 95C */
-> > > +#define UPPER_LIMIT_TH_8064    0xa6 /* 105C */
-> > >  #define MIN_LIMIT_TH           0x0
-> > >  #define MAX_LIMIT_TH           0xff
-> > >
-> > > @@ -57,6 +69,170 @@
-> > >  #define TRDY_MASK              BIT(7)
-> > >  #define TIMEOUT_US             100
-> > >
-> > > +#define TSENS_EN               BIT(0)
-> > > +#define TSENS_SW_RST           BIT(1)
-> > > +#define TSENS_ADC_CLK_SEL      BIT(2)
-> > > +#define SENSOR0_EN             BIT(3)
-> > > +#define SENSOR1_EN             BIT(4)
-> > > +#define SENSOR2_EN             BIT(5)
-> > > +#define SENSOR3_EN             BIT(6)
-> > > +#define SENSOR4_EN             BIT(7)
-> > > +#define SENSORS_EN             (SENSOR0_EN | SENSOR1_EN | \
-> > > +                               SENSOR2_EN | SENSOR3_EN | SENSOR4_EN)
-> > > +#define TSENS_8064_SENSOR5_EN                          BIT(8)
-> > > +#define TSENS_8064_SENSOR6_EN                          BIT(9)
-> > > +#define TSENS_8064_SENSOR7_EN                          BIT(10)
-> > > +#define TSENS_8064_SENSOR8_EN                          BIT(11)
-> > > +#define TSENS_8064_SENSOR9_EN                          BIT(12)
-> > > +#define TSENS_8064_SENSOR10_EN                         BIT(13)
-> > > +#define TSENS_8064_SENSORS_EN                          (SENSORS_EN |=
- \
-> > > +                                               TSENS_8064_SENSOR5_EN=
- | \
-> > > +                                               TSENS_8064_SENSOR6_EN=
- | \
-> > > +                                               TSENS_8064_SENSOR7_EN=
- | \
-> > > +                                               TSENS_8064_SENSOR8_EN=
- | \
-> > > +                                               TSENS_8064_SENSOR9_EN=
- | \
-> > > +                                               TSENS_8064_SENSOR10_E=
-N)
-> > > +
-> > > +u32 tsens_8960_slope[] =3D {
-> > > +                       1176, 1176, 1154, 1176,
-> > > +                       1111, 1132, 1132, 1199,
-> > > +                       1132, 1199, 1132
-> > > +                       };
-> > > +
-> > > +/* Temperature on y axis and ADC-code on x-axis */
-> > > +static inline int code_to_mdegC(u32 adc_code, const struct
-> > tsens_sensor *s)
-> > > +{
-> > > +       int slope, offset;
-> > > +
-> > > +       slope =3D thermal_zone_get_slope(s->tzd);
-> > > +       offset =3D CAL_MDEGC - slope * s->offset;
-> > > +
-> > > +       return adc_code * slope + offset;
-> > > +}
-> > > +
-> > > +static void notify_uspace_tsens_fn(struct work_struct *work)
-> > > +{
-> > > +       struct tsens_sensor *s =3D container_of(work, struct tsens_se=
-nsor,
-> > > +                                                               notif=
-y_work);
-> > > +
-> > > +       sysfs_notify(&s->tzd->device.kobj, NULL, "type");
-> > > +}
-> > > +
-> > > +static void tsens_scheduler_fn(struct work_struct *work)
-> > > +{
-> > > +       struct tsens_priv *priv =3D
-> > > +               container_of(work, struct tsens_priv, tsens_work);
-> > > +       unsigned int threshold, threshold_low, code, reg, sensor;
-> > > +       unsigned long mask;
-> > > +       bool upper_th_x, lower_th_x;
-> > > +       int ret;
-> > > +
-> > > +       ret =3D regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064,
-> > &reg);
-> > > +       if (ret)
-> > > +               return;
-> > > +       reg =3D reg | LOWER_STATUS_CLR | UPPER_STATUS_CLR;
-> > > +       ret =3D regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064, reg=
-);
-> > > +       if (ret)
-> > > +               return;
-> > > +
-> > > +       mask =3D ~(LOWER_STATUS_CLR | UPPER_STATUS_CLR);
-> > > +       ret =3D regmap_read(priv->tm_map, THRESHOLD_ADDR, &threshold)=
-;
-> > > +       if (ret)
-> > > +               return;
-> > > +       threshold_low =3D (threshold & THRESHOLD_LOWER_LIMIT_MASK) >>
-> > > +                       THRESHOLD_LOWER_LIMIT_SHIFT;
-> > > +       threshold =3D (threshold & THRESHOLD_UPPER_LIMIT_MASK) >>
-> > > +                   THRESHOLD_UPPER_LIMIT_SHIFT;
-> > > +
-> > > +       ret =3D regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064,
-> > &reg);
-> > > +       if (ret)
-> > > +               return;
-> > > +
-> > > +       ret =3D regmap_read(priv->tm_map, CNTL_ADDR, &sensor);
-> > > +       if (ret)
-> > > +               return;
-> > > +       sensor &=3D (uint32_t)TSENS_8064_SENSORS_EN;
-> > > +       sensor >>=3D SENSOR0_SHIFT;
-> > > +
-> > > +       /* Constraint: There is only 1 interrupt control register for=
- all
-> > > +        * 11 temperature sensor. So monitoring more than 1 sensor ba=
-sed
-> > > +        * on interrupts will yield inconsistent result. To overcome =
-this
-> > > +        * issue we will monitor only sensor 0 which is the master se=
-nsor.
-> > > +        */
-> > > +
-> > > +       /* Skip if the sensor is disabled */
-> > > +       if (sensor & 1) {
-> > > +               ret =3D regmap_read(priv->tm_map, priv->sensor[0].sta=
-tus,
-> > &code);
-> > > +               if (ret)
-> > > +                       return;
-> > > +               upper_th_x =3D code >=3D threshold;
-> > > +               lower_th_x =3D code <=3D threshold_low;
-> > > +               if (upper_th_x)
-> > > +                       mask |=3D UPPER_STATUS_CLR;
-> > > +               if (lower_th_x)
-> > > +                       mask |=3D LOWER_STATUS_CLR;
-> > > +               if (upper_th_x || lower_th_x) {
-> > > +                       /* Notify user space */
-> > > +                       schedule_work(&priv->sensor[0].notify_work);
-> > > +                       pr_debug("Trigger (%d degrees) for sensor %d\=
-n",
-> > > +                                code_to_mdegC(code, &priv->sensor[0]=
-), 0);
-> > > +               }
-> > > +       }
-> > > +       regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064, reg &
-> > mask);
-> > > +}
-> > > +
-> > > +static irqreturn_t tsens_isr(int irq, void *data)
-> > > +{
-> > > +       struct tsens_priv *priv =3D data;
-> > > +
-> > > +       schedule_work(&priv->tsens_work);
-> > > +       return IRQ_HANDLED;
-> >
-> >
-> > Have you considered trying to reuse the regmap and interrupt handling
-> > infrastructure in tsens.c that I used to convert over everything after
-> > IP version 0.1?
-> >
-> > I started converting over 8960 but never managed to finish testing
-> > this[1]. I'd be happy for you to take this over and get it working so
-> > the 8960 doesn't end up being a completely separate driver from the
-> > other platforms.
-> >
-> > [1]
-> > https://git.linaro.org/people/amit.kucheria/kernel.git/log/?h=3Dwrk3/ts=
-ens-
-> > 8960-breakage
-> >
->
-> Thanks a lot for the link. I started doing some test and I think the only=
- general
-> code we will be able to use will be the init_common. The get temp and
-> the function to convert code to decg are very different from the one used=
- in
-> 8960.  Do you think keep a custom get temp function is good or not?
+On Mon, Jul 13, 2020 at 03:29:24PM +0200, Alexandre Bailon wrote:
+> The DSP could be debugged using JTAG.
+> The support of JTAG could enabled at build time and it could be enabled
+> using debugfs.
+> 
+> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+> ---
+>  drivers/remoteproc/Kconfig         |   9 ++
+>  drivers/remoteproc/mtk_apu_rproc.c | 156 ++++++++++++++++++++++++++++-
+>  2 files changed, 162 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index e116d4a12ac3..e1158563e2e8 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -52,6 +52,15 @@ config MTK_APU
+>  
+>  	  It's safe to say N here.
+>  
+> +config MTK_APU_JTAG
+> +	bool "Enable support of JTAG"
+> +	depends on MTK_APU
+> +	help
+> +	  Say y to enable support of JTAG.
+> +	  By default, JTAG will remain disabled until it is enabled using
+> +	  debugfs: remoteproc/remoteproc0/jtag. Write 1 to enable it and
+> +	  0 to disable it.
+> +
+>  config OMAP_REMOTEPROC
+>  	tristate "OMAP remoteproc support"
+>  	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
+> diff --git a/drivers/remoteproc/mtk_apu_rproc.c b/drivers/remoteproc/mtk_apu_rproc.c
+> index fb416a817ef3..f2342b747a35 100644
+> --- a/drivers/remoteproc/mtk_apu_rproc.c
+> +++ b/drivers/remoteproc/mtk_apu_rproc.c
+> @@ -5,6 +5,7 @@
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> @@ -14,6 +15,7 @@
+>  #include <linux/highmem.h>
+>  #include <linux/module.h>
+>  #include <linux/of_reserved_mem.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/remoteproc.h>
+>  
+> @@ -48,6 +50,11 @@
+>  #define CORE_DEFAULT1				(0x00000140)
+>  #define  CORE_DEFAULT0_ARUSER_IDMA_USE_IOMMU	(0x10 << 0)
+>  #define  CORE_DEFAULT0_AWUSER_IDMA_USE_IOMMU	(0x10 << 5)
+> +#define CORE_DEFAULT2				(0x00000144)
+> +#define CORE_DEFAULT2_DBG_EN			BIT(3)
+> +#define CORE_DEFAULT2_NIDEN			BIT(2)
+> +#define CORE_DEFAULT2_SPNIDEN			BIT(1)
+> +#define CORE_DEFAULT2_SPIDEN			BIT(0)
+>  #define CORE_XTENSA_ALTRESETVEC			(0x000001F8)
+>  
+>  struct mtk_vpu_rproc {
+> @@ -59,6 +66,13 @@ struct mtk_vpu_rproc {
+>  	struct clk *axi;
+>  	struct clk *ipu;
+>  	struct clk *jtag;
+> +
+> +#ifdef CONFIG_MTK_APU_JTAG
+> +	struct pinctrl *pinctrl;
+> +	struct pinctrl_state *pinctrl_default;
+> +	struct pinctrl_state *pinctrl_jtag;
+> +	bool jtag_enabled;
+> +#endif
+>  };
+>  
+>  static u32 vpu_read32(struct mtk_vpu_rproc *vpu_rproc, u32 off)
+> @@ -149,6 +163,133 @@ static irqreturn_t handle_event(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +#ifdef CONFIG_MTK_APU_JTAG
+> +
+> +static int vpu_enable_jtag(struct mtk_vpu_rproc *vpu_rproc)
+> +{
+> +	int ret = 0;
+> +
+> +	if (vpu_rproc->jtag_enabled)
+> +		return -EINVAL;
+> +
+> +	ret = pinctrl_select_state(vpu_rproc->pinctrl,
+> +				   vpu_rproc->pinctrl_jtag);
+> +	if (ret < 0) {
+> +		dev_err(vpu_rproc->dev, "Failed to configure pins for JTAG\n");
+> +		return ret;
+> +	}
+> +
+> +	vpu_write32(vpu_rproc, CORE_DEFAULT2,
+> +		    CORE_DEFAULT2_SPNIDEN | CORE_DEFAULT2_SPIDEN |
+> +		    CORE_DEFAULT2_NIDEN | CORE_DEFAULT2_DBG_EN);
+> +
+> +	vpu_rproc->jtag_enabled = 1;
 
-OK. Let's start common init code and custom get_temp and adc-to-degc functi=
-ons.
+There should be mutex that gets taken at the beginning and released at the end of
+this function.
 
-Regards,
-Amit
+> +
+> +	return ret;
+> +}
+> +
+> +static int vpu_disable_jtag(struct mtk_vpu_rproc *vpu_rproc)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!vpu_rproc->jtag_enabled)
+> +		return -EINVAL;
+> +
+> +	vpu_write32(vpu_rproc, CORE_DEFAULT2, 0);
+> +
+> +	ret = pinctrl_select_state(vpu_rproc->pinctrl,
+> +				   vpu_rproc->pinctrl_default);
+> +	if (ret < 0) {
+> +		dev_err(vpu_rproc->dev,
+> +			"Failed to configure pins to default\n");
+> +		return ret;
+> +	}
+> +
+> +	vpu_rproc->jtag_enabled = 0;
+
+Same comment as above.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static ssize_t rproc_jtag_read(struct file *filp, char __user *userbuf,
+> +			       size_t count, loff_t *ppos)
+> +{
+> +	struct rproc *rproc = filp->private_data;
+> +	struct mtk_vpu_rproc *vpu_rproc = (struct mtk_vpu_rproc *)rproc->priv;
+> +	char *buf = vpu_rproc->jtag_enabled ? "enabled\n" : "disabled\n";
+> +
+> +	return simple_read_from_buffer(userbuf, count, ppos, buf, strlen(buf));
+> +}
+> +
+> +static ssize_t rproc_jtag_write(struct file *filp, const char __user *user_buf,
+> +				size_t count, loff_t *ppos)
+> +{
+> +	struct rproc *rproc = filp->private_data;
+> +	struct mtk_vpu_rproc *vpu_rproc = (struct mtk_vpu_rproc *)rproc->priv;
+> +	char buf[10];
+> +	int ret;
+> +
+> +	if (count < 1 || count > sizeof(buf))
+> +		return -EINVAL;
+> +
+> +	ret = copy_from_user(buf, user_buf, count);
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	/* remove end of line */
+> +	if (buf[count - 1] == '\n')
+> +		buf[count - 1] = '\0';
+> +
+> +	if (!strncmp(buf, "1", count) || !strncmp(buf, "enabled", count))
+> +		ret = vpu_enable_jtag(vpu_rproc);
+> +	else if (!strncmp(buf, "0", count) || !strncmp(buf, "disabled", count))
+> +		ret = vpu_disable_jtag(vpu_rproc);
+> +	else
+> +		return -EINVAL;
+
+I think we should simply stick with "enabled" and "disabled" to be in line with
+what is done in rproc_recovery_write().
+
+> +
+> +	return ret ? ret : count;
+> +}
+> +
+> +static const struct file_operations rproc_jtag_ops = {
+> +	.read = rproc_jtag_read,
+> +	.write = rproc_jtag_write,
+> +	.open = simple_open,
+> +};
+> +
+> +static int vpu_jtag_probe(struct mtk_vpu_rproc *vpu_rproc)
+> +{
+> +	int ret;
+> +
+> +	if (!vpu_rproc->rproc->dbg_dir)
+> +		return -ENODEV;
+> +
+> +	vpu_rproc->pinctrl = devm_pinctrl_get(vpu_rproc->dev);
+> +	if (IS_ERR(vpu_rproc->pinctrl)) {
+> +		dev_warn(vpu_rproc->dev, "Failed to find JTAG pinctrl\n");
+> +		return PTR_ERR(vpu_rproc->pinctrl);
+> +	}
+> +
+> +	vpu_rproc->pinctrl_default = pinctrl_lookup_state(vpu_rproc->pinctrl,
+> +							PINCTRL_STATE_DEFAULT);
+
+Indentation problem.
+
+> +	if (IS_ERR(vpu_rproc->pinctrl_default))
+> +		return PTR_ERR(vpu_rproc->pinctrl_default);
+> +
+> +	vpu_rproc->pinctrl_jtag = pinctrl_lookup_state(vpu_rproc->pinctrl,
+> +						       "jtag");
+> +	if (IS_ERR(vpu_rproc->pinctrl_jtag))
+> +		return PTR_ERR(vpu_rproc->pinctrl_jtag);
+> +
+> +	ret = pinctrl_select_state(vpu_rproc->pinctrl,
+> +				   vpu_rproc->pinctrl_default);
+
+What is the default configuration for?  It does not seem to be needed to
+properly boot the remote processor since it is not part of the example in the
+bindings or dts patch included in this set.   Moreover it is part of a
+configuration option so I really don't understand what it does.
+
+
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	debugfs_create_file("jtag", 0600, vpu_rproc->rproc->dbg_dir,
+> +			    vpu_rproc->rproc, &rproc_jtag_ops);
+> +
+> +	return 0;
+> +}
+> +#endif /* CONFIG_MTK_APU_JTAG */
+> +
+>  static int mtk_vpu_rproc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -228,16 +369,16 @@ static int mtk_vpu_rproc_probe(struct platform_device *pdev)
+>  		goto clk_disable_ipu;
+>  	}
+>  
+> -	vpu_rproc->jtag = devm_clk_get_optional(dev, "jtag");
+> +	vpu_rproc->jtag = devm_clk_get(vpu_rproc->dev, "jtag");
+
+As I remarked in my comments on the previous patch, this should have been
+devm_clk_get() from the start.  Either that or the bindings are wrong.
+
+>  	if (IS_ERR(vpu_rproc->jtag)) {
+> -		dev_err(dev, "Failed to enable jtag clock\n");
+> +		dev_err(vpu_rproc->dev, "Failed to get jtag clock\n");
+
+Why go from dev to vpu_rproc->dev?
+
+>  		ret = PTR_ERR(vpu_rproc->jtag);
+>  		goto clk_disable_axi;
+>  	}
+>  
+>  	ret = clk_prepare_enable(vpu_rproc->jtag);
+>  	if (ret) {
+> -		dev_err(dev, "Failed to enable jtag clock\n");
+> +		dev_err(vpu_rproc->dev, "Failed to enable jtag clock\n");
+
+Same here.
+
+>  		goto clk_disable_axi;
+>  	}
+>  
+> @@ -253,6 +394,12 @@ static int mtk_vpu_rproc_probe(struct platform_device *pdev)
+>  		goto free_mem;
+>  	}
+>  
+> +#ifdef CONFIG_MTK_APU_JTAG
+> +	ret = vpu_jtag_probe(vpu_rproc);
+> +	if (ret)
+> +		dev_warn(dev, "Failed to configure jtag\n");
+> +#endif
+
+Please don't use #ifdefs in the code like that.  It is better to introduce a
+#else (above) with stubs that don't do anything.  
+
+> +
+>  	return 0;
+>  
+>  free_mem:
+> @@ -277,6 +424,9 @@ static int mtk_vpu_rproc_remove(struct platform_device *pdev)
+>  
+>  	disable_irq(vpu_rproc->irq);
+>  
+> +#ifdef CONFIG_MTK_APU_JTAG
+> +	vpu_disable_jtag(vpu_rproc);
+> +#endif
+>  	rproc_del(rproc);
+>  	of_reserved_mem_device_release(dev);
+>  	clk_disable_unprepare(vpu_rproc->jtag);
+> -- 
+> 2.26.2
+> 
