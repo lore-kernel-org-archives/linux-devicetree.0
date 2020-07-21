@@ -2,112 +2,126 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E422C433ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA30C433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05570208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A6820672
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n4Wkp7kF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rwuFLbad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgGUGCH (ORCPT
+        id S1726474AbgGUGKW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728447AbgGUGCG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 02:02:06 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456FCC0619D6
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 23:02:06 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 140so611447lfi.5
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 23:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=my59yREAno2VQTQHnPXurOEKaB8ry8pumgPVSYznLUI=;
-        b=n4Wkp7kFOj4iLJpP6r5SwB/qPrN12j5OeQuZbk0acAZfjK2hSrnY5oVJscJUPJZjD3
-         3Tvi5Ib/nIudBxUDjzrTXkkSIr59b33qw6AqttrRaU1314ITKvd/1FtQuM/5vKaW0A+a
-         PydSNvajtDmUqYoIqdhaT7f4RF6xalnRHweH8EiAQO0pKeOZ07SNaZwFOtlBa9fP73VM
-         I4SbOpTQZF2mL623gjrHR8g1xHJHhidB/LdHYH0AexCQbQwR/+So1zmjx6IzHTdt6o48
-         YzKD7k26mYLcUxYGMVuyYavPyJpwUSkvTdvD/fxuRGJ0N+AhylZL7eBHTZv7ZGwXd8Pw
-         sgnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=my59yREAno2VQTQHnPXurOEKaB8ry8pumgPVSYznLUI=;
-        b=J0t3HWLOk4Y7px6jxSnckkxkp1O2o5reWJRbdpSoCLlv2jUVsrKMnvDZU6qEykrHq9
-         +05pM09Ju/ulSD9Zaj1pGXk45P+Wlak1P4NAy/jAnus+xjVkvlbePfQ+Xy/cBS6L2D1N
-         qsc/zztCAVn9dZ+tKS9XKTCyLvj4StbVWIoAy781wMdAphzmama6KnjAUsNGwU3PHEmL
-         QsSJWiZdPYEQTBWtF9Eq/eJdIi6VP289+3whotHTiTQiLNmLJFPr7cAiUw3ugxnK3wQX
-         WqipbvnjhhOH/9cYznVpzSEw1YkGkM/59IQejnJRAiN1pWmBZtSPOhibO3BAM7LPn46c
-         p/0w==
-X-Gm-Message-State: AOAM530qmnKFcMdSLWcaqSGhbBnANPhqzksIMCVEeH9O/VqMpGt1+Wlz
-        cyvEBHeo9idufd/oxZI5gZg1MFtrv7D8YWhk2/OzgQ==
-X-Google-Smtp-Source: ABdhPJwvgCTehztyDX3Ii5ZlkS2X5xVAaX40gTTrRR53FMNAybYJMQOf2Mixr3o03K0dYP0cmjuKZJsCxtWu/EWeh40=
-X-Received: by 2002:ac2:5325:: with SMTP id f5mr12579460lfh.6.1595311324713;
- Mon, 20 Jul 2020 23:02:04 -0700 (PDT)
+        Tue, 21 Jul 2020 02:10:22 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50024 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgGUGKW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 02:10:22 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06L6AEAg101909;
+        Tue, 21 Jul 2020 01:10:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595311814;
+        bh=oKRAwy1gVFVujNKnJrnrL1LYZ5HRD7zeciasF6OCHBk=;
+        h=From:To:CC:Subject:Date;
+        b=rwuFLbadm9G0YuKBAe6/DuohbR+aAvEZW7JArnqUksS5gi3iWJ0W5Q8/e4f8e76GC
+         JOE8oRjpzlLJsqAPNuVfCFBfzcwEy9WQ72TLuqowcAO6N5h+a4UDEZ0mpeqcICKDHC
+         QBp3R9O/PAalWoTa99z/abKdPFAOI++zsG9B4LjQ=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06L6AEpk126277
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 Jul 2020 01:10:14 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
+ Jul 2020 01:10:14 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 21 Jul 2020 01:10:14 -0500
+Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06L6A8J3091920;
+        Tue, 21 Jul 2020 01:10:09 -0500
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 0/9] irqchip: ti,sci-intr/inta: Update the dt bindings to accept different interrupt parents
+Date:   Tue, 21 Jul 2020 11:39:58 +0530
+Message-ID: <20200721061007.28324-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com>
- <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
- <159528817752.3847286.2725374997908705208@swboyd.mtv.corp.google.com> <CAP245DXqiEZLoVa-jfLx0tYRwrtK0sp+ZX6P_yTf4C9vetg3RA@mail.gmail.com>
-In-Reply-To: <CAP245DXqiEZLoVa-jfLx0tYRwrtK0sp+ZX6P_yTf4C9vetg3RA@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 21 Jul 2020 11:31:53 +0530
-Message-ID: <CAP245DUZTT4dFAzpN3Uv1-y2DKHriXZ9jH3t7V1qxf7sNH8yYw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:27 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
->
->
-> On Tue, 21 Jul, 2020, 05:06 Stephen Boyd, <sboyd@kernel.org> wrote:
->>
->> Quoting Amit Kucheria (2020-07-20 02:41:44)
->> > On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
->> > >
->> > > Add support for child probing needed for tsens driver that share the
->> > > seme regs of gcc for this platform.
->> >
->> > Typo: same
->> >
->>
->> Otherwise reviewed-by? Because I can throw this into the clk tree with
->> the typo fixed.
->
->
-> Yes, the rest of the series need work imo, but this patch looks ok to populate the child nodes in OF.
->
-> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Hi Marc,
+	This is continuation of the RFC patches[0] regarding the driver
+updates to support for following interrupt parent connection:
+- INTR -> INTR
+- INTA -> GICv3
+The current existing driver assumes that INTR is always connected to
+GICv3 and INTA is always connected to INTR.
 
-Replied earlier from a phone, which resulted in HTML email. Resending.
+As discussed this change breaks the DT backward compatibility but it
+allows to not depend on TISCI firmware properties in DT node. IMHO, this
+will ensure that any future changes will not effect DT properties.
 
-The rest of the series need work imo, but this patch looks ok to
-populate the child nodes in OF.
+[0] https://lore.kernel.org/linux-arm-kernel/20190923042405.26064-1-lokeshvutla@ti.com/
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Changes since v1:
+- Rebased on top of latest Linux master
+- Dropped DT patches.
+
+Intention to re-post the series is to get it in the review queue.
+
+Thanks and regards,
+Lokesh
+
+Lokesh Vutla (9):
+  firmware: ti_sci: Drop the device id to resource type translation
+  firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
+  firmware: ti_sci: Add support for getting resource with subtype
+  dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage
+    of gic as parent
+  dt-bindings: irqchip: Convert ti,sci-intr bindings to yaml
+  irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
+  dt-bindings: irqchip: ti,sci-inta: Update docs to support different
+    parent.
+  dt-bindings: irqchip: Convert ti,sci-inta bindings to yaml
+  irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
+
+ .../interrupt-controller/ti,sci-inta.txt      |  66 --------
+ .../interrupt-controller/ti,sci-inta.yaml     | 104 ++++++++++++
+ .../interrupt-controller/ti,sci-intr.txt      |  82 ---------
+ .../interrupt-controller/ti,sci-intr.yaml     | 113 +++++++++++++
+ MAINTAINERS                                   |   4 +-
+ drivers/firmware/ti_sci.c                     | 155 ++++++++----------
+ drivers/irqchip/irq-ti-sci-inta.c             |  90 ++++++++--
+ drivers/irqchip/irq-ti-sci-intr.c             | 150 ++++++++++-------
+ include/linux/soc/ti/ti_sci_protocol.h        |  13 ++
+ 9 files changed, 468 insertions(+), 309 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
+
+-- 
+2.27.0
+
