@@ -2,176 +2,247 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FEDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C920C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE6B206F2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBA520714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="Ce5+x++x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pfNV1tpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgGUBPq (ORCPT
+        id S1726029AbgGUBZw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
+        Mon, 20 Jul 2020 21:25:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727978AbgGUBPp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 21:15:45 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30693C0619D5
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 18:15:45 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id o2so1232754wmh.2
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 18:15:45 -0700 (PDT)
+        with ESMTP id S1725774AbgGUBZw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 21:25:52 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF311C061794
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 18:25:51 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t6so9523736plo.3
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 18:25:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0m1PBDlf1LPTxPG0j6MS17W+ARPO8tVxYxjfZxGbckE=;
-        b=Ce5+x++xkvWmQy5tV2ek8r7BcQsw1cnHjnq9IuBBj4ctIMLrk93iuc98LxUYPCK4Og
-         jXE88z4QZFv4Ix7/4u8SyV5QyNcB5lOUWBtoMAEp9hnwWYnqxtvg2AUoepjjXtt6EOru
-         t89VHWNOMR1jUPfsemv6niF42JiAx3scOvcV0=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
+        b=pfNV1tpV1MiM7maphlEeXhHlc27jPtO3X0mWiOfbKEo1uVuTLEnPavTfmEqpHGXlG0
+         kI5nChADivSZJ/Y5dch6ZFhiNJmbFGziSNY1dzW6EuAyuogXajsDh41XX3k4UuqZ8bXT
+         Ls+h7Od/DacwDZ81hHBvZ2vmDPcL9rCM5nklhKAVog77j07GHoEAFc1P0rN+7YlyAdv6
+         Wy0iwIBMoWSYuM1Aye2ixh+j+35yRxpY6r9xP46QU20f6vLpdhNCW+eiCZwzVIqwWatQ
+         bjyP7XkrDYDAIEfrGerZrfNIZCnT5xjCZHAwTXlzcZyo+bhXGyX81PH1VNzgyuEiv9DZ
+         ACtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0m1PBDlf1LPTxPG0j6MS17W+ARPO8tVxYxjfZxGbckE=;
-        b=RrsMlrQBpgeGQBrS67zh9tQuv9vgppvs8Alk3n/Z5vNqpAtgNcoFKDFAm6mbxm/vWy
-         pPtS1WEplbEFgTpi3vGdUR2CRpt5uT/O18747/3PBQLJ9oMbV4GfrKRzD8iu2DuQnmK+
-         i0k7aU/Qk8iJc8mKHXpxKggdmx8oHwCF7LWew46+k2roeWAT+2fEwd6CHXNEJcImW4Q3
-         HJn1aHx/0hE7Tiy7etYh07oZECKryEsgIykicrdU0fWutUCpPKxTFbsvzFjioQZcputI
-         Lsp/ZvKe64iElWt80vtjEB2AmwQVIS0BD8jbW/AJpFDD2tdq237Blrsqpe1RzcNqQYdd
-         qvVA==
-X-Gm-Message-State: AOAM53006lNeQu3ff3caUbNg9HHFRzJ6vsyejHJSrCrnA43FsatOEwbj
-        FQ06L+t+rkIE5UfzTs/rlyXqejvoc2RAe1UGynEc
-X-Google-Smtp-Source: ABdhPJzWQtySB01DNvPHDj45pwAGcvZh8S0h0KZzv1pnkzbL6e2npAV+4EXFSbg2gu+eHmxZCvo2HTCuKpZ05HmE5mI=
-X-Received: by 2002:a1c:2095:: with SMTP id g143mr1620823wmg.78.1595294143811;
- Mon, 20 Jul 2020 18:15:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-5-anup.patel@wdc.com>
-In-Reply-To: <20200717075101.263332-5-anup.patel@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Mon, 20 Jul 2020 18:15:32 -0700
-Message-ID: <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
+        b=AGuwCJfIzAKloK9k7XOu5Au/wI0eVRdAcRnCrcPvdbzdgtK894XZ4Cb+6v4biVg0Ay
+         R/zJt8+fY5Ld5WLiyVWhCr5ZQsn7Ea0g+7wG426NdRE+6MrI/VbjOlrbVPHzuZu4mUQZ
+         pVrry4X5S9SdvqmZPLo9t8W4hFC2MoSQFXvDWtlh/Tl2vfN0Kp7Sq77ticVvjeieZYpA
+         hxzYfqQzlhA80+XhljY3FiEnfYnb4H2/2b+SASO/prdfub+hsSHG0Dut8ygJQZLV61TS
+         a1UFD240ODh1xmmr0+OcIUNYaojb/eoP8b/7lfLGujVFWeCjUevhW354N9dmaPvf/7WN
+         qstQ==
+X-Gm-Message-State: AOAM530Ex768ngy7USFdTY5hHMBw8Bnh+8eaGs51fAC3J1G0DzV57deT
+        CcFGLSQ0tcQUNLwrF8TvS9izEA==
+X-Google-Smtp-Source: ABdhPJwp1ovg1df0tjWgNFcVMOrW2Xk42aBPcKAUAtGy7Z5/5lUywtIy9nlBAHwvFtwWWyB4Um4tTg==
+X-Received: by 2002:a17:902:c3cb:: with SMTP id j11mr10058164plj.324.1595294751414;
+        Mon, 20 Jul 2020 18:25:51 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id x13sm17571067pfj.122.2020.07.20.18.25.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 18:25:50 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        YongQin Liu <yongqin.liu@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [RESEND][PATCH] dts: hi3660: Add support for basic usb gadget on Hikey960
+Date:   Tue, 21 Jul 2020 01:25:47 +0000
+Message-Id: <20200721012547.83743-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
->
-> We add DT bindings documentation for CLINT device.
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> ---
->  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
->
-> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> new file mode 100644
-> index 000000000000..8ad115611860
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SiFive Core Local Interruptor
-> +
-> +maintainers:
-> +  - Palmer Dabbelt <palmer@dabbelt.com>
-> +  - Anup Patel <anup.patel@wdc.com>
-> +
-> +description:
-> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
-> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
-> +  interrupts. It directly connects to the timer and inter-processor interrupt
-> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
-> +  interrupt controller is the parent interrupt controller for CLINT device.
-> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
-> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
-> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sifive,clint0
-> +      - const: sifive,fu540-c000-clint
-> +
-> +    description:
-> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
-> +      Supported compatible strings are -
-> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
-> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
-> +      CLINT v0 IP block with no chip integration tweaks.
-> +      Please refer to sifive-blocks-ip-versioning.txt for details
-> +
+This patch adds basic core dwc3, usb phy and rt1711h nodes for
+usb support on Hikey960.
 
-As the DT binding suggests that the clint device should be named as "sifive,**",
-I think we should change the DT property in kendryte dts as well.
+This does not enable the mux/hub functionality on the board, so
+the USB-A host ports will not function, but does allow the USB-C
+port to function in gadget mode (unfortunately not in host, as
+the hub/mux functionality is needed to enable vbus output to
+power devices in host mode).
 
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts-extended:
-> +    minItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts-extended
-> +
-> +examples:
-> +  - |
-> +    clint@2000000 {
-> +      compatible = "sifive,clint0", "sifive,fu540-c000-clint";
-> +      interrupts-extended = <&cpu1intc 3 &cpu1intc 7
-> +                             &cpu2intc 3 &cpu2intc 7
-> +                             &cpu3intc 3 &cpu3intc 7
-> +                             &cpu4intc 3 &cpu4intc 7>;
-> +       reg = <0x2000000 0x4000000>;
-> +    };
-> +...
-> --
-> 2.25.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+This is based on an old patch originally by Yu Chen.
 
-Otherwise,
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
+Cc: YongQin Liu <yongqin.liu@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ .../boot/dts/hisilicon/hi3660-hikey960.dts    | 72 +++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi     | 34 +++++++++
+ 2 files changed, 106 insertions(+)
 
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index e035cf195b19..ff392a47562c 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -13,6 +13,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/usb/pd.h>
+ 
+ / {
+ 	model = "HiKey960";
+@@ -526,6 +527,48 @@
+ &i2c1 {
+ 	status = "okay";
+ 
++	rt1711h: rt1711h@4e {
++		compatible = "richtek,rt1711h";
++		reg = <0x4e>;
++		status = "ok";
++		interrupt-parent = <&gpio27>;
++		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_cfg_func>;
++
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++			power-role = "dual";
++			try-power-role = "sink";
++			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
++				PDO_VAR(5000, 5000, 1000)>;
++			op-sink-microwatt = <10000000>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@1 {
++					reg = <1>;
++					usb_con_ss: endpoint {
++						remote-endpoint = <&dwc3_ss>;
++					};
++				};
++			};
++		};
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			rt1711h_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dwc3_role_switch>;
++			};
++		};
++	};
++
+ 	adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+@@ -612,3 +655,32 @@
+ 		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
+ 	};
+ };
++
++&dwc3 { /* USB */
++	dr_mode = "otg";
++	maximum-speed = "super-speed";
++	phy_type = "utmi";
++	snps,dis-del-phy-power-chg-quirk;
++	snps,lfps_filter_quirk;
++	snps,dis_u2_susphy_quirk;
++	snps,dis_u3_susphy_quirk;
++	snps,tx_de_emphasis_quirk;
++	snps,tx_de_emphasis = <1>;
++	snps,dis_enblslpm_quirk;
++	snps,gctl-reset-quirk;
++	usb-role-switch;
++	role-switch-default-mode = "host";
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		dwc3_role_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&rt1711h_ep>;
++		};
++
++		dwc3_ss: endpoint@1 {
++			reg = <1>;
++			remote-endpoint = <&usb_con_ss>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index c39b78989ff9..d25aac5e0bf8 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -1152,6 +1152,40 @@
+ 				};
+ 			};
+ 		};
++
++		usb3_otg_bc: usb3_otg_bc@ff200000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x0 0xff200000 0x0 0x1000>;
++
++			usb_phy: usb-phy {
++				compatible = "hisilicon,hi3660-usb-phy";
++				#phy-cells = <0>;
++				hisilicon,pericrg-syscon = <&crg_ctrl>;
++				hisilicon,pctrl-syscon = <&pctrl>;
++				hisilicon,eye-diagram-param = <0x22466e4>;
++			};
++		};
++
++		dwc3: dwc3@ff100000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0xff100000 0x0 0x100000>;
++
++			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
++				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++			clock-names = "ref", "bus_early";
++
++			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
++			assigned-clock-rates = <229000000>;
++
++			resets = <&crg_rst 0x90 8>,
++				 <&crg_rst 0x90 7>,
++				 <&crg_rst 0x90 6>,
++				 <&crg_rst 0x90 5>;
++
++			interrupts = <0 159 4>, <0 161 4>;
++			phys = <&usb_phy>;
++			phy-names = "usb3-phy";
++		};
+ 	};
+ };
+ 
 -- 
-Regards,
-Atish
+2.17.1
+
