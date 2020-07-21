@@ -7,87 +7,110 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39EC43445
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2532C433F8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DABD20720
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916FA2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595347385;
-	bh=fQQCBOyDQWb60C0s27XMaIMd5c5BtwjBWjlNEXDTDC0=;
+	s=default; t=1595347580;
+	bh=Ci4uPdNrn7JVB5LU0PFCw5AZKheuWEY0KSofqjrH4/I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J0u+puiEn8Gc5iy7iRT9c0F08SyhWKH6/h59pAtcLzwuu7VXGOgZ0TlV4Yus1DyeC
-	 CqtxAlcGvTT2ljowYvXdbcCICn+cCkZuawLSxFOt4rcft/q2Nlndwm4cw5AGhZPZvQ
-	 xdYWIjzdldCJgJC5MvLiu2kExqaY4/TB8T5plkGU=
+	b=FtaU7VdhbFLbpWDR49XaDjOHH64v4o21qogD/nMDbZKe8eaoNJ+bQJ7WhMzXhj/Fc
+	 8xD7bpjNTACdyH6CknwdgmQw8b6RIno6KTgFrf88bqPb7TM399IWByT+4zpzf9+kP0
+	 UBfeXw7lEpnJ39HIAI7McmumnwT7qk+ktbD9cWqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgGUQC4 (ORCPT
+        id S1729658AbgGUQGR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:02:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43719 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728342AbgGUQC4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:02:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so21948509iom.10;
-        Tue, 21 Jul 2020 09:02:55 -0700 (PDT)
+        Tue, 21 Jul 2020 12:06:17 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45424 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbgGUQGQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:06:16 -0400
+Received: by mail-io1-f67.google.com with SMTP id e64so21966984iof.12;
+        Tue, 21 Jul 2020 09:06:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YwalK1RQnq3CwXPePKJZqsfuaCdWC1+FyIER6ijuGx4=;
-        b=lOKQ8qw4PCwdbF8TsSMkRD2DGibFejqDSi2B6XYg6QNRvvl0XXDrep6MMt3M7B5eF4
-         NAl/Kq5bAvYxU3SQ7PkfVy+CXev7JS5DrjfsFeJRfC60mn7fPgWr5MAIu/H8IgTqeKXe
-         WXMD2uv6Uz0sjPGlbXCSKl6TiPkeaTiN0rRn8b/5E1Ass8h1O5yDDoUqULvW4ioE+xOX
-         YzvgoiEk43kjYkUH27n8f+xV51cZccueha0n1hZLlz9/OvFDaHJcxHZrj0ITNGmsK/tH
-         b+tENPEjenzRY+70OSoMvXLHm8KkraKaIU7EuebGgzHOhmNzr12doJLUeGi9LBqRgKXK
-         GI5g==
-X-Gm-Message-State: AOAM531hODTUgZLwsnF9ThLLMGSmf3nNvmjn+Vd/UWdXZHQh6xMdKLEX
-        A8UjeGxyocZS5qDEU4Nnrg==
-X-Google-Smtp-Source: ABdhPJwd72ipD4E8/OySWEaZwXAbNXJiZHx1bqKEq3A2mBDY1mlkJrHxS8eBEz7M3yC39Zddd7TShQ==
-X-Received: by 2002:a05:6638:601:: with SMTP id g1mr33001644jar.137.1595347374981;
-        Tue, 21 Jul 2020 09:02:54 -0700 (PDT)
+        bh=xmFiyYVAXh8dLGcqP1mUgHDGPOUnEx9ltZZJeHm/90U=;
+        b=BgCnRSBMuc6+yGI6PMHGqPiH3hK8Vewze/VGgj851XgysHKRNJheCYl5lj+O1yPcp3
+         pArTMzbusj2sVcfpD1K5UdxodmVbwWxmXouhnDe96wTcWPCuddYupLYDmxZRlYNLkfFo
+         FfzpNV0fksGcFrpXNr33Vq5m5jyIEitm5gn8x8MzsiWX0KzzhzAEhglV/obpW/6q1SmW
+         VZeq7WuQ1B40Mo1Saa+80Vq0bpJzvBmk9y2NVqwqgLUxU2PjeGaM7zcf4eJHPSrqqH+1
+         jIBJHlH0P60E4aBVJPlFpXDVH7pnnlxd0BS86hynZjdVpc5bhrRk35/rvxBf1VKoY/gl
+         fHHA==
+X-Gm-Message-State: AOAM533qVudyJnv2nFD2fe10suKoNnN6pVnOVuN+uxAjRt7vrokGH57C
+        EXEus/rgrjpUfrQbsOoBMw==
+X-Google-Smtp-Source: ABdhPJz/byD3lCIAK+KOCr8tkp6iytOXF67GXPOZHcVpAtLQmMBl43jbmfyqhruhjKTJCj0McCmYNA==
+X-Received: by 2002:a02:8308:: with SMTP id v8mr32365035jag.101.1595347575497;
+        Tue, 21 Jul 2020 09:06:15 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y12sm10759945iot.49.2020.07.21.09.02.49
+        by smtp.gmail.com with ESMTPSA id v13sm10694113iox.12.2020.07.21.09.06.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:02:52 -0700 (PDT)
-Received: (nullmailer pid 378076 invoked by uid 1000);
-        Tue, 21 Jul 2020 16:02:49 -0000
-Date:   Tue, 21 Jul 2020 10:02:49 -0600
+        Tue, 21 Jul 2020 09:06:12 -0700 (PDT)
+Received: (nullmailer pid 382755 invoked by uid 1000);
+        Tue, 21 Jul 2020 16:06:10 -0000
+Date:   Tue, 21 Jul 2020 10:06:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>
-Cc:     a.fatoum@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, mani@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        sam@ravnborg.org, allen.chen@ite.com.tw, robh+dt@kernel.org,
-        stephan@gerhold.net, broonie@kernel.org, linus.walleij@linaro.org,
-        devicetree@vger.kernel.org, heiko.stuebner@theobroma-systems.com,
-        lkundrak@v3.sk, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: add Seeed Studio
-Message-ID: <20200721160249.GA377907@bogus>
-References: <20200721152015.11608-1-marcin.sloniewski@gmail.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     maz@kernel.org, devicetree@vger.kernel.org, ssantosh@kernel.org,
+        jason@lakedaemon.net, tglx@linutronix.de, t-kristo@ti.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, nm@ti.com, p.zabel@pengutronix.de
+Subject: Re: [PATCH] firmware: ti_sci: Replace HTTP links with HTTPS ones
+Message-ID: <20200721160610.GA382708@bogus>
+References: <20200718105538.9542-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721152015.11608-1-marcin.sloniewski@gmail.com>
+In-Reply-To: <20200718105538.9542-1-grandmaster@al2klimov.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2020 17:20:13 +0200, Marcin Sloniewski wrote:
-> Add the "seeed" vendor prefix for Seeed Technology Co., Ltd
-> Website: https://www.seeedstudio.com/
+On Sat, 18 Jul 2020 12:55:38 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+> 
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+> 
+>  .../devicetree/bindings/interrupt-controller/ti,sci-intr.txt    | 2 +-
+>  drivers/firmware/ti_sci.c                                       | 2 +-
+>  drivers/firmware/ti_sci.h                                       | 2 +-
+>  drivers/irqchip/irq-ti-sci-inta.c                               | 2 +-
+>  drivers/irqchip/irq-ti-sci-intr.c                               | 2 +-
+>  drivers/reset/reset-ti-sci.c                                    | 2 +-
+>  include/linux/soc/ti/ti_sci_inta_msi.h                          | 2 +-
+>  include/linux/soc/ti/ti_sci_protocol.h                          | 2 +-
+>  8 files changed, 8 insertions(+), 8 deletions(-)
 > 
 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
+Acked-by: Rob Herring <robh@kernel.org>
