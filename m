@@ -2,88 +2,114 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BA9C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDE7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9FC20717
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595352615;
-	bh=ivHskNM+Pzn/uxKF3bGeiO3eYOoZTUBmqmoPTc51p0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=szPSrfJK9cUw8jzeVD/Hv3QXaoPBm1j/9z9l4GdOjTvsalN7Sm07CcIaoRKYqSlU3
-	 +61Wa7c79BHL+VVH3RBcaKBii78Y1ubAu6xB+qLushq3vWZdPjuroNTzjx0axPPk8V
-	 wPahby/r3ghKjgWmxSoBy1xU99aT+Z7kXuHtTxJg=
+	by mail.kernel.org (Postfix) with ESMTP id CD9102065D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:27:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cqG10eD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgGURaO (ORCPT
+        id S1730408AbgGUR1G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59848 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 13:27:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34548 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbgGURaO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:30:14 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730392AbgGUR1G (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:27:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595352425; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=tn7ejI+sUf3otsLmxloNW0nHWliUL6j6F994zKSOkpc=; b=cqG10eD7MmmObF4BgrQeUeCoaJapAA4i6ieO93R1svhvKoKAaeuYHzFQWr8I08PRNsDhXLb+
+ eCZeUlTzWP+nJEm6J10ppyRR4tLrnJ/OnhD6O57gCQzTRBZMyB/ejz8eSw7/O4JEX6XpEsmM
+ sqXAvxNWvCJvGNREnufEZS4MQrY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f1725640cb8533c3bef1e68 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 21 Jul 2020 17:27:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7FEF6C433CA; Tue, 21 Jul 2020 17:27:00 +0000 (UTC)
+Received: from [192.168.0.106] (unknown [183.82.139.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5472065D;
-        Tue, 21 Jul 2020 17:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595352613;
-        bh=ivHskNM+Pzn/uxKF3bGeiO3eYOoZTUBmqmoPTc51p0s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pYc8ac+q5DvNUo0IZN5t0WjWeadKhYBtcqiWnRgr3rIqYq14n+dJ8yB0GD/EqKqDP
-         3kapzZ5xXdIoT3LlYByRzbHb9BDBKnLJiAdcJyRGNY2FiNhp9jGbZf2pRnICkCaMX4
-         fhHIo+4jv0opfsN2LLSRc5cpTrYMMqOtDGxzyMno=
-Date:   Tue, 21 Jul 2020 23:00:09 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     jonas.gorski@gmail.com, kishon@ti.com, robh+dt@kernel.org,
-        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        p.zabel@pengutronix.de, krzk@kernel.org,
-        gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
-Message-ID: <20200721173009.GO12965@vkoul-mobl>
-References: <20200720131209.1236590-1-noltari@gmail.com>
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07DB0C433C6;
+        Tue, 21 Jul 2020 17:26:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07DB0C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v4 2/4] dt-bindings: clock: Add YAML schemas for LPASS
+ clocks on SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org>
+ <1594795010-9074-3-git-send-email-tdas@codeaurora.org>
+ <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
+Date:   Tue, 21 Jul 2020 22:56:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200720131209.1236590-1-noltari@gmail.com>
+In-Reply-To: <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-20, 15:12, Álvaro Fernández Rojas wrote:
-> Add BCM63xx USBH PHY driver for BMIPS.
-> 
-> v8: readd Simon as author and remove his email address from the source code.
-> v7: remove Simon from authors and introduce changes suggested by Rob:
->   - Move clock conditions to the main section.
->   - Set missing additionalProperties to false.
-> v6: introduce changes suggested by Rob and Vinod:
->  - Remove BMIPS_GENERIC default from kconfig.
->  - Print registered message as debug.
->  - Add another if case to device tree binding for SoCs with just 1 clock.
->  - Ignored "additionalProperties: false" suggestion since it triggers a
->   warning. This has been reported, but I haven't received any answer yet.
-> v5: use devm_reset_control_get_exclusive.
-> v4: fix dt-bindings documentation and improve device mode config.
-> v3: introduce changes suggested by Florian:
->  - Add support for device mode.
-> v2: introduce changes suggested by Florian:
->  - phy-cells changed to 1.
->  - Drop OF dependency (use device_get_match_data).
->  - Drop __initconst from variant tables.
->  - Use devm_clk_get_optional.
+Hi Stephen,
 
-Applied, thanks
+Thanks for the review.
+
+On 7/21/2020 1:21 PM, Stephen Boyd wrote:
+
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> index 992b67b..bdf43adc 100644
+>> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+>> @@ -138,6 +138,7 @@
+>>   #define GCC_MSS_Q6_MEMNOC_AXI_CLK                              128
+>>   #define GCC_MSS_SNOC_AXI_CLK                                   129
+>>   #define GCC_SEC_CTRL_CLK_SRC                                   130
+>> +#define GCC_LPASS_CFG_NOC_SWAY_CLK                             131
+>>   
+>>   /* GCC resets */
+>>   #define GCC_QUSB2PHY_PRIM_BCR                                  0
+> 
+> This hunk should be in the next patch. Oh but then that patch should come
+> before this one so the binding can use it. Either way, shouldn't be part
+> of this patch.
+> 
+
+
+We had a problem with the bot complaining about the clock handles being 
+used in the example.
+
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1582540703-6328-4-git-send-email-tdas@codeaurora.org/
+
+Thus I have kept the GCC bindings in the same patch.
 
 -- 
-~Vinod
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
