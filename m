@@ -2,146 +2,143 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58955C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB832C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43ECD20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9968320714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="z2zQJ+0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgGUIcd (ORCPT
+        id S1726803AbgGUIdH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:32:33 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:56964 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGUIcc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 04:32:32 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id A418180695;
-        Tue, 21 Jul 2020 10:32:29 +0200 (CEST)
-Date:   Tue, 21 Jul 2020 10:32:28 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2 v1] dt-bindings: backlight: Add Kinetic KTD253
- bindings
-Message-ID: <20200721083228.GA283099@ravnborg.org>
-References: <20200720203506.3883129-1-linus.walleij@linaro.org>
+        Tue, 21 Jul 2020 04:33:07 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30288 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726521AbgGUIdG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 04:33:06 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L8HNEJ015522;
+        Tue, 21 Jul 2020 10:32:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=CibemXE2ARvrszMiSzpsNnNZsBGP7TWt0eJ8XHPZ0IM=;
+ b=z2zQJ+0Yz2nGqPF6BaMqzl7aDjRaG9/1rG6VVL1nAvtQKxr3AoE1+NJVgANpqmVns7Zc
+ Znr6mSWJyOhQs8MgZT7HVpocAXrxYbicmpFYQ47MBL6C6vvAofOivCU+EgWxLY/VeagZ
+ zXhLSfklIqtQvc4LxYNQTG2m7583LnJ8EdXEacti7odutBlA9GYkIyAWVwFdNFrUgC+T
+ LI4WKw2oXSwGmxAV6mcTkIfD7KVwDdWcFu26qyO6F2niDVv7tk0IT/9tMjoYH889HPdx
+ eQVRs8vtrrwIFPUC+eECtNVI8+Y02GddXg8iGJW2Rs/DDfZjmsAN7Z+sjy2rAXkKY/UQ Sw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bsfpcphg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Jul 2020 10:32:56 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BB1E3100034;
+        Tue, 21 Jul 2020 10:32:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ABCF62A614B;
+        Tue, 21 Jul 2020 10:32:55 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
+ 2020 10:32:55 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: Correct spi4 pins in
+ stm32mp15-pinctrl.dtsi
+To:     Patrick Delaunay <patrick.delaunay@st.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     Manivannan Sadhasivam <mani@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200708114324.7309-1-patrick.delaunay@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <3cc829c2-8d9f-d053-7330-7ac0a83436d1@st.com>
+Date:   Tue, 21 Jul 2020 10:32:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200720203506.3883129-1-linus.walleij@linaro.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8
-        a=e5mUnYsNAAAA:8 a=3ht3TW4W6TadcqOHVe8A:9 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=cvBusfyB2V15izCimMoJ:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200708114324.7309-1-patrick.delaunay@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus.
+Hi Patrick
 
-On Mon, Jul 20, 2020 at 10:35:05PM +0200, Linus Walleij wrote:
-> This adds device tree bindings for the Kinetic KTD253
-> white LED backlight driver.
+On 7/8/20 1:43 PM, Patrick Delaunay wrote:
+> Move spi4_pins_a nodes from pinctrl_z to pinctrl
+> as the associated pins are not in BANK Z.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
-See a few comments in the following.
-
-	Sam
-
+> Fixes: 498a7014989dfdd9a47864b55704dc829ed0dc90
+> Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
 > ---
->  .../leds/backlight/kinetic,ktd253.yaml        | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-> new file mode 100644
-> index 000000000000..610bf9a0e270
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/backlight/kinetic,ktd253.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Kinetic Technologies KTD253 one-wire backlight
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +description: |
-> +  The Kinetic Technologies KTD253 is a white LED backlight that is
-> +  controlled by a single GPIO line. If you just turn on the backlight
-> +  it goes to maximum backlight then you can set the level of backlight
-> +  using pulses on the enable wire.
 
-No $ref for common.yaml?
+Applied on stm32-next by updating Fixes tag.
 
-> +
-> +properties:
-> +  compatible:
-> +    const: kinetic,ktd253
-> +
-> +  gpios:
-A less generic and more descriptive name would be good.
+Thanks
+Alex
 
-> +    description: GPIO to use to enable/disable and dim the backlight.
-> +    maxItems: 1
-> +
-> +  default-brightness:
-> +    description: Default brightness level on boot. 0 is off.
-> +    minimum: 0
-> +    maximum: 255
-> +
-> +  max-brightness:
-> +    description: Maximum brightness that is allowed during runtime.
-> +    minimum: 0
-> +    maximum: 255
-Both looks like candidates for common.yaml - they are used by other
-bindings.
-
-> +
-> +required:
-> +  - compatible
-> +  - gpios
-It would make senste that maximum-brighness was mandatory too.
-
-addtionalProperties: false??
-
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    backlight {
-> +        compatible = "kinetic,ktd253";
-> +        gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-> +        default-on;
-default-on is not documented - and not part of common.yaml.
-
-> +        default-brightness = <160>;
-> +    };
-> -- 
-> 2.26.2
+>   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 28 ++++++++++++------------
+>   1 file changed, 14 insertions(+), 14 deletions(-)
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+> index 7eb858732d6d..6aedbd7077ff 100644
+> --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+> @@ -1574,6 +1574,20 @@
+>   		};
+>   	};
+>   
+> +	spi4_pins_a: spi4-0 {
+> +		pins {
+> +			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
+> +				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
+> +			bias-disable;
+> +			drive-push-pull;
+> +			slew-rate = <1>;
+> +		};
+> +		pins2 {
+> +			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
+> +			bias-disable;
+> +		};
+> +	};
+> +
+>   	usart2_pins_a: usart2-0 {
+>   		pins1 {
+>   			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
+> @@ -1776,18 +1790,4 @@
+>   			bias-disable;
+>   		};
+>   	};
+> -
+> -	spi4_pins_a: spi4-0 {
+> -		pins {
+> -			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
+> -				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
+> -			bias-disable;
+> -			drive-push-pull;
+> -			slew-rate = <1>;
+> -		};
+> -		pins2 {
+> -			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
+> -			bias-disable;
+> -		};
+> -	};
+>   };
+> 
