@@ -2,133 +2,123 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8024AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 05:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57AF420B1F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 05:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5385207DD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PeM20mTF"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WrzwzFfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgGUFtN (ORCPT
+        id S1727942AbgGUGAu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 01:49:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgGUFtM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 01:49:12 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F768C061794
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 22:49:12 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id h7so2324760qkk.7
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 22:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J/VlXTBNzYr8hWPwvtPcB4lgFmJDE5C1OJFdc6g87I8=;
-        b=PeM20mTFYvDuzMfpomPGFEV+VbCpyqNRz96/UTtSaaCROneoqwStaNoSWR9FvUGKj6
-         6d1jx8OFvjMweiWfBfcFiQfN4UKiEHKdePqOtbxKGCfMEWNaKnIucQZmYDLnRSnQh59j
-         WY+MsoAYB4zkLOknqmNqoYX/jcfhu+hAn9/Wo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J/VlXTBNzYr8hWPwvtPcB4lgFmJDE5C1OJFdc6g87I8=;
-        b=mNKMxDVXgzNQfX6o7vCVdHPm8nxReuIjyrUPtF3EIzTZcTw5CxKfH/19nsfC6e80Do
-         15ssVyncrV5AFbRTFDaTpnKuroFaqej+dWZcvaUVAdCjeK4TuW+7bcpvJEKIQymaFzWn
-         YmYhxW9BdavRuS90HtswZQtL93m8a4KPyeqy2aPrhzlGYw4BntB8uwuHcaHzFjQeaYo5
-         jR4t8PssvcaOxLeimC/8vFPfoSrl5G9+Db/+LHU8wXZBa7yLZzphP1i9x/XcNKmWITG0
-         JTo8BEctLvTMXxMKY6d+ATwcqCOlVDD4uqER88dBmypgM3iUYCJNMl3CsSUCYtytyaWd
-         O94Q==
-X-Gm-Message-State: AOAM532RK2BiJX6CW0qlmRuvMMTqd/bskGqbhIOw6xy1YELsIVvgE+9N
-        PYbD0ZvY/50mtd5ZTqytDJjiAqnobRvb6fjepmlM+g==
-X-Google-Smtp-Source: ABdhPJw77g3OeCWEh/vfgU+VObGbigGa4gwWnRtUgXrHgKPEHbJSVJ2NsPJ73ftijbPN4mYbIHY9ydyqGxwKveqNMh8=
-X-Received: by 2002:a37:ae01:: with SMTP id x1mr23561539qke.179.1595310551419;
- Mon, 20 Jul 2020 22:49:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200714113617.10470-1-hdegoede@redhat.com> <20200714113617.10470-2-hdegoede@redhat.com>
- <20200721022610.GA3391383@bogus>
-In-Reply-To: <20200721022610.GA3391383@bogus>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 20 Jul 2020 22:49:00 -0700
-Message-ID: <CACeCKacEqZX5FKF2Gpaa_zEgf-sCrxsgk-WJ9VDdYsrwZNoCBg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: usb-connector: Add support for Type-C alternate-modes
-To:     Rob Herring <robh@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Tobias Schramm <t.schramm@manjaro.org>,
-        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        Tue, 21 Jul 2020 02:00:50 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5339 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725294AbgGUGAu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 02:00:50 -0400
+X-UUID: 7ab65104b14a4a6ab6d29dfb2bde717d-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=U8PX+F+mnKbPbXqn4UjkWg26k/aBzCM1RQhtMnlz4g8=;
+        b=WrzwzFfIVY7/0UEwUhttN1gyFZ8Pd2vOHdMOD1GRhZ857dctw43hTGHPLJlMTWdrhMc6JNYdgwgPxjNYHe/Er2M1xYVGrmRSDTbED992XTtsDoXReL7wgbHB2yt+IYaLnE917b6DBhX9FYyBnmkaobadO1OWvLdaBFXMqpoP3PM=;
+X-UUID: 7ab65104b14a4a6ab6d29dfb2bde717d-20200721
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 633919522; Tue, 21 Jul 2020 14:00:44 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 21 Jul 2020 14:00:41 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 14:00:41 +0800
+Message-ID: <1595311242.5599.3.camel@mtkswgap22>
+Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Tue, 21 Jul 2020 14:00:42 +0800
+In-Reply-To: <742eefe1-954b-eb3f-98b7-469833df729a@gmail.com>
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+         <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
+         <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
+         <1594872242.11090.8.camel@mtkswgap22>
+         <742eefe1-954b-eb3f-98b7-469833df729a@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-HI Rob,
+T24gTW9uLCAyMDIwLTA3LTIwIGF0IDE4OjEzICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMTYvMDcvMjAyMCAwNjowNCwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiBPbiBU
+dWUsIDIwMjAtMDctMTQgYXQgMjA6MTQgKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+
+ID4+DQo+ID4+IE9uIDE0LzA3LzIwMjAgMTE6MjAsIEhhbmtzIENoZW4gd3JvdGU6DQo+ID4+PiB0
+aGlzIGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvciBib2FyZCBzdXBwb3J0LA0K
+PiA+Pj4gaW5jbHVkaW5nIGNwdSwgZ2ljLCB0aW1lciwgY2NmLCBwaW5jdHJsLCB1YXJ0LCBzeXNp
+cnEuLi5ldGMuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3Mu
+Y2hlbkBtZWRpYXRlay5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgIGFyY2gvYXJtNjQvYm9vdC9k
+dHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgfCAgIDEgKw0KPiA+Pj4gICAgYXJjaC9hcm02NC9i
+b290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cyB8ICAzMSArKysNCj4gPj4+ICAgIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kgICAgfCAyNzEgKysrKysrKysrKysr
+KysrKysrKysNCj4gPj4+ICAgIDMgZmlsZXMgY2hhbmdlZCwgMzAzIGluc2VydGlvbnMoKykNCj4g
+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210
+Njc3OS1ldmIuZHRzDQo+ID4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290
+L2R0cy9tZWRpYXRlay9tdDY3NzkuZHRzaQ0KPiA+Pj4NCj4gPj4gWy4uLl0NCj4gPj4+ICsNCj4g
+Pj4+ICsJCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KPiA+Pj4gKwkJCWNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ2Nzc5LXVhcnQiLA0KPiA+Pj4gKwkJCQkgICAgICJtZWRpYXRlayxtdDY1Nzct
+dWFydCI7DQo+ID4+PiArCQkJcmVnID0gPDAgMHgxMTAwMjAwMCAwIDB4NDAwPjsNCj4gPj4+ICsJ
+CQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTE1IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ID4+PiAr
+CQkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmluZnJhY2ZnX2FvIENMS19JTkZSQV9VQVJUMD47DQo+
+ID4+PiArCQkJY2xvY2stbmFtZXMgPSAiYmF1ZCIsICJidXMiOw0KPiA+Pj4gKwkJCXN0YXR1cyA9
+ICJkaXNhYmxlZCI7DQo+ID4+PiArCQl9Ow0KPiA+Pj4gKw0KPiA+Pj4gKwkJdWFydDE6IHNlcmlh
+bEAxMTAwMzAwMCB7DQo+ID4+PiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktdWFy
+dCIsDQo+ID4+PiArCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPj4+ICsJCQly
+ZWcgPSA8MCAweDExMDAzMDAwIDAgMHg0MDA+Ow0KPiA+Pj4gKwkJCWludGVycnVwdHMgPSA8R0lD
+X1NQSSAxMTYgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPj4+ICsJCQljbG9ja3MgPSA8JmNsazI2
+bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQxPjsNCj4gPj4+ICsJCQljbG9jay1uYW1l
+cyA9ICJiYXVkIiwgImJ1cyI7DQo+ID4+PiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPj4+
+ICsJCX07DQo+ID4+PiArDQo+ID4+PiArCQl1YXJ0Mjogc2VyaWFsQDExMDA0MDAwIHsNCj4gPj4+
+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPj4+ICsJCQkJICAg
+ICAibWVkaWF0ZWssbXQ2NTc3LXVhcnQiOw0KPiA+Pj4gKwkJCXJlZyA9IDwwIDB4MTEwMDQwMDAg
+MCAweDQwMD47DQo+ID4+PiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExNyBJUlFfVFlQRV9M
+RVZFTF9MT1c+Ow0KPiA+Pj4gKwkJCWNsb2NrcyA9IDwmY2xrMjZtPiwgPCZpbmZyYWNmZ19hbyBD
+TEtfSU5GUkFfVUFSVDI+Ow0KPiA+Pj4gKwkJCWNsb2NrLW5hbWVzID0gImJhdWQiLCAiYnVzIjsN
+Cj4gPj4+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+Pj4gKwkJfTsNCj4gPj4NCj4gPj4g
+RGV2aWNldHJlZSBkZXNjcmliZXMgdGhlIEhXIHdlIGhhdmUuIEFzIGZhciBhcyBJIGtub3csIHdl
+IGhhdmUgNCBVQVJUcyBvbg0KPiA+PiBNVDY3NzkuIFNvIHdlIHNob3VsZCBsaXN0IHRoZW0gYWxs
+IGhlcmUuDQo+ID4+DQo+ID4gDQo+ID4gQWN0dWFsbHksIFdlIGhhdmUgb25seSAzIFVBUlRzIEhX
+IG9uIE1UNjc3OSwgYnV0IGhhdmUgNCBVQVJUIGNsayBpbg0KPiA+IGhlYWRlciBmaWxlIG9mIGNs
+ay4NCj4gDQo+IENvcnJlY3QsIEkgZ290IGNvbmZ1c2VkIGJ5IHRoZSBmb3VyIGNsb2Nrcy4NCj4g
+V2l0aCB0aGF0IGNsYXJpZmllZCBJJ20gZmluZSB3aXRoIHRoZSBwYXRjaCBhbmQgd2lsbCB0YWtl
+IGl0IGFzIHNvb24gYXMgdGhlIA0KPiBjbG9jayBkcml2ZXIgcGF0Y2ggaXMgYWNjZXB0ZWQuDQo+
+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCkdvdCBpdCwgSSBzZW5kIGEgbmV3IHNlcmlh
+bCB0byBmaXggdGhlIHJlZHVuZGFudCBVQVJUIGNsaw0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIw
+MjAvNy8yMS80NQ0KDQpUaGFua3MNCg0KSGFua3MgQ2hlbg0KDQo+ID4gQ0xLX0lORlJBX1VBUlQz
+IGlzIGEgZHVtbXkgY2xrIGludGVyZmFjZSwgaXQgaGFzIG5vIGVmZmVjdCBvbiB0aGUNCj4gPiBv
+cGVyYXRpb24gb2YgdGhlIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rpb24uDQo+ID4gDQo+ID4gSWYgeW91
+IHRoaW5rIGl0IGlzIG5vdCBnb29kLCBJIGNhbiByZW1vdmUgaXQgaW4gdGhlIGhlYWRlciBmaWxl
+IG9mIGNsay4NCj4gPiANCj4gPiBUaGFua3MNCj4gPiANCj4gPj4gUmVnYXJkcywNCj4gPj4gTWF0
+dGhpYXMNCj4gPiANCg0K
 
-On Mon, Jul 20, 2020 at 7:26 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Jul 14, 2020 at 01:36:14PM +0200, Hans de Goede wrote:
-> > This commit adds the minimum bindings required to allow describing which
-> > altmodes a port supports. Currently this is limited to just specifying:
-> >
-> > 1. The svid, which is the id of the altmode, e.g. displayport altmode has
-> > a svid of 0xff01.
-> >
-> > 2. The vdo, a 32 bit integer, typically used as a bitmask describing the
-> > capabilities of the altmode, the bits in the vdo are specified in the
-> > specification of the altmode, the dt-binding simply refers to the
-> > specification as that is the canonical source of the meaning of the bits.
->
-> What if this information should be derived from information already in
-> DT (or would be there if alt mode connections are described)?
->
-> >
-> > Later on we may want to extend the binding with extra properties specific
-> > to some altmode, but for now this is sufficient to e.g. hook up
-> > displayport alternate-mode.
->
-> I don't think this is sufficient as it doesn't describe how alternate
-> modes are connected to various components. This has been discussed some
-> here[1] with the CrOS folks. Maybe this is orthogonal, IDK, but I really
-> need something that is somewhat complete and not sprinkle a few new
-> properties at a time.
-
-Just thought I'd add a link[2] to some amendments which were made to
-the "switch"
-proposal in the thread you added a link to (it has many responses, so
-not sure if my
-responses got lost in the thread). I also wrote a short summary[3].
-
-Please ignore these if you've already taken a look at them :)
-
-Best regards,
-
--Prashant
-
-[2] https://lkml.org/lkml/2020/6/12/602
-[3] https://lkml.org/lkml/2020/7/10/234
->
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> > Note I hope I got the yaml correct, this is my first time writing a
-> > dt-binding in the new yaml style. I did run:
-> > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/connector/usb-connector.yaml
-> > and that was happy.
->
-> That aspect of it looks fine.
->
-> Rob
->
-> [1] https://lkml.org/lkml/2020/4/22/1819
->
