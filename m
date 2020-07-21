@@ -2,126 +2,231 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFCBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B42FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53BA32072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D05D20657
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="fV65wltr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MTnB31s3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg0rQeFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGUJXq (ORCPT
+        id S1728533AbgGUJZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:23:46 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:35375 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725984AbgGUJXp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:23:45 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 281BF58010D;
-        Tue, 21 Jul 2020 05:23:44 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 21 Jul 2020 05:23:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=x0tir+s+BOA84v7ZwfmMnAHoypG
-        Rmb6HnlXSdXNH2I0=; b=fV65wltrZ3rUv6cZRL2rvf6GyJaJowvLYnQbRlZLgMh
-        iCD88uBovfc557F1XIu8yCoQBxw8OVPNqFfugeVjQllsLRRHe30Iln3yBPteyI22
-        5ZxzC5kcP60fjYXBHgaAUiBsfDkjCzOd+ZAf0z+xdtsNkirS6inMddCGzbC6bEsB
-        c7PoaH6fISg+aN2Iu3M+wGm5+5jW4moHa0cgBAuCGTlWN3G4fUj3Fhflq98rS1hS
-        jwlmdh086G5dKlMGejGofVLuxO6xffQKKu/caInNzPg01wLsSDoYd/tRp989kDPM
-        yPL2HHLVXjjA+K1da1sPE6/CYo1UivU4NM7fnzv6JJw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=x0tir+
-        s+BOA84v7ZwfmMnAHoypGRmb6HnlXSdXNH2I0=; b=MTnB31s3EU6RFpUCuCYDXO
-        3YZk8e+bjoZ52wD5jP6RzdTjRILGC1ygxdZr/TiGlB9CMo1Czg1IQQKxgFYONlnT
-        /puzlmM7YvS6MWIBGI0MuLRsQ1h35cJSUNvw5lmqtKNMFH1jOkPis01R4qYrosYZ
-        wLSQHMsAhywiAkRn6ZwsM5N8C3KuDzbQSg5FS7sRsVRVDDe9tODEZQa3wFourZBZ
-        zRVh4y/hblE9dkfuo04qMvRWOv4jlGB3bGo2nb/qswl0ZQNzjlI2mj/rdSLDLyt0
-        xe+yuW9e1Wh0Z2mAoyMC2yQYT37cfJf0vAE3o8psdZBnydY2bAZAkgYZ1zIXFOMw
-        ==
-X-ME-Sender: <xms:G7QWX2Ulju6BysJfXK8sElzp_0fHg-DD7o_jaVMeQJXBKiUxDs251w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrgeeigdduudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:G7QWXynGMJ-UQ-RN-5QI9AG6o2Y7PHFQuaK3_qNR68CS8S9hDY1-Zg>
-    <xmx:G7QWX6aN-cz87Hg7_1bM6MT5zocXDCAOS8JJ04bYAKio27ASwWuqgw>
-    <xmx:G7QWX9Xfb0nJxrD_H6iq7g6UcZ93zRGP2W8fM63B9bSjBrxz8_1nwA>
-    <xmx:ILQWX6Us7OlF1nO3lVZ_p-kWq3LT5qG9CP5naVistWKtfXrq2riePA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7A6883280063;
-        Tue, 21 Jul 2020 05:23:39 -0400 (EDT)
-Date:   Tue, 21 Jul 2020 11:23:33 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Siarhei Siamashka <siarhei.siamashka@gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: display: panel-dpi: Add bits-per-color
- property
-Message-ID: <20200721092333.yr3wwmrxwz5rvpam@gilmour.lan>
-References: <20200714071305.18492-1-wens@kernel.org>
- <20200714071305.18492-2-wens@kernel.org>
- <20200721021026.GA3382460@bogus>
+        Tue, 21 Jul 2020 05:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgGUJZL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 05:25:11 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6609FC061794;
+        Tue, 21 Jul 2020 02:25:11 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id x9so23289454ljc.5;
+        Tue, 21 Jul 2020 02:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ze6lJWvJHZbmrt8N27YOntoBu13Av/K4oTVWvmf42EM=;
+        b=Sg0rQeFUrG/1Joo1uXLswuZgL8HlliGcFZBnS7LPFBO0yiQa6vpYGNpyG1QVcQ4gjo
+         eVUJva/qdPy31j6nav5crh4VtOaDJdkCm5Q8G/eT8G5Y3ehbfx7cGBi/jSJXZm5FMYjT
+         XtiyGdwDLA+4nEc7zf+GLmrwEfRtIvSgMi+tktHNmpafTUy7PHes4Z73wLY4o2Oqw9X5
+         6UaogLOr9+pp0xHgZ/kUxwoDTR34U3PLocaYUDw7JVhaUXcjcmtQYpCpst/m+f23g3TE
+         7tuTllKB2WGle9AHQLNJaZmBA3KPtyPLUiszU0gyA28I79yFWXc6gs4Te4ybM8ZxxhH2
+         rULA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ze6lJWvJHZbmrt8N27YOntoBu13Av/K4oTVWvmf42EM=;
+        b=bqEIb0EtCZ3I8di3vGXZtATBIBUA4MVAPfTtsazFpBXXyCvm6JILS3jMLsTrJyZPFD
+         zcKu0DEDQTDiNna0rNRJvKgMA1wQWbSMho1E0dmNv9z6zMP5fGtEvUpy54K02JzwTcKU
+         mNgWvB17iWy+6QBPY1u5bc03kO3TF+T2GkqxC1eBsA/ZoHevqE08LLy5ZBzWi3MuhRfA
+         2a5x4w2lJ96sb09IYa0Quzii0G9L3cgEaoMzEWUhMAaQGioMebqFW9zrZ9qWms1kkAXz
+         ecQ5dYxBKVmz/EbAgbKg4LcPkHqqsoqKJS/kr0txUV5v+lld8akl6TIJPxC9uO+nAQLg
+         0GKA==
+X-Gm-Message-State: AOAM533rHaO8B7GUkRHK96sunq3kiStlKvX3JQgVOrW7nsSet8RDaKd5
+        Hry1bhhOpjX+0Sl3FkKSdS4mDee5LlraxI/BCwI=
+X-Google-Smtp-Source: ABdhPJyVqq/e5qtdfaM4Pt8zraL2Gu3jDazqIA7Ge6GF1VOUJm15J1RP3WN1Q8JW4PbN5N5rOWnxwOMnPvEAva9XsBw=
+X-Received: by 2002:a2e:3602:: with SMTP id d2mr12878639lja.152.1595323509227;
+ Tue, 21 Jul 2020 02:25:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="odw3lcwqgr2hgq6u"
-Content-Disposition: inline
-In-Reply-To: <20200721021026.GA3382460@bogus>
+References: <20200719141034.8403-1-christianshewitt@gmail.com>
+ <20200719141034.8403-4-christianshewitt@gmail.com> <90da2697-9dcc-1d75-eded-bf4bdc4b594b@baylibre.com>
+ <fc679db1-be92-c384-0fe2-3b06c920ea75@baylibre.com>
+In-Reply-To: <fc679db1-be92-c384-0fe2-3b06c920ea75@baylibre.com>
+From:   Dongjin Kim <tobetter@gmail.com>
+Date:   Tue, 21 Jul 2020 18:24:57 +0900
+Message-ID: <CADoNuNepjmZgdAVAMM8Y6FA8uL5rd96e5qdn1_HDHKj6Lsnu6A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: meson: add support for the ODROID-N2+
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dongjin Kim <tobetter@hardkernel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Can we use "Hardkernel ODROID-N2Plus" instead of "Hardkernel ODROID-N2+"?
 
---odw3lcwqgr2hgq6u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+Dongjin.
 
-On Mon, Jul 20, 2020 at 08:10:26PM -0600, Rob Herring wrote:
-> On Tue, Jul 14, 2020 at 03:13:01PM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >=20
-> > Some LCD panels do not support 24-bit true color, or 8bits per channel
-> > RGB. Many low end ones only support up to 6 bits per channel natively.
->=20
-> This should be implied by the panel's compatible property.
 
-I'm not sure it should, or at least it's not sufficient. Some panels
-while 24 bits capable might only have the higher bits connected to save
-off a couple of pins per color, in which case we should probably
-describe that somehow.
 
-Maxime
-
---odw3lcwqgr2hgq6u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXxa0FQAKCRDj7w1vZxhR
-xZkZAQDftXEa79LnkvoDY7JmWNKr84twqwgwvGDvry1EED0yNgD/T4JNTJQkfpM+
-3Rm9c1KwCUpO971+NRBdz79kBZgYVAw=
-=ofIw
------END PGP SIGNATURE-----
-
---odw3lcwqgr2hgq6u--
+On Tue, Jul 21, 2020 at 5:24 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On 21/07/2020 10:10, Neil Armstrong wrote:
+> > On 19/07/2020 16:10, Christian Hewitt wrote:
+> >> HardKernel ODROID-N2+ uses an Amlogic S922X rev. C chip capable of higher
+> >> clock speeds than the original ODROID-N2. Hardkernel supports the big cpu
+> >> cluster at 2.4GHz and the little cpu cluster at 2.0GHz. Opp points and
+> >> regulator changess are from the HardKernel Linux kernel sources.
+> >>
+> >> Suggested-by: Dongjin Kim <tobetter@hardkernel.com>
+> >> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> >> ---
+> >>  arch/arm64/boot/dts/amlogic/Makefile          |  1 +
+> >>  .../dts/amlogic/meson-g12b-odroid-n2-plus.dts | 53 +++++++++++++++++++
+> >>  2 files changed, 54 insertions(+)
+> >>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+> >>
+> >> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> >> index 5cac4d1d487d..6dc508b80133 100644
+> >> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> >> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> >> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking-pro.dtb
+> >>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
+> >>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
+> >>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
+> >> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2-plus.dtb
+> >>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-ugoos-am6.dtb
+> >>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-kii-pro.dtb
+> >>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+> >> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+> >> new file mode 100644
+> >> index 000000000000..99e96be509f8
+> >> --- /dev/null
+> >> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dts
+> >> @@ -0,0 +1,53 @@
+> >> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >> +/*
+> >> + * Copyright (c) 2019 BayLibre, SAS
+> >> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> >> + */
+> >> +
+> >> +/dts-v1/;
+> >> +
+> >> +#include "meson-g12b-odroid-n2.dtsi"
+> >> +
+> >> +/ {
+> >> +    compatible = "hardkernel,odroid-n2-plus", "amlogic,s922x", "amlogic,g12b";
+> >> +    model = "Hardkernel ODROID-N2+";
+> >> +
+> >> +    vddcpu_a: regulator-vddcpu-a {
+> >> +            regulator-min-microvolt = <680000>;
+> >> +            regulator-max-microvolt = <1040000>;
+> >> +
+> >> +            pwms = <&pwm_ab 0 1500 0>;
+> >> +    };
+> >> +
+> >> +    vddcpu_b: regulator-vddcpu-b {
+> >> +            regulator-min-microvolt = <680000>;
+> >> +            regulator-max-microvolt = <1040000>;
+> >> +
+> >> +            pwms = <&pwm_AO_cd 1 1500 0>;
+> >> +    };
+> >> +
+> >> +    cpu_opp_table_0: opp-table-0 {
+> >> +            opp-1908000000 {
+> >> +                    opp-hz = /bits/ 64 <1908000000>;
+> >> +                    opp-microvolt = <1030000>;
+> >> +            };
+> >> +
+> >> +            opp-2016000000 {
+> >> +                    opp-hz = /bits/ 64 <2016000000>;
+> >> +                    opp-microvolt = <1040000>;
+> >> +            };
+> >> +    };
+> >> +
+> >> +    cpub_opp_table_1: opp-table-1 {
+> >> +            opp-2304000000 {
+> >> +                    opp-hz = /bits/ 64 <2304000000>;
+> >> +                    opp-microvolt = <1030000>;
+> >> +            };
+> >> +
+> >> +            opp-2400000000 {
+> >> +                    opp-hz = /bits/ 64 <2400000000>;
+> >> +                    opp-microvolt = <1040000>;
+> >> +            };
+> >> +    };
+> >> +};
+> >> +
+> >>
+> > Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> >
+>
+> Wait no, it should be:
+>
+> / {
+>         compatible = "hardkernel,odroid-n2-plus", "amlogic,s922x", "amlogic,g12b";
+>         model = "Hardkernel ODROID-N2+";
+> };
+>
+> &vddcpu_a {
+>         regulator-min-microvolt = <680000>;
+>         regulator-max-microvolt = <1040000>;
+>
+>         pwms = <&pwm_ab 0 1500 0>;
+> };
+>
+> &vddcpu_b {
+>         regulator-min-microvolt = <680000>;
+>         regulator-max-microvolt = <1040000>;
+>
+>         pwms = <&pwm_AO_cd 1 1500 0>;
+> };
+>
+> &cpu_opp_table_0 {
+>                 opp-1908000000 {
+>                 opp-hz = /bits/ 64 <1908000000>;
+>                 opp-microvolt = <1030000>;
+>         };
+>
+>         opp-2016000000 {
+>                 opp-hz = /bits/ 64 <2016000000>;
+>                 opp-microvolt = <1040000>;
+>         };
+> };
+>
+> &cpub_opp_table_1 {
+>         opp-2304000000 {
+>                 opp-hz = /bits/ 64 <2304000000>;
+>                 opp-microvolt = <1030000>;
+>         };
+>
+>         opp-2400000000 {
+>                 opp-hz = /bits/ 64 <2400000000>;
+>                 opp-microvolt = <1040000>;
+>         };
+> };
+>
+> Neil
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
