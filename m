@@ -2,111 +2,140 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B978DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3027C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9638520734
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD7520729
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J383kpAi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jYPX3N/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgGUDI5 (ORCPT
+        id S1726068AbgGUDWD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:08:57 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57536 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgGUDI4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:08:56 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06L38T5M067344;
-        Mon, 20 Jul 2020 22:08:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595300909;
-        bh=eQGqxP1QWHp4sxGYk/YkYc0H0zt+vKwY/jDQBq7XFtU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=J383kpAi1TnccBq+kgRzAXc9Ox2mEIVibxoA8Iq5yLGQ3UjtYJPa9NoqGODp6yGVt
-         pSaojeK5mDEnCw/Qh7+HdfEG1Em8mrLbAa8Fy3xZam0b1dBJ1jIp4Mr8vkAxZfiws2
-         OEevvoTGEaicRfdE9jh2y3bA3Hz7IUVS/GkQp7XY=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06L38Tp0113319
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 20 Jul 2020 22:08:29 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
- Jul 2020 22:08:28 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 20 Jul 2020 22:08:28 -0500
-Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06L38OVg050719;
-        Mon, 20 Jul 2020 22:08:25 -0500
-Subject: Re: [PATCH] ARM: dts: keystone-k2g-evm: fix rgmii phy-mode for
- ksz9031 phy
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-References: <20200715085427.8713-1-grygorii.strashko@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <f35d8ae5-c0f8-dcb2-f2f7-a4e56ea03825@ti.com>
-Date:   Tue, 21 Jul 2020 08:38:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 20 Jul 2020 23:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728586AbgGUDWC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:22:02 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D72CC0619D5
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 20:22:02 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p3so11301138pgh.3
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 20:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ijZcvY+9HThogPQGU1zhNOmg7ddSlcdPOxTGsylYukU=;
+        b=jYPX3N/CYwrP8xdNoZm6Jr5f6CFeNAOzox2cznLatSc6OzyK71rLS2Q01WaRr9xjWw
+         EwjoYXhjMJGl88p2OYXPm0Y8GrymObK4q3Gr6KyQpSpctoA/7Pz+kGPUQRqh7DMbKbm1
+         xRCj9BQnbsXzzoeJ7amj+1JJGbQXy9NWlFc+IZ1N8aPvU7v0jcG/yvTmBLvVaoYMn+Vs
+         OTZa5qdb9I06AvZg1of6xQzxglhtCqYrU6lupDFQh7DRm5dr17cb0rv0RNJgjw8OOexG
+         MTU2rlNhDi+qC/Si0jn6sbgB75I26/HWknjIVwFgUnc2OBePW4wx3JVfQgpg4O2EvPOo
+         o8vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ijZcvY+9HThogPQGU1zhNOmg7ddSlcdPOxTGsylYukU=;
+        b=iCPwnDknV4ewJIig+dddz5MLIV1lmznFwtHrhb5wn3MNXrG6wjc4sD+/ZA1K+iy71n
+         OjptN0XLzjiyXTNQ4oOtAkHZ9680tNOwv3VZL2Zubq6BjwS+MNRYLajCZkKb9ggc57n1
+         ZaYi2sO1/KMzqe0Hty53fWhaXfDZc/B/rv/vgYToZeRaUQwbGcTcm6crsbPJa4H4Jyxe
+         UOK0cSuygXXFakCddP2HDgv5H2vnx4dYkcK18qhsQmGxJRSuD3EiAHlw8SavQb4QR0ja
+         EZ15ap3HCS8q3t/Ha3LGAi6uRl5XM0THJs92MSGjOVy61asa1sbJeC9OF3BuqDyvJI31
+         fOMQ==
+X-Gm-Message-State: AOAM530uCVgFhNOiIxjWVKTSdGSaKgCdVV+ngIng93QHb/HOzMTO62F+
+        Gb691Vb0KC7GVdEsPbc00SSsDQ==
+X-Google-Smtp-Source: ABdhPJx61jmy8+lIZewjXQ+YePZ0gDxMGB+c3iKHDGI3JWW31i4NNS2itBhvkd+VWS/UiHU4wWEQKw==
+X-Received: by 2002:a65:408b:: with SMTP id t11mr20670837pgp.407.1595301721432;
+        Mon, 20 Jul 2020 20:22:01 -0700 (PDT)
+Received: from localhost ([223.179.133.67])
+        by smtp.gmail.com with ESMTPSA id t1sm16787715pgq.66.2020.07.20.20.21.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jul 2020 20:22:00 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 08:51:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        lukasz.luba@arm.com, daniel.lezcano@linaro.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Talel Shenhar <talel@amazon.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: thermal: Get rid of thermal.txt and
+ replace references
+Message-ID: <20200721032149.prgxcmwjxonml4u6@vireshk-mac-ubuntu>
+References: <e9aacd33071a00568b67e110fa3bcc4d86d3e1e4.1595245166.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200715085427.8713-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9aacd33071a00568b67e110fa3bcc4d86d3e1e4.1595245166.git.amit.kucheria@linaro.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Santosh,
-
-On 7/15/20 2:24 PM, Grygorii Strashko wrote:
-> Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
-> KSZ9031 PHY") the networking is broken on keystone-k2g-evm board.
+On 20-07-20, 17:23, Amit Kucheria wrote:
+> Now that we have yaml bindings for the thermal subsystem, get rid of the
+> old bindings (thermal.txt).
 > 
-> The above board have phy-mode = "rgmii-id" and it is worked before because
-> KSZ9031 PHY started with default RGMII internal delays configuration (TX
-> off, RX on 1.2 ns) and MAC provided TX delay by default.
-> After above commit, the KSZ9031 PHY starts handling phy mode properly and
-> enables both RX and TX delays, as result networking is become broken.
+> Replace all references to thermal.txt in the Documentation with a link
+> to the appropriate YAML bindings using the following search and replace
+> pattern:
+>  - If the reference is specific to the thermal-sensor-cells property,
+>  replace with a pointer to thermal-sensor.yaml
+>  - If the reference is to the cooling-cells property, replace with a
+>  pointer to thermal-cooling-devices.yaml
+>  - If the reference is generic thermal bindings, replace with a
+>  reference to thermal*.yaml.
 > 
-> Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
-> behavior.
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Philippe Schenker <philippe.schenker@toradex.com>
-> Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
-> Fix for one more broken TI board with KSZ9031 PHY.
+> Changes since v1:
+>  - Rebase onto v.5.8-rc6 to make it apply again
+>  - Fix cpufreq/nvidia,tegra20-cpufreq.txt
+>  - Fix bindings/arm/freescale/fsl,scu.txt
+> 
+> 
+>  .../bindings/cpufreq/cpufreq-dt.txt           |   3 +-
+>  .../bindings/cpufreq/cpufreq-mediatek.txt     |   4 +-
+>  .../cpufreq/nvidia,tegra20-cpufreq.txt        |   2 +-
 
-This is coming bit late, but its important to get into v5.8 since NFS
-boot fails without this blocking all mainline testing for this platform.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Can we send this to ARM SoC for -rc7. If you are going to be busy this
-week, I am happy to send a pull request on your behalf with your ack
-included. Let me know.
-
-Thanks,
-Sekhar
+-- 
+viresh
