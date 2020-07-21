@@ -2,476 +2,353 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA61C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FF1C433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4B32072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07182072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RuwQJ5VL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+VQdbPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgGUJ1H (ORCPT
+        id S1726089AbgGUJ1j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:27:07 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4088 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726089AbgGUJ1H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:27:07 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L9CEG6002901;
-        Tue, 21 Jul 2020 11:26:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=OV14C0Y2Erm6Xcl0qlPZn5PrJ9Zz3pkJLyGKIPrp1ME=;
- b=RuwQJ5VLINxzOtwl1mwiDuXHrnjRDULmwK7XQ+lMUhEYOhiKW4Aui9UNdvdWuegirH9I
- w1i8YBd+T8e2ra6AKt4douIqqERpKBCFYMfZseWmtzBSxAqrWj47CWDC2qrNo2p/KF7W
- h+HkN62IxXQdWBWgTvRrmJvKMEFJo+5Zqv433EnyStuEy3mkQOV0ZNerZ8WVrrDJTZJ8
- N/4QPyzdRDXhnnEXv0mBkUHmPxgMVtik/v0IEwTxBMXojp/j1VxRetKwLxiR5k8w6VPs
- h8qYV+dwqQjUUVYqo3a0L7mnNDSUFMs+pZKnnmUIPZFs/MqfxD5/wafsFhtBKkMjcA4J Mg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32cux07u0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 11:26:27 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4B1A710002A;
-        Tue, 21 Jul 2020 11:26:24 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1B7342A8DBF;
-        Tue, 21 Jul 2020 11:26:24 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
- 2020 11:26:23 +0200
-Subject: Re: [PATCH 3/3] ARM: dts: stm32: add initial support for
- stm32mp157-odyssey board
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20200706173353.20525-1-marcin.sloniewski@gmail.com>
- <20200706173353.20525-3-marcin.sloniewski@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <832ce94d-0635-634f-7d56-aa21d53652ae@st.com>
-Date:   Tue, 21 Jul 2020 11:26:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 05:27:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbgGUJ1g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 05:27:36 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999E6C0619D8
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 02:27:35 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b79so4825200qkg.9
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 02:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DOUOyhEXYy+mFY4wX1elRvpk/b4iwOOSpeaE0g0UYT0=;
+        b=l+VQdbPnwaXNy8KTtlkuAw05dOdR22m9cpX3v1c0wXHGUFwABtMSKKz/bCh95/xOvZ
+         el7CvES8n0Z06cd7eulSa9BKM3k0vGPm6o2tNZzVLSuDmuqptPCKerqTheTwKlryqER+
+         HsrIl25l252bwyeEyPDrxfBOARdMax2Oxc7BQpuDcFpklvpgOPR8KFfglf0UHcpa3siq
+         3Aig813Bt+FYEG4IH4GdgL4Ze3CwMqzHvJcvQgMqmNPFBcM1utMCfKKZso+0noagmjK9
+         HXReDhy3ubedJCJN1IN/ouk9Mxqzc4n2vAEhUhXRqhgq0epeVc2BfepIT/9YWijmau8u
+         hGsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DOUOyhEXYy+mFY4wX1elRvpk/b4iwOOSpeaE0g0UYT0=;
+        b=qiooC0XqTJGRW7rmfqvhCjjoF3ah5+Q1CExDCDPfsmnKDBJZfHfvRHe31ZnyWje5Ln
+         CNKQiSkO46OvcfF+5WrsatiPi+cCUoORIB3zKRru06x6qb1iBc9fnDqxgzhL7BvCxgeK
+         058+UMParIOwaGOFYsn412Tked7t/IEAmZkZrsdLtzjSIdbPOvfc67frXxSsU2yGemJe
+         Hi8pxx/cdyOMAR4fcsYiu4SdA3Xb7eDB60/amSK1I+Gr6AxjGbK/dBqhuxWyU/+M7/dE
+         9rBD0O9ZFBdr118f692J3Gl3HLRhG2+Qu9okFq4jYAOdEZ5dJNG7VWnQT2VyQghDn8O3
+         gz6w==
+X-Gm-Message-State: AOAM5325sp3WJMsz7I+xtlD7YqpIvrVqV9QWAcWUvxqcypfuSe0FHcRK
+        cYxsO1mQVTQbDn2ww2vS5oFxQ0WRaP7roKXx2DF1zQ==
+X-Google-Smtp-Source: ABdhPJyaeGg6r+6dXtRnMgUeD7HJuEYHGBjsTvloAVbpMgna1hllHKWaXJLbYDua1AZHue81pBZWVerRGHcC+oJP16o=
+X-Received: by 2002:a05:620a:4ca:: with SMTP id 10mr5498681qks.306.1595323654602;
+ Tue, 21 Jul 2020 02:27:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200706173353.20525-3-marcin.sloniewski@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-3-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <f0d3f3224a1b8fa2be668dd2b8d9d84e@kernel.org> <CAMxfBF6A9702-rBOo0jHtfn4Ds1_G+nWG4O9-urNqU00dFXeww@mail.gmail.com>
+ <12db6d22c12369b6d64f410aa2434b03@kernel.org> <CAMxfBF7pbH1LLE4fJnnCPnrqnQ-tdO+_xfoN1VerJcQ-ZyYM9Q@mail.gmail.com>
+ <53d39d8fbd63c6638dbf0584c7016ee0@kernel.org> <CAMxfBF6Th+zKOmogA5phkh21tSUzutokCgU+pv0Eh-sDk=1Hbg@mail.gmail.com>
+ <f11097c321b62e7f8ba904dc2907d4e0@kernel.org> <3501f3a6-0613-df1c-2c6d-5ac4610a226d@ti.com>
+ <CAMxfBF6G5haTLp7+DqB5D6uHhTNfftk8SVMYpsh0VQGztJEm9w@mail.gmail.com> <87ft9qxqqk.wl-maz@kernel.org>
+In-Reply-To: <87ft9qxqqk.wl-maz@kernel.org>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Tue, 21 Jul 2020 11:27:23 +0200
+Message-ID: <CAMxfBF6-d1uj2-E+3EPO2hysE06La_nrk+HSgmYvwgE82EanFw@mail.gmail.com>
+Subject: Re: [PATCHv3 2/6] irqchip/irq-pruss-intc: Add a PRUSS irqchip driver
+ for PRUSS interrupts
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>, "Andrew F . Davis" <afd@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marcin,
+Hi Marc,
 
-On 7/6/20 7:33 PM, Marcin Sloniewski wrote:
-> Add support for Seeed Studio's stm32mp157c odyssey board.
-> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
-> and carrier board with USB and ETH interfaces, SD card connector,
-> wifi and BT chip AP6236.
-> 
-> In this patch only basic kernel boot is supported and interfacing
-> SD card and on-board eMMC.
-> 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+First of all thank you very much for your review. I apologize in
+advance if the description below is too verbose or not detailed
+enough.
 
-Thanks for adding a new STM32MP157 board. Nothing to say about your DT 
-patchs except that Makefile update is missing.
+On Fri, 17 Jul 2020 at 14:36, Marc Zyngier <maz@kernel.org> wrote:
+>
+> Suman, Grzegorz,
+>
+> On Wed, 15 Jul 2020 14:38:05 +0100,
+> Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org> wrote:
+> >
+> > Hi Marc,
+> >
+> > > On 7/8/20 5:47 AM, Marc Zyngier wrote:
+> > > > On 2020-07-08 08:04, Grzegorz Jaszczyk wrote:
+> > > >> On Sun, 5 Jul 2020 at 22:45, Marc Zyngier <maz@kernel.org> wrote:
+> > > >>>
+> > > >>> On 2020-07-05 14:26, Grzegorz Jaszczyk wrote:
+> > > >>> > On Sat, 4 Jul 2020 at 11:39, Marc Zyngier <maz@kernel.org> wrote:
+> > > >>> >>
+> > > >>> >> On 2020-07-03 15:28, Grzegorz Jaszczyk wrote:
+> > > >>>
+> > > >>> [...]
+> > > >>>
+> > > >>> >> It still begs the question: if the HW can support both edge and level
+> > > >>> >> triggered interrupts, why isn't the driver supporting this diversity?
+> > > >>> >> I appreciate that your HW may only have level interrupts so far, but
+> > > >>> >> what guarantees that this will forever be true? It would imply a
+> > > >>> >> change
+> > > >>> >> in the DT binding, which isn't desirable.
+> > > >>> >
+> > > >>> > Ok, I've got your point. I will try to come up with something later
+> > > >>> > on. Probably extending interrupt-cells by one and passing interrupt
+> > > >>> > type will be enough for now. Extending this driver to actually support
+> > > >>> > it can be handled later if needed. Hope it works for you.
+> > > >>>
+> > > >>> Writing a set_type callback to deal with this should be pretty easy.
+> > > >>> Don't delay doing the right thing.
+> > > >>
+> > > >> Ok.
+> > >
+> > > Sorry for the typo in my comment causing this confusion.
+> > >
+> > > The h/w actually doesn't support the edge-interrupts. Likewise, the
+> > > polarity is always high. The individual register bit descriptions
+> > > mention what the bit values 0 and 1 mean, but there is additional
+> > > description in the TRMs on all the SoCs that says
+> > > "always write 1 to the bits of this register" for PRUSS_INTC_SIPR(x) and
+> > > "always write 0 to the bits of this register" for PRUSS_INTC_SITR(x).
+> > > FWIW, these are also the reset values.
+> > >
+> > > Eg: AM335x TRM - https://www.ti.com/lit/pdf/spruh73
+> > > Please see Section 4.4.2.5 and the register descriptions in 4.5.3.49,
+> > > 4.5.3.51. Please also see Section 4.4.2.3 that explains the PRUSS INTC
+> > > methodology.
+> > >
+> > > >>
+> > > >>>
+> > > >>> [...]
+> > > >>>
+> > > >>> >> >> > +             hwirq = hipir & GENMASK(9, 0);
+> > > >>> >> >> > +             virq = irq_linear_revmap(intc->domain, hwirq);
+> > > >>> >> >>
+> > > >>> >> >> And this is where I worry. You seems to have a single irqdomain
+> > > >>> >> >> for all the muxes. Are you guaranteed that you will have no
+> > > >>> >> >> overlap between muxes? And please use irq_find_mapping(), as
+> > > >>> >> >> I have top-secret plans to kill irq_linear_revmap().
+> > > >>> >> >
+> > > >>> >> > Regarding irq_find_mapping - sure.
+> > > >>> >> >
+> > > >>> >> > Regarding irqdomains:
+> > > >>> >> > It is a single irqdomain since the hwirq (system event) can be
+> > > >>> mapped
+> > > >>> >> > to different irq_host (muxes). Patch #6
+> > > >>> >> > https://lkml.org/lkml/2020/7/2/616 implements and describes how
+> > > >>> input
+> > > >>> >> > events can be mapped to some output host interrupts through 2
+> > > >>> levels
+> > > >>> >> > of many-to-one mapping i.e. events to channel mapping and
+> > > >>> channels to
+> > > >>> >> > host interrupts. Mentioned implementation ensures that specific
+> > > >>> system
+> > > >>> >> > event (hwirq) can be mapped through PRUSS specific channel into a
+> > > >>> >> > single host interrupt.
+> > > >>> >>
+> > > >>> >> Patch #6 is a nightmare of its own, and I haven't fully groked it
+> > > >>> yet.
+> > > >>> >> Also, this driver seems to totally ignore the 2-level routing. Where
+> > > >>> >> is it set up? map/unmap in this driver do exactly *nothing*, so
+> > > >>> >> something somewhere must set it up.
+> > > >>> >
+> > > >>> > The map/unmap is updated in patch #6 and it deals with those 2-level
+> > > >>> > routing setup. Map is responsible for programming the Channel Map
+> > > >>> > Registers (CMRx) and Host-Interrupt Map Registers (HMRx) basing on
+> > > >>> > provided configuration from the one parsed in the xlate function.
+> > > >>> > Unmap undo whatever was done on the map. More details can be found in
+> > > >>> > patch #6.
+> > > >>> >
+> > > >>> > Maybe it would be better to squash patch #6 with this one so it would
+> > > >>> > be less confusing. What is your advice?
+> > > >>>
+> > > >>> So am I right in understanding that without patch #6, this driver does
+> > > >>> exactly nothing? If so, it has been a waste of review time.
+> > > >>>
+> > > >>> Please split patch #6 so that this driver does something useful
+> > > >>> for Linux, without any of the PRU interrupt routing stuff. I want
+> > > >>> to see a Linux-only driver that works and doesn't rely on any other
+> > > >>> exotic feature.
+> > > >>>
+> > > >>
+> > > >> Patch #6 provides PRU specific 2-level routing setup. This step is
+> > > >> required and it is part of the entire patch-set. Theoretically routing
+> > > >> setup could be done by other platform driver (not irq one) or e.g. by
+> > > >> PRU firmware. In such case this driver would be functional without
+> > > >> patch #6 but I do not think it would be proper.
+> > > >
+> > > > Then this whole driver is non-functional until the last patch that
+> > > > comes with the PRU-specific "value-add".
+> > >
+> > > It is all moot actually and the interrupts work only when the PRU
+> > > remoteproc/clients have invoked the irq_create_fwspec_mapping()
+> > > for all of the desired system events. It does not make much difference
+> > > if it was a separate patch or squashed in, patch #6 is a replacement for
+> > > the previous logic, and since it was complex, it was done in a separate
+> > > patch to better explain the usage (same reason on v1 and v2 as
+> > > well).
+>
+> It may make no difference to you, but it does for me, as I'm the lucky
+> idiot reviewing this code. So I am going to say it again: please keep
+> anything that only exists for the PRU subsystem benefit out of the
+> initial patches.
+>
+> I want to see something that works for Linux, and only for Linux. Once
+> we have that working, we'll see to add more stuff. But stop throwing
+> the PRU business into the early patches, as all you are achieving is
+> to delay the whole thing.
+>
+> > >
+> > > >
+> > > > [...]
+> > > >
+> > > >> I am open to any suggestion if there is a better way of handling
+> > > >> 2-level routing. I will also appreciate if you could elaborate about
+> > > >> issues that you see with patch #6.
+> > > >
+> > > > The two level routing has to be part of this (or another) irqchip
+> > > > driver (specially given that it appears to me like another set of
+> > > > crossbar). There should only be a *single* binding for all interrupts,
+> > > > including those targeting the PRU (you seem to have two).
+> > > >
+> > >
+> > > Yeah, there hasn't been a clean way of doing this. Our previous attempt
+> > > was to do this through custom exported functions so that the PRU
+> > > remoteproc driver can set these up correctly, but that was shot down and
+> > > this is the direction we are pointed to.
+> > >
+> > > We do want to leverage the "interrupts" property in the PRU user nodes
+> > > instead of inventing our own paradigm through a non-irqchip driver, and
+> > > at the same time, be able to configure this at the run time only when
+> > > that PRU driver is running, and remove the mappings once that driver is
+> > > removed allowing another PRU application/driver. We treat PRUs as an
+> > > exclusive resource, so everything needs to go along with an appropriate
+> > > client user.
+> >
+> > I will just add an explanation about interrupt binding. So actually
+> > there is one dt-binding defined in yaml (interrupt-cells = 1). The
+> > reason why you see xlate allowing to proceed with 1 or 3 parameters is
+> > because linux can change the PRU firmware at run-time (thorough linux
+> > remoteproc framework) and different firmware may require different
+> > kinds of interrupt mapping. Therefore during firmware load, the new
+> > mapping is created through irq_create_fwspec_mapping() and in this
+> > case 3 parameters are passed: system event, channel and host irq.
+> > Similarly the mapping is disposed during remoteproc stop by invoking
+> > irq_dispose_mapping. This allows to create new mapping, in the same
+> > way, for next firmware loaded through Linux remote-proc at runtime
+> > (depending on the needs of new remoteproc firmware).
+> >
+> > On the other hand dt-bindings defines interrupt-cells = 1, so when the
+> > interrupt is registered the xlate function (proceed with 1 parameter)
+> > checks if this event already has valid mapping - if yes we are fine,
+> > if not we return -EINVAL.
+>
+> It means that interrupts declared in DT get their two-level routing
+> via the kernel driver, while PRU interrupts get their routing via some
+> external blob that Linux is not in control of?
 
-regards
-Alex
+Actually with the current approach all two-level routing goes through
+this linux driver. The interrupts that should be routed to PRU are
+described in remoteproc firmware resource table [1] and it is under
+Linux remoteproc driver control. In general, the resource table
+contains system resources that the remote processor requires before it
+should be powered on. We treat the interrupt mapping (described in the
+resource table, which is a dedicated elf section defined in [1]) as
+one of system resources that linux has to provide before we power on
+the PRU core. Therefore the remoteproce driver will parse the resource
+table and trigger irq_create_fwspec_mapping() after validating
+resource table content.
 
+[1] https://www.kernel.org/doc/Documentation/remoteproc.txt (Binary
+Firmware Structure)
 
-> ---
->   .../arm/boot/dts/stm32mp157c-odyssey-som.dtsi | 276 ++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-odyssey.dts     |  72 +++++
->   2 files changed, 348 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey.dts
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
-> new file mode 100644
-> index 000000000000..620ff9e7f370
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
-> @@ -0,0 +1,276 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "stm32mp157.dtsi"
-> +#include "stm32mp15xc.dtsi"
-> +#include "stm32mp15-pinctrl.dtsi"
-> +#include "stm32mp15xxac-pinctrl.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/mfd/st,stpmic1.h>
-> +
-> +/ {
-> +	model = "Seeed Studio Odyssey-STM32MP157C SOM";
-> +	compatible = "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
-> +
-> +	memory@c0000000 {
-> +		reg = <0xc0000000 0x20000000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		mcuram2: mcuram2@10000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x10000000 0x40000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev0vring0: vdev0vring0@10040000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x10040000 0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev0vring1: vdev0vring1@10041000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x10041000 0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev0buffer: vdev0buffer@10042000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x10042000 0x4000>;
-> +			no-map;
-> +		};
-> +
-> +		mcuram: mcuram@30000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x30000000 0x40000>;
-> +			no-map;
-> +		};
-> +
-> +		retram: retram@38000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x38000000 0x10000>;
-> +			no-map;
-> +		};
-> +
-> +		gpu_reserved: gpu@d4000000 {
-> +			reg = <0xd4000000 0x4000000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	led {
-> +		compatible = "gpio-leds";
-> +		blue {
-> +			label = "heartbeat";
-> +			gpios = <&gpiog 3 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			default-state = "off";
-> +		};
-> +	};
-> +};
-> +
-> +&gpu {
-> +	contiguous-area = <&gpu_reserved>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins_a>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	status = "okay";
-> +	/* spare dmas for other usage */
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +
-> +	pmic: stpmic@33 {
-> +		compatible = "st,stpmic1";
-> +		reg = <0x33>;
-> +		interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		status = "okay";
-> +
-> +		regulators {
-> +			compatible = "st,stpmic1-regulators";
-> +			ldo1-supply = <&v3v3>;
-> +			ldo3-supply = <&vdd_ddr>;
-> +			ldo6-supply = <&v3v3>;
-> +			pwr_sw1-supply = <&bst_out>;
-> +			pwr_sw2-supply = <&bst_out>;
-> +
-> +			vddcore: buck1 {
-> +				regulator-name = "vddcore";
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd_ddr: buck2 {
-> +				regulator-name = "vdd_ddr";
-> +				regulator-min-microvolt = <1350000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd: buck3 {
-> +				regulator-name = "vdd";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				st,mask-reset;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			v3v3: buck4 {
-> +				regulator-name = "v3v3";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +				regulator-initial-mode = <0>;
-> +			};
-> +
-> +			v1v8_audio: ldo1 {
-> +				regulator-name = "v1v8_audio";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
-> +				interrupts = <IT_CURLIM_LDO1 0>;
-> +			};
-> +
-> +			v3v3_hdmi: ldo2 {
-> +				regulator-name = "v3v3_hdmi";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				interrupts = <IT_CURLIM_LDO2 0>;
-> +			};
-> +
-> +			vtt_ddr: ldo3 {
-> +				regulator-name = "vtt_ddr";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <750000>;
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd_usb: ldo4 {
-> +				regulator-name = "vdd_usb";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				interrupts = <IT_CURLIM_LDO4 0>;
-> +			};
-> +
-> +			vdda: ldo5 {
-> +				regulator-name = "vdda";
-> +				regulator-min-microvolt = <2900000>;
-> +				regulator-max-microvolt = <2900000>;
-> +				interrupts = <IT_CURLIM_LDO5 0>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			v1v2_hdmi: ldo6 {
-> +				regulator-name = "v1v2_hdmi";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-always-on;
-> +				interrupts = <IT_CURLIM_LDO6 0>;
-> +			};
-> +
-> +			vref_ddr: vref_ddr {
-> +				regulator-name = "vref_ddr";
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			 bst_out: boost {
-> +				regulator-name = "bst_out";
-> +				interrupts = <IT_OCP_BOOST 0>;
-> +			 };
-> +
-> +			vbus_otg: pwr_sw1 {
-> +				regulator-name = "vbus_otg";
-> +				interrupts = <IT_OCP_OTG 0>;
-> +			 };
-> +
-> +			 vbus_sw: pwr_sw2 {
-> +				regulator-name = "vbus_sw";
-> +				interrupts = <IT_OCP_SWOUT 0>;
-> +				regulator-active-discharge;
-> +			 };
-> +		};
-> +
-> +		onkey {
-> +			compatible = "st,stpmic1-onkey";
-> +			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
-> +			interrupt-names = "onkey-falling", "onkey-rising";
-> +			power-off-time-sec = <10>;
-> +			status = "okay";
-> +		};
-> +
-> +		watchdog {
-> +			compatible = "st,stpmic1-wdt";
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> +
-> +&ipcc {
-> +	status = "okay";
-> +};
-> +
-> +&iwdg2 {
-> +	timeout-sec = <32>;
-> +	status = "okay";
-> +};
-> +
-> +&m4_rproc {
-> +	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
-> +			<&vdev0vring1>, <&vdev0buffer>;
-> +	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
-> +	mbox-names = "vq0", "vq1", "shutdown";
-> +	interrupt-parent = <&exti>;
-> +	interrupts = <68 1>;
-> +	status = "okay";
-> +};
-> +
-> +&rng1 {
-> +	status = "okay";
-> +};
-> +
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc2 {
-> +	pinctrl-names = "default", "opendrain", "sleep";
-> +	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_a>;
-> +	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_a>;
-> +	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_a>;
-> +	non-removable;
-> +	no-sd;
-> +	no-sdio;
-> +	st,neg-edge;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&v3v3>;
-> +	vqmmc-supply = <&v3v3>;
-> +	mmc-ddr-3_3v;
-> +	status = "okay";
-> +};
-> +
-> diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
-> new file mode 100644
-> index 000000000000..6c1b091af14f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
-> @@ -0,0 +1,72 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "stm32mp157c-odyssey-som.dtsi"
-> +
-> +/ {
-> +	model = "Seeed Studio Odyssey-STM32MP157C Board";
-> +	compatible = "seeed,stm32mp157c-odyssey", "st,stm32mp157";
-> +
-> +	aliases {
-> +		ethernet0 = &ethernet0;
-> +		serial0 = &uart4;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&ethernet0 {
-> +	status = "okay";
-> +	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-> +	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
-> +	pinctrl-names = "default", "sleep";
-> +	phy-mode = "rgmii-id";
-> +	max-speed = <1000>;
-> +	phy-handle = <&phy0>;
-> +
-> +	mdio0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,dwmac-mdio";
-> +		phy0: ethernet-phy@0 {
-> +			reg = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&i2c1_pins_a>;
-> +	pinctrl-1 = <&i2c1_pins_sleep_a>;
-> +	i2c-scl-rising-time-ns = <100>;
-> +	i2c-scl-falling-time-ns = <7>;
-> +	status = "okay";
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +};
-> +
-> +&sdmmc1 {
-> +	pinctrl-names = "default", "opendrain", "sleep";
-> +	pinctrl-0 = <&sdmmc1_b4_pins_a>;
-> +	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-> +	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-> +	cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-> +	disable-wp;
-> +	st,neg-edge;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&v3v3>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart4_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> 
+>
+> If so, this looks broken. What if you get a resource allocation
+> conflict because the kernel and the blob are stepping into each
+> other's toes? Why should an end-point client decide on the routing of
+> the interrupt?
+
+The code in the pruss_intc_map function checks if there are no
+allocation conflicts: e.g. if the sysevent is already assigned it will
+throw -EBUSY. Similarly when some channel was already assigned to
+host_irq and a different assignment is requested it will again throw
+-EBUSY.
+
+>
+> All the end-point should provide is the ID of the input signal, and to
+> which PRU this is routed. Interrupts described in DT should have the
+> exact same model (input signal, target). All the intermediate routing
+> logic should be handled by the Linux driver for *all* interrupts in
+> the system.
+
+There is one issue with this approach: the channel number corresponds
+to the priority as described in TRM and PRU core firmware relies on
+those priorities. Because the interrupt routing for the PRU core will
+also go through this linux interrupt driver I think we have to stick
+with 3 parameter descriptions.
+
+>
+> >
+> > >
+> > > > And the non-CPU interrupt code has to be in its own patch, because
+> > > > it is pretty borderline anyway (I'm still not completely convinced
+> > > > this is Linux's job).
+> > >
+> > > The logic for non-CPU interrupt code is exactly the same as the CPU
+> > > interrupt code, as they are all setup through the
+> > > irq_create_fwspec_mapping(). The CPU-specific pieces are primarily the
+> > > chained interrupt handling.
+> > >
+> > > We have already argued internally about the last part, but our firmware
+> > > developers literally don't have any IRAM space (we have a lot of
+> > > Industrial protocols working out of 4K/8K memory), and have pushed all
+> > > one-time setup to the OS running (Linux or otherwise) on the main ARM
+> > > core, and INTC is one among the other many such settings. Every word in
+> > > Instruction RAM was crucial for them.
+>
+> And that's fine. Just push *all* of it into Linux, and not just the
+> programming of the registers.
+>
+> > >
+> > > So, we are all ears if there is still an elegant way of doing this. Look
+> > > forward to any suggestions you may have.
+> >
+> > Yes, the non-CPU logic is exactly the same as the CPU interrupt code
+> > as Suman described. There is no distinction between routing setup for
+> > main CPU and PRU core, both use exactly the same logic, just different
+> > numbers are passed through  irq_create_fwspec_mapping.
+>
+> It obviously isn't the same at the moment. You have two distinct code
+> paths, two ways to describe a mapping, and a potential resource
+> allocation issue.
+>
+
+Ok, I will get rid of the two distinct code paths in the xlate
+function (in patch#6) and change the #interrupt-cells to 3 which and
+describe the entire interrupt routing in DT for interrupts targeted to
+the main CPU. Please let me know if you have any further comments.
+
+Thank you,
+Grzegorz
