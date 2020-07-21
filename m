@@ -2,310 +2,243 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB86FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EA8C433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B161920B1F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40CD22CA0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="W9AzDrxL"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gYKVArj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726042AbgGUG2K (ORCPT
+        id S1728267AbgGUGjc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:28:10 -0400
-Received: from mail-dm6nam10on2044.outbound.protection.outlook.com ([40.107.93.44]:11930
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726039AbgGUG2J (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:28:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E3wqckeVk9OreK74Ug3Fub7WLsLZVUciI7c8OYwqtPm4YqS9RCS8MDjhzlv3AtGTYrcWAKeyvHuGGPGNHAx8cOssT8cCWGv7X5JkM4M/XXWknTU9g1rPnU2GPpaVKKSYyeZQ5h6CUylHu8TLGf02UUs+h9b1qAm6gpDdYm+MjoxnLsSgcQjZhkYPYW7hK5GD89ggBCjTPWZWv3edE1GBSQRZed6tfGdmxGcEJCpQcxCExMHjKJNPW1CN8JosuUvYdsmbhnOOZ9ZV5lM+dymWbZgRB6Kz2iSH9NR5KDVaWBDSX3Fn8lBS8YVICf2FAd7u7wxzjuMhRo5Bn2CGTgSLyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dcP6ceC56fnJ5gKUuILIwvX3m3wAWQAF/B/pA0RmVbg=;
- b=R8tdYDwn0Xa8JRv4f/T1Sk4ExwD4jUUNwz1yjXwTowHk4QSBzf89chhmFEi820ZR7DfxW66tH61lfHVS2Qy9MmRrNoMGERsMhAPZo6JJGAgn8Q1oHqKKdLFfgcck0SyOjntDmfd2d/BBe8dLvkOG+RjbzlGN37BO0abz9Z6KNMHsGJLbnrAXydqv/N5AqOaIAMWRtlKi3e5m/akpEeHW1VzMYCCjXmku+nQNuZ4p5pq9hW2XwrUomDDYNzHe2SXGjgpfYeHJOj8DMfBT/ODfjBmhq4bE8OiwEEp4HsTtoq8LLb8NXyd0IV4k+5K28Zw+nuSUpFB4/X3hSg77XRQsuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dcP6ceC56fnJ5gKUuILIwvX3m3wAWQAF/B/pA0RmVbg=;
- b=W9AzDrxLMzrcur0/4rJd2I5iNtfOS6NSilO0BkzCt+i0qUvK53zwpeH82SRBWmTY6A3Jt2pdJo4vDCzuLOamsyHDxsP28SsWkBjOO7Kw6fYCTpLsiTxSmn8dtiyasKWH7zdiL0JZZQZrsju8gn1ypTQA9bzH/+SKH3fIWoHMKpw=
-Received: from DM6PR02MB5818.namprd02.prod.outlook.com (2603:10b6:5:17c::24)
- by DM6PR02MB5196.namprd02.prod.outlook.com (2603:10b6:5:47::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.25; Tue, 21 Jul
- 2020 06:28:05 +0000
-Received: from DM6PR02MB5818.namprd02.prod.outlook.com
- ([fe80::fcb8:7630:4fa4:6ba6]) by DM6PR02MB5818.namprd02.prod.outlook.com
- ([fe80::fcb8:7630:4fa4:6ba6%5]) with mapi id 15.20.3174.026; Tue, 21 Jul 2020
- 06:28:04 +0000
-From:   Sai Krishna Potthuri <lakshmis@xilinx.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Michal Simek <michals@xilinx.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>,
-        "saikrishna12468@gmail.com" <saikrishna12468@gmail.com>
-Subject: RE: [PATCH 1/2] dt-bindings: reset: Updated binding for Versal reset
- driver
-Thread-Topic: [PATCH 1/2] dt-bindings: reset: Updated binding for Versal reset
- driver
-Thread-Index: AQHWWagTecU6ft9w8EW9Zg+g4N9XWqkRVBwAgABDR8A=
-Date:   Tue, 21 Jul 2020 06:28:04 +0000
-Message-ID: <DM6PR02MB581821BF5C2F79F909A128C1BD780@DM6PR02MB5818.namprd02.prod.outlook.com>
-References: <1594708149-29944-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <1594708149-29944-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <20200721020740.GA3376303@bogus>
-In-Reply-To: <20200721020740.GA3376303@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ea0b2660-7e04-4ee5-2e0e-08d82d3f39d5
-x-ms-traffictypediagnostic: DM6PR02MB5196:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR02MB519613251CB9C2EC7D415A88BD780@DM6PR02MB5196.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W6a0tr9EN09Z4Sz1VKYs/Mp4nUuz7puD3tjFzKyAQp6UnErKoas0MALmAjws2yQyqheY3dm1gtMZxoQWUH9fOc0D1g8BXlATWSuzsE/8zRJuR8fCwqm7FFESJ6CtcVcFZytePVBe+vGWzA61BB0UG+CftM/r+733AKyLW7ZEu7HRhM0vCplyAa8kczezGrPlOyeUKSUKeeUK8Edo+VyZHyiYaR2cntMLMOUp9pX2WyCK57wMo7jGEhvza0ZrzVFYMb+U/PhShg0pcO1VP0+TOSrxRpYG3+r9IwO6pj3loGnkdnyLAlXRTlJM4WkyxrEUwclGfdgmbM2dCUm50A8aKQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB5818.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(136003)(39860400002)(396003)(366004)(86362001)(8936002)(52536014)(2906002)(186003)(6506007)(7696005)(53546011)(5660300002)(478600001)(8676002)(26005)(15650500001)(6916009)(83380400001)(316002)(9686003)(55016002)(54906003)(76116006)(71200400001)(33656002)(66946007)(64756008)(4326008)(66556008)(66446008)(66476007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 6QuEgGY6KHgji3BY0sR3gI5Zdkw7WARstOnvnehjZVKKkTnArtV1ANhLDhJi0T+1DX4uWs1KmtG4LqXKpf7enGeo/FnBAB7ynhuSuwOcKFb8OSRsXnMX01kLwPcVK+HpgxDea5nSwdddN0cfEl979wWG3+diIR7pZMCm/B5VVvQkzrDJeGhaLGlofpMGqYJkuKktjlzthulpIwNeIX/BZY93IusgUhYbJyYHaf7pwiQLmaDMgNLpW1rc3YVqSu7Oj+fJPWWoRZpCO15FhXdZBbVa0ZUSy3HM3noqnAaXnT+MHoSpAO6pv6T/KF5+sIEl5nCEdqCPWcmmNunS4fla0v/YlQb4+0Vf/JK16x/ColRsmZXKWPkXcvNrdY+8uRQkEs8/vtWZ2jFNqVM3GAbLf/cJx7sndiFk8yAdX/fme18wylipUAKO+uzxfByAcb86GUJbIOAinB6Cqxhwkk36XnL5vfS8dvs9Ck+65dO9f8Iz5YgQXNDrdELFwmLbY/yu
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 Jul 2020 02:39:32 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:6864 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726053AbgGUGjb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 02:39:31 -0400
+X-UUID: 7539a72c29f64db58ccd12a237d138e0-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=HDE+Nmz97xH0ltYCR/7mZosOzkYaRCE+XN7OpMwDbO0=;
+        b=gYKVArj93R7G8LE9UDlFK7sMIUBPnFSglqS1QJbF11bXh9rcn92cNUrKNnSYJClCWvVCMewZcm/LDlrqExL8w5wVziD0jPrSxxreSVVY6CWIL/SoJadRPkDHCY4SvGeVKjs+rS164eZEp351hQ4jC4DiX7+dQZZCSFgzDFKj+fw=;
+X-UUID: 7539a72c29f64db58ccd12a237d138e0-20200721
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.mao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1510372257; Tue, 21 Jul 2020 14:39:19 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
+ 2020 14:39:17 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 14:39:15 +0800
+Message-ID: <1595313493.10458.1.camel@mhfsdcap03>
+Subject: Re: [PATCH v7 3/4] mmc: mediatek: command queue support
+From:   "yong.mao@mediatek.com" <yong.mao@mediatek.com>
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+CC:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
+        "Al Cooper" <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-tegra@vger.kernel.org>, <kernel-team@android.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 21 Jul 2020 14:38:13 +0800
+In-Reply-To: <1595205759-5825-4-git-send-email-chun-hung.wu@mediatek.com>
+References: <1595205759-5825-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1595205759-5825-4-git-send-email-chun-hung.wu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR02MB5818.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea0b2660-7e04-4ee5-2e0e-08d82d3f39d5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 06:28:04.7977
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lDiZjNNCNG5YyGODs33Ub3TIWqvmIPN+3eAWts9u9LeXBfJxxOip9lMpogzHowHpNoZ2jpMezRmBvImByZS5Dg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5196
+X-TM-SNTS-SMTP: DA64DD8DC2FBB8E4BA786BAC7558BA6035E8F96A600D608D10CD9570EDFFAA072000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+T24gTW9uLCAyMDIwLTA3LTIwIGF0IDA4OjQyICswODAwLCBDaHVuLUh1bmcgV3Ugd3JvdGU6DQo+
+IFN1cHBvcnQgY29tbWFuZCBxdWV1ZSBmb3IgbXQ2Nzc5IHBsYXRmb3JtLg0KPiBhLiBBZGQgbXNk
+Y19zZXRfYnVzeV90aW1lb3V0KCkgdG8gY2FsY3VsYXRlIGVtbWMgd3JpdGUgdGltZW91dC4NCj4g
+Yi4gQ29ubmVjdCBtdGsgbXNkYyBkcml2ZXIgdG8gY3FoY2kgZHJpdmVyIHRocm91Z2gNCj4gICAg
+aG9zdC0+Y3FfaG9zdC0+b3BzID0gJm1zZGNfY21kcV9vcHM7DQo+IGMuIG1zZGNfY21kcV9pcnEo
+KSB3aWxsIGxpbmsgdXAgd2l0aCBjcWNoaV9pcnEoKS4gQmVzaWRlcywgaXQgcHJvdmlkZXMNCj4g
+ICAgbW9yZSBpcnEgZXJyb3IgbWVzc2FnZXMgbGlrZSBSU1BDUkNFUlIvQ01EVE8vREFUQUNSQ0VS
+Ui9EQVRUTU8uDQo+IGQuIFNlbGVjdCBrZXJuZWwgY29uZmlnIE1NQ19DUUhDSSBmb3IgTU1DX01U
+Sw0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ2h1bi1IdW5nIFd1IDxjaHVuLWh1bmcud3VAbWVkaWF0
+ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbW1jL2hvc3QvS2NvbmZpZyAgfCAgIDEgKw0KPiAg
+ZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYyB8IDExNSArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDExNiBpbnNlcnRpb25z
+KCspDQo+IA0KDQpBY2tlZC1ieTogWW9uZyBNYW8gPHlvbmcubWFvQG1lZGlhdGVrLmNvbT4NCg0K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvaG9zdC9LY29uZmlnIGIvZHJpdmVycy9tbWMvaG9z
+dC9LY29uZmlnDQo+IGluZGV4IDNiNzA2YWYuLjljODlhNWIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvbW1jL2hvc3QvS2NvbmZpZw0KPiArKysgYi9kcml2ZXJzL21tYy9ob3N0L0tjb25maWcNCj4g
+QEAgLTEwMDksNiArMTAwOSw3IEBAIGNvbmZpZyBNTUNfTVRLDQo+ICAJdHJpc3RhdGUgIk1lZGlh
+VGVrIFNEL01NQyBDYXJkIEludGVyZmFjZSBzdXBwb3J0Ig0KPiAgCWRlcGVuZHMgb24gSEFTX0RN
+QQ0KPiAgCXNlbGVjdCBSRUdVTEFUT1INCj4gKwlzZWxlY3QgTU1DX0NRSENJDQo+ICAJaGVscA0K
+PiAgCSAgVGhpcyBzZWxlY3RzIHRoZSBNZWRpYVRlayhSKSBTZWN1cmUgZGlnaXRhbCBhbmQgTXVs
+dGltZWRpYSBjYXJkIEludGVyZmFjZS4NCj4gIAkgIElmIHlvdSBoYXZlIGEgbWFjaGluZSB3aXRo
+IGEgaW50ZWdyYXRlZCBTRC9NTUMgY2FyZCByZWFkZXIsIHNheSBZIG9yIE0gaGVyZS4NCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMgYi9kcml2ZXJzL21tYy9ob3N0L210
+ay1zZC5jDQo+IGluZGV4IDM0N2VkNzIuLmU1NjBhMDYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
+bW1jL2hvc3QvbXRrLXNkLmMNCj4gKysrIGIvZHJpdmVycy9tbWMvaG9zdC9tdGstc2QuYw0KPiBA
+QCAtMzEsNiArMzEsOCBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4L21tYy9zZGlvLmg+DQo+ICAjaW5j
+bHVkZSA8bGludXgvbW1jL3Nsb3QtZ3Bpby5oPg0KPiAgDQo+ICsjaW5jbHVkZSAiY3FoY2kuaCIN
+Cj4gKw0KPiAgI2RlZmluZSBNQVhfQkRfTlVNICAgICAgICAgIDEwMjQNCj4gIA0KPiAgLyotLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLSovDQo+IEBAIC0xNTIsNiArMTU0LDcgQEANCj4gICNkZWZpbmUgTVNEQ19J
+TlRfRE1BX0JEQ1NFUlIgICAgKDB4MSA8PCAxNykJLyogVzFDICovDQo+ICAjZGVmaW5lIE1TRENf
+SU5UX0RNQV9HUERDU0VSUiAgICgweDEgPDwgMTgpCS8qIFcxQyAqLw0KPiAgI2RlZmluZSBNU0RD
+X0lOVF9ETUFfUFJPVEVDVCAgICAoMHgxIDw8IDE5KQkvKiBXMUMgKi8NCj4gKyNkZWZpbmUgTVNE
+Q19JTlRfQ01EUSAgICAgICAgICAgKDB4MSA8PCAyOCkJLyogVzFDICovDQo+ICANCj4gIC8qIE1T
+RENfSU5URU4gbWFzayAqLw0KPiAgI2RlZmluZSBNU0RDX0lOVEVOX01NQ0lSUSAgICAgICAoMHgx
+IDw8IDApCS8qIFJXICovDQo+IEBAIC0xODIsNiArMTg1LDcgQEANCj4gIC8qIFNEQ19DRkcgbWFz
+ayAqLw0KPiAgI2RlZmluZSBTRENfQ0ZHX1NESU9JTlRXS1VQICAgICAoMHgxIDw8IDApCS8qIFJX
+ICovDQo+ICAjZGVmaW5lIFNEQ19DRkdfSU5TV0tVUCAgICAgICAgICgweDEgPDwgMSkJLyogUlcg
+Ki8NCj4gKyNkZWZpbmUgU0RDX0NGR19XUkRUT0MgICAgICAgICAgKDB4MWZmZiAgPDwgMikgIC8q
+IFJXICovDQo+ICAjZGVmaW5lIFNEQ19DRkdfQlVTV0lEVEggICAgICAgICgweDMgPDwgMTYpCS8q
+IFJXICovDQo+ICAjZGVmaW5lIFNEQ19DRkdfU0RJTyAgICAgICAgICAgICgweDEgPDwgMTkpCS8q
+IFJXICovDQo+ICAjZGVmaW5lIFNEQ19DRkdfU0RJT0lERSAgICAgICAgICgweDEgPDwgMjApCS8q
+IFJXICovDQo+IEBAIC0yMzAsNiArMjM0LDcgQEANCj4gICNkZWZpbmUgTVNEQ19QQVRDSF9CSVRf
+REVDUkNUTU8gICAoMHgxIDw8IDMwKQkvKiBSVyAqLw0KPiAgDQo+ICAjZGVmaW5lIE1TRENfUEFU
+Q0hfQklUMV9DTURUQSAgICAgKDB4NyA8PCAzKSAgICAvKiBSVyAqLw0KPiArI2RlZmluZSBNU0RD
+X1BCMV9CVVNZX0NIRUNLX1NFTCAgICgweDEgPDwgNykgICAgLyogUlcgKi8NCj4gICNkZWZpbmUg
+TVNEQ19QQVRDSF9CSVQxX1NUT1BfRExZICAoMHhmIDw8IDgpICAgIC8qIFJXICovDQo+ICANCj4g
+ICNkZWZpbmUgTVNEQ19QQVRDSF9CSVQyX0NGR1JFU1AgICAoMHgxIDw8IDE1KSAgIC8qIFJXICov
+DQo+IEBAIC00MzEsOSArNDM2LDExIEBAIHN0cnVjdCBtc2RjX2hvc3Qgew0KPiAgCQkJCSAvKiBj
+bWQgcmVzcG9uc2Ugc2FtcGxlIHNlbGVjdGlvbiBmb3IgSFM0MDAgKi8NCj4gIAlib29sIGhzNDAw
+X21vZGU7CS8qIGN1cnJlbnQgZU1NQyB3aWxsIHJ1biBhdCBoczQwMCBtb2RlICovDQo+ICAJYm9v
+bCBpbnRlcm5hbF9jZDsJLyogVXNlIGludGVybmFsIGNhcmQtZGV0ZWN0IGxvZ2ljICovDQo+ICsJ
+Ym9vbCBjcWhjaTsJCS8qIHN1cHBvcnQgZU1NQyBodyBjbWRxICovDQo+ICAJc3RydWN0IG1zZGNf
+c2F2ZV9wYXJhIHNhdmVfcGFyYTsgLyogdXNlZCB3aGVuIGdhdGUgSENMSyAqLw0KPiAgCXN0cnVj
+dCBtc2RjX3R1bmVfcGFyYSBkZWZfdHVuZV9wYXJhOyAvKiBkZWZhdWx0IHR1bmUgc2V0dGluZyAq
+Lw0KPiAgCXN0cnVjdCBtc2RjX3R1bmVfcGFyYSBzYXZlZF90dW5lX3BhcmE7IC8qIHR1bmUgcmVz
+dWx0IG9mIENNRDIxL0NNRDE5ICovDQo+ICsJc3RydWN0IGNxaGNpX2hvc3QgKmNxX2hvc3Q7DQo+
+ICB9Ow0KPiAgDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19tbWNfY29tcGF0aWJsZSBtdDgx
+MzVfY29tcGF0ID0gew0KPiBAQCAtNzY0LDYgKzc3MSwxNSBAQCBzdGF0aWMgdm9pZCBtc2RjX3Nl
+dF90aW1lb3V0KHN0cnVjdCBtc2RjX2hvc3QgKmhvc3QsIHU2NCBucywgdTY0IGNsa3MpDQo+ICAJ
+CSAgICAgICh1MzIpKHRpbWVvdXQgPiAyNTUgPyAyNTUgOiB0aW1lb3V0KSk7DQo+ICB9DQo+ICAN
+Cj4gK3N0YXRpYyB2b2lkIG1zZGNfc2V0X2J1c3lfdGltZW91dChzdHJ1Y3QgbXNkY19ob3N0ICpo
+b3N0LCB1NjQgbnMsIHU2NCBjbGtzKQ0KPiArew0KPiArCXU2NCB0aW1lb3V0Ow0KPiArDQo+ICsJ
+dGltZW91dCA9IG1zZGNfdGltZW91dF9jYWwoaG9zdCwgbnMsIGNsa3MpOw0KPiArCXNkcl9zZXRf
+ZmllbGQoaG9zdC0+YmFzZSArIFNEQ19DRkcsIFNEQ19DRkdfV1JEVE9DLA0KPiArCQkgICAgICAo
+dTMyKSh0aW1lb3V0ID4gODE5MSA/IDgxOTEgOiB0aW1lb3V0KSk7DQo+ICt9DQo+ICsNCj4gIHN0
+YXRpYyB2b2lkIG1zZGNfZ2F0ZV9jbG9jayhzdHJ1Y3QgbXNkY19ob3N0ICpob3N0KQ0KPiAgew0K
+PiAgCWNsa19kaXNhYmxlX3VucHJlcGFyZShob3N0LT5zcmNfY2xrX2NnKTsNCj4gQEAgLTE0ODEs
+NiArMTQ5NywzNCBAQCBzdGF0aWMgdm9pZCBtc2RjX2VuYWJsZV9zZGlvX2lycShzdHJ1Y3QgbW1j
+X2hvc3QgKm1tYywgaW50IGVuYikNCj4gIAkJcG1fcnVudGltZV9wdXRfbm9pZGxlKGhvc3QtPmRl
+dik7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpcnFyZXR1cm5fdCBtc2RjX2NtZHFfaXJxKHN0cnVj
+dCBtc2RjX2hvc3QgKmhvc3QsIHUzMiBpbnRzdHMpDQo+ICt7DQo+ICsJaW50IGNtZF9lcnIgPSAw
+LCBkYXRfZXJyID0gMDsNCj4gKw0KPiArCWlmIChpbnRzdHMgJiBNU0RDX0lOVF9SU1BDUkNFUlIp
+IHsNCj4gKwkJY21kX2VyciA9IC1FSUxTRVE7DQo+ICsJCWRldl9lcnIoaG9zdC0+ZGV2LCAiJXM6
+IENNRCBDUkMgRVJSIiwgX19mdW5jX18pOw0KPiArCX0gZWxzZSBpZiAoaW50c3RzICYgTVNEQ19J
+TlRfQ01EVE1PKSB7DQo+ICsJCWNtZF9lcnIgPSAtRVRJTUVET1VUOw0KPiArCQlkZXZfZXJyKGhv
+c3QtPmRldiwgIiVzOiBDTUQgVElNRU9VVCBFUlIiLCBfX2Z1bmNfXyk7DQo+ICsJfQ0KPiArDQo+
+ICsJaWYgKGludHN0cyAmIE1TRENfSU5UX0RBVENSQ0VSUikgew0KPiArCQlkYXRfZXJyID0gLUVJ
+TFNFUTsNCj4gKwkJZGV2X2Vycihob3N0LT5kZXYsICIlczogREFUQSBDUkMgRVJSIiwgX19mdW5j
+X18pOw0KPiArCX0gZWxzZSBpZiAoaW50c3RzICYgTVNEQ19JTlRfREFUVE1PKSB7DQo+ICsJCWRh
+dF9lcnIgPSAtRVRJTUVET1VUOw0KPiArCQlkZXZfZXJyKGhvc3QtPmRldiwgIiVzOiBEQVRBIFRJ
+TUVPVVQgRVJSIiwgX19mdW5jX18pOw0KPiArCX0NCj4gKw0KPiArCWlmIChjbWRfZXJyIHx8IGRh
+dF9lcnIpIHsNCj4gKwkJZGV2X2Vycihob3N0LT5kZXYsICJjbWRfZXJyID0gJWQsIGRhdF9lcnIg
+PSVkLCBpbnRzdHMgPSAweCV4IiwNCj4gKwkJCWNtZF9lcnIsIGRhdF9lcnIsIGludHN0cyk7DQo+
+ICsJfQ0KPiArDQo+ICsJcmV0dXJuIGNxaGNpX2lycShob3N0LT5tbWMsIDAsIGNtZF9lcnIsIGRh
+dF9lcnIpOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgaXJxcmV0dXJuX3QgbXNkY19pcnEoaW50IGly
+cSwgdm9pZCAqZGV2X2lkKQ0KPiAgew0KPiAgCXN0cnVjdCBtc2RjX2hvc3QgKmhvc3QgPSAoc3Ry
+dWN0IG1zZGNfaG9zdCAqKSBkZXZfaWQ7DQo+IEBAIC0xNTE3LDYgKzE1NjEsMTQgQEAgc3RhdGlj
+IGlycXJldHVybl90IG1zZGNfaXJxKGludCBpcnEsIHZvaWQgKmRldl9pZCkNCj4gIAkJaWYgKCEo
+ZXZlbnRzICYgKGV2ZW50X21hc2sgJiB+TVNEQ19JTlRfU0RJT0lSUSkpKQ0KPiAgCQkJYnJlYWs7
+DQo+ICANCj4gKwkJaWYgKChob3N0LT5tbWMtPmNhcHMyICYgTU1DX0NBUDJfQ1FFKSAmJg0KPiAr
+CQkgICAgKGV2ZW50cyAmIE1TRENfSU5UX0NNRFEpKSB7DQo+ICsJCQltc2RjX2NtZHFfaXJxKGhv
+c3QsIGV2ZW50cyk7DQo+ICsJCQkvKiBjbGVhciBpbnRlcnJ1cHRzICovDQo+ICsJCQl3cml0ZWwo
+ZXZlbnRzLCBob3N0LT5iYXNlICsgTVNEQ19JTlQpOw0KPiArCQkJcmV0dXJuIElSUV9IQU5ETEVE
+Ow0KPiArCQl9DQo+ICsNCj4gIAkJaWYgKCFtcnEpIHsNCj4gIAkJCWRldl9lcnIoaG9zdC0+ZGV2
+LA0KPiAgCQkJCSIlczogTVJRPU5VTEw7IGV2ZW50cz0lMDhYOyBldmVudF9tYXNrPSUwOFhcbiIs
+DQo+IEBAIC0yMjAxLDYgKzIyNTMsMzYgQEAgc3RhdGljIGludCBtc2RjX2dldF9jZChzdHJ1Y3Qg
+bW1jX2hvc3QgKm1tYykNCj4gIAkJcmV0dXJuICF2YWw7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyB2
+b2lkIG1zZGNfY3FlX2VuYWJsZShzdHJ1Y3QgbW1jX2hvc3QgKm1tYykNCj4gK3sNCj4gKwlzdHJ1
+Y3QgbXNkY19ob3N0ICpob3N0ID0gbW1jX3ByaXYobW1jKTsNCj4gKw0KPiArCS8qIGVuYWJsZSBj
+bWRxIGlycSAqLw0KPiArCXdyaXRlbChNU0RDX0lOVF9DTURRLCBob3N0LT5iYXNlICsgTVNEQ19J
+TlRFTik7DQo+ICsJLyogZW5hYmxlIGJ1c3kgY2hlY2sgKi8NCj4gKwlzZHJfc2V0X2JpdHMoaG9z
+dC0+YmFzZSArIE1TRENfUEFUQ0hfQklUMSwgTVNEQ19QQjFfQlVTWV9DSEVDS19TRUwpOw0KPiAr
+CS8qIGRlZmF1bHQgd3JpdGUgZGF0YSAvIGJ1c3kgdGltZW91dCAyMHMgKi8NCj4gKwltc2RjX3Nl
+dF9idXN5X3RpbWVvdXQoaG9zdCwgMjAgKiAxMDAwMDAwMDAwVUxMLCAwKTsNCj4gKwkvKiBkZWZh
+dWx0IHJlYWQgZGF0YSB0aW1lb3V0IDFzICovDQo+ICsJbXNkY19zZXRfdGltZW91dChob3N0LCAx
+MDAwMDAwMDAwVUxMLCAwKTsNCj4gK30NCj4gKw0KPiArdm9pZCBtc2RjX2NxZV9kaXNhYmxlKHN0
+cnVjdCBtbWNfaG9zdCAqbW1jLCBib29sIHJlY292ZXJ5KQ0KPiArew0KPiArCXN0cnVjdCBtc2Rj
+X2hvc3QgKmhvc3QgPSBtbWNfcHJpdihtbWMpOw0KPiArDQo+ICsJLyogZGlzYWJsZSBjbWRxIGly
+cSAqLw0KPiArCXNkcl9jbHJfYml0cyhob3N0LT5iYXNlICsgTVNEQ19JTlRFTiwgTVNEQ19JTlRf
+Q01EUSk7DQo+ICsJLyogZGlzYWJsZSBidXN5IGNoZWNrICovDQo+ICsJc2RyX2Nscl9iaXRzKGhv
+c3QtPmJhc2UgKyBNU0RDX1BBVENIX0JJVDEsIE1TRENfUEIxX0JVU1lfQ0hFQ0tfU0VMKTsNCj4g
+Kw0KPiArCWlmIChyZWNvdmVyeSkgew0KPiArCQlzZHJfc2V0X2ZpZWxkKGhvc3QtPmJhc2UgKyBN
+U0RDX0RNQV9DVFJMLA0KPiArCQkJICAgICAgTVNEQ19ETUFfQ1RSTF9TVE9QLCAxKTsNCj4gKwkJ
+bXNkY19yZXNldF9odyhob3N0KTsNCj4gKwl9DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBz
+dHJ1Y3QgbW1jX2hvc3Rfb3BzIG10X21zZGNfb3BzID0gew0KPiAgCS5wb3N0X3JlcSA9IG1zZGNf
+cG9zdF9yZXEsDQo+ICAJLnByZV9yZXEgPSBtc2RjX3ByZV9yZXEsDQo+IEBAIC0yMjE3LDYgKzIy
+OTksMTEgQEAgc3RhdGljIGludCBtc2RjX2dldF9jZChzdHJ1Y3QgbW1jX2hvc3QgKm1tYykNCj4g
+IAkuaHdfcmVzZXQgPSBtc2RjX2h3X3Jlc2V0LA0KPiAgfTsNCj4gIA0KPiArc3RhdGljIGNvbnN0
+IHN0cnVjdCBjcWhjaV9ob3N0X29wcyBtc2RjX2NtZHFfb3BzID0gew0KPiArCS5lbmFibGUgICAg
+ICAgICA9IG1zZGNfY3FlX2VuYWJsZSwNCj4gKwkuZGlzYWJsZSAgICAgICAgPSBtc2RjX2NxZV9k
+aXNhYmxlLA0KPiArfTsNCj4gKw0KPiAgc3RhdGljIHZvaWQgbXNkY19vZl9wcm9wZXJ0eV9wYXJz
+ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KPiAgCQkJCSAgIHN0cnVjdCBtc2RjX2hv
+c3QgKmhvc3QpDQo+ICB7DQo+IEBAIC0yMjM3LDYgKzIzMjQsMTIgQEAgc3RhdGljIHZvaWQgbXNk
+Y19vZl9wcm9wZXJ0eV9wYXJzZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KPiAgCQlo
+b3N0LT5oczQwMF9jbWRfcmVzcF9zZWxfcmlzaW5nID0gdHJ1ZTsNCj4gIAllbHNlDQo+ICAJCWhv
+c3QtPmhzNDAwX2NtZF9yZXNwX3NlbF9yaXNpbmcgPSBmYWxzZTsNCj4gKw0KPiArCWlmIChvZl9w
+cm9wZXJ0eV9yZWFkX2Jvb2wocGRldi0+ZGV2Lm9mX25vZGUsDQo+ICsJCQkJICAic3VwcG9ydHMt
+Y3FlIikpDQo+ICsJCWhvc3QtPmNxaGNpID0gdHJ1ZTsNCj4gKwllbHNlDQo+ICsJCWhvc3QtPmNx
+aGNpID0gZmFsc2U7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBpbnQgbXNkY19kcnZfcHJvYmUoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gQEAgLTIzNTIsNiArMjQ0NSw4IEBAIHN0YXRp
+YyBpbnQgbXNkY19kcnZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAkJ
+bW1jLT5jYXBzMiB8PSBNTUNfQ0FQMl9TRElPX0lSUV9OT1RIUkVBRDsNCj4gIA0KPiAgCW1tYy0+
+Y2FwcyB8PSBNTUNfQ0FQX0NNRDIzOw0KPiArCWlmIChob3N0LT5jcWhjaSkNCj4gKwkJbW1jLT5j
+YXBzMiB8PSBNTUNfQ0FQMl9DUUUgfCBNTUNfQ0FQMl9DUUVfRENNRDsNCj4gIAkvKiBNTUMgY29y
+ZSB0cmFuc2ZlciBzaXplcyB0dW5hYmxlIHBhcmFtZXRlcnMgKi8NCj4gIAltbWMtPm1heF9zZWdz
+ID0gTUFYX0JEX05VTTsNCj4gIAlpZiAoaG9zdC0+ZGV2X2NvbXAtPnN1cHBvcnRfNjRnKQ0KPiBA
+QCAtMjM2Nyw2ICsyNDYyLDI2IEBAIHN0YXRpYyBpbnQgbXNkY19kcnZfcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikNCj4gIAkJaG9zdC0+ZG1hX21hc2sgPSBETUFfQklUX01BU0so
+MzIpOw0KPiAgCW1tY19kZXYobW1jKS0+ZG1hX21hc2sgPSAmaG9zdC0+ZG1hX21hc2s7DQo+ICAN
+Cj4gKwlpZiAobW1jLT5jYXBzMiAmIE1NQ19DQVAyX0NRRSkgew0KPiArCQlob3N0LT5jcV9ob3N0
+ID0gZGV2bV9remFsbG9jKGhvc3QtPm1tYy0+cGFyZW50LA0KPiArCQkJCQkgICAgIHNpemVvZigq
+aG9zdC0+Y3FfaG9zdCksDQo+ICsJCQkJCSAgICAgR0ZQX0tFUk5FTCk7DQo+ICsJCWlmICghaG9z
+dC0+Y3FfaG9zdCkgew0KPiArCQkJcmV0ID0gLUVOT01FTTsNCj4gKwkJCWdvdG8gaG9zdF9mcmVl
+Ow0KPiArCQl9DQo+ICsJCWhvc3QtPmNxX2hvc3QtPmNhcHMgfD0gQ1FIQ0lfVEFTS19ERVNDX1Na
+XzEyODsNCj4gKwkJaG9zdC0+Y3FfaG9zdC0+bW1pbyA9IGhvc3QtPmJhc2UgKyAweDgwMDsNCj4g
+KwkJaG9zdC0+Y3FfaG9zdC0+b3BzID0gJm1zZGNfY21kcV9vcHM7DQo+ICsJCXJldCA9IGNxaGNp
+X2luaXQoaG9zdC0+Y3FfaG9zdCwgbW1jLCB0cnVlKTsNCj4gKwkJaWYgKHJldCkNCj4gKwkJCWdv
+dG8gaG9zdF9mcmVlOw0KPiArCQltbWMtPm1heF9zZWdzID0gMTI4Ow0KPiArCQkvKiBjcWhjaSAx
+NmJpdCBsZW5ndGggKi8NCj4gKwkJLyogMCBzaXplLCBtZWFucyA2NTUzNiBzbyB3ZSBkb24ndCBo
+YXZlIHRvIC0xIGhlcmUgKi8NCj4gKwkJbW1jLT5tYXhfc2VnX3NpemUgPSA2NCAqIDEwMjQ7DQo+
+ICsJfQ0KPiArDQo+ICAJaG9zdC0+dGltZW91dF9jbGtzID0gMyAqIDEwNDg1NzY7DQo+ICAJaG9z
+dC0+ZG1hLmdwZCA9IGRtYV9hbGxvY19jb2hlcmVudCgmcGRldi0+ZGV2LA0KPiAgCQkJCTIgKiBz
+aXplb2Yoc3RydWN0IG10X2dwZG1hX2Rlc2MpLA0KDQo=
 
-Thanks for the review
-
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Tuesday, July 21, 2020 7:38 AM
-> To: Sai Krishna Potthuri <lakshmis@xilinx.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>; Michal Simek
-> <michals@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; git
-> <git@xilinx.com>; saikrishna12468@gmail.com
-> Subject: Re: [PATCH 1/2] dt-bindings: reset: Updated binding for Versal r=
-eset
-> driver
->=20
-> On Tue, Jul 14, 2020 at 11:59:08AM +0530, Sai Krishna Potthuri wrote:
-> > Added documentation and Versal reset indices to describe about Versal
-> > reset driver bindings.
-> >
-> > Signed-off-by: Sai Krishna Potthuri
-> > <lakshmi.sai.krishna.potthuri@xilinx.com>
-> > ---
-> >  .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
-> >  .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
-> >  2 files changed, 112 insertions(+), 4 deletions(-)  create mode
-> > 100644 include/dt-bindings/reset/xlnx-versal-resets.h
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
-> > b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
-> > index 27a45fe5ecf1..ed836868dbf1 100644
-> > --- a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
-> > +++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
-> > @@ -1,7 +1,7 @@
-> >
-> > ----------------------------------------------------------------------
-> > ----
-> > - =3D  Zynq UltraScale+ MPSoC reset driver binding =3D
-> > + =3D  Zynq UltraScale+ MPSoC and Versal reset driver binding =3D
-> >
-> > ----------------------------------------------------------------------
-> > ---- -The Zynq UltraScale+ MPSoC has several different resets.
-> > +The Zynq UltraScale+ MPSoC and Versal has several different resets.
-> >
-> >  See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more
-> > information  about zynqmp resets.
-> > @@ -10,7 +10,8 @@ Please also refer to reset.txt in this directory for
-> > common reset  controller binding usage.
-> >
-> >  Required Properties:
-> > -- compatible:	"xlnx,zynqmp-reset"
-> > +- compatible:	"xlnx,zynqmp-reset" for Zynq UltraScale+ MPSoC
-> platform
-> > +		"xlnx,versal-reset" for Versal platform
-> >  - #reset-cells:	Specifies the number of cells needed to encode reset
-> >  		line, should be 1
-> >
-> > @@ -37,8 +38,10 @@ Device nodes that need access to reset lines should
-> > specify them as a reset phandle in their corresponding node as
-> > specified in reset.txt.
-> >
-> > -For list of all valid reset indicies see
-> > +For list of all valid reset indices for Zynq UltraScale+ MPSoC see
-> >  <dt-bindings/reset/xlnx-zynqmp-resets.h>
-> > +For list of all valid reset indices for Versal see
-> > +<dt-bindings/reset/xlnx-versal-resets.h>
-> >
-> >  Example:
-> >
-> > diff --git a/include/dt-bindings/reset/xlnx-versal-resets.h
-> > b/include/dt-bindings/reset/xlnx-versal-resets.h
-> > new file mode 100644
-> > index 000000000000..895424e9b0e5
-> > --- /dev/null
-> > +++ b/include/dt-bindings/reset/xlnx-versal-resets.h
-> > @@ -0,0 +1,105 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + *  Copyright (C) 2020 Xilinx, Inc.
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_VERSAL_RESETS_H
-> > +#define _DT_BINDINGS_VERSAL_RESETS_H
-> > +
-> > +#define VERSAL_RST_PMC_POR			(0xc30c001U)
->=20
-> Perhaps some explanation on the numbering as ZynqMP seems to be just an
-> index.
-In versal, all ID's includes Class, SubClass, Type, Index information where=
-as class
-refers to clock, reset, power etc., Underlying firmware in Versal have such
-classification and expects the ID to be this way.
-[13:0] - Index bits
-[19:14] - Type bits
-[25:20] - SubClass bits
-[31:26] - Class bits
-I will add this information in this file in v2.
-
-Regards
-Sai Krishna
->=20
-> > +#define VERSAL_RST_PMC				(0xc410002U)
-> > +#define VERSAL_RST_PS_POR			(0xc30c003U)
-> > +#define VERSAL_RST_PL_POR			(0xc30c004U)
-> > +#define VERSAL_RST_NOC_POR			(0xc30c005U)
-> > +#define VERSAL_RST_FPD_POR			(0xc30c006U)
-> > +#define VERSAL_RST_ACPU_0_POR			(0xc30c007U)
-> > +#define VERSAL_RST_ACPU_1_POR			(0xc30c008U)
-> > +#define VERSAL_RST_OCM2_POR			(0xc30c009U)
-> > +#define VERSAL_RST_PS_SRST			(0xc41000aU)
-> > +#define VERSAL_RST_PL_SRST			(0xc41000bU)
-> > +#define VERSAL_RST_NOC				(0xc41000cU)
-> > +#define VERSAL_RST_NPI				(0xc41000dU)
-> > +#define VERSAL_RST_SYS_RST_1			(0xc41000eU)
-> > +#define VERSAL_RST_SYS_RST_2			(0xc41000fU)
-> > +#define VERSAL_RST_SYS_RST_3			(0xc410010U)
-> > +#define VERSAL_RST_FPD				(0xc410011U)
-> > +#define VERSAL_RST_PL0				(0xc410012U)
-> > +#define VERSAL_RST_PL1				(0xc410013U)
-> > +#define VERSAL_RST_PL2				(0xc410014U)
-> > +#define VERSAL_RST_PL3				(0xc410015U)
-> > +#define VERSAL_RST_APU				(0xc410016U)
-> > +#define VERSAL_RST_ACPU_0			(0xc410017U)
-> > +#define VERSAL_RST_ACPU_1			(0xc410018U)
-> > +#define VERSAL_RST_ACPU_L2			(0xc410019U)
-> > +#define VERSAL_RST_ACPU_GIC			(0xc41001aU)
-> > +#define VERSAL_RST_RPU_ISLAND			(0xc41001bU)
-> > +#define VERSAL_RST_RPU_AMBA			(0xc41001cU)
-> > +#define VERSAL_RST_R5_0				(0xc41001dU)
-> > +#define VERSAL_RST_R5_1				(0xc41001eU)
-> > +#define VERSAL_RST_SYSMON_PMC_SEQ_RST		(0xc41001fU)
-> > +#define VERSAL_RST_SYSMON_PMC_CFG_RST		(0xc410020U)
-> > +#define VERSAL_RST_SYSMON_FPD_CFG_RST		(0xc410021U)
-> > +#define VERSAL_RST_SYSMON_FPD_SEQ_RST		(0xc410022U)
-> > +#define VERSAL_RST_SYSMON_LPD			(0xc410023U)
-> > +#define VERSAL_RST_PDMA_RST1			(0xc410024U)
-> > +#define VERSAL_RST_PDMA_RST0			(0xc410025U)
-> > +#define VERSAL_RST_ADMA				(0xc410026U)
-> > +#define VERSAL_RST_TIMESTAMP			(0xc410027U)
-> > +#define VERSAL_RST_OCM				(0xc410028U)
-> > +#define VERSAL_RST_OCM2_RST			(0xc410029U)
-> > +#define VERSAL_RST_IPI				(0xc41002aU)
-> > +#define VERSAL_RST_SBI				(0xc41002bU)
-> > +#define VERSAL_RST_LPD				(0xc41002cU)
-> > +#define VERSAL_RST_QSPI				(0xc10402dU)
-> > +#define VERSAL_RST_OSPI				(0xc10402eU)
-> > +#define VERSAL_RST_SDIO_0			(0xc10402fU)
-> > +#define VERSAL_RST_SDIO_1			(0xc104030U)
-> > +#define VERSAL_RST_I2C_PMC			(0xc104031U)
-> > +#define VERSAL_RST_GPIO_PMC			(0xc104032U)
-> > +#define VERSAL_RST_GEM_0			(0xc104033U)
-> > +#define VERSAL_RST_GEM_1			(0xc104034U)
-> > +#define VERSAL_RST_SPARE			(0xc104035U)
-> > +#define VERSAL_RST_USB_0			(0xc104036U)
-> > +#define VERSAL_RST_UART_0			(0xc104037U)
-> > +#define VERSAL_RST_UART_1			(0xc104038U)
-> > +#define VERSAL_RST_SPI_0			(0xc104039U)
-> > +#define VERSAL_RST_SPI_1			(0xc10403aU)
-> > +#define VERSAL_RST_CAN_FD_0			(0xc10403bU)
-> > +#define VERSAL_RST_CAN_FD_1			(0xc10403cU)
-> > +#define VERSAL_RST_I2C_0			(0xc10403dU)
-> > +#define VERSAL_RST_I2C_1			(0xc10403eU)
-> > +#define VERSAL_RST_GPIO_LPD			(0xc10403fU)
-> > +#define VERSAL_RST_TTC_0			(0xc104040U)
-> > +#define VERSAL_RST_TTC_1			(0xc104041U)
-> > +#define VERSAL_RST_TTC_2			(0xc104042U)
-> > +#define VERSAL_RST_TTC_3			(0xc104043U)
-> > +#define VERSAL_RST_SWDT_FPD			(0xc104044U)
-> > +#define VERSAL_RST_SWDT_LPD			(0xc104045U)
-> > +#define VERSAL_RST_USB				(0xc104046U)
-> > +#define VERSAL_RST_DPC				(0xc208047U)
-> > +#define VERSAL_RST_PMCDBG			(0xc208048U)
-> > +#define VERSAL_RST_DBG_TRACE			(0xc208049U)
-> > +#define VERSAL_RST_DBG_FPD			(0xc20804aU)
-> > +#define VERSAL_RST_DBG_TSTMP			(0xc20804bU)
-> > +#define VERSAL_RST_RPU0_DBG			(0xc20804cU)
-> > +#define VERSAL_RST_RPU1_DBG			(0xc20804dU)
-> > +#define VERSAL_RST_HSDP				(0xc20804eU)
-> > +#define VERSAL_RST_DBG_LPD			(0xc20804fU)
-> > +#define VERSAL_RST_CPM_POR			(0xc30c050U)
-> > +#define VERSAL_RST_CPM				(0xc410051U)
-> > +#define VERSAL_RST_CPMDBG			(0xc208052U)
-> > +#define VERSAL_RST_PCIE_CFG			(0xc410053U)
-> > +#define VERSAL_RST_PCIE_CORE0			(0xc410054U)
-> > +#define VERSAL_RST_PCIE_CORE1			(0xc410055U)
-> > +#define VERSAL_RST_PCIE_DMA			(0xc410056U)
-> > +#define VERSAL_RST_CMN				(0xc410057U)
-> > +#define VERSAL_RST_L2_0				(0xc410058U)
-> > +#define VERSAL_RST_L2_1				(0xc410059U)
-> > +#define VERSAL_RST_ADDR_REMAP			(0xc41005aU)
-> > +#define VERSAL_RST_CPI0				(0xc41005bU)
-> > +#define VERSAL_RST_CPI1				(0xc41005cU)
-> > +#define VERSAL_RST_XRAM				(0xc30c05dU)
-> > +#define VERSAL_RST_AIE_ARRAY			(0xc10405eU)
-> > +#define VERSAL_RST_AIE_SHIM			(0xc10405fU)
-> > +
-> > +#endif
-> > --
-> > 2.17.1
-> >
