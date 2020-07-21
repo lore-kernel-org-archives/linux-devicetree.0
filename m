@@ -2,225 +2,105 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C77C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 23:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655DCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 23:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5E72077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 23:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595373711;
-	bh=wTtpSu1n6XAQfccXsXj/yy7BEmnVf2cxowLIgXfPQa4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bO/dpIfGkKi5a5mxEpBVB924LvnLBnzgLLBza0FrbND1XwCXYvpLxHIIbXdkctouI
-	 XDM4HaKbQLZZjg9Hg61jVEP84eYbLvvGsAPUyR1PolSmRyEDfYM14lVHhvcC6VD8IG
-	 Kqh3ODPLGxEmVs6P/Dby1Q/zaN2femPJYIAj6888=
+	by mail.kernel.org (Postfix) with ESMTP id 3D5A620720
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 23:58:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HaAgyktY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgGUXVu (ORCPT
+        id S1731455AbgGUX6q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 19:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgGUXVu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 19:21:50 -0400
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54BC22080D;
-        Tue, 21 Jul 2020 23:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595373709;
-        bh=wTtpSu1n6XAQfccXsXj/yy7BEmnVf2cxowLIgXfPQa4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=djoyGjsek9zMyt+FdnK+r8Y+Y8cE0QjaJAoFygr9S3udNk1aNJSn3lr74jFf5KJyu
-         tg8mPdg5E5OYS3dphKNMC5RAnzA2UeSmPG64dn12GcDwmnxFONm6KNtlXosq/uf84A
-         BBAVo1jrC1P8LjZHeGqFxI5/no69+m2Sstbl8PbM=
-Received: by mail-ed1-f47.google.com with SMTP id d18so269800edv.6;
-        Tue, 21 Jul 2020 16:21:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533bYGPV78gVJ/7FiGDwU3ik+K88+GZ45DtHoL+Fr0hz9vTo6OOm
-        Y3n/LwlcePqe1h3chQSGsP4MxwQ3aeuExx4B/w==
-X-Google-Smtp-Source: ABdhPJyyEjrBpd1nx1mUcLsn4M9oTcaAX99uq6R42dxNbGcxMzW6I48C2eM3ctFpN3ScOSRXnd6gohvyg/yKTe1Y26k=
-X-Received: by 2002:a05:6402:16c7:: with SMTP id r7mr28579038edx.288.1595373707856;
- Tue, 21 Jul 2020 16:21:47 -0700 (PDT)
+        Tue, 21 Jul 2020 19:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731361AbgGUX6q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 19:58:46 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394BCC0619DB
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 16:58:46 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id 8so216555pjj.1
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 16:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GuyDVxBXJ2eH/fhFLNQsFiugfMp6zgAf3tWvMyaED+s=;
+        b=HaAgyktYnJOdjm5FRHn5a2ME+0Fd9HVyv0m5tug3+N2yvslrpy2kUqaZrnPLE5PP5J
+         +W1u5brVAx92kBbDzk+6zrBBUcNNPgkh7Yuhwl07N9CJU25tAyyf427zq3s7OMTudGMH
+         9xd4r4hn/FAIex3VFg1YQUnS+tpDa1SDcwP/OMueE0jBmmByQTwFY6ovbcf5bg9gidev
+         6tycNK/hXF7XZ6Ddhqc/Rwdh7puaq/3P2q6jMZKBN4udkoMsKVizjO6WN9H7+6SAv1Hh
+         Xjtolx88vxG70K2suFvarVbFLW2TVF2dHuDRl2yX2whEBF6VUdpLrQ3QucfhyNdamySF
+         qf5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GuyDVxBXJ2eH/fhFLNQsFiugfMp6zgAf3tWvMyaED+s=;
+        b=ubzX5vLPYqMKU7kTGqJz5LozZd9BX5ZznN5X/yhvqVTiPug6FZJwhTN4zDm3Re23np
+         W+Oz5+dTAIA0TkvTmSXLxpMuUzzfCijFsVgd6PnTGyi6OmnIoNzSLeQS2KV1JJEsjyne
+         FX2RN39UcvzbmxsPjz3b323qdSp+hjfcKwME09MZFs3hM9tNtnd++IqbVZpuHt4IajD1
+         FmuhWFyoGZLCc2i045Lg4f0IJqKPdH0hDSsuM7bCNF41bwTgka5VLbs9qcjvTp8h+SBg
+         7vaHTIYSsVIHT18Ue9hB9JZII+bCjJvlhZFdIHgjG/aqAq36ZLeR93+GIJO5iDdk97cm
+         vKyA==
+X-Gm-Message-State: AOAM530f/XbDeDp/UzDZC2l1vVR7mk5vh386PTi6/bT+m/vpjsC32T4Q
+        /7hsKTnSahy93Ii3vdgjSvfrzA==
+X-Google-Smtp-Source: ABdhPJyNuk7PzxMd8B56wIzfsRBCUaRfXZEp3SIsJsCTjayO+IwYE5wac4ySM2zGZNDAQTp1F3brfA==
+X-Received: by 2002:a17:902:8ecb:: with SMTP id x11mr18820708plo.123.1595375925125;
+        Tue, 21 Jul 2020 16:58:45 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a2sm21698033pfg.120.2020.07.21.16.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 16:58:44 -0700 (PDT)
+Date:   Tue, 21 Jul 2020 16:56:50 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+Message-ID: <20200721235650.GN388985@builder.lan>
+References: <20200704122809.73794-1-konradybcio@gmail.com>
+ <20200704130922.GB21333@willie-the-truck>
+ <20200705033511.GR388985@builder.lan>
+ <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
+ <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
+ <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com> <1595303971-8793-3-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1595303971-8793-3-git-send-email-neal.liu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 22 Jul 2020 07:21:35 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
-Message-ID: <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Neal:
+On Tue 21 Jul 09:20 PDT 2020, Konrad Dybcio wrote:
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8821=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> MediaTek bus fabric provides TrustZone security support and data
-> protection to prevent slaves from being accessed by unexpected
-> masters.
-> The security violation is logged and sent to the processor for
-> further analysis or countermeasures.
->
-> Any occurrence of security violation would raise an interrupt, and
-> it will be handled by mtk-devapc driver. The violation
-> information is printed in order to find the murderer.
->
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> ---
+> >The current
+> >focus has been on moving more of the SMMU specific bits into the arm-smmu-qcom
+> >implementation [1] and I think that is the right way to go.
+> 
+> Pardon if I overlooked something obvious, but I can't seem to find a
+> clean way for implementing qcom,skip-init in arm-smmu-qcom, as neither
+> the arm_smmu_test_smr_masks nor the probe function seem to be
+> alterable with arm_smmu_impl. I'm open to your ideas guys.
+> 
 
-[snip]
-
-> +
-> +static u32 get_shift_group(struct mtk_devapc_context *ctx, u32 vio_idx)
-
-vio_idx is useless, so remove it.
-
-> +{
-> +       u32 vio_shift_sta;
-> +       void __iomem *reg;
-> +
-> +       reg =3D ctx->devapc_pd_base + ctx->offset->vio_shift_sta;
-> +       vio_shift_sta =3D readl(reg);
-> +
-> +       if (vio_shift_sta)
-> +               return __ffs(vio_shift_sta);
-> +
-> +       return 31;
-> +}
-> +
-
-[snip]
-
-> +
-> +/*
-> + * mtk_devapc_dump_vio_dbg - get the violation index and dump the full v=
-iolation
-> + *                           debug information.
-> + */
-> +static bool mtk_devapc_dump_vio_dbg(struct mtk_devapc_context *ctx, u32 =
-vio_idx)
-> +{
-> +       u32 shift_bit;
-> +
-> +       if (check_vio_mask(ctx, vio_idx))
-> +               return false;
-> +
-> +       if (!check_vio_status(ctx, vio_idx))
-> +               return false;
-> +
-> +       shift_bit =3D get_shift_group(ctx, vio_idx);
-> +
-> +       if (sync_vio_dbg(ctx, shift_bit))
-> +               return false;
-> +
-> +       devapc_extract_vio_dbg(ctx);
-
-I think get_shift_group(), sync_vio_dbg(), and
-devapc_extract_vio_dbg() should be moved out of vio_idx for-loop (the
-loop in devapc_violation_irq()) because these three function is not
-related to vio_idx.
-Another question: when multiple vio_idx violation occur, vio_addr is
-related to which one vio_idx? The latest happened one?
-
-> +
-> +       return true;
-> +}
-> +
-> +/*
-> + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR) wil=
-l dump
-> + *                        violation information including which master v=
-iolates
-> + *                        access slave.
-> + */
-> +static irqreturn_t devapc_violation_irq(int irq_number,
-> +                                       struct mtk_devapc_context *ctx)
-> +{
-> +       u32 vio_idx;
-> +
-> +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++) {
-> +               if (!mtk_devapc_dump_vio_dbg(ctx, vio_idx))
-> +                       continue;
-> +
-> +               /* Ensure that violation info are written before
-> +                * further operations
-> +                */
-> +               smp_mb();
-> +
-> +               /*
-> +                * Mask slave's irq before clearing vio status.
-> +                * Must do it to avoid nested interrupt and prevent
-> +                * unexpected behavior.
-> +                */
-> +               mask_module_irq(ctx, vio_idx, true);
-> +
-> +               clear_vio_status(ctx, vio_idx);
-> +
-> +               mask_module_irq(ctx, vio_idx, false);
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +/*
-> + * start_devapc - initialize devapc status and start receiving interrupt
-> + *                while devapc violation is triggered.
-> + */
-> +static int start_devapc(struct mtk_devapc_context *ctx)
-> +{
-> +       void __iomem *pd_vio_shift_sta_reg;
-> +       void __iomem *pd_apc_con_reg;
-> +       u32 vio_shift_sta;
-> +       u32 vio_idx;
-> +
-> +       pd_apc_con_reg =3D ctx->devapc_pd_base + ctx->offset->apc_con;
-> +       pd_vio_shift_sta_reg =3D ctx->devapc_pd_base + ctx->offset->vio_s=
-hift_sta;
-> +       if (!pd_apc_con_reg || !pd_vio_shift_sta_reg)
-> +               return -EINVAL;
-> +
-> +       /* Clear devapc violation status */
-> +       writel(BIT(31), pd_apc_con_reg);
-> +
-> +       /* Clear violation shift status */
-> +       vio_shift_sta =3D readl(pd_vio_shift_sta_reg);
-> +       if (vio_shift_sta)
-> +               writel(vio_shift_sta, pd_vio_shift_sta_reg);
-> +
-> +       /* Clear slave violation status */
-> +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++) {
-> +               clear_vio_status(ctx, vio_idx);
-> +               mask_module_irq(ctx, vio_idx, false);
-> +       }
-> +
-
-Why do you clear these? After power on hardware, I think these
-register status are correct. If the default value of these register
-are not correct, add a comment for this.
+Is the problem on SDM630 that when you write to SMR/S2CR the device
+reboots? Or that when you start writing out the context bank
+configuration that trips the display and the device reboots?
 
 Regards,
-Chun-Kuang.
-
-> +       return 0;
-> +}
-> +
+Bjorn
