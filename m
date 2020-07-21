@@ -2,91 +2,106 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA1BC433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F75C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022762176B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAB2F2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595302643;
-	bh=1P3Exm77/gstV8imrGnAisutL3XQd3LM/1BJE3G/0es=;
+	s=default; t=1595302751;
+	bh=SKsbP8YEocGP4dO0TPWy61vFPbifAta3MUwQilecXso=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w+Dgtfn4fvXQjJ6prilqKWmAtReLUmFr3Ol5SfXnT5d5JiDtbEWgt+tZntoLYpmZo
-	 72j5CN1LE0ZSjESLVzuTbLwRusXfJKdQE0hUqdp3/tfpkESrVj7448/VdzNZwxbxrC
-	 uCERLjeK9BdMOzGu4Wgfek+prBQK9Xobf49gghw8=
+	b=tv380CCsnUcV4Ea6bCPZulqux6oc5B162X2kypNYX/R6Lr5WM5LXGKbsb9zRaX1t1
+	 9gTw6B/3qy06TUhHbRBegfHyt8DqFSgmC724J8TKCCb+YCktriJjsd7auBI5DrJ4lv
+	 xrw9zZAilJBbOKtKBtMAPaC5oA4/baC/FvyKbg88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgGUDhT (ORCPT
+        id S1726089AbgGUDjL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:37:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42698 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgGUDhS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:37:18 -0400
-Received: by mail-io1-f65.google.com with SMTP id c16so19870934ioi.9;
-        Mon, 20 Jul 2020 20:37:18 -0700 (PDT)
+        Mon, 20 Jul 2020 23:39:11 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45611 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgGUDjK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:39:10 -0400
+Received: by mail-io1-f68.google.com with SMTP id e64so19893695iof.12;
+        Mon, 20 Jul 2020 20:39:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+9qom4iCMnZgg5OUyCqy8rMrulXYpgfPi7u8JdN9+6A=;
-        b=tS5IdtYqgv2o44mjHGpOpkpXaamuf3ynj/sXDSyJLFyn6r7G5id6AQuiq2e9HPZzz4
-         mCy8iIacwCaDlSFJj0XeyjirEPGK2EhJ0RW2S/xX0HbHa/t9EUVm25D0lOLQTZ5BrCsn
-         Um6/lyxuQtAlca3jfIuAI3wfNSJKUCEwunzYkX78vwzO0iaeqYqV6vSAmJyECMhGJWW5
-         BkdO3FGhbOV3e3lHxKxY2SE+hL3OANhcq7MQi45TB1GxFtLqLR0RDVQ1n5VCzI7FUj6Z
-         fv8GmxrteejTgUtlsIgEtxRJkGjMWBzdj72zmoVN2hAv2hS0ccYBEmFUwFkchRPUIPwN
-         ThOQ==
-X-Gm-Message-State: AOAM531NraLKP3gcVkIUNvBB3vO9EO6oARxE68Qvho/p1ZaI5+GUxKxt
-        dokgj59FfBWW4COve9YhaA==
-X-Google-Smtp-Source: ABdhPJxl+n2NOcu3KNd/qL1dRY3dBGjtNr9GskY73pB8dsE/f7YJXe0PSnxF3WpVFTdaHqxHx7XHpA==
-X-Received: by 2002:a5e:880f:: with SMTP id l15mr24770541ioj.94.1595302637676;
-        Mon, 20 Jul 2020 20:37:17 -0700 (PDT)
+        bh=isWASpPxb2Gc0cCo3Yx4OshrmKHzj/OHrWNXRjmdTlw=;
+        b=kw+CfmPgSri3CClHflLJ0cSHP+uz+esTY5q6/Eref3JJzJ7H4656BMSxwQxA5Ht0pj
+         a0tHaN7Yi9PF3tJxKaP476sgiB2DYw/RVFSkAyBcSbIln6da7Im879yHTQegKx65MKRc
+         d+tcJn2p6ZZSH5HiDoKZLE2AhvVG5ddK4DEOyrWqNki37COFXfcLa9NfQ7KO2wVCa8rq
+         nLh8Lne5SF2VSw+eb1fdDBRsspdVvuCx5BAcyq6t2mftZJTTy2dRFF8kfVNtdtxosJHF
+         WDItNuGJ2RBITAlTvJ+UKpHBP5eNNGzH/Y6B4bNJ+WfyN1gHNblAcuJuCgCaX0Wh2nqP
+         HkZQ==
+X-Gm-Message-State: AOAM531mgEbFg9ao6dxkiVEfvZ5feO9lxpkTeyhN/0nLy3dBoR81H30O
+        z8arSmWgh9rAQ2JlEr7m8NAHPjQ/JQ==
+X-Google-Smtp-Source: ABdhPJywzeMgJUQygmP/cq9Cz4DEcV5KEkAC/BVWTR6wX7OJx9CmZ1mHPmXSHaVaUser2Ls6KhFBBQ==
+X-Received: by 2002:a6b:5813:: with SMTP id m19mr25793678iob.29.1595302749588;
+        Mon, 20 Jul 2020 20:39:09 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id a1sm9761517ilq.50.2020.07.20.20.37.16
+        by smtp.gmail.com with ESMTPSA id c25sm9896217ioi.13.2020.07.20.20.39.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 20:37:17 -0700 (PDT)
-Received: (nullmailer pid 3508431 invoked by uid 1000);
-        Tue, 21 Jul 2020 03:37:16 -0000
-Date:   Mon, 20 Jul 2020 21:37:16 -0600
+        Mon, 20 Jul 2020 20:39:08 -0700 (PDT)
+Received: (nullmailer pid 3510955 invoked by uid 1000);
+        Tue, 21 Jul 2020 03:39:08 -0000
+Date:   Mon, 20 Jul 2020 21:39:08 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Dudziak <bartosz.dudziak@snejp.pl>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add msm8226 pinctrl
- bindings
-Message-ID: <20200721033716.GA3508379@bogus>
-References: <20200716205530.22910-1-bartosz.dudziak@snejp.pl>
- <20200716205530.22910-2-bartosz.dudziak@snejp.pl>
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        John Youn <John.Youn@synopsys.com>
+Subject: Re: [PATCH 06/11] usb: devicetree: dwc3: Introduce num-lanes and lsm
+Message-ID: <20200721033908.GA3508628@bogus>
+References: <cover.1594935978.git.thinhn@synopsys.com>
+ <9684a2b2adb01b6b1a8c513928ea49b4a6436184.1594935978.git.thinhn@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200716205530.22910-2-bartosz.dudziak@snejp.pl>
+In-Reply-To: <9684a2b2adb01b6b1a8c513928ea49b4a6436184.1594935978.git.thinhn@synopsys.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Jul 2020 22:55:28 +0200, Bartosz Dudziak wrote:
-> Add device tree binding Documentation details for Qualcomm msm8226
-> pinctrl driver.
+On Thu, Jul 16, 2020 at 02:59:08PM -0700, Thinh Nguyen wrote:
+> Introduce num-lanes and lane-speed-mantissa-gbps for devices operating
+> in super-speed-plus. DWC_usb32 IP supports multiple lanes and can
+> operate in different sublink speeds. Currently the device controller
+> does not have the information of the phy's number of lanes supported. As
+> a result, the user can specify them through these properties if they are
+> different than the default setting.
 > 
-> - Bindings documentation was based on qcom,ipq6018-pinctrl.yaml added by
->   Sricharan R <sricharan@codeaurora.org> and then modified for msm8226
->   content
-> 
-> Signed-off-by: Bartosz Dudziak <bartosz.dudziak@snejp.pl>
+> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 > ---
->  .../pinctrl/qcom,msm8226-pinctrl.yaml         | 132 ++++++++++++++++++
->  1 file changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8226-pinctrl.yaml
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index d03edf9d3935..4eba0615562f 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -86,6 +86,15 @@ Optional properties:
+>   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
+>  	register for post-silicon frame length adjustment when the
+>  	fladj_30mhz_sdbnd signal is invalid or incorrect.
+> + - snps,num-lanes: set to specify the number of lanes to use. Valid inputs are
+> +			1 or 2. Apply if the maximum-speed is super-speed-plus
+> +			only. Default value is 2 for DWC_usb32. For DWC_usb31,
+> +			it is always 1 at super-speed-plus.
+> + - snps,lane-speed-mantissa-gbps: set to specify the symmetric lane speed
+> +			mantissa in Gbps. Valid inputs are 5 or 10. Apply if
+> +			the maximum-speed is super-speed-plus only. Default
+> +			value is 10. For DWC_usb31, it's always 10 at
+> +			super-speed-plus.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is all common USB things and should be common properties (which we 
+may already have).
+
+Rob
