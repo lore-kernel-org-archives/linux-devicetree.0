@@ -2,278 +2,170 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D7AC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 04:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC978C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 05:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D83208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 04:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830702176B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 05:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JIZ/YbX1"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YmiMwWrZ";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ccVi11bT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725984AbgGUE2g (ORCPT
+        id S1726735AbgGUFBT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 00:28:36 -0400
-Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:15205
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725294AbgGUE2f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 00:28:35 -0400
+        Tue, 21 Jul 2020 01:01:19 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42256 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725294AbgGUFBS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 01:01:18 -0400
+Received: from mailhost.synopsys.com (us03-mailhost1.synopsys.com [10.4.17.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E1864C008A;
+        Tue, 21 Jul 2020 05:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1595307677; bh=7ZXk723N8ZznFHwj/eX4mSs0gmVcyPW0u8fgzgqbnus=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=YmiMwWrZxZ1msD6nMlOSnQrQlwIZ+QwjykvRooI1vXEB8TRDABUx4bkWuKn7GrcL7
+         TUXPCNGCq42qxbW1U49gGavEDpWx9uwg/DVrtNACt+Ivzh1u+yfRx1BPMTevmzgdHo
+         mvz8JC6Qf1Qb85SG20Csx3jKCZBJos0w4QqVGt8s3sH+UbHPXd/FDd5R/zlh7QTHYP
+         9jqTU3AbXMUXGDSWrTBUguBek1L2fbU1AZ4ZtB/K0+KAMJ1zQB5Yo/v2l90kyWH99S
+         uxdRCg/aHN7lb+JAlvA30fF1J63aypdcpcKfm5aSqTJ6OrCumEDKwCMd7P8YQP5Gak
+         AZhQMYPmzqnIQ==
+Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 03853A005A;
+        Tue, 21 Jul 2020 05:01:15 +0000 (UTC)
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 7FA49800CC;
+        Tue, 21 Jul 2020 05:01:14 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=thinhn@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="ccVi11bT";
+        dkim-atps=neutral
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gFQVcQyaWvsUG44XdSChW2yUXoo+b9mZbXnsvI90K6Ie/HbmdqIWWnN92qY5yuoEP71ETYMCJaeeCxiiod8A3N2Zk2MPC1ZTCeAst35p0kHz8rKGcOj6AthtFokM0voSHgRk7sr/mTp18rTsQl7gjkAKPHGt0J27irrOj/eBxqFYOvafogyfaDR+MXr1qhvuRCf4uVax8ZirRbq88FV3mnNkLUureJeIs6rOsO34KndID4fguw7TadWlLx/VPyeciN5py0lvdGDum9OXzCHxinsz2P/Hao/iOi3dvkAtoTYgg/Z9S92c178xlq9pQKhkxME/4QpgPQk+YQJtxoNwDA==
+ b=WMU2iVU7H/kgOvetD4Mb5ToM8di2xm49iudWybKdWQukVAnD94Iyo71msupqtkfLZkaysLK2GRwq+0pwPTmMvlJG+nVYvfjVV+RLniIHNfkEdyhDrqxj8o+ysyH3NFNxqFM3KaLnFd2NK7bVhO1Fi/EIfRHXSlcFBEnjHZ7q7WldBMO5NHhiLkXi5kGcYyvz8+8zlkOUClhJVbGK0KVpV29R94p/FFdO8TTKmDT6vgj9HMz0GLkzoOU1nV/yqB+8SEzCuYiWpEGNytz3DFHwSis76IheS0UjG0BSUkuNjOCOSAfTq4S9fKpxsNX1K/8BEw9Iw9EQYsEWWfeaiSMq3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HA5z3Mh8DZD1o3ypG13EfIrFK75pKfsvj81iTyYA0uE=;
- b=IpR5Cs4A4+GgKWGu3o6MnmmsLyXCqvCwchPw0wTLzeFgcCZ5CXifclov0+1mO+Crocu/tl2QSzD2sjutbGT9QAXbBJzewoHZQtRgW9YDrD0puF6F+6dEoRhOvNDz8A2xJ1sC9+t+zIo0gQaDLsCJZ7iI6d8J8RdeBUiFHBjXA7cemeyt4/XxbLJlrEmmmlXk9O64jQbhx69JaD/eP5DSES5yA2b64mbmMRYbLdd83P1PZwcVPAh1PcyFtTBhDKagUtuSfEFgfKhlSBZ4JeFE0VCCuip4U8GKRp0VsmW43jbKiQJBexU2mrEgaxdx3jmGyVHdHC87AdqatfgdJR1YOQ==
+ bh=7ZXk723N8ZznFHwj/eX4mSs0gmVcyPW0u8fgzgqbnus=;
+ b=con/BQabu+nXmcjyEDQ0i2+d9GzCZ70n8D77XZPWk6uDKjAChzHxo6KBqTeHM5614ZN7tJs4P3OUxZa0E17c36iBlyapJcQIxwwkADeeLFUpxFgL36zvnP8Wr1nCE+NIUC6ITzTKnDK/MQVy7xmykIQU9hee1kv9COMZ0qRqxKZHOLXRTOjMKeuMOhVtYX3rttpHS/S1h5/53xqMLI2bCJsJlIENLUMCqPI43VWlGIJ54iIAEKgSgeDIHUsMjkeHwdvQTjsX2os7IdvM7efAFicJLtYNUC0bdi5E5Dj2/vQ9b9nMNluE8j2/PzJq4nb72TJhy/Y8h5az1yaXknWpEQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HA5z3Mh8DZD1o3ypG13EfIrFK75pKfsvj81iTyYA0uE=;
- b=JIZ/YbX11YKI7lnTVgJPwYPI5QfMs3WP+ZXCn8N/N6j6aRP3Q8P6jDTCH7/z2V/aP04tHlP8Uuao/03kOSZTXG+aaZBmxwidvq6TEerrDf3yJbORX+FHJHSjGW5Q+5lvVU1/I5RYE/togi+Gyv6Od6LiKJ4ciau9aydpIFAuSaA=
-Received: from DB7PR04MB4986.eurprd04.prod.outlook.com (2603:10a6:10:13::25)
- by DB7PR04MB5353.eurprd04.prod.outlook.com (2603:10a6:10:84::11) with
+ bh=7ZXk723N8ZznFHwj/eX4mSs0gmVcyPW0u8fgzgqbnus=;
+ b=ccVi11bTsJ0t3HGHXL96wTU/yg+4t8MqxE4tFYAI5lSIo+s2g410qBRhQLR6SObDaMEJ7zBlNEkfZo7CBAy29+InTkIv4We4FOHJDCrwddDpbXXsnc+8Nzb+0SL9sadh7tBnXHH4hEvINqQIzuNafEAlr49BvJMxgLkAR7ytxPQ=
+Received: from BYAPR12MB2917.namprd12.prod.outlook.com (2603:10b6:a03:130::14)
+ by BY5PR12MB3874.namprd12.prod.outlook.com (2603:10b6:a03:1ad::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.18; Tue, 21 Jul
- 2020 04:28:30 +0000
-Received: from DB7PR04MB4986.eurprd04.prod.outlook.com
- ([fe80::d133:55be:7303:108e]) by DB7PR04MB4986.eurprd04.prod.outlook.com
- ([fe80::d133:55be:7303:108e%6]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
- 04:28:29 +0000
-From:   Makarand Pawagi <makarand.pawagi@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>
-CC:     Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Tue, 21 Jul
+ 2020 05:01:12 +0000
+Received: from BYAPR12MB2917.namprd12.prod.outlook.com
+ ([fe80::3844:ed8:654d:7456]) by BYAPR12MB2917.namprd12.prod.outlook.com
+ ([fe80::3844:ed8:654d:7456%5]) with mapi id 15.20.3195.026; Tue, 21 Jul 2020
+ 05:01:12 +0000
+X-SNPS-Relay: synopsys.com
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Rob Herring <robh@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v2 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping
- APIs
-Thread-Topic: [EXT] Re: [PATCH v2 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping
- APIs
-Thread-Index: AQHWXrZ8RLWPWILym0mae/lq5iihW6kRcNYw
-Date:   Tue, 21 Jul 2020 04:28:29 +0000
-Message-ID: <DB7PR04MB49868304D142BEC5044A6FCEEB780@DB7PR04MB4986.eurprd04.prod.outlook.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
- <20200720165442.GA19658@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200720165442.GA19658@e121166-lin.cambridge.arm.com>
+        John Youn <John.Youn@synopsys.com>
+Subject: Re: [PATCH 06/11] usb: devicetree: dwc3: Introduce num-lanes and lsm
+Thread-Topic: [PATCH 06/11] usb: devicetree: dwc3: Introduce num-lanes and lsm
+Thread-Index: AQHWW7xVn29tfo9/DkKD4yu8ygVtF6kRaYEAgAAW7YA=
+Date:   Tue, 21 Jul 2020 05:01:12 +0000
+Message-ID: <d7e3d5c6-05c1-f256-7773-2b88f6cd5ca3@synopsys.com>
+References: <cover.1594935978.git.thinhn@synopsys.com>
+ <9684a2b2adb01b6b1a8c513928ea49b4a6436184.1594935978.git.thinhn@synopsys.com>
+ <20200721033908.GA3508628@bogus>
+In-Reply-To: <20200721033908.GA3508628@bogus>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [122.169.237.208]
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [149.117.7.21]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 123854ce-bdd9-4a7c-cac9-08d82d2e8539
-x-ms-traffictypediagnostic: DB7PR04MB5353:
+x-ms-office365-filtering-correlation-id: d8ea21ef-3996-466d-0a8f-08d82d3316cc
+x-ms-traffictypediagnostic: BY5PR12MB3874:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB53538029CD6C72063DF8F0A4EB780@DB7PR04MB5353.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <BY5PR12MB3874EA166EA827EE4CC4AB7BAA780@BY5PR12MB3874.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mkULBl8xYEDomk0nozHEbT/9MOoma0nZuYy96M37RqBosKbDSW8rpkafwoOGzBYrUlveawsci/M9CScqpCQS/ekiYcFGlXRbBAfYZtJnWQvqd493ooabEZfGMSZLhrU9J+HoCjV7+9E2T8Vf7/34+yekd7GXMO8nAnxMd3nJhEp7bwmePvSebzee+OO3tr7c1ZZpuDoNGitRHKwQ/8nkWlJ+Obix5rLo0bpsQ1aiKzzFUmenJKo2Dom0+50S0Ry8jb7BIbX2Aaqhd3/wv/jz5h6U3NeR07Ony/FTBFNhgwS27jTAP1bfd2prkBkH5+0VZQe0gtt9/gFL22jBKmikD+t3nj9Z2LPMCkEsK1I05T1IZpUT9xqqAbeZdC7NciGY/v6qvQb5sm10r7SO6ZOiMw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4986.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(39860400002)(366004)(346002)(52536014)(83080400001)(2906002)(33656002)(5660300002)(86362001)(55016002)(8936002)(316002)(9686003)(7416002)(66946007)(478600001)(45080400002)(6506007)(66476007)(66556008)(64756008)(66446008)(7696005)(76116006)(966005)(53546011)(44832011)(186003)(26005)(8676002)(110136005)(54906003)(71200400001)(4326008)(83380400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: pKZvw4+u3w09yWUFv/SSjcRyMIUy0qcVnZ8sF7qrd0GmTBecc9Xsj5Trcvg846FiXx1mf4e6VWl01SvE8toCFzXK8GHpBpzdYUvxb0iT85ybJshcGB1LfjjUDO9EFEu8xB/2WkKzwu7vDByoI2buEZgavOermftozTfIEAENcrjMmkjP0eoBRi3+D9M9l7VMuaEYQ81TpXnMcvXwWgMfc3OwpUqc1YpUdC5TVFrpoNrEPbZlOpRKQ//63RrB5H6Mn8LujtQTvb5FGGIWc/8ioV4toplXZSM9s18iQgjVa1s7Nj53ZmL77d8gPtEM7rEMTvKvNfvdQbPqouQbqr5qfXNzQlz4YqVNGhV5T95UUSl56nPfgZH4fESeVPEROyTemrnk71+rlpeAWUSWBME59k3dyBPPHaMOB95lg3H2UzF4MOnUT9iyyODqTiweZI7EkpkL3EvVJqaJ3LRQl8dibUKpmNyJXI2+89N6sxO2Cl3QJnpgF8eQwSab1j6xlT18
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: M677x6Yx63DCik7b8882OzJdC0S7L9ggUe+cQsAmQvLjLOxNHmQpTNpKFQvK/x87AfwJMLAgdu5LfXoecHcvDUZSYEvYkZzzX2bOd7GfE0P8SBvQHQYE6qlrYC5aD9KHm88Bmyn8V/WGi5zvuF91v8XGS8JxPXze/4Ok2MYXyuzkqYooyQvnm1Bs6cMJVEiUTB4iwPWoew4coKIqHRMp8p52rTNmoyGxbOCv5eM4BsmwOyNFcYGS6lTlvvlRTT7bk0WkuWLkrUSBDrjnTwHZws2mI5XNcg5n2R9c3Rrt9ooUR/OHKhTxDNjim7rH4ySE99eUb7bYQCYDIDgsCmb7F4jXzREoGEt1VzZcOQhSKH6G7DmCDSxmyTcliblDz1o6
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2917.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39860400002)(346002)(136003)(376002)(366004)(2906002)(110136005)(8676002)(54906003)(316002)(5660300002)(478600001)(6512007)(71200400001)(64756008)(86362001)(31686004)(66476007)(66946007)(2616005)(76116006)(26005)(6486002)(31696002)(8936002)(107886003)(66556008)(6506007)(186003)(4326008)(36756003)(66446008)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: LnxhuYjrl8MCFgRjD5m/d+YcXL7Zc6k6HmOx3qBIF0tEz1yowKuTfshyVrC73ri4fKQ7u8YcVI/0HQ6LVG3d05sldoKsmCOa1cHXVguljmpytZ5m3nfboojgT5UZ6/AgpgMtnkCfWxb9eaxBcUl1U7D+/x8SGDD4FU4S8S5zs0RUIo49ti9NGErdPi5vsaKcX39pYHuOSZ+DD1gpu8TAM1R5yY8m+W55ZdwoPhhgCXjlAVx1WPBqtMDr/TgZme+pD6ic6aNUc/qR4f773Nf6usRFgOEO3VZc8UErKQiLcok35YogkudtlqbsnoMy6m28IsdavDLDrnOvmOhrcIYM0pCX5TFzkcYAubaUN+o4x5chXK2VT5rgvyS5/k0tM3g0TyimwSsAlR+B7OQmnYjDVHZ510Q5NthPxjxAj6f02RuLq10zhBjTIWPeJlYExsG4Sh0CGmtgpVcEPJHFSO74jv258NSvR082FSzc7HpISHY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C52CE87183CC484FB872E40582AFD84D@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-OriginatorOrg: synopsys.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4986.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 123854ce-bdd9-4a7c-cac9-08d82d2e8539
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 04:28:29.5100
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2917.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8ea21ef-3996-466d-0a8f-08d82d3316cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 05:01:12.0428
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uz4ZcIjaZ+im9vI6/52cBnomZ5tPGZgLZwKivBRBu0Ttytb4dDfAwOresDdSkBoBSqI2YuvR2BItBMR5o0CLag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5353
+X-MS-Exchange-CrossTenant-userprincipalname: j2P+fCXvaBYdZuBcdC5lxsIJ1Hn4MMFTTA5gy0hSVTnd+ngU4FP7YYtsBMRtFvke6eI87MpSnJ81dtt5PsuFcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3874
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Monday, July 20, 2020 10:25 PM
-> To: linux-arm-kernel@lists.infradead.org; Rob Herring <robh+dt@kernel.org=
->;
-> Rafael J. Wysocki <rjw@rjwysocki.net>; Bjorn Helgaas <bhelgaas@google.com=
->;
-> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will@kernel.org>;
-> joro@8bytes.org
-> Cc: Hanjun Guo <guohanjun@huawei.com>; Sudeep Holla
-> <sudeep.holla@arm.com>; Robin Murphy <robin.murphy@arm.com>; Marc
-> Zyngier <maz@kernel.org>; iommu@lists.linux-foundation.org; linux-
-> acpi@vger.kernel.org; devicetree@vger.kernel.org; linux-pci@vger.kernel.o=
-rg;
-> Makarand Pawagi <makarand.pawagi@nxp.com>; Diana Madalina Craciun (OSS)
-> <diana.craciun@oss.nxp.com>; Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> Subject: [EXT] Re: [PATCH v2 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping
-> APIs
->=20
-> Caution: EXT Email
->=20
-> On Fri, Jun 19, 2020 at 09:20:01AM +0100, Lorenzo Pieralisi wrote:
-> > This series is a v2 of a previous posting:
-> >
-> > v1 -> v2
-> >
-> > - Removed _rid() wrappers
-> > - Fixed !CONFIG_ACPI compilation issue
-> > - Converted of_pci_iommu_init() to use of_iommu_configure_dev_id()
-> >
-> > v1:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flor=
-e
-> > .kernel.org%2Flinux-arm-kernel%2F20200521130008.8266-1-lorenzo.pierali
-> >
-> si%40arm.com%2F&amp;data=3D02%7C01%7Cmakarand.pawagi%40nxp.com%7C
-> da7bade
-> >
-> c592846a1478808d82ccd9eb1%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> 7C1%7
-> >
-> C637308608924853281&amp;sdata=3DZoP3e2Q5Ijkz%2FtsGfgu9MYkmKXSHQExs5
-> J64Sb
-> > h51YA%3D&amp;reserved=3D0
-> >
-> > Original cover letter
-> > ---------------------
-> >
-> > Firmware bindings provided in the ACPI IORT table[1] and device tree
-> > bindings define rules to carry out input/output ID mappings - ie
-> > retrieving an IOMMU/MSI controller input ID for a device with a given
-> > ID.
-> >
-> > At the moment these firmware bindings are used exclusively for PCI
-> > devices and their requester ID to IOMMU/MSI id mapping but there is
-> > nothing PCI specific in the ACPI and devicetree bindings that prevent
-> > the firmware and kernel from using the firmware bindings to traslate
-> > device IDs for any bus that requires its devices to carry out
-> > input/output id translations.
-> >
-> > The Freescale FSL bus is an example whereby the input/output ID
-> > translation kernel code put in place for PCI can be reused for devices
-> > attached to the bus that are not PCI devices.
-> >
-> > This series updates the kernel code to make the MSI/IOMMU input/output
-> > ID translation PCI agnostic and apply the resulting changes to the
-> > device ID space provided by the Freescale FSL bus.
-> >
-> > [1]
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Finfo=
-c
-> >
-> enter.arm.com%2Fhelp%2Ftopic%2Fcom.arm.doc.den0049d%2FDEN0049D_IO_
-> Rema
-> >
-> pping_Table.pdf&amp;data=3D02%7C01%7Cmakarand.pawagi%40nxp.com%7Cda
-> 7bade
-> >
-> c592846a1478808d82ccd9eb1%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> 7C1%7
-> >
-> C637308608924853281&amp;sdata=3DRzpIo4AfAFsi2pdEuY%2FbnPAyase5cSmFIr5
-> 2SX
-> > aOrTg%3D&amp;reserved=3D0
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: "Joerg Roedel <joro@8bytes.org>
-> > Cc: Hanjun Guo <guohanjun@huawei.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> >
-> > Diana Craciun (2):
-> >   of/irq: make of_msi_map_get_device_domain() bus agnostic
-> >   bus/fsl-mc: Refactor the MSI domain creation in the DPRC driver
-> >
-> > Laurentiu Tudor (1):
-> >   dt-bindings: arm: fsl: Add msi-map device-tree binding for fsl-mc
-> > bus
-> >
-> > Lorenzo Pieralisi (8):
-> >   ACPI/IORT: Make iort_match_node_callback walk the ACPI namespace for
-> >     NC
-> >   ACPI/IORT: Make iort_get_device_domain IRQ domain agnostic
-> >   ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
-> >   ACPI/IORT: Remove useless PCI bus walk
-> >   ACPI/IORT: Add an input ID to acpi_dma_configure()
-> >   of/iommu: Make of_map_rid() PCI agnostic
-> >   of/device: Add input id to of_dma_configure()
-> >   of/irq: Make of_msi_map_rid() PCI bus agnostic
-> >
-> > Makarand Pawagi (1):
-> >   bus: fsl-mc: Add ACPI support for fsl-mc
-> >
-> >  .../devicetree/bindings/misc/fsl,qoriq-mc.txt |  50 +++++++-
-> >  drivers/acpi/arm64/iort.c                     | 108 ++++++++++++------
-> >  drivers/acpi/scan.c                           |   8 +-
-> >  drivers/bus/fsl-mc/dprc-driver.c              |  31 ++---
-> >  drivers/bus/fsl-mc/fsl-mc-bus.c               |  79 +++++++++----
-> >  drivers/bus/fsl-mc/fsl-mc-msi.c               |  36 ++++--
-> >  drivers/bus/fsl-mc/fsl-mc-private.h           |   6 +-
-> >  drivers/iommu/of_iommu.c                      |  81 +++++++------
-> >  drivers/irqchip/irq-gic-v3-its-fsl-mc-msi.c   | 105 ++++++++++++++---
-> >  drivers/of/base.c                             |  42 +++----
-> >  drivers/of/device.c                           |   8 +-
-> >  drivers/of/irq.c                              |  34 +++---
-> >  drivers/pci/msi.c                             |   9 +-
-> >  include/acpi/acpi_bus.h                       |   9 +-
-> >  include/linux/acpi.h                          |   7 ++
-> >  include/linux/acpi_iort.h                     |  20 ++--
-> >  include/linux/of.h                            |   4 +-
-> >  include/linux/of_device.h                     |  16 ++-
-> >  include/linux/of_iommu.h                      |   6 +-
-> >  include/linux/of_irq.h                        |  13 ++-
-> >  20 files changed, 451 insertions(+), 221 deletions(-)
->=20
-> Hi guys,
->=20
-> I think this series is ready for upstream (there are two ACKs missing fro=
-m Rafael
-> on patch (5) and Bjorn on patch (3) - I asked for them), it touches lots =
-of
-> subsystems so I am not really sure what's the best way to pull it, more s=
-o given
-> that it is also late in the cycle (I do think it is best to merge it via =
-a single tree, it
-> does not make sense to split it up in my opinion).
->=20
-> Please let me know.
->=20
-Hi Lorenzo, I too find it suitable to merge it as a whole.
-Hi Rafael, Bjorn, Can you finalize your review for patch-5 and patch-3?=20
-
-
-> Thanks,
-> Lorenzo
+Um9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFRodSwgSnVsIDE2LCAyMDIwIGF0IDAyOjU5OjA4UE0g
+LTA3MDAsIFRoaW5oIE5ndXllbiB3cm90ZToNCj4+IEludHJvZHVjZSBudW0tbGFuZXMgYW5kIGxh
+bmUtc3BlZWQtbWFudGlzc2EtZ2JwcyBmb3IgZGV2aWNlcyBvcGVyYXRpbmcNCj4+IGluIHN1cGVy
+LXNwZWVkLXBsdXMuIERXQ191c2IzMiBJUCBzdXBwb3J0cyBtdWx0aXBsZSBsYW5lcyBhbmQgY2Fu
+DQo+PiBvcGVyYXRlIGluIGRpZmZlcmVudCBzdWJsaW5rIHNwZWVkcy4gQ3VycmVudGx5IHRoZSBk
+ZXZpY2UgY29udHJvbGxlcg0KPj4gZG9lcyBub3QgaGF2ZSB0aGUgaW5mb3JtYXRpb24gb2YgdGhl
+IHBoeSdzIG51bWJlciBvZiBsYW5lcyBzdXBwb3J0ZWQuIEFzDQo+PiBhIHJlc3VsdCwgdGhlIHVz
+ZXIgY2FuIHNwZWNpZnkgdGhlbSB0aHJvdWdoIHRoZXNlIHByb3BlcnRpZXMgaWYgdGhleSBhcmUN
+Cj4+IGRpZmZlcmVudCB0aGFuIHRoZSBkZWZhdWx0IHNldHRpbmcuDQo+Pg0KPj4gU2lnbmVkLW9m
+Zi1ieTogVGhpbmggTmd1eWVuIDx0aGluaG5Ac3lub3BzeXMuY29tPg0KPj4gLS0tDQo+PiAgIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQgfCA5ICsrKysrKysr
+Kw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQo+Pg0KPj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2R3YzMudHh0DQo+PiBpbmRleCBkMDNl
+ZGY5ZDM5MzUuLjRlYmEwNjE1NTYyZiAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy91c2IvZHdjMy50eHQNCj4+IEBAIC04Niw2ICs4NiwxNSBAQCBPcHRp
+b25hbCBwcm9wZXJ0aWVzOg0KPj4gICAgLSBzbnBzLHF1aXJrLWZyYW1lLWxlbmd0aC1hZGp1c3Rt
+ZW50OiBWYWx1ZSBmb3IgR0ZMQURKXzMwTUhaIGZpZWxkIG9mIEdGTEFESg0KPj4gICAJcmVnaXN0
+ZXIgZm9yIHBvc3Qtc2lsaWNvbiBmcmFtZSBsZW5ndGggYWRqdXN0bWVudCB3aGVuIHRoZQ0KPj4g
+ICAJZmxhZGpfMzBtaHpfc2RibmQgc2lnbmFsIGlzIGludmFsaWQgb3IgaW5jb3JyZWN0Lg0KPj4g
+KyAtIHNucHMsbnVtLWxhbmVzOiBzZXQgdG8gc3BlY2lmeSB0aGUgbnVtYmVyIG9mIGxhbmVzIHRv
+IHVzZS4gVmFsaWQgaW5wdXRzIGFyZQ0KPj4gKwkJCTEgb3IgMi4gQXBwbHkgaWYgdGhlIG1heGlt
+dW0tc3BlZWQgaXMgc3VwZXItc3BlZWQtcGx1cw0KPj4gKwkJCW9ubHkuIERlZmF1bHQgdmFsdWUg
+aXMgMiBmb3IgRFdDX3VzYjMyLiBGb3IgRFdDX3VzYjMxLA0KPj4gKwkJCWl0IGlzIGFsd2F5cyAx
+IGF0IHN1cGVyLXNwZWVkLXBsdXMuDQo+PiArIC0gc25wcyxsYW5lLXNwZWVkLW1hbnRpc3NhLWdi
+cHM6IHNldCB0byBzcGVjaWZ5IHRoZSBzeW1tZXRyaWMgbGFuZSBzcGVlZA0KPj4gKwkJCW1hbnRp
+c3NhIGluIEdicHMuIFZhbGlkIGlucHV0cyBhcmUgNSBvciAxMC4gQXBwbHkgaWYNCj4+ICsJCQl0
+aGUgbWF4aW11bS1zcGVlZCBpcyBzdXBlci1zcGVlZC1wbHVzIG9ubHkuIERlZmF1bHQNCj4+ICsJ
+CQl2YWx1ZSBpcyAxMC4gRm9yIERXQ191c2IzMSwgaXQncyBhbHdheXMgMTAgYXQNCj4+ICsJCQlz
+dXBlci1zcGVlZC1wbHVzLg0KPiBUaGlzIGlzIGFsbCBjb21tb24gVVNCIHRoaW5ncyBhbmQgc2hv
+dWxkIGJlIGNvbW1vbiBwcm9wZXJ0aWVzICh3aGljaCB3ZQ0KPiBtYXkgYWxyZWFkeSBoYXZlKS4N
+Cg0KU3VyZS4gRm9yICJudW0tbGFuZXMiIGlzIHNpbXBsZSwgYW55IG9iamVjdGlvbiBpZiB3ZSB1
+c2UgDQoibGFuZS1zcGVlZC1tYW50aXNzYS1nYnBzIj8gT3Igc2hvdWxkIHdlIGFkZCAibGFuZS1z
+cGVlZC1leHBvbmVudCI/DQoNClRoYW5rcywNClRoaW5oDQo=
