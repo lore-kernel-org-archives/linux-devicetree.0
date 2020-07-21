@@ -2,90 +2,169 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBB7C433E5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2026AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 383DD20674
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 10:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96F62073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 11:02:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q3PTt388"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgGUKsr (ORCPT
+        id S1729401AbgGULCt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 06:48:47 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:23256 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgGUKsr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 06:48:47 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 21 Jul 2020 03:48:47 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Jul 2020 03:48:45 -0700
-Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 21 Jul 2020 16:18:42 +0530
-Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
-        id CEC6F3FFA; Tue, 21 Jul 2020 16:18:41 +0530 (IST)
-From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        rnayak@codeaurora.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-Subject: [PATCH V1] arm64: dts: qcom: sc7180: Include xo clock to sdhc clocks list
-Date:   Tue, 21 Jul 2020 16:18:39 +0530
-Message-Id: <1595328519-30115-1-git-send-email-sbhanu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 Jul 2020 07:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgGULCs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 07:02:48 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DDD4C061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:02:48 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q15so2388197wmj.2
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 04:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CPqRjmeULxuLVoEjy9aA3UQhI9sTfnd10elbtAQrDro=;
+        b=q3PTt388dGTnzDpVwzvX6J60ZQKkYn/bYlCxdn54F6eINTC2t/AidA+9Em79HiEZRt
+         lavrMoQiz13W5VNdzEGkAZDZOy4WCxvC2LGYETtYQrLBrSesCPem+2KnQZNDvq9REXRL
+         oOrUs7OF4A3Yr9oKdXRBigpkeKEb46CLGy2q+phezgBG+EEhywNBZqsa1oFPDlVszg8e
+         iPeyiyu4ytWfy6HBiQU+IIjba9r0/2MaZ1ShQUSedgi+eIHyTVeXGn5Hc+bg+mM7MwYq
+         EWe02FiTsvsrcAgW9M2u4viKWhX+d0dp4COZjIhCwTvTxY++9dLalWkh0XmV95/70I/Q
+         b9fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CPqRjmeULxuLVoEjy9aA3UQhI9sTfnd10elbtAQrDro=;
+        b=r6AEeEsjOomDD+HCi5yg4Sz3Cd3YEO4QpZMQA36xiQyVQx0NtCjnF2pw77kZfHkzrH
+         qBTr1x8qoY1PYP6hbGuB4eUi2/idV4S5fziZSgCxW2FqJ5QoMhEDVOtAeMFK0rUESk3y
+         t2SLpYC/fuVkbLtzrkFA0Vi59SdIWb7O8MPd2NxoV2rBV0t5IEQZYSuv4FyTuuRU1jkw
+         J+Ax4m7PQfzEjt1BwY0YaucTwOsaXrsHfueSxoOxxYSEE/3u6U961GF29eZgS8BjQ6N3
+         L7esnXDMJSyc3kCbKWZMfjZPdQQwmmlvmX1K9rkfkCVmsdSfofhUenaoyuN+uXabj8yh
+         X83A==
+X-Gm-Message-State: AOAM5302Jw0IkeT/e/WTpxFDep7EjLfO98+XqmRgtpY2OTutYxD1He81
+        mel+AJ49OBf2hmR7K4yO3wjketxcks4=
+X-Google-Smtp-Source: ABdhPJw4oqzUpsLRaO3E4F0cyKC6CtdtVtcGI3tpABklcSHKMh0/ZWva0LboU9nfH9I2yu3x4fbG/A==
+X-Received: by 2002:a7b:ce83:: with SMTP id q3mr3481693wmj.5.1595329366936;
+        Tue, 21 Jul 2020 04:02:46 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
+        by smtp.googlemail.com with ESMTPSA id d14sm4547519wre.44.2020.07.21.04.02.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 04:02:46 -0700 (PDT)
+Subject: Re: [PATCH v4 2/4] clocksource/drivers: Add CLINT timer driver
+To:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Emil Renner Berhing <kernel@esmil.dk>
+References: <20200717075101.263332-1-anup.patel@wdc.com>
+ <20200717075101.263332-3-anup.patel@wdc.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <63f65ddd-b7c4-b8fd-151c-a77e8c87efed@linaro.org>
+Date:   Tue, 21 Jul 2020 13:02:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200717075101.263332-3-anup.patel@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+On 17/07/2020 09:50, Anup Patel wrote:
+> We add a separate CLINT timer driver for Linux RISC-V M-mode (i.e.
+> RISC-V NoMMU kernel).
+> 
+> The CLINT MMIO device provides three things:
+> 1. 64bit free running counter register
+> 2. 64bit per-CPU time compare registers
+> 3. 32bit per-CPU inter-processor interrupt registers
+> 
+> Unlike other timer devices, CLINT provides IPI registers along with
+> timer registers. To use CLINT IPI registers, the CLINT timer driver
+> provides IPI related callbacks to arch/riscv.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> ---
+>  drivers/clocksource/Kconfig       |   9 ++
+>  drivers/clocksource/Makefile      |   1 +
+>  drivers/clocksource/timer-clint.c | 231 ++++++++++++++++++++++++++++++
+>  include/linux/cpuhotplug.h        |   1 +
+>  4 files changed, 242 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-clint.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 91418381fcd4..e1ce0d510a03 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -658,6 +658,15 @@ config RISCV_TIMER
+>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+>  	  required for all RISC-V systems.
+>  
+> +config CLINT_TIMER
+> +	bool "Timer for the RISC-V platform"
+> +	depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
+> +	select TIMER_PROBE
+> +	select TIMER_OF
+> +	help
+> +	  This option enables the CLINT timer for RISC-V systems. The CLINT
+> +	  driver is usually used for NoMMU RISC-V systems.
 
-Include xo clock to sdhc clocks list which will be used
-in calculating MCLK_FREQ field of DLL_CONFIG2 register.
+V3 has a comment about fixing the Kconfig option.
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+[ ... ]
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index d78a066..7ccb780 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -682,8 +682,9 @@
- 			interrupt-names = "hc_irq", "pwr_irq";
- 
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
--					<&gcc GCC_SDCC1_AHB_CLK>;
--			clock-names = "core", "iface";
-+					<&gcc GCC_SDCC1_AHB_CLK>,
-+					<&xo_board>;
-+			clock-names = "core", "iface", "xo";
- 			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
- 				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
- 			interconnect-names = "sdhc-ddr","cpu-sdhc";
-@@ -2481,8 +2482,9 @@
- 			interrupt-names = "hc_irq", "pwr_irq";
- 
- 			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
--					<&gcc GCC_SDCC2_AHB_CLK>;
--			clock-names = "core", "iface";
-+					<&gcc GCC_SDCC2_AHB_CLK>,
-+					<&xo_board>;
-+			clock-names = "core", "iface", "xo";
- 
- 			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
- 				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
+> +{
+> +	bool *registered = per_cpu_ptr(&clint_clock_event_registered, cpu);
+> +	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
+> +
+> +	if (!(*registered)) {
+> +		ce->cpumask = cpumask_of(cpu);
+> +		clockevents_config_and_register(ce, clint_timer_freq, 200,
+> +						 ULONG_MAX);
+> +		*registered = true;
+> +	}
+
+
+I was unsure about the clockevents_config_and_register() multiple calls
+when doing the comment. It seems like it is fine to call it several
+times and that is done in several places like riscv or arch_arm_timer.
+
+It is probably safe to drop the 'registered' code here, sorry for the
+confusion.
+
+> +	enable_percpu_irq(clint_timer_irq,
+> +			  irq_get_trigger_type(clint_timer_irq));
+> +	return 0;
+> +}
+> +
+
+[ ... ]
+
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
