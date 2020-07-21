@@ -2,123 +2,112 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E422C433ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5385207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05570208E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WrzwzFfI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n4Wkp7kF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgGUGAu (ORCPT
+        id S1728464AbgGUGCH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:00:50 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5339 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725294AbgGUGAu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 02:00:50 -0400
-X-UUID: 7ab65104b14a4a6ab6d29dfb2bde717d-20200721
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=U8PX+F+mnKbPbXqn4UjkWg26k/aBzCM1RQhtMnlz4g8=;
-        b=WrzwzFfIVY7/0UEwUhttN1gyFZ8Pd2vOHdMOD1GRhZ857dctw43hTGHPLJlMTWdrhMc6JNYdgwgPxjNYHe/Er2M1xYVGrmRSDTbED992XTtsDoXReL7wgbHB2yt+IYaLnE917b6DBhX9FYyBnmkaobadO1OWvLdaBFXMqpoP3PM=;
-X-UUID: 7ab65104b14a4a6ab6d29dfb2bde717d-20200721
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 633919522; Tue, 21 Jul 2020 14:00:44 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 21 Jul 2020 14:00:41 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 21 Jul 2020 14:00:41 +0800
-Message-ID: <1595311242.5599.3.camel@mtkswgap22>
-Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Date:   Tue, 21 Jul 2020 14:00:42 +0800
-In-Reply-To: <742eefe1-954b-eb3f-98b7-469833df729a@gmail.com>
-References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
-         <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
-         <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
-         <1594872242.11090.8.camel@mtkswgap22>
-         <742eefe1-954b-eb3f-98b7-469833df729a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 21 Jul 2020 02:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbgGUGCG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 02:02:06 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456FCC0619D6
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 23:02:06 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 140so611447lfi.5
+        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 23:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=my59yREAno2VQTQHnPXurOEKaB8ry8pumgPVSYznLUI=;
+        b=n4Wkp7kFOj4iLJpP6r5SwB/qPrN12j5OeQuZbk0acAZfjK2hSrnY5oVJscJUPJZjD3
+         3Tvi5Ib/nIudBxUDjzrTXkkSIr59b33qw6AqttrRaU1314ITKvd/1FtQuM/5vKaW0A+a
+         PydSNvajtDmUqYoIqdhaT7f4RF6xalnRHweH8EiAQO0pKeOZ07SNaZwFOtlBa9fP73VM
+         I4SbOpTQZF2mL623gjrHR8g1xHJHhidB/LdHYH0AexCQbQwR/+So1zmjx6IzHTdt6o48
+         YzKD7k26mYLcUxYGMVuyYavPyJpwUSkvTdvD/fxuRGJ0N+AhylZL7eBHTZv7ZGwXd8Pw
+         sgnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=my59yREAno2VQTQHnPXurOEKaB8ry8pumgPVSYznLUI=;
+        b=J0t3HWLOk4Y7px6jxSnckkxkp1O2o5reWJRbdpSoCLlv2jUVsrKMnvDZU6qEykrHq9
+         +05pM09Ju/ulSD9Zaj1pGXk45P+Wlak1P4NAy/jAnus+xjVkvlbePfQ+Xy/cBS6L2D1N
+         qsc/zztCAVn9dZ+tKS9XKTCyLvj4StbVWIoAy781wMdAphzmama6KnjAUsNGwU3PHEmL
+         QsSJWiZdPYEQTBWtF9Eq/eJdIi6VP289+3whotHTiTQiLNmLJFPr7cAiUw3ugxnK3wQX
+         WqipbvnjhhOH/9cYznVpzSEw1YkGkM/59IQejnJRAiN1pWmBZtSPOhibO3BAM7LPn46c
+         p/0w==
+X-Gm-Message-State: AOAM530qmnKFcMdSLWcaqSGhbBnANPhqzksIMCVEeH9O/VqMpGt1+Wlz
+        cyvEBHeo9idufd/oxZI5gZg1MFtrv7D8YWhk2/OzgQ==
+X-Google-Smtp-Source: ABdhPJwvgCTehztyDX3Ii5ZlkS2X5xVAaX40gTTrRR53FMNAybYJMQOf2Mixr3o03K0dYP0cmjuKZJsCxtWu/EWeh40=
+X-Received: by 2002:ac2:5325:: with SMTP id f5mr12579460lfh.6.1595311324713;
+ Mon, 20 Jul 2020 23:02:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com>
+ <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
+ <159528817752.3847286.2725374997908705208@swboyd.mtv.corp.google.com> <CAP245DXqiEZLoVa-jfLx0tYRwrtK0sp+ZX6P_yTf4C9vetg3RA@mail.gmail.com>
+In-Reply-To: <CAP245DXqiEZLoVa-jfLx0tYRwrtK0sp+ZX6P_yTf4C9vetg3RA@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 21 Jul 2020 11:31:53 +0530
+Message-ID: <CAP245DUZTT4dFAzpN3Uv1-y2DKHriXZ9jH3t7V1qxf7sNH8yYw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTIwIGF0IDE4OjEzICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMTYvMDcvMjAyMCAwNjowNCwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiBPbiBU
-dWUsIDIwMjAtMDctMTQgYXQgMjA6MTQgKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+
-ID4+DQo+ID4+IE9uIDE0LzA3LzIwMjAgMTE6MjAsIEhhbmtzIENoZW4gd3JvdGU6DQo+ID4+PiB0
-aGlzIGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvciBib2FyZCBzdXBwb3J0LA0K
-PiA+Pj4gaW5jbHVkaW5nIGNwdSwgZ2ljLCB0aW1lciwgY2NmLCBwaW5jdHJsLCB1YXJ0LCBzeXNp
-cnEuLi5ldGMuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3Mu
-Y2hlbkBtZWRpYXRlay5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgIGFyY2gvYXJtNjQvYm9vdC9k
-dHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgfCAgIDEgKw0KPiA+Pj4gICAgYXJjaC9hcm02NC9i
-b290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cyB8ICAzMSArKysNCj4gPj4+ICAgIGFyY2gv
-YXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kgICAgfCAyNzEgKysrKysrKysrKysr
-KysrKysrKysNCj4gPj4+ICAgIDMgZmlsZXMgY2hhbmdlZCwgMzAzIGluc2VydGlvbnMoKykNCj4g
-Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210
-Njc3OS1ldmIuZHRzDQo+ID4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290
-L2R0cy9tZWRpYXRlay9tdDY3NzkuZHRzaQ0KPiA+Pj4NCj4gPj4gWy4uLl0NCj4gPj4+ICsNCj4g
-Pj4+ICsJCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KPiA+Pj4gKwkJCWNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssbXQ2Nzc5LXVhcnQiLA0KPiA+Pj4gKwkJCQkgICAgICJtZWRpYXRlayxtdDY1Nzct
-dWFydCI7DQo+ID4+PiArCQkJcmVnID0gPDAgMHgxMTAwMjAwMCAwIDB4NDAwPjsNCj4gPj4+ICsJ
-CQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTE1IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ID4+PiAr
-CQkJY2xvY2tzID0gPCZjbGsyNm0+LCA8JmluZnJhY2ZnX2FvIENMS19JTkZSQV9VQVJUMD47DQo+
-ID4+PiArCQkJY2xvY2stbmFtZXMgPSAiYmF1ZCIsICJidXMiOw0KPiA+Pj4gKwkJCXN0YXR1cyA9
-ICJkaXNhYmxlZCI7DQo+ID4+PiArCQl9Ow0KPiA+Pj4gKw0KPiA+Pj4gKwkJdWFydDE6IHNlcmlh
-bEAxMTAwMzAwMCB7DQo+ID4+PiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NzktdWFy
-dCIsDQo+ID4+PiArCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPj4+ICsJCQly
-ZWcgPSA8MCAweDExMDAzMDAwIDAgMHg0MDA+Ow0KPiA+Pj4gKwkJCWludGVycnVwdHMgPSA8R0lD
-X1NQSSAxMTYgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPj4+ICsJCQljbG9ja3MgPSA8JmNsazI2
-bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQxPjsNCj4gPj4+ICsJCQljbG9jay1uYW1l
-cyA9ICJiYXVkIiwgImJ1cyI7DQo+ID4+PiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPj4+
-ICsJCX07DQo+ID4+PiArDQo+ID4+PiArCQl1YXJ0Mjogc2VyaWFsQDExMDA0MDAwIHsNCj4gPj4+
-ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPj4+ICsJCQkJICAg
-ICAibWVkaWF0ZWssbXQ2NTc3LXVhcnQiOw0KPiA+Pj4gKwkJCXJlZyA9IDwwIDB4MTEwMDQwMDAg
-MCAweDQwMD47DQo+ID4+PiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExNyBJUlFfVFlQRV9M
-RVZFTF9MT1c+Ow0KPiA+Pj4gKwkJCWNsb2NrcyA9IDwmY2xrMjZtPiwgPCZpbmZyYWNmZ19hbyBD
-TEtfSU5GUkFfVUFSVDI+Ow0KPiA+Pj4gKwkJCWNsb2NrLW5hbWVzID0gImJhdWQiLCAiYnVzIjsN
-Cj4gPj4+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+Pj4gKwkJfTsNCj4gPj4NCj4gPj4g
-RGV2aWNldHJlZSBkZXNjcmliZXMgdGhlIEhXIHdlIGhhdmUuIEFzIGZhciBhcyBJIGtub3csIHdl
-IGhhdmUgNCBVQVJUcyBvbg0KPiA+PiBNVDY3NzkuIFNvIHdlIHNob3VsZCBsaXN0IHRoZW0gYWxs
-IGhlcmUuDQo+ID4+DQo+ID4gDQo+ID4gQWN0dWFsbHksIFdlIGhhdmUgb25seSAzIFVBUlRzIEhX
-IG9uIE1UNjc3OSwgYnV0IGhhdmUgNCBVQVJUIGNsayBpbg0KPiA+IGhlYWRlciBmaWxlIG9mIGNs
-ay4NCj4gDQo+IENvcnJlY3QsIEkgZ290IGNvbmZ1c2VkIGJ5IHRoZSBmb3VyIGNsb2Nrcy4NCj4g
-V2l0aCB0aGF0IGNsYXJpZmllZCBJJ20gZmluZSB3aXRoIHRoZSBwYXRjaCBhbmQgd2lsbCB0YWtl
-IGl0IGFzIHNvb24gYXMgdGhlIA0KPiBjbG9jayBkcml2ZXIgcGF0Y2ggaXMgYWNjZXB0ZWQuDQo+
-IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCkdvdCBpdCwgSSBzZW5kIGEgbmV3IHNlcmlh
-bCB0byBmaXggdGhlIHJlZHVuZGFudCBVQVJUIGNsaw0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIw
-MjAvNy8yMS80NQ0KDQpUaGFua3MNCg0KSGFua3MgQ2hlbg0KDQo+ID4gQ0xLX0lORlJBX1VBUlQz
-IGlzIGEgZHVtbXkgY2xrIGludGVyZmFjZSwgaXQgaGFzIG5vIGVmZmVjdCBvbiB0aGUNCj4gPiBv
-cGVyYXRpb24gb2YgdGhlIHJlYWQvd3JpdGUgaW5zdHJ1Y3Rpb24uDQo+ID4gDQo+ID4gSWYgeW91
-IHRoaW5rIGl0IGlzIG5vdCBnb29kLCBJIGNhbiByZW1vdmUgaXQgaW4gdGhlIGhlYWRlciBmaWxl
-IG9mIGNsay4NCj4gPiANCj4gPiBUaGFua3MNCj4gPiANCj4gPj4gUmVnYXJkcywNCj4gPj4gTWF0
-dGhpYXMNCj4gPiANCg0K
+On Tue, Jul 21, 2020 at 11:27 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+>
+>
+> On Tue, 21 Jul, 2020, 05:06 Stephen Boyd, <sboyd@kernel.org> wrote:
+>>
+>> Quoting Amit Kucheria (2020-07-20 02:41:44)
+>> > On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+>> > >
+>> > > Add support for child probing needed for tsens driver that share the
+>> > > seme regs of gcc for this platform.
+>> >
+>> > Typo: same
+>> >
+>>
+>> Otherwise reviewed-by? Because I can throw this into the clk tree with
+>> the typo fixed.
+>
+>
+> Yes, the rest of the series need work imo, but this patch looks ok to populate the child nodes in OF.
+>
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
+Replied earlier from a phone, which resulted in HTML email. Resending.
+
+The rest of the series need work imo, but this patch looks ok to
+populate the child nodes in OF.
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
