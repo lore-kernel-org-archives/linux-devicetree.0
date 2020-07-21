@@ -2,244 +2,136 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1A8C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D71C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5ADA207DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:11:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AOH5LAos"
+	by mail.kernel.org (Postfix) with ESMTP id A06A4208E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 06:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595312544;
+	bh=47dJEVMdxrfXF2oYeyAzojzZPGNAbJ4RDRe72YadUlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SHJ8qhCsnbtSmqVkqeOanLOM3KUnWg9LlJ6YG9hpaxYns9MBc7pcSRitBuaVDENpw
+	 lXb6IMfFvNZ1gv7hu786bt6LQheyrCzutnMwpbiBGoQW899qIc0/FpCtI3AKPkhmVj
+	 lKXU4dEWV0Zog1u597e9WNtbAyL19r8N7ZRFZEcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgGUGLG (ORCPT
+        id S1726108AbgGUGWY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 02:11:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52146 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgGUGLF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 02:11:05 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06L6B0SI116101;
-        Tue, 21 Jul 2020 01:11:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595311860;
-        bh=tCRyqOS7QzOz+wBhm7jyYwDjGFUQdR0oZraTRLE9x2o=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=AOH5LAosi8cUch/ZY9DGo2xBa3IgHzS7me//Pv4bvUZJ5jfSw/pxSASHQzN3MImTW
-         ergQqRcmsg65xBfwpATW4z0VtxvJeohB5QxcUmLdYR7ZVRSWaOe5/GyRtK0smF6ANZ
-         HA+kaipTWhr7Kc0aeDt2e9L+RqnDNvp2a+acpoX0=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06L6B06B009135
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 01:11:00 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 01:10:59 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 01:10:59 -0500
-Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06L6A8JC091920;
-        Tue, 21 Jul 2020 01:10:55 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v2 9/9] irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
-Date:   Tue, 21 Jul 2020 11:40:07 +0530
-Message-ID: <20200721061007.28324-10-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200721061007.28324-1-lokeshvutla@ti.com>
-References: <20200721061007.28324-1-lokeshvutla@ti.com>
+        Tue, 21 Jul 2020 02:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbgGUGWX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 02:22:23 -0400
+Received: from localhost (p5486cdb1.dip0.t-ipconnect.de [84.134.205.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB0E20792;
+        Tue, 21 Jul 2020 06:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595312543;
+        bh=47dJEVMdxrfXF2oYeyAzojzZPGNAbJ4RDRe72YadUlk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aFO1sfzyiSsQ1aRHew1Fs3t3HI9JCj0gnJYlQfk/Wn+lFIwh2wcj9fdH+Uf4agaTQ
+         oHaCrMb0N0PX0kMcmZoQu3HE3aEJxxd8pAinpjgDk+f0OYHP+pE+UPzSlTZQ+7FEWP
+         CWY0zTjGWsjW1KPmZOKcxbu5Z+ZJNG/oCu+weqRQ=
+Date:   Tue, 21 Jul 2020 08:22:17 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Alain Volmat <alain.volmat@st.com>, mark.rutland@arm.com,
+        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH v2 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
+Message-ID: <20200721062217.GA1044@kunai>
+References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+ <1593070769-9106-4-git-send-email-alain.volmat@st.com>
+ <20200630194107.GA999@ninjato>
+ <20200714023048.GA1151665@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8t9RHnE3ZwKMSgU+"
+Content-Disposition: inline
+In-Reply-To: <20200714023048.GA1151665@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Driver assumes that Interrupt parent to Interrupt Aggregator is always
-Interrupt router. This is not true always and GIC can be a parent to
-Interrupt Aggregator. Update the driver to detect the parent and request
-the parent irqs accordingly.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
- drivers/irqchip/irq-ti-sci-inta.c | 90 ++++++++++++++++++++++++++-----
- 1 file changed, 77 insertions(+), 13 deletions(-)
+--8t9RHnE3ZwKMSgU+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index 7e3ebf6ed2cd..00c17ade118a 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
- #include <linux/interrupt.h>
-@@ -128,6 +129,37 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(irq_desc_get_chip(desc), desc);
- }
- 
-+/**
-+ * ti_sci_inta_xlate_irq() - Translate hwirq to parent's hwirq.
-+ * @inta:	IRQ domain corresponding to Interrupt Aggregator
-+ * @irq:	Hardware irq corresponding to the above irq domain
-+ *
-+ * Return parent irq number if translation is available else -ENOENT.
-+ */
-+static int ti_sci_inta_xlate_irq(struct ti_sci_inta_irq_domain *inta,
-+				 u16 vint_id)
-+{
-+	struct device_node *np = dev_of_node(&inta->pdev->dev);
-+	u32 base, parent_base, size;
-+	const __be32 *range;
-+	int len;
-+
-+	range = of_get_property(np, "ti,interrupt-ranges", &len);
-+	if (!range)
-+		return vint_id;
-+
-+	for (len /= sizeof(*range); len >= 3; len -= 3) {
-+		base = be32_to_cpu(*range++);
-+		parent_base = be32_to_cpu(*range++);
-+		size = be32_to_cpu(*range++);
-+
-+		if (base <= vint_id && vint_id < base + size)
-+			return vint_id - base + parent_base;
-+	}
-+
-+	return -ENOENT;
-+}
-+
- /**
-  * ti_sci_inta_alloc_parent_irq() - Allocate parent irq to Interrupt aggregator
-  * @domain:	IRQ domain corresponding to Interrupt Aggregator
-@@ -139,30 +171,55 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
- 	struct ti_sci_inta_irq_domain *inta = domain->host_data;
- 	struct ti_sci_inta_vint_desc *vint_desc;
- 	struct irq_fwspec parent_fwspec;
-+	struct device_node *parent_node;
- 	unsigned int parent_virq;
--	u16 vint_id;
-+	u16 vint_id, p_hwirq;
-+	int ret;
- 
- 	vint_id = ti_sci_get_free_resource(inta->vint);
- 	if (vint_id == TI_SCI_RESOURCE_NULL)
- 		return ERR_PTR(-EINVAL);
- 
-+	p_hwirq = ti_sci_inta_xlate_irq(inta, vint_id);
-+	if (p_hwirq < 0) {
-+		ret = p_hwirq;
-+		goto free_vint;
-+	}
-+
- 	vint_desc = kzalloc(sizeof(*vint_desc), GFP_KERNEL);
--	if (!vint_desc)
--		return ERR_PTR(-ENOMEM);
-+	if (!vint_desc) {
-+		ret = -ENOMEM;
-+		goto free_vint;
-+	}
- 
- 	vint_desc->domain = domain;
- 	vint_desc->vint_id = vint_id;
- 	INIT_LIST_HEAD(&vint_desc->list);
- 
--	parent_fwspec.fwnode = of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
--	parent_fwspec.param_count = 2;
--	parent_fwspec.param[0] = inta->pdev->id;
--	parent_fwspec.param[1] = vint_desc->vint_id;
-+	parent_node = of_irq_find_parent(dev_of_node(&inta->pdev->dev));
-+	parent_fwspec.fwnode = of_node_to_fwnode(parent_node);
-+	if (of_property_read_u32(parent_node, "#interrupt-cells",
-+				 &parent_fwspec.param_count)) {
-+		ret = -EINVAL;
-+		goto free_vint_desc;
-+	}
-+
-+	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
-+		/* Parent is GIC */
-+		parent_fwspec.param[0] = 0;
-+		parent_fwspec.param[1] = p_hwirq - 32;
-+		parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
-+	} else {
-+		/* Parent is Interrupt Router */
-+		parent_fwspec.param[0] = p_hwirq;
-+	}
- 
- 	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
- 	if (parent_virq == 0) {
--		kfree(vint_desc);
--		return ERR_PTR(-EINVAL);
-+		dev_err(&inta->pdev->dev, "Parent IRQ allocation failed\n");
-+		ret = -EINVAL;
-+		goto free_vint_desc;
-+
- 	}
- 	vint_desc->parent_virq = parent_virq;
- 
-@@ -171,6 +228,11 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
- 					 ti_sci_inta_irq_handler, vint_desc);
- 
- 	return vint_desc;
-+free_vint_desc:
-+	kfree(vint_desc);
-+free_vint:
-+	ti_sci_release_resource(inta->vint, vint_id);
-+	return ERR_PTR(ret);
- }
- 
- /**
-@@ -555,15 +617,15 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
--						 "ti,sci-rm-range-vint");
-+	inta->vint = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
-+					      TI_SCI_RESASG_SUBTYPE_IA_VINT);
- 	if (IS_ERR(inta->vint)) {
- 		dev_err(dev, "VINT resource allocation failed\n");
- 		return PTR_ERR(inta->vint);
- 	}
- 
--	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
--						"ti,sci-rm-range-global-event");
-+	inta->global_event = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
-+					TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT);
- 	if (IS_ERR(inta->global_event)) {
- 		dev_err(dev, "Global event resource allocation failed\n");
- 		return PTR_ERR(inta->global_event);
-@@ -594,6 +656,8 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&inta->vint_list);
- 	mutex_init(&inta->vint_mutex);
- 
-+	dev_info(dev, "Interrupt Aggregator domain %d created\n", pdev->id);
-+
- 	return 0;
- }
- 
--- 
-2.27.0
+Hi Rob,
 
+> > > The I2C/SMBUS framework already provides a mechanism to enable SMBus-=
+Alert
+> > > by naming an IRQ line "smbus_alert". However, on stm32, the SMBus-Ale=
+rt is
+> > > part of the i2c IRQ. Using the smbus_alert naming here would lead to =
+having
+> > > 2 handlers (the handler of the driver and the smbus_alert handler
+> > > from I2C/SMBUS framework) on the unique i2c IRQ of the stm32. Meaning=
+ that
+> > > the smbus_alert handler would get called for all IRQ generated by the=
+ stm32
+> > > I2C controller.
+> > >=20
+> > > For that reason, the smbus_alert IRQ naming cannot be used and a dedi=
+cated
+> > > binding is introduced.
+> >=20
+> > What if we update the core to not register another irq handler if the
+> > "smbus_alert" and main irq are the same?
+> >=20
+> > I think it could work. However, while trying to make a proof-of-concept,
+> > I found that irq descriptions in the generic i2c binding document are
+> > probably mixed up. And before fixing that, I'd like to get HostNotify
+> > done first.
+>=20
+> Why does this even need to be in DT? Can't the driver just register that=
+=20
+> it supports SMBus alert or have some call to the core signaling an SMBus=
+=20
+> alert?=20
+
+If we emulate this SMBus behaviour with I2C, it means we apply
+additional restrictions. In this case, there is an address which can't
+be used anymore. Because there is another case of additional
+restrictions, I proposed the binding "smbus" which means this bus is not
+I2C but SMBus, so it is more restricted.
+
+Thanks,
+
+   Wolfram
+
+
+--8t9RHnE3ZwKMSgU+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8WiZIACgkQFA3kzBSg
+Kbagiw/8CFregwnGWfzJ8CixS6lpRM7jx77tfodUx9ozPR0J2bZ0XG7itMnirLQO
+VIMV2kRUkbaIO3Gfwr0WTM2HvL3Ej5lIJttqPPcm4ZxvYvPhX6eZEe7fYquFnnje
+7/uxFH+GgXqjRfWLVtSG4uwFg7WV70UEQ52E8lORH/PJEdYya/7ICWebcdIfTWhQ
+W+XV4pN08sYkPBUo775Fan2JxruVmISkr/dNRZztLT4PMpczhUf+BQMdOIyrmPO7
+Ix/pPt2inVZfZHzYrM53SXzdOritt6OhYG0xHrdwtTgg4mL2b/Ov1qJCYKDlGGBY
+T00o2ynEp8/IqIXHZ2huw3zplAMvVpxgPFjesoE4tNUwlGjaaGuWECfoFGmdJNJ1
+p2xiXrKLl+6Vlwg+NoDuqZwyL7NY1pEweyCkHjcYs58XrFCoHPbfsvhHcERIgytY
+N4QRmRjTI0D+WtyrNcoBbphl/RtSLAn59lP7SwuiLb9fslTQ34srGDPJXfFBageK
+i1bPBMYMnN3fWD1I29OzDZjPQZPYPzH0qVDKFIj5DLtEx9lM6aUOzKm6EQgduoWn
+rQ+wJX+vml0lfIXZ6jjKBv+JwKg9cvloJlqSlVwVPBLscgn0ptmw6jUuofXtETAg
+cBuIRLHb+u+rorqO89KpaxDXuI/ZFP/zNxC6/4el9FLFawCJ3ZY=
+=ORZA
+-----END PGP SIGNATURE-----
+
+--8t9RHnE3ZwKMSgU+--
