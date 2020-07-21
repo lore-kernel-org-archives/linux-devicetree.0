@@ -2,103 +2,96 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D16C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B698C433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5281820684
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AD2206F2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YZW7+M6n"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yLeByTOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgGUIn3 (ORCPT
+        id S1728230AbgGUIrV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:43:29 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4336 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728418AbgGUIn2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 04:43:28 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06L8avqI020757;
-        Tue, 21 Jul 2020 10:43:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=dJLHdoGwt48EnjSrf0L0JKYkNiadZM77RdxMqkK77T4=;
- b=YZW7+M6nqFCTFlcQL3GU+ISgaS6SJXJGBep9/K1+AsjqH+ytBHRT4TXY7MUEAQkJtvKi
- 8YyURQEKTCDYK6adyvmpvwogPC65A+yIB3kKD0hg45BlVkY8vRtLhtb4+Ure5F94kxmr
- VaxKLw3reSYy17cxeLAlHJkFG7y1jgZ+L16KhYivxeBnzA6gyVFEpqe7LMyw/PGYFydL
- 0ppetjLHxh6fNSP/3QtjZJHnm9re4p47WGPyo9Cw/kDklXN/Wotv/1fraYAWWt1U80Pt
- pPd1DJUpJcL+I6FA+5l4Kmx7/WVrrkHDeqnBQn64ZGfbco+w0HCBBXecO34MVxjsajW0 UQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bs6uvswq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jul 2020 10:43:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B4F0C10002A;
-        Tue, 21 Jul 2020 10:43:17 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A2F702A615D;
-        Tue, 21 Jul 2020 10:43:17 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 Jul
- 2020 10:43:17 +0200
-Subject: Re: [PATCH 0/5] ARM: STM32: Add compatibles for syscon nodes
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <lee.jones@linaro.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200703095520.30264-1-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <dc7779a9-fe0d-5317-2b7f-3607963888c5@st.com>
-Date:   Tue, 21 Jul 2020 10:43:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 21 Jul 2020 04:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbgGUIrU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 04:47:20 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6057C061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:47:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so20394650wrp.2
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
+         :mime-version;
+        bh=K1UC6jdZ3c17SoyP6xlxlFovUPpmZnz7mywCnflsBk0=;
+        b=yLeByTOo/OuRZOhYSglmXMos6TiL26zvvxwrhk+bL5lWrsou8qeC4S3+TZtxGQDLuw
+         L7Ys23fspQbkmwkAVtzfVqsVHVxQm1MjRdHmOO3bNSC+l/cNljHbODizKlMXG/Ocde/Y
+         h2Lhh11tIUosxCFVQv/QryUzJE3cnCS4aFo9sdixtsKYFaPW/4wE8bvMfKnIbT8TxdCM
+         uH8bgVD/OCPfVOnC/cxBgiqi0abxIhCSyZsfGrCBnankem40jBRFEil+pi2XJfyX9Co1
+         SsZjxOWJc2qRHH7LGcs2/OO94lkNMy2KdoAJ8i1qhwyaii3DZGFQOEpFRI6EozGLzqJ+
+         sErw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=K1UC6jdZ3c17SoyP6xlxlFovUPpmZnz7mywCnflsBk0=;
+        b=rh4VWylugtn3xn3nD9zGYCvrUjMJl6mC3JpI7+ZB6XNvavb6S2eKvAOXiIsP8D/vyc
+         i5Zr69G19LXJRQ5AfAe6Vv5dinBcgMBaVO8mTNfo2LwJ72l04+1wsogT+qC9Qy6TrVCP
+         HNjSaYdx3AnZfQ2FdGduy/K8bAfdP0/9uQRL6je/0eRyFmfscWGkfiT+5dYV6+dpv4+U
+         M3/uKQZY9L1HRUAHIF4UYJNK8HJV2r/gStdrLPjw9KRjzmFlHy6FG7LlEeDas1NxezXA
+         jf6Jeizi72lnUYjJGfyH492Fvfl+L7udkrj2hHcRc7iqZOYUUb1PI6JsGh220YpDONpw
+         UqHw==
+X-Gm-Message-State: AOAM5329VfBwaj/B0FSeYRv9TNiNNTqIFg/ZNA++PZ//HoZYbT4AYnEB
+        C9fMktk9/fKyvS0Z9Gdl1N5Ctw==
+X-Google-Smtp-Source: ABdhPJwYjwvOJGv70O4j08oC5Qj/6svFm8pb1ZFxyQlbQgrUYLJvNUdUrDKKHwsDnuZm3Aohn4pOtg==
+X-Received: by 2002:adf:f784:: with SMTP id q4mr25561076wrp.397.1595321239433;
+        Tue, 21 Jul 2020 01:47:19 -0700 (PDT)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f15sm35050842wrx.91.2020.07.21.01.47.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 01:47:18 -0700 (PDT)
+References: <20200718072532.8427-1-christianshewitt@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: add more SM1 soundcards
+In-reply-to: <20200718072532.8427-1-christianshewitt@gmail.com>
+Date:   Tue, 21 Jul 2020 10:47:18 +0200
+Message-ID: <1jsgdl8dbd.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200703095520.30264-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-21_02:2020-07-21,2020-07-21 signatures=0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Benjamin
 
-On 7/3/20 11:55 AM, Benjamin Gaignard wrote:
-> Since commit ad440432d1f9 ("dt-bindings: mfd: Ensure 'syscon' has a more specific compatible")
-> it is required to provide at least 2 compatibles string for syscon node.
-> This series update the syscon of the STM32 SoCs to fix the reported errors.
-> 
-> Benjamin Gaignard (5):
->    dt-bingings: arm: stm32: Add compatibles for syscon nodes
->    ARM: dts: stm32: Add compatibles for syscon for stm32f426
->    ARM: dts: stm32: Add compatibles for syscon for stm32f746
->    ARM: dts: stm32: Add compatibles for syscon for stm32h743
->    ARM: dts: stm32: Add compatibles for syscon for stm32mp151
-> 
->   .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml     | 14 +++++++++++++-
->   arch/arm/boot/dts/stm32f429.dtsi                           |  6 +++---
->   arch/arm/boot/dts/stm32f746.dtsi                           |  6 +++---
->   arch/arm/boot/dts/stm32h743.dtsi                           |  6 +++---
->   arch/arm/boot/dts/stm32mp151.dtsi                          |  2 +-
->   5 files changed, 23 insertions(+), 11 deletions(-)
-> 
+On Sat 18 Jul 2020 at 09:25, Christian Hewitt <christianshewitt@gmail.com> wrote:
 
-Series applied on stm32-next by fixing subject of patch [1].
+> This series adds basic support for LPCM audio over HDMI interfaces
+> to the Khadas VIM3L (reusing the same config as the VIM3) and the
+> HardKernel ODROID-C4 devices. I'm sure support can be extended to
+> include other hardware but this gets the HDMI port working as a
+> minimum capability. I have personally tested with both devices.
+>
+> Christian Hewitt (2):
+>   arm64: dts: meson: add audio playback to odroid-c4
+>   arm64: dts: meson: add audio playback to khadas-vim3l
+>
+>  .../dts/amlogic/meson-sm1-khadas-vim3l.dts    | 88 +++++++++++++++++++
+>  .../boot/dts/amlogic/meson-sm1-odroid-c4.dts  | 88 +++++++++++++++++++
+>  2 files changed, 176 insertions(+)
 
-Regards
-Alex
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
