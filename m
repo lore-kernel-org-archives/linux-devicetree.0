@@ -2,119 +2,101 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F19CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB30C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B669206E9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0DB206E9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 02:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595299363;
+	bh=yQQPJM4nETVhaWUXKmM3jmz2ODwAJdTJ/7rx6GtWhkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TgjeSEYeoXKivZcLMr4BA3qmmaICHc8QluwTbHuFIUs1u5s4+joSZ7qZtGycI5cHx
+	 /Q6hA1EoYp8xq1Lpx0b4/N3PWmvLYMhjaj8+jw/whOduwDxqqpyyX9ZhxbKjypG4uM
+	 015GiBvl5lPKGopGqDBkK3Ga+lGCoWKqJrfSgIY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgGUClz (ORCPT
+        id S1728105AbgGUCmf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 22:41:55 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7801 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbgGUCly (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 22:41:54 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 640FC4F13BADEE4B7CCF;
-        Tue, 21 Jul 2020 10:41:52 +0800 (CST)
-Received: from [10.57.101.250] (10.57.101.250) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 21 Jul 2020 10:41:49 +0800
-Subject: Re: [PATCH v3 2/4] arm64: dts: hisilicon: hikey: fixes to comply with
- adi,adv7533 DT binding
-To:     =?UTF-8?Q?Ricardo_Ca=c3=b1uelo?= <ricardo.canuelo@collabora.com>,
-        <laurent.pinchart@ideasonboard.com>
-References: <20200601063308.13045-1-ricardo.canuelo@collabora.com>
- <20200601063308.13045-3-ricardo.canuelo@collabora.com>
-CC:     <kernel@collabora.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <michal.simek@xilinx.com>, <mcoquelin.stm32@gmail.com>,
-        <marex@denx.de>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5F1655ED.60703@hisilicon.com>
-Date:   Tue, 21 Jul 2020 10:41:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Mon, 20 Jul 2020 22:42:35 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41827 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgGUCmf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 22:42:35 -0400
+Received: by mail-il1-f194.google.com with SMTP id q3so15107318ilt.8;
+        Mon, 20 Jul 2020 19:42:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a37UVIcr3tFTjvos+1XDI3vyeJL0TUxOErOODhturYQ=;
+        b=qKqeAo/ni4hlVbUxXfk5SHB3ryIkx1fCZykCPOINnWAPu3axe0TUUJIM1nc7t6fVwr
+         6v9+564334dnwsALgK1ZfXF4XmCrFbwE+gU1vcEPAGYtsS9x9+V1wfytrRSNA52vGdfm
+         ehbxmnr69hEMRQMept2H+XkGejKf7KwqwWHgDm4V+xIVqx/t5HuTZMsMqYY1RqgJhcvg
+         QZgtbImn5mXDVzGdlbrxgWfWInITPkEB1jGDCmxrRNvdUArdOXUP5K1o7ByWRCeFk6sO
+         +PBY31CumJh4k7A4kNPW53Mu7e0WzvZN5Bi44vyAbmNeOvklRyODyARbh06X0xE616a3
+         TvGQ==
+X-Gm-Message-State: AOAM533AMgH6m44kCxih7gSVk9ZfiGh6d1GZfNrEEozLlyhf4jVU1KPK
+        wjJxkrAdFGjtoRS48z3PPA==
+X-Google-Smtp-Source: ABdhPJwG8kX/q1434RzLt+ZA/7HsPclvXJIOgxPK5H8X536km51g25555NKw2Ltyw6fPW2ta3HlnXg==
+X-Received: by 2002:a92:cd48:: with SMTP id v8mr27621396ilq.114.1595299354086;
+        Mon, 20 Jul 2020 19:42:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id r124sm9538209iod.40.2020.07.20.19.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2020 19:42:33 -0700 (PDT)
+Received: (nullmailer pid 3433663 invoked by uid 1000);
+        Tue, 21 Jul 2020 02:42:31 -0000
+Date:   Mon, 20 Jul 2020 20:42:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pm@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/20] dt-bindings: thermal: rcar-gen3-thermal: Add
+ r8a774e1 support
+Message-ID: <20200721024231.GA3433616@bogus>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200601063308.13045-3-ricardo.canuelo@collabora.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ricardo,
-
-On 2020/6/1 14:33, Ricardo Cañuelo wrote:
-> hi3660-hikey960.dts:
->   Define a 'ports' node for 'adv7533: adv7533@39' and the
->   'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
->   binding.
+On Wed, 15 Jul 2020 12:08:52 +0100, Lad Prabhakar wrote:
+> Document RZ/G2H (R8A774E1) SoC bindings.
 > 
->   This fills the requirements to meet the binding requirements,
->   remote endpoints are not defined.
-> 
-> hi6220-hikey.dts:
->   Change property name s/pd-gpio/pd-gpios, gpio properties should be
->   plural. This is just a cosmetic change.
-> 
-> Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Thanks!
-Applied this patch only to the hisilicon arm64 dt tree since
-it does not depend on the new yaml format binding.
-
-Best Regards,
-Wei
-
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
->  2 files changed, 12 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index e035cf195b19..8c4bfbaf3a80 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -530,6 +530,17 @@
->  		status = "ok";
->  		compatible = "adi,adv7533";
->  		reg = <0x39>;
-> +		adi,dsi-lanes = <4>;
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +			};
-> +		};
->  	};
->  };
->  
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> index c14205cd6bf5..3e47150c05ec 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -516,7 +516,7 @@
->  		reg = <0x39>;
->  		interrupt-parent = <&gpio1>;
->  		interrupts = <1 2>;
-> -		pd-gpio = <&gpio0 4 0>;
-> +		pd-gpios = <&gpio0 4 0>;
->  		adi,dsi-lanes = <4>;
->  		#sound-dai-cells = <0>;
->  
-> 
+
+Acked-by: Rob Herring <robh@kernel.org>
