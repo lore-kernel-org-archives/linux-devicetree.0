@@ -2,89 +2,71 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26921C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400CAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3122080D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D05620720
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 09:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595324053;
-	bh=wRyOkf5BPZx5EhcERYgIJKjB6OMOn8b6JxT3/6io1uU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nmzc4646FTr3zoe9fX1ksZ94CZd1Lo1IEEHyZbzwpkhfkzCGacMdLkED9hazkZFCL
-	 JYG4IYW2ijBEob2T0bz4/LsU1qMMpiGdVCn5q1IVjtP62gv+jxIj0MvowyjIKN3TDP
-	 HuKoeeOwqn+FEiRX9OxxKmUXVbkGepjBQcItDYzg=
+	s=default; t=1595324231;
+	bh=K8Sj50xO/JwTh4VLhBj/W7/IQ4b0OHSwpJCDBWyZClA=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=OcopeB+KHXUA+iBxVChtFVmK7BweNATi2BxOs8MD2H6ZCefi2A7RjK47pkyFa0uzM
+	 ke+rtFPJk1VT7HNWW82icEFMMeRRiLWO+j6vwQqJHFJ77XMUAA/LvqQrlKjYI9JMlf
+	 cnvHjTiXi97ihYbMQ9lnzDMVx7hUQJJu9bdAP/cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgGUJeM (ORCPT
+        id S1726415AbgGUJhK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 05:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52294 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 05:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgGUJeM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 05:34:12 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726188AbgGUJhK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 05:37:10 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 826942070A;
-        Tue, 21 Jul 2020 09:34:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04E032070A;
+        Tue, 21 Jul 2020 09:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595324052;
-        bh=wRyOkf5BPZx5EhcERYgIJKjB6OMOn8b6JxT3/6io1uU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VUwFh+akV6bxsDn1GyNoMZEn5p+yDLf684CgGe64T4TJEu3GBLxg5yF/U6lpq/WaL
-         GQLmWOpZNlWyaNxTNb5pzRNCM4xaf1PoLs8EXchYcY2Vf3N1gibdrtQ6s4beURmhaj
-         tFa6EcHUBwm2QtdO6rG3ewL86ougrM7mBa6nSOls=
-Date:   Tue, 21 Jul 2020 10:33:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: tas2770: Convert tas2770 binding to
- yaml
-Message-ID: <20200721093358.GA4845@sirena.org.uk>
-References: <20200720181202.31000-1-dmurphy@ti.com>
+        s=default; t=1595324230;
+        bh=K8Sj50xO/JwTh4VLhBj/W7/IQ4b0OHSwpJCDBWyZClA=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=XzytEykN3qSDmKdHOYrgZYJx6b8K2JHAUfC7k0U92DYJaPpsazu4BtCWiWVaR38SG
+         T3ztzBw+HXAg9bdC6y/9s+YcnUt7TSpHTo+fSwEQEduff8xuBmEm9bAAELC2hCGmEn
+         68lK89oWptjMlvgHJYg/OLEF4wRnSFkJOo41n+lM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
-In-Reply-To: <20200720181202.31000-1-dmurphy@ti.com>
-X-Cookie: I'm also against BODY-SURFING!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1595322791-18571-1-git-send-email-loic.poulain@linaro.org>
+References: <1595322791-18571-1-git-send-email-loic.poulain@linaro.org>
+Subject: Re: [PATCH] dt-bindings: clock: Fix qcom,msm8996-apcc yaml syntax
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Loic Poulain <loic.poulain@linaro.org>
+To:     Loic Poulain <loic.poulain@linaro.org>
+Date:   Tue, 21 Jul 2020 02:37:09 -0700
+Message-ID: <159532422926.3847286.17225381725328792627@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Quoting Loic Poulain (2020-07-21 02:13:11)
+> Fix errors reported by dt_binding_check.
+> - Fix literal block scalar for dts example
+> - Fix schema identifier URI
+>=20
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+> ---
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Any chance you can resend and Cc linux-clk and Robh?
 
-On Mon, Jul 20, 2020 at 01:12:01PM -0500, Dan Murphy wrote:
-> Convert the tas2770 binding to yaml format.
-> Add in the reset-gpio to the binding as it is in the code but not
-> documented in the binding.
-
-What's new about this version?
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8WtoYACgkQJNaLcl1U
-h9DBiwf/VkRD3CE9qEXZu/H6d/cKccK78cdx+xjg+aPRtBQUNd1d0VuGIfe0j6MQ
-Prpam9rnYKQkVwea4g84t9758PLwMQquSokeMUBhOEAF4a1opT33TKEZxIe9LR2V
-43HK6V5NZX/ybjlw3Oeos7OWvJmMfpACqL5C4ceQQ2phEPGpe3TuAKx2+o/Dnk0Y
-7EHHI+RqWZB82rpeOCngyKUWjxaetSBt+k9k8QxvP9ubgbQzXvn40rJt0VivIuna
-uBqdWKRTHHaev3IGr+cpBRRiH/TTZzZroQhVN7ydhYdtXsikuGBKg2/Xd9OJ+L/J
-3vTgCaWBlVkpMLU6PaREZwy7rvUS3g==
-=LJIg
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+>  Documentation/devicetree/bindings/clock/qcom,msm8996-apcc.yaml | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
