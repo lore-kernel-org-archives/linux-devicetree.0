@@ -6,111 +6,84 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06283C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BA9C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D846E2068F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9FC20717
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595352492;
-	bh=YF4nPnFDznHPW2MW5uypg9cVqrtkKdwCBtlzagc+f2k=;
+	s=default; t=1595352615;
+	bh=ivHskNM+Pzn/uxKF3bGeiO3eYOoZTUBmqmoPTc51p0s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KFidkBi/LeoIKHopw8aYwLHJ6P2VDu2alOTplvUGx+RT9no5wW8D5evachtW3Cgqr
-	 qqUpAyyHTN0GAQOLbCXbxDoWwnlFX978tmpQTLBhbHktV5jDIVVYUyBxa9/x0e38lK
-	 CHhvvsJZqc1IhDK+5ij5MGzjvBEt7Y7Fi43gFDz8=
+	b=szPSrfJK9cUw8jzeVD/Hv3QXaoPBm1j/9z9l4GdOjTvsalN7Sm07CcIaoRKYqSlU3
+	 +61Wa7c79BHL+VVH3RBcaKBii78Y1ubAu6xB+qLushq3vWZdPjuroNTzjx0axPPk8V
+	 wPahby/r3ghKjgWmxSoBy1xU99aT+Z7kXuHtTxJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgGUR2M (ORCPT
+        id S1728755AbgGURaO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 13:28:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 13:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgGUR2L (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 13:28:11 -0400
+        id S1726686AbgGURaO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 13:30:14 -0400
 Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B302065D;
-        Tue, 21 Jul 2020 17:28:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB5472065D;
+        Tue, 21 Jul 2020 17:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595352491;
-        bh=YF4nPnFDznHPW2MW5uypg9cVqrtkKdwCBtlzagc+f2k=;
+        s=default; t=1595352613;
+        bh=ivHskNM+Pzn/uxKF3bGeiO3eYOoZTUBmqmoPTc51p0s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GYzhbEZxz26TtxCK9ZuVFVZP9GQaJioiufy3WmmEu3Wq7FdtzC2HA2UB7LZmMD9HK
-         BBKGQo5EIk1Uii16I00PXLCEPtaMfwQMha6bDowXr2fz3aqj+pwboq9OZ4Uo+3o2Ae
-         o8zbx0kERanOxW/F+Z09QdwfofyRz2REfdlkCoHY=
-Date:   Tue, 21 Jul 2020 22:58:07 +0530
+        b=pYc8ac+q5DvNUo0IZN5t0WjWeadKhYBtcqiWnRgr3rIqYq14n+dJ8yB0GD/EqKqDP
+         3kapzZ5xXdIoT3LlYByRzbHb9BDBKnLJiAdcJyRGNY2FiNhp9jGbZf2pRnICkCaMX4
+         fhHIo+4jv0opfsN2LLSRc5cpTrYMMqOtDGxzyMno=
+Date:   Tue, 21 Jul 2020 23:00:09 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/3] Fix Armada 38x mvneta lockups when switching
- speeds
-Message-ID: <20200721172807.GN12965@vkoul-mobl>
-References: <20200721143756.GT1605@shell.armlinux.org.uk>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     jonas.gorski@gmail.com, kishon@ti.com, robh+dt@kernel.org,
+        f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        p.zabel@pengutronix.de, krzk@kernel.org,
+        gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 0/2] phy: bcm63xx-usbh: Add BCM63xx USBH driver
+Message-ID: <20200721173009.GO12965@vkoul-mobl>
+References: <20200720131209.1236590-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200721143756.GT1605@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200720131209.1236590-1-noltari@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21-07-20, 15:37, Russell King - ARM Linux admin wrote:
-> Hi,
+On 20-07-20, 15:12, Álvaro Fernández Rojas wrote:
+> Add BCM63xx USBH PHY driver for BMIPS.
 > 
-> While testing phylink over the weekend, I found it was possible to
-> cause the mvneta hardware to lockup in various weird and wonderful
-> ways by switching the interface speed between 1G and 2.5G repeatedly.
-> It didn't require a rapid switching, but one switch every few seconds.
-> 
-> Symptoms included one or more of:
-> - Timeout while trying to stop transmit (seen once)
-> - 2500BASE-X link negotiation failure (fails to exchange link word.)
-> - Detects lack of sync, but fails to flag 10ms of sync failure.
-> - SyncOk bit randomly toggles.
-> 
-> Once the hardware gets into a "bad" state, trying to recover it by
-> using the mvneta GMAC port reset fails to resolve the issue.
-> Disabling the port also fails to recover it.  The only way to
-> recover seemed to be via a reboot.
-> 
-> Many solutions to solve this were tried in various combinations -
-> while changing the COMPHY configuration:
-> - putting the GMAC into reset
-> - disabling the GMAC port
-> - augmenting the COMPHY configuration to try to "cleanly" disable
->   the COMPHY via phy_power_down() and reconfigure it via
->   phy_power_up(), including resetting parts of the COMPHY and
->   re-running the RX initialisation.
-> 
-> None of that worked.  It was then discovered from the u-boot sources
-> that there is an undocumented register that has a lane-specific bit
-> set at the end of COMPHY initialisation, once the loosely documented
-> COMPHY setup has completed.
-> 
-> Experimentation with that showed that if the lane specific bit is
-> cleared before changing the COMPHY "GEN" configuration, and set
-> afterwards, mvneta no longer locks up.
-> 
-> Unfortunately, this undocumented register is not part of the COMPHY
-> register set that we map - it is located in a region of "System
-> Registers" which are shared between multiple different devices.
-> 
-> Who should be responsible for mapping this register (mvneta or
-> COMPHY) was considered; the register is only present on Armada 38x
-> systems, and seemingly not on Armada 37x or Armada 37xx systems.
-> It seems that it is a system-level register.  The COMPHYs seem to
-> be system specific, so let's make it part of the COMPHY.
-> 
-> With no real information on this register, all we can do is guess
-> about it's function and how to fit it into the system.
+> v8: readd Simon as author and remove his email address from the source code.
+> v7: remove Simon from authors and introduce changes suggested by Rob:
+>   - Move clock conditions to the main section.
+>   - Set missing additionalProperties to false.
+> v6: introduce changes suggested by Rob and Vinod:
+>  - Remove BMIPS_GENERIC default from kconfig.
+>  - Print registered message as debug.
+>  - Add another if case to device tree binding for SoCs with just 1 clock.
+>  - Ignored "additionalProperties: false" suggestion since it triggers a
+>   warning. This has been reported, but I haven't received any answer yet.
+> v5: use devm_reset_control_get_exclusive.
+> v4: fix dt-bindings documentation and improve device mode config.
+> v3: introduce changes suggested by Florian:
+>  - Add support for device mode.
+> v2: introduce changes suggested by Florian:
+>  - phy-cells changed to 1.
+>  - Drop OF dependency (use device_get_match_data).
+>  - Drop __initconst from variant tables.
+>  - Use devm_clk_get_optional.
 
-Applied 1 & 3, thanks
+Applied, thanks
+
 -- 
 ~Vinod
