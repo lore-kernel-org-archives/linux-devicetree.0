@@ -1,78 +1,168 @@
-Return-Path: <SRS0=nYmw=A7=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1952C433E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A9AC433E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 00:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD8822B4D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 20 Jul 2020 23:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CBCB207FC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 00:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595288179;
-	bh=5wUWZTgLDGHLY0b9AD8FrjBZZ27JrDASbzC7CTV8awo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=k7oV1A6MRUXD+MA+BqP+cecwrL+BmPOJ/jyDO8Xe9UfXAP7BFQbbw68z5l46EUH6W
-	 /5owUB+qEjoXfIPZA29QKdbSklRlnESZODwJpGPpmcmktUawAi40x8iYvyQ8k43hXP
-	 HcuwHXbxwTX+B9MkUHsRJv2MYk7Wi/pOxl830Unc=
+	s=default; t=1595290922;
+	bh=Da6qbEX+o6uaMHJDmFF0770XklkhAChY4ArFWsyOmmA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Z50ppLGO5hpd04OJ96jcM0Cq8HnHyH0JraCMFHyBEjmrYmXzdAXZXphaN4EcPJ6tb
+	 f2nz+hhKP3DQM1hDE72IN3xowX0qtzVctx5AmStfnLqhlPF8p6XYjAI2veyEUKRaB8
+	 P1EvAEMRGil4ME18qDX4q+JFzEum70iQq2s+202U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgGTXgT (ORCPT
+        id S1728159AbgGUAWB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 19:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33742 "EHLO mail.kernel.org"
+        Mon, 20 Jul 2020 20:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbgGTXgS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 20 Jul 2020 19:36:18 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728063AbgGUAWA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 20 Jul 2020 20:22:00 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45B7A207FC;
-        Mon, 20 Jul 2020 23:36:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E05CB2080D;
+        Tue, 21 Jul 2020 00:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595288178;
-        bh=5wUWZTgLDGHLY0b9AD8FrjBZZ27JrDASbzC7CTV8awo=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=BgQvT4o5Xpt82FGLtEwXj3nshT+vjMtfX6VHZMJTEIgEO46oS3TgO1SqLnA8m2XkQ
-         cIlprELy2O+YaNRBHmK4tglrXTbh9YQGNZXIKLuMqTmnPrdK6uJoGramddqH9+9dNr
-         VpoviPyZczNy9iFhCCwJUZmzydaHDIg6J0Z2JNYc=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1595290919;
+        bh=Da6qbEX+o6uaMHJDmFF0770XklkhAChY4ArFWsyOmmA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1piYj1C1iwDOdLUDzd1rpVvo9vemkWJsXS8URCuVmBS46JfALaTtF4CFjYAEuenRx
+         +jMlCMyHpvZDdEsGvJ0CoPXR8b32rY/c1OXxwFthmAOfQxQUS1g7q7jovgKBJmLiqa
+         /VmUOqCuAFq6Ad4vUGlG3bwxJWvcFC5mEinDh5Sk=
+Received: by mail-ot1-f47.google.com with SMTP id e90so13752181ote.1;
+        Mon, 20 Jul 2020 17:21:58 -0700 (PDT)
+X-Gm-Message-State: AOAM531mxw6kpiBRe6xAK/ysT9gbXsjp7ak6UMiyQulUgoTufzuQRdlL
+        L71u1+Gtl+MyPb0EgsCIDOraPBcST6XfuSQK+w==
+X-Google-Smtp-Source: ABdhPJwGHRLkI27jNoNgF7ILMZHHY4pXlB5JpjB75m22H4vcQUfZq0NMhHBlUVhvdM2QlsP4dOjhti/AnlshASjzvYo=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr20938572otb.107.1595290918250;
+ Mon, 20 Jul 2020 17:21:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-2-ansuelsmth@gmail.com> <CAP245DUqvTYENmaxG3rjUn1XrzrmvdFmKG_vaef2BxKL6jY+Rg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] ipq806x: gcc: add support for child probe
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>
-Date:   Mon, 20 Jul 2020 16:36:17 -0700
-Message-ID: <159528817752.3847286.2725374997908705208@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <20200720074249.596364-1-jiaxun.yang@flygoat.com> <20200720074249.596364-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200720074249.596364-2-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 20 Jul 2020 18:21:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKhs=m=q9YcdxFz8XPcn4KUOum3U_XwcLoxMs4FqjptXQ@mail.gmail.com>
+Message-ID: <CAL_JsqKhs=m=q9YcdxFz8XPcn4KUOum3U_XwcLoxMs4FqjptXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] of_address: Add bus type match for pci ranges parser
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Amit Kucheria (2020-07-20 02:41:44)
-> On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com> wrote:
-> >
-> > Add support for child probing needed for tsens driver that share the
-> > seme regs of gcc for this platform.
->=20
-> Typo: same
->=20
+On Mon, Jul 20, 2020 at 1:49 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> So the parser can be used to parse range property of different bus
+> types, such as ISA bus.
 
-Otherwise reviewed-by? Because I can throw this into the clk tree with
-the typo fixed.
+Regular MMIO buses are actually already supported, but not ISA.
+
+>
+> As they're all using PCI-like method of range property, there is no need
+> start a new parser.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  drivers/of/address.c       | 15 +++++++++++----
+>  include/linux/of_address.h |  3 +++
+>  2 files changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 8eea3f6e29a4..250c91767648 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -702,6 +702,10 @@ static int parser_init(struct of_pci_range_parser *parser,
+>         parser->ns = of_bus_n_size_cells(node);
+>         parser->dma = !strcmp(name, "dma-ranges");
+>
+> +       parser->bus = of_match_bus(node);
+> +       if (!parser->bus)
+> +               return -ENOENT;
+
+You'll hit BUG() before you get here, so you can assume success.
+
+> +
+>         parser->range = of_get_property(node, name, &rlen);
+>         if (parser->range == NULL)
+>                 return -ENOENT;
+> @@ -732,6 +736,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>         int na = parser->na;
+>         int ns = parser->ns;
+>         int np = parser->pna + na + ns;
+> +       int bus_na = 0;
+>
+>         if (!range)
+>                 return NULL;
+> @@ -739,8 +744,10 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>         if (!parser->range || parser->range + np > parser->end)
+>                 return NULL;
+>
+> -       if (parser->na == 3)
+> -               range->flags = of_bus_pci_get_flags(parser->range);
+> +       parser->bus->count_cells(parser->node, &bus_na, NULL);
+> +
+> +       if (parser->na == bus_na)
+> +               range->flags = parser->bus->get_flags(parser->range);
+
+I think you can just unconditionally call this and drop the else. For
+plain MMIO bus, we'd just return IORESOURCE_MEM, but I think the flags
+are ignored in that case.
+
+>         else
+>                 range->flags = 0;
+>
+> @@ -761,8 +768,8 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>                 u32 flags = 0;
+>                 u64 pci_addr, cpu_addr, size;
+>
+> -               if (parser->na == 3)
+> -                       flags = of_bus_pci_get_flags(parser->range);
+> +               if (parser->na == bus_na)
+
+This too can be unconditional.
+
+> +                       flags = parser->bus->get_flags(parser->range);
+>                 pci_addr = of_read_number(parser->range, na);
+
+Perhaps rename pci_addr to child_addr and cpu_addr to parent_addr.
+
+>                 if (parser->dma)
+>                         cpu_addr = of_translate_dma_address(parser->node,
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 763022ed3456..3929b4637033 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -6,8 +6,11 @@
+>  #include <linux/of.h>
+>  #include <linux/io.h>
+>
+> +struct of_bus;
+> +
+>  struct of_pci_range_parser {
+>         struct device_node *node;
+> +       struct of_bus *bus;
+>         const __be32 *range;
+>         const __be32 *end;
+>         int na;
+> --
+> 2.28.0.rc1
+>
