@@ -2,266 +2,114 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDF4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3358C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7DDB20792
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595301942;
-	bh=RABhCOC89MZhVuLxs3cnNJ3H6w6Ka5FamAwpLDmI4pg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wTwJh0UrVx3eDqRYUS7hekgqnY2MQOz++hrTy186y9CzviOKlsZ7LyPXz9rJV0wtH
-	 +rU2XOByl5pu0BijBx27qetMY08jCMNpH5pqHwxE36sL8PRtDyLgRLHOEPFPwkPCYP
-	 aK3/vD50HaFU3UKi9ZpKMy4hpyH0w8YQ2tccxAUc=
+	by mail.kernel.org (Postfix) with ESMTP id 843AE208E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HbebthKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725857AbgGUDZl (ORCPT
+        id S1728515AbgGUD3Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:25:41 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34416 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbgGUDZk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:25:40 -0400
-Received: by mail-io1-f66.google.com with SMTP id q74so19929979iod.1;
-        Mon, 20 Jul 2020 20:25:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PbmHXiUgYZ7K3k3+4SC1dxQ0M9qSdVSxsuVwkOW5+Ow=;
-        b=kdcyTZrdm44HBnXC9CerCLcMLYi1ecm0OmRxEB8f30NZI435BlzTnMIwXCnlclcrRs
-         iXUbVvRuAvT8VnyEDLJ8qp6sbUjDqC0cIQY0fTXRnwuaauuYnuZGV1uuKBnRjH3CgS6j
-         6sjAFqZbWYO6wF2W+ddRRKgV/KOI9B23b++N5ezvp9iJVZ1SJzSwNi6Py4OHtdJAnpXC
-         i43LbeUvgeI3g6M+tBO/KQE48aspgOe4w8SdKh4F2gXjj71jmr+dsXIQf1iDszeH2e4z
-         EEYq+ic0BPdZ+HwhHu2RVrnL2KRcGaD1qakYIaejASmv3dIXFEZhjRitGd1fQyZKc/WB
-         kNGw==
-X-Gm-Message-State: AOAM532SWFYVFGh9OUNDVYERviQ8nG7Avz1vaoJggrUokE8vJW6jgbkb
-        yTKAcQHEgfbtK1tspjR7iw==
-X-Google-Smtp-Source: ABdhPJycudUTQZUWHZqdt3WKQxrt/MH89xE6iuGVYnrVJSrbXkzUig2eq2rAIRTz4FYtbGGk+4363w==
-X-Received: by 2002:a05:6602:1610:: with SMTP id x16mr25769599iow.68.1595301939583;
-        Mon, 20 Jul 2020 20:25:39 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p12sm9772317ilj.16.2020.07.20.20.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 20:25:38 -0700 (PDT)
-Received: (nullmailer pid 3491686 invoked by uid 1000);
-        Tue, 21 Jul 2020 03:25:36 -0000
-Date:   Mon, 20 Jul 2020 21:25:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        dianders@chromium.org, heiko@sntech.de,
-        Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: power: rockchip: Convert to json-schema
-Message-ID: <20200721032536.GA3476792@bogus>
-References: <20200715170216.2875868-1-enric.balletbo@collabora.com>
+        Mon, 20 Jul 2020 23:29:16 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:11938 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727849AbgGUD3P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:29:15 -0400
+X-UUID: 0efb29e786b24d63a65f5cad76c89a81-20200721
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=p5edfquzkRU6ceVF49k8bWT2pebXpZwumAzJ3c92oME=;
+        b=HbebthKhqHugyLTk15GvvmaBqFjYhFtClpzYngY/SmiLNBq/GO0AdNBaIn6OJ4ukjfPqo5PAxuKOZ/tIYTUrEMmUPoqvdfZmVZszdBAke37RjKmcJRXjtL9ocfe1pBuCoK2wxM3Dt6x65LkKHdSdOy8ABs8E5i066/qJw25bsTo=;
+X-UUID: 0efb29e786b24d63a65f5cad76c89a81-20200721
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 574409423; Tue, 21 Jul 2020 11:29:02 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
+ 2020 11:28:59 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 21 Jul 2020 11:28:58 +0800
+Message-ID: <1595302076.16172.49.camel@mhfsdcap03>
+Subject: Re: Re: [PATCH 04/21] dt-binding: mediatek: Add binding for mt8192
+ IOMMU and SMI
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <youlin.pei@mediatek.com>, <devicetree@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <cui.zhang@mediatek.com>, <srv_heupstream@mediatek.com>,
+        <chao.hao@mediatek.com>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        "Tomasz Figa" <tfiga@google.com>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <ming-fan.chen@mediatek.com>, <anan.sun@mediatek.com>,
+        Will Deacon <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 21 Jul 2020 11:27:56 +0800
+In-Reply-To: <20200720231621.GA3106350@bogus>
+References: <20200711064846.16007-1-yong.wu@mediatek.com>
+         <20200711064846.16007-5-yong.wu@mediatek.com>
+         <20200720231621.GA3106350@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715170216.2875868-1-enric.balletbo@collabora.com>
+X-TM-SNTS-SMTP: D49D8E756E183EDB1F2B9E9AB572BFF9AED4A4D42C576D30129F7E826088FE652000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 07:02:16PM +0200, Enric Balletbo i Serra wrote:
-> Convert the soc/rockchip/power_domain.txt binding document to json-schema
-> and move to the power bindings directory.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
-> 
->  .../power/rockchip,power-controller.yaml      | 154 ++++++++++++++++++
->  .../bindings/soc/rockchip/power_domain.txt    | 136 ----------------
->  2 files changed, 154 insertions(+), 136 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
->  delete mode 100644 Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
-> new file mode 100644
-> index 000000000000..af50cf2b3e63
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
-> @@ -0,0 +1,154 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/rockchip,power-controller.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip Power Domains
-> +
-> +maintainers:
-> +  - Caesar Wang <wxt@rock-chips.com>
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +description: |
-> +  Rockchip processors include support for multiple power domains which can be
-> +  powered up/down by software based on different application scenes to save power.
-> +
-> +  Power domains contained within power-controller node are generic power domain
-> +  providers documented in Documentation/devicetree/bindings/power/power-domain.yaml.
-> +
-> +  IP cores belonging to a power domain should contain a 'power-domains'
-> +  property that is a phandle for the power domain node representing the domain.
-> +
-> +properties:
-> +  power-controller:
-> +    type: object
-> +    description: List of power domains provided by this controller.
-> +
-> +    properties:
-> +      compatible:
-> +        enum:
-> +          - rockchip,px30-power-controller
-> +          - rockchip,rk3036-power-controller
-> +          - rockchip,rk3066-power-controller
-> +          - rockchip,rk3128-power-controller
-> +          - rockchip,rk3188-power-controller
-> +          - rockchip,rk3228-power-controller
-> +          - rockchip,rk3288-power-controller
-> +          - rockchip,rk3328-power-controller
-> +          - rockchip,rk3366-power-controller
-> +          - rockchip,rk3368-power-controller
-> +          - rockchip,rk3399-power-controller
-> +
-> +      reg:
-> +        description: |
-> +          Power domain index. Valid values are defined in:
-> +          "include/dt-bindings/power/px30-power.h" - for PX30 type power domain.
-> +          "include/dt-bindings/power/rk3036-power.h" - for RK3036 type power domain.
-> +          "include/dt-bindings/power/rk3066-power.h" - for RK3066 type power domain.
-> +          "include/dt-bindings/power/rk3128-power.h" - for RK3128 type power domain.
-> +          "include/dt-bindings/power/rk3188-power.h" - for RK3188 type power domain.
-> +          "include/dt-bindings/power/rk3228-power.h" - for RK3228 type power domain.
-> +          "include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
-> +          "include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
-> +          "include/dt-bindings/power/rk3366-power.h" - for RK3366 type power domain.
-> +          "include/dt-bindings/power/rk3368-power.h" - for RK3368 type power domain.
-> +          "include/dt-bindings/power/rk3399-power.h" - for RK3399 type power domain.
-> +        maxItems: 1
-> +
-> +      clocks:
-> +        description: |
-> +          A number of phandles to clocks that need to be enabled while power domain
-> +          switches state.
-> +      pm_qos:
-> +        description: |
-> +          A number of phandles to qos blocks which need to be saved and restored
-> +          while power domain switches state.
-> +
-> +      power-supply: true
-> +
-> +    required:
-> +      - compatible
-> +      - reg
+T24gTW9uLCAyMDIwLTA3LTIwIGF0IDE3OjE2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gU2F0LCBKdWwgMTEsIDIwMjAgYXQgMDI6NDg6MjlQTSArMDgwMCwgWW9uZyBXdSB3cm90ZToN
+Cj4gPiBUaGlzIHBhdGNoIGFkZHMgZGVjcmlwdGlvbnMgZm9yIG10ODE5MiBJT01NVSBhbmQgU01J
+Lg0KPiA+IA0KPiA+IG10ODE5MiBhbHNvIGlzIE1USyBJT01NVSBnZW4yIHdoaWNoIHVzZXMgQVJN
+IFNob3J0LURlc2NyaXB0b3IgdHJhbnNsYXRpb24NCj4gPiB0YWJsZSBmb3JtYXQuIFRoZSBNNFUt
+U01JIEhXIGRpYWdyYW0gaXMgYXMgYmVsb3c6DQo+ID4gDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICBFTUkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICBNNFUNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLQ0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgU01JIENvbW1vbg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAtLS0tLS0t
+LS0tLS0NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICArLS0tLS0tLSst
+LS0tLS0rLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLSsNCj4gPiAgIHwgICAg
+ICAgfCAgICAgIHwgICAgICB8ICAgICAgIC4uLi4uLiAgICAgICAgIHwgICAgICAgfA0KPiA+ICAg
+fCAgICAgICB8ICAgICAgfCAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICB8DQo+
+ID4gbGFyYjAgICBsYXJiMSAgbGFyYjIgIGxhcmI0ICAgICAuLi4uLi4gICAgICBsYXJiMTkgICBs
+YXJiMjANCj4gPiBkaXNwMCAgIGRpc3AxICAgbWRwICAgIHZkZWMgICAgICAgICAgICAgICAgICAg
+SVBFICAgICAgSVBFDQo+ID4gDQo+ID4gQWxsIHRoZSBjb25uZWN0aW9ucyBhcmUgSFcgZml4ZWQs
+IFNXIGNhbiBOT1QgYWRqdXN0IGl0Lg0KPiA+IA0KPiA+IG10ODE5MiBNNFUgc3VwcG9ydCAwfjE2
+R0IgaW92YSByYW5nZS4gd2UgcHJlYXNzaWduIGRpZmZlcmVudCBlbmdpbmVzDQo+ID4gaW50byBk
+aWZmZXJlbnQgaW92YSByYW5nZXM6DQo+ID4gDQo+ID4gZG9tYWluLWlkICBtb2R1bGUgICAgIGlv
+dmEtcmFuZ2UgICAgICAgICAgICAgICAgICBsYXJicw0KPiA+ICAgIDAgICAgICAgZGlzcCAgICAg
+ICAgMCB+IDRHICAgICAgICAgICAgICAgICAgICAgIGxhcmIwLzENCj4gPiAgICAxICAgICAgIHZj
+b2RlYyAgICAgIDRHIH4gOEcgICAgICAgICAgICAgICAgICAgICBsYXJiNC81LzcNCj4gPiAgICAy
+ICAgICAgIGNhbS9tZHAgICAgIDhHIH4gMTJHICAgICAgICAgICAgIGxhcmIyLzkvMTEvMTMvMTQv
+MTYvMTcvMTgvMTkvMjANCj4gPiAgICAzICAgICAgIENDVTAgICAgMHg0MDAwXzAwMDAgfiAweDQz
+ZmZfZmZmZiAgICAgbGFyYjEzOiBwb3J0IDkvMTANCj4gPiAgICA0ICAgICAgIENDVTEgICAgMHg0
+NDAwXzAwMDAgfiAweDQ3ZmZfZmZmZiAgICAgbGFyYjE0OiBwb3J0IDQvNQ0KPiANCj4gWW91IHBy
+b2JhYmx5IHdhbnQgdG8gdXNlIGRtYS1yYW5nZXMgZm9yIGRlZmluaW5nIHRoZXNlIA0KPiBhZGRy
+ZXNzIHJlc3RyaWN0aW9ucy4gDQoNClllcy4gUGxlYXNlIHNlZSB0aGUgY29tbWl0IG1lc3NhZ2Ug
+b2YgWzE4LzIxXSBpbiB0aGlzIHBhdGNoc2V0Lg0KDQo+IA0KPiBIb3cgaXMgdGhlIGRvbWFpbi1p
+ZCB1c2VkIG9yIG5lZWRlZD8NCg0KSGVyZSB3ZSBhc3NpZ24gZGlmZmVyZW50IGxhcmIvcG9ydHMg
+aW4gZGlmZmVyZW50IGlvdmEgcmFuZ2VzLg0KSW4gdGhlIGlvbW11IGRyaXZlciwgd2Ugd2lsbCBs
+aXN0IHRoZSBpb3ZhIHJhbmdlcyBhcyBhYm92ZSBhbmQgdXNlIHRoZQ0KZG9tYWluLWlkIHRvIGdl
+dCB0aGUgZGV0YWlsZWQgaW92YSByYW5nZSwgdGhlbiBjcmVhdGUgYSBpb21tdSBkb21haW4gZm9y
+DQplYWNoIGEgaW92YSByYW5nZS4NCg0KRm9yIHRoZSBpb21tdSBtYXN0ZXJzLCBpdCBvbmx5IG5l
+ZWQgdXNlIGl0cyBzcGVjaWFsIHBvcnQgaW4gaXRzIGR0c2kNCm5vZGUsIHRoZW4gdGhlIGlvdmEg
+Z290IGZyb20gZG1hX2FsbG9jX2F0dHJzIGZvciB0aGF0IGRldmljZSB3aWxsIGxvY2F0ZQ0KaW4g
+dGhlIHNwZWNpYWwgaW92YSByYW5nZXMuDQoNCj4gDQo+IFJvYiANCj4gDQo+IF9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LW1lZGlhdGVrIG1h
+aWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsNCg0K
 
-You need:
-
-       additionalProperties: false
-
-(with indentation). Then you will get a bunch of errors as you are 
-missing a level of nodes. The 'power-controller' node doesn't have 
-'reg' for example. You'll need to use 'patternProperties' with '^pd_'.
-
-And to describe the nested power domains, you have to describe yet 
-another level. You can do a $ref with something like:
-
-$ref: '#/properties/power-controller/patternProperties/^pd_'
-
-That creates a circular reference though and I'm not sure what will 
-happen. :)
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3399-cru.h>
-> +    #include <dt-bindings/power/rk3399-power.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        qos_iep: qos@ffa98000 {
-> +            compatible = "syscon";
-
-This will generate a warning now. 'syscon' should not be used alone.
-
-> +            reg = <0x0 0xffa98000 0x0 0x20>;
-> +        };
-> +
-> +        qos_rga_r: qos@ffab0000 {
-> +            compatible = "syscon";
-> +            reg = <0x0 0xffab0000 0x0 0x20>;
-> +        };
-> +
-> +        qos_rga_w: qos@ffab0080 {
-> +            compatible = "syscon";
-> +            reg = <0x0 0xffab0080 0x0 0x20>;
-> +        };
-> +
-> +        qos_video_m0: qos@ffab8000 {
-> +            compatible = "syscon";
-> +            reg = <0x0 0xffab8000 0x0 0x20>;
-> +        };
-> +
-> +        qos_video_m1_r: qos@ffac0000 {
-> +            compatible = "syscon";
-> +            reg = <0x0 0xffac0000 0x0 0x20>;
-> +        };
-> +
-> +        qos_video_m1_w: qos@ffac0080 {
-> +            compatible = "syscon";
-> +            reg = <0x0 0xffac0080 0x0 0x20>;
-> +        };
-> +
-> +        power-management@ff310000 {
-> +            compatible = "rockchip,rk3399-pmu", "syscon", "simple-mfd";
-> +            reg = <0x0 0xff310000 0x0 0x1000>;
-> +
-> +            power-controller {
-> +                compatible = "rockchip,rk3399-power-controller";
-> +                #power-domain-cells = <1>;
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                /* These power domains are grouped by VD_CENTER */
-> +                pd_iep@RK3399_PD_IEP {
-> +                    reg = <RK3399_PD_IEP>;
-> +                    clocks = <&cru ACLK_IEP>,
-> +                             <&cru HCLK_IEP>;
-> +                    pm_qos = <&qos_iep>;
-> +                };
-> +                pd_rga@RK3399_PD_RGA {
-> +                    reg = <RK3399_PD_RGA>;
-> +                    clocks = <&cru ACLK_RGA>,
-> +                             <&cru HCLK_RGA>;
-> +                    pm_qos = <&qos_rga_r>,
-> +                             <&qos_rga_w>;
-> +                };
-> +                pd_vcodec@RK3399_PD_VCODEC {
-> +                    reg = <RK3399_PD_VCODEC>;
-> +                    clocks = <&cru ACLK_VCODEC>,
-> +                             <&cru HCLK_VCODEC>;
-> +                    pm_qos = <&qos_video_m0>;
-> +                };
-> +                pd_vdu@RK3399_PD_VDU {
-> +                    reg = <RK3399_PD_VDU>;
-> +                    clocks = <&cru ACLK_VDU>,
-> +                             <&cru HCLK_VDU>;
-> +                    pm_qos = <&qos_video_m1_r>,
-> +                             <&qos_video_m1_w>;
-> +                };
-> +            };
-> +        };
-> +    };
