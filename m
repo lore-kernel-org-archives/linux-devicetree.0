@@ -2,79 +2,154 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBA6C433F7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49DEC433EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D593A2072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C6720B1F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 07:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595317693;
+	bh=BQZ5hmFIpZckWyenvtmkpbQjIg05LGMKNSIMSzTcK/A=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=0dNRHv0ibEPnSd7MOUD+hH+RU/5Pllw5IqrtCufDu6UErFf66p8WjueG/NC5KckoT
+	 vZ2kArguPG7QqjubBBnxePCRBEC9Y4gmyfVJNCar4S0Rgs1nvUTOWnOexiD2dC4yP9
+	 msHcvMoq82rA43JmKSnEV/DRrnbwYSEvA3ovHTwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgGUHpd (ORCPT
+        id S1726932AbgGUHsF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 03:45:33 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:13786 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgGUHpc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 03:45:32 -0400
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 21 Jul 2020 00:45:31 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 21 Jul 2020 00:45:28 -0700
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 21 Jul 2020 13:15:02 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id DBEA82BA8; Tue, 21 Jul 2020 13:15:01 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v9 2/2] arm64: dts: qcom: sc7180: Add maximum speed property for DWC3 USB node
-Date:   Tue, 21 Jul 2020 13:14:49 +0530
-Message-Id: <1595317489-18432-3-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595317489-18432-1-git-send-email-sanm@codeaurora.org>
-References: <1595317489-18432-1-git-send-email-sanm@codeaurora.org>
+        Tue, 21 Jul 2020 03:48:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbgGUHsE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 03:48:04 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4DD420792;
+        Tue, 21 Jul 2020 07:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595317683;
+        bh=BQZ5hmFIpZckWyenvtmkpbQjIg05LGMKNSIMSzTcK/A=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ehUhwlCwbnHNUi1W6XHRH3vBCM2gpc5QnE57816xOwX2itcx+armXE57XNgrOBLau
+         EHPxOfO/YQPTe6p8ldWbhMgOiM2aFisEQ0oO5kBNRIfpTD1nuvvxbxD7D+GCdjv/ZW
+         PVVy7gY2jBo0VwWfsLKgZvXH/XCCDDZFmzb2FBAI=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1594795010-9074-5-git-send-email-tdas@codeaurora.org>
+References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org> <1594795010-9074-5-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v4 4/4] clk: qcom: lpass: Add support for LPASS clock controller for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Tue, 21 Jul 2020 00:48:03 -0700
+Message-ID: <159531768310.3847286.13203525525881212775@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adding maximum speed property for DWC3 USB node which can be used
-for setting interconnect bandwidth.
+Quoting Taniya Das (2020-07-14 23:36:50)
+> diff --git a/drivers/clk/qcom/lpasscorecc-sc7180.c b/drivers/clk/qcom/lpa=
+sscorecc-sc7180.c
+> new file mode 100644
+> index 0000000..fd8537c
+> --- /dev/null
+> +++ b/drivers/clk/qcom/lpasscorecc-sc7180.c
+> @@ -0,0 +1,478 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+> +
+> +#include "clk-alpha-pll.h"
+> +#include "clk-branch.h"
+> +#include "clk-rcg.h"
+> +#include "clk-regmap.h"
+> +#include "common.h"
+> +#include "gdsc.h"
+> +
+> +enum {
+> +       P_BI_TCXO,
+> +       P_LPASS_LPAAUDIO_DIG_PLL_OUT_ODD,
+> +       P_SLEEP_CLK,
+> +};
+> +
+> +static struct pll_vco fabia_vco[] =3D {
+> +       { 249600000, 2000000000, 0 },
+> +};
+> +
+> +static const struct alpha_pll_config lpass_lpaaudio_dig_pll_config =3D {
+> +       .l =3D 0x20,
+> +       .alpha =3D 0x0,
+> +       .config_ctl_val =3D 0x20485699,
+> +       .config_ctl_hi_val =3D 0x00002067,
+> +       .test_ctl_val =3D 0x40000000,
+> +       .test_ctl_hi_val =3D 0x00000000,
+> +       .user_ctl_val =3D 0x00005105,
+> +       .user_ctl_hi_val =3D 0x00004805,
+> +};
+> +
+> +static const u8 clk_alpha_pll_regs_offset[][PLL_OFF_MAX_REGS] =3D {
+> +       [CLK_ALPHA_PLL_TYPE_FABIA] =3D  {
+> +               [PLL_OFF_L_VAL] =3D 0x04,
+> +               [PLL_OFF_CAL_L_VAL] =3D 0x8,
+> +               [PLL_OFF_USER_CTL] =3D 0x0c,
+> +               [PLL_OFF_USER_CTL_U] =3D 0x10,
+> +               [PLL_OFF_USER_CTL_U1] =3D 0x14,
+> +               [PLL_OFF_CONFIG_CTL] =3D 0x18,
+> +               [PLL_OFF_CONFIG_CTL_U] =3D 0x1C,
+> +               [PLL_OFF_CONFIG_CTL_U1] =3D 0x20,
+> +               [PLL_OFF_TEST_CTL] =3D 0x24,
+> +               [PLL_OFF_TEST_CTL_U] =3D 0x28,
+> +               [PLL_OFF_STATUS] =3D 0x30,
+> +               [PLL_OFF_OPMODE] =3D 0x38,
+> +               [PLL_OFF_FRAC] =3D 0x40,
+> +       },
+> +};
+> +
+> +static struct clk_alpha_pll lpass_lpaaudio_dig_pll =3D {
+> +       .offset =3D 0x1000,
+> +       .vco_table =3D fabia_vco,
+> +       .num_vco =3D ARRAY_SIZE(fabia_vco),
+> +       .regs =3D clk_alpha_pll_regs_offset[CLK_ALPHA_PLL_TYPE_FABIA],
+> +       .clkr =3D {
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "lpass_lpaaudio_dig_pll",
+> +                       .parent_data =3D &(const struct clk_parent_data){
+> +                               .fw_name =3D "bi_tcxo",
+> +                               .name =3D "bi_tcxo",
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+We don't need .name if we have .fw_name and this is a new binding/device.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 16df08d..3fe759b6 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2656,6 +2656,7 @@
- 				snps,dis_enblslpm_quirk;
- 				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
- 				phy-names = "usb2-phy", "usb3-phy";
-+				maximum-speed = "super-speed";
- 			};
- 		};
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_alpha_pll_fabia_ops,
+> +               },
+> +       },
+> +};
+> +
