@@ -2,192 +2,111 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FC3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B978DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7A02073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595300661;
-	bh=0ijoXqtsJN/5vt9jkXiXCJDWZp8cpTrTTe1gED+C+Uw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X5B7lPgZrKsUCVPUzYLmcJixgDiVGeGO2yqlnQO0HeGVeq4gbTh46roPuhQpZ6SmE
-	 Bjevo+mRhVWKfB8cm4SNi6W7s4bp2iapUscRH6e2iW8aEBkGIwbrtqUGJ2RtOczJ7n
-	 FoSNVKzI06SBORNSkBoQy+9nxOLzI/gvMpHMD6Aw=
+	by mail.kernel.org (Postfix) with ESMTP id 9638520734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 03:08:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J383kpAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgGUDEU (ORCPT
+        id S1726135AbgGUDI5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 23:04:20 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35621 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgGUDEU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:04:20 -0400
-Received: by mail-io1-f65.google.com with SMTP id v8so19864204iox.2;
-        Mon, 20 Jul 2020 20:04:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2GnZO+Ycdsio9KAP5RhSVTIeQOjBv69bMXcFq/3rg2w=;
-        b=FosDq5u1IikOglcsp43QX+KAmiotbfM0Kk26C0G7vsxwVBL41QZMUMLGQbCmEawlRF
-         /DSd6Fc4yCWHtxaH5g2dpBooGwl3rzzjB0D/0aggjpjQsFjFT3jRDRkFwnXHlq+odF98
-         sZ3rS0d2XP3dNBGxfTQhgkJEl1WCYfGDQEO9fTYN2HShBVzVNnJtgoTr4x63NtqsqwNr
-         nfpYyrC1ClBOHLE6P0SYQp4XlXPmVDu86n72dW15s0Rug6UXPtNvlST4x3hCMMqjWdoG
-         Ih0VB31JB+prmkXnHqOMK1MXZtoavsjbJmBBgZlkJg+U095S/krIW134hzWrHGyP531v
-         +mhg==
-X-Gm-Message-State: AOAM532N9OEGe5slyLWh0nsJP5Jk/gBsRXNIuptuD0jnfxL9hKKruF0V
-        egpNNmrFb8/F4DPhlus/TSWo4l6C+g==
-X-Google-Smtp-Source: ABdhPJxYHQOHmwni8IbzLsQFjDjhMW1QMJ0xz7+vMqBmHkJWmfFNmRSzPPYwV8tIvvK+ZPiqNIZRaA==
-X-Received: by 2002:a05:6638:601:: with SMTP id g1mr29790037jar.137.1595300659197;
-        Mon, 20 Jul 2020 20:04:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b24sm9821963ioh.6.2020.07.20.20.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 20:04:18 -0700 (PDT)
-Received: (nullmailer pid 3463148 invoked by uid 1000);
-        Tue, 21 Jul 2020 03:04:16 -0000
-Date:   Mon, 20 Jul 2020 21:04:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        evelyn.tsai@mediatek.com, Shayne Chen <shayne.chen@mediatek.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: net: wireless: mt76: add
- power-limits node
-Message-ID: <20200721030416.GA3448943@bogus>
-References: <20200715130134.34988-1-nbd@nbd.name>
+        Mon, 20 Jul 2020 23:08:57 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57536 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgGUDI4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 23:08:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06L38T5M067344;
+        Mon, 20 Jul 2020 22:08:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595300909;
+        bh=eQGqxP1QWHp4sxGYk/YkYc0H0zt+vKwY/jDQBq7XFtU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=J383kpAi1TnccBq+kgRzAXc9Ox2mEIVibxoA8Iq5yLGQ3UjtYJPa9NoqGODp6yGVt
+         pSaojeK5mDEnCw/Qh7+HdfEG1Em8mrLbAa8Fy3xZam0b1dBJ1jIp4Mr8vkAxZfiws2
+         OEevvoTGEaicRfdE9jh2y3bA3Hz7IUVS/GkQp7XY=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06L38Tp0113319
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 20 Jul 2020 22:08:29 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 20
+ Jul 2020 22:08:28 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 20 Jul 2020 22:08:28 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06L38OVg050719;
+        Mon, 20 Jul 2020 22:08:25 -0500
+Subject: Re: [PATCH] ARM: dts: keystone-k2g-evm: fix rgmii phy-mode for
+ ksz9031 phy
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Philippe Schenker <philippe.schenker@toradex.com>
+References: <20200715085427.8713-1-grygorii.strashko@ti.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <f35d8ae5-c0f8-dcb2-f2f7-a4e56ea03825@ti.com>
+Date:   Tue, 21 Jul 2020 08:38:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200715130134.34988-1-nbd@nbd.name>
+In-Reply-To: <20200715085427.8713-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 03:01:34PM +0200, Felix Fietkau wrote:
-> This subnode can be used to set per-rate tx power limits either per
-> country code / regdomain or globally.
-> These limits are typically provided by the device manufacturers and are
-> used to limit sideband emissions and stay within regulatory limits
+Hi Santosh,
+
+On 7/15/20 2:24 PM, Grygorii Strashko wrote:
+> Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+> KSZ9031 PHY") the networking is broken on keystone-k2g-evm board.
 > 
-> Co-developed-by: Shayne Chen <shayne.chen@mediatek.com>
-> Signed-off-by: Shayne Chen <shayne.chen@mediatek.com>
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> The above board have phy-mode = "rgmii-id" and it is worked before because
+> KSZ9031 PHY started with default RGMII internal delays configuration (TX
+> off, RX on 1.2 ns) and MAC provided TX delay by default.
+> After above commit, the KSZ9031 PHY starts handling phy mode properly and
+> enables both RX and TX delays, as result networking is become broken.
+> 
+> Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
+> behavior.
+> 
+> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Philippe Schenker <philippe.schenker@toradex.com>
+> Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
-> v3:
->  - fix S-o-b order
-> v2:
->  - merge 802.11ax rate changes from Shayne's patch
->  - document txs-delta property
+> Fix for one more broken TI board with KSZ9031 PHY.
 
-This is an extensive enough change that I think it needs to be in schema 
-format.
+This is coming bit late, but its important to get into v5.8 since NFS
+boot fails without this blocking all mainline testing for this platform.
 
->  .../bindings/net/wireless/mediatek,mt76.txt   | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> index ab7e7a00e534..e4859c974ef4 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> @@ -36,6 +36,7 @@ Optional nodes:
->  - led: Properties for a connected LED
->    Optional properties:
->      - led-sources: See Documentation/devicetree/bindings/leds/common.txt
-> +- power-limits: contains per-regdomain/channel rate power limit subnodes
->  
->  &pcie {
->  	pcie0 {
-> @@ -76,3 +77,61 @@ wmac: wmac@18000000 {
->  
->  	power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
->  };
-> +
-> +
-> +Subnodes of power-limits:
-> +
-> +Properties:
-> +- country: One or more country codes, as used by the cfg80211 regdomain code
+Can we send this to ARM SoC for -rc7. If you are going to be busy this
+week, I am happy to send a pull request on your behalf with your ack
+included. Let me know.
 
-What are the values? cfg80211 is a Linux thing and doesn't belong in 
-bindings.
-
-> +- regdomain: "FCC", "ETSI" or "JP"
-
-These aren't implied by the country code?
-
-> +
-> +If neither country, nor regdomain is specified, the power limits node is used
-> +as a fallback when no other subnode matches.
-> +
-> +Subnodes txpower-2g, txpower-5g:
-> +
-> +Properties:
-> +- channels: pairs of first and last channel number
-
-What's the range in terms of channel numbers and pairs?
-
-> +- cck: 4 half-dBm per-rate power limit values
-> +- ofdm: 8 half-dBm per-rate power limit values
-> +- mcs:
-> +	sets of per-rate power limit values for 802.11n/802.11ac rates for
-> +	multiple channel bandwidth settings.
-> +	Each set starts with the number of channel bandwidth settings for
-> +	which the rate set applies, followed by either 8 (MT7603/MT7628) or
-> +	10 (all other chips) power limit values.
-> +	The order of the channel bandwidth settings is: 20, 40, 80, 160 MHz.
-
-The example only has 2 sets, so which channels are they?
-
-> +- ru:
-> +	sets of per-rate power limit values for 802.11ax rates for multiple
-> +	channel bandwidth or resource unit settings.
-> +	Each set starts with the number of channel bandwidth or resource unit
-> +	settings for which the rate set applies, followed by 12 power limit
-> +	values. The order of the channel resource unit settings is:
-> +	RU26, RU52, RU106, RU242/SU20, RU484/SU40, RU996/SU80, RU2x996/SU160.
-
-Could be 8-bit? Doesn't really matter much for the example, but what's 
-the worst/typical case?
-
-> +- txs-delta: half-dBm power delta for different numbers of antennas (1, 2, ...)
-> +
-> +
-> +power-limit example:
-> +
-> +power-limits {
-> +	r0 {
-
-What's 'r0'? Not documented.
-
-> +		regdomain = "FCC";
-> +		txpower-5g {
-> +			r1 {
-
-What's 'r1' and 'r2'? Not documented.
-
-> +				channels = <36 48>;
-> +				ofdm = <23 23 23 23 23 23 23 23>;
-> +				mcs = <1 23 23 23 23 23 23 23 23 23 23>,
-> +					  <3 22 22 22 22 22 22 22 22 22 22>;
-> +				ru = <3 22 22 22 22 22 22 22 22 22 22 22 22>,
-> +				     <4 20 20 20 20 20 20 20 20 20 20 20 20>;
-> +			};
-> +			r2 {
-> +				channels = <100 181>;
-> +				ofdm = <14 14 14 14 14 14 14 14>;
-> +				mcs = <4 14 14 14 14 14 14 14 14 14 14>;
-> +				txs-delta = <12 9 6>;
-> +				ru = <7 14 14 14 14 14 14 14 14 14 14 14 14>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.24.0
-> 
+Thanks,
+Sekhar
