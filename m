@@ -2,108 +2,144 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ED0C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BE6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655EE2077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3FF2077D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595346580;
-	bh=kJy9YVyQ/g72va9G3bpw8Xk/D0Hdf4hQTYHPkrjA5qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kO1QxcN6YuhGzKRYkk9RZzyoCGDSMoQcZAwyhUT8BRVo3fQm7Sk9+wDVl5oKX6I9A
-	 NALWAndsK9nbljNQDUSjT9cI/a8JAk1oyTgcRLLaRHD4ABnQWRMUEKd+qTh1fK2agD
-	 Y6pX9AIqzmk5eJn3ZIWG7sCqa0L4wBaXLd5SSGi0=
+	s=default; t=1595346853;
+	bh=7YwE6zmlolnXrIDvIovVwCoGjPItA6t4+svrJdYth50=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OYLqiy2H/5auN5UCX87G4/1TPCAsYGdGaz9EiBR9DVnUxmYEVy88VRo97l1ZRaqpy
+	 xCckC3LmYQxEG8dyAF1GnRUP8KYyEeaEZyCf0WTWTEcw/y9ZBGTHjoge/ZJT3ge1i9
+	 JUCLRMB2FBXHVTT6bqwNAy7CPLO9CsLn5av27TRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgGUPtk (ORCPT
+        id S1728127AbgGUPyN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:49:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38190 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGUPtj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 11:49:39 -0400
-Received: by mail-il1-f196.google.com with SMTP id s21so16790030ilk.5
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 08:49:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+sP6HwhbLL5xK82h9NSKGWG46/No53OboFNx8AQgHWU=;
-        b=mcWvKtf55KsKtsY3qmJRCHGv6YEWJECc3pUhOO+rVjGmbcbvRCPxih466m2Q9n1WKg
-         Fix1gkzQbSEVCRWo4ExbDu+WUzCTZoyz9P4hsJle6P7NWWgg9zGsJCGPivYIzUp+bEOG
-         0EpXclzwpqSoaFJpcmkVbew5IjB3AhivE1pcXiRCuwkWqBW5wqyH8VsTg0bNIoiHm6uo
-         gaGeycZSzDtqwOjOCgQtzERtPsN1EL5PRrijyHexYuUzUCNHYO602tbQgInL7JM5jNEU
-         Pw+KhHLq62wIoqpTPtI22efn8v4yQ0tjqFRX6r88RybOI4V1gHLSE97tfpHsoJKs891D
-         vfCw==
-X-Gm-Message-State: AOAM5310o+XHnoKEpqm0+H8oTIJv/n0cXUEtlwPEJsxOrA9FBD2kG07U
-        CNavgvhVx1bvIaDqvZYMdQ==
-X-Google-Smtp-Source: ABdhPJxvuVyvCuddEdxjXYe/UGD0/HMWu8AR0d0K/vanOzgbSRQIffuxB3GLMbNke5jTSSOwlxwdKQ==
-X-Received: by 2002:a92:ca8d:: with SMTP id t13mr27503926ilo.274.1595346578628;
-        Tue, 21 Jul 2020 08:49:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c9sm10444955ilm.57.2020.07.21.08.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 08:49:37 -0700 (PDT)
-Received: (nullmailer pid 357804 invoked by uid 1000);
-        Tue, 21 Jul 2020 15:49:34 -0000
-Date:   Tue, 21 Jul 2020 09:49:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, Marc Zyngier <maz@kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 5/9] dt-bindings: irqchip: Convert ti, sci-intr
- bindings to yaml
-Message-ID: <20200721154934.GA356627@bogus>
-References: <20200721061007.28324-1-lokeshvutla@ti.com>
- <20200721061007.28324-6-lokeshvutla@ti.com>
+        Tue, 21 Jul 2020 11:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbgGUPyM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:54:12 -0400
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CEED2077D;
+        Tue, 21 Jul 2020 15:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595346851;
+        bh=7YwE6zmlolnXrIDvIovVwCoGjPItA6t4+svrJdYth50=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Iz3vmYbwKAknWwvSnAsWrx+kKYjVj+9BXEirJaOU0WEd69APuiYoNgOWkdVL4dehx
+         7LyjiRy/IEXxM5doRoqtBesB4/Z/bt+j6izRV6hpBBYQKSEEuwmO+kh1kQDES/PGm1
+         yOkFs0ipS/hmz7seHC1GeZSZuABUhnhMy+FXvy2E=
+Received: by mail-oo1-f43.google.com with SMTP id t6so4004575ooh.4;
+        Tue, 21 Jul 2020 08:54:11 -0700 (PDT)
+X-Gm-Message-State: AOAM533I39dDrjEbqyNVQTOxwhLaRjTIJaF/pn8RNGVbWyqpTZNnazFW
+        qAAdq1vEEPNFUSt68h53fxGmjBqQM67siU30xw==
+X-Google-Smtp-Source: ABdhPJxAzM/2DwnEuB4r4A7OI1g6uyx9kfxGkiJ8IopPkvBszfpb9C0ul1jz71QKkma5Db/cDeh3Y6zvX2E0GJ+/ELE=
+X-Received: by 2002:a4a:ae07:: with SMTP id z7mr24532077oom.25.1595346850730;
+ Tue, 21 Jul 2020 08:54:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721061007.28324-6-lokeshvutla@ti.com>
+References: <20200717234800.9423-1-s-anna@ti.com> <20200717234800.9423-4-s-anna@ti.com>
+In-Reply-To: <20200717234800.9423-4-s-anna@ti.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jul 2020 09:53:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
+Message-ID: <CAL_JsqLnPQNZ7KhqfPwiMCJESYrD9_UN2gwc_hj9=WOJM8NQQw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/6] dt-bindings: remoteproc: Add common TI SCI rproc bindings
+To:     Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2020 11:40:03 +0530, Lokesh Vutla wrote:
-> In order to automate the verification of DT nodes convert
-> ti,sci-intr.txt ti,sci-intr.yaml.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+On Fri, Jul 17, 2020 at 5:48 PM Suman Anna <s-anna@ti.com> wrote:
+>
+> Add a bindings document that lists the common TI SCI properties
+> used by the K3 R5F and DSP remoteproc devices.
+>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 > ---
->  .../interrupt-controller/ti,sci-intr.txt      |  83 -------------
->  .../interrupt-controller/ti,sci-intr.yaml     | 113 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 114 insertions(+), 84 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
-> 
+> v4: Addressed both of Rob's review comments on ti,sci-proc-ids property
+> v3: https://patchwork.kernel.org/patch/11602317/
+>
+>  .../bindings/remoteproc/ti,k3-sci-proc.yaml   | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+> new file mode 100644
+> index 000000000000..0dca2ffdbc48
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-sci-proc.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/ti,k3-sci-proc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common TI K3 remote processor device bindings
+> +
+> +maintainers:
+> +  - Suman Anna <s-anna@ti.com>
+> +
+> +description: |
+> +  The TI K3 family of SoCs usually have one or more remote processor sub-systems
+> +  like the dual-core R5F sub-system or a C66x or C71x DSP processor subsystem.
+> +  The device management of these remote processors is managed by a dedicated
+> +  System Processor, and the communication with that processor is managed through
+> +  the TI-SCI protocol.
+> +
+> +  Each remote processor device node should define a common set of properties
+> +  that allows the System Processor firmware to perform the device management
+> +  such as powering the IPs, asserting/deasserting the resets for each of these
+> +  processors.
+> +
+> +properties:
+> +  ti,sci:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Should be a phandle to the TI-SCI System Controller node
+> +
+> +  ti,sci-dev-id:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Should contain the TI-SCI device id corresponding to the remote processor
+> +      core. Please refer to the corresponding System Controller documentation
+> +      for valid values.
 
+These also apply on Lokesh's series converting ti,sci-int[ra]
+bindings. Please rework to use for both.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.example.dt.yaml: interrupt-controller0: $nodename:0: 'interrupt-controller0' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
-
-
-See https://patchwork.ozlabs.org/patch/1332809
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+> +
+> +  ti,sci-proc-ids:
+> +    description: Should contain a single tuple of <proc_id host_id>.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      - description: TI-SCI processor id for the remote processor device
+> +      - description: TI-SCI host id to which processor control ownership
+> +                     should be transferred to
+> +
+> +required:
+> +  - ti,sci
+> +  - ti,sci-dev-id
+> +  - ti,sci-proc-ids
+> --
+> 2.26.0
+>
