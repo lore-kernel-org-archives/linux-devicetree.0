@@ -7,109 +7,148 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BC0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47883C433E7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C80C2077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A222077D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595343909;
-	bh=F6SxBfdl4wNRW/1mURa5CcBLgQWhe+UrLwqJXivNcng=;
+	s=default; t=1595344421;
+	bh=cJveZYxoa7dAdPqQanvrZZl4c8wbkUcvWDgkCaEe+Os=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0a0ywUI3Zp3b2SM3sBjWFKztAUOQpeGksrT+4qcn2oootZZFPwO+InJa48qJloEyQ
-	 u6m+Awe5yPhdCv8K/CIPhpHcmbh2LX7vkMRqiq02RbVlxTQdJlyyGamfWuiuOmebsa
-	 ojeV5jZ6CgA7CKRSK2fMhw23vC5QxT0UipFVTtZ4=
+	b=qu1gKvXxiq/KUe1NLw2jdZCRT8+xlpEmAOngLoEnBWKtNymeYJb2DWp1aeXN3Lmgm
+	 yzMngf84xKag2PAL5t3gOc9l1kwslAv5IsoQamq5Q/5cxptn1bDwbkCDA80MX+H9+a
+	 BMIk4OEzIx+WOCifLdYd/TBFfgDmI+XTYtr7f1Ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbgGUPFI (ORCPT
+        id S1729847AbgGUPNk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 11:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgGUPFI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:05:08 -0400
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        id S1729831AbgGUPNk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:13:40 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57FC72077D;
-        Tue, 21 Jul 2020 15:05:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813372073A;
+        Tue, 21 Jul 2020 15:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595343907;
-        bh=F6SxBfdl4wNRW/1mURa5CcBLgQWhe+UrLwqJXivNcng=;
+        s=default; t=1595344419;
+        bh=cJveZYxoa7dAdPqQanvrZZl4c8wbkUcvWDgkCaEe+Os=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fzskyMThqWp3vPofTVlE7URWYrxG7mp9JN0O/mS8uUhQmQA8WSCgUg3QdybuMMXxe
-         SlyYa2xaf1BaIlj1RXI80nywhjvqG0BwiTC3NWV8wE4urSHPG12KsiYMxqkkr1Gr23
-         3sSt7KzI+692NrWW8WVxGo3d4n9/9gXrKkJ4imPA=
-Received: by mail-ot1-f52.google.com with SMTP id c25so15298525otf.7;
-        Tue, 21 Jul 2020 08:05:07 -0700 (PDT)
-X-Gm-Message-State: AOAM5301IX8gm61xLx/ypE0v5bDO/uGXzus4KYq+W9fOzc0MlQl9U4Qe
-        PIis6ynztSXDIYg5cWS5Ij3wAlcyI7o9gL+rSQ==
-X-Google-Smtp-Source: ABdhPJwg1qFu+GHeVDp8NETJ9sN5dj3TU0LVw4V3/6K8ZBPyo2KYrQFu1CZaOPP1xtFqiOsO9MGIf0TUDpBxmjtDLIY=
-X-Received: by 2002:a9d:46c:: with SMTP id 99mr5434638otc.192.1595343906622;
- Tue, 21 Jul 2020 08:05:06 -0700 (PDT)
+        b=M34Xz+Pc5nQE/Ho21lGgohVu/PtpmhfIr6dhTZlnCUrQoHmKtmo1NkhpCjDpGTh0x
+         2065SHB4LCKQdIDH8xIeOacFUdrI/qxpE8EdHWbydd9PFpDvMl+oACZkyT0cpWVOXK
+         /lJOtx6+K9HNOzF9XLvLJ6cTh5/LUH7/vlhh/6SE=
+Received: by mail-oi1-f171.google.com with SMTP id e4so17514498oib.1;
+        Tue, 21 Jul 2020 08:13:39 -0700 (PDT)
+X-Gm-Message-State: AOAM531dzzPPnkvAKg3IIPvMfNJrQj/zp9gbek7NBqcfVSViGixK4EZG
+        VNILZp7cd3KJGd59ue65mkc9d+Tumew7tYAhAA==
+X-Google-Smtp-Source: ABdhPJx5usOUbuBPfOhR/huG6DuDsg8mCHNfxMXgiZDEHvwhavGmrHIBAxM6qwppEevA9KhIyFvg6dUqdvZHyzegRBI=
+X-Received: by 2002:aca:bb82:: with SMTP id l124mr3483290oif.106.1595344418842;
+ Tue, 21 Jul 2020 08:13:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1594935978.git.thinhn@synopsys.com> <9684a2b2adb01b6b1a8c513928ea49b4a6436184.1594935978.git.thinhn@synopsys.com>
- <20200721033908.GA3508628@bogus> <d7e3d5c6-05c1-f256-7773-2b88f6cd5ca3@synopsys.com>
-In-Reply-To: <d7e3d5c6-05c1-f256-7773-2b88f6cd5ca3@synopsys.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 21 Jul 2020 09:04:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLSKKT__dJaML4SWCpFpFYV_Cpkor=mNh5-Z7hE4n4fMA@mail.gmail.com>
-Message-ID: <CAL_JsqLSKKT__dJaML4SWCpFpFYV_Cpkor=mNh5-Z7hE4n4fMA@mail.gmail.com>
-Subject: Re: [PATCH 06/11] usb: devicetree: dwc3: Introduce num-lanes and lsm
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        John Youn <John.Youn@synopsys.com>
+References: <20200622075956.171058-1-bjorn.andersson@linaro.org> <20200622075956.171058-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20200622075956.171058-2-bjorn.andersson@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 21 Jul 2020 09:13:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
+Message-ID: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 11:01 PM Thinh Nguyen <Thinh.Nguyen@synopsys.com> wrote:
+On Mon, Jun 22, 2020 at 1:59 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> Rob Herring wrote:
-> > On Thu, Jul 16, 2020 at 02:59:08PM -0700, Thinh Nguyen wrote:
-> >> Introduce num-lanes and lane-speed-mantissa-gbps for devices operating
-> >> in super-speed-plus. DWC_usb32 IP supports multiple lanes and can
-> >> operate in different sublink speeds. Currently the device controller
-> >> does not have the information of the phy's number of lanes supported. As
-> >> a result, the user can specify them through these properties if they are
-> >> different than the default setting.
-> >>
-> >> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-> >> ---
-> >>   Documentation/devicetree/bindings/usb/dwc3.txt | 9 +++++++++
-> >>   1 file changed, 9 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> index d03edf9d3935..4eba0615562f 100644
-> >> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> @@ -86,6 +86,15 @@ Optional properties:
-> >>    - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
-> >>      register for post-silicon frame length adjustment when the
-> >>      fladj_30mhz_sdbnd signal is invalid or incorrect.
-> >> + - snps,num-lanes: set to specify the number of lanes to use. Valid inputs are
-> >> +                    1 or 2. Apply if the maximum-speed is super-speed-plus
-> >> +                    only. Default value is 2 for DWC_usb32. For DWC_usb31,
-> >> +                    it is always 1 at super-speed-plus.
-> >> + - snps,lane-speed-mantissa-gbps: set to specify the symmetric lane speed
-> >> +                    mantissa in Gbps. Valid inputs are 5 or 10. Apply if
-> >> +                    the maximum-speed is super-speed-plus only. Default
-> >> +                    value is 10. For DWC_usb31, it's always 10 at
-> >> +                    super-speed-plus.
-> > This is all common USB things and should be common properties (which we
-> > may already have).
+> Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
 >
-> Sure. For "num-lanes" is simple, any objection if we use
-> "lane-speed-mantissa-gbps"? Or should we add "lane-speed-exponent"?
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>
+> Changes since v1:
+> - Actually remove the old binding doc
+>
+>  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
+>  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 39 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+>  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
 
-'num-lanes' is good as that's what PCIe uses. Document that with
-'maximum-speed'.
+[...]
 
-I think 'super-speed-plus' should mean gen 2 10G per lane. Then
-between num-lanes and maximum-speed you can define all 4 possible
-rates.
+> diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+> new file mode 100644
+> index 000000000000..71e63b52edd5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hwlock/qcom-hwspinlock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Hardware Mutex Block
+> +
+> +maintainers:
+> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +description:
+> +  The hardware block provides mutexes utilized between different processors on
+> +  the SoC as part of the communication protocol used by these processors.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sfpb-mutex
+> +      - qcom,tcsr-mutex
+> +
+> +  '#hwlock-cells':
+> +    const: 1
+> +
+> +  syscon:
+> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +    description:
+> +      Should be a triple of phandle referencing the TCSR mutex syscon, offset
+> +      of first mutex within the syscon and stride between each mutex.
+> +
+> +required:
+> +  - compatible
+> +  - '#hwlock-cells'
+> +  - syscon
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        tcsr_mutex_block: syscon@fd484000 {
+> +                compatible = "syscon";
 
-Rob
+'syscon' alone now generates warnings. Can you drop this node or add a
+specific compatible.
+
+> +                reg = <0xfd484000 0x2000>;
+> +        };
+> +
+> +        hwlock {
+> +                compatible = "qcom,tcsr-mutex";
+> +                syscon = <&tcsr_mutex_block 0 0x80>;
+> +
+> +                #hwlock-cells = <1>;
+> +        };
+> +...
+> --
+> 2.26.2
+>
