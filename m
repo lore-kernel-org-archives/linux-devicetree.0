@@ -2,205 +2,137 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B9DC433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA93CC433E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94BD120714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9782320714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 08:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TvvwtPFH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nQZzuMkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgGUIVb (ORCPT
+        id S1727048AbgGUI3Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 04:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53750 "EHLO
+        Tue, 21 Jul 2020 04:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbgGUIVa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 04:21:30 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E25DC0619D8
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:21:30 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f139so1952644wmf.5
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:21:30 -0700 (PDT)
+        with ESMTP id S1728044AbgGUI3S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 04:29:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06885C0619DA
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:29:17 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z2so20339193wrp.2
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 01:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=uMWFGyYaTk9SRaKtXrAbhRNUe/iVRjZ0CQr2Oah93dc=;
-        b=TvvwtPFHKZTUhwEr9W9AXtSlqbKNq06vH+t3GLZT2QS1OMIA96GNjTtRytz3C2Gi5w
-         u3Rq95KzXXgL8JGyaQyIVdaKNvOELpTtT6c5FqM6xl83SDIBSB2V++v9f6n16C2enp6R
-         lBDDJIoz2oPhubdn47BHyeCSgDAuag+Wqc7jmuXtuVAyQLWOok4RCScH49qQaTDkkiy2
-         phywHN1eA411+5AlQP/vD3klsOlgfMF87S5OVp1R2HUgNr2z20/rlg/tfH/4ezLsBEeu
-         mUIbMZHvJcUPCHVRvPYYBHK+3l+HaBkOfvZ5WI5y9syy1exLBUcoYhJUmfbUjOgVRZwm
-         ty+w==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BCc9lQHutdqUheCKRkROi161ZNJWwY3EPFExUcfdRiQ=;
+        b=nQZzuMkvsmF8UEWlQ2eMje2ox6IxIQnvVbZvACyM99WUCNYR4mar5iAsEGOMOc1+kZ
+         W47xjV3CaLmGqGyhv+1g8jpHCUH2OllbVfcJnsO2LuTUPFgblr8cB3VkvBPBU0eMoS8C
+         bDpo4AnqD9Ze142VKWzYhpOd238YloVY6mGh99Pj3KHwXg4yPC5MPHjeWWDd2+cLLFE7
+         VWXzcnWEMofCTSbJPcZGPf78ZW/wwbQR3UBjy0EiNgclwxf6YDw2IB5JTQ5l6nd72jFF
+         NzSBCKQA6U6T6hQYX5gxJm4mO0jp49pX79cI2b8LyY7hj/iq16n93wrUPjZMA62YVHHw
+         0F4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=uMWFGyYaTk9SRaKtXrAbhRNUe/iVRjZ0CQr2Oah93dc=;
-        b=YAd+wvy1jPd2310jA9lhdPaQlGuu9F7ddsRkAQiFuWrJBmLvS8AaEAMFBwznou3C8I
-         n3FHY6y6vrdDf08w8VYNQN3rnT+2fvhUhk7RLX6/deeXT5kfGUWD5Oai2GIHF1rkD6ef
-         VViJvYX3quxRlTqpIvWNIVoDCatd1l7+4QxULcQmTNnR+8cK/uA+V44bauqU/B/KjFwR
-         ZI3WlS0HDerWoNaXuhVH6kUpoj86mi/mLQaqZXE8cN4fD0ah1nhLaluviuTkSZJraE+n
-         QW946SPYbKIJ7PoYTRjrReRj0sVLYzbScLruxWQl4QXfAbUxPW9XxS56H4tf7Ei9jM1g
-         u3Bw==
-X-Gm-Message-State: AOAM531lhhLpKqN4JBlzv5M09BzojBpqu6HvcmtJOPQ7SHdC/Fa30q9V
-        T0VnDWABEsi+yF775Nx8fFx5LA==
-X-Google-Smtp-Source: ABdhPJzRv+7pl9/WdCZxywp6d8aVxlktytPK5D5woF8AKJK9Czov2HPw0/JkawnYD0SQovjvrLrsKQ==
-X-Received: by 2002:a1c:750a:: with SMTP id o10mr3065841wmc.165.1595319689264;
-        Tue, 21 Jul 2020 01:21:29 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t202sm2519588wmt.20.2020.07.21.01.21.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 01:21:28 -0700 (PDT)
-References: <20200718065739.7802-1-christianshewitt@gmail.com> <20200718065739.7802-10-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/12] arm64: dts: meson: add audio playback to rbox-pro
-In-reply-to: <20200718065739.7802-10-christianshewitt@gmail.com>
-Date:   Tue, 21 Jul 2020 10:21:27 +0200
-Message-ID: <1jv9ih8eig.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BCc9lQHutdqUheCKRkROi161ZNJWwY3EPFExUcfdRiQ=;
+        b=oiPx4iMeK1bw6T4orjiECqS6U1LDlRZwPqOz3LaOX0ylsvIVMIzJ7iX+wPuqDjRSU8
+         TLlfHOrh0rmdxitZAJzFo70l4qdELaz0kTlD179lBOAqEoZ9UUWm+vflWPLCfWWCnoL4
+         q4D7X7Djunk3ytY1GFQ4bBZSPz7+kkg6a1m7INJxadWTQaXb9/3t/CZbaBYO3W/zy1nA
+         DQLd7IPWjXGQKt9VYuGtbhkM4stP5BIVCtZDoPgh3maRfD1cQphubwei2O+6OLbo43e4
+         2u6cJDLUlkbTC3BeJYFxwjfYPJtLjj13k8OhMG0vHsXf6KRXX3pC2TUgwIxiP9wkUlPZ
+         3vww==
+X-Gm-Message-State: AOAM530pJx+mPLNuUKzZNpjyFmtnMZ49XfdQ42AyHejZlxli5ixDhH/G
+        yzddrXqkt+34hAlxQAVcl5Jm9Q==
+X-Google-Smtp-Source: ABdhPJx7ILZH2KvjvBFVVZB5grxQumhwOHm/i3j36nylWvTrt1yjKSBvidlCH5i8FTEEGeIg8iA/PA==
+X-Received: by 2002:adf:fb06:: with SMTP id c6mr810292wrr.261.1595320156360;
+        Tue, 21 Jul 2020 01:29:16 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3590:b402:869a:11fc? ([2a01:e34:ed2f:f020:3590:b402:869a:11fc])
+        by smtp.googlemail.com with ESMTPSA id d10sm36006628wrx.66.2020.07.21.01.29.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2020 01:29:15 -0700 (PDT)
+Subject: Re: [PATCH v2] dt-bindings: thermal: Get rid of thermal.txt and
+ replace references
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        lukasz.luba@arm.com, Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Talel Shenhar <talel@amazon.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>
+Cc:     Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <e9aacd33071a00568b67e110fa3bcc4d86d3e1e4.1595245166.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <8c7f5c41-746b-f26d-7b3e-4152c17c4812@linaro.org>
+Date:   Tue, 21 Jul 2020 10:29:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <e9aacd33071a00568b67e110fa3bcc4d86d3e1e4.1595245166.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 20/07/2020 13:53, Amit Kucheria wrote:
+> Now that we have yaml bindings for the thermal subsystem, get rid of the
+> old bindings (thermal.txt).
+> 
+> Replace all references to thermal.txt in the Documentation with a link
+> to the appropriate YAML bindings using the following search and replace
+> pattern:
+>  - If the reference is specific to the thermal-sensor-cells property,
+>  replace with a pointer to thermal-sensor.yaml
+>  - If the reference is to the cooling-cells property, replace with a
+>  pointer to thermal-cooling-devices.yaml
+>  - If the reference is generic thermal bindings, replace with a
+>  reference to thermal*.yaml.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-On Sat 18 Jul 2020 at 08:57, Christian Hewitt <christianshewitt@gmail.com> wrote:
+Applied, thanks
 
-> Add initial support limited to HDMI i2s and SPDIF (LPCM).
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  .../boot/dts/amlogic/meson-gxm-rbox-pro.dts   | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-> index c89c9f846fb1..7b23b3da27ff 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-> @@ -14,6 +14,7 @@
->  /dts-v1/;
->  
->  #include "meson-gxm.dtsi"
-> +#include <dt-bindings/sound/meson-aiu.h>
->  
->  / {
->  	compatible = "kingnovel,r-box-pro", "amlogic,s912", "amlogic,meson-gxm";
-> @@ -33,6 +34,13 @@
->  		reg = <0x0 0x0 0x0 0x80000000>; /* 2 GiB or 3 GiB */
->  	};
->  
-> +	spdif_dit: audio-codec-0 {
-> +		#sound-dai-cells = <0>;
-> +		compatible = "linux,spdif-dit";
-> +		status = "okay";
-> +		sound-name-prefix = "DIT";
-> +	};
-> +
->  	leds {
->  		compatible = "gpio-leds";
->  
-> @@ -51,6 +59,25 @@
->  		};
->  	};
->  
-> +	vddio_ao18: regulator-vddio_ao18 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO18";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	hdmi_5v: regulator-hdmi-5v {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "HDMI_5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +
-> +		gpio = <&gpio GPIOH_3 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
 
-Same comment here ...
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> +
->  	vddio_boot: regulator-vddio-boot {
->  		compatible = "regulator-fixed";
->  		regulator-name = "VDDIO_BOOT";
-> @@ -90,6 +117,59 @@
->  		clocks = <&wifi32k>;
->  		clock-names = "ext_clock";
->  	};
-> +
-> +	sound {
-> +		compatible = "amlogic,gx-sound-card";
-> +		model = "GXM-RBOX-PRO";
-> +		assigned-clocks = <&clkc CLKID_MPLL0>,
-> +				  <&clkc CLKID_MPLL1>,
-> +				  <&clkc CLKID_MPLL2>;
-> +		assigned-clock-parents = <0>, <0>, <0>;
-> +		assigned-clock-rates = <294912000>,
-> +				       <270950400>,
-> +				       <393216000>;
-> +		status = "okay";
-> +
-> +		dai-link-0 {
-> +			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-> +		};
-> +
-> +		dai-link-1 {
-> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_FIFO>;
-> +		};
-> +
-> +		dai-link-2 {
-> +			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-> +			dai-format = "i2s";
-> +			mclk-fs = <256>;
-> +
-> +			codec-0 {
-> +				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-> +			};
-> +		};
-> +
-> +		dai-link-3 {
-> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_ENCODER>;
-> +
-> +			codec-0 {
-> +				sound-dai = <&spdif_dit>;
-> +			};
-> +		};
-> +
-> +		dai-link-4 {
-> +			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-> +
-> +			codec-0 {
-> +				sound-dai = <&hdmi_tx>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&aiu {
-> +	status = "okay";
-> +	pinctrl-0 = <&spdif_out_h_pins>;
-> +	pinctrl-names = "default";
->  };
->  
->  &ethmac {
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
