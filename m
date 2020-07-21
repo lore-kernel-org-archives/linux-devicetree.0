@@ -2,153 +2,59 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47883C433E7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA71C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A222077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595344421;
-	bh=cJveZYxoa7dAdPqQanvrZZl4c8wbkUcvWDgkCaEe+Os=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qu1gKvXxiq/KUe1NLw2jdZCRT8+xlpEmAOngLoEnBWKtNymeYJb2DWp1aeXN3Lmgm
-	 yzMngf84xKag2PAL5t3gOc9l1kwslAv5IsoQamq5Q/5cxptn1bDwbkCDA80MX+H9+a
-	 BMIk4OEzIx+WOCifLdYd/TBFfgDmI+XTYtr7f1Ys=
+	by mail.kernel.org (Postfix) with ESMTP id A3B89206E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 15:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgGUPNk (ORCPT
+        id S1728644AbgGUPSP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 11:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
+        Tue, 21 Jul 2020 11:18:15 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47434 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbgGUPNk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 11:13:40 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 813372073A;
-        Tue, 21 Jul 2020 15:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595344419;
-        bh=cJveZYxoa7dAdPqQanvrZZl4c8wbkUcvWDgkCaEe+Os=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M34Xz+Pc5nQE/Ho21lGgohVu/PtpmhfIr6dhTZlnCUrQoHmKtmo1NkhpCjDpGTh0x
-         2065SHB4LCKQdIDH8xIeOacFUdrI/qxpE8EdHWbydd9PFpDvMl+oACZkyT0cpWVOXK
-         /lJOtx6+K9HNOzF9XLvLJ6cTh5/LUH7/vlhh/6SE=
-Received: by mail-oi1-f171.google.com with SMTP id e4so17514498oib.1;
-        Tue, 21 Jul 2020 08:13:39 -0700 (PDT)
-X-Gm-Message-State: AOAM531dzzPPnkvAKg3IIPvMfNJrQj/zp9gbek7NBqcfVSViGixK4EZG
-        VNILZp7cd3KJGd59ue65mkc9d+Tumew7tYAhAA==
-X-Google-Smtp-Source: ABdhPJx5usOUbuBPfOhR/huG6DuDsg8mCHNfxMXgiZDEHvwhavGmrHIBAxM6qwppEevA9KhIyFvg6dUqdvZHyzegRBI=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr3483290oif.106.1595344418842;
- Tue, 21 Jul 2020 08:13:38 -0700 (PDT)
+        id S1728072AbgGUPSP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 11:18:15 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jxu1p-006Bdr-OB; Tue, 21 Jul 2020 17:18:01 +0200
+Date:   Tue, 21 Jul 2020 17:18:01 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 2/3] ARM: dts: armada-38x: fix NETA lockup when
+ repeatedly switching speeds
+Message-ID: <20200721151801.GQ1339445@lunn.ch>
+References: <20200721143756.GT1605@shell.armlinux.org.uk>
+ <E1jxtRe-0003Tn-8Z@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org> <20200622075956.171058-2-bjorn.andersson@linaro.org>
-In-Reply-To: <20200622075956.171058-2-bjorn.andersson@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 21 Jul 2020 09:13:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
-Message-ID: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1jxtRe-0003Tn-8Z@rmk-PC.armlinux.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 1:59 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
->
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->
-> Changes since v1:
-> - Actually remove the old binding doc
->
->  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
->  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
->  2 files changed, 51 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
->  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+On Tue, Jul 21, 2020 at 03:40:38PM +0100, Russell King wrote:
+> To support the change in "phy: armada-38x: fix NETA lockup when
+> repeatedly switching speeds" we need to update the DT with the
+> additional register.
+> 
+> Fixes: 14dc100b4411 ("phy: armada38x: add common phy support")
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-[...]
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> new file mode 100644
-> index 000000000000..71e63b52edd5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwlock/qcom-hwspinlock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Hardware Mutex Block
-> +
-> +maintainers:
-> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> +
-> +description:
-> +  The hardware block provides mutexes utilized between different processors on
-> +  the SoC as part of the communication protocol used by these processors.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sfpb-mutex
-> +      - qcom,tcsr-mutex
-> +
-> +  '#hwlock-cells':
-> +    const: 1
-> +
-> +  syscon:
-> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> +    description:
-> +      Should be a triple of phandle referencing the TCSR mutex syscon, offset
-> +      of first mutex within the syscon and stride between each mutex.
-> +
-> +required:
-> +  - compatible
-> +  - '#hwlock-cells'
-> +  - syscon
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        tcsr_mutex_block: syscon@fd484000 {
-> +                compatible = "syscon";
-
-'syscon' alone now generates warnings. Can you drop this node or add a
-specific compatible.
-
-> +                reg = <0xfd484000 0x2000>;
-> +        };
-> +
-> +        hwlock {
-> +                compatible = "qcom,tcsr-mutex";
-> +                syscon = <&tcsr_mutex_block 0 0x80>;
-> +
-> +                #hwlock-cells = <1>;
-> +        };
-> +...
-> --
-> 2.26.2
->
+    Andrew
