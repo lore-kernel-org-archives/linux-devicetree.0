@@ -2,383 +2,183 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CA9C433E6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80A2C433E2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3482065E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEA720771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 17:05:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y9lsdwUm";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PFljy1Mz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgGUQrH (ORCPT
+        id S1730449AbgGURFa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:47:07 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:38494 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728732AbgGUQrG (ORCPT
+        Tue, 21 Jul 2020 13:05:30 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:41040 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728268AbgGURF3 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 21 Jul 2020 12:47:06 -0400
-Received: from [78.134.114.177] (port=54080 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jxvPy-0009Zq-NM; Tue, 21 Jul 2020 18:47:02 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-clk@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>
-Subject: [PATCH v3 4/4] dt-bindings: clk: versaclock5: convert to yaml
-Date:   Tue, 21 Jul 2020 18:46:55 +0200
-Message-Id: <20200721164655.422-4-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200721164655.422-1-luca@lucaceresoli.net>
-References: <20200721164655.422-1-luca@lucaceresoli.net>
+        Tue, 21 Jul 2020 13:05:29 -0400
+Received: from mailhost.synopsys.com (us03-mailhost1.synopsys.com [10.4.17.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 979A2C00AE;
+        Tue, 21 Jul 2020 16:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1595350680; bh=6IEKf5IcZ4gel7f8CN3kjGa3YpRzkWLIMa6NCMNtwPo=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Y9lsdwUmkmd8Yj42tN0w1/6OuxpFCx+Gruk9Ge8XJUuCBsoZYb2adUlvV2/6lPcci
+         UcWcguwFlVf+3ADJtpPhjrBn5qxlLxJKNPeTD+g50PboptBDcsN7ZYL/P3AUxr+8Dr
+         lC+Qc9MVaVpUzJcXOcUXH7wOqsqVc3p46MYl0HLWsR+fB/EisXSPEI2O0M44lK/92l
+         CNUapYHTlFyBSwr6opGurBfNTtr7e4Je2q5QKTi7jkNUJm1uJq1d/SF7TX8fi54yrh
+         uFLpAqlz9qT2a4xcn/Qv6HIbCGEJW2vNS7/HX034cbHG27+CLIyYUMfN3DMOTAWv97
+         hVNg1DunlZbIQ==
+Received: from o365relay-in.synopsys.com (sv2-o365relay3.synopsys.com [10.202.1.139])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 23058A005A;
+        Tue, 21 Jul 2020 16:58:00 +0000 (UTC)
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2170.outbound.protection.outlook.com [104.47.59.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 9F4EE4014B;
+        Tue, 21 Jul 2020 16:57:59 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=joglekar@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="PFljy1Mz";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gzyqOuZay3NXV7kbcmXpjiUdZL2xrgLC/uKAryH0VjderqmOFLHB+gmlmqofnOpue5pqXuYCiZH2EHBiF0pRO2RcF2NXtr3X1V++dkfEquHPMHIObCPBtAdFtizA7DA7WDibvC9TeaFg500I8ja4P1crYSmrCMz2jwgun6iv7XHxRe3UKAEG6c6cgV8Pq4Vs8ta+Omr+oI4h7lIdfMndmLf35zNCDrIHtYgGTGand8TJpZ2WMkZBbLJCQD+hyADS0RmHkdOjy8UMu2YuvwIgz7niYK5CGEeO+4XqW0WA9n91w7Dst8DzdM6X2lt2GM4c7e6jcZuhwSVOqauF7oEw4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6IEKf5IcZ4gel7f8CN3kjGa3YpRzkWLIMa6NCMNtwPo=;
+ b=ebbEd4LgMCaGzHGGAIrd+mCC3fB8or62d1JWGh3UPV3BGTic2s7LComChKksNaammUzIyOvUO6St0pAfGDEmZpJFKH0OF8pd3MHpTfPBhPYaWl++34Q0FtZZNgSeKR1w1vdt/w1clhwLW71r1YGhLhnAyAUmCmWPUXlS7vRRLfBrJctrQlNzlna/20+8RGDilvz5WGmBeZz9XGD2cqxhOLC7PBjdqAm/kZyT3+cT/ptsnjR0pgM8iEmY4tgouF+buRIr7YGaPAmM6/Ha2tiekHMCpnhc4QZA7fW9V98k7pai7nyj4pw6Da+Cs92VTdMIfdLGnKWCoGA1JQ9luSdYWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6IEKf5IcZ4gel7f8CN3kjGa3YpRzkWLIMa6NCMNtwPo=;
+ b=PFljy1Mz933eeP5WZP+Zp4700fOe7hYrqXsfLP3oOAKxhj1Gdt4+PtKG4bUB/QIJNGI1OoRHN8x1/gunpxeDPdAAx63y2/1dlognQedyhEDMgLZxaxq4gKY1qQOKqgYPzWC1B+/2ZxkLnElp0RtEAVE4mgjm6oaQT5k3c1h9Cs0=
+Received: from BN8PR12MB3458.namprd12.prod.outlook.com (2603:10b6:408:44::32)
+ by BN6PR1201MB0001.namprd12.prod.outlook.com (2603:10b6:404:a7::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Tue, 21 Jul
+ 2020 16:57:58 +0000
+Received: from BN8PR12MB3458.namprd12.prod.outlook.com
+ ([fe80::9559:91b2:aaa3:bfd6]) by BN8PR12MB3458.namprd12.prod.outlook.com
+ ([fe80::9559:91b2:aaa3:bfd6%2]) with mapi id 15.20.3216.020; Tue, 21 Jul 2020
+ 16:57:58 +0000
+X-SNPS-Relay: synopsys.com
+From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        John Youn <John.Youn@synopsys.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 3/4] usb: dwc3: Add device property
+ sgl-trb-cache-size-quirk
+Thread-Topic: [PATCH v3 3/4] usb: dwc3: Add device property
+ sgl-trb-cache-size-quirk
+Thread-Index: AQHWNBPIzVDQozhV20CqjRBnx+8J26j6PmiAgAAa/YCADhZwgIAJsAyAgAB4IAA=
+Date:   Tue, 21 Jul 2020 16:57:58 +0000
+Message-ID: <48f1764e-4383-a149-b93b-3851095394e7@synopsys.com>
+References: <cover.1590415123.git.joglekar@synopsys.com>
+ <83eba2e9f0069f20ccc94537e3b99cbaec209441.1590415123.git.joglekar@synopsys.com>
+ <5534d9d6-5452-dade-e46e-f4b0910becdb@synopsys.com>
+ <877dvhqh2e.fsf@kernel.org>
+ <2f61133b-319d-80dc-f3f3-7e08e0228953@synopsys.com>
+ <878sfdp5bk.fsf@kernel.org>
+In-Reply-To: <878sfdp5bk.fsf@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [49.207.204.153]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: df1453a2-fd58-45b9-3cfd-08d82d973880
+x-ms-traffictypediagnostic: BN6PR1201MB0001:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR1201MB0001C10C7325F92192BC7CFCA4780@BN6PR1201MB0001.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fBJQZBSgREdLkVfQ14TRP7hU9tYvsAlETSke9f7kEhRpYJbMKU4f5ZYU2KZ3SIhEk8T490xCOxzeoOGgdz3ZyIpwK5WjhWTY3TChvqdX6W0mmP8Xus4QAGTsY3aN87l+HT1AUnM9I6IB/xy9Q4O46jypZBkk0QHaqrNtBXwUzRe0+Nr5n4B5hjc6UBSksORIORP02gM10u4swoliZuPryfhDczv6vO1ZppS/2AIMl6CDlCWuADlq+npoIOfoXCxfdbwGbvxpL7Y/ysrh2dyV2e9eA5bd1TeaGTba0uB1gj1Jm932MSZXYx5Bmz03I64DImF2v7C8A7i0U+srH1I/Vg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3458.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(366004)(346002)(396003)(376002)(86362001)(2906002)(71200400001)(31696002)(26005)(55236004)(53546011)(6506007)(31686004)(66446008)(64756008)(76116006)(91956017)(66476007)(66556008)(6486002)(186003)(2616005)(66946007)(110136005)(83380400001)(4326008)(8676002)(36756003)(54906003)(6512007)(478600001)(8936002)(316002)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: LQaX+6jFtJNZclDDwrXrfCqhDyWDitFLeJPdWJRrlwmJ95Jpw/wZvUbnfYQRz4TQN4+VbYaVKtdlch7+Kkf4upYSJZ/uwYYI+aYiG9LuCmdJN970UXTzh99YL3QPxI98J42HR/7H5c8qtdBjeiEitJklB2BuOBQZeRIFY3vip+rpSMe1umTV8D1r1zZKn1U7rRqdY7GNBiCxlTBkzpk7GK1Jpay2pNPE1jmgDctt1l+Qk2g3MebhwLuN4OjnWVNSnrTeXEKSJ3GNWQMgt+MIHebkOI9789kMjoBRhIeMwcWOHQGOc3F/TuzqD3AoIJoEBv/zqKdYxEDlqMCTTu4PcOn8hYSkhV0PGYbG8gYF8CRTyxnZVnHUi7ia/6ggidA7L6Hcnv/quOozHnrkmLgVxvxKwE3AvuoLHi6sItzwiUkpwzmW3iz2/8mVIH3tzC+1UE3V+vFwuLjphp3+OyT2Vpzf8OLalAe+xdUbaMF/lrVXQ1DvmeRpQncRcQ2AYfGP
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6ACF93066DF85C4B84E163ECC25953D8@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3458.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df1453a2-fd58-45b9-3cfd-08d82d973880
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2020 16:57:58.2705
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ibKGMl3/iPpsuCL4g4LnbYyE/ZdEgZBoauqNxgeN8VN3T9xIJSLJCzMuJSENnw44c6gQu57A4xdNSOPdL304SQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0001
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert to yaml the VersaClock bindings document. The mapping between
-clock specifier and physical pins cannot be described formally in yaml
-schema, then keep it verbatim in the description field.
-
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-
----
-
-Changes in v3:
- - schema syntax fixes: use enum to constrain reg, don't use defines as
-   enums, drop type for standard unit suffix, fix syntax for clock-names
-   property (all suggested by Rob Herring)
----
- .../bindings/clock/idt,versaclock5.txt        | 125 --------------
- .../bindings/clock/idt,versaclock5.yaml       | 154 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 3 files changed, 155 insertions(+), 125 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
- create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-deleted file mode 100644
-index 9656d4cf221c..000000000000
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-+++ /dev/null
-@@ -1,125 +0,0 @@
--Binding for IDT VersaClock 5,6 programmable i2c clock generators.
--
--The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
--generators providing from 3 to 12 output clocks.
--
--==I2C device node==
--
--Required properties:
--- compatible:	shall be one of
--		"idt,5p49v5923"
--		"idt,5p49v5925"
--		"idt,5p49v5933"
--		"idt,5p49v5935"
--		"idt,5p49v6901"
--		"idt,5p49v6965"
--- reg:		i2c device address, shall be 0x68 or 0x6a.
--- #clock-cells:	from common clock binding; shall be set to 1.
--- clocks:	from common clock binding; list of parent clock handles,
--		- 5p49v5923 and
--		  5p49v5925 and
--		  5p49v6901: (required) either or both of XTAL or CLKIN
--					reference clock.
--		- 5p49v5933 and
--		- 5p49v5935: (optional) property not present (internal
--					Xtal used) or CLKIN reference
--					clock.
--- clock-names:	from common clock binding; clock input names, can be
--		- 5p49v5923 and
--		  5p49v5925 and
--		  5p49v6901: (required) either or both of "xin", "clkin".
--		- 5p49v5933 and
--		- 5p49v5935: (optional) property not present or "clkin".
--
--For all output ports, a corresponding, optional child node named OUT1,
--OUT2, etc. can represent a each output, and the node can be used to
--specify the following:
--
--- idt,mode: can be one of the following:
--                 - VC5_LVPECL
--                 - VC5_CMOS
--                 - VC5_HCSL33
--                 - VC5_LVDS
--                 - VC5_CMOS2
--                 - VC5_CMOSD
--                 - VC5_HCSL25
--
--- idt,voltage-microvolts:  can be one of the following
--                 - 1800000
--                 - 2500000
--                 - 3300000
---  idt,slew-percent: Percent of normal, can be one of
--                 - 80
--                 - 85
--                 - 90
--                 - 100
--
--==Mapping between clock specifier and physical pins==
--
--When referencing the provided clock in the DT using phandle and
--clock specifier, the following mapping applies:
--
--5P49V5923:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT2
--
--5P49V5933:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT4
--
--5P49V5925 and
--5P49V5935:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT2
--	3 -- OUT3
--	4 -- OUT4
--
--5P49V6901:
--	0 -- OUT0_SEL_I2CB
--	1 -- OUT1
--	2 -- OUT2
--	3 -- OUT3
--	4 -- OUT4
--
--==Example==
--
--/* 25MHz reference crystal */
--ref25: ref25m {
--	compatible = "fixed-clock";
--	#clock-cells = <0>;
--	clock-frequency = <25000000>;
--};
--
--i2c-master-node {
--
--	/* IDT 5P49V5923 i2c clock generator */
--	vc5: clock-generator@6a {
--		compatible = "idt,5p49v5923";
--		reg = <0x6a>;
--		#clock-cells = <1>;
--
--		/* Connect XIN input to 25MHz reference */
--		clocks = <&ref25m>;
--		clock-names = "xin";
--
--		OUT1 {
--			idt,mode = <VC5_CMOS>;
--			idt,voltage-microvolts = <1800000>;
--			idt,slew-percent = <80>;
--		};
--		OUT2 {
--			...
--		};
--		...
--	};
--};
--
--/* Consumer referencing the 5P49V5923 pin OUT1 */
--consumer {
--	...
--	clocks = <&vc5 1>;
--	...
--}
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-new file mode 100644
-index 000000000000..3d4e1685cc55
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-@@ -0,0 +1,154 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/idt,versaclock5.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Binding for IDT VersaClock 5 and 6 programmable I2C clock generators
-+
-+description: |
-+  The IDT VersaClock 5 and VersaClock 6 are programmable I2C
-+  clock generators providing from 3 to 12 output clocks.
-+
-+  When referencing the provided clock in the DT using phandle and clock
-+  specifier, the following mapping applies:
-+
-+  - 5P49V5923:
-+    0 -- OUT0_SEL_I2CB
-+    1 -- OUT1
-+    2 -- OUT2
-+
-+  - 5P49V5933:
-+    0 -- OUT0_SEL_I2CB
-+    1 -- OUT1
-+    2 -- OUT4
-+
-+  - other parts:
-+    0 -- OUT0_SEL_I2CB
-+    1 -- OUT1
-+    2 -- OUT2
-+    3 -- OUT3
-+    4 -- OUT4
-+
-+maintainers:
-+  - Luca Ceresoli <luca@lucaceresoli.net>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - idt,5p49v5923
-+      - idt,5p49v5925
-+      - idt,5p49v5933
-+      - idt,5p49v5935
-+      - idt,5p49v6901
-+      - idt,5p49v6965
-+
-+  reg:
-+    description: I2C device address
-+    enum: [ 0x68, 0x6a ]
-+
-+  '#clock-cells':
-+    const: 1
-+
-+patternProperties:
-+  "^OUT[1-4]$":
-+    type: object
-+    description:
-+      Description of one of the outputs (OUT1..OUT4). See "Clock1 Output
-+      Configuration" in the Versaclock 5/6/6E Family Register Description
-+      and Programming Guide.
-+    properties:
-+      idt,mode:
-+        description:
-+          The output drive mode. Values defined in dt-bindings/clk/versaclock.h
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        minimum: 0
-+        maximum: 6
-+      idt,voltage-microvolt:
-+        description: The output drive voltage.
-+        enum: [ 1800000, 2500000, 3300000 ]
-+      idt,slew-percent:
-+        description: The Slew rate control for CMOS single-ended.
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [ 80, 85, 90, 100 ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - idt,5p49v5933
-+            - idt,5p49v5935
-+    then:
-+      # Devices with builtin crystal + optional external input
-+      properties:
-+        clock-names:
-+          const: clkin
-+        clocks:
-+          maxItems: 1
-+    else:
-+      # Devices without builtin crystal
-+      properties:
-+        clock-names:
-+            minItems: 1
-+            maxItems: 2
-+            items:
-+              enum: [ xin, clkin ]
-+        clocks:
-+          minItems: 1
-+          maxItems: 2
-+      required:
-+        - clock-names
-+        - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clk/versaclock.h>
-+
-+    /* 25MHz reference crystal */
-+    ref25: ref25m {
-+        compatible = "fixed-clock";
-+        #clock-cells = <0>;
-+        clock-frequency = <25000000>;
-+    };
-+
-+    i2c@0 {
-+        reg = <0x0 0x100>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        /* IDT 5P49V5923 I2C clock generator */
-+        vc5: clock-generator@6a {
-+            compatible = "idt,5p49v5923";
-+            reg = <0x6a>;
-+            #clock-cells = <1>;
-+
-+            /* Connect XIN input to 25MHz reference */
-+            clocks = <&ref25m>;
-+            clock-names = "xin";
-+
-+            OUT1 {
-+                idt,drive-mode = <VC5_CMOSD>;
-+                idt,voltage-microvolts = <1800000>;
-+                idt,slew-percent = <80>;
-+            };
-+
-+            OUT4 {
-+                idt,drive-mode = <VC5_LVDS>;
-+            };
-+        };
-+    };
-+
-+    /* Consumer referencing the 5P49V5923 pin OUT1 */
-+    consumer {
-+        /* ... */
-+        clocks = <&vc5 1>;
-+        /* ... */
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8e323ffddea0..344564ae0134 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8327,6 +8327,7 @@ F:	drivers/input/misc/ideapad_slidebar.c
- IDT VersaClock 5 CLOCK DRIVER
- M:	Luca Ceresoli <luca@lucaceresoli.net>
- S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
- F:	drivers/clk/clk-versaclock5.c
- 
- IEEE 802.15.4 SUBSYSTEM
--- 
-2.27.0
-
+SGVsbG8sDQoNCk9uIDcvMjEvMjAyMCAzOjE3IFBNLCBGZWxpcGUgQmFsYmkgd3JvdGU6DQo+IFRl
+amFzIEpvZ2xla2FyIDxUZWphcy5Kb2dsZWthckBzeW5vcHN5cy5jb20+IHdyaXRlczoNCj4gDQo+
+PiBIaSBSb2IsDQo+Pg0KPj4gT24gNy82LzIwMjAgMTI6MTMgUE0sIEZlbGlwZSBCYWxiaSB3cm90
+ZToNCj4+Pg0KPj4+IEhpLA0KPj4+DQo+Pj4gVGVqYXMgSm9nbGVrYXIgPFRlamFzLkpvZ2xla2Fy
+QHN5bm9wc3lzLmNvbT4gd3JpdGVzOg0KPj4+Pj4gQEAgLTk1LDYgKzk1LDEwIEBAIGludCBkd2Mz
+X2hvc3RfaW5pdChzdHJ1Y3QgZHdjMyAqZHdjKQ0KPj4+Pj4gIAlpZiAoZHdjLT51c2IyX2xwbV9k
+aXNhYmxlKQ0KPj4+Pj4gIAkJcHJvcHNbcHJvcF9pZHgrK10gPSBQUk9QRVJUWV9FTlRSWV9CT09M
+KCJ1c2IyLWxwbS1kaXNhYmxlIik7DQo+Pj4+PiAgDQo+Pj4+PiArCWlmIChkd2MtPnNnbF90cmJf
+Y2FjaGVfc2l6ZV9xdWlyaykNCj4+Pj4+ICsJCXByb3BzW3Byb3BfaWR4KytdID0NCj4+Pj4+ICsJ
+CQlQUk9QRVJUWV9FTlRSWV9CT09MKCJzZ2wtdHJiLWNhY2hlLXNpemUtcXVpcmsiKTsNCj4+Pj4+
+ICsNCj4+Pj4+ICAJLyoqDQo+Pj4+PiAgCSAqIFdPUktBUk9VTkQ6IGR3YzMgcmV2aXNpb25zIDw9
+My4wMGEgaGF2ZSBhIGxpbWl0YXRpb24NCj4+Pj4+ICAJICogd2hlcmUgUG9ydCBEaXNhYmxlIGNv
+bW1hbmQgZG9lc24ndCB3b3JrLg0KPj4+Pj4NCj4+Pj4gRG9lcyB0aGlzIGltcGxlbWVudGF0aW9u
+IGxvb2tzIGdvb2QgdG8geW91PyBSb2IgaGFzIHNvbWUgY29uY2VybmVkIG92ZXIgdGhlIERUIGVu
+dHJpZXMsDQo+Pj4+IHlvdSBzdWdnZXN0ZWQgdXNpbmcgY29tcGF0aWJsZSBzdHJpbmcgd2l0aCB0
+aGlzIHF1aXJrIGFkZGl0aW9uLg0KPj4+PiBDYW4geW91IHBsZWFzZSBicmllZiBhYm91dCBob3cg
+eW91IHdvdWxkIGxpa2UgdG8gaGF2ZSB0aGlzIHF1aXJrIGltcGxlbWVudGVkPw0KPj4+PiBJIGNh
+biBzZW5kIHRoZSB1cGRhdGVkIHBhdGNoLiBNeSBwYXRjaCBzZXJpZXMgaXMgcGVuZGluZyBmb3Ig
+bWVyZ2UganVzdCBiZWNhdXNlIG9mIHRoZQ0KPj4+PiBEVCBhbmQgcXVpcmsgaXNzdWUuIENhbiB5
+b3UgcGxlYXNlIGhlbHA/DQo+Pj4NCj4+PiBZZWFoLCB5b3UgbmVlZCB0byBnZXQgaW50byBhbiBh
+Z3JlZW1lbnQgd2l0aCBSb2IgOi0pIEkgZG9uJ3QgbWluZCBoYXZpbmcNCj4+PiBleHRyYSBEVCBm
+bGFncyBmb3IgdGhpbmdzIHdoaWNoIGNhbid0IGJlIGRldGVjdGVkIGluIHJ1bnRpbWUsIFJvYg0K
+Pj4+IGRpc2FncmVlcy4NCj4+Pg0KPj4gVGhlIGNvbXBhdGlibGUgc3RyaW5nIGlzIG5vdCBzdWl0
+YWJsZSBvcHRpb24gYXMgaXQgZG9lcyBub3Qgd29yayB3aXRoIHBsYXRmb3JtIGRyaXZlcnMNCj4+
+IHdpdGggUENJIGJhc2VkIHN5c3RlbS4gQWxzbyBTeW5vcHN5cyBjb250cm9sbGVycyBJUCB2ZXJz
+aW9uIHJlZ2lzdGVyIGlzIG5vdCB2aXNpYmxlIHRvIHhoY2kNCj4+IGRyaXZlciBhbmQgaGVuY2Ug
+d2UgZG9uJ3QgaGF2ZSBzZXBhcmF0ZSBjb21wYXRpYmxlIHN0cmluZyBmb3IgZWFjaCBTeW5vcHN5
+cyB2ZXJzaW9uIG9uIHRoZQ0KPj4geGhjaSBkcml2ZXIgc2lkZS4gDQo+PiBEdWUgdG8gd2hpY2gg
+SSBkZXBlbmQgb24gRFQgZmxhZyBhZGRpdGlvbiBmb3IgdGhlIHF1aXJrLiBDYW4gd2UgYWRkIHRo
+ZXNlIERUIGZsYWdzIGFuZCBxdWlyaz8NCj4gDQo+IEFzIEkgc2FpZCwgSSdtIHdlbGwgYXdhcmUg
+b2YgdGhlIHNpdHVhdGlvbiByZWdhcmRpbmcgdXNhZ2Ugb2YgY29tcGF0aWJsZQ0KPiBzdHJpbmdz
+IGFuZCB0aGUgZmFjdCB0aGF0IGR3YzMgbXVzdCB3b3JrIG9uIFBDSSBhbmQgbm9uLVBDSSBzeXN0
+ZW1zIChJDQo+IHdyb3RlIHRoZSB0aGluZyBhcyBpdCBpcyBhZnRlciBhbGwpLiBUaGUgcGVyc29u
+IGJsb2NraW5nIG5ldyBxdWlyayBmbGFncw0KPiBpcyBSb2IsIG5vdCBtZS4gWW91IG5lZWQgdG8g
+Y29udmluY2UgUm9iIHRoYXQgdGhpcyBpcyB0aGUgd2F5IHRvIGdvLg0KPiANCkBGZWxpcGU6IFNv
+cnJ5IGZvciBjb25mdXNpb24gaWYgYW55LCBwcmV2aW91cyBtYWlsIHdhcyBpbnRlbmRlZCBmb3Ig
+Um9iIGFza2luZyBhYm91dCBoaXMgYXBwcm92YWwuDQoNCj4gUm9iLCBiYWxsJ3MgaW4geW91ciBj
+b3VydC4gU29ycnkuPiANCkBSb2I6IEFzIEkgYW5kIEZlbGlwZSBoYXZlIG1lbnRpb25lZCBiZWZv
+cmUsIGl0IGlzIHZlcnkgbXVjaCBuZWNlc3NhcnkgdG8gaGF2ZSBxdWlyayBmbGFncw0KZm9yIHRo
+ZSBjdXJyZW50IGNoYW5nZXMgYXMgY29tcGF0aWJsZSBzdHJpbmcgd291bGQgbm90IGJlIGEgc29s
+dXRpb24gZm9yIFBDSSBhbmQgbm9uLVBDSQ0Kc3lzdGVtcy4gQ2FuIHlvdSBwbGVhc2UgYXBwcm92
+ZSB0aGlzIGNoYW5nZSA/IElmIHlvdSBoYXZlIGFueSBjb25jZXJuIGFib3V0IG5hbWluZyBvciBh
+bnkNCm90aGVyIHRoaW5nLCBwbGVhc2UgbGV0IHVzIGtub3cuDQoNClRoYW5rcyAmIFJlZ2FyZHMs
+DQogVGVqYXMgSm9nbGVrYXINCg==
