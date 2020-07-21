@@ -2,247 +2,104 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C920C433E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7EDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBA520714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8A7207DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 01:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pfNV1tpV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMBHYcII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgGUBZw (ORCPT
+        id S1726845AbgGUBj0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 20 Jul 2020 21:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44474 "EHLO
+        Mon, 20 Jul 2020 21:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgGUBZw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 21:25:52 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF311C061794
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 18:25:51 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t6so9523736plo.3
-        for <devicetree@vger.kernel.org>; Mon, 20 Jul 2020 18:25:51 -0700 (PDT)
+        with ESMTP id S1725857AbgGUBjX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Jul 2020 21:39:23 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F582C061794;
+        Mon, 20 Jul 2020 18:39:23 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id j18so1206285wmi.3;
+        Mon, 20 Jul 2020 18:39:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
-        b=pfNV1tpV1MiM7maphlEeXhHlc27jPtO3X0mWiOfbKEo1uVuTLEnPavTfmEqpHGXlG0
-         kI5nChADivSZJ/Y5dch6ZFhiNJmbFGziSNY1dzW6EuAyuogXajsDh41XX3k4UuqZ8bXT
-         Ls+h7Od/DacwDZ81hHBvZ2vmDPcL9rCM5nklhKAVog77j07GHoEAFc1P0rN+7YlyAdv6
-         Wy0iwIBMoWSYuM1Aye2ixh+j+35yRxpY6r9xP46QU20f6vLpdhNCW+eiCZwzVIqwWatQ
-         bjyP7XkrDYDAIEfrGerZrfNIZCnT5xjCZHAwTXlzcZyo+bhXGyX81PH1VNzgyuEiv9DZ
-         ACtA==
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Nrug+AWSzjZGrBINnJb7jz7fHx/HXVjSPsVyZ+aIDeo=;
+        b=RMBHYcII3aAfMtjYSyy48tK+c1/Q/zQkwkMYYl6or0ZK12+W75rcPJDNBupa/yyNyU
+         2A6PieyzOXLHlZF54nE+H+5XjALkG3sFaOXW3kagnM8kxto3jv3AFJ7mkmk67pfVqHj6
+         mRyLT/wGHzIH26vwiZNlzp2gMgiJEnnjtd+MONCTj8Pi/+dw2yIsIjwd6om1i2v8E74I
+         dTFPO/QsXpURRPqKvF87bxcZzUclFKimx0SqaO27BKW8Cm8D9gwUjn5FSt62gsUSYp4Z
+         UscD5srtkjOsI7BU2TmSI2d4HP5s6/H5QAxL56S9eaQ8tMjTUje8TqBf0e0DW5SD5gYR
+         VnCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3SL61dihAHKQ5Ht3JKZwsIf+MYk0kZQ06Zncr9exNUs=;
-        b=AGuwCJfIzAKloK9k7XOu5Au/wI0eVRdAcRnCrcPvdbzdgtK894XZ4Cb+6v4biVg0Ay
-         R/zJt8+fY5Ld5WLiyVWhCr5ZQsn7Ea0g+7wG426NdRE+6MrI/VbjOlrbVPHzuZu4mUQZ
-         pVrry4X5S9SdvqmZPLo9t8W4hFC2MoSQFXvDWtlh/Tl2vfN0Kp7Sq77ticVvjeieZYpA
-         hxzYfqQzlhA80+XhljY3FiEnfYnb4H2/2b+SASO/prdfub+hsSHG0Dut8ygJQZLV61TS
-         a1UFD240ODh1xmmr0+OcIUNYaojb/eoP8b/7lfLGujVFWeCjUevhW354N9dmaPvf/7WN
-         qstQ==
-X-Gm-Message-State: AOAM530Ex768ngy7USFdTY5hHMBw8Bnh+8eaGs51fAC3J1G0DzV57deT
-        CcFGLSQ0tcQUNLwrF8TvS9izEA==
-X-Google-Smtp-Source: ABdhPJwp1ovg1df0tjWgNFcVMOrW2Xk42aBPcKAUAtGy7Z5/5lUywtIy9nlBAHwvFtwWWyB4Um4tTg==
-X-Received: by 2002:a17:902:c3cb:: with SMTP id j11mr10058164plj.324.1595294751414;
-        Mon, 20 Jul 2020 18:25:51 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id x13sm17571067pfj.122.2020.07.20.18.25.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 18:25:50 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        YongQin Liu <yongqin.liu@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Nrug+AWSzjZGrBINnJb7jz7fHx/HXVjSPsVyZ+aIDeo=;
+        b=oYt9iDy8xr3Jvavyk1bhrYYL/ILPWCUlyAka4Nkac1cSqTH82qfwiPCO3jL6L2inye
+         UahYZnGq7UnhLfW+Au3tbbEflhGZZkhX6AjRFFvT4CSwxebOoAKSgxpm3wFgCyLf/5fa
+         JEMHPqEMtnLBx6IGnUXFtq1p4lyi4hFGGYIBvGEm5mTX+x6QoN2bcUyZa43z9IwqwyDB
+         C0ftc1QTQI39yWhC4h7rDUJ0PeuDUIOjtge2o7yhJZF/wfNXEElmgqyDm1y+AjhnVbqO
+         rMMulMtQqQvILl5nx4NaqF1wVtP1n1ZIUgydRCrUAQEMTrutpMIkHLeiWCO7capciMnQ
+         +rmw==
+X-Gm-Message-State: AOAM53323mZQr0wXk8Bv2mGG5XRw9nhxBXdy9eGYvhvTDC/XRC3+qby6
+        CdNv+fVt0IXVB8zHp2HKpgo=
+X-Google-Smtp-Source: ABdhPJxEWy8mHaI1ZwdniVdsbDPS6hEK7Mlb0/0gXb3tSP5J/MILa3B1gJ74K7YR5WVFNdJeUDADJA==
+X-Received: by 2002:a1c:ba0b:: with SMTP id k11mr1677645wmf.140.1595295562280;
+        Mon, 20 Jul 2020 18:39:22 -0700 (PDT)
+Received: from [172.16.20.20] ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id z10sm35619627wrm.21.2020.07.20.18.39.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 Jul 2020 18:39:21 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.14\))
+Subject: Re: [PATCH] arm64: dts: meson: misc fixups for w400 dtsi
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <7hd04pakqm.fsf@baylibre.com>
+Date:   Tue, 21 Jul 2020 05:39:18 +0400
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [RESEND][PATCH] dts: hi3660: Add support for basic usb gadget on Hikey960
-Date:   Tue, 21 Jul 2020 01:25:47 +0000
-Message-Id: <20200721012547.83743-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <2A03FA86-D190-4DD1-95EE-AA0E5618DACE@gmail.com>
+References: <20200718052950.3707-1-christianshewitt@gmail.com>
+ <7hd04pakqm.fsf@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+X-Mailer: Apple Mail (2.3445.104.14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds basic core dwc3, usb phy and rt1711h nodes for
-usb support on Hikey960.
 
-This does not enable the mux/hub functionality on the board, so
-the USB-A host ports will not function, but does allow the USB-C
-port to function in gadget mode (unfortunately not in host, as
-the hub/mux functionality is needed to enable vbus output to
-power devices in host mode).
+> On 21 Jul 2020, at 2:24 am, Kevin Hilman <khilman@baylibre.com> wrote:
+> 
+> Christian Hewitt <christianshewitt@gmail.com> writes:
+> 
+>> Current devices using the W400 dtsi show mmc tuning errors:
+>> 
+>> [12483.917391] mmc0: tuning execution failed: -5
+>> [30535.551221] mmc0: tuning execution failed: -5
+>> [35359.953671] mmc0: tuning execution failed: -5
+>> [35561.875332] mmc0: tuning execution failed: -5
+>> [61733.348709] mmc0: tuning execution failed: -5
+>> 
+>> Removing "sd-uhs-sdr50" from the SDIO node prevents this. We also add
+>> keep-power-in-suspend to the SDIO node and fix an indentation.
+>> 
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> 
+> This could use a Fixes tag so it can be backported to stable
+> 
+> Kevin
 
-This is based on an old patch originally by Yu Chen.
-
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Cc: YongQin Liu <yongqin.liu@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- .../boot/dts/hisilicon/hi3660-hikey960.dts    | 72 +++++++++++++++++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi     | 34 +++++++++
- 2 files changed, 106 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index e035cf195b19..ff392a47562c 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -13,6 +13,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/usb/pd.h>
- 
- / {
- 	model = "HiKey960";
-@@ -526,6 +527,48 @@
- &i2c1 {
- 	status = "okay";
- 
-+	rt1711h: rt1711h@4e {
-+		compatible = "richtek,rt1711h";
-+		reg = <0x4e>;
-+		status = "ok";
-+		interrupt-parent = <&gpio27>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_cfg_func>;
-+
-+		usb_con: connector {
-+			compatible = "usb-c-connector";
-+			label = "USB-C";
-+			data-role = "dual";
-+			power-role = "dual";
-+			try-power-role = "sink";
-+			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
-+			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
-+				PDO_VAR(5000, 5000, 1000)>;
-+			op-sink-microwatt = <10000000>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				port@1 {
-+					reg = <1>;
-+					usb_con_ss: endpoint {
-+						remote-endpoint = <&dwc3_ss>;
-+					};
-+				};
-+			};
-+		};
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			rt1711h_ep: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&dwc3_role_switch>;
-+			};
-+		};
-+	};
-+
- 	adv7533: adv7533@39 {
- 		status = "ok";
- 		compatible = "adi,adv7533";
-@@ -612,3 +655,32 @@
- 		interrupts = <3 IRQ_TYPE_EDGE_RISING>;
- 	};
- };
-+
-+&dwc3 { /* USB */
-+	dr_mode = "otg";
-+	maximum-speed = "super-speed";
-+	phy_type = "utmi";
-+	snps,dis-del-phy-power-chg-quirk;
-+	snps,lfps_filter_quirk;
-+	snps,dis_u2_susphy_quirk;
-+	snps,dis_u3_susphy_quirk;
-+	snps,tx_de_emphasis_quirk;
-+	snps,tx_de_emphasis = <1>;
-+	snps,dis_enblslpm_quirk;
-+	snps,gctl-reset-quirk;
-+	usb-role-switch;
-+	role-switch-default-mode = "host";
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		dwc3_role_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&rt1711h_ep>;
-+		};
-+
-+		dwc3_ss: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&usb_con_ss>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index c39b78989ff9..d25aac5e0bf8 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -1152,6 +1152,40 @@
- 				};
- 			};
- 		};
-+
-+		usb3_otg_bc: usb3_otg_bc@ff200000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x0 0xff200000 0x0 0x1000>;
-+
-+			usb_phy: usb-phy {
-+				compatible = "hisilicon,hi3660-usb-phy";
-+				#phy-cells = <0>;
-+				hisilicon,pericrg-syscon = <&crg_ctrl>;
-+				hisilicon,pctrl-syscon = <&pctrl>;
-+				hisilicon,eye-diagram-param = <0x22466e4>;
-+			};
-+		};
-+
-+		dwc3: dwc3@ff100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xff100000 0x0 0x100000>;
-+
-+			clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-+				 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-+			clock-names = "ref", "bus_early";
-+
-+			assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-+			assigned-clock-rates = <229000000>;
-+
-+			resets = <&crg_rst 0x90 8>,
-+				 <&crg_rst 0x90 7>,
-+				 <&crg_rst 0x90 6>,
-+				 <&crg_rst 0x90 5>;
-+
-+			interrupts = <0 159 4>, <0 161 4>;
-+			phys = <&usb_phy>;
-+			phy-names = "usb3-phy";
-+		};
- 	};
- };
- 
--- 
-2.17.1
-
+Okay, I will send v2 with a fixes tag.
