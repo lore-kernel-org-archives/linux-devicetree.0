@@ -2,503 +2,441 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C82C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D946AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E7F206F2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79B720720
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 19:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KD74ey/u"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="pPcteCtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbgGUTWM (ORCPT
+        id S1730783AbgGUTjg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 15:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43656 "EHLO
+        Tue, 21 Jul 2020 15:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729637AbgGUTWL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 15:22:11 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B09CC061794;
-        Tue, 21 Jul 2020 12:22:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so22312621wrs.0;
-        Tue, 21 Jul 2020 12:22:11 -0700 (PDT)
+        with ESMTP id S1730780AbgGUTjf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 15:39:35 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED02C0619DA
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 12:39:35 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 22so3947132wmg.1
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 12:39:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=FoHnD9SjK5CBLRCMFvn08nnEbMfgFJ4R38W+MLAf1DE=;
-        b=KD74ey/uh7rpEwluS08Ysg7rMzloVUJI2oN5zD2G+BG0GI1dZevFLyBy+EJ1tq33Cx
-         gu1Rx1Qyja26XMJKsc2+FX4vGaOspbAwth4oAlvorEn0a4/CCUZngRNu0X7JFmk22iTo
-         SpobUPrF3/gkNcDLOu0kr/8/yfO1rQxVcPPnfOm7hzkik4OBk+UvYs6Y0br8tmAqTANP
-         USZa5c9EqxHebaAIkk6GXdkj1XuIoq4AZoa10JdkXNpQmKRV1uHzbwkJhNpc+FIQWvj5
-         h7imtUfCzyECVCK1EcViRcMXCw1+xlAKIkgI1x0JuxHU/ANJvHO7awcbXkFvlZr5UdMt
-         1fUw==
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ROGDfW/sOKRuVITcXBG6WpnxRQy78vMNrySdIALy/lI=;
+        b=pPcteCtglZkTGAXbs0qulCkbIifjc8RThcdXIOzexJxKk/WXWIy1bOP1A6ugn6q1Wj
+         YhBkjEJVrrZk8Y0IEBq9RXZq6ZyPfYl2dS4jbaJaCFH3JELzov4vGSUmgHiDMInPm9WT
+         bbLVfeqW8ntMGL6X0JuLsr9zBt875iugxAq4o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=FoHnD9SjK5CBLRCMFvn08nnEbMfgFJ4R38W+MLAf1DE=;
-        b=HhJXsLdp7cWp+ym2G/hde+lGk83WIBNOwWDcTJpHWpWdqX1jPD1JuAvElYyzTMbIpQ
-         +Tu2BzeTwQuMpt0d6fkMGzjE0MyDj1NuCGeoT8tgG/ayaFcU9pANtcP5gmfGSgsQRw8A
-         smQB4RAyivBL3veWqcJJCIKL3SdPg2lY2EUGDrDq70KjqkIryPVM5rZRGC7XHrEZXU4Q
-         MczA7eiIg1+VlgJf448GLr1VxHmG0NBzLWFP1flOLXxp1DHJCKZHwaouZ3mTBLKWBZNq
-         vUT2Q8YNv6+whwfzaRtI8AHuqOJM/9J9q87eNt6p26EbAWCvVVm4xbzh6etmRC6ILoKf
-         bF3w==
-X-Gm-Message-State: AOAM533O4wZQRavwwof0qnEFB+JUmwYMP6wbjoAW1SeZ+a7rzqD65dQH
-        yipimfFMSujEJCfrop0CphE=
-X-Google-Smtp-Source: ABdhPJy+phklsh49TF2wsaE+u5gsZ4lO7RTicHDHDd7Ets/tzTjbtErJ2SooHMQx9ilcFw+iQ0bn7g==
-X-Received: by 2002:adf:a35e:: with SMTP id d30mr15279739wrb.53.1595359329845;
-        Tue, 21 Jul 2020 12:22:09 -0700 (PDT)
-Received: from AnsuelXPS (host-87-7-31-173.retail.telecomitalia.it. [87.7.31.173])
-        by smtp.gmail.com with ESMTPSA id s15sm4962749wmj.41.2020.07.21.12.22.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Jul 2020 12:22:09 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Amit Kucheria'" <amit.kucheria@linaro.org>
-Cc:     "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Zhang Rui'" <rui.zhang@intel.com>,
-        "'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        "'Stephen Boyd'" <sboyd@kernel.org>,
-        "'Linux PM list'" <linux-pm@vger.kernel.org>,
-        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
-        "'DTML'" <devicetree@vger.kernel.org>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        "'linux-clk'" <linux-clk@vger.kernel.org>
-References: <20200716022817.30439-1-ansuelsmth@gmail.com> <20200716022817.30439-6-ansuelsmth@gmail.com> <CAP245DUGM7BgNvBEXvgA6xFiNr0a4BFhSorYwkyRDN5r99y=8w@mail.gmail.com>
-In-Reply-To: <CAP245DUGM7BgNvBEXvgA6xFiNr0a4BFhSorYwkyRDN5r99y=8w@mail.gmail.com>
-Subject: R: [PATCH v4 5/7] drivers: thermal: tsens: add interrupt support for 9860 driver
-Date:   Tue, 21 Jul 2020 21:22:06 +0200
-Message-ID: <006001d65f94$39e5d350$adb179f0$@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ROGDfW/sOKRuVITcXBG6WpnxRQy78vMNrySdIALy/lI=;
+        b=J8WmYn4vy3OmFfchCq9wF4bYK8gPyQV6EJwAl4VsoP69JQOBzoHkEU76fg7tTY4J3i
+         hF2fFdG7MOhyQDHzlDlsGUqjV+jUZtIFRxppGEz70nacVbkgB2JitnIhiAVo8SqNMRGU
+         Eo4ZXFIEsZjIMdqNMtIrLfT4TXGVvQwA1FdlnLUq7YrfWRuiLb14CrmYmZ0ILcyYR/9N
+         6AblQDC6tpAcWHSxgLCQ/UraFNgU0qpCoiaYQf+EArtjmIygHvT/ATHP8Pwu1R4O5hWg
+         D6hFxAJjyrIKuXbpas/Nj5oybTLlqy9DfshyMZqgRhxYkNKWMfvkuj5IjrNsRLV9SqTt
+         e2SQ==
+X-Gm-Message-State: AOAM532nG4wjoQP91kXLTWiVenA3oQd3H7Fm14nFsbPhAcgkeNVRt2+B
+        0WRd+cb9JrHD+R4nDSvSYX8cAhKdZYvmyZU6TiC2
+X-Google-Smtp-Source: ABdhPJxyAn1vQoGf/buvBDraXct4LF9Xdi+8G+j/HHs1UTu85DhtfEaDBlAL/3+WgcaqfxRA+C7xSsuoMv5uPtSGmIw=
+X-Received: by 2002:a1c:7c19:: with SMTP id x25mr5263186wmc.176.1595360373924;
+ Tue, 21 Jul 2020 12:39:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHD+Sy6OmkuDb4Sao9CLBNDWRTt2wI15zSEAdo/l8epFrQeMA==
-Content-Language: it
+References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-3-anup.patel@wdc.com>
+ <CAOnJCUL=LSEfK67GbZ6c0NjEpHmpWq3HM1odgU=bo5JAjAGO2A@mail.gmail.com> <CAAhSdy1AJAp7WOMPhJRk9ahs2Puhpct2nb+ZDz02iYG2NVP1rA@mail.gmail.com>
+In-Reply-To: <CAAhSdy1AJAp7WOMPhJRk9ahs2Puhpct2nb+ZDz02iYG2NVP1rA@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 21 Jul 2020 12:39:22 -0700
+Message-ID: <CAOnJCUKCs2TaxYHjsLnyQbmEMA+tbaD8Cj7=MpTVxKp318Y50g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] clocksource/drivers: Add CLINT timer driver
+To:     Anup Patel <anup@brainfault.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Emil Renner Berhing <kernel@esmil.dk>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jul 21, 2020 at 4:44 AM Anup Patel <anup@brainfault.org> wrote:
+>
+> On Tue, Jul 21, 2020 at 6:41 AM Atish Patra <atishp@atishpatra.org> wrote:
+> >
+> > On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
+> > >
+> > > We add a separate CLINT timer driver for Linux RISC-V M-mode (i.e.
+> > > RISC-V NoMMU kernel).
+> > >
+> > > The CLINT MMIO device provides three things:
+> > > 1. 64bit free running counter register
+> > > 2. 64bit per-CPU time compare registers
+> > > 3. 32bit per-CPU inter-processor interrupt registers
+> > >
+> > > Unlike other timer devices, CLINT provides IPI registers along with
+> > > timer registers. To use CLINT IPI registers, the CLINT timer driver
+> > > provides IPI related callbacks to arch/riscv.
+> > >
+> > > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > > Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> > > ---
+> > >  drivers/clocksource/Kconfig       |   9 ++
+> > >  drivers/clocksource/Makefile      |   1 +
+> > >  drivers/clocksource/timer-clint.c | 231 ++++++++++++++++++++++++++++++
+> > >  include/linux/cpuhotplug.h        |   1 +
+> > >  4 files changed, 242 insertions(+)
+> > >  create mode 100644 drivers/clocksource/timer-clint.c
+> > >
+> > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> > > index 91418381fcd4..e1ce0d510a03 100644
+> > > --- a/drivers/clocksource/Kconfig
+> > > +++ b/drivers/clocksource/Kconfig
+> > > @@ -658,6 +658,15 @@ config RISCV_TIMER
+> > >           is accessed via both the SBI and the rdcycle instruction.  This is
+> > >           required for all RISC-V systems.
+> > >
+> > > +config CLINT_TIMER
+> > > +       bool "Timer for the RISC-V platform"
+> > > +       depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
+> > > +       select TIMER_PROBE
+> > > +       select TIMER_OF
+> > > +       help
+> > > +         This option enables the CLINT timer for RISC-V systems. The CLINT
+> > > +         driver is usually used for NoMMU RISC-V systems.
+> > > +
+> > >  config CSKY_MP_TIMER
+> > >         bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
+> > >         depends on CSKY
+> > > diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> > > index bdda1a2e4097..18e700e703a0 100644
+> > > --- a/drivers/clocksource/Makefile
+> > > +++ b/drivers/clocksource/Makefile
+> > > @@ -87,6 +87,7 @@ obj-$(CONFIG_CLKSRC_ST_LPC)           += clksrc_st_lpc.o
+> > >  obj-$(CONFIG_X86_NUMACHIP)             += numachip.o
+> > >  obj-$(CONFIG_ATCPIT100_TIMER)          += timer-atcpit100.o
+> > >  obj-$(CONFIG_RISCV_TIMER)              += timer-riscv.o
+> > > +obj-$(CONFIG_CLINT_TIMER)              += timer-clint.o
+> > >  obj-$(CONFIG_CSKY_MP_TIMER)            += timer-mp-csky.o
+> > >  obj-$(CONFIG_GX6605S_TIMER)            += timer-gx6605s.o
+> > >  obj-$(CONFIG_HYPERV_TIMER)             += hyperv_timer.o
+> > > diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
+> > > new file mode 100644
+> > > index 000000000000..e1698efa73a1
+> > > --- /dev/null
+> > > +++ b/drivers/clocksource/timer-clint.c
+> > > @@ -0,0 +1,231 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
+> > > + *
+> > > + * Most of the M-mode (i.e. NoMMU) RISC-V systems usually have a
+> > > + * CLINT MMIO timer device.
+> > > + */
+> > > +
+> > > +#define pr_fmt(fmt) "clint: " fmt
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/clocksource.h>
+> > > +#include <linux/clockchips.h>
+> > > +#include <linux/cpu.h>
+> > > +#include <linux/delay.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/sched_clock.h>
+> > > +#include <linux/io-64-nonatomic-lo-hi.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/of_irq.h>
+> > > +#include <linux/smp.h>
+> > > +
+> > > +#define CLINT_IPI_OFF          0
+> > > +#define CLINT_TIMER_CMP_OFF    0x4000
+> > > +#define CLINT_TIMER_VAL_OFF    0xbff8
+> > > +
+> > > +/* CLINT manages IPI and Timer for RISC-V M-mode  */
+> > > +static u32 __iomem *clint_ipi_base;
+> > > +static u64 __iomem *clint_timer_cmp;
+> > > +static u64 __iomem *clint_timer_val;
+> > > +static unsigned long clint_timer_freq;
+> > > +static unsigned int clint_timer_irq;
+> > > +
+> > > +static void clint_send_ipi(const struct cpumask *target)
+> > > +{
+> > > +       unsigned int cpu;
+> > > +
+> > > +       for_each_cpu(cpu, target)
+> > > +               writel(1, clint_ipi_base + cpuid_to_hartid_map(cpu));
+> > > +}
+> > > +
+> > > +static void clint_clear_ipi(void)
+> > > +{
+> > > +       writel(0, clint_ipi_base + cpuid_to_hartid_map(smp_processor_id()));
+> > > +}
+> > > +
+> > > +static struct riscv_ipi_ops clint_ipi_ops = {
+> > > +       .ipi_inject = clint_send_ipi,
+> > > +       .ipi_clear = clint_clear_ipi,
+> > > +};
+> > > +
+> > > +#ifdef CONFIG_64BIT
+> > > +#define clint_get_cycles()     readq_relaxed(clint_timer_val)
+> > > +#else
+> > > +#define clint_get_cycles()     readl_relaxed(clint_timer_val)
+> > > +#define clint_get_cycles_hi()  readl_relaxed(((u32 *)clint_timer_val) + 1)
+> > > +#endif
+> > > +
+> > > +#ifdef CONFIG_64BIT
+> > > +static u64 notrace clint_get_cycles64(void)
+> > > +{
+> > > +       return clint_get_cycles();
+> > > +}
+> > > +#else /* CONFIG_64BIT */
+> > > +static u64 notrace clint_get_cycles64(void)
+> > > +{
+> > > +       u32 hi, lo;
+> > > +
+> > > +       do {
+> > > +               hi = clint_get_cycles_hi();
+> > > +               lo = clint_get_cycles();
+> > > +       } while (hi != clint_get_cycles_hi());
+> > > +
+> > > +       return ((u64)hi << 32) | lo;
+> > > +}
+> > > +#endif /* CONFIG_64BIT */
+> > > +
+> > > +static u64 clint_rdtime(struct clocksource *cs)
+> > > +{
+> > > +       return clint_get_cycles64();
+> > > +}
+> > > +
+> > > +static struct clocksource clint_clocksource = {
+> > > +       .name           = "clint_clocksource",
+> > > +       .rating = 300,
+> >
+> > nit: Not aligned with other structure members.
+> >
+> > > +       .mask           = CLOCKSOURCE_MASK(64),
+> > > +       .flags          = CLOCK_SOURCE_IS_CONTINUOUS,
+> > > +       .read           = clint_rdtime,
+> > > +};
+> > > +
+> > > +static int clint_clock_next_event(unsigned long delta,
+> > > +                                  struct clock_event_device *ce)
+> > > +{
+> > > +       void __iomem *r = clint_timer_cmp +
+> > > +                         cpuid_to_hartid_map(smp_processor_id());
+> > > +
+> > > +       csr_set(CSR_IE, IE_TIE);
+> > > +       writeq_relaxed(clint_get_cycles64() + delta, r);
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
+> > > +       .name                   = "clint_clockevent",
+> > > +       .features               = CLOCK_EVT_FEAT_ONESHOT,
+> > > +       .rating         = 100,
+> > > +       .set_next_event = clint_clock_next_event,
+> >
+> > nit: Not aligned with other structure members.
+>
+> Okay, will update.
+>
+> > > +};
+> > > +
+> > > +static DEFINE_PER_CPU(bool, clint_clock_event_registered);
+> > > +
+> > > +static int clint_timer_starting_cpu(unsigned int cpu)
+> > > +{
+> > > +       bool *registered = per_cpu_ptr(&clint_clock_event_registered, cpu);
+> > > +       struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
+> > > +
+> > > +       if (!(*registered)) {
+> > > +               ce->cpumask = cpumask_of(cpu);
+> > > +               clockevents_config_and_register(ce, clint_timer_freq, 200,
+> > > +                                                ULONG_MAX);
+> >
+> > Is there a specific reason to choose different values from the timer-riscv ?
+> > The min_delta is set to 100 and max_delta is set to 0x7fffffff in
+> > timer-riscv driver.
+>
+> Not really, I will update. I think it's better to use 100 and ULONG_MAX to
+> have fewer magic values.
+>
 
+Yeah. Looking at the other timer driver, max_delta is all over the place :).
+I guess we should just keep the same max/min_delta between riscv timer
+and clint driver.
 
-> -----Messaggio originale-----
-> Da: Amit Kucheria <amit.kucheria@linaro.org>
-> Inviato: luned=C3=AC 20 luglio 2020 11:41
-> A: Ansuel Smith <ansuelsmth@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Andy Gross <agross@kernel.org>;
-> Bjorn Andersson <bjorn.andersson@linaro.org>; Zhang Rui
-> <rui.zhang@intel.com>; Daniel Lezcano <daniel.lezcano@linaro.org>;
-> Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
-> <sboyd@kernel.org>; Linux PM list <linux-pm@vger.kernel.org>; =
-linux-arm-
-> msm <linux-arm-msm@vger.kernel.org>; DTML
-> <devicetree@vger.kernel.org>; Linux Kernel Mailing List <linux-
-> kernel@vger.kernel.org>; linux-clk <linux-clk@vger.kernel.org>
-> Oggetto: Re: [PATCH v4 5/7] drivers: thermal: tsens: add interrupt =
-support
-> for 9860 driver
->=20
-> Hi Ansuel,
->=20
-> Thanks for this patch.
->=20
-> On Thu, Jul 16, 2020 at 7:58 AM Ansuel Smith <ansuelsmth@gmail.com>
-> wrote:
 > >
-> > Add interrupt support for 9860 tsens driver used to set thermal trip
-> > point for the system.
->=20
-> typo: 8960
->=20
-> You've used the names 8960 and ipq8064 interchangeably throughout the
-> series. AFAICT, msm8960, ipq8064 and apq8064 use the same IP version
-> of tsens. Please use 8960 in all patches, descriptions and dt-binding.
-> to reflect the filename for the driver.
-> Then add ipq8064 and apq8064 in a comment in the driver like here to
-> show that the driver also supports these other SoCs:
-> https://elixir.bootlin.com/linux/v5.8-
-> rc4/source/drivers/thermal/qcom/tsens-v0_1.c#L328
->=20
-> You can also add a new compatible string for ipq8064 as a separate
-> patch at the end of the series.
->=20
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/thermal/qcom/tsens-8960.c | 197
-> +++++++++++++++++++++++++++---
-> >  drivers/thermal/qcom/tsens.h      |   3 +
-> >  2 files changed, 186 insertions(+), 14 deletions(-)
+> > > +               *registered = true;
+> > > +       }
+> > > +
+> > > +       enable_percpu_irq(clint_timer_irq,
+> > > +                         irq_get_trigger_type(clint_timer_irq));
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static int clint_timer_dying_cpu(unsigned int cpu)
+> > > +{
+> > > +       disable_percpu_irq(clint_timer_irq);
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static irqreturn_t clint_timer_interrupt(int irq, void *dev_id)
+> > > +{
+> > > +       struct clock_event_device *evdev = this_cpu_ptr(&clint_clock_event);
+> > > +
+> > > +       csr_clear(CSR_IE, IE_TIE);
+> > > +       evdev->event_handler(evdev);
+> > > +
+> > > +       return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +static int __init clint_timer_init_dt(struct device_node *np)
+> > > +{
+> > > +       int rc;
+> > > +       u32 i, nr_irqs;
+> > > +       void __iomem *base;
+> > > +       struct of_phandle_args oirq;
+> > > +
+> > > +       /*
+> > > +        * Ensure that CLINT device interrupts are either RV_IRQ_TIMER or
+> > > +        * RV_IRQ_SOFT. If it's anything else then we ignore the device.
+> > > +        */
+> > > +       nr_irqs = of_irq_count(np);
+> > > +       for (i = 0; i < nr_irqs; i++) {
+> > > +               if (of_irq_parse_one(np, i, &oirq)) {
+> > > +                       pr_err("%pOFP: failed to parse irq %d.\n", np, i);
+> > > +                       continue;
+> > > +               }
+> > > +
+> > > +               if ((oirq.args_count != 1) ||
+> > > +                   (oirq.args[0] != RV_IRQ_TIMER &&
+> > > +                    oirq.args[0] != RV_IRQ_SOFT)) {
+> > > +                       pr_err("%pOFP: invalid irq %d (hwirq %d)\n",
+> > > +                              np, i, oirq.args[0]);
+> > > +                       return -ENODEV;
+> > > +               }
+> > > +
+> > > +               /* Find parent irq domain and map timer irq */
+> > > +               if (!clint_timer_irq &&
+> > > +                   oirq.args[0] == RV_IRQ_TIMER &&
+> > > +                   irq_find_host(oirq.np))
+> > > +                       clint_timer_irq = irq_of_parse_and_map(np, i);
+> > > +       }
+> > > +
+> > > +       /* If CLINT timer irq not found then fail */
+> > > +       if (!clint_timer_irq) {
+> > > +               pr_err("%pOFP: timer irq not found\n", np);
+> > > +               return -ENODEV;
+> > > +       }
+> > > +
+> > > +       base = of_iomap(np, 0);
+> > > +       if (!base) {
+> > > +               pr_err("%pOFP: could not map registers\n", np);
+> > > +               return -ENODEV;
+> > > +       }
+> > > +
+> > > +       clint_ipi_base = base + CLINT_IPI_OFF;
+> > > +       clint_timer_cmp = base + CLINT_TIMER_CMP_OFF;
+> > > +       clint_timer_val = base + CLINT_TIMER_VAL_OFF;
+> > > +       clint_timer_freq = riscv_timebase;
+> > > +
+> > > +       pr_info("%pOFP: timer running at %ld Hz\n", np, clint_timer_freq);
+> > > +
+> > > +       rc = clocksource_register_hz(&clint_clocksource, clint_timer_freq);
+> > > +       if (rc) {
+> > > +               iounmap(base);
+> > > +               pr_err("%pOFP: clocksource register failed [%d]\n", np, rc);
+> > > +               return rc;
+> > > +       }
+> > > +
+> > > +       sched_clock_register(clint_get_cycles64, 64, clint_timer_freq);
+> > > +
+> > > +       rc = request_percpu_irq(clint_timer_irq, clint_timer_interrupt,
+> > > +                                "clint-timer", &clint_clock_event);
+> > > +       if (rc) {
+> > > +               iounmap(base);
+> > > +               pr_err("registering percpu irq failed [%d]\n", rc);
+> > > +               return rc;
+> > > +       }
+> > > +
+> > > +       rc = cpuhp_setup_state(CPUHP_AP_CLINT_TIMER_STARTING,
+> > > +                               "clockevents/clint/timer:starting",
+> > > +                               clint_timer_starting_cpu,
+> > > +                               clint_timer_dying_cpu);
+> > > +       if (rc) {
+> > > +               free_irq(clint_timer_irq, &clint_clock_event);
+> > > +               iounmap(base);
+> > > +               pr_err("%pOFP: cpuhp setup state failed [%d]\n", np, rc);
+> > > +               return rc;
 > >
-> > diff --git a/drivers/thermal/qcom/tsens-8960.c
-> b/drivers/thermal/qcom/tsens-8960.c
-> > index 45788eb3c666..20d0bfb10f1f 100644
-> > --- a/drivers/thermal/qcom/tsens-8960.c
-> > +++ b/drivers/thermal/qcom/tsens-8960.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/bitops.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/mfd/syscon.h>
-> > +#include <linux/interrupt.h>
-> >  #include <linux/thermal.h>
-> >  #include "tsens.h"
+> > All the iounmap & return statements can be moved to a goto at the end
+> > of the function.
+>
+> Okay, will update.
+>
 > >
-> > @@ -27,7 +28,6 @@
-> >  /* CNTL_ADDR bitmasks */
-> >  #define EN                     BIT(0)
-> >  #define SW_RST                 BIT(1)
-> > -#define SENSOR0_EN             BIT(3)
-> >  #define SLP_CLK_ENA            BIT(26)
-> >  #define SLP_CLK_ENA_8660       BIT(24)
-> >  #define MEASURE_PERIOD         1
-> > @@ -41,14 +41,26 @@
+> > > +       }
+> > > +
+> > > +       riscv_set_ipi_ops(&clint_ipi_ops);
+> > > +       clint_clear_ipi();
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
+> > > +TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
+> > > diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> > > index 191772d4a4d7..1451f4625833 100644
+> > > --- a/include/linux/cpuhotplug.h
+> > > +++ b/include/linux/cpuhotplug.h
+> > > @@ -132,6 +132,7 @@ enum cpuhp_state {
+> > >         CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+> > >         CPUHP_AP_ARC_TIMER_STARTING,
+> > >         CPUHP_AP_RISCV_TIMER_STARTING,
+> > > +       CPUHP_AP_CLINT_TIMER_STARTING,
+> > >         CPUHP_AP_CSKY_TIMER_STARTING,
+> > >         CPUHP_AP_HYPERV_TIMER_STARTING,
+> > >         CPUHP_AP_KVM_STARTING,
+> > > --
+> > > 2.25.1
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-riscv mailing list
+> > > linux-riscv@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-riscv
 > >
-> >  #define THRESHOLD_ADDR         0x3624
-> >  /* THRESHOLD_ADDR bitmasks */
-> > +#define THRESHOLD_MAX_CODE             0x20000
-> > +#define THRESHOLD_MIN_CODE             0
-> >  #define THRESHOLD_MAX_LIMIT_SHIFT      24
-> >  #define THRESHOLD_MIN_LIMIT_SHIFT      16
-> >  #define THRESHOLD_UPPER_LIMIT_SHIFT    8
-> >  #define THRESHOLD_LOWER_LIMIT_SHIFT    0
-> > +#define THRESHOLD_MAX_LIMIT_MASK       (THRESHOLD_MAX_CODE
-> << \
-> > +                                               =
-THRESHOLD_MAX_LIMIT_SHIFT)
-> > +#define THRESHOLD_MIN_LIMIT_MASK       (THRESHOLD_MAX_CODE <<
-> \
-> > +                                               =
-THRESHOLD_MIN_LIMIT_SHIFT)
-> > +#define THRESHOLD_UPPER_LIMIT_MASK     (THRESHOLD_MAX_CODE
-> << \
-> > +                                               =
-THRESHOLD_UPPER_LIMIT_SHIFT)
-> > +#define THRESHOLD_LOWER_LIMIT_MASK     (THRESHOLD_MAX_CODE
-> << \
-> > +                                               =
-THRESHOLD_LOWER_LIMIT_SHIFT)
 > >
-> >  /* Initial temperature threshold values */
-> > -#define LOWER_LIMIT_TH         0x50
-> > -#define UPPER_LIMIT_TH         0xdf
-> > +#define LOWER_LIMIT_TH_8960    0x50
-> > +#define UPPER_LIMIT_TH_8960    0xdf
-> > +#define LOWER_LIMIT_TH_8064    0x9d /* 95C */
-> > +#define UPPER_LIMIT_TH_8064    0xa6 /* 105C */
-> >  #define MIN_LIMIT_TH           0x0
-> >  #define MAX_LIMIT_TH           0xff
 > >
-> > @@ -57,6 +69,170 @@
-> >  #define TRDY_MASK              BIT(7)
-> >  #define TIMEOUT_US             100
-> >
-> > +#define TSENS_EN               BIT(0)
-> > +#define TSENS_SW_RST           BIT(1)
-> > +#define TSENS_ADC_CLK_SEL      BIT(2)
-> > +#define SENSOR0_EN             BIT(3)
-> > +#define SENSOR1_EN             BIT(4)
-> > +#define SENSOR2_EN             BIT(5)
-> > +#define SENSOR3_EN             BIT(6)
-> > +#define SENSOR4_EN             BIT(7)
-> > +#define SENSORS_EN             (SENSOR0_EN | SENSOR1_EN | \
-> > +                               SENSOR2_EN | SENSOR3_EN | =
-SENSOR4_EN)
-> > +#define TSENS_8064_SENSOR5_EN                          BIT(8)
-> > +#define TSENS_8064_SENSOR6_EN                          BIT(9)
-> > +#define TSENS_8064_SENSOR7_EN                          BIT(10)
-> > +#define TSENS_8064_SENSOR8_EN                          BIT(11)
-> > +#define TSENS_8064_SENSOR9_EN                          BIT(12)
-> > +#define TSENS_8064_SENSOR10_EN                         BIT(13)
-> > +#define TSENS_8064_SENSORS_EN                          (SENSORS_EN =
-| \
-> > +                                               =
-TSENS_8064_SENSOR5_EN | \
-> > +                                               =
-TSENS_8064_SENSOR6_EN | \
-> > +                                               =
-TSENS_8064_SENSOR7_EN | \
-> > +                                               =
-TSENS_8064_SENSOR8_EN | \
-> > +                                               =
-TSENS_8064_SENSOR9_EN | \
-> > +                                               =
-TSENS_8064_SENSOR10_EN)
-> > +
-> > +u32 tsens_8960_slope[] =3D {
-> > +                       1176, 1176, 1154, 1176,
-> > +                       1111, 1132, 1132, 1199,
-> > +                       1132, 1199, 1132
-> > +                       };
-> > +
-> > +/* Temperature on y axis and ADC-code on x-axis */
-> > +static inline int code_to_mdegC(u32 adc_code, const struct
-> tsens_sensor *s)
-> > +{
-> > +       int slope, offset;
-> > +
-> > +       slope =3D thermal_zone_get_slope(s->tzd);
-> > +       offset =3D CAL_MDEGC - slope * s->offset;
-> > +
-> > +       return adc_code * slope + offset;
-> > +}
-> > +
-> > +static void notify_uspace_tsens_fn(struct work_struct *work)
-> > +{
-> > +       struct tsens_sensor *s =3D container_of(work, struct =
-tsens_sensor,
-> > +                                                               =
-notify_work);
-> > +
-> > +       sysfs_notify(&s->tzd->device.kobj, NULL, "type");
-> > +}
-> > +
-> > +static void tsens_scheduler_fn(struct work_struct *work)
-> > +{
-> > +       struct tsens_priv *priv =3D
-> > +               container_of(work, struct tsens_priv, tsens_work);
-> > +       unsigned int threshold, threshold_low, code, reg, sensor;
-> > +       unsigned long mask;
-> > +       bool upper_th_x, lower_th_x;
-> > +       int ret;
-> > +
-> > +       ret =3D regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064,
-> &reg);
-> > +       if (ret)
-> > +               return;
-> > +       reg =3D reg | LOWER_STATUS_CLR | UPPER_STATUS_CLR;
-> > +       ret =3D regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064, =
-reg);
-> > +       if (ret)
-> > +               return;
-> > +
-> > +       mask =3D ~(LOWER_STATUS_CLR | UPPER_STATUS_CLR);
-> > +       ret =3D regmap_read(priv->tm_map, THRESHOLD_ADDR, =
-&threshold);
-> > +       if (ret)
-> > +               return;
-> > +       threshold_low =3D (threshold & THRESHOLD_LOWER_LIMIT_MASK) =
->>
-> > +                       THRESHOLD_LOWER_LIMIT_SHIFT;
-> > +       threshold =3D (threshold & THRESHOLD_UPPER_LIMIT_MASK) >>
-> > +                   THRESHOLD_UPPER_LIMIT_SHIFT;
-> > +
-> > +       ret =3D regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064,
-> &reg);
-> > +       if (ret)
-> > +               return;
-> > +
-> > +       ret =3D regmap_read(priv->tm_map, CNTL_ADDR, &sensor);
-> > +       if (ret)
-> > +               return;
-> > +       sensor &=3D (uint32_t)TSENS_8064_SENSORS_EN;
-> > +       sensor >>=3D SENSOR0_SHIFT;
-> > +
-> > +       /* Constraint: There is only 1 interrupt control register =
-for all
-> > +        * 11 temperature sensor. So monitoring more than 1 sensor =
-based
-> > +        * on interrupts will yield inconsistent result. To overcome =
-this
-> > +        * issue we will monitor only sensor 0 which is the master =
-sensor.
-> > +        */
-> > +
-> > +       /* Skip if the sensor is disabled */
-> > +       if (sensor & 1) {
-> > +               ret =3D regmap_read(priv->tm_map, =
-priv->sensor[0].status,
-> &code);
-> > +               if (ret)
-> > +                       return;
-> > +               upper_th_x =3D code >=3D threshold;
-> > +               lower_th_x =3D code <=3D threshold_low;
-> > +               if (upper_th_x)
-> > +                       mask |=3D UPPER_STATUS_CLR;
-> > +               if (lower_th_x)
-> > +                       mask |=3D LOWER_STATUS_CLR;
-> > +               if (upper_th_x || lower_th_x) {
-> > +                       /* Notify user space */
-> > +                       schedule_work(&priv->sensor[0].notify_work);
-> > +                       pr_debug("Trigger (%d degrees) for sensor =
-%d\n",
-> > +                                code_to_mdegC(code, =
-&priv->sensor[0]), 0);
-> > +               }
-> > +       }
-> > +       regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064, reg &
-> mask);
-> > +}
-> > +
-> > +static irqreturn_t tsens_isr(int irq, void *data)
-> > +{
-> > +       struct tsens_priv *priv =3D data;
-> > +
-> > +       schedule_work(&priv->tsens_work);
-> > +       return IRQ_HANDLED;
->=20
->=20
-> Have you considered trying to reuse the regmap and interrupt handling
-> infrastructure in tsens.c that I used to convert over everything after
-> IP version 0.1?
->=20
-> I started converting over 8960 but never managed to finish testing
-> this[1]. I'd be happy for you to take this over and get it working so
-> the 8960 doesn't end up being a completely separate driver from the
-> other platforms.
->=20
-> [1]
-> =
-https://git.linaro.org/people/amit.kucheria/kernel.git/log/?h=3Dwrk3/tsen=
-s-
-> 8960-breakage
->=20
-
-Thanks a lot for the link. I started doing some test and I think the =
-only general
-code we will be able to use will be the init_common. The get temp and=20
-the function to convert code to decg are very different from the one =
-used in=20
-8960.  Do you think keep a custom get temp function is good or not?
-
-
-> > +}
-> > +
-> > +static void hw_init(struct tsens_priv *priv)
-> > +{
-> > +       int ret;
-> > +       unsigned int reg_cntl =3D 0, reg_cfg =3D 0, reg_thr =3D 0;
-> > +       unsigned int reg_status_cntl =3D 0;
-> > +
-> > +       regmap_read(priv->tm_map, CNTL_ADDR, &reg_cntl);
-> > +       regmap_write(priv->tm_map, CNTL_ADDR, reg_cntl |
-> TSENS_SW_RST);
-> > +
-> > +       reg_cntl |=3D SLP_CLK_ENA | (MEASURE_PERIOD << 18) |
-> > +                   (((1 << priv->num_sensors) - 1) << =
-SENSOR0_SHIFT);
-> > +       regmap_write(priv->tm_map, CNTL_ADDR, reg_cntl);
-> > +       regmap_read(priv->tm_map, STATUS_CNTL_ADDR_8064,
-> &reg_status_cntl);
-> > +       reg_status_cntl |=3D LOWER_STATUS_CLR | UPPER_STATUS_CLR |
-> > +                          MIN_STATUS_MASK | MAX_STATUS_MASK;
-> > +       regmap_write(priv->tm_map, STATUS_CNTL_ADDR_8064,
-> reg_status_cntl);
-> > +       reg_cntl |=3D TSENS_EN;
-> > +       regmap_write(priv->tm_map, CNTL_ADDR, reg_cntl);
-> > +
-> > +       regmap_read(priv->tm_map, CONFIG_ADDR, &reg_cfg);
-> > +       if (priv->num_sensors > 1)
-> > +               reg_cfg =3D (reg_cfg & ~CONFIG_MASK) | CONFIG;
-> > +       else
-> > +               reg_cfg =3D (reg_cfg & ~CONFIG_MASK) |
-> > +                         (CONFIG << CONFIG_SHIFT_8660);
-> > +       regmap_write(priv->tm_map, CONFIG_ADDR, reg_cfg);
-> > +
-> > +       reg_thr |=3D (LOWER_LIMIT_TH_8064 <<
-> THRESHOLD_LOWER_LIMIT_SHIFT) |
-> > +                  (UPPER_LIMIT_TH_8064 << =
-THRESHOLD_UPPER_LIMIT_SHIFT)
-> |
-> > +                  (MIN_LIMIT_TH << THRESHOLD_MIN_LIMIT_SHIFT) |
-> > +                  (MAX_LIMIT_TH << THRESHOLD_MAX_LIMIT_SHIFT);
-> > +
-> > +       regmap_write(priv->tm_map, THRESHOLD_ADDR, reg_thr);
-> > +
-> > +       ret =3D devm_request_irq(priv->dev, priv->tsens_irq, =
-tsens_isr,
-> > +                              IRQF_TRIGGER_RISING, =
-"tsens_interrupt", priv);
-> > +       if (ret < 0) {
-> > +               dev_err(priv->dev, "request_irq FAIL: %d", ret);
-> > +               return;
-> > +       }
-> > +
-> > +       INIT_WORK(&priv->tsens_work, tsens_scheduler_fn);
-> > +}
-> > +
-> >  static int suspend_8960(struct tsens_priv *priv)
-> >  {
-> >         int ret;
-> > @@ -191,6 +367,8 @@ static int init_8960(struct tsens_priv *priv)
-> >                 if (i >=3D 5)
-> >                         priv->sensor[i].status =3D S0_STATUS_ADDR + =
-40;
-> >                 priv->sensor[i].status +=3D i * 4;
-> > +               priv->sensor[i].slope =3D tsens_8960_slope[i];
-> > +               INIT_WORK(&priv->sensor[i].notify_work,
-> notify_uspace_tsens_fn);
-> >         }
-> >
-> >         reg_cntl =3D SW_RST;
-> > @@ -241,18 +419,9 @@ static int calibrate_8960(struct tsens_priv
-> *priv)
-> >
-> >         kfree(data);
-> >
-> > -       return 0;
-> > -}
-> > -
-> > -/* Temperature on y axis and ADC-code on x-axis */
-> > -static inline int code_to_mdegC(u32 adc_code, const struct =
-tsens_sensor
-> *s)
-> > -{
-> > -       int slope, offset;
-> > +       hw_init(priv);
-> >
-> > -       slope =3D thermal_zone_get_slope(s->tzd);
-> > -       offset =3D CAL_MDEGC - slope * s->offset;
-> > -
-> > -       return adc_code * slope + offset;
->=20
-> This code move hunk belongs in a separate patch.
->=20
-> > +       return 0;
-> >  }
-> >
-> >  static int get_temp_8960(const struct tsens_sensor *s, int *temp)
-> > diff --git a/drivers/thermal/qcom/tsens.h
-> b/drivers/thermal/qcom/tsens.h
-> > index 59d01162c66a..e66048fabcc7 100644
-> > --- a/drivers/thermal/qcom/tsens.h
-> > +++ b/drivers/thermal/qcom/tsens.h
-> > @@ -48,6 +48,7 @@ enum tsens_irq_type {
-> >  struct tsens_sensor {
-> >         struct tsens_priv               *priv;
-> >         struct thermal_zone_device      *tzd;
-> > +       struct work_struct              notify_work;
-> >         int                             offset;
-> >         unsigned int                    hw_id;
-> >         int                             slope;
-> > @@ -559,6 +560,7 @@ struct tsens_priv {
-> >         struct regmap                   *tm_map;
-> >         struct regmap                   *srot_map;
-> >         u32                             tm_offset;
-> > +       u32                             tsens_irq;
-> >
-> >         /* lock for upper/lower threshold interrupts */
-> >         spinlock_t                      ul_lock;
-> > @@ -568,6 +570,7 @@ struct tsens_priv {
-> >         struct tsens_features           *feat;
-> >         const struct reg_field          *fields;
-> >         const struct tsens_ops          *ops;
-> > +       struct work_struct              tsens_work;
-> >
-> >         struct dentry                   *debug_root;
-> >         struct dentry                   *debug;
 > > --
-> > 2.27.0
-> >
+> > Regards,
+> > Atish
+>
+> Regards,
+> Anup
 
+
+
+-- 
+Regards,
+Atish
