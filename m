@@ -2,77 +2,74 @@ Return-Path: <SRS0=jMr8=BA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C5FC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56906C433E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBE6E2077D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37ABB2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595347648;
-	bh=4Ii0UAX9xYXRoxt9jj5DGM4xtBxju1hoL0KGKo0sJQk=;
+	s=default; t=1595347725;
+	bh=Ou+jjvUyuR84E0nD0cuzGVRFTtpu/V8BPsbx3zPHbF0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2fZMi0weBlpsscKvIlCA53hCTK4978jlBGosRXpxHHqbz5o50OYl4uEoAGb6ft1hn
-	 9RlbiOwYWcGTt6xijn3cNgDHzBvr0D77sO28/pIu1NfMA8tfdvDMNPFusLwgqM8hiQ
-	 X94YlW0JdUAYzxSZluGdNGKMK5zB3UBeOGE6icuE=
+	b=SeES4i1hJjrnmo/OG9jo0mh8z63DJKHqiIzTqiGbHBiD6YXOSOZyioexcu4wKI68W
+	 qd4BYGCrOnUz0PK2I+kf+fnCpRb/JykpVTnDuBjnuBGBbA+uCCOa8DfO488wXtkCYG
+	 BW+pabZrLC95gmKD03Umo7uQ6dR8Lm+PV6R4YoXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbgGUQHX (ORCPT
+        id S1728369AbgGUQIl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:07:23 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36957 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729999AbgGUQHW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:07:22 -0400
-Received: by mail-il1-f195.google.com with SMTP id r12so16882261ilh.4;
-        Tue, 21 Jul 2020 09:07:20 -0700 (PDT)
+        Tue, 21 Jul 2020 12:08:41 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43534 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbgGUQIl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:08:41 -0400
+Received: by mail-il1-f193.google.com with SMTP id i18so16882111ilk.10;
+        Tue, 21 Jul 2020 09:08:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AWT6HTVnGa5OoA145kFbOVcYaqGdpzuCOlaAtGKUKy8=;
-        b=HLFzFucJPUm0vBdRj8rnp6obmcT9PtQJ7t+APoiRNAIUsWroNRA12R4ucsVdgml5xR
-         GXbbnk6YjsrxvQZdq0Py8zK/lluzgR78qxmaVhYboPqTaJRTSxOWntLpHvhCUR06VPdP
-         aBINVQoxpACptLAkuiNp7r4O4V65fKcuUVg/jR39SehWg/Ee6zwPY4q8f9VrTbdHU2xs
-         GxYPJ2cfiam1n+TOGRwmyJRqevEQx655kcb+72AGtJvTcJEgy0sJ7qmNQB7oi3NtFXOT
-         McXA8HOr1eT+Rj67qiQHIlZDZ2Z2L/k/KeYWRPa5o6smRFhL04vJEyRtrlN89BF7/qzS
-         Wz8A==
-X-Gm-Message-State: AOAM530HLUzYJSF4Ag9lG1q9SbNENJwU7mVAuytsrcoIFSbO1hoA9meF
-        pPU0RYvwiyfL3GlUZbFBGg==
-X-Google-Smtp-Source: ABdhPJxk0ryfRp5Ip5DVR+SmEj772J0qYAPqjLlJ2FWea2yXLBozmmKfdjVr2hzURUDYB/jA3x3ozg==
-X-Received: by 2002:a05:6e02:4ca:: with SMTP id f10mr28975574ils.291.1595347640457;
-        Tue, 21 Jul 2020 09:07:20 -0700 (PDT)
+        bh=FjMXsxzFtaUreC3kbfmAv2v7/+I+dvMTekAmMNypevk=;
+        b=PIucpEwHCivJUKxO8ttX7BRqJM2YlKkxcz8cgnae43wQwXph8+cJmaxcdWMRLtHJ5Q
+         DL3kTYE/ork9cAlyLD8JNDIfx0tG1AjLGfXZ7vuKecI/Azmhcc3hun7FntYoqO4y0IFi
+         ESVWV46vwkYKURbTssOcYhJ+MwKXz4Lgu2s2i+EqzLcOkOi2cg5+AFOqb15OIHkB6atn
+         hWq4X62ET++alHdtUAqIWVqCsvnl2+YIefP0yCd2h7M5LrJwMkP2DF+URQCVoJzWz5xM
+         Fg6dYEtFcTOHMlPbXxZ8C9FDGaByPlzdQzrOqNC//tjmvww08vXELYRtQHCEKvgDmgB2
+         I7Dw==
+X-Gm-Message-State: AOAM532n5QdRFxVlpdEmHuVrStFeLEucxX2Zmr2x+UK3gWW/v4+sFmHY
+        p7xEFmS5Z0YxZaFhY8QyIw==
+X-Google-Smtp-Source: ABdhPJxyPY8gF2PcuZ6eVWiD1brwqr9E0n8BNki5/DOpSqJmzQt+fWfHePbEhzQUUPcEn1kQu2A6BA==
+X-Received: by 2002:a92:dc0f:: with SMTP id t15mr26156619iln.218.1595347719975;
+        Tue, 21 Jul 2020 09:08:39 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id m6sm11123394ilb.39.2020.07.21.09.07.15
+        by smtp.gmail.com with ESMTPSA id c25sm10733962ioi.13.2020.07.21.09.08.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:07:18 -0700 (PDT)
-Received: (nullmailer pid 384253 invoked by uid 1000);
-        Tue, 21 Jul 2020 16:07:13 -0000
-Date:   Tue, 21 Jul 2020 10:07:13 -0600
+        Tue, 21 Jul 2020 09:08:38 -0700 (PDT)
+Received: (nullmailer pid 386158 invoked by uid 1000);
+        Tue, 21 Jul 2020 16:08:35 -0000
+Date:   Tue, 21 Jul 2020 10:08:35 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, b.zolnierkie@samsung.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH for v5.9] ARM: dts: mxs: Replace HTTP links with HTTPS
- ones
-Message-ID: <20200721160713.GA382903@bogus>
-References: <20200719101008.57623-1-grandmaster@al2klimov.de>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, jaswinder.singh@linaro.org
+Subject: Re: [PATCH for v5.9] ARM: dts: Replace HTTP links with HTTPS ones
+Message-ID: <20200721160835.GA386106@bogus>
+References: <20200719152722.59701-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200719101008.57623-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200719152722.59701-1-grandmaster@al2klimov.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 12:10:08PM +0200, Alexander A. Klimov wrote:
+On Sun, 19 Jul 2020 17:27:22 +0200, Alexander A. Klimov wrote:
 > Rationale:
 > Reduces attack surface on kernel devs opening the links for MITM
 > as HTTPS traffic is much harder to manipulate.
@@ -112,91 +109,23 @@ On Sun, Jul 19, 2020 at 12:10:08PM +0200, Alexander A. Klimov wrote:
 >  Impossible is nothing! :)
 > 
 > 
->  arch/arm/boot/dts/imx23-pinfunc.h     | 4 ++--
->  arch/arm/boot/dts/imx28-pinfunc.h     | 4 ++--
->  arch/arm/boot/dts/imx53-tx53-x13x.dts | 4 ++--
->  arch/arm/boot/dts/mxs-pinfunc.h       | 4 ++--
->  include/video/imx-ipu-v3.h            | 4 ++--
->  5 files changed, 10 insertions(+), 10 deletions(-)
+>  Documentation/devicetree/bindings/arm/xen.txt                 | 2 +-
+>  Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt     | 2 +-
+>  .../devicetree/bindings/memory-controllers/ti-aemif.txt       | 4 ++--
+>  .../bindings/memory-controllers/ti-da8xx-ddrctl.txt           | 2 +-
+>  Documentation/devicetree/bindings/usb/gr-udc.txt              | 2 +-
+>  Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml  | 2 +-
+>  Documentation/devicetree/bindings/usb/usb-device.txt          | 2 +-
+>  Documentation/devicetree/booting-without-of.txt               | 2 +-
+>  arch/arm/boot/dts/keystone.dtsi                               | 2 +-
+>  arch/arm/boot/dts/tps6507x.dtsi                               | 4 ++--
+>  arch/arm/boot/dts/tps65217.dtsi                               | 4 ++--
+>  arch/arm/boot/dts/tps65910.dtsi                               | 4 ++--
+>  arch/arm/boot/dts/twl4030.dtsi                                | 2 +-
+>  arch/arm/boot/dts/twl6030.dtsi                                | 4 ++--
+>  include/dt-bindings/pinctrl/dra.h                             | 2 +-
+>  include/dt-bindings/pinctrl/keystone.h                        | 2 +-
+>  16 files changed, 21 insertions(+), 21 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/imx23-pinfunc.h b/arch/arm/boot/dts/imx23-pinfunc.h
-> index 5c0f32ca3a93..f9d7eb6679de 100644
-> --- a/arch/arm/boot/dts/imx23-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx23-pinfunc.h
-> @@ -7,8 +7,8 @@
->   * License. You may obtain a copy of the GNU General Public License
->   * Version 2 at the following locations:
->   *
-> - * http://www.opensource.org/licenses/gpl-license.html
-> - * http://www.gnu.org/copyleft/gpl.html
-> + * https://www.opensource.org/licenses/gpl-license.html
-> + * https://www.gnu.org/copyleft/gpl.html
 
-Replace the license text with SPDX tags instead.
-
->   */
->  
->  #ifndef __DT_BINDINGS_MX23_PINCTRL_H__
-> diff --git a/arch/arm/boot/dts/imx28-pinfunc.h b/arch/arm/boot/dts/imx28-pinfunc.h
-> index e11f69ba0fe4..ffd5412b70ae 100644
-> --- a/arch/arm/boot/dts/imx28-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx28-pinfunc.h
-> @@ -7,8 +7,8 @@
->   * License. You may obtain a copy of the GNU General Public License
->   * Version 2 at the following locations:
->   *
-> - * http://www.opensource.org/licenses/gpl-license.html
-> - * http://www.gnu.org/copyleft/gpl.html
-> + * https://www.opensource.org/licenses/gpl-license.html
-> + * https://www.gnu.org/copyleft/gpl.html
->   */
->  
->  #ifndef __DT_BINDINGS_MX28_PINCTRL_H__
-> diff --git a/arch/arm/boot/dts/imx53-tx53-x13x.dts b/arch/arm/boot/dts/imx53-tx53-x13x.dts
-> index 6cdf2082c742..a34d98cf6ed4 100644
-> --- a/arch/arm/boot/dts/imx53-tx53-x13x.dts
-> +++ b/arch/arm/boot/dts/imx53-tx53-x13x.dts
-> @@ -41,8 +41,8 @@
->   * License. You may obtain a copy of the GNU General Public License
->   * Version 2 at the following locations:
->   *
-> - * http://www.opensource.org/licenses/gpl-license.html
-> - * http://www.gnu.org/copyleft/gpl.html
-> + * https://www.opensource.org/licenses/gpl-license.html
-> + * https://www.gnu.org/copyleft/gpl.html
->   */
->  
->  /dts-v1/;
-> diff --git a/arch/arm/boot/dts/mxs-pinfunc.h b/arch/arm/boot/dts/mxs-pinfunc.h
-> index c6da987b20cb..6766292eee30 100644
-> --- a/arch/arm/boot/dts/mxs-pinfunc.h
-> +++ b/arch/arm/boot/dts/mxs-pinfunc.h
-> @@ -7,8 +7,8 @@
->   * License. You may obtain a copy of the GNU General Public License
->   * Version 2 at the following locations:
->   *
-> - * http://www.opensource.org/licenses/gpl-license.html
-> - * http://www.gnu.org/copyleft/gpl.html
-> + * https://www.opensource.org/licenses/gpl-license.html
-> + * https://www.gnu.org/copyleft/gpl.html
->   */
->  
->  #ifndef __DT_BINDINGS_MXS_PINCTRL_H__
-> diff --git a/include/video/imx-ipu-v3.h b/include/video/imx-ipu-v3.h
-> index 06b0b57e996c..749490e3c66e 100644
-> --- a/include/video/imx-ipu-v3.h
-> +++ b/include/video/imx-ipu-v3.h
-> @@ -5,8 +5,8 @@
->   * Public License.  You may obtain a copy of the GNU Lesser General
->   * Public License Version 2.1 or later at the following locations:
->   *
-> - * http://www.opensource.org/licenses/lgpl-license.html
-> - * http://www.gnu.org/copyleft/lgpl.html
-> + * https://www.opensource.org/licenses/lgpl-license.html
-> + * https://www.gnu.org/copyleft/lgpl.html
->   */
->  
->  #ifndef __DRM_IPU_H__
-> -- 
-> 2.27.0
-> 
+Acked-by: Rob Herring <robh@kernel.org>
