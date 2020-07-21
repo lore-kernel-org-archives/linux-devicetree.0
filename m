@@ -7,69 +7,71 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D28C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB68FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A647A2073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B971E2073A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595347779;
-	bh=sNmbc7KHOeVZrAwkp+5Dno/XRXWqnpjzUcXRAU65btA=;
+	s=default; t=1595347803;
+	bh=E6lg8jAHaQYNBjr04rJ+m92muZLX1x2mFKlTnO6j7LM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=anz/2fl9RiWjACBCvtRp7PQecDemRMYNeBKV7kZ22FvsfaOhAVmqIdsqYzDalHwfR
-	 JtGgArWZ3b5klSbO/npOgZiK3OOZEwRt80WhYDMO7tt2nmfpAybv4ccwZhcuCiav8p
-	 Kx6r2YPcU7DKGtKitg3DXBbtraFyGBhuZ+SY6KWA=
+	b=QmlxJd289dqzQqlw6nqJ7anvUsNSCNfWhp8CmeK/44HzjBm7wq5D6Qs+VsbvJdTSt
+	 t3vHXJoVPMcNjGls/DZ0jmD2+TKVLglgFEynQcCNK1lamOX43psqkMhaAuE/ZvNqWE
+	 G/eFYgYMv2bBDU3CAvvyRCM6U5dyp8Tz+93ZG+Hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGUQJj (ORCPT
+        id S1727873AbgGUQKD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:09:39 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43644 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbgGUQJj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:09:39 -0400
-Received: by mail-il1-f195.google.com with SMTP id i18so16885154ilk.10;
-        Tue, 21 Jul 2020 09:09:38 -0700 (PDT)
+        Tue, 21 Jul 2020 12:10:03 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39735 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgGUQKD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:10:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id z6so4496358iow.6;
+        Tue, 21 Jul 2020 09:10:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=MAFnSJ9nfMA+aM1fdOKhLqLRIwC/D6r6rOu7Wq8LJQU=;
-        b=CuJRSN08c4y5kExyF86sZgRSJG2k2wYK8FwSJrXr9YZipAGPClYmkdu4mDjaP0AHXp
-         GmixksZhr0wfCw9GmS5yNUi4B2r5TirxhYiLLQzbs7OzcbzzqDxDpMsragk9qbt8CWRL
-         VgeUnY2NZDtgkh6QbsWz/97g2PXhHv0ESuha31Tbh9tu4E6bBihhMNkjs61CmE9g6349
-         Qrzr4TOdmH0rdsHix9FChlDvzTLTY94EI5mPOj7dIbVFHOlDeBCtsvB8NO3q63l8EY08
-         n4m5sWVS0gGnwtswOAEHHydvz4EDUDx7EEKJgztUnG3aE1xTBnGJCmMqW6UC/X0Pv+RZ
-         q/kA==
-X-Gm-Message-State: AOAM533rhfBtOhrVq/nxBuCfaKOetC2kh47oIBXSTyT2C7KSNW2BOwq7
-        D/J509gR5pY3VKy0SHUqXJwpmVMQAFmw
-X-Google-Smtp-Source: ABdhPJz0uCodnN2b+0uHsM5KcqfLRxa9mPLd8qxPeebl+S3wN2JyK2Dag3ihJB+mmf/jI3cqcRZxNA==
-X-Received: by 2002:a92:d308:: with SMTP id x8mr28150239ila.3.1595347778144;
-        Tue, 21 Jul 2020 09:09:38 -0700 (PDT)
+        bh=5vZnPunGzHzcF0JaBHQsiLzx0dizWC0QJDWGM3L9f5c=;
+        b=Qe6l6ChpgZQSHZx99WDVTCgXFqWMSt1vF3QN7sXtysHW0sUBUM29JDgig2QOlB/8em
+         mRIgUrnvKNT2m4i7kFeexRcC/zTDD7fXcu/JX8lDuYLZigNMrRpgsWp/L7iz3qhxPELp
+         tC2AsQSL4Ggn1b0b2Etf5dGrvmbkj/UDBNZVtWEiaN5XqlGbeU8mzEcxTJ1L07BDyxi7
+         MXcTYKtbGZkrEyewIEn/EgInBp6lwK8dakaISqoH1fyc7dlOm7nVyW/BnhFY3IDFQb2A
+         U8CutkE/Fj41G8euYJcOd7dDkT4GGr1Ug5EFxwn/HcoJm19AYsPXfIvaPsrotp8UXVjp
+         fuHA==
+X-Gm-Message-State: AOAM533QJzvS036bwFA0x/0R6LxEOx4wPEk3mcac0+rU8zqUnpqh6YUT
+        ya4g31VdNEG5KWqwHZDp6Q==
+X-Google-Smtp-Source: ABdhPJw/GMPRXuRPapKDmiimXNT1feeBi8f4deFqtacLZt7Z7EGOGgBWwTEEUTrlaQ4Q9UqmXfWaCA==
+X-Received: by 2002:a6b:7210:: with SMTP id n16mr28740129ioc.177.1595347802108;
+        Tue, 21 Jul 2020 09:10:02 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e21sm11034941ioe.11.2020.07.21.09.09.36
+        by smtp.gmail.com with ESMTPSA id d6sm10604898ilq.27.2020.07.21.09.09.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:09:37 -0700 (PDT)
-Received: (nullmailer pid 387737 invoked by uid 1000);
-        Tue, 21 Jul 2020 16:09:35 -0000
-Date:   Tue, 21 Jul 2020 10:09:35 -0600
+        Tue, 21 Jul 2020 09:10:01 -0700 (PDT)
+Received: (nullmailer pid 388371 invoked by uid 1000);
+        Tue, 21 Jul 2020 16:09:58 -0000
+Date:   Tue, 21 Jul 2020 10:09:58 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     linux-kernel@vger.kernel.org, jsarha@ti.com, airlied@linux.ie,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        daniel@ffwll.ch, tomi.valkeinen@ti.com, robh+dt@kernel.org
-Subject: Re: [PATCH for v5.9] drm/tilcdc: Replace HTTP links with HTTPS ones
-Message-ID: <20200721160935.GA387686@bogus>
-References: <20200719172438.60536-1-grandmaster@al2klimov.de>
+Cc:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        krzk@kernel.org, sboyd@kernel.org, paul.walmsley@sifive.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel@ffwll.ch, airlied@linux.ie
+Subject: Re: [PATCH for v5.9] dt-bindings: drm/bridge: Replace HTTP links
+ with HTTPS ones
+Message-ID: <20200721160958.GA388320@bogus>
+References: <20200719174457.60674-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200719172438.60536-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200719174457.60674-1-grandmaster@al2klimov.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 19 Jul 2020 19:24:38 +0200, Alexander A. Klimov wrote:
+On Sun, 19 Jul 2020 19:44:57 +0200, Alexander A. Klimov wrote:
 > Rationale:
 > Reduces attack surface on kernel devs opening the links for MITM
 > as HTTPS traffic is much harder to manipulate.
@@ -109,7 +111,7 @@ On Sun, 19 Jul 2020 19:24:38 +0200, Alexander A. Klimov wrote:
 >  Impossible is nothing! :)
 > 
 > 
->  Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt | 2 +-
+>  .../devicetree/bindings/display/bridge/ti,sn65dsi86.txt         | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
