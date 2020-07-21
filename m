@@ -7,69 +7,72 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C378C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B439C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE2C2073A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425E52077D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 21 Jul 2020 16:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595347860;
-	bh=hYhXVhno38aiu1U0lwSML5mb8dSzlyisG3+yEKk85qc=;
+	s=default; t=1595348002;
+	bh=6yp0dejYr/pxxfUqZk82RY/7Bg+S6u9JX5ToVgpRB70=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vT13puQciTUKj0keUorRmUsNh4jPkmVBZ0Q+LOZku7FCWPz2mr22qfKCO+W+JSX1c
-	 4OnH/uKd8fw28G+8JGtYauGt479H56hcGqd4u/7qtgckjTcPKXbvKdFkHFY01m0KAB
-	 CSga9PTZuRWSIwrl1kRONN5ZTWJHEX8fpEGQlJ6o=
+	b=u5HXgqmnIGZd1GUVBmSVjtA1H/b4X+/OajAn/FZR6x/wavaIVbphb82MYmVFWm5ds
+	 juPXIEHT1IDrgV3HM/PYe5JynDY7ECYnG3Cv+NJ3orCAi67qjCARv2sMHGoxPlVkUj
+	 W+osy97IAygNTARvn4SfBbUWZMwV/G4YJtvXDq2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgGUQK7 (ORCPT
+        id S1730103AbgGUQNV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 12:10:59 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43777 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgGUQK7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:10:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id k23so21979109iom.10;
-        Tue, 21 Jul 2020 09:10:58 -0700 (PDT)
+        Tue, 21 Jul 2020 12:13:21 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:41873 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgGUQNU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 12:13:20 -0400
+Received: by mail-il1-f195.google.com with SMTP id q3so16871086ilt.8;
+        Tue, 21 Jul 2020 09:13:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ngN1dMUC5VJm2HydOcbj0IgJ128cHEC3MnMuoqkayZc=;
-        b=gb2Gaf0JcjqTBxTTaXC0OqIEjlta51TlajJxBCCicy2KJJvHypjbK/U8mqUm+Lu285
-         /GlZxDouJx4G5EmauUROHrxBN8qYP2twVvXrLS/rITkArSwLZVqNWPr2wVnNtbLp1S7E
-         3sdKEclnvWTuZC+DVOyTDdUQRLvTfPBAcclvTJ6oBHLIwCRb9dDkjwZB17NCWoDSrv65
-         AqmOORQhiUYiXmMrXsinBezU13FzY+C75OHqJDuVtNHQpQyS/EGPpL+68oRE7miVoYE4
-         /VM5BGiEnV4ycfAk0TTe1ouzepLzaurz6ddwiGqnPdKqZ7F/h7oSlerLnb8AvVxDfpjL
-         FPSA==
-X-Gm-Message-State: AOAM531rVgGLCnVWfOqmLsvuT1+PqlzkPtkGJbu+VIrIBkTAHmur7UrD
-        0mAtwrF5zqjGxZhLU6zYng==
-X-Google-Smtp-Source: ABdhPJzxyQ/gVV/yZGUV9h9yhscNnMTy2KhOl/TC488NOSifdRHB34C5x/aPgftVf02G70cnTJyGeg==
-X-Received: by 2002:a05:6638:14c1:: with SMTP id l1mr31432368jak.108.1595347858190;
-        Tue, 21 Jul 2020 09:10:58 -0700 (PDT)
+        bh=3hEvd6e5qQIyO2q50icuN5FjIQ5q4rwekadksksXza4=;
+        b=FoSg4oj+xbTGpENAvqh3FefVJNVTa9QVT++v1Ohdv0D7Mom9ootnHgLnly9OexqzCq
+         9Rdt6NX/uBHLHHyoXMs5ZuPa/um7y8pyxCzU2D4RlrmbsqDa3N1l3Sy+BtN9qyAyYdpo
+         xSJ9ZBJjYadFSZHKk3mOm9E0RG4G+TWvDVUjvMti1PB+xBmEp9OJ9aPWB7/2Mc1cER5j
+         hTUcPusuTclHm/4Ifr9Wy89X0o0k82uBR2e6MDmBhpdnkQQhUg4Jk/KlI7zmSrZYpUSN
+         il+3AricB2ispAV8va/eVCI+skzwZz/sgJ/RFB2ZznV6KuObzFHmL/HlsFDNsenCT7dd
+         lKoA==
+X-Gm-Message-State: AOAM532zQ3YonK9v2ApmJg0V0JvAmHAGfSTcrduaomVJ9VxqqN7RU02M
+        PAn96CyF3B0DR0+y/ibVLw==
+X-Google-Smtp-Source: ABdhPJwZyjj1eCmbDB8qodPjQFtYDmTZBEcJbwfaZKYhQLlgyU4nhZLjz4sJOcRtVBR5wxuFep/Rtw==
+X-Received: by 2002:a92:58d6:: with SMTP id z83mr28467802ilf.186.1595347999985;
+        Tue, 21 Jul 2020 09:13:19 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c7sm10916679ilo.85.2020.07.21.09.10.55
+        by smtp.gmail.com with ESMTPSA id b14sm10999389ilg.86.2020.07.21.09.13.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 09:10:56 -0700 (PDT)
-Received: (nullmailer pid 389838 invoked by uid 1000);
-        Tue, 21 Jul 2020 16:10:54 -0000
-Date:   Tue, 21 Jul 2020 10:10:54 -0600
+        Tue, 21 Jul 2020 09:13:18 -0700 (PDT)
+Received: (nullmailer pid 393136 invoked by uid 1000);
+        Tue, 21 Jul 2020 16:13:17 -0000
+Date:   Tue, 21 Jul 2020 10:13:17 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     devicetree@vger.kernel.org, lgirdwood@gmail.com, tony@atomide.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH for v5.9] regulator: Replace HTTP links with HTTPS ones
-Message-ID: <20200721161054.GA389740@bogus>
-References: <20200719200623.61524-1-grandmaster@al2klimov.de>
+Cc:     robh+dt@kernel.org, andrew@aj.id.au, joel@jms.id.au,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, lee.jones@linaro.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: aspeed-lpc: Replace HTTP links with
+ HTTPS ones
+Message-ID: <20200721161317.GA393067@bogus>
+References: <CACPK8Xc_iwvRtUVjY8G8rS8UbZf6-Q6FTGaNweJXk06A=Y459Q@mail.gmail.com>
+ <20200720212110.64214-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200719200623.61524-1-grandmaster@al2klimov.de>
+In-Reply-To: <20200720212110.64214-1-grandmaster@al2klimov.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 19 Jul 2020 22:06:23 +0200, Alexander A. Klimov wrote:
+On Mon, 20 Jul 2020 23:21:10 +0200, Alexander A. Klimov wrote:
 > Rationale:
 > Reduces attack surface on kernel devs opening the links for MITM
 > as HTTPS traffic is much harder to manipulate.
@@ -87,41 +90,10 @@ On Sun, 19 Jul 2020 22:06:23 +0200, Alexander A. Klimov wrote:
 > 
 > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 > ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
+>  v2: Left only links to be only HTTPSified.
 > 
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  Documentation/devicetree/bindings/regulator/lp872x.txt | 4 ++--
->  drivers/regulator/hi6421-regulator.c                   | 2 +-
->  drivers/regulator/hi6421v530-regulator.c               | 2 +-
->  drivers/regulator/lp873x-regulator.c                   | 2 +-
->  drivers/regulator/lp87565-regulator.c                  | 2 +-
->  drivers/regulator/pbias-regulator.c                    | 2 +-
->  drivers/regulator/tps65023-regulator.c                 | 2 +-
->  drivers/regulator/tps6507x-regulator.c                 | 2 +-
->  drivers/regulator/tps65086-regulator.c                 | 2 +-
->  drivers/regulator/tps65217-regulator.c                 | 2 +-
->  drivers/regulator/tps65218-regulator.c                 | 2 +-
->  drivers/regulator/tps65912-regulator.c                 | 2 +-
->  12 files changed, 13 insertions(+), 13 deletions(-)
+>  Documentation/devicetree/bindings/mfd/aspeed-lpc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
