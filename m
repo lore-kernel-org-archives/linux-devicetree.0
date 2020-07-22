@@ -2,80 +2,174 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E580C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 09:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8D0C433E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0CE207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 09:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A6920771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:27:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="ogUc7Sea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726153AbgGVJbG (ORCPT
+        id S1730296AbgGVK1b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 05:31:06 -0400
-Received: from elvis.franken.de ([193.175.24.41]:45216 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgGVJbG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 05:31:06 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jyB5X-0000cS-00; Wed, 22 Jul 2020 11:30:59 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 09649C0873; Wed, 22 Jul 2020 11:30:24 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 11:30:23 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-Message-ID: <20200722093023.GA8813@alpha.franken.de>
-References: <20200721141742.996350-1-jiaxun.yang@flygoat.com>
- <20200721141742.996350-4-jiaxun.yang@flygoat.com>
+        Wed, 22 Jul 2020 06:27:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgGVK1a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 06:27:30 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 839ACC0619DE
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 03:27:30 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id s9so1887517ljm.11
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 03:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=VPm22LOYeZ54yE0JFsNtMPSHO2Ay7Su9W8bmkwt26Hs=;
+        b=ogUc7SeaE1rAZkufGirXFyyBtKme0j9yLEpwlBGAchRT1H/Y21p0SuaaFUFFdQLSzU
+         dY3GtumCHpZi0bombwJiAXtR7gEgE7EjEnqUm6YuYz5qME9Cqrn+2jpF4pUeO5LveylR
+         Ax0X8Crr2SUgogVopy4PBMHci69Ot7JQhUTFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=VPm22LOYeZ54yE0JFsNtMPSHO2Ay7Su9W8bmkwt26Hs=;
+        b=DZH+sM3yYSdzeLaLOVIDxTzwye8zEGzmt4kAPF/cqz/uYV06pJzOfJeEj9CXx9vfND
+         qoxWJPSe1t+vCK8UPm+KnFI0xdNPQKbZZFqeblyOjc93u0zS8AGx4CXlOjWrFKbfdZ3P
+         cu32W5okYMhh/DZxz0MuuX1uzYlkk3ZIXj7RAyGW+OFdWBVGf5TvWiW+owCLpA2DZv1g
+         bN5EUjtToWdTUtSx2Imr4ycFLQYlvF4lHLKFccYQJVJNuOnpx/VTViRnKuwTNuPBvh9x
+         1evFQ5FUyccBxsEX0ojWSCiKZDWjI7jfN2hfK7U4inmM5UnwIoGVhOMSWPlbo/Jnxn0Q
+         BzqQ==
+X-Gm-Message-State: AOAM5307gnRPHTFQADsThsc3ADVShaOeyHNjGJUkSxvSGDmvwRNV4ATh
+        Pv6VA/Ga3YpV5NPl+DB58yoMmA==
+X-Google-Smtp-Source: ABdhPJztz3YC0z08uqZCfX8O3PtxgNuSMnR2KAngE5gKIgL0V4oOMc1BqEep74wkuMP7v5jQiyifFg==
+X-Received: by 2002:a2e:7a07:: with SMTP id v7mr15018202ljc.159.1595413648841;
+        Wed, 22 Jul 2020 03:27:28 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id f26sm6400345ljj.4.2020.07.22.03.27.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 03:27:28 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 12:27:21 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: [PATCH v9 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200722122704.1153221-0-mholenko@antmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721141742.996350-4-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:17:31PM +0800, Jiaxun Yang wrote:
-> It can be very big on LS7A PCH systems.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/mips/include/asm/io.h                     | 3 ++-
->  arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-> index 346fffd9e972..0072489325fa 100644
-> --- a/arch/mips/include/asm/io.h
-> +++ b/arch/mips/include/asm/io.h
-> @@ -50,8 +50,9 @@
->  # define __relaxed_ioswabq ioswabq
->  
->  /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
-> -
-> +#ifndef IO_SPACE_LIMIT
->  #define IO_SPACE_LIMIT 0xffff
-> +#endif
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-please move this to include/asm/mach-generic/spaces.h
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
-Thomas.
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
+
+Changes in v9:
+    - fixed the `reg` node notation in the DT example
+    - added exporting of the `litex_set_reg`/`litex_get_reg` symbols
+
+Changes in v8:
+    - fixed help messages in LiteUART's KConfig
+    - removed dependency between LiteUART and LiteX SoC drivers
+    - removed `litex_check_accessors()` helper function
+    - added crashing (BUG) on the failed LiteX CSR access test
+
+Changes in v7:
+    - added missing include directive in UART's driver
+
+Changes in v6:
+    - changed accessors in SoC Controller's driver
+    - reworked UART driver
+
+Changes in v5:
+    - added Reviewed-by tag
+    - removed custom accessors from SoC Controller's driver
+    - fixed error checking in SoC Controller's driver
+
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml 
+    - simplified SoC Controller's driver
+
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
+
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  15 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 194 +++++++++
+ drivers/tty/serial/Kconfig                    |  32 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 402 ++++++++++++++++++
+ include/linux/litex.h                         |  24 ++
+ 13 files changed, 761 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.25.1
+
