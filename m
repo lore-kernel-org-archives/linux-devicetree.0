@@ -2,119 +2,104 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A850C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EACEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D229207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lW5+R6aR"
+	by mail.kernel.org (Postfix) with ESMTP id 6E90E2176B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgGVS2J (ORCPT
+        id S1726841AbgGVSeX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgGVS2J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 14:28:09 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F8FC0619DC;
-        Wed, 22 Jul 2020 11:28:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=OYSn/KpUWZQ4nMms7wrSLpPiy3w6Iv2nJw1LBl+3jF0=; b=lW5+R6aRaWcL9XzKxeo7g5Hful
-        WB3kf8WqLPpb61zWFBlp7UgSv7qpIOeGa48lURbXLzeLUsAifWGG+HFuqixLg88RFHNQU0lq+bs/H
-        3PzfQDfTGsTByGAh8tILgch4vOdKZDJENn8NKjnX0nqCrnRJNCC+VofhJPLMlfjkJW7/uWH+1lHud
-        jSAxkZtocZ/eaqN7pNp3RILjxqQ3tc/1TUZtHI1B7SvLNuhzGPsv730DR+KbCNSKR8Xw0j2G/b4EB
-        ONOnnHLQ9PNAUV8QUjQAPaxaXRqWnjt+OxdEfbV9evkI7uK//nHt4CDmfoFo/X+RtDijYKwKhf28W
-        AP/sr27g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyJSb-0001BB-Ve; Wed, 22 Jul 2020 18:27:22 +0000
-Subject: Re: [PATCH 2/2] crypto: Ingenic: Add hardware RNG for Ingenic JZ4780
- and X1000.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, arnd@arndb.de,
-        gregkh@linuxfoundation.org, mpm@selenic.com,
-        herbert@gondor.apana.org.au, robh+dt@kernel.org
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, hadar.gat@arm.com,
-        prasannatsmkumar@gmail.com, krzk@kernel.org, masahiroy@kernel.org,
-        xuzaibo@huawei.com, daniel.thompson@linaro.org,
-        tmaimon77@gmail.com, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-References: <20200722164007.77655-1-zhouyanjie@wanyeetech.com>
- <20200722164007.77655-3-zhouyanjie@wanyeetech.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <779949c8-8b1a-52ed-f695-7006f0045d7e@infradead.org>
-Date:   Wed, 22 Jul 2020 11:27:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 14:34:23 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:47246 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgGVSeX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:34:23 -0400
+Received: from x2f7fa19.dyn.telefonica.de ([2.247.250.25] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jyJZM-0005FO-8n; Wed, 22 Jul 2020 20:34:20 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>
+Subject: Re: [PATCH v3] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
+Date:   Wed, 22 Jul 2020 20:34:18 +0200
+Message-ID: <8444056.acRTkLjuym@phil>
+In-Reply-To: <20200720105846.367776-1-jagan@amarulasolutions.com>
+References: <20200720105846.367776-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-In-Reply-To: <20200722164007.77655-3-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/22/20 9:40 AM, 周琰杰 (Zhou Yanjie) wrote:
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 0ad17efc96df..fcb06027cd88 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -257,6 +257,21 @@ config HW_RANDOM_IMX_RNGC
+Hi Jaganm
+
+Am Montag, 20. Juli 2020, 12:58:46 CEST schrieb Jagan Teki:
+> rk3288 and rk3288w have a usb host0 ohci controller.
+> 
+> Although rk3288 ohci doesn't actually work on hardware, but
+> rk3288w ohci can work well.
+> 
+> So add usb host0 ohci node in rk3288 dtsi and the quirk in
+> ohci platform driver will disable ohci on rk3288.
+
+If I remember the discussion correctly, we expect the board dts
+or the bootloader to enable the ohci, right?
+So that block go away ... just making sure, I don't remember
+untrue stuff ;-)
+
+
+Heiko
+
+
+> Cc: William Wu <william.wu@rock-chips.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v3:
+> - none
+> 
+>  arch/arm/boot/dts/rk3288.dtsi | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 0cd88774db95..f0774d9afb67 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -614,7 +614,16 @@ usb_host0_ehci: usb@ff500000 {
+>  		status = "disabled";
+>  	};
 >  
->  	  If unsure, say Y.
+> -	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
+> +	/* NOTE: doesn't work on RK3288, but fixed on RK3288W */
+> +	usb_host0_ohci: usb@ff520000 {
+> +		compatible = "generic-ohci";
+> +		reg = <0x0 0xff520000 0x0 0x100>;
+> +		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_USBHOST0>;
+> +		phys = <&usbphy1>;
+> +		phy-names = "usb";
+> +		status = "disabled";
+> +	};
 >  
-> +config HW_RANDOM_INGENIC_RNG
-> +	tristate "Ingenic Random Number Generator support"
-> +	depends on HW_RANDOM
-> +	depends on MACH_JZ4780 || MACH_X1000
-> +	default HW_RANDOM
-> +	---help---
+>  	usb_host1: usb@ff540000 {
+>  		compatible = "rockchip,rk3288-usb", "rockchip,rk3066-usb",
+> 
 
-Just use:
-	help
-here. See this for why:
 
-commit 8f268881d7d278047b00eed54bbb9288dbd6ab23
-Author: Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue Dec 17 20:51:51 2019 +0900
 
-    kconfig: remove ---help--- from documentation
-    
-    Since commit 84af7a6194e4 ("checkpatch: kconfig: prefer 'help' over
-    '---help---'"), scripts/checkpatch.pl warns the use of ---help---.
-    
-    Kconfig still supports ---help---, but new code should avoid using it.
-    Let's stop advertising it in documentation.
-
-> +	  This driver provides kernel-side support for the Random Number Generator
-> +	  hardware found in ingenic JZ4780 and X1000 SoC. MIPS Creator CI20 uses
-> +	  JZ4780 SoC, YSH & ATIL CU1000-Neo uses X1000 SoC.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called ingenic-rng.
-> +
-> +	  If unsure, say Y.
-> +
->  config HW_RANDOM_NOMADIK
->  	tristate "ST-Ericsson Nomadik Random Number Generator support"
->  	depends on ARCH_NOMADIK
-
-thanks.
--- 
-~Randy
 
