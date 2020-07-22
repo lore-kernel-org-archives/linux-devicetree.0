@@ -2,177 +2,161 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413B0C433EA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 11:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FF6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 11:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1564B206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 11:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595415995;
-	bh=bZjQ2Uob/4CUYWd7rIddx1aYEPpWUUs6EczK2hxIPq0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=gc7gYX2CtpWGz+jDGSmzabRyoBq50upd36atNVojdH3iHNQs41e/LORVCpqy8mBle
-	 g+1kHLA9Ap2kOAgrRE6bHogH8Ps4+ToNWS6zvTQRkT6QN+aC3N4nz2Y7v6DGCS4zsp
-	 61rbpcg1JrqVWcj04vjFIgaHeLOI2hJhRo93rsOM=
+	by mail.kernel.org (Postfix) with ESMTP id 91A58207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 11:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Btsx+F+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgGVLGe (ORCPT
+        id S1726711AbgGVLTc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 07:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726153AbgGVLGe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 07:06:34 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D478EC0619DC;
-        Wed, 22 Jul 2020 04:06:33 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id q7so2046492ljm.1;
-        Wed, 22 Jul 2020 04:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ULZvt2k9btgSmmBhSl+qWzrfYfaCTiUlaEZAENWSLQg=;
-        b=il/2GsfEvGypgLnNtWr+fb5XjbXK1r2XfFa6ss6jkMBBS61IxuTwJdlwkEg3yGYdJY
-         z3+EyrNVZzW2Ggmqv/ltQLFGxHfFwQLmybR7rqmtpveDOFv9VJHyxOKKT8jPK3DL0CWW
-         MVEqwL1PNYt1ThXGt5/gcRY5Wvj7TUiYWhXx6nxDntw1S+C+G98paIaWr0IUuilPj5ab
-         UwFoza3CoiClnrcJbpAFchSflWcUIyufbfFs+00q/C3Moxo/MitRABtVSvSsVToeDXTM
-         jCMVpMoX89fq0HvJ0Uk76C5mM2XE5SDhoP/ZZifTasjxBcmlluo2bjaZqAlPpmmaUZpH
-         SWNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ULZvt2k9btgSmmBhSl+qWzrfYfaCTiUlaEZAENWSLQg=;
-        b=m/VIf1nlDNg+1kIwSodhDPMQsExdPSLN93KZZ+2kM8evd3zh3RZfSOQVkeM+5mDiuM
-         D6Revdu8y6nH7DlIgefFo78Sl/jOnOv/4J2WrrvPVcu5idho2bAq8lrgA6RAWw8rO/b9
-         L31tbl4WD6WADysPn0V+5J7qkvWZi8dDDUXq7LQ84stqCfXi0XOTxctR2P6UyNnHzn2m
-         CbsH1dqZMb/NvUkyTXw9eYSIrX1VYkWGHz3aKlKHU+oX/h5Nd2WFu1o48kpXpmoBFyFn
-         LDy84kzVzKp+/wnMK/71g5uDUbwyLsU0GcOrKZG9FHjqg8CVKHr6+7NyzrJ5nr7DIBZg
-         SB+Q==
-X-Gm-Message-State: AOAM533WSFhEFOsk3lU9OrbE0kW2HQwm5+IPls+6pdynp36JWEtGtGcu
-        NmUwSXRvQzJQLJzLS7wtGpI=
-X-Google-Smtp-Source: ABdhPJxnm4mHvApRmdVWkKxGaTTlFx8Y7YgkR1OoNTJq1SZ+Qz4Kcq6gw7Z5p03A7medByHk3J3YRA==
-X-Received: by 2002:a2e:8ecc:: with SMTP id e12mr15230082ljl.130.1595415992232;
-        Wed, 22 Jul 2020 04:06:32 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id s2sm4512846lfs.4.2020.07.22.04.06.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jul 2020 04:06:31 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [PATCH 06/11] usb: devicetree: dwc3: Introduce num-lanes and lsm
-In-Reply-To: <57fffdfb-a4fa-6e50-1156-1ada3765e362@synopsys.com>
-References: <cover.1594935978.git.thinhn@synopsys.com> <9684a2b2adb01b6b1a8c513928ea49b4a6436184.1594935978.git.thinhn@synopsys.com> <20200721033908.GA3508628@bogus> <d7e3d5c6-05c1-f256-7773-2b88f6cd5ca3@synopsys.com> <CAL_JsqLSKKT__dJaML4SWCpFpFYV_Cpkor=mNh5-Z7hE4n4fMA@mail.gmail.com> <57fffdfb-a4fa-6e50-1156-1ada3765e362@synopsys.com>
-Date:   Wed, 22 Jul 2020 14:06:26 +0300
-Message-ID: <87wo2voll9.fsf@kernel.org>
+        Wed, 22 Jul 2020 07:19:32 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46218 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726028AbgGVLTb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 07:19:31 -0400
+X-UUID: f4eacbf9b29f4c2ca118753468804077-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=RSwgljTRgkEcHXir5exEiZR1FuMb9nTNQg3w4yYtvsM=;
+        b=Btsx+F+KyUSA8K3exfGSEFiLNCxRXvx4B6aMA5/yeyPYKcEg4b5yzxLhruNrmujxi0pusrprDcOYbLc6363LRL90YAbfQN49UgtCNIC4Dl0pjGkyjXR/gybKNTIJH/aLtIrt5y5w2hR/jOXGKRzb3zRmKnNexPA7cgBfNsPDW6g=;
+X-UUID: f4eacbf9b29f4c2ca118753468804077-20200722
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1247376614; Wed, 22 Jul 2020 19:19:24 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 22 Jul 2020 19:19:21 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 19:19:22 +0800
+Message-ID: <1595416762.22392.5.camel@mtkswgap22>
+Subject: Re: [PATCH v6 1/4] dt-bindings: dmaengine: Add MediaTek
+ Command-Queue DMA controller bindings
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
+Date:   Wed, 22 Jul 2020 19:19:22 +0800
+In-Reply-To: <20200709205915.GA865123@bogus>
+References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+         <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
+         <20200709205915.GA865123@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-TM-SNTS-SMTP: 64B4CD0E11C60C63EEBAC5E16AB7A324C9F7C8C5961F0971A8F21997C7A4088F2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+T24gVGh1LCAyMDIwLTA3LTA5IGF0IDE0OjU5IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVGh1LCBKdWwgMDIsIDIwMjAgYXQgMDM6MDY6MDFQTSArMDgwMCwgRWFzdEwgTGVlIHdyb3Rl
+Og0KPiA+IERvY3VtZW50IHRoZSBkZXZpY2V0cmVlIGJpbmRpbmdzIGZvciBNZWRpYVRlayBDb21t
+YW5kLVF1ZXVlIERNQSBjb250cm9sbGVyDQo+ID4gd2hpY2ggY291bGQgYmUgZm91bmQgb24gTVQ2
+Nzc5IFNvQyBvciBvdGhlciBzaW1pbGFyIE1lZGlhdGVrIFNvQ3MuDQo+ID4gDQo+ID4gU2lnbmVk
+LW9mZi1ieTogRWFzdEwgTGVlIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwgICAgICAgICB8IDEx
+MyArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExMyBpbnNlcnRp
+b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi44M2VkNzQyDQo+ID4gLS0tIC9kZXYv
+bnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRr
+LWNxZG1hLnlhbWwNCj4gPiBAQCAtMCwwICsxLDExMyBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1J
+ZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZSkNCj4gPiArJVlBTUwgMS4y
+DQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwOi8v
+ZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9kbWEvbXRrLWNxZG1hLnlhbWwqX187SXchIUNUUk5LQTl3
+TWcwQVJidyExUF9pZjNSaVpPVnB6TjhuNEVRSTBJeFpxMGQwN1Vrc1NnZUhZQTBoNkhMeWxVOWw0
+cHUyZWdncTdlZVZzRjJIJCANCj4gPiArJHNjaGVtYTogaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92
+My9fX2h0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sKl9fO0l3ISFD
+VFJOS0E5d01nMEFSYnchMVBfaWYzUmlaT1Zwek44bjRFUUkwSXhacTBkMDdVa3NTZ2VIWUEwaDZI
+THlsVTlsNHB1MmVnZ3E3Wk1Qb3cyMyQgDQo+ID4gKw0KPiA+ICt0aXRsZTogTWVkaWFUZWsgQ29t
+bWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciBEZXZpY2UgVHJlZSBCaW5kaW5nDQo+ID4gKw0KPiA+
+ICttYWludGFpbmVyczoNCj4gPiArICAtIEVhc3RMIExlZSA8RWFzdEwuTGVlQG1lZGlhdGVrLmNv
+bT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOg0KPiA+ICsgIE1lZGlhVGVrIENvbW1hbmQtUXVl
+dWUgRE1BIGNvbnRyb2xsZXIgKENRRE1BKSBvbiBNZWRpYXRlayBTb0MNCj4gPiArICBpcyBkZWRp
+Y2F0ZWQgdG8gbWVtb3J5LXRvLW1lbW9yeSB0cmFuc2ZlciB0aHJvdWdoIHF1ZXVlIGJhc2VkDQo+
+ID4gKyAgZGVzY3JpcHRvciBtYW5hZ2VtZW50Lg0KPiA+ICsNCj4gPiArYWxsT2Y6DQo+ID4gKyAg
+LSAkcmVmOiAiZG1hLWNvbnRyb2xsZXIueWFtbCMiDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0K
+PiA+ICsgICIjZG1hLWNlbGxzIjoNCj4gPiArICAgIG1pbmltdW06IDENCj4gPiArICAgIG1heGlt
+dW06IDI1NQ0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFVzZWQgdG8gcHJvdmlk
+ZSBETUEgY29udHJvbGxlciBzcGVjaWZpYyBpbmZvcm1hdGlvbi4NCj4gDQo+IE5vLCBmb3IgYSBz
+cGVjaWZpYyBiaW5kaW5nIGxpa2UgdGhpcywgaXQgc2hvdWxkIGJlIDEgZGVmaW5lZCB2YWx1ZS4N
+Ck9LLkknbGwgZml4IGl0IHRvIGNvbnN0IDENCj4gDQo+ID4gKw0KPiA+ICsgIGNvbXBhdGlibGU6
+DQo+ID4gKyAgICBvbmVPZjoNCj4gPiArICAgICAgLSBjb25zdDogbWVkaWF0ZWssbXQ2NzY1LWNx
+ZG1hDQo+ID4gKyAgICAgIC0gY29uc3Q6IG1lZGlhdGVrLG10Njc3OS1jcWRtYQ0KPiA+ICsNCj4g
+PiArICByZWc6DQo+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgbWF4SXRlbXM6IDUNCj4g
+PiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAgIEEgYmFzZSBhZGRyZXNzIG9mIE1lZGlh
+VGVrIENvbW1hbmQtUXVldWUgRE1BIGNvbnRyb2xsZXIsDQo+ID4gKyAgICAgICAgYSBjaGFubmVs
+IHdpbGwgaGF2ZSBhIHNldCBvZiBiYXNlIGFkZHJlc3MuDQo+ID4gKw0KPiA+ICsgIGludGVycnVw
+dHM6DQo+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgbWF4SXRlbXM6IDUNCj4gPiArICAg
+IGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAgIEEgaW50ZXJydXB0IG51bWJlciBvZiBNZWRpYVRl
+ayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyLA0KPiA+ICsgICAgICAgIG9uZSBpbnRlcnJ1
+cHQgbnVtYmVyIHBlciBkbWEtY2hhbm5lbHMuDQo+ID4gKw0KPiA+ICsgIGNsb2NrczoNCj4gPiAr
+ICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICsgIGNsb2NrLW5hbWVzOg0KPiA+ICsgICAgY29u
+c3Q6IGNxZG1hDQo+ID4gKw0KPiA+ICsgIGRtYS1jaGFubmVsLW1hc2s6DQo+ID4gKyAgICAkcmVm
+OiAvc2NoZW1hcy90eXBlcy55YW1sI2RlZmluaXRpb25zL3VpbnQzMg0KPiANCj4gQWxyZWF5IGhh
+cyBhIHR5cGUsIGRvbid0IHJlZGVmaW5lIGl0IGhlcmUuDQpPSw0KPiANCj4gPiArICAgIGRlc2Ny
+aXB0aW9uOg0KPiA+ICsgICAgICAgRm9yIERNQSBjYXBhYmlsaXR5LCBXZSB3aWxsIGtub3cgdGhl
+IGFkZHJlc3NpbmcgY2FwYWJpbGl0eSBvZg0KPiA+ICsgICAgICAgTWVkaWFUZWsgQ29tbWFuZC1R
+dWV1ZSBETUEgY29udHJvbGxlciB0aHJvdWdoIGRtYS1jaGFubmVsLW1hc2suDQo+IA0KPiBUaGlz
+IHNvdW5kcyBsaWtlIHRoZSBrZXJuZWwncyBETUEgbWFza3Mgd2hpY2ggaXMgbm90IHdoYXQgdGhp
+cyBwcm9wZXJ0eSANCj4gaXMuDQpZZXMsIHRoaXMgaXMgZm9yIGtlcm5lbCdzIERNQSBtYXNrLg0K
+RG8gSSBuZWVkIHRvIGRlY2xhcmUgdGhpcyBtZW1iZXIgYWdhaW4/DQo+IA0KPiA+ICsgICAgaXRl
+bXM6DQo+ID4gKyAgICAgIG1pbkl0ZW1zOiAxDQo+ID4gKyAgICAgIG1heEl0ZW1zOiA2Mw0KPiAN
+Cj4gQW4gYXJyYXkgb2YgNjMgZWxlbWVudHM/DQo+IA0KPiBJIHRoaW5rIHlvdSB3YW50Og0KPiAN
+Cj4gbWluaW11bTogMQ0KPiBtYXhpbXVtOiA2Mw0KPiANCj4gT3I6DQo+IA0KPiBlbnVtOiBbIDEs
+IDMsIDcsIDB4ZiwgMHgxZiwgMHgzZiBdDQo+IA0KPiAoVGhvdWdoIGlmIHRoaXMgd29ya3MsIHRo
+ZW4ganVzdCAnZG1hLWNoYW5uZWxzJyBpcyBlbm91Z2guKQ0KPiANCj4gPiArDQo+ID4gKyAgZG1h
+LWNoYW5uZWxzOg0KPiA+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9u
+cy91aW50MzINCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBOdW1iZXIgb2YgRE1B
+IGNoYW5uZWxzIHN1cHBvcnRlZCBieSBNZWRpYVRlayBDb21tYW5kLVF1ZXVlIERNQQ0KPiA+ICsg
+ICAgICBjb250cm9sbGVyLCBzdXBwb3J0IHVwIHRvIGZpdmUuDQo+IA0KPiBJcyBpdCA1IG9yIDYg
+Y2hhbm5lbHM/IFlvdSdyZSBvZmYgYnkgb25lIHNvbWV3aGVyZS4NCkN1cnJlbnRseSBjaGlwIENR
+RE1BIG9ubHkgaGFzIHRocmVlIGNoYW5uZWxzIGF0IG1vc3QsIEknbGwgZml4IGl0IHRvDQptYXhu
+dW0gMw0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIG1pbkl0ZW1zOiAxDQo+ID4gKyAgICAg
+IG1heEl0ZW1zOiA1DQo+ID4gKw0KPiA+ICsgIGRtYS1yZXF1ZXN0czoNCj4gPiArICAgICRyZWY6
+IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWludDMyDQo+ID4gKyAgICBkZXNjcmlw
+dGlvbjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSByZXF1ZXN0ICh2aXJ0dWFsIGNoYW5uZWwp
+IHN1cHBvcnRlZCBieSBNZWRpYVRlaw0KPiA+ICsgICAgICBDb21tYW5kLVF1ZXVlIERNQSBjb250
+cm9sbGVyLCBzdXBwb3J0IHVwIHRvIDMyLg0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIG1p
+bkl0ZW1zOiAxDQo+ID4gKyAgICAgIG1heEl0ZW1zOiAzMg0KPiANCj4gWW91IGFyZSBkZXNjcmli
+aW5nIGhvdyBtYW55IGVsZW1lbnRzIGluIGFuIGFycmF5IGFuZCB0aGlzIGlzIGEgc2NhbGFyLg0K
+T0sgSTtsbCBmaXggdG8gbWlubnVtICYgbWF4bnVtDQo+IA0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6
+DQo+ID4gKyAgLSAiI2RtYS1jZWxscyINCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIHJl
+Zw0KPiA+ICsgIC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gY2xvY2tzDQo+ID4gKyAgLSBjbG9jay1u
+YW1lcw0KPiA+ICsgIC0gZG1hLWNoYW5uZWwtbWFzaw0KPiA+ICsgIC0gZG1hLWNoYW5uZWxzDQo+
+ID4gKyAgLSBkbWEtcmVxdWVzdHMNCj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBm
+YWxzZQ0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVk
+ZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQo+ID4gKyAgICAjaW5j
+bHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsg
+ICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaD4NCj4gPiArICAgIGNx
+ZG1hOiBkbWEtY29udHJvbGxlckAxMDIxMjAwMCB7DQo+ID4gKyAgICAgICAgY29tcGF0aWJsZSA9
+ICJtZWRpYXRlayxtdDY3NzktY3FkbWEiOw0KPiA+ICsgICAgICAgIHJlZyA9IDwweDEwMjEyMDAw
+IDB4ODA+LA0KPiA+ICsgICAgICAgICAgICA8MHgxMDIxMjA4MCAweDgwPiwNCj4gPiArICAgICAg
+ICAgICAgPDB4MTAyMTIxMDAgMHg4MD47DQo+ID4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNf
+U1BJIDEzOSBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+ICsgICAgICAgICAgICA8R0lDX1NQSSAx
+NDAgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4gPiArICAgICAgICAgICAgPEdJQ19TUEkgMTQxIElS
+UV9UWVBFX0xFVkVMX0xPVz47DQo+ID4gKyAgICAgICAgY2xvY2tzID0gPCZpbmZyYWNmZ19hbyBD
+TEtfSU5GUkFfQ1FfRE1BPjsNCj4gPiArICAgICAgICBjbG9jay1uYW1lcyA9ICJjcWRtYSI7DQo+
+ID4gKyAgICAgICAgZG1hLWNoYW5uZWwtbWFzayA9IDw2Mz47DQo+ID4gKyAgICAgICAgZG1hLWNo
+YW5uZWxzID0gPDM+Ow0KPiA+ICsgICAgICAgIGRtYS1yZXF1ZXN0cyA9IDwzMj47DQo+ID4gKyAg
+ICAgICAgI2RtYS1jZWxscyA9IDwxPjsNCj4gPiArICAgIH07DQo+ID4gKw0KPiA+ICsuLi4NCj4g
+PiAtLSANCj4gPiAxLjkuMQ0KDQo=
 
-
-Hi,
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
-> Rob Herring wrote:
->> On Mon, Jul 20, 2020 at 11:01 PM Thinh Nguyen <Thinh.Nguyen@synopsys.com=
-> wrote:
->>> Rob Herring wrote:
->>>> On Thu, Jul 16, 2020 at 02:59:08PM -0700, Thinh Nguyen wrote:
->>>>> Introduce num-lanes and lane-speed-mantissa-gbps for devices operating
->>>>> in super-speed-plus. DWC_usb32 IP supports multiple lanes and can
->>>>> operate in different sublink speeds. Currently the device controller
->>>>> does not have the information of the phy's number of lanes supported.=
- As
->>>>> a result, the user can specify them through these properties if they =
-are
->>>>> different than the default setting.
->>>>>
->>>>> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
->>>>> ---
->>>>>    Documentation/devicetree/bindings/usb/dwc3.txt | 9 +++++++++
->>>>>    1 file changed, 9 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documen=
-tation/devicetree/bindings/usb/dwc3.txt
->>>>> index d03edf9d3935..4eba0615562f 100644
->>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->>>>> @@ -86,6 +86,15 @@ Optional properties:
->>>>>     - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ fiel=
-d of GFLADJ
->>>>>       register for post-silicon frame length adjustment when the
->>>>>       fladj_30mhz_sdbnd signal is invalid or incorrect.
->>>>> + - snps,num-lanes: set to specify the number of lanes to use. Valid =
-inputs are
->>>>> +                    1 or 2. Apply if the maximum-speed is super-spee=
-d-plus
->>>>> +                    only. Default value is 2 for DWC_usb32. For DWC_=
-usb31,
->>>>> +                    it is always 1 at super-speed-plus.
->>>>> + - snps,lane-speed-mantissa-gbps: set to specify the symmetric lane =
-speed
->>>>> +                    mantissa in Gbps. Valid inputs are 5 or 10. Appl=
-y if
->>>>> +                    the maximum-speed is super-speed-plus only. Defa=
-ult
->>>>> +                    value is 10. For DWC_usb31, it's always 10 at
->>>>> +                    super-speed-plus.
->>>> This is all common USB things and should be common properties (which we
->>>> may already have).
->>> Sure. For "num-lanes" is simple, any objection if we use
->>> "lane-speed-mantissa-gbps"? Or should we add "lane-speed-exponent"?
->> 'num-lanes' is good as that's what PCIe uses. Document that with
->> 'maximum-speed'.
->>
->> I think 'super-speed-plus' should mean gen 2 10G per lane. Then
->> between num-lanes and maximum-speed you can define all 4 possible
->> rates.
->
-> That may confuse the user because now we'd use 'super-speed-plus' to=20
-> define the speed of the lane rather than the device itself.
-
-I agree. In USB land we should refer solely to the USB specification
-naming schemes.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8YHbIACgkQzL64meEa
-mQbfzA//cXtk5a9Glesdts9G35MMDG9Jva0bthRppWu3PtUS0iq6A9jcT+8xVWsf
-r4wor+BCD8cwH5nDAPoV8KWwqgDcB0ioqYXp+UT8J7Ron7xWns5UhuIIZJXxO2W0
-HtRVASJqcY9stnI65L3RkZZ6C+l0+PU9PwYPONGtcMe0qdHN7LWNYnLya15c2tgj
-9uadQscWJ/PvlYAdTLNuV2Rm/UVHqPrRLF5lvwVrpa8jxnMtObyaI0vPvSWBTnnL
-U6h80+1AEsmwSoVtjhoPXK682lAqW7rHVSDaoZPQtBls+0uR/Ls05QTO280EXeAF
-xUr+ZXJDXGaTxJAhmnzxRWeNRfc5ybKb9wO8lxZanYrjvGD2LRYTVcsqWoRkjDB4
-fr2qlB4jvIUMu2MLTJpMuSKCmJugROMkhilzq0LxqpS5mrKqlawRL37aU/F7ZkoG
-ATiTO+RfpK1Nk6hESr2Z7DTG6v8GPaHNbF7JOLRuGSbrQvJtqVY4uFHeiudYpbr/
-YABGu89glDerA2u2X4exUiY9GE9xdmMdguENFILUbdfqVESzkQ98MDe0iLQcXEXZ
-M45GD5uBZItFZUdE3HqPuiLOeOHX7CR3+/tiMF3weJjz+cNo0g4XRB66IvE1LgpU
-YgrHkN2/eHGasQKbhE9FP6Odzw5oz9VCrGeqGR69xBr5ptFgM8E=
-=sg/C
------END PGP SIGNATURE-----
---=-=-=--
