@@ -2,360 +2,149 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5DDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A31C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92F620787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Zk04zUIv"
+	by mail.kernel.org (Postfix) with ESMTP id 7296A207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgGVRud (ORCPT
+        id S1727818AbgGVSHz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbgGVRud (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 13:50:33 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE3CC0619DC;
-        Wed, 22 Jul 2020 10:50:32 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DFFD2329;
-        Wed, 22 Jul 2020 19:50:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595440229;
-        bh=7Jk5nGhbLfKyiwIvuyI1txtc2bykplbBHJzSx1WoiuE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zk04zUIvTcGNRYsyb+mCH7uvSM9qL0u+sGlubhkz67NI9gJTm0CWTg+RJNUiUDGPK
-         HKCRAl4Zb1cccjtPebxZlYoHaWkJLw5GD4VeqmlG5+wcl6nmK7gPeKz0On3tA4G8j3
-         U/X7EHoB1lTFLumtBx1eZuoe9XsuuLiSX2dyTH8I=
-Date:   Wed, 22 Jul 2020 20:50:23 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Eddie Cai <eddie.cai.linux@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
-        Chen Jacob <jacob2.chen@rock-chips.com>,
-        Jeffy <jeffy.chen@rock-chips.com>,
-        =?utf-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-Message-ID: <20200722175023.GA30979@pendragon.ideasonboard.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com>
- <20190816001323.GF5011@pendragon.ideasonboard.com>
- <30b6367d-9088-d755-d041-904ff2a48130@collabora.com>
- <20200722152459.GC1828171@chromium.org>
- <20200722163045.GN29813@pendragon.ideasonboard.com>
- <CAAFQd5D84adGPo=9b3dJTm8R-HjXeMOnZQwr2Efj-KQH0R38XQ@mail.gmail.com>
+        Wed, 22 Jul 2020 14:07:55 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:12738 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgGVSHz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 14:07:55 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06MI7ePS038841;
+        Thu, 23 Jul 2020 03:07:40 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp);
+ Thu, 23 Jul 2020 03:07:40 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp)
+Received: from localhost.localdomain (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06MI7bJZ038819
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 23 Jul 2020 03:07:40 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Subject: [PATCH] dt-bindings: sound: convert Everest ES8316 binding to yaml
+Date:   Thu, 23 Jul 2020 03:07:28 +0900
+Message-Id: <20200722180728.993812-1-katsuhiro@katsuster.net>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5D84adGPo=9b3dJTm8R-HjXeMOnZQwr2Efj-KQH0R38XQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomasz,
+This patch converts Everest Semiconductor ES8316 low power audio
+CODEC binding to DT schema.
 
-On Wed, Jul 22, 2020 at 07:12:12PM +0200, Tomasz Figa wrote:
-> On Wed, Jul 22, 2020 at 6:30 PM Laurent Pinchart wrote:
-> > On Wed, Jul 22, 2020 at 03:24:59PM +0000, Tomasz Figa wrote:
-> > > On Sat, Jul 11, 2020 at 01:04:31PM +0200, Dafna Hirschfeld wrote:
-> > > > On 16.08.19 02:13, Laurent Pinchart wrote:
-> > > > > On Tue, Jul 30, 2019 at 03:42:47PM -0300, Helen Koike wrote:
-> > >
-> > > [snip]
-> > >
-> > > > > > +static void rkisp1_isp_queue_event_sof(struct rkisp1_isp_subdev *isp)
-> > > > > > +{
-> > > > > > +       struct v4l2_event event = {
-> > > > > > +               .type = V4L2_EVENT_FRAME_SYNC,
-> > > > > > +               .u.frame_sync.frame_sequence =
-> > > > > > +                       atomic_inc_return(&isp->frm_sync_seq) - 1,
-> > > > >
-> > > > > I would move the increment to the caller, hiding it in this function is
-> > > > > error-prone (and if you look at the caller I'm pointing out one possible
-> > > > > error :-)).
-> > > > >
-> > > > > In general usage of frm_sync_seq through the driver seems to be very
-> > > > > race-prone. It's read in various IRQ handling functions, all coming from
-> > > > > the same IRQ, so that part is fine (and wouldn't require an atomic
-> > > > > variable), but when read from the buffer queue handlers I really get a
-> > > > > red light flashing in my head. I'll try to investigate more when
-> > > > > reviewing the next patches.
-> > > >
-> > > > I see that the only place were 'frame_sequence' is read outside of the irq
-> > > > handlers is in the capture in 'rkisp1_vb2_buf_queue':
-> > > >
-> > > >     /*
-> > > >          * If there's no next buffer assigned, queue this buffer directly
-> > > >          * as the next buffer, and update the memory interface.
-> > > >          */
-> > > >         if (cap->is_streaming && !cap->buf.next &&
-> > > >             atomic_read(&cap->rkisp1->isp.frame_sequence) == -1) {
-> > > >                 cap->buf.next = ispbuf;
-> > > >                 rkisp1_set_next_buf(cap);
-> > > >         } else {
-> > > >                 list_add_tail(&ispbuf->queue, &cap->buf.queue);
-> > > >         }
-> > > >
-> > > > This "if" condition seems very specific, a case where we already stream but v-start was not yet received.
-> > > > I think it is possible to remove the test 'atomic_read(&cap->rkisp1->isp.frame_sequence) == -1'
-> > > > from the above condition so that the next buffer is updated in case it is null not just before the first
-> > > > v-start signal.
-> > >
-> > > We don't have this special case in the Chrome OS code.
-> > >
-> > > I suppose it would make it possible to resume the capture 1 frame
-> > > earlier after a queue underrun, as otherwise the new buffer would be
-> > > only programmed after the next frame start interrupt and used for the
-> > > next-next frame.  However, it's racy, because programming of the buffer
-> > > addresses is not atomic and could end up with the hardware using few
-> > > plane addresses from the new buffer and few from the dummy buffer.
-> > >
-> > > Given that and also the fact that a queue underrun is a very special
-> > > case, where the system was already having problems catching up, I'd just
-> > > remove this special case.
-> > >
-> > > [snip]
-> > >
-> > > > > > +void rkisp1_isp_isr(unsigned int isp_mis, struct rkisp1_device *dev)
-> > > > > > +{
-> > > > > > +       void __iomem *base = dev->base_addr;
-> > > > > > +       unsigned int isp_mis_tmp = 0;
-> > > > >
-> > > > > _tmp are never good names :-S
-> > > > >
-> > > > > > +       unsigned int isp_err = 0;
-> > > > >
-> > > > > Neither of these variable need to be initialised to 0.
-> > > > >
-> > > > > > +
-> > > > > > +       /* start edge of v_sync */
-> > > > > > +       if (isp_mis & CIF_ISP_V_START) {
-> > > > > > +               rkisp1_isp_queue_event_sof(&dev->isp_sdev);
-> > > > >
-> > > > > This will increment the frame sequence number. What if the interrupt is
-> > > > > slightly delayed and the next frame starts before we get a change to
-> > > > > copy the sequence number to the buffers (before they will complete
-> > > > > below) ?
-> > > >
-> > > > Do you mean that we get two sequental v-start signals and then the next
-> > > > frame-end signal in MI_MIS belongs to the first v-start signal of the two?
-> > > > How can this be solved? I wonder if any v-start signal has a later signal
-> > > > that correspond to the same frame so that we can follow it?
-> > > >
-> > > > Maybe we should have one counter that is incremented on v-start signal,
-> > > > and another counter that is incremented uppon some other signal?
-> > >
-> > > We're talking about a hard IRQ. I can't imagine the interrupt handler
-> > > being delayed for a time close to a full frame interval (~16ms for 60
-> > > fps) to trigger such scenario.
-> >
-> > I've been burnt too many times by making such statements and then seeing
-> > a wifi driver disablign interrupts for 40ms... :-S We can only perform
-> > as well as the system and the hardware allow us to, I understand we
-> > can't solve all issues related to long interrupt delays as that would
-> > require more hardware support. I'm not sure what an appropriate best
-> > effort level is though.
-> 
-> In that case most of the driver would just stop working, because this
-> hardware requires reprogramming every frame. I think it's a problem of
-> that wifi driver and it shouldn't be worked around in other drivers.
->
-> Of course we still have to ensure that nothing catastrophic happens,
-> like the DMA writing to random addresses or the driver crashing. We
-> could also attempt to detect the case and print a warning.
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+---
+ .../bindings/sound/everest,es8316.txt         | 23 ---------
+ .../bindings/sound/everest,es8316.yaml        | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.yaml
 
-Absolutely, I strongly believe that at the kernel level drivers need to
-cooperate and be good citizens overall, otherwise we can't guarantee
-proper operation. Avoiding catastrophes, and if possible detecting the
-issues, should be good enough. In general I try to get drivers to
-support userspace with recovery in such cases, depending on how much can
-be reasonably achieved.
-
-I've worked with a system that would disable interrupts (actually
-preempting the CPU from an execution level higher than the kernel's) for
-500ms when a crypto operation was offloaded to the hardware crypto
-engine. We ended up performing the crypto operations in software :-)
-
-> > > > > > +
-> > > > > > +               writel(CIF_ISP_V_START, base + CIF_ISP_ICR);
-> > > > >
-> > > > > Do you need to clear all interrupt bits individually, can't you write
-> > > > > isp_mis to CIF_ISP_ICR at the beginning of the function to clear them
-> > > > > all in one go ?
-> > > > >
-> > > > > > +               isp_mis_tmp = readl(base + CIF_ISP_MIS);
-> > > > > > +               if (isp_mis_tmp & CIF_ISP_V_START)
-> > > > > > +                       v4l2_err(&dev->v4l2_dev, "isp icr v_statr err: 0x%x\n",
-> > > > > > +                                isp_mis_tmp);
-> > > > >
-> > > > > This require some explanation. It looks like a naive way to protect
-> > > > > against something, but I think it could trigger under normal
-> > > > > circumstances if IRQ handling is delayed, and wouldn't do much anyway.
-> > > > > Same for the similar constructs below.
-> > > > >
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       if ((isp_mis & CIF_ISP_PIC_SIZE_ERROR)) {
-> > > > > > +               /* Clear pic_size_error */
-> > > > > > +               writel(CIF_ISP_PIC_SIZE_ERROR, base + CIF_ISP_ICR);
-> > > > > > +               isp_err = readl(base + CIF_ISP_ERR);
-> > > > > > +               v4l2_err(&dev->v4l2_dev,
-> > > > > > +                        "CIF_ISP_PIC_SIZE_ERROR (0x%08x)", isp_err);
-> > > > >
-> > > > > What does this mean ?
-> > > > >
-> > > > > > +               writel(isp_err, base + CIF_ISP_ERR_CLR);
-> > > > > > +       } else if ((isp_mis & CIF_ISP_DATA_LOSS)) {
-> > > > >
-> > > > > Are CIF_ISP_PIC_SIZE_ERROR and CIF_ISP_DATA_LOSS mutually exclusive ?
-> > > > >
-> > > > > > +               /* Clear data_loss */
-> > > > > > +               writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
-> > > > > > +               v4l2_err(&dev->v4l2_dev, "CIF_ISP_DATA_LOSS\n");
-> > > > > > +               writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       /* sampled input frame is complete */
-> > > > > > +       if (isp_mis & CIF_ISP_FRAME_IN) {
-> > > > > > +               writel(CIF_ISP_FRAME_IN, base + CIF_ISP_ICR);
-> > > > > > +               isp_mis_tmp = readl(base + CIF_ISP_MIS);
-> > > > > > +               if (isp_mis_tmp & CIF_ISP_FRAME_IN)
-> > > > > > +                       v4l2_err(&dev->v4l2_dev, "isp icr frame_in err: 0x%x\n",
-> > > > > > +                                isp_mis_tmp);
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       /* frame was completely put out */
-> > > > >
-> > > > > "put out" ? :-) What's the difference between ISP_FRAME_IN and ISP_FRAME
-> > > > > ? The two comments could do with a bit of brush up, and I think the
-> > > > > ISP_FRAME_IN interrupt could be disabled as it doesn't perform any
-> > > > > action.
-> > > >
-> > > > Those two oneline comments are just copy-paste from the datasheet.
-> > > >
-> > > > ""
-> > > > 5 MIS_FRAME_IN sampled input frame is complete
-> > > > 1 MIS_FRAME frame was completely put out
-> > > > ""
-> > > >
-> > > > Unfrotunately, the datasheet does not add any further explanation about those signals.
-> > >
-> > > My loose recollection is that the former is signaled when then frame
-> > > is fully input to the ISP and the latter when the ISP completes
-> > > outputting the frame to the next block in the pipeline, but someone
-> > > would need to verify this, for example by printing timestamps for all
-> > > the various interrupts.
-> > >
-> > > > >
-> > > > > > +       if (isp_mis & CIF_ISP_FRAME) {
-> > > > > > +               u32 isp_ris = 0;
-> > > > >
-> > > > > No need to initialise this to 0.
-> > > > >
-> > > > > > +               /* Clear Frame In (ISP) */
-> > > > > > +               writel(CIF_ISP_FRAME, base + CIF_ISP_ICR);
-> > > > > > +               isp_mis_tmp = readl(base + CIF_ISP_MIS);
-> > > > > > +               if (isp_mis_tmp & CIF_ISP_FRAME)
-> > > > > > +                       v4l2_err(&dev->v4l2_dev,
-> > > > > > +                                "isp icr frame end err: 0x%x\n", isp_mis_tmp);
-> > > > > > +
-> > > > > > +               isp_ris = readl(base + CIF_ISP_RIS);
-> > > > > > +               if (isp_ris & (CIF_ISP_AWB_DONE | CIF_ISP_AFM_FIN |
-> > > > > > +                              CIF_ISP_EXP_END | CIF_ISP_HIST_MEASURE_RDY))
-> > > > > > +                       rkisp1_stats_isr(&dev->stats_vdev, isp_ris);
-> > > > >
-> > > > > Is there a guarantee that the statistics will be fully written out
-> > > > > before the video frame itself ? And doesn't this test if any of the
-> > > > > statistics is complete, not all of them ? I think the logic is wrong, it
-> > > >
-> > > > The datasheet does not add any explanation of what is expected to come first.
-> > > > Should we wait until all statistics measurements are done? In the struct
-> > > > sent to userspace there is a bitmaks for which of the statistics are read.
-> > > > I think that if only part of the statistics are ready, we can already send the once
-> > > > that are ready to userspace.
-> > >
-> > > If we look further into the code, rkisp1_stats_isr() checks the
-> > > interrupt status mask passed to it and reads out only the parameters
-> > > with indicated completion. The statistics metadata buffer format
-> > > includes a bit mask which tells the userspace which measurements are
-> > > available.
-> > >
-> > > However, I think I've spotted a bug there. At the beginning of
-> > > rkisp1_stats_isr(), all the 4 interrupt status bits are cleared,
-> > > regardless of the mask used later to decide which readouts need to be
-> > > done. This could mean that with an unfortunate timing, some measurements
-> > > would be lost. So at least the code should be fixed to only clear the
-> > > interrupts bits really handled.
-> > >
-> > > As for whether to send separate buffers for each measurement, I guess
-> > > it's not a bad thing to let the userspace access the ones available
-> > > earlier. Now I only don't recall why we decided to put all the
-> > > measurements into one metadata structure, rather than splitting the 4
-> > > into their own structures and buffer queues...
-> > >
-> > > > > seems it should be moved out of the CIF_ISP_FRAME test, to a test of its
-> > > > > own. It's hard to tell for sure without extra information though (for
-> > > > > instance why are the stats-related bits read from CIF_ISP_RIS, when
-> > > > > they seem to be documented as valid in CIF_ISP_ISR), but this should be
-> > > > > validated, and most probably fixed. Care should be taken to keep
-> > > > > synchronisation of sequence number between the different queues.
-> > > >
-> > > > I see that the capture buffers are done before incrementing the frame_sequence with
-> > > > the following explanation:
-> > > >
-> > > >     /*
-> > > >          * Call rkisp1_capture_isr() first to handle the frame that
-> > > >          * potentially completed using the current frame_sequence number before
-> > > >          * it is potentially incremented by rkisp1_isp_isr() in the vertical
-> > > >          * sync.
-> > > >          */
-> > > >
-> > > > I think reading the stats/params should also be done before calling rkisp1_capture_isr
-> > > > for the same reason. (so to match the correct frame_sequence)
-> > >
-> > > My recollection of the sequence of interrupts in this hardware is like
-> > > this:
-> > >
-> > > CIF_ISP_V_START (frame 0)
-> > >   CIF_ISP_FRAME_IN (frame 0)
-> > >     CIF_ISP_FRAME (frame 0)
-> > >       CIF_ISP_AWB_DONE
-> > >       CIF_ISP_AFM_FIN
-> > >       CIF_ISP_EXP_END
-> > >       CIF_ISP_HIST_MEASURE_RDY
-> > >       CIF_MI_FRAME*
-> > >       CIF_ISP_V_START (frame 1)
-> > >         CIF_ISP_FRAME_IN (frame 1)
-> > >           CIF_ISP_FRAME (frame 1)
-> > >             ...
-> > >
-> > > where the interrupts at the same indentation level can happen
-> > > independently of each other. Again, someone would have to verify this.
-
+diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.txt b/Documentation/devicetree/bindings/sound/everest,es8316.txt
+deleted file mode 100644
+index 1bf03c5f2af4..000000000000
+--- a/Documentation/devicetree/bindings/sound/everest,es8316.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-Everest ES8316 audio CODEC
+-
+-This device supports both I2C and SPI.
+-
+-Required properties:
+-
+-  - compatible  : should be "everest,es8316"
+-  - reg : the I2C address of the device for I2C
+-
+-Optional properties:
+-
+-  - clocks : a list of phandle, should contain entries for clock-names
+-  - clock-names : should include as follows:
+-         "mclk" : master clock (MCLK) of the device
+-
+-Example:
+-
+-es8316: codec@11 {
+-	compatible = "everest,es8316";
+-	reg = <0x11>;
+-	clocks = <&clks 10>;
+-	clock-names = "mclk";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.yaml b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
+new file mode 100644
+index 000000000000..b713404dac4f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/everest,es8316.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Everest ES8316 audio CODEC
++
++maintainers:
++  - Mark Brown <broonie@kernel.org>
++
++properties:
++  compatible:
++    const: everest,es8316
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: clock for master clock (MCLK)
++
++  clock-names:
++    items:
++      - const: mclk
++
++  "#sound-dai-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - "#sound-dai-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      es8316: codec@11 {
++        compatible = "everest,es8316";
++        reg = <0x11>;
++        clocks = <&clks 10>;
++        clock-names = "mclk";
++        #sound-dai-cells = <0>;
++      };
++    };
 -- 
-Regards,
+2.27.0
 
-Laurent Pinchart
