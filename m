@@ -7,22 +7,25 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448C9C433E7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A351DC433F4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 250E622BEF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894BB22CA1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733227AbgGVP4T (ORCPT
+        id S1733161AbgGVP4C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:56:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35804 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733194AbgGVP4R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:56:17 -0400
+        Wed, 22 Jul 2020 11:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733113AbgGVP4B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:56:01 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9ECEC0619DC;
+        Wed, 22 Jul 2020 08:56:00 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 795652976FD
+        with ESMTPSA id ACEB2297FEA
 From:   Helen Koike <helen.koike@collabora.com>
 To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
         linux-rockchip@lists.infradead.org
@@ -33,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
         eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
         robin.murphy@arm.com
-Subject: [PATCH v5 6/9] dt-bindings: media: rkisp1: move rockchip-isp1 bindings out of staging
-Date:   Wed, 22 Jul 2020 12:55:30 -0300
-Message-Id: <20200722155533.252844-7-helen.koike@collabora.com>
+Subject: [PATCH v5 3/9] media: staging: dt-bindings: rkisp1: re-order properties
+Date:   Wed, 22 Jul 2020 12:55:27 -0300
+Message-Id: <20200722155533.252844-4-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.28.0.rc1
 In-Reply-To: <20200722155533.252844-1-helen.koike@collabora.com>
 References: <20200722155533.252844-1-helen.koike@collabora.com>
@@ -46,22 +49,101 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move rkisp1 bindings to Documentation/devicetree/bindings/media
+Organize properties order in dt-bindings to move it out of staging.
 
-Verified with:
-make ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+On top: compatible, reg and interrupts.
+Then alphabetical order, then properties starting with '#'.
 
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/media/rockchip-isp1.yaml                  | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (100%)
+V5:
+- s/binbings/bindings
 
-diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-similarity index 100%
-rename from drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-rename to Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+V2:
+- this is a new patch in the series
+---
+ .../bindings/media/rockchip-isp1.yaml         | 32 +++++++++----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+index 4c31cfaee2709..79ebacab83cf3 100644
+--- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
++++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+@@ -23,19 +23,6 @@ properties:
+   interrupts:
+     maxItems: 1
+ 
+-  iommus:
+-    maxItems: 1
+-
+-  power-domains:
+-    maxItems: 1
+-
+-  phys:
+-    maxItems: 1
+-    description: phandle for the PHY port
+-
+-  phy-names:
+-    const: dphy
+-
+   clocks:
+     items:
+       - description: ISP clock
+@@ -52,6 +39,19 @@ properties:
+       - const: hclk_isp
+       - const: hclk_isp_wrap
+ 
++  iommus:
++    maxItems: 1
++
++  phys:
++    maxItems: 1
++    description: phandle for the PHY port
++
++  phy-names:
++    const: dphy
++
++  power-domains:
++    maxItems: 1
++
+   # See ./video-interfaces.txt for details
+   ports:
+     type: object
+@@ -110,10 +110,10 @@ required:
+   - interrupts
+   - clocks
+   - clock-names
+-  - power-domains
+   - iommus
+   - phys
+   - phy-names
++  - power-domains
+   - ports
+ 
+ additionalProperties: false
+@@ -139,19 +139,19 @@ examples:
+             clock-names = "clk_isp",
+                           "aclk_isp", "aclk_isp_wrap",
+                           "hclk_isp", "hclk_isp_wrap";
+-            power-domains = <&power RK3399_PD_ISP0>;
+             iommus = <&isp0_mmu>;
+             phys = <&dphy>;
+             phy-names = "dphy";
++            power-domains = <&power RK3399_PD_ISP0>;
+ 
+             ports {
+                 #address-cells = <1>;
+                 #size-cells = <0>;
+ 
+                 port@0 {
++                    reg = <0>;
+                     #address-cells = <1>;
+                     #size-cells = <0>;
+-                    reg = <0>;
+ 
+                     mipi_in_wcam: endpoint@0 {
+                         reg = <0>;
 -- 
 2.28.0.rc1
 
