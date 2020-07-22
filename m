@@ -2,65 +2,30 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AE1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 16:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065CDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE11B207BB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 16:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iAS4i7Tg"
+	by mail.kernel.org (Postfix) with ESMTP id CF892207BB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgGVQt7 (ORCPT
+        id S1727769AbgGVRDU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 12:49:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgGVQt6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 12:49:58 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A92FCC0619DC
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 09:49:58 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 184so2655512wmb.0
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 09:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c2nAerlR11FC4bc73llJS+KYZxx6imSwhCd66cb6xO8=;
-        b=iAS4i7TglEthtM/HZoQ129NxIbAtlHbTqcU68I1QgUbrfqibKhoXmm4OOKNTANCwwO
-         dDsDzmsdKb1tq45zSfE32cuCYKQQti6f+rkD6mNU0uEzCnoNmuKSt3ZdSw0z9drysK/p
-         FA4OVFOefwYD7WqHRBtaiA6S2O/ku6Ov4e6Fznk+jppwkjQm9YwjBqkEubIq9JkkT9cV
-         0UcJyzCM4ZYWSHbV8kNK4BWo+SkGwTNZQXKwnJDfGZ/XwA7Zd6CqpmSSDvG+fb31YdnK
-         nUthXh+VCOPiFxtW76Skle8eGPMLQ0vYPTZP0SjRb10yjIaPbmX/2NaZE0VSmwbboM4V
-         00nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c2nAerlR11FC4bc73llJS+KYZxx6imSwhCd66cb6xO8=;
-        b=AGamY7a64Cyv4QGsi4jvBWNpSKergbb1dJhEfwknrdzYIcFNJUY/nOaJkczKCMUSBy
-         KuFu+MJaX3Ce2gVxxFutUAE4hFP2vAfHBwe8yVlUpWgjCchvnzQKN0YTUgdJEMIiGEEa
-         +CNDEPFqhUn7Uwcu5u74qyYiZAvuNr8Pztm1Z7Zt0DfQk8jv/vfeDUt3LShapOgGlNzA
-         9oJZl5xUpmmikqrUvrZnIBHSoA/r9zDrOKYg0oXzjPGXDTLIQ4Nk7iiIO1W1SlCJ7eXW
-         ftjfEC/1gOaj16A8akJoIjlpQvPEkdoDKjqeLUHoBDg8pUKwkQtMGoiiB+NWyJVTZ682
-         037Q==
-X-Gm-Message-State: AOAM530iTlh1rIxqVB32pVgbVvDOMyRsJ5sgJ0+oWlnR8zcJGfTkl+uR
-        Hpfyy/ck5osKy+WOGQpb/nuehw==
-X-Google-Smtp-Source: ABdhPJzy1AZnXOnkwBJorSdXJuVH0ao3cr5xpLz10DDOsUZL37/6MCteU3K8UfOKE0lSMg3jHPcIyw==
-X-Received: by 2002:a1c:18e:: with SMTP id 136mr457537wmb.93.1595436597304;
-        Wed, 22 Jul 2020 09:49:57 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:dca7:8d30:33fa:daac? ([2a01:e34:ed2f:f020:dca7:8d30:33fa:daac])
-        by smtp.googlemail.com with ESMTPSA id p8sm667819wrq.9.2020.07.22.09.49.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 09:49:56 -0700 (PDT)
+        Wed, 22 Jul 2020 13:03:20 -0400
+Received: from out28-74.mail.aliyun.com ([115.124.28.74]:40806 "EHLO
+        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgGVRDU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 13:03:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0809535|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0192437-0.000249335-0.980507;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07381;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I6.6HMv_1595437393;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6.6HMv_1595437393)
+          by smtp.aliyun-inc.com(10.147.42.135);
+          Thu, 23 Jul 2020 01:03:14 +0800
 Subject: Re: [PATCH v10 0/2] Add support for the OST in Ingenic X1000.
-To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>, robh+dt@kernel.org
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         tglx@linutronix.de, dongsheng.qiu@ingenic.com,
         aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
@@ -69,61 +34,62 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 References: <20200720173134.22826-1-zhouyanjie@wanyeetech.com>
  <6aca88ad-1e20-97da-effe-fa5a4cec789c@linaro.org>
  <0ace68b6-9d75-8b8f-c108-89863cb6d03d@wanyeetech.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <8129fbbf-652d-5429-4b8a-63038cd42ccb@linaro.org>
-Date:   Wed, 22 Jul 2020 18:49:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <8129fbbf-652d-5429-4b8a-63038cd42ccb@linaro.org>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <35e3e3f9-8348-cb09-8809-5e93be03744d@wanyeetech.com>
+Date:   Thu, 23 Jul 2020 01:03:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-In-Reply-To: <0ace68b6-9d75-8b8f-c108-89863cb6d03d@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <8129fbbf-652d-5429-4b8a-63038cd42ccb@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 22/07/2020 18:47, Zhou Yanjie wrote:
-> Hello Daniel,
-> 
-> 在 2020/7/21 下午8:53, Daniel Lezcano 写道:
->> On 20/07/2020 19:31, 周琰杰 (Zhou Yanjie) wrote:
->>> v9->v10:
->>> Fix errors which case "make dt_binding_check" failed.
->>>
->>> 周琰杰 (Zhou Yanjie) (2):
->>>    dt-bindings: timer: Add Ingenic X1000 OST bindings.
->>>    clocksource: Ingenic: Add support for the Ingenic X1000 OST.
->>>
->>>   .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
->>>   drivers/clocksource/Kconfig                        |  12 +-
->>>   drivers/clocksource/Makefile                       |   1 +
->>>   drivers/clocksource/ingenic-sysost.c               | 539
->>> +++++++++++++++++++++
->>>   include/dt-bindings/clock/ingenic,sysost.h         |  12 +
->>>   5 files changed, 626 insertions(+), 1 deletion(-)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
->>>   create mode 100644 drivers/clocksource/ingenic-sysost.c
->>>   create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
->> Applied, thanks
-> 
-> 
-> I'm very sorry, I found some typos in this series, do I need to send a
-> v11 to fix these typos?
 
-As your convenience, V11 or patches on top of V10. But please do it
-quickly as I'm preparing the PR.
-
-Thanks
-
-  -- Daniel
+在 2020/7/23 上午12:49, Daniel Lezcano 写道:
+> On 22/07/2020 18:47, Zhou Yanjie wrote:
+>> Hello Daniel,
+>>
+>> 在 2020/7/21 下午8:53, Daniel Lezcano 写道:
+>>> On 20/07/2020 19:31, 周琰杰 (Zhou Yanjie) wrote:
+>>>> v9->v10:
+>>>> Fix errors which case "make dt_binding_check" failed.
+>>>>
+>>>> 周琰杰 (Zhou Yanjie) (2):
+>>>>     dt-bindings: timer: Add Ingenic X1000 OST bindings.
+>>>>     clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+>>>>
+>>>>    .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
+>>>>    drivers/clocksource/Kconfig                        |  12 +-
+>>>>    drivers/clocksource/Makefile                       |   1 +
+>>>>    drivers/clocksource/ingenic-sysost.c               | 539
+>>>> +++++++++++++++++++++
+>>>>    include/dt-bindings/clock/ingenic,sysost.h         |  12 +
+>>>>    5 files changed, 626 insertions(+), 1 deletion(-)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
+>>>>    create mode 100644 drivers/clocksource/ingenic-sysost.c
+>>>>    create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+>>> Applied, thanks
+>>
+>> I'm very sorry, I found some typos in this series, do I need to send a
+>> v11 to fix these typos?
+> As your convenience, V11 or patches on top of V10. But please do it
+> quickly as I'm preparing the PR.
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Okay, thank you very much, I will finish v11 in half an hour.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks and best regards!
+
+
+> Thanks
+>
+>    -- Daniel
+>
+>
