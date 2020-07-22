@@ -2,474 +2,360 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5DDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29B4020787
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92F620787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Zk04zUIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgGVRoN (ORCPT
+        id S1729000AbgGVRud (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:44:13 -0400
-Received: from out28-99.mail.aliyun.com ([115.124.28.99]:42817 "EHLO
-        out28-99.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVRoN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 13:44:13 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0238906-0.000253092-0.975856;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I6.RTvs_1595439842;
-Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6.RTvs_1595439842)
-          by smtp.aliyun-inc.com(10.147.43.95);
-          Thu, 23 Jul 2020 01:44:03 +0800
-Subject: Re: [PATCH v4 2/3] USB: PHY: JZ4770: Add support for new Ingenic
- SoCs.
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, prasannatsmkumar@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-References: <20200722063355.67781-1-zhouyanjie@wanyeetech.com>
- <20200722063355.67781-3-zhouyanjie@wanyeetech.com>
- <84SVDQ.U2WOG9BOMMYN1@crapouillou.net>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5116f2e7-6479-b7f0-eecc-910dcfa01448@wanyeetech.com>
-Date:   Thu, 23 Jul 2020 01:43:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 22 Jul 2020 13:50:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbgGVRud (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 13:50:33 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE3CC0619DC;
+        Wed, 22 Jul 2020 10:50:32 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DFFD2329;
+        Wed, 22 Jul 2020 19:50:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595440229;
+        bh=7Jk5nGhbLfKyiwIvuyI1txtc2bykplbBHJzSx1WoiuE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zk04zUIvTcGNRYsyb+mCH7uvSM9qL0u+sGlubhkz67NI9gJTm0CWTg+RJNUiUDGPK
+         HKCRAl4Zb1cccjtPebxZlYoHaWkJLw5GD4VeqmlG5+wcl6nmK7gPeKz0On3tA4G8j3
+         U/X7EHoB1lTFLumtBx1eZuoe9XsuuLiSX2dyTH8I=
+Date:   Wed, 22 Jul 2020 20:50:23 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
+        Chen Jacob <jacob2.chen@rock-chips.com>,
+        Jeffy <jeffy.chen@rock-chips.com>,
+        =?utf-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Jacob Chen <cc@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+Message-ID: <20200722175023.GA30979@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com>
+ <20190816001323.GF5011@pendragon.ideasonboard.com>
+ <30b6367d-9088-d755-d041-904ff2a48130@collabora.com>
+ <20200722152459.GC1828171@chromium.org>
+ <20200722163045.GN29813@pendragon.ideasonboard.com>
+ <CAAFQd5D84adGPo=9b3dJTm8R-HjXeMOnZQwr2Efj-KQH0R38XQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <84SVDQ.U2WOG9BOMMYN1@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5D84adGPo=9b3dJTm8R-HjXeMOnZQwr2Efj-KQH0R38XQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Tomasz,
 
-在 2020/7/23 上午1:19, Paul Cercueil 写道:
-> Hi Zhou,
+On Wed, Jul 22, 2020 at 07:12:12PM +0200, Tomasz Figa wrote:
+> On Wed, Jul 22, 2020 at 6:30 PM Laurent Pinchart wrote:
+> > On Wed, Jul 22, 2020 at 03:24:59PM +0000, Tomasz Figa wrote:
+> > > On Sat, Jul 11, 2020 at 01:04:31PM +0200, Dafna Hirschfeld wrote:
+> > > > On 16.08.19 02:13, Laurent Pinchart wrote:
+> > > > > On Tue, Jul 30, 2019 at 03:42:47PM -0300, Helen Koike wrote:
+> > >
+> > > [snip]
+> > >
+> > > > > > +static void rkisp1_isp_queue_event_sof(struct rkisp1_isp_subdev *isp)
+> > > > > > +{
+> > > > > > +       struct v4l2_event event = {
+> > > > > > +               .type = V4L2_EVENT_FRAME_SYNC,
+> > > > > > +               .u.frame_sync.frame_sequence =
+> > > > > > +                       atomic_inc_return(&isp->frm_sync_seq) - 1,
+> > > > >
+> > > > > I would move the increment to the caller, hiding it in this function is
+> > > > > error-prone (and if you look at the caller I'm pointing out one possible
+> > > > > error :-)).
+> > > > >
+> > > > > In general usage of frm_sync_seq through the driver seems to be very
+> > > > > race-prone. It's read in various IRQ handling functions, all coming from
+> > > > > the same IRQ, so that part is fine (and wouldn't require an atomic
+> > > > > variable), but when read from the buffer queue handlers I really get a
+> > > > > red light flashing in my head. I'll try to investigate more when
+> > > > > reviewing the next patches.
+> > > >
+> > > > I see that the only place were 'frame_sequence' is read outside of the irq
+> > > > handlers is in the capture in 'rkisp1_vb2_buf_queue':
+> > > >
+> > > >     /*
+> > > >          * If there's no next buffer assigned, queue this buffer directly
+> > > >          * as the next buffer, and update the memory interface.
+> > > >          */
+> > > >         if (cap->is_streaming && !cap->buf.next &&
+> > > >             atomic_read(&cap->rkisp1->isp.frame_sequence) == -1) {
+> > > >                 cap->buf.next = ispbuf;
+> > > >                 rkisp1_set_next_buf(cap);
+> > > >         } else {
+> > > >                 list_add_tail(&ispbuf->queue, &cap->buf.queue);
+> > > >         }
+> > > >
+> > > > This "if" condition seems very specific, a case where we already stream but v-start was not yet received.
+> > > > I think it is possible to remove the test 'atomic_read(&cap->rkisp1->isp.frame_sequence) == -1'
+> > > > from the above condition so that the next buffer is updated in case it is null not just before the first
+> > > > v-start signal.
+> > >
+> > > We don't have this special case in the Chrome OS code.
+> > >
+> > > I suppose it would make it possible to resume the capture 1 frame
+> > > earlier after a queue underrun, as otherwise the new buffer would be
+> > > only programmed after the next frame start interrupt and used for the
+> > > next-next frame.  However, it's racy, because programming of the buffer
+> > > addresses is not atomic and could end up with the hardware using few
+> > > plane addresses from the new buffer and few from the dummy buffer.
+> > >
+> > > Given that and also the fact that a queue underrun is a very special
+> > > case, where the system was already having problems catching up, I'd just
+> > > remove this special case.
+> > >
+> > > [snip]
+> > >
+> > > > > > +void rkisp1_isp_isr(unsigned int isp_mis, struct rkisp1_device *dev)
+> > > > > > +{
+> > > > > > +       void __iomem *base = dev->base_addr;
+> > > > > > +       unsigned int isp_mis_tmp = 0;
+> > > > >
+> > > > > _tmp are never good names :-S
+> > > > >
+> > > > > > +       unsigned int isp_err = 0;
+> > > > >
+> > > > > Neither of these variable need to be initialised to 0.
+> > > > >
+> > > > > > +
+> > > > > > +       /* start edge of v_sync */
+> > > > > > +       if (isp_mis & CIF_ISP_V_START) {
+> > > > > > +               rkisp1_isp_queue_event_sof(&dev->isp_sdev);
+> > > > >
+> > > > > This will increment the frame sequence number. What if the interrupt is
+> > > > > slightly delayed and the next frame starts before we get a change to
+> > > > > copy the sequence number to the buffers (before they will complete
+> > > > > below) ?
+> > > >
+> > > > Do you mean that we get two sequental v-start signals and then the next
+> > > > frame-end signal in MI_MIS belongs to the first v-start signal of the two?
+> > > > How can this be solved? I wonder if any v-start signal has a later signal
+> > > > that correspond to the same frame so that we can follow it?
+> > > >
+> > > > Maybe we should have one counter that is incremented on v-start signal,
+> > > > and another counter that is incremented uppon some other signal?
+> > >
+> > > We're talking about a hard IRQ. I can't imagine the interrupt handler
+> > > being delayed for a time close to a full frame interval (~16ms for 60
+> > > fps) to trigger such scenario.
+> >
+> > I've been burnt too many times by making such statements and then seeing
+> > a wifi driver disablign interrupts for 40ms... :-S We can only perform
+> > as well as the system and the hardware allow us to, I understand we
+> > can't solve all issues related to long interrupt delays as that would
+> > require more hardware support. I'm not sure what an appropriate best
+> > effort level is though.
+> 
+> In that case most of the driver would just stop working, because this
+> hardware requires reprogramming every frame. I think it's a problem of
+> that wifi driver and it shouldn't be worked around in other drivers.
 >
-> Le mer. 22 juil. 2020 à 14:33, 周琰杰 (Zhou Yanjie) 
-> <zhouyanjie@wanyeetech.com> a écrit :
->> Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
->> the X1000 SoC and the X1830 SoC from Ingenic.
->>
->> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
->> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>
->> Notes:
->>     v1->v2:
->>     Add bindings for the JZ4780 SoC.
->>
->>     v2->v3:
->>     Use "of_device_get_match_data" instead "of_match_device"
->>     to get version information.
->>
->>     v3->v4:
->>     Fix typos.
->>
->>  drivers/usb/phy/Kconfig      |   4 +-
->>  drivers/usb/phy/phy-jz4770.c | 174 
->> ++++++++++++++++++++++++++++++++-----------
->>  2 files changed, 133 insertions(+), 45 deletions(-)
->>
->> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
->> index 4b3fa78995cf..775f0dd7b5f5 100644
->> --- a/drivers/usb/phy/Kconfig
->> +++ b/drivers/usb/phy/Kconfig
->> @@ -185,11 +185,11 @@ config USB_ULPI_VIEWPORT
->>        controllers with a viewport register (e.g. Chipidea/ARC 
->> controllers).
->>
->>  config JZ4770_PHY
->> -    tristate "Ingenic JZ4770 Transceiver Driver"
->> +    tristate "Ingenic SoCs Transceiver Driver"
->>      depends on MIPS || COMPILE_TEST
->>      select USB_PHY
->>      help
->>        This driver provides PHY support for the USB controller found
->> -      on the JZ4770 SoC from Ingenic.
->> +      on the JZ4770/JZ4780/X1000/X1830 SoC from Ingenic.
->
-> 'JZ-series / X-series SoCs' would be more future-proof :)
->
+> Of course we still have to ensure that nothing catastrophic happens,
+> like the DMA writing to random addresses or the driver crashing. We
+> could also attempt to detect the case and print a warning.
 
-Sure.
+Absolutely, I strongly believe that at the kernel level drivers need to
+cooperate and be good citizens overall, otherwise we can't guarantee
+proper operation. Avoiding catastrophes, and if possible detecting the
+issues, should be good enough. In general I try to get drivers to
+support userspace with recovery in such cases, depending on how much can
+be reasonably achieved.
 
+I've worked with a system that would disable interrupts (actually
+preempting the CPU from an execution level higher than the kernel's) for
+500ms when a crypto operation was offloaded to the hardware crypto
+engine. We ended up performing the crypto operations in software :-)
 
->>
->>  endmenu
->> diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
->> index 8f62dc2a90ff..cd49b32b4c13 100644
->> --- a/drivers/usb/phy/phy-jz4770.c
->> +++ b/drivers/usb/phy/phy-jz4770.c
->> @@ -1,27 +1,30 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  /*
->> - * Ingenic JZ4770 USB PHY driver
->> + * Ingenic SoCs USB PHY driver
->>   * Copyright (c) Paul Cercueil <paul@crapouillou.net>
->> + * Copyright (c) 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
->> + * Copyright (c) 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>   */
->>
->>  #include <linux/clk.h>
->>  #include <linux/io.h>
->>  #include <linux/module.h>
->> +#include <linux/of_device.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/regulator/consumer.h>
->>  #include <linux/usb/otg.h>
->>  #include <linux/usb/phy.h>
->>
->> +/* OTGPHY register offsets */
->>  #define REG_USBPCR_OFFSET    0x00
->>  #define REG_USBRDT_OFFSET    0x04
->>  #define REG_USBVBFIL_OFFSET    0x08
->>  #define REG_USBPCR1_OFFSET    0x0c
->>
->> -/* USBPCR */
->> +/* bits within the USBPCR register */
->>  #define USBPCR_USB_MODE        BIT(31)
->>  #define USBPCR_AVLD_REG        BIT(30)
->> -#define USBPCR_INCRM        BIT(27)
->> -#define USBPCR_CLK12_EN        BIT(26)
->> +#define USBPCR_INCR_MASK    BIT(27)
->
-> Please don't rename macros, it adds a lot of noise to the patch.
->
+> > > > > > +
+> > > > > > +               writel(CIF_ISP_V_START, base + CIF_ISP_ICR);
+> > > > >
+> > > > > Do you need to clear all interrupt bits individually, can't you write
+> > > > > isp_mis to CIF_ISP_ICR at the beginning of the function to clear them
+> > > > > all in one go ?
+> > > > >
+> > > > > > +               isp_mis_tmp = readl(base + CIF_ISP_MIS);
+> > > > > > +               if (isp_mis_tmp & CIF_ISP_V_START)
+> > > > > > +                       v4l2_err(&dev->v4l2_dev, "isp icr v_statr err: 0x%x\n",
+> > > > > > +                                isp_mis_tmp);
+> > > > >
+> > > > > This require some explanation. It looks like a naive way to protect
+> > > > > against something, but I think it could trigger under normal
+> > > > > circumstances if IRQ handling is delayed, and wouldn't do much anyway.
+> > > > > Same for the similar constructs below.
+> > > > >
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       if ((isp_mis & CIF_ISP_PIC_SIZE_ERROR)) {
+> > > > > > +               /* Clear pic_size_error */
+> > > > > > +               writel(CIF_ISP_PIC_SIZE_ERROR, base + CIF_ISP_ICR);
+> > > > > > +               isp_err = readl(base + CIF_ISP_ERR);
+> > > > > > +               v4l2_err(&dev->v4l2_dev,
+> > > > > > +                        "CIF_ISP_PIC_SIZE_ERROR (0x%08x)", isp_err);
+> > > > >
+> > > > > What does this mean ?
+> > > > >
+> > > > > > +               writel(isp_err, base + CIF_ISP_ERR_CLR);
+> > > > > > +       } else if ((isp_mis & CIF_ISP_DATA_LOSS)) {
+> > > > >
+> > > > > Are CIF_ISP_PIC_SIZE_ERROR and CIF_ISP_DATA_LOSS mutually exclusive ?
+> > > > >
+> > > > > > +               /* Clear data_loss */
+> > > > > > +               writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
+> > > > > > +               v4l2_err(&dev->v4l2_dev, "CIF_ISP_DATA_LOSS\n");
+> > > > > > +               writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       /* sampled input frame is complete */
+> > > > > > +       if (isp_mis & CIF_ISP_FRAME_IN) {
+> > > > > > +               writel(CIF_ISP_FRAME_IN, base + CIF_ISP_ICR);
+> > > > > > +               isp_mis_tmp = readl(base + CIF_ISP_MIS);
+> > > > > > +               if (isp_mis_tmp & CIF_ISP_FRAME_IN)
+> > > > > > +                       v4l2_err(&dev->v4l2_dev, "isp icr frame_in err: 0x%x\n",
+> > > > > > +                                isp_mis_tmp);
+> > > > > > +       }
+> > > > > > +
+> > > > > > +       /* frame was completely put out */
+> > > > >
+> > > > > "put out" ? :-) What's the difference between ISP_FRAME_IN and ISP_FRAME
+> > > > > ? The two comments could do with a bit of brush up, and I think the
+> > > > > ISP_FRAME_IN interrupt could be disabled as it doesn't perform any
+> > > > > action.
+> > > >
+> > > > Those two oneline comments are just copy-paste from the datasheet.
+> > > >
+> > > > ""
+> > > > 5 MIS_FRAME_IN sampled input frame is complete
+> > > > 1 MIS_FRAME frame was completely put out
+> > > > ""
+> > > >
+> > > > Unfrotunately, the datasheet does not add any further explanation about those signals.
+> > >
+> > > My loose recollection is that the former is signaled when then frame
+> > > is fully input to the ISP and the latter when the ISP completes
+> > > outputting the frame to the next block in the pipeline, but someone
+> > > would need to verify this, for example by printing timestamps for all
+> > > the various interrupts.
+> > >
+> > > > >
+> > > > > > +       if (isp_mis & CIF_ISP_FRAME) {
+> > > > > > +               u32 isp_ris = 0;
+> > > > >
+> > > > > No need to initialise this to 0.
+> > > > >
+> > > > > > +               /* Clear Frame In (ISP) */
+> > > > > > +               writel(CIF_ISP_FRAME, base + CIF_ISP_ICR);
+> > > > > > +               isp_mis_tmp = readl(base + CIF_ISP_MIS);
+> > > > > > +               if (isp_mis_tmp & CIF_ISP_FRAME)
+> > > > > > +                       v4l2_err(&dev->v4l2_dev,
+> > > > > > +                                "isp icr frame end err: 0x%x\n", isp_mis_tmp);
+> > > > > > +
+> > > > > > +               isp_ris = readl(base + CIF_ISP_RIS);
+> > > > > > +               if (isp_ris & (CIF_ISP_AWB_DONE | CIF_ISP_AFM_FIN |
+> > > > > > +                              CIF_ISP_EXP_END | CIF_ISP_HIST_MEASURE_RDY))
+> > > > > > +                       rkisp1_stats_isr(&dev->stats_vdev, isp_ris);
+> > > > >
+> > > > > Is there a guarantee that the statistics will be fully written out
+> > > > > before the video frame itself ? And doesn't this test if any of the
+> > > > > statistics is complete, not all of them ? I think the logic is wrong, it
+> > > >
+> > > > The datasheet does not add any explanation of what is expected to come first.
+> > > > Should we wait until all statistics measurements are done? In the struct
+> > > > sent to userspace there is a bitmaks for which of the statistics are read.
+> > > > I think that if only part of the statistics are ready, we can already send the once
+> > > > that are ready to userspace.
+> > >
+> > > If we look further into the code, rkisp1_stats_isr() checks the
+> > > interrupt status mask passed to it and reads out only the parameters
+> > > with indicated completion. The statistics metadata buffer format
+> > > includes a bit mask which tells the userspace which measurements are
+> > > available.
+> > >
+> > > However, I think I've spotted a bug there. At the beginning of
+> > > rkisp1_stats_isr(), all the 4 interrupt status bits are cleared,
+> > > regardless of the mask used later to decide which readouts need to be
+> > > done. This could mean that with an unfortunate timing, some measurements
+> > > would be lost. So at least the code should be fixed to only clear the
+> > > interrupts bits really handled.
+> > >
+> > > As for whether to send separate buffers for each measurement, I guess
+> > > it's not a bad thing to let the userspace access the ones available
+> > > earlier. Now I only don't recall why we decided to put all the
+> > > measurements into one metadata structure, rather than splitting the 4
+> > > into their own structures and buffer queues...
+> > >
+> > > > > seems it should be moved out of the CIF_ISP_FRAME test, to a test of its
+> > > > > own. It's hard to tell for sure without extra information though (for
+> > > > > instance why are the stats-related bits read from CIF_ISP_RIS, when
+> > > > > they seem to be documented as valid in CIF_ISP_ISR), but this should be
+> > > > > validated, and most probably fixed. Care should be taken to keep
+> > > > > synchronisation of sequence number between the different queues.
+> > > >
+> > > > I see that the capture buffers are done before incrementing the frame_sequence with
+> > > > the following explanation:
+> > > >
+> > > >     /*
+> > > >          * Call rkisp1_capture_isr() first to handle the frame that
+> > > >          * potentially completed using the current frame_sequence number before
+> > > >          * it is potentially incremented by rkisp1_isp_isr() in the vertical
+> > > >          * sync.
+> > > >          */
+> > > >
+> > > > I think reading the stats/params should also be done before calling rkisp1_capture_isr
+> > > > for the same reason. (so to match the correct frame_sequence)
+> > >
+> > > My recollection of the sequence of interrupts in this hardware is like
+> > > this:
+> > >
+> > > CIF_ISP_V_START (frame 0)
+> > >   CIF_ISP_FRAME_IN (frame 0)
+> > >     CIF_ISP_FRAME (frame 0)
+> > >       CIF_ISP_AWB_DONE
+> > >       CIF_ISP_AFM_FIN
+> > >       CIF_ISP_EXP_END
+> > >       CIF_ISP_HIST_MEASURE_RDY
+> > >       CIF_MI_FRAME*
+> > >       CIF_ISP_V_START (frame 1)
+> > >         CIF_ISP_FRAME_IN (frame 1)
+> > >           CIF_ISP_FRAME (frame 1)
+> > >             ...
+> > >
+> > > where the interrupts at the same indentation level can happen
+> > > independently of each other. Again, someone would have to verify this.
 
-Sure.
+-- 
+Regards,
 
-
->>  #define USBPCR_COMMONONN    BIT(25)
->>  #define USBPCR_VBUSVLDEXT    BIT(24)
->>  #define USBPCR_VBUSVLDEXTSEL    BIT(23)
->> @@ -32,46 +35,80 @@
->>
->>  #define USBPCR_IDPULLUP_LSB    28
->>  #define USBPCR_IDPULLUP_MASK    GENMASK(29, USBPCR_IDPULLUP_LSB)
->> -#define USBPCR_IDPULLUP_ALWAYS    (3 << USBPCR_IDPULLUP_LSB)
->> -#define USBPCR_IDPULLUP_SUSPEND    (1 << USBPCR_IDPULLUP_LSB)
->> -#define USBPCR_IDPULLUP_OTG    (0 << USBPCR_IDPULLUP_LSB)
->> +#define USBPCR_IDPULLUP_ALWAYS    (0x2 << USBPCR_IDPULLUP_LSB)
->> +#define USBPCR_IDPULLUP_SUSPEND    (0x1 << USBPCR_IDPULLUP_LSB)
->> +#define USBPCR_IDPULLUP_OTG    (0x0 << USBPCR_IDPULLUP_LSB)
->
-> a '3' turned into a '2' here...
->
-
- From the information in the programming manual, it can be 3 or 2.
-
-I think using 2 with 1 and 0 below seems more in line with reading 
-habits :)
-
-
->>
->>  #define USBPCR_COMPDISTUNE_LSB    17
->>  #define USBPCR_COMPDISTUNE_MASK    GENMASK(19, USBPCR_COMPDISTUNE_LSB)
->> -#define USBPCR_COMPDISTUNE_DFT    4
->> +#define USBPCR_COMPDISTUNE_DFT    (0x4 << USBPCR_COMPDISTUNE_LSB)
->
-> Why? Even if you have a valid reason to do that, it does not belong in 
-> this patch.
->
-
-USBPCR_COMPDISTUNE_DFT (and below) is using in jz4770_phy_init(), to do 
-this can simplify jz4770_phy_init(), do I need separate it as a separate 
-patch in the next version?
-
-
->>
->>  #define USBPCR_OTGTUNE_LSB    14
->>  #define USBPCR_OTGTUNE_MASK    GENMASK(16, USBPCR_OTGTUNE_LSB)
->> -#define USBPCR_OTGTUNE_DFT    4
->> +#define USBPCR_OTGTUNE_DFT    (0x4 << USBPCR_OTGTUNE_LSB)
->>
->>  #define USBPCR_SQRXTUNE_LSB    11
->>  #define USBPCR_SQRXTUNE_MASK    GENMASK(13, USBPCR_SQRXTUNE_LSB)
->> -#define USBPCR_SQRXTUNE_DFT    3
->> +#define USBPCR_SQRXTUNE_DCR_20PCT    (0x7 << USBPCR_SQRXTUNE_LSB)
->> +#define USBPCR_SQRXTUNE_DFT    (0x3 << USBPCR_SQRXTUNE_LSB)
->>
->>  #define USBPCR_TXFSLSTUNE_LSB    7
->>  #define USBPCR_TXFSLSTUNE_MASK    GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
->> -#define USBPCR_TXFSLSTUNE_DFT    3
->> +#define USBPCR_TXFSLSTUNE_DCR_50PPT    (0xf << USBPCR_TXFSLSTUNE_LSB)
->> +#define USBPCR_TXFSLSTUNE_DCR_25PPT    (0x7 << USBPCR_TXFSLSTUNE_LSB)
->> +#define USBPCR_TXFSLSTUNE_DFT    (0x3 << USBPCR_TXFSLSTUNE_LSB)
->> +#define USBPCR_TXFSLSTUNE_INC_25PPT    (0x1 << USBPCR_TXFSLSTUNE_LSB)
->> +#define USBPCR_TXFSLSTUNE_INC_50PPT    (0x0 << USBPCR_TXFSLSTUNE_LSB)
->> +
->> +#define USBPCR_TXHSXVTUNE_LSB    4
->> +#define USBPCR_TXHSXVTUNE_MASK    GENMASK(5, USBPCR_TXHSXVTUNE_LSB)
->> +#define USBPCR_TXHSXVTUNE_DFT    (0x3 << USBPCR_TXHSXVTUNE_LSB)
->> +#define USBPCR_TXHSXVTUNE_DCR_15MV    (0x1 << USBPCR_TXHSXVTUNE_LSB)
->>
->>  #define USBPCR_TXRISETUNE_LSB    4
->>  #define USBPCR_TXRISETUNE_MASK    GENMASK(5, USBPCR_TXRISETUNE_LSB)
->> -#define USBPCR_TXRISETUNE_DFT    3
->> +#define USBPCR_TXRISETUNE_DFT    (0x3 << USBPCR_TXRISETUNE_LSB)
->>
->>  #define USBPCR_TXVREFTUNE_LSB    0
->>  #define USBPCR_TXVREFTUNE_MASK    GENMASK(3, USBPCR_TXVREFTUNE_LSB)
->> -#define USBPCR_TXVREFTUNE_DFT    5
->> +#define USBPCR_TXVREFTUNE_INC_25PPT    (0x7 << USBPCR_TXVREFTUNE_LSB)
->> +#define USBPCR_TXVREFTUNE_DFT    (0x5 << USBPCR_TXVREFTUNE_LSB)
->>
->> -/* USBRDT */
->> +/* bits within the USBRDTR register */
->> +#define USBRDT_UTMI_RST        BIT(27)
->> +#define USBRDT_HB_MASK        BIT(26)
->>  #define USBRDT_VBFIL_LD_EN    BIT(25)
->>  #define USBRDT_IDDIG_EN        BIT(24)
->>  #define USBRDT_IDDIG_REG    BIT(23)
->> -
->> -#define USBRDT_USBRDT_LSB    0
->> -#define USBRDT_USBRDT_MASK    GENMASK(22, USBRDT_USBRDT_LSB)
->> -
->> -/* USBPCR1 */
->> -#define USBPCR1_UHC_POWON    BIT(5)
->> +#define USBRDT_VBFIL_EN        BIT(2)
->> +
->> +/* bits within the USBPCR1 register */
->> +#define USBPCR1_BVLD_REG            BIT(31)
->> +#define USBPCR1_DPPD                BIT(29)
->> +#define USBPCR1_DMPD                BIT(28)
->> +#define USBPCR1_USB_SEL                BIT(28)
->> +#define USBPCR1_WORD_IF_16BIT        BIT(19)
->> +
->> +#define USBPCR1_REFCLKSEL_LSB        26
->> +#define USBPCR1_REFCLKSEL_MASK        GENMASK(27, 
->> USBPCR1_REFCLKDIV_LSB)
->> +#define USBPCR1_REFCLKSEL_CLKCORE    (0x3 << USBPCR1_REFCLKSEL_LSB)
->> +
->> +#define USBPCR1_REFCLKDIV_LSB        24
->> +#define USBPCR1_REFCLKDIV_MASK        GENMASK(25, 
->> USBPCR1_REFCLKDIV_LSB)
->> +#define USBPCR1_REFCLKDIV_48M        (0x2 << USBPCR1_REFCLKDIV_LSB)
->> +#define USBPCR1_REFCLKDIV_24M        (0x1 << USBPCR1_REFCLKDIV_LSB)
->> +#define USBPCR1_REFCLKDIV_12M        (0x0 << USBPCR1_REFCLKDIV_LSB)
->> +
->> +enum ingenic_usb_phy_version {
->> +    ID_JZ4770,
->> +    ID_JZ4780,
->> +    ID_X1000,
->> +    ID_X1830,
->> +};
->>
->>  struct jz4770_phy {
->> +    enum ingenic_usb_phy_version version;
->> +
->>      struct usb_phy phy;
->>      struct usb_otg otg;
->>      struct device *dev;
->> @@ -96,6 +133,12 @@ static int jz4770_phy_set_peripheral(struct 
->> usb_otg *otg,
->>      struct jz4770_phy *priv = otg_to_jz4770_phy(otg);
->>      u32 reg;
->>
->> +    if (priv->version >= ID_X1000) {
->> +        reg = readl(priv->base + REG_USBPCR1_OFFSET);
->> +        reg |= USBPCR1_BVLD_REG;
->> +        writel(reg, priv->base + REG_USBPCR1_OFFSET);
->> +    }
->> +
->>      reg = readl(priv->base + REG_USBPCR_OFFSET);
->>      reg &= ~USBPCR_USB_MODE;
->>      reg |= USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL | 
->> USBPCR_OTG_DISABLE;
->> @@ -135,17 +178,59 @@ static int jz4770_phy_init(struct usb_phy *phy)
->>          return err;
->>      }
->>
->> -    reg = USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS |
->> -        (USBPCR_COMPDISTUNE_DFT << USBPCR_COMPDISTUNE_LSB) |
->> -        (USBPCR_OTGTUNE_DFT << USBPCR_OTGTUNE_LSB) |
->> -        (USBPCR_SQRXTUNE_DFT << USBPCR_SQRXTUNE_LSB) |
->> -        (USBPCR_TXFSLSTUNE_DFT << USBPCR_TXFSLSTUNE_LSB) |
->> -        (USBPCR_TXRISETUNE_DFT << USBPCR_TXRISETUNE_LSB) |
->> -        (USBPCR_TXVREFTUNE_DFT << USBPCR_TXVREFTUNE_LSB) |
->> -        USBPCR_POR;
->> +    if (priv->version >= ID_X1830) {
->> +        /* rdt */
->> +        writel(USBRDT_VBFIL_EN | USBRDT_UTMI_RST, priv->base + 
->> REG_USBRDT_OFFSET);
->> +
->> +        reg = readl(priv->base + REG_USBPCR1_OFFSET) | 
->> USBPCR1_WORD_IF_16BIT |
->> +            USBPCR1_DMPD | USBPCR1_DPPD;
->> +        writel(reg, priv->base + REG_USBPCR1_OFFSET);
->> +
->> +        reg = USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT | 
->> USBPCR_TXPREEMPHTUNE;
->> +    } else if (priv->version >= ID_X1000) {
->> +        reg = readl(priv->base + REG_USBPCR1_OFFSET) | 
->> USBPCR1_WORD_IF_16BIT;
->> +        writel(reg, priv->base + REG_USBPCR1_OFFSET);
->> +
->> +        reg = USBPCR_SQRXTUNE_DCR_20PCT | USBPCR_TXPREEMPHTUNE |
->> +            USBPCR_TXHSXVTUNE_DCR_15MV | USBPCR_TXVREFTUNE_INC_25PPT;
->> +    } else if (priv->version >= ID_JZ4780) {
->> +        reg = readl(priv->base + REG_USBPCR1_OFFSET) | 
->> USBPCR1_USB_SEL |
->> +            USBPCR1_WORD_IF_16BIT;
->> +        writel(reg, priv->base + REG_USBPCR1_OFFSET);
->> +
->> +        reg = USBPCR_TXPREEMPHTUNE;
->> +    } else {
->> +        reg = USBPCR_AVLD_REG | USBPCR_IDPULLUP_ALWAYS |
->> +            USBPCR_COMPDISTUNE_DFT | USBPCR_OTGTUNE_DFT |
->> +            USBPCR_SQRXTUNE_DFT | USBPCR_TXFSLSTUNE_DFT |
->> +            USBPCR_TXRISETUNE_DFT | USBPCR_TXVREFTUNE_DFT;
->> +    }
->> +
->> +    reg |= USBPCR_COMMONONN | USBPCR_POR;
->>      writel(reg, priv->base + REG_USBPCR_OFFSET);
->>
->> -    /* Wait for PHY to reset */
->> +    /*
->> +     * Power-On Reset(POR)
->> +     * Function:This customer-specific signal resets all test registers
->> +     * and state machines in the USB 2.0 nanoPHY.
->> +     * The POR signal must be asserted for a minimum of 10 μs.
->> +     * For POR timing information:
->> +     *
->> +     * T0: Power-on reset (POR) is initiated. 0 (reference).
->> +     * T1: T1 indicates when POR can be set to 1’b0. (To provide 
->> examples,
->> +     * values for T2 and T3 are also shown where T1 = T0 + 30 μs.);
->> +     * In general, T1 must be ≥ T0 + 10 μs. T0 + 10 μs ≤ T1.
->> +     * T2: T2 indicates when PHYCLOCK, CLK48MOHCI, and CLK12MOHCI are
->> +     * available at the macro output, based on the USB 2.0 nanoPHY
->> +     * reference clock source.
->> +     * Crystal:
->> +     *    • When T1 = T0 + 10 μs:
->> +     *      T2 < T1 + 805 μs = T0 + 815 μs
->> +     *    • When T1 = T0 + 30 μs:
->> +     *      T2 < T1 + 805 μs = T0 + 835 μs
->> +     * see "Reset and Power-Saving Signals" on page 60 an “Powering Up
->> +     * and Powering Down the USB 2.0 nanoPHY” on page 73.
->> +     */
->
-> I don't think this comment is very interesting. The code already says 
-> that the hardware needs at least 30 µs to reset, all the low-level 
-> details are in the programming manual for those who want to learn 
-> more. Besides, since you don't actually modify the reset code, why 
-> update the comment in this patch?
->
-
-Okay, I will drop it in the next version.
-
-
->>      usleep_range(30, 300);
->>      writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
->>      usleep_range(300, 1000);
->> @@ -166,6 +251,15 @@ static void jz4770_phy_remove(void *phy)
->>      usb_remove_phy(phy);
->>  }
->>
->> +static const struct of_device_id ingenic_usb_phy_of_matches[] = {
->> +    { .compatible = "ingenic,jz4770-phy", .data = (void *) ID_JZ4770 },
->> +    { .compatible = "ingenic,jz4780-phy", .data = (void *) ID_JZ4780 },
->> +    { .compatible = "ingenic,x1000-phy", .data = (void *) ID_X1000 },
->> +    { .compatible = "ingenic,x1830-phy", .data = (void *) ID_X1830 },
->
-> I'm not a fan of having ID_* as platform data. Create 'soc_info' 
-> structures, one per supported SoC, and pass them here. Then you can 
-> add a 'version' field of type 'enum ingenic_usb_phy_version'. And add 
-> a '.phy_init' field as a function pointer, that would be called within 
-> jz4770_phy_init(). That would make the jz4770_phy_init() function much 
-> cleaner (no if/else/else/else/...).
-
-
-Sure, I will do it in the next version.
-
-
->
->> +    { }
->> +};
->> +MODULE_DEVICE_TABLE(of, ingenic_usb_phy_of_matches);
->> +
->>  static int jz4770_phy_probe(struct platform_device *pdev)
->>  {
->>      struct device *dev = &pdev->dev;
->> @@ -176,11 +270,13 @@ static int jz4770_phy_probe(struct 
->> platform_device *pdev)
->>      if (!priv)
->>          return -ENOMEM;
->>
->> +    priv->version = (enum 
->> ingenic_usb_phy_version)of_device_get_match_data(dev);
->> +
->>      platform_set_drvdata(pdev, priv);
->>      priv->dev = dev;
->>      priv->phy.dev = dev;
->>      priv->phy.otg = &priv->otg;
->> -    priv->phy.label = "jz4770-phy";
->> +    priv->phy.label = "ingenic-usb-phy";
->>      priv->phy.init = jz4770_phy_init;
->>      priv->phy.shutdown = jz4770_phy_shutdown;
->>
->> @@ -221,23 +317,15 @@ static int jz4770_phy_probe(struct 
->> platform_device *pdev)
->>      return devm_add_action_or_reset(dev, jz4770_phy_remove, 
->> &priv->phy);
->>  }
->>
->> -#ifdef CONFIG_OF
->> -static const struct of_device_id jz4770_phy_of_matches[] = {
->> -    { .compatible = "ingenic,jz4770-phy" },
->> -    { }
->> -};
->> -MODULE_DEVICE_TABLE(of, jz4770_phy_of_matches);
->> -#endif
->> -
->> -static struct platform_driver jz4770_phy_driver = {
->> +static struct platform_driver ingenic_usb_phy_driver = {
->>      .probe        = jz4770_phy_probe,
->>      .driver        = {
->> -        .name    = "jz4770-phy",
->> -        .of_match_table = of_match_ptr(jz4770_phy_of_matches),
->> +        .name    = "ingenic-usb-phy",
->> +        .of_match_table = of_match_ptr(ingenic_usb_phy_of_matches),
->
-> It's preferred not to rename the functions unless you have a good 
-> reason, and you definitely shouldn't rename the module. It's OK to 
-> have a driver called 'jz4770-phy' even if it supports more SoCs. 
-> Renaming it breaks userspace ABI.
-
-
-Sure.
-
-
-Thanks and best regards!
-
-
->
-> Cheers,
-> -Paul
->
->>      },
->>  };
->> -module_platform_driver(jz4770_phy_driver);
->> +module_platform_driver(ingenic_usb_phy_driver);
->>
->>  MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
->> -MODULE_DESCRIPTION("Ingenic JZ4770 USB PHY driver");
->> +MODULE_DESCRIPTION("Ingenic SoCs USB PHY driver");
->>  MODULE_LICENSE("GPL");
->> -- 
->> 2.11.0
->>
->
+Laurent Pinchart
