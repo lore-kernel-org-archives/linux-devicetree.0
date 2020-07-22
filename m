@@ -2,121 +2,88 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D87C433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 00:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22C0C433E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7D520771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 00:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oD8YLncu"
+	by mail.kernel.org (Postfix) with ESMTP id 7F2DE208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 00:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595379433;
+	bh=ixbCeX47fIGI9Saa2Wc+hbWi7zHZVD3equCOUqRHMbI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=ySCNaG9DJdgias+t+6UNzSnN7Wyu6+3c2oZBue+smle6lQ3eF7PrLCAgl00CQ09Mj
+	 58EpOSe4sT+OSMRUPviJr4B2nB6NeHgDeFrIYy3/nDIbCMwyYChrgv2BvZtjxakpws
+	 ok4sWpYU/GLKAPHyjZxp4A+kntrFv6M/zUxhQJD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgGVAFZ (ORCPT
+        id S1731584AbgGVA5N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 20:05:25 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46604 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgGVAFZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 20:05:25 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06M05DNQ130836;
-        Tue, 21 Jul 2020 19:05:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595376313;
-        bh=BaVl8BMz9uCrVtWj8q6K5EptiOMW/J/P4Io6v+g3r48=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=oD8YLncuwpqLVfP44aad7yVfnnIbBiWWZQDlL+0IbEHVFexNY88DyDBtIKnkoBuc3
-         B9iTHy/zDVPctK+VYwk96rpNScnZVcPiF3nf5lTInI81JWFnDsMWDOmC/LNt+3yNQx
-         uKy7CNAlsmTxJqCJw0QMrYBMty7MFjOQhzzRJkmA=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06M05D0m058564
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 Jul 2020 19:05:13 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 21
- Jul 2020 19:05:13 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 21 Jul 2020 19:05:13 -0500
-Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06M05DVv046850;
-        Tue, 21 Jul 2020 19:05:13 -0500
-Subject: Re: [PATCH v31 03/12] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
-        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200716182007.18389-1-dmurphy@ti.com>
- <20200716182007.18389-4-dmurphy@ti.com> <20200721210724.GD5966@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <59d0a02c-cfae-1170-728d-2ae332a81f6e@ti.com>
-Date:   Tue, 21 Jul 2020 19:05:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200721210724.GD5966@amd>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 21 Jul 2020 20:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731561AbgGVA5M (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 21 Jul 2020 20:57:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F243D20792;
+        Wed, 22 Jul 2020 00:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595379432;
+        bh=ixbCeX47fIGI9Saa2Wc+hbWi7zHZVD3equCOUqRHMbI=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=IejbyqoiNK7Luy4TAyeeNNy7rPXl8xiL0ZdWgT1hijD3gJTwstjjH5P78lak6wDZS
+         Fu8wufz5ryTGUOOyWf9zraOO3TI2ICHYjVQmflFC/uvRmll/wyjDaEdiZvPvIGcC93
+         xQD4+WuhqBY2X0HBtP8FRpD1LiQFMe8u1GZJhpVI=
+Date:   Wed, 22 Jul 2020 01:56:59 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     tiwai@suse.com, perex@perex.cz, Dan Murphy <dmurphy@ti.com>,
+        lgirdwood@gmail.com
+Cc:     alsa-devel@alsa-project.org, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20200720181202.31000-1-dmurphy@ti.com>
+References: <20200720181202.31000-1-dmurphy@ti.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: tas2770: Convert tas2770 binding to yaml
+Message-Id: <159537940424.49432.10532525399520468723.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pavel
+On Mon, 20 Jul 2020 13:12:01 -0500, Dan Murphy wrote:
+> Convert the tas2770 binding to yaml format.
+> Add in the reset-gpio to the binding as it is in the code but not
+> documented in the binding.
 
-On 7/21/20 4:07 PM, Pavel Machek wrote:
-> On Thu 2020-07-16 13:19:58, Dan Murphy wrote:
->> Introduce the LP5036/30/24/18/12/9 RGB LED driver.
->> The difference in these parts are the number of
->> LED outputs where the:
->>
->> LP5036 can control 36 LEDs
->> LP5030 can control 30 LEDs
->> LP5024 can control 24 LEDs
->> LP5018 can control 18 LEDs
->> LP5012 can control 12 LEDs
->> LP5009 can control 9 LEDs
->>
->> The device has the ability to group LED output into control banks
->> so that multiple LED banks can be controlled with the same mixing and
->> brightness.  Inversely the LEDs can also be controlled independently.
->>
->> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> +/*
->> + * struct lp50xx_chip_info -
->> + * @num_leds: number of LED outputs available on the device
->> + * @led_brightness0_reg: first brightness register of the device
->> + * @mix_out0_reg: first color mix register of the device
->> + * @bank_brt_reg: bank brightness register
->> + * @bank_mix_reg: color mix register
->> + * @reset_reg: device reset register
->> + */
-> Should have /** if this is kerneldoc.
->
->> +		init_data.fwnode = child;
->> +		num_colors = 0;
->> +
->> +		/* There are only 3 LEDs per module otherwise they should be
->> +		 * banked which also is presented as 3 LEDs
->> +		 */
-> This is not usual comment style for kernel. (And add . at end of
-> sentence).
+Applied to
 
-I will fix both.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Dan
+Thanks!
 
+[1/2] ASoC: tas2770: Convert tas2770 binding to yaml
+      commit: ad0ddbb9ba3d5216bf3035db6684c1507c90b93b
+[2/2] ASoC: tas2770: Fix reset gpio property name
+      commit: 58b868f51d6e38146e44cb09fcd92b5fc35d83bc
 
-> Best regards,
-> 									Pavel
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
