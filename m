@@ -2,624 +2,183 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E310C433E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0645C433E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046B020771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B681620729
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="ozQc4uwC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="s55h9RZ/";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="VtkURXhU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbgGVK2v (ORCPT
+        id S1732044AbgGVKcc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731814AbgGVK2u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 06:28:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9C1C0619DF
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 03:28:50 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q6so1924874ljp.4
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 03:28:50 -0700 (PDT)
+        Wed, 22 Jul 2020 06:32:32 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:16520 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731951AbgGVKcc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 06:32:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595413951; x=1626949951;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=mSehFQkck53P3sniCiCm7vZp42rPCCjCurLfB43bk68=;
+  b=s55h9RZ/eiqYJeelzaIovQ6FneUfnNO6Fk3xUTZ82DC5FLYLwuyIP98b
+   KyLzEib5qLUWNhPh1C1t3ERpncAvlXZFcISHNqRncuUHPR5vbYjeLzQ4C
+   dSyWqP3EpltJP77EokVLQHQGladzKvKCwfzupyDjT+CwjaTnbvuHxt9AH
+   2CCmpZeJbQT28V5J4af3cM/wgpTG5Zxjf73XGqKxLnlHXm41lYqkERGnf
+   VSiHJXYB55F2v8tT8pXGky2gHWP4/1YZUG3xrPk/GEqX1LU6PW7q7q6Zr
+   kl6+CL3kxiEd3asw/vnKFSBY+jAihUDDoHoz8e87MZnKAF7c15PFkVzZ3
+   A==;
+IronPort-SDR: EwhPXCwCP7ncbTQJjGCcgGdi3myVqMi1FeVnFyTIiVNCghDmfbMoq2pe3CSdhoGMz2Stcu+XFW
+ CEIEmOxidpzRhw7iEX5Ex2XidSVkEgdzfsbekbMUFvXHX8fUpxMWJwCzVPEvWMuV5ZiHf/03tA
+ YOkToRt9vFQLoMrrhCh1aYN3hq+frguO3gVX/AZVshaggR4TZR+4P4NCHqZBBR1YchDO4+uuDy
+ NMK/pVdBnSQfKM9g9gtc0R/I3/CpRHw04jvBFC2fd9gztMnT4qSFHMOHdleOIFQP5S207Jd8bN
+ hTo=
+X-IronPort-AV: E=Sophos;i="5.75,381,1589266800"; 
+   d="scan'208";a="84934310"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jul 2020 03:32:31 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 22 Jul 2020 03:31:52 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Wed, 22 Jul 2020 03:32:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nDyyoDDqixq6VoeXRnP1rOwkH+xdh42/4hYRqWPej4fwbEvYE7GB2KFHDLRn4jXkGML6n0sRg6AvVmfU2O/4/i5vcSnb86KgGN8eUc6pZAp9fEZaUQadV8zt5HyGfM4GopZh1UWUgtaerl91KUzKqRUSIiqPEL+juBRFU3rdhKjH4aV0I28WAzxiZsjEMu8YFxJ8tVUK2D6NO62wbBtoDIKPoe77uEfeFfl94UaOMY/1mhEFmtEHcBt0ojpRFBKMIQ96RrPLzdTiJPsmZ9aYSrmWVe7GUZQpFLLKsXzaFCg888qmgDeQV94cjg0z9+wi8k2Z+Mj4bkJSOxj03CFnfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mSehFQkck53P3sniCiCm7vZp42rPCCjCurLfB43bk68=;
+ b=DrOwkBg3KLvRnd3xKnd0ato/huz534H38nfvpjhbUOg1BvZk6OFXK4tRamZOigc40OmeSMoc3ANoFJnGBqdpkS70hitwZE+tpdzuJXnlCyMLVyaB1mkNvLfoSJsblIb88NH1okwc3yfIaHDjSRWVCynd996ikz4PCu8DiCBO0G2YT/b1pwWHh+RwkP9ULIhbRAixLJcOlNJ6nIJtDEL+L6uqbl2zat5qbKqZAVzAfB7Ln7voYqOhtOc2KAcxH05aB2SBPbQp2rP4ASl3u/J2kin52FjQaHEupgNpI9AYkFSX2MpElDmbtkurL7un3pmPvXrv1xrzvZIi7zZgez4IMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cJagAd/8WC9XvDkDHHpHzrb4DXFYXl9tVuuVOihRO7o=;
-        b=ozQc4uwCgb6gg+UVo/nvdwswx1zEXCaCG1TeuMWDDr9UtcDMKBpwt4qRdmMGEipCbR
-         4RF5+/0PavG5KfEWKjAB45Te3yGGvutKC37xe+tfBUa7BIpahzYU0BuMuabPp9lK8WJj
-         EsBYHX/3u8HfIUIOfTgQm+kjbb9Tihy0VNq20=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cJagAd/8WC9XvDkDHHpHzrb4DXFYXl9tVuuVOihRO7o=;
-        b=KmbcTf0v+VJOFPMIXpwMvmb3vcF/5qWXM0TRiu7waVG0D4OVXMRgppDGAv2N7vV/oB
-         SHXO309LDeAZw1aZhZqZ/k4HugsOxjQPkXnwUNa44NmHFYRhR3wEpay6d0W2NT+JpnbU
-         5X+nmzjVTRb8zlG8ZLIGoinuAGu4LS1tUmuwI9s7u4FiHeu7F/K5xee/DjeVj3j4195+
-         h69QDNempNxCC0F+N5ZjgNl3m4huQFDGnp7Nte+LwMIQAh1XN73J5G9EzZFbtMIyP8zQ
-         ROU2yHOOp1+NNkBSyl5SkloVZYn4aUdxLHisDQqvGhBEntDdUu5aBkvUN8HoXEFpQAaw
-         0icQ==
-X-Gm-Message-State: AOAM531BoXsdcqrAtIkyUWAZbYQOqQB0aneEyx5y+HOxuj3afgg2n3Ib
-        R4yzXu/vmq5ke6pTGLFmqbuAYjjwtwRGHw==
-X-Google-Smtp-Source: ABdhPJyX44O5oRnn4Mjq5vqjvzhp0LolRYhOPXFYIRU/AiigYLM4TsvV78QDkDJkEVhLkP5yfQ4VKQ==
-X-Received: by 2002:a2e:b0da:: with SMTP id g26mr14827755ljl.299.1595413728490;
-        Wed, 22 Jul 2020 03:28:48 -0700 (PDT)
-Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
-        by smtp.gmail.com with ESMTPSA id l13sm874808lfk.18.2020.07.22.03.28.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 03:28:47 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 12:28:42 +0200
-From:   Mateusz Holenko <mholenko@antmicro.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mateusz Holenko <mholenko@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
-Subject: [PATCH v9 5/5] drivers/tty/serial: add LiteUART driver
-Message-ID: <20200722122704.1153221-5-mholenko@antmicro.com>
-References: <20200722122704.1153221-0-mholenko@antmicro.com>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mSehFQkck53P3sniCiCm7vZp42rPCCjCurLfB43bk68=;
+ b=VtkURXhUW6fkLOWJ6r41QjEuAyUXVlYw+6KDZjVxtaKZiwT7YgDsVFb1PlW++J12NoU4j4S+NEfbXBkdc3X8ENyLRggULQuZI4ltswp+2/xotkDSWhAqBuoenaW9BJP74oHCEzbWqQVGf88fR/qNoDLcj4x+O+dTMYzZ0LW/vxE=
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
+ DM5PR11MB1579.namprd11.prod.outlook.com (2603:10b6:4:f::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3195.17; Wed, 22 Jul 2020 10:32:21 +0000
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b]) by DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b%6]) with mapi id 15.20.3195.025; Wed, 22 Jul 2020
+ 10:32:21 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <Codrin.Ciubotariu@microchip.com>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Nicolas.Ferre@microchip.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>
+Subject: Re: [PATCH net-next v2 0/7] Add an MDIO sub-node under MACB
+Thread-Topic: [PATCH net-next v2 0/7] Add an MDIO sub-node under MACB
+Thread-Index: AQHWYBNhIyVBpIRYr0OAbjzWw9KOlQ==
+Date:   Wed, 22 Jul 2020 10:32:21 +0000
+Message-ID: <0ec99957-57e9-b384-425a-ccf0e877f1a1@microchip.com>
+References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none
+ header.from=microchip.com;
+x-originating-ip: [82.76.227.81]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b2e53ba4-6a44-4b81-8b77-08d82e2a847e
+x-ms-traffictypediagnostic: DM5PR11MB1579:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB1579A5A283589FD176C6FFEE87790@DM5PR11MB1579.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9qIws/ko0g8YERoqkd0eS1DBdkNwx2bu9VMEWpz8JtbazDVrg8Ew1o+wqZHGH1ckWueksa62GOCfS4YvHj6LcCMbPJh88C8+qmSJ2ezU+ig/XmwTfw9TM1w5HJEUrx+RuGNEwv1pFS3rf+vkdTr3CfSbTgYaPlTCIfhGM0cpVfewNI7fKHrdsbLAlGfYMWSfQinHz0eVwQJHPVHCUYybGTTQ4Kq6GDzJk4npmL6yH3+WQXox1xOrHWQ7ubajNBxyBWljoGl1umV5Ia3QMthyB8g+OTMg8L93/BV1t7gNp4YvDzF863E1twn9xH/1BwxeZxQauJPb++0yGfdXfjMk5aCLIkhJmwPykFoSE78U7cfdIi3Y04FiZjb+uBCOJ1j3
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(136003)(366004)(376002)(346002)(83380400001)(53546011)(26005)(186003)(71200400001)(54906003)(6506007)(2906002)(7416002)(8936002)(478600001)(8676002)(66476007)(66946007)(316002)(91956017)(76116006)(5660300002)(66556008)(110136005)(36756003)(2616005)(66446008)(64756008)(86362001)(6486002)(6512007)(4326008)(31696002)(107886003)(31686004)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ppeUkvwyu5lNlRRMMd/YB4ryvPja6faWbZOSZ3rnaRIZcykR5yQNeYSBrVxHrs0I3BdI7yFrms/D9jFUeQadysVkdBTTMg7Spnb8m53SpADtYOjPLQH2Nyk7PIPfycFwx2aZdUia9MWXtfuYHIiJKWRwH5Pf0EVYoiNmyyEi3O7ncquEv+w8vXkJgcAtVX4AJ65nEQ9hz492DU3uqjlAVxGg42GeZMl1W9vUISyuw4M5+cvqzgAY4oEQyByiKHYisyZNEQ0ENaPdL1sz1nDE7UPipO7TQffHe1Ijm44m2RKCpaf9b2PbQvVy4OdJfdsLfEFwanuc+yEojhWTlRijbS8A3SwvNM04Ulxahv/Y42m0OaJDx3BnjAbt+s+9nL268PxB1WajwcgV8eIUrrEyXwjqW8NkMfPI2lq5Iu+unPkQF0UCWu/l6amSDnyystKdNLOH8Kc1kw8MZcRiemBDZOhDwcoXxWKSaEr14AYLF1U=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E3BDC96C2D703544AD0399E97891AAB7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722122704.1153221-0-mholenko@antmicro.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3420.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2e53ba4-6a44-4b81-8b77-08d82e2a847e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jul 2020 10:32:21.7775
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ie0o4VJubYVxh2O8ev4DHkVc1IWuU1Prhyg7y1DXUiUPSjTC73iYXbGp4wxgNyUZmppCC23FJq0VWhspGwStm5o3Vadavj5eIb5THUzntuU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1579
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Filip Kokosinski <fkokosinski@antmicro.com>
-
-This commit adds driver for the FPGA-based LiteUART serial controller
-from LiteX SoC builder.
-
-The current implementation supports LiteUART configured
-for 32 bit data width and 8 bit CSR bus width.
-
-It does not support IRQ.
-
-Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
-Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
----
-
-Notes:
-    No changes in v9.
-
-    Changes in v8:
-    - fixed help messages in LiteUART's KConfig
-    - removed dependency between LiteUART and LiteX SoC drivers
-
-    Changed in v7:
-    - added missing include directive
-
-    Changes in v6:
-    - LiteUART ports now stored in xArray
-    - removed PORT_LITEUART
-    - fixed formatting
-    - removed some unnecessary defines
-
-    No changes in v5.
-
-    Changes in v4:
-    - fixed copyright header
-    - removed a wrong dependency on UARTLITE from Kconfig
-    - added a dependency on LITEX_SOC_CONTROLLER to LITEUART in Kconfig
-
-    Changes in v3:
-    - aliases made optional
-    - used litex_get_reg/litex_set_reg functions instead of macros
-    - SERIAL_LITEUART_NR_PORTS renamed to SERIAL_LITEUART_MAX_PORTS
-    - PORT_LITEUART changed from 122 to 123
-    - added dependency on LITEX_SOC_CONTROLLER
-    - patch number changed from 4 to 5
-
-    No changes in v2.
-
- MAINTAINERS                   |   1 +
- drivers/tty/serial/Kconfig    |  32 +++
- drivers/tty/serial/Makefile   |   1 +
- drivers/tty/serial/liteuart.c | 402 ++++++++++++++++++++++++++++++++++
- 4 files changed, 436 insertions(+)
- create mode 100644 drivers/tty/serial/liteuart.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4d70a1b22a87..1387cefc63ce 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9841,6 +9841,7 @@ M:	Mateusz Holenko <mholenko@antmicro.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/*/litex,*.yaml
- F:	drivers/soc/litex/litex_soc_ctrl.c
-+F:	drivers/tty/serial/liteuart.c
- F:	include/linux/litex.h
- 
- LIVE PATCHING
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index adf9e80e7dc9..17aaf0afb27a 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1562,6 +1562,38 @@ config SERIAL_MILBEAUT_USIO_CONSOLE
- 	  receives all kernel messages and warnings and which allows logins in
- 	  single user mode).
- 
-+config SERIAL_LITEUART
-+	tristate "LiteUART serial port support"
-+	depends on HAS_IOMEM
-+	depends on OF || COMPILE_TEST
-+	depends on LITEX_SOC_CONTROLLER
-+	select SERIAL_CORE
-+	help
-+	  This driver is for the FPGA-based LiteUART serial controller from LiteX
-+	  SoC builder.
-+
-+	  Say 'Y' or 'M' here if you wish to use the LiteUART serial controller.
-+	  Otherwise, say 'N'.
-+
-+config SERIAL_LITEUART_MAX_PORTS
-+	int "Maximum number of LiteUART ports"
-+	depends on SERIAL_LITEUART
-+	default "1"
-+	help
-+	  Set this to the maximum number of serial ports you want the driver
-+	  to support.
-+
-+config SERIAL_LITEUART_CONSOLE
-+	bool "LiteUART serial port console support"
-+	depends on SERIAL_LITEUART=y
-+	select SERIAL_CORE_CONSOLE
-+	help
-+	  Say 'Y' or 'M' here if you wish to use the FPGA-based LiteUART serial
-+	  controller from LiteX SoC builder as the system console
-+	  (the system console is the device which receives all kernel messages
-+	  and warnings and which allows logins in single user mode).
-+	  Otherwise, say 'N'.
-+
- endmenu
- 
- config SERIAL_MCTRL_GPIO
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index d056ee6cca33..9f8ba419ff3b 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -89,6 +89,7 @@ obj-$(CONFIG_SERIAL_OWL)	+= owl-uart.o
- obj-$(CONFIG_SERIAL_RDA)	+= rda-uart.o
- obj-$(CONFIG_SERIAL_MILBEAUT_USIO) += milbeaut_usio.o
- obj-$(CONFIG_SERIAL_SIFIVE)	+= sifive.o
-+obj-$(CONFIG_SERIAL_LITEUART) += liteuart.o
- 
- # GPIOLIB helpers for modem control lines
- obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
-diff --git a/drivers/tty/serial/liteuart.c b/drivers/tty/serial/liteuart.c
-new file mode 100644
-index 000000000000..b087e6a32106
---- /dev/null
-+++ b/drivers/tty/serial/liteuart.c
-@@ -0,0 +1,402 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * LiteUART serial controller (LiteX) Driver
-+ *
-+ * Copyright (C) 2019-2020 Antmicro <www.antmicro.com>
-+ */
-+
-+#include <linux/console.h>
-+#include <linux/litex.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/serial.h>
-+#include <linux/serial_core.h>
-+#include <linux/slab.h>
-+#include <linux/timer.h>
-+#include <linux/tty_flip.h>
-+#include <linux/xarray.h>
-+
-+/*
-+ * CSRs definitions (base address offsets + width)
-+ *
-+ * The definitions below are true for LiteX SoC configured for 8-bit CSR Bus,
-+ * 32-bit aligned.
-+ *
-+ * Supporting other configurations might require new definitions or a more
-+ * generic way of indexing the LiteX CSRs.
-+ *
-+ * For more details on how CSRs are defined and handled in LiteX, see comments
-+ * in the LiteX SoC Driver: drivers/soc/litex/litex_soc_ctrl.c
-+ */
-+#define OFF_RXTX	0x00
-+#define OFF_TXFULL	0x04
-+#define OFF_RXEMPTY	0x08
-+#define OFF_EV_STATUS	0x0c
-+#define OFF_EV_PENDING	0x10
-+#define OFF_EV_ENABLE	0x14
-+
-+/* events */
-+#define EV_TX		0x1
-+#define EV_RX		0x2
-+
-+struct liteuart_port {
-+	struct uart_port port;
-+	struct timer_list timer;
-+};
-+
-+#define to_liteuart_port(port)	container_of(port, struct liteuart_port, port)
-+
-+static DEFINE_XARRAY_FLAGS(liteuart_array, XA_FLAGS_ALLOC);
-+
-+#ifdef CONFIG_SERIAL_LITEUART_CONSOLE
-+static struct console liteuart_console;
-+#endif
-+
-+static struct uart_driver liteuart_driver = {
-+	.owner = THIS_MODULE,
-+	.driver_name = "liteuart",
-+	.dev_name = "ttyLXU",
-+	.major = 0,
-+	.minor = 0,
-+	.nr = CONFIG_SERIAL_LITEUART_MAX_PORTS,
-+#ifdef CONFIG_SERIAL_LITEUART_CONSOLE
-+	.cons = &liteuart_console,
-+#endif
-+};
-+
-+static void liteuart_timer(struct timer_list *t)
-+{
-+	struct liteuart_port *uart = from_timer(uart, t, timer);
-+	struct uart_port *port = &uart->port;
-+	unsigned char __iomem *membase = port->membase;
-+	unsigned int flg = TTY_NORMAL;
-+	int ch;
-+	unsigned long status;
-+
-+	while ((status = !litex_get_reg(membase + OFF_RXEMPTY, 1)) == 1) {
-+		ch = litex_get_reg(membase + OFF_RXTX, 1);
-+		port->icount.rx++;
-+
-+		/* necessary for RXEMPTY to refresh its value */
-+		litex_set_reg(membase + OFF_EV_PENDING, 1, EV_TX | EV_RX);
-+
-+		/* no overflow bits in status */
-+		if (!(uart_handle_sysrq_char(port, ch)))
-+			uart_insert_char(port, status, 0, ch, flg);
-+
-+		tty_flip_buffer_push(&port->state->port);
-+	}
-+
-+	mod_timer(&uart->timer, jiffies + uart_poll_timeout(port));
-+}
-+
-+static void liteuart_putchar(struct uart_port *port, int ch)
-+{
-+	while (litex_get_reg(port->membase + OFF_TXFULL, 1))
-+		cpu_relax();
-+
-+	litex_set_reg(port->membase + OFF_RXTX, 1, ch);
-+}
-+
-+static unsigned int liteuart_tx_empty(struct uart_port *port)
-+{
-+	/* not really tx empty, just checking if tx is not full */
-+	if (!litex_get_reg(port->membase + OFF_TXFULL, 1))
-+		return TIOCSER_TEMT;
-+
-+	return 0;
-+}
-+
-+static void liteuart_set_mctrl(struct uart_port *port, unsigned int mctrl)
-+{
-+	/* modem control register is not present in LiteUART */
-+}
-+
-+static unsigned int liteuart_get_mctrl(struct uart_port *port)
-+{
-+	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
-+}
-+
-+static void liteuart_stop_tx(struct uart_port *port)
-+{
-+}
-+
-+static void liteuart_start_tx(struct uart_port *port)
-+{
-+	struct circ_buf *xmit = &port->state->xmit;
-+	unsigned char ch;
-+
-+	if (unlikely(port->x_char)) {
-+		litex_set_reg(port->membase + OFF_RXTX, 1, port->x_char);
-+		port->icount.tx++;
-+		port->x_char = 0;
-+	} else if (!uart_circ_empty(xmit)) {
-+		while (xmit->head != xmit->tail) {
-+			ch = xmit->buf[xmit->tail];
-+			xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-+			port->icount.tx++;
-+			liteuart_putchar(port, ch);
-+		}
-+	}
-+
-+	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-+		uart_write_wakeup(port);
-+}
-+
-+static void liteuart_stop_rx(struct uart_port *port)
-+{
-+	struct liteuart_port *uart = to_liteuart_port(port);
-+
-+	/* just delete timer */
-+	del_timer(&uart->timer);
-+}
-+
-+static void liteuart_break_ctl(struct uart_port *port, int break_state)
-+{
-+	/* LiteUART doesn't support sending break signal */
-+}
-+
-+static int liteuart_startup(struct uart_port *port)
-+{
-+	struct liteuart_port *uart = to_liteuart_port(port);
-+
-+	/* disable events */
-+	litex_set_reg(port->membase + OFF_EV_ENABLE, 1, 0);
-+
-+	/* prepare timer for polling */
-+	timer_setup(&uart->timer, liteuart_timer, 0);
-+	mod_timer(&uart->timer, jiffies + uart_poll_timeout(port));
-+
-+	return 0;
-+}
-+
-+static void liteuart_shutdown(struct uart_port *port)
-+{
-+}
-+
-+static void liteuart_set_termios(struct uart_port *port, struct ktermios *new,
-+				 struct ktermios *old)
-+{
-+	unsigned int baud;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+
-+	/* update baudrate */
-+	baud = uart_get_baud_rate(port, new, old, 0, 460800);
-+	uart_update_timeout(port, new->c_cflag, baud);
-+
-+	spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static const char *liteuart_type(struct uart_port *port)
-+{
-+	return "liteuart";
-+}
-+
-+static void liteuart_release_port(struct uart_port *port)
-+{
-+}
-+
-+static int liteuart_request_port(struct uart_port *port)
-+{
-+	return 0;
-+}
-+
-+static void liteuart_config_port(struct uart_port *port, int flags)
-+{
-+	/*
-+	 * Driver core for serial ports forces a non-zero value for port type.
-+	 * Write an arbitrary value here to accommodate the serial core driver,
-+	 * as ID part of UAPI is redundant.
-+	 */
-+	port->type = 1;
-+}
-+
-+static int liteuart_verify_port(struct uart_port *port,
-+				struct serial_struct *ser)
-+{
-+	if (port->type != PORT_UNKNOWN && ser->type != 1)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct uart_ops liteuart_ops = {
-+	.tx_empty	= liteuart_tx_empty,
-+	.set_mctrl	= liteuart_set_mctrl,
-+	.get_mctrl	= liteuart_get_mctrl,
-+	.stop_tx	= liteuart_stop_tx,
-+	.start_tx	= liteuart_start_tx,
-+	.stop_rx	= liteuart_stop_rx,
-+	.break_ctl	= liteuart_break_ctl,
-+	.startup	= liteuart_startup,
-+	.shutdown	= liteuart_shutdown,
-+	.set_termios	= liteuart_set_termios,
-+	.type		= liteuart_type,
-+	.release_port	= liteuart_release_port,
-+	.request_port	= liteuart_request_port,
-+	.config_port	= liteuart_config_port,
-+	.verify_port	= liteuart_verify_port,
-+};
-+
-+static int liteuart_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct liteuart_port *uart;
-+	struct uart_port *port;
-+	struct xa_limit limit;
-+	int dev_id, ret;
-+
-+	/* no device tree */
-+	if (!np)
-+		return -ENODEV;
-+
-+	/* look for aliases; auto-enumerate for free index if not found */
-+	dev_id = of_alias_get_id(np, "serial");
-+	if (dev_id < 0)
-+		limit = XA_LIMIT(0, CONFIG_SERIAL_LITEUART_MAX_PORTS);
-+	else
-+		limit = XA_LIMIT(dev_id, dev_id);
-+
-+	uart = kzalloc(sizeof(struct liteuart_port), GFP_KERNEL);
-+	if (!uart)
-+		return -ENOMEM;
-+
-+	ret = xa_alloc(&liteuart_array, &dev_id, uart, limit, GFP_KERNEL);
-+	if (ret)
-+		return ret;
-+
-+	port = &uart->port;
-+
-+	/* get membase */
-+	port->membase = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-+	if (!port->membase)
-+		return -ENXIO;
-+
-+	/* values not from device tree */
-+	port->dev = &pdev->dev;
-+	port->iotype = UPIO_MEM;
-+	port->flags = UPF_BOOT_AUTOCONF;
-+	port->ops = &liteuart_ops;
-+	port->regshift = 2;
-+	port->fifosize = 16;
-+	port->iobase = 1;
-+	port->type = PORT_UNKNOWN;
-+	port->line = dev_id;
-+	spin_lock_init(&port->lock);
-+
-+	return uart_add_one_port(&liteuart_driver, &uart->port);
-+}
-+
-+static int liteuart_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static const struct of_device_id liteuart_of_match[] = {
-+	{ .compatible = "litex,liteuart" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, liteuart_of_match);
-+
-+static struct platform_driver liteuart_platform_driver = {
-+	.probe = liteuart_probe,
-+	.remove = liteuart_remove,
-+	.driver = {
-+		.name = "liteuart",
-+		.of_match_table = liteuart_of_match,
-+	},
-+};
-+
-+#ifdef CONFIG_SERIAL_LITEUART_CONSOLE
-+
-+static void liteuart_console_write(struct console *co, const char *s,
-+	unsigned int count)
-+{
-+	struct liteuart_port *uart;
-+	struct uart_port *port;
-+	unsigned long flags;
-+
-+	uart = (struct liteuart_port *)xa_load(&liteuart_array, co->index);
-+	port = &uart->port;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+	uart_console_write(port, s, count, liteuart_putchar);
-+	spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static int liteuart_console_setup(struct console *co, char *options)
-+{
-+	struct liteuart_port *uart;
-+	struct uart_port *port;
-+	int baud = 115200;
-+	int bits = 8;
-+	int parity = 'n';
-+	int flow = 'n';
-+
-+	uart = (struct liteuart_port *)xa_load(&liteuart_array, co->index);
-+	if (!uart)
-+		return -ENODEV;
-+
-+	port = &uart->port;
-+	if (!port->membase)
-+		return -ENODEV;
-+
-+	if (options)
-+		uart_parse_options(options, &baud, &parity, &bits, &flow);
-+
-+	return uart_set_options(port, co, baud, parity, bits, flow);
-+}
-+
-+static struct console liteuart_console = {
-+	.name = "liteuart",
-+	.write = liteuart_console_write,
-+	.device = uart_console_device,
-+	.setup = liteuart_console_setup,
-+	.flags = CON_PRINTBUFFER,
-+	.index = -1,
-+	.data = &liteuart_driver,
-+};
-+
-+static int __init liteuart_console_init(void)
-+{
-+	register_console(&liteuart_console);
-+
-+	return 0;
-+}
-+console_initcall(liteuart_console_init);
-+#endif /* CONFIG_SERIAL_LITEUART_CONSOLE */
-+
-+static int __init liteuart_init(void)
-+{
-+	int res;
-+
-+	res = uart_register_driver(&liteuart_driver);
-+	if (res)
-+		return res;
-+
-+	res = platform_driver_register(&liteuart_platform_driver);
-+	if (res) {
-+		uart_unregister_driver(&liteuart_driver);
-+		return res;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit liteuart_exit(void)
-+{
-+	platform_driver_unregister(&liteuart_platform_driver);
-+	uart_unregister_driver(&liteuart_driver);
-+}
-+
-+module_init(liteuart_init);
-+module_exit(liteuart_exit);
-+
-+MODULE_AUTHOR("Antmicro <www.antmicro.com>");
-+MODULE_DESCRIPTION("LiteUART serial driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform: liteuart");
--- 
-2.25.1
-
+DQoNCk9uIDIxLjA3LjIwMjAgMjA6MTMsIENvZHJpbiBDaXVib3Rhcml1IHdyb3RlOg0KPiBBZGRp
+bmcgdGhlIFBIWSBub2RlcyBkaXJlY3RseSB1bmRlciB0aGUgRXRoZXJuZXQgbm9kZSBiZWNhbWUg
+ZGVwcmVjYXRlZCwNCj4gc28gdGhlIGFpbSBvZiB0aGlzIHBhdGNoIHNlcmllcyBpcyB0byBtYWtl
+IE1BQ0IgdXNlIGFuIE1ESU8gbm9kZSBhcw0KPiBjb250YWluZXIgZm9yIE1ESU8gZGV2aWNlcy4N
+Cj4gVGhpcyBwYXRjaCBzZXJpZXMgc3RhcnRzIHdpdGggYSBzbWFsbCBwYXRjaCB0byB1c2UgdGhl
+IGRldmljZS1tYW5hZ2VkDQo+IGRldm1fbWRpb2J1c19hbGxvYygpLiBJbiB0aGUgbmV4dCB0d28g
+cGF0Y2hlcyB3ZSB1cGRhdGUgdGhlIGJpbmRpbmdzIGFuZA0KPiBhZGFwdCBtYWNiIGRyaXZlciB0
+byBwYXJzZSB0aGUgZGV2aWNlLXRyZWUgUEhZIG5vZGVzIGZyb20gdW5kZXIgYW4gTURJTw0KPiBu
+b2RlLiBUaGUgbGFzdCBwYXRjaGVzIGFkZCB0aGUgTURJTyBub2RlIGluIHRoZSBkZXZpY2UtdHJl
+ZXMgb2Ygc2FtYTVkMiwNCj4gc2FtYTVkMywgc2FtYWQ0IGFuZCBzYW05eDYwIGJvYXJkcy4NCj4g
+DQoNClRlc3RlZCB0aGlzIHNlcmllcyBvbiBzYW1hNWQyX3hwbGFpbmVkIGluIHRoZSBmb2xsb3dp
+bmcgc2NlbmFyaW9zOg0KDQoxLyBQSFkgYmluZGluZ3MgZnJvbSBwYXRjaCA0Lzc6DQptZGlvIHsN
+CgkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCgkjc2l6ZS1jZWxscyA9IDwwPjsNCglldGhlcm5ldC1w
+aHlAMSB7DQoJCXJlZyA9IDwweDE+Ow0KCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZwaW9BPjsNCgkJ
+aW50ZXJydXB0cyA9IDxQSU5fUEM5IElSUV9UWVBFX0xFVkVMX0xPVz47DQp9Ow0KDQoyLyBQSFkg
+YmluZGluZ3MgYmVmb3JlIHRoaXMgc2VyaWVzOg0KZXRoZXJuZXQtcGh5QDEgew0KCXJlZyA9IDww
+eDE+Ow0KCWludGVycnVwdC1wYXJlbnQgPSA8JnBpb0E+Ow0KCWludGVycnVwdHMgPSA8UElOX1BD
+OSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KfTsNCg0KMy8gTm8gUEhZIGJpbmRpbmdzIGF0IGFsbC4N
+Cg0KQWxsIDMgY2FzZXMgd2VudCBPSy4NCg0KWW91IGNhbiBhZGQ6DQpUZXN0ZWQtYnk6IENsYXVk
+aXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KQWNrZWQtYnk6IENsYXVk
+aXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KDQpUaGFuayB5b3UsDQpD
+bGF1ZGl1IEJlem5lYQ0KDQo+IENoYW5nZXMgaW4gdjI6DQo+ICAtIHJlbmFtZWQgcGF0Y2ggMi83
+IGZyb20gIm1hY2I6IGJpbmRpbmdzIGRvYzogdXNlIGFuIE1ESU8gbm9kZSBhcyBhDQo+ICAgIGNv
+bnRhaW5lciBmb3IgUEhZIG5vZGVzIiB0byAiZHQtYmluZGluZ3M6IG5ldDogbWFjYjogdXNlIGFu
+IE1ESU8NCj4gICAgbm9kZSBhcyBhIGNvbnRhaW5lciBmb3IgUEhZIG5vZGVzIg0KPiAgLSBhZGRl
+ZCBiYWNrIGEgbmV3bGluZSByZW1vdmVkIGJ5IG1pc3Rha2UgaW4gcGF0Y2ggMy83DQo+IA0KPiBD
+b2RyaW4gQ2l1Ym90YXJpdSAoNyk6DQo+ICAgbmV0OiBtYWNiOiB1c2UgZGV2aWNlLW1hbmFnZWQg
+ZGV2bV9tZGlvYnVzX2FsbG9jKCkNCj4gICBkdC1iaW5kaW5nczogbmV0OiBtYWNiOiB1c2UgYW4g
+TURJTyBub2RlIGFzIGEgY29udGFpbmVyIGZvciBQSFkgbm9kZXMNCj4gICBuZXQ6IG1hY2I6IHBh
+cnNlIFBIWSBub2RlcyBmb3VuZCB1bmRlciBhbiBNRElPIG5vZGUNCj4gICBBUk06IGR0czogYXQ5
+MTogc2FtYTVkMjogYWRkIGFuIG1kaW8gc3ViLW5vZGUgdG8gbWFjYg0KPiAgIEFSTTogZHRzOiBh
+dDkxOiBzYW1hNWQzOiBhZGQgYW4gbWRpbyBzdWItbm9kZSB0byBtYWNiDQo+ICAgQVJNOiBkdHM6
+IGF0OTE6IHNhbWE1ZDQ6IGFkZCBhbiBtZGlvIHN1Yi1ub2RlIHRvIG1hY2INCj4gICBBUk06IGR0
+czogYXQ5MTogc2FtOXg2MDogYWRkIGFuIG1kaW8gc3ViLW5vZGUgdG8gbWFjYg0KPiANCj4gIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvbWFjYi50eHQgfCAxNSArKysrKysr
+KysrKystLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtOXg2MGVrLmR0cyAgICAgICAg
+ICAgfCAgOCArKysrKystLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyN19zb20x
+LmR0c2kgICAgICB8IDE2ICsrKysrKysrKystLS0tLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F0
+OTEtc2FtYTVkMjdfd2xzb20xLmR0c2kgICAgfCAxNyArKysrKysrKysrLS0tLS0tLQ0KPiAgYXJj
+aC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyX3B0Y19lay5kdHMgICAgICB8IDEzICsrKysrKysr
+LS0tLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkMl94cGxhaW5lZC5kdHMgICAg
+fCAxMiArKysrKysrKy0tLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2FtYTVkM194cGxh
+aW5lZC5kdHMgICAgfCAxNiArKysrKysrKysrKystLS0tDQo+ICBhcmNoL2FybS9ib290L2R0cy9h
+dDkxLXNhbWE1ZDRfeHBsYWluZWQuZHRzICAgIHwgMTIgKysrKysrKystLS0tDQo+ICBkcml2ZXJz
+L25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jICAgICAgIHwgMTggKysrKysrKysrKysr
+LS0tLS0tDQo+ICA5IGZpbGVzIGNoYW5nZWQsIDg2IGluc2VydGlvbnMoKyksIDQxIGRlbGV0aW9u
+cygtKQ0KPiA=
