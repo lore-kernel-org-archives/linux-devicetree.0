@@ -2,188 +2,114 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0166DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC3BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3D2F20792
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E962064C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:30:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nG39IMDj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wFYPLNpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgGVEsK (ORCPT
+        id S1727048AbgGVFa2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 00:48:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46480 "EHLO
+        Wed, 22 Jul 2020 01:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgGVEsK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 00:48:10 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D00C0619DD
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 21:48:10 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m9so545643pfh.0
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 21:48:09 -0700 (PDT)
+        with ESMTP id S1726147AbgGVFa1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 01:30:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD3BDC061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 22:30:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a24so566657pfc.10
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 22:30:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=58zKMZOPt1u3jpGyc+egvpdxr0peyatL+Nyz70ratxs=;
-        b=nG39IMDjujMeRh/4sbcvRxIPQSNRe2DOZ6Nx2FVG6gFBmEZfpbR8IHnABB/ZFmmuYq
-         L9xik+zNqwLx6t9ltZtPjSlPzGwW8BnJ3U4QayiLDdViWAIAJtsky0WxIHPn26ocOqWy
-         goPjV8dCAOoFOA+8R4dlu0BP0LN9LKT5QfYZbL1Csgi59vmx1OEuQghm6E6wBeBB15Vz
-         UlJEiHxgOpMI29wi8Rh60WgwyBr33qFbpArVhR2gW4+hsSu0SntQMTQn8yTNYF78DY8o
-         AlyXxwIlq39XaWwhHYmo8npE5Bw4Lb0yEBUd0I9rhSUOKy+6rR2KbHStwZl1SRblTPt6
-         qjww==
+         :content-disposition:in-reply-to:user-agent;
+        bh=dl6zwzhq+FsMerc9qwgjpE1ja24WRPYdLlSyn3M9Lhc=;
+        b=wFYPLNpIceaExhbJzjXzj6tDwJR+E2dHZTr/ewhWaneEnAkKVT4tW3ngs4Ana5WOY4
+         JfAbIvMdjf1VIJe9UXtwIm9fjoqxZ4usIYpwHCVaZavJIFFd+fnrU6vME5UiA3OflLMv
+         PjFwR9gTJfbDkCNCnxFjdkM5ybfl439hSbbNWHF+AANDuDpkYtixQfBLNPZswGRM2DZc
+         A+KAoq8xOpfUBwZcC55ebWCtTICdrxK1ie00kDe8G4+14vi1XxzOFtfhfeTXnUap7efU
+         QN1XAOgUSvgdOOotJ2DjwrU3ZOPO07v9BSL1HUBLvu0PwWszIbIqxbQX6Ez2fani/u8w
+         0nmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=58zKMZOPt1u3jpGyc+egvpdxr0peyatL+Nyz70ratxs=;
-        b=bFXz81fe5fq6ObshNScOvy1dFvQyrdCWoyWhp4VChhbOLzNyxOIUWtZE4hU34Gxeec
-         gG2exi2L8KhKRiGCNTJmKxcAfT2Bz14Pj/rSqy4+jSkXk4u2obUhT6ZypsXW1X3ugPWl
-         LmFj4cXMCzU8EC2C9fbxGbqxKRgboMnu9JXK9wniXDYvYsr8anHNy2fESAJNGJoWGOhH
-         XXAo3W6fiEZvEgkLA4oOxa9d+q9zLSG+ASi7T6r3nffOPXeQNN4V2dyRsoniQlnj7vRR
-         zcGqzpJ2/lPgA8iiWsAqTYcyMO7tKsVvAFnP1QK4gXJwkFB8Q8QXpU1piI4vYtvLut2e
-         Kuag==
-X-Gm-Message-State: AOAM532kIzWUCJQx1EByOusMB51hfaRcuT1QBluyDzYUVwtRgISSdyYT
-        Vy7m5/KSL/NmZr1DIumD9Qmxug==
-X-Google-Smtp-Source: ABdhPJy06BZ1ClnCiS4rdd+DGQj+8rN/XzWayLoX5YI/eqUtY8HLfx6BNn8AsV/rf4BLpaE0sM22Nw==
-X-Received: by 2002:a63:f806:: with SMTP id n6mr24931192pgh.346.1595393289326;
-        Tue, 21 Jul 2020 21:48:09 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w1sm22555353pfq.53.2020.07.21.21.48.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 21:48:08 -0700 (PDT)
-Date:   Tue, 21 Jul 2020 21:46:15 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dl6zwzhq+FsMerc9qwgjpE1ja24WRPYdLlSyn3M9Lhc=;
+        b=aC1EMI7gt94H82ZKg5y37j4UzkjG8FVB72DTbBA8jFC/IQ1WKI//wWR1eMrpwSEiQ7
+         2nzIRZFyzRvWy6NEREFTxpkShbBqxhAt+F3h0cKd+KKz/LUbQtggVneu+777wG1WV8Il
+         ZVgTF4HJ0oYFUrM5Q6jNuBLSuz3q+6bsQeJD8j+i77tDXCobiAwRVG7dnw1eJE0AUhhf
+         0jXUSuntKw8hNbt7NMZxo3fx6BvrHGpncqO9aFgjGjEkrgAzl9kFbP0okGFIBxCg70u/
+         6mO72uw95bJGlEjX5xGf7digRlPbkW8jHC6dWnGxtwLn/Sx503jYgzTtVwy90m7rQEkP
+         gwkw==
+X-Gm-Message-State: AOAM530JR7UAxJrHuRHsmrcFHsPXm+kTLluJVI9jmqm4HpM/K7x4HJ7c
+        lg54qyw4hwxpAcYWNkSK4oRZPA==
+X-Google-Smtp-Source: ABdhPJwOr+y0DG+QB+DOdgrlRofbLELHLiFlXrD3oG8oQpR/O3B/puROrAIHaF3LxSmr19O0mGHgVA==
+X-Received: by 2002:a62:8fc6:: with SMTP id n189mr25703478pfd.10.1595395827137;
+        Tue, 21 Jul 2020 22:30:27 -0700 (PDT)
+Received: from localhost ([182.77.116.224])
+        by smtp.gmail.com with ESMTPSA id ml8sm4857037pjb.47.2020.07.21.22.30.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 Jul 2020 22:30:26 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 11:00:23 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: hwlock: qcom: Migrate binding to YAML
-Message-ID: <20200722044615.GR388985@builder.lan>
-References: <20200622075956.171058-1-bjorn.andersson@linaro.org>
- <20200622075956.171058-2-bjorn.andersson@linaro.org>
- <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
+        Jonathan <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
+Message-ID: <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu>
+References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+ <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
+ <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu>
+ <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
+ <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu>
+ <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKW+R=rygii7N69o28h5780qx645RhPXGQZ4jw3kHadhw@mail.gmail.com>
+In-Reply-To: <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 21 Jul 08:13 PDT 2020, Rob Herring wrote:
+On 21-07-20, 07:28, Rob Clark wrote:
+> With your ack, I can add the patch the dev_pm_opp_set_bw patch to my
+> tree and merge it via msm-next -> drm-next -> linus
 
-> On Mon, Jun 22, 2020 at 1:59 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > Migrate the Qualcomm TCSR mutex binding to YAML to allow validation.
-> >
-> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >
-> > Changes since v1:
-> > - Actually remove the old binding doc
-> >
-> >  .../bindings/hwlock/qcom-hwspinlock.txt       | 39 --------------
-> >  .../bindings/hwlock/qcom-hwspinlock.yaml      | 51 +++++++++++++++++++
-> >  2 files changed, 51 insertions(+), 39 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
-> >  create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> 
-> [...]
-> 
-> > diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> > new file mode 100644
-> > index 000000000000..71e63b52edd5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-> > @@ -0,0 +1,51 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/hwlock/qcom-hwspinlock.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Hardware Mutex Block
-> > +
-> > +maintainers:
-> > +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> > +
-> > +description:
-> > +  The hardware block provides mutexes utilized between different processors on
-> > +  the SoC as part of the communication protocol used by these processors.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - qcom,sfpb-mutex
-> > +      - qcom,tcsr-mutex
-> > +
-> > +  '#hwlock-cells':
-> > +    const: 1
-> > +
-> > +  syscon:
-> > +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> > +    description:
-> > +      Should be a triple of phandle referencing the TCSR mutex syscon, offset
-> > +      of first mutex within the syscon and stride between each mutex.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - '#hwlock-cells'
-> > +  - syscon
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +        tcsr_mutex_block: syscon@fd484000 {
-> > +                compatible = "syscon";
-> 
-> 'syscon' alone now generates warnings. Can you drop this node or add a
-> specific compatible.
-> 
+I wanted to send it via my tree, but its okay. Pick this patch from
+linux-next and add my Ack, I will drop it after that.
 
-In the binding examples or in the dts files as well?
+a8351c12c6c7 OPP: Add and export helper to set bandwidth
 
-The hardware block here is named "TCSR_MUTEX", so the natural compatible
-to add here would be "qcom,tcsr-mutex", but that already has a meaning -
-and the syscon node here doesn't carry all required properties...
+> Otherwise I can send a second later pull req that adds the final patch
+> after has rebased to 5.9-rc1 (by which point the opp next tree will
+> have presumably been merged
 
+The PM stuff gets pushed fairly early and so I was asking you to
+rebase just on my tree, so you could have sent the pull request right
+after the PM tree landed there instead of waiting for rc1.
 
-Should we perhaps just remove the split model (syscon and
-qcom,tcsr-mutex as different nodes) from the example and dts files?
-(While maintaining backwards compatibility in the binding and driver)
+But its fine now.
 
-For the platforms where we have other drivers that needs to poke in this
-syscon it seems to work fine to say:
-	compatible = "qcom,tcsr-mutex", "syscon";
-
-Regards,
-Bjorn
-
-> > +                reg = <0xfd484000 0x2000>;
-> > +        };
-> > +
-> > +        hwlock {
-> > +                compatible = "qcom,tcsr-mutex";
-> > +                syscon = <&tcsr_mutex_block 0 0x80>;
-> > +
-> > +                #hwlock-cells = <1>;
-> > +        };
-> > +...
-> > --
-> > 2.26.2
-> >
+-- 
+viresh
