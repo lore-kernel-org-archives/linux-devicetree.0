@@ -2,29 +2,27 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AB7C43462
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DADC4345F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBFF22BEF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D63E22BEF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733091AbgGVPzs (ORCPT
+        id S1733133AbgGVPz5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732799AbgGVPzr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:55:47 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9A1C0619DC;
-        Wed, 22 Jul 2020 08:55:47 -0700 (PDT)
+        Wed, 22 Jul 2020 11:55:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35724 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731155AbgGVPz4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:55:56 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id CAE2B297600
+        with ESMTPSA id 24B6C2976FF
 From:   Helen Koike <helen.koike@collabora.com>
 To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
         linux-rockchip@lists.infradead.org
@@ -35,10 +33,12 @@ Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
         eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
         robin.murphy@arm.com
-Subject: [PATCH v5 0/9] move Rockchip ISP bindings out of staging / add ISP DT nodes for RK3399
-Date:   Wed, 22 Jul 2020 12:55:24 -0300
-Message-Id: <20200722155533.252844-1-helen.koike@collabora.com>
+Subject: [PATCH v5 2/9] media: staging: dt-bindings: rkisp1: drop i2c unit address
+Date:   Wed, 22 Jul 2020 12:55:26 -0300
+Message-Id: <20200722155533.252844-3-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200722155533.252844-1-helen.koike@collabora.com>
+References: <20200722155533.252844-1-helen.koike@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -46,58 +46,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move the bindings out of drivers/staging and place them in
-Documentation/devicetree/bindings instead.
+Add missing required items in Rockchip ISP1 dt-bindings example for
+a complete i2c node.
+Drop unit address to Fix error:
+/example-0/parent/i2c@ff160000: node has a unit name, but no reg or ranges property
+Remove unecessary fields for the example.
 
-Also, add DT nodes for RK3399 and verify with make ARCH=arm64 dtbs_check
-and make ARCH=arm64 dt_binding_check.
-
-Tested by verifying images streamed from Scarlet Chromebook
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+---
 
 Changes in v5:
-- Drop unit addresses in dt-bindings example for simplification and fix
-errors as suggested by Rob Herring in previous version
-- Fix typos
-- Re-write clock organization with if/then schema
-
-Changes in v4:
-- simplify clocks with "isp", "aclk" and "hclk" as suggested by
-Robin Murphy on https://patchwork.kernel.org/patch/11475007/
-
-Changes in v3:
-- dropped accepted patches
-- cleanup clocks
-- fix "no reg" error in dt-bindings parent@0 example
-- add linux-rockchip list in MAINTAINERS and reorder items
-- add Scarlet sensors dt nodes to the series
+- Patch re-written to drop unity address instead of completing i2c node
 
 Changes in v2:
-Add patches modifying bindings, as sugested by Johan Jonker in v1,
-before moving them out of staging.
+- new patch in the series
 
-Eddie Cai (1):
-  arm64: dts: rockchip: add isp and sensors for Scarlet
+tmp: i2c drop fields
+---
+ .../Documentation/devicetree/bindings/media/rockchip-isp1.yaml | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Helen Koike (7):
-  media: staging: dt-bindings: rkisp1: add missing required nodes
-  media: staging: dt-bindings: rkisp1: drop i2c unit address
-  media: staging: dt-bindings: rkisp1: re-order properties
-  media: staging: dt-bindings: rkisp1: drop parent unit address
-  media: staging: rkisp1: remove unecessary clocks
-  dt-bindings: media: rkisp1: move rockchip-isp1 bindings out of staging
-  media: MAINTAINERS: rkisp1: add path to dt-bindings
-
-Shunqian Zheng (1):
-  arm64: dts: rockchip: add isp0 node for rk3399
-
- .../bindings/media/rockchip-isp1.yaml         | 81 ++++++++++++-------
- MAINTAINERS                                   |  2 +
- .../boot/dts/rockchip/rk3399-gru-scarlet.dtsi | 74 +++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi      | 25 ++++++
- drivers/staging/media/rkisp1/rkisp1-dev.c     |  8 +-
- 5 files changed, 156 insertions(+), 34 deletions(-)
- rename {drivers/staging/media/rkisp1/Documentation => Documentation}/devicetree/bindings/media/rockchip-isp1.yaml (80%)
-
+diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+index a77b6ec500c95..4c31cfaee2709 100644
+--- a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
++++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+@@ -168,8 +168,7 @@ examples:
+             };
+         };
+ 
+-        i2c7: i2c@ff160000 {
+-            clock-frequency = <400000>;
++        i2c7: i2c {
+             #address-cells = <1>;
+             #size-cells = <0>;
+ 
 -- 
 2.28.0.rc1
 
