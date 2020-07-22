@@ -2,160 +2,101 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3940AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44379C433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10E6420792
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22088207CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="srkmkvhD"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ZNbOB3B3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731922AbgGVDzp (ORCPT
+        id S1726573AbgGVET2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731793AbgGVDzp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 23:55:45 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB68FC061794
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z2so485090wrp.2
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
-        b=srkmkvhDKIkC7xQ+Erl9q+ptkCX3zSzRoCdUCdYWrtYxQgtdnbMIebHVIlnrXMuECG
-         SlRnahF0UnWTSTGwaOSTKHTlLgKzRoMS0IW5PLwk/089WiaVhC7HDzMEs3HeK6eRkrE0
-         ATmz2QKDy/y/DlIo+2cwk3NtTspyqAwzk7fP+H1sKOpzTaKI5x/kdGVgh0GHGQ9wZTdU
-         wAp87P7cDy9vH2Dz8YnBjmaA4+fff3ouquN8cIASp9+HDaaGgv1Xv2Bb5Mm16InXgdJ+
-         qMObXjMx+gTN/PngzgaIdoYF6LTreTu6hcGLIuU97b5KBh8+HWF/4R3FztO8TKb+hE0H
-         SKow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
-        b=V1oOzHaakhGUEKaIc5RypB7uitl5Sg5EhcAc/yYE3SxbqL8OYxMhDITpjw81IJjljT
-         mSySiqL6AP12j1hx6YasTJvSKrk9bCxB1LD5YtOj4t+twVhSae2Z1RgxpvT+0Lq+d64T
-         uFAueTwkjWXeKZJ1+q+K1KTpaBq53aOfrKv3KAorw09gtxy1zjrSHuLGfmR3bCwhEJHt
-         SLaCsBEU7TkF7zcgMMg8FVrGw/VV7N4y1TK6wACAaRlDDWNubWWDOgJPOjWBw633dYRY
-         bzY+AjmHo2gdg04HYpLKeeBlRDxAakPl6QyyomqRNxQir+l88e3h5Jqy2VwvfrJe5GYB
-         zM9A==
-X-Gm-Message-State: AOAM5328c3AKlQ/rhDlrKsFCzDsZcX6YFt3nlSCI+OmIxyfv22eM+pDr
-        Qb2zc31DGHMMvWgXMh0wSUxq5tB7hW+j+Zi/apM0JA==
-X-Google-Smtp-Source: ABdhPJwviiRhh8Ew5FwFPWSNY3nE65EKkh19UnrCdWqhsEpXCx9HCf/vqo6H6vcfqlvdohr7KotRJueK95xx91UgOUU=
-X-Received: by 2002:adf:f247:: with SMTP id b7mr13963465wrp.128.1595390143363;
- Tue, 21 Jul 2020 20:55:43 -0700 (PDT)
+        Wed, 22 Jul 2020 00:19:28 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44133 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbgGVET2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 00:19:28 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2D0B98066C;
+        Wed, 22 Jul 2020 16:19:20 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595391560;
+        bh=Hh7WNPsS5JoNma82bp0sTkdc+G0ymDb0dhl+iwohdbQ=;
+        h=From:To:CC:Subject:Date;
+        b=ZNbOB3B3tfaoK2Z+WUEewc17Ubd7yZ79hqKAjhMom5cOijH67z8sd2ZCUINsj9hyc
+         ++B20P0EGtYvmhPJvG7xAZp9LazveCl5qOO94F+0dItW3aWAm9m1GWLDMgG67MrjK1
+         UEu13+K7Ub8U9bFpwxdedce0Pbh0ZAmqz1PVnKP1dE9yMweKu/QMI8Ij3Lj4Cye4I2
+         mm+feZzxBDXnw4+qkZ1G/3rAfRzzwGxLNPOnv7ZE4WorKaVsEJLsYIuqVcmodIOvnx
+         fyrWdSMsmh4hnR0RkneNtkmxl+kDht82xn/6q0IWdE4jtG+Q7kFBkYS9Kcd6jb37nw
+         4dm9d8w7ijH9A==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f17be480000>; Wed, 22 Jul 2020 16:19:20 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 22 Jul 2020 16:19:16 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 22 Jul 2020 16:19:16 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: OF: Can't handle multiple dma-ranges with different offsets
+Thread-Topic: Can't handle multiple dma-ranges with different offsets
+Thread-Index: AQHWX99COSKGYTheAUmvWcrnzVaQaw==
+Date:   Wed, 22 Jul 2020 04:19:15 +0000
+Message-ID: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <38888D739A91544DBDA7EBEF6B8183B7@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-5-anup.patel@wdc.com>
- <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
- <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com> <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
-In-Reply-To: <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 22 Jul 2020 09:25:31 +0530
-Message-ID: <CAAhSdy1Dx+oP0guRGvCFa61gL93R+pcQDYLdMpo+LaOjA5tvBQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
-To:     Sean Anderson <seanga2@gmail.com>
-Cc:     Atish Patra <atishp@atishpatra.org>, devicetree@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        Anup Patel <anup.patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 5:48 PM Sean Anderson <seanga2@gmail.com> wrote:
->
-> On 7/20/20 9:15 PM, Atish Patra wrote:
-> > On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
-> >>
-> >> We add DT bindings documentation for CLINT device.
-> >>
-> >> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> >> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> >> ---
-> >>  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
-> >>  1 file changed, 58 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >> new file mode 100644
-> >> index 000000000000..8ad115611860
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >> @@ -0,0 +1,58 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: SiFive Core Local Interruptor
-> >> +
-> >> +maintainers:
-> >> +  - Palmer Dabbelt <palmer@dabbelt.com>
-> >> +  - Anup Patel <anup.patel@wdc.com>
-> >> +
-> >> +description:
-> >> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
-> >> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
-> >> +  interrupts. It directly connects to the timer and inter-processor interrupt
-> >> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
-> >> +  interrupt controller is the parent interrupt controller for CLINT device.
-> >> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
-> >> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
-> >> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    items:
-> >> +      - const: sifive,clint0
-> >> +      - const: sifive,fu540-c000-clint
-> >> +
-> >> +    description:
-> >> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
-> >> +      Supported compatible strings are -
-> >> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
-> >> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
-> >> +      CLINT v0 IP block with no chip integration tweaks.
-> >> +      Please refer to sifive-blocks-ip-versioning.txt for details
-> >> +
-> >
-> > As the DT binding suggests that the clint device should be named as "sifive,**",
-> > I think we should change the DT property in kendryte dts as well.
->
-> The kendryte device is based on Rocket Chip, not any SiFive IP/device.
-> If anything, the general binding should be "chipsalliance,clint" and the
-> specific bindings should be "sifive,clint" and "kendryte,clint" (or
-> "canaan,clint").
-
-AFAIK, Palmer clearly mentioned in previous discussion that CLINT
-spec is still owned by SiFive. No matter who implements CLINT device
-in their SOC, we will need one compatible string to represent the
-spec version (i.e. "sifive,clint0") and another compatible representing
-specific implementation (for kendryte this can be "kendryte,k210-clint").
-
-Regards,
-Anup
+SGksDQoNCkkndmUganVzdCBmaXJlZCB1cCBsaW51eCBrZXJuZWwgdjUuNyBvbiBhIHAyMDQwIGJh
+c2VkIHN5c3RlbSBhbmQgSSdtIA0KZ2V0dGluZyB0aGUgZm9sbG93aW5nIG5ldyB3YXJuaW5nDQoN
+Ck9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVudCBvZmZz
+ZXRzIG9uIA0Kbm9kZSgvcGNpZUBmZmUyMDIwMDApDQpPRjogQ2FuJ3QgaGFuZGxlIG11bHRpcGxl
+IGRtYS1yYW5nZXMgd2l0aCBkaWZmZXJlbnQgb2Zmc2V0cyBvbiANCm5vZGUoL3BjaWVAZmZlMjAy
+MDAwKQ0KDQpUaGUgd2FybmluZyBpdHNlbGYgd2FzIGFkZGVkIGluIGNvbW1pdCA5ZDU1YmViZDk4
+MTYgKCJvZi9hZGRyZXNzOiANClN1cHBvcnQgbXVsdGlwbGUgJ2RtYS1yYW5nZXMnIGVudHJpZXMi
+KSBidXQgSSBnYXRoZXIgaXQncyBwb2ludGluZyBvdXQgDQpzb21ldGhpbmcgYWJvdXQgdGhlIGR0
+cy4gTXkgYm9hcmRzIGR0cyBpcyBiYXNlZCBoZWF2aWx5IG9uIHAyMDQxcmRiLmR0cyANCmFuZCB0
+aGUgcmVsZXZhbnQgcGNpMiBzZWN0aW9uIGlzIGlkZW50aWNhbCAocmVwcm9kdWNlZCBiZWxvdyBm
+b3IgcmVmZXJlbmNlKS4NCg0KIMKgwqDCoCBwY2kyOiBwY2llQGZmZTIwMjAwMCB7DQogwqDCoMKg
+IMKgwqDCoCByZWcgPSA8MHhmIDB4ZmUyMDIwMDAgMCAweDEwMDA+Ow0KIMKgwqDCoCDCoMKgwqAg
+cmFuZ2VzID0gPDB4MDIwMDAwMDAgMCAweGUwMDAwMDAwIDB4YyAweDQwMDAwMDAwIDAgMHgyMDAw
+MDAwMA0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgIDB4MDEwMDAwMDAgMCAweDAwMDAwMDAwIDB4
+ZiAweGY4MDIwMDAwIDAgMHgwMDAxMDAwMD47DQogwqDCoMKgIMKgwqDCoCBwY2llQDAgew0KIMKg
+wqDCoCDCoMKgwqAgwqDCoMKgIHJhbmdlcyA9IDwweDAyMDAwMDAwIDAgMHhlMDAwMDAwMA0KIMKg
+wqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAweDAyMDAwMDAwIDAgMHhlMDAwMDAwMA0KIMKg
+wqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MjAwMDAwMDANCg0KIMKgwqDCoCDCoMKg
+wqAgwqDCoMKgIMKgwqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMA0KIMKgwqDCoCDCoMKg
+wqAgwqDCoMKgIMKgwqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMA0KIMKgwqDCoCDCoMKg
+wqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MDAwMTAwMDA+Ow0KIMKgwqDCoCDCoMKgwqAgfTsNCiDC
+oMKgwqAgfTsNCg0KSSBoYXZlbid0IG5vdGljZWQgYW55IGlsbCBlZmZlY3QgKGFzaWRlIGZyb20g
+dGhlIHNjYXJ5IG1lc3NhZ2UpLiBJJ20gbm90IA0Kc3VyZSBpZiB0aGVyZSdzIHNvbWV0aGluZyBt
+aXNzaW5nIGluIHRoZSBkdHMgb3IgaW4gdGhlIGNvZGUgdGhhdCBjaGVja3MgDQp0aGUgcmFuZ2Vz
+LiBBbnkgZ3VpZGFuY2Ugd291bGQgYmUgYXBwcmVjaWF0ZWQuDQoNClRoYW5rcywNCkNocmlzDQo=
