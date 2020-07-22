@@ -2,172 +2,209 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F52C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A686C433E7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB3A207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B4E207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="SG5Xm6Vc";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hl2XJLBL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="guVuNrx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgGVF5z (ORCPT
+        id S1728318AbgGVF6b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:57:55 -0400
-Received: from relay5.mymailcheap.com ([159.100.241.64]:33606 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbgGVF5y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 01:57:54 -0400
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.157])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id ABF8420142
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 05:57:51 +0000 (UTC)
-Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay3.mymailcheap.com (Postfix) with ESMTPS id 73DB23ECDF;
-        Wed, 22 Jul 2020 07:57:47 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id 9EDF42A3B7;
-        Wed, 22 Jul 2020 01:57:46 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1595397466;
-        bh=GJoB7Hu1HHYwLx+18m5vh2TqCsCvOamF2pFuHKFNT7Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SG5Xm6VchAkjw/SYaCkgiNtbs0tuZAdlfUhLTud/L4U6vi1LIOfqqmgzlqEmaPEwc
-         UX3FRXLO7FC37co1kMHNECHLJG/U9DocJJ3Vmsr1/h681Dide6GYcrJtRx0OL6KeYc
-         QtrZYozDNR0dY0idaLEjSPjXVpSFBm9cCzL0Zqss=
-X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
-Received: from filter1.mymailcheap.com ([127.0.0.1])
-        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hcoPqqim3Gns; Wed, 22 Jul 2020 01:57:44 -0400 (EDT)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter1.mymailcheap.com (Postfix) with ESMTPS;
-        Wed, 22 Jul 2020 01:57:44 -0400 (EDT)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id E68044083C;
-        Wed, 22 Jul 2020 05:57:40 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="hl2XJLBL";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [210.140.199.71])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 6D24F4083C;
-        Wed, 22 Jul 2020 05:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1595397456;
-        bh=GJoB7Hu1HHYwLx+18m5vh2TqCsCvOamF2pFuHKFNT7Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hl2XJLBLMvj8A0Wa+uCdDHB6Tpfp9pkthBN2FcPis0CQT5TU++MevcZzo9mOx5JfI
-         kbancRKEkJDtDxtOVt8wHLZzWquf/iPJZcI1LJc9RERmZ+PII7u2i4o1xtjB+sTp04
-         9vz8vnUhe7nMQQ6q9MHGysLlQk06saH6LYygj1Rs=
-Subject: Re: [PATCH v2 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-To:     linux-mips@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200721141742.996350-1-jiaxun.yang@flygoat.com>
- <20200721141742.996350-4-jiaxun.yang@flygoat.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <004c3248-95f6-03ef-1d39-956794a844a7@flygoat.com>
-Date:   Wed, 22 Jul 2020 13:57:22 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 22 Jul 2020 01:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728299AbgGVF6a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 01:58:30 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAEFBC061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 22:58:30 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k4so405484pld.12
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 22:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dTm4mWhvKAmIc2Rf3uwqpSL+kAsziisrGlZO4B+85K8=;
+        b=guVuNrx2ZWLOp4fNmvGs/LfJYvYVXWStXsqNLTMHKJIZAV/XgbdQm12D7Ftqp67bIP
+         Ojv6OaXH4wfdhdGo2uaSJEY2mNxzfWgXvQEAcVvr4IhBJPOmDeaimWxQySSEcfXnbIj+
+         j5KgliOrjkHxKKf/CoiroWN75Usd09WLyc58/m7bi9CLgk2JLfz+ApA5VMV4FJued4Yu
+         lV+FwRXcQlbdhzifR2pyGCPE4QLkdQPCHdqEJasdDsuKzV4DpaY34VeVUTACzED7VCIb
+         oFXY+Ssx1ko+J3e/kasBhiR17y+QxrXn3ClI3vY8Wt2TJtpa2NjenDct7nnD+B9AWC3T
+         so1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dTm4mWhvKAmIc2Rf3uwqpSL+kAsziisrGlZO4B+85K8=;
+        b=nEKkjtCt+J71pGuDDiFdbcl0EUwKggXXG/qf4XM7YLJ9erogoP7+jQmaXuJWdy5Q5y
+         JnkvjDTlQWdRzeAmhDJSlbOx1bceTnovQROzHblSMd2Q1j+GedVbYLfZyoOblO6gJYda
+         3/8ZFvmMQ1F7ZoQou1zligpb8Navoqu4UoaEHa1DuxYXrfUymQ3mbNXw1/CSkkuVIRON
+         +x94OWoa/nnGqinxaGim8RVFSz0ypvq3B2vir7CRrCY3c6pBFfuiruxQvqP/3gSewptd
+         xld59zV6+47xle/tqbYsjKok0VbrqQ9n+RdIPx+pZRYZvfslDUkiD8QXR56g78YIOLnr
+         S5qA==
+X-Gm-Message-State: AOAM532Smq9lF1JUyyznyyHBDP50CEOUdUMylAtGTP9Gi33YdsE5Ni+T
+        uge/m5hVvGpSFHyPNqLEg9sdWA==
+X-Google-Smtp-Source: ABdhPJxNgX46VHUtwjAEqfNC1oD0Z6BdM604ZtHA8C7mdc+55PewhMuFojFaYwfykV1A/TwKENDtHw==
+X-Received: by 2002:a17:90b:8d7:: with SMTP id ds23mr8547210pjb.148.1595397510192;
+        Tue, 21 Jul 2020 22:58:30 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id e191sm22144010pfh.42.2020.07.21.22.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2020 22:58:29 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: display: panel: Add bindings for Tianma nt36672a panel
+Date:   Wed, 22 Jul 2020 11:28:15 +0530
+Message-Id: <20200722055816.20768-2-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200722055816.20768-1-sumit.semwal@linaro.org>
+References: <20200722055816.20768-1-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200721141742.996350-4-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: E68044083C
-X-Spamd-Result: default: False [1.40 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         MID_RHS_MATCH_FROM(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         FREEMAIL_CC(0.00)[kernel.org,alpha.franken.de,lemote.com,gmail.com,arndb.de,google.com,vger.kernel.org];
-         SUSPICIOUS_RECIPS(1.50)[];
-         RCVD_COUNT_TWO(0.00)[2]
-X-Rspamd-Server: mail20.mymailcheap.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The nt36672a panel from Tianma is a FHD+ panel with a resolution of 1080x2246
+and 6.18 inches size. It is found in some of the Poco F1 phones.
 
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+Change-Id: I401dfbfe23ff2d806c956002f45e349cb9688c16
 
-ÔÚ 2020/7/21 ÏÂÎç10:17, Jiaxun Yang Ð´µÀ:
-> It can be very big on LS7A PCH systems.
->
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->   arch/mips/include/asm/io.h                     | 3 ++-
->   arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
->   2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-> index 346fffd9e972..0072489325fa 100644
-> --- a/arch/mips/include/asm/io.h
-> +++ b/arch/mips/include/asm/io.h
-> @@ -50,8 +50,9 @@
->   # define __relaxed_ioswabq ioswabq
->   
->   /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
-> -
-> +#ifndef IO_SPACE_LIMIT
->   #define IO_SPACE_LIMIT 0xffff
-> +#endif
->   
->   /*
->    * On MIPS I/O ports are memory mapped, so we access them using normal
-> diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
-> index 3de0ac9d8829..fa5ea4ee8b6c 100644
-> --- a/arch/mips/include/asm/mach-loongson64/spaces.h
-> +++ b/arch/mips/include/asm/mach-loongson64/spaces.h
-> @@ -11,8 +11,7 @@
->   #define PCI_IOSIZE	SZ_16M
->   #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
->   
-> -/* Reserved at the start of PCI_IOBASE for legacy drivers */
-> -#define MMIO_LOWER_RESERVED	0x10000
-> +#define IO_SPACE_LIMIT  PCI_IOSIZE
-Oops, it should be (PCI_IOSIZE - 1), will fix in next revision.
+---
+v2: remove ports node, making port@0 directly under panel@0 node.
+---
+ .../display/panel/tianma,nt36672a.yaml        | 104 ++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
 
-Sorry for the noise.
+diff --git a/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+new file mode 100644
+index 000000000000..cb1799fbbd32
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+@@ -0,0 +1,104 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/tianma,nt36672a.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Tianma model NT36672A DSI Panel display driver
++
++maintainers:
++  - Sumit Semwal <sumit.semwal@linaro.org>
++
++description: |
++  The nt36672a panel from Tianma is a FHD+ LCD display panel with a resolution
++  of 1080x2246. It is a video mode DSI panel.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: tianma,nt36672a
++
++  reg:
++    description: DSI virtual channel of the peripheral
++
++  reset-gpios:
++    description: phandle of gpio for reset line - This should be 8mA, gpio
++      can be configured using mux, pinctrl, pinctrl-names (active high)
++
++  vddio-supply:
++    description: phandle of the regulator that provides the supply voltage
++      Power IC supply
++
++  vddpos-supply:
++    description: phandle of the positive boost supply regulator
++
++  vddneg-supply:
++    description: phandle of the negative boost supply regulator
++
++  pinctrl-names:
++    description: Pinctrl for panel active and suspend
++
++  pinctrl-0:
++    description: Active pinctrls
++
++  pinctrl-1:
++    description: Suspend pinctrls
++
++  port@0:
++    type: object
++    description: DSI input port driven by master DSI
++    properties:
++      reg:
++        const: 0
++
++    required:
++      - reg
++
++required:
++  - compatible
++  - reg
++  - vddi0-supply
++  - vddpos-supply
++  - vddneg-supply
++  - reset-gpios
++  - pinctrl-names
++  - pinctrl-0
++  - pinctrl-1
++  - port@0
++
++unevaluatedProperties: false
++
++examples:
++  - |+
++    #include <dt-bindings/gpio/gpio.h>
++    dsi0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      panel@0 {
++        compatible = "tianma,nt36672a";
++        reg = <0>;
++        vddi0-supply = <&vreg_l14a_1p88>;
++        vddpos-supply = <&lab>;
++        vddneg-supply = <&ibb>;
++
++        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
++
++        pinctrl-names = "panel_active", "panel_suspend";
++        pinctrl-0 = <&sde_dsi_active>;
++        pinctrl-1 = <&sde_dsi_suspend>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++        port@0 {
++          reg = <0>;
++          tianma_nt36672a_in_0: endpoint {
++            remote-endpoint = <&dsi0_out>;
++          };
++        };
++      };
++    };
++
++...
+-- 
+2.27.0
 
-Thanks.
-
-- Jiaxun
-
->   
->   #include <asm/mach-generic/spaces.h>
->   #endif
