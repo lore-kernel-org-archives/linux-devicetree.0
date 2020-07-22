@@ -2,42 +2,73 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A7BC433EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973D6C433E6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07CB920781
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776CE207CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:24:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXn7IUD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732043AbgGVRVP (ORCPT
+        id S1730402AbgGVRYm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:21:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:60068 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728315AbgGVRVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 13:21:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7478ED6E;
-        Wed, 22 Jul 2020 10:21:11 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 50F6F3F66F;
-        Wed, 22 Jul 2020 10:21:10 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, mike.leach@linaro.org,
-        mathieu.poirier@linaro.org, coresight@lists.linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [RFC PATCH 14/14] dts: bindings: coresight: ETMv4.4 system register access only units
-Date:   Wed, 22 Jul 2020 18:20:40 +0100
-Message-Id: <20200722172040.1299289-15-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200722172040.1299289-1-suzuki.poulose@arm.com>
-References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+        Wed, 22 Jul 2020 13:24:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbgGVRYl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 13:24:41 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4032EC0619DC;
+        Wed, 22 Jul 2020 10:24:41 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id n2so2251499edr.5;
+        Wed, 22 Jul 2020 10:24:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gPP0o2IshuB1LsGL+RlWYagGQFRTxZqJkVHgsKuPywk=;
+        b=eXn7IUD/qqGZ665TjtY/1XQa6zE3hdJTIfxcjm9PHJSTXYZx8C6sRqi8KjavPYnP4j
+         glhyUS6oA94YrOTN/C75FuWP7eHJF06P90j6gT4U8tHksMu8dYeOaUv4kEQJ2ZjGNrx4
+         zmtxNETChqqAejiSizVPikMweJuWEBb8tqO2cjekgH6LP6r/CPW2gDyC8hTXDmPWPcf0
+         3mUGe7ytgBVKEaljkhd3OWBCCQu5vlt0/oKnLKxRrJWaxWJTePwFYAKVzC86eHxajaEt
+         5mwxIjbKDswO3P2a3H4oGhKR+L6iqHEoYdKEd4WHo2iE7wyXLbNoy9Sjv/NfQN+aa/Jb
+         XSLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gPP0o2IshuB1LsGL+RlWYagGQFRTxZqJkVHgsKuPywk=;
+        b=P+N2NS8gY7DOHMJ0S6X8dTADZD32WLiy3A1B6BXHNxwMoqZQhHmQxp7wFalNjJWIeJ
+         2IpIiOsGMAfga5mPmeVshjSRoFHFz8zVIfCCFXvV4dG4wQdI2CcLN/jDtxbKRBf9SVnR
+         xI5VdK1KxsoBCM2aNhR7PF38InoaCImGO1654F7Hwn6jne1VTL6DI2I8kblcNdER8DdW
+         SGTnqHE0SGkQHRaMbetuj+3g6Prmg7L7JIR1dREWQU3Ty0YZNEU+6q2R1VExORgEZyCk
+         ScPCTgB5DVpngsXco5gPdstXj03O43FHv3b6e+T3HmdwCkvyOLXrlI+GWBFZvX4ekvx0
+         BkHw==
+X-Gm-Message-State: AOAM533S+4Awmp12a3YK+g9inD6+LG76dIfd8q/hqlGyQM0dc+AAuIeW
+        /vRM9wd3dvEtqQMfzAr0z/A=
+X-Google-Smtp-Source: ABdhPJw6qCvxHjC43/yrpWhDOe/AsWnZXiBnfMRI2ghCPn3hOLpRGBpWv3Dxsjl6tQ8CgvCHhpH0Mw==
+X-Received: by 2002:a05:6402:3064:: with SMTP id bs4mr517588edb.350.1595438679957;
+        Wed, 22 Jul 2020 10:24:39 -0700 (PDT)
+Received: from localhost.localdomain ([188.25.219.134])
+        by smtp.gmail.com with ESMTPSA id bt26sm311517edb.17.2020.07.22.10.24.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2020 10:24:39 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, mpe@ellerman.id.au,
+        devicetree@vger.kernel.org
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, madalin.bucur@oss.nxp.com,
+        radu-andrei.bulie@nxp.com, fido_max@inbox.ru
+Subject: [PATCH devicetree 0/4] Add Seville Ethernet switch to T1040RDB
+Date:   Wed, 22 Jul 2020 20:24:18 +0300
+Message-Id: <20200722172422.2590489-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -45,37 +76,24 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the bindings for ETMv4.4 and later with only system register
-access.
+Seville is a DSA switch that is embedded inside the T1040 SoC, and
+supported by the mscc_seville DSA driver. The driver has been accepted
+this release cycle and is currently available in net-next (and
+therefore, in linux-next).
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- Documentation/devicetree/bindings/arm/coresight.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+This series adds this switch to the SoC's dtsi files and to the T1040RDB
+board file.
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index d711676b4a51..cfe47bdda728 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -34,9 +34,13 @@ its hardware characteristcs.
- 					Program Flow Trace Macrocell:
- 			"arm,coresight-etm3x", "arm,primecell";
- 
--		- Embedded Trace Macrocell (version 4.x):
-+		- Embedded Trace Macrocell (version 4.x), with memory mapped access.
- 			"arm,coresight-etm4x", "arm,primecell";
- 
-+		- Embedded Trace Macrocell (version 4.4 and later) with system
-+		  register access only.
-+			"arm,coresight-etm-v4.4";
-+
- 		- Coresight programmable Replicator :
- 			"arm,coresight-dynamic-replicator", "arm,primecell";
- 
+Vladimir Oltean (4):
+  powerpc: dts: t1040: add bindings for Seville Ethernet switch
+  powerpc: dts: t1040: label the 2 MDIO controllers
+  powerpc: dts: t1040rdb: put SGMII PHY under &mdio0 label
+  powerpc: dts: t1040rdb: add ports for Seville Ethernet switch
+
+ arch/powerpc/boot/dts/fsl/t1040rdb.dts      | 123 +++++++++++++++++++-
+ arch/powerpc/boot/dts/fsl/t1040si-post.dtsi |  79 ++++++++++++-
+ 2 files changed, 194 insertions(+), 8 deletions(-)
+
 -- 
-2.24.1
+2.25.1
 
