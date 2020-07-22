@@ -2,101 +2,97 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44379C433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F055FC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22088207CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC39520714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 04:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ZNbOB3B3"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QdycRie8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgGVET2 (ORCPT
+        id S1726638AbgGVE0I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 00:19:28 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44133 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgGVET2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 00:19:28 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2D0B98066C;
-        Wed, 22 Jul 2020 16:19:20 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1595391560;
-        bh=Hh7WNPsS5JoNma82bp0sTkdc+G0ymDb0dhl+iwohdbQ=;
-        h=From:To:CC:Subject:Date;
-        b=ZNbOB3B3tfaoK2Z+WUEewc17Ubd7yZ79hqKAjhMom5cOijH67z8sd2ZCUINsj9hyc
-         ++B20P0EGtYvmhPJvG7xAZp9LazveCl5qOO94F+0dItW3aWAm9m1GWLDMgG67MrjK1
-         UEu13+K7Ub8U9bFpwxdedce0Pbh0ZAmqz1PVnKP1dE9yMweKu/QMI8Ij3Lj4Cye4I2
-         mm+feZzxBDXnw4+qkZ1G/3rAfRzzwGxLNPOnv7ZE4WorKaVsEJLsYIuqVcmodIOvnx
-         fyrWdSMsmh4hnR0RkneNtkmxl+kDht82xn/6q0IWdE4jtG+Q7kFBkYS9Kcd6jb37nw
-         4dm9d8w7ijH9A==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f17be480000>; Wed, 22 Jul 2020 16:19:20 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 22 Jul 2020 16:19:16 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 22 Jul 2020 16:19:16 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "frowand.list@gmail.com" <frowand.list@gmail.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: OF: Can't handle multiple dma-ranges with different offsets
-Thread-Topic: Can't handle multiple dma-ranges with different offsets
-Thread-Index: AQHWX99COSKGYTheAUmvWcrnzVaQaw==
-Date:   Wed, 22 Jul 2020 04:19:15 +0000
-Message-ID: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <38888D739A91544DBDA7EBEF6B8183B7@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 22 Jul 2020 00:26:08 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:64366 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726607AbgGVE0I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 00:26:08 -0400
+X-UUID: 2baed5a44c8c40ec9aa0a3e70e250e44-20200722
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=GWVeRuD9gmf3IP/ZtIdGMOtS8Q7B5XBZWmUJ38WKNSo=;
+        b=QdycRie8uOFBxVVTNFzc3xxme+2QFN/eSv60cy7c+ilznZ453tMfy+EDT73Syb5YsHFIaB/hcE2wy99dHsKl3W9z8BDXI8d+WULis4IHHwwkgDmGKpPMYTN+KMeXGhG5iPingvi1u95ntDpIUuS3ZUfJYwQpSYetL1RG29G0j7w=;
+X-UUID: 2baed5a44c8c40ec9aa0a3e70e250e44-20200722
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 347078801; Wed, 22 Jul 2020 12:26:03 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 22 Jul 2020 12:26:01 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 22 Jul 2020 12:26:01 +0800
+Message-ID: <1595391961.8456.1.camel@mtksdaap41>
+Subject: Re: [PATCH 3/3] soc: mediatek: pwrap: add pwrap driver for
+ MT6873/8192 SoCs
+From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Argus Lin <argus.lin@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Date:   Wed, 22 Jul 2020 12:26:01 +0800
+In-Reply-To: <e80b2e38-1324-a038-5647-6f595381ba47@gmail.com>
+References: <1594720432-19586-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1594720432-19586-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <e80b2e38-1324-a038-5647-6f595381ba47@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQoNCkkndmUganVzdCBmaXJlZCB1cCBsaW51eCBrZXJuZWwgdjUuNyBvbiBhIHAyMDQwIGJh
-c2VkIHN5c3RlbSBhbmQgSSdtIA0KZ2V0dGluZyB0aGUgZm9sbG93aW5nIG5ldyB3YXJuaW5nDQoN
-Ck9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVudCBvZmZz
-ZXRzIG9uIA0Kbm9kZSgvcGNpZUBmZmUyMDIwMDApDQpPRjogQ2FuJ3QgaGFuZGxlIG11bHRpcGxl
-IGRtYS1yYW5nZXMgd2l0aCBkaWZmZXJlbnQgb2Zmc2V0cyBvbiANCm5vZGUoL3BjaWVAZmZlMjAy
-MDAwKQ0KDQpUaGUgd2FybmluZyBpdHNlbGYgd2FzIGFkZGVkIGluIGNvbW1pdCA5ZDU1YmViZDk4
-MTYgKCJvZi9hZGRyZXNzOiANClN1cHBvcnQgbXVsdGlwbGUgJ2RtYS1yYW5nZXMnIGVudHJpZXMi
-KSBidXQgSSBnYXRoZXIgaXQncyBwb2ludGluZyBvdXQgDQpzb21ldGhpbmcgYWJvdXQgdGhlIGR0
-cy4gTXkgYm9hcmRzIGR0cyBpcyBiYXNlZCBoZWF2aWx5IG9uIHAyMDQxcmRiLmR0cyANCmFuZCB0
-aGUgcmVsZXZhbnQgcGNpMiBzZWN0aW9uIGlzIGlkZW50aWNhbCAocmVwcm9kdWNlZCBiZWxvdyBm
-b3IgcmVmZXJlbmNlKS4NCg0KIMKgwqDCoCBwY2kyOiBwY2llQGZmZTIwMjAwMCB7DQogwqDCoMKg
-IMKgwqDCoCByZWcgPSA8MHhmIDB4ZmUyMDIwMDAgMCAweDEwMDA+Ow0KIMKgwqDCoCDCoMKgwqAg
-cmFuZ2VzID0gPDB4MDIwMDAwMDAgMCAweGUwMDAwMDAwIDB4YyAweDQwMDAwMDAwIDAgMHgyMDAw
-MDAwMA0KIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgIDB4MDEwMDAwMDAgMCAweDAwMDAwMDAwIDB4
-ZiAweGY4MDIwMDAwIDAgMHgwMDAxMDAwMD47DQogwqDCoMKgIMKgwqDCoCBwY2llQDAgew0KIMKg
-wqDCoCDCoMKgwqAgwqDCoMKgIHJhbmdlcyA9IDwweDAyMDAwMDAwIDAgMHhlMDAwMDAwMA0KIMKg
-wqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAweDAyMDAwMDAwIDAgMHhlMDAwMDAwMA0KIMKg
-wqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MjAwMDAwMDANCg0KIMKgwqDCoCDCoMKg
-wqAgwqDCoMKgIMKgwqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMA0KIMKgwqDCoCDCoMKg
-wqAgwqDCoMKgIMKgwqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMA0KIMKgwqDCoCDCoMKg
-wqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MDAwMTAwMDA+Ow0KIMKgwqDCoCDCoMKgwqAgfTsNCiDC
-oMKgwqAgfTsNCg0KSSBoYXZlbid0IG5vdGljZWQgYW55IGlsbCBlZmZlY3QgKGFzaWRlIGZyb20g
-dGhlIHNjYXJ5IG1lc3NhZ2UpLiBJJ20gbm90IA0Kc3VyZSBpZiB0aGVyZSdzIHNvbWV0aGluZyBt
-aXNzaW5nIGluIHRoZSBkdHMgb3IgaW4gdGhlIGNvZGUgdGhhdCBjaGVja3MgDQp0aGUgcmFuZ2Vz
-LiBBbnkgZ3VpZGFuY2Ugd291bGQgYmUgYXBwcmVjaWF0ZWQuDQoNClRoYW5rcywNCkNocmlzDQo=
+SGksDQoNCk9uIFdlZCwgMjAyMC0wNy0yMiBhdCAwMDo1MSArMDIwMCwgTWF0dGhpYXMgQnJ1Z2dl
+ciB3cm90ZToNCj4gDQo+IE9uIDE0LzA3LzIwMjAgMTE6NTMsIEhzaW4tSHNpdW5nIFdhbmcgd3Jv
+dGU6DQo+ID4gTVQ2ODczLzgxOTIgYXJlIGhpZ2hseSBpbnRlZ3JhdGVkIFNvQ3MgYW5kIHVzZSBQ
+TUlDX01UNjM1OSBmb3INCj4gPiBwb3dlciBtYW5hZ2VtZW50LiBUaGlzIHBhdGNoIGFkZHMgcHdy
+YXAgbWFzdGVyIGRyaXZlciB0bw0KPiA+IGFjY2VzcyBQTUlDX01UNjM1OS4NCj4gPiANCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVr
+LmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAu
+YyB8IDk4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+ICAgMSBmaWxl
+IGNoYW5nZWQsIDg3IGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMgYi9kcml2ZXJz
+L3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCj4gPiBpbmRleCBjODk3MjA1Li42ZTdmNzk2
+ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMN
+Cj4gPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstcG1pYy13cmFwLmMNCj4gPiBAQCAt
+MjQsMTEgKzI0LDEzIEBADQo+ID4gICAjZGVmaW5lIFBXUkFQX01UODEzNV9CUklER0VfV0RUX1NS
+Q19FTgkJMHg1NA0KPiA+ICAgDQo+ID4gICAvKiBtYWNybyBmb3Igd3JhcHBlciBzdGF0dXMgKi8N
+Cj4gPiArI2RlZmluZSBQV1JBUF9HRVRfU1dJTkZfMl9GU00oeCkJKCgoeCkgPj4gMSkgJiAweDAw
+MDAwMDA3KQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9HRVRfV0FDU19SREFUQSh4KQkJKCgoeCkgPj4g
+MCkgJiAweDAwMDBmZmZmKQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9HRVRfV0FDU19GU00oeCkJCSgo
+KHgpID4+IDE2KSAmIDB4MDAwMDAwMDcpDQo+ID4gICAjZGVmaW5lIFBXUkFQX0dFVF9XQUNTX1JF
+USh4KQkJKCgoeCkgPj4gMTkpICYgMHgwMDAwMDAwMSkNCj4gPiAgICNkZWZpbmUgUFdSQVBfU1RB
+VEVfU1lOQ19JRExFMAkJQklUKDIwKQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9TVEFURV9JTklUX0RP
+TkUwCQlCSVQoMjEpDQo+ID4gKyNkZWZpbmUgUFdSQVBfU1RBVEVfSU5JVF9ET05FMQkJQklUKDE1
+KQ0KPiA+ICAgDQo+ID4gICAvKiBtYWNybyBmb3IgV0FDUyBGU00gKi8NCj4gPiAgICNkZWZpbmUg
+UFdSQVBfV0FDU19GU01fSURMRQkJMHgwMA0KPiA+IEBAIC03NCw2ICs3Niw3IEBADQo+ID4gICAj
+ZGVmaW5lIFBXUkFQX0NBUF9EQ00JCUJJVCgyKQ0KPiA+ICAgI2RlZmluZSBQV1JBUF9DQVBfSU5U
+MV9FTglCSVQoMykNCj4gPiAgICNkZWZpbmUgUFdSQVBfQ0FQX1dEVF9TUkMxCUJJVCg0KQ0KPiA+
+ICsjZGVmaW5lIFBXUkFQX0NBUF9BUkIJCUJJVCg1KQ0KPiANCj4gVGhpcyBjb21taXQgc2hvdWxk
+IGJlIHR3byBwYXRjaGVzIChhdCBsZWFzdCkuIE9uZSBhZGRpbmcgUFdSQVBfQ0FQX0FSQiBhbmQg
+dGhlbiANCj4gYW5vdGhlciBvbmUgYWRkaW5nIE1UNjg3MyBzdXBwb3J0Lg0KPiANCj4gUmVnYXJk
+cywNCj4gTWF0dGhpYXMNCj4gDQoNClRoYW5rcyBmb3IgdGhlIGNvbW1lbnQuIEkgd2lsbCB1cGRh
+dGUgaXQgaW4gbmV4dCBwYXRjaC4NCg0KPiA+ICAgDQo+ID4gICAvKiBkZWZpbmVzIGZvciBzbGF2
+ZSBkZXZpY2Ugd3JhcHBlciByZWdpc3RlcnMgKi8NCj4gPiAgIGVudW0gZGV3X3JlZ3Mgew0KDQpb
+RGVsZXRlXQ0KDQo=
+
