@@ -6,58 +6,57 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEA7C43458
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C583CC433E2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B09C20684
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9152080D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595425525;
-	bh=bhU2SrpxL6HK/PGcmY+z+DbNbJ/eMlUdGESTC5DRoYs=;
+	s=default; t=1595425546;
+	bh=nHj4qidlCzPnSj6K3Rd04M4Ti2n81ozk+ic2UrNZ/uA=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Jwsu0er6ibBE6FDanmzhFUfYG3CBhfFMtvuBCNrxmtrg/jrJxpMWhG1vGeejLoSy4
-	 y80mLHWZHod2mijW1slH9ypXo71sVD1SmtjvPlHRuAZbusi/v0sdggtOc3WwPx3oBO
-	 ToobAl/PWjjNVrVHe3jAjrP71V3m3+A1b8cTbizM=
+	b=ACPdOL6i68hLGBQUtqltk8a/UbFe7RtTdo8bZ46tyMzvFdNnPQtrwZGe78h8KhEMv
+	 WtlEj8Y15F9XwnH/QcDGFoWFLAhexxwthtfB2SXo4XWjkpdy6MyZ8mGOQ+hmbAPc2e
+	 ZbKYbktGj0/AhbxQ74SMVTCBOLnaDn+ozntH+QdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbgGVNpV (ORCPT
+        id S1732634AbgGVNpq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33242 "EHLO mail.kernel.org"
+        Wed, 22 Jul 2020 09:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgGVNpU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:45:20 -0400
+        id S1732623AbgGVNpp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 09:45:45 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBDBA2064C;
-        Wed, 22 Jul 2020 13:45:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD3802064C;
+        Wed, 22 Jul 2020 13:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595425520;
-        bh=bhU2SrpxL6HK/PGcmY+z+DbNbJ/eMlUdGESTC5DRoYs=;
+        s=default; t=1595425545;
+        bh=nHj4qidlCzPnSj6K3Rd04M4Ti2n81ozk+ic2UrNZ/uA=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=XqxGkFwjP4lDM6IyHBP02oBHIiEOzqliPZDN7yWLCZXeYg0ifhJa6kBA/f32DgLlI
-         5nhB36jBo54jbTyLC0j21o0EsPGmSclCU84rluHtps2CVnNirULxctzCvkTEyDjKBS
-         fojUfgiTnN7FbAE9NQJSJBc931uqTGSEjfTNsxbw=
-Date:   Wed, 22 Jul 2020 14:45:07 +0100
+        b=hIdorwcyP9KeG8W1hYiCVHJhwSRjuYWfbIeAtMkRiwREcpHJP/Bu6hWhbqFDUWOqu
+         U8hDeuZUR9/dju4tLIU+lG2tDzWVeKQynQRtY8YZb0r/4BA+xKP3B0zHZ6QYkcLupG
+         FgkN1CM21Q+ubYs8AokhGta/W2ztZw5f3uSIUaOs=
+Date:   Wed, 22 Jul 2020 14:45:32 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Leilk Liu <leilk.liu@mediatek.com>
-Cc:     devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+Cc:     linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200721122436.31544-1-leilk.liu@mediatek.com>
-References: <20200721122436.31544-1-leilk.liu@mediatek.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: update bindings for MT8192 SoC
-Message-Id: <159542550175.19884.9018022901634412745.b4-ty@kernel.org>
+        devicetree@vger.kernel.org
+In-Reply-To: <20200721024819.7150-1-leilk.liu@mediatek.com>
+References: <20200721024819.7150-1-leilk.liu@mediatek.com>
+Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
+Message-Id: <159542550175.19884.11879506725313401487.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2020 20:24:35 +0800, Leilk Liu wrote:
+On Tue, 21 Jul 2020 10:48:19 +0800, Leilk Liu wrote:
 > Add a DT binding documentation for the MT8192 soc.
 
 Applied to
@@ -66,10 +65,8 @@ Applied to
 
 Thanks!
 
-[1/2] spi: update bindings for MT8192 SoC
+[1/1] spi: update bindings for MT8192 SoC
       commit: 30962fe33ab5ed4bbd78c12f4b9e25a85c3e8d0b
-[2/2] spi: mediatek: add spi support for mt8192 IC
-      commit: 8cf125c403f4e0c7c7b78f34bbf9d7a7c55c1ff8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
