@@ -2,102 +2,188 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E911C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10099C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 11:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E65A20771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 10:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595415329;
-	bh=M2x96i5KaNWg2BOe51Db2AB9asUsaUmui/319W5e/u8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2qcJWaWLB+MrHA84Mr9lzHapX5/wLrAyeUSglJkcL1Xz/aoSZwfEAPV8hA9W7sAxw
-	 96OE6CubKf2NDuRIoKhAfBQARGGyAEfFvBt84qF6B/Dt3LpRzYA8rbFR/yWdx1Fm8O
-	 XsKX3hBp1J+SAuP++QOmKdSVKAxpZzPn3xlItNdE=
+	by mail.kernel.org (Postfix) with ESMTP id DA95B206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 11:03:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bv9t8B0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgGVKz2 (ORCPT
+        id S1726821AbgGVLDj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 06:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgGVKz2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 06:55:28 -0400
-Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8F15206F5;
-        Wed, 22 Jul 2020 10:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595415327;
-        bh=M2x96i5KaNWg2BOe51Db2AB9asUsaUmui/319W5e/u8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dELiU8CPE9hqRVfSPybQBVNB884h/qxqQJlJuvlEf7JHtUl1yPoVMaW3MnyuyN0Nm
-         XvX1KTLSrKxItM8phvuUWdj077x0beca7IZbfZ39z9fH/Q2ALVNxkQv76HrXC5A4Tb
-         Lybr6y38aUQnXP1oTHZeYYcMUCPXXHN/lnOU9+Nc=
-Date:   Wed, 22 Jul 2020 12:55:24 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     gregory.clement@bootlin.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 13/16] dt-bindings: i2c: mv64xxx: Add compatible for
- the A100 i2c node.
-Message-ID: <20200722105524.GO1030@ninjato>
-References: <cover.1594708863.git.frank@allwinnertech.com>
- <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
+        Wed, 22 Jul 2020 07:03:39 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49446 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726153AbgGVLDj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 07:03:39 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3Ro5052626;
+        Wed, 22 Jul 2020 06:03:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595415807;
+        bh=1raZkMKIg8HyeFaSNe5T8QbrZ+ubuokHpyXLX12R2xA=;
+        h=From:To:CC:Subject:Date;
+        b=Bv9t8B0DKmqKzoAJU5jkCHdhGRzgmTOBZyRZf/kmOCb7ZJT0YC82gAeefrVF06ThB
+         k87c38GwdkuO/WkXHIy+4kF9GC5cSBihCoe8ynXuAiwZXUyfCyCB1dC9OVh6D/rZFz
+         eRW1hRNZNAHB/DrYBeCLq/0GqySuEeZZfu1vc4wo=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MB3LVF005494
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 06:03:26 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
+ Jul 2020 06:03:22 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 22 Jul 2020 06:03:22 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MB3IFY078616;
+        Wed, 22 Jul 2020 06:03:19 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v8 00/15] Add PCIe support to TI's J721E SoC
+Date:   Wed, 22 Jul 2020 16:33:02 +0530
+Message-ID: <20200722110317.4744-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HFD/Dq8JdnjNvyuv"
-Content-Disposition: inline
-In-Reply-To: <2315816045fa84057968ec6b679d0df611a3b1d3.1594708864.git.frank@allwinnertech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+and EP mode.
 
---HFD/Dq8JdnjNvyuv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The high level features are:
+  *) Supports Legacy, MSI and MSI-X interrupt
+  *) Supports upto GEN4 speed mode
+  *) Supports SR-IOV
+  *) Supports multiple physical function
+  *) Ability to route all transactions via SMMU
 
-On Tue, Jul 14, 2020 at 03:18:39PM +0800, Frank Lee wrote:
-> From: Yangtao Li <frank@allwinnertech.com>
->=20
-> Allwinner A100 have a mv64xxx i2c interface available to be used.
->=20
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+This patch series
+  *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+  *) Add a driver for J721E PCIe wrapper
 
-Applied to for-next, thanks!
+v1 of the series can be found @ [1]
+v2 of the series can be found @ [2]
+v3 of the series can be found @ [5]
+v4 of the series can be found @ [6]
+v5 of the series can be found @ [7]
+v6 of the series can be found @ [8]
+v7 of the series can be found @ [9]
 
+Changes from v7:
+1) Replaced WARN with pr_warn
+2) Included support for "dma-ranges" property patch in this series [10]
 
---HFD/Dq8JdnjNvyuv
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes from v6:
+1) Fixed bot found errors running 'make dt_binding_check'
 
------BEGIN PGP SIGNATURE-----
+Changes from v5:
+1) Added Reviewed-by: for PATCH #6
+2) Protect writes to PCI_STATUS with spin_lock during raising interrupts
+   in EP mode to reduce the time between read and write of RMW.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8YGxwACgkQFA3kzBSg
-KbZ5QRAAi3zqkJXhL6j4BS1FZDrdNLKvyyxGd80R/X2rplKFshFPBu2dnjdSolJG
-efmbYtvEQN53OHkeBWxj9/TuNP6Pkok5yODeqKGZvTIVUHNjNP/d36cJry3P1uaC
-hmtlYJlzXDybuKvGoN8Zt78ERnA5KkPBf12p9sg4mJ3llaZwm/TWJDGfiGDYWZOz
-DWzb16NLy4W0QgHXXODd4GXLfq5uGf+kwosyHU8dlc6iMS1zTOEO2UPnb7nVAFKx
-qCbh4Kp+Yg5TXEJsCIhbWpmZ4/j/eIU8A9+N5Gtx8kEERfLoNg8yLcdP1M1Kh510
-WV4ngYtpiKaoD1rm4K+wVKA7K3Cg0KeCj1qxc0zFzEmpFHhfpPBg/4YbgYpYM7D1
-gTltn2d3TDGPMRSgELE+fzt7ir1YGCeHMZIsbyq/OaBHhLh9Y8dFAqcJfMIiLm11
-nSwCLXsEcCvrClyNwMF5JyblG8cjfdnAMXcVKd+lWoUEdadONK4yaC/39wUZCOdp
-Dw6U5/X/LqBAn0BIv7i237b5jNNnNRxLz5Jixgvw8hYPymhUjsMZXzlDB5ZwRxPD
-Q1CC2QP56n7h3oeXa5yvc6aYhrqwQuErxhWsBqFOeZ6L0lnB+lsrfkccyh/Jh+Zn
-VobysQnU0Hkznp2B7Ylcgcj8a96KBowvhcDnTFM90mo3y19jB14=
-=ZObD
------END PGP SIGNATURE-----
+Changes from v4:
+1) Added Reviewed-by: & Acked-by: tags from RobH
+2) Removed un-used accessors for pcie-cadence.h and removed having ops
+   for read/write accessors
+3) Updated cdns,cdns-pcie-host.yaml to remove "mem" from reg
 
---HFD/Dq8JdnjNvyuv--
+Changes from v3:
+1) Changed the order of files in MAINTAINTERS file to fix Joe's comments
+2) Fixed indentation and added Reviewed-by: Rob Herring <robh@kernel.org>
+3) Cleaned up computing msix_tbl
+4) Fixed RobH's comment on J721E driver
+
+Changes from v2:
+1) Converting Cadence binding to YAML schema was done as a
+   separate series [3] & [4]. [3] is merged and [4] is
+   pending.
+2) Included MSI-X support in this series
+3) Added link down interrupt handling (only error message)
+4) Rebased to latest 5.7-rc1
+5) Adapted TI J721E binding to [3] & [4]
+
+Changes from v1:
+1) Added DT schemas cdns-pcie-host.yaml, cdns-pcie-ep.yaml and
+   cdns-pcie.yaml for Cadence PCIe core and included it in
+   TI's PCIe DT schema.
+2) Added cpu_addr_fixup() for Cadence Platform driver.
+3) Fixed subject/description/renamed functions as commented by
+   Andrew Murray.
+
+[1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+[2] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+[3] -> http://lore.kernel.org/r/20200305103017.16706-1-kishon@ti.com
+[4] -> http://lore.kernel.org/r/20200417114322.31111-1-kishon@ti.com
+[5] -> http://lore.kernel.org/r/20200417125753.13021-1-kishon@ti.com
+[6] -> http://lore.kernel.org/r/20200506151429.12255-1-kishon@ti.com
+[7] -> http://lore.kernel.org/r/20200522033631.32574-1-kishon@ti.com
+[8] -> http://lore.kernel.org/r/20200708093018.28474-1-kishon@ti.com
+[9] -> http://lore.kernel.org/r/20200713110141.13156-1-kishon@ti.com
+[10] -> http://lore.kernel.org/r/20200521080153.5902-1-kishon@ti.com
+
+Alan Douglas (1):
+  PCI: cadence: Add MSI-X support to Endpoint driver
+
+Kishon Vijay Abraham I (14):
+  PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
+    property
+  PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
+  linux/kernel.h: Add PTR_ALIGN_DOWN macro
+  PCI: cadence: Convert all r/w accessors to perform only 32-bit
+    accesses
+  PCI: cadence: Add support to start link and verify link status
+  PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+  dt-bindings: PCI: cadence: Remove "mem" from reg binding
+  PCI: cadence: Add new *ops* for CPU addr fixup
+  PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+  dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+  dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+  PCI: j721e: Add TI J721E PCIe driver
+  misc: pci_endpoint_test: Add J721E in pci_device_id table
+  MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     |   8 +-
+ .../bindings/pci/ti,j721e-pci-ep.yaml         |  94 ++++
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 113 ++++
+ MAINTAINERS                                   |   4 +-
+ drivers/misc/pci_endpoint_test.c              |   9 +
+ drivers/pci/controller/cadence/Kconfig        |  23 +
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ drivers/pci/controller/cadence/pci-j721e.c    | 493 ++++++++++++++++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 129 ++++-
+ .../controller/cadence/pcie-cadence-host.c    | 310 +++++++++--
+ .../controller/cadence/pcie-cadence-plat.c    |  13 +
+ drivers/pci/controller/cadence/pcie-cadence.c |   8 +-
+ drivers/pci/controller/cadence/pcie-cadence.h | 161 +++++-
+ include/linux/kernel.h                        |   1 +
+ 14 files changed, 1297 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+
+-- 
+2.17.1
+
