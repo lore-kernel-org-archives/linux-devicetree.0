@@ -2,161 +2,146 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F48BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE68CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 07:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 546B2206C1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 06:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B78206F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 07:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IsAoqvXN"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="nyJAXOGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgGVGye (ORCPT
+        id S1728649AbgGVHJ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 02:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbgGVGyd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 02:54:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799DFC0619DD
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 23:54:33 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q5so761354wru.6
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 23:54:33 -0700 (PDT)
+        Wed, 22 Jul 2020 03:09:58 -0400
+Received: from mail-eopbgr690045.outbound.protection.outlook.com ([40.107.69.45]:32879
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728624AbgGVHJ5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 03:09:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oTZ9jyEZ1Pr/wZ51ZH5Qx/T8EzNG6h/6RSHlneJ/K5boFZ5z1I5syGSXRyGK/Y1BiORGKOH9wUf+4lTAGSAtzhVO/CShs5kZxwujOjmAVYcX1Tmn7LfBLVxyVcZ/hhDgSpTLVRUiJqnCjoLFRJBC4CfwW7a3Wbidk28/uQOuRwVk2lpwzSimHZ6oqWIAY+RunNFsiV7MR/xQjuYnaLJbQhzTVW5BzLvfGXW4fHZsis/ynPyE9hhDrf7/NxR6ok3fuzjADexrNpUv/utIA5HCeIxTAd5MHlRV7AAuq7PT+nA5CcQGpTVk0XLOgHxP/o60nYXLoA4fsr6xyUBtvUz48g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JCr8Vo/3mylQ6cvDnmBofE5wdrnd86UXiDjzcbTx/44=;
+ b=BhzBSDMzzt7SN4+SOyqokLsmwSP07r/NP/bVk76pjTt1p36t9FIaX7wjkeS8FZMDCer427GFoRY2s1W+hTHqPOwx+nYjXBgfyG+/WhFAfkqTyRA5vNlwz6QepvXNoJGRJhpCP+mCgtC/USUllh66lW5VExDjShjcnAjJb4AiMPVczTDEsTB/gib/lZF2DFADvrtSEOoZltwmnVQlvtndg964MDb/5ebjMcQNoyL8OR938OZmqsJNnytJ9nKK92ylSp5FF6pSTHPTcxDCZUJUpaQkmjKDzm6VrGIT0sHaQXC60ugrnFZ8tvfCN99OjU9bY7QG1IyblQStgd62xJKrcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=avnet.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ocBmwtCFiYWP9YFIU9y/qGa4fpuschond1lKiBqRad4=;
-        b=IsAoqvXNG2/0xQHeu18hvZcm6DuJpizwx+JDHvWFU2JKIN2MpdQDmUQ+uu2ylHccoI
-         rJdblvsBWP/F5sJjt+ptjDC26ZfdRZDhCbl5/c7eJo7gg6xVok0/gXRFbA6bGdlsK+YI
-         yJF7m5VWJY+VT/8DasrqeqIwKreZRj2FwcpU2EIGQhCBBj21Cfm4ZQvK9V/QIAM4kUiz
-         3WH0GrgLYsyCQQsfK9ZHsB3flBg2QcBZFllL884AZaxPmRmmuNwrn++/k3q19c/wIQZS
-         +dSOwzNYmZB0Zawp3c3EYJPI9lVSmHeieq1TmcZpLjVjfJr9v8pU6KcmPjcreQ9qD0LE
-         mNxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ocBmwtCFiYWP9YFIU9y/qGa4fpuschond1lKiBqRad4=;
-        b=nnjhRI5Yp5msGCZZGqKk4OS2/vlVQL3E9SStBLXEM60Njko4P1XOm8ynR0kGa/VVhb
-         AuXTlzpQ6xQ81/u4hSSYEBpgljaznNLCI322q1w7j2KOCdZIRAUvlspJhRfFmKxHCgXJ
-         /OiqPGX7vhBEQREaSSGR3urPjwEhvhZaKY0eo7OuKTu76RR1Kpm4zlbJ07bPJUm/UqWy
-         //qirxRrLvAffbWyn6RhsThv7SdXwSHxjfr6D19ZUdllS/SWeRDjWYzk/cq/C7rdFWhu
-         RajtlI/z1UoBsZRTs4lBWASuRKOnAsIz/2qnz8VLZQs/rPKgvsvmeJ7hSdudqR/2w2nL
-         WeBQ==
-X-Gm-Message-State: AOAM532LLMQ5KVEHpKEFvrLKCZmIfny1iKRpaDA0l+5YQxmXWuEeKElc
-        FFfSJbLdkMJTIu5R+rjjsO+e3w==
-X-Google-Smtp-Source: ABdhPJyo10m2wQJAJRAjVOGmLFVQEnAPrhWt00A+y6ezpxtZSlEAclgSzZxiLt39v1L/xOQWpCQkGg==
-X-Received: by 2002:adf:a3d0:: with SMTP id m16mr28162290wrb.232.1595400871982;
-        Tue, 21 Jul 2020 23:54:31 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id h14sm39439532wrt.36.2020.07.21.23.54.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 23:54:31 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 07:54:29 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, tony@atomide.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH for v5.9] mfd: Replace HTTP links with HTTPS ones
-Message-ID: <20200722065429.GI621928@dell>
-References: <20200719195613.61458-1-grandmaster@al2klimov.de>
- <20200721161028.GA389086@bogus>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JCr8Vo/3mylQ6cvDnmBofE5wdrnd86UXiDjzcbTx/44=;
+ b=nyJAXOGtPeClq0jEu4y/9EBq1enyNcPoD+RNyy0DzAvCrKuhLlQwgUCWmqS2Q5hPAlczRllxxe0HejHFUjkfmu4+XEmd8Sw5rumpRUItVnvTsQgVE6/o2+G0RusE84WlUK7aW6IOUTSEqM8nYPPjxi89nJ6dr0mPvg6Y/PcQE1w=
+Received: from MN2PR07CA0029.namprd07.prod.outlook.com (2603:10b6:208:1a0::39)
+ by BYAPR02MB6007.namprd02.prod.outlook.com (2603:10b6:a03:119::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Wed, 22 Jul
+ 2020 07:09:55 +0000
+Received: from BL2NAM02FT028.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:1a0:cafe::ec) by MN2PR07CA0029.outlook.office365.com
+ (2603:10b6:208:1a0::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend
+ Transport; Wed, 22 Jul 2020 07:09:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; avnet.com; dkim=none (message not signed)
+ header.d=none;avnet.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT028.mail.protection.outlook.com (10.152.77.165) with Microsoft SMTP
+ Server id 15.20.3216.10 via Frontend Transport; Wed, 22 Jul 2020 07:09:54
+ +0000
+Received: from [149.199.38.66] (port=60688 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
+        id 1jy8rB-0002Ju-Us; Wed, 22 Jul 2020 00:08:01 -0700
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <lakshmi.sai.krishna.potthuri@xilinx.com>)
+        id 1jy8sy-0001G7-96; Wed, 22 Jul 2020 00:09:52 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 06M79oVc016845;
+        Wed, 22 Jul 2020 00:09:51 -0700
+Received: from [10.140.6.35] (helo=xhdsaipava40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <lakshmis@xhdsaipava40.xilinx.com>)
+        id 1jy8sw-0001Fp-NI; Wed, 22 Jul 2020 00:09:50 -0700
+Received: by xhdsaipava40.xilinx.com (Postfix, from userid 14964)
+        id 125DC13C0564; Wed, 22 Jul 2020 12:46:06 +0530 (IST)
+From:   Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com,
+        saikrishna12468@gmail.com,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Subject: [PATCH v2 0/2] reset: reset-zynqmp: Added Versal platform support
+Date:   Wed, 22 Jul 2020 12:46:03 +0530
+Message-Id: <1595402165-8282-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(376002)(39850400004)(136003)(396003)(46966005)(81166007)(8936002)(5660300002)(47076004)(4744005)(6636002)(4326008)(82310400002)(8676002)(83380400001)(42186006)(478600001)(426003)(356005)(336012)(70586007)(186003)(82740400003)(107886003)(6266002)(110136005)(2906002)(2616005)(6666004)(316002)(70206006)(36756003)(26005);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200721161028.GA389086@bogus>
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 3132e4e2-95ec-4ea9-df4b-08d82e0e3c0a
+X-MS-TrafficTypeDiagnostic: BYAPR02MB6007:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BYAPR02MB600759E60827FF83FEE4EABABD790@BYAPR02MB6007.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:608;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hd1cR340PTLitUY5IC3wsjIKuyzCqsykfhrAuAjezUnBm4dSyR69sE8wY7hF3bwyGktQWbNsn08OnCWh7pIRCXHuUP4LSjUmIJovIXthkW7pgV9JBPIyCOfWhbsPEvcVhwICLJE2Aa4I9aYOiYIcukuIyaeRR0/rOt8cPEnxaqLLOsXB12u+Mg8ycZVialM6Uxr3QHvDBS5aQvM+UAJQ3t9DV1cphgMPvhFS6Yi3EhZFMo/E5GsqUK+6AGSta6oy8HmUWGeQdwpulbDEFLpC9q+oOm6sF7j5accjVfHBQox6dAASCpXWr67cY1P5QBXHsjYUWoniLutqddfOqxo2/m3ld3FRX0BSui3mQX31qEwCdhVQp+bZrNXZz3ZJ2i2sAcoS+UKt4i5nSN92SOgzWw==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 07:09:54.4570
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3132e4e2-95ec-4ea9-df4b-08d82e0e3c0a
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT028.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB6007
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2020, Rob Herring wrote:
+Extended the ZynqMP reset driver to support Versal platform, accordingly
+updated the dt-binding with the Versal platform specific information
+like compatible string and reset indices.
 
-> On Sun, 19 Jul 2020 21:56:13 +0200, Alexander A. Klimov wrote:
-> > Rationale:
-> > Reduces attack surface on kernel devs opening the links for MITM
-> > as HTTPS traffic is much harder to manipulate.
-> > 
-> > Deterministic algorithm:
-> > For each file:
-> >   If not .svg:
-> >     For each line:
-> >       If doesn't contain `\bxmlns\b`:
-> >         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-> >             If both the HTTP and HTTPS versions
-> >             return 200 OK and serve the same content:
-> >               Replace HTTP with HTTPS.
-> > 
-> > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> > ---
-> >  Continuing my work started at 93431e0607e5.
-> >  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> >  (Actually letting a shell for loop submit all this stuff for me.)
+Changes in v2:
+ - Updated 1/2 patch commit description with some explanation about
+reset indices.
+ - 2/2 patch, Created SOC specific data structure and initialize the
+const data based on of_device_get_match_data.
+ - Defined driver specific of_xlate callback.
 
-I'm guessing something went wrong with your submission, as Rob's reply
-is the first time I saw this patch.  Did your bot send it to me?
+Sai Krishna Potthuri (2):
+  dt-bindings: reset: Updated binding for Versal reset driver
+  reset: reset-zynqmp: Added support for Versal platform
 
-You really should be fully reviewing anything that gets sent to the
-MLs.  "Sorry, I didn't send it, my bot did" is not an acceptable
-excuse for inadequacies.
-
-> >  If there are any URLs to be removed completely
-> >  or at least not (just) HTTPSified:
-> >  Just clearly say so and I'll *undo my change*.
-> >  See also: https://lkml.org/lkml/2020/6/27/64
-> > 
-> >  If there are any valid, but yet not changed URLs:
-> >  See: https://lkml.org/lkml/2020/6/26/837
-> > 
-> >  If you apply the patch, please let me know.
-> > 
-> >  Sorry again to all maintainers who complained about subject lines.
-> >  Now I realized that you want an actually perfect prefixes,
-> >  not just subsystem ones.
-> >  I tried my best...
-> >  And yes, *I could* (at least half-)automate it.
-> >  Impossible is nothing! :)
-> > 
-> > 
-> >  Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
-> >  drivers/mfd/hi6421-pmic-core.c                       | 2 +-
-> >  drivers/mfd/lp873x.c                                 | 2 +-
-> >  drivers/mfd/lp87565.c                                | 2 +-
-> >  drivers/mfd/omap-usb-host.c                          | 2 +-
-> >  drivers/mfd/omap-usb-tll.c                           | 2 +-
-> >  drivers/mfd/smsc-ece1099.c                           | 2 +-
-> >  drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
-> >  drivers/mfd/tps65086.c                               | 2 +-
-> >  drivers/mfd/tps65217.c                               | 2 +-
-> >  drivers/mfd/tps65218.c                               | 2 +-
-> >  drivers/mfd/tps65912-core.c                          | 2 +-
-> >  drivers/mfd/tps65912-i2c.c                           | 2 +-
-> >  drivers/mfd/tps65912-spi.c                           | 2 +-
-> >  include/linux/mfd/hi6421-pmic.h                      | 2 +-
-> >  include/linux/mfd/lp873x.h                           | 2 +-
-> >  include/linux/mfd/lp87565.h                          | 2 +-
-> >  include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
-> >  include/linux/mfd/tps65086.h                         | 2 +-
-> >  include/linux/mfd/tps65217.h                         | 2 +-
-> >  include/linux/mfd/tps65218.h                         | 2 +-
-> >  include/linux/mfd/tps65912.h                         | 2 +-
-> >  22 files changed, 22 insertions(+), 22 deletions(-)
-> > 
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+ .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
+ drivers/reset/reset-zynqmp.c                  |  50 ++++++++-
+ .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
+ 3 files changed, 156 insertions(+), 10 deletions(-)
+ create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
