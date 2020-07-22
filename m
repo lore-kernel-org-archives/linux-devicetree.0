@@ -2,88 +2,126 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56366C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7889FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334D6207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5192620717
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:50:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VjW8M1Ij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgGVSta (ORCPT
+        id S1728299AbgGVSu6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:49:30 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:47398 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbgGVSta (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 14:49:30 -0400
-Received: from x2f7fa19.dyn.telefonica.de ([2.247.250.25] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jyJny-0005KA-ST; Wed, 22 Jul 2020 20:49:26 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        William Wu <william.wu@rock-chips.com>
-Subject: Re: [PATCH v3] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
-Date:   Wed, 22 Jul 2020 20:49:25 +0200
-Message-ID: <2630968.GxkqStg1Zh@phil>
-In-Reply-To: <CAMty3ZCxynb3_GTxhf=Nrf=F=SbijqEfDVysCzQ1KXsF_MCjxw@mail.gmail.com>
-References: <20200720105846.367776-1-jagan@amarulasolutions.com> <8444056.acRTkLjuym@phil> <CAMty3ZCxynb3_GTxhf=Nrf=F=SbijqEfDVysCzQ1KXsF_MCjxw@mail.gmail.com>
+        Wed, 22 Jul 2020 14:50:58 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56260 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgGVSu6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 14:50:58 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MIoAQA025624;
+        Wed, 22 Jul 2020 13:50:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595443810;
+        bh=9f2jGn0pD++9Yxca7x8BCShEMLB/gy2zylnc48q7auA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VjW8M1IjKgzniAsdheTN3EvjKM66h2tHKrVUv944qJgkr/UY13i828uajtF1NR75O
+         KbR+cWHsZO38WQ0ZfJ4r4Zg/OvezfxNhtk3p4rqD6AjodiMZo94TtIQzmWb3Fwxr4Q
+         +6djcYk0x2+Rp7tB7xewdbWJrQr4LecUGOStC+o8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MIoArG047101
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 13:50:10 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
+ Jul 2020 13:50:09 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 22 Jul 2020 13:50:10 -0500
+Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MIo91r100814;
+        Wed, 22 Jul 2020 13:50:09 -0500
+Subject: Re: [PATCH v2 2/2] ASoC: tas2562: Update shutdown GPIO property
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200722154706.9657-1-dmurphy@ti.com>
+ <20200722154706.9657-2-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <09f2076f-352f-cac2-030f-9f29a0add47e@ti.com>
+Date:   Wed, 22 Jul 2020 13:50:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200722154706.9657-2-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Mittwoch, 22. Juli 2020, 20:46:55 CEST schrieb Jagan Teki:
-> Hi Heiko,
-> 
-> On Thu, Jul 23, 2020 at 12:04 AM Heiko Stuebner <heiko@sntech.de> wrote:
-> >
-> > Hi Jaganm
-> >
-> > Am Montag, 20. Juli 2020, 12:58:46 CEST schrieb Jagan Teki:
-> > > rk3288 and rk3288w have a usb host0 ohci controller.
-> > >
-> > > Although rk3288 ohci doesn't actually work on hardware, but
-> > > rk3288w ohci can work well.
-> > >
-> > > So add usb host0 ohci node in rk3288 dtsi and the quirk in
-> > > ohci platform driver will disable ohci on rk3288.
-> >
-> > If I remember the discussion correctly, we expect the board dts
-> > or the bootloader to enable the ohci, right?
-> > So that block go away ... just making sure, I don't remember
-> > untrue stuff ;-)
-> 
-> Our (with Robin) initial discussion [1] is to manage OHCI enablement
-> in the bootloader but since it requires many checks at bootloader
-> level we finally rely on board dts to enable it as normal.
+Hello
 
-ok, so I'll just drop this paragraph when applying.
+On 7/22/20 10:47 AM, Dan Murphy wrote:
+> Update the shutdown GPIO property to be shutdown from shut-down.
+>
+> Fixes: c173dba44c2d2 ("ASoC: tas2562: Introduce the TAS2562 amplifier")
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>
+> v2 - Set sdz_gpio to NULL if gpio property not present.
+>
+>   sound/soc/codecs/tas2562.c | 21 +++++++++++++++++----
+>   1 file changed, 17 insertions(+), 4 deletions(-)
+>
+> diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+> index e74628061040..8a53633a3853 100644
+> --- a/sound/soc/codecs/tas2562.c
+> +++ b/sound/soc/codecs/tas2562.c
+> @@ -680,12 +680,25 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
+>   	struct device *dev = tas2562->dev;
+>   	int ret = 0;
+>   
+> -	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
+> -						    GPIOD_OUT_HIGH);
+> +	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
+> +						      GPIOD_OUT_HIGH);
+>   	if (IS_ERR(tas2562->sdz_gpio)) {
+> -		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER) {
+> -			tas2562->sdz_gpio = NULL;
+> +		tas2562->sdz_gpio = NULL;
 
+This is incorrect.  We will never see EPROBE_DEFER since we cleared out 
+the gpio.  I need to revert this.
 
+Same for below.
 
-> 
-> [1] https://lkml.org/lkml/2020/7/3/424
-> 
-> Jagan.
-> 
+> +		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER)
+>   			return -EPROBE_DEFER;
+> +	}
+> +
+> +	/*
+> +	 * The shut-down property is deprecated but needs to be checked for
+> +	 * backwards compatibility.
+> +	 */
+> +	if (tas2562->sdz_gpio == NULL) {
+> +		tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
+> +							      GPIOD_OUT_HIGH);
+> +		if (IS_ERR(tas2562->sdz_gpio)) {
+> +			tas2562->sdz_gpio = NULL;
 
+Same comment as above
 
-
+Dan
 
