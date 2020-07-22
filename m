@@ -2,109 +2,172 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8641C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F52C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E46420771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB3A207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 05:57:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q8ZTcKkP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="SG5Xm6Vc";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="hl2XJLBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgGVF61 (ORCPT
+        id S1727840AbgGVF5z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 01:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbgGVF60 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 01:58:26 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C151FC0619DB
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 22:58:26 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id k27so630759pgm.2
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 22:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Iv7QKTOnsxus+CuHI4vvy3vYG7WJhwMve42jwP65b5A=;
-        b=Q8ZTcKkPG2FtXDevUXUXT12Cpg5/QNeaH242BUf0y4hS76xUFB35tplhoVeBGSKbS4
-         nxJjcK2bjH2Ng8pExvUvJglYqCEh2TV/OysI2eX6f3Ji0ukDLKJ94gBLHct284DHZUU7
-         toCbiRUHv2GuqSy7+56Y+0vMFa/fd87OE07bWJ15ufJYS9VQkOXaxTIeb9SHk5J1Ykpi
-         uvX7Lzdf1g9+d5sRziXlGX9eGp922bso9G+WGwTe0fw5wtKFdsa5GHTVx5dexv25xvqO
-         wFO7hzq1D/GCtGeckSZ25talOW5mcJ/PrNdI7oQiGF/d1gaVIFDPt1szOx3Vzuwv6Ut4
-         3wcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Iv7QKTOnsxus+CuHI4vvy3vYG7WJhwMve42jwP65b5A=;
-        b=THEmXTEyOgAnRov1MtgSZe65UnOhginrCazT6EFQmy9Znd+wlmnBgnXexfKGUEy/II
-         2oP5ib9HLhfvU59qER2j1ZOF63xjO63lmJ9hzwkstrrdGayvjs08BgoUdgI/lsBQdjCl
-         BwzqTwAaW4+IsbUpKXOK+4v8m3Siqf69MWdLrgPjLyhRlcGFBsCHe2DDuuuqd8SPAp4H
-         k0M0hmp5JJMPUftiPbRf6Gzf3LdzKlUVNhuzC6ZOKUelD93NHVy994AdSn6TOuCE7NTp
-         Jgv4NQEDXJIPMNQoz/8a3xXLjMcu8Dhkla/OxubqPgSBif3aLmbIPv720ESurE1J1+kA
-         OjnA==
-X-Gm-Message-State: AOAM530/IQxjZCTY8DVMKKdMgHyekNwatunP2treo8mDQQnQIHkR+CZ5
-        Ja3pNBf7yC34/O4ABEL20DrXoA==
-X-Google-Smtp-Source: ABdhPJwCCobUwQ+e2qBFBRCdirZxriYS+99wEqbUE93tZXMYMdKpU/YWU6y9v2U/frBlQbsxu1858Q==
-X-Received: by 2002:a62:33c5:: with SMTP id z188mr27044385pfz.180.1595397506096;
-        Tue, 21 Jul 2020 22:58:26 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id e191sm22144010pfh.42.2020.07.21.22.58.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2020 22:58:25 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v2 0/2] Add support for Tianma nt36672a video mode panel
-Date:   Wed, 22 Jul 2020 11:28:14 +0530
-Message-Id: <20200722055816.20768-1-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.27.0
+        Wed, 22 Jul 2020 01:57:55 -0400
+Received: from relay5.mymailcheap.com ([159.100.241.64]:33606 "EHLO
+        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbgGVF5y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 01:57:54 -0400
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.157])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id ABF8420142
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 05:57:51 +0000 (UTC)
+Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
+        by relay3.mymailcheap.com (Postfix) with ESMTPS id 73DB23ECDF;
+        Wed, 22 Jul 2020 07:57:47 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter1.mymailcheap.com (Postfix) with ESMTP id 9EDF42A3B7;
+        Wed, 22 Jul 2020 01:57:46 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1595397466;
+        bh=GJoB7Hu1HHYwLx+18m5vh2TqCsCvOamF2pFuHKFNT7Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SG5Xm6VchAkjw/SYaCkgiNtbs0tuZAdlfUhLTud/L4U6vi1LIOfqqmgzlqEmaPEwc
+         UX3FRXLO7FC37co1kMHNECHLJG/U9DocJJ3Vmsr1/h681Dide6GYcrJtRx0OL6KeYc
+         QtrZYozDNR0dY0idaLEjSPjXVpSFBm9cCzL0Zqss=
+X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
+Received: from filter1.mymailcheap.com ([127.0.0.1])
+        by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id hcoPqqim3Gns; Wed, 22 Jul 2020 01:57:44 -0400 (EDT)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter1.mymailcheap.com (Postfix) with ESMTPS;
+        Wed, 22 Jul 2020 01:57:44 -0400 (EDT)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id E68044083C;
+        Wed, 22 Jul 2020 05:57:40 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="hl2XJLBL";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from [0.0.0.0] (unknown [210.140.199.71])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 6D24F4083C;
+        Wed, 22 Jul 2020 05:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1595397456;
+        bh=GJoB7Hu1HHYwLx+18m5vh2TqCsCvOamF2pFuHKFNT7Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hl2XJLBLMvj8A0Wa+uCdDHB6Tpfp9pkthBN2FcPis0CQT5TU++MevcZzo9mOx5JfI
+         kbancRKEkJDtDxtOVt8wHLZzWquf/iPJZcI1LJc9RERmZ+PII7u2i4o1xtjB+sTp04
+         9vz8vnUhe7nMQQ6q9MHGysLlQk06saH6LYygj1Rs=
+Subject: Re: [PATCH v2 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
+To:     linux-mips@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200721141742.996350-1-jiaxun.yang@flygoat.com>
+ <20200721141742.996350-4-jiaxun.yang@flygoat.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <004c3248-95f6-03ef-1d39-956794a844a7@flygoat.com>
+Date:   Wed, 22 Jul 2020 13:57:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200721141742.996350-4-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Rspamd-Queue-Id: E68044083C
+X-Spamd-Result: default: False [1.40 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         MID_RHS_MATCH_FROM(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         FREEMAIL_CC(0.00)[kernel.org,alpha.franken.de,lemote.com,gmail.com,arndb.de,google.com,vger.kernel.org];
+         SUSPICIOUS_RECIPS(1.50)[];
+         RCVD_COUNT_TWO(0.00)[2]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some Poco F1 phones from Xiaomi have an nt36672a video mode panel; add support
-for the same.
-Most of the panel data is taken from downstream panel dts, and is converted to
-drm-panel based driver by me.
-It has been validated with v5.8-rc5 on Poco F1 phone; my tree with other
-dependent patches is here [1]
-
----
-v2: In dt-binding, removed ports node, making port@0 directly under panel@0 node.
-    Also updated the panel_on delay to a safer 200ms as needed for latest Android.
 
 
-Sumit Semwal (2):
-  dt-bindings: display: panel: Add bindings for Tianma nt36672a panel
-  drm: panel: Add tianma nt36672a panel driver
+ÔÚ 2020/7/21 ÏÂÎç10:17, Jiaxun Yang Ð´µÀ:
+> It can be very big on LS7A PCH systems.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>   arch/mips/include/asm/io.h                     | 3 ++-
+>   arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
+>   2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+> index 346fffd9e972..0072489325fa 100644
+> --- a/arch/mips/include/asm/io.h
+> +++ b/arch/mips/include/asm/io.h
+> @@ -50,8 +50,9 @@
+>   # define __relaxed_ioswabq ioswabq
+>   
+>   /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
+> -
+> +#ifndef IO_SPACE_LIMIT
+>   #define IO_SPACE_LIMIT 0xffff
+> +#endif
+>   
+>   /*
+>    * On MIPS I/O ports are memory mapped, so we access them using normal
+> diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
+> index 3de0ac9d8829..fa5ea4ee8b6c 100644
+> --- a/arch/mips/include/asm/mach-loongson64/spaces.h
+> +++ b/arch/mips/include/asm/mach-loongson64/spaces.h
+> @@ -11,8 +11,7 @@
+>   #define PCI_IOSIZE	SZ_16M
+>   #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
+>   
+> -/* Reserved at the start of PCI_IOBASE for legacy drivers */
+> -#define MMIO_LOWER_RESERVED	0x10000
+> +#define IO_SPACE_LIMIT  PCI_IOSIZE
+Oops, it should be (PCI_IOSIZE - 1), will fix in next revision.
 
- .../display/panel/tianma,nt36672a.yaml        | 104 +++
- MAINTAINERS                                   |   7 +
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-tianma-nt36672a.c | 859 ++++++++++++++++++
- 5 files changed, 982 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-tianma-nt36672a.c
+Sorry for the noise.
 
--- 
-2.27.0
+Thanks.
 
+- Jiaxun
+
+>   
+>   #include <asm/mach-generic/spaces.h>
+>   #endif
