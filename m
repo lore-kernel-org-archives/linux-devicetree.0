@@ -2,123 +2,88 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C29C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56366C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797FB20737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:47:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MRH6zfCJ"
+	by mail.kernel.org (Postfix) with ESMTP id 334D6207DD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 18:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732413AbgGVSrQ (ORCPT
+        id S1726535AbgGVSta (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 14:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgGVSrP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 14:47:15 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA61C0619E0
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 11:47:15 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q5so2880931wru.6
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 11:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9uIMnNiW1J/fPcTrkBy02J2f4zbMTNbT/H46HboavW0=;
-        b=MRH6zfCJDTuWzbHixxBHkUtlOfZcOoyaP5qWJeYl/Y1ydjc57lVUt15/Z3rNPFOM+Q
-         eXhkDkS0tbDYbGmgk8fEVeOcibbTwXF0hUtDZ5uYZJ62pOmZSrFdfI/AWl9GzDgCywDV
-         iGqMiHeRbNf1fqCXtmzFXdJnHaPmkbK/aa5MquDlKt0K0OO1546+odLXa1bXZCmJaOlY
-         Q8TVlYjYa64EETTLNI2kPk11umtXwq1ZKw83jM1kdkjH8XYfj9bQDHvl+tL7mDHRArV7
-         Gg6sMpvQKCvSrrUWRN1poYxCDFFn2V7ET7nKnyoquU4C163Hn3qRellu6eWHCNuUUACd
-         QesQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9uIMnNiW1J/fPcTrkBy02J2f4zbMTNbT/H46HboavW0=;
-        b=jqdLTLpENIpLRtLch09hllk5biKSGOvZCT/WnkdxePsdoy34Xpb24/5WnIes6KKO9V
-         uT1CKvGO9f7Gscm7feRPcA/YgWiEhXgn5EZUWdaWcgy7jsqMLG1v65WMduxgCLAnVsON
-         +RbJVBxAHqurV8uvMTYa0Qnt11KEGQZZy7YcImNUmU3qLt2VyK70Dc1XLNBnUTttNa46
-         ZyIwX6FGSKpMxbu2bpI5w63S9Do0eUTfYobrT0qDFiweWoM0DTQY+HH/okMHnOB1gzaa
-         PcZe/W6UfqX/PxszICTh2pZwL0oE9ymxLaPA88rBA+LSUR8bYxI0Cuv5BMtNgqY9HKeq
-         9DDQ==
-X-Gm-Message-State: AOAM533VF7FBgeleThvoG2vJccd8N9TDZtcYTti0LUpOkSG0P+KiGYGt
-        zagvidnyESRPD9Kbobpk4tYAHg==
-X-Google-Smtp-Source: ABdhPJxtohXqDYKUnUrficjmG8NBPqZ8wqdKCOq3VgpWcXwuze5DIM+i6c7rpgpveF9E0C2ZYuoOGA==
-X-Received: by 2002:adf:df89:: with SMTP id z9mr746733wrl.395.1595443634012;
-        Wed, 22 Jul 2020 11:47:14 -0700 (PDT)
-Received: from dell ([2.27.167.94])
-        by smtp.gmail.com with ESMTPSA id y11sm899839wrs.80.2020.07.22.11.47.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2020 11:47:13 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 19:47:11 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Rob Herring <robh@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, tony@atomide.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH for v5.9] mfd: Replace HTTP links with HTTPS ones
-Message-ID: <20200722184711.GI3533@dell>
-References: <20200719195613.61458-1-grandmaster@al2klimov.de>
- <20200721161028.GA389086@bogus>
- <20200722065429.GI621928@dell>
- <df4b92a2-0c19-ca0e-7967-4ec059196835@al2klimov.de>
+        Wed, 22 Jul 2020 14:49:30 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:47398 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726390AbgGVSta (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 14:49:30 -0400
+Received: from x2f7fa19.dyn.telefonica.de ([2.247.250.25] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jyJny-0005KA-ST; Wed, 22 Jul 2020 20:49:26 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        William Wu <william.wu@rock-chips.com>
+Subject: Re: [PATCH v3] ARM: dts: rockchip: Add usb host0 ohci node for rk3288
+Date:   Wed, 22 Jul 2020 20:49:25 +0200
+Message-ID: <2630968.GxkqStg1Zh@phil>
+In-Reply-To: <CAMty3ZCxynb3_GTxhf=Nrf=F=SbijqEfDVysCzQ1KXsF_MCjxw@mail.gmail.com>
+References: <20200720105846.367776-1-jagan@amarulasolutions.com> <8444056.acRTkLjuym@phil> <CAMty3ZCxynb3_GTxhf=Nrf=F=SbijqEfDVysCzQ1KXsF_MCjxw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <df4b92a2-0c19-ca0e-7967-4ec059196835@al2klimov.de>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Jul 2020, Alexander A. Klimov wrote:
+Am Mittwoch, 22. Juli 2020, 20:46:55 CEST schrieb Jagan Teki:
+> Hi Heiko,
+> 
+> On Thu, Jul 23, 2020 at 12:04 AM Heiko Stuebner <heiko@sntech.de> wrote:
+> >
+> > Hi Jaganm
+> >
+> > Am Montag, 20. Juli 2020, 12:58:46 CEST schrieb Jagan Teki:
+> > > rk3288 and rk3288w have a usb host0 ohci controller.
+> > >
+> > > Although rk3288 ohci doesn't actually work on hardware, but
+> > > rk3288w ohci can work well.
+> > >
+> > > So add usb host0 ohci node in rk3288 dtsi and the quirk in
+> > > ohci platform driver will disable ohci on rk3288.
+> >
+> > If I remember the discussion correctly, we expect the board dts
+> > or the bootloader to enable the ohci, right?
+> > So that block go away ... just making sure, I don't remember
+> > untrue stuff ;-)
+> 
+> Our (with Robin) initial discussion [1] is to manage OHCI enablement
+> in the bootloader but since it requires many checks at bootloader
+> level we finally rely on board dts to enable it as normal.
+
+ok, so I'll just drop this paragraph when applying.
+
+
 
 > 
+> [1] https://lkml.org/lkml/2020/7/3/424
 > 
-> Am 22.07.20 um 08:54 schrieb Lee Jones:
-> > On Tue, 21 Jul 2020, Rob Herring wrote:
-> > 
-> > > On Sun, 19 Jul 2020 21:56:13 +0200, Alexander A. Klimov wrote:
-> > > > Rationale:
-> > > > Reduces attack surface on kernel devs opening the links for MITM
-> > > > as HTTPS traffic is much harder to manipulate.
-> > > > 
-> > > > Deterministic algorithm:
-> > > > For each file:
-> > > >    If not .svg:
-> > > >      For each line:
-> > > >        If doesn't contain `\bxmlns\b`:
-> > > >          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> > > > 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-> > > >              If both the HTTP and HTTPS versions
-> > > >              return 200 OK and serve the same content:
-> > > >                Replace HTTP with HTTPS.
-> > > > 
-> > > > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> > > > ---
-> > > >   Continuing my work started at 93431e0607e5.
-> > > >   See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> > > >   (Actually letting a shell for loop submit all this stuff for me.)
-> > 
-> > I'm guessing something went wrong with your submission, as Rob's reply
-> > is the first time I saw this patch.  Did your bot send it to me?
-> Yes,
-> https://lore.kernel.org/lkml/20200719195613.61458-1-grandmaster@al2klimov.de/
+> Jagan.
+> 
 
-Could you [RESEND] it please.  It doesn't appear to be in my Inbox.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+
