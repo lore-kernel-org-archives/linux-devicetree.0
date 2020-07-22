@@ -2,361 +2,120 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8953EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A216AC433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518A02065E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 21:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A54620825
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 22:11:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="j3VjI31l"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QBvO8ncC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbgGVVzg (ORCPT
+        id S1733032AbgGVWLO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 17:55:36 -0400
-Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:50529
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726685AbgGVVzg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 17:55:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h46WKeqa+QybwxJKoG6DVZBB4B2HTlo/2TuVCmhZ4/cKdLVAu4jGRFS0kIbdQSMpbKzn0ywZRBwd6I4JvTV5Pth5kZBHL+hSk1X6VbLkW+nw1/hN9b64IFadfXIwulhRShQGcRBtt32Poy6Noe21DjKfpiGYXne4tiJ6i4HE1C+GoZESUUy7k+SfJbYgvMvdKAmKprNIOYIUaUENu35JKr70LEH3x/bWH9IFx/7z27A+7v1m8zm9q1St0EQpPt4IM584PHrZQFHlBt3sHvA1ACqWHkzxxY+YkstLi41/WIJFlBWV7gPRtcGWRBSHpPH+WNyIH5qVSzQiKXKhbUifJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BlGZjebzE57gHn+5sKfurMuK0R7344ncjIYBc5Vk4Ok=;
- b=jb+CHsB6GxvS8tYdU8GzK5GjCVMmG5K7aqL+ruEAKiGRdAf5N5QRTclU4eaoOe7YsCogQpVXwpzqL4bZgZLOIwhFpEWRsALuNMYpjqLn+7YYdiJ7J2T/CPVGh/gAhDjfAnDxG/VsVCuIIfUfSWSZHvJR4HKPM87RGzMEIuX+1mnYKsat2Bp3/Bw0BiWsLWOTMifbTJx2rb47sFs9QZGwBYrzw7PzOD331qpmpCtkIdT4edp4cwicfWbX1s6NZhfxzmKwnkGzrxlBqnxHhzsI+XZbhduX5k+e6i51/ZIhH8NSPDRy0CdanfIOKRDzuAcQt+GSGwMplaRfPTYSMnnkLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BlGZjebzE57gHn+5sKfurMuK0R7344ncjIYBc5Vk4Ok=;
- b=j3VjI31lDX8r9KFH0giQHepHU5NI9fvtutYVmXpMW+XXPweLCmf3iNyfXX0wGhyaYTYdbYsHzVkbeCqdOCR8ZTXwnKVlGdQ5f0YenfENXw8ISOIMvQvbfhm8Baf0QJ9VGSZ1d5LqRsCC4532WFCy+SYl0kPEb4/pR7QpactO+GQ=
-Authentication-Results: jms.id.au; dkim=none (message not signed)
- header.d=none;jms.id.au; dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB4582.namprd12.prod.outlook.com (2603:10b6:208:26b::18)
- by MN2PR12MB3917.namprd12.prod.outlook.com (2603:10b6:208:166::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Wed, 22 Jul
- 2020 21:55:32 +0000
-Received: from MN2PR12MB4582.namprd12.prod.outlook.com
- ([fe80::7d2d:b00b:bac4:a66b]) by MN2PR12MB4582.namprd12.prod.outlook.com
- ([fe80::7d2d:b00b:bac4:a66b%7]) with mapi id 15.20.3195.026; Wed, 22 Jul 2020
- 21:55:32 +0000
-From:   Supreeth Venkatesh <supreeth.venkatesh@amd.com>
-To:     joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, robh+dt@kernel.org
-Cc:     Supreeth Venkatesh <supreeth.venkatesh@amd.com>
-Subject: [PATCH v2 1/1] ARM:dts:aspeed: Initial device tree for AMD EthanolX
-Date:   Wed, 22 Jul 2020 16:55:06 -0500
-Message-Id: <20200722215506.5984-1-supreeth.venkatesh@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0701CA0002.namprd07.prod.outlook.com
- (2603:10b6:803:28::12) To MN2PR12MB4582.namprd12.prod.outlook.com
- (2603:10b6:208:26b::18)
+        Wed, 22 Jul 2020 18:11:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgGVWLO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 18:11:14 -0400
+X-Greylist: delayed 64309 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 22 Jul 2020 15:11:14 PDT
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17404C0619DC
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 15:11:14 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A086D8066C;
+        Thu, 23 Jul 2020 10:11:08 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595455868;
+        bh=uGLP8GFd1sLG0iTQ4kS9Znwic8dX4tEl85GOUOGN9+Q=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=QBvO8ncCMdrm6GJJfnE5nhz6ijI12eMF4aZVclDKnYVsXx4vAhPd5I8trfpG68qpz
+         seKMzh9+Jxi+B8TTrW6st31UYImkTn5uLP/sQ/yAPB74/91W9jCRYYBylFlR69KK7r
+         vKOuoj+/nhZDpjS5vp8qhz1hL4j5z7DwP82nWh582Uk3DAsRTQRicZ6TMBXKXRaAcB
+         OrttJpU6AxU5SuNLjOhjrghxHauvN/YcT4J3HJ3uSFDvkuNYdHe0sPj176zdV9uTyd
+         l8Ohc1lugq91257RAbO8W3lgcorGU+4waRr97E6QNGpYg6OeOckHq+9MVkKxLpELpx
+         42mVZg4kQuvyg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f18b97c0001>; Thu, 23 Jul 2020 10:11:08 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 23 Jul 2020 10:11:08 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Thu, 23 Jul 2020 10:11:08 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: OF: Can't handle multiple dma-ranges with different offsets
+Thread-Topic: OF: Can't handle multiple dma-ranges with different offsets
+Thread-Index: AQHWX99COSKGYTheAUmvWcrnzVaQa6kTYRWA
+Date:   Wed, 22 Jul 2020 22:11:07 +0000
+Message-ID: <961bc990-c815-1a19-c349-8b03065d5aab@alliedtelesis.co.nz>
+References: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
+In-Reply-To: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FA203FADBCA2084AAC80BAE92F8EA873@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from BMCDEV-02.amd.com (165.204.78.1) by SN4PR0701CA0002.namprd07.prod.outlook.com (2603:10b6:803:28::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Wed, 22 Jul 2020 21:55:30 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.78.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 67349b89-ce61-402c-a4e6-08d82e89f466
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3917:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3917A9BF810DF4D7C05DC3D696790@MN2PR12MB3917.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZsaBwO9tFu80ZHjB0xsXvCZXInGxl0nBTeQuWRdqQ1KL8cNcYlfF1sSo+4nBz7jtTCWtQQ6rU9ekH7H23cJ3t8/cq4vwVNYfq7pRlu7p/vbbjIrumwDpnABi8CTA07/YGT3JL6iHjaAik4N7GRhPF5s3VCuQiPIL9EDD9oKDPSCqI2vIcNOP/etny2Rdh+n4NnoP4+zWCGuOwAdoDJH2sb0PgmdiYJ0CTU3/alP/db1GfZSNpDrQHyUBApuenXYjZydt9AaK9KGowCbELMiMO8o9CFXgKwQYRIcCmeswYsbvSYLQvLe1fSzwa4RFkWUGSSmGgUy9IQXgksu9FOm5sw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4582.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(366004)(396003)(39860400002)(8676002)(478600001)(36756003)(186003)(66556008)(6486002)(7696005)(44832011)(66476007)(52116002)(83380400001)(66946007)(16526019)(6666004)(2616005)(316002)(26005)(956004)(8936002)(5660300002)(1076003)(4326008)(2906002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: /VrQ9RWC/f+pC+21P40CKTfnhMYrV2IFzJkKQrHnujhConufO2in+3MQ8S1P7CDxNbS1sAzMaW1GUQ0eA/sHiVKGZwoQp5hM7kkgFmqnizmDUpecm8sgjLPZwDxlM5xXnsJtfIxfM5JxacKisGYd/pShOe0eV1hX+86ygArFpCUUkMrF4X8vJhLZMFSNVyqNyNnxDBfj84BrUELfldXuthREGzJR/m44b+KPqT9eyLVV4QD5B+/nEUachmf+klHYc7f6W8iaC17Rt1uKwQuaZcxa0hcrG7o5oRAkhwuPQ1RtBaOt/r8dmN+Bjvd9/XJD1sOnYTyeJ7sGclk23AmpX6tUXA2HTJhfAPAVHshSzjppc6rb9IwI0zntGqeGWITj2sDG2PaTUWDsG4bCuOz+MTl5UNOufnHEHUmbuxW3MrnsUqH+Hl7n0txLgyNdHpditCZ9Rnr3bxaWWaz8Mu4TKFp96fWQfIbKKVEcLFpxVYU=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67349b89-ce61-402c-a4e6-08d82e89f466
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4582.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2020 21:55:31.9894
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lRwILJdWd74pFCSnRnj2Giis/1tcq4/SjqvqnljNc1SozvSDAEmF3TlHownd3qNlIty+K3GunLcj/Ke+XbuqFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3917
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Initial introduction of AMD EthanolX platform equipped with an
-Aspeed ast2500 BMC manufactured by AMD.
-
-AMD EthanolX platform is an AMD customer reference board with an
-Aspeed ast2500 BMC manufactured by AMD.
-This adds AMD EthanolX device tree file including the flash layout
-used by EthanolX BMC machines.
-
-This also adds an entry of AMD EthanolX device tree file in Makefile.
-
-Signed-off-by: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
----
-Changes since v1:
-* Addressed review comment regarding SPDX License Identifier
-* Added I2c0 and I2c1 which cater to AMD's APML Interface
----
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts | 221 ++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d6dfdf73e66b..55ed881d2ebc 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1281,6 +1281,7 @@ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
- dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-ast2500-evb.dtb \
- 	aspeed-ast2600-evb.dtb \
-+	aspeed-bmc-amd-ethanolx.dtb \
- 	aspeed-bmc-arm-centriq2400-rep.dtb \
- 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
- 	aspeed-bmc-facebook-cmm.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
-new file mode 100644
-index 000000000000..3d67fa31a3ab
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-amd-ethanolx.dts
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2020 AMD Inc.
-+// Author: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "AMD EthanolX BMC";
-+	compatible = "amd,ethanolx-bmc", "aspeed,ast2500";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+	aliases {
-+		serial0 = &uart1;
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		fault {
-+			gpios = <&gpio ASPEED_GPIO(A, 2) GPIO_ACTIVE_LOW>;
-+		};
-+
-+		identify {
-+			gpios = <&gpio ASPEED_GPIO(A, 3) GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>, <&adc 4>;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+
-+&mac0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
-+		 <&syscon ASPEED_CLK_MAC1RCLK>;
-+	clock-names = "MACCLK", "RCLK";
-+};
-+
-+&uart1 {
-+	//Host Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart5 {
-+	//BMC Console
-+	status = "okay";
-+};
-+
-+&adc {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+		     &pinctrl_adc1_default
-+		     &pinctrl_adc2_default
-+		     &pinctrl_adc3_default
-+		     &pinctrl_adc4_default>;
-+};
-+
-+//APML for P0
-+&i2c0 {
-+	reg = <0x80 0x40>;
-+	status = "okay";
-+};
-+
-+//APML for P1
-+&i2c1 {
-+	reg = <0xc0 0x40>;
-+	status = "okay";
-+};
-+
-+// Thermal Sensors
-+&i2c7 {
-+	status = "okay";
-+
-+	lm75a@48 {
-+		compatible = "national,lm75a";
-+		reg = <0x48>;
-+	};
-+
-+	lm75a@49 {
-+		compatible = "national,lm75a";
-+		reg = <0x49>;
-+	};
-+
-+	lm75a@4a {
-+		compatible = "national,lm75a";
-+		reg = <0x4a>;
-+	};
-+
-+	lm75a@4b {
-+		compatible = "national,lm75a";
-+		reg = <0x4b>;
-+	};
-+
-+	lm75a@4c {
-+		compatible = "national,lm75a";
-+		reg = <0x4c>;
-+	};
-+
-+	lm75a@4d {
-+		compatible = "national,lm75a";
-+		reg = <0x4d>;
-+	};
-+
-+	lm75a@4e {
-+		compatible = "national,lm75a";
-+		reg = <0x4e>;
-+	};
-+
-+	lm75a@4f {
-+		compatible = "national,lm75a";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&kcs1 {
-+	status = "okay";
-+	kcs_addr = <0x60>;
-+};
-+
-+&kcs2 {
-+	status = "okay";
-+	kcs_addr = <0x62>;
-+};
-+
-+&kcs4 {
-+	status = "okay";
-+	kcs_addr = <0x97DE>;
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&lpc_ctrl {
-+	//Enable lpc clock
-+	status = "okay";
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default
-+	&pinctrl_pwm1_default
-+	&pinctrl_pwm2_default
-+	&pinctrl_pwm3_default
-+	&pinctrl_pwm4_default
-+	&pinctrl_pwm5_default
-+	&pinctrl_pwm6_default
-+	&pinctrl_pwm7_default>;
-+
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+
-+	fan@2 {
-+		reg = <0x02>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+
-+	fan@3 {
-+		reg = <0x03>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
-+	};
-+
-+	fan@4 {
-+		reg = <0x04>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
-+	};
-+
-+	fan@5 {
-+		reg = <0x05>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
-+	};
-+
-+	fan@6 {
-+		reg = <0x06>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
-+	};
-+
-+	fan@7 {
-+		reg = <0x07>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
-+	};
-+};
-+
-+
-+
--- 
-2.17.1
-
+DQpPbiAyMi8wNy8yMCA0OjE5IHBtLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPiBIaSwNCj4NCj4g
+SSd2ZSBqdXN0IGZpcmVkIHVwIGxpbnV4IGtlcm5lbCB2NS43IG9uIGEgcDIwNDAgYmFzZWQgc3lz
+dGVtIGFuZCBJJ20gDQo+IGdldHRpbmcgdGhlIGZvbGxvd2luZyBuZXcgd2FybmluZw0KPg0KPiBP
+RjogQ2FuJ3QgaGFuZGxlIG11bHRpcGxlIGRtYS1yYW5nZXMgd2l0aCBkaWZmZXJlbnQgb2Zmc2V0
+cyBvbiANCj4gbm9kZSgvcGNpZUBmZmUyMDIwMDApDQo+IE9GOiBDYW4ndCBoYW5kbGUgbXVsdGlw
+bGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVudCBvZmZzZXRzIG9uIA0KPiBub2RlKC9wY2llQGZm
+ZTIwMjAwMCkNCj4NCj4gVGhlIHdhcm5pbmcgaXRzZWxmIHdhcyBhZGRlZCBpbiBjb21taXQgOWQ1
+NWJlYmQ5ODE2ICgib2YvYWRkcmVzczogDQo+IFN1cHBvcnQgbXVsdGlwbGUgJ2RtYS1yYW5nZXMn
+IGVudHJpZXMiKSBidXQgSSBnYXRoZXIgaXQncyBwb2ludGluZyBvdXQgDQo+IHNvbWV0aGluZyBh
+Ym91dCB0aGUgZHRzLiBNeSBib2FyZHMgZHRzIGlzIGJhc2VkIGhlYXZpbHkgb24gDQo+IHAyMDQx
+cmRiLmR0cyBhbmQgdGhlIHJlbGV2YW50IHBjaTIgc2VjdGlvbiBpcyBpZGVudGljYWwgKHJlcHJv
+ZHVjZWQgDQo+IGJlbG93IGZvciByZWZlcmVuY2UpLg0KPg0KPiDCoMKgwqAgcGNpMjogcGNpZUBm
+ZmUyMDIwMDAgew0KPiDCoMKgwqAgwqDCoMKgIHJlZyA9IDwweGYgMHhmZTIwMjAwMCAwIDB4MTAw
+MD47DQo+IMKgwqDCoCDCoMKgwqAgcmFuZ2VzID0gPDB4MDIwMDAwMDAgMCAweGUwMDAwMDAwIDB4
+YyAweDQwMDAwMDAwIDAgMHgyMDAwMDAwMA0KPiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAweDAx
+MDAwMDAwIDAgMHgwMDAwMDAwMCAweGYgMHhmODAyMDAwMCAwIDB4MDAwMTAwMDA+Ow0KPiDCoMKg
+wqAgwqDCoMKgIHBjaWVAMCB7DQo+IMKgwqDCoCDCoMKgwqAgwqDCoMKgIHJhbmdlcyA9IDwweDAy
+MDAwMDAwIDAgMHhlMDAwMDAwMA0KPiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqAgMHgw
+MjAwMDAwMCAwIDB4ZTAwMDAwMDANCj4gwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgIDAg
+MHgyMDAwMDAwMA0KPg0KPiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqAgMHgwMTAwMDAw
+MCAwIDB4MDAwMDAwMDANCj4gwqDCoMKgIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgIDB4MDEwMDAw
+MDAgMCAweDAwMDAwMDAwDQo+IMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoCAwIDB4MDAw
+MTAwMDA+Ow0KPiDCoMKgwqAgwqDCoMKgIH07DQo+IMKgwqDCoCB9Ow0KPg0KPiBJIGhhdmVuJ3Qg
+bm90aWNlZCBhbnkgaWxsIGVmZmVjdCAoYXNpZGUgZnJvbSB0aGUgc2NhcnkgbWVzc2FnZSkuIEkn
+bSANCj4gbm90IHN1cmUgaWYgdGhlcmUncyBzb21ldGhpbmcgbWlzc2luZyBpbiB0aGUgZHRzIG9y
+IGluIHRoZSBjb2RlIHRoYXQgDQo+IGNoZWNrcyB0aGUgcmFuZ2VzLiBBbnkgZ3VpZGFuY2Ugd291
+bGQgYmUgYXBwcmVjaWF0ZWQuDQoNCkkndmUgYWxzbyBqdXN0IGNoZWNrZWQgdGhlIFQyMDgwUkRC
+IG9uIHY1LjcuOSB3aGljaCBzaG93cyBhIHNpbWlsYXIgaXNzdWUNCg0KT0Y6IENhbid0IGhhbmRs
+ZSBtdWx0aXBsZSBkbWEtcmFuZ2VzIHdpdGggZGlmZmVyZW50IG9mZnNldHMgb24gDQpub2RlKC9w
+Y2llQGZmZTI1MDAwMCkNCk9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRo
+IGRpZmZlcmVudCBvZmZzZXRzIG9uIA0Kbm9kZSgvcGNpZUBmZmUyNTAwMDApDQpwY2llcG9ydCAw
+MDAwOjAwOjAwLjA6IEludmFsaWQgc2l6ZSAweGZmZmZmOSBmb3IgZG1hLXJhbmdlDQpwY2llcG9y
+dCAwMDAwOjAwOjAwLjA6IEFFUjogZW5hYmxlZCB3aXRoIElSUSAyMQ0KT0Y6IENhbid0IGhhbmRs
+ZSBtdWx0aXBsZSBkbWEtcmFuZ2VzIHdpdGggZGlmZmVyZW50IG9mZnNldHMgb24gDQpub2RlKC9w
+Y2llQGZmZTI3MDAwMCkNCk9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRo
+IGRpZmZlcmVudCBvZmZzZXRzIG9uIA0Kbm9kZSgvcGNpZUBmZmUyNzAwMDApDQpwY2llcG9ydCAw
+MDAxOjAwOjAwLjA6IEludmFsaWQgc2l6ZSAweGZmZmZmOSBmb3IgZG1hLXJhbmdlDQpwY2llcG9y
+dCAwMDAxOjAwOjAwLjA6IEFFUjogZW5hYmxlZCB3aXRoIElSUSAyMw0KDQoNCg==
