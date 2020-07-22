@@ -2,109 +2,97 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26B9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 12:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6ED3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 12:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC4D120771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 12:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790E820787
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 12:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eVIhmJTF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TEujInQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgGVMKb (ORCPT
+        id S1726462AbgGVM04 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 08:10:31 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1821 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726462AbgGVMKa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 08:10:30 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06MC2OTE002090;
-        Wed, 22 Jul 2020 14:09:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=vmdNwJ2HewNJLb/ngps5jILq7qbplk1hGoHXd/4wx9c=;
- b=eVIhmJTFr0bJmK4xQaclpzupG/RzTS98PjSvZWg1AYKan2EwyZHAKFAUT64zwIq1v7+Y
- fRhyDNJjSSbzUCTsDVyvqv6G46Ad9m1r2BYKO45XWiB4qQ8JswNJxbreqBCRXRH0IL8D
- H7emYCy1txezRsja1aQ+XNgXqgmL8ju+eeKe+viEO927B4/YrudVtC/V8lhkOAIEZ73d
- 3FGHuRqsdpP7oww5oaevtuPtWNuvL5fX23UY7f2XPqWLqzs3iAoy9135b3Mv9hcCZCEf
- GLGosXeitedlugT4a9E7rlB1vHTWAl25OUPtDfi3Nn2DHOjh54+RbyW4bHRhWstt9iOU 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32cux0ejnt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Jul 2020 14:09:57 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DE34100034;
-        Wed, 22 Jul 2020 14:09:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D95252AF323;
-        Wed, 22 Jul 2020 14:09:52 +0200 (CEST)
-Received: from [10.48.0.224] (10.75.127.46) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 Jul
- 2020 14:09:52 +0200
-Subject: Re: [Linux-stm32] [PATCH v3 3/3] ARM: dts: stm32: add initial support
- for stm32mp157-odyssey board
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
+        Wed, 22 Jul 2020 08:26:56 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36506 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgGVM0z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 08:26:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MCQbwV092506;
+        Wed, 22 Jul 2020 07:26:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595420797;
+        bh=1wP4G7MooADMavVojqi6pALDQyDsRy6rEAIKe4yjHOw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TEujInQmBuVFM2RzBDMoO3xqsQ9niVglkU6w2kUPo/V5RYpECbEiiAB7uCa4ruUHw
+         QLFsl9wxfGBFwdur+f44FOPPN+WFbWIf6gnZQQpOUyaiZmiNIXgkUHBjZkjIlp/Ohr
+         JAqPwpvRt5FXNMsVKzxB50IeGKd9c690yoQyHhaA=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MCQbW4120900
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 07:26:37 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
+ Jul 2020 07:26:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 22 Jul 2020 07:26:37 -0500
+Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MCQbcQ024135;
+        Wed, 22 Jul 2020 07:26:37 -0500
+Subject: Re: [PATCH v31 03/12] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-CC:     Rob Herring <robh@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-kernel@vger.kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>
-References: <20200721185317.208722-1-marcin.sloniewski@gmail.com>
- <20200721185317.208722-3-marcin.sloniewski@gmail.com>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <73077407-e008-1ae2-266d-1045a73620ba@st.com>
-Date:   Wed, 22 Jul 2020 14:09:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+References: <20200716182007.18389-1-dmurphy@ti.com>
+ <20200716182007.18389-4-dmurphy@ti.com> <20200721210554.GC5966@amd>
+ <c774fab9-124b-da2e-6f7c-614f34322942@ti.com> <20200722071055.GA8984@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c4e2b2db-483f-27ef-9869-3b0c56d0d8ba@ti.com>
+Date:   Wed, 22 Jul 2020 07:26:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200721185317.208722-3-marcin.sloniewski@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200722071055.GA8984@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-22_05:2020-07-22,2020-07-22 signatures=0
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Marcin,
+Pavel
 
-On 7/21/20 8:53 PM, Marcin Sloniewski wrote:
-> +&sdmmc2 {
-> +	pinctrl-names = "default", "opendrain", "sleep";
-> +	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_a>;
-> +	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_a>;
-> +	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_a>;
-> +	non-removable;
-> +	no-sd;
-> +	no-sdio;
-> +	st,neg-edge;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&v3v3>;
-> +	vqmmc-supply = <&v3v3>;
-> +	mmc-ddr-3_3v;
-> +	status = "okay";
-> +};
+On 7/22/20 2:10 AM, Pavel Machek wrote:
+> Hi!
+>
+>>>> +			ret = fwnode_property_read_u32_array(child,
+>>>> +							     "reg",
+>>>> +							     led_banks,
+>>>> +							     ret);
+>>> Move this to subfunction to reduce the indentation? (Or, just refactor
+>>> it somehow).
+>> Actually I can just put it all on the same line since the 80 character
+>> requirement is relaxed.
+> No.
+>
+> You have too long and too complex function, with too many blocks
+> inside each other. Please fix it.
 
-Based on the pins muxed, 8 data lines are configured, but the bus width 
-is set to 4. What is the reason of not setting this property to 8?
+I will refactor
 
-Regards,
-Christophe Kerello.
+Dan
+
+
