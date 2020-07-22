@@ -2,101 +2,115 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BCBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11555C433EC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E922077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:47:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVlUjrqq"
+	by mail.kernel.org (Postfix) with ESMTP id DC4242077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595407872;
+	bh=5VKULX8ADgA7+H2EigrTRpvSe/lUy15QaMOU+A/CI+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hVjI366X534xH5kWdVvhu527yLRtS6/Ks0QCTUhu+nA8Zocq2szmxrUfeHB2RzcPx
+	 2VJSPtNgICXdOF1aipGzYAoZy3AxNdZBN0n6pq0oks9T4RazBZWfIsDc9OIQ3tas9O
+	 u0qSwQw/dN5F1Ti9Y7mSRKpNzqmeKZPGF2WoP0E4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgGVIra (ORCPT
+        id S1731133AbgGVIvM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgGVIra (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 04:47:30 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE5EC0619DC;
-        Wed, 22 Jul 2020 01:47:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id q4so1647345lji.2;
-        Wed, 22 Jul 2020 01:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qmcGYJPSuyo4WuFIfVqxApT7la3Q4Txd8FLQ6LnHWo4=;
-        b=IVlUjrqqH0pP9EmVDgkTU6EIgQeXEF3Gh/3cI5fsOThjWIECBl0cH1kSFmgcIfnw1+
-         fu8ccq1XZ7wNqWXqScglWb3UJKE62Du90zTwS76lkvNpXhZ3BV3006kgYMCQPGlSx6y7
-         veH8VJETf2hnCj6mfmjRBfbrR2oqMCxtTEGH0s49gHxXJsPHqtBDJ6mliw7ybiiG1W8d
-         xZm8d5jSNfIOpItyIFkqfcHt9PZVQQdw7u7ffOz7wb3hXBPSl6VNO1bo1JDl/jLUrvRr
-         EO0aw5NHOK0dtQuoCYEqXfFYrsCPzUfW1vk0ooc6fIs8J08l0H1KE0oaHWWPapYTO/Xo
-         ok+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qmcGYJPSuyo4WuFIfVqxApT7la3Q4Txd8FLQ6LnHWo4=;
-        b=Jsnw2c+kO+kUVz5Vgs5AbWgmCIfeQDWx24DwzJ+hd4chGc3N+eKVodsga0DEs29fiW
-         GmP+IC+14qcQGq8io4W2fNY+zUnVLoMbpoFG2jaNhGKhry/8ekE//S4WjGuFfhETYrgV
-         8aMBDuZU5kc9Kx1Q0uZq0IUpJlQ/A2PjLYz++KE91eVFWw/m4dh5E4WDNe37kdyhKQxG
-         /Bltc+Nk2iAIpqjG6UDRjHWkYbiGByUV3e7i/DSWp1k2OMBBauGJamZjsEID9ZkdcXPv
-         6bja2DlW5Nh91Y69AO6K+VZQCiaVjcoeOOMZpUw5hwH6DCIpDNKSdLWto53j1OBYSuy7
-         Ievg==
-X-Gm-Message-State: AOAM533t4bDD8RovUZLesafNURPUZm9ZfaOX+/PDP4xjuhVyRbiAuhTe
-        pZtfvhwsXyfHvfClXWuaNXk=
-X-Google-Smtp-Source: ABdhPJzxgSeLeWfdE37PuacpR3Wt8B+Wgl2c49Vt2KIZs+uwNveItzbShKhFT6aBtIvL9eDMu8fxhg==
-X-Received: by 2002:a2e:8316:: with SMTP id a22mr13830785ljh.246.1595407648046;
-        Wed, 22 Jul 2020 01:47:28 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:44d2:25a2:d4ec:7c9e:620b:fb8? ([2a00:1fa0:44d2:25a2:d4ec:7c9e:620b:fb8])
-        by smtp.gmail.com with ESMTPSA id y24sm6241661ljy.91.2020.07.22.01.47.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 01:47:27 -0700 (PDT)
-Subject: Re: [PATCH v2 2/7] usb: bdc: Add compatible string for new style USB
- DT nodes
-To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Wed, 22 Jul 2020 04:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728911AbgGVIvK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 04:51:10 -0400
+Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADA222077D;
+        Wed, 22 Jul 2020 08:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595407869;
+        bh=5VKULX8ADgA7+H2EigrTRpvSe/lUy15QaMOU+A/CI+Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TvDvcjfKa+vjcCeAISmgjEW+fYRbaGUNquFQgXGpLqYmkm80KFOgCerMuWLycm+ZV
+         k+xSZ1nc9noBosM5GPDDzmj/H5F/WzdPyL7Fa7ImHzdKh1VwobjPGB8fKtAb24Isis
+         RGJsyWPulH2eYURc982loSrrzS5yw8NYtlevcruY=
+Date:   Wed, 22 Jul 2020 10:51:06 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Sasi Kumar <sasi.kumar@broadcom.com>
-References: <20200721144326.7976-1-alcooperx@gmail.com>
- <20200721144326.7976-3-alcooperx@gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <ca58400f-353b-64e6-d923-82978a48876a@gmail.com>
-Date:   Wed, 22 Jul 2020 11:47:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 01/20] dt-bindings: pci: rcar-pci: Add device tree
+ support for r8a774e1
+Message-ID: <20200722085106.GE1030@ninjato>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200721144326.7976-3-alcooperx@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Rgf3q3z9SdmXC6oT"
+Content-Disposition: inline
+In-Reply-To: <1594919915-5225-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
 
-On 21.07.2020 17:43, Al Cooper wrote:
+--Rgf3q3z9SdmXC6oT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Add compatible string for some newer boards that only have this
-> as there match sting. Remove unused compatible string "brcm,bdc-v0.16".
+On Thu, Jul 16, 2020 at 06:18:16PM +0100, Lad Prabhakar wrote:
+> Add PCIe support for the RZ/G2H (a.k.a. R8A774E1).
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
+as.com>
 
-    s/there/their/.
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-[...]
 
-MBR, Sergei
+--Rgf3q3z9SdmXC6oT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8X/foACgkQFA3kzBSg
+KbYBWQ/8DnQbj6fqdgDpJjxoGMvRlAGRmD/LQyLgeNZDawpLA777Z4SwPpfHuyXH
+tJy/aVjlLezk3AtfaxG87wUrwymDi3qmcjOQ/7F0exSRseGNXLrM3jYw37cH0zxr
+Qcf3G48YkoHNFOTk4HYO9q5UYEhMtZOZnOBNOopox1cRy8glrR7nxNSfDhxpZVZs
+dL3kgz14gDgBt14Oz4NgFWQ1iggFHB0TazeOr7a9r3NF/JazPQ1y4fmlTgPz1DWA
+2yEE2P27ev+KZ4uqtwueghMFgzAnE8lJax8giRAltuS1QCe7D2i6hV9yyvc+aOV+
+ci8xl7FHxyHeIDtRCfyp5Dfl0ud+vg0ewbD8aFe5lYW37rG3/8NJ/UShQKjJj2mT
+YU1ne29hQ19sH1WUpAIKfGum2Ps7VZ/Bjgv4pHiAM4siayrkgAE7uRAI0vEFj6do
+drNmWmySFFGx/sbjYQGdnvZfvGmUk3Y4t3VHNW5NhPk17gxMMht2iUeU4JJCurhR
+/BE5wVtwfdArEeoMTvjTCyE0oZOGrCmpngp9i53vFvgTpU9vjzuKmPYatnBG7jiN
+ctixKPeb4U9KoEMN1p1VnATLvLlBCxKi+blTVO06005x3kMkck3bMD6ZAfb0/ztg
+30sT5P11NP9Za8s2A/TwTV6Nm2IBR4tMW+t1sJLCuSdR5X7RJJk=
+=FHkP
+-----END PGP SIGNATURE-----
+
+--Rgf3q3z9SdmXC6oT--
