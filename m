@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC71C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1225AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B429B22BEF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC75A22CF8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733269AbgGVP4c (ORCPT
+        id S1733242AbgGVP4W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:56:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35862 "EHLO
+        Wed, 22 Jul 2020 11:56:22 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35820 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732910AbgGVP4a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:56:30 -0400
+        with ESMTP id S1733197AbgGVP4V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:56:21 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id F2AD12976FD
+        with ESMTPSA id C1121297600
 From:   Helen Koike <helen.koike@collabora.com>
 To:     devicetree@vger.kernel.org, linux-media@vger.kernel.org,
         linux-rockchip@lists.infradead.org
@@ -33,9 +33,9 @@ Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         karthik.poduval@gmail.com, jbx6244@gmail.com, tfiga@chromium.org,
         eddie.cai.linux@gmail.com, zhengsq@rock-chips.com,
         robin.murphy@arm.com
-Subject: [PATCH v5 9/9] arm64: dts: rockchip: add isp and sensors for Scarlet
-Date:   Wed, 22 Jul 2020 12:55:33 -0300
-Message-Id: <20200722155533.252844-10-helen.koike@collabora.com>
+Subject: [PATCH v5 7/9] media: MAINTAINERS: rkisp1: add path to dt-bindings
+Date:   Wed, 22 Jul 2020 12:55:31 -0300
+Message-Id: <20200722155533.252844-8-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.28.0.rc1
 In-Reply-To: <20200722155533.252844-1-helen.koike@collabora.com>
 References: <20200722155533.252844-1-helen.koike@collabora.com>
@@ -46,126 +46,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Eddie Cai <eddie.cai.linux@gmail.com>
+The Rockchip ISP bindings was moved out of staging.
+Update MAINTAINERS file with the new path.
 
-Enable ISP and camera sensor ov2685 and ov5695 for Scarlet Chromebook
+Fields sorted according to output of
+./scripts/parse-maintainers.pl --input=MAINTAINERS --output=MAINTAINERS
+--order
 
-Verified with:
-    make ARCH=arm64 dtbs_check
-
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
 ---
 
-This patch is based on:
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/527854
+V3:
+- Add line:
+L:     linux-rockchip@lists.infradead.org
+- Re-order:
+F:     drivers/staging/media/rkisp1/
 
-Changes in V3:
-- This patch was first submitted stand alone at
-https://lore.kernel.org/patchwork/patch/1223736/
-I'm including in this patch series without changes
+V2:
+- This is a new patch in the series
 ---
- .../boot/dts/rockchip/rk3399-gru-scarlet.dtsi | 74 +++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi
-index 4373ed732af76..ae08205aa8e24 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet.dtsi
-@@ -296,6 +296,52 @@ camera: &i2c7 {
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5392f00cec46d..bfd947ea5c920 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14717,7 +14717,9 @@ F:	include/linux/hid-roccat*
+ ROCKCHIP ISP V1 DRIVER
+ M:	Helen Koike <helen.koike@collabora.com>
+ L:	linux-media@vger.kernel.org
++L:	linux-rockchip@lists.infradead.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+ F:	drivers/staging/media/rkisp1/
  
- 	/* 24M mclk is shared between world and user cameras */
- 	pinctrl-0 = <&i2c7_xfer &test_clkout1>;
-+
-+	/* Rear-facing camera */
-+	wcam: camera@36 {
-+		compatible = "ovti,ov5695";
-+		reg = <0x36>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wcam_rst>;
-+
-+		clocks = <&cru SCLK_TESTCLKOUT1>;
-+		clock-names = "xvclk";
-+
-+		avdd-supply = <&pp2800_cam>;
-+		dvdd-supply = <&pp1250_cam>;
-+		dovdd-supply = <&pp1800_s0>;
-+		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>;
-+
-+		port {
-+			wcam_out: endpoint {
-+				remote-endpoint = <&mipi_in_wcam>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+	};
-+
-+	/* Front-facing camera */
-+	ucam: camera@3c {
-+		compatible = "ovti,ov2685";
-+		reg = <0x3c>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ucam_rst>;
-+
-+		clocks = <&cru SCLK_TESTCLKOUT1>;
-+		clock-names = "xvclk";
-+
-+		avdd-supply = <&pp2800_cam>;
-+		dovdd-supply = <&pp1800_s0>;
-+		dvdd-supply = <&pp1800_s0>;
-+		reset-gpios = <&gpio2 3 GPIO_ACTIVE_LOW>;
-+
-+		port {
-+			ucam_out: endpoint {
-+				remote-endpoint = <&mipi_in_ucam>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
- };
- 
- &cdn_dp {
-@@ -353,10 +399,38 @@ &io_domains {
- 	gpio1830-supply = <&pp1800_s0>;		/* APIO4_VDD;  4c 4d */
- };
- 
-+&isp0 {
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			mipi_in_wcam: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&wcam_out>;
-+				data-lanes = <1 2>;
-+			};
-+
-+			mipi_in_ucam: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&ucam_out>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
-+};
-+
-+&isp0_mmu {
-+	status = "okay";
-+};
-+
- &max98357a {
- 	sdmode-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
- };
- 
-+&mipi_dphy_rx0 {
-+	status = "okay";
-+};
-+
- &mipi_dsi {
- 	status = "okay";
- 	clock-master;
+ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
 -- 
 2.28.0.rc1
 
