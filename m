@@ -2,169 +2,160 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46A6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3940AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880D720714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E6420792
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qF1jkM1w"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="srkmkvhD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731879AbgGVDt0 (ORCPT
+        id S1731922AbgGVDzp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:49:26 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:44505 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731857AbgGVDt0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 23:49:26 -0400
-X-UUID: 221b47b3d2744002b8a171d6eb81e83f-20200722
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cHPa7miAlaakjsnpeCyU5C6NdjxVAY3sMbtVxzf1Jq4=;
-        b=qF1jkM1w5fsam7ptJmjY97wCYjSLxld9P4dPvsR8ohYzAcWD1utFRHYV7Rhhiz9Mh5hX6caMOpXfEyfxujpg+yIoUnPwxG2dWksvUx22E2N5rlEJkr20i3G02bEGEp4u8F96grhpTGYZzfLNdpTzCic+3GXvIkNZ6mg6zM5u2VM=;
-X-UUID: 221b47b3d2744002b8a171d6eb81e83f-20200722
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 803185677; Wed, 22 Jul 2020 11:49:17 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 22 Jul 2020 11:49:15 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 11:49:13 +0800
-Message-ID: <1595389756.20193.12.camel@mtkswgap22>
-Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 22 Jul 2020 11:49:16 +0800
-In-Reply-To: <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
-References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
-         <1595303971-8793-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 21 Jul 2020 23:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731793AbgGVDzp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 23:55:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB68FC061794
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so485090wrp.2
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:55:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
+        b=srkmkvhDKIkC7xQ+Erl9q+ptkCX3zSzRoCdUCdYWrtYxQgtdnbMIebHVIlnrXMuECG
+         SlRnahF0UnWTSTGwaOSTKHTlLgKzRoMS0IW5PLwk/089WiaVhC7HDzMEs3HeK6eRkrE0
+         ATmz2QKDy/y/DlIo+2cwk3NtTspyqAwzk7fP+H1sKOpzTaKI5x/kdGVgh0GHGQ9wZTdU
+         wAp87P7cDy9vH2Dz8YnBjmaA4+fff3ouquN8cIASp9+HDaaGgv1Xv2Bb5Mm16InXgdJ+
+         qMObXjMx+gTN/PngzgaIdoYF6LTreTu6hcGLIuU97b5KBh8+HWF/4R3FztO8TKb+hE0H
+         SKow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AFC4e1lyE7ts6QLvqBb4PFiSTT9NQBcFvnLiz1+hr48=;
+        b=V1oOzHaakhGUEKaIc5RypB7uitl5Sg5EhcAc/yYE3SxbqL8OYxMhDITpjw81IJjljT
+         mSySiqL6AP12j1hx6YasTJvSKrk9bCxB1LD5YtOj4t+twVhSae2Z1RgxpvT+0Lq+d64T
+         uFAueTwkjWXeKZJ1+q+K1KTpaBq53aOfrKv3KAorw09gtxy1zjrSHuLGfmR3bCwhEJHt
+         SLaCsBEU7TkF7zcgMMg8FVrGw/VV7N4y1TK6wACAaRlDDWNubWWDOgJPOjWBw633dYRY
+         bzY+AjmHo2gdg04HYpLKeeBlRDxAakPl6QyyomqRNxQir+l88e3h5Jqy2VwvfrJe5GYB
+         zM9A==
+X-Gm-Message-State: AOAM5328c3AKlQ/rhDlrKsFCzDsZcX6YFt3nlSCI+OmIxyfv22eM+pDr
+        Qb2zc31DGHMMvWgXMh0wSUxq5tB7hW+j+Zi/apM0JA==
+X-Google-Smtp-Source: ABdhPJwviiRhh8Ew5FwFPWSNY3nE65EKkh19UnrCdWqhsEpXCx9HCf/vqo6H6vcfqlvdohr7KotRJueK95xx91UgOUU=
+X-Received: by 2002:adf:f247:: with SMTP id b7mr13963465wrp.128.1595390143363;
+ Tue, 21 Jul 2020 20:55:43 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-5-anup.patel@wdc.com>
+ <CAOnJCULcffij3-d-TsQixj5TZdatBdUcC-y73L=W-+5h41ytKQ@mail.gmail.com>
+ <CAAhSdy1cbKA9iwBPYMX5xaYFe_BxnB2Sm_ftHPPDq+96SeKbnA@mail.gmail.com> <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
+In-Reply-To: <b2d7b1d6-db33-7b40-9511-95de991e9ad6@gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 22 Jul 2020 09:25:31 +0530
+Message-ID: <CAAhSdy1Dx+oP0guRGvCFa61gL93R+pcQDYLdMpo+LaOjA5tvBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
+To:     Sean Anderson <seanga2@gmail.com>
+Cc:     Atish Patra <atishp@atishpatra.org>, devicetree@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Emil Renner Berhing <kernel@esmil.dk>,
+        Anup Patel <anup.patel@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gV2VkLCAyMDIwLTA3LTIyIGF0IDA3OjIxICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDIx5pelIOmAseS6jCDkuIvljYgxMjowMOWvq+mB
-k++8mg0KPiA+DQo+ID4gTWVkaWFUZWsgYnVzIGZhYnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2Vj
-dXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMg
-ZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gbWFzdGVycy4NCj4gPiBUaGUg
-c2VjdXJpdHkgdmlvbGF0aW9uIGlzIGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZv
-cg0KPiA+IGZ1cnRoZXIgYW5hbHlzaXMgb3IgY291bnRlcm1lYXN1cmVzLg0KPiA+DQo+ID4gQW55
-IG9jY3VycmVuY2Ugb2Ygc2VjdXJpdHkgdmlvbGF0aW9uIHdvdWxkIHJhaXNlIGFuIGludGVycnVw
-dCwgYW5kDQo+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1kZXZhcGMgZHJpdmVyLiBUaGUg
-dmlvbGF0aW9uDQo+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBpbiBvcmRlciB0byBmaW5kIHRo
-ZSBtdXJkZXJlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKw0KPiA+ICtzdGF0
-aWMgdTMyIGdldF9zaGlmdF9ncm91cChzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgsIHUz
-MiB2aW9faWR4KQ0KPiANCj4gdmlvX2lkeCBpcyB1c2VsZXNzLCBzbyByZW1vdmUgaXQuDQoNCk9r
-YXksIEknbGwgcmVtb3ZlIGl0IGluIG5leHQgcGF0Y2guDQoNCj4gDQo+ID4gK3sNCj4gPiArICAg
-ICAgIHUzMiB2aW9fc2hpZnRfc3RhOw0KPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpyZWc7DQo+
-ID4gKw0KPiA+ICsgICAgICAgcmVnID0gY3R4LT5kZXZhcGNfcGRfYmFzZSArIGN0eC0+b2Zmc2V0
-LT52aW9fc2hpZnRfc3RhOw0KPiA+ICsgICAgICAgdmlvX3NoaWZ0X3N0YSA9IHJlYWRsKHJlZyk7
-DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKHZpb19zaGlmdF9zdGEpDQo+ID4gKyAgICAgICAgICAg
-ICAgIHJldHVybiBfX2Zmcyh2aW9fc2hpZnRfc3RhKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1
-cm4gMzE7DQo+ID4gK30NCj4gPiArDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKw0KPiA+ICsvKg0K
-PiA+ICsgKiBtdGtfZGV2YXBjX2R1bXBfdmlvX2RiZyAtIGdldCB0aGUgdmlvbGF0aW9uIGluZGV4
-IGFuZCBkdW1wIHRoZSBmdWxsIHZpb2xhdGlvbg0KPiA+ICsgKiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGRlYnVnIGluZm9ybWF0aW9uLg0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGJvb2wgbXRr
-X2RldmFwY19kdW1wX3Zpb19kYmcoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4LCB1MzIg
-dmlvX2lkeCkNCj4gPiArew0KPiA+ICsgICAgICAgdTMyIHNoaWZ0X2JpdDsNCj4gPiArDQo+ID4g
-KyAgICAgICBpZiAoY2hlY2tfdmlvX21hc2soY3R4LCB2aW9faWR4KSkNCj4gPiArICAgICAgICAg
-ICAgICAgcmV0dXJuIGZhbHNlOw0KPiA+ICsNCj4gPiArICAgICAgIGlmICghY2hlY2tfdmlvX3N0
-YXR1cyhjdHgsIHZpb19pZHgpKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7DQo+
-ID4gKw0KPiA+ICsgICAgICAgc2hpZnRfYml0ID0gZ2V0X3NoaWZ0X2dyb3VwKGN0eCwgdmlvX2lk
-eCk7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKHN5bmNfdmlvX2RiZyhjdHgsIHNoaWZ0X2JpdCkp
-DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsNCj4gPiArDQo+ID4gKyAgICAgICBk
-ZXZhcGNfZXh0cmFjdF92aW9fZGJnKGN0eCk7DQo+IA0KPiBJIHRoaW5rIGdldF9zaGlmdF9ncm91
-cCgpLCBzeW5jX3Zpb19kYmcoKSwgYW5kDQo+IGRldmFwY19leHRyYWN0X3Zpb19kYmcoKSBzaG91
-bGQgYmUgbW92ZWQgb3V0IG9mIHZpb19pZHggZm9yLWxvb3AgKHRoZQ0KPiBsb29wIGluIGRldmFw
-Y192aW9sYXRpb25faXJxKCkpIGJlY2F1c2UgdGhlc2UgdGhyZWUgZnVuY3Rpb24gaXMgbm90DQo+
-IHJlbGF0ZWQgdG8gdmlvX2lkeC4NCj4gQW5vdGhlciBxdWVzdGlvbjogd2hlbiBtdWx0aXBsZSB2
-aW9faWR4IHZpb2xhdGlvbiBvY2N1ciwgdmlvX2FkZHIgaXMNCj4gcmVsYXRlZCB0byB3aGljaCBv
-bmUgdmlvX2lkeD8gVGhlIGxhdGVzdCBoYXBwZW5lZCBvbmU/DQo+IA0KDQpBY3R1YWxseSwgaXQn
-cyByZWxhdGVkIHRvIHZpb19pZHguIEJ1dCB3ZSBkb24ndCB1c2UgaXQgZGlyZWN0bHkgb24gdGhl
-c2UNCmZ1bmN0aW9uLiBJIHRoaW5rIGJlbG93IHNuaXAgY29kZSBtaWdodCBiZSBiZXR0ZXIgd2F5
-IHRvIHVuZGVyc3RhbmQgaXQuDQoNCmZvciAoLi4uKQ0Kew0KCWNoZWNrX3Zpb19tYXNrKCkNCglj
-aGVja192aW9fc3RhdHVzKCkNCg0KCS8vIGlmIGdldCB2aW9faWR4LCBtYXNrIGl0IHRlbXBvcmFy
-aWx5DQoJbWFza19tb2R1bGVfaXJxKHRydWUpDQoJY2xlYXJfdmlvX3N0YXR1cygpDQoNCgkvLyBk
-dW1wIHZpb2xhdGlvbiBpbmZvDQoJZ2V0X3NoaWZ0X2dyb3VwKCkNCglzeW5jX3Zpb19kYmcoKQ0K
-CWRldmFwY19leHRyYWN0X3Zpb19kYmcoKQ0KDQoJLy8gdW5tYXNrDQoJbWFza19tb2R1bGVfaXJx
-KGZhbHNlKQ0KfQ0KDQpBYm91dCB5b3VyIHF1ZXN0aW9uLCB2aW9fYWRkciB3b3VsZCBiZSB0aGUg
-Zmlyc3Qgb25lLg0KDQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIHRydWU7DQo+ID4gK30NCj4g
-PiArDQo+ID4gKy8qDQo+ID4gKyAqIGRldmFwY192aW9sYXRpb25faXJxIC0gdGhlIGRldmFwYyBJ
-bnRlcnJ1cHQgU2VydmljZSBSb3V0aW5lIChJU1IpIHdpbGwgZHVtcA0KPiA+ICsgKiAgICAgICAg
-ICAgICAgICAgICAgICAgIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBpbmNsdWRpbmcgd2hpY2ggbWFz
-dGVyIHZpb2xhdGVzDQo+ID4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzIHNsYXZl
-Lg0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJx
-KGludCBpcnFfbnVtYmVyLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgpDQo+ID4gK3sNCj4gPiArICAgICAg
-IHUzMiB2aW9faWR4Ow0KPiA+ICsNCj4gPiArICAgICAgIGZvciAodmlvX2lkeCA9IDA7IHZpb19p
-ZHggPCBjdHgtPnZpb19pZHhfbnVtOyB2aW9faWR4KyspIHsNCj4gPiArICAgICAgICAgICAgICAg
-aWYgKCFtdGtfZGV2YXBjX2R1bXBfdmlvX2RiZyhjdHgsIHZpb19pZHgpKQ0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgLyog
-RW5zdXJlIHRoYXQgdmlvbGF0aW9uIGluZm8gYXJlIHdyaXR0ZW4gYmVmb3JlDQo+ID4gKyAgICAg
-ICAgICAgICAgICAqIGZ1cnRoZXIgb3BlcmF0aW9ucw0KPiA+ICsgICAgICAgICAgICAgICAgKi8N
-Cj4gPiArICAgICAgICAgICAgICAgc21wX21iKCk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAg
-ICAvKg0KPiA+ICsgICAgICAgICAgICAgICAgKiBNYXNrIHNsYXZlJ3MgaXJxIGJlZm9yZSBjbGVh
-cmluZyB2aW8gc3RhdHVzLg0KPiA+ICsgICAgICAgICAgICAgICAgKiBNdXN0IGRvIGl0IHRvIGF2
-b2lkIG5lc3RlZCBpbnRlcnJ1cHQgYW5kIHByZXZlbnQNCj4gPiArICAgICAgICAgICAgICAgICog
-dW5leHBlY3RlZCBiZWhhdmlvci4NCj4gPiArICAgICAgICAgICAgICAgICovDQo+ID4gKyAgICAg
-ICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShjdHgsIHZpb19pZHgsIHRydWUpOw0KPiA+ICsNCj4g
-PiArICAgICAgICAgICAgICAgY2xlYXJfdmlvX3N0YXR1cyhjdHgsIHZpb19pZHgpOw0KPiA+ICsN
-Cj4gPiArICAgICAgICAgICAgICAgbWFza19tb2R1bGVfaXJxKGN0eCwgdmlvX2lkeCwgZmFsc2Up
-Ow0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiBJUlFfSEFORExFRDsN
-Cj4gPiArfQ0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogc3RhcnRfZGV2YXBjIC0gaW5pdGlhbGl6
-ZSBkZXZhcGMgc3RhdHVzIGFuZCBzdGFydCByZWNlaXZpbmcgaW50ZXJydXB0DQo+ID4gKyAqICAg
-ICAgICAgICAgICAgIHdoaWxlIGRldmFwYyB2aW9sYXRpb24gaXMgdHJpZ2dlcmVkLg0KPiA+ICsg
-Ki8NCj4gPiArc3RhdGljIGludCBzdGFydF9kZXZhcGMoc3RydWN0IG10a19kZXZhcGNfY29udGV4
-dCAqY3R4KQ0KPiA+ICt7DQo+ID4gKyAgICAgICB2b2lkIF9faW9tZW0gKnBkX3Zpb19zaGlmdF9z
-dGFfcmVnOw0KPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpwZF9hcGNfY29uX3JlZzsNCj4gPiAr
-ICAgICAgIHUzMiB2aW9fc2hpZnRfc3RhOw0KPiA+ICsgICAgICAgdTMyIHZpb19pZHg7DQo+ID4g
-Kw0KPiA+ICsgICAgICAgcGRfYXBjX2Nvbl9yZWcgPSBjdHgtPmRldmFwY19wZF9iYXNlICsgY3R4
-LT5vZmZzZXQtPmFwY19jb247DQo+ID4gKyAgICAgICBwZF92aW9fc2hpZnRfc3RhX3JlZyA9IGN0
-eC0+ZGV2YXBjX3BkX2Jhc2UgKyBjdHgtPm9mZnNldC0+dmlvX3NoaWZ0X3N0YTsNCj4gPiArICAg
-ICAgIGlmICghcGRfYXBjX2Nvbl9yZWcgfHwgIXBkX3Zpb19zaGlmdF9zdGFfcmVnKQ0KPiA+ICsg
-ICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPiArDQo+ID4gKyAgICAgICAvKiBDbGVh
-ciBkZXZhcGMgdmlvbGF0aW9uIHN0YXR1cyAqLw0KPiA+ICsgICAgICAgd3JpdGVsKEJJVCgzMSks
-IHBkX2FwY19jb25fcmVnKTsNCj4gPiArDQo+ID4gKyAgICAgICAvKiBDbGVhciB2aW9sYXRpb24g
-c2hpZnQgc3RhdHVzICovDQo+ID4gKyAgICAgICB2aW9fc2hpZnRfc3RhID0gcmVhZGwocGRfdmlv
-X3NoaWZ0X3N0YV9yZWcpOw0KPiA+ICsgICAgICAgaWYgKHZpb19zaGlmdF9zdGEpDQo+ID4gKyAg
-ICAgICAgICAgICAgIHdyaXRlbCh2aW9fc2hpZnRfc3RhLCBwZF92aW9fc2hpZnRfc3RhX3JlZyk7
-DQo+ID4gKw0KPiA+ICsgICAgICAgLyogQ2xlYXIgc2xhdmUgdmlvbGF0aW9uIHN0YXR1cyAqLw0K
-PiA+ICsgICAgICAgZm9yICh2aW9faWR4ID0gMDsgdmlvX2lkeCA8IGN0eC0+dmlvX2lkeF9udW07
-IHZpb19pZHgrKykgew0KPiA+ICsgICAgICAgICAgICAgICBjbGVhcl92aW9fc3RhdHVzKGN0eCwg
-dmlvX2lkeCk7DQo+ID4gKyAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShjdHgsIHZpb19p
-ZHgsIGZhbHNlKTsNCj4gPiArICAgICAgIH0NCj4gPiArDQo+IA0KPiBXaHkgZG8geW91IGNsZWFy
-IHRoZXNlPyBBZnRlciBwb3dlciBvbiBoYXJkd2FyZSwgSSB0aGluayB0aGVzZQ0KPiByZWdpc3Rl
-ciBzdGF0dXMgYXJlIGNvcnJlY3QuIElmIHRoZSBkZWZhdWx0IHZhbHVlIG9mIHRoZXNlIHJlZ2lz
-dGVyDQo+IGFyZSBub3QgY29ycmVjdCwgYWRkIGEgY29tbWVudCBmb3IgdGhpcy4NCj4gDQoNClRo
-ZSByZWdpc3RlciBkZWZhdWx0IHZhbHVlIHdvdWxkIGJlIGNvcnJlY3QgYWZ0ZXIgcG93ZXIgb24u
-DQpCdXQgdGhlcmUgYXJlIG1hbnkgdGhpbmdzIGhhdmUgdG8gZG8gYmVmb3JlIGtlcm5lbCBkcml2
-ZXIgcHJvYmUuDQpEdXJpbmcgdGhhdCB0aW1lLCBkZXZhcGMgcmVnaXN0ZXIgc3RhdHVzIG1pZ2h0
-IGJlIGNoYW5nZWQuIEJ1dCB3ZSBhcmUNCmZvY3VzaW5nIG9uIGhhbmRsaW5nIHZpb2xhdGlvbiBh
-ZnRlciBkcml2ZXIgcHJvYmUgaW5zdGVhZC4NClNvIGNsZWFyaW5nIGFsbCByZWcgc3RhdHVzIHRv
-IG1ha2UgaXQgYXMgaW5pdGlhbCBzdGF0ZS4NCg0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0K
-PiANCj4gPiArICAgICAgIHJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KDQo=
+On Tue, Jul 21, 2020 at 5:48 PM Sean Anderson <seanga2@gmail.com> wrote:
+>
+> On 7/20/20 9:15 PM, Atish Patra wrote:
+> > On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
+> >>
+> >> We add DT bindings documentation for CLINT device.
+> >>
+> >> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> >> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> >> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> >> ---
+> >>  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
+> >>  1 file changed, 58 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >> new file mode 100644
+> >> index 000000000000..8ad115611860
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >> @@ -0,0 +1,58 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: SiFive Core Local Interruptor
+> >> +
+> >> +maintainers:
+> >> +  - Palmer Dabbelt <palmer@dabbelt.com>
+> >> +  - Anup Patel <anup.patel@wdc.com>
+> >> +
+> >> +description:
+> >> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
+> >> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
+> >> +  interrupts. It directly connects to the timer and inter-processor interrupt
+> >> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
+> >> +  interrupt controller is the parent interrupt controller for CLINT device.
+> >> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
+> >> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
+> >> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: sifive,clint0
+> >> +      - const: sifive,fu540-c000-clint
+> >> +
+> >> +    description:
+> >> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
+> >> +      Supported compatible strings are -
+> >> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
+> >> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
+> >> +      CLINT v0 IP block with no chip integration tweaks.
+> >> +      Please refer to sifive-blocks-ip-versioning.txt for details
+> >> +
+> >
+> > As the DT binding suggests that the clint device should be named as "sifive,**",
+> > I think we should change the DT property in kendryte dts as well.
+>
+> The kendryte device is based on Rocket Chip, not any SiFive IP/device.
+> If anything, the general binding should be "chipsalliance,clint" and the
+> specific bindings should be "sifive,clint" and "kendryte,clint" (or
+> "canaan,clint").
 
+AFAIK, Palmer clearly mentioned in previous discussion that CLINT
+spec is still owned by SiFive. No matter who implements CLINT device
+in their SOC, we will need one compatible string to represent the
+spec version (i.e. "sifive,clint0") and another compatible representing
+specific implementation (for kendryte this can be "kendryte,k210-clint").
+
+Regards,
+Anup
