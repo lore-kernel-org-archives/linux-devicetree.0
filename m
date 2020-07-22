@@ -2,115 +2,193 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF7CC433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FE2C433EA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A232065F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c7zvVHqa"
+	by mail.kernel.org (Postfix) with ESMTP id 7DC4A22BEF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595433337;
+	bh=kbnKA7mCq4Ti8FRp3szUEaPvkReboJRHj1Bnap/yDXc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pPiaAmhjdoMN5l1fU1EcecbOk4sE8BWPIq2TSUMXz44qo8TT691MO9NjUxhbfj2sT
+	 BjIYNN1eCVbJnXKTyJJRk4tl84oLjgytzeEkBnSQg6eSvFNY9LJJ/loE5wddRnyJ6C
+	 qJCOdGLN/wFMGFWqbYNJazO5GkOwM21aTA4sVn9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732804AbgGVPsG (ORCPT
+        id S1733039AbgGVPzg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:48:06 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58600 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgGVPsG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:48:06 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MFlIF8110020;
-        Wed, 22 Jul 2020 10:47:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595432838;
-        bh=XJ+ytuhtkKd7PxGGLQoO++jTzbDtr8cHVrzy6/eyodU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=c7zvVHqazamxkG/ApE8+1P25eW3S2f2pqRoCasN3ZDxa50JlDEbRyN+KC43VmhI6F
-         spFMVxwOAUS3eZPPjFMa51sU5UAKMTSBH7UwZ7k3Owh5sQet+4iufLXiwrAR1ihJRC
-         LakTLixG1MOQaPwykB7/fwnUtG0ugS9Gy0LWbwKM=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MFlIWJ083089;
-        Wed, 22 Jul 2020 10:47:18 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Jul 2020 10:47:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Jul 2020 10:47:17 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MFlHsk009607;
-        Wed, 22 Jul 2020 10:47:17 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2 2/2] ASoC: tas2562: Update shutdown GPIO property
-Date:   Wed, 22 Jul 2020 10:47:06 -0500
-Message-ID: <20200722154706.9657-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200722154706.9657-1-dmurphy@ti.com>
-References: <20200722154706.9657-1-dmurphy@ti.com>
+        Wed, 22 Jul 2020 11:55:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733022AbgGVPzf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 11:55:35 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E14722BEF;
+        Wed, 22 Jul 2020 15:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595433334;
+        bh=kbnKA7mCq4Ti8FRp3szUEaPvkReboJRHj1Bnap/yDXc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M7PCNAT9DGUX2L0caH+10UVk/p1rx6cEhyeyfCRf6jASk+SutrbKCUhw/JYEbYB32
+         BjD0ohEjSXEDVDq1qz6Q8MfXlggxLHeV1j3pv/wpdz0SRtzmomA0dZBVPY43/EzREm
+         Ocy1sPp4IMvGRDmbA0L51GpMPky3zMlh5grWjl2M=
+Received: by mail-ot1-f43.google.com with SMTP id t18so2122728otq.5;
+        Wed, 22 Jul 2020 08:55:34 -0700 (PDT)
+X-Gm-Message-State: AOAM530N5TuAfQ/pLHpqByyI61P8YN2eA3v3d8CJjtoyGidTLgKWC5GX
+        Ptrb3Z2DSNb5dzgwhOLIzzfc5i3UmQuiqBFgNg==
+X-Google-Smtp-Source: ABdhPJyb6F8z3WA4lftymR6yk0cNa75DCHAW9IbL6thShEbw7ONJr6PozDiOwNdaclBZhAjRHcaGBf8TXqSfAfl9dE4=
+X-Received: by 2002:a9d:46c:: with SMTP id 99mr580182otc.192.1595433333529;
+ Wed, 22 Jul 2020 08:55:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200721141742.996350-1-jiaxun.yang@flygoat.com> <20200721141742.996350-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200721141742.996350-2-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 22 Jul 2020 09:55:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLFZc8ChR=Sj3N-G-b0tq_4F0-HSQPt5+WmkcDZrxUznA@mail.gmail.com>
+Message-ID: <CAL_JsqLFZc8ChR=Sj3N-G-b0tq_4F0-HSQPt5+WmkcDZrxUznA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] of_address: Add bus type match for pci ranges parser
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the shutdown GPIO property to be shutdown from shut-down.
+On Tue, Jul 21, 2020 at 8:18 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> So the parser can be used to parse range property of ISA bus.
+>
+> As they're all using PCI-like method of range property, there is no need
+> start a new parser.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>
+> --
+> v2: Drop useless check, fix some na for bus_addr
+>         add define of of_range_parser_init according to
+>         Rob's suggestion.
+> ---
+>  drivers/of/address.c       | 27 +++++++++++++++------------
+>  include/linux/of_address.h |  5 +++++
+>  2 files changed, 20 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 8eea3f6e29a4..7406636cea87 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -698,9 +698,10 @@ static int parser_init(struct of_pci_range_parser *parser,
+>
+>         parser->node = node;
+>         parser->pna = of_n_addr_cells(node);
+> -       parser->na = of_bus_n_addr_cells(node);
+> -       parser->ns = of_bus_n_size_cells(node);
+>         parser->dma = !strcmp(name, "dma-ranges");
+> +       parser->bus = of_match_bus(node);
+> +
+> +       parser->bus->count_cells(parser->node, &parser->na, &parser->ns);
+>
+>         parser->range = of_get_property(node, name, &rlen);
+>         if (parser->range == NULL)
+> @@ -732,6 +733,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>         int na = parser->na;
+>         int ns = parser->ns;
+>         int np = parser->pna + na + ns;
+> +       int busflag_na = 0;
+>
+>         if (!range)
+>                 return NULL;
+> @@ -739,12 +741,14 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>         if (!parser->range || parser->range + np > parser->end)
+>                 return NULL;
+>
+> -       if (parser->na == 3)
+> -               range->flags = of_bus_pci_get_flags(parser->range);
+> -       else
+> -               range->flags = 0;
+> +       range->flags = parser->bus->get_flags(parser->range);
+> +
+> +       /* PCI and ISA have a extra cell for resource flags */
+> +       if (strcmp(parser->bus->name, "pci") ||
+> +           strcmp(parser->bus->name, "isa"))
+> +               busflag_na = 1;
 
-Fixes: c173dba44c2d2 ("ASoC: tas2562: Introduce the TAS2562 amplifier")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+This should be abstracted out. Probably the easiest is to add a
+'has_flags' boolean to the of_bus struct.
 
-v2 - Set sdz_gpio to NULL if gpio property not present.
+>
+> -       range->pci_addr = of_read_number(parser->range, na);
+> +       range->bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
+>
+>         if (parser->dma)
+>                 range->cpu_addr = of_translate_dma_address(parser->node,
+> @@ -759,11 +763,10 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>         /* Now consume following elements while they are contiguous */
+>         while (parser->range + np <= parser->end) {
+>                 u32 flags = 0;
+> -               u64 pci_addr, cpu_addr, size;
+> +               u64 bus_addr, cpu_addr, size;
+>
+> -               if (parser->na == 3)
+> -                       flags = of_bus_pci_get_flags(parser->range);
+> -               pci_addr = of_read_number(parser->range, na);
+> +               flags = parser->bus->get_flags(parser->range);
+> +               bus_addr = of_read_number(parser->range + busflag_na, na - busflag_na);
+>                 if (parser->dma)
+>                         cpu_addr = of_translate_dma_address(parser->node,
+>                                         parser->range + na);
+> @@ -774,7 +777,7 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+>
+>                 if (flags != range->flags)
+>                         break;
+> -               if (pci_addr != range->pci_addr + range->size ||
+> +               if (bus_addr != range->bus_addr + range->size ||
+>                     cpu_addr != range->cpu_addr + range->size)
+>                         break;
+>
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 763022ed3456..3e8d6489cbf1 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -6,8 +6,11 @@
+>  #include <linux/of.h>
+>  #include <linux/io.h>
+>
+> +struct of_bus;
+> +
+>  struct of_pci_range_parser {
+>         struct device_node *node;
+> +       struct of_bus *bus;
+>         const __be32 *range;
+>         const __be32 *end;
+>         int na;
+> @@ -53,6 +56,7 @@ extern const __be32 *of_get_address(struct device_node *dev, int index,
+>
+>  extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+>                         struct device_node *node);
+> +#define of_range_parser_init of_pci_range_parser_init
+>  extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+>                         struct device_node *node);
+>  extern struct of_pci_range *of_pci_range_parser_one(
+> @@ -83,6 +87,7 @@ static inline int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+>  {
+>         return -ENOSYS;
+>  }
+> +#define of_range_parser_init of_pci_range_parser_init
 
- sound/soc/codecs/tas2562.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-index e74628061040..8a53633a3853 100644
---- a/sound/soc/codecs/tas2562.c
-+++ b/sound/soc/codecs/tas2562.c
-@@ -680,12 +680,25 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
- 	struct device *dev = tas2562->dev;
- 	int ret = 0;
- 
--	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
--						    GPIOD_OUT_HIGH);
-+	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown",
-+						      GPIOD_OUT_HIGH);
- 	if (IS_ERR(tas2562->sdz_gpio)) {
--		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER) {
--			tas2562->sdz_gpio = NULL;
-+		tas2562->sdz_gpio = NULL;
-+		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
-+	}
-+
-+	/*
-+	 * The shut-down property is deprecated but needs to be checked for
-+	 * backwards compatibility.
-+	 */
-+	if (tas2562->sdz_gpio == NULL) {
-+		tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
-+							      GPIOD_OUT_HIGH);
-+		if (IS_ERR(tas2562->sdz_gpio)) {
-+			tas2562->sdz_gpio = NULL;
-+			if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
- 		}
- 	}
- 
--- 
-2.27.0
-
+No need for 2 defines. Move this outside of the ifdef like the others.
