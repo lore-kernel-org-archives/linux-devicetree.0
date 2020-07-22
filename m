@@ -2,131 +2,99 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BE7C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 20:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF9BC433EB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 20:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F72A207BB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 20:13:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jzml84ER"
+	by mail.kernel.org (Postfix) with ESMTP id 87D7E206E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 20:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732914AbgGVUNU (ORCPT
+        id S1732945AbgGVUdB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 16:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbgGVUNU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 16:13:20 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBAAC0619DC
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 13:13:20 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id h10so2166807qtc.4
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 13:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=bHKxXLzRxjp9sEodI13FMKA+gAY4CEHn5pKoXQX0rac=;
-        b=Jzml84ERxyON/0dqHs6IN8pWEjMh/QmFsgLXzpjdyKxK3ZfpSq+8radDDcLKWiX6mp
-         xEMUN4dHkCM4alWtyKevkNUQrUO5TG2bOiKu/HtVR0drayo34qNM8OL1cH1bsVpCCU92
-         gXEGQAHjUzoQsd+NQNpGFjGBvVJTzjgv/sGOtIsMmC2X4Oz+gs0tE1sAQS6ZoKeaL6T+
-         uPqdt0PwvAdIdJuCdiyGd6LvscIk/c0isaS49EHK1EDTXlZDHDkYe7bndI+hJZxlS0hW
-         Y+fPG7uRQFrMmM6UNgrMlRfag6Hfmcl2HPlYADPfrrFiFZdPA8oPMolwuHvkgSHV534i
-         EW7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bHKxXLzRxjp9sEodI13FMKA+gAY4CEHn5pKoXQX0rac=;
-        b=OtpnvrMVW4jsJCTBIBggSfqbQWWS7xG1nvmvrAjRMpVA2mHdkHxC8HU2M2YLe7Y4im
-         RTKP+K1CBIrkL2TmfN0evLEkyXJM/vUuXdeNe3tv5cskntJe1P4LVZIyFbd0dvsvu56+
-         u19+n2ocYQA0SqUSFXM3jYzu+baZQUs7UlWInVyKpZNrylalr8oju3vsgPZCYsXQrsAk
-         7IcaLEy4pGJNc5l0ZWrzc+2R/f5CoFTPb6z/T22EoJwaKSkC6MQypi7pfIj6vr3xzysT
-         ibiHRMjKvWmZfIw3fTcv+6XizWlj2HtPH4NS5g8FjDUrDQr0w2jslLDrkCsPWBqkNt4d
-         +NPA==
-X-Gm-Message-State: AOAM531HqZfYNp42h8+PMHuCBJgGLQprm1HjwLnlZ1sUrIJBTvXDWWwl
-        b50C5xN58rRYgBLrmR+SEozcmSiLNkMgCAk=
-X-Google-Smtp-Source: ABdhPJwj4x5AqnsnHuU7eLFaaCrg7iFEgECz0x2EW+4lWy5xpGyNNzbzxFRm5bhYysPyfFoZL3rvQRkwzt8D9MY=
-X-Received: by 2002:ad4:476a:: with SMTP id d10mr1724517qvx.13.1595448799289;
- Wed, 22 Jul 2020 13:13:19 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 13:13:13 -0700
-In-Reply-To: <20200722201313.754671-1-saravanak@google.com>
-Message-Id: <20200722201313.754671-2-saravanak@google.com>
-Mime-Version: 1.0
-References: <20200722201313.754671-1-saravanak@google.com>
-X-Mailer: git-send-email 2.28.0.rc0.105.gf9edc3c819-goog
-Subject: [PATCH v1 2/2] of: property: Add device link support for pinctrl-0
- through pinctrl-8
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+        Wed, 22 Jul 2020 16:33:01 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:33499 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732944AbgGVUdA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 16:33:00 -0400
+Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MdwRi-1kZ3cK3f42-00b24j; Wed, 22 Jul 2020 22:32:59 +0200
+Received: by mail-qt1-f179.google.com with SMTP id s16so2855067qtn.7;
+        Wed, 22 Jul 2020 13:32:58 -0700 (PDT)
+X-Gm-Message-State: AOAM530Z+bxJV/3VTX0l/CELmsIow/mdXCM0L+mWpelLtVD0z5O0SM4P
+        wSHm0MD5FfejRnIP06vE0+B2/5/vBF2S7h5I9So=
+X-Google-Smtp-Source: ABdhPJz7qCwl199ceVBeakAKIXlC2KGHzaN4T30wS+r6H8SRwHBhlTecZSvjjgYXYoEJpQAkag6kBfpffToe30BE4FU=
+X-Received: by 2002:ac8:7587:: with SMTP id s7mr1188116qtq.304.1595449977474;
+ Wed, 22 Jul 2020 13:32:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200615133242.24911-1-lars.povlsen@microchip.com>
+In-Reply-To: <20200615133242.24911-1-lars.povlsen@microchip.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Jul 2020 22:32:41 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1VGsMFfqaMXA2n49F84MYR5eYWvPT-sMHK1XYGGnNB0A@mail.gmail.com>
+Message-ID: <CAK8P3a1VGsMFfqaMXA2n49F84MYR5eYWvPT-sMHK1XYGGnNB0A@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] Adding support for Microchip Sparx5 SoC
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:dANfnZAZBysQ3Ar2MBWgKmGQ/lPpdgAnCAwDK3+uSV+wr14L3yO
+ ME8yR+Z6cbnP/PFBkdLfzBZ+IFWny0R3r8GmnKY8w1qxrS2q0hS8d5mVyAg31TnCJuUKUcS
+ S2T3164pY99tDMktdtHUl6P+HJ/jDLTjRZ3iL8Se/pAlhIhzfzHX8hcopd9DrKTlQVGLU8q
+ YUL7wo1PzJyCHmL5Vx7Iw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F0Y9TxNRR84=:y+uhsoMlotktFVRF1glGlq
+ fpHGg0WhMjqGtItTeERkAYydjlDvI3n2M0BJLSazTqF0KlS4V+MhqdXTYFTgUzhELCPcVJHLJ
+ iYWcJEV6IfsFv0xiVJVO+AFI6naijtEFsyb94W3aRqh70Ycpu63tiLNl+qYSDIskhK49Mzwac
+ H6/TX6jQ9uW8tDek0Uw4BwH8Mcj6uA5dXFWe3fNLdVmM0jLQwRKJa10e0p/dVemrN/3mgay+p
+ QV35WYTOMz1NDln7ye6YRsDdDhZoHeQ6vULMQMHXMLdMAVeizhd83S09D/2esa2KCJ/zRkFYJ
+ /z0+IdhOLUtRUlZ2swYMkYZ6REbK3GopXilkf7IFmeLyzUdHHuz/oUup+wYUt7AFd9zEx3zwv
+ MnqMDoy3EE7gOSVDCBtrp3ye9qM6psbtzHMADfrma9Gh0MnyskoTIc1MI2UvzDJb4FFV3y7Qg
+ xF2Aghlv4gnWhJ3YMvCsRqIbUgYwwjVCErg5IqM2HtqmT+GPt9CBBunWoPxeglio/zMrmlUog
+ LPynMcJqPGOX79Xt4lr5/XXTp8IBzb6+5b1BGV/8z+dkEvN8/Uowm6O2BxMSGxYVoffDi77m3
+ WII1xJPw66hN/LHLSSdaQvh/XKECFZowmx9BEPJ0D/lAhMwTeXeVG5ryPeLsQv69vmTSCgpDn
+ hJFAteDlmsf4XojPdTm/ol38k94SGkTUK9kQ9mPnlF8+fh6HUAjvkB8G1+s7vFhe2esOsz4Rs
+ Kqlop7hxgBOH6uU62ADD1Iar3snlDoULcYtsM+2SNfX79WWJFNcq613jHVxSxSF4poMEt3wUC
+ OMvU4U+ykKkRdlh2RPwd6xbdXfhXAKfSqEzXbtgXRIn7f/RzBHWbTHAO33yvEU9RjTC8AUsbR
+ dnRnno6q5U2EQxGkSf4npkYrzhqkgFIzC6uLksNK7qD69ncPxwPEOqVp1Tnn5oLC8z2qQX8Nb
+ SI4L7iUYB2Ah9s5KF3sIqzVXC4Lm/w7i2l2tRc6ZfVeQ65ieif8Km
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for pinctrl-0 through pinctrl-8 explicitly instead of trying
-to add support for pinctrl-%d properties.
+On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+> This patch series adds support for Microchip Sparx5 SoC, the CPU
+> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+> x 2 CPU core (A53).
+>
+> Although this is an ARM core, it shares some peripherals with the
+> Microsemi Ocelot MIPS SoC.
 
-Of all the pinctrl-* properties in dts files (20322), only 47% (9531)
-are pinctrl-%d properties. Of all the pinctrl-%d properties, 99.5%
-(9486) are made up of pinctrl-[0-2].
+I've picked up this version of the series into an arm/newsoc branch in
+the soc tree,
+except for the pinctrl patch that Linus Walleij already merged.
 
-Trying to parse all pinctrl-* properties and checking for pinctrl-%d is
-unnecessarily complicated. So, just add support for pinctrl-[0-8] for
-now. In the unlikely event we ever exceed pinctrl-8, we can come back
-and improve this.
+I see you still have a few pending patches for other subsystems (spi, mmc)
+and I'm not sure what the status is for those and am dropping them for the
+moment.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/property.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Once the bindings are accepted by the respective subsystem maintainers,
+please send any remaining DT patches as a follow-up to what I've already
+merged.
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index b06edeb1f88b..d40d923ffeaf 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1274,6 +1274,15 @@ DEFINE_SIMPLE_PROP(interrupts_extended, "interrupts-extended",
- DEFINE_SIMPLE_PROP(nvmem_cells, "nvmem-cells", NULL)
- DEFINE_SIMPLE_PROP(phys, "phys", "#phy-cells")
- DEFINE_SIMPLE_PROP(wakeup_parent, "wakeup-parent", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl0, "pinctrl-0", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl1, "pinctrl-1", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl2, "pinctrl-2", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl3, "pinctrl-3", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl4, "pinctrl-4", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl5, "pinctrl-5", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl6, "pinctrl-6", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
- DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
- DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
- DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
-@@ -1303,6 +1312,15 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_nvmem_cells, },
- 	{ .parse_prop = parse_phys, },
- 	{ .parse_prop = parse_wakeup_parent, },
-+	{ .parse_prop = parse_pinctrl0, },
-+	{ .parse_prop = parse_pinctrl1, },
-+	{ .parse_prop = parse_pinctrl2, },
-+	{ .parse_prop = parse_pinctrl3, },
-+	{ .parse_prop = parse_pinctrl4, },
-+	{ .parse_prop = parse_pinctrl5, },
-+	{ .parse_prop = parse_pinctrl6, },
-+	{ .parse_prop = parse_pinctrl7, },
-+	{ .parse_prop = parse_pinctrl8, },
- 	{ .parse_prop = parse_regulators, },
- 	{ .parse_prop = parse_gpio, },
- 	{ .parse_prop = parse_gpios, },
--- 
-2.28.0.rc0.105.gf9edc3c819-goog
-
+      Arnd
