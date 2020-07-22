@@ -2,157 +2,274 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C55DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81CCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 14:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23C4D20709
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99B820709
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 14:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595427927;
+	bh=7qu9AhuxHamYf2H65Wn8U6QS1wG03iK+GcGL7GeTdt0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rY8Q9t/gHIBz0vrXT/IcVqCcAC2l0t5EwIMCai1rv6qxmJABud++f8PiCPVtwY6Gj
+	 USwpO27lkaitgJF5V2VRPJv9R2rasebHQteRsJ+YEzfwylQejRXtRP0AXm/pemZpwv
+	 Ua2iEGizEuoTBEQkt/OQrrcY3EJwAzg3d38g2w1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbgGVOEr (ORCPT
+        id S1732492AbgGVOZ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 10:04:47 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36216 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbgGVOEr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 10:04:47 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8680F1C0BD8; Wed, 22 Jul 2020 16:04:43 +0200 (CEST)
-Date:   Wed, 22 Jul 2020 16:04:43 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Denis Osterland-Heim <denis.osterland@diehl.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v6 1/2] leds: pwm: add support for default-state device
- property
-Message-ID: <20200722140443.6cagitx3dozgjazh@duo.ucw.cz>
-References: <20200713054259.7608-1-Denis.Osterland@diehl.com>
- <20200713054259.7608-2-Denis.Osterland@diehl.com>
+        Wed, 22 Jul 2020 10:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730574AbgGVOZ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 10:25:26 -0400
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B852120729;
+        Wed, 22 Jul 2020 14:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595427926;
+        bh=7qu9AhuxHamYf2H65Wn8U6QS1wG03iK+GcGL7GeTdt0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UdOTKCQNQEAHNuJPmna0YOIC32+p0i5Fs49J2mN+BlpL4q4OnGm7p32BW0oDSaQxm
+         kWEl+WHTI0AUOh6qR4A8SWognsRXz+p34Iz+CrrmT2euaU3CJ/nz7y87eGz1tiuz61
+         mY85CSbo1PFGp4cRDrm1OHL9zd1c82kTPX9vviWI=
+Received: by mail-ej1-f42.google.com with SMTP id y10so2437783eje.1;
+        Wed, 22 Jul 2020 07:25:25 -0700 (PDT)
+X-Gm-Message-State: AOAM530JzqviUExCJYbH0FWEbFX3TRrA0fWepCTHfkGrq/4FhfNzgVYD
+        GRoHF6uErDEfgPqBhXRxXfZJpFZlzdiY+zDyWg==
+X-Google-Smtp-Source: ABdhPJzFT8VUNhe352u2h73sOsvThk1Vu0xKwN26k6fBL2y8N2CMnD91ujV5It0L2yB+67/2TV+cl1gHiuVf6ha3PqI=
+X-Received: by 2002:a17:906:6959:: with SMTP id c25mr29600316ejs.375.1595427924194;
+ Wed, 22 Jul 2020 07:25:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="v2ovlewz76qvmngn"
-Content-Disposition: inline
-In-Reply-To: <20200713054259.7608-2-Denis.Osterland@diehl.com>
-User-Agent: NeoMutt/20180716
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+ <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+ <1595389756.20193.12.camel@mtkswgap22>
+In-Reply-To: <1595389756.20193.12.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 22 Jul 2020 22:25:13 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+Message-ID: <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi, Neal:
 
---v2ovlewz76qvmngn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8822=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8821=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> >
+> > > +
+> > > +/*
+> > > + * mtk_devapc_dump_vio_dbg - get the violation index and dump the fu=
+ll violation
+> > > + *                           debug information.
+> > > + */
+> > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_devapc_context *ctx, =
+u32 vio_idx)
+> > > +{
+> > > +       u32 shift_bit;
+> > > +
+> > > +       if (check_vio_mask(ctx, vio_idx))
+> > > +               return false;
+> > > +
+> > > +       if (!check_vio_status(ctx, vio_idx))
+> > > +               return false;
+> > > +
+> > > +       shift_bit =3D get_shift_group(ctx, vio_idx);
+> > > +
+> > > +       if (sync_vio_dbg(ctx, shift_bit))
+> > > +               return false;
+> > > +
+> > > +       devapc_extract_vio_dbg(ctx);
+> >
+> > I think get_shift_group(), sync_vio_dbg(), and
+> > devapc_extract_vio_dbg() should be moved out of vio_idx for-loop (the
+> > loop in devapc_violation_irq()) because these three function is not
+> > related to vio_idx.
+> > Another question: when multiple vio_idx violation occur, vio_addr is
+> > related to which one vio_idx? The latest happened one?
+> >
+>
+> Actually, it's related to vio_idx. But we don't use it directly on these
+> function. I think below snip code might be better way to understand it.
+>
+> for (...)
+> {
+>         check_vio_mask()
+>         check_vio_status()
+>
+>         // if get vio_idx, mask it temporarily
+>         mask_module_irq(true)
+>         clear_vio_status()
+>
+>         // dump violation info
+>         get_shift_group()
+>         sync_vio_dbg()
+>         devapc_extract_vio_dbg()
+>
+>         // unmask
+>         mask_module_irq(false)
+> }
 
+This snip code does not explain any thing. I could rewrite this code as:
 
-> This patch adds support for "default-state" devicetree property, which
-> allows to defer pwm init to first use of led.
->=20
-> This allows to configure the PWM early in bootloader to let the LED
-> blink until an application in Linux userspace sets something different.
->=20
-> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+for (...)
+{
+    check_vio_mask()
+    check_vio_status()
 
-> +#define LEDS_PWM_DEFSTATE_OFF	0
-> +#define LEDS_PWM_DEFSTATE_ON	1
-> +#define LEDS_PWM_DEFSTATE_KEEP	2
+    // if get vio_idx, mask it temporarily
+    mask_module_irq(true)
+    clear_vio_status()
+    // unmask
+    mask_module_irq(false)
+}
 
-Turn this into enum; no need for prefix as this is private to the driver.
+// dump violation info
+get_shift_group()
+sync_vio_dbg()
+devapc_extract_vio_dbg()
 
->  struct led_pwm {
->  	const char	*name;
->  	const char	*default_trigger;
->  	u8		active_low;
-> +	u8		default_state;
->  	unsigned int	max_brightness;
->  };
-> =20
-> @@ -88,7 +93,30 @@ static int led_pwm_add(struct device *dev, struct led_=
-pwm_priv *priv,
-> =20
->  	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
-> =20
-> -	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> +	/* init PWM state */
-> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-> +		pwm_get_state(led_data->pwm, &led_data->pwmstate);
-> +		if (!led_data->pwmstate.period) {
-> +			led->default_state =3D LEDS_PWM_DEFSTATE_OFF;
-> +			dev_warn(dev,
-> +				"failed to read period for %s, default to off",
-> +				led->name);
-> +		}
-> +	}
-> +	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
-> +		pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> +
-> +	/* set brightness */
-> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
-> +		led_data->cdev.brightness =3D led->max_brightness;
-> +	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-> +		uint64_t brightness;
-> +
-> +		brightness =3D led->max_brightness;
-> +		brightness *=3D led_data->pwmstate.duty_cycle;
-> +		do_div(brightness, led_data->pwmstate.period);
-> +		led_data->cdev.brightness =3D brightness;
-> +	}
+And my version is identical with your version, isn't it?
 
-Try to clean this up... switch() might help. Maybe two of them.
+>
+> About your question, vio_addr would be the first one.
 
-> @@ -134,6 +166,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
- struct led_pwm_priv *priv)
->  		fwnode_property_read_u32(fwnode, "max-brightness",
->  					 &led.max_brightness);
-> =20
-> +		if (!fwnode_property_read_string(fwnode, "default-state",
-> +						 &state)) {
-> +			if (!strcmp(state, "keep"))
-> +				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
-> +			else if (!strcmp(state, "on"))
-> +				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
-> +			else
-> +				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
-> +		}
+So other vio_addr would be dropped? Or hardware would keep all
+vio_addr and you have some way to get all vio_addr?
 
-Actually... Move the enum to core, and add helper for this. We don't
-want to see this duplicated.
+>
+> > > +
+> > > +       return true;
+> > > +}
+> > > +
+> > > +/*
+> > > + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR)=
+ will dump
+> > > + *                        violation information including which mast=
+er violates
+> > > + *                        access slave.
+> > > + */
+> > > +static irqreturn_t devapc_violation_irq(int irq_number,
+> > > +                                       struct mtk_devapc_context *ct=
+x)
+> > > +{
+> > > +       u32 vio_idx;
+> > > +
+> > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++) {
+> > > +               if (!mtk_devapc_dump_vio_dbg(ctx, vio_idx))
+> > > +                       continue;
+> > > +
+> > > +               /* Ensure that violation info are written before
+> > > +                * further operations
+> > > +                */
+> > > +               smp_mb();
+> > > +
+> > > +               /*
+> > > +                * Mask slave's irq before clearing vio status.
+> > > +                * Must do it to avoid nested interrupt and prevent
+> > > +                * unexpected behavior.
+> > > +                */
+> > > +               mask_module_irq(ctx, vio_idx, true);
+> > > +
+> > > +               clear_vio_status(ctx, vio_idx);
+> > > +
+> > > +               mask_module_irq(ctx, vio_idx, false);
+> > > +       }
+> > > +
+> > > +       return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +/*
+> > > + * start_devapc - initialize devapc status and start receiving inter=
+rupt
+> > > + *                while devapc violation is triggered.
+> > > + */
+> > > +static int start_devapc(struct mtk_devapc_context *ctx)
+> > > +{
+> > > +       void __iomem *pd_vio_shift_sta_reg;
+> > > +       void __iomem *pd_apc_con_reg;
+> > > +       u32 vio_shift_sta;
+> > > +       u32 vio_idx;
+> > > +
+> > > +       pd_apc_con_reg =3D ctx->devapc_pd_base + ctx->offset->apc_con=
+;
+> > > +       pd_vio_shift_sta_reg =3D ctx->devapc_pd_base + ctx->offset->v=
+io_shift_sta;
+> > > +       if (!pd_apc_con_reg || !pd_vio_shift_sta_reg)
+> > > +               return -EINVAL;
+> > > +
+> > > +       /* Clear devapc violation status */
+> > > +       writel(BIT(31), pd_apc_con_reg);
+> > > +
+> > > +       /* Clear violation shift status */
+> > > +       vio_shift_sta =3D readl(pd_vio_shift_sta_reg);
+> > > +       if (vio_shift_sta)
+> > > +               writel(vio_shift_sta, pd_vio_shift_sta_reg);
+> > > +
+> > > +       /* Clear slave violation status */
+> > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++) {
+> > > +               clear_vio_status(ctx, vio_idx);
+> > > +               mask_module_irq(ctx, vio_idx, false);
+> > > +       }
+> > > +
+> >
+> > Why do you clear these? After power on hardware, I think these
+> > register status are correct. If the default value of these register
+> > are not correct, add a comment for this.
+> >
+>
+> The register default value would be correct after power on.
+> But there are many things have to do before kernel driver probe.
+> During that time, devapc register status might be changed. But we are
+> focusing on handling violation after driver probe instead.
+> So clearing all reg status to make it as initial state.
 
-> The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please in=
-form us if you have received this e-mail by
-> mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is stri=
-ctly prohibited.=20
-> - For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-obl=
-igations/
+After hardware is powered on and some violation happen before this
+driver init, why do you not care about it? That is a violation in this
+system.
+For one application, I could build this driver as a ko (kernel
+module). I do not insert this ko in normal, but I insert it after
+something is wrong. So I need to get the information happened before
+this driver init.
 
-Get rid of this.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Regards,
+Chun-Kuang.
 
---v2ovlewz76qvmngn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxhHewAKCRAw5/Bqldv6
-8rmuAJ4rvbdm8hCC5wda9/NyXq6BFCfuYQCglCBcKWz5JOVJkDmRIX+8DtvNYdc=
-=Hxhr
------END PGP SIGNATURE-----
-
---v2ovlewz76qvmngn--
+>
+> > Regards,
+> > Chun-Kuang.
+> >
+> > > +       return 0;
+> > > +}
+> > > +
+>
