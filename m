@@ -2,140 +2,258 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAC2C433EA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A22C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B648207E8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1692065D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZLz2fct8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnaVdBB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732918AbgGVPcf (ORCPT
+        id S1730600AbgGVPia (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:32:35 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56658 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732633AbgGVPce (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:32:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MFWJW0106191;
-        Wed, 22 Jul 2020 10:32:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595431939;
-        bh=AtFpbFN/pk3H2W7tsZe1q1Dl9Qhx5ZausPpl8TMz2w4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZLz2fct8efECUaMkbqEZ/vsjTCwf2rKjyyoTe2xPaiPZESLnrFWDNjzUezeSeq5OE
-         0gzBDObVCO3ablUW7T3zbp2xEcBRqbqLLKIy1gFJEoYikrYpvd5zJksEgvNaWKo8R0
-         5u9mz3BiPg4Wcd3C1CVp9gczt0dgJCHOXmhgnSko=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MFWJA5066435
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Jul 2020 10:32:19 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
- Jul 2020 10:32:18 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 22 Jul 2020 10:32:18 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MFWIZX046694;
-        Wed, 22 Jul 2020 10:32:18 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
-        <marek.behun@nic.cz>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v32 6/6] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
-Date:   Wed, 22 Jul 2020 10:31:46 -0500
-Message-ID: <20200722153146.8767-7-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200722153146.8767-1-dmurphy@ti.com>
-References: <20200722153146.8767-1-dmurphy@ti.com>
+        Wed, 22 Jul 2020 11:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730382AbgGVPia (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:38:30 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA72C0619DC;
+        Wed, 22 Jul 2020 08:38:29 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a6so4626994wmm.0;
+        Wed, 22 Jul 2020 08:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ylc7qLRRrMH6H2UFevhm+/uCNfEKRkKzQpNEzJ1tCQw=;
+        b=lnaVdBB8azpaFkq8qD2+4PQY7y2msO0gCqVtuxkicRYn+wezhs6Z5pLmDo5qVlhtKS
+         B+PtaD2n+k3jqKCD5dT8VulgF1Bdk2wj6MOf3mfmc2U8PcJGn2wH6M614xeavZygetUX
+         QeLcoRZqoqgz6x+3oZpfpL3/p3sFPH7OhN7eGGVqYEkdqQGD5tqdC0/Q5RYayc1sHmds
+         yty8lrM3BYtSScRMg7E5Wa+UixO3iFOzeuGAPumqjCaUgohZ6ZGg6bZg+0ROvC+MdUgB
+         Z18wbhgZoGjbUN5IcYIFeNPeG+S62zsqsPO9wJpMJmCOAFF2CORPYgi8oNzG7ZuSbrUU
+         c02g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ylc7qLRRrMH6H2UFevhm+/uCNfEKRkKzQpNEzJ1tCQw=;
+        b=n8m4qJhWhIxXI4YI0wox1KggEaFh+yzblpYypflIGvKm6HJ5dX88vbGnqcHih2wtpS
+         2CQ1FDifOP8oFjRZbJuATBMKcaJAqdC3b4Zr9bOiQ0GzPSHJ/x+R05pwS8tjGl2YZCcY
+         iwMDXKEcc8O7+Bs1X9+BluwM95laFAK0NzdirK4t9EAMkglXVXenP5CM9VoPa48OuRm3
+         MJ+mGDCvQ/ZwWMpzXr5Jl1pBaVGrgo4/OeV6xMg45fy/qzef6GOJTZoeGQiFDDNDuYzV
+         TWGdDD7SteUcsiW1QTlT0qQ5EjA7bOnuvpyOY5x3jkSQ3KgqoDrxZ93IQ8/SEvXR4nPd
+         ofNQ==
+X-Gm-Message-State: AOAM530A1D92hDUFWXGF0498GXw48e99RQFgoaSYDZLg5icomGX57J+o
+        jQwt59OtmDsSF3vGQZbTsvo=
+X-Google-Smtp-Source: ABdhPJx6Px97Z7ADx5ieGw6VhWBsc9D7294PT05rKbXSTT+BglTgblzgGqfr7YpFyWbPg5nQY8MYZQ==
+X-Received: by 2002:a7b:cf10:: with SMTP id l16mr214085wmg.93.1595432308443;
+        Wed, 22 Jul 2020 08:38:28 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.122.158])
+        by smtp.gmail.com with ESMTPSA id a123sm101145wmd.28.2020.07.22.08.38.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2020 08:38:27 -0700 (PDT)
+Subject: Re: [PATCH 2/4] i2c: mediatek: Support DMA mask range over 33-bits
+To:     Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
+Cc:     qiangming.xia@mediatek.com, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
+ <1595421106-10017-3-git-send-email-qii.wang@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <87429327-5d2e-e3f3-db22-04e225a31055@gmail.com>
+Date:   Wed, 22 Jul 2020 17:38:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <1595421106-10017-3-git-send-email-qii.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accommodate the multicolor framework.  In addition to the
-accommodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 33e3b0b3c53d..ff47cbf6ed3b 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -58,16 +58,21 @@ lp5521@33 {
- 				reg = <0x33>;
- 				label = "lp5521_pri";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 					linux,default-trigger = "heartbeat";
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
-@@ -77,15 +82,20 @@ lp5521@34 {
- 				reg = <0x34>;
- 				label = "lp5521_sec";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--- 
-2.27.0
+On 22/07/2020 14:31, Qii Wang wrote:
+> Replace 'support_33bits with 'dma_max_support' for DMA mask
+> operation, and replace 'mtk_i2c_set_4g_mode' with 'upper_32_bits'.
 
+Please explain more in detail what you are doing and how this fits to the way 
+the HW works.
+
+> 
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>   drivers/i2c/busses/i2c-mt65xx.c | 37 +++++++++++++++++--------------------
+>   1 file changed, 17 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index e6b984a..e475877 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -209,6 +209,7 @@ struct mtk_i2c_compatible {
+>   	unsigned char dma_sync: 1;
+>   	unsigned char ltiming_adjust: 1;
+>   	unsigned char apdma_sync: 1;
+> +	unsigned char max_dma_support;
+>   };
+>   
+>   struct mtk_i2c_ac_timing {
+> @@ -311,11 +312,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 1,
+>   	.timing_adjust = 1,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 33,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt6577_compat = {
+> @@ -325,11 +326,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 0,
+>   	.aux_len_reg = 0,
+> -	.support_33bits = 0,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 32,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt6589_compat = {
+> @@ -339,11 +340,11 @@ struct i2c_spec_values {
+>   	.dcm = 0,
+>   	.auto_restart = 0,
+>   	.aux_len_reg = 0,
+> -	.support_33bits = 0,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 32,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt7622_compat = {
+> @@ -353,11 +354,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 0,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 32,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt8173_compat = {
+> @@ -366,11 +367,11 @@ struct i2c_spec_values {
+>   	.dcm = 1,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 1,
+>   	.timing_adjust = 0,
+>   	.dma_sync = 0,
+>   	.ltiming_adjust = 0,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 33,
+>   };
+>   
+>   static const struct mtk_i2c_compatible mt8183_compat = {
+> @@ -380,11 +381,11 @@ struct i2c_spec_values {
+>   	.dcm = 0,
+>   	.auto_restart = 1,
+>   	.aux_len_reg = 1,
+> -	.support_33bits = 1,
+>   	.timing_adjust = 1,
+>   	.dma_sync = 1,
+>   	.ltiming_adjust = 1,
+>   	.apdma_sync = 0,
+> +	.max_dma_support = 33,
+>   };
+>   
+>   static const struct of_device_id mtk_i2c_of_match[] = {
+> @@ -796,11 +797,6 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
+>   	return 0;
+>   }
+>   
+> -static inline u32 mtk_i2c_set_4g_mode(dma_addr_t addr)
+> -{
+> -	return (addr & BIT_ULL(32)) ? I2C_DMA_4G_MODE : I2C_DMA_CLR_FLAG;
+
+I2C_DMA_4G_MODE define could now be deleted as well.
+
+Regards,
+Matthias
+
+> -}
+> -
+>   static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			       int num, int left_num)
+>   {
+> @@ -885,8 +881,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			return -ENOMEM;
+>   		}
+>   
+> -		if (i2c->dev_comp->support_33bits) {
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
+> +		if (i2c->dev_comp->max_dma_support > 32) {
+> +			reg_4g_mode = upper_32_bits(rpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_RX_4G_MODE);
+>   		}
+>   
+> @@ -908,8 +904,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			return -ENOMEM;
+>   		}
+>   
+> -		if (i2c->dev_comp->support_33bits) {
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
+> +		if (i2c->dev_comp->max_dma_support > 32) {
+> +			reg_4g_mode = upper_32_bits(wpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_TX_4G_MODE);
+>   		}
+>   
+> @@ -954,11 +950,11 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>   			return -ENOMEM;
+>   		}
+>   
+> -		if (i2c->dev_comp->support_33bits) {
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
+> +		if (i2c->dev_comp->max_dma_support > 32) {
+> +			reg_4g_mode = upper_32_bits(wpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_TX_4G_MODE);
+>   
+> -			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
+> +			reg_4g_mode = upper_32_bits(rpaddr);
+>   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_RX_4G_MODE);
+>   		}
+>   
+> @@ -1232,8 +1228,9 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+>   		return -EINVAL;
+>   	}
+>   
+> -	if (i2c->dev_comp->support_33bits) {
+> -		ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(33));
+> +	if (i2c->dev_comp->max_dma_support > 32) {
+> +		ret = dma_set_mask(&pdev->dev,
+> +				DMA_BIT_MASK(i2c->dev_comp->max_dma_support));
+>   		if (ret) {
+>   			dev_err(&pdev->dev, "dma_set_mask return error.\n");
+>   			return ret;
+> 
