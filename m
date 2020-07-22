@@ -2,64 +2,96 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E294C433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9906C433E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29123207BB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781022176B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 17:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595438343;
+	bh=ia3Drrpb8R286Xl10CkSuL9nEqLtKvC8Ftw8IXrdn/s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=C7HAL2YIGJjTCxilD4A5IqXcaf8DoVPXgWKEeqpU3mzPcQUIUIH2M7rBRtPDNKH5i
+	 QAJHp/LZkJPoCltLhG5CcPlS5YlzE3T9aRXQuHrhsNG4hjdmDOQjMuScM4MOtxxFAk
+	 L/4wu/yxuDFcj4/xrGMCMwqmvy7+KjSIUK62Bg78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgGVRS5 (ORCPT
+        id S1729618AbgGVRTC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 13:18:57 -0400
-Received: from out28-98.mail.aliyun.com ([115.124.28.98]:50175 "EHLO
-        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbgGVRS5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 13:18:57 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2956703|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.054435-0.000271357-0.945294;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I6.3qla_1595438306;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6.3qla_1595438306)
-          by smtp.aliyun-inc.com(10.147.41.138);
-          Thu, 23 Jul 2020 01:18:53 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     daniel.lezcano@linaro.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v11 0/2] Add support for the OST in Ingenic X1000.
-Date:   Thu, 23 Jul 2020 01:18:02 +0800
-Message-Id: <20200722171804.97559-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 22 Jul 2020 13:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726938AbgGVRTC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:19:02 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 363E92071A;
+        Wed, 22 Jul 2020 17:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595438341;
+        bh=ia3Drrpb8R286Xl10CkSuL9nEqLtKvC8Ftw8IXrdn/s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Llbo/CbeIrHS36qg4Tav3ymVIZ6aEUb70v3+IRetVM7dfFtTJ05OA67XrrwaYZ6Y7
+         DOH5dhovSD6XxQjJXy9IrN4W3avampo7relGtesnasxUuwBe2q8f5X2xzD9xKnJH2I
+         +lEtbG7fHzaVDIH8mEbYE1D/wqf+fVmDMVPMK64o=
+Date:   Wed, 22 Jul 2020 18:18:57 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 0/3] dt-bindings: iio: adc: Maxim ADC yaml conversions
+Message-ID: <20200722181857.57917132@archlinux>
+In-Reply-To: <20200722171224.989138-1-jic23@kernel.org>
+References: <20200722171224.989138-1-jic23@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v10->v11:
-Fix typos.
+On Wed, 22 Jul 2020 18:12:21 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-周琰杰 (Zhou Yanjie) (2):
-  dt-bindings: timer: Add Ingenic X1000 OST bindings.
-  clocksource: Ingenic: Add support for the Ingenic X1000 OST.
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> These 3 are all fairly simple (I think) so should be uncontroversial.
+> My biggest question is with Jacopi and Akinobu are happy to be
+> explicitly listed as maintainers for these bindings.
 
- .../devicetree/bindings/timer/ingenic,sysost.yaml  |  63 +++
- drivers/clocksource/Kconfig                        |  12 +-
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/ingenic-sysost.c               | 539 +++++++++++++++++++++
- include/dt-bindings/clock/ingenic,sysost.h         |  12 +
- 5 files changed, 626 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/timer/ingenic,sysost.yaml
- create mode 100644 drivers/clocksource/ingenic-sysost.c
- create mode 100644 include/dt-bindings/clock/ingenic,sysost.h
+I'll leave these for now, but just realised I didn't put
+additionalProperties: false in the last 2 and I'm fairly sure
+it should be fine to do so in both of them.
 
--- 
-2.11.0
+Jonathan
+
+
+> 
+> Jonathan Cameron (3):
+>   dt-bindings: iio: adc: maxim,max11100 yaml conversion
+>   dt-bindings: iio: adc: maxim,max1118 yaml conversion
+>   dt-bindings: iio: adc: maxim,max9611 yaml conversions
+> 
+>  .../devicetree/bindings/iio/adc/max11100.txt  | 18 ------
+>  .../devicetree/bindings/iio/adc/max1118.txt   | 21 -------
+>  .../devicetree/bindings/iio/adc/max9611.txt   | 27 ---------
+>  .../bindings/iio/adc/maxim,max11100.yaml      | 49 +++++++++++++++
+>  .../bindings/iio/adc/maxim,max1118.yaml       | 59 +++++++++++++++++++
+>  .../bindings/iio/adc/maxim,max9611.yaml       | 49 +++++++++++++++
+>  6 files changed, 157 insertions(+), 66 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/max11100.txt
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/max1118.txt
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/max9611.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max11100.yaml
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1118.yaml
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max9611.yaml
+> 
 
