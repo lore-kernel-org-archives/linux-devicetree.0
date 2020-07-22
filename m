@@ -2,116 +2,242 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC527C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E365C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C042077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595407824;
-	bh=KBex7YObWFkv3ZED+tckY/19Y0OC0cIjEMo2Ccpv9Bg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ziZlnA9iXFk6V64vU78M19AaxZbhaap6I/Og4ola0teLwdOQ83U8EgIclmiTHsWWT
-	 r4ln4YakfXY+2o1P14MNRoih+07PkIMC7StwYnrfA5yx6CUvdgUxrLoOAY1J4XKeDl
-	 8OmjvyrlEcVMxdRyprhIhclHvLAfCKIPvby/uhTw=
+	by mail.kernel.org (Postfix) with ESMTP id 3E0452077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 08:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C21JPhyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgGVIuY (ORCPT
+        id S1728539AbgGVI4O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 04:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbgGVIuX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 04:50:23 -0400
-Received: from localhost (p54b33083.dip0.t-ipconnect.de [84.179.48.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6785D2065E;
-        Wed, 22 Jul 2020 08:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595407823;
-        bh=KBex7YObWFkv3ZED+tckY/19Y0OC0cIjEMo2Ccpv9Bg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iJzPYASLrtpyTXcRKDvZ/DG2+ITva/hZLilKwxh9W9WVvDgyr+Jf7zCm98iQodmP0
-         wXVnB3cdXiMmbV1Db++NNRZ35/pzumvSy/HpvIrhnm2t9ibHKi+f3AnTAYeoWSJnFY
-         yAsS1ll5wCriS7wGUkQlq5BljvfR5NCn3mALKCKs=
-Date:   Wed, 22 Jul 2020 10:50:20 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 00/20] Add support for SATA/PCIe/USB2[3]/VIN/CSI on
- R8A774E1
-Message-ID: <20200722085020.GD1030@ninjato>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 22 Jul 2020 04:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgGVI4O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 04:56:14 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4902AC0619DC;
+        Wed, 22 Jul 2020 01:56:14 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id a12so1712668ion.13;
+        Wed, 22 Jul 2020 01:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ln57g9kGaw+MdOcgZwEqa5A1Z1hG/VwmmjB0ZBbadOM=;
+        b=C21JPhyOHrIydO6NKi2q8Pphvs5J6wYTWsjI/WilYhnPzBRUEUfbi3sZvNyRqe31sV
+         fgkeFWZBGgS9jnNWkNnjcMWavgqiICtwVoD7e1HaBn6rV1E5ZAJXfVf+PB+5TOt8av9G
+         kOGFqXG5tHd2MT64x2UE0la5J9oRsm2cKm0DDw5yOiEpM9SHQgMGa1ZOSIwOQvwP4bll
+         HS8dQfM9mlpIzy3H9cGIcb21dhsDiYruiQ2Zkgy58Y1bS/0Oz+zcXQU1CfdPToqMKCOT
+         ME2/FGgge3o5FdgljJmUPBe8WzJ8M21UjM2IWJrvpE6GLkYt64B6M8uUAsdFlsm2dB2t
+         pkvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ln57g9kGaw+MdOcgZwEqa5A1Z1hG/VwmmjB0ZBbadOM=;
+        b=p+O6pCPgUC7jzosDs8AAMCwyzCzeNRq/G6dix2QBVwNmzSyl+SA1y6Av3owjDcZk+0
+         5uOCW/DXuEGDd2NmMRbLoEZ9iapDtWm+36OkzBZiZxwo8HNa10bTtC40UYAt7caOc6TC
+         ShfQBKfeuOwBMyALSm6jkHZTnN2fSNtZSxRJReLRYqCj/Qb8SnwzBjs8emDdZgz6x1dm
+         hz+xauC202pSOd9aljctv2aVz3DbvuTrdyW5TmteITaH4PGNVXydiCX5daso4dRMQRT5
+         siiDXblLQyGZEV3gcPKQBStv5yon/dGZzcgaYEVKSC3M9Q8RMjX+4HCfiQ8rmj7LAZjM
+         /A5A==
+X-Gm-Message-State: AOAM532W38kwfyXTKZwziGr/zW39WgcC+okL1ztCjj6/2P8mbeSV1GKj
+        QXR/zM+vWqFxpyNMcZrdJNu38k53tvYyx7r4SJYSKRQm6Z8=
+X-Google-Smtp-Source: ABdhPJzBn3F4eF5x3FCOg62em2mFuXAaZLS2uGn9dAJTbouuZ36/w0i6SG+5OMOsXp3zAFeZBBv2MzyHd/bLklA870c=
+X-Received: by 2002:a5e:8805:: with SMTP id l5mr652782ioj.124.1595408173330;
+ Wed, 22 Jul 2020 01:56:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="C1iGAkRnbeBonpVg"
-Content-Disposition: inline
-In-Reply-To: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200704113902.336911-1-peron.clem@gmail.com> <20200704113902.336911-2-peron.clem@gmail.com>
+ <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
+In-Reply-To: <72a6fddf-5e84-f050-2eee-74178d457789@sholland.org>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 22 Jul 2020 10:56:02 +0200
+Message-ID: <CAJiuCcej5Drwz_jfF=uHNRG+w_c_SfbyJt7jyck5d_phVh-oLw@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 01/16] ASoC: sun4i-i2s: Add support for H6 I2S
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Samuel,
 
---C1iGAkRnbeBonpVg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, 10 Jul 2020 at 07:44, Samuel Holland <samuel@sholland.org> wrote:
+>
+> On 7/4/20 6:38 AM, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 I2S is very similar to that in H3, except it supports up to 16
+> > channels.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  sound/soc/sunxi/sun4i-i2s.c | 227 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 227 insertions(+)
+> >
+> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+> > index d0a8d5810c0a..9690389cb68e 100644
+> > --- a/sound/soc/sunxi/sun4i-i2s.c
+> > +++ b/sound/soc/sunxi/sun4i-i2s.c
+> > @@ -124,6 +124,21 @@
+> >  #define SUN8I_I2S_RX_CHAN_SEL_REG    0x54
+> >  #define SUN8I_I2S_RX_CHAN_MAP_REG    0x58
+> >
+> > +/* Defines required for sun50i-h6 support */
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET_MASK        GENMASK(21, 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_OFFSET(offset)     ((offset) << 20)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL_MASK               GENMASK(19, 16)
+> > +#define SUN50I_H6_I2S_TX_CHAN_SEL(chan)              ((chan - 1) << 16=
+)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN_MASK                GENMASK(15, 0)
+> > +#define SUN50I_H6_I2S_TX_CHAN_EN(num_chan)   (((1 << num_chan) - 1))
+> > +
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP0_REG       0x44
+> > +#define SUN50I_H6_I2S_TX_CHAN_MAP1_REG       0x48
+> > +
+> > +#define SUN50I_H6_I2S_RX_CHAN_SEL_REG        0x64
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP0_REG       0x68
+> > +#define SUN50I_H6_I2S_RX_CHAN_MAP1_REG       0x6C
+> > +
+> >  struct sun4i_i2s;
+> >
+> >  /**
+> > @@ -466,6 +481,65 @@ static int sun8i_i2s_set_chan_cfg(const struct sun=
+4i_i2s *i2s,
+> >       return 0;
+> >  }
+> >
+> > +static int sun50i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
+> > +                                const struct snd_pcm_hw_params *params=
+)
+> > +{
+> > +     unsigned int channels =3D params_channels(params);
+> > +     unsigned int slots =3D channels;
+> > +     unsigned int lrck_period;
+> > +
+> > +     if (i2s->slots)
+> > +             slots =3D i2s->slots;
+> > +
+> > +     /* Map the channels for playback and capture */
+> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x76543=
+210);
+> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x76543=
+210);
+> > +
+> > +     /* Configure the channels */
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +     regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
+> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
+> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
+> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
+> > +
+> > +     switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
+> > +     case SND_SOC_DAIFMT_DSP_A:
+> > +     case SND_SOC_DAIFMT_DSP_B:
+> > +     case SND_SOC_DAIFMT_LEFT_J:
+> > +     case SND_SOC_DAIFMT_RIGHT_J:
+>
+> According to the manual, LEFT_J and RIGHT_J should use the same calculati=
+on as
+> I2S, not the one for PCM/DSP.
+>
+> > +             lrck_period =3D params_physical_width(params) * slots;
+> > +             break;
+> > +
+> > +     case SND_SOC_DAIFMT_I2S:
+> > +             lrck_period =3D params_physical_width(params);
+> > +             break;
+> > +
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (i2s->slot_width)
+> > +             lrck_period =3D i2s->slot_width;
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
+> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
+> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
+>
+> From the description in the manual, this looks off by one. The number of =
+BCLKs
+> per LRCK is LRCK_PERIOD + 1.
+>
+> > +
+> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
+> > +                        SUN50I_H6_I2S_TX_CHAN_EN_MASK,
+> > +                        SUN50I_H6_I2S_TX_CHAN_EN(channels));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+> >                              struct snd_pcm_hw_params *params,
+> >                              struct snd_soc_dai *dai)
+> > @@ -691,6 +765,108 @@ static int sun8i_i2s_set_soc_fmt(const struct sun=
+4i_i2s *i2s,
+> >       return 0;
+> >  }
+> >
+> > +static int sun50i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
+> > +                               unsigned int fmt)
+> > +{
+> > +     u32 mode, val;
+> > +     u8 offset;
+> > +
+> > +     /*
+> > +      * DAI clock polarity
+> > +      *
+> > +      * The setup for LRCK contradicts the datasheet, but under a
+> > +      * scope it's clear that the LRCK polarity is reversed
+> > +      * compared to the expected polarity on the bus.
+> > +      */
+>
+> This comment makes us sound a lot more confident than I think we actually=
+ are.
 
+That's a comment that needs to be checked using a Logic analyzer (that
+I don't have).
+It's a copy paste from the previous generation.
+But this seems wrong as we need to specify
+"simple-audio-card,frame-inversion;" in the device-tree.
 
-> This patch series adds support for the following peripherals on RZ/G2H SoC
->  * PCIe
->  * SATA
->  * USB2
->  * USB3
->  * Audio
->  * VIN
->  * CSI
+Regards,
+Clement
 
-Nice. But please update your recipients list. No need to have the i2c
-mailing list in there.
-
-
---C1iGAkRnbeBonpVg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8X/cwACgkQFA3kzBSg
-KbbCjg/9EwkGut+pjFLsSqqQcdsIzTD9kym4OTeB/bHTnHu+yCKyYJ0Sa6ytd/+O
-J9JLAahz7QkGnfOSFkz17HGK29XcNocub/8bIAuUBuydV8yQrleXLt/3oOKWOWrt
-FC9p8gGr1q0/DLKeCOeIG1ftIaOe22L6bJsuxCzhJG8DetJY0If4fZ+nZc08r6Af
-qMClhrnXZDqG7mYhLiWkeeKoiootXREJ8b2NozWKGLkQF0zMpSzQ0H+IwNrj6ElB
-OCZHdbRrRLc1oIHmNWosZiFrH20DmVdjRUaZhvP1sBiw7/CdjZAf10OedOF8fv48
-PGMhu3HM2FsqzPncnYAiNtTJrwESnDDROinJW8D+mAjFToABbnr1Nhc5iC38elIl
-HTsJgC03NEZfZ1k6rvr1t/cYGcHePKzXod1ftEvvmT9093mGLlArZhMmKDFcXiDU
-4g01TTz4SetHaOqdzZlPdxu5cJ1YGyMcOQQgBAC1C2vOLGg2Fsqs8VBI/ud/VAG2
-XYAILg0D7wbFUd1fMYkG1W4x9HNdVlNXd4cCZWr4Geqc51B/9CQyJPhPJfCMK8py
-KNcd8JmzsXN1oXW9E7K1VjHiMCb9TsBswsXXz8nnsfUuE09CpVQGfFqtmS+2nMjV
-4VyHziCHbgqRqmlFlzwkGp7gcBcxBywyBwhRobKdGCTwFF+J7VE=
-=oXte
------END PGP SIGNATURE-----
-
---C1iGAkRnbeBonpVg--
+>
+> Regards,
+> Samuel
