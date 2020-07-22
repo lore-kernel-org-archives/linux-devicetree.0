@@ -2,110 +2,132 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CC6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 22:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81483C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 23:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04E2D22B3F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 22:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595457024;
-	bh=I7/YIfdAMV3E37NnGmsLOOWx8Y9KsMdASXp+fIuCB6Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jmkGRJsjtGnVTD1Zs/Jk/6kOFvSvdlPRPnJRgi2foyOhlg5gGu65D8VXu3FtfrPkE
-	 CiSE0GKxDCW4M1b8KXuXvREX2xBZ7xHC9cra3giwnazBrDQwDMHdmjWfLFlUt4Psj2
-	 PTbGPVtkEccjgD8vd6/iYzvGe0uZRzrbwbZoO0Q0=
+	by mail.kernel.org (Postfix) with ESMTP id 5B03122B3F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 23:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LDgxRU0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732822AbgGVWaU (ORCPT
+        id S1733006AbgGVXBj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 18:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728607AbgGVWaU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 18:30:20 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB74622B47;
-        Wed, 22 Jul 2020 22:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595457020;
-        bh=I7/YIfdAMV3E37NnGmsLOOWx8Y9KsMdASXp+fIuCB6Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FAbkgy6sdytJTU9IpGYQFy7pAkblb4fmUS8GeRdQobkppbe5HQIrBbeJzJayZak5C
-         d7sO+DFy+vfJNPDZJhdWaE1DKWIxJqRg1CQ/PT5Baxx5rBP3ke+h7YVK9UPNCBXc1Z
-         1sEZPtWHIJ9knZnQWkIXTh2Zerhysm6OmYirf0Wk=
-Received: by mail-oi1-f171.google.com with SMTP id k22so3324389oib.0;
-        Wed, 22 Jul 2020 15:30:19 -0700 (PDT)
-X-Gm-Message-State: AOAM532NU+ZpvnrhEuQQ/3xJmGCYq7s7PicredcoK5cIHNqmLZzNUfM1
-        DrZ9OrfvhLI6f20KIZDoFDGGcsofydUy/rGK5w==
-X-Google-Smtp-Source: ABdhPJyNc7J2Ie/GaUmdtczDpk4TzTx1BaMfBmYiKRVYAxHqT4jh1z08pTVv5GVCvdyCO3JGH5yTevtghczkpAcneRg=
-X-Received: by 2002:aca:4844:: with SMTP id v65mr1605683oia.152.1595457019133;
- Wed, 22 Jul 2020 15:30:19 -0700 (PDT)
+        Wed, 22 Jul 2020 19:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729843AbgGVXBi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 19:01:38 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A52CC0619E2
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 16:01:38 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id w17so3060800otl.4
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 16:01:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zMYtvDBeGfcQxAGCAdsv13lRzxlc7JtBvhHF/yrjphQ=;
+        b=LDgxRU0PPlOqe+jIyOjiUKQdehMfoZWAjfvZ25p0KPl8vFDDdOtUj3vbuWcx1d2HiM
+         bsCRH9MS1l8LDU98iOSE7GPEolaslu2fkxDb1T3PBTgCR24VzMdTGS6k/iPRG3QEztNe
+         Em9GsZq+bVr765qjSjudsYKVBDe/BWvUycBl0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zMYtvDBeGfcQxAGCAdsv13lRzxlc7JtBvhHF/yrjphQ=;
+        b=e+SOUNLXRqB0TTQ7nyT7AiCmvuDqETPget9zp08CytObQ+tliZg7L97NMBycqvQpZx
+         4l9kSMj1ymnHx5v+3NML2JZwhkT96uI9RBX4Bt4LreTlR4bzWdJ/y8G4F9ZrzgGxhVBu
+         G7BCYVmcrmGXcS+q6dodAng/lgQQVlfvUorBzlRIE4f0QLy3RRmrRoW7BsOcNrFNmO9v
+         vGnRJ+0fak3Sq/IeZQ/TJxObnQH+qtvzkT4/JwVdpdUB7IUrOACd12LMudv/zOljMpBw
+         VVgTD1mWEw7kcr39KGg2xwELBGNMe+NB2YqqvfXs+q00hNy3HVJ/AIEJGQ32KucNEw02
+         Q1Kg==
+X-Gm-Message-State: AOAM532mv9Y3rUGPwr7sSnEr3iJIl5MLscHESKfQo5qvZ1cYZF7Mloxi
+        Y15dcmbdPqZ0P40yg2yLr0ZtwVc9R/oVEElXInkMYg==
+X-Google-Smtp-Source: ABdhPJzMRGNhyEWDrKRLOE3infJnLErmNB6h5FHJQExFCTQdMa95a4Z/n+l6f4RR6YJ3xa3qMPCPWE5qcULyrQPYc4Y=
+X-Received: by 2002:a9d:d55:: with SMTP id 79mr2018905oti.281.1595458897417;
+ Wed, 22 Jul 2020 16:01:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200722110317.4744-1-kishon@ti.com> <20200722110317.4744-2-kishon@ti.com>
-In-Reply-To: <20200722110317.4744-2-kishon@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 Jul 2020 16:30:07 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLVnWruxyavw_nRCorXQ2JGihjvMZffqniq8jPaRYPYTA@mail.gmail.com>
-Message-ID: <CAL_JsqLVnWruxyavw_nRCorXQ2JGihjvMZffqniq8jPaRYPYTA@mail.gmail.com>
-Subject: Re: [PATCH v8 01/15] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
+ <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
+ <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu> <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
+ <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu> <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
+ <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu> <CAF6AEGsOZshgBUnUKUF_hOLNHmvrvsDwPzX24-RKos6MZEeusg@mail.gmail.com>
+In-Reply-To: <CAF6AEGsOZshgBUnUKUF_hOLNHmvrvsDwPzX24-RKos6MZEeusg@mail.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Thu, 23 Jul 2020 01:01:25 +0200
+Message-ID: <CAKMK7uF=vhzZSKuy6XV=R7roabxMt104Vg_w8axNmLi4EE6+0g@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jonathan <jonathan@marek.ca>,
+        saravanak@google.com,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        dri-devel@freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sibi Sankar <sibis@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 5:03 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Wed, Jul 22, 2020 at 5:47 PM Rob Clark <robdclark@gmail.com> wrote:
 >
-> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
-> property to configure the number of bits passed through from PCIe
-> address to internal address in Inbound Address Translation register.
-> This only used the NO MATCH BAR.
+> On Tue, Jul 21, 2020 at 10:30 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 21-07-20, 07:28, Rob Clark wrote:
+> > > With your ack, I can add the patch the dev_pm_opp_set_bw patch to my
+> > > tree and merge it via msm-next -> drm-next -> linus
+> >
+> > I wanted to send it via my tree, but its okay. Pick this patch from
+> > linux-next and add my Ack, I will drop it after that.
+> >
+> > a8351c12c6c7 OPP: Add and export helper to set bandwidth
 >
-> However standard PCI dt-binding already defines "dma-ranges" to
-> describe the address ranges accessible by PCIe controller. Add support
-> in Cadence PCIe host driver to parse dma-ranges and configure the
-> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
-> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB.
+> Thanks, I'll do that
 >
-> This adds support to take the next biggest region in "dma-ranges" and
-> find the smallest BAR that each of the regions fit in and if there is
-> no BAR big enough to hold the region, split the region to see if it can
-> be fitted using multiple BARs.
+> >
+> > > Otherwise I can send a second later pull req that adds the final patch
+> > > after has rebased to 5.9-rc1 (by which point the opp next tree will
+> > > have presumably been merged
+> >
+> > The PM stuff gets pushed fairly early and so I was asking you to
+> > rebase just on my tree, so you could have sent the pull request right
+> > after the PM tree landed there instead of waiting for rc1.
 >
-> "dma-ranges" of J721E will be
-> dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
-> Since there is no BAR which can hold 2^48 size, NO_MATCH_BAR will be
-> used here.
->
-> Legacy device tree binding compatibility is maintained by retaining
-> support for "cdns,no-bar-match-nbits".
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> Changes from [1]
-> 1) Use list_sort() for sorting the address ranges by size
-> 2) Clear CDNS_PCIE_LM_RC_BAR_CFG register before configuring them
->
-> [1] -> http://lore.kernel.org/r/20200521080153.5902-1-kishon@ti.com
->  .../controller/cadence/pcie-cadence-host.c    | 251 +++++++++++++++++-
->  drivers/pci/controller/cadence/pcie-cadence.h |  28 +-
->  2 files changed, 262 insertions(+), 17 deletions(-)
+> I guess I should have explained that my tree gets pulled first into
+> drm-next, which then gets pulled by Linus.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yeah either topic tree or acks for merging in the other branch. No
+rebasing in the middle of the merge window, that's rather uncool.
+-Daniel
+
+>
+> BR,
+> -R
+>
+> > But its fine now.
+> >
+> > --
+> > viresh
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
