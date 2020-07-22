@@ -2,214 +2,109 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1315DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB32C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF6E207DD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACB92068F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 15:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2fwuh96"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qCiF/viG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732726AbgGVP0q (ORCPT
+        id S1732698AbgGVPcJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 11:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbgGVP0p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:26:45 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A234C0619DC;
-        Wed, 22 Jul 2020 08:26:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r12so2283177wrj.13;
-        Wed, 22 Jul 2020 08:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=akcO108wudl5eEgjnEkCunNDPWVs+eb32qFL3qxkaXw=;
-        b=F2fwuh965Lrcv6Mm0JcItJPFlBbuhKsYu3vNEmQZNerCWr81bNRRX4fkIVyJXvACp/
-         FzkQT599/MCpybVn4aCNU0QzU7QZezbKdNmmG5k3Ql7hCsVAxG4C5dbO9YEGmRttgenP
-         liuwWy5QPuG6HDkDs5BqyLFpFZNcWp0hdtxeAyu9ns4TCRrzghh3vhyJE924/t0noFSa
-         UQl1YxYVdqdMd6yUm8UHewWEeLnoJyCtbHcvc+cjn2UNXhX1ON4DFLH5UfF02vc8PGvB
-         cSRU1ppxJM1pWIgRnSkXtsctrfgA97KJyOEAA4iScx23/65MFX73gSPVqy5te4OQiKAG
-         QFHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=akcO108wudl5eEgjnEkCunNDPWVs+eb32qFL3qxkaXw=;
-        b=ZCXm4s/Z5ZewrMnEZtagShCUIfpO89sHnWMGv8W9GDZMxiuqtR0Z89YkS5btg1PgQW
-         BBgBmqpFPCJiRNbgEE8bu3YQcDjGgMSYJlWUM5xgkWEBTylMEldeZsvf0QWs84s6Tou5
-         VrOGwJRBoQexfWHlF71U17uOtETUQgwjvX8YG5o4mp4GR/DLX8pCTDp/bIi/Fph9vEI7
-         cjw6SmUOzgLO2DiD9xBUuf5p+NHCFOWIHT/lSsr2d4PSiiFw8XHGP9H+EB+nyQwLNxoB
-         k9Nlzvl7pgYlxbTfNoYTTYb0IIWDg6fywFPIyix6HwFSn5l38Rhrb2nR0YmWt6dyaMyI
-         44GQ==
-X-Gm-Message-State: AOAM533n+wMHw8TXJ7VqIL8Mcsz5Qn28vsR6kL/R3IybeqxIPDz5PSPV
-        1myOH6IGzW9+vn24keltiRs=
-X-Google-Smtp-Source: ABdhPJzNhFaLsOgasoKvuzKRv3v1C9BYgx4EPcERrylzUFA6ZeQ9um13EegybBW95xbv9HkDiglmnw==
-X-Received: by 2002:adf:e701:: with SMTP id c1mr112470wrm.350.1595431604326;
-        Wed, 22 Jul 2020 08:26:44 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id u2sm54779wml.16.2020.07.22.08.26.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2020 08:26:43 -0700 (PDT)
-Subject: Re: [PATCH 1/4] i2c: mediatek: Add apdma sync in i2c driver
-To:     Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
-Cc:     qiangming.xia@mediatek.com, devicetree@vger.kernel.org,
-        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
- <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <58e23057-d84c-7fc2-e912-6569cbbf1b25@gmail.com>
-Date:   Wed, 22 Jul 2020 17:26:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 22 Jul 2020 11:32:09 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44564 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbgGVPcI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 11:32:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06MFVquY011789;
+        Wed, 22 Jul 2020 10:31:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595431912;
+        bh=R7Oa65f2HhKPSlBuczqXsfDjkDfALVHkd5h98zrQVsU=;
+        h=From:To:CC:Subject:Date;
+        b=qCiF/viGmpafrY1AvL3rojzLq/hXbnEjxyGQR6F2VlerEECn3/+Sqwhb1dEq9D1GM
+         vcJvkvCGO/L78xLWtiS1K4k5tM+5iZLvJpvYYrjG77JPF7QxZv0Yv3cjeGPfa6XSOW
+         Em9QhYK2/+jrqbbWPATA7QvfgIW8MBkeV/fDGR5s=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06MFVqZk065232
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 Jul 2020 10:31:52 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 22
+ Jul 2020 10:31:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 22 Jul 2020 10:31:52 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06MFVq7r115650;
+        Wed, 22 Jul 2020 10:31:52 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>,
+        <marek.behun@nic.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v32 0/6] Multicolor Framework v32
+Date:   Wed, 22 Jul 2020 10:31:40 -0500
+Message-ID: <20200722153146.8767-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <1595421106-10017-2-git-send-email-qii.wang@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello
+
+This is the remaining patches in the multicolor framework series.  Only the
+LP50xx driver has been updated per the review comment here
+
+https://lore.kernel.org/patchwork/patch/1274070/
+
+In addition to these fixes fixes for the enable/disable and reset functions have
+also been updated.
+
+Summary:
+Converted links from http->https
+Fixed comment style
+Fixed enable/disable function
+Refactored probe_dt code
+Fixed checkpatch style issues
+Fixed issues when building with W=1 C=1
 
 
-On 22/07/2020 14:31, Qii Wang wrote:
-> With the apdma remove hand-shake signal, it need to keep i2c and
-> apdma in sync manually.
-> 
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+Dan Murphy (6):
+  dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+  leds: lp50xx: Add the LP50XX family of the RGB LED driver
+  ARM: defconfig: u8500: Add LP55XX_COMMON config flag
+  ARM: dts: n900: Add reg property to the LP5523 channel node
+  ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+  ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+ .../devicetree/bindings/leds/leds-lp50xx.yaml | 130 +++
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi    |  14 +-
+ arch/arm/boot/dts/omap3-n900.dts              |  29 +-
+ arch/arm/boot/dts/ste-href.dtsi               |  22 +-
+ arch/arm/configs/u8500_defconfig              |   1 +
+ drivers/leds/Kconfig                          |  11 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lp50xx.c                    | 791 ++++++++++++++++++
+ 8 files changed, 980 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+ create mode 100644 drivers/leds/leds-lp50xx.c
 
-> ---
->   drivers/i2c/busses/i2c-mt65xx.c | 23 ++++++++++++++++++++---
->   1 file changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index deef69e..e6b984a 100644
-> --- a/drivers/i2c/busses/i2c-mt65xx.c
-> +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -48,6 +48,9 @@
->   
->   #define I2C_DMA_CON_TX			0x0000
->   #define I2C_DMA_CON_RX			0x0001
-> +#define I2C_DMA_ASYNC_MODE		0x0004
-> +#define I2C_DMA_SKIP_CONFIG		0x0010
-> +#define I2C_DMA_DIR_CHANGE		0x0200
->   #define I2C_DMA_START_EN		0x0001
->   #define I2C_DMA_INT_FLAG_NONE		0x0000
->   #define I2C_DMA_CLR_FLAG		0x0000
-> @@ -205,6 +208,7 @@ struct mtk_i2c_compatible {
->   	unsigned char timing_adjust: 1;
->   	unsigned char dma_sync: 1;
->   	unsigned char ltiming_adjust: 1;
-> +	unsigned char apdma_sync: 1;
->   };
->   
->   struct mtk_i2c_ac_timing {
-> @@ -311,6 +315,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 1,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt6577_compat = {
-> @@ -324,6 +329,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt6589_compat = {
-> @@ -337,6 +343,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt7622_compat = {
-> @@ -350,6 +357,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt8173_compat = {
-> @@ -362,6 +370,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct mtk_i2c_compatible mt8183_compat = {
-> @@ -375,6 +384,7 @@ struct i2c_spec_values {
->   	.timing_adjust = 1,
->   	.dma_sync = 1,
->   	.ltiming_adjust = 1,
-> +	.apdma_sync = 0,
->   };
->   
->   static const struct of_device_id mtk_i2c_of_match[] = {
-> @@ -798,6 +808,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   	u16 start_reg;
->   	u16 control_reg;
->   	u16 restart_flag = 0;
-> +	u16 dma_sync = 0;
->   	u32 reg_4g_mode;
->   	u8 *dma_rd_buf = NULL;
->   	u8 *dma_wr_buf = NULL;
-> @@ -851,10 +862,16 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   		mtk_i2c_writew(i2c, num, OFFSET_TRANSAC_LEN);
->   	}
->   
-> +	if (i2c->dev_comp->apdma_sync) {
-> +		dma_sync = I2C_DMA_SKIP_CONFIG | I2C_DMA_ASYNC_MODE;
-> +		if (i2c->op == I2C_MASTER_WRRD)
-> +			dma_sync |= I2C_DMA_DIR_CHANGE;
-> +	}
-> +
->   	/* Prepare buffer data to start transfer */
->   	if (i2c->op == I2C_MASTER_RD) {
->   		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
-> -		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
-> +		writel(I2C_DMA_CON_RX | dma_sync, i2c->pdmabase + OFFSET_CON);
->   
->   		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
->   		if (!dma_rd_buf)
-> @@ -877,7 +894,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   		writel(msgs->len, i2c->pdmabase + OFFSET_RX_LEN);
->   	} else if (i2c->op == I2C_MASTER_WR) {
->   		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
-> -		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
-> +		writel(I2C_DMA_CON_TX | dma_sync, i2c->pdmabase + OFFSET_CON);
->   
->   		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
->   		if (!dma_wr_buf)
-> @@ -900,7 +917,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   		writel(msgs->len, i2c->pdmabase + OFFSET_TX_LEN);
->   	} else {
->   		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
-> -		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
-> +		writel(I2C_DMA_CLR_FLAG | dma_sync, i2c->pdmabase + OFFSET_CON);
->   
->   		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 1);
->   		if (!dma_wr_buf)
-> 
+-- 
+2.27.0
+
