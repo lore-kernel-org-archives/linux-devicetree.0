@@ -2,363 +2,237 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22188C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C58DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E45F0206E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBB3207BB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 03:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o+sfsjMC"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="n5kU7X/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731877AbgGVDPp (ORCPT
+        id S1731897AbgGVDgi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 21 Jul 2020 23:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60414 "EHLO
+        Tue, 21 Jul 2020 23:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731781AbgGVDPo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 23:15:44 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E81C0619DB
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:15:44 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id v8so1043559iox.2
-        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:15:44 -0700 (PDT)
+        with ESMTP id S1731846AbgGVDgi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Jul 2020 23:36:38 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B91C0619DB
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:36:37 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id w3so563756wmi.4
+        for <devicetree@vger.kernel.org>; Tue, 21 Jul 2020 20:36:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=45JomO1d9wejy1HPoYxaCzisM7wW+NcLf1i+9Sigraw=;
-        b=o+sfsjMCDuKPzbe/qIeYMbzrEqO1c3cG6lOfmpnyTEQm+sA/yJ7z+qHiKEtgfUSGpV
-         wMHw163AiILZEL7mx9dOU1WNE5kixKXY7q5NnrEUACGAFtwWFsWKdiRNJUyepwilvgnY
-         iUn0p2++v3ZaNkQioAz7VGloQD2D6dHBNUGz5/vSQwvYkSesZoiwJQ8HnhyMZ6enhZKr
-         DkV6zb9TmsuIxgw003JvA4UaCJ2+HAtqFGqwIpq6Yo3VADMSwQfMzOgQnC2bjgrGkQvB
-         i3j1u9ZQZnzkMYpllOWdDbcDqymwGviqmmwK2tUcfutCvtQpZAb2xrrWvd8ElWMbZGO0
-         7aTw==
+         :cc:content-transfer-encoding;
+        bh=ZYjf/M8LtGnB4n0AyVVMXshArfiVRiM4rRLy+QhAdfs=;
+        b=n5kU7X/CI3Z5fW6+a551VM3WKGThHB5ECCmvscA5jslOS6TIK8br9x2moqjvPMW/cO
+         4IROMHQFonmY+VuZyRzuCUu0Br+fXUw4ZZh9w+kNVins/sX+FDLeCUpDLXWopq4L4KKR
+         JJwgau3DxCOp6ISAphnMaIyhgaekZHeFaBxBcykEqImIhN5bxU5bUFH/nihdD8K5vnv3
+         1ohikFnZFDtlWYURDzaqbbthwJJijaRT2nDXJbRxgS25kCrD7dM0khqGcZl59dAyAxR1
+         7YuAlnecgKJrux+CpYjmP4mCDKs634ykK+DO0MEpxfSao+US+//ueJcWdf6vHNJyYdBU
+         Z3xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=45JomO1d9wejy1HPoYxaCzisM7wW+NcLf1i+9Sigraw=;
-        b=AMNwuJSGLyUKwgdwA2YpUjB8dS9fuDJR6OYCaG7w4vSctE6lhG72ED5pfZYC89Uppl
-         awfx0Nc6PdoqdfBOAytbYbJHyJiOOw0hjx1GM2zldzyGwgfR57k+hrgU12Z8O4KV4fxR
-         2MKc5KlcWdpZuYHM5f6d4FpCCPOBmt9gK9IZBg0zGgL3Fj5TXEGnVKLdug9rppBwvRDr
-         WmjJw1yN608TuCXIFr3hy3GiAmoOH1JNGWfBUCk1FlNKsRkF/McNelKAA/qgEVqh2VGI
-         ewUni2y0SpSt1M5FXYwjWiwNJB+UpCtYpf3VHFt9uDNyYLpKxHb6s/gywuCdjsRMya6/
-         eWuQ==
-X-Gm-Message-State: AOAM531k92dUxBPkL9OVUTxBaPRaQXPp8oMdptJ1HgaBoEExnfwB1iob
-        IZ/hfL8e7uEfydDclkRbYRBUb6wIAQKjuudD4990/Q==
-X-Google-Smtp-Source: ABdhPJytvgzhX6bIeTKuXIhQ8Ogfb1O2KxTd1ZdvSE0ibGG3xWtYgYMUBBjc4eOOaKb7vSbZzLHEhfw0MosrRiQSayg=
-X-Received: by 2002:a6b:d301:: with SMTP id s1mr30475980iob.146.1595387743234;
- Tue, 21 Jul 2020 20:15:43 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZYjf/M8LtGnB4n0AyVVMXshArfiVRiM4rRLy+QhAdfs=;
+        b=TbGGbR7n4gbqfr7W/xUUrnOpGKNSwMQy4zZJsEAHfp4zy4wcvRKF2ZpnZtMjt0zOJ9
+         HsQPdD0zEav/ERX2x2jEZ26Tr0bq5yfVaJWwTD6JvlNMVlth6zmlcNhCVq0TYywXKxZR
+         XXX8VKKkvaKjIQy6hjxEe72C8doXAQWMuf84YCwq7oq7A1R/TKM+gH2+TtTWPD5X8ZQK
+         +3vALWVnXFy1fzc7sc5lNL0nPVeJVGdh8uTqYa6B0yzdIgfIKP2MEkCLXGAg78oWcb+c
+         SM8QLBr5DV5yJUb6wRGoYxNq9lK4i2nu76lfBdS5W86Y/siwDjhi5v3lmdJk0oMlAXia
+         c5ow==
+X-Gm-Message-State: AOAM5307CwYczntS+DEsGtCG+yjw03joR/PnATQ7xboleVJ7F/HD0T4d
+        iAr3ziUZx4opvQRcVV2b2L3zzjm1NERndRnw8fm4Pg==
+X-Google-Smtp-Source: ABdhPJz1xTvLXcoVhk8ZPc7aGEiWIeZd45I4TtCBSHOm9CSA0MqoCjl6Ufc6dKkEIUr4LC9xvkDrLWvqNuc1sdfLi/k=
+X-Received: by 2002:a1c:8117:: with SMTP id c23mr6252105wmd.157.1595388996424;
+ Tue, 21 Jul 2020 20:36:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200721104422.369368-1-cychiang@chromium.org> <20200721104422.369368-3-cychiang@chromium.org>
-In-Reply-To: <20200721104422.369368-3-cychiang@chromium.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Wed, 22 Jul 2020 11:15:32 +0800
-Message-ID: <CA+Px+wUEQqe0dOeHBFxOEFG5QctTipj6egu94OD+LvYmSunaTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+References: <20200717075101.263332-1-anup.patel@wdc.com> <20200717075101.263332-3-anup.patel@wdc.com>
+ <63f65ddd-b7c4-b8fd-151c-a77e8c87efed@linaro.org> <CAAhSdy2oGAk6A6=SwgCgZ+trmzCMRPOCiB6ibDTL2A_1sUu1og@mail.gmail.com>
+ <107e3ef3-9f61-05d1-7a91-95d0dc7ea7b8@linaro.org>
+In-Reply-To: <107e3ef3-9f61-05d1-7a91-95d0dc7ea7b8@linaro.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 22 Jul 2020 09:06:24 +0530
+Message-ID: <CAAhSdy0fmtaExqEx-7qW6Bpzu23d6A4OnUY7b785VJW_5a6rdA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] clocksource/drivers: Add CLINT timer driver
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
         Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Douglas Anderson <dianders@chromium.org>, dgreid@chromium.org,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Ajit Pandey <ajitp@codeaurora.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Emil Renner Berhing <kernel@esmil.dk>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 6:44 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
-> diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
-> new file mode 100644
-> index 000000000000..3beb2b129d01
-> --- /dev/null
-> +++ b/sound/soc/qcom/sc7180.c
-> @@ -0,0 +1,380 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +//Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> +//
-> +//sc7180.c -- ALSA SoC Machine driver for SC7180
-Insert an extra space between // and text to make it look better.
+On Tue, Jul 21, 2020 at 5:45 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 21/07/2020 13:49, Anup Patel wrote:
+> > On Tue, Jul 21, 2020 at 4:32 PM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> >>
+> >> On 17/07/2020 09:50, Anup Patel wrote:
+> >>> We add a separate CLINT timer driver for Linux RISC-V M-mode (i.e.
+> >>> RISC-V NoMMU kernel).
+> >>>
+> >>> The CLINT MMIO device provides three things:
+> >>> 1. 64bit free running counter register
+> >>> 2. 64bit per-CPU time compare registers
+> >>> 3. 32bit per-CPU inter-processor interrupt registers
+> >>>
+> >>> Unlike other timer devices, CLINT provides IPI registers along with
+> >>> timer registers. To use CLINT IPI registers, the CLINT timer driver
+> >>> provides IPI related callbacks to arch/riscv.
+> >>>
+> >>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> >>> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+> >>> ---
+> >>>  drivers/clocksource/Kconfig       |   9 ++
+> >>>  drivers/clocksource/Makefile      |   1 +
+> >>>  drivers/clocksource/timer-clint.c | 231 ++++++++++++++++++++++++++++=
+++
+> >>>  include/linux/cpuhotplug.h        |   1 +
+> >>>  4 files changed, 242 insertions(+)
+> >>>  create mode 100644 drivers/clocksource/timer-clint.c
+> >>>
+> >>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+> >>> index 91418381fcd4..e1ce0d510a03 100644
+> >>> --- a/drivers/clocksource/Kconfig
+> >>> +++ b/drivers/clocksource/Kconfig
+> >>> @@ -658,6 +658,15 @@ config RISCV_TIMER
+> >>>         is accessed via both the SBI and the rdcycle instruction.  Th=
+is is
+> >>>         required for all RISC-V systems.
+> >>>
+> >>> +config CLINT_TIMER
+> >>> +     bool "Timer for the RISC-V platform"
+> >>> +     depends on GENERIC_SCHED_CLOCK && RISCV_M_MODE
+> >>> +     select TIMER_PROBE
+> >>> +     select TIMER_OF
+> >>> +     help
+> >>> +       This option enables the CLINT timer for RISC-V systems. The C=
+LINT
+> >>> +       driver is usually used for NoMMU RISC-V systems.
+> >>
+> >> V3 has a comment about fixing the Kconfig option.
+> >
+> > I have removed "default y" from the Kconfig option as-per your suggesti=
+ons.
+> >
+> > I looked at other Timer Kconfig options. Most of them have menuconfig n=
+ame.
+> > Also, we can certainly have different timer MMIO timer drivers in futur=
+e. Do
+> > you still insist on making this kconfig option totally silent ??
+>
+> Yes, and there is an effort to change the entries to be silent as much
+> as possible.
+>
+> Just add:
+>
+>         bool "Timer for the RISC-V platform" if COMPILE_TEST
 
-> +static int sc7180_headset_init(struct snd_soc_component *component);
-> +
-> +static struct snd_soc_aux_dev sc7180_headset_dev = {
-> +       .dlc = COMP_EMPTY(),
-> +       .init = sc7180_headset_init,
-> +};
-Move definition of sc7180_headset_dev after sc7180_headset_init( ) so
-that you don't need forward declaration of sc7180_headset_init( ).
+Okay, I will update.
 
-> +static unsigned int primary_dai_fmt = SND_SOC_DAIFMT_CBS_CFS |
-> +                                     SND_SOC_DAIFMT_NB_NF |
-> +                                     SND_SOC_DAIFMT_I2S;
-> +
-> +static int sc7180_snd_startup(struct snd_pcm_substream *substream)
-> +{
-> +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +       struct snd_soc_card *card = rtd->card;
-> +       struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-> +       struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-> +       struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-> +       int ret;
-> +
-> +       switch (cpu_dai->id) {
-> +       case MI2S_PRIMARY:
-> +               if (++data->pri_mi2s_clk_count == 1) {
-> +                       snd_soc_dai_set_sysclk(cpu_dai,
-> +                                              LPASS_MCLK0,
-> +                                              DEFAULT_MCLK_RATE,
-> +                                              SNDRV_PCM_STREAM_PLAYBACK);
-> +               }
-> +               snd_soc_dai_set_fmt(codec_dai, primary_dai_fmt);
-My comment on the previous thread may mislead.  My original intent:
-move the DAIFMT setting to DAI link->dai_fmt in sc7180_parse_of( ).
+>
+> and remove the RISCV_M_MODE dependency.
 
-If you need to keep it as is: inline the SND_SOC_DAIFMT_* into
-snd_soc_dai_set_fmt( ) (i.e. eliminate primary_dai_fmt).
+CLINT driver depends on RISC-V specific symbols from asm/smp.h
+so we should at least have "depends on RISCV" so that compile
+test does not fail.
 
-> +static int sc7180_parse_of(struct snd_soc_card *card)
-> +{
-> +       struct device_node *np;
-> +       struct device_node *codec = NULL;
-> +       struct device_node *platform = NULL;
-The function doesn't use platform.
+Agree ??
 
-> +       struct device_node *cpu = NULL;
-> +       struct device *dev = card->dev;
-> +       struct snd_soc_dai_link *link;
-> +       struct of_phandle_args args;
-> +       struct snd_soc_dai_link_component *dlc;
-> +       int ret, num_links;
-> +
-> +       ret = snd_soc_of_parse_card_name(card, "model");
-> +       if (ret) {
-> +               dev_err(dev, "Error parsing card name: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       /* DAPM routes */
-> +       if (of_property_read_bool(dev->of_node, "audio-routing")) {
-> +               ret = snd_soc_of_parse_audio_routing(card,
-> +                                                    "audio-routing");
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       /* headset aux dev. */
-> +       sc7180_headset_dev.dlc.of_node = of_parse_phandle(
-> +                       dev->of_node, "aux-dev", 0);
-> +       if (!sc7180_headset_dev.dlc.of_node) {
-> +               dev_err(dev,
-> +                       "Property 'aux-dev' missing/invalid\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Populate links */
-> +       num_links = of_get_child_count(dev->of_node);
-Eliminate num_links but use card->num_links directly.
+>
+> Or alternatively:
+>
+> replace the RISCV_M_MODE dependency with COMPILE_TEST
+>
+> The goal is to be able to compile the driver on different platforms for
+> compilation test covering.
 
-> +
-> +       /* Allocate the DAI link array */
-> +       card->dai_link = devm_kcalloc(dev, num_links, sizeof(*link),
-> +                                     GFP_KERNEL);
-> +       if (!card->dai_link)
-> +               return -ENOMEM;
-> +
-> +       card->num_links = num_links;
-Ditto, eliminate it.
+Please see the above comment.
 
-> +       link = card->dai_link;
-> +
-Eliminate the blank line to make "link = card->dai_link" and the
-following for-loop "a whole thing".
+>
+> Then when more mmio drivers will added we will figure out.
+>
+> >> [ ... ]
+> >>
+> >>> +{
+> >>> +     bool *registered =3D per_cpu_ptr(&clint_clock_event_registered,=
+ cpu);
+> >>> +     struct clock_event_device *ce =3D per_cpu_ptr(&clint_clock_even=
+t, cpu);
+> >>> +
+> >>> +     if (!(*registered)) {
+> >>> +             ce->cpumask =3D cpumask_of(cpu);
+> >>> +             clockevents_config_and_register(ce, clint_timer_freq, 2=
+00,
+> >>> +                                              ULONG_MAX);
+> >>> +             *registered =3D true;
+> >>> +     }
+> >>
+> >>
+> >> I was unsure about the clockevents_config_and_register() multiple call=
+s
+> >> when doing the comment. It seems like it is fine to call it several
+> >> times and that is done in several places like riscv or arch_arm_timer.
+> >>
+> >> It is probably safe to drop the 'registered' code here, sorry for the
+> >> confusion.
+> >
+> > Okay, will revert these changes.
+> >
+> >>
+> >>> +     enable_percpu_irq(clint_timer_irq,
+> >>> +                       irq_get_trigger_type(clint_timer_irq));
+> >>> +     return 0;
+> >>> +}
+> >>> +
+> >>
+> >> [ ... ]
+> >>
+> >>
+> >> --
+> >> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for=
+ ARM SoCs
+> >>
+> >> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> >> <http://twitter.com/#!/linaroorg> Twitter |
+> >> <http://www.linaro.org/linaro-blog/> Blog
+> >
+> > Regards,
+> > Anup
+> >
+>
+>
+> --
+> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for AR=
+M SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
 
-> +       for_each_child_of_node(dev->of_node, np) {
-> +               dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
-> +               if (!dlc)
-> +                       return -ENOMEM;
-> +
-> +               link->cpus      = &dlc[0];
-> +               link->platforms = &dlc[1];
-> +
-> +               link->num_cpus          = 1;
-> +               link->num_platforms     = 1;
-> +
-> +               ret = of_property_read_string(np, "link-name", &link->name);
-> +               if (ret) {
-> +                       dev_err(card->dev,
-> +                               "error getting codec dai_link name\n");
-> +                       goto err;
-> +               }
-> +
-> +               link->playback_only = of_property_read_bool(np,
-> +                                                           "playback_only");
-> +               link->capture_only = of_property_read_bool(np,
-> +                                                          "capture_only");
-> +
-> +               if (link->playback_only && link->capture_only) {
-> +                       dev_err(card->dev,
-> +                               "getting both playback and capture only\n");
-ret = -EINVAL;
-
-> +                       goto err;
-> +               }
-> +
-> +               cpu = of_get_child_by_name(np, "cpu");
-> +               codec = of_get_child_by_name(np, "codec");
-Move to below.
-
-> +
-> +               if (!cpu) {
-> +                       dev_err(dev, "%s: Can't find cpu DT node\n",
-> +                               link->name);
-> +                       ret = -EINVAL;
-> +                       goto err;
-> +               }
-> +
-> +               ret = of_parse_phandle_with_args(cpu, "sound-dai",
-> +                                                "#sound-dai-cells", 0, &args);
-I may overlook it but I failed to find "#sound-dai-cells" in the
-dt-binding example.  I think it should be in DTS?
-
-> +               if (ret) {
-> +                       dev_err(card->dev, "%s: error getting cpu phandle\n",
-> +                               link->name);
-> +                       goto err;
-> +               }
-> +               link->cpus->of_node = args.np;
-> +               link->id = args.args[0];
-I am not quite sure what it will be.  I guess one of the following
-comes from DTS node name.
-#define MI2S_PRIMARY 0
-#define MI2S_SECONDARY 1
-
-> +
-> +               ret = snd_soc_of_get_dai_name(cpu, &link->cpus->dai_name);
-> +               if (ret) {
-> +                       dev_err(card->dev, "%s: error getting cpu dai name\n",
-> +                               link->name);
-> +                       goto err;
-> +               }
-> +
-
-Move "codec = of_get_child_by_name(np, "codec");" to here.
-> +               if (codec) {
-> +                       ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
-> +                       if (ret < 0) {
-> +                               dev_err(card->dev, "%s: codec dai not found\n",
-> +                                       link->name);
-> +                               goto err;
-> +                       }
-> +               } else {
-> +                       dlc = devm_kzalloc(dev, sizeof(*dlc), GFP_KERNEL);
-> +                       if (!dlc)
-> +                               return -ENOMEM;
-> +
-> +                       link->codecs     = dlc;
-> +                       link->num_codecs = 1;
-> +
-> +                       link->codecs->dai_name = "snd-soc-dummy-dai";
-> +                       link->codecs->name = "snd-soc-dummy";
-> +               }
-> +
-> +               link->platforms->of_node = link->cpus->of_node;
-> +               link->stream_name = link->name;
-> +               link->ops = &sc7180_ops;
-> +               link++;
-> +
-> +               of_node_put(cpu);
-> +               of_node_put(codec);
-cpu = NULL;
-codec = NULL;
-In case of double of_node_put( ).
-
-> +       }
-> +
-> +       return 0;
-> +err:
-> +       of_node_put(np);
-I guess you don't need this.
-
-> +       of_node_put(cpu);
-> +       of_node_put(codec);
-> +       of_node_put(platform);
-Eliminate it, not used.
-
-> +static int sc7180_snd_platform_probe(struct platform_device *pdev)
-> +{
-> +       struct snd_soc_card *card;
-> +       struct sc7180_snd_data *data;
-> +       struct device *dev = &pdev->dev;
-> +       int ret;
-> +
-> +       card = &sc7180_card;
-In this case, inline the initialization while declaration.
-
-> +
-> +       /* Allocate the private data */
-> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       card->dapm_widgets = sc7180_snd_widgets;
-> +       card->num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets);
-Remove them.
-
-> +       card->dev = dev;
-> +       dev_set_drvdata(dev, card);
-I guess you don't need this if using devm_snd_soc_register_card(...).
-
-Insert a blank line.
-> +       ret = sc7180_parse_of(card);
-> +       if (ret) {
-> +               dev_err(dev, "Error parsing OF data\n");
-> +               return ret;
-> +       }
-> +
-> +       data->card = card;
-Looks like data->card is not used.
-
-> +       snd_soc_card_set_drvdata(card, data);
-> +
-> +       ret = snd_soc_register_card(card);
-> +       if (ret) {
-> +               dev_err(dev, "Sound card registration failed\n");
-> +               return ret;
-> +       }
-> +       return ret;
-Just return devm_snd_soc_register_card(...);
-
-> +static int sc7180_snd_platform_remove(struct platform_device *pdev)
-> +{
-> +       struct snd_soc_card *card = dev_get_drvdata(&pdev->dev);
-> +
-> +       snd_soc_unregister_card(card);
-> +       return 0;
-> +}
-Can be removed if using devm_snd_soc_register_card( ).
-
-
-I didn't go through all the cases.  But it would be better if all "if
-(ret < 0)" can be replaced to "if (ret)".
+Regards,
+Anup
