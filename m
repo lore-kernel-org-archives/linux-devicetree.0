@@ -2,87 +2,157 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C583CC433E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C55DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9152080D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595425546;
-	bh=nHj4qidlCzPnSj6K3Rd04M4Ti2n81ozk+ic2UrNZ/uA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=ACPdOL6i68hLGBQUtqltk8a/UbFe7RtTdo8bZ46tyMzvFdNnPQtrwZGe78h8KhEMv
-	 WtlEj8Y15F9XwnH/QcDGFoWFLAhexxwthtfB2SXo4XWjkpdy6MyZ8mGOQ+hmbAPc2e
-	 ZbKYbktGj0/AhbxQ74SMVTCBOLnaDn+ozntH+QdE=
+	by mail.kernel.org (Postfix) with ESMTP id 23C4D20709
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 14:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732634AbgGVNpq (ORCPT
+        id S1731521AbgGVOEr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732623AbgGVNpp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 22 Jul 2020 09:45:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD3802064C;
-        Wed, 22 Jul 2020 13:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595425545;
-        bh=nHj4qidlCzPnSj6K3Rd04M4Ti2n81ozk+ic2UrNZ/uA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=hIdorwcyP9KeG8W1hYiCVHJhwSRjuYWfbIeAtMkRiwREcpHJP/Bu6hWhbqFDUWOqu
-         U8hDeuZUR9/dju4tLIU+lG2tDzWVeKQynQRtY8YZb0r/4BA+xKP3B0zHZ6QYkcLupG
-         FgkN1CM21Q+ubYs8AokhGta/W2ztZw5f3uSIUaOs=
-Date:   Wed, 22 Jul 2020 14:45:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Leilk Liu <leilk.liu@mediatek.com>
-Cc:     linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org
-In-Reply-To: <20200721024819.7150-1-leilk.liu@mediatek.com>
-References: <20200721024819.7150-1-leilk.liu@mediatek.com>
-Subject: Re: [PATCH] dt-bindings: spi: update bindings for MT8192 SoC
-Message-Id: <159542550175.19884.11879506725313401487.b4-ty@kernel.org>
+        Wed, 22 Jul 2020 10:04:47 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36216 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728837AbgGVOEr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 10:04:47 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8680F1C0BD8; Wed, 22 Jul 2020 16:04:43 +0200 (CEST)
+Date:   Wed, 22 Jul 2020 16:04:43 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Denis Osterland-Heim <denis.osterland@diehl.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v6 1/2] leds: pwm: add support for default-state device
+ property
+Message-ID: <20200722140443.6cagitx3dozgjazh@duo.ucw.cz>
+References: <20200713054259.7608-1-Denis.Osterland@diehl.com>
+ <20200713054259.7608-2-Denis.Osterland@diehl.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="v2ovlewz76qvmngn"
+Content-Disposition: inline
+In-Reply-To: <20200713054259.7608-2-Denis.Osterland@diehl.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2020 10:48:19 +0800, Leilk Liu wrote:
-> Add a DT binding documentation for the MT8192 soc.
 
-Applied to
+--v2ovlewz76qvmngn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Thanks!
+> This patch adds support for "default-state" devicetree property, which
+> allows to defer pwm init to first use of led.
+>=20
+> This allows to configure the PWM early in bootloader to let the LED
+> blink until an application in Linux userspace sets something different.
+>=20
+> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
-[1/1] spi: update bindings for MT8192 SoC
-      commit: 30962fe33ab5ed4bbd78c12f4b9e25a85c3e8d0b
+> +#define LEDS_PWM_DEFSTATE_OFF	0
+> +#define LEDS_PWM_DEFSTATE_ON	1
+> +#define LEDS_PWM_DEFSTATE_KEEP	2
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Turn this into enum; no need for prefix as this is private to the driver.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+>  struct led_pwm {
+>  	const char	*name;
+>  	const char	*default_trigger;
+>  	u8		active_low;
+> +	u8		default_state;
+>  	unsigned int	max_brightness;
+>  };
+> =20
+> @@ -88,7 +93,30 @@ static int led_pwm_add(struct device *dev, struct led_=
+pwm_priv *priv,
+> =20
+>  	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
+> =20
+> -	pwm_init_state(led_data->pwm, &led_data->pwmstate);
+> +	/* init PWM state */
+> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
+> +		pwm_get_state(led_data->pwm, &led_data->pwmstate);
+> +		if (!led_data->pwmstate.period) {
+> +			led->default_state =3D LEDS_PWM_DEFSTATE_OFF;
+> +			dev_warn(dev,
+> +				"failed to read period for %s, default to off",
+> +				led->name);
+> +		}
+> +	}
+> +	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
+> +		pwm_init_state(led_data->pwm, &led_data->pwmstate);
+> +
+> +	/* set brightness */
+> +	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
+> +		led_data->cdev.brightness =3D led->max_brightness;
+> +	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
+> +		uint64_t brightness;
+> +
+> +		brightness =3D led->max_brightness;
+> +		brightness *=3D led_data->pwmstate.duty_cycle;
+> +		do_div(brightness, led_data->pwmstate.period);
+> +		led_data->cdev.brightness =3D brightness;
+> +	}
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Try to clean this up... switch() might help. Maybe two of them.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> @@ -134,6 +166,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
+ struct led_pwm_priv *priv)
+>  		fwnode_property_read_u32(fwnode, "max-brightness",
+>  					 &led.max_brightness);
+> =20
+> +		if (!fwnode_property_read_string(fwnode, "default-state",
+> +						 &state)) {
+> +			if (!strcmp(state, "keep"))
+> +				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
+> +			else if (!strcmp(state, "on"))
+> +				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
+> +			else
+> +				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
+> +		}
 
-Thanks,
-Mark
+Actually... Move the enum to core, and add helper for this. We don't
+want to see this duplicated.
+
+> The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please in=
+form us if you have received this e-mail by
+> mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is stri=
+ctly prohibited.=20
+> - For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-obl=
+igations/
+
+Get rid of this.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--v2ovlewz76qvmngn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxhHewAKCRAw5/Bqldv6
+8rmuAJ4rvbdm8hCC5wda9/NyXq6BFCfuYQCglCBcKWz5JOVJkDmRIX+8DtvNYdc=
+=Hxhr
+-----END PGP SIGNATURE-----
+
+--v2ovlewz76qvmngn--
