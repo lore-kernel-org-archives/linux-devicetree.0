@@ -2,172 +2,130 @@ Return-Path: <SRS0=Wzi+=BB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5493BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBECC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4B520717
-	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFA72071A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 22 Jul 2020 13:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iUx5z42n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bL+X4ZI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgGVNOi (ORCPT
+        id S1732476AbgGVNo3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 09:14:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgGVNOi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 09:14:38 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D06C0619DC;
-        Wed, 22 Jul 2020 06:14:37 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3F279329;
-        Wed, 22 Jul 2020 15:14:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595423676;
-        bh=Yy1kPitq1p4+UT+TJhQ9MFHfEcOUO4nuS8woENFDtKE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iUx5z42nUo41McjzpXcpPYK3kDiTO0mS1R0i5jJXLLU3o3kpDsQg+ihnlOuKkDYxX
-         sfXX1nV021EDZeAuXNHMdFQKl2tey7qXoTUZT4lGFnkv5g5LDVx2Vko187/pg+yYdP
-         OhB1hAttWuHlUPXd0sIziaSJsIWioKxfeEu5GqWo=
-Date:   Wed, 22 Jul 2020 16:14:30 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v5 3/4] drm/bridge: Introduce LT9611 DSI to HDMI bridge
-Message-ID: <20200722131430.GJ5833@pendragon.ideasonboard.com>
-References: <20200708103559.132300-1-vkoul@kernel.org>
- <20200708103559.132300-4-vkoul@kernel.org>
- <20200719171806.GA55541@ravnborg.org>
+        Wed, 22 Jul 2020 09:44:29 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:34283 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732349AbgGVNo3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 09:44:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595425468; x=1626961468;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LJ5a5zW2HlzZmrctuphKUjLbHmULw+4CLiQ9IBxCDFc=;
+  b=bL+X4ZI7uaOTVL4lGxIKlw3q8Qyul90y+t4xj0TnafOoLsoIqHPAVd3V
+   B+5aKOHFhaRDUmkDC89GmXXHOsAyaaKW+241pxSPuKu/CdffwCesMo4Ns
+   FkHAhhJcL6jeVGvoxJvEnGTrjxsMFu20eYn/6sf0yEgb4MpeUBKlxnNXa
+   YKHNNHooL4E53u3VBvgI9qNFBlaoumVu316VGQ0uURs+/M8LnANr3OMgx
+   GNeOWfz3BQnxr1kbgfLeNT87prTJAKXziWuMPhLRtJk6ihNvaPS8PnHA2
+   L/wSEe6WWR+KXe4UfsB1NZCUSWotXDRwVAdA+7DaXR9ZGsFHgs1TKmoi1
+   A==;
+IronPort-SDR: c+T80368qAGQokoVoIRBT4mGga38vMwiY9veQa/e7thJA3szdFsuHMhRG579esd66j+IFIoof5
+ nHQQ5/cUCTI2RPXNWLwabFzDN44pVPUgzLhTsq7dKf4el4MP5lcwqO6Mun23LB4Vgp5n3UmmLj
+ zzcLlmtZINjEpaf6cBUBi2K1UOAIT99hSmlRknRlEoEFVMKjpii9ovI1ATh3TIdx3gFFJAK6KZ
+ Ahf0YelzNbTHyq+nfry3oXVfnxJcJGz2LdKBmlgc/qhrHDVrYsUAW+11C3HFFX0mTxI6IeBm6P
+ o2E=
+X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
+   d="scan'208";a="84955380"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Jul 2020 06:44:28 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 22 Jul 2020 06:44:28 -0700
+Received: from cristi-P53.amer.actel.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 22 Jul 2020 06:43:46 -0700
+From:   <cristian.birsan@microchip.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v3 1/6] usb: gadget: udc: atmel: use of_find_matching_node_and_match
+Date:   Wed, 22 Jul 2020 16:44:16 +0300
+Message-ID: <20200722134421.190741-2-cristian.birsan@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200722134421.190741-1-cristian.birsan@microchip.com>
+References: <20200722134421.190741-1-cristian.birsan@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200719171806.GA55541@ravnborg.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-On Sun, Jul 19, 2020 at 07:18:06PM +0200, Sam Ravnborg wrote:
-> Hi Vinod.
-> 
-> Three trivial points below.
-> The rest looks good.
-> 
-> With these fixed you can add:
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> 
-> 	Sam
-> 
-> On Wed, Jul 08, 2020 at 04:05:58PM +0530, Vinod Koul wrote:
-> > Lontium Lt9611 is a DSI to HDMI bridge which supports two DSI ports and
-> > I2S port as an input and HDMI port as output
-> > 
-> > Co-developed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > Tested-by: John Stultz <john.stultz@linaro.org>
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/gpu/drm/bridge/Kconfig          |   13 +
-> >  drivers/gpu/drm/bridge/Makefile         |    1 +
-> >  drivers/gpu/drm/bridge/lontium-lt9611.c | 1142 +++++++++++++++++++++++
-> >  3 files changed, 1156 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/bridge/lontium-lt9611.c
-> > 
-> > +
-> > +#include <drm/drm_probe_helper.h>
-> > +#include <drm/drm_atomic_helper.h>
-> > +#include <drm/drm_bridge.h>
-> > +#include <drm/drm_mipi_dsi.h>
-> > +#include <drm/drm_print.h>
-> 
-> In alphabetical order. drm_probe_helper needs to be moved.
-> 
-> > +
-> > +#define EDID_SEG_SIZE	256
-> > +#define EDID_LEN	32
-> > +#define EDID_LOOP	8
-> > +#define KEY_DDC_ACCS_DONE 0x02
-> > +#define DDC_NO_ACK	0x50
-> > +
-> 
-> > +static void lt9611_pcr_setup(struct lt9611 *lt9611, const struct drm_display_mode *mode)
-> > +{
-> > +	const struct reg_sequence reg_cfg[] = {
-> > +		{ 0x830b, 0x01 },
-> > +		{ 0x830c, 0x10 },
-> > +		{ 0x8348, 0x00 },
-> > +		{ 0x8349, 0x81 },
-> > +
-> > +		/* stage 1 */
-> > +		{ 0x8321, 0x4a },
-> > +		{ 0x8324, 0x71 },
-> > +		{ 0x8325, 0x30 },
-> > +		{ 0x832a, 0x01 },
-> > +
-> > +		/* stage 2 */
-> > +		{ 0x834a, 0x40 },
-> > +		{ 0x831d, 0x10 },
-> > +
-> > +		/* MK limit */
-> > +		{ 0x832d, 0x38 },
-> > +		{ 0x8331, 0x08 },
-> > +	};
-> > +	const struct reg_sequence reg_cfg2[] = {
-> > +			{ 0x830b, 0x03 },
-> > +			{ 0x830c, 0xd0 },
-> > +			{ 0x8348, 0x03 },
-> > +			{ 0x8349, 0xe0 },
-> > +			{ 0x8324, 0x72 },
-> > +			{ 0x8325, 0x00 },
-> > +			{ 0x832a, 0x01 },
-> > +			{ 0x834a, 0x10 },
-> > +			{ 0x831d, 0x10 },
-> > +			{ 0x8326, 0x37 },
-> 
-> Block above is indented one tab too much.
-> 
-> > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
-> > +				enum drm_bridge_attach_flags flags)
-> > +{
-> > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
-> > +	int ret;
-> > +
-> > +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
-> > +		dev_err(lt9611->dev, "Fix bridge driver to make connector optional!");
-> > +		return -EINVAL;
-> > +	}
->
-> This should say that the display driver should be fixed.
-> If a display driver expects this bridge to create the connector
-> it would not work.
+Instead of trying to match every possible compatible use
+of_find_matching_node_and_match() and pass the compatible array.
 
-Actually, for new bridge drivers, connector creation should be optional
-from the start. We don't want a failure in that case, the feature should
-be implemented.
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/usb/gadget/udc/atmel_usba_udc.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+index c5128c229c52..ee2b550aa400 100644
+--- a/drivers/usb/gadget/udc/atmel_usba_udc.c
++++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+@@ -2112,6 +2112,13 @@ static const struct of_device_id atmel_udc_dt_ids[] = {
+ 
+ MODULE_DEVICE_TABLE(of, atmel_udc_dt_ids);
+ 
++static const struct of_device_id atmel_pmc_dt_ids[] = {
++	{ .compatible = "atmel,at91sam9g45-pmc" },
++	{ .compatible = "atmel,at91sam9rl-pmc" },
++	{ .compatible = "atmel,at91sam9x5-pmc" },
++	{ /* sentinel */ }
++};
++
+ static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
+ 						    struct usba_udc *udc)
+ {
+@@ -2128,13 +2135,17 @@ static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
+ 
+ 	udc_config = match->data;
+ 	udc->errata = udc_config->errata;
+-	udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9g45-pmc");
+-	if (IS_ERR(udc->pmc))
+-		udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9rl-pmc");
+-	if (IS_ERR(udc->pmc))
+-		udc->pmc = syscon_regmap_lookup_by_compatible("atmel,at91sam9x5-pmc");
+-	if (udc->errata && IS_ERR(udc->pmc))
+-		return ERR_CAST(udc->pmc);
++	if (udc->errata) {
++		pp = of_find_matching_node_and_match(NULL, atmel_pmc_dt_ids,
++						     NULL);
++		if (!pp)
++			return ERR_PTR(-ENODEV);
++
++		udc->pmc = syscon_node_to_regmap(pp);
++		of_node_put(pp);
++		if (IS_ERR(udc->pmc))
++			return ERR_CAST(udc->pmc);
++	}
+ 
+ 	udc->num_ep = 0;
+ 
 -- 
-Regards,
+2.25.1
 
-Laurent Pinchart
