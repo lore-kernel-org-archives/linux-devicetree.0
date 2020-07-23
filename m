@@ -2,172 +2,199 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B80C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7671EC433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E322065F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5111A208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:12:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VcfmvNq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgGWKLO convert rfc822-to-8bit (ORCPT
+        id S1728350AbgGWKMg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:11:14 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:51939 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgGWKLO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 06:11:14 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MhCq4-1kU3Fl1Ht4-00eO2b; Thu, 23 Jul 2020 12:11:11 +0200
-Received: by mail-qk1-f177.google.com with SMTP id 2so679556qkf.10;
-        Thu, 23 Jul 2020 03:11:11 -0700 (PDT)
-X-Gm-Message-State: AOAM532kyoMDnZ1Ms2H/OnY+vQT6odNHvrXVNraM4kcJDrpSBKNQCxER
-        Fw63q/vOgq17zw7YKvnEzyVoxp0VCh8t98fGEmc=
-X-Google-Smtp-Source: ABdhPJyRBZh+Jnh8z1ps+hnBPrP8rDjvPm7uyIy6hqZTMrzSNVY+O9ozgvN2kAt4bsn8pb7YiQI/Bo1v4oLc+w7G1AU=
-X-Received: by 2002:a37:9004:: with SMTP id s4mr4252271qkd.286.1595499070036;
- Thu, 23 Jul 2020 03:11:10 -0700 (PDT)
+        Thu, 23 Jul 2020 06:12:36 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35944 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgGWKMf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 06:12:35 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06NACMDx128920;
+        Thu, 23 Jul 2020 05:12:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595499142;
+        bh=JocIv59QpCGZ95+4xMkMFnSnQtZjJWg7KwCnL9Tm5b0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VcfmvNq6sRqsu/m0HO3+TXh9MdK5BXYpXSVT+XHu2B8+RqfROs0vSbrVbmbPWDH1r
+         kCCZxy5A4/PLngKN0lK5u10pMCwG1ZTONLxNDAv8Ug8sBwx1K6pqi45m8/dyRz5xmD
+         qviJopOYJgMgq0gGHenpi6sg7Wr4t2TEga5MtYO4=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06NACMTx077547;
+        Thu, 23 Jul 2020 05:12:22 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Jul 2020 05:12:21 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 23 Jul 2020 05:12:21 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06NACICj116733;
+        Thu, 23 Jul 2020 05:12:18 -0500
+Subject: Re: [PATCH v8 00/15] Add PCIe support to TI's J721E SoC
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200722110317.4744-1-kishon@ti.com>
+ <20200723100258.GA7195@e121166-lin.cambridge.arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <bc8ec8a2-9869-c170-7497-df3b6279fe97@ti.com>
+Date:   Thu, 23 Jul 2020 15:42:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200324104918.29578-1-hhhawa@amazon.com> <158946977180.3480.12435085393834819053@kwain>
-In-Reply-To: <158946977180.3480.12435085393834819053@kwain>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 23 Jul 2020 12:10:53 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3ndL0U=Q1HAxd3oTPfO6WwQZM3yQvr-TQEnA3ZzhQNYQ@mail.gmail.com>
-Message-ID: <CAK8P3a3ndL0U=Q1HAxd3oTPfO6WwQZM3yQvr-TQEnA3ZzhQNYQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     hhhawa@amazon.com, Rob Herring <robh+dt@kernel.org>,
-        Tsahee Zidenberg <tsahee@annapurnalabs.com>,
-        arm-soc <arm@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        benh@amazon.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        hanochu@amazon.com, David Woodhouse <dwmw@amazon.co.uk>,
-        jonnyc@amazon.com, ronenk@amazon.com,
-        Talel Shenhar <talel@amazon.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:jmjQgQgR1kfpNwBKzXOjGaIt7P5xvz6Uq0aaEtr6Bf0DQwMhboH
- gXvM0j2x2oNNS/2AqBL9uYf+rCm5jTNSMgZ0HP/44QEYWM2VnAm6Fvfx5l6efZG7lw38mpk
- VLyhuXbvtJrY5AREcqJ6a8S3klnUqqW9nOAjogIg7mtsjijXlBzxovIvo7BhHhTmxmNa5sG
- YdiMlfm4MZThljCdWRdQQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:s1PXoWdnRAk=:1CwqWG6FjcV4SYaJHsv8DX
- mWq6MT1kJsQOC0o+Pn1DURac20De7ds0woW817skooUFIAcN1O8MFgGhbJyzpnyBAg2Y4/bY3
- +hXP7QqSkzw+pGIgSjkC2/R3k4RyfOOrp2CeaM9ttY2YFUJUncgn/p9MBUiIdzqbuKzQYh6U6
- dfLPY1phW5GOKrTfA3cZa8yjfnmUFCeMZThDp1ZoCliN9q5AJbc/LLnP69ytRzK1lW4fmUNjn
- hdFtKdAZguz5jiVBB1L0ekeRhXPUenSTGYDuqBdDwe8nTkSOw16PtMloeRl9pIFRnreO4yBgx
- 3j2iAuN81P7WAXqG9bHeESeBm0RPZHA7jOkVigMlm3pmy+otRvlIUZpn8onRBJ5095eHinzVW
- 63bWS20pdLmStDngxKnsSaOdLeM3EW4x/AA9nves2PqlVx+Z6HhpxPG0/oTGd/NRSDUSODcGg
- O7mITucxlPUdRCWFUx65u95JFCHbb1NJNNYk9VJzTOomK0MXbh9yzzSqjaTkd3fKR7Y00or42
- S3R+pWk3X8203g0Wc3p2KF94cLGoGgsYG/keF/MX7w+x9/PAOPgf5bDD3r6P/fwT40AJmLhe7
- +y1tkzDiy8uVAtJODG5VDGQvxnIij0dSxbTZo4WTmcPYyNBPuO7EF/k+ObwyQ328s6lkScMCM
- jkNrsJ/xang/9aESMPk7SZrCGnqD/00e+37z/ojP6UEneTbNf++aWPVU3c0WIpzUCL77e9e/r
- DwtaOYNFswgbmGAmPblV/fPbmiMNRuX3QyoiaoqBq5tOSxOQMb9MDrh54F7uiK7bPTnvRBRvM
- HB2/hP5E8CwsUiD0uyQCBOjeegIG59Q6lg8vn011Ch5SARMGLxkvnXvmR7qDb5ulpdrtpi1Oc
- rkv5bBUL0Uax3j4ZIMsK1EB1qE0TbsImGWWct6bNUbNNAjEklAVwL/ElQsRRF65S64XrR0nSt
- cn4tyXBbrvA+mY8/mBosOhWsigjQqsNaf5UGmcCyugTbf4EmfXCPC
+In-Reply-To: <20200723100258.GA7195@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, May 14, 2020 at 5:22 PM Antoine Tenart
-<antoine.tenart@bootlin.com> wrote:
->
-> [Adding arm-soc]
->
-> Hi Hanna,
->
-> Sorry for the delay, the series was buried in my mails...
->
-> Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
->
-> Arnd, Olof, could you take this series directly as this will be the only
-> Alpine patches for this release (and for a long time)?
 
-Hi Hanna and Antoine,
 
-I just came across this old series and noticed we had never merged it.
+On 7/23/2020 3:32 PM, Lorenzo Pieralisi wrote:
+> On Wed, Jul 22, 2020 at 04:33:02PM +0530, Kishon Vijay Abraham I wrote:
+>> TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+>> and EP mode.
+>>
+>> The high level features are:
+>>   *) Supports Legacy, MSI and MSI-X interrupt
+>>   *) Supports upto GEN4 speed mode
+>>   *) Supports SR-IOV
+>>   *) Supports multiple physical function
+>>   *) Ability to route all transactions via SMMU
+>>
+>> This patch series
+>>   *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+>>   *) Add a driver for J721E PCIe wrapper
+>>
+>> v1 of the series can be found @ [1]
+>> v2 of the series can be found @ [2]
+>> v3 of the series can be found @ [5]
+>> v4 of the series can be found @ [6]
+>> v5 of the series can be found @ [7]
+>> v6 of the series can be found @ [8]
+>> v7 of the series can be found @ [9]
+>>
+>> Changes from v7:
+>> 1) Replaced WARN with pr_warn
+>> 2) Included support for "dma-ranges" property patch in this series [10]
+>>
+>> Changes from v6:
+>> 1) Fixed bot found errors running 'make dt_binding_check'
+>>
+>> Changes from v5:
+>> 1) Added Reviewed-by: for PATCH #6
+>> 2) Protect writes to PCI_STATUS with spin_lock during raising interrupts
+>>    in EP mode to reduce the time between read and write of RMW.
+>>
+>> Changes from v4:
+>> 1) Added Reviewed-by: & Acked-by: tags from RobH
+>> 2) Removed un-used accessors for pcie-cadence.h and removed having ops
+>>    for read/write accessors
+>> 3) Updated cdns,cdns-pcie-host.yaml to remove "mem" from reg
+>>
+>> Changes from v3:
+>> 1) Changed the order of files in MAINTAINTERS file to fix Joe's comments
+>> 2) Fixed indentation and added Reviewed-by: Rob Herring <robh@kernel.org>
+>> 3) Cleaned up computing msix_tbl
+>> 4) Fixed RobH's comment on J721E driver
+>>
+>> Changes from v2:
+>> 1) Converting Cadence binding to YAML schema was done as a
+>>    separate series [3] & [4]. [3] is merged and [4] is
+>>    pending.
+>> 2) Included MSI-X support in this series
+>> 3) Added link down interrupt handling (only error message)
+>> 4) Rebased to latest 5.7-rc1
+>> 5) Adapted TI J721E binding to [3] & [4]
+>>
+>> Changes from v1:
+>> 1) Added DT schemas cdns-pcie-host.yaml, cdns-pcie-ep.yaml and
+>>    cdns-pcie.yaml for Cadence PCIe core and included it in
+>>    TI's PCIe DT schema.
+>> 2) Added cpu_addr_fixup() for Cadence Platform driver.
+>> 3) Fixed subject/description/renamed functions as commented by
+>>    Andrew Murray.
+>>
+>> [1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+>> [2] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+>> [3] -> http://lore.kernel.org/r/20200305103017.16706-1-kishon@ti.com
+>> [4] -> http://lore.kernel.org/r/20200417114322.31111-1-kishon@ti.com
+>> [5] -> http://lore.kernel.org/r/20200417125753.13021-1-kishon@ti.com
+>> [6] -> http://lore.kernel.org/r/20200506151429.12255-1-kishon@ti.com
+>> [7] -> http://lore.kernel.org/r/20200522033631.32574-1-kishon@ti.com
+>> [8] -> http://lore.kernel.org/r/20200708093018.28474-1-kishon@ti.com
+>> [9] -> http://lore.kernel.org/r/20200713110141.13156-1-kishon@ti.com
+>> [10] -> http://lore.kernel.org/r/20200521080153.5902-1-kishon@ti.com
+>>
+>> Alan Douglas (1):
+>>   PCI: cadence: Add MSI-X support to Endpoint driver
+>>
+>> Kishon Vijay Abraham I (14):
+>>   PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
+>>     property
+>>   PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
+>>   linux/kernel.h: Add PTR_ALIGN_DOWN macro
+>>   PCI: cadence: Convert all r/w accessors to perform only 32-bit
+>>     accesses
+>>   PCI: cadence: Add support to start link and verify link status
+>>   PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+>>   dt-bindings: PCI: cadence: Remove "mem" from reg binding
+>>   PCI: cadence: Add new *ops* for CPU addr fixup
+>>   PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+>>   dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+>>   dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+>>   PCI: j721e: Add TI J721E PCIe driver
+>>   misc: pci_endpoint_test: Add J721E in pci_device_id table
+>>   MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+>>
+>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |   8 +-
+>>  .../bindings/pci/ti,j721e-pci-ep.yaml         |  94 ++++
+>>  .../bindings/pci/ti,j721e-pci-host.yaml       | 113 ++++
+>>  MAINTAINERS                                   |   4 +-
+>>  drivers/misc/pci_endpoint_test.c              |   9 +
+>>  drivers/pci/controller/cadence/Kconfig        |  23 +
+>>  drivers/pci/controller/cadence/Makefile       |   1 +
+>>  drivers/pci/controller/cadence/pci-j721e.c    | 493 ++++++++++++++++++
+>>  .../pci/controller/cadence/pcie-cadence-ep.c  | 129 ++++-
+>>  .../controller/cadence/pcie-cadence-host.c    | 310 +++++++++--
+>>  .../controller/cadence/pcie-cadence-plat.c    |  13 +
+>>  drivers/pci/controller/cadence/pcie-cadence.c |   8 +-
+>>  drivers/pci/controller/cadence/pcie-cadence.h | 161 +++++-
+>>  include/linux/kernel.h                        |   1 +
+>>  14 files changed, 1297 insertions(+), 70 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>>  create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+> 
+> Applied to pci/cadence for v5.9, thanks !
 
-I don't know if the patches all still apply. Could you check and perhaps
-resend to soc@kernel.org if they are still good to go into the coming
-merge window?
+Thank you Lorenzo!
 
-> Quoting Hanna Hawa (2020-03-24 11:49:12)
-> > This series organize the Amazon's Annapurna Labs Alpine device tree
-> > bindings, device tree folder and adds new device tree for Alpine v3.
-> >
-> > Changes since v4:
-> > -----------------
-> > - Re-order nodes in increasing order.
-> > - Add disable to UART nodes.
-> > - Add missing UART nodes (1,2,3)
-> > - Add comments for GIC/UART
-> > - Add io-fabric bus, and move uart nodes into it.
-> > - Fix MSIx range according Alpine function spec
-> >
-> > Changes since v3:
-> > -----------------
-> > - rebased and retested for tag Linux 5.6-rc2
-> >
-> > Changes since v2:
-> > -----------------
-> > - Move up a level for DT node without mmio regs.
-> > - Drop device_type from serial@fd883000 node.
-> > - Minor change name of PCIe node to: pcie@fbd00000
-> >
-> > Changes since v1:
-> > -----------------
-> > - Rename al,alpine DT binding to amazon,alpine
-> > - Rename al folder to be amazon
-> > - Update maintainers of amazon,alpine DT
-> > - Add missing alpine-v2 DT binding
-> > - Fix yaml schemas for alpine-v3-evp.dts:
-> >         - #size-cells:0:0: 0 is not one of [1, 2]
-> >         - arch-timer: interrupts: [[1, 13, 8, 1, 14, 8, 1, 11, 8, 1, 10,
-> >         8]] is too short
-> > - Change compatible string of alpine-v3-evp to amazon,al
-> >
-> > Hanna Hawa (5):
-> >   dt-bindings: arm: amazon: rename al,alpine DT binding to amazon,al
-> >   arm64: dts: amazon: rename al folder to be amazon
-> >   dt-bindings: arm: amazon: update maintainers of amazon,al DT bindings
-> >   dt-bindings: arm: amazon: add missing alpine-v2 DT binding
-> >   dt-bindings: arm: amazon: add Amazon Annapurna Labs Alpine V3
-> >
-> > Ronen Krupnik (1):
-> >   arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support
-> >
-> >  .../devicetree/bindings/arm/al,alpine.yaml    |  21 -
-> >  .../devicetree/bindings/arm/amazon,al.yaml    |  33 ++
-> >  MAINTAINERS                                   |   2 +-
-> >  arch/arm64/boot/dts/Makefile                  |   2 +-
-> >  arch/arm64/boot/dts/{al => amazon}/Makefile   |   1 +
-> >  .../boot/dts/{al => amazon}/alpine-v2-evp.dts |   0
-> >  .../boot/dts/{al => amazon}/alpine-v2.dtsi    |   0
-> >  arch/arm64/boot/dts/amazon/alpine-v3-evp.dts  |  24 ++
-> >  arch/arm64/boot/dts/amazon/alpine-v3.dtsi     | 408 ++++++++++++++++++
-> >  9 files changed, 468 insertions(+), 23 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/arm/amazon,al.yaml
-> >  rename arch/arm64/boot/dts/{al => amazon}/Makefile (64%)
-> >  rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
-> >  rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
-> >  create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
-> >  create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-> >
-> > --
-> > 2.17.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-> --
-> Antoine Ténart, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Regards
+Kishon
