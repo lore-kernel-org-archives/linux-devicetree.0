@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF587C433EA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77EEC433EB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD1F2071A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63A72071A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:02:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HU0nk8lz"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IAju02F8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgGWJC3 (ORCPT
+        id S1728059AbgGWJCd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54998 "EHLO
+        Thu, 23 Jul 2020 05:02:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgGWJC3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 05:02:29 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A77BC0619DC
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 02:02:29 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 8so2869332pjj.1
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 02:02:29 -0700 (PDT)
+        with ESMTP id S1725984AbgGWJCc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 05:02:32 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43EFC0619DC
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 02:02:32 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so2689245pfh.0
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 02:02:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DJCSwxnGk2Ssl9aVpet8CDGQoGguzrl/jiXKGzvc19M=;
-        b=HU0nk8lzy9019SP8Nxp4115Sx1aNoaLg7bRyELTqpLgKO/pV9TxmtAm5IgVHYcToee
-         M4TUnVcoOS1FyxpKfsASbNHoRnc3bKZRwF6MR+1RbKIcfEqoitN/qCiT9Gkqv0nT5NKG
-         vo09E9SBG8LJbV9ZT0t8tKQ345PACJtc8w4t4=
+        bh=mXAoChgL41EYHlBynT6RAmQ3PERwS+BjK2PhZPY9IXA=;
+        b=IAju02F8LxM+WbOeJC3jNS+yeBauCJDh+ckTXRn8GBMqUpo1IvtP8l6GRwhpDk085K
+         qhpAHjTjq6OvErA3m5cOuRdNaYEtu/Cgblv2kze7IUwbCKBSBItfhG2vNs+H40W6lzcu
+         RdQ32IuJ39Q1nf3gqOf8dpow1NpleNQSXiabo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DJCSwxnGk2Ssl9aVpet8CDGQoGguzrl/jiXKGzvc19M=;
-        b=pEFjBRBWilApDIy7VZFQ1Kk1oSKOzWNnPZD0+3X/cgSnpMWBHv5eedeQCfuSPOZz8H
-         bo/rgkxKNSCNzk3Wf9pHFJsyKbRzleIbAVl1YhOyVDulnmXxHcUITYozMoi1asoOX0bz
-         MlcXUi2gPzRsrJk6A5FdG5lZi1mBscl7hTZ9mPmEdhq+S4RbLutRTecCQYVRH2vZDmJX
-         LH/I0R11+1iXCWOEaC+UV23GoQbh0KHywYQdOahu8IrD8AiCVV3KWjXmOlwiHSpUJxbQ
-         N/frMoi4E8ZP9+m6ZEmVhjj8N6Haef40gxrAT54zqFZiSbphXtSBIoAOSt0aHtB6sGyr
-         QERA==
-X-Gm-Message-State: AOAM5329qczqrHbomFgeRYB7sFxmkYIl2Uu2BTk5axznGlJDuEUou09V
-        b/bNKUwistNYsy1GRx5SnmaYaA==
-X-Google-Smtp-Source: ABdhPJwL9kQ/eB8mfbD0qNXkzpBox+40LlM209FHnzSpjMSGLSH4ebLDS5lP8Jf4/LPAn4lBptNzzg==
-X-Received: by 2002:a17:90a:784b:: with SMTP id y11mr161257pjl.51.1595494947770;
-        Thu, 23 Jul 2020 02:02:27 -0700 (PDT)
+        bh=mXAoChgL41EYHlBynT6RAmQ3PERwS+BjK2PhZPY9IXA=;
+        b=JP8QdH4MaOmbsbWPNmw/HUl1GkxhkLggQ4y7Wc/V6/YDr0vpKJAfoSoXvZ5nXNULKi
+         vehr1cZav2E+XlPfKeLH934PbATVM2YQlLJMZtMSWi7axWSP+TmCDrCYUb7uYl2aq8x+
+         teaNS8JtxnBZLRqYRZJ7zlfmF7qbpwv0bro/t5oRQ2SdFA5kEY2dBBPzQ2ZdJFVNATu6
+         Njp45hY+kfebkSUlcdOEaOL/BJi2Babn5gnqm2Sj5sswYIh7rVOxqJED8hF0+0YyXa5n
+         /eLpIiZh6Bfm+3p7dy7H2fjQ3qiAg7cfzRfhP2MXfXTYw7RRxWIG5YmWl2gpFnyzKo5O
+         gnjA==
+X-Gm-Message-State: AOAM5328NM5u9Hwfw2voX9DnY/T9FApjtG1kxqDvmG4erAJlscLfOolz
+        vRXgKQeHQzgNtT3kMNKRt31APAfrQ5atiA==
+X-Google-Smtp-Source: ABdhPJzLhZ9/DsCLprr+mhWrqXaPevy0rgoslHCs4/ADvwsE25ZOF/lRPYi0y8mtKv465X5WKg0zaQ==
+X-Received: by 2002:a05:6a00:10:: with SMTP id h16mr3218673pfk.214.1595494952164;
+        Thu, 23 Jul 2020 02:02:32 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:cbf:ea0:8a30:a3af])
-        by smtp.gmail.com with ESMTPSA id k23sm2319383pgb.92.2020.07.23.02.02.23
+        by smtp.gmail.com with ESMTPSA id k23sm2319383pgb.92.2020.07.23.02.02.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 02:02:26 -0700 (PDT)
+        Thu, 23 Jul 2020 02:02:31 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
@@ -64,9 +64,9 @@ Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 2/4] arm64: dts: rockchip: Mark rock-pi-4 as rock-pi-4a dts
-Date:   Thu, 23 Jul 2020 14:32:08 +0530
-Message-Id: <20200723090210.41201-2-jagan@amarulasolutions.com>
+Subject: [PATCH v3 3/4] arm64: dts: rockchip: Add Radxa ROCK Pi 4B support
+Date:   Thu, 23 Jul 2020 14:32:09 +0530
+Message-Id: <20200723090210.41201-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723090210.41201-1-jagan@amarulasolutions.com>
 References: <20200723090210.41201-1-jagan@amarulasolutions.com>
@@ -77,16 +77,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ROCKPi 4 has 3 variants of hardware platforms called
-RockPI 4A, 4B, and 4C.
-
-- ROCKPi 4A has no Wif/BT.
-- ROCKPi 4B has AP6256 Wifi/BT, PoE.
-- ROCKPi 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enabled
-  GPIO pin change compared to 4B, 4C
-
-So move common nodes, properties into dtsi file and include
-on respective variant dts files.
+RockPI 4B has AP6256 Wifi/BT, so enable them in 4B dts
+instead of enable in common dtsi.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
@@ -94,51 +86,73 @@ Changes for v3:
 - none
 Changes for v2:
 - update commit message
-- add radxa,rockpi4a
+- add radxa,rockpi4b
 
- arch/arm64/boot/dts/rockchip/Makefile               |  2 +-
- .../{rk3399-rock-pi-4.dts => rk3399-rock-pi-4.dtsi} |  3 ---
- arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts  | 13 +++++++++++++
- 3 files changed, 14 insertions(+), 4 deletions(-)
- rename arch/arm64/boot/dts/rockchip/{rk3399-rock-pi-4.dts => rk3399-rock-pi-4.dtsi} (99%)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ .../boot/dts/rockchip/rk3399-rock-pi-4.dtsi   | 23 ----------
+ .../boot/dts/rockchip/rk3399-rock-pi-4b.dts   | 42 +++++++++++++++++++
+ 3 files changed, 43 insertions(+), 23 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts
 
 diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index b87b1f773083..42f9e1861461 100644
+index 42f9e1861461..8832d05c2571 100644
 --- a/arch/arm64/boot/dts/rockchip/Makefile
 +++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -33,7 +33,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+@@ -34,6 +34,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
--dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4a.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4a.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4b.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.dtb
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-similarity index 99%
-rename from arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-rename to arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-index 60f98a3e19d8..e163f438f836 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
+index e163f438f836..678a336010bf 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-@@ -11,9 +11,6 @@
- #include "rk3399-opp.dtsi"
- 
- / {
--	model = "Radxa ROCK Pi 4";
--	compatible = "radxa,rockpi4", "rockchip,rk3399";
+@@ -584,17 +584,6 @@ &sdio0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+ 	sd-uhs-sdr104;
+-	status = "okay";
 -
- 	chosen {
- 		stdout-path = "serial2:1500000n8";
- 	};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts
+-	brcmf: wifi@1 {
+-		compatible = "brcm,bcm4329-fmac";
+-		reg = <1>;
+-		interrupt-parent = <&gpio0>;
+-		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
+-		interrupt-names = "host-wake";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&wifi_host_wake_l>;
+-	};
+ };
+ 
+ &sdmmc {
+@@ -663,18 +652,6 @@ u2phy1_host: host-port {
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+-	status = "okay";
+-
+-	bluetooth {
+-		compatible = "brcm,bcm43438-bt";
+-		clocks = <&rk808 1>;
+-		clock-names = "ext_clock";
+-		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
+-		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
+-		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
+-	};
+ };
+ 
+ &uart2 {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts
 new file mode 100644
-index 000000000000..89f2af5e111d
+index 000000000000..f0055ce2fda0
 --- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4a.dts
-@@ -0,0 +1,13 @@
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts
+@@ -0,0 +1,42 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2019 Akash Gajjar <Akash_Gajjar@mentor.com>
@@ -149,8 +163,37 @@ index 000000000000..89f2af5e111d
 +#include "rk3399-rock-pi-4.dtsi"
 +
 +/ {
-+	model = "Radxa ROCK Pi 4A";
-+	compatible = "radxa,rockpi4a", "radxa,rockpi4", "rockchip,rk3399";
++	model = "Radxa ROCK Pi 4B";
++	compatible = "radxa,rockpi4b", "radxa,rockpi4", "rockchip,rk3399";
++};
++
++&sdio0 {
++	status = "okay";
++
++	brcmf: wifi@1 {
++		compatible = "brcm,bcm4329-fmac";
++		reg = <1>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
++		interrupt-names = "host-wake";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_host_wake_l>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rk808 1>;
++		clock-names = "ext_clock";
++		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
++	};
 +};
 -- 
 2.25.1
