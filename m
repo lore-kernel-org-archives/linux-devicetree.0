@@ -6,98 +6,83 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FC2C433E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEBDC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EABD120771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF86207BB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595523761;
-	bh=aSD3StTCB+wXgstT8yQFWXvYmZPlqZbbx0ydsS15MEY=;
+	s=default; t=1595524154;
+	bh=HjsfiP19KyAOfie0hjv4TeKrxsOP2IbTnwhuNtx0DrU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w9d4mkQe5I8upwz7RFHGRx0buHMNuw9cr5dtA1CSUpj4ukC7kdIGNCrlgj2+RBXJ7
-	 e/EJFXsu2CTIJ1HRJkQy/z8GzyzVAt5IzkE/ozdZ8L8UDZWLXVLsjj9/kGScLA3E6A
-	 RjkWWP1YqRk10c7PFUlSzzkDI5mldXaEnOwGna74=
+	b=BCwQobU1xOsSDy3O6lzk/RmJI3CEInkpogsn5T73vzCtJCnF+lw+7ato73AoyQYCB
+	 +TqVJi9MBzJfx+1cRKboS/hvszJccFuNRgTTOLBDRpcdCZOsiBwzW6q5jVBHy84KJ/
+	 Vlb62sS3U9R6VYS47zTnItinWe/Bvc01M/EtMafM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgGWRCh (ORCPT
+        id S1726814AbgGWRJN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:02:37 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38243 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgGWRCh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:02:37 -0400
-Received: by mail-io1-f68.google.com with SMTP id l1so6970447ioh.5;
-        Thu, 23 Jul 2020 10:02:36 -0700 (PDT)
+        Thu, 23 Jul 2020 13:09:13 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37729 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgGWRJN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:09:13 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so4943907ilh.4;
+        Thu, 23 Jul 2020 10:09:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=vLLS4DiGQKQgTm6aUjfCBDa6TERWvhFHxY3Cq9YdYWM=;
-        b=fzU72jL8RXkYRkGanQlKYuXz5oQcs2o3DqrvNm2J1jGKrVj3R0nRz1hruUMy/KpN76
-         vmcSs9euLOP54Bp1O2BaQ9Vi23WcBGsbVW9NL21YpRjpkoPA+R+rkoywdv6dyICEjjk6
-         AxH6ZDZnyriohQc2S+pmesM3KyyVVdNljthpSXC6cpNmspQPVLwl0ZkTNsW3uZCcsaaD
-         x0kRanbPOA58EJC9AtI/GDo+Lr1jrUVwAWLE0BB5fWMtit8fG2S4LhNfy+7xaPXB+xxj
-         pHK3way97Nzkhn2F/guPejZNraaoe/oY1Eshll8BZ71HZf9EN4BtsI9NEOUCujfbDEhp
-         HTUA==
-X-Gm-Message-State: AOAM533rvqUAE2lpGLV9uIyEF4QNJGl/G9qaJ+HQ5PEWY/EkrJQ11tm4
-        4X95+FBsC/rWJqQHZjrX9A==
-X-Google-Smtp-Source: ABdhPJxx7foQDhl0CghD7HuYXs5m3BZErhowysmy9Id61ICoRpQi0WA0uHVnR5lW7obS5bwv5L0Xnw==
-X-Received: by 2002:a6b:1496:: with SMTP id 144mr6007145iou.6.1595523756004;
-        Thu, 23 Jul 2020 10:02:36 -0700 (PDT)
+        bh=Kze7uV82SUZpJUOtNuBnD6sFmN/SrEeVHBi08SLQeLQ=;
+        b=EA1NtiF79HQ1jKCrg/JQzDIsiWdB2tb8OL/8CIqsVZFr5FVKjc/L8mvuiiWUxmFz1R
+         OS0v7aeknKZiAZs8/Ur3D1T7vcarataQaMLhDdcsXWRgbRQOJbatL9oWRMIK4davI0iP
+         PeaKHeCpF7tzOJHibOLZCJV4uo/0lrzALUnbhu1wwyynDEo8pk/+iylT9F/iR7unxMyX
+         UIMTzVxBTWQER282KpvktiQ9HyMDQ6aWwKGhLvF67SNVW76EbsgjjAFWdPFi87hWmWgf
+         mPijGzcmJJtOvYJ7D5e1sVDleYOgEpLPp+LkzdHBVGD4PTzgq2X3+wtqsL1TrP42bbwX
+         MDOg==
+X-Gm-Message-State: AOAM533BC2Ye3PSvZXygSZUEahibVDHRbgA2nG0j42cIJZUAM5sQKuI7
+        K1LCUI/a1fRFnoUqOkXyDw==
+X-Google-Smtp-Source: ABdhPJwAoGVIDmO0+nmhcKlcUs+phhhTWD14e8hUiqneEXeaH3ip09RFCPy8OBqVRcv3YPZwJ2M5Dw==
+X-Received: by 2002:a92:9804:: with SMTP id l4mr5879435ili.271.1595524152087;
+        Thu, 23 Jul 2020 10:09:12 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 28sm1818471ilv.17.2020.07.23.10.02.34
+        by smtp.gmail.com with ESMTPSA id o16sm1783266ilt.59.2020.07.23.10.09.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 10:02:35 -0700 (PDT)
-Received: (nullmailer pid 535616 invoked by uid 1000);
-        Thu, 23 Jul 2020 17:02:34 -0000
-Date:   Thu, 23 Jul 2020 11:02:34 -0600
+        Thu, 23 Jul 2020 10:09:11 -0700 (PDT)
+Received: (nullmailer pid 544431 invoked by uid 1000);
+        Thu, 23 Jul 2020 17:09:10 -0000
+Date:   Thu, 23 Jul 2020 11:09:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-remoteproc@vger.kernel.org, Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: arm: keystone: Add common TI SCI
- bindings
-Message-ID: <20200723170234.GA535571@bogus>
-References: <20200721223617.20312-1-s-anna@ti.com>
- <20200721223617.20312-2-s-anna@ti.com>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     linux-kernel@vger.kernel.org, agx@sigxcpu.org, kernel@puri.sm,
+        broonie@kernel.org, mchehab@kernel.org, shawnguo@kernel.org,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        festevam@gmail.com, devicetree@vger.kernel.org,
+        Anson.Huang@nxp.com, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        angus@akkea.ca
+Subject: Re: [PATCH v4 3/3] dt-bindings: arm: fsl: Add the librem 5 phone
+Message-ID: <20200723170910.GA544402@bogus>
+References: <20200721153225.7593-1-martin.kepplinger@puri.sm>
+ <20200721153225.7593-3-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200721223617.20312-2-s-anna@ti.com>
+In-Reply-To: <20200721153225.7593-3-martin.kepplinger@puri.sm>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 21 Jul 2020 17:36:12 -0500, Suman Anna wrote:
-> Add a bindings document that defines the common TI SCI properties
-> used by various K3 device management nodes such as clock controllers,
-> interrupt controllers, reset controllers or remoteproc devices.
+On Tue, 21 Jul 2020 17:32:25 +0200, Martin Kepplinger wrote:
+> Add entries for the imx8mq based Librem 5 phone. The "Birch" and
+> "Chestnut" hardware revisions are supported by r2. The "Dogwood"
+> revision by r3.
+> See https://puri.sm/products/librem-5/ and https://developer.puri.sm/Librem5/
+> for the schematics and more information.
 > 
-> The required properties for each device management node shall be
-> specified in the respective binding document.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 > ---
-> v5:
->  - New patch refactored out for usage by remoteproc and other TI SCI
->    interrupt controller bindings
->  - Patch based on remoteproc ti,k3-sci-proc.yaml binding (v4 patch 3)
->    with revised overall description and ti,sci-dev-id and no required
->    properties
-> v4: https://patchwork.kernel.org/patch/11671455/
->  - Addressed both of Rob's review comments on ti,sci-proc-ids property
-> v3: https://patchwork.kernel.org/patch/11602317/
-> 
->  .../arm/keystone/ti,k3-sci-common.yaml        | 44 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
