@@ -2,266 +2,167 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFBEC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CC2C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24AAA22B40
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595522110;
-	bh=pH9hCqHfdlU+w6Ab8i9hBud2GdbD3VXacsj5zyagtEA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGi9np3pXRQQYtxwq8785AhaQGyS0N0EU2O9q982ZxyWlQM/cttJMAz5Gg+SdEOMD
-	 lE5plbWnHYCkwcXLz+8k/wKLTG7rfvM9t9MCnBprKy5CeVJebhhXZIHy5cengOj1ph
-	 8sL65/+Ol1tNsPTZgiYSWgL81B/FwOrWWeG2XBPo=
+	by mail.kernel.org (Postfix) with ESMTP id A41E0207BB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:54:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="C48UkXkp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a3F1dORF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGWQfJ (ORCPT
+        id S1726761AbgGWQyy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbgGWQfJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 12:35:09 -0400
-Received: from localhost.localdomain (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DDC1206F4;
-        Thu, 23 Jul 2020 16:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595522108;
-        bh=pH9hCqHfdlU+w6Ab8i9hBud2GdbD3VXacsj5zyagtEA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pF/lpfQcCUEM1QqI/hAXZ3itOtpGN4oLPtO9LyfQe2joZPHbk9I07M0PJDasd8el4
-         R+aATZmGeDt9POXRR5TOXwwejLFztu9XWWNcOzxRTXXci9WFVgL/0qxoo4FlhryyKq
-         LAc6zM8mgUvpYt9aVWJAnAuvSKc8gw1FQ+bsyEFM=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v6 2/3] dt-bindings: display: bridge: Add documentation for LT9611
-Date:   Thu, 23 Jul 2020 22:04:41 +0530
-Message-Id: <20200723163442.1280414-3-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200723163442.1280414-1-vkoul@kernel.org>
-References: <20200723163442.1280414-1-vkoul@kernel.org>
+        Thu, 23 Jul 2020 12:54:54 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:52905 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726621AbgGWQyx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:54:53 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id E37AE5C00FE;
+        Thu, 23 Jul 2020 12:54:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 23 Jul 2020 12:54:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=N
+        aypVAu5q5bWw5EDqU/ZD81JjsTy8wVq+ErZYa1wjzg=; b=C48UkXkpzRRFWsN/y
+        HQ2mVp4+rpu2C+IMnrWrkji+n0JtRvMgMNv3GB4zInYZU7lVJYtk0J/JnkRFXnlv
+        JHlhk8g8Pdxj8J0hJvATwtBhJLGXmZR90bN+Zbn+YBMmuPKIXeJfbqPQWsJwGLyQ
+        /FwozXDMTIa1ggWeRYuymmxdByEbKC+MYLbqH0Q3/Mx0p56LpZLljQl4TS24RsEP
+        XGeRJlTIsXkJf6P3mnHb/DjQu5Asjg8p5c3epM3oDaJfEtoKNND4UQNIAnpoTpIu
+        4iw5WWLBjalxxCLDBmoPMkmu3fcUL+JoKIb7RrphxTEK/9ItYd5EcEDFCFwPiWPy
+        M/uAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=NaypVAu5q5bWw5EDqU/ZD81JjsTy8wVq+ErZYa1wj
+        zg=; b=a3F1dORFPnqjQCWf/vHtmHFsDqp6pRf6LdBIOkgwR1kpzOKu7fLycwb8i
+        WjrBJi1//rDrKzAg2SRGH2LnABR7jrvIK8dlW3DL3YDMdQvs1beUDV6j3HX/dj/L
+        vqVdtOq+yemGqrnTh5RAEsRwKjEgHuGV9+FRRbjhihNsZytEApIeIrIJ5ZZw/DWa
+        jTt/QLvBQvjV2RRwbMG1uT9qsn9AtfZcPVG0yt5dSH6ivWkjp1KNBmDY8lhFp38C
+        Em5VEItyFes0F2A8TKifNZsjAUnQvrLRXoOLK5P/hPo7tSiFbyrWlb3qEkJIJMaS
+        77NCyZZPzyhXxTMMXBe+k5xkdjodQ==
+X-ME-Sender: <xms:2sAZX1xZgiYvlOQpmBUKsx-Uqg92lS4ZvlBDaWDqec9oiO8WwDPu6Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrhedugdduuddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpefgjeettdejgffgffdvteeutdehtdehgeehueetkeefgefhtdetjeekledu
+    gedvudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:2sAZX1TQjvIMb6bUbjt_aHp8bJkIaGXt60Wpa7ZFeSKDYdxkJhBAuQ>
+    <xmx:2sAZX_WDynJ77bQg6qss3VXagrKspPxGf87_7O--xJ3dImYE5kxiXQ>
+    <xmx:2sAZX3i5hzPonsdp63bRrIleGztI5MJECIRcET9iWR09ZHniXgHtPw>
+    <xmx:3MAZXy5xg--258A-Q9bapyxLZCCCx6JT1ZEReeFdxU181qgcxYCHXA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7C7853280064;
+        Thu, 23 Jul 2020 12:54:50 -0400 (EDT)
+Date:   Thu, 23 Jul 2020 18:54:48 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v4 14/16] arm64: allwinner: A100: add the basical
+ Allwinner A100 DTSI file
+Message-ID: <20200723165448.crdc4fc5jwqmsret@gilmour.lan>
+References: <cover.1594708863.git.frank@allwinnertech.com>
+ <f7f86c648bad6e72f8fc8117b96065bf5326a273.1594708864.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f7f86c648bad6e72f8fc8117b96065bf5326a273.1594708864.git.frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
-and I2S port as input and one HDMI port as output
+Hi,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- .../display/bridge/lontium,lt9611.yaml        | 176 ++++++++++++++++++
- 1 file changed, 176 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+On Tue, Jul 14, 2020 at 03:20:29PM +0800, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
+>=20
+> Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
+> the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
+> nmi, and UART support.
+>=20
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> ---
+>  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 364 ++++++++++++++++++
+>  1 file changed, 364 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-a100.dtsi
+> new file mode 100644
+> index 000000000000..3fb2443f2121
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+> @@ -0,0 +1,364 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> +/*
+> + * Copyright (c) 2020 Yangtao Li <frank@allwinnertech.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/sun50i-a100-ccu.h>
+> +#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-ccu.h>
+> +#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
+> +
+> +/ {
+> +	interrupt-parent =3D <&gic>;
+> +	#address-cells =3D <2>;
+> +	#size-cells =3D <2>;
+> +
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			compatible =3D "arm,armv8";
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-new file mode 100644
-index 000000000000..d60208359234
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-@@ -0,0 +1,176 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Lontium LT9611 2 Port MIPI to HDMI Bridge
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+description: |
-+  The LT9611 is a bridge device which converts DSI to HDMI
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lontium,lt9611
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active high RESET pin.
-+
-+  vdd-supply:
-+    description: Regulator for 1.8V MIPI phy power.
-+
-+  vcc-supply:
-+    description: Regulator for 3.3V IO power.
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description: |
-+          Primary MIPI port-1 for MIPI input
-+
-+        properties:
-+          reg:
-+            const: 0
-+
-+        patternProperties:
-+          "^endpoint(@[0-9])$":
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint:
-+                $ref: /schemas/types.yaml#/definitions/phandle
-+
-+        required:
-+          - reg
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Additional MIPI port-2 for MIPI input, used in combination
-+          with primary MIPI port-1 to drive higher resolution displays
-+
-+        properties:
-+          reg:
-+            const: 1
-+
-+        patternProperties:
-+          "^endpoint(@[0-9])$":
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint:
-+                $ref: /schemas/types.yaml#/definitions/phandle
-+
-+        required:
-+          - reg
-+
-+      port@2:
-+        type: object
-+        description: |
-+          HDMI port for HDMI output
-+
-+        properties:
-+          reg:
-+            const: 2
-+
-+        patternProperties:
-+          "^endpoint(@[0-9])$":
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint:
-+                $ref: /schemas/types.yaml#/definitions/phandle
-+
-+        required:
-+          - reg
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - vdd-supply
-+  - vcc-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c10 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      hdmi-bridge@3b {
-+        compatible = "lontium,lt9611";
-+        reg = <0x3b>;
-+
-+        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
-+        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
-+
-+        vdd-supply = <&lt9611_1v8>;
-+        vcc-supply = <&lt9611_3v3>;
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+            lt9611_a: endpoint {
-+              remote-endpoint = <&dsi0_out>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+            lt9611_b: endpoint {
-+              remote-endpoint = <&dsi1_out>;
-+            };
-+          };
-+
-+          port@2 {
-+            reg = <2>;
-+            lt9611_out: endpoint {
-+              remote-endpoint = <&hdmi_con>;
-+            };
-+          };
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.26.2
+You should use the arm,cortex-a53 compatible here, arm,armv8 is for
+software models.
 
+> +		sid@3006000 {
+
+The node name is supposed to be the class of the device, and the DT spec
+defines a list of them already. eeprom would be better suited here.
+
+> +	thermal-zones {
+> +		cpu-thermal-zone {
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 0>;
+> +		};
+> +
+> +		gpu-thermal-zone {
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 1>;
+> +		};
+> +
+> +		ddr-thermal-zone {
+> +			polling-delay-passive =3D <0>;
+> +			polling-delay =3D <0>;
+> +			thermal-sensors =3D <&ths 2>;
+> +		};
+> +	};
+
+Ideally, the nodes here should be ordered by alphabetical order (so ddr
+before GPU).
+
+Thanks!
+Maxime
