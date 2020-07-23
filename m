@@ -2,110 +2,110 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344C7C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F53DC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB342065E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7opUyK3"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9342065E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595537256;
+	bh=Z16xu/uGurFFuLQg7lucgmQ5ePh3KVIjkt6FCIdbgi0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0XaknrQQg3mApmvncbA+3fZ7ZW+BOS2kES09DXF8xILI7Ps09JXcuSSRSK8EG8X0N
+	 wKJMXYuzN8OFL2TXJmsY6ZHTNdHpudq31zabIpN13cVQrlifkInFPHJzUQ8LHAd0iE
+	 Jd94693u4zrSgDaGqO7Fd02fj6NX5yOdGdjG3mpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgGWUl3 (ORCPT
+        id S1728036AbgGWUrd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgGWUl3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:41:29 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059F8C0619D3;
-        Thu, 23 Jul 2020 13:41:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f1so5846252wro.2;
-        Thu, 23 Jul 2020 13:41:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DEHuwTmHfM6jPX2Oo9IcWySJbO6MovJApsAE0g9jcS4=;
-        b=l7opUyK3fCQXpJQKsFzCdaoNL0cpR9THAbku/w3qFpjV6KsgCq2dVnfO/5qDyydF3o
-         RcW/CUT4UJIoZLxqro8XjYrE8YDayx0FVHCuVUzLhUr/dU0ewNklXcCBo9/xeY8FQv7A
-         wCFCbG4WGkrgNQQqJqVM0jll1OrQiLx7NPo9dAbNnEzS2mh3kaQyIU99lrY+eTCGd/LD
-         OXD+Hl1+Wr9u5gsO0d7jqG/oozWm4ro9rSvQ/TMfhEAIMJy6adLTzssgjAStjStD8K+4
-         0o8al43yK1CPPk0JMDGrUowYcNnIOoVEGPAy6da/LWfhf1DISsWr66uQNhAPFdTXeWNA
-         a4yw==
+        Thu, 23 Jul 2020 16:47:33 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39192 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgGWUrc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:47:32 -0400
+Received: by mail-il1-f194.google.com with SMTP id k6so5497582ili.6;
+        Thu, 23 Jul 2020 13:47:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DEHuwTmHfM6jPX2Oo9IcWySJbO6MovJApsAE0g9jcS4=;
-        b=TCEi2nZ0XTRdmLBTmIa+0RTO73T8fr3Ohc+n0ywji0xAD/exKpbdNNxwR4/J7PzTqf
-         scrkDCS2pY3pXoH2iYO4l02eBK6Cb5qFxd3HWzuDrYpNIqtpFTj2qoofkTaCXTVKXtX9
-         ahSe3qJkJ/o7GlLIF53yRxhBua30oVCybNtm0tIT3ZeGFKogjXMmePz9tthvQvAxvpBM
-         4XwGxK1L5+1gMMgj0FaTFkqci/dQgsBI4TK0kcSjVxSvOuyUtE/Fc51LUySnQgdKfHrE
-         iCZydhgmPZmoGIGHzaH1is4Z2ZvUJqZqplFU4sKFKz/jE62FRU6U4aaK3mot3J+FjVRS
-         X2VQ==
-X-Gm-Message-State: AOAM53389Fr0t25t/g3NDbh1/NyOj2LkUWh5S0ujzBb+SYaxpsV6W7+9
-        PVRxFtXvxQGIpOLJqnXhKFrbI/whaXLmOPLMT5I=
-X-Google-Smtp-Source: ABdhPJwe2QpV4/JnbT/qj55tsLIxV0aWuNlNbtPgiz9hklOpzxMRpvjqQpO8ycTfm3THOAE1PJq4Bv+wkd8+sOYcLhU=
-X-Received: by 2002:a5d:464e:: with SMTP id j14mr5571416wrs.361.1595536887627;
- Thu, 23 Jul 2020 13:41:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/ykIh0i0xy9qqdWkp/0xl4AY6xx/230nGu1DDjaI5lo=;
+        b=ia6JJF9GPGzyOOL+z+bCioEzpwnTufIoSgmRqABFHpqgl02jc0gLPnmHlqjeK7M9yw
+         tcHSDyfBsjMvZuLdjS5kzXUUYGHc37HrRz+nuxj5TqHQqprYqHEVC//7BufK3fO5Pkiy
+         KKtBbeL3ouDRKxYNXDc747Ehm/CQzFDZDVcDk0C8OXFX/ffBiLNmBhxm7cQBz7pSFa7S
+         p43XIVLB7btqVKLET1S52C4qGdOJjizORlm9m7J4kqSY3bwsAdDOfuB9w/6yPO5VwMcg
+         iYxFezlp9LF+DLKSfgo8+foMZB/myxzlbpVkYhHpNw7tlGe7raOWugBGYdwWVWOw+664
+         d6Cg==
+X-Gm-Message-State: AOAM531qS0JhyBkmsFKiZW3y/1i+eKuIxzMbqLNg77k0VLPFsGQkOOuR
+        ojGAo+ePpE2VH2yVMLPk/4b2eRSadg==
+X-Google-Smtp-Source: ABdhPJxj977xyK987KA25YXvHJw0KF0pYIdsSwCRmIfXKkWWW85uigcOZS4pmbBfQX5gRynZmqjiXQ==
+X-Received: by 2002:a92:c792:: with SMTP id c18mr7006999ilk.223.1595537251697;
+        Thu, 23 Jul 2020 13:47:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w5sm2032325ilm.46.2020.07.23.13.47.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 13:47:30 -0700 (PDT)
+Received: (nullmailer pid 833108 invoked by uid 1000);
+        Thu, 23 Jul 2020 20:47:29 -0000
+Date:   Thu, 23 Jul 2020 14:47:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        cui.zhang@mediatek.com, chao.hao@mediatek.com,
+        ming-fan.chen@mediatek.com
+Subject: Re: [PATCH 18/21] iommu/mediatek: Add support for multi domain
+Message-ID: <20200723204729.GA823856@bogus>
+References: <20200711064846.16007-1-yong.wu@mediatek.com>
+ <20200711064846.16007-19-yong.wu@mediatek.com>
 MIME-Version: 1.0
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net>
-In-Reply-To: <20200723195755.GV3428@piout.net>
-From:   Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-Date:   Thu, 23 Jul 2020 21:41:16 +0100
-Message-ID: <CAC4G8N7Agb6pVVv6x9_pMMxkB9HnCFiaaC6EJb4-MNzEPd0Uhw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh@kernel.org>, a.zummo@towertech.it,
-        baruch@tkos.co.il, linux@armlinux.org.uk, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200711064846.16007-19-yong.wu@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On Sat, Jul 11, 2020 at 02:48:43PM +0800, Yong Wu wrote:
+> Some HW IP(ex: CCU) require the special iova range. That means the
+> iova got from dma_alloc_attrs for that devices must locate in his
+> special range. In this patch, we allocate a special iova_range for
+> each a special requirement and create each a iommu domain for each
+> a iova_range.
+> 
+> meanwhile we still use one pagetable which support 16GB iova.
+> 
+> After this patch, If the iova range of a master is over 4G, the master
+> should:
+> a) Declare its special dma_ranges in its dtsi node. For example, If we
+> preassign the iova 4G-8G for vcodec, then the vcodec dtsi node should:
+> 	dma-ranges = <0x1 0x0 0x1 0x0 0x1 0x0>;  /* 4G ~ 8G */
 
-Having a way to dynamically change the configuration would definitely
-be helpful in most cases. I decided to go with a DT property because
-in the case this patch tries to solve (the cubox-i) there isn't simply
-any other option - the default mode won't work due to the missing hw
-components. So, I thought that by defining it as a DT property it
-could somehow be locked to the hardware definition.
-Keep me posted
+BTW, dma-ranges should be in the parent node of the vcodec.
 
-Regards
+> b) Update the dma_mask:
+>  dma_set_mask_and_coherent(dev, DMA_BIT_MASK(33));
 
-PS: Sorry for the second message, forgot to disable html and the
-message couldn't be delivered to all recipients.
+This should happen for you automatically. The DMA PFN offset 
+should also be 4GB here.
 
-Alexandre Belloni <alexandre.belloni@bootlin.com> escreveu no dia
-quinta, 23/07/2020 =C3=A0(s) 20:57:
->
-
-> >
-> > I'm all for common properties, but is this common across vendors?
-> >
->
-> This is but this shouldn't be a DT property as it has to be changed
-> dynamically. I'm working on an ioctl interface to change this
-> configuration.
->
->
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> ---
+>  drivers/iommu/mtk_iommu.c | 49 ++++++++++++++++++++++++++++++++-------
+>  drivers/iommu/mtk_iommu.h |  3 ++-
+>  2 files changed, 42 insertions(+), 10 deletions(-)
