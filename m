@@ -2,225 +2,115 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77EBC433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44079C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFCE120771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AD5206D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocSI4ZH0"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XGkM4f9x";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CHw7B4RB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgGWPm2 (ORCPT
+        id S1728577AbgGWPoZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728063AbgGWPm1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 11:42:27 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901F7C0619DC;
-        Thu, 23 Jul 2020 08:42:27 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id c80so5391417wme.0;
-        Thu, 23 Jul 2020 08:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WmpEF3wAK9MyQIycfqRtOyPcqi5ldyWuyIoAHJsmiPk=;
-        b=ocSI4ZH0PyYIM68bnC8T89tdDC4qku8Q6bns0IbSeRi1ZgVm3N/GxGxVS9OvbcFBTz
-         oN7uSgt2lKmq43lzIsDXJYDBJAwxxzPHxYg2X68/7Y4M6QFcG5OpgmJQJcIwmCwq8Pbn
-         X4yNeIg2evOKg9vwfUFM8w8zPvrBzqIsA/CLeb0RYbFvC5tedw0VnpZ+y5W8cdkQvVQB
-         B4qW9aI40iuWv9mIQka7e5M7rF5xN9BydSf+BcZtfkZ1XkUzYMg7gRBGOk5N+mR+G7fn
-         Tvq7pFmLlgjBzYZ7VZb3Jn4W762go9m09GdcVOeNhbmfyH3c/Bf1FddziFKl6cFlCC8U
-         bv2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WmpEF3wAK9MyQIycfqRtOyPcqi5ldyWuyIoAHJsmiPk=;
-        b=B118zAt6ee3ByheGglFCQFbj2Xt4fxe5R39ch0iEdosW+o9uQKamvBEzRMOdzxkCD4
-         mmNqhz9O+rN2cDIaImPrYjZHi60E10nBS70JYHStNzBVmUPyeq2841qmcFuo2IxafQOL
-         0ZpghNhPn5xc+6BQeYsA5HBbJnFWgniLKSxD1DLItUxRw8Aser2VmbpFp78ZdVsYSz31
-         o0QzU+4cEZ+ReAmYyzE0Tj+pbqbNmT87uX8279OH5TDovnW2GACsE6li2WbeCvhYihuw
-         ycOe5igpGddAUzTk4/pBq0dyt9CdyyeJMzAc2xD4Q9RLbgX/cnitXmdtmUctnY8FcR/R
-         bl4g==
-X-Gm-Message-State: AOAM531vHAB0CwI96Ct62axw3bgjBUqS+AohNR3ZbBOwynDNtfapAkht
-        0QX8bHC16N5FSMQQACMWnWY=
-X-Google-Smtp-Source: ABdhPJyX2JfGZsL+cpAXob0aVplIVs631ETGzU1KEWsj2v12UjMXeteDcjRnFvXcYr5gn4WVKyOiOQ==
-X-Received: by 2002:a1c:49c6:: with SMTP id w189mr2301255wma.97.1595518946327;
-        Thu, 23 Jul 2020 08:42:26 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id d18sm4238353wrj.8.2020.07.23.08.42.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 08:42:25 -0700 (PDT)
-Subject: Re: [v7, PATCH 5/7] arm64: dts: add display nodes for mt8183
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Thu, 23 Jul 2020 11:44:25 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:56629 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727108AbgGWPoZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 11:44:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3EBD358046D;
+        Thu, 23 Jul 2020 11:44:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 23 Jul 2020 11:44:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=3
+        WU5tiH6MW2suDFTBvDbYfQ8TP5tgnJIuAQD/XuTOGQ=; b=XGkM4f9xk4vSaNPSq
+        B8sEnunFjr0biFvfDNBlH1OmV8qiODcIyJI2fiWqwYukyfRM/LNgHoxS6AmTRtQG
+        0uZnJ3qpRADkJ4k+IIxbb2ioBC3enac7CddhNM7FxiUMenw2wtPocXkOwJtXiUWS
+        BON6TSvLeORYJQCfs16pm+aptmoWMIiVydkqmf6XLkSxqko/bFDeu14Vki4vLqob
+        Ixr17YPu2/S6Uaq72SYjqFLN+VDyzgBwFT9qQn9hkQjwLKX3znbBhrDoKX/SuljN
+        TH+NTqK6yItgaWxprpgnkKCKjPockDZps2rvGAtmFB3qI3SXqJzYRJqOz7Ugj4Ol
+        LNITw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=3WU5tiH6MW2suDFTBvDbYfQ8TP5tgnJIuAQD/XuTO
+        GQ=; b=CHw7B4RBoH4oJkqH1vY1e8D6B2/mKF3Tvl2x1ZMZe9CiKS7mQYzTM4TkS
+        5KfEZsr35HNA/l27qM1NuxMFIl2t+1H76rEfi/Daznztqf4UzEbKu5IdC4YmwLDm
+        x5D0Crq+de9qk9+68qoMFeG+CJkTcXDZKBbY6v1qcK2YhumSH5P44jqDKAONjsXa
+        D2ug/8b/h/nnC6+l2vGu+4qrAe6EEmtYugYQ/dS67f4fda6m10e2hAzj14+hF1el
+        +QuYFKQB/0htUvsKI+0QKGjce0R8X0dmFfBhloDT9SvrGdli5b9C0kHYGcKyjTuC
+        2KutWzLd36xJzP5nr2FqBhLp4j4eQ==
+X-ME-Sender: <xms:V7AZX9HH9jlNg0YUYena9d9jFpx3LvaNbDrEjNINsS1EszVrKOY4qA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrhedugdelhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
+    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:V7AZXyX2OiCjwtm10I8FcF5SBqSyl4WcZk3PNgbsUFaOLxzba3W9Mg>
+    <xmx:V7AZX_JjvKn0xmkTmRPqJ2FyGSo4fEfd3rAccJVgo0ch3c_n20-BIg>
+    <xmx:V7AZXzFm_crW2JeHYcbppaC04F7uClLJL8EKFSA2tY-MxeyT2Xjz7w>
+    <xmx:WLAZX6FTEgDJm6Ir3Tqvf2pmdYCyV3A4-IErTeGQRsQuyLCOPm-nvw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 52341328005A;
+        Thu, 23 Jul 2020 11:44:23 -0400 (EDT)
+Date:   Thu, 23 Jul 2020 17:44:21 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
- <1595469798-3824-6-git-send-email-yongqiang.niu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <a8a7232c-6c2b-b606-2091-da540e5cb79e@gmail.com>
-Date:   Thu, 23 Jul 2020 17:42:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware
+ binding
+Message-ID: <20200723154421.yzecsy5qctqbgbxc@gilmour.lan>
+References: <20200626115433.125735-1-maxime@cerno.tech>
 MIME-Version: 1.0
-In-Reply-To: <1595469798-3824-6-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200626115433.125735-1-maxime@cerno.tech>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Stephen, Mike,
 
-
-On 23/07/2020 04:03, Yongqiang Niu wrote:
-> This patch add display nodes for mt8183
-> 
-
-In comparison, DTS patches should go last in a series as you will need the 
-driver patches to make it work.
-
-Regards,
-Matthias
-
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Fri, Jun 26, 2020 at 01:54:33PM +0200, Maxime Ripard wrote:
+> The RaspberryPi firmware binding uses two compatible, include simple-bus.
+> The select statement generated by default will thus select any node that
+> has simple-bus, not all of them being the raspberrypi firmware node.
+>=20
+> This results in warnings being wrongfully reported. Let's add a custom
+> select statement to fix that.
+>=20
+> Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware bin=
+ding to YAML")
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+>
 > ---
->   arch/arm64/boot/dts/mediatek/mt8183.dtsi | 98 ++++++++++++++++++++++++++++++++
->   1 file changed, 98 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 7b781eb..440cf22 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -31,6 +31,11 @@
->   		i2c9 = &i2c9;
->   		i2c10 = &i2c10;
->   		i2c11 = &i2c11;
-> +		ovl0 = &ovl0;
-> +		ovl_2l0 = &ovl_2l0;
-> +		ovl_2l1 = &ovl_2l1;
-> +		rdma0 = &rdma0;
-> +		rdma1 = &rdma1;
->   	};
->   
->   	cpus {
-> @@ -707,9 +712,102 @@
->   		mmsys: syscon@14000000 {
->   			compatible = "mediatek,mt8183-mmsys", "syscon";
->   			reg = <0 0x14000000 0 0x1000>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
->   			#clock-cells = <1>;
->   		};
->   
-> +		ovl0: ovl@14008000 {
-> +			compatible = "mediatek,mt8183-disp-ovl";
-> +			reg = <0 0x14008000 0 0x1000>;
-> +			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_OVL0>;
-> +		};
-> +
-> +		ovl_2l0: ovl@14009000 {
-> +			compatible = "mediatek,mt8183-disp-ovl-2l";
-> +			reg = <0 0x14009000 0 0x1000>;
-> +			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_OVL0_2L>;
-> +		};
-> +
-> +		ovl_2l1: ovl@1400a000 {
-> +			compatible = "mediatek,mt8183-disp-ovl-2l";
-> +			reg = <0 0x1400a000 0 0x1000>;
-> +			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_OVL1_2L>;
-> +		};
-> +
-> +		rdma0: rdma@1400b000 {
-> +			compatible = "mediatek,mt8183-disp-rdma";
-> +			reg = <0 0x1400b000 0 0x1000>;
-> +			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
-> +			mediatek,rdma_fifo_size = <5120>;
-> +		};
-> +
-> +		rdma1: rdma@1400c000 {
-> +			compatible = "mediatek,mt8183-disp-rdma";
-> +			reg = <0 0x1400c000 0 0x1000>;
-> +			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-> +			mediatek,rdma_fifo_size = <2048>;
-> +		};
-> +
-> +		color0: color@1400e000 {
-> +			compatible = "mediatek,mt8183-disp-color",
-> +				     "mediatek,mt8173-disp-color";
-> +			reg = <0 0x1400e000 0 0x1000>;
-> +			interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
-> +		};
-> +
-> +		ccorr0: ccorr@1400f000 {
-> +			compatible = "mediatek,mt8183-disp-ccorr";
-> +			reg = <0 0x1400f000 0 0x1000>;
-> +			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_CCORR0>;
-> +		};
-> +
-> +		aal0: aal@14010000 {
-> +			compatible = "mediatek,mt8183-disp-aal",
-> +				     "mediatek,mt8173-disp-aal";
-> +			reg = <0 0x14010000 0 0x1000>;
-> +			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_AAL0>;
-> +		};
-> +
-> +		gamma0: gamma@14011000 {
-> +			compatible = "mediatek,mt8183-disp-gamma",
-> +				     "mediatek,mt8173-disp-gamma";
-> +			reg = <0 0x14011000 0 0x1000>;
-> +			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_GAMMA0>;
-> +		};
-> +
-> +		dither0: dither@14012000 {
-> +			compatible = "mediatek,mt8183-disp-dither";
-> +			reg = <0 0x14012000 0 0x1000>;
-> +			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +			clocks = <&mmsys CLK_MM_DISP_DITHER0>;
-> +		};
-> +
-> +		mutex: mutex@14016000 {
-> +			compatible = "mediatek,mt8183-disp-mutex";
-> +			reg = <0 0x14016000 0 0x1000>;
-> +			interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_LOW>;
-> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +		};
-> +
->   		smi_common: smi@14019000 {
->   			compatible = "mediatek,mt8183-smi-common", "syscon";
->   			reg = <0 0x14019000 0 0x1000>;
-> 
+>
+> The original binding has been merged through the clock tree, so it should
+> be merged there.
+
+Could you apply that patch to clk-next?
+
+Thanks!
+Maxime
