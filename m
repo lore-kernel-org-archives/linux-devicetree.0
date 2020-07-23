@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E4BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0D8C433E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6614C20768
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2652720825
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="cwimNVVU"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="CxpBGTue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgGWMkP (ORCPT
+        id S1728848AbgGWMkU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60616 "EHLO
+        Thu, 23 Jul 2020 08:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgGWMkP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 08:40:15 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B179C0619DC
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 05:40:15 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w17so2496977ply.11
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 05:40:15 -0700 (PDT)
+        with ESMTP id S1728265AbgGWMkT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 08:40:19 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47FCC0619DC
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 05:40:19 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id x8so2497198plm.10
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 05:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=m++NcJD4D9qyIM0yoYrA2193x1gO/IpyUHnTZrnYdqE=;
-        b=cwimNVVUL2ZRKhYUpjPnCahoeZjEkgePw8zWlUz/Vx7t0fPDr0Oe3xwu5LJnh9LxPP
-         CN6hlNMyhiedaPW2yQc+yBxt5rQUKquKbYOR24sIkuKTfy6GM5a2XUgJYiqPZR1Y/hBj
-         iEfXOe9hIhZfTkniR+EKk06710g5xWqc8VOcQ=
+        bh=S8BrKGFOX92wI7Q6LfoafDhnOXbyYBWnVUMYQMlRIgM=;
+        b=CxpBGTue7nd+N0CdNq7NdsZ8r/L/dPw1A2lpMkUB4YI5J4u9rZAFqLtoqQvrVdEa0+
+         XcpPCo90XlXmWgHmd00FtJ6maDRzK211c3QQkydMYAo8rVcgvcBxXUQLFXTG93C2nwRz
+         JP3NWHl/irgos39j4I5bAgiQd4RgFwGHwADLY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=m++NcJD4D9qyIM0yoYrA2193x1gO/IpyUHnTZrnYdqE=;
-        b=dgDnCkaQ6d10Vu+gh3OPSZpb5GjwVYinPugXwspqSEedb3anN66wUdYN/C7StWWi+P
-         2ozEl8PW4LzuyRApKYApglEtFk7PMUci4gFozxa0tw3dq72pDE6CQuBsA9rIs7nA/s9K
-         6J8HClhMZvt6K/ZPYbA7nkK1mLKeT3ID6GG+BJ3YVMLyxYv6rVuc+PbAjqk4/r4srvHV
-         ktRpAfZgxke6o0CNwwQqLdubhfVv1tZL1CrMlOjBVZChVk0ImlOnnHWKPgbzpYlFpQqU
-         za6v7x+EXvUbjCYRBBznKoXgl5zxneLad5blJn5kDr/8OumBriXsCgoRw28XFACZl9Ra
-         WGYQ==
-X-Gm-Message-State: AOAM5331sUIlbC6cL3MxqjGyMqbHd3U5NbPWkmyGVI/V5BJe9fwWQQVJ
-        Zd678W4Cfzqy2yDJcSlxLuD6eA==
-X-Google-Smtp-Source: ABdhPJwVRBhB8JfLTcYDzcTUPhTG8ljFSnglRRGudi5SwWLBmNYO+qwbzW8ovkKER9L7EWcSldjoPA==
-X-Received: by 2002:a17:90a:cb0e:: with SMTP id z14mr236606pjt.140.1595508014924;
-        Thu, 23 Jul 2020 05:40:14 -0700 (PDT)
+        bh=S8BrKGFOX92wI7Q6LfoafDhnOXbyYBWnVUMYQMlRIgM=;
+        b=XKQir+5Y3ooiN1lYdfrfWZRT4Q8TtlqZBQm4UwQ/IWgiKCdsNglDYEmFFp/K6gBkCG
+         PmHAEm1wX5DvsyV7LTN/yavSCn2dSkSQ61t9tR3n/IEyS4oJDw98EWpS8IlBc0Ck7IaQ
+         toI4mJs317D1cQnwkHgXWzlPdVbmy3P1fCBp4NuPGmJNUpfOWdRqFzdCEmN6043/PZTj
+         8EO9wWdaiA1d1fF71oTVwRismtlUfvNWU/RLsGZmFd8bjHJQ3RfmqcrtEV1DX39zXPvi
+         Ba54xtjgN/GeCSRArlENUo7jUaBhvnkMmMRdrBxswUGr6niZrSmEDEAmOUK0NUtbj/yc
+         CzEA==
+X-Gm-Message-State: AOAM530bEL9yiQf1CvcTUb34lh9IhuNzRiUUYo0geDAWQvfRLGWlbAki
+        yvD37t2BCBFjTpOqun9fwkmY2g==
+X-Google-Smtp-Source: ABdhPJyo4a8KUjxm5ZJlqKwfK+qpMVIrio5tr2XGfPF9t9GzmZwAJmIuxWGPnkAxcfahJUCGDeafSQ==
+X-Received: by 2002:a17:90a:fe6:: with SMTP id 93mr201901pjz.145.1595508019268;
+        Thu, 23 Jul 2020 05:40:19 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:cbf:ea0:8a30:a3af])
-        by smtp.gmail.com with ESMTPSA id m26sm3051270pff.84.2020.07.23.05.40.10
+        by smtp.gmail.com with ESMTPSA id m26sm3051270pff.84.2020.07.23.05.40.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 05:40:13 -0700 (PDT)
+        Thu, 23 Jul 2020 05:40:18 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
@@ -64,9 +64,9 @@ Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 1/7] dt-bindings: arm: rockchip: Add Engicam PX30.Core EDIMM2.2 Starter Kit
-Date:   Thu, 23 Jul 2020 18:09:45 +0530
-Message-Id: <20200723123951.149497-2-jagan@amarulasolutions.com>
+Subject: [PATCH 2/7] arm64: dts: rockchip: px30: Add Engicam EDIMM2.2 Starter Kit
+Date:   Thu, 23 Jul 2020 18:09:46 +0530
+Message-Id: <20200723123951.149497-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200723123951.149497-1-jagan@amarulasolutions.com>
 References: <20200723123951.149497-1-jagan@amarulasolutions.com>
@@ -77,38 +77,86 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PX30.Core is an EDIMM SOM based on Rockchip PX30 from Engicam.
+Engicam EDIMM2.2 Starter Kit is an EDIMM 2.2 Form Factor Capacitive
+Evaluation Board.
 
-EDIMM2.2 Starter Kit is an EDIMM 2.2 Form Factor Capacitive
-Evaluation Board from Engicam.
+Genaral features:
+- LCD 7" C.Touch
+- microSD slot
+- Ethernet 1Gb
+- Wifi/BT
+- 2x LVDS Full HD interfaces
+- 3x USB 2.0
+- 1x USB 3.0
+- HDMI Out
+- Mini PCIe
+- MIPI CSI
+- 2x CAN
+- Audio Out
 
-PX30.Core needs to mount on top of this Evaluation board for
-creating complete PX30.Core EDIMM2.2 Starter Kit.
+SOM's like PX30.Core needs to mount on top of this Evaluation board
+for creating complete PX30.Core EDIMM2.2 Starter Kit.
 
-Add bindings for it.
+Add support for it.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../dts/rockchip/px30-engicam-common.dtsi     | 31 +++++++++++++++++++
+ .../dts/rockchip/px30-engicam-edimm2.2.dtsi   |  7 +++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index e6f656b0bd56..392bdb7042de 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -70,6 +70,12 @@ properties:
-           - const: elgin,rv1108-r1
-           - const: rockchip,rv1108
- 
-+      - description: Engicam PX30.Core EDIMM2.2 Starter Kit
-+        items:
-+          - const: engicam,px30-core-edimm2.2
-+          - const: engicam,px30-px30-core
-+          - const: rockchip,px30
+diff --git a/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi b/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
+new file mode 100644
+index 000000000000..fa0645231b09
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2020 Engicam srl
++ * Copyright (c) 2020 Amarula Solutions(India)
++ */
 +
-       - description: Firefly Firefly-RK3288
-         items:
-           - enum:
++/ {
++	vcc5v0_sys: vcc5v0-sys {
++		compatible = "regulator-fixed";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-name = "vcc5v0_sys";	/* +5V */
++	};
++};
++
++&gmac {
++	phy-supply = <&vcc_3v3>;	/* +3V3_SOM */
++	status = "okay";
++};
++
++&sdmmc {
++	vmmc-supply = <&vcc_3v3>;	/* +3V3_SOM */
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-0 = <&uart2m1_xfer>;
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi b/arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi
+new file mode 100644
+index 000000000000..cb00988953e9
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2020 Engicam srl
++ * Copyright (c) 2020 Amarula Solutions(India)
++ */
++
++#include "px30-engicam-common.dtsi"
 -- 
 2.25.1
 
