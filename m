@@ -2,32 +2,33 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D7EC43457
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F4AC433FC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D738F20714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B01920714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgGWHna (ORCPT
+        id S1727774AbgGWHnc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:43:30 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33746 "EHLO inva021.nxp.com"
+        Thu, 23 Jul 2020 03:43:32 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33812 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgGWHna (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:43:30 -0400
+        id S1726303AbgGWHnc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:43:32 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5880C200070;
-        Thu, 23 Jul 2020 09:43:28 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B9EB5200024;
+        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 495C1200015;
-        Thu, 23 Jul 2020 09:43:28 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AAE93200A42;
+        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
 Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9AE21202B6;
-        Thu, 23 Jul 2020 09:43:27 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0D995202B6;
+        Thu, 23 Jul 2020 09:43:29 +0200 (CEST)
 From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
@@ -42,10 +43,12 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
         linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v3 0/3] input: i.MX snvs powerkey updates
-Date:   Thu, 23 Jul 2020 10:43:11 +0300
-Message-Id: <20200723074314.3304-1-horia.geanta@nxp.com>
+Subject: [PATCH v3 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+Date:   Thu, 23 Jul 2020 10:43:13 +0300
+Message-Id: <20200723074314.3304-3-horia.geanta@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200723074314.3304-1-horia.geanta@nxp.com>
+References: <20200723074314.3304-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -55,27 +58,109 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Herbert, Dmitry,
+From: André Draszik <git@andred.net>
 
-This is a resend of v2 patches 1,5,6 that were not picked up
-https://lore.kernel.org/linux-input/20200225161201.1975-1-git@andred.net
-with collecting Acked-by, Reviewed-by.
+At the moment, enabling this driver without the SNVS RTC driver
+being active will hang the kernel as soon as the power button
+is pressed.
 
-I skipped Robin's Reviewed-by since I prefer avoiding misintepreting
-the discussion between him and André.
+The reason is that in that case the SNVS isn't enabled, and
+any attempt to read the SNVS registers will simply hang forever.
 
-Thanks,
-Horia
+Ensure the clock is enabled (during the interrupt handler) to
+make this driver work.
 
-André Draszik (3):
-  dt-bindings: crypto: fsl-sec4: add snvs clock to pwrkey
-  Input: snvs_pwrkey - enable snvs clock as needed
-  Input: snvs_pwrkey - only IRQ_HANDLED for our own events
+Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
+and commit edb190cb1734
+("rtc: snvs: make sure clock is enabled for interrupt handle")
+for similar updates to the snvs rtc driver.
 
- .../devicetree/bindings/crypto/fsl-sec4.txt   | 17 +++++++++
- drivers/input/keyboard/snvs_pwrkey.c          | 38 ++++++++++++++++---
- 2 files changed, 50 insertions(+), 5 deletions(-)
+Signed-off-by: André Draszik <git@andred.net>
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+---
+ drivers/input/keyboard/snvs_pwrkey.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+index 2f5e3ab5ed63..382d2ae82c9b 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -16,6 +16,7 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_wakeirq.h>
++#include <linux/clk.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
+ 
+@@ -38,6 +39,7 @@ struct pwrkey_drv_data {
+ 	int wakeup;
+ 	struct timer_list check_timer;
+ 	struct input_dev *input;
++	struct clk *clk;
+ 	u8 minor_rev;
+ };
+ 
+@@ -47,7 +49,10 @@ static void imx_imx_snvs_check_for_events(struct timer_list *t)
+ 	struct input_dev *input = pdata->input;
+ 	u32 state;
+ 
++	clk_enable(pdata->clk);
+ 	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
++	clk_disable(pdata->clk);
++
+ 	state = state & SNVS_HPSR_BTN ? 1 : 0;
+ 
+ 	/* only report new event if status changed */
+@@ -74,11 +79,13 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+ 
+ 	pm_wakeup_event(input->dev.parent, 0);
+ 
++	clk_enable(pdata->clk);
++
+ 	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+ 	if (lp_status & SNVS_LPSR_SPO) {
+ 		if (pdata->minor_rev == 0) {
+ 			/*
+-			 * The first generation i.MX6 SoCs only sends an
++			 * The first generation i.MX[6|7] SoCs only send an
+ 			 * interrupt on button release. To mimic power-key
+ 			 * usage, we'll prepend a press event.
+ 			 */
+@@ -96,6 +103,8 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+ 	/* clear SPO status */
+ 	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+ 
++	clk_disable(pdata->clk);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -140,6 +149,23 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+ 	if (pdata->irq < 0)
+ 		return -EINVAL;
+ 
++	pdata->clk = devm_clk_get_optional(&pdev->dev, "snvs-pwrkey");
++	if (IS_ERR(pdata->clk))
++		return PTR_ERR(pdata->clk);
++
++	error = clk_prepare(pdata->clk);
++	if (error) {
++		dev_err(&pdev->dev, "failed to prepare the snvs clock\n");
++		return error;
++	}
++	error = devm_add_action_or_reset(&pdev->dev,
++			(void(*)(void *))clk_unprepare,
++			pdata->clk);
++	if (error) {
++		dev_err(&pdev->dev, "failed to add reset action on 'snvs-pwrkey'");
++		return error;
++	}
++
+ 	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);
+ 	pdata->minor_rev = vid & 0xff;
+ 
 -- 
 2.17.1
 
