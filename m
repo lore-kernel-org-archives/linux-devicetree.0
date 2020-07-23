@@ -2,102 +2,109 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6453AC4363D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BE1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4323422D07
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE1620658
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgGWGN5 (ORCPT
+        id S1726691AbgGWGQ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:13:57 -0400
-Received: from out28-98.mail.aliyun.com ([115.124.28.98]:55206 "EHLO
-        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgGWGNz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 02:13:55 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.6997842|0.7739751;CH=green;DM=|SPAM|false|;DS=CONTINUE|ham_regular_dialog|0.0117991-0.00267069-0.98553;FP=16928395198620438954|2|2|8|0|-1|-1|-1;HT=e02c03293;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I6H78tB_1595484804;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6H78tB_1595484804)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Thu, 23 Jul 2020 14:13:52 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, dongsheng.qiu@ingenic.com,
+        Thu, 23 Jul 2020 02:16:58 -0400
+Received: from out28-145.mail.aliyun.com ([115.124.28.145]:60821 "EHLO
+        out28-145.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbgGWGQ6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 02:16:58 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1183656|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0542861-0.0440707-0.901643;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03308;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.I6H4xer_1595484991;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6H4xer_1595484991)
+          by smtp.aliyun-inc.com(10.147.42.16);
+          Thu, 23 Jul 2020 14:16:32 +0800
+Subject: Re: [PATCH 2/2] crypto: Ingenic: Add hardware RNG for Ingenic JZ4780
+ and X1000.
+To:     Randy Dunlap <rdunlap@infradead.org>, arnd@arndb.de,
+        gregkh@linuxfoundation.org, mpm@selenic.com,
+        herbert@gondor.apana.org.au, robh+dt@kernel.org
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, hadar.gat@arm.com,
+        prasannatsmkumar@gmail.com, krzk@kernel.org, masahiroy@kernel.org,
+        xuzaibo@huawei.com, daniel.thompson@linaro.org,
+        tmaimon77@gmail.com, dongsheng.qiu@ingenic.com,
         aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
         yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com
-Subject: [PATCH v5 1/4] dt-bindings: USB: Add bindings for new Ingenic SoCs.
-Date:   Thu, 23 Jul 2020 14:12:58 +0800
-Message-Id: <20200723061301.82583-2-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200723061301.82583-1-zhouyanjie@wanyeetech.com>
-References: <20200723061301.82583-1-zhouyanjie@wanyeetech.com>
+References: <20200722164007.77655-1-zhouyanjie@wanyeetech.com>
+ <20200722164007.77655-3-zhouyanjie@wanyeetech.com>
+ <779949c8-8b1a-52ed-f695-7006f0045d7e@infradead.org>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <cb9d9d4d-4f85-5e41-8597-946698649c5e@wanyeetech.com>
+Date:   Thu, 23 Jul 2020 14:16:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <779949c8-8b1a-52ed-f695-7006f0045d7e@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the USB PHY bindings for the JZ4780 SoC, the X1000 SoC and
-the X1830 SoC from Ingenic.
+Hello Randy,
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+在 2020/7/23 上午2:27, Randy Dunlap 写道:
+> On 7/22/20 9:40 AM, 周琰杰 (Zhou Yanjie) wrote:
+>> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+>> index 0ad17efc96df..fcb06027cd88 100644
+>> --- a/drivers/char/hw_random/Kconfig
+>> +++ b/drivers/char/hw_random/Kconfig
+>> @@ -257,6 +257,21 @@ config HW_RANDOM_IMX_RNGC
+>>   
+>>   	  If unsure, say Y.
+>>   
+>> +config HW_RANDOM_INGENIC_RNG
+>> +	tristate "Ingenic Random Number Generator support"
+>> +	depends on HW_RANDOM
+>> +	depends on MACH_JZ4780 || MACH_X1000
+>> +	default HW_RANDOM
+>> +	---help---
+> Just use:
+> 	help
+> here. See this for why:
+>
+> commit 8f268881d7d278047b00eed54bbb9288dbd6ab23
+> Author: Masahiro Yamada <masahiroy@kernel.org>
+> Date:   Tue Dec 17 20:51:51 2019 +0900
+>
+>      kconfig: remove ---help--- from documentation
+>      
+>      Since commit 84af7a6194e4 ("checkpatch: kconfig: prefer 'help' over
+>      '---help---'"), scripts/checkpatch.pl warns the use of ---help---.
+>      
+>      Kconfig still supports ---help---, but new code should avoid using it.
+>      Let's stop advertising it in documentation.
+>
 
-Notes:
-    v1->v2:
-    Add bindings for the JZ4780 SoC.
-    
-    v2->v3:
-    No change.
-    
-    v3->v4:
-    No change.
-    
-    v4->v5:
-    No change.
+Sure, I will change it in v2.
 
- Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thanks and best regards!
 
-diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
-index a81b0b1a2226..2d61166ea5cf 100644
---- a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
-+++ b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
-@@ -4,10 +4,11 @@
- $id: http://devicetree.org/schemas/usb/ingenic,jz4770-phy.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Ingenic JZ4770 USB PHY devicetree bindings
-+title: Ingenic SoCs USB PHY devicetree bindings
- 
- maintainers:
-   - Paul Cercueil <paul@crapouillou.net>
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
- 
- properties:
-   $nodename:
-@@ -16,6 +17,9 @@ properties:
-   compatible:
-     enum:
-       - ingenic,jz4770-phy
-+      - ingenic,jz4780-phy
-+      - ingenic,x1000-phy
-+      - ingenic,x1830-phy
- 
-   reg:
-     maxItems: 1
--- 
-2.11.0
 
+>> +	  This driver provides kernel-side support for the Random Number Generator
+>> +	  hardware found in ingenic JZ4780 and X1000 SoC. MIPS Creator CI20 uses
+>> +	  JZ4780 SoC, YSH & ATIL CU1000-Neo uses X1000 SoC.
+>> +
+>> +	  To compile this driver as a module, choose M here: the
+>> +	  module will be called ingenic-rng.
+>> +
+>> +	  If unsure, say Y.
+>> +
+>>   config HW_RANDOM_NOMADIK
+>>   	tristate "ST-Ericsson Nomadik Random Number Generator support"
+>>   	depends on ARCH_NOMADIK
+> thanks.
