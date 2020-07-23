@@ -2,97 +2,80 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF97C433FE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D7EC43457
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E164F206C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D738F20714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgGWHl2 (ORCPT
+        id S1726304AbgGWHna (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:41:28 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:52291 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726089AbgGWHl0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:41:26 -0400
-Received: from [78.134.114.177] (port=33386 helo=melee.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jyVr1-0007WW-6B; Thu, 23 Jul 2020 09:41:23 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-clk@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Adam Ford <aford173@gmail.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 1/3] dt-bindings: clk: versaclock5: fix 'idt' prefix typos
-Date:   Thu, 23 Jul 2020 09:41:10 +0200
-Message-Id: <20200723074112.3159-2-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723074112.3159-1-luca@lucaceresoli.net>
-References: <20200723074112.3159-1-luca@lucaceresoli.net>
+        Thu, 23 Jul 2020 03:43:30 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33746 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgGWHna (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:43:30 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5880C200070;
+        Thu, 23 Jul 2020 09:43:28 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 495C1200015;
+        Thu, 23 Jul 2020 09:43:28 +0200 (CEST)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9AE21202B6;
+        Thu, 23 Jul 2020 09:43:27 +0200 (CEST)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v3 0/3] input: i.MX snvs powerkey updates
+Date:   Thu, 23 Jul 2020 10:43:11 +0300
+Message-Id: <20200723074314.3304-1-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-'idt' is misspelled 'itd' in a few places, fix it.
+Hi Herbert, Dmitry,
 
-Fixes: 34662f6e3084 ("dt: Add additional option bindings for IDT VersaClock")
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is a resend of v2 patches 1,5,6 that were not picked up
+https://lore.kernel.org/linux-input/20200225161201.1975-1-git@andred.net
+with collecting Acked-by, Reviewed-by.
 
----
+I skipped Robin's Reviewed-by since I prefer avoiding misintepreting
+the discussion between him and André.
 
-Changes in v4: none.
+Thanks,
+Horia
 
-Changes in v3: add Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/clock/idt,versaclock5.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+André Draszik (3):
+  dt-bindings: crypto: fsl-sec4: add snvs clock to pwrkey
+  Input: snvs_pwrkey - enable snvs clock as needed
+  Input: snvs_pwrkey - only IRQ_HANDLED for our own events
 
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-index 6165b6ddb1a9..9656d4cf221c 100644
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-@@ -35,7 +35,7 @@ For all output ports, a corresponding, optional child node named OUT1,
- OUT2, etc. can represent a each output, and the node can be used to
- specify the following:
- 
--- itd,mode: can be one of the following:
-+- idt,mode: can be one of the following:
-                  - VC5_LVPECL
-                  - VC5_CMOS
-                  - VC5_HCSL33
-@@ -106,7 +106,7 @@ i2c-master-node {
- 		clock-names = "xin";
- 
- 		OUT1 {
--			itd,mode = <VC5_CMOS>;
-+			idt,mode = <VC5_CMOS>;
- 			idt,voltage-microvolts = <1800000>;
- 			idt,slew-percent = <80>;
- 		};
+ .../devicetree/bindings/crypto/fsl-sec4.txt   | 17 +++++++++
+ drivers/input/keyboard/snvs_pwrkey.c          | 38 ++++++++++++++++---
+ 2 files changed, 50 insertions(+), 5 deletions(-)
+
 -- 
-2.27.0
+2.17.1
 
