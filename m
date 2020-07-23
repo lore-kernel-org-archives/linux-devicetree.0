@@ -2,83 +2,84 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C50C433EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2B1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF653206D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595539088;
-	bh=zka2wG+qXYaeC3pqd/fPt0xZLsscVGYe/mWLlcbw6Y8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q2f4yWPBMTpffESePCwmQedgjdtzh8yB90FodoQsjqfoSUP715z4QTPoNLqvuu2QR
-	 PppbQJYA5S6wkb/6bmGVCUT/xI/8tYGnwHhkL4WTJlI3q7tMy00TQljW+v85qLB3oM
-	 vyUcbn2fAwMJja/NhK6Vn9OFOIMbubFI/IfNrZzg=
+	by mail.kernel.org (Postfix) with ESMTP id A12D022B49
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgGWVSH (ORCPT
+        id S1727034AbgGWVSk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:18:07 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45619 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgGWVSG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:18:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id e64so7763579iof.12;
-        Thu, 23 Jul 2020 14:18:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hx09CFzFEK3rFI8A30xOHAnNXgPfvKjfqFgA/SCg1s4=;
-        b=cDGBlyJ/oPvBAF8l8jpS/xTS17YlXIVKkyxn9brRELeDmHQU9s4daExQDwKpdMNAp9
-         hQVapPICgbvHru/ZC2F1OUUkcYFXJsS3AcJL7AO1eOf6Uqu+5S47iVl4e4q02was3BcA
-         1fMf5f7sF00n2ca10/LOH6z7H4JlwAQ/frfFDsvvuw2KdFE7AzHPKdYNoEwwT/85Zhn8
-         kWR4vbtmum/pObKnAI0AEFN5NvQ7/YURGWuTuk6opqq2Q6Tt1uy/Iua0h7lGRd6OLrO9
-         tceT1I2Wh8sEyLMucu+dl/Avm2FcLm6n1qvqrB7p1EKVcjGvRKp4X+jnmf1cSrvXaLH6
-         ENgA==
-X-Gm-Message-State: AOAM531dzTTXBH4WdkCCjTw5rtkN2Z2H5ocI5ErKE2tIaALmcr7h0agX
-        MQNtqL6hOYZHmtAvkPjwow==
-X-Google-Smtp-Source: ABdhPJzIrbGkisYa8iZy5IAqxlxr48Sy8HcbDiPVQc/+SP8E4CfSPaTNyFUPOeLZfDlyP9BAFCp0HQ==
-X-Received: by 2002:a5e:d90a:: with SMTP id n10mr7039546iop.50.1595539086180;
-        Thu, 23 Jul 2020 14:18:06 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d9sm2016925iod.55.2020.07.23.14.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 14:18:05 -0700 (PDT)
-Received: (nullmailer pid 875357 invoked by uid 1000);
-        Thu, 23 Jul 2020 21:18:04 -0000
-Date:   Thu, 23 Jul 2020 15:18:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Qii Wang <qii.wang@mediatek.com>
-Cc:     qiangming.xia@mediatek.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, wsa@the-dreams.de,
-        linux-arm-kernel@lists.infradead.org, leilk.liu@mediatek.com,
-        linux-i2c@vger.kernel.org, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH 3/4] dt-bindings: i2c: update bindings for MT8192 SoC
-Message-ID: <20200723211804.GA875327@bogus>
-References: <1595421106-10017-1-git-send-email-qii.wang@mediatek.com>
- <1595421106-10017-4-git-send-email-qii.wang@mediatek.com>
+        Thu, 23 Jul 2020 17:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgGWVSj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:18:39 -0400
+X-Greylist: delayed 492 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Jul 2020 14:18:39 PDT
+Received: from hera.iit.uni-miskolc.hu (hera.iit.uni-miskolc.hu [IPv6:2001:738:6001:500::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FFEC0619D3;
+        Thu, 23 Jul 2020 14:18:39 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id C3F27A10;
+        Thu, 23 Jul 2020 23:10:35 +0200 (CEST)
+X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
+Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
+        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Y1COzVsCAt1j; Thu, 23 Jul 2020 23:10:29 +0200 (CEST)
+Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:908:226:9eff:fe30:2af8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: szucst@iit.uni-miskolc.hu)
+        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id 9F1A7A11;
+        Thu, 23 Jul 2020 23:10:21 +0200 (CEST)
+From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        JC Kuo <jckuo@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Subject: [PATCH v2 4/4] arm64: tegra: Enable HS400 on Tegra194 SDMMC4
+Date:   Thu, 23 Jul 2020 23:09:32 +0200
+Message-Id: <20200723210932.8076-5-tszucs@protonmail.ch>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200723210932.8076-1-tszucs@protonmail.ch>
+References: <20200723210932.8076-1-tszucs@protonmail.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595421106-10017-4-git-send-email-qii.wang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Jul 2020 20:31:45 +0800, Qii Wang wrote:
-> Add a DT binding documentation for the MT8192 soc.
-> 
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-mt65xx.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Enable HS400 signaling on Tegra194 SDMMC4 controller.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 8351035bb6a7..e26f35b6279b 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -558,6 +558,7 @@
+ 			nvidia,default-tap = <0x8>;
+ 			nvidia,default-trim = <0x14>;
+ 			nvidia,dqs-trim = <40>;
++			mmc-hs400-1_8v;
+ 			supports-cqe;
+ 			status = "disabled";
+ 		};
+-- 
+2.20.1
+
