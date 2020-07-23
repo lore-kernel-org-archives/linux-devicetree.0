@@ -2,272 +2,185 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0474DC433EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7752C433E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67C9206E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7E220825
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgGWGZZ (ORCPT
+        id S1726815AbgGWGee (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:25:25 -0400
-Received: from out28-98.mail.aliyun.com ([115.124.28.98]:58460 "EHLO
-        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgGWGZY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 02:25:24 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436651|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.0284585-0.000932928-0.970609;FP=11267283304491539706|1|1|13|0|-1|-1|-1;HT=e02c03298;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.I6H7HEV_1595485508;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I6H7HEV_1595485508)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Thu, 23 Jul 2020 14:25:18 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org, mpm@selenic.com,
-        herbert@gondor.apana.org.au, robh+dt@kernel.org
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, hadar.gat@arm.com,
-        prasannatsmkumar@gmail.com, krzk@kernel.org, masahiroy@kernel.org,
-        rdunlap@infradead.org, xuzaibo@huawei.com,
-        daniel.thompson@linaro.org, tmaimon77@gmail.com,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 2/2] crypto: Ingenic: Add hardware RNG for Ingenic JZ4780 and X1000.
-Date:   Thu, 23 Jul 2020 14:24:46 +0800
-Message-Id: <20200723062446.84013-3-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
-References: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
+        Thu, 23 Jul 2020 02:34:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbgGWGec (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 02:34:32 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D93DC0619DC
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 23:34:32 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jyUoD-0008Pl-5F; Thu, 23 Jul 2020 08:34:25 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jyUoB-0001C2-NZ; Thu, 23 Jul 2020 08:34:23 +0200
+Date:   Thu, 23 Jul 2020 08:34:20 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v4 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200723063420.rn4q74vasg54k6v7@pengutronix.de>
+References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+ <a74b18b68f26bf902c30a017050cc4ea070da887.1593503228.git.rahul.tanwar@linux.intel.com>
+ <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
+ <409ee148-a6a6-327f-e4d7-455f98ef4c66@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d5jj35vqcv44tli3"
+Content-Disposition: inline
+In-Reply-To: <409ee148-a6a6-327f-e4d7-455f98ef4c66@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add JZ4780 SoC and X1000 SoC random number generator driver,
-based on PrasannaKumar Muralidharan's JZ4780 RNG driver.
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Suggested-by: Jeffrey Walton <noloader@gmail.com>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+--d5jj35vqcv44tli3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Notes:
-    v1->v2:
-    Use "help" instead "---help---" in Kconfig.
+Hello,
 
- drivers/char/hw_random/Kconfig       |  15 ++++
- drivers/char/hw_random/Makefile      |   1 +
- drivers/char/hw_random/ingenic-rng.c | 154 +++++++++++++++++++++++++++++++++++
- 3 files changed, 170 insertions(+)
- create mode 100644 drivers/char/hw_random/ingenic-rng.c
+On Thu, Jul 23, 2020 at 12:16:18PM +0800, Tanwar, Rahul wrote:
+> On 14/7/2020 3:10 am, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >
+> > On Tue, Jun 30, 2020 at 03:55:32PM +0800, Rahul Tanwar wrote:
+> >> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+> >> This PWM controller does not have any other consumer, it is a
+> >> dedicated PWM controller for fan attached to the system. Add
+> >> driver for this PWM fan controller.
+> >>
+> >> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> >> ---
+> >>  drivers/pwm/Kconfig         |  11 ++
+> >>  drivers/pwm/Makefile        |   1 +
+> >>  drivers/pwm/pwm-intel-lgm.c | 266 +++++++++++++++++++++++++++++++++++=
++++++++++
+> >>  3 files changed, 278 insertions(+)
+> >>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+>=20
+> [...]
+>=20
+> >> +
+> >> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> >> +			 const struct pwm_state *state)
+> >> +{
+> >> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> >> +	u32 duty_cycle, val;
+> >> +	unsigned int period;
+> >> +
+> >> +	if (!state->enabled) {
+> >> +		lgm_pwm_enable(chip, 0);
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	period =3D min_t(u64, state->period, pc->period);
+> >> +
+> >> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+> >> +	    period < pc->period)
+> >> +		return -EINVAL;
+> > This check looks wrong. If you refuse period < pc->period there isn't
+> > much configuration possible.
+>=20
+> I am kind of stuck here. I made this change of adding a check
+> period < pc->period based on your feedback on v2 patch.
+> In fact, you had specified this code in v2 review feedback
+> and i used the same exact code.
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 0ad17efc96df..2f5af6b9fbb7 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -257,6 +257,21 @@ config HW_RANDOM_IMX_RNGC
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_INGENIC_RNG
-+	tristate "Ingenic Random Number Generator support"
-+	depends on HW_RANDOM
-+	depends on MACH_JZ4780 || MACH_X1000
-+	default HW_RANDOM
-+	help
-+	  This driver provides kernel-side support for the Random Number Generator
-+	  hardware found in ingenic JZ4780 and X1000 SoC. MIPS Creator CI20 uses
-+	  JZ4780 SoC, YSH & ATIL CU1000-Neo uses X1000 SoC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ingenic-rng.
-+
-+	  If unsure, say Y.
-+
- config HW_RANDOM_NOMADIK
- 	tristate "ST-Ericsson Nomadik Random Number Generator support"
- 	depends on ARCH_NOMADIK
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 2c6724735345..acb1a1978d23 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_HW_RANDOM_VIRTIO) += virtio-rng.o
- obj-$(CONFIG_HW_RANDOM_TX4939) += tx4939-rng.o
- obj-$(CONFIG_HW_RANDOM_MXC_RNGA) += mxc-rnga.o
- obj-$(CONFIG_HW_RANDOM_IMX_RNGC) += imx-rngc.o
-+obj-$(CONFIG_HW_RANDOM_INGENIC_RNG) += ingenic-rng.o
- obj-$(CONFIG_HW_RANDOM_OCTEON) += octeon-rng.o
- obj-$(CONFIG_HW_RANDOM_NOMADIK) += nomadik-rng.o
- obj-$(CONFIG_HW_RANDOM_PSERIES) += pseries-rng.o
-diff --git a/drivers/char/hw_random/ingenic-rng.c b/drivers/char/hw_random/ingenic-rng.c
-new file mode 100644
-index 000000000000..d704cef64b64
---- /dev/null
-+++ b/drivers/char/hw_random/ingenic-rng.c
-@@ -0,0 +1,154 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ingenic Random Number Generator driver
-+ * Copyright (c) 2017 PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+ * Copyright (c) 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/hw_random.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+/* RNG register offsets */
-+#define RNG_REG_ERNG_OFFSET		0x0
-+#define RNG_REG_RNG_OFFSET		0x4
-+
-+/* bits within the ERND register */
-+#define ERNG_READY				BIT(31)
-+#define ERNG_ENABLE				BIT(0)
-+
-+enum ingenic_rng_version {
-+	ID_JZ4780,
-+	ID_X1000,
-+};
-+
-+/* Device associated memory */
-+struct ingenic_rng {
-+	enum ingenic_rng_version version;
-+
-+	void __iomem *base;
-+	struct hwrng rng;
-+};
-+
-+static int ingenic_rng_init(struct hwrng *rng)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+
-+	writel(ERNG_ENABLE, priv->base + RNG_REG_ERNG_OFFSET);
-+
-+	return 0;
-+}
-+
-+static void ingenic_rng_cleanup(struct hwrng *rng)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+
-+	writel(0, priv->base + RNG_REG_ERNG_OFFSET);
-+}
-+
-+static int ingenic_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct ingenic_rng *priv = container_of(rng, struct ingenic_rng, rng);
-+	u32 *data = buf;
-+	u32 status;
-+	int ret;
-+
-+	if (priv->version >= ID_X1000) {
-+		ret = readl_poll_timeout(priv->base + RNG_REG_ERNG_OFFSET, status,
-+					 status & ERNG_READY, 10, 1000);
-+		if (ret == -ETIMEDOUT) {
-+			pr_err("%s: Wait for RNG data ready timeout\n", __func__);
-+			return ret;
-+		}
-+	} else {
-+		/*
-+		 * A delay is required so that the current RNG data is not bit shifted
-+		 * version of previous RNG data which could happen if random data is
-+		 * read continuously from this device.
-+		 */
-+		udelay(20);
-+	}
-+
-+	*data = readl(priv->base + RNG_REG_RNG_OFFSET);
-+
-+	return 4;
-+}
-+
-+static int ingenic_rng_probe(struct platform_device *pdev)
-+{
-+	struct ingenic_rng *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base)) {
-+		pr_err("%s: Failed to map RNG registers\n", __func__);
-+		ret = PTR_ERR(priv->base);
-+		goto err_free_rng;
-+	}
-+
-+	priv->version = (enum ingenic_rng_version)of_device_get_match_data(&pdev->dev);
-+
-+	priv->rng.name = pdev->name;
-+	priv->rng.init = ingenic_rng_init;
-+	priv->rng.cleanup = ingenic_rng_cleanup;
-+	priv->rng.read = ingenic_rng_read;
-+
-+	ret = hwrng_register(&priv->rng);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register hwrng\n");
-+		goto err_free_rng;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	dev_info(&pdev->dev, "Ingenic RNG driver registered\n");
-+	return 0;
-+
-+err_free_rng:
-+	kfree(priv);
-+	return ret;
-+}
-+
-+static int ingenic_rng_remove(struct platform_device *pdev)
-+{
-+	struct ingenic_rng *priv = platform_get_drvdata(pdev);
-+
-+	hwrng_unregister(&priv->rng);
-+
-+	writel(0, priv->base + RNG_REG_ERNG_OFFSET);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ingenic_rng_of_match[] = {
-+	{ .compatible = "ingenic,jz4780-rng", .data = (void *) ID_JZ4780 },
-+	{ .compatible = "ingenic,x1000-rng", .data = (void *) ID_X1000 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_rng_of_match);
-+
-+static struct platform_driver ingenic_rng_driver = {
-+	.probe		= ingenic_rng_probe,
-+	.remove		= ingenic_rng_remove,
-+	.driver		= {
-+		.name	= "ingenic-rng",
-+		.of_match_table = ingenic_rng_of_match,
-+	},
-+};
-+
-+module_platform_driver(ingenic_rng_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>");
-+MODULE_AUTHOR("周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>");
-+MODULE_DESCRIPTION("Ingenic Random Number Generator driver");
--- 
-2.11.0
+My feedback was nonsense, sorry. Now I don't understand anymore what I
+thought. The check you proposed in v2 is perfectly fine.
 
+> How should we handle it when the hardware supports fixed period.
+> We don't want user to change period and allow just changing
+> duty_cycle. With that intention, i had first added a strict check
+> which refused configuration if period !=3D pc->period. Period is
+> intended to be a read only value.
+>=20
+> How do you suggest we handle the fixed period hardware support?
+> Would you have any reference example of other drivers which also
+> supports fixed period? Thanks.
+>=20
+> [...]
+> >> +static int lgm_pwm_remove(struct platform_device *pdev)
+> >> +{
+> >> +	struct lgm_pwm_chip *pc =3D platform_get_drvdata(pdev);
+> >> +	int ret;
+> >> +
+> >> +	ret =3D pwmchip_remove(&pc->chip);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	clk_disable_unprepare(pc->clk);
+> >> +	reset_control_assert(pc->rst);
+> > Please swap the two previous lines to match the error patch of .probe.
+>=20
+> Again, i had made this change based on your below review feedback
+> for v1. IMO, reverse of probe makes more sense.
+>=20
+> "In .probe() you first release reset and then enable the clock. It's good
+> style to do it the other way round in .remove()."
+
+Again my comment was nonsense, I'm sorry. I think I was irritated by the
+fact that reset handling happens in between the clk stuff in probe. You
+do there:
+
+	devm_clk_get
+	devm_reset_control_get_exclusive
+	reset_control_deassert
+	clk_prepare_enable
+
+and I noticed that as "in probe clk handling is done first".
+
+Looking at the other feedback I think my other comments are not BS.
+
+Best regards and sorry again,
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--d5jj35vqcv44tli3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ZL2oACgkQwfwUeK3K
+7AkTaAf+MtroLMbh+kPdFcEyRNOvCTYIKkWxU6avMtvNO0R13KywJo5Wtuepkjhg
+IHwwaX24X2AquNZ24HtXnMfunLTGmnIpkDrtaKEkrWExyrI8KZgTZdwhbW9SHJzR
+uhkdXl6E5p5rkz8dThregiCt7HfGyNQz8NHnqWBdB9Wz6/gSIsVX5+5dx0nkd8zZ
+M9EGO3764K/pSBMqJuTRa4SuERpDp3YRDDjr3cYOQlVAyptVxVxJlAMfneyxB7Nk
+9mNZLjs6eOn9VQAv3gLRTBM79kqP00nKY8N3csaENlFOBUQR9sylXdSEsMA9Q3eF
+tSBdQQpNp7vUAEVVnVgq4/3k7oPhTQ==
+=uN7r
+-----END PGP SIGNATURE-----
+
+--d5jj35vqcv44tli3--
