@@ -6,78 +6,75 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7735C433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994B3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1D520771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731BC22B40
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595525782;
-	bh=m0YD9vZWoaOyt7S+phVIzJZ92p81rgRrNd9k4MtenYo=;
+	s=default; t=1595526454;
+	bh=/3IvY/DYOTBrXi7NW45g4f2LvCiiTpdv7yKISfiqnp4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U5wrdQCI7y1R8JYIjBzxLV6JSygijcIW7r+xmwwo9kaaF917MY+PjfQcpw8LUziwb
-	 tEDUzNh5CBuzdF2ymyzvGbz3zAnzY/+xvGhfNlO6IpcvbcA3vb96c2ao7+IpUHKcdw
-	 UMHdlkabAGqW3nNEvRhmbK5GoU5WPlzLJfBQVgd0=
+	b=NXb6dUWdOmoGDp1v0HUiXu4chjb5LlE0zMlXqOLGbciqliYv16MDPtq5BOzVNuxhd
+	 +Dnuydkh4W6WN8eeikEJ/9gvW6lCylhRL2rHNPTuA9Qf7TgO1CmeRvk4/hLk3j1gCk
+	 Kwb+St9UnlXH7rCSMg/1P6l9+DIXSqDgp9NdwvrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgGWRgT (ORCPT
+        id S1729811AbgGWRre (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:36:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37334 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730117AbgGWRgS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:36:18 -0400
-Received: by mail-io1-f65.google.com with SMTP id v6so7131911iob.4;
-        Thu, 23 Jul 2020 10:36:18 -0700 (PDT)
+        Thu, 23 Jul 2020 13:47:34 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42849 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgGWRrd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:47:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id c16so7152286ioi.9;
+        Thu, 23 Jul 2020 10:47:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=yVB+vIUtjaaHPulso6pqHodFPKr8jx+epmHWtmKS4+E=;
-        b=YqnGeGuGlg2m2Ncw8hHRXsQCXJm9tB9sjsqNvMhPT4MhxAdQPgH7Hvp/KQzjEQOGrq
-         XjWlJZCt89ihqWPOywCu4FWkKEGyI3etV589F7OSDn9WVgWTKSHb/BC5Xx/E01MWQAwe
-         unmaxTzmdt4Fo++cJKUwmF5a3I0cMRfVaFNkpOHgiABZz+U1GZOg0TfW/Mo0GhsGEUU/
-         sz5p40qYVSux80fRVg15547fBA3UDGj4YPrvTNoJw1nF0JvKqySaFw3wQO89cy8PK+Vn
-         nRVeUkHfmIn6tMo9s9+M52ZOMnITB4ok7xd+M89ZCJmyP52HVvKxqJq2KGo6tyVWkmjW
-         YsOw==
-X-Gm-Message-State: AOAM531Op6CZx4PcodI99WvgC0tO/NiVKztOCynd/W6OhG4EED9KbPgj
-        cTKcnvDUHfdqRMsx5o3/cg==
-X-Google-Smtp-Source: ABdhPJyjHCEGi+BzXFpL9NnYenkOEeH2KtSTzv9WSYzqvQH5l+b0aE+BfqJOL1KR7fPeaWNNUfBqXQ==
-X-Received: by 2002:a05:6602:154d:: with SMTP id h13mr6114131iow.210.1595525777983;
-        Thu, 23 Jul 2020 10:36:17 -0700 (PDT)
+        bh=igJO29xYdhEX1YZcPaTW1/UQWYbjGuigif1HBx3az5o=;
+        b=Dr7ztTS1Bw8nSdfIfDio0zEi0F9rCQsEtUYASh5MJhpUshYziGKXT002UQx26SYBgK
+         NtUEN4w/mpiRkKVJkMHcwt+odCL29GMYA4Nx1b/wLH8nQWOFRmmuNARY8UGn8Qkbd7Wu
+         +T6GiYS3GEWAsj5fJk3RVTA+prZDzVUiOJYCAq7rKSXwZd6THqIiIiAZ2yNd6pKADQC9
+         LOR6P6CmBiZpN/7l6whs7IPAH+uZSuqD/3YmR5873riE0OXQdBtyDDm/cxPQBb1de4hs
+         TFQpXF7Dpv8rgubriTTKtUiXC1wKmwXB0ZvbmGEFs4Z4umxyrC+q4BUGL0pHkBt81IPY
+         PLnw==
+X-Gm-Message-State: AOAM530SDRz56IGxPbAhkpdUFiydRhvSVv5ZbT+PwJVA+h+2LlEZNHHd
+        wzdXjREb4fYWRAP1kstxGA==
+X-Google-Smtp-Source: ABdhPJy27/VlKtHPpbL16r6sY+r3eYd1PpECzmmkVDUMiMNSdrTQRv5b79vmNs9h4w0jeamL027ckg==
+X-Received: by 2002:a02:6595:: with SMTP id u143mr4012012jab.28.1595526452873;
+        Thu, 23 Jul 2020 10:47:32 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w74sm1789076ilk.24.2020.07.23.10.36.16
+        by smtp.gmail.com with ESMTPSA id y24sm1854076ilk.52.2020.07.23.10.47.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 10:36:17 -0700 (PDT)
-Received: (nullmailer pid 581186 invoked by uid 1000);
-        Thu, 23 Jul 2020 17:36:16 -0000
-Date:   Thu, 23 Jul 2020 11:36:16 -0600
+        Thu, 23 Jul 2020 10:47:32 -0700 (PDT)
+Received: (nullmailer pid 596082 invoked by uid 1000);
+        Thu, 23 Jul 2020 17:47:31 -0000
+Date:   Thu, 23 Jul 2020 11:47:31 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: arm: rockchip: add Zkmagic A95X Z2
- description
-Message-ID: <20200723173616.GA581157@bogus>
-References: <20200718105343.5152-1-jbx6244@gmail.com>
- <20200718105343.5152-3-jbx6244@gmail.com>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     linux-iio@vger.kernel.org, jic23@kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: chemical: add O2 EZO module
+ documentation
+Message-ID: <20200723174731.GA596034@bogus>
+References: <20200720070330.259954-1-matt.ranostay@konsulko.com>
+ <20200720070330.259954-3-matt.ranostay@konsulko.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200718105343.5152-3-jbx6244@gmail.com>
+In-Reply-To: <20200720070330.259954-3-matt.ranostay@konsulko.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 18 Jul 2020 12:53:42 +0200, Johan Jonker wrote:
-> Add Zkmagic A95X Z2 description for a board with rk3318 processor.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+On Mon, 20 Jul 2020 00:03:29 -0700, Matt Ranostay wrote:
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
 > ---
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+>  .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
