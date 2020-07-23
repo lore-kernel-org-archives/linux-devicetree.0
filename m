@@ -2,148 +2,92 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB348C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 04:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DDAC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD65020737
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 04:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075B820771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5ZB3El9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgGWEQZ (ORCPT
+        id S1725857AbgGWFgN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 00:16:25 -0400
-Received: from mga06.intel.com ([134.134.136.31]:44677 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgGWEQY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 00:16:24 -0400
-IronPort-SDR: 9GOXqDrua+V07IoOz1oMITzw90rxZP5GDtO6pjusCC1cm116jh36SsT4jRY0Np7k2dlZAz96Ez
- 9AOdGy3+wjhg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="212005799"
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="212005799"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 21:16:22 -0700
-IronPort-SDR: rpHIBZB6bPuv3oNaM50bZUknBDy+sYwfmQRnelBJL17bUfJOpOoX8J3DFyk6Szu4intgGr9/2i
- DVGSuZxFmu8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="288509462"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 22 Jul 2020 21:16:22 -0700
-Received: from [10.226.38.18] (unknown [10.226.38.18])
-        by linux.intel.com (Postfix) with ESMTP id AEE69580299;
-        Wed, 22 Jul 2020 21:16:19 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] Add PWM fan controller driver for LGM SoC
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
- <a74b18b68f26bf902c30a017050cc4ea070da887.1593503228.git.rahul.tanwar@linux.intel.com>
- <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <409ee148-a6a6-327f-e4d7-455f98ef4c66@linux.intel.com>
-Date:   Thu, 23 Jul 2020 12:16:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 01:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbgGWFgM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 01:36:12 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66DBC0619DC;
+        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e8so2479385pgc.5;
+        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tFcZGTVxEOvpoeXkUsiN4vBy9B3kLzwfdLU6/Bk7M20=;
+        b=o5ZB3El9NmbYAUMnVLSF4MIKU/vBZ/hxFH6zt/eg3JEdcrIYxBDT5DdYf4FaDNM7tc
+         HYHjiAVqeSntdb6shGkwKcnEkageOOeoE6zxzESicOczUGrZEhoT9DaQHtjx5/yB4OYY
+         1OfErF+AkU8/UiZFKOriS/yecoTRi9lBcCUC/2ZIbRJXr9gJb3RmlQPOYZ41m93EV/vV
+         5IpLOGY1BcxzSVSF8CQu+FUYZ9Top4dkOSr5fM3ywCobxPGrAjWg/PmOn0Kf5mKXlZJM
+         +KDrpfzLSI7/vaIf0f5ZMCVlZlPjz80SNScDW+gU0Jy0JQX9zaLqvfvb7wJLkqaSg4DE
+         Jotw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tFcZGTVxEOvpoeXkUsiN4vBy9B3kLzwfdLU6/Bk7M20=;
+        b=YhSYjfClc9Uw+P3XUqBWsV1ZptSpwHGBCoHaJJlbW3irveS5WqA47eCATJnrjpmc6M
+         5iqmcqu+CS5lwdberf55yQ0LAnqpywEVSHS/WTxWoIvt4yrAsGkodZpHIhamUepm+Qc8
+         A30+xe5zHuvB4YUBYK9zwN8F8vceHnSYYorwWpoRP6VJChXVwgpc/VEErt1kUfN6Yv9I
+         oM8Vi42YSO+Z2Oz+c8GU8taYNKhCeQLlhQlCIhWf4uRwWt1s7jCBQwB4nsiEIdN8RTp9
+         HEezyc0IlDi7vbiMni/cY7c+TkCMNbWc990ARwwjC08RPM60eD3+jhVjp5k1e+v4M4aQ
+         sDCw==
+X-Gm-Message-State: AOAM533Gt/zHFzml6PkZVut7R/vYJZVMGigUooAo7VojSkaUk5or1cs8
+        icTwGqpoK9zXa5j42l5mOpI=
+X-Google-Smtp-Source: ABdhPJwFIlyfJWb07kcj58BziwubzU5I4KohZd4uiMgJMQI1YstOLbnS44kIKgEb1P7Wi4W5qBcaaw==
+X-Received: by 2002:a65:6554:: with SMTP id a20mr2447316pgw.301.1595482572334;
+        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id o128sm1414392pfg.127.2020.07.22.22.36.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 Jul 2020 22:36:11 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 22:35:39 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ASoC: fsl-asoc-card: Support configuring dai fmt
+ from DT
+Message-ID: <20200723053538.GB5476@Asurada-Nvidia>
+References: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jul 21, 2020 at 11:41:49AM +0800, Shengjiu Wang wrote:
+> Support same propeties as simple card for configuring fmt
+> from DT.
+> In order to make this change compatible with old DT, these
+> properties are optional.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Hi Uwe,
-
-Thanks for the feedback.
-
-On 14/7/2020 3:10 am, Uwe Kleine-König wrote:
-> Hello,
->
-> On Tue, Jun 30, 2020 at 03:55:32PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
->> This PWM controller does not have any other consumer, it is a
->> dedicated PWM controller for fan attached to the system. Add
->> driver for this PWM fan controller.
->>
->> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
->> ---
->>  drivers/pwm/Kconfig         |  11 ++
->>  drivers/pwm/Makefile        |   1 +
->>  drivers/pwm/pwm-intel-lgm.c | 266 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 278 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
-
-[...]
-
->> +
->> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->> +			 const struct pwm_state *state)
->> +{
->> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
->> +	u32 duty_cycle, val;
->> +	unsigned int period;
->> +
->> +	if (!state->enabled) {
->> +		lgm_pwm_enable(chip, 0);
->> +		return 0;
->> +	}
->> +
->> +	period = min_t(u64, state->period, pc->period);
->> +
->> +	if (state->polarity != PWM_POLARITY_NORMAL ||
->> +	    period < pc->period)
->> +		return -EINVAL;
-> This check looks wrong. If you refuse period < pc->period there isn't
-> much configuration possible.
-
-I am kind of stuck here. I made this change of adding a check
-period < pc->period based on your feedback on v2 patch.
-In fact, you had specified this code in v2 review feedback
-and i used the same exact code.
-
-How should we handle it when the hardware supports fixed period.
-We don't want user to change period and allow just changing
-duty_cycle. With that intention, i had first added a strict check
-which refused configuration if period != pc->period. Period is
-intended to be a read only value.
-
-How do you suggest we handle the fixed period hardware support?
-Would you have any reference example of other drivers which also
-supports fixed period? Thanks.
-
-[...]
->> +static int lgm_pwm_remove(struct platform_device *pdev)
->> +{
->> +	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
->> +	int ret;
->> +
->> +	ret = pwmchip_remove(&pc->chip);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	clk_disable_unprepare(pc->clk);
->> +	reset_control_assert(pc->rst);
-> Please swap the two previous lines to match the error patch of .probe.
-
-Again, i had made this change based on your below review feedback
-for v1. IMO, reverse of probe makes more sense.
-
-"In .probe() you first release reset and then enable the clock. It's good
-style to do it the other way round in .remove()."
-
-Regards,
-Rahul
+For both changes:
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
