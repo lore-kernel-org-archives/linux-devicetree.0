@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B137C433ED
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38538C433FB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1CB2086A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C232086A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEnGsBWq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LnqX/B+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgGWNJs (ORCPT
+        id S1728869AbgGWNJ7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
+        Thu, 23 Jul 2020 09:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728966AbgGWNJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 09:09:47 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A91C0619E5
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:47 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a6so6477045wmm.0
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:47 -0700 (PDT)
+        with ESMTP id S1729018AbgGWNJu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 09:09:50 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09439C0619E2
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:50 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x5so4352315wmi.2
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R+lee8B7JFfBYPKyFP3yz/BoNx5eAb9WaQRkbumGc3E=;
-        b=vEnGsBWqxZP6Q+KXwBLvSyX1MOrqEdZzzqFXcnrqx1GiSKetgbLJOiMySAywIL80yq
-         ZpW5g3USJh6jrO++XvlweFAMbDjZnX+Lv5ibi4oNbnAEY160dsY8mvIbjDmrwhhn2cg+
-         YwkpCWfCtcW/u/hxnf95mzfHcp7Wq0Sn7CE8BABd4jMGroI16PoBrbXXQch9K/6WV9sE
-         Ng754Q4m097X0MDwn1Oh1giyud6/+GDKLTwDPMXaZ9hAxE94yHcxa7WNxn+MxAMYcD98
-         mpzJytXYhOZEul8gtsTierUiFbxBjspzIbbKM5J+UuujnJ2rAYZljscT+099Z+2TXElu
-         lddA==
+        bh=7y9euSqb4UGhv5UE5N0M42WZpX+QG1MkkSdfq84u7II=;
+        b=LnqX/B+IKmVX2RArreUfFVmrhFZbjMs43s5s/Re0yMQin/P7W7DMXO5aQqvpdNLc25
+         D+eouaQzVbL38f7M7n1PTxjkg7eerQo5VDUPEk4MfCaTXKaudatcACmgt7CZuGJnyj2a
+         zTmT38T4D9GCe34bm+EiW+LHAHd/jzfCH42D1aowE1FzS9Sj4CaNeV08jgh5fkDM7rhh
+         VgHrikYgqxAYY4v/8dG/lR+LVMKd6keNykp3pYdE/hEb+bucctOOIxbG/j/o2SGMu4S0
+         M2nZB69lADpVWpyXj1sCVMGOCQ2sKU9SPVMBi2ZZ4YtfpX34MsHF77GFh2LJ5NxtPb6w
+         T33A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R+lee8B7JFfBYPKyFP3yz/BoNx5eAb9WaQRkbumGc3E=;
-        b=YOOBumvjQoqi2TUfUnd8JXd9zxTs2AvNaqNNLIAFpTi0N+R7sIQDJLjSWmxKYrkjg1
-         KZCEDo2O5SLPURnQzzY9Q8EY+oGPF6V6UR2Qb8sfXec7G1M3TPpdDrCEjGIOIt4w6hMh
-         /6EkI8MdMqjKP+dhrSvc4djf55iSI/qzqZ4Tmv9/7HhQ2TPNevEOyJoq3E/P2fcOB20v
-         IeGDNufRua9ozPd+b9J4XuZ7jeNc/Y4RxainqYU23Hln4ZHDJbp4eKSxsyBO0GeTO981
-         SgPRmcEFtJxCy8crWOzmaf7Iy+CTXnwQonOMLG6JBMHnSsO/PmQLd9LD95moy6ehZUDr
-         JZ6A==
-X-Gm-Message-State: AOAM531efdkqXs8VaX/qps54buFzbWhkKR5PaSdulip3eZYd7N0CZwLA
-        37oDsaTnmpmWweDvUoOxu2WOGw==
-X-Google-Smtp-Source: ABdhPJwgrZG+M6VvSuuefuXl0h1Zce5N82Kr5wnaXUw8uuGBWCxPV5wjRudOmF7cOpH6h97vM6pjZg==
-X-Received: by 2002:a1c:1f85:: with SMTP id f127mr1894728wmf.154.1595509786042;
-        Thu, 23 Jul 2020 06:09:46 -0700 (PDT)
+        bh=7y9euSqb4UGhv5UE5N0M42WZpX+QG1MkkSdfq84u7II=;
+        b=YsEtcOGtU27VSBUayw4+wy3cm/9OMAAzGPe9h7psJzjSMrU2C1uaJi7qRW7eypRWtc
+         hI5BFcVE8qj33ovkZtaYY2opzNrnhFPfvw4+sESWqaCxvQA+NKvAPrJcUj97cQ03SWVX
+         tURN7WlnHkp1TlKb0jZVOJpAlU55pw7GNAzQArqKomfvY6sUhqvSOp1zC3eQfvj57Yxs
+         cX3pr6lEYYwDhgD1kVHa6tiZaQ0HXv6xc1WErLslfzxLknDgfFQu4I35cFtCQ6gvbbjI
+         5X5KtzD+WRhuUjz6uo14Q2VS3lq6mMjFN1b7J54lVAz8nAqM2kzUMSFRF4BB4k2ggm3L
+         ELaw==
+X-Gm-Message-State: AOAM532rLjCy/0pmvsvcUz7H+nEqKqbHcz3EayaU46H+q9/5ZCroUdkj
+        HX3WnHsiCmYjonoU2bn62UUXaw==
+X-Google-Smtp-Source: ABdhPJws1JRS1xbOTd3gpqfPFZSxS071Z+dp2hlmrwJ8beTF4BZPvFsrO0Z0JrnTCmdqM6cCEKt0UQ==
+X-Received: by 2002:a1c:7d81:: with SMTP id y123mr1735724wmc.87.1595509788745;
+        Thu, 23 Jul 2020 06:09:48 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.44
+        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.47
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 06:09:45 -0700 (PDT)
+        Thu, 23 Jul 2020 06:09:48 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
         sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
         georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] interconnect: qcom: sdm845: Replace xlate with xlate_extended
-Date:   Thu, 23 Jul 2020 16:09:39 +0300
-Message-Id: <20200723130942.28491-4-georgi.djakov@linaro.org>
+Subject: [PATCH 5/6] interconnect: qcom: sc7180: Replace xlate with xlate_extended
+Date:   Thu, 23 Jul 2020 16:09:41 +0300
+Message-Id: <20200723130942.28491-6-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200723130942.28491-1-georgi.djakov@linaro.org>
 References: <20200723130942.28491-1-georgi.djakov@linaro.org>
@@ -76,19 +76,22 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Sibi Sankar <sibis@codeaurora.org>
+
 Use the qcom_icc_xlate_extended() in order to parse tags, that are
 specified as an additional arguments to the path endpoints in DT.
 
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/qcom/sdm845.c | 2 +-
+ drivers/interconnect/qcom/sc7180.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index f6c7b969520d..3b81dbb71b0b 100644
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -469,7 +469,7 @@ static int qnoc_probe(struct platform_device *pdev)
+diff --git a/drivers/interconnect/qcom/sc7180.c b/drivers/interconnect/qcom/sc7180.c
+index dcf493d07928..a6f119f363b1 100644
+--- a/drivers/interconnect/qcom/sc7180.c
++++ b/drivers/interconnect/qcom/sc7180.c
+@@ -535,7 +535,7 @@ static int qnoc_probe(struct platform_device *pdev)
  	provider->set = qcom_icc_set;
  	provider->pre_aggregate = qcom_icc_pre_aggregate;
  	provider->aggregate = qcom_icc_aggregate;
