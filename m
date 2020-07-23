@@ -6,79 +6,80 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F031C433F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB93CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34E47207BB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D85D20714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595525446;
-	bh=Dj82vkgJPrZSN3x4kAOe5r5L+Vhrm/NkYrZ/OjwBzos=;
+	s=default; t=1595525553;
+	bh=/SsUMjF5DYDiERnMvKAQfDrpzKcuVZUN3jKHmDT1jjE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AIZs9uAxIEVpefnEE0heYUdlUV5ux9Cqptt8dFynH8Q8N2cm6D0MBzsCjNQ5ya9Y3
-	 HtWE5n6XaXXdeNUZmyr/jVVH9Mtz7762VFy9CpXyxsG/HXfhNJGSHFd+tyX4/0VeTw
-	 ztBYDxZTjbgNTdAu514wFniGmtzuqtt4986xhTLk=
+	b=0I/IXnlQANlqvk4+btHkQOLO0RvJb3KDJaWud4sONJrw2tPTwz4FW9mIdRYcwLA6l
+	 zZboMvZ9bIS3uKdRLHkFEg5cpqgcCnAqd11qUIzX0kVR4kbUFLeVYlfbs2/3jCwg/V
+	 y2eRyrnrgO22Ug2HsdRhdVLqgEVh7mf8LCfX42bE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgGWRap (ORCPT
+        id S1729961AbgGWRcd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:30:45 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33031 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgGWRap (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:30:45 -0400
-Received: by mail-il1-f196.google.com with SMTP id a11so5030248ilk.0;
-        Thu, 23 Jul 2020 10:30:44 -0700 (PDT)
+        Thu, 23 Jul 2020 13:32:33 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39194 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgGWRcc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:32:32 -0400
+Received: by mail-il1-f193.google.com with SMTP id k6so5017187ili.6;
+        Thu, 23 Jul 2020 10:32:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=3Ow5vY26aW+rLwamS/6/cMT0oAqoc9a80Oft+f/ONOw=;
-        b=VCK+QO6lqIEdA3bz0T2ZDT9Gj1Dq79GYmeWaJfbPRMJVcC+9pQnrzivjReHbVY6vwa
-         u+FYdiPZSbV49X8kw9oL3MJIsiA9OGICt2mKj6UdcQUiz6UU7QmzgiMVVrMnf6Dx/wPN
-         DbqJZNix++0rz8lH+c1sCMscp9X8addJAtSsBmqkkhJBo6kpDcZiHYWGhM/U4rd9HhE8
-         TkTT/xlZ2O13VgXtPLC1rAHg4ApaRNB+KtkNppV1sOTC+OS1pAVKlYoMwWwvvWVy7y+E
-         Fg3wuE/NYhALUPuGgAun77ZbuL43L/TvhHwwH41ZvdunZNbFBNDZYUQOiuCyWKcLYP+F
-         u3NA==
-X-Gm-Message-State: AOAM533qCg0TNFXtu8RTV3MR0P4417Y2rHf/q7ZB23RSbPzWzTBOQBuU
-        KEfh000qSaTapI4t5hNFjw==
-X-Google-Smtp-Source: ABdhPJxBOQrG/3mEEEQzyqanTv7H+CFMIOya1grP238Ldzx6PJ0bIs5hUr8gokRkmSWtY5N/Fyyr/A==
-X-Received: by 2002:a05:6e02:606:: with SMTP id t6mr5870185ils.181.1595525444202;
-        Thu, 23 Jul 2020 10:30:44 -0700 (PDT)
+        bh=6flyhC4ycfiZJcGIIv1sGGK8Z2R9l9tVntRkY9zO51c=;
+        b=Hbg1CP0gCK6Hw9VygsGJNfowrSnzrtM/8coYthchAYvtyTneCyssKuTpZIpgAGnQqk
+         ZOmp5easlMVF8ciLHMJBrWjLn7qdf8XEI0bgwfnRSq5IU9vCfYlzKPWJMM/F12xzUMY+
+         T8uvjGNTmLst/03tW2lmBDHMSFHvN94HiBV8tiNDiI7lmgPXT6LeQITZNR0AKy2JH7G/
+         jxezFTgK2c6UQGEp0ramZabSWMo8Z2hqqk1n8m2uWZmrjoT1gYuAQrVSPJiNroEsGEmt
+         TkEgYLElzZ/ZKbDsX/xuPDOEpy6w5iffo8CtXdbW4D391o7qdpTjRzmkYmGfFSLWS7Su
+         X7rg==
+X-Gm-Message-State: AOAM5307qASqxkmH36tdJbUKs2gARf8AJ98yzmOCvXg2kCZhMZWndL3O
+        WYNWrIwZeJN+gNfFnFxCqGMCaCkatg==
+X-Google-Smtp-Source: ABdhPJynOYkAzsitaDa24xfZd7L2XOvkozCFT9pk4AwwE6EFaSNOryw3lOL18JE32MV1qyGXXkHFSg==
+X-Received: by 2002:a92:8451:: with SMTP id l78mr6054828ild.234.1595525551966;
+        Thu, 23 Jul 2020 10:32:31 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e84sm187809ill.60.2020.07.23.10.30.43
+        by smtp.gmail.com with ESMTPSA id w15sm1854130ila.65.2020.07.23.10.32.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 10:30:43 -0700 (PDT)
-Received: (nullmailer pid 573433 invoked by uid 1000);
-        Thu, 23 Jul 2020 17:30:42 -0000
-Date:   Thu, 23 Jul 2020 11:30:42 -0600
+        Thu, 23 Jul 2020 10:32:31 -0700 (PDT)
+Received: (nullmailer pid 575965 invoked by uid 1000);
+        Thu, 23 Jul 2020 17:32:29 -0000
+Date:   Thu, 23 Jul 2020 11:32:29 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kathiravan T <kathirav@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        sricharan@codeaurora.org, sivaprak@codeaurora.org,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        broonie@kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com
-Subject: Re: [PATCH V3 1/4] dt-bindings: soc: qcom: Add IPQ6018 compatible
-Message-ID: <20200723173042.GA573384@bogus>
-References: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
- <1595225543-12127-2-git-send-email-kathirav@codeaurora.org>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sasi Kumar <sasi.kumar@broadcom.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v3 1/7] dt-bindings: usb: bdc: Update compatible strings
+Message-ID: <20200723173229.GA575916@bogus>
+References: <20200722170746.5222-1-alcooperx@gmail.com>
+ <20200722170746.5222-2-alcooperx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1595225543-12127-2-git-send-email-kathirav@codeaurora.org>
+In-Reply-To: <20200722170746.5222-2-alcooperx@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jul 2020 11:42:20 +0530, Kathiravan T wrote:
-> This patch adds the dt-binding for the rpm on the Qualcomm IPQ6018
-> platform.
+On Wed, 22 Jul 2020 13:07:40 -0400, Al Cooper wrote:
+> Remove "brcm,bdc-v0.16" because it was never used on any system.
+> Add "brcm,bdc-udc-v2" which exists for any STB system with BDC.
 > 
-> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/usb/brcm,bdc.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
