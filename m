@@ -2,163 +2,196 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300D6C433F2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86F3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1884620825
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37F1206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595539302;
+	bh=24rabyt7xSLpI2GdILit2UsZizLr+iYDT/3wULNyh4Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tLRf46ZOI92++RGYqJnKYZUuNgB5/dhNrxn52R15GIDXoC8zdg04cAVnTgN1dNFaj
+	 rcjOk7tYntHJ0ng59Mz2i6EXnURqZXoaWsiD36xACIDTjldAS7V+qBL2JBQWvn2XGL
+	 YCX8+1cuglvp8lD+QqfOSRkR1p3bclANCd4pCnhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgGWVSk (ORCPT
+        id S1726310AbgGWVVl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgGWVSj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:18:39 -0400
-Received: from hera.iit.uni-miskolc.hu (hera.iit.uni-miskolc.hu [IPv6:2001:738:6001:500::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982ECC0619DC;
-        Thu, 23 Jul 2020 14:18:39 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id 06A74A12;
-        Thu, 23 Jul 2020 23:10:29 +0200 (CEST)
-X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
-Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
-        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ae8prMPlSpa0; Thu, 23 Jul 2020 23:10:19 +0200 (CEST)
-Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:908:226:9eff:fe30:2af8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: szucst@iit.uni-miskolc.hu)
-        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id 33A04A0F;
-        Thu, 23 Jul 2020 23:10:19 +0200 (CEST)
-From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        JC Kuo <jckuo@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
-Subject: [PATCH v2 1/4] arm64: tegra: Enable signal voltage switching on Tegra194 SDMMC1 and SDMMC3
-Date:   Thu, 23 Jul 2020 23:09:29 +0200
-Message-Id: <20200723210932.8076-2-tszucs@protonmail.ch>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200723210932.8076-1-tszucs@protonmail.ch>
-References: <20200723210932.8076-1-tszucs@protonmail.ch>
+        Thu, 23 Jul 2020 17:21:41 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39132 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgGWVVl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:21:41 -0400
+Received: by mail-io1-f65.google.com with SMTP id z6so7816619iow.6;
+        Thu, 23 Jul 2020 14:21:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DF4SoJ3bkqgFOwJrwi4NaCZKlRqd4/RS0vrb93p8qnk=;
+        b=RfmeCifK8bD8B0M1C8dczCH7k+xnR8PQlUbvIdhsK46CH33a4xbf5fmQUhFrbVTNYP
+         3kFsqWDmghnrTy7XNKPBof06rj8r7RK75PPm2MCJ5OlmnxYVXvsEyidwdmJLnCGJOKdp
+         NRNzX5qZg+AyktLygzLMxOjf1waFOaQ+XkHTRG1i6EeRBpuzNflsnU70BmyJ2bpKGroX
+         r4nebSitWtgbDrhO7722FyDiKO/L0OCaCMEHs3nempaAGW2PDjqGOAnTYO/k0iVN1wom
+         UZbRtHAOz9LwmejNYPJesFGJ6PcfSUK1GMWtrGmXciAKm7V2KkcbV8VM6VoopH+xVpsV
+         w31Q==
+X-Gm-Message-State: AOAM531rHgEXdm1Ivg2tbQGENXhX5WJC86Y1Z0GQTBAWGexyIkiqDWD1
+        H61qke+JskhVECazDI0SjA==
+X-Google-Smtp-Source: ABdhPJwNHXXRj2P9BDzjbKhSiYJWzsI4bSYAAQ/7SgyJi1PiF/OckBbEZ/VG/YgjGAEgbQCLDA0srA==
+X-Received: by 2002:a05:6602:2e13:: with SMTP id o19mr7184099iow.24.1595539300530;
+        Thu, 23 Jul 2020 14:21:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id f18sm2066894ion.47.2020.07.23.14.21.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 14:21:40 -0700 (PDT)
+Received: (nullmailer pid 880075 invoked by uid 1000);
+        Thu, 23 Jul 2020 21:21:39 -0000
+Date:   Thu, 23 Jul 2020 15:21:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: adc: maxim,max1118 yaml conversion
+Message-ID: <20200723212139.GA875510@bogus>
+References: <20200722171224.989138-1-jic23@kernel.org>
+ <20200722171224.989138-3-jic23@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722171224.989138-3-jic23@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add pad voltage configuration nodes for SDMMC pads with configurable voltages
-and enable supported SD card, SDIO and eMMC modes.
+On Wed, Jul 22, 2020 at 06:12:23PM +0100, Jonathan Cameron wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Simple device with a simple conversion.  Special handling needed
+> for the max1118 which is the only supported part that has an external
+> reference voltage.
+> 
+> Cc: Akinobu Mita <akinobu.mita@gmail.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  .../devicetree/bindings/iio/adc/max1118.txt   | 21 -------
+>  .../bindings/iio/adc/maxim,max1118.yaml       | 59 +++++++++++++++++++
+>  2 files changed, 59 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/max1118.txt b/Documentation/devicetree/bindings/iio/adc/max1118.txt
+> deleted file mode 100644
+> index cf33d0b15a6d..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/max1118.txt
+> +++ /dev/null
+> @@ -1,21 +0,0 @@
+> -* MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs
+> -
+> -Required properties:
+> - - compatible: Should be one of
+> -	* "maxim,max1117"
+> -	* "maxim,max1118"
+> -	* "maxim,max1119"
+> - - reg: spi chip select number for the device
+> - - (max1118 only) vref-supply: The regulator supply for ADC reference voltage
+> -
+> -Recommended properties:
+> - - spi-max-frequency: Definition as per
+> -		Documentation/devicetree/bindings/spi/spi-bus.txt
+> -
+> -Example:
+> -adc@0 {
+> -	compatible = "maxim,max1118";
+> -	reg = <0>;
+> -	vref-supply = <&vdd_supply>;
+> -	spi-max-frequency = <1000000>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1118.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1118.yaml
+> new file mode 100644
+> index 000000000000..ca24b8b23cde
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1118.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/maxim,max1118.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim MAX1118 and similar ADCs
+> +
+> +maintainers:
+> +  - Akinobu Mita <akinobu.mita@gmail.com>
+> +
+> +description: |
+> +    Dual channel 8bit ADCs.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxim,max1117
+> +      - maxim,max1118
+> +      - maxim,max1119
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 5000000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +           const: maxim,max1118
+> +    then:
+> +      properties:
+> +        vref-supply:
+> +          description: External reference, needed to establish input scaling
 
-Signed-off-by: Tamás Szűcs <tszucs@protonmail.ch>
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 45 ++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+This needs to be moved to the main section when you add 
+'additionalProperties'.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 48160f48003a..8351035bb6a7 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/mailbox/tegra186-hsp.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
-+#include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
- #include <dt-bindings/power/tegra194-powergate.h>
- #include <dt-bindings/reset/tegra194-reset.h>
- #include <dt-bindings/thermal/tegra194-bpmp-thermal.h>
-@@ -467,6 +468,9 @@
- 			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCRA &emc>,
- 					<&mc TEGRA194_MEMORY_CLIENT_SDMMCWA &emc>;
- 			interconnect-names = "dma-mem", "write";
-+			pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
-+			pinctrl-0 = <&sdmmc1_3v3>;
-+			pinctrl-1 = <&sdmmc1_1v8>;
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
- 									<0x07>;
- 			nvidia,pad-autocal-pull-down-offset-3v3-timeout =
-@@ -478,6 +482,15 @@
- 			nvidia,pad-autocal-pull-down-offset-sdr104 = <0x00>;
- 			nvidia,default-tap = <0x9>;
- 			nvidia,default-trim = <0x5>;
-+			cap-sd-highspeed;
-+			cap-mmc-highspeed;
-+			sd-uhs-sdr12;
-+			sd-uhs-sdr25;
-+			sd-uhs-sdr50;
-+			sd-uhs-sdr104;
-+			cap-sdio-irq;
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
- 			status = "disabled";
- 		};
- 
-@@ -492,6 +505,9 @@
- 			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCR &emc>,
- 					<&mc TEGRA194_MEMORY_CLIENT_SDMMCW &emc>;
- 			interconnect-names = "dma-mem", "write";
-+			pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
-+			pinctrl-0 = <&sdmmc3_3v3>;
-+			pinctrl-1 = <&sdmmc3_1v8>;
- 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
- 			nvidia,pad-autocal-pull-down-offset-1v8 = <0x7a>;
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x07>;
-@@ -504,6 +520,15 @@
- 			nvidia,pad-autocal-pull-down-offset-sdr104 = <0x00>;
- 			nvidia,default-tap = <0x9>;
- 			nvidia,default-trim = <0x5>;
-+			cap-sd-highspeed;
-+			cap-mmc-highspeed;
-+			sd-uhs-sdr12;
-+			sd-uhs-sdr25;
-+			sd-uhs-sdr50;
-+			sd-uhs-sdr104;
-+			cap-sdio-irq;
-+			mmc-ddr-1_8v;
-+			mmc-hs200-1_8v;
- 			status = "disabled";
- 		};
- 
-@@ -1029,6 +1054,26 @@
- 
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
-+
-+			sdmmc1_3v3: sdmmc1-3v3 {
-+				pins = "sdmmc1-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
-+			};
-+
-+			sdmmc1_1v8: sdmmc1-1v8 {
-+				pins = "sdmmc1-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
-+			};
-+
-+			sdmmc3_3v3: sdmmc3-3v3 {
-+				pins = "sdmmc3-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_3V3>;
-+			};
-+
-+			sdmmc3_1v8: sdmmc3-1v8 {
-+				pins = "sdmmc3-hv";
-+				power-source = <TEGRA_IO_PAD_VOLTAGE_1V8>;
-+			};
- 		};
- 
- 		host1x@13e00000 {
--- 
-2.20.1
+Then add an 'else' clause here with:
 
+not:
+  required:
+    - vref-supply
+
+Or this works too:
+
+properties:
+  vref-supply: false
+
+> +
+> +      required:
+> +        - vref-supply
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adc@0 {
+> +            compatible = "maxim,max1118";
+> +            reg = <0>;
+> +            vref-supply = <&adc_vref>;
+> +            spi-max-frequency = <1000000>;
+> +        };
+> +    };
+> +...
+> -- 
+> 2.27.0
+> 
