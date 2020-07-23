@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F404BC433F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEE4C433F8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4EE120709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0C9207BB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PhZtX+D1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B88GpjOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgGWL1r (ORCPT
+        id S1728623AbgGWL1v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:27:47 -0400
+        Thu, 23 Jul 2020 07:27:51 -0400
 Received: from mail29.static.mailgun.info ([104.130.122.29]:18715 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728574AbgGWL1o (ORCPT
+        by vger.kernel.org with ESMTP id S1728068AbgGWL1t (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:27:44 -0400
+        Thu, 23 Jul 2020 07:27:49 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595503664; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1595503669; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=MOuUpg+RsZZ6Dijxt0uuA6eqckA+O2zG103ZtZ+NQvI=; b=PhZtX+D1ACmbiF004EccN9bu8o54XHNQZ+vQVJIJZ7jDDhinLSnGCr/3nW3Mr8I8i5wAsw4r
- 76LD81NLdlzRlAt9WQtAjCIvxngmL1iu+SFo5T8KuxoWXUBZsMRVGehjfghfwhSiElZy2N7J
- b7llWTPz5lPqV3buTENpnqFSBec=
+ bh=mvbsyjNOsVr1qUOEhJ50w9899eyqmnSk84iDvKCs73c=; b=B88GpjObiJSXJZPzaQlH3Ai/a8cKr14mZBQk+w//3EmEEq7sxzDT1UxxmTtDB/S1XKgRCdGw
+ 2wgJDpF7KFPU9ZJHe5g0qI3RpTNhZxUhohoZQ1wiZ9XUvyU6eYMMAbIlstfaTx3oA82CX/Vy
+ kr9rzUfRDss8KxPRsNcHBwoZbL0=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f19741f3dbcb593a933ca8c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:27:27
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f197426e3bee12510f9a9a2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:27:34
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D1750C433C9; Thu, 23 Jul 2020 11:27:26 +0000 (UTC)
+        id ACAA9C433C9; Thu, 23 Jul 2020 11:27:33 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3057C43395;
-        Thu, 23 Jul 2020 11:27:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3057C43395
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8A186C433C6;
+        Thu, 23 Jul 2020 11:27:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8A186C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -54,9 +54,9 @@ To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
 Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v4 2/5] media: venus: core: Fix error handling in probe
-Date:   Thu, 23 Jul 2020 16:56:49 +0530
-Message-Id: <1595503612-2901-3-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and power-domains for venus
+Date:   Thu, 23 Jul 2020 16:56:51 +0530
+Message-Id: <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
 References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
@@ -65,62 +65,72 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Post a successful pm_ops->core_get, an error in probe
-should exit by doing a pm_ops->core_put which seems
-to be missing. So fix it.
+Add the OPP tables in order to be able to vote on the performance state of
+a power-domain.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- drivers/media/platform/qcom/venus/core.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 203c653..bfcaba3 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -224,13 +224,15 @@ static int venus_probe(struct platform_device *pdev)
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index e506793..5ca2265 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3631,8 +3631,10 @@
+ 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+ 			power-domains = <&videocc VENUS_GDSC>,
+ 					<&videocc VCODEC0_GDSC>,
+-					<&videocc VCODEC1_GDSC>;
+-			power-domain-names = "venus", "vcodec0", "vcodec1";
++					<&videocc VCODEC1_GDSC>,
++					<&rpmhpd SDM845_CX>;
++			power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
++			operating-points-v2 = <&venus_opp_table>;
+ 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+@@ -3654,6 +3656,40 @@
+ 			video-core1 {
+ 				compatible = "venus-encoder";
+ 			};
++
++			venus_opp_table: venus-opp-table {
++				compatible = "operating-points-v2";
++
++				opp-100000000 {
++					opp-hz = /bits/ 64 <100000000>;
++					required-opps = <&rpmhpd_opp_min_svs>;
++				};
++
++				opp-200000000 {
++					opp-hz = /bits/ 64 <200000000>;
++					required-opps = <&rpmhpd_opp_low_svs>;
++				};
++
++				opp-320000000 {
++					opp-hz = /bits/ 64 <320000000>;
++					required-opps = <&rpmhpd_opp_svs>;
++				};
++
++				opp-380000000 {
++					opp-hz = /bits/ 64 <380000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-444000000 {
++					opp-hz = /bits/ 64 <444000000>;
++					required-opps = <&rpmhpd_opp_nom>;
++				};
++
++				opp-533000000 {
++					opp-hz = /bits/ 64 <533000000>;
++					required-opps = <&rpmhpd_opp_turbo>;
++				};
++			};
+ 		};
  
- 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
- 	if (ret)
--		return ret;
-+		goto err_core_put;
- 
- 	if (!dev->dma_parms) {
- 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
- 					      GFP_KERNEL);
--		if (!dev->dma_parms)
--			return -ENOMEM;
-+		if (!dev->dma_parms) {
-+			ret = -ENOMEM;
-+			goto err_core_put;
-+		}
- 	}
- 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
- 
-@@ -242,11 +244,11 @@ static int venus_probe(struct platform_device *pdev)
- 					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
- 					"venus", core);
- 	if (ret)
--		return ret;
-+		goto err_core_put;
- 
- 	ret = hfi_create(core, &venus_core_ops);
- 	if (ret)
--		return ret;
-+		goto err_core_put;
- 
- 	pm_runtime_enable(dev);
- 
-@@ -302,6 +304,9 @@ static int venus_probe(struct platform_device *pdev)
- 	pm_runtime_set_suspended(dev);
- 	pm_runtime_disable(dev);
- 	hfi_destroy(core);
-+err_core_put:
-+	if (core->pm_ops->core_put)
-+		core->pm_ops->core_put(dev);
- 	return ret;
- }
- 
+ 		videocc: clock-controller@ab00000 {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
