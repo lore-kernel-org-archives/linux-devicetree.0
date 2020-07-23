@@ -2,144 +2,120 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7B1C43458
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC025C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB8E1207BB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C25207BB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tvaotbhg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ewi7Gb4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgGWNJs (ORCPT
+        id S1728985AbgGWNQT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 09:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36918 "EHLO
+        Thu, 23 Jul 2020 09:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgGWNJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 09:09:47 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEFEC0619E2
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so5129656wrw.1
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:46 -0700 (PDT)
+        with ESMTP id S1727859AbgGWNQS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 09:16:18 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF65C0619DC
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:16:18 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d7so2536325plq.13
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YWTfVRkR79Imko0PPqnIzVcER9nAarkHmVQCWvBzyCc=;
-        b=tvaotbhgbQViqsspi5Ia9TKg2g2+k8ZHJrq+MuqBEc7x4WaXGNGGEy7nerdKRpdySD
-         AUFA0aEvde2ok3vmf3f7d032hQhoI/FwgRbVHeBsMzKfqIKacX8ch/8XktFVE7ixAXtp
-         xLPPa/8uJemD/71lkS+de69byXAyLhqC1PhLMys6VruIqacBVqXH1r76V/IELKpOtb5f
-         MbmEuoZdf2Cxe3mEMy4KFrMZ/td+/Pf/fhpk43Hc+Pe3hg36IZUe7lFHn+SwTrv6OCDC
-         JLe0q+Pv2lnwhN3rYTWg6KicxVM0cM0TcLWDijyfCSFstREF/FY4UvOhbaLNUcz+I8fS
-         sMjQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ePu2DQifrSypcKw3c6HDysOl6wZIG3mL9ysnlkjPzpE=;
+        b=Ewi7Gb4wAt29Y1el687HjMUlmBNi0VZIMdhklA/O/vcmU3tD45R50AO9Q80T+OTOm9
+         c+4LstGwg00MY4C6qBcinL9fAPsI3RxCxikAbXfC8G2uZtdQQ1GrXyIaf6SDtmhN3yR3
+         j7v2zgArlooh2K3TaXEuD5+4MvI7fZIZ4n1deAYC/51SO6x5IQklaYy2slaIbFUkczU9
+         cTs8W6qTDds4v0A+wz17iitfv3XQV1g0kbUrLKndLFywDkXdoCx6Lfg97Bra24RZsR1P
+         expVFr7rLA4lpnnZlD0FJrok+I19gx3LHgdoo0PGXBdFSOrbB7DbaC3pEO7aznatwWR3
+         UvaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YWTfVRkR79Imko0PPqnIzVcER9nAarkHmVQCWvBzyCc=;
-        b=UcT5hQB/LmNlJ0kSiJQ6d4ohlSZtQlQpmgK9l4QkvfaKfQP8Dw7P8+/iYXG7kcs8FH
-         2HF7S2glMQUwyBtI+M6pd1mPxrdZW/xVEVt2LPzRxqup2eSxrp3dM4fipqXDkMG5+wpt
-         JBUdWhnX+uW6ZWn7gbIWo+jb9DigRQOZwfwFm+vK0eYGlKWh172j+3qqDt0jfvSTEGQk
-         wy+Ivoje/p1a1BB5tB1wQoAdqrj4EgJIKconyAybSl+PL9FDasGlk9tYiwVuXsgMOTL3
-         kCaCBxPw9r/D7keiuHk0PvkD/rlBT36P5OFpcbpiX6oGao0lK3kvbh8d29Ghr0SXt03k
-         3s5g==
-X-Gm-Message-State: AOAM533Qh0+DfjuHBhlXKV08neMavJgwOYiKOR5zD6jatkkwKoPXS/Pv
-        f9K8p1CLafh8Bqc7KdAiIhnSNg==
-X-Google-Smtp-Source: ABdhPJypdAbK/l+XgBOALRGgJMjOLyLZ37pF8MBqln+MJ+cdCucrwML/MuWtdw1EdWissbAnd5A8rQ==
-X-Received: by 2002:a5d:43ca:: with SMTP id v10mr3970548wrr.299.1595509784758;
-        Thu, 23 Jul 2020 06:09:44 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 Jul 2020 06:09:44 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
-        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] interconnect: qcom: Implement xlate_extended() to parse tags
-Date:   Thu, 23 Jul 2020 16:09:38 +0300
-Message-Id: <20200723130942.28491-3-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200723130942.28491-1-georgi.djakov@linaro.org>
-References: <20200723130942.28491-1-georgi.djakov@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ePu2DQifrSypcKw3c6HDysOl6wZIG3mL9ysnlkjPzpE=;
+        b=pFfbZ5GQSGy3+22muZXjHysfVudReO4roPj5HW5dJ4WJHXvCPfcUCc4ad9ORQCJAwe
+         6Y6BJrHHHH5QBBsrQZeuBE6nY8q0i+6b75ilKxMgFzdfWo0oxRFFtp4NpyfHCph3IihD
+         SOePk0TfhA9/me00VN6P8WUAV4Ogjk5qC923Hkoxaeo01xuPL2rw5N2rtVDq/HR9Ik1H
+         D/286VDMfpCX4VME38qBt2BESc5rnMZOY5Cid/y7Hd1x7XJ9clWdUuJo+2yRjX/rpVhN
+         YnZ6OG4D3j1DW8HIUfJh0Q4xBy45eR7e7XVJ8oOVLCfoRk553jJN75APNwAb3PXgb/mx
+         ybfA==
+X-Gm-Message-State: AOAM532xUC1N2O4EAY92+CmGLzGhl5DeCa0Ji2FxXB9MAbWnvMBFGZ7w
+        +X+02CDhEvGKOrEzVJXMFiCQhg==
+X-Google-Smtp-Source: ABdhPJxJpfqGOnbg0xA8HsHA154EtCmp9G7TiNwpsst4qATzbOdPWrKM3zxg4Lw4KSO6gB0TVCTDZw==
+X-Received: by 2002:a17:90a:d684:: with SMTP id x4mr377489pju.62.1595510177991;
+        Thu, 23 Jul 2020 06:16:17 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 129sm3085243pfv.161.2020.07.23.06.16.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 06:16:17 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 06:14:26 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sivaprak@codeaurora.org, sricharan@codeaurora.org
+Subject: Re: [PATCH V3 0/4] Add frequency / voltage scaling support for
+ IPQ6018 SoC
+Message-ID: <20200723131426.GK1218486@builder.lan>
+References: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595225543-12127-1-git-send-email-kathirav@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Implement a function to parse the arguments of the "interconnects" DT
-property and populate the interconnect path tags if this information
-is available.
+On Sun 19 Jul 23:12 PDT 2020, Kathiravan T wrote:
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/qcom/icc-rpmh.c | 27 +++++++++++++++++++++++++++
- drivers/interconnect/qcom/icc-rpmh.h |  1 +
- 2 files changed, 28 insertions(+)
+> IPQ6018 SoC uses the PMIC MP5496. SMPA2 and LDOA2 regulator of MP5496
+> controls the APSS and SDCC voltage scaling respectively. Add support
+> for the same.
+> 
 
-diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
-index 3ac5182c9ab2..44144fabec32 100644
---- a/drivers/interconnect/qcom/icc-rpmh.c
-+++ b/drivers/interconnect/qcom/icc-rpmh.c
-@@ -6,6 +6,8 @@
- #include <linux/interconnect.h>
- #include <linux/interconnect-provider.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
- 
- #include "bcm-voter.h"
- #include "icc-rpmh.h"
-@@ -92,6 +94,31 @@ int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
- }
- EXPORT_SYMBOL_GPL(qcom_icc_set);
- 
-+struct icc_node_data *qcom_icc_xlate_extended(struct of_phandle_args *spec, void *data)
-+{
-+	struct icc_node_data *ndata;
-+	struct icc_node *node;
-+
-+	if (!spec)
-+		return ERR_PTR(-EINVAL);
-+
-+	node = of_icc_xlate_onecell(spec, data);
-+	if (IS_ERR(node))
-+		return ERR_CAST(node);
-+
-+	ndata = kzalloc(sizeof(*ndata), GFP_KERNEL);
-+	if (!ndata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ndata->node = node;
-+
-+	if (spec->args_count == 2)
-+		ndata->tag = spec->args[1];
-+
-+	return ndata;
-+}
-+EXPORT_SYMBOL_GPL(qcom_icc_xlate_extended);
-+
- /**
-  * qcom_icc_bcm_init - populates bcm aux data and connect qnodes
-  * @bcm: bcm to be initialized
-diff --git a/drivers/interconnect/qcom/icc-rpmh.h b/drivers/interconnect/qcom/icc-rpmh.h
-index 903d25e61984..1dac39bc255d 100644
---- a/drivers/interconnect/qcom/icc-rpmh.h
-+++ b/drivers/interconnect/qcom/icc-rpmh.h
-@@ -143,6 +143,7 @@ struct qcom_icc_desc {
- int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
- 		       u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
- int qcom_icc_set(struct icc_node *src, struct icc_node *dst);
-+struct icc_node_data *qcom_icc_xlate_extended(struct of_phandle_args *spec, void *data);
- int qcom_icc_bcm_init(struct qcom_icc_bcm *bcm, struct device *dev);
- void qcom_icc_pre_aggregate(struct icc_node *node);
- 
+Picked up patch 1-3 for v5.10
+
+Thanks,
+Bjorn
+
+> changes since V2:
+> 	- Rebased on top of linux-next 20200717 tag
+> 	- Addressed Rob's comment to drop the 'syscon' node in qcom,smd-rpm.yaml
+> 	- Picked up the Reviewed-by tag for qcom,smd-rpm-regulator.yaml
+> 	- Regulator patches part of V2 was picked up by Mark and it's available in linux-next tree
+> 
+> changes since V1:
+> 	- Moved YAML conversion to the last as per Mark's comments
+> 
+> Kathiravan T (4):
+>   dt-bindings: soc: qcom: Add IPQ6018 compatible
+>   soc: qcom: smd-rpm: Add IPQ6018 compatible
+>   dt-bindings: soc: qcom: convert the SMD-RPM document to YAML schema
+>   dt-bindings: regulator: convert QCOM SMD-RPM regulator document to
+>     YAML schema
+> 
+>  .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 321 ---------------------
+>  .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 106 +++++++
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.txt  |  64 ----
+>  .../devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml |  87 ++++++
+>  drivers/soc/qcom/smd-rpm.c                         |   1 +
+>  5 files changed, 194 insertions(+), 385 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.yaml
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
