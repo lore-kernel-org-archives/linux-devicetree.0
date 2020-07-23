@@ -2,92 +2,170 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DDAC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1111C433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 05:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 075B820771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 05:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD1A207E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 05:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5ZB3El9"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="bImpdVRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725857AbgGWFgN (ORCPT
+        id S1725822AbgGWFkx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 01:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgGWFgM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 01:36:12 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66DBC0619DC;
-        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so2479385pgc.5;
-        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tFcZGTVxEOvpoeXkUsiN4vBy9B3kLzwfdLU6/Bk7M20=;
-        b=o5ZB3El9NmbYAUMnVLSF4MIKU/vBZ/hxFH6zt/eg3JEdcrIYxBDT5DdYf4FaDNM7tc
-         HYHjiAVqeSntdb6shGkwKcnEkageOOeoE6zxzESicOczUGrZEhoT9DaQHtjx5/yB4OYY
-         1OfErF+AkU8/UiZFKOriS/yecoTRi9lBcCUC/2ZIbRJXr9gJb3RmlQPOYZ41m93EV/vV
-         5IpLOGY1BcxzSVSF8CQu+FUYZ9Top4dkOSr5fM3ywCobxPGrAjWg/PmOn0Kf5mKXlZJM
-         +KDrpfzLSI7/vaIf0f5ZMCVlZlPjz80SNScDW+gU0Jy0JQX9zaLqvfvb7wJLkqaSg4DE
-         Jotw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tFcZGTVxEOvpoeXkUsiN4vBy9B3kLzwfdLU6/Bk7M20=;
-        b=YhSYjfClc9Uw+P3XUqBWsV1ZptSpwHGBCoHaJJlbW3irveS5WqA47eCATJnrjpmc6M
-         5iqmcqu+CS5lwdberf55yQ0LAnqpywEVSHS/WTxWoIvt4yrAsGkodZpHIhamUepm+Qc8
-         A30+xe5zHuvB4YUBYK9zwN8F8vceHnSYYorwWpoRP6VJChXVwgpc/VEErt1kUfN6Yv9I
-         oM8Vi42YSO+Z2Oz+c8GU8taYNKhCeQLlhQlCIhWf4uRwWt1s7jCBQwB4nsiEIdN8RTp9
-         HEezyc0IlDi7vbiMni/cY7c+TkCMNbWc990ARwwjC08RPM60eD3+jhVjp5k1e+v4M4aQ
-         sDCw==
-X-Gm-Message-State: AOAM533Gt/zHFzml6PkZVut7R/vYJZVMGigUooAo7VojSkaUk5or1cs8
-        icTwGqpoK9zXa5j42l5mOpI=
-X-Google-Smtp-Source: ABdhPJwFIlyfJWb07kcj58BziwubzU5I4KohZd4uiMgJMQI1YstOLbnS44kIKgEb1P7Wi4W5qBcaaw==
-X-Received: by 2002:a65:6554:: with SMTP id a20mr2447316pgw.301.1595482572334;
-        Wed, 22 Jul 2020 22:36:12 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id o128sm1414392pfg.127.2020.07.22.22.36.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 Jul 2020 22:36:11 -0700 (PDT)
-Date:   Wed, 22 Jul 2020 22:35:39 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ASoC: fsl-asoc-card: Support configuring dai fmt
- from DT
-Message-ID: <20200723053538.GB5476@Asurada-Nvidia>
-References: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
+        Thu, 23 Jul 2020 01:40:53 -0400
+Received: from mail-eopbgr20074.outbound.protection.outlook.com ([40.107.2.74]:43119
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725536AbgGWFkw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 01:40:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jSmH1szUoLQ4zeuZTaUqMHFI53nELhNVmgERYr3mEuDT52TH8tYnsjnCMP0502IslY/NacXFcx+h+3VA/f17qsOkLoarIAZ190mpl4NeYSz3pKlF/zucEkZK/MHiuzRucoP9q/EsTot2Ty98FQP78KOcONo7YUlBW6GV44qj846lIUBxkwRJnY4FUYceBx+ZQDZM3fqVcOhRqSwI9qFuP9e9xxi/5S4MSoWVecYHCsyeo/R/INAmZHsI38dCTHwh03x2IdgG/KoZRPrGmeJrcPeqx6S6lQGgeEzIRjj9yMsEBE1mM1/Jv3CiLT8Xym7JtZ3yRCNA3aujJokgSGvOIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eaS/TlDo7cqi4FbDalwnmowouBaF73RbMKLUTJpPgcM=;
+ b=RHZyHb8yQTJWZyWE/++6Q/79KwGyostRlDsTFZBXBkLhkPDZtGyMAZX1oIN3uUJ+fSxVHW2xVXhrLgxwl6HaLBW7l73HrRKK1w8HzEQf668r0sbBMJ0hdOXZUkYxBigitA01QQYpfgJm6h6weKbI3zV1OhB8fliejd2Cjhvz9keXpCquNYy/IpICKwyaV1uvQypR4eyQtavuHoTXp5kBlrqRQbftnjjO7lXrQGhisTinHXm8T2t2Uk2Zt+ApydXnXmV5xT4iX4+CTGAZ5ihrLQSJFY1NtCEJ7StbMEgtr7c9g1G6rR5szjyZ84osYo+eG/0dAumDCJYuYc6jzKLA+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eaS/TlDo7cqi4FbDalwnmowouBaF73RbMKLUTJpPgcM=;
+ b=bImpdVRp/VzcFN4ysZDyAbWMJoYyYtBqk8JvB1X5V26CBHAeo9hKHbkbJTyY1pNrMa9vO6O0FcQqOH5e0G13q3rE97iTZpWzyvfNg2E6FH88q2L4OANMik1ademJaeXgRAWGoIbJX5Sq1M+CA7VhSvLarLtqzulh7TcaJcOb9O8=
+Received: from AM6PR04MB3976.eurprd04.prod.outlook.com (2603:10a6:209:3f::17)
+ by AM6PR04MB5079.eurprd04.prod.outlook.com (2603:10a6:20b:4::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Thu, 23 Jul
+ 2020 05:40:48 +0000
+Received: from AM6PR04MB3976.eurprd04.prod.outlook.com
+ ([fe80::51e7:c810:fec7:6943]) by AM6PR04MB3976.eurprd04.prod.outlook.com
+ ([fe80::51e7:c810:fec7:6943%3]) with mapi id 15.20.3174.030; Thu, 23 Jul 2020
+ 05:40:48 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Radu-andrei Bulie <radu-andrei.bulie@nxp.com>,
+        "fido_max@inbox.ru" <fido_max@inbox.ru>
+Subject: RE: [PATCH devicetree 3/4] powerpc: dts: t1040rdb: put SGMII PHY
+ under &mdio0 label
+Thread-Topic: [PATCH devicetree 3/4] powerpc: dts: t1040rdb: put SGMII PHY
+ under &mdio0 label
+Thread-Index: AQHWYEz+LgZibInI10i2/O6ewv0daakUplWQ
+Date:   Thu, 23 Jul 2020 05:40:48 +0000
+Message-ID: <AM6PR04MB39763CA66048BD4F221D0DE4EC760@AM6PR04MB3976.eurprd04.prod.outlook.com>
+References: <20200722172422.2590489-1-olteanv@gmail.com>
+ <20200722172422.2590489-4-olteanv@gmail.com>
+In-Reply-To: <20200722172422.2590489-4-olteanv@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [5.14.204.117]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 30811635-b75a-46a0-1b37-08d82ecaf405
+x-ms-traffictypediagnostic: AM6PR04MB5079:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB5079AD348F569C950C4E48B8AD760@AM6PR04MB5079.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /Bv17ujXPqbg74Cv8yFInypvDL1dKa09B0vWwYrgJNpBwuDc14pPIeWHnURs+korboP21mBrOgjuxrFxZyiqqMz12riMx/m1/jp1gdUhb4JL7lRw/PQAzcsqPwRINAgUMamZGpeEaZeQW3ifQ/TB7zczvZexmi7o+z0TQeoNKhbdOWeai6FFcTeUOgH9n7VS3hHRhy4FcDyWZ2473qVQnrnyHPR8OA2goMYjJpntLgd/aB/d9mCFuVBliJ2egIm0OIibWkjaKJ80LCDLxAxJHbEQnoOrgZgmSDhiUVBPxfJnzx9UraWv1RCI2bYAH54+
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB3976.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(186003)(8936002)(64756008)(66476007)(478600001)(83380400001)(66556008)(2906002)(5660300002)(66446008)(7696005)(7416002)(316002)(33656002)(76116006)(52536014)(8676002)(26005)(110136005)(54906003)(9686003)(86362001)(71200400001)(53546011)(4326008)(6506007)(66946007)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JYal8yjGjhmUpyCL23LXjXcejFQTZ8ako1F/2UL7OOQg/n/HQ2Ew+kIZrKc0/MVxlaw5RSFcDC9XKfxDaCzl4rs6U/2bRo404kTjj+HoXI2r5Oj4++WH94xQdtyH3WnNtUbjS7G99jDnDNHbW6742skjsSM2MfI1kBw9/uFqOCEMH9RdX40JW60hEBY2H0lgkxJisxllhhQxGUneAK7mofLwqPDnz2Oe4gz/NF4KoR+ifqUAysSbbMREgRKQg9sNMGUOmw+kWKak1bL4JtMoxAY7Isi2xrVYj8ohi58kojpQmB4pCK7TQ1UtpQAus3pLSwvnkfCy3ndiP7V9rJg5uvhn10pVtb8gZqT6ttMOseixs+tJDr8YDlExMR2SFCkdbPLRoIuLEKUUskV2oUUHY9kph8L6mQogLDCK3ZrYgZl+D9VTA9m8IauTqDNMyxcgi6uGZM5ox09AWHeCFoQEWOJfa7kPKv5kg1/5EriKLsQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB3976.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30811635-b75a-46a0-1b37-08d82ecaf405
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 05:40:48.3732
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Ov+hqQMBgJgE5yGTDeKqx9QweO+ZPr4vLyDMnKPW9WCiT5K6cPcI7WqIxksXVo8v49Y3q7v1RAyLmj3FhzUlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5079
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 11:41:49AM +0800, Shengjiu Wang wrote:
-> Support same propeties as simple card for configuring fmt
-> from DT.
-> In order to make this change compatible with old DT, these
-> properties are optional.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> -----Original Message-----
+> From: Vladimir Oltean <olteanv@gmail.com>
+> Sent: Wednesday, July 22, 2020 8:24 PM
+> To: robh+dt@kernel.org; shawnguo@kernel.org; mpe@ellerman.id.au;
+> devicetree@vger.kernel.org
+> Cc: benh@kernel.crashing.org; paulus@samba.org; linuxppc-
+> dev@lists.ozlabs.org; linux-kernel@vger.kernel.org;
+> netdev@vger.kernel.org; Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>;
+> Radu-andrei Bulie <radu-andrei.bulie@nxp.com>; fido_max@inbox.ru
+> Subject: [PATCH devicetree 3/4] powerpc: dts: t1040rdb: put SGMII PHY
+> under &mdio0 label
+>=20
+> We're going to add 8 more PHYs in a future patch. It is easier to follow
+> the hardware description if we don't need to fish for the path of the
+> MDIO controllers inside the SoC and just use the labels.
+>=20
 
-For both changes:
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Please align to the existing structure, it may be easier to add something
+without paying attention to that but it's better to keep things organized.
+This structure is used across all the device trees of the platforms using
+DPAA, let's not start diverging now.
+
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> ---
+>  arch/powerpc/boot/dts/fsl/t1040rdb.dts | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+> b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+> index 65ff34c49025..40d7126dbe90 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+> +++ b/arch/powerpc/boot/dts/fsl/t1040rdb.dts
+> @@ -59,12 +59,6 @@ ethernet@e4000 {
+>  				phy-handle =3D <&phy_sgmii_2>;
+>  				phy-connection-type =3D "sgmii";
+>  			};
+> -
+> -			mdio@fc000 {
+> -				phy_sgmii_2: ethernet-phy@3 {
+> -					reg =3D <0x03>;
+> -				};
+> -			};
+>  		};
+>  	};
+>=20
+> @@ -76,3 +70,9 @@ cpld@3,0 {
+>  };
+>=20
+>  #include "t1040si-post.dtsi"
+> +
+> +&mdio0 {
+> +	phy_sgmii_2: ethernet-phy@3 {
+> +		reg =3D <0x3>;
+> +	};
+> +};
+> --
+> 2.25.1
+
