@@ -2,242 +2,97 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10FDC433F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 18:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541FDC433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 18:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CACB1206D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 18:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ImXSJ2Zx"
+	by mail.kernel.org (Postfix) with ESMTP id 1F50320737
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 18:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595530415;
+	bh=3MN8t8y9ZPzg2hd+nYHHKUypvzn6YowNfDxcV2ZUaZI=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=JrkIPlQh9da6bDjN6BkxLVa7b1z/DEcmVXujtVJak+SHwMRP3hJU2QJC5wtL0GhKf
+	 EXjj9pdUmOD3lDA+C1SOkOoZUE7691wEw4xjgsAklqtIPzHs3fclkYaobxL2300yub
+	 yFQhJlOY9se2V45Gb246G6PdAupqidCzyimZQgb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGWSv0 (ORCPT
+        id S1726643AbgGWSxe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 14:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgGWSv0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 14:51:26 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA7EC0619E4
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 11:51:26 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k71so3613046pje.0
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 11:51:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L1u1/EP612atHM51MLfxnclzjBCkmv7rza24Rpog9OU=;
-        b=ImXSJ2Zx/AD2cuVUklyjgXZcToxYG0YMH42R7JppafBiBcde2wlGcA5qyps8YUchMY
-         TcIfgj1LAeYBMHSo2q/znhkEP0nhXul6Io95EwzMUUL33nNvW8Rdh16Ni/bsEk3M3I69
-         xKNyLKxVB1PlIo9EGl0u/N6l7cd4NMHstkHK0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L1u1/EP612atHM51MLfxnclzjBCkmv7rza24Rpog9OU=;
-        b=Bd8HwXG38Z+4eLvMoJoOwkswnXXLr+9bpN+kfcayWg5U+oeGbzLQjNlbRqmewB6XK+
-         2c7ucbDkTOCwluBUiqhmQyIgkc8yBWDsVpGGHi24KlfxNxVR9feAuuXxf7TaUXCKRi+E
-         otnYeOulWkKMJkY8YQd8t+uknRlK05sEk9EiQ65IkvgtryJ7mm6jks13uONwU5Lwvf/F
-         ha/U8YplRGNHUeTPUMI0BxbBI1+QxJBn2aJXI3Nm4CTgLZQvHM/4Pvll/IY5ayvJduV3
-         ILjR/Aakj+IOl1pSdW6p07PMnWT5G0BMphywuQDLdNCwsXzbzA3KPvm38b8PD+El58zY
-         qa+Q==
-X-Gm-Message-State: AOAM533NCtAl605UvOXYHM2c1sZtG8OgfxVMgjSO4wXhMOCbiNMc2jdG
-        XDKl3JZK+btS3GkDcFmI9e3YJQ==
-X-Google-Smtp-Source: ABdhPJzyj7yK2JTK1AOjG2mh6QKyzyYvBoP2CT7/5OcHK0sZ5dR0bE0p7llSMAC/hJIBfgCGbhzr4w==
-X-Received: by 2002:a17:902:9682:: with SMTP id n2mr4820147plp.11.1595530285601;
-        Thu, 23 Jul 2020 11:51:25 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id p12sm3668537pgk.40.2020.07.23.11.51.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 11:51:24 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 11:51:23 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v10 1/2] usb: dwc3: qcom: Add interconnect support in
- dwc3 driver
-Message-ID: <20200723185123.GY3191083@google.com>
-References: <1595528857-25357-1-git-send-email-sanm@codeaurora.org>
- <1595528857-25357-2-git-send-email-sanm@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1595528857-25357-2-git-send-email-sanm@codeaurora.org>
+        Thu, 23 Jul 2020 14:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbgGWSxe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 14:53:34 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB7C206D8;
+        Thu, 23 Jul 2020 18:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595530414;
+        bh=3MN8t8y9ZPzg2hd+nYHHKUypvzn6YowNfDxcV2ZUaZI=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=X/7uRGMTKucKW1k1ALs6UQAv0cSyAdndk3Z39eeG9B0NVh8R00KqFaKijIrUWPJtM
+         7SZd3On9XXgkgvrqEZ8dppSVIxeAcjm5jf09qMsVsUURRGfAjS+mJCFpFq959LO/KH
+         Y4ZRcqa/lDiZOPm6v3EZ9Jb2Ek5wgDImDsRNszGY=
+Date:   Thu, 23 Jul 2020 19:53:19 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     robh+dt@kernel.org, lgirdwood@gmail.com,
+        linux-omap@vger.kernel.org, tony@atomide.com,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200719200623.61524-1-grandmaster@al2klimov.de>
+References: <20200719200623.61524-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH for v5.9] regulator: Replace HTTP links with HTTPS ones
+Message-Id: <159553039921.39979.10054073177417218787.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sandeep,
-
-On Thu, Jul 23, 2020 at 11:57:36PM +0530, Sandeep Maheswaram wrote:
-> Add interconnect support in dwc3-qcom driver to vote for bus
-> bandwidth.
+On Sun, 19 Jul 2020 22:06:23 +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> This requires for two different paths - from USB to
-> DDR. The other is from APPS to USB.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 127 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 125 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index e1e78e9..712efb7 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -13,6 +13,7 @@
->  #include <linux/module.h>
->  #include <linux/kernel.h>
->  #include <linux/extcon.h>
-> +#include <linux/interconnect.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
-> @@ -43,6 +44,14 @@
->  #define SDM845_QSCRATCH_SIZE			0x400
->  #define SDM845_DWC3_CORE_SIZE			0xcd00
->  
-> +/* Interconnect path bandwidths in MBps */
-> +#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
-> +#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
-> +#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
-> +#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
-> +#define APPS_USB_AVG_BW 0
-> +#define APPS_USB_PEAK_BW MBps_to_icc(40)
-> +
->  struct dwc3_acpi_pdata {
->  	u32			qscratch_base_offset;
->  	u32			qscratch_base_size;
-> @@ -76,6 +85,8 @@ struct dwc3_qcom {
->  	enum usb_dr_mode	mode;
->  	bool			is_suspended;
->  	bool			pm_suspended;
-> +	struct icc_path		*icc_path_ddr;
-> +	struct icc_path		*icc_path_apps;
->  };
->  
->  static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
-> @@ -190,6 +201,103 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
->  	return 0;
->  }
->  
-> +static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
-> +{
-> +	int ret;
-> +
-> +	ret = icc_enable(qcom->icc_path_ddr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = icc_enable(qcom->icc_path_apps);
-> +	if (ret)
-> +		return icc_disable(qcom->icc_path_ddr);
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
-You are returning the result of icc_disable(), but it should be the
-previous error. Just do
+Applied to
 
-		icc_disable(qcom->icc_path_ddr);
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-and use the below statement for returning (if not it should be 'return 0').
+Thanks!
 
-> +
-> +	return ret;
-> +}
-> +
-> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
-> +{
-> +	int ret;
-> +
-> +	ret = icc_disable(qcom->icc_path_ddr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = icc_disable(qcom->icc_path_apps);
-> +	if (ret)
-> +		goto err_reenable_memory_path;
+[1/1] regulator: Replace HTTP links with HTTPS ones
+      commit: 2ca76b3e4954ea6bbb365005edc8d5237b488cf1
 
-Please make the error handling in _enable() and _disable() symmetrical, either
-call icc_enable/disable() directly or use a goto in both functions (IMO the goto
-is not needed in this case, it makes the code more complex rather than
-simplifying it).
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> +
-> +	return 0;
-> +
-> +	/* Re-enable things in the event of an error */
-> +err_reenable_memory_path:
-> +	dwc3_qcom_interconnect_enable(qcom);
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Why this function which disables both paths and not just
-icc_enable(qcom->icc_path_ddr), analogous to dwc3_qcom_interconnect_enable()?
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
-> + * and set bandwidhth.
-> + * @qcom:			Pointer to the concerned usb core.
-> + *
-> + */
-> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
-> +{
-> +	struct device *dev = qcom->dev;
-> +	int ret;
-> +
-> +	qcom->icc_path_ddr = of_icc_get(dev, "usb-ddr");
-> +	if (IS_ERR(qcom->icc_path_ddr)) {
-> +		dev_err(dev, "failed to get usb-ddr path: %ld\n",
-> +			PTR_ERR(qcom->icc_path_ddr));
-> +		return PTR_ERR(qcom->icc_path_ddr);
-> +	}
-> +
-> +	qcom->icc_path_apps = of_icc_get(dev, "apps-usb");
-> +	if (IS_ERR(qcom->icc_path_apps)) {
-> +		dev_err(dev, "failed to get apps-usb path: %ld\n",
-> +				PTR_ERR(qcom->icc_path_apps));
-> +		return PTR_ERR(qcom->icc_path_apps);
-> +	}
-> +
-> +	if (usb_get_maximum_speed(&qcom->dwc3->dev) >= USB_SPEED_SUPER ||
-> +			usb_get_maximum_speed(&qcom->dwc3->dev) == USB_SPEED_UNKNOWN)
-> +		ret = icc_set_bw(qcom->icc_path_ddr,
-> +			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
-> +	else
-> +		ret = icc_set_bw(qcom->icc_path_ddr,
-> +			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
-> +
-> +	if (ret) {
-> +		dev_err(dev, "failed to set bandwidth for usb-ddr path: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = icc_set_bw(qcom->icc_path_apps,
-> +		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
-> +
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-nit: remove empty line, the call and the if block belong together.
-
-> +	if (ret) {
-> +		dev_err(dev, "failed to set bandwidth for apps-usb path: %d\n", ret);
-> +		return ret;
-> +	}
+Thanks,
+Mark
