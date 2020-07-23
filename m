@@ -2,433 +2,140 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427A4C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E99BC433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12FF922B40
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595524598;
-	bh=82CuT3B2oJEoMB9UO7PXa0HTJ/CZfmTTLpJVVu88vMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cP02RDQhV+jzqiPXScxWnX9QDreLk0j8JNAbaTNFBnhU/oFo98CT2qM8tvS8TMwyf
-	 xHCJwBYCqP/gSnomEppgU6J/q2/SrouyemEl9Tq8Q0297VImTILXFCoSZoy1YkLiTo
-	 K+swFSfXhkNx0ZuenEgQ72hJqLc+/gaFnQIF8H9g=
+	by mail.kernel.org (Postfix) with ESMTP id 57B5420714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="PB2ohY9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgGWRQe (ORCPT
+        id S1728662AbgGWRU4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:16:34 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35042 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgGWRQe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:16:34 -0400
-Received: by mail-il1-f196.google.com with SMTP id t18so4992668ilh.2;
-        Thu, 23 Jul 2020 10:16:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZUMvuj8eAX170gQ9mGFNERiGRb24OFcJogsQlsHCEEc=;
-        b=NbVqjDi37fic83fWEaPcnbNCqZwZ/ZTk3FpqtS+0uajjuSdvGXFD2NzbM/HWl4kwY7
-         GWElE04iSqpi7AbGqzYKtSoyn7gBcmbQVKoXIR/Qt3yyjhWPyi77Z5rH+qbWa3Nsaa/o
-         SK8YZ+PW9BMbu6yWa3qKiMK1BEKbFHDot0rY0fmpYuzgd64yQePtuvcumZAL00srhzDw
-         +Jev+UV3TP2mT4sE9qQCu4KA91tYSIXcrkwJyJiun6NKmFeUnZbm1hY0K9uNmbMlJDG2
-         45UMFrQCjDfS2mmCQC3jdqVhYEq7hYMgfoYKBEIIbTO4m9pcPqScv9y2WkNUXvXunINS
-         z88Q==
-X-Gm-Message-State: AOAM532e+BAfj6Fgr5ANmq449x5YIbScV7GoIVpiRLjDxE9ZOyyf7Msn
-        /6HggbjCc7PA5OhKlwko4PMEzGxy3Q==
-X-Google-Smtp-Source: ABdhPJxiFoI0aTZugjHZ9P161oA5K6mViNl9PekuivKjxoewfHL+pHLtmo+tDNlrnAlTBWQ2wWOwNA==
-X-Received: by 2002:a05:6e02:501:: with SMTP id d1mr5642607ils.213.1595524591704;
-        Thu, 23 Jul 2020 10:16:31 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y2sm1753806iox.22.2020.07.23.10.16.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 10:16:31 -0700 (PDT)
-Received: (nullmailer pid 554254 invoked by uid 1000);
-        Thu, 23 Jul 2020 17:16:29 -0000
-Date:   Thu, 23 Jul 2020 11:16:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rohit kumar <rohitkr@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 12/12] dt-bindings: sound: lpass-cpu: Move to yaml
- format
-Message-ID: <20200723171629.GA547775@bogus>
-References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
- <1595413915-17867-13-git-send-email-rohitkr@codeaurora.org>
+        Thu, 23 Jul 2020 13:20:56 -0400
+Received: from mail-eopbgr10065.outbound.protection.outlook.com ([40.107.1.65]:41280
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727044AbgGWRU4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 13:20:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SkadnWytPMKaqWUqE/hNBbXIdmlkUv/3PBQWZxdEAodDO5t7MaPJLEVlThk0Ld91qcUrR47QzRKo6LAGGZisPdmNcQe+4+82QRe+zIJypBvRduYIlHNBOhIwYEKnxWujluItsg7OBqub1NJrQqw4YFDqt+73Zk94zabzI9JeLM3AiHNgz/OPnh7v5HloeTtfeMggjRJ9MZHv7EjtnkwHkOIHYUrZ3zib8DigBr98czVy0UKaUrj4vOfveYLbsy9PfiPcfn+yFie4cvFJhCF2iNPzvHSQO8EiacKsRPeQjzF0iZyuTcFhc1mCKZ7/k8K1Di63pk3prrxkaZPrvsvlEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+44xVhRCa9KxkG5uPst6GMEsSVkgIiFEgCsYek+7Crk=;
+ b=cKWzaTuqVVmDvJiUrIrC5y84VWPUlkPmG94w6mkw4zK3nvfy+tqPnshluMm5ZWoHaA2bL/S3e5U9qLZMSC4iw3/92/W2PYEHDTwQV7Ism9a9k6he/no+q0eGjgc7r6xm9WmPt4bkRmdn3bJKQ3gGyvVY34rtY2N/V70i/oCmksSvWkn0yCKK1l4gixKtY4HXLRMkXEHM8jKceSDKruJT3Dzm5dZN5K92D+v32Ztkz6DnesEnGHxvsPsKLFW9qS3Q3fJZ+EO5o40P1nrs6txOXNWGEsBwvlV3/AQaNimy0AcjqlHs3nmbehZlxDfWbqwzPjIfhA9J/qXQtJfDqb+tsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 193.240.239.45) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=diasemi.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+44xVhRCa9KxkG5uPst6GMEsSVkgIiFEgCsYek+7Crk=;
+ b=PB2ohY9mdpD/uUbeqzq9PVYBKIksrenf5rl6LZkKuqA/Vuk2lperonIcnUW5g7MpQRVluw3gotYQdueQvrDSNqdgjBSlTB+zuhccV0V8f1FFWh8uodVpQ6y8XKGhheyXsu63xrF+RpGiWKa9+CohppxPhqFHas/QT4kdfW58s7U=
+Received: from AM5PR0701CA0012.eurprd07.prod.outlook.com
+ (2603:10a6:203:51::22) by AM0PR10MB2868.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15d::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Thu, 23 Jul
+ 2020 17:20:52 +0000
+Received: from HE1EUR02FT049.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:203:51:cafe::a6) by AM5PR0701CA0012.outlook.office365.com
+ (2603:10a6:203:51::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend
+ Transport; Thu, 23 Jul 2020 17:20:52 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; linuxfoundation.org; dkim=none
+ (message not signed) header.d=none;linuxfoundation.org; dmarc=fail
+ action=none header.from=diasemi.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ diasemi.com discourages use of 193.240.239.45 as permitted sender)
+Received: from mailrelay1.diasemi.com (193.240.239.45) by
+ HE1EUR02FT049.mail.protection.outlook.com (10.152.11.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3216.10 via Frontend Transport; Thu, 23 Jul 2020 17:20:52 +0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 23 Jul 2020 19:20:49 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 9FFEB13F672; Fri, 24 Jul 2020 02:20:47 +0900 (KST)
+Message-ID: <cover.1595516501.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Fri, 24 Jul 2020 00:01:41 +0900
+Subject: [PATCH v17 0/3]  da7280: haptic driver submission
+To:     "David S. Miller" <davem@davemloft.net>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595413915-17867-13-git-send-email-rohitkr@codeaurora.org>
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 21a6e378-507f-4227-f271-08d82f2cc066
+X-MS-TrafficTypeDiagnostic: AM0PR10MB2868:
+X-Microsoft-Antispam-PRVS: <AM0PR10MB2868013D41ABB324AE2C16B0A2760@AM0PR10MB2868.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vJ7M/LVDfzQ9QIJvxstlMNInIomNL+wCh8cC/hH85x4kWs/JzZssNUn0oobfUP1wZfH3IaA5w+9gvy7TmHfzBwN2PgtXlRyktKnW6eBEazH7PFkx9uEV/VhMWRbn3qGb0NAQT+UqTurnAyCwIokvDTBZvNsTrhXXAyFHeoAI1iRlvw8QwkYesWBUZW95jhIhaKGQWPUBe+2sV0apREsDHH5Ml32MAHpG/q+vHaLxxjVq5FQp/VN6YywzouhYwhgn3jmVs1GJZykYjofnk0fR+eA1zoGOp6M+VjJYsyELYDPhf4kmA+Ca2JaW9FBBeUrC2E6HIT0g+ad+CjH2qZPueCL77/hT5RnS8Vg0aHGUTGN2cNL/jF7ovm74RSApbcyhEHlqfDsP5Yv2b6WVPWklLbqp4o6eIUQaK1XAD0S+Ac7HM6fzdEIKwaz8lEOD7mpb
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(396003)(376002)(46966005)(6666004)(36756003)(36906005)(8936002)(2616005)(6266002)(4326008)(5660300002)(70206006)(426003)(8676002)(336012)(86362001)(26005)(83380400001)(478600001)(186003)(47076004)(2906002)(4744005)(42186006)(82310400002)(82740400003)(33310700002)(316002)(54906003)(81166007)(356005)(70586007)(110136005)(7416002)(921003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2020 17:20:52.2835
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21a6e378-507f-4227-f271-08d82f2cc066
+X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT049.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2868
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 04:01:55PM +0530, Rohit kumar wrote:
-> Update lpass-cpu binding with yaml formats.
-> 
-> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-> ---
->  .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 130 ---------------
->  .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 185 +++++++++++++++++++++
->  2 files changed, 185 insertions(+), 130 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-> deleted file mode 100644
-> index c21392e..00000000
-> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-> +++ /dev/null
-> @@ -1,130 +0,0 @@
-> -* Qualcomm Technologies LPASS CPU DAI
-> -
-> -This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
-> -
-> -Required properties:
-> -
-> -- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
-> -			  "qcom,lpass-cpu-sc7180"
-> -- clocks		: Must contain an entry for each entry in clock-names.
-> -- clock-names		: A list which must include the following entries:
-> -				* "ahbix-clk"
-> -				* "mi2s-osr-clk"
-> -				* "mi2s-bit-clk"
-> -			: required clocks for "qcom,lpass-cpu-apq8016"
-> -				* "ahbix-clk"
-> -				* "mi2s-bit-clk0"
-> -				* "mi2s-bit-clk1"
-> -				* "mi2s-bit-clk2"
-> -				* "mi2s-bit-clk3"
-> -				* "pcnoc-mport-clk"
-> -				* "pcnoc-sway-clk"
-> -			: required clocks for "qcom,lpass-cpu-sc7180"
-> -				* "audio-core"
-> -				* "mclk0"
-> -				* "mi2s-bit-clk0"
-> -				* "mi2s-bit-clk1"
-> -				* "pcnoc-sway-clk"
-> -				* "pcnoc-mport-clk"
-> -
-> -- interrupts		: Must contain an entry for each entry in
-> -			  interrupt-names.
-> -- interrupt-names	: A list which must include the following entries:
-> -				* "lpass-irq-lpaif"
-> -- pinctrl-N		: One property must exist for each entry in
-> -			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
-> -			  for details of the property values.
-> -- pinctrl-names		: Must contain a "default" entry.
-> -- reg			: Must contain an address for each entry in reg-names.
-> -- reg-names		: A list which must include the following entries:
-> -				* "lpass-lpaif"
-> -- #address-cells	: Must be 1
-> -- #size-cells		: Must be 0
-> -
-> -
-> -
-> -Optional properties:
-> -
-> -- qcom,adsp		: Phandle for the audio DSP node
-> -
-> -By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
-> -The SD lines to use can be configured by adding subnodes for each of the DAIs.
-> -
-> -Required properties for each DAI (represented by a subnode):
-> -- reg			: Must be one of the DAI IDs
-> -			  (usually part of dt-bindings header)
-> -- qcom,playback-sd-lines: List of serial data lines to use for playback
-> -			  Each SD line should be represented by a number from 0-3.
-> -- qcom,capture-sd-lines	: List of serial data lines to use for capture
-> -			  Each SD line should be represented by a number from 0-3.
-> -
-> -Note that adding a subnode changes the default to "no lines configured",
-> -so both playback and capture lines should be configured when a subnode is added.
-> -
-> -Examples:
-> -1)
-> -
-> -lpass@28100000 {
-> -	compatible = "qcom,lpass-cpu";
-> -	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
-> -	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
-> -	interrupts = <0 85 1>;
-> -	interrupt-names = "lpass-irq-lpaif";
-> -	pinctrl-names = "default", "idle";
-> -	pinctrl-0 = <&mi2s_default>;
-> -	pinctrl-1 = <&mi2s_idle>;
-> -	reg = <0x28100000 0x10000>;
-> -	reg-names = "lpass-lpaif";
-> -	qcom,adsp = <&adsp>;
-> -
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -
-> -	/* Optional to set different MI2S SD lines */
-> -	dai@3 {
-> -		reg = <MI2S_QUATERNARY>;
-> -		qcom,playback-sd-lines = <0 1>;
-> -	};
-> -};
-> -
-> -2)
-> -
-> -#include <dt-bindings/sound/sc7180-lpass.h>
-> -
-> -lpass_cpu: lpass {
-> -	compatible = "qcom,lpass-cpu-sc7180";
-> -
-> -	reg = <0 0x62F00000 0 0x29000>;
-> -
-> -	iommus = <&apps_smmu 0x1020 0>;
-> -
-> -	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> -	clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_CORE_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
-> -	clock-names = "pcnoc-sway-clk", "audio-core",
-> -			"mclk0", "pcnoc-mport-clk",
-> -			"mi2s-bit-clk0", "mi2s-bit-clk1";
-> -	interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
-> -	interrupt-names = "lpass-irq-lpaif";
-> -
-> -
-> -	#sound-dai-cells = <1>;
-> -
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -
-> -	mi2s-primary@0 {
-> -		reg = <MI2S_PRIMARY>;
-> -		qcom,playback-sd-lines = <1>;
-> -		qcom,capture-sd-lines = <0>;
-> -	};
-> -
-> -	mi2s-secondary@1 {
-> -		reg = <MI2S_SECONDARY>;
-> -		qcom,playback-sd-lines = <0>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> new file mode 100644
-> index 00000000..03c598f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> @@ -0,0 +1,185 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-If all the authors are QCom or Linaro please dual license.
+In this patch set the following is provided:
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm LPASS CPU dai driver bindings
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +  - Rohit kumar <rohitkr@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm SOC Low-Power Audio SubSystem (LPASS) that consist of MI2S interface
-> +  for audio data transfer on external codecs. LPASS cpu driver is a module to
-> +  configure Low-Power Audio Interface(LPAIF) core registers across different
-> +  IP versions.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: qcom,lpass-cpu
-> +        description: For IPQ806x
-> +
-> +      - const: qcom,apq8016-lpass-cpu
-> +        description: For APQ8016
-> +
-> +      - const: qcom,lpass-cpu-sc7180
-> +        description: For SC7180
+[PATCH v17 1/3] MAINTAINERS file update for DA7280
+[PATCH v17 2/3] DA7280 DT Binding
+[PATCH v17 3/3] DA7280 Driver
 
-Use enum rather than oneOf+const
+This patch applies against linux-next and v5.8-rc6
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: LPAIF core registers
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 6
-> +
-> +  clock-names:
-> +    minItems: 3
-> +    maxItems: 6
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: LPAIF DMA buffer interrupt
-> +
-> +  qcom,adsp:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle for the audio DSP node
-> +
-> +  iommus:
-> +    maxItems: 1
-> +    description: Phandle to apps_smmu node with sid mask
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +patternProperties:
-> +  "(^mi2s-[0-9a-f]$|mi2s)":
-> +    type: object
-> +    description: Required properties for each DAI
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +        description: Must be one of the DAI ID
-> +
-> +    required:
-> +      - reg
-> +
-> +
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-Extra blank line.
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
 
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - '#sound-dai-cells'
+ .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1840 ++++++++++++++++++++
+ 5 files changed, 1965 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
 
-Add:
+-- 
+end-of-patch for PATCH v17
 
-additionalProperties: false
-
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,lpass-cpu-sc7180
-> +
-> +    then:
-> +      required:
-> +        - iommus
-> +        - power-domains
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,lpass-cpu
-> +
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          items:
-> +            - const: ahbix-clk
-> +            - const: mi2s-osr-clk
-> +            - const: mi2s-bit-clk
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,apq8016-lpass-cpu
-> +
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          items:
-> +            - const: ahbix-clk
-> +            - const: mi2s-bit-clk0
-> +            - const: mi2s-bit-clk1
-> +            - const: mi2s-bit-clk2
-> +            - const: mi2s-bit-clk3
-> +            - const: pcnoc-mport-clk
-> +            - const: pcnoc-sway-clk
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,lpass-cpu-sc7180
-
-You already have the same condition previously. Combine into 1.
-
-> +
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          items:
-> +            - const: pcnoc-sway-clk
-> +            - const: audio-core
-> +            - const: mclk0
-> +            - const: pcnoc-mport-clk
-> +            - const: mi2s-bit-clk0
-> +            - const: mi2s-bit-clk1
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/sound/sc7180-lpass.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        lpass@62f00000 {
-> +            compatible = "qcom,lpass-cpu-sc7180";
-> +
-> +            reg = <0 0x62f00000  0 0x29000>;
-> +
-> +            iommus = <&apps_smmu 0x1020 0>;
-> +            power-domains = <&lpass_hm 0>;
-> +
-> +            clocks = <&gcc 131>,
-> +                 <&lpasscorecc 6>,
-> +                 <&lpasscorecc 7>,
-> +                 <&lpasscorecc 10>,
-> +                 <&lpasscorecc 8>,
-> +                 <&lpasscorecc 9>;
-> +
-> +            clock-names = "pcnoc-sway-clk", "audio-core",
-> +                          "mclk0", "pcnoc-mport-clk",
-> +                          "mi2s-bit-clk0", "mi2s-bit-clk1";
-> +
-> +            interrupts = <0 160 1>;
-> +
-> +            #sound-dai-cells = <1>;
-> +
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            /* Optional to set different MI2S SD lines */
-> +            mi2s-primary@0 {
-> +                reg = <MI2S_PRIMARY>;
-> +                qcom,playback-sd-lines = <1>;
-> +                qcom,capture-sd-lines = <0>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-> 
