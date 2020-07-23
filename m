@@ -2,89 +2,83 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07737C433E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA83C433F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DBD20888
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:22:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595539354;
-	bh=viGwTz++LeibVxJ9asehRgtVFS4za6tPq5yhMfIvdAA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g6jpFQ45PX4o2aw8zUopDQBi7Z8/T0/n0OxGkMdHxl0JtIIObaObsOImWCsNW5g8m
-	 MG+4Kpw8nHk46XKJBELBc28wPONwuAI8bmf/rdceoGVFBCIznvkgL53igvPXN20wVU
-	 M+V5U3tITk3kWRvQPeg1+VWYgJGEvfLtnK22cK1A=
+	by mail.kernel.org (Postfix) with ESMTP id 5A9CF207C4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgGWVWe (ORCPT
+        id S1728027AbgGWVSx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:22:34 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41437 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgGWVWd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:22:33 -0400
-Received: by mail-il1-f196.google.com with SMTP id q3so5574967ilt.8;
-        Thu, 23 Jul 2020 14:22:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OJ57T581vc5PeC3dDJScbWKVMa1D4jQ/zhnzNifzw9Q=;
-        b=tArhQ5AASqcaPSf9cNlS6hytKA6mI7u3XpOn0pKi8Rtl+xhToGBd/W6eFcZeYM8u84
-         Ofg6h1LNvQEdUg/n9Oqwar1JQTxotBoIJ7tsBYK9Cpok6AfZndRpAl6wqoOm3I9AyTP0
-         FPCmFLWXhOKzzz+o//unVPv0oqviQInVu5FfDUhhMn21dSAowqMNx47vwDnzYwzjI2ka
-         HUFGJC1isZg0YxW1j5Ev9Zj0T0Ij9R9Ib3huHfWloqn4J65E6MJeIBgcT6otY/qgdMKR
-         CERhxHbv/cREhDFCr5eRKvC8E5b2WUGQitNgDRJMPUVEjRM7rn8YCc1DArbo40srqkvF
-         O+PA==
-X-Gm-Message-State: AOAM531oYqFJRUiKmaPzfyrVBiFoDOMSKiRWHIMRGsRhZiwUKd+kiraN
-        +m7NyCOqKgXdxv0+kBraqw==
-X-Google-Smtp-Source: ABdhPJwzC8OH3Mz3FyBavKzPCckG/RRrF9p2NAjnBrtkJ8Q8NBT2pnlr1Ur1wfpwZpiNTnMEhHHaAw==
-X-Received: by 2002:a92:da51:: with SMTP id p17mr7030616ilq.44.1595539353289;
-        Thu, 23 Jul 2020 14:22:33 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f2sm2082536ioc.52.2020.07.23.14.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 14:22:32 -0700 (PDT)
-Received: (nullmailer pid 881539 invoked by uid 1000);
-        Thu, 23 Jul 2020 21:22:31 -0000
-Date:   Thu, 23 Jul 2020 15:22:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: maxim,max9611 yaml conversions
-Message-ID: <20200723212231.GA881485@bogus>
-References: <20200722171224.989138-1-jic23@kernel.org>
- <20200722171224.989138-4-jic23@kernel.org>
+        Thu, 23 Jul 2020 17:18:53 -0400
+Received: from hera.iit.uni-miskolc.hu ([193.6.5.4]:57804 "EHLO
+        hera.iit.uni-miskolc.hu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgGWVSk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:18:40 -0400
+X-Greylist: delayed 497 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Jul 2020 17:18:39 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by hera.iit.uni-miskolc.hu (Postfix) with ESMTP id 2A340A0D;
+        Thu, 23 Jul 2020 23:10:19 +0200 (CEST)
+X-Virus-Scanned: Kamavis at iit.uni-miskolc.hu
+Received: from hera.iit.uni-miskolc.hu ([127.0.0.1])
+        by localhost (hera.iit.uni-miskolc.hu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zQyqtF7SqN2D; Thu, 23 Jul 2020 23:10:12 +0200 (CEST)
+Received: from titan.hitronhub.home (unknown [IPv6:2a02:8109:a180:908:226:9eff:fe30:2af8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: szucst@iit.uni-miskolc.hu)
+        by hera.iit.uni-miskolc.hu (Postfix) with ESMTPSA id 635A1A0B;
+        Thu, 23 Jul 2020 23:10:11 +0200 (CEST)
+From:   =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        JC Kuo <jckuo@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <tszucs@protonmail.ch>
+Subject: [PATCH v2 0/4] arm64: tegra: Xavier SDMMC changes
+Date:   Thu, 23 Jul 2020 23:09:28 +0200
+Message-Id: <20200723210932.8076-1-tszucs@protonmail.ch>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722171224.989138-4-jic23@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 22 Jul 2020 18:12:24 +0100, Jonathan Cameron wrote:
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Straight forward conversion of this binding for this
-> current sense amplifier and ADC.
-> 
-> Cc: Jacopo Mondi <jacopo@jmondi.org>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  .../devicetree/bindings/iio/adc/max9611.txt   | 27 ----------
->  .../bindings/iio/adc/maxim,max9611.yaml       | 49 +++++++++++++++++++
->  2 files changed, 49 insertions(+), 27 deletions(-)
-> 
+It turns out uSD card detection on the Jetson AGX Xavier is not working and
+I/Os are limited to 3.3 V. SDIO is supported but not enabled. Also, the
+on-board eMMC module is using HS200 only.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes in v2:
+- fix board name in commit messages
+- rebase on for-next
+
+Kind regards,
+Tamas
+
+
+Tamás Szűcs (4):
+  arm64: tegra: Enable signal voltage switching on Tegra194 SDMMC1 and
+    SDMMC3
+  arm64: tegra: Fix CD on Jetson AGX Xavier SDMMC1
+  arm64: tegra: Configure SDIO cards on Jetson AGX Xavier SDMMC1
+  arm64: tegra: Enable HS400 on Tegra194 SDMMC4
+
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  4 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 46 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
+
