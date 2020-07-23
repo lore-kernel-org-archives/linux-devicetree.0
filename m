@@ -2,118 +2,90 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEE8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F3AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91302080D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595506239;
-	bh=eSF1O/MPFAgzk9HDIMFIg1UmW6izaaYh4M3av+WBB5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iQ8pTsboQ5BQkitcnQtl6LQSi6CrJV67qJVbT8QQyq8OzZDLEzqenrC4FmnfiNHDk
-	 MXEn07oyY0vsnHz3RwWQMqzGhWXE6gqO1s0/m9zNpz9whFxQvplvIrf52GKcDK4pGP
-	 Q5RtSkS0hFu/zKOa8uvgTP3souMXBuPKef/Pb+yI=
+	by mail.kernel.org (Postfix) with ESMTP id 36E6B20709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RLr/JR1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgGWMKj (ORCPT
+        id S1728436AbgGWMLY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgGWMKj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 08:10:39 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 23 Jul 2020 08:11:24 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:53432 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728396AbgGWMLY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 08:11:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595506284; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=WvXLJMSd5moKGBo4HGcbWn9Mn8ofEkg1LsUDy5piKlI=; b=RLr/JR1QuUX4s2FbkJYYZel0y3yCwuaiE2rIVXAcQYyR9rNATWmvTqqcPOopwdVHsHaoWnoF
+ x0rqLxoqxTkyeb1l6sng5cG8DJgITd7DSUlqpD0+BvNkpOIPQRqmIVrbZkFEu9vEuMnHouTl
+ XyMlgiVFZQzl+42iqUqlmjjeQDE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5f197e638e9b2c49c6f31de2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 12:11:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 495D0C433C6; Thu, 23 Jul 2020 12:11:15 +0000 (UTC)
+Received: from vnaralas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820F420709;
-        Thu, 23 Jul 2020 12:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595506238;
-        bh=eSF1O/MPFAgzk9HDIMFIg1UmW6izaaYh4M3av+WBB5M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eUBlib0URNNKizHNTmWwA3Xtv4n94Sey+jkjk4xuo7gmwo8/sFTNwigwF9osh7DiH
-         Rq6Kk68saahw0pWsizNtXauDaTtpxrFnolD2FQirpFRvc9saBEUznu5BvsmZADMgPN
-         Ar07tvoXy492obYkCnxgJ4tSBrHgUi8Oh5/AJaIA=
-Date:   Thu, 23 Jul 2020 17:40:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v5 3/4] drm/bridge: Introduce LT9611 DSI to HDMI bridge
-Message-ID: <20200723121034.GA12965@vkoul-mobl>
-References: <20200708103559.132300-1-vkoul@kernel.org>
- <20200708103559.132300-4-vkoul@kernel.org>
- <20200719171806.GA55541@ravnborg.org>
- <20200722131430.GJ5833@pendragon.ideasonboard.com>
- <20200723104151.GY12965@vkoul-mobl>
- <20200723113912.GA535520@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723113912.GA535520@ravnborg.org>
+        (Authenticated sender: akolli)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7FD4AC433C9;
+        Thu, 23 Jul 2020 12:11:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7FD4AC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akolli@codeaurora.org
+From:   Anilkumar Kolli <akolli@codeaurora.org>
+To:     ath11k@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
+        akolli@codeaurora.org
+Subject: [PATCH v4 0/3] ath11k: Add IPQ6018 support
+Date:   Thu, 23 Jul 2020 17:41:01 +0530
+Message-Id: <1595506264-6393-1-git-send-email-akolli@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23-07-20, 13:39, Sam Ravnborg wrote:
-> On Thu, Jul 23, 2020 at 04:11:51PM +0530, Vinod Koul wrote:
-> > Hi Sam, Laurent,
-> > 
-> > On 22-07-20, 16:14, Laurent Pinchart wrote:
-> > > > > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
-> > > > > +				enum drm_bridge_attach_flags flags)
-> > > > > +{
-> > > > > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
-> > > > > +		dev_err(lt9611->dev, "Fix bridge driver to make connector optional!");
-> > > > > +		return -EINVAL;
-> > > > > +	}
-> > > >
-> > > > This should say that the display driver should be fixed.
-> > > > If a display driver expects this bridge to create the connector
-> > > > it would not work.
-> > > 
-> > > Actually, for new bridge drivers, connector creation should be optional
-> > > from the start. We don't want a failure in that case, the feature should
-> > > be implemented.
-> > 
-> > Yes this is causing issues for me now !. The patch 4/4 adds support in
-> > msm/dsi but causes regression on qualcomm laptops with ti-sn65dsi86 eDP
-> > bridge. I tried to fix that up with changes like Laurent has done for
-> > adv7511, but it hasnt worked yet for me (remote debug of this is bit
-> > painful)
-> > 
-> > So I am going to drop patch 4 from this series and add support for both
-> > DRM_BRIDGE_ATTACH_NO_CONNECTOR set and cleared (like we have in adv7511)
-> > so that it can work in both cases, while I fix all bridge uses of
-> > msm/dsi and then we can drop these. Does that sound okay to you folks?
-> Yes, sounds like a good plan.
-> Only when all display drivers are migrated over can we drop all the
-> workarounds in the bridge drivers.
-> I had hoped all users of this bridge was converted - alas that was not
-> the case.
+IPQ6018 has a 5G radio and 2G radio with 2x2
+and shares IPQ8074 configuration.
 
-Thanks, I will send updated patchset fixing the nits and supporting both
-the cases and will drop msm/dsi patch for now
+Tested on: IPQ6018 WLAN.HK.2.2-02134-QCAHKSWPL_SILICONZ-1
+Tested on: IPQ8074 WLAN.HK.2.4.0.1-00009-QCAHKSWPL_SILICONZ-1 
+
+Anilkumar Kolli (3):
+  dt: bindings: net: update compatible for ath11k
+  ath11k: copy ce service configs to hw_params
+  ath11k: add IPQ6018 support
+
+V2:
+ - Added devicetree reviewers 
+V3:
+ - addressed dt bindinds comments
+ - Reworked on Kalles patches
+ - copied ce svc configs to hw_params
+V4:
+ - updated dt patch (Rob)
+
+ .../bindings/net/wireless/qcom,ath11k.yaml         |   4 +-
+ drivers/net/wireless/ath/ath11k/ahb.c              | 131 ++++++++++++++++++++-
+ drivers/net/wireless/ath/ath11k/core.c             |  20 ++--
+ drivers/net/wireless/ath/ath11k/core.h             |   2 +
+ drivers/net/wireless/ath/ath11k/hw.h               |   2 +
+ 5 files changed, 146 insertions(+), 13 deletions(-)
 
 -- 
-~Vinod
+2.7.4
+
