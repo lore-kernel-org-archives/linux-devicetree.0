@@ -2,161 +2,148 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB49C433EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 03:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB348C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 04:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7615B2080D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 03:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MYReN72H"
+	by mail.kernel.org (Postfix) with ESMTP id AD65020737
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 04:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387756AbgGWDkd (ORCPT
+        id S1726109AbgGWEQZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 23:40:33 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:11888 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387761AbgGWDk1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 23:40:27 -0400
-X-UUID: 9177e58d825e47298e4fcb6092c962d6-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=SrPkUP8o0qnzmuIeH5BNsY2yvlNKAkq0haYDD/az/v4=;
-        b=MYReN72H99jSPvijojwikF+OpV7TeHlX5aQ8MK16SvcRn9PkKLVHWZPR/OJt8HHK34e9aFa7VlGSuQjUaQoDQU/AuZy70ctN1/mdyxLyusU3HlkLg2gTjlnqeo1ufR1pwe0GMtscBdEoXBvkrZIMVP0UYXTdKmweaY0FR14qWbI=;
-X-UUID: 9177e58d825e47298e4fcb6092c962d6-20200723
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1340201786; Thu, 23 Jul 2020 11:40:20 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 11:40:18 +0800
-Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 11:40:15 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Argus Lin <argus.lin@mediatek.com>
-CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Subject: [PATCH v2 2/4] soc: mediatek: pwrap: add arbiter capability
-Date:   Thu, 23 Jul 2020 11:39:58 +0800
-Message-ID: <1595475600-23180-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 2.6.4
-In-Reply-To: <1595475600-23180-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1595475600-23180-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 23 Jul 2020 00:16:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:44677 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbgGWEQY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 00:16:24 -0400
+IronPort-SDR: 9GOXqDrua+V07IoOz1oMITzw90rxZP5GDtO6pjusCC1cm116jh36SsT4jRY0Np7k2dlZAz96Ez
+ 9AOdGy3+wjhg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="212005799"
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="212005799"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 21:16:22 -0700
+IronPort-SDR: rpHIBZB6bPuv3oNaM50bZUknBDy+sYwfmQRnelBJL17bUfJOpOoX8J3DFyk6Szu4intgGr9/2i
+ DVGSuZxFmu8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
+   d="scan'208";a="288509462"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 22 Jul 2020 21:16:22 -0700
+Received: from [10.226.38.18] (unknown [10.226.38.18])
+        by linux.intel.com (Postfix) with ESMTP id AEE69580299;
+        Wed, 22 Jul 2020 21:16:19 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] Add PWM fan controller driver for LGM SoC
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+References: <cover.1593503228.git.rahul.tanwar@linux.intel.com>
+ <a74b18b68f26bf902c30a017050cc4ea070da887.1593503228.git.rahul.tanwar@linux.intel.com>
+ <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <409ee148-a6a6-327f-e4d7-455f98ef4c66@linux.intel.com>
+Date:   Thu, 23 Jul 2020 12:16:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200713191059.zsokzvv3k2hyaxcl@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIGFyYml0ZXIgY2FwYWJpbGl0eSBmb3IgcHdyYXAgZHJpdmVyLg0KVGhpcyBwYXRjaCBpcyBw
-cmVwYXJpbmcgZm9yIGFkZGluZyBtdDY4NzMvODE5MiBwd3JhcCBzdXBwb3J0Lg0KDQpTaWduZWQt
-b2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4N
-Ci0tLQ0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAuYyB8IDY3ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA1NiBpbnNlcnRp
-b25zKCspLCAxMSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1wbWljLXdyYXAuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1wbWljLXdyYXAu
-Yw0KaW5kZXggYzg5NzIwNS4uOGQ3NmVkNCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1wbWljLXdyYXAuYw0KKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXBtaWMt
-d3JhcC5jDQpAQCAtMjQsMTEgKzI0LDEzIEBADQogI2RlZmluZSBQV1JBUF9NVDgxMzVfQlJJREdF
-X1dEVF9TUkNfRU4JCTB4NTQNCiANCiAvKiBtYWNybyBmb3Igd3JhcHBlciBzdGF0dXMgKi8NCisj
-ZGVmaW5lIFBXUkFQX0dFVF9TV0lORl8yX0ZTTSh4KQkoKCh4KSA+PiAxKSAmIDB4MDAwMDAwMDcp
-DQogI2RlZmluZSBQV1JBUF9HRVRfV0FDU19SREFUQSh4KQkJKCgoeCkgPj4gMCkgJiAweDAwMDBm
-ZmZmKQ0KICNkZWZpbmUgUFdSQVBfR0VUX1dBQ1NfRlNNKHgpCQkoKCh4KSA+PiAxNikgJiAweDAw
-MDAwMDA3KQ0KICNkZWZpbmUgUFdSQVBfR0VUX1dBQ1NfUkVRKHgpCQkoKCh4KSA+PiAxOSkgJiAw
-eDAwMDAwMDAxKQ0KICNkZWZpbmUgUFdSQVBfU1RBVEVfU1lOQ19JRExFMAkJQklUKDIwKQ0KICNk
-ZWZpbmUgUFdSQVBfU1RBVEVfSU5JVF9ET05FMAkJQklUKDIxKQ0KKyNkZWZpbmUgUFdSQVBfU1RB
-VEVfSU5JVF9ET05FMQkJQklUKDE1KQ0KIA0KIC8qIG1hY3JvIGZvciBXQUNTIEZTTSAqLw0KICNk
-ZWZpbmUgUFdSQVBfV0FDU19GU01fSURMRQkJMHgwMA0KQEAgLTc0LDYgKzc2LDcgQEANCiAjZGVm
-aW5lIFBXUkFQX0NBUF9EQ00JCUJJVCgyKQ0KICNkZWZpbmUgUFdSQVBfQ0FQX0lOVDFfRU4JQklU
-KDMpDQogI2RlZmluZSBQV1JBUF9DQVBfV0RUX1NSQzEJQklUKDQpDQorI2RlZmluZSBQV1JBUF9D
-QVBfQVJCCQlCSVQoNSkNCiANCiAvKiBkZWZpbmVzIGZvciBzbGF2ZSBkZXZpY2Ugd3JhcHBlciBy
-ZWdpc3RlcnMgKi8NCiBlbnVtIGRld19yZWdzIHsNCkBAIC0zNDAsNiArMzQzLDggQEAgZW51bSBw
-d3JhcF9yZWdzIHsNCiAJUFdSQVBfRENNX0RCQ19QUkQsDQogCVBXUkFQX0VJTlRfU1RBMF9BRFIs
-DQogCVBXUkFQX0VJTlRfU1RBMV9BRFIsDQorCVBXUkFQX1NXSU5GXzJfV0RBVEFfMzFfMCwNCisJ
-UFdSQVBfU1dJTkZfMl9SREFUQV8zMV8wLA0KIA0KIAkvKiBNVDI3MDEgb25seSByZWdzICovDQog
-CVBXUkFQX0FEQ19DTURfQUREUiwNCkBAIC0xMTA4LDE2ICsxMTEzLDMwIEBAIHN0YXRpYyB2b2lk
-IHB3cmFwX3dyaXRlbChzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnAsIHUzMiB2YWwsIGVudW0gcHdy
-YXBfcmVncyByZWcpDQogDQogc3RhdGljIGJvb2wgcHdyYXBfaXNfZnNtX2lkbGUoc3RydWN0IHBt
-aWNfd3JhcHBlciAqd3JwKQ0KIHsNCi0JdTMyIHZhbCA9IHB3cmFwX3JlYWRsKHdycCwgUFdSQVBf
-V0FDUzJfUkRBVEEpOw0KKwl1MzIgdmFsOw0KKwlib29sIHJldDsNCisNCisJdmFsID0gcHdyYXBf
-cmVhZGwod3JwLCBQV1JBUF9XQUNTMl9SREFUQSk7DQorCWlmICghSEFTX0NBUCh3cnAtPm1hc3Rl
-ci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpDQorCQlyZXQgPSAoUFdSQVBfR0VUX1dBQ1NfRlNNKHZh
-bCkgPT0gUFdSQVBfV0FDU19GU01fSURMRSk7DQorCWVsc2UNCisJCXJldCA9IChQV1JBUF9HRVRf
-U1dJTkZfMl9GU00odmFsKSA9PSBQV1JBUF9XQUNTX0ZTTV9JRExFKTsNCiANCi0JcmV0dXJuIFBX
-UkFQX0dFVF9XQUNTX0ZTTSh2YWwpID09IFBXUkFQX1dBQ1NfRlNNX0lETEU7DQorCXJldHVybiBy
-ZXQ7DQogfQ0KIA0KIHN0YXRpYyBib29sIHB3cmFwX2lzX2ZzbV92bGRjbHIoc3RydWN0IHBtaWNf
-d3JhcHBlciAqd3JwKQ0KIHsNCi0JdTMyIHZhbCA9IHB3cmFwX3JlYWRsKHdycCwgUFdSQVBfV0FD
-UzJfUkRBVEEpOw0KKwl1MzIgdmFsOw0KKwlib29sIHJldDsNCisNCisJdmFsID0gcHdyYXBfcmVh
-ZGwod3JwLCBQV1JBUF9XQUNTMl9SREFUQSk7DQorCWlmICghSEFTX0NBUCh3cnAtPm1hc3Rlci0+
-Y2FwcywgUFdSQVBfQ0FQX0FSQikpDQorCQlyZXQgPSAoUFdSQVBfR0VUX1dBQ1NfRlNNKHZhbCkg
-PT0gUFdSQVBfV0FDU19GU01fV0ZWTERDTFIpOw0KKwllbHNlDQorCQlyZXQgPSAoUFdSQVBfR0VU
-X1NXSU5GXzJfRlNNKHZhbCkgPT0gUFdSQVBfV0FDU19GU01fV0ZWTERDTFIpOw0KIA0KLQlyZXR1
-cm4gUFdSQVBfR0VUX1dBQ1NfRlNNKHZhbCkgPT0gUFdSQVBfV0FDU19GU01fV0ZWTERDTFI7DQor
-CXJldHVybiByZXQ7DQogfQ0KIA0KIC8qDQpAQCAtMTE3MiwxMyArMTE5MSwyMSBAQCBzdGF0aWMg
-aW50IHB3cmFwX3JlYWQxNihzdHJ1Y3QgcG1pY193cmFwcGVyICp3cnAsIHUzMiBhZHIsIHUzMiAq
-cmRhdGEpDQogCQlyZXR1cm4gcmV0Ow0KIAl9DQogDQotCXB3cmFwX3dyaXRlbCh3cnAsIChhZHIg
-Pj4gMSkgPDwgMTYsIFBXUkFQX1dBQ1MyX0NNRCk7DQorCWlmICghSEFTX0NBUCh3cnAtPm1hc3Rl
-ci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpDQorCQlwd3JhcF93cml0ZWwod3JwLCAoYWRyID4+IDEp
-IDw8IDE2LCBQV1JBUF9XQUNTMl9DTUQpOw0KKwllbHNlDQorCQlwd3JhcF93cml0ZWwod3JwLCBh
-ZHIsIFBXUkFQX1dBQ1MyX0NNRCk7DQogDQogCXJldCA9IHB3cmFwX3dhaXRfZm9yX3N0YXRlKHdy
-cCwgcHdyYXBfaXNfZnNtX3ZsZGNscik7DQogCWlmIChyZXQpDQogCQlyZXR1cm4gcmV0Ow0KIA0K
-LQkqcmRhdGEgPSBQV1JBUF9HRVRfV0FDU19SREFUQShwd3JhcF9yZWFkbCh3cnAsIFBXUkFQX1dB
-Q1MyX1JEQVRBKSk7DQorCWlmICghSEFTX0NBUCh3cnAtPm1hc3Rlci0+Y2FwcywgUFdSQVBfQ0FQ
-X0FSQikpDQorCQkqcmRhdGEgPSBQV1JBUF9HRVRfV0FDU19SREFUQShwd3JhcF9yZWFkbCh3cnAs
-DQorCQkJCQkgICAgICBQV1JBUF9XQUNTMl9SREFUQSkpOw0KKwllbHNlDQorCQkqcmRhdGEgPSBQ
-V1JBUF9HRVRfV0FDU19SREFUQShwd3JhcF9yZWFkbCh3cnAsDQorCQkJCQkgICAgICBQV1JBUF9T
-V0lORl8yX1JEQVRBXzMxXzApKTsNCiANCiAJcHdyYXBfd3JpdGVsKHdycCwgMSwgUFdSQVBfV0FD
-UzJfVkxEQ0xSKTsNCiANCkBAIC0xMjI4LDggKzEyNTUsMTMgQEAgc3RhdGljIGludCBwd3JhcF93
-cml0ZTE2KHN0cnVjdCBwbWljX3dyYXBwZXIgKndycCwgdTMyIGFkciwgdTMyIHdkYXRhKQ0KIAkJ
-cmV0dXJuIHJldDsNCiAJfQ0KIA0KLQlwd3JhcF93cml0ZWwod3JwLCAoMSA8PCAzMSkgfCAoKGFk
-ciA+PiAxKSA8PCAxNikgfCB3ZGF0YSwNCi0JCSAgICAgUFdSQVBfV0FDUzJfQ01EKTsNCisJaWYg
-KCFIQVNfQ0FQKHdycC0+bWFzdGVyLT5jYXBzLCBQV1JBUF9DQVBfQVJCKSkgew0KKwkJcHdyYXBf
-d3JpdGVsKHdycCwgQklUKDMxKSB8ICgoYWRyID4+IDEpIDw8IDE2KSB8IHdkYXRhLA0KKwkJCSAg
-ICAgUFdSQVBfV0FDUzJfQ01EKTsNCisJfSBlbHNlIHsNCisJCXB3cmFwX3dyaXRlbCh3cnAsIHdk
-YXRhLCBQV1JBUF9TV0lORl8yX1dEQVRBXzMxXzApOw0KKwkJcHdyYXBfd3JpdGVsKHdycCwgQklU
-KDI5KSB8IGFkciwgUFdSQVBfV0FDUzJfQ01EKTsNCisJfQ0KIA0KIAlyZXR1cm4gMDsNCiB9DQpA
-QCAtMjAyMiw2ICsyMDU0LDcgQEAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgb2ZfcHdyYXBfbWF0
-Y2hfdGJsKTsNCiBzdGF0aWMgaW50IHB3cmFwX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpDQogew0KIAlpbnQgcmV0LCBpcnE7DQorCXUzMiByZGF0YTsNCiAJc3RydWN0IHBtaWNf
-d3JhcHBlciAqd3JwOw0KIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25v
-ZGU7DQogCWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm9mX3NsYXZlX2lkID0gTlVMTDsNCkBA
-IC0yMTE2LDE0ICsyMTQ5LDIyIEBAIHN0YXRpYyBpbnQgcHdyYXBfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCiAJCX0NCiAJfQ0KIA0KLQlpZiAoIShwd3JhcF9yZWFkbCh3cnAs
-IFBXUkFQX1dBQ1MyX1JEQVRBKSAmIFBXUkFQX1NUQVRFX0lOSVRfRE9ORTApKSB7DQorCWlmICgh
-SEFTX0NBUCh3cnAtPm1hc3Rlci0+Y2FwcywgUFdSQVBfQ0FQX0FSQikpDQorCQlyZGF0YSA9IHB3
-cmFwX3JlYWRsKHdycCwgUFdSQVBfV0FDUzJfUkRBVEEpICYNCisJCQkJICAgIFBXUkFQX1NUQVRF
-X0lOSVRfRE9ORTA7DQorCWVsc2UNCisJCXJkYXRhID0gcHdyYXBfcmVhZGwod3JwLCBQV1JBUF9X
-QUNTMl9SREFUQSkgJg0KKwkJCQkgICAgUFdSQVBfU1RBVEVfSU5JVF9ET05FMTsNCisJaWYgKCFy
-ZGF0YSkgew0KIAkJZGV2X2RiZyh3cnAtPmRldiwgImluaXRpYWxpemF0aW9uIGlzbid0IGZpbmlz
-aGVkXG4iKTsNCiAJCXJldCA9IC1FTk9ERVY7DQogCQlnb3RvIGVycl9vdXQyOw0KIAl9DQogDQog
-CS8qIEluaXRpYWxpemUgd2F0Y2hkb2csIG1heSBub3QgYmUgZG9uZSBieSB0aGUgYm9vdGxvYWRl
-ciAqLw0KLQlwd3JhcF93cml0ZWwod3JwLCAweGYsIFBXUkFQX1dEVF9VTklUKTsNCisJaWYgKCFI
-QVNfQ0FQKHdycC0+bWFzdGVyLT5jYXBzLCBQV1JBUF9DQVBfQVJCKSkNCisJCXB3cmFwX3dyaXRl
-bCh3cnAsIDB4ZiwgUFdSQVBfV0RUX1VOSVQpOw0KKw0KIAkvKg0KIAkgKiBTaW5jZSBTVEFVUEQg
-d2FzIG5vdCB1c2VkIG9uIG10ODE3MyBwbGF0Zm9ybSwNCiAJICogc28gU1RBVVBEIG9mIFdEVF9T
-UkMgd2hpY2ggc2hvdWxkIGJlIHR1cm5lZCBvZmYNCkBAIC0yMTMyLDcgKzIxNzMsMTEgQEAgc3Rh
-dGljIGludCBwd3JhcF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAlpZiAo
-SEFTX0NBUCh3cnAtPm1hc3Rlci0+Y2FwcywgUFdSQVBfQ0FQX1dEVF9TUkMxKSkNCiAJCXB3cmFw
-X3dyaXRlbCh3cnAsIHdycC0+bWFzdGVyLT53ZHRfc3JjLCBQV1JBUF9XRFRfU1JDX0VOXzEpOw0K
-IA0KLQlwd3JhcF93cml0ZWwod3JwLCAweDEsIFBXUkFQX1RJTUVSX0VOKTsNCisJaWYgKCFIQVNf
-Q0FQKHdycC0+bWFzdGVyLT5jYXBzLCBQV1JBUF9DQVBfQVJCKSkNCisJCXB3cmFwX3dyaXRlbCh3
-cnAsIDB4MSwgUFdSQVBfVElNRVJfRU4pOw0KKwllbHNlDQorCQlwd3JhcF93cml0ZWwod3JwLCAw
-eDMsIFBXUkFQX1RJTUVSX0VOKTsNCisNCiAJcHdyYXBfd3JpdGVsKHdycCwgd3JwLT5tYXN0ZXIt
-PmludF9lbl9hbGwsIFBXUkFQX0lOVF9FTik7DQogCS8qDQogCSAqIFdlIGFkZCBJTlQxIGludGVy
-cnVwdCB0byBoYW5kbGUgc3RhcnZhdGlvbiBhbmQgcmVxdWVzdCBleGNlcHRpb24NCi0tIA0KMi42
-LjQNCg==
 
+Hi Uwe,
+
+Thanks for the feedback.
+
+On 14/7/2020 3:10 am, Uwe Kleine-König wrote:
+> Hello,
+>
+> On Tue, Jun 30, 2020 at 03:55:32PM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>> This PWM controller does not have any other consumer, it is a
+>> dedicated PWM controller for fan attached to the system. Add
+>> driver for this PWM fan controller.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+>>  drivers/pwm/Kconfig         |  11 ++
+>>  drivers/pwm/Makefile        |   1 +
+>>  drivers/pwm/pwm-intel-lgm.c | 266 ++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 278 insertions(+)
+>>  create mode 100644 drivers/pwm/pwm-intel-lgm.c
+
+[...]
+
+>> +
+>> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +			 const struct pwm_state *state)
+>> +{
+>> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
+>> +	u32 duty_cycle, val;
+>> +	unsigned int period;
+>> +
+>> +	if (!state->enabled) {
+>> +		lgm_pwm_enable(chip, 0);
+>> +		return 0;
+>> +	}
+>> +
+>> +	period = min_t(u64, state->period, pc->period);
+>> +
+>> +	if (state->polarity != PWM_POLARITY_NORMAL ||
+>> +	    period < pc->period)
+>> +		return -EINVAL;
+> This check looks wrong. If you refuse period < pc->period there isn't
+> much configuration possible.
+
+I am kind of stuck here. I made this change of adding a check
+period < pc->period based on your feedback on v2 patch.
+In fact, you had specified this code in v2 review feedback
+and i used the same exact code.
+
+How should we handle it when the hardware supports fixed period.
+We don't want user to change period and allow just changing
+duty_cycle. With that intention, i had first added a strict check
+which refused configuration if period != pc->period. Period is
+intended to be a read only value.
+
+How do you suggest we handle the fixed period hardware support?
+Would you have any reference example of other drivers which also
+supports fixed period? Thanks.
+
+[...]
+>> +static int lgm_pwm_remove(struct platform_device *pdev)
+>> +{
+>> +	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
+>> +	int ret;
+>> +
+>> +	ret = pwmchip_remove(&pc->chip);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	clk_disable_unprepare(pc->clk);
+>> +	reset_control_assert(pc->rst);
+> Please swap the two previous lines to match the error patch of .probe.
+
+Again, i had made this change based on your below review feedback
+for v1. IMO, reverse of probe makes more sense.
+
+"In .probe() you first release reset and then enable the clock. It's good
+style to do it the other way round in .remove()."
+
+Regards,
+Rahul
