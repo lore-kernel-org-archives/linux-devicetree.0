@@ -2,109 +2,152 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECACEC433EB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87630C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD762071A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595519663;
-	bh=xOdIURdksIa9QF2fAtH1zOnoXNic4rqcFhJCxoE+ckc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dgC7OwFDSlvKggEqnPPReWX+U9lWMc6QNdRFa5zIQQ4NJYtvBRNNUyHiaycDOjbMI
-	 ztpKNYs9Pj4xWoKZumrwzsag+lIzRnUM9pdDmKumITFUXhNNDV9xc73WqqQWy21wPM
-	 oQ9RP93LhylN47fjifnSP8wyWm/B9II7COGQUXw4=
+	by mail.kernel.org (Postfix) with ESMTP id 5E2A720714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C0nj4Eke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgGWPyW (ORCPT
+        id S1726731AbgGWQJD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:54:22 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36599 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgGWPyV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 11:54:21 -0400
-Received: by mail-il1-f196.google.com with SMTP id x9so4746602ila.3;
-        Thu, 23 Jul 2020 08:54:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LannAD2AX1fh6q7gHSRa8VqKVqFIn5KRyC4DsoZMwXo=;
-        b=cMy2certaOv0+zqWXPEKqgOKspoSvXfRLXXkDSZkSVOy/97FC0CzX00KI0w8HJGd5z
-         ruUbQ4mQiZNEmN9JIOFDkH8xWvoHuI+V/tJg3uqSCZgEOlhxsHf0c6DXC/uSVGzPt4Kp
-         5v2u/C/t8PxYRzpMqCL/j6NkJypWQmvy8AO2rKHS9NClzrvULK/wYA6YNYKClb7f/wxN
-         kopqvXSZVt8ZgYLEdg37f9hPHn3L+sRrj6fgJD0Qt0wep3/J9yEDf1+4snsOJ4Z+/svV
-         ZjjCsdyVnXtYORR4yXBgl6UUszu2yakI9jbbCbq1kLKDGapX9FxIIlNBDBOTenrVY21U
-         12Og==
-X-Gm-Message-State: AOAM53281PP7TsZACV+j2uSAzAWDgTl/RtN3dx82a8+OHe7uTVP9C5fW
-        173ln3Inuz0aCHHQ+CaMkkuLmfpcGA==
-X-Google-Smtp-Source: ABdhPJywARBshz2+0DGQQChaKCPrF7Q5cVSGWUX2ed65RXvpBb9WB1QX1mqkbQNg55v9AFpOewT71g==
-X-Received: by 2002:a92:1b5b:: with SMTP id b88mr2651749ilb.104.1595519660249;
-        Thu, 23 Jul 2020 08:54:20 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p9sm1660623ilc.78.2020.07.23.08.54.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 08:54:19 -0700 (PDT)
-Received: (nullmailer pid 440701 invoked by uid 1000);
-        Thu, 23 Jul 2020 15:54:18 -0000
-Date:   Thu, 23 Jul 2020 09:54:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anilkumar Kolli <akolli@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        ath11k@lists.infradead.org
-Subject: Re: [PATCH v4 1/3] dt: bindings: net: update compatible for ath11k
-Message-ID: <20200723155418.GA439882@bogus>
-References: <1595506264-6393-1-git-send-email-akolli@codeaurora.org>
- <1595506264-6393-2-git-send-email-akolli@codeaurora.org>
+        Thu, 23 Jul 2020 12:09:03 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46658 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgGWQJC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 12:09:02 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06NG8i0c021763;
+        Thu, 23 Jul 2020 11:08:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595520524;
+        bh=uP42COOHI/Gb4zZlyWVEyG3GF7JuWum+Uudtqa+M438=;
+        h=From:To:CC:Subject:Date;
+        b=C0nj4EkeRMpoGFNE/j6P9HXwL0H1YiPzKFjxv0zRFEiH9wiJLayHYhHIr+id3Tg5s
+         dADze4YYT+SkKCA3DTbG/8UfjnZGH5Wqm+8AFvnnrcpY6CWONOOBGAMRZdmV0WZwZi
+         2LJOf5XJCQegBNdpi9jeSspaFw2OWVQJtCCrL00A=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06NG8iH7103767
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Jul 2020 11:08:44 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
+ Jul 2020 11:08:43 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 23 Jul 2020 11:08:43 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06NG8hsm002451;
+        Thu, 23 Jul 2020 11:08:43 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 1/2] dt-bindings: tas2562: Convert the tas2562 binding to yaml
+Date:   Thu, 23 Jul 2020 11:08:37 -0500
+Message-ID: <20200723160838.9738-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595506264-6393-2-git-send-email-akolli@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2020 17:41:02 +0530, Anilkumar Kolli wrote:
-> Add IPQ6018 wireless driver support,
-> its based on ath11k driver.
-> 
-> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-> ---
-> V3:
->  - Use 'enum' rather than oneOf+const.
-> V4:
->  - removed oneOf, use just enum (Rob)
-> 
->  Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+Convert the TAS2562 text file to yaml format.
 
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../devicetree/bindings/sound/tas2562.yaml    | 69 +++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml: properties:compatible: [{'enum': ['qcom,ipq8074-wifi', 'qcom,ipq6018-wifi']}] is not of type 'object', 'boolean'
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/net/wireless/qcom,ath11k.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/net/wireless/qcom,ath11k.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml: ignoring, error in schema: properties: compatible
-warning: no schema found in file: ./Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml: ignoring, error in schema: properties: compatible
-warning: no schema found in file: ./Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-
-See https://patchwork.ozlabs.org/patch/1334839
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
+new file mode 100644
+index 000000000000..8d75a798740b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments TAS2562 Smart PA
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
++  efficiently driving high peak power into small loudspeakers.
++  Integrated speaker voltage and current sense provides for
++  real time monitoring of loudspeaker behavior.
++
++properties:
++  compatible:
++    enum:
++      - ti,tas2562
++      - ti,tas2563
++
++  reg:
++    maxItems: 1
++    description: |
++       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
++
++  shut-down-gpios:
++    description: GPIO used to control the state of the device.
++    deprecated: true
++
++  shutdown-gpios:
++    description: GPIO used to control the state of the device.
++
++  interrupts:
++    maxItems: 1
++
++  ti,imon-slot-no:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: TDM TX current sense time slot.
++
++  '#sound-dai-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++   #include <dt-bindings/gpio/gpio.h>
++   i2c0 {
++     #address-cells = <1>;
++     #size-cells = <0>;
++     codec: codec@4c {
++       compatible = "ti,tas2562";
++       reg = <0x4c>;
++       #sound-dai-cells = <1>;
++       interrupt-parent = <&gpio1>;
++       interrupts = <14>;
++       shutdown-gpios = <&gpio1 15 0>;
++       ti,imon-slot-no = <0>;
++     };
++   };
++
+-- 
+2.27.0
 
