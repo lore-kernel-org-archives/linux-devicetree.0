@@ -2,48 +2,49 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040C1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04E9C433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2B1120709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5EE20709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cRfoLBwm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dEvPSRVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgGWL1c (ORCPT
+        id S1725846AbgGWL1e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:27:32 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:11741 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727940AbgGWL1c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:27:32 -0400
+        Thu, 23 Jul 2020 07:27:34 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:50925 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727769AbgGWL1d (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:27:33 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595503651; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=zMBGA4GBLjo26JmXFoaEr/6TroQfiUFJV+/N5KVNSYQ=; b=cRfoLBwmkKKPcd9qtr6Zts5sviMqkWOVRFqPAGmhW2pWgx3awoQd/k1Y2SVGrPgbk2xW2oxx
- Fb3ZJ1mdi1BeZQiwiYW/BkbjCEdr4xEitmyRjSIeGqvJJeI32/Th9FkBjzy+sFDNg+Y23pIU
- WmpVgtPln1bYuVa6bHID8cF3W9I=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ s=smtp; t=1595503653; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=yXX+zDjtzoUhuag45GK9cAM42D+4eQLi+FQrdJPM7bk=; b=dEvPSRVca2ZQSHypRgNLQsvDubONPIJwM+J5h+VmsSN4QbvN0Sjgm4G0e6m6/a32npa4yqEu
+ Is8BcclprILTuCKLRKI9YgMdItaMC5JtAVRo3DweKQ8ZEfSFLLNtK7sSLoXoL0Jo+JZ5gX+m
+ SuiGRsJyQVOv3mR4mfPPMuCyc9E=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f1974185b75bcda60af5815 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:27:20
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f19741bed710aec628887e5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:27:23
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3585BC433CB; Thu, 23 Jul 2020 11:27:20 +0000 (UTC)
+        id AA7ACC433C9; Thu, 23 Jul 2020 11:27:23 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D5656C433C6;
-        Thu, 23 Jul 2020 11:27:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D5656C433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DFC4C43391;
+        Thu, 23 Jul 2020 11:27:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DFC4C43391
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -52,47 +53,75 @@ To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
 Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v4 0/5] DVFS support for Venus
-Date:   Thu, 23 Jul 2020 16:56:47 +0530
-Message-Id: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v4 1/5] dt-bindings: media: venus: Add an optional power domain for perf voting
+Date:   Thu, 23 Jul 2020 16:56:48 +0530
+Message-Id: <1595503612-2901-2-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v4: Moved code from probe/remove/runtime_suspend into
-different pm_ops callbacks
+Venus needs to vote for the performance state of a power domain (cx)
+to be able to support DVFS. This 'cx' power domain is controlled by
+rpmh and is a common power domain (scalable) not specific to
+venus alone. This is optional in the sense that, leaving this power
+domain out does not really impact the functionality but just makes
+the platform a little less power efficient.
 
-v3: Renamed the optional power domain as cx
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+ Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-v2: Fixed up the labels of OPP nodes in patch 4
-    Included the bindings update patch as part of this series,
-    a resend of https://lore.kernel.org/patchwork/patch/1241077/
-
-These patches add DVFS support for Venus
-
-Patch 1 will need to be picked by Rob.
-Patch 2 and 3 will need to be picked by Stan,
-Patch 4 and 5 should land via the qcom tree.
-
-Rajendra Nayak (5):
-  dt-bindings: media: venus: Add an optional power domain for perf
-    voting
-  media: venus: core: Fix error handling in probe
-  media: venus: core: Add support for opp tables/perf voting
-  arm64: dts: sdm845: Add OPP tables and power-domains for venus
-  arm64: dts: sc7180: Add OPP tables and power-domains for venus
-
- .../bindings/media/qcom,sc7180-venus.yaml          |  6 +-
- .../bindings/media/qcom,sdm845-venus-v2.yaml       |  6 +-
- arch/arm64/boot/dts/qcom/sc7180.dtsi               | 35 +++++++-
- arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 +++++++++-
- drivers/media/platform/qcom/venus/core.c           | 17 ++--
- drivers/media/platform/qcom/venus/core.h           |  5 ++
- drivers/media/platform/qcom/venus/pm_helpers.c     | 92 ++++++++++++++++++++--
- 7 files changed, 183 insertions(+), 18 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+index 55f2d67..04e303b 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+@@ -25,12 +25,16 @@ properties:
+     maxItems: 1
+ 
+   power-domains:
+-    maxItems: 2
++    minItems: 2
++    maxItems: 3
+ 
+   power-domain-names:
++    minItems: 2
++    maxItems: 3
+     items:
+       - const: venus
+       - const: vcodec0
++      - const: cx
+ 
+   clocks:
+     maxItems: 5
+diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+index 157dff8..90013d4 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+@@ -25,13 +25,17 @@ properties:
+     maxItems: 1
+ 
+   power-domains:
+-    maxItems: 3
++    minItems: 3
++    maxItems: 4
+ 
+   power-domain-names:
++    minItems: 3
++    maxItems: 4
+     items:
+       - const: venus
+       - const: vcodec0
+       - const: vcodec1
++      - const: cx
+ 
+   clocks:
+     maxItems: 7
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
