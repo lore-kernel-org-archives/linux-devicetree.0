@@ -2,79 +2,146 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994B3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D69C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 731BC22B40
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1646D206F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595526454;
-	bh=/3IvY/DYOTBrXi7NW45g4f2LvCiiTpdv7yKISfiqnp4=;
+	s=default; t=1595526426;
+	bh=iWe0Q7nmomG2NnIFs5YK7ec5i5PWHlfLDRUaSoZjCWI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NXb6dUWdOmoGDp1v0HUiXu4chjb5LlE0zMlXqOLGbciqliYv16MDPtq5BOzVNuxhd
-	 +Dnuydkh4W6WN8eeikEJ/9gvW6lCylhRL2rHNPTuA9Qf7TgO1CmeRvk4/hLk3j1gCk
-	 Kwb+St9UnlXH7rCSMg/1P6l9+DIXSqDgp9NdwvrQ=
+	b=HUGP3m9n/IxECmLGT0QxHGJyxcCe1Lkejb5lG7G0uDy8hO1WSn4qlDlCvUSUdoAL2
+	 0XyU3xfF7fZlW4enO6bGmlYMgTEJsZPPjHrY/+iu7KUt+ebTnEvsy9Al0XZiO2UO/I
+	 EE4YRKKgWeCk+v3MbSVr1YzpTcfXmVUw3fhzxnMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgGWRre (ORCPT
+        id S1729974AbgGWRrF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:47:34 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42849 "EHLO
+        Thu, 23 Jul 2020 13:47:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34953 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgGWRrd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:47:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id c16so7152286ioi.9;
-        Thu, 23 Jul 2020 10:47:33 -0700 (PDT)
+        with ESMTP id S1726666AbgGWRrF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:47:05 -0400
+Received: by mail-io1-f66.google.com with SMTP id v8so7170525iox.2;
+        Thu, 23 Jul 2020 10:47:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=igJO29xYdhEX1YZcPaTW1/UQWYbjGuigif1HBx3az5o=;
-        b=Dr7ztTS1Bw8nSdfIfDio0zEi0F9rCQsEtUYASh5MJhpUshYziGKXT002UQx26SYBgK
-         NtUEN4w/mpiRkKVJkMHcwt+odCL29GMYA4Nx1b/wLH8nQWOFRmmuNARY8UGn8Qkbd7Wu
-         +T6GiYS3GEWAsj5fJk3RVTA+prZDzVUiOJYCAq7rKSXwZd6THqIiIiAZ2yNd6pKADQC9
-         LOR6P6CmBiZpN/7l6whs7IPAH+uZSuqD/3YmR5873riE0OXQdBtyDDm/cxPQBb1de4hs
-         TFQpXF7Dpv8rgubriTTKtUiXC1wKmwXB0ZvbmGEFs4Z4umxyrC+q4BUGL0pHkBt81IPY
-         PLnw==
-X-Gm-Message-State: AOAM530SDRz56IGxPbAhkpdUFiydRhvSVv5ZbT+PwJVA+h+2LlEZNHHd
-        wzdXjREb4fYWRAP1kstxGA==
-X-Google-Smtp-Source: ABdhPJy27/VlKtHPpbL16r6sY+r3eYd1PpECzmmkVDUMiMNSdrTQRv5b79vmNs9h4w0jeamL027ckg==
-X-Received: by 2002:a02:6595:: with SMTP id u143mr4012012jab.28.1595526452873;
-        Thu, 23 Jul 2020 10:47:32 -0700 (PDT)
+        bh=2u/Rq8wYBFTgkucJTkL8W/WVGPEOien8PbUmbomVeFg=;
+        b=P7ZHeLvNieyPL7vvUVb3U2IgtNZA86gmE431OW1NHbTMiy+DsZzmgAh4LBn2Htjg3n
+         iHMGIHSoJHJkWNoatAaKVUCVE6vnFvjYkDeJeGtQTtx+ERjb4Dna2zpHEqhcCJje5wpk
+         qxq5T8hlCQF4J6ioLynda4Ij4SNbwe0McxhLconbSoCwqAPddXMar63UruhXP0Q5Ko3k
+         WEfki2Io8OjElZDmrO2gknfra2BqVG5l0OfIzqTWuM0kf1uInLbeUiLYny/zD/RvPM5J
+         yd6X2QGVPOFPWa4ZmCQEVHmZ6V2DTyekzkdwLnVuvWxCKkMZ5DWtvs9lws+Ft9fPM/xr
+         Qi7g==
+X-Gm-Message-State: AOAM533KFH1kYp4b/nyTS6jiPuw96/F6CUR6iR131Xf6HSXq15x/HmXK
+        WfvN5WCe6iiEH2xUC3XCXw==
+X-Google-Smtp-Source: ABdhPJx2jePXlL5dDzYzVGWNvECUk7UdkUVtC6VOQEx6cg7dIZEBtv7lp9RU8mpCU2vNcX4K2kMtaQ==
+X-Received: by 2002:a05:6602:2555:: with SMTP id j21mr6071654ioe.11.1595526423819;
+        Thu, 23 Jul 2020 10:47:03 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y24sm1854076ilk.52.2020.07.23.10.47.31
+        by smtp.gmail.com with ESMTPSA id p20sm1460825ili.72.2020.07.23.10.47.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 10:47:32 -0700 (PDT)
-Received: (nullmailer pid 596082 invoked by uid 1000);
-        Thu, 23 Jul 2020 17:47:31 -0000
-Date:   Thu, 23 Jul 2020 11:47:31 -0600
+        Thu, 23 Jul 2020 10:47:03 -0700 (PDT)
+Received: (nullmailer pid 595294 invoked by uid 1000);
+        Thu, 23 Jul 2020 17:47:01 -0000
+Date:   Thu, 23 Jul 2020 11:47:01 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     linux-iio@vger.kernel.org, jic23@kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: chemical: add O2 EZO module
- documentation
-Message-ID: <20200723174731.GA596034@bogus>
-References: <20200720070330.259954-1-matt.ranostay@konsulko.com>
- <20200720070330.259954-3-matt.ranostay@konsulko.com>
+To:     vineetha.g.jaya.kumaran@intel.com
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com, andriy.shevchenko@intel.com
+Subject: Re: [PATCH v2 2/2] dt-bindings: pwm: keembay: Add bindings for Intel
+ Keem Bay PWM
+Message-ID: <20200723174701.GA584130@bogus>
+References: <1595083628-20734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+ <1595083628-20734-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720070330.259954-3-matt.ranostay@konsulko.com>
+In-Reply-To: <1595083628-20734-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 20 Jul 2020 00:03:29 -0700, Matt Ranostay wrote:
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-> ---
->  .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
->  1 file changed, 2 insertions(+)
+On Sat, Jul 18, 2020 at 10:47:08PM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
+> From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 > 
+> Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
+> 
+> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+> ---
+>  .../devicetree/bindings/pwm/intel,keembay-pwm.yaml | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+> new file mode 100644
+> index 00000000..e9388a7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2020 Intel Corporation
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/intel,keembay-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel Keem Bay PWM Device Tree Bindings
+> +
+> +maintainers:
+> +  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - intel,keembay-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - clocks
+> + - '#pwm-cells'
 
-Acked-by: Rob Herring <robh@kernel.org>
+Add:
+
+additionalProperties: false
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +
+> +examples:
+> +  - |
+> +    #define KEEM_BAY_A53_GPIO
+> +
+> +    pwm@203200a0 {
+> +      compatible = "intel,keembay-pwm";
+> +      reg = <0x203200a0 0xe8>;
+> +      clocks = <&scmi_clk KEEM_BAY_A53_GPIO>;
+> +      #pwm-cells = <2>;
+> +    };
+> -- 
+> 1.9.1
+> 
