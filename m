@@ -4,93 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CD9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BAEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4828520792
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF2D2065F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595538532;
-	bh=1QNGktzzDXW7iA21OjAPWe03EvWmJ49t19nWTtuo9Ks=;
+	s=default; t=1595538643;
+	bh=tD1TLT2HA8rRWNEmtWVWz/vwIcojwLoXBh6qRL5Oxqk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kyek+5SLeg2sllguGqzz42LHJDFEVfOOE6IVjrTQ9x9B+Q7xUryenM9q8IW2nuane
-	 P53WSv0E9wtOVlSykdQbVHrHEvx/dOm2Zc3KRDn2nO1nqmAyB57kQaQ3Wg2rJC9Wzv
-	 cUIJ4Ii0rNYRVS93PPE3Wuoy8WU03LqlvhmLyKzA=
+	b=igbeo8grs/KiZgrWthp+8TQbQ7NgolbQKDUKpz0OpwGp5QPacYOx7+emVuVyLC1hh
+	 tBleWa/QN23LrNXI73G461UrGccjHu0B2zG33NTEQmwcfu1WbAiaP/6p5cl3dDlWU8
+	 Cjp5Y9z1p4gNEInjJnjovRxL4D+7JRvIHTBo+Ziw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgGWVIv (ORCPT
+        id S1726390AbgGWVKn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 17:08:51 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45561 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGWVIv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:08:51 -0400
-Received: by mail-il1-f193.google.com with SMTP id b18so359983ilo.12;
-        Thu, 23 Jul 2020 14:08:50 -0700 (PDT)
+        Thu, 23 Jul 2020 17:10:43 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33455 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgGWVKn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:10:43 -0400
+Received: by mail-io1-f68.google.com with SMTP id d18so7788321ion.0;
+        Thu, 23 Jul 2020 14:10:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=2VZH35DZAxRu1oS4+i4xalpCsqsecoySSiZlMELJnnM=;
-        b=P/fXSffMV1K3XObAUuAJJgfX2n7eWW8ZU+zPLwigkg6z3V/frB75DJK2A+AgxyMWu3
-         1n+UtQFMJJOyRJZnm5hBGTxwuSqCVarZ97fPdfhtK5nPd+feDN74My8YzTkuoB9Yf6Tm
-         rtHcqyGlcbS3XuoRCmxr0sSceF+rrau1+eot6owUZzskSi1KpYceofl23fOd1emj2P/4
-         xFAricn99ZPuHCA2Y+/JgFgv6Tij+vcp0TEP5NySWMHs6ePdN0DdB0GGwDOmZwx0eUcm
-         2dlJb+RtFB13aB1nfLFbuTza6IhIPo85NRxDnpsPiHL6hjQ71/o1Ko3qFpKYBnGVuMVu
-         acfQ==
-X-Gm-Message-State: AOAM530CkXpipQwEVNxJes4W65j7qIrA10DlDgFySSkT4iA5uvy4zzsm
-        0zKBCEZEQNlFauFG5NQMC7EsIg6eHw==
-X-Google-Smtp-Source: ABdhPJxZpIl6pBTL4WHNxrGxU8jZXWQ7Qf3Cvu5wBnHX10cKpBPsvdeQ/EcD+6EbXUrJP4UxylInSA==
-X-Received: by 2002:a92:d186:: with SMTP id z6mr7241487ilz.227.1595538530445;
-        Thu, 23 Jul 2020 14:08:50 -0700 (PDT)
+        bh=rFnG6OjqqnnpckoLrF3IZeXaDva71gf7e2ghfJANXJg=;
+        b=WnjFgiT3oZtrQsSP6M056gk2UDj8nnuD6qbS27XY820YGwaHFEwdufHGZeyM6/vUMs
+         jn0bysi21w1wPSqKVe4+QqPbshxVIHl+xvoHXRpkMQrecIWNq0qFndPWtLJnJfvIqk51
+         o6obecMnJfdfwxIz8KWhoWSmpLbHjJ7H3/uO8CuZ9usUB+BSnPMlVY0WHzvRS182rt5e
+         FWXKBopBUWPw/Ccs3nGGtNM4qp1tCLKA/OWaPbs/mjjqAVoeDUdGOX+eJO3yQsCXsAC8
+         jN20w6MKH/3L8QYbEPbI6MCmMEmxDWFOx3ob5s3M3W+Rp8hL5oD0cYjz+sAGMUfX77AC
+         2TVw==
+X-Gm-Message-State: AOAM531I/DRXqRoKHnALtnwC904u+9Vj9pyenx2j/0HSbBBvxLMj6yv9
+        tB11Gw2C+dS1/2kQOm5TaA==
+X-Google-Smtp-Source: ABdhPJzPkVpagcW3ivBb3LUe2ly7ZSWK85Q3R+Kf30ArUVlbxiQmo8M85lxbkm/bp9JvXSVnb1L/Jw==
+X-Received: by 2002:a6b:4f19:: with SMTP id d25mr233891iob.190.1595538642326;
+        Thu, 23 Jul 2020 14:10:42 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v15sm2146214ili.28.2020.07.23.14.08.49
+        by smtp.gmail.com with ESMTPSA id d6sm2086764ioo.9.2020.07.23.14.10.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 14:08:49 -0700 (PDT)
-Received: (nullmailer pid 862353 invoked by uid 1000);
-        Thu, 23 Jul 2020 21:08:48 -0000
-Date:   Thu, 23 Jul 2020 15:08:48 -0600
+        Thu, 23 Jul 2020 14:10:41 -0700 (PDT)
+Received: (nullmailer pid 864810 invoked by uid 1000);
+        Thu, 23 Jul 2020 21:10:40 -0000
+Date:   Thu, 23 Jul 2020 15:10:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] dt-bindings: mux: mux.h: drop a duplicated word
-Message-ID: <20200723210848.GA862323@bogus>
-References: <20200719002816.20263-1-rdunlap@infradead.org>
+To:     Christian Hewitt <christianshewitt@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
+        Dongjin Kim <tobetter@hardkernel.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/3] dt-bindings: arm: amlogic: add support for the
+ ODROID-N2+
+Message-ID: <20200723211040.GA864520@bogus>
+References: <20200719141034.8403-1-christianshewitt@gmail.com>
+ <20200719141034.8403-3-christianshewitt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200719002816.20263-1-rdunlap@infradead.org>
+In-Reply-To: <20200719141034.8403-3-christianshewitt@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 18 Jul 2020 17:28:16 -0700, Randy Dunlap wrote:
-> Drop the repeated word "the" in a comment.
+On Sun, 19 Jul 2020 14:10:33 +0000, Christian Hewitt wrote:
+> HardKernel ODROID-N2+ uses a revised Amlogic S922X v2 chip that supports
+> higher cpu clock speeds than the original ODROID-N2.
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  include/dt-bindings/mux/mux.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200717.orig/include/dt-bindings/mux/mux.h
-> +++ linux-next-20200717/include/dt-bindings/mux/mux.h
-> @@ -3,7 +3,7 @@
->   * This header provides constants for most Multiplexer bindings.
->   *
->   * Most Multiplexer bindings specify an idle state. In most cases, the
-> - * the multiplexer can be left as is when idle, and in some cases it can
-> + * multiplexer can be left as is when idle, and in some cases it can
->   * disconnect the input/output and leave the multiplexer in a high
->   * impedance state.
->   */
-> 
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Applied, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
