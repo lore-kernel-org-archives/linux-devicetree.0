@@ -2,109 +2,96 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4B3C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 22:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01415C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAB6E20825
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 22:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595544350;
-	bh=ysaoh10oMPlqijllUrvR5st6IAHAnCP1ok7GBN063iM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=hnCdBg8RDvOFPiSw7wRoDk2q13g25E40KVIweXoZGV0O/oDno3YphRVD5UiFbjYsV
-	 YTQooAc1q6pK1Cq2AXuUdmMuhCjOyd9eJBcp/FQm4Xh2uwrn1c87yvYx5QTdrYG/ol
-	 XOibAwanUDKPJ4zY9GCSn7ABon16YLRhHaYSoauo=
+	by mail.kernel.org (Postfix) with ESMTP id C262F207C4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:05:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UcZbYO2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgGWWpu (ORCPT
+        id S1726833AbgGWXFt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgGWWpu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:45:50 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A25CB206E3;
-        Thu, 23 Jul 2020 22:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595544349;
-        bh=ysaoh10oMPlqijllUrvR5st6IAHAnCP1ok7GBN063iM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=WCcYMlYtQhuqzwqtbEjUfMNa/JR+hxs2nJB8An5VFT0X8E7T8ciY8dhMir1xkTuMd
-         t6+t/5h7NxsPXkAsghPFDJd+rMupZVID8fo//8niGbw/Xpo1pb2SzXl1HX7TPs+2dB
-         3fA8r1sv+vJ4djtqkSOKLmED2gZiv6gx/WKwg7+c=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200626115433.125735-1-maxime@cerno.tech>
-References: <20200626115433.125735-1-maxime@cerno.tech>
-Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware binding
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Thu, 23 Jul 2020 15:45:48 -0700
-Message-ID: <159554434893.3847286.8491922177659230646@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Thu, 23 Jul 2020 19:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbgGWXFt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 19:05:49 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00487C0619D3;
+        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b9so3381940plx.6;
+        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
+        b=UcZbYO2tukUDPc5K2c90M2NirgPVRhjzR9QGQza6coVEV+vD8vN4Nog0ApFFbosbl/
+         dG5b8aS8zz20MClvdvI0CFrZioWlWwP97Xda4pr0ydgi7Ambf+atwg9qDes0p60nHnP3
+         EiKymcj568OiA+9MakggBgSNRdxny4zwuIq3c8uB7CrfKBPDrVpIjJAw7UH3OZqb7d1C
+         uZG8Zi4DBymBaPBJnEzJd1rTJsYAzLXMV4DxhxPJzcqPlDcy2AW68C6rUKhVZS4/WLgq
+         GLjn1jUOr2sRmzobipNkiDR7RQxrHq+HSoRIs1TW1Ky2e2hl8m1VcsUQGaLLiswGh4Q4
+         gxVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Kx8J891apkIa/g8IE/ArV1cGSLaJdXykQLAbT7gapEo=;
+        b=bWTAPZAsvcpRk536kQBeAY91K/0734yOxNru/0aQz/X5ecfVuCtEf85ZCvK1Du4JzP
+         hmz8UvxUMqVtrlznG5UOSSuWIRqw5ATFsSxo6j6KpKxp7Gy2eepAv/t3DcH1IGzGljkM
+         dlKhkGz5KvZWy76M5ydPAdMyR+ag/FMYc2KF76AtUOLS5azlRJ4Tz2plaTbP2WuEicz3
+         Hk2Cx7rlqwJ1VD91+ste4A53uu7/NsyQiWXiypr6wpu7g633gqIx4ZD4qBwcfMnUMKBK
+         XPOUVHxO2uM8DFdVtEEqI5Dc6PadDY6QKBq3MmGSTabim8/QXPUHoqxdlIyxCM81p/Wv
+         LZZw==
+X-Gm-Message-State: AOAM531bie8X76rgQBFn1QMJ87cbd/WRsfUILzaTitKiutqFky5gXMi3
+        +pLa0LOhfEz/BWzCuaFiOy+8R4hJkQc=
+X-Google-Smtp-Source: ABdhPJw6b+CjqeczL6p7Kx1ZCNCp9dSoVlVCajK91Ff4+2KvkMLg88KX9mwSw72NK+D3DT3J0d0/xw==
+X-Received: by 2002:a17:902:d211:: with SMTP id t17mr5914972ply.106.1595545548328;
+        Thu, 23 Jul 2020 16:05:48 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id gn5sm3644742pjb.23.2020.07.23.16.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 16:05:47 -0700 (PDT)
+From:   rentao.bupt@gmail.com
+To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH v2 0/3] ARM: dts: aspeed: fixup wedge40 device tree
+Date:   Thu, 23 Jul 2020 16:05:36 -0700
+Message-Id: <20200723230539.17860-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2020-06-26 04:54:33)
-> The RaspberryPi firmware binding uses two compatible, include simple-bus.
-> The select statement generated by default will thus select any node that
-> has simple-bus, not all of them being the raspberrypi firmware node.
->=20
-> This results in warnings being wrongfully reported. Let's add a custom
-> select statement to fix that.
->=20
-> Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware bin=
-ding to YAML")
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
->=20
-> ---
->=20
-> The original binding has been merged through the clock tree, so it should
-> be merged there.
->=20
-> Even though the original binding (and the DT) are using the simple-bus
-> compatible, this creates some DTC warnings since the firmware really isn't
-> a bus, so the node name doesn't match what a bus should have, none of the
-> children have a reg property, #address-cells and #size-cells are missing,
-> etc.
->=20
-> I can only guess that simple-bus was used to make the sub-devices probe,
-> but maybe simple-mfd would be more appropriate here?
-> ---
->  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml   | 9 +++++++++
->  1 file changed, 9 insertions(+)
+From: Tao Ren <rentao.bupt@gmail.com>
 
-Hmm. I'm still seeing warnings.
+The patch series update several devices' settings in Facebook Wedge40
+device tree.
 
-Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.exam=
-ple.dts:23.37-26.15: Warning (simple_bus_reg): /example-0/firmware/clocks: =
-missing or emp
-ty reg/ranges property
-Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.exam=
-ple.dt.yaml: firmware: $nodename:0: 'firmware' does not match '^(bus|soc|ax=
-i|ahb|apb)(@[0-9a-f]+)?$'
-Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.exam=
-ple.dt.yaml: firmware: '#address-cells' is a required property
-Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.exam=
-ple.dt.yaml: firmware: '#size-cells' is a required property
-Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.exam=
-ple.dt.yaml: firmware: 'ranges' is a required property
+Patch #1 disables a few i2c controllers as they are not being used at
+present.
+
+Patch #2 enables adc device for voltage monitoring.
+
+Patch #3 enables pwm_tacho device for fan control and monitoring.
+
+Tao Ren (3):
+  ARM: dts: aspeed: wedge40: disable a few i2c controllers
+  ARM: dts: aspeed: wedge40: enable adc device
+  ARM: dts: aspeed: wedge40: enable pwm_tacho device
+
+ .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 42 +++++++++++++++----
+ 1 file changed, 34 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
+
