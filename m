@@ -2,47 +2,45 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010DAC433FB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD29C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DADED20781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E1E208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387612AbgGWBjL (ORCPT
+        id S2387714AbgGWBji (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:39:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:32982 "EHLO
+        Wed, 22 Jul 2020 21:39:38 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:32902 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387556AbgGWBjK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 21:39:10 -0400
+        with ESMTP id S2387460AbgGWBjH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 21:39:07 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id AA6A08040A6A;
-        Thu, 23 Jul 2020 01:39:07 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 866BA803202F;
+        Thu, 23 Jul 2020 01:39:05 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BZgbruE91aqq; Thu, 23 Jul 2020 04:39:07 +0300 (MSK)
+        with ESMTP id 7NZcB0gu1dAP; Thu, 23 Jul 2020 04:39:04 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/7] gpio: dwapb: Get reset control by means of resource managed interface
-Date:   Thu, 23 Jul 2020 04:38:56 +0300
-Message-ID: <20200723013858.10766-6-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 0/7] gpio: dwapb: Refactor GPIO resources initialization
+Date:   Thu, 23 Jul 2020 04:38:51 +0300
+Message-ID: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -52,77 +50,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The reset control interface provides the resource managed version of
-the reset_control_get() method. The only thing which needs to be also
-automated is the reset lane assertion on the device removal. It can be
-implemented by means of the custom action definition. After that the reset
-control will be purely managed by the device resources interface.
+This series is about the DW APB GPIO device initialization procedure
+cleaning up. First of all it has been discovered that having a
+vendor-specific "snps,nr-gpios" property isn't only redundant but also
+might be dangerous (see the commit log for details). Instead we suggest to
+use the generic "ngpios" property to define a number of GPIOs each DW APB
+GPIO controller port supports. Secondly seeing a tendency of the other
+GPIO drivers getting converted to using the GPIO-lib-based IRQ-chip
+interface this series provides a patch, which replaces the DW APB GPIO
+driver Generic IRQ-chip implementation with the GPIO-lib IRQ-chip one.
+Finally the DW APB GPIO device probe procedure is simplified by
+converting the code to be using the device managed resources for the
+reference clocks initialization, reset control assertion/de-assertion
+and GPIO-chip registration.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- drivers/gpio/gpio-dwapb.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 3f727ebe7f9a..693cbd896f08 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -595,6 +595,32 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
- 	return pdata;
- }
- 
-+static void dwapb_assert_reset(void *data)
-+{
-+	struct dwapb_gpio *gpio = data;
-+
-+	reset_control_assert(gpio->rst);
-+}
-+
-+static int dwapb_get_reset(struct dwapb_gpio *gpio)
-+{
-+	int err;
-+
-+	gpio->rst = devm_reset_control_get_optional_shared(gpio->dev, NULL);
-+	if (IS_ERR(gpio->rst)) {
-+		dev_err(gpio->dev, "Cannot get reset descriptor\n");
-+		return PTR_ERR(gpio->rst);
-+	}
-+
-+	err = reset_control_deassert(gpio->rst);
-+	if (err) {
-+		dev_err(gpio->dev, "Cannot deassert reset lane\n");
-+		return err;
-+	}
-+
-+	return devm_add_action_or_reset(gpio->dev, dwapb_assert_reset, gpio);
-+}
-+
- static const struct of_device_id dwapb_of_match[] = {
- 	{ .compatible = "snps,dw-apb-gpio", .data = (void *)0},
- 	{ .compatible = "apm,xgene-gpio-v2", .data = (void *)GPIO_REG_OFFSET_V2},
-@@ -634,11 +660,9 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 	gpio->dev = &pdev->dev;
- 	gpio->nr_ports = pdata->nports;
- 
--	gpio->rst = devm_reset_control_get_optional_shared(dev, NULL);
--	if (IS_ERR(gpio->rst))
--		return PTR_ERR(gpio->rst);
--
--	reset_control_deassert(gpio->rst);
-+	err = dwapb_get_reset(gpio);
-+	if (err)
-+		return err;
- 
- 	gpio->ports = devm_kcalloc(&pdev->dev, gpio->nr_ports,
- 				   sizeof(*gpio->ports), GFP_KERNEL);
-@@ -688,7 +712,6 @@ static int dwapb_gpio_remove(struct platform_device *pdev)
- 	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
- 
- 	dwapb_gpio_unregister(gpio);
--	reset_control_assert(gpio->rst);
- 	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
- 
- 	return 0;
+Serge Semin (7):
+  dt-bindings: gpio: dwapb: Add ngpios property support
+  gpio: dwapb: Add ngpios DT-property support
+  gpio: dwapb: Move MFD-specific IRQ handler
+  gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip
+  gpio: dwapb: Get reset control by means of resource managed interface
+  gpio: dwapb: Get clocks by means of resource managed interface
+  gpio: dwapb: Use resource managed GPIO-chip add data method
+
+ .../bindings/gpio/snps,dw-apb-gpio.yaml       |   6 +
+ drivers/gpio/Kconfig                          |   2 +-
+ drivers/gpio/gpio-dwapb.c                     | 324 +++++++++---------
+ 3 files changed, 161 insertions(+), 171 deletions(-)
+
 -- 
 2.26.2
 
