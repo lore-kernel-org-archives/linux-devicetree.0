@@ -2,116 +2,97 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3025C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7729C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7F9206E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA4A2065F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595536180;
-	bh=BEIghVSpfj4pej4m+Awv91V5gV084MRDhlrjU5+4m+k=;
+	s=default; t=1595536226;
+	bh=E/Oxvfkr47jBI1VhvqGZmOrSGj84gilYpon+jDgqMas=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kJJT2Zzy3wg5RHhkPWOVeWfwr4lEQbPC2/3YxATIerwrjmqb+982Ww44o3FaC+Nuz
-	 vn6c3r8WtiUBoO5Gg7PZ3VZKgcY8qabSg/COroesxrOJOuAM66pFx7YaN7to9BYzDg
-	 P7KGOORsCw3DQxvAe4NfZMOjsOQj4oMoXYteyiE0=
+	b=qU8kqPla9jjNtbq6qI5M1T5DSBEjGHxgT48PBnPM3UC3vJ8i5w4g3vqMlCa02oqEw
+	 suUsta6ws2hseyGQLDohjdEPyIw3ID9aU1nutL1q8BrzRPp8/ljtGGGpv7KYv98yn2
+	 Gf7rJqSPVVse8HLvw4PN/r7ce8fQXt4rFWtjAf9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgGWU3k (ORCPT
+        id S1726503AbgGWUa0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:29:40 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42886 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgGWU3j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:29:39 -0400
-Received: by mail-il1-f193.google.com with SMTP id t27so5427243ill.9;
-        Thu, 23 Jul 2020 13:29:39 -0700 (PDT)
+        Thu, 23 Jul 2020 16:30:26 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40223 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgGWUa0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:30:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id l17so7637914iok.7;
+        Thu, 23 Jul 2020 13:30:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kjud4HzJiYuJbrWHJZPLLkD9nUbndPaEbp8Lk6hPciw=;
-        b=D0yQXu4P4yhZWQHAyEJqPnO6BgsAY0UgmEX/26UkR1A7qR7enEWcRFaVWNrlcvjMOs
-         XypNRJJ6eiSQtZqA0+pXqXgZ1R+PbNPhb2xW0ebdZ1bba/ABJjVHbljwsrxFJGbYuJsq
-         /ogpFDEmRca1zieuTKeYn8XeGi70e5UPEacGS1US+J8YiazqV0aDsaFczE68V1B9mxtz
-         uaIDAjyOl/N9e6TzPU5Lt0E7JBPAZxgx6Zz3Dbz77VXSVDmDixnYx3cRUaI15gPSNdYC
-         u8xFs4pC8xI5rD4JtU41kr7z7GP2Tucemd/xSQLVgJDveGEzFB6OPfFnvW/L8G/Di7S3
-         3u7g==
-X-Gm-Message-State: AOAM531ExblBZCa9HWLjSIqj/ZfMV1WuNXw6Ru5JIJnT1fTKVHsE0u59
-        gTHq2xFNlgINTBczrNoJRA==
-X-Google-Smtp-Source: ABdhPJyVRyKvIrX21z4Zl2OJ4Xp53IgxAGPYZ3HN3G0+kSgHj7Uy5uc1dGpt8JJf6bR/XReMP27Prw==
-X-Received: by 2002:a92:dc09:: with SMTP id t9mr6938082iln.226.1595536178724;
-        Thu, 23 Jul 2020 13:29:38 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yHb+xD8ynAN011pr7vNrT4LxhN7rPIg+zVnoTdpnl/8=;
+        b=Vd3Nohh0FjXOs7SvKxpAppcuekz9ydi7Vkpu5k788T6BVmxXpPo4gB+YU8jJrdj/0m
+         OGExj2yQvxMBj72+xJjVechOU2GqnmR17q5RVE934XJ6Rp7Zhv3EYVKxscZ0YIPwVL4V
+         dUEdJvz2hS/GodICTMYTx2mT6C81tssZWU/exfnM1ALWPCqOy0yO4TGD899R3B9qB085
+         5t8RC2je3C+2xv5VyP3Dl+B1X5eabukii32lVheudp2KdqkF0iPrWBmIEH93LfJlQ+K2
+         B3QMk92p4UHAqD2vPL9sFXPn/bqWG5BHTHTZlOG3m3VJoltrdijVssVrcxOy33gf8z2w
+         o0Ww==
+X-Gm-Message-State: AOAM531PXbHmkQmftkVZ+aUlT28+UJrEHNr6wcJkAARtPJ5bDxMbmQXi
+        XR/atKKurnPjUIcKIuHxsQ==
+X-Google-Smtp-Source: ABdhPJyKres8M7XsIvRrG9U45Hb5uUqG04rfhkHiyYS7JQZbdnlz6SZ0M1ugFCGGbHxX22nAI/WepQ==
+X-Received: by 2002:a6b:5a04:: with SMTP id o4mr3923450iob.171.1595536224893;
+        Thu, 23 Jul 2020 13:30:24 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w15sm2030713ior.4.2020.07.23.13.29.37
+        by smtp.gmail.com with ESMTPSA id f18sm2001506ion.47.2020.07.23.13.30.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:29:37 -0700 (PDT)
-Received: (nullmailer pid 808938 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:29:36 -0000
-Date:   Thu, 23 Jul 2020 14:29:36 -0600
+        Thu, 23 Jul 2020 13:30:23 -0700 (PDT)
+Received: (nullmailer pid 810072 invoked by uid 1000);
+        Thu, 23 Jul 2020 20:30:22 -0000
+Date:   Thu, 23 Jul 2020 14:30:22 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [PATCH v2 06/12] usb: devicetree: Introduce num-lanes and lsm
-Message-ID: <20200723202936.GA801155@bogus>
-References: <cover.1595468673.git.thinhn@synopsys.com>
- <d605a437f0a4bc837a05269caaa3875c2e0b29d8.1595468673.git.thinhn@synopsys.com>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     rick.tyliu@ingenic.com, hadar.gat@arm.com,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        dongsheng.qiu@ingenic.com, sernia.zhou@foxmail.com,
+        robh+dt@kernel.org, prasannatsmkumar@gmail.com, xuzaibo@huawei.com,
+        krzk@kernel.org, arnd@arndb.de, rdunlap@infradead.org,
+        mpm@selenic.com, tmaimon77@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, yanfei.li@ingenic.com,
+        daniel.thompson@linaro.org, aric.pzqi@ingenic.com,
+        gregkh@linuxfoundation.org, zhenwenjin@gmail.com,
+        masahiroy@kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: RNG: Add Ingenic RNG bindings.
+Message-ID: <20200723203022.GA810026@bogus>
+References: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
+ <20200723062446.84013-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d605a437f0a4bc837a05269caaa3875c2e0b29d8.1595468673.git.thinhn@synopsys.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723062446.84013-2-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 07:12:39PM -0700, Thinh Nguyen wrote:
-> According to USB 3.2 spec, a super-speed-plus device can operate at
-> gen2x2, gen2x1, or gen1x2. Introduce "num-lanes" and
-> "lane-speed-mantissa-gbps" properties for devices operating in
-> super-speed-plus. If the USB controller device supports multiple lanes
-> at different transfer rate, the user can specify the HW capability via
-> these properties.
+On Thu, 23 Jul 2020 14:24:45 +0800, 周琰杰 (Zhou Yanjie) wrote:
+> Add the RNG bindings for the JZ4780 SoC and
+> the X1000 SoC from Ingenic.
 > 
-> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 > ---
-> Changes in v2:
-> - Make "num-lanes" and "lane-speed-mantissa-gbps" common USB properties
 > 
->  Documentation/devicetree/bindings/usb/generic.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Notes:
+>     v1->v2:
+>     No change.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> index ba472e7aefc9..a8253da684af 100644
-> --- a/Documentation/devicetree/bindings/usb/generic.txt
-> +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> @@ -7,6 +7,17 @@ Optional properties:
->  			"low-speed". In case this isn't passed via DT, USB
->  			controllers should default to their maximum HW
->  			capability.
-> + - num-lanes: tells USB controllers that we want to work up to a certain number
-> +			of lanes. Valid arguments are 1 or 2. Apply if the
-> +			maximum-speed is super-speed-plus. In case this isn't
-> +			passed via DT, the USB controllers should default to
-> +			their maximum HW capability.
-> + - lane-speed-mantissa-gbps: tells USB controllers that we want the symmetric
-> +			lanes to operate up to a certain rate in Gbps. Valid
-> +			inputs are 5 or 10 (i.e. Gen 1/Gen 2 transfer rate).
-> +			Apply if the maximum-speed is super-speed-plus. In case
-> +			this isn't passed via DT, the USB controllers should
-> +			default to their maximum HW capability.
+>  .../devicetree/bindings/rng/ingenic,rng.yaml       | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/ingenic,rng.yaml
+> 
 
-This still leaves 'maximum-speed = "super-speed-plus"' ambiguous. Fix 
-that please.
-
-To put it another way, we already have one way to define USB speeds. 
-Don't define a new and different way that only covers a fraction of the 
-possibilities.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
