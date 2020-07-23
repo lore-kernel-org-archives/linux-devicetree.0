@@ -2,178 +2,168 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D86C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF02C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B26320737
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:58:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="M6YYYPlT"
+	by mail.kernel.org (Postfix) with ESMTP id C21A920737
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgGWJ61 (ORCPT
+        id S1727997AbgGWKDI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:58:27 -0400
-Received: from mail-eopbgr10070.outbound.protection.outlook.com ([40.107.1.70]:5438
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725858AbgGWJ61 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 05:58:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QPrblr3ANxQVKeDknMz4Z9d7ThHHWDcUcBWyKDbMT8/M9Xw3/HLYW267XTJLJFO0ZjhL83X3p6fKRJsXA8iQLYoHzTpKMX8dKviocCefcsWsOApZu9vyIvR73tknWFs4sen14eMuNrGokqi8gP5ak1gcgRuvGk8PXIjg8FPcaDeBZyQ78T7XrO8tFMg72vLcj5onhBTd93YBK4Sa6riowybdTHCVnfD1zWf6fmx/U4h9xX8jYLXF45uDp7hAg3rL7yIxrOiECrZQtZUjrSzvGgXtQxBCfJE3BcXAiva09Cw3ac3Ukmdpmy24d2EEolFJ2m5X/pViHwSSQKDcEs02mQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JWUZP3dcO3LD8PvV6gxlaFcK9XWcKMvZNT/lxKFKATw=;
- b=N16eZmwtOI0DPVzqkvJ0OlBlQUzshY5ygchZrcUR9zrSuOWHVbO6gyZkoFoby7j0JbPEGTgna9V/cNvGxh16Q4UHNgP1dIkFNpxoOZQDqbdDhRV/PDK4XJ8WryVQerJr3Lnr4ddLru9HTU03WyvWh2Zvf7yXWwUBAHATB8oASThDWyadcAAAzUMoUTedSaZt+SIqV15rXO2Zuup3VWRHj17VmiGQbfQQ62aZ4v7kop2VhKJ6lrLEJlp/X3ht7/sgElvHOdNxCJzJCVS1VTD/D232R9uWnSrjzTfkBltuxVvFwpAaQPjVpEpkV0xqzB8RuiXrZFmnHd8fZwNZK6ty4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JWUZP3dcO3LD8PvV6gxlaFcK9XWcKMvZNT/lxKFKATw=;
- b=M6YYYPlT8qfFyIKVkaxixhdBGUXzhfzJCVVSg7JLdXK9VrhQVyuNKPWxEJi8DVLQasWHaKoJmjkwRSa08Q4wpCTovH/gfpZtaz15Nbq5K3S19whZDLUnFTieRI7yiajZ0zWEuuSbZ2rNIcutOTak4Tc56SWTHa0jI0ozl0qVeXE=
-Received: from VE1PR04MB6528.eurprd04.prod.outlook.com (2603:10a6:803:127::18)
- by VI1PR04MB4063.eurprd04.prod.outlook.com (2603:10a6:803:43::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Thu, 23 Jul
- 2020 09:58:22 +0000
-Received: from VE1PR04MB6528.eurprd04.prod.outlook.com
- ([fe80::30e2:71b0:ffd3:e39e]) by VE1PR04MB6528.eurprd04.prod.outlook.com
- ([fe80::30e2:71b0:ffd3:e39e%7]) with mapi id 15.20.3216.023; Thu, 23 Jul 2020
- 09:58:22 +0000
-From:   Jun Li <jun.li@nxp.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Peter Chen <peter.chen@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Horia Geanta <horia.geanta@nxp.com>
-Subject: RE: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core device
- to pass data
-Thread-Topic: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core device
- to pass data
-Thread-Index: AQHWU3qPod3u7KLfuUW6rq9H7arWKakU/oyAgAAAsRA=
-Date:   Thu, 23 Jul 2020 09:58:22 +0000
-Message-ID: <VE1PR04MB6528BF081AA2B4AE64C8F00F89760@VE1PR04MB6528.eurprd04.prod.outlook.com>
-References: <1594028699-1055-1-git-send-email-jun.li@nxp.com>
- <1594028699-1055-2-git-send-email-jun.li@nxp.com> <87r1t2oabc.fsf@kernel.org>
-In-Reply-To: <87r1t2oabc.fsf@kernel.org>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0f89aa14-8321-4924-4db1-08d82eeeef81
-x-ms-traffictypediagnostic: VI1PR04MB4063:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB406379DB53F663A142F55FA489760@VI1PR04MB4063.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZtmvizBj068pWK+B62kLNzlrQDEML4P1C9Zx8989eV1nwTqNZS3jlFVz5TDIY5FViV9Nh92WoLRH0LRt8qhedxtM1U/pJgAba2gaNl196b1LfAdYtuX+CPkM8nIQ14tAl7ALYmR9UahSdIi37FwyFTjV3r2WOP0fLKjhoYEm3xsB40qGvVB6bzwvB95Qb9iJ06snWS3ef1FrGbjfJ9M9tQoPDN1NzNxv2gpvX1/gPcl3Tuni8PVZGw/uCw4OhGj36wv6sjLo9ynDOQnycrKoGiGJ2BdBPJ+olL4p9n13cu+nxQ4mp+eplDiP1mTN/gBSxYpOwNpRv2pDND7sBZoX7g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6528.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(136003)(39860400002)(396003)(6506007)(76116006)(64756008)(33656002)(53546011)(44832011)(55016002)(8676002)(478600001)(71200400001)(54906003)(110136005)(52536014)(66556008)(66446008)(66946007)(66476007)(7416002)(5660300002)(316002)(186003)(8936002)(2906002)(4326008)(9686003)(26005)(83380400001)(86362001)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: veJ9Da7jRQguJbsZBdvD7TvKma/HryfoK1v230MLBejSUZA514mIs5OQ86O49KVWJVolpLbJaBAwYkXqvAA00nK/qgKuc60VX+yzHD1aMq+Q5ln+QFSx3dXq5Nl1NoVXgVCYarYKR6nhs3qyIp9DJFPRtFx+b1Hvxloa5Pgp2Eb/wjgS1ZGapSqGpy+2k/q3icT7fAutXNDYH39Fkzy+O6ag+OnCdnSByGt8c6mlewnaTV8ZJWfFJ32vT1fDTfC2uyu9WaO3aGO2YuFoPLjZAE70nhJ9jFlJzK2jJbnOFuA9xuw9DffFoHX8NTn0Y+bfKDmEvQ4SHmFH7ev2ndVn76Nw3+D7uYKpEdVzyxpTHcngb18Lp319qShKejEJ3SOgImPNcGvuucC0hj/b4DALHK85bxD9BSoz5qeCkj9IBj/PcuWvObgSdyIl+GP0xWTfwWR3AZyiJPIf/IQ8VXHKvRsu6pYk8UCxEnvkGKiX4NM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 Jul 2020 06:03:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:42934 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726982AbgGWKDI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 06:03:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C57ED6E;
+        Thu, 23 Jul 2020 03:03:07 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D527B3F66F;
+        Thu, 23 Jul 2020 03:03:05 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 11:02:58 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 00/15] Add PCIe support to TI's J721E SoC
+Message-ID: <20200723100258.GA7195@e121166-lin.cambridge.arm.com>
+References: <20200722110317.4744-1-kishon@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6528.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f89aa14-8321-4924-4db1-08d82eeeef81
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 09:58:22.7808
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I/XA/PNeS53du11WzqXr6aFJCscPZLfAPmkV4nZlz4GY26pZxKJ19qWhRb8I6uFl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722110317.4744-1-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Jul 22, 2020 at 04:33:02PM +0530, Kishon Vijay Abraham I wrote:
+> TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+> and EP mode.
+> 
+> The high level features are:
+>   *) Supports Legacy, MSI and MSI-X interrupt
+>   *) Supports upto GEN4 speed mode
+>   *) Supports SR-IOV
+>   *) Supports multiple physical function
+>   *) Ability to route all transactions via SMMU
+> 
+> This patch series
+>   *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+>   *) Add a driver for J721E PCIe wrapper
+> 
+> v1 of the series can be found @ [1]
+> v2 of the series can be found @ [2]
+> v3 of the series can be found @ [5]
+> v4 of the series can be found @ [6]
+> v5 of the series can be found @ [7]
+> v6 of the series can be found @ [8]
+> v7 of the series can be found @ [9]
+> 
+> Changes from v7:
+> 1) Replaced WARN with pr_warn
+> 2) Included support for "dma-ranges" property patch in this series [10]
+> 
+> Changes from v6:
+> 1) Fixed bot found errors running 'make dt_binding_check'
+> 
+> Changes from v5:
+> 1) Added Reviewed-by: for PATCH #6
+> 2) Protect writes to PCI_STATUS with spin_lock during raising interrupts
+>    in EP mode to reduce the time between read and write of RMW.
+> 
+> Changes from v4:
+> 1) Added Reviewed-by: & Acked-by: tags from RobH
+> 2) Removed un-used accessors for pcie-cadence.h and removed having ops
+>    for read/write accessors
+> 3) Updated cdns,cdns-pcie-host.yaml to remove "mem" from reg
+> 
+> Changes from v3:
+> 1) Changed the order of files in MAINTAINTERS file to fix Joe's comments
+> 2) Fixed indentation and added Reviewed-by: Rob Herring <robh@kernel.org>
+> 3) Cleaned up computing msix_tbl
+> 4) Fixed RobH's comment on J721E driver
+> 
+> Changes from v2:
+> 1) Converting Cadence binding to YAML schema was done as a
+>    separate series [3] & [4]. [3] is merged and [4] is
+>    pending.
+> 2) Included MSI-X support in this series
+> 3) Added link down interrupt handling (only error message)
+> 4) Rebased to latest 5.7-rc1
+> 5) Adapted TI J721E binding to [3] & [4]
+> 
+> Changes from v1:
+> 1) Added DT schemas cdns-pcie-host.yaml, cdns-pcie-ep.yaml and
+>    cdns-pcie.yaml for Cadence PCIe core and included it in
+>    TI's PCIe DT schema.
+> 2) Added cpu_addr_fixup() for Cadence Platform driver.
+> 3) Fixed subject/description/renamed functions as commented by
+>    Andrew Murray.
+> 
+> [1] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
+> [2] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+> [3] -> http://lore.kernel.org/r/20200305103017.16706-1-kishon@ti.com
+> [4] -> http://lore.kernel.org/r/20200417114322.31111-1-kishon@ti.com
+> [5] -> http://lore.kernel.org/r/20200417125753.13021-1-kishon@ti.com
+> [6] -> http://lore.kernel.org/r/20200506151429.12255-1-kishon@ti.com
+> [7] -> http://lore.kernel.org/r/20200522033631.32574-1-kishon@ti.com
+> [8] -> http://lore.kernel.org/r/20200708093018.28474-1-kishon@ti.com
+> [9] -> http://lore.kernel.org/r/20200713110141.13156-1-kishon@ti.com
+> [10] -> http://lore.kernel.org/r/20200521080153.5902-1-kishon@ti.com
+> 
+> Alan Douglas (1):
+>   PCI: cadence: Add MSI-X support to Endpoint driver
+> 
+> Kishon Vijay Abraham I (14):
+>   PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
+>     property
+>   PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path
+>   linux/kernel.h: Add PTR_ALIGN_DOWN macro
+>   PCI: cadence: Convert all r/w accessors to perform only 32-bit
+>     accesses
+>   PCI: cadence: Add support to start link and verify link status
+>   PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+>   dt-bindings: PCI: cadence: Remove "mem" from reg binding
+>   PCI: cadence: Add new *ops* for CPU addr fixup
+>   PCI: cadence: Fix updating Vendor ID and Subsystem Vendor ID register
+>   dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+>   dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+>   PCI: j721e: Add TI J721E PCIe driver
+>   misc: pci_endpoint_test: Add J721E in pci_device_id table
+>   MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+> 
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |   8 +-
+>  .../bindings/pci/ti,j721e-pci-ep.yaml         |  94 ++++
+>  .../bindings/pci/ti,j721e-pci-host.yaml       | 113 ++++
+>  MAINTAINERS                                   |   4 +-
+>  drivers/misc/pci_endpoint_test.c              |   9 +
+>  drivers/pci/controller/cadence/Kconfig        |  23 +
+>  drivers/pci/controller/cadence/Makefile       |   1 +
+>  drivers/pci/controller/cadence/pci-j721e.c    | 493 ++++++++++++++++++
+>  .../pci/controller/cadence/pcie-cadence-ep.c  | 129 ++++-
+>  .../controller/cadence/pcie-cadence-host.c    | 310 +++++++++--
+>  .../controller/cadence/pcie-cadence-plat.c    |  13 +
+>  drivers/pci/controller/cadence/pcie-cadence.c |   8 +-
+>  drivers/pci/controller/cadence/pcie-cadence.h | 161 +++++-
+>  include/linux/kernel.h                        |   1 +
+>  14 files changed, 1297 insertions(+), 70 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>  create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
 
+Applied to pci/cadence for v5.9, thanks !
 
-> -----Original Message-----
-> From: Felipe Balbi <balbif@gmail.com> On Behalf Of Felipe Balbi
-> Sent: Thursday, July 23, 2020 5:22 PM
-> To: Jun Li <jun.li@nxp.com>; shawnguo@kernel.org; robh+dt@kernel.org
-> Cc: gregkh@linuxfoundation.org; s.hauer@pengutronix.de; kernel@pengutroni=
-x.de;
-> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>; linux-usb@vger.kern=
-el.org;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; Peter C=
-hen
-> <peter.chen@nxp.com>; Anson Huang <anson.huang@nxp.com>; Peng Fan
-> <peng.fan@nxp.com>; Horia Geanta <horia.geanta@nxp.com>
-> Subject: Re: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core dev=
-ice to
-> pass data
->=20
->=20
-> Hi,
->=20
-> Li Jun <jun.li@nxp.com> writes:
-> > In case dwc3 has SoC specific customizations, dwc3 glue driver can
-> > base on compatible string and pass it via platform data to dwc3 core
-> > driver; and pass xhci private data further to xhci-plat like quirks.
-> >
-> > Signed-off-by: Li Jun <jun.li@nxp.com>
-> > ---
-> >  drivers/usb/dwc3/core.h | 5 +++++
-> >  drivers/usb/dwc3/host.c | 9 +++++++++
-> >  2 files changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h index
-> > 0b8ea8c..3146697 100644
-> > --- a/drivers/usb/dwc3/core.h
-> > +++ b/drivers/usb/dwc3/core.h
-> > @@ -29,6 +29,7 @@
-> >  #include <linux/ulpi/interface.h>
-> >
-> >  #include <linux/phy/phy.h>
-> > +#include "../host/xhci-plat.h"
-> >
-> >  #define DWC3_MSG_MAX	500
-> >
-> > @@ -924,6 +925,10 @@ struct dwc3_scratchpad_array {
-> >  	__le64	dma_adr[DWC3_MAX_HIBER_SCRATCHBUFS];
-> >  };
-> >
-> > +struct dwc3_platform_data {
-> > +	struct xhci_plat_priv *xhci_priv;
-> > +};
->=20
-> why? We should rely on properties, no?
-
-My v1 patch was adding new property directly, considering Rob has objection
-on that way if I understand correctly, also there is suggestion on use
-compatible string to set quirks, I changed to add platform data to pass
-SoC level quirks, I think this also can be used to extend other special
-handling for glue layer driver, so should I go back to use properties?=20
-Hope an agreement can be made on adding new properties/quirks.=20
-
-Thanks
-Li Jun
-=20
->=20
-> --
-> balbi
+Lorenzo
