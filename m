@@ -2,41 +2,42 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21868C4346D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6E6C43467
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F01E020792
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A5720792
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e/AJcIjv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ENPrKbk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgGWXsR (ORCPT
+        id S1728378AbgGWXsU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:48:17 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7643 "EHLO
+        Thu, 23 Jul 2020 19:48:20 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7650 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728194AbgGWXsR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 19:48:17 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1a21b40000>; Thu, 23 Jul 2020 16:48:04 -0700
+        with ESMTP id S1728194AbgGWXsT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 19:48:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1a21b50001>; Thu, 23 Jul 2020 16:48:05 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 23 Jul 2020 16:48:17 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Jul 2020 16:48:18 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 23 Jul 2020 16:48:17 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
- 2020 23:48:16 +0000
+        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 16:48:18 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
+ 2020 23:48:17 +0000
 Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
  (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 23 Jul 2020 23:48:16 +0000
+ Transport; Thu, 23 Jul 2020 23:48:17 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1a21c00000>; Thu, 23 Jul 2020 16:48:16 -0700
+        id <B5f1a21c10001>; Thu, 23 Jul 2020 16:48:17 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -46,131 +47,153 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v4 00/14] Support for Tegra video capture from external sensor
-Date:   Thu, 23 Jul 2020 16:50:58 -0700
-Message-ID: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v4 02/14] i2c: tegra: Remove NULL pointer check before clk_enable/disable/prepare/unprepare
+Date:   Thu, 23 Jul 2020 16:51:00 -0700
+Message-ID: <1595548272-9809-3-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
+References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
 X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595548084; bh=NcyOlwhxCrJ6+TI5P/DHk1w9IU5kwfVlNEWSx8UmFFI=;
+        t=1595548085; bh=jD0igf8U1bTJzOqQcNuwvqEC25xsAMW3RMlh+sdfw58=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=e/AJcIjv7kmaZyjsqpLRrNUa2PjgsCZV1XFzyciIWfXgN1J5icC7iCk9cPoXHEdBG
-         MsC51ddzHGKs147oA5+GNb4yzY5IN5NTioXRyef1yjTEykLOgx82Y3AJYwgOIBihZ6
-         a84/BZTV+BuAF6rpI9LEofFl0O/U9gRNOlFGWSEzkc2KFNodVZnsCAITfW6KKfcqnb
-         2TKmyKc6pgetoAb/TNGDU707aoPfaNQW4w2YzUmrLXKqAB4/t5316PujnSIteoT1uZ
-         E6BXcIXsl/NqlMECI8F9DEWo31unkmYF+eJ+QQyqKmyhUcvkxaMlIkih7WOyPhoFi3
-         7QkMXLAqihxSA==
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=ENPrKbk31hDdtOdLpNXjzsNn+ZpaqkAbsmKyMQNFeyBEMePQLr53Fyi5MJzlLm2NK
+         lTq7IZtJTAepkSsqXcTApOvJJBQEJv9zG/LdzmKh15/xQa5j9Tz5wurZWqzb3BhpXP
+         qXY9xLxdmpT3xfr+B4r5pplHVlcvs9ygjRg7Yb2kJFxKdyI6LBsxV0OHvTuty+h2Z1
+         R6dEVhfW8FdGBKDtfmyHMnwgbdRjtZCisZghA/nAx0IwAmJjvCiUbGm2fQ7iPJ2op8
+         pRwyAIGVAQpOpmv0uFy8FzxxnFs40x+FCmSSH4EO6dVmcZ6wXk/bMg40qB0F66R4FD
+         3SITAuf3L120A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds support for video capture from external camera sensor to
-Tegra video driver.
+clk_enable, clk_disable, clk_prepare, and clk_unprepare APIs have
+implementation for checking clk pointer not NULL and clock consumers
+can safely call these APIs without NULL pointer check.
 
-Jetson TX1 has camera expansion connector and supports custom camera module
-designed as per TX1 design specification.
+So, this patch cleans up Tegra i2c driver to remove explicit checks
+before these APIs.
 
-This series also enables camera capture support for Jetson Nano which has
-Raspberry PI camera header.
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 64 +++++++++++++++---------------------------
+ 1 file changed, 23 insertions(+), 41 deletions(-)
 
-This series is tested with IMX219 camera sensor.
-
-This series include,
-
-VI I2C related fixes
-- Camera sensor programming happens through VI I2C which is on host1x bus.
-- These patches includes device tree and I2C driver fixes for VI I2C.
-
-Tegra video driver updates
-- TPG Vs Non-TPG based on Kconfig
-- Support for external sensor video capture based on device graph from DT.
-- Support for selection ioctl operations
-- Tegra MIPI CSI pads calibration
-- CSI T-CLK and T-HS settle time computation based on clock rates.
-
-Host1x driver updates
-- Adds API to allow creating mipi device for specific device node.
-- Splits MIPI pads calibrate start and waiting for calibration to be done.
-
-Device tree updates
-- Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
-- Enabled VI and CSI support in Jetson Nano DT.
-
-
-Delta between patch versions:
-[v4]:	Includes below fix based on v3 feedback
-	- Patches are based on latest linux-next.
-	- With split of tegra_mipi_calibrate() and tegra_mipi_wait(), mipi
-	  clock is not left enabled till calibration done. This series adds
-	  a patch to fix this by keeping clock enabled till calibration is
-	  done.
-
-	Note:
-	Patch-0010 has compilation dependency on
-	https://patchwork.kernel.org/patch/11659521/
-
-[v3]:	Includes v2 feedback
-	- Uses separate helper function for retrieving remote csi subdevice
-	  and source subdevice.
-	- Added check for presence of subdevice ops set/get_selection
-	- dropped vb2_queue_release from driver and using
-	  vb2_video_unregister_device instead of video_unregister_device.
-	- video device register should happen in the last after all video
-	  device related setup is done in the driver. This is being addressed
-	  in below RFC patch. Once proper implementation of this is available
-	  will update Tegra video driver to use split APIs and do all setup
-	  prior to device register. Added this as TODO in the driver.
-	  https://www.spinics.net/lists/linux-media/msg172761.html
-
-	Note:
-	Patch-0012 has compilation dependency on
-	https://patchwork.kernel.org/patch/11659521/
-
-
-[v2]:	Includes below changes based on v1 feedback
-	- dt-binding document and the driver update for device graph to use
-	  separate ports for sink endpoint and source endpoint for csi.
-	- Use data-lanes endpoint property for csi.
-	- Update tegra_mipi_request() to take device node pointer argument
-	  rather than adding extra API.
-	- Remove checking for clk pointer before clk_disable.
-
-
-Sowjanya Komatineni (14):
-  i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
-  i2c: tegra: Remove NULL pointer check before
-    clk_enable/disable/prepare/unprepare
-  i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
-  i2c: tegra: Fix runtime resume to re-init VI I2C
-  i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
-  media: tegra-video: Fix channel format alignment
-  media: tegra-video: Enable TPG based on kernel config
-  media: tegra-video: Update format lookup to offset based
-  dt-bindings: tegra: Update VI and CSI bindings with port info
-  media: tegra-video: Add support for external sensor capture
-  media: tegra-video: Add support for selection ioctl ops
-  gpu: host1x: mipi: Keep MIPI clock enabled till calibration is done
-  media: tegra-video: Add CSI MIPI pads calibration
-  media: tegra-video: Compute settle times based on the clock rate
-
- .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
- drivers/gpu/drm/tegra/dsi.c                        |   4 +-
- drivers/gpu/host1x/mipi.c                          |  19 +-
- drivers/i2c/busses/i2c-tegra.c                     | 101 +--
- drivers/staging/media/tegra-video/Kconfig          |   7 +
- drivers/staging/media/tegra-video/csi.c            | 258 ++++++-
- drivers/staging/media/tegra-video/csi.h            |   8 +
- drivers/staging/media/tegra-video/tegra210.c       |  25 +-
- drivers/staging/media/tegra-video/vi.c             | 800 +++++++++++++++++++--
- drivers/staging/media/tegra-video/vi.h             |  25 +-
- drivers/staging/media/tegra-video/video.c          |  23 +-
- include/linux/host1x.h                             |   5 +-
- 12 files changed, 1224 insertions(+), 143 deletions(-)
-
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 3be1018..c91307b9 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -655,21 +655,17 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (!i2c_dev->hw->has_single_clk_source) {
+-		ret = clk_enable(i2c_dev->fast_clk);
+-		if (ret < 0) {
+-			dev_err(i2c_dev->dev,
+-				"Enabling fast clk failed, err %d\n", ret);
+-			return ret;
+-		}
++	ret = clk_enable(i2c_dev->fast_clk);
++	if (ret < 0) {
++		dev_err(i2c_dev->dev,
++			"Enabling fast clk failed, err %d\n", ret);
++		return ret;
+ 	}
+ 
+-	if (i2c_dev->slow_clk) {
+-		ret = clk_enable(i2c_dev->slow_clk);
+-		if (ret < 0) {
+-			dev_err(dev, "failed to enable slow clock: %d\n", ret);
+-			return ret;
+-		}
++	ret = clk_enable(i2c_dev->slow_clk);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable slow clock: %d\n", ret);
++		return ret;
+ 	}
+ 
+ 	ret = clk_enable(i2c_dev->div_clk);
+@@ -688,12 +684,8 @@ static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
+ 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+ 
+ 	clk_disable(i2c_dev->div_clk);
+-
+-	if (i2c_dev->slow_clk)
+-		clk_disable(i2c_dev->slow_clk);
+-
+-	if (!i2c_dev->hw->has_single_clk_source)
+-		clk_disable(i2c_dev->fast_clk);
++	clk_disable(i2c_dev->slow_clk);
++	clk_disable(i2c_dev->fast_clk);
+ 
+ 	return pinctrl_pm_select_idle_state(i2c_dev->dev);
+ }
+@@ -1716,20 +1708,16 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, i2c_dev);
+ 
+-	if (!i2c_dev->hw->has_single_clk_source) {
+-		ret = clk_prepare(i2c_dev->fast_clk);
+-		if (ret < 0) {
+-			dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
+-			return ret;
+-		}
++	ret = clk_prepare(i2c_dev->fast_clk);
++	if (ret < 0) {
++		dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
++		return ret;
+ 	}
+ 
+-	if (i2c_dev->slow_clk) {
+-		ret = clk_prepare(i2c_dev->slow_clk);
+-		if (ret < 0) {
+-			dev_err(dev, "failed to prepare slow clock: %d\n", ret);
+-			goto unprepare_fast_clk;
+-		}
++	ret = clk_prepare(i2c_dev->slow_clk);
++	if (ret < 0) {
++		dev_err(dev, "failed to prepare slow clock: %d\n", ret);
++		goto unprepare_fast_clk;
+ 	}
+ 
+ 	if (i2c_dev->bus_clk_rate > I2C_MAX_FAST_MODE_FREQ &&
+@@ -1843,12 +1831,10 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	clk_unprepare(i2c_dev->div_clk);
+ 
+ unprepare_slow_clk:
+-	if (i2c_dev->is_vi)
+-		clk_unprepare(i2c_dev->slow_clk);
++	clk_unprepare(i2c_dev->slow_clk);
+ 
+ unprepare_fast_clk:
+-	if (!i2c_dev->hw->has_single_clk_source)
+-		clk_unprepare(i2c_dev->fast_clk);
++	clk_unprepare(i2c_dev->fast_clk);
+ 
+ 	return ret;
+ }
+@@ -1867,12 +1853,8 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ 		tegra_i2c_runtime_suspend(&pdev->dev);
+ 
+ 	clk_unprepare(i2c_dev->div_clk);
+-
+-	if (i2c_dev->slow_clk)
+-		clk_unprepare(i2c_dev->slow_clk);
+-
+-	if (!i2c_dev->hw->has_single_clk_source)
+-		clk_unprepare(i2c_dev->fast_clk);
++	clk_unprepare(i2c_dev->slow_clk);
++	clk_unprepare(i2c_dev->fast_clk);
+ 
+ 	tegra_i2c_release_dma(i2c_dev);
+ 	return 0;
 -- 
 2.7.4
 
