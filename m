@@ -2,168 +2,91 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C492AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78736C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E29F208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478E122B47
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595535507;
-	bh=OKaS1P28nJxxtCAWZB+HdxF8uwxJI3GOsJdAJpz1Wb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wlRhOloOpx7w5XahxGj8X5w1U7HR9LyO7GmSzRcwseBsJPWbjSPnZfux8znZmdAQY
-	 tCSZdWl3dMAYV+BYymxsr3nVJPymVc2pLLqWmPaTa3J4ey48QtapJlkkyTu9RR6wbz
-	 yk+KVckNbqKrm9ZTbfVkjw0UfOOYziKDCmerlzjo=
+	s=default; t=1595535615;
+	bh=m9fN9R0RLf9EORdUqrD39Ga3LCQrNVMins4vQKdmgkY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=0o3mR/SfCLe6baN2k5lFYc0HNF6Lsvxnb0iIPAFFCdk9ODjkL5NCl/8CehJThQqyL
+	 ACn0foH+GvZuBkY/0IidkPMa7AsvyLPQxVmwqpyAoTMj72XXNeMJW1tsISoSARKABo
+	 k9LoUIzEuPXI4WnUDZYcBs4gcCjaxGf1FNzzuTNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgGWUS1 (ORCPT
+        id S1726033AbgGWUUO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:18:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41173 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgGWUS0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:18:26 -0400
-Received: by mail-io1-f68.google.com with SMTP id p205so7617289iod.8;
-        Thu, 23 Jul 2020 13:18:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A+bs3OlS8UQmhllIUhonZMM/+IfllG/gM+l8StXXg04=;
-        b=Cj0Nypo93IqGg+qJzGKISCP+PVGF5qtw5DbS+WFFuKUZKGG6AzVASrBnW8TclQahBI
-         9QSrpf8os1c8jLb+olVzwZMwMx1tyq8F+zKP0X2qR7b92qlb7Ld9/MvIDO5jIXktP+qG
-         oP1fqPFtDuhgRMUn6tTFnW8zYRHuacGAwh4clbwbhk5bYYuQSKQXlCyu7geXg+G2vlDs
-         aChkH35dH6vtErDREsEf0JoPVaP4i1wT5+0STq+4Jp6PLLcwzxiN5Yrbas2gPFMxwjP8
-         1O8s4tshvMSeRy99EGYnmGXRuTDgXHPxskr4Iy9CAe++JJ1fwCzqZiV5DJDGF7WhkEa5
-         oLRA==
-X-Gm-Message-State: AOAM533mtR6wGYBVOozv21kfNvwuu7ElBO1BdG/aIg5RzpUTA0w7XYOf
-        CmT6JjKWlXN5OsJT3n6rc5g+OHWSXA==
-X-Google-Smtp-Source: ABdhPJx40znh6EFlcwp+i/5XHaqEwUcM8wAzVExw4KY1VjVYL+2q03d6mC37eNjFzhZiBelEbH+gdA==
-X-Received: by 2002:a02:7786:: with SMTP id g128mr4182617jac.45.1595535502832;
-        Thu, 23 Jul 2020 13:18:22 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u65sm2019040iod.45.2020.07.23.13.18.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:18:21 -0700 (PDT)
-Received: (nullmailer pid 793895 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:18:19 -0000
-Date:   Thu, 23 Jul 2020 14:18:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: tas2562: Convert the tas2562 binding
- to yaml
-Message-ID: <20200723201819.GA783613@bogus>
-References: <20200722154706.9657-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722154706.9657-1-dmurphy@ti.com>
+        Thu, 23 Jul 2020 16:20:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725979AbgGWUUO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 16:20:14 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEAF12065F;
+        Thu, 23 Jul 2020 20:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595535614;
+        bh=m9fN9R0RLf9EORdUqrD39Ga3LCQrNVMins4vQKdmgkY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Qj9Kudv4h9bucJglhlPdbHIU7UvfhGkLfQcS+L02jHfVyGKoUvpucoKbGN9RmmFiX
+         PHcid1k8dmgQdun0E+mvOz2ViY0iel/N2rio1oIfSiBlSkM5n+pQx2f8uQMD/dkG/G
+         gkwjjg1IuWmdeKf0NdnlqV+1SFc1Z59yJxbfscbY=
+Date:   Thu, 23 Jul 2020 21:19:59 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     perex@perex.cz, nicoleotsuka@gmail.com,
+        Shengjiu Wang <shengjiu.wang@nxp.com>, festevam@gmail.com,
+        Xiubo.Lee@gmail.com, devicetree@vger.kernel.org, tiwai@suse.com,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, timur@kernel.org,
+        robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1595302910-19688-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH 1/2] ASoC: fsl-asoc-card: Support configuring dai fmt from DT
+Message-Id: <159553557415.41908.10792905322230723477.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 10:47:05AM -0500, Dan Murphy wrote:
-> Convert the TAS2562 text file to yaml format.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - Updated the shutdown-gpio to shutdown-gpios and fixed licensing to be
-> GPL-2.0-only.
-> 
->  .../devicetree/bindings/sound/tas2562.yaml    | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/tas2562.yaml b/Documentation/devicetree/bindings/sound/tas2562.yaml
-> new file mode 100644
-> index 000000000000..8d75a798740b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tas2562.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2019 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/sound/tas2562.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Texas Instruments TAS2562 Smart PA
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The TAS2562 is a mono, digital input Class-D audio amplifier optimized for
-> +  efficiently driving high peak power into small loudspeakers.
-> +  Integrated speaker voltage and current sense provides for
-> +  real time monitoring of loudspeaker behavior.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tas2562
-> +      - ti,tas2563
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +       I2C address of the device can be one of these 0x4c, 0x4d, 0x4e or 0x4f
-> +
-> +  shut-down-gpios:
-> +    description: GPIO used to control the state of the device.
-> +    deprecated: true
+On Tue, 21 Jul 2020 11:41:49 +0800, Shengjiu Wang wrote:
+> Support same propeties as simple card for configuring fmt
+> from DT.
+> In order to make this change compatible with old DT, these
+> properties are optional.
 
-I think you should just remove this given it never worked with any 
-released kernel. Otherwise,
+Applied to
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-> +
-> +  shutdown-gpios:
-> +    description: GPIO used to control the state of the device.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  ti,imon-slot-no:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: TDM TX current sense time slot.
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/gpio/gpio.h>
-> +   i2c0 {
-> +     #address-cells = <1>;
-> +     #size-cells = <0>;
-> +     codec: codec@4c {
-> +       compatible = "ti,tas2562";
-> +       reg = <0x4c>;
-> +       #sound-dai-cells = <1>;
-> +       interrupt-parent = <&gpio1>;
-> +       interrupts = <14>;
-> +       shutdown-gpios = <&gpio1 15 0>;
-> +       ti,imon-slot-no = <0>;
-> +     };
-> +   };
-> +
-> -- 
-> 2.27.0
-> 
+Thanks!
+
+[1/2] ASoC: fsl-asoc-card: Support configuring dai fmt from DT
+      commit: 08b54b5e38e67b7e99f71b35cb8841b53e006759
+[2/2] ASoC: bindings: fsl-asoc-card: Support properties for configuring dai fmt
+      commit: ca168352cf94bbbc523794f2a2972adcf84d8639
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
