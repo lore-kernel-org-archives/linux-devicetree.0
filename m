@@ -4,111 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECACEC433EB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D428220771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD762071A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 15:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595519524;
-	bh=/GQ2QhGK0gBCaytDhB9A8xX+MTJEtVpDuAAUfpwB38c=;
+	s=default; t=1595519663;
+	bh=xOdIURdksIa9QF2fAtH1zOnoXNic4rqcFhJCxoE+ckc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DdmNqi37vvnHzbwyyDi4HDFABvkUXkW1LtafLPtFw8oFDuy3PwrA89kqS4haJXfTh
-	 YmPfLmbn1PVG2h/4W0DavTh00i5fZs6TtjSE9zrY43JTZUAfvikG4ZR3T5aUR2XTDo
-	 gRojbKh0Dxu3epm3qXC5qtfuRajbfUixdu8q11E0=
+	b=dgC7OwFDSlvKggEqnPPReWX+U9lWMc6QNdRFa5zIQQ4NJYtvBRNNUyHiaycDOjbMI
+	 ztpKNYs9Pj4xWoKZumrwzsag+lIzRnUM9pdDmKumITFUXhNNDV9xc73WqqQWy21wPM
+	 oQ9RP93LhylN47fjifnSP8wyWm/B9II7COGQUXw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgGWPwE (ORCPT
+        id S1729590AbgGWPyW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 11:52:04 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38914 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgGWPwE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 11:52:04 -0400
-Received: by mail-io1-f66.google.com with SMTP id z6so6754215iow.6;
-        Thu, 23 Jul 2020 08:52:03 -0700 (PDT)
+        Thu, 23 Jul 2020 11:54:22 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36599 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgGWPyV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 11:54:21 -0400
+Received: by mail-il1-f196.google.com with SMTP id x9so4746602ila.3;
+        Thu, 23 Jul 2020 08:54:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=QY9kXtA33cXH0+WLfNZ9onY7TD+FXlnMCD83KHcN4Qs=;
-        b=UPPOiAfwyYwMQ3Z/wyDaSLFZAtwYxP9xIzzAacv0cHD3S93HDQF7JwfB5qGsro1Qsp
-         d0zZBSi8amDsdXnYt9xQD4vHsBMw96VjoQtmwEVCVnbZLCsfFEWY7BEsCvjXJM/kVhDe
-         Yc3chG3CCngA1crsl4Pd9cdH+PNNSbRQm++jdPfxSENH/OaQovqZuxgQBXPLH24EwIcs
-         qJsHyL/KmpwnB2eprRAREsMCWRYy+6vRnxuNKStkHzcPeNPB5y3Jrf5Qszidic1tPiHI
-         guEgTQrXZEikbVyUAnoD3iwUbc+Uk6e01PrAB8JQ+SHKJk0yDD97OZVo8VYk8ACfm6Ex
-         qxnA==
-X-Gm-Message-State: AOAM531DxcIaR2vvaxxNAjSpbGvgk6dt3AOsBYg6fumZ9q+3wWN5A4/r
-        cSTzL3dnJ83jdlCiZtnRoQ==
-X-Google-Smtp-Source: ABdhPJzB7/A+V1wRpSWO9D+GvJjuQx16r7g+IJe1Jh2draWFxJPpCwENrGDTtSYu4PAi0I2uf+GxjQ==
-X-Received: by 2002:a6b:c815:: with SMTP id y21mr5472143iof.83.1595519523112;
-        Thu, 23 Jul 2020 08:52:03 -0700 (PDT)
+        bh=LannAD2AX1fh6q7gHSRa8VqKVqFIn5KRyC4DsoZMwXo=;
+        b=cMy2certaOv0+zqWXPEKqgOKspoSvXfRLXXkDSZkSVOy/97FC0CzX00KI0w8HJGd5z
+         ruUbQ4mQiZNEmN9JIOFDkH8xWvoHuI+V/tJg3uqSCZgEOlhxsHf0c6DXC/uSVGzPt4Kp
+         5v2u/C/t8PxYRzpMqCL/j6NkJypWQmvy8AO2rKHS9NClzrvULK/wYA6YNYKClb7f/wxN
+         kopqvXSZVt8ZgYLEdg37f9hPHn3L+sRrj6fgJD0Qt0wep3/J9yEDf1+4snsOJ4Z+/svV
+         ZjjCsdyVnXtYORR4yXBgl6UUszu2yakI9jbbCbq1kLKDGapX9FxIIlNBDBOTenrVY21U
+         12Og==
+X-Gm-Message-State: AOAM53281PP7TsZACV+j2uSAzAWDgTl/RtN3dx82a8+OHe7uTVP9C5fW
+        173ln3Inuz0aCHHQ+CaMkkuLmfpcGA==
+X-Google-Smtp-Source: ABdhPJywARBshz2+0DGQQChaKCPrF7Q5cVSGWUX2ed65RXvpBb9WB1QX1mqkbQNg55v9AFpOewT71g==
+X-Received: by 2002:a92:1b5b:: with SMTP id b88mr2651749ilb.104.1595519660249;
+        Thu, 23 Jul 2020 08:54:20 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l5sm1642553ios.3.2020.07.23.08.52.00
+        by smtp.gmail.com with ESMTPSA id p9sm1660623ilc.78.2020.07.23.08.54.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 08:52:02 -0700 (PDT)
-Received: (nullmailer pid 437545 invoked by uid 1000);
-        Thu, 23 Jul 2020 15:51:59 -0000
-Date:   Thu, 23 Jul 2020 09:51:59 -0600
+        Thu, 23 Jul 2020 08:54:19 -0700 (PDT)
+Received: (nullmailer pid 440701 invoked by uid 1000);
+        Thu, 23 Jul 2020 15:54:18 -0000
+Date:   Thu, 23 Jul 2020 09:54:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>, wsd_upstream@mediatek.com,
-        Andy Teng <andy.teng@mediatek.com>, devicetree@vger.kernel.org,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v9 2/7] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-Message-ID: <20200723155159.GB436360@bogus>
-References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
- <1595503197-15246-3-git-send-email-hanks.chen@mediatek.com>
+To:     Anilkumar Kolli <akolli@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
+        ath11k@lists.infradead.org
+Subject: Re: [PATCH v4 1/3] dt: bindings: net: update compatible for ath11k
+Message-ID: <20200723155418.GA439882@bogus>
+References: <1595506264-6393-1-git-send-email-akolli@codeaurora.org>
+ <1595506264-6393-2-git-send-email-akolli@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1595503197-15246-3-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1595506264-6393-2-git-send-email-akolli@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2020 19:19:52 +0800, Hanks Chen wrote:
-> From: Andy Teng <andy.teng@mediatek.com>
+On Thu, 23 Jul 2020 17:41:02 +0530, Anilkumar Kolli wrote:
+> Add IPQ6018 wireless driver support,
+> its based on ath11k driver.
 > 
-> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
 > ---
->  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 197 ++++++++++++++++++
->  1 file changed, 197 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> V3:
+>  - Use 'enum' rather than oneOf+const.
+> V4:
+>  - removed oneOf, use just enum (Rob)
+> 
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:0: [0, 268455936, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:1: [0, 297926656, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:2: [0, 298909696, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:3: [0, 300023808, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:4: [0, 300351488, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:5: [0, 300548096, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:6: [0, 301072384, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:7: [0, 301137920, 0, 4096] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml: example-0: pinctrl@10005000:reg:8: [0, 268480512, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml: properties:compatible: [{'enum': ['qcom,ipq8074-wifi', 'qcom,ipq6018-wifi']}] is not of type 'object', 'boolean'
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/net/wireless/qcom,ath11k.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/net/wireless/qcom,ath11k.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml: ignoring, error in schema: properties: compatible
+warning: no schema found in file: ./Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml: ignoring, error in schema: properties: compatible
+warning: no schema found in file: ./Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1334743
+See https://patchwork.ozlabs.org/patch/1334839
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
