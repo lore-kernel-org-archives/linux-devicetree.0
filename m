@@ -2,191 +2,260 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18BCC433E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B7D20714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JDKPC9jD";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="JIOJqRcw"
+	by mail.kernel.org (Postfix) with ESMTP id 7667C20771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595521936;
+	bh=UsE0AfyyH9ASPhZTnv7rHkKV2A1QkqMr7Pj3l5isRpU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AWNzRPUX6JXP3OkSN3a5A1KiZ7JTqXOYZN2S4riZ+P1ox9weTfo3KT+ONAdTUTUJE
+	 ykr/GT4Alj7AIkM4qwMEaUZ15JPyNxYcybaHsdhchk6yh4orzxOZu10h2u4tFPr3at
+	 yN3amjg/u35ViW+vOZkOba4vZVI+Jc84TCq7pnP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGWQ3A (ORCPT
+        id S1729793AbgGWQcQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:29:00 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:50894 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgGWQ27 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 12:28:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595521738; x=1627057738;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version;
-  bh=3gMoUouwlk3fJwcByBAmiWdDWHPIZLt5eiuvmdzxTBc=;
-  b=JDKPC9jDpT2/JwfqR8vr9zNqbeWsGmNcq9leK+YCh2oX4gKml4KjELp5
-   EotMyEx8MYXiC/P8WNpJl5BdtGzreZLkN8O9EnDVbtq91koEMXGYFXfCC
-   lg8MFCaPx8IARV+8pVrju9e3RMet/ZMb8RP8/ozJ2xeRChcYY3z2RY9ST
-   nIMS9izR08EOPw3sooYa1MzgPiTvzXn/oQ7OFKd8WFJYobvS4UobNs+GQ
-   aqKjcIVBIYQUz0iTctcimwmqfWFurs9sBLN9sr4PT0awWB2qQIIS9mBbQ
-   0/wsZx5C/smcjcYl5PQ7UQ9uafdt9NcT/eeRmiFOH6guwhkdgZIvBbfCH
-   g==;
-IronPort-SDR: /G2oarO1AeG0A0QzndN1JpK5x0PGHCYv+A1fneWW0IytOXTSi3cbiDlpYpSksvzQcUxupEZQDp
- OmTcOdgkSDXavcIQS0PUepOeOqSHRd5T+pWzSTUyxWmTLS1eTQSYOWMQVFelotTygS3e2FGJ/n
- 9rx5Fqzq4RjyLM0hrLJK4cQ/+mdwy06qdB34gUAfqpsUJDbUaOGWpL0/WZxy9XvUl723l7dOkn
- gyvGG5xlgie61AWw/NpStGerj06u3X4cL3ciGfAb4f7hwo3lyUxK2CAGEEAPlqLa+fc3v3fkRv
- 7sg=
-X-IronPort-AV: E=Sophos;i="5.75,387,1589266800"; 
-   d="scan'208";a="83018926"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jul 2020 09:28:58 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 23 Jul 2020 09:28:18 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
- Transport; Thu, 23 Jul 2020 09:28:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xq+kfKR2R2HMQZajb7t/1tSDTq2UuM/PMKe9r9l80dwsvNo3rwVD3jJh2SWb7JK9kwQfOAVhA+FxIly2DfXGEnnuHyDIFFVDY6RAqMircgPebsCrpZayeNOM7c/mSksqWqe21Fk3c4JQkHrcA2qShekENrJfAMkU0qHrLGk0bluwk+mYGQZw4Kq1BzRS/olEVgUpM8O+CWndNoOUDMuNml2zlk7jmP9LwGjjOasLUxCDOE5ckmmcXT9NGv8mnuxnEFyMVtFYGtPlxWMCLPo/to4eSL7s67YwQmatomPsQgkrnDjyt9yV2FnZAJJAUv8WQFjkjWOGoTzZQNSDhtH3EQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3gMoUouwlk3fJwcByBAmiWdDWHPIZLt5eiuvmdzxTBc=;
- b=Z3XiIJr13ktGwu5WIPMw5b1TO9/TA8G6fJCf8dzgX77bV06DsaOQxMOgvJYy3kg8hqi5MQkSy+v4H58LEBfhMjBZ//oy8Orkn+/G0o79WGX/IEhiln+OCt1a7xz/HmRtgv4/ocYkTuLay3LuWVY1OrUGLqj70E8auFbCB68XBfwZ8K78WkvDCbyEZ+ucC2zT7Hc5D3ri172lRw+kZelYjOu7dFZP1fOMZLh1jmnIm4ZC7btkUav5XMNkUUJB4Gkf/NLkMFUkdrfu3iBSF7oMMx+S1fC7sdpdej5fA6aT1MgwC9xJOE4SU1NfrhLthdKSxmP2bTQzSvlco6HU1tfDyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3gMoUouwlk3fJwcByBAmiWdDWHPIZLt5eiuvmdzxTBc=;
- b=JIOJqRcwQ8489dAt8KJ1agbt7t1Z5BPe2P6+19q0rVdLQ93vTIAUfYqJn7jvD4qGjy5o670/2kWiAfcq9PqaU3mYtefmiGmfgr+r64/yZ2CIQdPrbrA/tk7bp7kyTLlYDDYsbVdzktfE31XLFa3f11CrYoATWiFYSQe/OpFAjnc=
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
- DM6PR11MB3193.namprd11.prod.outlook.com (2603:10b6:5:57::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3195.23; Thu, 23 Jul 2020 16:28:53 +0000
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8b2:1d82:49d9:f4b]) by DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8b2:1d82:49d9:f4b%6]) with mapi id 15.20.3216.024; Thu, 23 Jul 2020
- 16:28:53 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <Cristian.Birsan@microchip.com>, <balbi@kernel.org>,
-        <gregkh@linuxfoundation.org>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/6] usb: gadget: udc: atmel: use
- of_find_matching_node_and_match
-Thread-Topic: [PATCH v3 1/6] usb: gadget: udc: atmel: use
- of_find_matching_node_and_match
-Thread-Index: AQHWYDZ7vQs+wibSwkmzkBgy4Ym1sakVXEWA
-Date:   Thu, 23 Jul 2020 16:28:53 +0000
-Message-ID: <b9c051ce-fba2-297e-e6ec-63acfcc47afc@microchip.com>
-References: <20200722134421.190741-1-cristian.birsan@microchip.com>
- <20200722134421.190741-2-cristian.birsan@microchip.com>
- <9cf8e546-09ce-d902-6dca-e2490fd8c4ae@microchip.com>
-In-Reply-To: <9cf8e546-09ce-d902-6dca-e2490fd8c4ae@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: microchip.com; dkim=none (message not signed)
- header.d=none;microchip.com; dmarc=none action=none
- header.from=microchip.com;
-x-originating-ip: [213.233.110.107]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 90b832b2-2bb5-43ed-3338-08d82f257d4b
-x-ms-traffictypediagnostic: DM6PR11MB3193:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3193CF28614F29BE6814808187760@DM6PR11MB3193.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MJXTwNxDPvrMQdaXR/OSJZpeQxsmfhMAxEKIn7tHJSpxjEZ4LFf+PbwR1IHY77ZT8nb8e5ZJHIl9mf257L95Ip/JqPSIAdegtKk1Iznt6dfmTfpB+7DxSCgzk+goZ9990T512ExGoM00w+paffJ7+myHMhnOlzw5dfK70BImEjGmAi1bzzqx7Eq/EtHUNa6VImxaGbSWEeezfo3bpMKvLtcuRmndBO7/+KriHZmGMXx2VnLScFFcLv3aq9v1/kfUisqr06b8LPWK6A2rk+k1oJ+4xPR3jM14OjsZa4pB0nqmnOntjGyr6eo459+bMiajeM62vgGwdUIHR9eIazx0eH83qFMG5icQbQzIZMqwoq7fj4w+K9WBQb629SU14HyZtzaOTR6NUSOJYflMXXhCsZZmM1RRT8aESIJY0rxqCAu4ow8MKlkcQlO5kcbxCcuHCIx4cNsLBFJi9PyZITo4V/UNK1r0Nkebtd80Kgli9qw=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(346002)(39860400002)(376002)(136003)(83380400001)(186003)(71200400001)(26005)(5660300002)(31686004)(8676002)(6486002)(66446008)(36756003)(66556008)(2616005)(966005)(31696002)(6506007)(86362001)(110136005)(66476007)(91956017)(2906002)(8936002)(53546011)(6512007)(478600001)(316002)(76116006)(64756008)(66946007)(921003)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: TtNTQ1oo8rvXhFyaDUZfe/3wreGtPOym5N+KUrh6wDJhrZfAHZ8rxCJYeFAsERNTd3BxpudxNLYAgcFGDP6oY3vLbT6TRrOKQm22LhKYFPE5eb/gCo6VtLREBKx5IdAbaA5jrjN4cc9ocxQzJNHkp6NnbdPLgIIx+2mUAWzR7E+DhI1gBgFkp36WIfI0eiLwv9/8tcdKxp/k7kk69gq4+QkaNR53zKqeDKsYT3W8WH6SdgIPUy0OYZSS5vQ3+UHOmCPfhbZLZ/EPOEidH+0WDKrWfgzXXXe0L/1AIyEFF8mVaDU0YukrShJ7FbPIAWaCp9JboRoNERSQ2K4Tkp8Ry1rb7fTNVYNIQrAmOtJdkFUc6RD3Jq08l4n8/hZhEAoumqjyxUzz5d+V6ivsJwWDRfkQUFBt59DfEE4pm8mnLzzlECIiOIHGXVhEWKvkPCxaObzk/81x5d80Qt4l5wAMJIwKoWPCAJTk7mVDh5aJSzfEM8XQRWnJ5/3vB6sOmAVL
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <47DDA43FD86B73409BAEC4EFE15D26FE@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 23 Jul 2020 12:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726621AbgGWQcP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 12:32:15 -0400
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0ACC206F4;
+        Thu, 23 Jul 2020 16:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595521934;
+        bh=UsE0AfyyH9ASPhZTnv7rHkKV2A1QkqMr7Pj3l5isRpU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bO22246CLB+6Y85wT9sR8OfksIMvslPN0d6PY6Z1fDrwncHCz7S7WQGLe4vDVJHRF
+         xHNUH0d8FJaQhBWKzmQf+3JWJdo0M0jl3QCXzSyAnkfHV0Cj6YH7haYvdpblpiWsoO
+         wlLNFtk5bP/EiZlb5mKEGbxK9+kzU1HMLchHxM8M=
+Received: by mail-ed1-f42.google.com with SMTP id d18so4973452edv.6;
+        Thu, 23 Jul 2020 09:32:14 -0700 (PDT)
+X-Gm-Message-State: AOAM532QQlAIqN8HVPlzreYM+OHg4eTrw7YHxmbr/+BaGkW2d5mlrmhm
+        8Pe0iG1k7zUJ+L0L6PmIA/UCSM0Ofc+iTpekFQ==
+X-Google-Smtp-Source: ABdhPJyRm/l9dPj0W+dfDKiakdRmDJRlB3h26Hb6zg+r04P5orwxjTD/vSWsiavEJACFhMP/gwvhQEf/i1OLYSZOpWs=
+X-Received: by 2002:a50:e617:: with SMTP id y23mr4915055edm.47.1595521933191;
+ Thu, 23 Jul 2020 09:32:13 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3420.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90b832b2-2bb5-43ed-3338-08d82f257d4b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 16:28:53.4711
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CHZJXIvyQK6/Yid+IK9m071+CxLn1/fpDcLiCLRgjsuAp/xeN+EUggFyHKJcx+9cIpilnxJofpOQFf7DC4kJvV2u9OZdudnZcggo2XgRf28=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3193
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+ <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+ <1595389756.20193.12.camel@mtkswgap22> <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+ <1595484707.26237.12.camel@mtkswgap22>
+In-Reply-To: <1595484707.26237.12.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 24 Jul 2020 00:32:02 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
+Message-ID: <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCk9uIDIyLjA3LjIwMjAgMTc6NDMsIENsYXVkaXUuQmV6bmVhQG1pY3JvY2hpcC5jb20gd3Jv
-dGU6DQo+IA0KPiANCj4gT24gMjIuMDcuMjAyMCAxNjo0NCwgY3Jpc3RpYW4uYmlyc2FuQG1pY3Jv
-Y2hpcC5jb20gd3JvdGU6DQo+PiBGcm9tOiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFA
-bWljcm9jaGlwLmNvbT4NCj4+DQo+PiBJbnN0ZWFkIG9mIHRyeWluZyB0byBtYXRjaCBldmVyeSBw
-b3NzaWJsZSBjb21wYXRpYmxlIHVzZQ0KPj4gb2ZfZmluZF9tYXRjaGluZ19ub2RlX2FuZF9tYXRj
-aCgpIGFuZCBwYXNzIHRoZSBjb21wYXRpYmxlIGFycmF5Lg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
-IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+
-PiAgZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9hdG1lbF91c2JhX3VkYy5jIHwgMjUgKysrKysrKysr
-KysrKysrKysrLS0tLS0tLQ0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCA3
-IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRj
-L2F0bWVsX3VzYmFfdWRjLmMgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2F0bWVsX3VzYmFfdWRj
-LmMNCj4+IGluZGV4IGM1MTI4YzIyOWM1Mi4uZWUyYjU1MGFhNDAwIDEwMDY0NA0KPj4gLS0tIGEv
-ZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9hdG1lbF91c2JhX3VkYy5jDQo+PiArKysgYi9kcml2ZXJz
-L3VzYi9nYWRnZXQvdWRjL2F0bWVsX3VzYmFfdWRjLmMNCj4+IEBAIC0yMTEyLDYgKzIxMTIsMTMg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfdWRjX2R0X2lkc1tdID0g
-ew0KPj4gIA0KPj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGF0bWVsX3VkY19kdF9pZHMpOw0K
-Pj4gIA0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGF0bWVsX3BtY19kdF9p
-ZHNbXSA9IHsNCj4+ICsJeyAuY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxc2FtOWc0NS1wbWMiIH0s
-DQo+PiArCXsgLmNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXNhbTlybC1wbWMiIH0sDQo+PiArCXsg
-LmNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXNhbTl4NS1wbWMiIH0sDQo+PiArCXsgLyogc2VudGlu
-ZWwgKi8gfQ0KPj4gK307DQo+PiArDQo+PiAgc3RhdGljIHN0cnVjdCB1c2JhX2VwICogYXRtZWxf
-dWRjX29mX2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4+ICAJCQkJCQkgICAg
-c3RydWN0IHVzYmFfdWRjICp1ZGMpDQo+PiAgew0KPj4gQEAgLTIxMjgsMTMgKzIxMzUsMTcgQEAg
-c3RhdGljIHN0cnVjdCB1c2JhX2VwICogYXRtZWxfdWRjX29mX2luaXQoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldiwNCj4+ICANCj4+ICAJdWRjX2NvbmZpZyA9IG1hdGNoLT5kYXRhOw0KPj4g
-IAl1ZGMtPmVycmF0YSA9IHVkY19jb25maWctPmVycmF0YTsNCj4+IC0JdWRjLT5wbWMgPSBzeXNj
-b25fcmVnbWFwX2xvb2t1cF9ieV9jb21wYXRpYmxlKCJhdG1lbCxhdDkxc2FtOWc0NS1wbWMiKTsN
-Cj4+IC0JaWYgKElTX0VSUih1ZGMtPnBtYykpDQo+PiAtCQl1ZGMtPnBtYyA9IHN5c2Nvbl9yZWdt
-YXBfbG9va3VwX2J5X2NvbXBhdGlibGUoImF0bWVsLGF0OTFzYW05cmwtcG1jIik7DQo+PiAtCWlm
-IChJU19FUlIodWRjLT5wbWMpKQ0KPj4gLQkJdWRjLT5wbWMgPSBzeXNjb25fcmVnbWFwX2xvb2t1
-cF9ieV9jb21wYXRpYmxlKCJhdG1lbCxhdDkxc2FtOXg1LXBtYyIpOw0KPj4gLQlpZiAodWRjLT5l
-cnJhdGEgJiYgSVNfRVJSKHVkYy0+cG1jKSkNCj4+IC0JCXJldHVybiBFUlJfQ0FTVCh1ZGMtPnBt
-Yyk7DQo+PiArCWlmICh1ZGMtPmVycmF0YSkgew0KPj4gKwkJcHAgPSBvZl9maW5kX21hdGNoaW5n
-X25vZGVfYW5kX21hdGNoKE5VTEwsIGF0bWVsX3BtY19kdF9pZHMsDQo+PiArCQkJCQkJICAgICBO
-VUxMKTsNCj4+ICsJCWlmICghcHApDQo+PiArCQkJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7DQo+
-PiArDQo+PiArCQl1ZGMtPnBtYyA9IHN5c2Nvbl9ub2RlX3RvX3JlZ21hcChwcCk7DQo+PiArCQlv
-Zl9ub2RlX3B1dChwcCk7DQo+PiArCQlpZiAoSVNfRVJSKHVkYy0+cG1jKSkNCj4+ICsJCQlyZXR1
-cm4gRVJSX0NBU1QodWRjLT5wbWMpOw0KPj4gKwl9DQo+IA0KPiBUaGlzIHNlZW1zIGEgYml0IG5v
-dCBzaW1pbGFyLiBJIG1heSBoYWQgYmVlbiB3cm9uZyBhdCB0aGUgbW9tZW50IEkgd3JvdGUNCj4g
-dGhpcyBwYXRjaC4gUHJvYmFibHkgdGhlIGJlc3Qgd291bGQgYmU6DQo+IA0KPiArCXVkYy0+cG1j
-ID0gRVJSX1BUUigtRU5PREVWKTsNCj4gKwlwcCA9IG9mX2ZpbmRfbWF0Y2hpbmdfbm9kZV9hbmRf
-bWF0Y2goTlVMTCwgYXRtZWxfcG1jX2R0X2lkcywNCj4gKwkJCQkJICAgICBOVUxMKTsNCj4gKwlp
-ZiAocHApIHsNCj4gKwkJdWRjLT5wbWMgPSBzeXNjb25fbm9kZV90b19yZWdtYXAocHApOw0KPiAr
-CQlvZl9ub2RlX3B1dChwcCk7DQo+ICsJfQ0KPiArDQo+ICsJaWYgKCghcHAgfHwgSVNfRVJSKHVk
-Yy0+cG1jKSkgJiYgdWRjLT5lcnJhdGEpDQo+ICsJCXJldHVybiBFUlJfQ0FTVCh1ZGMtPnBtYyk7
-DQoNCkFjdHVhbGx5LCB0aGUgaW5pdGlhbCBwYXRjaCBzaG91bGQgYmUgZ29vZCBhbmQgc2ltcGxl
-ciB0aGFuIHdoYXQgSSBwcm9wb3NlZA0KaW4gcHJldmlvdXMgZW1haWwuIFBsZWFzZSBpZ25vcmUg
-aXQuDQoNClNvcnJ5IGZvciB0aGUgbm9pc2UhDQoNCj4gDQo+IFRoYW5rIHlvdSwNCj4gQ2xhdWRp
-dSBCZXpuZWENCj4gDQo+PiAgDQo+PiAgCXVkYy0+bnVtX2VwID0gMDsNCj4+ICANCj4+DQo+IF9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwNCj4g
+Hi, Neal:
+
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8823=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Wed, 2020-07-22 at 22:25 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8822=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Hi Chun-Kuang,
+> > >
+> > > On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=882=
+1=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > >
+> > > > > +
+> > > > > +/*
+> > > > > + * mtk_devapc_dump_vio_dbg - get the violation index and dump th=
+e full violation
+> > > > > + *                           debug information.
+> > > > > + */
+> > > > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_devapc_context *c=
+tx, u32 vio_idx)
+> > > > > +{
+> > > > > +       u32 shift_bit;
+> > > > > +
+> > > > > +       if (check_vio_mask(ctx, vio_idx))
+> > > > > +               return false;
+> > > > > +
+> > > > > +       if (!check_vio_status(ctx, vio_idx))
+> > > > > +               return false;
+> > > > > +
+> > > > > +       shift_bit =3D get_shift_group(ctx, vio_idx);
+> > > > > +
+> > > > > +       if (sync_vio_dbg(ctx, shift_bit))
+> > > > > +               return false;
+> > > > > +
+> > > > > +       devapc_extract_vio_dbg(ctx);
+> > > >
+> > > > I think get_shift_group(), sync_vio_dbg(), and
+> > > > devapc_extract_vio_dbg() should be moved out of vio_idx for-loop (t=
+he
+> > > > loop in devapc_violation_irq()) because these three function is not
+> > > > related to vio_idx.
+> > > > Another question: when multiple vio_idx violation occur, vio_addr i=
+s
+> > > > related to which one vio_idx? The latest happened one?
+> > > >
+> > >
+> > > Actually, it's related to vio_idx. But we don't use it directly on th=
+ese
+> > > function. I think below snip code might be better way to understand i=
+t.
+> > >
+> > > for (...)
+> > > {
+> > >         check_vio_mask()
+> > >         check_vio_status()
+> > >
+> > >         // if get vio_idx, mask it temporarily
+> > >         mask_module_irq(true)
+> > >         clear_vio_status()
+> > >
+> > >         // dump violation info
+> > >         get_shift_group()
+> > >         sync_vio_dbg()
+> > >         devapc_extract_vio_dbg()
+> > >
+> > >         // unmask
+> > >         mask_module_irq(false)
+> > > }
+> >
+> > This snip code does not explain any thing. I could rewrite this code as=
+:
+> >
+> > for (...)
+> > {
+> >     check_vio_mask()
+> >     check_vio_status()
+> >
+> >     // if get vio_idx, mask it temporarily
+> >     mask_module_irq(true)
+> >     clear_vio_status()
+> >     // unmask
+> >     mask_module_irq(false)
+> > }
+> >
+> > // dump violation info
+> > get_shift_group()
+> > sync_vio_dbg()
+> > devapc_extract_vio_dbg()
+> >
+> > And my version is identical with your version, isn't it?
+>
+> Sorry, I did not explain it clearly. Let's me try again.
+> The reason why I put "dump violation info" between mask & unmask context
+> is because it has to stop interrupt first before dump violation info,
+> and then unmask it to prepare next violation.
+> These sequence guarantee that if multiple violation is triggered, we
+> still have information to debug.
+> If the code sequence in your version and multiple violation is
+> triggered, there might be no any information but keeps entering ISR.
+> Finally, system might be abnormal and watchdog timeout.
+> In this case, we still don't have any information to debug.
+
+I still don't understand why no information to debug. For example when
+vio_idx 5, 10, 15 has violation,
+You would mask vio_idx 5 to get information, but vio_idx 10, 15 does
+not mask yet.
+In your words, when vio_idx 10, 15 not mask, you would not get any
+debug information when you process vio_idx 5.
+
+In my version, I would clear all status, why keeps entering ISR?
+
+>
+> >
+> > >
+> > > About your question, vio_addr would be the first one.
+> >
+> > So other vio_addr would be dropped? Or hardware would keep all
+> > vio_addr and you have some way to get all vio_addr?
+> >
+>
+> In this case, hardware will drop other violation info and keep the first
+> one until it been handled.
+
+Does 'handled' mean status is cleared?
+
+Regards,
+Chun-Kuang.
+
+>
+> > >
+> > > > > +
+> > > > > +       return true;
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > > + * devapc_violation_irq - the devapc Interrupt Service Routine (=
+ISR) will dump
+> > > > > + *                        violation information including which =
+master violates
+> > > > > + *                        access slave.
+> > > > > + */
+> > > > > +static irqreturn_t devapc_violation_irq(int irq_number,
+> > > > > +                                       struct mtk_devapc_context=
+ *ctx)
+> > > > > +{
+> > > > > +       u32 vio_idx;
+> > > > > +
+> > > > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++=
+) {
+> > > > > +               if (!mtk_devapc_dump_vio_dbg(ctx, vio_idx))
+> > > > > +                       continue;
+> > > > > +
+> > > > > +               /* Ensure that violation info are written before
+> > > > > +                * further operations
+> > > > > +                */
+> > > > > +               smp_mb();
+> > > > > +
+> > > > > +               /*
+> > > > > +                * Mask slave's irq before clearing vio status.
+> > > > > +                * Must do it to avoid nested interrupt and preve=
+nt
+> > > > > +                * unexpected behavior.
+> > > > > +                */
+> > > > > +               mask_module_irq(ctx, vio_idx, true);
+> > > > > +
+> > > > > +               clear_vio_status(ctx, vio_idx);
+> > > > > +
+> > > > > +               mask_module_irq(ctx, vio_idx, false);
+> > > > > +       }
+> > > > > +
+> > > > > +       return IRQ_HANDLED;
+> > > > > +}
+> > > > > +
+> > > > > +/*
