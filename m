@@ -2,153 +2,187 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D0FC433E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AD1C433E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCC72071A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6173E207C4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 23:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DQxjeXAV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lPY06tsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgGWXQA (ORCPT
+        id S1728448AbgGWXs0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 19:16:00 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34990 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgGWXP6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 19:15:58 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B6336279;
-        Fri, 24 Jul 2020 01:15:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595546155;
-        bh=6y3U4yLr3ZQR9s0aeNcGQU+EWxh0U1ZBRXVyKtbSqKU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DQxjeXAVtgVxhpDiJRG7FVdtmWfKjhiw6AqHSaHrN2I8F61jxkXTcDX0jx2f0zreC
-         NtvNWATcWPQXQNwP6yIxlqGIck1StxplXEcj4klD0AW3AQdO6wVuCwTUcquLSETbgL
-         bilIQk56ILpsoD3r77VWFvlHM5tKJHg0M6m3Yjcg=
-Date:   Fri, 24 Jul 2020 02:15:49 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, slongerbeam@gmail.com,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 08/13] dt-bindings: media: ov5640: Remove data-shift
-Message-ID: <20200723231549.GE21353@pendragon.ideasonboard.com>
-References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
- <20200717132859.237120-9-jacopo+renesas@jmondi.org>
- <20200717205722.GJ5961@pendragon.ideasonboard.com>
- <20200723222259.GB829@valkosipuli.retiisi.org.uk>
+        Thu, 23 Jul 2020 19:48:26 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17670 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728194AbgGWXsY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 19:48:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1a214d0000>; Thu, 23 Jul 2020 16:46:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 Jul 2020 16:48:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 Jul 2020 16:48:24 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 Jul
+ 2020 23:48:23 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 23 Jul 2020 23:48:24 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f1a21c70000>; Thu, 23 Jul 2020 16:48:23 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v4 12/14] gpu: host1x: mipi: Keep MIPI clock enabled till calibration is done
+Date:   Thu, 23 Jul 2020 16:51:10 -0700
+Message-ID: <1595548272-9809-13-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
+References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200723222259.GB829@valkosipuli.retiisi.org.uk>
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595547982; bh=7YV/RNdP1EunzTF6v813MxrmrehBVahzPQ0dOJiVOQI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=lPY06tsV1yznzgcV1NJv5wMTVHuEMKfbRCpAOlQspYzyhVryp+DpUGyqYg2py+vjr
+         UqTglK/3ktfcUczi6uZDEcNZi22hvOizSde3PMJXGePW9QMeZYkl1kQfrCoD/s6iqt
+         zP4qpSPKeQajje477NN/a6PF5uuDBcDmHRgZuy555kKq2ziOcMvAu3HEWNN5eZ7LAv
+         l0Eo06HH2GmP5W+rNCEi0FDgR+ZjandOkY0z2x/f/CAavhs+ntejWT9MNn1ltCWjdW
+         1MnNxsH5zkY1qkg4iL+ro+7CB8Xm3sjdkoTX2+y6pywaXCPLly8cJPQTgm52SIuycJ
+         fj+xUKW4bODxw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+With the split of MIPI calibration into tegra_mipi_calibrate() and
+tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+is done.
 
-On Fri, Jul 24, 2020 at 01:22:59AM +0300, Sakari Ailus wrote:
-> On Fri, Jul 17, 2020 at 11:57:22PM +0300, Laurent Pinchart wrote:
-> > Hi Jacopo,
-> > 
-> > (CC'ing Sakari)
-> > 
-> > Thank you for the patch.
-> > 
-> > On Fri, Jul 17, 2020 at 03:28:54PM +0200, Jacopo Mondi wrote:
-> > > The value of the data-shift property solely depend on the selected
-> > > bus width and it's not freely configurable.
-> > > 
-> > > Remove it from the bindings document and update its users accordingly.
-> > 
-> > Hmmmm that's an interesting one. Sakari, what do you think ?
-> > 
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/i2c/ov5640.yaml | 9 ---------
-> > >  arch/arm/boot/dts/stm32mp157c-ev1.dts                   | 1 -
-> > >  2 files changed, 10 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> > > index 5e1662e848bd..ab700a1830aa 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> > > @@ -92,12 +92,6 @@ properties:
-> > >                parallel bus.
-> > >              enum: [8, 10]
-> > > 
-> > > -          data-shift:
-> > > -            description: |
-> > > -              Shall be set to <2> for 8 bits parallel bus (lines 9:2 are used) or
-> > > -              <0> for 10 bits parallel bus.
-> > > -            enum: [0, 2]
-> > 
-> > Should you document in the description of bus-width that data-shift is
-> > implied ?
-> 
-> The purpose of the datas-shift property is to convey how the parallel bus
-> lines are connected for a given bus width for devices where it is
-> configurable. As this device does not not support that, then indeed this
-> property is not relevant for the device IMO.
+So, this patch skips disabling MIPI clock after triggering start of
+calibration and disables it only after waiting for done status from
+the calibration logic.
 
-Could you elaborate on this ? I believe the case that Jacopo is
-describing connects D[9:2] from the sensor to D[7:0] of the receiver
-(Jacopo, could you confirm ?). Isn't that what data-shift is for ?
+This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
+and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+with their usage.
 
-> > > -
-> > >            hsync-active:
-> > >              enum: [0, 1]
-> > > 
-> > > @@ -115,7 +109,6 @@ properties:
-> > >              then:
-> > >                  properties:
-> > >                    bus-width: false
-> > > -                  data-shift: false
-> > >                    hsync-active: false
-> > >                    vsync-active: false
-> > >                    pclk-sample: false
-> > > @@ -135,7 +128,6 @@ properties:
-> > >                  - remote-endpoint
-> > >                  - bus-type
-> > >                  - bus-width
-> > > -                - data-shift
-> > >                  - hsync-active
-> > >                  - vsync-active
-> > >                  - pclk-sample
-> > > @@ -204,7 +196,6 @@ examples:
-> > >                      remote-endpoint = <&parallel_from_ov5640>;
-> > >                      bus-type = <5>;
-> > >                      bus-width = <10>;
-> > > -                    data-shift = <0>;
-> > >                      hsync-active = <1>;
-> > >                      vsync-active = <1>;
-> > >                      pclk-sample = <1>;
-> > > diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> > > index 613ede73b65b..96f96202ca63 100644
-> > > --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> > > +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> > > @@ -192,7 +192,6 @@ ov5640_0: endpoint {
-> > >  				remote-endpoint = <&dcmi_0>;
-> > >  				bus-type = <5>;
-> > >  				bus-width = <8>;
-> > > -				data-shift = <2>; /* lines 9:2 are used */
-> > >  				hsync-active = <0>;
-> > >  				vsync-active = <0>;
-> > >  				pclk-sample = <1>;
+As MIPI clock is left enabled and in case of any failures with CSI input
+streaming tegra_mipi_finish_calibration() will not get invoked.
+So added new API tegra_mipi_cancel_calibrate() which disables MIPI clock
+and consumer drivers can call this in such cases.
 
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/gpu/drm/tegra/dsi.c |  4 ++--
+ drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+ include/linux/host1x.h      |  5 +++--
+ 3 files changed, 15 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 3820e8d..4d54c13 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
+ 		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+ 	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+ 
+-	err = tegra_mipi_calibrate(dsi->mipi);
++	err = tegra_mipi_start_calibrate(dsi->mipi);
+ 	if (err < 0)
+ 		return err;
+ 
+-	return tegra_mipi_wait(dsi->mipi);
++	return tegra_mipi_finish_calibrate(dsi->mipi);
+ }
+ 
+ static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
+diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+index e606464..f06c5cd 100644
+--- a/drivers/gpu/host1x/mipi.c
++++ b/drivers/gpu/host1x/mipi.c
+@@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
+ }
+ EXPORT_SYMBOL(tegra_mipi_disable);
+ 
+-int tegra_mipi_wait(struct tegra_mipi_device *device)
++void tegra_mipi_cancel_calibrate(struct tegra_mipi_device *device)
++{
++	clk_disable(device->mipi->clk);
++}
++EXPORT_SYMBOL(tegra_mipi_cancel_calibrate);
++
++int tegra_mipi_finish_calibrate(struct tegra_mipi_device *device)
+ {
+ 	struct tegra_mipi *mipi = device->mipi;
+ 	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
+ 	u32 value;
+ 	int err;
+ 
+-	err = clk_enable(device->mipi->clk);
+-	if (err < 0)
+-		return err;
+-
+ 	mutex_lock(&device->mipi->lock);
+ 
+ 	err = readl_relaxed_poll_timeout(status_reg, value,
+@@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
+ 
+ 	return err;
+ }
+-EXPORT_SYMBOL(tegra_mipi_wait);
++EXPORT_SYMBOL(tegra_mipi_finish_calibrate);
+ 
+-int tegra_mipi_calibrate(struct tegra_mipi_device *device)
++int tegra_mipi_start_calibrate(struct tegra_mipi_device *device)
+ {
+ 	const struct tegra_mipi_soc *soc = device->mipi->soc;
+ 	unsigned int i;
+@@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+ 	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+ 
+ 	mutex_unlock(&device->mipi->lock);
+-	clk_disable(device->mipi->clk);
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(tegra_mipi_calibrate);
++EXPORT_SYMBOL(tegra_mipi_start_calibrate);
+ 
+ static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
+ 	{ .data = MIPI_CAL_CONFIG_CSIA },
+diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+index 20c885d..0065763 100644
+--- a/include/linux/host1x.h
++++ b/include/linux/host1x.h
+@@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
+ void tegra_mipi_free(struct tegra_mipi_device *device);
+ int tegra_mipi_enable(struct tegra_mipi_device *device);
+ int tegra_mipi_disable(struct tegra_mipi_device *device);
+-int tegra_mipi_calibrate(struct tegra_mipi_device *device);
+-int tegra_mipi_wait(struct tegra_mipi_device *device);
++int tegra_mipi_start_calibrate(struct tegra_mipi_device *device);
++int tegra_mipi_finish_calibrate(struct tegra_mipi_device *device);
++void tegra_mipi_cancel_calibrate(struct tegra_mipi_device *device);
+ 
+ #endif
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
