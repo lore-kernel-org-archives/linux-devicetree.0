@@ -2,117 +2,172 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCA0C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1C5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8A3520825
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 06:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325DC2068F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="rkKiIc4b"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="At0Pl150"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgGWGe1 (ORCPT
+        id S1725857AbgGWHPk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 02:34:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60382 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgGWGe0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 02:34:26 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51867C0619DC
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 23:34:25 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l4so5101517ejd.13
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 23:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YHBydU8vIOvimRwIQ4AVmmdC0WTsfc4hrzMrtnp6v40=;
-        b=rkKiIc4bIcWziclAnuygl88kLrosymEFhyaR5U3rtuhiQbRhU/oG9QfgSw6A9Ons5p
-         UATja2ojOHWqBgsAldLe/SfxOn3rNlg0RYcHhV+SvOb1w+Zy3Do086g2y+175lAWp6r2
-         oEaQbXci13z0gFCVVQAYjUiwdjjx7wso13jrM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YHBydU8vIOvimRwIQ4AVmmdC0WTsfc4hrzMrtnp6v40=;
-        b=XRm4h/SemuhPtknCeei0xTmMcfkq78KSe4cRTbYB8FNJGD2DddIsAhVPBbZd5H4qCc
-         fbg0fAWvu5Ny1pMyXNgaV+UdATsP4yhRp58nHfBnokNlrDbxwzn1T1j2F7CCY/5SDHWm
-         BD6xUuh+wGXH5pBunn+KmHQ/1HxSxnzs1AaFe2OLGKW/poa1axCgF36av15zm9xIaC1U
-         7jFHDM1QSecftIQvRrsSLywClf/xM6BjZZvdsyHsAG6rWYeSWwW/7JKqQH2WdL8fHd4e
-         1Igl1wVyCafxkTjRK5T2ERToyu/Zon+t+lZk8WHlkiiYVQmz05wWkzWDFd0l0wCqg4Oz
-         72Dw==
-X-Gm-Message-State: AOAM533hmySHIXrlA45cyhyc3upLbxHYxVivWbqb5YPcFxoqnMfQlvgB
-        3gfjFIVxy/QEiLNJmkv3Ix93TgmEYfs/xVjCxt2Vlw==
-X-Google-Smtp-Source: ABdhPJxsyATkUuOcnQe0rXO2IGjkjtHk9Fd38vKQTVik9MvcczWGbe4wq7L/G9FA2hVRAHtaDc0LvXdPYIpmPCd4id0=
-X-Received: by 2002:a17:906:e46:: with SMTP id q6mr2058869eji.234.1595486063946;
- Wed, 22 Jul 2020 23:34:23 -0700 (PDT)
+        Thu, 23 Jul 2020 03:15:40 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59684 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725536AbgGWHPk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 03:15:40 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06N7DD7m014051;
+        Thu, 23 Jul 2020 09:15:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=yqcfY/padsjVsHSiHABJVoYRhWwTvp1SMriQZY8ccyU=;
+ b=At0Pl150HlvjCdBUER0ftWuQuekxfi0EwklT75x/bePqYqO4iWqKjxuNsDn7aFrOZpLe
+ 42WJqY4eJEJYzCCfh/TdisUjXbq47ICeBRdrfFAg1n3vrswF9wFc/L6+9l7FjlYtbXQt
+ ozlUIOEaCMZYqIrJm2Hkl+fcCAUERTXyqFjbBOcq/0GLgFxwvX8H7yVXfR6PxmwRFprp
+ eNlqkDES+OBWBOHik1XACNAmvweFWNWXHS8ed4YVhMeDS/KSfUhK60bbf0KJWTXQs8CG
+ btG6mEnaLZj84V88bkHov2UkcUEiRRfWtd1swOyWMnDoc2ka7q39STFgU6Gh1OKqTcVS 7A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bsah95dp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 09:15:20 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4B13610002A;
+        Thu, 23 Jul 2020 09:15:19 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 32E0621FEA9;
+        Thu, 23 Jul 2020 09:15:19 +0200 (CEST)
+Received: from lmecxl0995.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 23 Jul
+ 2020 09:15:18 +0200
+Subject: Re: [PATCH 1/3] usb: dwc2: override PHY input signals with usb role
+ switch support
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "balbi@kernel.org" <balbi@kernel.org>
+CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hminas@synopsys.com" <hminas@synopsys.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+References: <20200616140717.28465-2-amelie.delaunay@st.com>
+ <20200704174219.612060-1-martin.blumenstingl@googlemail.com>
+ <05a81997-5ddb-ea81-7a89-8078b8a2b610@st.com>
+ <CAFBinCCVYJ=DuKbqhJJ8463Gs+GW0bgxyXSFiLXhUfvWV6AR0Q@mail.gmail.com>
+ <ee4ee889-835e-2244-504c-2b1b605d78aa@st.com>
+ <CAFBinCDUxvovAyDywz3xVcu_1v4nai+ebR2D38U2B8oBGss=yg@mail.gmail.com>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <7497c0ed-bac6-969e-8198-c40a41e874e3@st.com>
+Date:   Thu, 23 Jul 2020 09:15:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200722190949.215656-1-jagan@amarulasolutions.com>
- <20200722190949.215656-3-jagan@amarulasolutions.com> <3893924.cuH9TW0V3R@phil>
-In-Reply-To: <3893924.cuH9TW0V3R@phil>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 23 Jul 2020 12:04:12 +0530
-Message-ID: <CAMty3ZDk28-wg_=wdf_Ps-5RaHK1T-+h0Jn43aK5ReWAz+GTGw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] dt-bindings: arm: rockchip: Add ROCKPi 4B binding
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFBinCDUxvovAyDywz3xVcu_1v4nai+ebR2D38U2B8oBGss=yg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_02:2020-07-22,2020-07-23 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
+Hi Felipe,
+Hi Martin,
 
-On Thu, Jul 23, 2020 at 4:43 AM Heiko Stuebner <heiko@sntech.de> wrote:
->
-> Hi Jagan,
->
-> Am Mittwoch, 22. Juli 2020, 21:09:46 CEST schrieb Jagan Teki:
-> > Add dt-bindings for ROCKPi 4B which is similar to 4A with
-> > additional AP6256 Wifi/BT, PoE.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Changes for v2:
-> > - new patch
-> >
-> >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > index 36057c9e4b83..7250adb43d24 100644
-> > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-> > @@ -448,6 +448,12 @@ properties:
-> >            - const: radxa,rockpi4a
-> >            - const: rockchip,rk3399
-> >
-> > +      - description: Radxa ROCK Pi 4B
-> > +        items:
-> > +          - const: radxa,rockpi4
-> > +          - const: radxa,rockpi4b
-> > +          - const: rockchip,rk3399
-> > +
->
-> Please do all RockPi4 variants into one entry, so we want something like:
->
->       - description: Radxa ROCK Pi 4
+I saw the issue reported ([balbi-usb:testing/next 2/17] 
+drivers/usb/dwc2/drd.c:80:38: error: no member named 'test_mode' in 
+'struct dwc2_hsotg'). I prepare a V2 fixing it + adressing Martin's 
+comments.
 
-What if the description has something like below.
+Regards,
+Amelie
 
-          - description: Radxa ROCK Pi 4A/B/C
-
-Jagan.
+On 7/19/20 9:56 PM, Martin Blumenstingl wrote:
+> Hello Amelie,
+> 
+> sorry for the late reply
+> 
+> On Wed, Jul 8, 2020 at 6:00 PM Amelie DELAUNAY <amelie.delaunay@st.com> 
+> wrote:
+> [...]
+>> Could you please test with:
+>>
+>> static int dwc2_drd_role_sw_set(struct device *dev, enum usb_role role)
+>> {
+>>         struct dwc2_hsotg *hsotg = dev_get_drvdata(dev);
+>>         unsigned long flags;
+>>         int already = 0;
+>>
+>>         /* Skip session not in line with dr_mode */
+>>         if ((role == USB_ROLE_DEVICE && hsotg->dr_mode == USB_DR_MODE_HOST) ||
+>>             (role == USB_ROLE_HOST && hsotg->dr_mode == USB_DR_MODE_PERIPHERAL))
+>>                 return -EINVAL;
+>>
+>>         /* Skip session if core is in test mode */
+>>         if (role == USB_ROLE_NONE && hsotg->test_mode) {
+>>                 dev_dbg(hsotg->dev, "Core is in test mode\n");
+>>                 return -EBUSY;
+>>         }
+>>
+>>         spin_lock_irqsave(&hsotg->lock, flags);
+>>
+>>         if (role == USB_ROLE_HOST) {
+>>                 already = dwc2_ovr_avalid(hsotg, true);
+>>         } else if (role == USB_ROLE_DEVICE) {
+>>                 already = dwc2_ovr_bvalid(hsotg, true);
+>>                 /* This clear DCTL.SFTDISCON bit */
+>>                 dwc2_hsotg_core_connect(hsotg);
+>>         } else {
+>>                 if (dwc2_is_device_mode(hsotg)) {
+>>                     if (!dwc2_ovr_bvalid(hsotg, false))
+>>                         /* This set DCTL.SFTDISCON bit */
+>>                         dwc2_hsotg_core_disconnect(hsotg);
+>>                 } else {
+>>                         dwc2_ovr_avalid(hsotg, false);
+>>                 }
+>>         }
+>>
+>>         spin_unlock_irqrestore(&hsotg->lock, flags);
+>>
+>>         if (!already &&
+>>             role != USB_ROLE_NONE && hsotg->dr_mode == USB_DR_MODE_OTG)
+>>                 /* This will raise a Connector ID Status Change Interrupt */
+>>                 dwc2_force_mode(hsotg, role == USB_ROLE_HOST);
+>>
+>>         dev_dbg(hsotg->dev, "%s-session valid\n",
+>>                 role == USB_ROLE_NONE ? "No" :
+>>                 role == USB_ROLE_HOST ? "A" : "B");
+>>
+>>         return 0;
+>> }
+>>
+>>
+>> dwc2_force_mode is called outside the spin_lock_irqsave so the kernel
+>> should not complain. I've tested on my setup and the behavior seems the
+>> same.
+> this one is looking good - the previous kernel warnings are now gone!
+> thank you very much
+> 
+> 
+> Best regards,
+> Martin
