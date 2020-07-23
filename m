@@ -2,115 +2,201 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2377C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AFBC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C61D20714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:09:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="euR4/39W"
+	by mail.kernel.org (Postfix) with ESMTP id 6A73D22B43
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 16:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgGWQJd (ORCPT
+        id S1729764AbgGWQQE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 12:09:33 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46708 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbgGWQJd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 12:09:33 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06NG8iCf021775;
-        Thu, 23 Jul 2020 11:08:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595520524;
-        bh=nA7a4nlfdC+eYe8JsjKg4KWcz0j3ZopXtCp88J/O3P0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=euR4/39WbozRW1r7GbT2HDVPCvSUH2yFYWfHGy27Yn9014B1wnkPsaA2PwrreS21s
-         yNJAFQlXGWMmV+WP6b4qE7gQMwsWCjOTNiBxTjMAy0GV8161hQZ3OIydo2US0I9yUR
-         hZKYLzo++yIX0kp9WZCI2fMOL5UjOkOMXLjsE0a8=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06NG8iu8000716
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Jul 2020 11:08:44 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Jul 2020 11:08:44 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Jul 2020 11:08:44 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06NG8iVg049221;
-        Thu, 23 Jul 2020 11:08:44 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 2/2] ASoC: tas2562: Update shutdown GPIO property
-Date:   Thu, 23 Jul 2020 11:08:38 -0500
-Message-ID: <20200723160838.9738-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200723160838.9738-1-dmurphy@ti.com>
-References: <20200723160838.9738-1-dmurphy@ti.com>
+        Thu, 23 Jul 2020 12:16:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgGWQQC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 12:16:02 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5026CC0619DC
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 09:16:02 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jydsx-00081u-KY; Thu, 23 Jul 2020 18:15:55 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jydsv-0006Eg-Tl; Thu, 23 Jul 2020 18:15:53 +0200
+Date:   Thu, 23 Jul 2020 18:15:53 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
+References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
+ <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3hlam5iwxswnzw5y"
+Content-Disposition: inline
+In-Reply-To: <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the shutdown GPIO property to be shutdown from shut-down.
 
-Fixes: c173dba44c2d2 ("ASoC: tas2562: Introduce the TAS2562 amplifier")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- sound/soc/codecs/tas2562.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+--3hlam5iwxswnzw5y
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-index e74628061040..99920c691d28 100644
---- a/sound/soc/codecs/tas2562.c
-+++ b/sound/soc/codecs/tas2562.c
-@@ -680,13 +680,26 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
- 	struct device *dev = tas2562->dev;
- 	int ret = 0;
- 
--	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
--						    GPIOD_OUT_HIGH);
-+	tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shutdown", GPIOD_OUT_HIGH);
- 	if (IS_ERR(tas2562->sdz_gpio)) {
--		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER) {
--			tas2562->sdz_gpio = NULL;
-+		if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
--		}
-+
-+		tas2562->sdz_gpio = NULL;
-+	}
-+
-+	/*
-+	 * The shut-down property is deprecated but needs to be checked for
-+	 * backwards compatibility.
-+	 */
-+	if (tas2562->sdz_gpio == NULL) {
-+		tas2562->sdz_gpio = devm_gpiod_get_optional(dev, "shut-down",
-+							      GPIOD_OUT_HIGH);
-+		if (IS_ERR(tas2562->sdz_gpio))
-+			if (PTR_ERR(tas2562->sdz_gpio) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
-+
-+		tas2562->sdz_gpio = NULL;
- 	}
- 
- 	ret = fwnode_property_read_u32(dev->fwnode, "ti,imon-slot-no",
--- 
-2.27.0
+Hello,
 
+On Thu, Jul 23, 2020 at 03:44:18PM +0800, Rahul Tanwar wrote:
+> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			 const struct pwm_state *state)
+> +{
+> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> +	u32 duty_cycle, val;
+> +	int ret;
+> +
+> +	if (!state->enabled) {
+> +		ret =3D lgm_pwm_enable(chip, 0);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * HW only supports NORMAL polarity
+> +	 * HW supports fixed period which can not be changed/configured by user
+> +	 */
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+> +	    state->period !=3D pc->period)
+> +		return -EINVAL;
+
+At least for state->polarity you have to check before state->enabled, as
+the expectation on
+
+        .enabled =3D false
+        .polarity =3D PWM_POLARITY_INVERSED
+
+is that the output becomes constant high. Also as confirmed at the end
+of v4, state->period < pc->period was the right check to do.
+
+> +	duty_cycle =3D min_t(u64, state->duty_cycle, state->period);
+> +	/* reg_value =3D duty_ns * LGM_PWM_MAX_DUTY_CYCLE(0xff) / period_ns */
+> +	val =3D duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / state->period;
+
+The comment adds only little compared to the code line below. Please
+drop it.
+
+Dividing by state->period is wrong. I think you need pc->period here.
+
+> +	ret =3D regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC=
+_MSK,
+> +				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (state->enabled)
+> +		ret =3D lgm_pwm_enable(chip, 1);
+> +
+> +	return ret;
+> +}
+> +
+> +static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *=
+pwm,
+> +			      struct pwm_state *state)
+> +{
+> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> +	u32 duty, val;
+> +
+> +	state->enabled =3D regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
+> +					  LGM_PWM_FAN_EN_EN);
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +	state->period =3D pc->period; /* fixed period */
+> +
+> +	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
+> +	duty =3D FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
+> +	state->duty_cycle =3D DIV_ROUND_UP(duty * pc->period,
+> +					 LGM_PWM_MAX_DUTY_CYCLE);
+> +}
+> +
+> +static const struct pwm_ops lgm_pwm_ops =3D {
+> +	.get_state =3D lgm_pwm_get_state,
+> +	.apply =3D lgm_pwm_apply,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static void lgm_pwm_init(struct lgm_pwm_chip *pc)
+> +{
+> +	struct device *dev =3D pc->chip.dev;
+> +	struct regmap *regmap =3D pc->regmap;
+> +	u32 max_rpm, fan_wire, con0_val, con0_mask;
+> +
+> +	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
+> +		fan_wire =3D 2; /* default is 2 wire mode */
+> +
+> +	con0_mask =3D LGM_PWM_FAN_MODE_MSK;
+> +
+> +	switch (fan_wire) {
+> +	case 4:
+> +		con0_val =3D FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_4WIRE);
+> +		pc->period =3D LGM_PWM_PERIOD_4WIRE_NSECS;
+> +		break;
+> +	default:
+> +		/* default is 2wire mode */
+> +		con0_val =3D FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
+> +		pc->period =3D LGM_PWM_PERIOD_2WIRE_NSECS;
+> +		break;
+> +	}
+> +
+> +	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
+> +		max_rpm =3D LGM_PWM_DEFAULT_RPM;
+
+This property isn't in the binding!?
+
+> +	max_rpm =3D min_t(u32, max_rpm, LGM_PWM_MAX_RPM);
+> +	if (max_rpm =3D=3D 0)
+> +		max_rpm =3D LGM_PWM_DEFAULT_RPM;
+> +
+> +	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK, m=
+ax_rpm);
+> +	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, con0_mask, con0_val);
+> +}
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3hlam5iwxswnzw5y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8Zt7YACgkQwfwUeK3K
+7AmMJQf+IOPqsaAt0rmo75wbf7nQBu9/apJAED4ZCHhuPgL7Y9eHeyZ3MdaCo80d
+tWUxL2jPfQVJ4MIjPGfuKZHjMnx6q0qG5XMsTcDoQWb99ijOhbRhi7HWqF0oM6eX
+EC2lrppB8IBtvtR9HZFW2dZjFoDMTaZjk7UBla5/5032VC15h/z4jpd8wMEzEXoh
+sxsXlTQdSaxyTEryy/56AreRP7Gm9532HYKfafzWwp7qP6IrWKJAXS61LIKuSSw/
+XlvNFbDj5IdXR/e66HYdQEFKgOIPF+E1z93HxWRMeb/eaXv/FtDYmovbCehIJcsh
+itwD09BWGYs8/2Z6ClhT5uUfitTtNg==
+=Nimh
+-----END PGP SIGNATURE-----
+
+--3hlam5iwxswnzw5y--
