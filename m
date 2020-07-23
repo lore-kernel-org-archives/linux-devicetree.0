@@ -4,143 +4,150 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD3EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E31C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B77822086A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8856B20709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 09:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbgGWJ1o (ORCPT
+        id S1726675AbgGWJ1S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 05:27:44 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39835 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgGWJ1o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 05:27:44 -0400
-X-Originating-IP: 93.34.118.233
+        Thu, 23 Jul 2020 05:27:18 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:32853 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgGWJ1S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 05:27:18 -0400
 Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
         (Authenticated sender: jacopo@jmondi.org)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 69F50E0004;
-        Thu, 23 Jul 2020 09:27:40 +0000 (UTC)
-Date:   Thu, 23 Jul 2020 11:31:18 +0200
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 5364E240004;
+        Thu, 23 Jul 2020 09:27:13 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 11:30:51 +0200
 From:   Jacopo Mondi <jacopo@jmondi.org>
 To:     Jonathan Cameron <jic23@kernel.org>
 Cc:     linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, Akinobu Mita <akinobu.mita@gmail.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: maxim,max11100 yaml conversion
-Message-ID: <20200723093118.yxogewmcholhqxm3@uno.localdomain>
+Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: maxim,max9611 yaml conversions
+Message-ID: <20200723093051.kq7nc72s6532zoct@uno.localdomain>
 References: <20200722171224.989138-1-jic23@kernel.org>
- <20200722171224.989138-2-jic23@kernel.org>
+ <20200722171224.989138-4-jic23@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200722171224.989138-2-jic23@kernel.org>
+In-Reply-To: <20200722171224.989138-4-jic23@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jonathan,
-
-On Wed, Jul 22, 2020 at 06:12:22PM +0100, Jonathan Cameron wrote:
+On Wed, Jul 22, 2020 at 06:12:24PM +0100, Jonathan Cameron wrote:
 > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 >
-> Straight forward conversion for this SPI ADC.
-> Added limits on spi-max-frequency from datasheet (0.1 to 4.8MHz)
+> Straight forward conversion of this binding for this
+> current sense amplifier and ADC.
 >
 > Cc: Jacopo Mondi <jacopo@jmondi.org>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-
-Thanks
-  j
-
 > ---
->  .../devicetree/bindings/iio/adc/max11100.txt  | 18 -------
->  .../bindings/iio/adc/maxim,max11100.yaml      | 49 +++++++++++++++++++
->  2 files changed, 49 insertions(+), 18 deletions(-)
+>  .../devicetree/bindings/iio/adc/max9611.txt   | 27 ----------
+>  .../bindings/iio/adc/maxim,max9611.yaml       | 49 +++++++++++++++++++
+>  2 files changed, 49 insertions(+), 27 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/iio/adc/max11100.txt b/Documentation/devicetree/bindings/iio/adc/max11100.txt
+> diff --git a/Documentation/devicetree/bindings/iio/adc/max9611.txt b/Documentation/devicetree/bindings/iio/adc/max9611.txt
 > deleted file mode 100644
-> index b7f7177b8aca..000000000000
-> --- a/Documentation/devicetree/bindings/iio/adc/max11100.txt
+> index ab4f43145ae5..000000000000
+> --- a/Documentation/devicetree/bindings/iio/adc/max9611.txt
 > +++ /dev/null
-> @@ -1,18 +0,0 @@
-> -* Maxim max11100 Analog to Digital Converter (ADC)
+> @@ -1,27 +0,0 @@
+> -* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
 > -
-> -Required properties:
-> -  - compatible: Should be "maxim,max11100"
-> -  - reg: the adc unit address
-> -  - vref-supply: phandle to the regulator that provides reference voltage
+> -Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+> -12-bits ADC communicating over I2c bus.
+> -The device node for this driver shall be a child of a I2c controller.
 > -
-> -Optional properties:
-> -  - spi-max-frequency: SPI maximum frequency
+> -Required properties
+> -  - compatible: Should be "maxim,max9611" or "maxim,max9612"
+> -  - reg: The 7-bits long I2c address of the device
+> -  - shunt-resistor-micro-ohms: Value, in micro Ohms, of the current sense shunt
+> -			        resistor
 > -
 > -Example:
 > -
-> -max11100: adc@0 {
-> -        compatible = "maxim,max11100";
-> -        reg = <0>;
-> -        vref-supply = <&adc0_vref>;
-> -        spi-max-frequency = <240000>;
+> -&i2c4 {
+> -	csa: adc@7c {
+> -		compatible = "maxim,max9611";
+> -		reg = <0x7c>;
+> -
+> -		shunt-resistor-micro-ohms = <5000>;
+> -	};
 > -};
-> diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max11100.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max11100.yaml
+> -
+> -This device node describes a current sense amplifier sitting on I2c4 bus
+> -with address 0x7c (read address is 0xf9, write address is 0xf8).
+> -A sense resistor of 0,005 Ohm is installed between RS+ and RS- current-sensing
+> -inputs.
+> diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max9611.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max9611.yaml
 > new file mode 100644
-> index 000000000000..0cf87556ef82
+> index 000000000000..a9fc05e6b62c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max11100.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max9611.yaml
 > @@ -0,0 +1,49 @@
 > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/iio/adc/maxim,max11100.yaml#
+> +$id: http://devicetree.org/schemas/iio/adc/maxim,max9611.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Maxim MAX11100 ADC
+> +title: Maxim MAX9611 and similar current sense amplifiers with integrated ADCs
 > +
 > +maintainers:
 > +  - Jacopo Mondi <jacopo@jmondi.org>
 > +
 > +description: |
-> +    Single channel 16 bit ADC with SPI interface.
+> +   These devices combine a high-side current sense amplifier with a 12 bit ADC.
+> +   They have an i2c interface.
 > +
 > +properties:
 > +  compatible:
-> +    const: maxim,max11100
+> +    enum:
+> +      - maxim,max9611
+> +      - maxim,max9612
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  vref-supply:
-> +    description: External reference, needed to establish input scaling.
+> +  shunt-resistor-micro-ohms:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Value in micro Ohms of the shunt resistor connected between the RS+ and
+> +      RS- inputs, across which the current is measured.  Value needed to compute
+                                                          ^ Double space
+> +      the scaling of the measured current.
 > +
-> +  spi-max-frequency:
-> +    minimum: 100000
-> +    maximum: 4800000
-> +
-> +additionalProperties: false
-> +
+
+With additionalProperties added
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+  j
 > +required:
 > +  - compatible
 > +  - reg
-> +  - vref-supply
+> +  - shunt-resistor-micro-ohms
 > +
 > +examples:
 > +  - |
-> +    spi {
+> +    i2c {
 > +        #address-cells = <1>;
 > +        #size-cells = <0>;
 > +
-> +        adc@0 {
-> +            compatible = "maxim,max11100";
-> +            reg = <0>;
-> +            vref-supply = <&adc_vref>;
-> +            spi-max-frequency = <240000>;
+> +        adc@7c {
+> +            compatible = "maxim,max9611";
+> +            reg = <0x7c>;
+> +            shunt-resistor-micro-ohms = <5000>;
 > +        };
 > +    };
 > +...
