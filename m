@@ -2,144 +2,149 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BF5C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 14:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC7C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 14:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2685020709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 14:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C987120888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 14:11:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TVPUQGzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgGWOIT (ORCPT
+        id S1729199AbgGWOL1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 10:08:19 -0400
-Received: from mga11.intel.com ([192.55.52.93]:8749 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbgGWOIT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:08:19 -0400
-IronPort-SDR: M/aslXAApwUpwgdoHKc9vyij7axE+SLa664p5OxOcCMdsdGI5Gk0Wvzxi9Y8tG2sCABZnTpxR5
- FIVddEo2V/DQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="148461355"
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="148461355"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 07:08:18 -0700
-IronPort-SDR: FYrQsWQR3SEQbICT+WzUfTzZAhpWuLC2eRTff33nOFUtBjNFdFYyA4RBWvh8v9Aw7VZ4cnSBMI
- v7nFmJuF6LCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="302318604"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 23 Jul 2020 07:08:15 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jybtP-003eVU-JI; Thu, 23 Jul 2020 17:08:15 +0300
-Date:   Thu, 23 Jul 2020 17:08:15 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200723140815.GL3703480@smile.fi.intel.com>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+        Thu, 23 Jul 2020 10:11:27 -0400
+Received: from mail-am6eur05on2078.outbound.protection.outlook.com ([40.107.22.78]:9697
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726089AbgGWOLZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 10:11:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h+wG1p/ijGdgOJW2qmFMkNYZ4X2ZBBEMZeZNv3fxvv7Ef8th4PgbBAExm6FkmWApdB/BxKd98gaQa2i6X/aBryRgtJFh16vcWX3K+LxgoR9Owa9Z/3xRTbZyo6tXPXap7v5Qm4Y5TGFV1A63YCjMXNbb1IqnmbshO36byicUIPzXsxKNsx9hOPSncM+Z4grkt9HjTJ5SF9C64CpJPsINuJYZ8PtwhFyomC1+niFxTnVQKK+Oohl62uRCCtDnRF4p6QtQTjVBAzJ5O09H+SR50IPvOR4rbMmZ+J98cE09+R+uM1EYyot+d1J8pWCJwr656dNVaVIq0vONP/xN40YqfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TpClA+EViGrEPTaSmvfJxJ1mrmCFpz3tfA0TYhDTxVk=;
+ b=TuglgvNlAl+Kh81ai5Mun9Jlb0L6cgZLluhnfB0pieDW1OR+VHnwJYHLYloLddr5KgF7FgRjVtCx47ja0ZlVeChFXjSYgin93Av5orwZjrN70UN+nZFUU45prKKGIS0kOYb6XMaKp2bvNj8HBoBABtCOkl8PA383aRHecXL9uvDg7Zll5WuwMDoCjfguKhL+73We2iY4U89Sb+q9rNOTEMF6iKdRXEz+CMFmfUPWYGXOni0jA4uVs5px4m5vS2gT/e2QklAbbpPhOBkxpVfyLpNVFLQcZfPkkqCUIsnrxYfFq3XhB/uVJFccbWQqyLD6lk1+Ktp14x8OW/jFANAJyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TpClA+EViGrEPTaSmvfJxJ1mrmCFpz3tfA0TYhDTxVk=;
+ b=TVPUQGzctYiRmkRe7XztPjbMC043Vo4FIc3gvLPPLg8x+x+uXQhUu7KnIBv4P130L1dWU33qU2EObMsIEsE9pPkYVPFKxuGUwll7ieKgs9fmrmKekxN4slevt/VOOd2rVRvVWqDqxdRg843PkR3c4q9l6XyFzYSbEZQJp89ns1I=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6511.eurprd04.prod.outlook.com (2603:10a6:803:11f::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
+ 2020 14:11:19 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3195.028; Thu, 23 Jul 2020
+ 14:11:19 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Frieder Schrempf <frieder.schrempf@kontron.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
+ is_ram_script
+Thread-Topic: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
+ is_ram_script
+Thread-Index: AQHWTp7JbcJo/3lJ0kuBP+xQgJ1yA6kVAw+AgAAOScCAAAwKMIAAFKYAgAAgFWA=
+Date:   Thu, 23 Jul 2020 14:11:19 +0000
+Message-ID: <VE1PR04MB6638FFA76076ECCA9CE8F2C289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
+ <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
+ <1b04e4e6-ca26-3f45-e353-af81e03f85a7@kontron.de>
+ <VE1PR04MB66385FC4FE591EAFA8CB7D8289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <VE1PR04MB6638BEA5C2594FEBFDE9318589760@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
+In-Reply-To: <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kontron.de; dkim=none (message not signed)
+ header.d=none;kontron.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.236.25]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cbb2c035-07c4-4709-ef1c-08d82f124556
+x-ms-traffictypediagnostic: VE1PR04MB6511:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6511D0BECC90D5027EECAA6B89760@VE1PR04MB6511.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PoZ28h6ZHrhUV39FpcC+9olHZhRbH2Ngx42zJ86BzRwa27fUVbtR8MR5kKE0zSUdFFU1f9lLtg468qUFeJwDCpEiGfSTH00jlkyFXuLuTnd63OwHawVESn6domOoewOAp73oiZTzi8ny7HHMDDksQNRi3yZJ+1HQY8M/KsKFj6XDymh7BKKT8zJl7/hYXMQUxY1N7yIi9wioCo9NATsARaRtzawVY3teKSM9H/LTL5mZuTDTsEFl+0Lv/J+olNZCsKwYS4mmRMC2U4wihfJvOnx+9PEo3GxF3OTKcj6ogJr7roPUUP2HCs3AEs+Y68wLcq5UxkVmGKqN4G0aYZVcy3uI8Wp81e9BMUPv4JzQMj/CVlIPhvAeitgJdlarmaQ7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(39860400002)(346002)(136003)(396003)(52536014)(8936002)(76116006)(66946007)(64756008)(110136005)(66446008)(7416002)(8676002)(5660300002)(33656002)(2906002)(54906003)(7696005)(66476007)(66556008)(478600001)(4326008)(53546011)(316002)(26005)(71200400001)(6506007)(186003)(55016002)(83380400001)(9686003)(86362001)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: uG4N8KATOS5JiRifBeIMlKLNlJAqZcDEah669+VtTdQshQsouejIPJpV0JPHidLmcsLgTvrJ/ZP4R5MKboFPOsqeusDeZ3hys5YQ/yPFgP0+bRY62LV9NEjUY20KPVmad2ewSoOaESOhVZIqhodmZ537WZv7jUsCJZDOugpkAl1UlKCdLUnZ/aVhghWiVzaH35vIU1dRWjhHVo2rF9OTMgLF4/wgZRrnGMW6cWiQ9zr4hlFaJ5zzVX/9Iil/MIbOM8i4w6QA/m/jAi4Xnyk8A6zBFWs1FeZ/TLFraEwWjMyufsxZI5H7QKQGY431Ju9LTZqtkGaRYeYjafwIXlfgc82JxZHeFft5PX8hrApr6Wgd7Hf+4sw6RgbSL9TtiZf9JIJPgEnweN8wL2r+GaOWkjjh8JV26vexV5fnTss7mPrfn00RDBF/6vV9dS+ohtMB9jJY6bLbisZpu/wuTZpdgKI8Rl0GzW6tvRT0hhN0Pu6c3g3+dHysVa7W3uvMhrzC
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbb2c035-07c4-4709-ef1c-08d82f124556
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 14:11:19.0448
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FDqm/PiPSYaqxMG9/DLr6jloqxMppLV0b+tHIJbATe/VV5g3w2bw1bEJtVbFk1FFaDYtF7aoBESDae137VIXUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6511
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
-> GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
-> top of a GPIO chip. It's better from maintainability and readability
-> point of view to use one instead of supporting a hand-written Generic
-> IRQ-chip-based implementation. Moreover the new implementation won't
-> cause much functional overhead but will provide a cleaner driver code.
-> All of that makes the DW APB GPIO driver conversion pretty much justified
-> especially seeing a tendency of the other GPIO drivers getting converted
-> too.
-> 
-> Here is what we do in the framework of this commit to convert the driver
-> to using the GPIO-lib-based IRQ-chip interface:
-> 1) IRQ ack, mask and unmask callbacks are locally defined instead of
-> using the Generic IRQ-chip ones.
-> 2) An irq_chip structure instance is embedded into the dwapb_gpio
-> private data. Note we can't have a static instance of that structure since
-> GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
-> A warning about that would have been printed by the GPIO-lib code if we
-> used a single irq_chip structure instance for multiple DW APB GPIO
-> controllers.
-> 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
-> descriptor. By default there is no IRQ enabled so any event raised will be
-> handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
-> is synthesized to have non-shared reference IRQ-lines, then as before the
-> hierarchical and cascaded cases are distinguished by checking how many
-> parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
-> initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
-> is used on a platform with shared IRQ line, then we simply won't let the
-> GPIO-lib to initialize the parental IRQs, but will handle them locally in
-> the driver.
-> 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
-> GPIO-lib IRQ-chip interface will create a new domain and accept a standard
-> IRQ-chip structure pointer based on the setting we provided in the
-> gpio_irq_chip structure.
-> 5) Manually select a proper IRQ flow handler directly in the
-> irq_set_type() callback by calling irq_set_handler_locked() method, since
-> an ordinary (not Generic) irq_chip descriptor is now utilized.
-> 6) Discard the custom GPIO-to-IRQ mapping function since GPIO-lib defines
-> the standard method gpiochip_to_irq(), which will be used anyway no matter
-> whether the custom to_irq callback is specified or not.
-> 7) Discard the acpi_gpiochip_{request,free}_interrupts()
-> invocations, since they will be called from
-> gpiochip_add_irqchip()/gpiochip_irqchip_remove() anyway.
-> 8) Alter CONFIG_GPIO_DWAPB kernel config to select
-> CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
-
-
-...
-
-One more thing...
-
->  static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
->  {
-> +	struct gpio_chip *gc = &gpio->ports[0].gc;
->  	unsigned long irq_status;
->  	irq_hw_number_t hwirq;
->  
->  	irq_status = dwapb_read(gpio, GPIO_INTSTATUS);
->  	for_each_set_bit(hwirq, &irq_status, 32) {
-> -		int gpio_irq = irq_find_mapping(gpio->domain, hwirq);
-> +		int gpio_irq = gc->to_irq(gc, hwirq);
-
-Very, very few do this.
-Can we stick with the original one?
-(See plenty of other examples in the GPIO / pin control subsystems.
-
->  		u32 irq_type = irq_get_trigger_type(gpio_irq);
->  
->  		generic_handle_irq(gpio_irq);
-
-
->  }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+T24gMjAyMC8wNy8yMyAxOTo1MiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtv
+bnRyb24uZGU+IHdyb3RlOg0KPiANCj4gPiBUaGUgd2FybmluZyBsb2cgY29tZXMgb3V0IGR1cmlu
+ZyBzcGkNCj4gPiB0cmFuc2ZlciBzdGFydCBhbmQgc2RtYSBmaXJtd2FyZSBsb2FkaW5nIGRvbmUs
+IGJ1dCBpZiBzZG1hIGRyaXZlcg0KPiA+IGJ1aWxkaW5nIGFzIG1vZHVsZSBjb3VsZCBlbnN1cmUg
+ZmlybXdhcmUgbG9hZGluZyBkb25lIGluDQo+ID4gc2RtYV9kcml2ZXJfcHJvYmVfcGhhc2UtPiBz
+cGlfaW14X3Byb2JlX3BoYXNlLCB3aGljaCBtZWFucyBzZG1hDQo+ID4gZmlybXdhcmUgbG9hZGlu
+ZyBoYXMgYmVlbiByZWFkeSBiZWZvcmUgc3BpIHRyYW5zZmVyIHN0YXJ0LCBoZW5jZSBubyBzdWNo
+DQo+IHdhcm5pbmcgbWVzc2FnZS4NCj4gPg0KPiA+IEJ1dCBJIGFtIG5vdCBzdXJlIGlmIGFsbCBj
+bGllbnQgZHJpdmVycyBleGNlcHQgc3BpIGFyZSBpbiBnb29kIHNoYXBlDQo+ID4gdG8gc3VwcG9y
+dCAnIENPTkZJR19JTVhfU0RNQT1tICcuDQo+IA0KPiBJJ20gcHJldHR5IHN1cmUgdGhhdCBDT05G
+SUdfSU1YX1NETUE9bSBpcyBzdXBwb3J0ZWQgYW5kIGNvbW1vbi4NCj4gT3RoZXJ3aXNlIGl0IHdv
+dWxkbid0IGJlIGFuIG9wdGlvbiBpbiBLY29uZmlnLg0KU29ycnksIEkgbWVhbiBvdGhlciBkcml2
+ZXJzIHVzaW5nIHNkbWEgc3VjaCBhcyBhdWRpby91YXJ0Li5ldGMsIEkga25vdw0Kc2RtYSBkcml2
+ZXIgc3VwcG9ydCB0byBidWlsZCBhcyBtb2R1bGUuIEJ1dCBJJ20gbm90IHN1cmUgaWYgdGhlcmUg
+YXJlIHNvbWUNCnBvdGVudGlhbCBpc3N1ZXMgaGVyZSB3aXRoIGNoYW5naW5nIHRvIHNkbWEgbW9k
+dWxlLiBGb3Igbm93LCBjb3VsZCB3ZQ0KanVzdCBsZWF2ZSBpdCBmb3IgYW5vdGhlciBwYXRjaCB3
+aGF0ZXZlciBpdCdzIGJldHRlciBzb2x1dGlvbiBvciBub3Q/DQo+IA0KPiA+IEJlc2lkZXMsIGRv
+IHlvdSB0aGluayAnZGV2X2Vycl9vbmNlICcgaW5zdGVhZCBvZiAnZGV2X2VycicgaXMgb2theSBm
+b3IgeW91Pw0KPiANCj4gSSBjYW4ndCByZWFsbHkganVkZ2UgaWYgdGhpcyBpcyBhIHByb3BlciBm
+aXggYXMgSSBoYXZlbid0IGxvb2tlZCBhdCB0aGUgY29kZSBpbiBkZXRhaWwsDQo+IGJ1dCBpZiB5
+b3Ugd2FudCB0byB1c2UgZGV2X2Vycl9vbmNlKCksIHRoYXQgd291bGQgYmUgb2sgZm9yIG1lLCBt
+YXliZSBldmVuDQo+IGJldHRlciBkZXZfd2Fybl9vbmNlKCkuDQo+IEFzIGNoYW5jZXMgYXJlIHRo
+YXQgZXZlbiB3aXRob3V0IGZpcm13YXJlIHRyYW5zZmVycyB3aWxsIHdvcmsgYSB3YXJuaW5nDQo+
+IGluc3RlYWQgb2YgYW4gZXJyb3IgbWFrZXMgbW9yZSBzZW5zZSB0byBtZS4NCk9rYXksIEknbGwg
+Y2hhbmdlIGl0IGluIGxhdGVyIHZlcnNpb24uIEFueXdheSwgdGhhbmtzIGZvciB5b3VyIHRlc3Qu
+DQo=
