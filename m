@@ -2,181 +2,115 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFC8C43446
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3CAC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A5020768
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 12:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD96B20714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 13:09:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NGUo9ftA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jLHhwfMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgGWM7j (ORCPT
+        id S1728820AbgGWNJo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 08:59:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:6419 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726521AbgGWM7M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 08:59:12 -0400
-X-UUID: ade07837e5614dd197fca847f0645e61-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=0aqTZVk9bRmcAMVjVp+RRfkroYKT6fTuKxtG5i1XBcY=;
-        b=NGUo9ftA23GH2kfKjPlDSO66ye6Vrhz61wK/byq8BbeGmvQ0NCNuWjNN3Q1y3QGfK244exOLdB/bZE6BG5SB58sqOZc8V/K9zLYkE37BtsdKrSxkp57i8rsS+0u5Qg/bmXToVZkMAUiP0cbrqln940RSAMUTZi7fKkLe1BZ910Y=;
-X-UUID: ade07837e5614dd197fca847f0645e61-20200723
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2096626807; Thu, 23 Jul 2020 20:59:07 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 20:59:04 +0800
-Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 20:59:06 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Subject: [PATCH 1/8] mfd: mt6358: refine interrupt code
-Date:   Thu, 23 Jul 2020 20:58:46 +0800
-Message-ID: <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 2.6.4
-In-Reply-To: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 23 Jul 2020 09:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgGWNJn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 09:09:43 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A521AC0619DC
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id q5so5107370wru.6
+        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 06:09:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHNOabgTTNbh6uri8W4VPeDNkD37Z9qVynqApQA8NN4=;
+        b=jLHhwfMgxxeLyGX9Vu5obKFeM6cJuGW5m219rJLASk42B8yCuiSrbsYu9g4Om3CrQO
+         u8+PhnKSL74Rqrmjsn7QSzvAuZWPYtNlJ5c4JvYRPf9ug+ThVMEr6OQiOaSvx39H6D6K
+         +dAXBolNwP9SldzHVxjetuVWbdFFkOk3DerVI9CYHiOh8s8cAhVMlWL2jpEZW3SwmNbl
+         VWdbomN2X2NbtU7jNJeyYRxauMv+gmJWqdsbiEUHdhc5maNRJGqc8ce7NbyXNT1EarIT
+         CCkawWMZ5O6qDOcq2Mmr8jZa4RGPQ28pS7aAM/1nsoEHccPsCL8DblVhkak/i6PPUViD
+         z94A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oHNOabgTTNbh6uri8W4VPeDNkD37Z9qVynqApQA8NN4=;
+        b=PY4vHyhpCHZ1RTpBT6R2e7KQPYs5dzpsB5nz1oT6Vu1dnjz76ndkxoFk8mY6twGPeW
+         icXHlgCu7LMeXw/GS9gWbHHFj4cx7Nq56tuF8EpLthMX0p2IMh5O5KPqyywJiQARsllg
+         Zx0ySLAkY7A4LFhDDSRKKJSIUssho5H6bhc64ei5SWejjBkn7KMSR6wQ4FOOV7bmJIdO
+         4cyAX7ZuovGO9qfU8XCKIm7hldBmIw0KNfZVlCeaHBvuidnjW8nS2QERh8dxLkBvOISl
+         DT1MP4NjV9wWmEXythFSDEUGLQcbRVSKsS6VatcVFDxIM3yFXjN4hydi2YqjXwilRD5o
+         PLeA==
+X-Gm-Message-State: AOAM531zhyYdfKLzipfQMFRsF0VGl4hwLK0ZGSuqX/yafpHRpSgjc7uf
+        LHNe2oL/TD0eEXdnipmtTwX95A==
+X-Google-Smtp-Source: ABdhPJyn9q77KWRk28k9ReYpgP1tzCRLEjDCCty8oAulmC1LG1zHc+TAu26s0hrwLaOIgaDbxOXoaQ==
+X-Received: by 2002:adf:ee06:: with SMTP id y6mr4020677wrn.225.1595509782303;
+        Thu, 23 Jul 2020 06:09:42 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id w7sm3594632wmc.32.2020.07.23.06.09.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Jul 2020 06:09:41 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sibis@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        georgi.djakov@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] interconnect: Introduce xlate_extended()
+Date:   Thu, 23 Jul 2020 16:09:36 +0300
+Message-Id: <20200723130942.28491-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCByZWZpbmVzIHRoZSBpbnRlcnJ1cHQgcmVsYXRlZCBjb2RlIHRvIHN1cHBvcnQg
-bmV3IGNoaXBzLg0KDQpTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVu
-Zy53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbWZkL210NjM1OC1pcnEuYyAgICAg
-ICAgfCA2NSArKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLQ0KIGluY2x1
-ZGUvbGludXgvbWZkL210NjM1OC9jb3JlLmggfCAgOCArKy0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwg
-NDEgaW5zZXJ0aW9ucygrKSwgMzIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L21mZC9tdDYzNTgtaXJxLmMgYi9kcml2ZXJzL21mZC9tdDYzNTgtaXJxLmMNCmluZGV4IGRiNzM0
-ZjIuLjRiMDk0ZTUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21mZC9tdDYzNTgtaXJxLmMNCisrKyBi
-L2RyaXZlcnMvbWZkL210NjM1OC1pcnEuYw0KQEAgLTEzLDcgKzEzLDkgQEANCiAjaW5jbHVkZSA8
-bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQogI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KIA0K
-LXN0YXRpYyBzdHJ1Y3QgaXJxX3RvcF90IG10NjM1OF9pbnRzW10gPSB7DQorI2RlZmluZSBNVEtf
-UE1JQ19SRUdfV0lEVEggMTYNCisNCitzdGF0aWMgY29uc3Qgc3RydWN0IGlycV90b3BfdCBtdDYz
-NThfaW50c1tdID0gew0KIAlNVDYzNThfVE9QX0dFTihCVUNLKSwNCiAJTVQ2MzU4X1RPUF9HRU4o
-TERPKSwNCiAJTVQ2MzU4X1RPUF9HRU4oUFNDKSwNCkBAIC0yNCw2ICsyNiwxMyBAQCBzdGF0aWMg
-c3RydWN0IGlycV90b3BfdCBtdDYzNThfaW50c1tdID0gew0KIAlNVDYzNThfVE9QX0dFTihNSVND
-KSwNCiB9Ow0KIA0KK3N0YXRpYyBzdHJ1Y3QgcG1pY19pcnFfZGF0YSBtdDYzNThfaXJxZCA9IHsN
-CisJLm51bV90b3AgPSBBUlJBWV9TSVpFKG10NjM1OF9pbnRzKSwNCisJLm51bV9wbWljX2lycXMg
-PSBNVDYzNThfSVJRX05SLA0KKwkudG9wX2ludF9zdGF0dXNfcmVnID0gTVQ2MzU4X1RPUF9JTlRf
-U1RBVFVTMCwNCisJLnBtaWNfaW50cyA9IG10NjM1OF9pbnRzLA0KK307DQorDQogc3RhdGljIHZv
-aWQgcG1pY19pcnFfZW5hYmxlKHN0cnVjdCBpcnFfZGF0YSAqZGF0YSkNCiB7DQogCXVuc2lnbmVk
-IGludCBod2lycSA9IGlycWRfdG9faHdpcnEoZGF0YSk7DQpAQCAtNjIsMTUgKzcxLDE1IEBAIHN0
-YXRpYyB2b2lkIHBtaWNfaXJxX3N5bmNfdW5sb2NrKHN0cnVjdCBpcnFfZGF0YSAqZGF0YSkNCiAJ
-CS8qIEZpbmQgb3V0IHRoZSBJUlEgZ3JvdXAgKi8NCiAJCXRvcF9ncCA9IDA7DQogCQl3aGlsZSAo
-KHRvcF9ncCArIDEpIDwgaXJxZC0+bnVtX3RvcCAmJg0KLQkJICAgICAgIGkgPj0gbXQ2MzU4X2lu
-dHNbdG9wX2dwICsgMV0uaHdpcnFfYmFzZSkNCisJCSAgICAgICBpID49IGlycWQtPnBtaWNfaW50
-c1t0b3BfZ3AgKyAxXS5od2lycV9iYXNlKQ0KIAkJCXRvcF9ncCsrOw0KIA0KIAkJLyogRmluZCB0
-aGUgSVJRIHJlZ2lzdGVycyAqLw0KLQkJZ3Bfb2Zmc2V0ID0gaSAtIG10NjM1OF9pbnRzW3RvcF9n
-cF0uaHdpcnFfYmFzZTsNCi0JCWludF9yZWdzID0gZ3Bfb2Zmc2V0IC8gTVQ2MzU4X1JFR19XSURU
-SDsNCi0JCXNoaWZ0ID0gZ3Bfb2Zmc2V0ICUgTVQ2MzU4X1JFR19XSURUSDsNCi0JCWVuX3JlZyA9
-IG10NjM1OF9pbnRzW3RvcF9ncF0uZW5fcmVnICsNCi0JCQkgKG10NjM1OF9pbnRzW3RvcF9ncF0u
-ZW5fcmVnX3NoaWZ0ICogaW50X3JlZ3MpOw0KKwkJZ3Bfb2Zmc2V0ID0gaSAtIGlycWQtPnBtaWNf
-aW50c1t0b3BfZ3BdLmh3aXJxX2Jhc2U7DQorCQlpbnRfcmVncyA9IGdwX29mZnNldCAvIE1US19Q
-TUlDX1JFR19XSURUSDsNCisJCXNoaWZ0ID0gZ3Bfb2Zmc2V0ICUgTVRLX1BNSUNfUkVHX1dJRFRI
-Ow0KKwkJZW5fcmVnID0gaXJxZC0+cG1pY19pbnRzW3RvcF9ncF0uZW5fcmVnICsNCisJCQkgKGly
-cWQtPnBtaWNfaW50c1t0b3BfZ3BdLmVuX3JlZ19zaGlmdCAqIGludF9yZWdzKTsNCiANCiAJCXJl
-Z21hcF91cGRhdGVfYml0cyhjaGlwLT5yZWdtYXAsIGVuX3JlZywgQklUKHNoaWZ0KSwNCiAJCQkJ
-ICAgaXJxZC0+ZW5hYmxlX2h3aXJxW2ldIDw8IHNoaWZ0KTsNCkBAIC05NSwxMCArMTA0LDExIEBA
-IHN0YXRpYyB2b2lkIG10NjM1OF9pcnFfc3BfaGFuZGxlcihzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNo
-aXAsDQogCXVuc2lnbmVkIGludCBpcnFfc3RhdHVzLCBzdGFfcmVnLCBzdGF0dXM7DQogCXVuc2ln
-bmVkIGludCBod2lycSwgdmlycTsNCiAJaW50IGksIGosIHJldDsNCisJc3RydWN0IHBtaWNfaXJx
-X2RhdGEgKmlycWQgPSBjaGlwLT5pcnFfZGF0YTsNCiANCi0JZm9yIChpID0gMDsgaSA8IG10NjM1
-OF9pbnRzW3RvcF9ncF0ubnVtX2ludF9yZWdzOyBpKyspIHsNCi0JCXN0YV9yZWcgPSBtdDYzNThf
-aW50c1t0b3BfZ3BdLnN0YV9yZWcgKw0KLQkJCW10NjM1OF9pbnRzW3RvcF9ncF0uc3RhX3JlZ19z
-aGlmdCAqIGk7DQorCWZvciAoaSA9IDA7IGkgPCBpcnFkLT5wbWljX2ludHNbdG9wX2dwXS5udW1f
-aW50X3JlZ3M7IGkrKykgew0KKwkJc3RhX3JlZyA9IGlycWQtPnBtaWNfaW50c1t0b3BfZ3BdLnN0
-YV9yZWcgKw0KKwkJCWlycWQtPnBtaWNfaW50c1t0b3BfZ3BdLnN0YV9yZWdfc2hpZnQgKiBpOw0K
-IA0KIAkJcmV0ID0gcmVnbWFwX3JlYWQoY2hpcC0+cmVnbWFwLCBzdGFfcmVnLCAmaXJxX3N0YXR1
-cyk7DQogCQlpZiAocmV0KSB7DQpAQCAtMTE0LDggKzEyNCw4IEBAIHN0YXRpYyB2b2lkIG10NjM1
-OF9pcnFfc3BfaGFuZGxlcihzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAsDQogCQlkbyB7DQogCQkJ
-aiA9IF9fZmZzKHN0YXR1cyk7DQogDQotCQkJaHdpcnEgPSBtdDYzNThfaW50c1t0b3BfZ3BdLmh3
-aXJxX2Jhc2UgKw0KLQkJCQlNVDYzNThfUkVHX1dJRFRIICogaSArIGo7DQorCQkJaHdpcnEgPSBp
-cnFkLT5wbWljX2ludHNbdG9wX2dwXS5od2lycV9iYXNlICsNCisJCQkJTVRLX1BNSUNfUkVHX1dJ
-RFRIICogaSArIGo7DQogDQogCQkJdmlycSA9IGlycV9maW5kX21hcHBpbmcoY2hpcC0+aXJxX2Rv
-bWFpbiwgaHdpcnEpOw0KIAkJCWlmICh2aXJxKQ0KQEAgLTEzMSwxMiArMTQxLDEyIEBAIHN0YXRp
-YyB2b2lkIG10NjM1OF9pcnFfc3BfaGFuZGxlcihzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAsDQog
-c3RhdGljIGlycXJldHVybl90IG10NjM1OF9pcnFfaGFuZGxlcihpbnQgaXJxLCB2b2lkICpkYXRh
-KQ0KIHsNCiAJc3RydWN0IG10NjM5N19jaGlwICpjaGlwID0gZGF0YTsNCi0Jc3RydWN0IHBtaWNf
-aXJxX2RhdGEgKm10NjM1OF9pcnFfZGF0YSA9IGNoaXAtPmlycV9kYXRhOw0KKwlzdHJ1Y3QgcG1p
-Y19pcnFfZGF0YSAqaXJxZCA9IGNoaXAtPmlycV9kYXRhOw0KIAl1bnNpZ25lZCBpbnQgYml0LCBp
-LCB0b3BfaXJxX3N0YXR1cyA9IDA7DQogCWludCByZXQ7DQogDQogCXJldCA9IHJlZ21hcF9yZWFk
-KGNoaXAtPnJlZ21hcCwNCi0JCQkgIG10NjM1OF9pcnFfZGF0YS0+dG9wX2ludF9zdGF0dXNfcmVn
-LA0KKwkJCSAgaXJxZC0+dG9wX2ludF9zdGF0dXNfcmVnLA0KIAkJCSAgJnRvcF9pcnFfc3RhdHVz
-KTsNCiAJaWYgKHJldCkgew0KIAkJZGV2X2VycihjaGlwLT5kZXYsDQpAQCAtMTQ0LDggKzE1NCw4
-IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtdDYzNThfaXJxX2hhbmRsZXIoaW50IGlycSwgdm9pZCAq
-ZGF0YSkNCiAJCXJldHVybiBJUlFfTk9ORTsNCiAJfQ0KIA0KLQlmb3IgKGkgPSAwOyBpIDwgbXQ2
-MzU4X2lycV9kYXRhLT5udW1fdG9wOyBpKyspIHsNCi0JCWJpdCA9IEJJVChtdDYzNThfaW50c1tp
-XS50b3Bfb2Zmc2V0KTsNCisJZm9yIChpID0gMDsgaSA8IGlycWQtPm51bV90b3A7IGkrKykgew0K
-KwkJYml0ID0gQklUKGlycWQtPnBtaWNfaW50c1tpXS50b3Bfb2Zmc2V0KTsNCiAJCWlmICh0b3Bf
-aXJxX3N0YXR1cyAmIGJpdCkgew0KIAkJCW10NjM1OF9pcnFfc3BfaGFuZGxlcihjaGlwLCBpKTsN
-CiAJCQl0b3BfaXJxX3N0YXR1cyAmPSB+Yml0Ow0KQEAgLTE4MCwxNyArMTkwLDE4IEBAIGludCBt
-dDYzNThfaXJxX2luaXQoc3RydWN0IG10NjM5N19jaGlwICpjaGlwKQ0KIAlpbnQgaSwgaiwgcmV0
-Ow0KIAlzdHJ1Y3QgcG1pY19pcnFfZGF0YSAqaXJxZDsNCiANCi0JaXJxZCA9IGRldm1fa3phbGxv
-YyhjaGlwLT5kZXYsIHNpemVvZigqaXJxZCksIEdGUF9LRVJORUwpOw0KLQlpZiAoIWlycWQpDQot
-CQlyZXR1cm4gLUVOT01FTTsNCisJc3dpdGNoIChjaGlwLT5jaGlwX2lkKSB7DQorCWNhc2UgTVQ2
-MzU4X0NISVBfSUQ6DQorCQljaGlwLT5pcnFfZGF0YSA9ICZtdDYzNThfaXJxZDsNCisJCWJyZWFr
-Ow0KIA0KLQljaGlwLT5pcnFfZGF0YSA9IGlycWQ7DQorCWRlZmF1bHQ6DQorCQlkZXZfZXJyKGNo
-aXAtPmRldiwgInVuc3VwcG9ydGVkIGNoaXA6IDB4JXhcbiIsIGNoaXAtPmNoaXBfaWQpOw0KKwkJ
-cmV0dXJuIC1FTk9ERVY7DQorCX0NCiANCiAJbXV0ZXhfaW5pdCgmY2hpcC0+aXJxbG9jayk7DQot
-CWlycWQtPnRvcF9pbnRfc3RhdHVzX3JlZyA9IE1UNjM1OF9UT1BfSU5UX1NUQVRVUzA7DQotCWly
-cWQtPm51bV9wbWljX2lycXMgPSBNVDYzNThfSVJRX05SOw0KLQlpcnFkLT5udW1fdG9wID0gQVJS
-QVlfU0laRShtdDYzNThfaW50cyk7DQotDQorCWlycWQgPSBjaGlwLT5pcnFfZGF0YTsNCiAJaXJx
-ZC0+ZW5hYmxlX2h3aXJxID0gZGV2bV9rY2FsbG9jKGNoaXAtPmRldiwNCiAJCQkJCSAgaXJxZC0+
-bnVtX3BtaWNfaXJxcywNCiAJCQkJCSAgc2l6ZW9mKCppcnFkLT5lbmFibGVfaHdpcnEpLA0KQEAg
-LTIwNywxMCArMjE4LDEwIEBAIGludCBtdDYzNThfaXJxX2luaXQoc3RydWN0IG10NjM5N19jaGlw
-ICpjaGlwKQ0KIA0KIAkvKiBEaXNhYmxlIGFsbCBpbnRlcnJ1cHRzIGZvciBpbml0aWFsaXppbmcg
-Ki8NCiAJZm9yIChpID0gMDsgaSA8IGlycWQtPm51bV90b3A7IGkrKykgew0KLQkJZm9yIChqID0g
-MDsgaiA8IG10NjM1OF9pbnRzW2ldLm51bV9pbnRfcmVnczsgaisrKQ0KKwkJZm9yIChqID0gMDsg
-aiA8IGlycWQtPnBtaWNfaW50c1tpXS5udW1faW50X3JlZ3M7IGorKykNCiAJCQlyZWdtYXBfd3Jp
-dGUoY2hpcC0+cmVnbWFwLA0KLQkJCQkgICAgIG10NjM1OF9pbnRzW2ldLmVuX3JlZyArDQotCQkJ
-CSAgICAgbXQ2MzU4X2ludHNbaV0uZW5fcmVnX3NoaWZ0ICogaiwgMCk7DQorCQkJCSAgICAgaXJx
-ZC0+cG1pY19pbnRzW2ldLmVuX3JlZyArDQorCQkJCSAgICAgaXJxZC0+cG1pY19pbnRzW2ldLmVu
-X3JlZ19zaGlmdCAqIGosIDApOw0KIAl9DQogDQogCWNoaXAtPmlycV9kb21haW4gPSBpcnFfZG9t
-YWluX2FkZF9saW5lYXIoY2hpcC0+ZGV2LT5vZl9ub2RlLA0KZGlmZiAtLWdpdCBhL2luY2x1ZGUv
-bGludXgvbWZkL210NjM1OC9jb3JlLmggYi9pbmNsdWRlL2xpbnV4L21mZC9tdDYzNTgvY29yZS5o
-DQppbmRleCBjNWExMWI3Li42ODU3OGUyIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9tZmQv
-bXQ2MzU4L2NvcmUuaA0KKysrIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L2NvcmUuaA0KQEAg
-LTYsMTIgKzYsOSBAQA0KICNpZm5kZWYgX19NRkRfTVQ2MzU4X0NPUkVfSF9fDQogI2RlZmluZSBf
-X01GRF9NVDYzNThfQ09SRV9IX18NCiANCi0jZGVmaW5lIE1UNjM1OF9SRUdfV0lEVEggMTYNCi0N
-CiBzdHJ1Y3QgaXJxX3RvcF90IHsNCiAJaW50IGh3aXJxX2Jhc2U7DQogCXVuc2lnbmVkIGludCBu
-dW1faW50X3JlZ3M7DQotCXVuc2lnbmVkIGludCBudW1faW50X2JpdHM7DQogCXVuc2lnbmVkIGlu
-dCBlbl9yZWc7DQogCXVuc2lnbmVkIGludCBlbl9yZWdfc2hpZnQ7DQogCXVuc2lnbmVkIGludCBz
-dGFfcmVnOw0KQEAgLTI1LDYgKzIyLDcgQEAgc3RydWN0IHBtaWNfaXJxX2RhdGEgew0KIAl1bnNp
-Z25lZCBzaG9ydCB0b3BfaW50X3N0YXR1c19yZWc7DQogCWJvb2wgKmVuYWJsZV9od2lycTsNCiAJ
-Ym9vbCAqY2FjaGVfaHdpcnE7DQorCWNvbnN0IHN0cnVjdCBpcnFfdG9wX3QgKnBtaWNfaW50czsN
-CiB9Ow0KIA0KIGVudW0gbXQ2MzU4X2lycV90b3Bfc3RhdHVzX3NoaWZ0IHsNCkBAIC0xNDYsOCAr
-MTQ0LDggQEAgZW51bSBtdDYzNThfaXJxX251bWJlcnMgew0KIHsJXA0KIAkuaHdpcnFfYmFzZSA9
-IE1UNjM1OF9JUlFfIyNzcCMjX0JBU0UsCVwNCiAJLm51bV9pbnRfcmVncyA9CVwNCi0JCSgoTVQ2
-MzU4X0lSUV8jI3NwIyNfQklUUyAtIDEpIC8gTVQ2MzU4X1JFR19XSURUSCkgKyAxLAlcDQotCS5u
-dW1faW50X2JpdHMgPSBNVDYzNThfSVJRXyMjc3AjI19CSVRTLCBcDQorCQkoKE1UNjM1OF9JUlFf
-IyNzcCMjX0JJVFMgLSAxKSAvCVwNCisJCU1US19QTUlDX1JFR19XSURUSCkgKyAxLAlcDQogCS5l
-bl9yZWcgPSBNVDYzNThfIyNzcCMjX1RPUF9JTlRfQ09OMCwJXA0KIAkuZW5fcmVnX3NoaWZ0ID0g
-MHg2LAlcDQogCS5zdGFfcmVnID0gTVQ2MzU4XyMjc3AjI19UT1BfSU5UX1NUQVRVUzAsCVwNCi0t
-IA0KMi42LjQNCg==
+Currently the interconnect framework provides the xlate() callback for
+mapping the endpoints from phandle arguments in DT. This is implemented
+by the provider drivers. But the endpoints (or the path between the
+endpoints) might have an additional attributes, which should be parsed
+and populated. During previous discussions [1], it was suggested that
+adding more and more DT properties will not scale very well. So instead
+of adding DT properties, such data should be put into the 'interconnects'
+arguments.
+
+This patchset is introducing a new xlate_extended() callback, which
+would allow the interconnect provider drivers to parse additional data
+(such as path tags) and allow the framework to make use of them.
+
+Thanks to Sibi for the preliminary feedback and testing this patchset
+on the sc7180 platform.
+
+The patchset is based on linux-next (next-20200723).
+
+[1]. https://lore.kernel.org/linux-devicetree/20200519185836.GA469006@bogus/
+
+Georgi Djakov (4):
+  interconnect: Introduce xlate_extended() callback
+  interconnect: qcom: Implement xlate_extended() to parse tags
+  interconnect: qcom: sdm845: Replace xlate with xlate_extended
+  arm64: dts: qcom: sdm845: Increase the number of interconnect cells
+
+Sibi Sankar (2):
+  interconnect: qcom: sc7180: Replace xlate with xlate_extended
+  arm64: dts: qcom: sc7180: Increase the number of interconnect cells
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi  | 216 +++++++++++++-------------
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  |  44 +++---
+ drivers/interconnect/core.c           |  73 ++++++---
+ drivers/interconnect/qcom/icc-rpmh.c  |  27 ++++
+ drivers/interconnect/qcom/icc-rpmh.h  |   1 +
+ drivers/interconnect/qcom/sc7180.c    |   2 +-
+ drivers/interconnect/qcom/sdm845.c    |   2 +-
+ include/linux/interconnect-provider.h |  17 +-
+ 8 files changed, 225 insertions(+), 157 deletions(-)
 
