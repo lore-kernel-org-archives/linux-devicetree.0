@@ -2,123 +2,120 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9C0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1ECC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8431420825
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 00:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25BB820888
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:02:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gv5J7slR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387475AbgGWA64 (ORCPT
+        id S1733073AbgGWBCe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 20:58:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60896 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387461AbgGWA6z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 20:58:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id EE07180045E5;
-        Thu, 23 Jul 2020 00:58:52 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id g0kkXRreM11a; Thu, 23 Jul 2020 03:58:52 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 03/10] dmaengine: Introduce min burst length capability
-Date:   Thu, 23 Jul 2020 03:58:41 +0300
-Message-ID: <20200723005848.31907-4-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
+        Wed, 22 Jul 2020 21:02:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728914AbgGWBCe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 21:02:34 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FB3C0619DC
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 18:02:34 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s189so2190625pgc.13
+        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 18:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nUCwRjT2pU2Gmv3Op2+ljHBnuLbX/BdWuYfwk3p2dPU=;
+        b=Gv5J7slRS2adw592HJRD5Dk1x0nICM0czHuAtw+Bea1LUJWvVeWd0EXViOfOPO1aIz
+         lZRq1TTWDGIpJFyqeXnKCiX4h5lGMCqz+sDdJoYXUjk2nk0smYwqWnSg3ia+ENWx3JL6
+         J3P2+rh7riPtr1zCP0JTRttUOoJt8xjmKnixeV5qmaJMSe8T1E39p3iyzDBlQ/bMcJgG
+         CgUONWqmmby9jG30sRUM7Kw4PSnEj4qGFFW1pVFZrnjJzniW8fYV5srexWGwLHMe67Tb
+         Xoo/sWsbkcjREY3TQbYqcS+/AG9DB2VIYxYjlkTctj6thbZspvKB0TG84njjduRKwvae
+         rdUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nUCwRjT2pU2Gmv3Op2+ljHBnuLbX/BdWuYfwk3p2dPU=;
+        b=P71bKNEAAQQ6Iq83fJvcbZ+SRd5JHMtKdYHKVuYzRczmyI1UR+8vC8Eg7p9XrFAupo
+         znxAcDc6w6t0mv8KmbUZ59Pyoo5zOOUCTgFayHGe+mIi1ok/OwH5tF/Pg4+l0mU/XkTB
+         jrHoKiKBPIy77w0Hvx6d4r9cgrdWAqqXRqqOQGj5tnwSb+fG2gwFk3zF61JyX8PGOzAf
+         Yp+Q7lIs7ZVm7HX1Lv0McEWmMUb3seCpUox0OT5rrPSPJwirxfVIUdJKzoyxHHINybP/
+         shgBHkpx/v5zfHDtjX9OnoHmaV7ruv7hqGGZbNuIcQNkLIDK5ij5PPZnTibKKgDRGY07
+         zCmQ==
+X-Gm-Message-State: AOAM5339Tn9KfEqzRLpgZqXJgxn9XYIpf1TJd4Aq/UjinTk3Af4HvHX2
+        oBQbozFxUSKYxlqyKZixgpEJDQwWsHUY0dbd8QW+QdzOaOo=
+X-Google-Smtp-Source: ABdhPJy3F0JIAPnQcvEuqhIjvTmhlNc50e2Fao3jv3xBkWy1mCNh+m6SvHBS7aYoHWIqwjhyNEQp/34XrbengBxtQHU=
+X-Received: by 2002:a63:495c:: with SMTP id y28mr2164282pgk.30.1595466153346;
+ Wed, 22 Jul 2020 18:02:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200722201313.754671-1-saravanak@google.com> <20200722201313.754671-2-saravanak@google.com>
+ <084158b7-f6dc-167f-b06d-db617fb2df29@gmail.com>
+In-Reply-To: <084158b7-f6dc-167f-b06d-db617fb2df29@gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 22 Jul 2020 18:01:57 -0700
+Message-ID: <CAGETcx-CajYnh=ZOkGBxrSUHe0uTAwJ_gZ8EJV1jrq-jNmaBVw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] of: property: Add device link support for
+ pinctrl-0 through pinctrl-8
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some hardware aside from default 0/1 may have greater minimum burst
-transactions length constraints. Here we introduce the DMA device
-and slave capability, which if required can be initialized by the DMA
-engine driver with the device-specific value.
+On Wed, Jul 22, 2020 at 1:56 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 2020-07-22 15:13, Saravana Kannan wrote:
+> > Add support for pinctrl-0 through pinctrl-8 explicitly instead of trying
+> > to add support for pinctrl-%d properties.
+> >
+> > Of all the pinctrl-* properties in dts files (20322), only 47% (9531)
+> > are pinctrl-%d properties. Of all the pinctrl-%d properties, 99.5%
+> > (9486) are made up of pinctrl-[0-2].
+> >
+> > Trying to parse all pinctrl-* properties and checking for pinctrl-%d is
+> > unnecessarily complicated. So, just add support for pinctrl-[0-8] for
+> > now. In the unlikely event we ever exceed pinctrl-8, we can come back
+> > and improve this.
+>
+> If you were to implement the more general pinctrl-* case, roughly what would
+> it look like (pseudo-code or english description is fine).
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+So when I say "unnecessarily complicated", it's in terms of
+readability. I can't use these macros -- which are succinct 1 line
+entries that are super easy to understand.
 
----
+Pseudo code:
+parse_pinctrl(np, prop_name, index)
+{
+    if (doens't start with "pinctrl-")
+        return NULL;
+    ret = kstrtouint(propname + strlen("pinctrl"), 10, &val);
 
-Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
----
- drivers/dma/dmaengine.c   | 1 +
- include/linux/dmaengine.h | 4 ++++
- 2 files changed, 5 insertions(+)
+    check that it's not something line "pinctrl-2nd-val" that'll still
+set val to 2.
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 2b06a7a8629d..2f1a7c0c5446 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- 	caps->src_addr_widths = device->src_addr_widths;
- 	caps->dst_addr_widths = device->dst_addr_widths;
- 	caps->directions = device->directions;
-+	caps->min_burst = device->min_burst;
- 	caps->max_burst = device->max_burst;
- 	caps->residue_granularity = device->residue_granularity;
- 	caps->descriptor_reuse = device->descriptor_reuse;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 6283917edd90..669833c15dfc 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -465,6 +465,7 @@ enum dma_residue_granularity {
-  *	Since the enum dma_transfer_direction is not defined as bit flag for
-  *	each type, the dma controller should set BIT(<TYPE>) and same
-  *	should be checked by controller as well
-+ * @min_burst: min burst capability per-transfer
-  * @max_burst: max burst capability per-transfer
-  * @cmd_pause: true, if pause is supported (i.e. for reading residue or
-  *	       for resume later)
-@@ -478,6 +479,7 @@ struct dma_slave_caps {
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
- 	u32 directions;
-+	u32 min_burst;
- 	u32 max_burst;
- 	bool cmd_pause;
- 	bool cmd_resume;
-@@ -769,6 +771,7 @@ struct dma_filter {
-  *	Since the enum dma_transfer_direction is not defined as bit flag for
-  *	each type, the dma controller should set BIT(<TYPE>) and same
-  *	should be checked by controller as well
-+ * @min_burst: min burst capability per-transfer
-  * @max_burst: max burst capability per-transfer
-  * @residue_granularity: granularity of the transfer residue reported
-  *	by tx_status
-@@ -839,6 +842,7 @@ struct dma_device {
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
- 	u32 directions;
-+	u32 min_burst;
- 	u32 max_burst;
- 	bool descriptor_reuse;
- 	enum dma_residue_granularity residue_granularity;
--- 
-2.26.2
+    parse phandle with args and return phandle node.
+}
 
+All this when effectively 99.5% of the DT just use pinctrl-0,
+pinctrl-1 and pinctrl-2. There are a few that use pinctrl-3. And
+literally 6 DT files in the entire kernel source tree use pinctrl-4 or
+greater.
+
+And for those 6 files, pinctrl-[0-8] really point to the same pinctrl
+node. So even if I didn't parse pinctrl-[4-8], all the device
+dependencies would be tracked properly.
+
+-Saravana
