@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EC0C433F7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F71C433F8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6767920781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBED20781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387665AbgGWBjW (ORCPT
+        id S1728914AbgGWBjI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:39:22 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33012 "EHLO
+        Wed, 22 Jul 2020 21:39:08 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:32942 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387462AbgGWBjL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 21:39:11 -0400
+        with ESMTP id S2387462AbgGWBjI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 21:39:08 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F0A498040A69;
-        Thu, 23 Jul 2020 01:39:08 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4CE4D80307CB;
+        Thu, 23 Jul 2020 01:39:06 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zaFfzz5IrmEE; Thu, 23 Jul 2020 04:39:08 +0300 (MSK)
+        with ESMTP id TInw2puhoxo6; Thu, 23 Jul 2020 04:39:05 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -38,9 +38,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 7/7] gpio: dwapb: Use resource managed GPIO-chip add data method
-Date:   Thu, 23 Jul 2020 04:38:58 +0300
-Message-ID: <20200723013858.10766-8-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 3/7] gpio: dwapb: Move MFD-specific IRQ handler
+Date:   Thu, 23 Jul 2020 04:38:54 +0300
+Message-ID: <20200723013858.10766-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -52,97 +52,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the resource managed version of gpiochip_add_data() will handle the
-GPIO-chip data automated cleanup we can freely remove the DW APB GPIO
-driver code responsible for that. After doing so the DW APB GPIO driver
-removal callback can be also fully discarded since there is nothing left
-to be done for it. All the cleanups are now performed by means of the
-device managed framework.
+For better readability let's group all the IRQ handler in a single place
+of the driver instead of having them scatter around all over the file.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/gpio/gpio-dwapb.c | 37 ++-----------------------------------
- 1 file changed, 2 insertions(+), 35 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 8588e45186ad..3d1767e69881 100644
+index ccd80df16062..3081213247d8 100644
 --- a/drivers/gpio/gpio-dwapb.c
 +++ b/drivers/gpio/gpio-dwapb.c
-@@ -84,7 +84,6 @@ struct dwapb_context {
- 
- struct dwapb_gpio_port {
- 	struct gpio_chip	gc;
--	bool			is_registered;
- 	struct dwapb_gpio	*gpio;
- #ifdef CONFIG_PM_SLEEP
- 	struct dwapb_context	*ctx;
-@@ -493,32 +492,16 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 	if (pp->idx == 0)
- 		dwapb_configure_irqs(gpio, port, pp);
- 
--	err = gpiochip_add_data(&port->gc, port);
-+	err = devm_gpiochip_add_data(gpio->dev, &port->gc, port);
- 	if (err) {
- 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
- 			port->idx);
- 		return err;
- 	}
- 
--	port->is_registered = true;
--
- 	return 0;
+@@ -220,6 +220,11 @@ static void dwapb_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
  }
  
--static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
--{
--	unsigned int m;
--
--	for (m = 0; m < gpio->nr_ports; ++m) {
--		struct dwapb_gpio_port *port = &gpio->ports[m];
--
--		if (!port->is_registered)
--			continue;
--
--		gpiochip_remove(&port->gc);
--	}
--}
--
- static void dwapb_get_irq(struct device *dev, struct fwnode_handle *fwnode,
- 			  struct dwapb_port_property *pp)
++static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
++{
++	return IRQ_RETVAL(dwapb_do_irq(dev_id));
++}
++
+ static void dwapb_irq_enable(struct irq_data *d)
  {
-@@ -712,23 +695,8 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 	for (i = 0; i < gpio->nr_ports; i++) {
- 		err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
- 		if (err)
--			goto out_unregister;
-+			return err;
- 	}
--	platform_set_drvdata(pdev, gpio);
--
--	return 0;
--
--out_unregister:
--	dwapb_gpio_unregister(gpio);
--
--	return err;
+ 	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
+@@ -349,11 +354,6 @@ static int dwapb_gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ 	return dwapb_gpio_set_debounce(gc, offset, debounce);
+ }
+ 
+-static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
+-{
+-	return IRQ_RETVAL(dwapb_do_irq(dev_id));
 -}
 -
--static int dwapb_gpio_remove(struct platform_device *pdev)
--{
--	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
--
--	dwapb_gpio_unregister(gpio);
- 
- 	return 0;
- }
-@@ -832,7 +800,6 @@ static struct platform_driver dwapb_gpio_driver = {
- 		.acpi_match_table = dwapb_acpi_match,
- 	},
- 	.probe		= dwapb_gpio_probe,
--	.remove		= dwapb_gpio_remove,
- };
- 
- module_platform_driver(dwapb_gpio_driver);
+ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 				 struct dwapb_gpio_port *port,
+ 				 struct dwapb_port_property *pp)
 -- 
 2.26.2
 
