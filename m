@@ -2,131 +2,98 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC618C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040C1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A603E207BB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B1120709
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 11:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GQs477h5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cRfoLBwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgGWLUH (ORCPT
+        id S1728199AbgGWL1c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 07:20:07 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37873 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727769AbgGWLUH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 07:20:07 -0400
-X-UUID: a60ed0f0ddbd4722a29382f602a7be42-20200723
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=IAYQHxickWHe2ZE7HNcFpZYh+SYPG0KsSHSyyPGPmIU=;
-        b=GQs477h5fAfcpLX+GOk9Ghm5B7mto9ZocWKzkMXRMztroT1zT0RdTP2rWgyz7xQHI9f+DZTBdglq4LTx5VlLAChx4bH+RWMFTbFeb4JNkR/v2wLvFwr/yCIsSQNGOcxIcdrXMSXeiFszXFXtsNh8J/SUIBRrBVz6Qb89kGQO9SA=;
-X-UUID: a60ed0f0ddbd4722a29382f602a7be42-20200723
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1786912797; Thu, 23 Jul 2020 19:20:02 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 23 Jul 2020 19:19:58 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 23 Jul 2020 19:19:59 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH v9 3/7] pinctrl: mediatek: avoid virtual gpio trying to set reg
-Date:   Thu, 23 Jul 2020 19:19:53 +0800
-Message-ID: <1595503197-15246-4-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
-References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 1E47C6615EB965B77944190983D9BF6B97ABBFC08EB39DA51C9A6004CB1D90A02000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Thu, 23 Jul 2020 07:27:32 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11741 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727940AbgGWL1c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 07:27:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595503651; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=zMBGA4GBLjo26JmXFoaEr/6TroQfiUFJV+/N5KVNSYQ=; b=cRfoLBwmkKKPcd9qtr6Zts5sviMqkWOVRFqPAGmhW2pWgx3awoQd/k1Y2SVGrPgbk2xW2oxx
+ Fb3ZJ1mdi1BeZQiwiYW/BkbjCEdr4xEitmyRjSIeGqvJJeI32/Th9FkBjzy+sFDNg+Y23pIU
+ WmpVgtPln1bYuVa6bHID8cF3W9I=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f1974185b75bcda60af5815 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Jul 2020 11:27:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3585BC433CB; Thu, 23 Jul 2020 11:27:20 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D5656C433C6;
+        Thu, 23 Jul 2020 11:27:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D5656C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v4 0/5] DVFS support for Venus
+Date:   Thu, 23 Jul 2020 16:56:47 +0530
+Message-Id: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Zm9yIHZpcnR1YWwgZ3Bpb3MsIHRoZXkgc2hvdWxkIG5vdCBkbyByZWcgc2V0dGluZyBhbmQNCnNo
-b3VsZCBiZWhhdmUgYXMgZXhwZWN0ZWQgZm9yIGVpbnQgZnVuY3Rpb24uDQoNCkFja2VkLWJ5OiBT
-ZWFuIFdhbmcgPHNlYW4ud2FuZ0BrZXJuZWwub3JnPg0KU2lnbmVkLW9mZi1ieTogTWFycyBDaGVu
-ZyA8bWFycy5jaGVuZ0BtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBIYW5rcyBDaGVuIDxo
-YW5rcy5jaGVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9waW5jdHJsL21lZGlhdGVrL3BpbmN0
-cmwtbXRrLWNvbW1vbi12Mi5jICB8IDI1ICsrKysrKysrKysrKysrKysrKysNCiAuLi4vcGluY3Ry
-bC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuaCAgfCAgMSArDQogZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYyAgICAgIHwgIDcgKysrKysrDQogMyBmaWxlcyBj
-aGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwv
-bWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0
-ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCmluZGV4IGI3N2IxOGZlNWFkYy4uYzUzZTJjMzkx
-ZTMyIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNv
-bW1vbi12Mi5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29t
-bW9uLXYyLmMNCkBAIC0yNDMsNiArMjQzLDI4IEBAIHN0YXRpYyBpbnQgbXRrX3h0X2ZpbmRfZWlu
-dF9udW0oc3RydWN0IG10a19waW5jdHJsICpodywgdW5zaWduZWQgbG9uZyBlaW50X24pDQogCXJl
-dHVybiBFSU5UX05BOw0KIH0NCiANCisvKg0KKyAqIFZpcnR1YWwgR1BJTyBvbmx5IHVzZWQgaW5z
-aWRlIFNPQyBhbmQgbm90IGJlaW5nIGV4cG9ydGVkIHRvIG91dHNpZGUgU09DLg0KKyAqIFNvbWUg
-bW9kdWxlcyB1c2UgdmlydHVhbCBHUElPIGFzIGVpbnQgKGUuZy4gcG1pZiBvciB1c2IpLg0KKyAq
-IEluIE1USyBwbGF0Zm9ybSwgZXh0ZXJuYWwgaW50ZXJydXB0IChFSU5UKSBhbmQgR1BJTyBpcyAx
-LTEgbWFwcGluZw0KKyAqIGFuZCB3ZSBjYW4gc2V0IEdQSU8gYXMgZWludC4NCisgKiBCdXQgc29t
-ZSBtb2R1bGVzIHVzZSBzcGVjaWZpYyBlaW50IHdoaWNoIGRvZXNuJ3QgaGF2ZSByZWFsIEdQSU8g
-cGluLg0KKyAqIFNvIHdlIHVzZSB2aXJ0dWFsIEdQSU8gdG8gbWFwIGl0Lg0KKyAqLw0KKw0KK2Jv
-b2wgbXRrX2lzX3ZpcnRfZ3BpbyhzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCB1bnNpZ25lZCBpbnQg
-Z3Bpb19uKQ0KK3sNCisJY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYzsNCisJYm9vbCB2
-aXJ0X2dwaW8gPSBmYWxzZTsNCisNCisJZGVzYyA9IChjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNj
-ICopJmh3LT5zb2MtPnBpbnNbZ3Bpb19uXTsNCisNCisJaWYgKGRlc2MtPmZ1bmNzICYmICFkZXNj
-LT5mdW5jc1tkZXNjLT5laW50LmVpbnRfbV0ubmFtZSkNCisJCXZpcnRfZ3BpbyA9IHRydWU7DQor
-DQorCXJldHVybiB2aXJ0X2dwaW87DQorfQ0KKw0KIHN0YXRpYyBpbnQgbXRrX3h0X2dldF9ncGlv
-X24odm9pZCAqZGF0YSwgdW5zaWduZWQgbG9uZyBlaW50X24sDQogCQkJICAgICB1bnNpZ25lZCBp
-bnQgKmdwaW9fbiwNCiAJCQkgICAgIHN0cnVjdCBncGlvX2NoaXAgKipncGlvX2NoaXApDQpAQCAt
-Mjk1LDYgKzMxNyw5IEBAIHN0YXRpYyBpbnQgbXRrX3h0X3NldF9ncGlvX2FzX2VpbnQodm9pZCAq
-ZGF0YSwgdW5zaWduZWQgbG9uZyBlaW50X24pDQogCWlmIChlcnIpDQogCQlyZXR1cm4gZXJyOw0K
-IA0KKwlpZiAobXRrX2lzX3ZpcnRfZ3BpbyhodywgZ3Bpb19uKSkNCisJCXJldHVybiAwOw0KKw0K
-IAlkZXNjID0gKGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKikmaHctPnNvYy0+cGluc1tncGlv
-X25dOw0KIA0KIAllcnIgPSBtdGtfaHdfc2V0X3ZhbHVlKGh3LCBkZXNjLCBQSU5DVFJMX1BJTl9S
-RUdfTU9ERSwNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1t
-dGstY29tbW9uLXYyLmggYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29t
-bW9uLXYyLmgNCmluZGV4IDI3ZGYwODczNjM5Ni4uYmQwNzlmNGZiMWQ2IDEwMDY0NA0KLS0tIGEv
-ZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oDQorKysgYi9k
-cml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmgNCkBAIC0zMTUs
-NCArMzE1LDUgQEAgaW50IG10a19waW5jb25mX2Fkdl9kcml2ZV9zZXQoc3RydWN0IG10a19waW5j
-dHJsICpodywNCiBpbnQgbXRrX3BpbmNvbmZfYWR2X2RyaXZlX2dldChzdHJ1Y3QgbXRrX3BpbmN0
-cmwgKmh3LA0KIAkJCSAgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIHUzMiAq
-dmFsKTsNCiANCitib29sIG10a19pc192aXJ0X2dwaW8oc3RydWN0IG10a19waW5jdHJsICpodywg
-dW5zaWduZWQgaW50IGdwaW9fbik7DQogI2VuZGlmIC8qIF9fUElOQ1RSTF9NVEtfQ09NTU9OX1Yy
-X0ggKi8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJp
-cy5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KaW5kZXggOTBh
-NDMyYmY5ZmVkLi5hMjNjMTgyNTE5NjUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVk
-aWF0ZWsvcGluY3RybC1wYXJpcy5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGlu
-Y3RybC1wYXJpcy5jDQpAQCAtNzY5LDYgKzc2OSwxMyBAQCBzdGF0aWMgaW50IG10a19ncGlvX2dl
-dF9kaXJlY3Rpb24oc3RydWN0IGdwaW9fY2hpcCAqY2hpcCwgdW5zaWduZWQgaW50IGdwaW8pDQog
-CWlmIChncGlvID49IGh3LT5zb2MtPm5waW5zKQ0KIAkJcmV0dXJuIC1FSU5WQUw7DQogDQorCS8q
-DQorCSAqICJWaXJ0dWFsIiBHUElPcyBhcmUgYWx3YXlzIGFuZCBvbmx5IHVzZWQgZm9yIGludGVy
-cnVwdHMNCisJICogU2luY2UgdGhleSBhcmUgb25seSB1c2VkIGZvciBpbnRlcnJ1cHRzLCB0aGV5
-IGFyZSBhbHdheXMgaW5wdXRzDQorCSAqLw0KKwlpZiAobXRrX2lzX3ZpcnRfZ3BpbyhodywgZ3Bp
-bykpDQorCQlyZXR1cm4gMTsNCisNCiAJZGVzYyA9IChjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNj
-ICopJmh3LT5zb2MtPnBpbnNbZ3Bpb107DQogDQogCWVyciA9IG10a19od19nZXRfdmFsdWUoaHcs
-IGRlc2MsIFBJTkNUUkxfUElOX1JFR19ESVIsICZ2YWx1ZSk7DQotLSANCjIuMTguMA0K
+v4: Moved code from probe/remove/runtime_suspend into
+different pm_ops callbacks
+
+v3: Renamed the optional power domain as cx
+
+v2: Fixed up the labels of OPP nodes in patch 4
+    Included the bindings update patch as part of this series,
+    a resend of https://lore.kernel.org/patchwork/patch/1241077/
+
+These patches add DVFS support for Venus
+
+Patch 1 will need to be picked by Rob.
+Patch 2 and 3 will need to be picked by Stan,
+Patch 4 and 5 should land via the qcom tree.
+
+Rajendra Nayak (5):
+  dt-bindings: media: venus: Add an optional power domain for perf
+    voting
+  media: venus: core: Fix error handling in probe
+  media: venus: core: Add support for opp tables/perf voting
+  arm64: dts: sdm845: Add OPP tables and power-domains for venus
+  arm64: dts: sc7180: Add OPP tables and power-domains for venus
+
+ .../bindings/media/qcom,sc7180-venus.yaml          |  6 +-
+ .../bindings/media/qcom,sdm845-venus-v2.yaml       |  6 +-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 35 +++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 +++++++++-
+ drivers/media/platform/qcom/venus/core.c           | 17 ++--
+ drivers/media/platform/qcom/venus/core.h           |  5 ++
+ drivers/media/platform/qcom/venus/pm_helpers.c     | 92 ++++++++++++++++++++--
+ 7 files changed, 183 insertions(+), 18 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
