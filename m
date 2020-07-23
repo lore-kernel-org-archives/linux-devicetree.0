@@ -2,97 +2,250 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7729C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A752C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFA4A2065F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7321620714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595536226;
-	bh=E/Oxvfkr47jBI1VhvqGZmOrSGj84gilYpon+jDgqMas=;
+	s=default; t=1595536634;
+	bh=CsKh+uI8RBUAeguUCkreM+7Br+qPHthtVRn/SK0oVIM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qU8kqPla9jjNtbq6qI5M1T5DSBEjGHxgT48PBnPM3UC3vJ8i5w4g3vqMlCa02oqEw
-	 suUsta6ws2hseyGQLDohjdEPyIw3ID9aU1nutL1q8BrzRPp8/ljtGGGpv7KYv98yn2
-	 Gf7rJqSPVVse8HLvw4PN/r7ce8fQXt4rFWtjAf9A=
+	b=txf8Po7n693VAYWXgZwxGEblf3UmACJsLUuPr27GGXV4S3lS+f/vXVci7WWmB/iQm
+	 PQVHphLQkAoqlJbE2NXKzSdMeL/ai/H8NNE7deRqxvXOWrDtIXBKNmMSpVFGT029wy
+	 gAu8YGrV9owRPUfqWoz7KhnLr5MFklkDI378JnCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgGWUa0 (ORCPT
+        id S1726033AbgGWUhO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:30:26 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40223 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgGWUa0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:30:26 -0400
-Received: by mail-io1-f68.google.com with SMTP id l17so7637914iok.7;
-        Thu, 23 Jul 2020 13:30:25 -0700 (PDT)
+        Thu, 23 Jul 2020 16:37:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46753 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgGWUhN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:37:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id a12so7648701ion.13;
+        Thu, 23 Jul 2020 13:37:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=yHb+xD8ynAN011pr7vNrT4LxhN7rPIg+zVnoTdpnl/8=;
-        b=Vd3Nohh0FjXOs7SvKxpAppcuekz9ydi7Vkpu5k788T6BVmxXpPo4gB+YU8jJrdj/0m
-         OGExj2yQvxMBj72+xJjVechOU2GqnmR17q5RVE934XJ6Rp7Zhv3EYVKxscZ0YIPwVL4V
-         dUEdJvz2hS/GodICTMYTx2mT6C81tssZWU/exfnM1ALWPCqOy0yO4TGD899R3B9qB085
-         5t8RC2je3C+2xv5VyP3Dl+B1X5eabukii32lVheudp2KdqkF0iPrWBmIEH93LfJlQ+K2
-         B3QMk92p4UHAqD2vPL9sFXPn/bqWG5BHTHTZlOG3m3VJoltrdijVssVrcxOy33gf8z2w
-         o0Ww==
-X-Gm-Message-State: AOAM531PXbHmkQmftkVZ+aUlT28+UJrEHNr6wcJkAARtPJ5bDxMbmQXi
-        XR/atKKurnPjUIcKIuHxsQ==
-X-Google-Smtp-Source: ABdhPJyKres8M7XsIvRrG9U45Hb5uUqG04rfhkHiyYS7JQZbdnlz6SZ0M1ugFCGGbHxX22nAI/WepQ==
-X-Received: by 2002:a6b:5a04:: with SMTP id o4mr3923450iob.171.1595536224893;
-        Thu, 23 Jul 2020 13:30:24 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=6nkqz8zGOU3urYFWNeUbOdQOY3hcOTYFkmXK97Wy0sc=;
+        b=lpng8KEhCeaVgJQ6RwE2sS+ShDzFrRs6EN2l9KRmxpE85bZQY1QKxoS8NdMLB7e/sB
+         PruvC4Id2IHkLTlk08J7oUPjt43JjBG9x5UuhFLVzpwq7tprYH18J/D5JPUJJ5fMnEVj
+         c38H3YIxuQzDcf9PCmdHqlcpFlbLtva39jYcd5FoowmG2Ners/lTqid9PpgZeOLYHTiJ
+         37urMaIM8X/2ww9SgEacQrPMUdtDeUo+POnbTqd6Lcy5cY1CHfHl24nMPy+KcIlFESW2
+         vGfuMeOyIVqO5C7Mtkw/eq9xc55kAPOuJ+Q54Ut718pxYkeHUKKAx4AcsymaoRsK0PgR
+         PbMg==
+X-Gm-Message-State: AOAM533hv5RX5nbfmr5Eo7AWHEIgTxLuLyuhi8rImPfYW4FU/hGAkx9l
+        xfn56r5bO+XlXigZlh35Bw==
+X-Google-Smtp-Source: ABdhPJyLxzJTOSuCRBbbSVeCMMXUCvUWmlkxvfC5/nxyt+iEdErKiX/49sT7x90v4qMwaYIbqsRHzw==
+X-Received: by 2002:a02:cc24:: with SMTP id o4mr6881649jap.105.1595536632720;
+        Thu, 23 Jul 2020 13:37:12 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f18sm2001506ion.47.2020.07.23.13.30.23
+        by smtp.gmail.com with ESMTPSA id i6sm1997252ilj.61.2020.07.23.13.37.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:30:23 -0700 (PDT)
-Received: (nullmailer pid 810072 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:30:22 -0000
-Date:   Thu, 23 Jul 2020 14:30:22 -0600
+        Thu, 23 Jul 2020 13:37:12 -0700 (PDT)
+Received: (nullmailer pid 819123 invoked by uid 1000);
+        Thu, 23 Jul 2020 20:37:10 -0000
+Date:   Thu, 23 Jul 2020 14:37:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     rick.tyliu@ingenic.com, hadar.gat@arm.com,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        dongsheng.qiu@ingenic.com, sernia.zhou@foxmail.com,
-        robh+dt@kernel.org, prasannatsmkumar@gmail.com, xuzaibo@huawei.com,
-        krzk@kernel.org, arnd@arndb.de, rdunlap@infradead.org,
-        mpm@selenic.com, tmaimon77@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, yanfei.li@ingenic.com,
-        daniel.thompson@linaro.org, aric.pzqi@ingenic.com,
-        gregkh@linuxfoundation.org, zhenwenjin@gmail.com,
-        masahiroy@kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: RNG: Add Ingenic RNG bindings.
-Message-ID: <20200723203022.GA810026@bogus>
-References: <20200723062446.84013-1-zhouyanjie@wanyeetech.com>
- <20200723062446.84013-2-zhouyanjie@wanyeetech.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v2 8/8] dt-bindings: net: dsa: Add documentation for
+ Hellcreek switches
+Message-ID: <20200723203710.GA810197@bogus>
+References: <20200723081714.16005-1-kurt@linutronix.de>
+ <20200723081714.16005-9-kurt@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200723062446.84013-2-zhouyanjie@wanyeetech.com>
+In-Reply-To: <20200723081714.16005-9-kurt@linutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2020 14:24:45 +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Add the RNG bindings for the JZ4780 SoC and
-> the X1000 SoC from Ingenic.
+On Thu, Jul 23, 2020 at 10:17:14AM +0200, Kurt Kanzenbach wrote:
+> Add basic documentation and example.
 > 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
 > ---
+>  .../bindings/net/dsa/hellcreek.yaml           | 126 ++++++++++++++++++
+>  1 file changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
 > 
-> Notes:
->     v1->v2:
->     No change.
-> 
->  .../devicetree/bindings/rng/ingenic,rng.yaml       | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/ingenic,rng.yaml
-> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
+> new file mode 100644
+> index 000000000000..1b192ba7f4ca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
+> @@ -0,0 +1,126 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/dsa/hellcreek.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Hirschmann Hellcreek TSN Switch Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: dsa.yaml#
+> +
+> +maintainers:
+> +  - Andrew Lunn <andrew@lunn.ch>
+> +  - Florian Fainelli <f.fainelli@gmail.com>
+> +  - Vivien Didelot <vivien.didelot@gmail.com>
+> +  - Kurt Kanzenbach <kurt@linutronix.de>
+> +
+> +description:
+> +  The Hellcreek TSN Switch IP is a 802.1Q Ethernet compliant switch. It supports
+> +  the Precision Time Protocol, Hardware Timestamping as well the Time Aware
+> +  Shaper.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: hirschmann,hellcreek
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Don't need 'oneOf' for 1 entry.
+
+> +
+> +  reg:
+> +    description:
+> +      The physical base address and size of TSN and PTP memory base
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +    description:
+> +      Names of the physical base addresses
+
+No need for generic descriptions. That's all 'reg-names'...
+
+> +    minItems: 2
+> +    maxItems: 2
+> +    items:
+> +      enum: ["reg", "ptp"]
+
+Why not 'tsn' as above instead of reg? In any case, the correct form is:
+
+items:
+  - const: reg
+  - const: ptp
+
+> +
+> +  leds:
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^led@[0-9]+$":
+> +          type: object
+> +          description: Hellcreek leds
+
+This should reference leds/common.yaml
+
+> +
+> +          properties:
+> +            reg:
+> +              items:
+> +                - enum: [0, 1]
+> +              description: Led number
+> +
+> +            label: true
+> +
+> +            default-state: true
+> +
+> +          required:
+> +            - reg
+> +
+> +          additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - ports
+
+Use the preferred 'ethernet-ports'.
+
+> +  - leds
+
+Add:
+
+unevaluatedProperties: false
+
+> +
+> +examples:
+> +  - |
+> +        switch0: switch@ff240000 {
+> +            compatible = "hirschmann,hellcreek";
+> +            status = "okay";
+
+Don't show status in examples.
+
+> +            reg = <0xff240000 0x1000>,
+> +                  <0xff250000 0x1000>;
+> +            reg-names = "reg", "ptp";
+> +            dsa,member = <0 0>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    reg = <0>;
+> +                    label = "cpu";
+> +                    ethernet = <&gmac0>;
+> +                };
+> +
+> +                port@2 {
+> +                    reg = <2>;
+> +                    label = "lan0";
+> +                    phy-handle = <&phy1>;
+> +                };
+> +
+> +                port@3 {
+> +                    reg = <3>;
+> +                    label = "lan1";
+> +                    phy-handle = <&phy2>;
+> +                };
+> +            };
+> +
+> +            leds {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                led@0 {
+> +                    reg = <0>;
+> +                    label = "sync_good";
+> +                    default-state = "on";
+> +                };
+> +
+> +                led@1 {
+> +                    reg = <1>;
+> +                    label = "is_gm";
+> +                    default-state = "off";
+> +                };
+> +            };
+> +        };
+> -- 
+> 2.20.1
+> 
