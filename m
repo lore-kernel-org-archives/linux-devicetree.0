@@ -2,383 +2,204 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5A9C433F2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CFEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDBB922B3F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D29206C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 07:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BEGTTY/X";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="VhNb8S9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgGWHof (ORCPT
+        id S1726473AbgGWHvy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 03:44:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:63352 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgGWHof (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 03:44:35 -0400
-IronPort-SDR: lHQXhfaS4kOiR8ONcvGDu/DH+LceeFcDbEGuPweMNWcJF0ya3cVJhZSks4e+ShAjRMmOb9pFKR
- oV1dPkXX3enQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="212022177"
+        Thu, 23 Jul 2020 03:51:54 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:51686 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgGWHvx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 03:51:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595490712; x=1627026712;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=hiuPNBGi4RXNNjGG2ixGTRRVmKDTjodCCcyFSr034T8=;
+  b=BEGTTY/Xn/GNLu+riu+CwH2vLLEpMweBWNe0DwYCCE0D5TuywAw29Rjj
+   3PLoiAsIE0C6HikugTgZgWP3AUUr0mKdzZDY7PeLjftqPYoM56ljcSzvM
+   KRBhJn9RiFanvRw/rcTUnMPZDJKhc0ghW6zi47S7BubvS+IR+FqZQW+PX
+   2ZBm74Eyimc3D9hy3WCHt4sZQT9ZkYa6ZAwzzdTCEGiba5oByLEMsPz3k
+   LE9O1ckJqxgoOKFDQyrxu8OA3kRQpwFHaAVLd+T7vwaiY8ueL6ObOATh2
+   Trdfo+wYS1Dn+Pd9armZXLDeIHJ1PPvXNjva7cg5GvJPvRM0CnC/0WeRQ
+   A==;
+IronPort-SDR: 3sSb+N1kW/HIFdAFPuFvfDFPRzGtFO4vJauphphqqsOx12+UG8JZ7oreuLN0LyTwYoRRLLm5aI
+ oeDidev9WrENzq+qvwMxDmLiS4yBA93vgSC/L8g/Oh10H0Iqj014o05GD2nurikxRUwiv9Tqst
+ 7mjYsj9bdLcvy2Lbj2HbaTAz8EcNa3Mvsbdpa+OImJnrB2vvBYvJUuJq2lYWaQAbYTXjJ4jofH
+ 3aUk8E4QCnr5KcDBwDktzpkwhRt+IJ7JcyUFQXhK6quEj9YMZntJn7AnspgY2wFOwGJwrumP/c
+ Aek=
 X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="212022177"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 00:44:34 -0700
-IronPort-SDR: GLr8UcOV6CTxpwpni+Mq6hLgz6go2gnwf8ooT/WahNY6gADO/mTzouQ12yAbCZkjM5pZvoTWY2
- FHnZSRtyOpgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,385,1589266800"; 
-   d="scan'208";a="270976305"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Jul 2020 00:44:31 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Thu, 23 Jul 2020 15:44:18 +0800
-Message-Id: <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
-References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
-References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
+   d="scan'208";a="82939593"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jul 2020 00:51:51 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 23 Jul 2020 00:51:51 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Thu, 23 Jul 2020 00:51:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oQ5QBpYE7B0PZfnDPjPN9xC9oHP36oyQ5KIa7hJk4pR3ubb6JNKxHBrcjSJFqHEMeY/lMubKrqSqSGyKSI5vmDlW59sJrga/G5qGpz00jJh5GcTdLXMoBH1wFPjyJuz3El9lGVYl7lhIag8SaakmfHV7+SnfNZXykb7skVkBKhwTASO3Nes9GQO+V1KUJpxNp3p33K13pscrr9qdHIygdj+msKd0OJIKO9YNIQ6iso77odHYO1b90HxIScG3CupupsxHXPO3bJuaUgenYD8OMDiYGnk+TngJ/Ee4sKZ6gOZTbV7FLlENh+5S0K0nM8cRSSb8CdoXK33ezDyGnBwWoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hiuPNBGi4RXNNjGG2ixGTRRVmKDTjodCCcyFSr034T8=;
+ b=UuaXMYIcZMjbuHhwCUvsZpXOrTB8fZo/Hmq8yaACGHkpeiJhbvPg90aA2dV7HYNyXnt6dnJazE3B9MsPwTcfP8D4p4gcOoDyVOt1Noh8II9gS5cCjdawEqMUL1FzfvJaCG2MpRDMj0UZ5wbWs/dIwZjMX7jCxoZucWBBQsndGs6PY4ZstnaY5Qx+I7GmGOifaixkxUXrPD90UJVJ9fCUoN0mt+igVGFRrQKd+YtFIKOLTPox3XrP4db+bf1bI66FLGnE9bVndiKmaWNSiNR6VXVmJDfZz/7RVga8P65PkSfXyvzDsmPDV8o3FM2w1X1pMFeNeR4A8q/fFiocHYkmpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hiuPNBGi4RXNNjGG2ixGTRRVmKDTjodCCcyFSr034T8=;
+ b=VhNb8S9UjCOS3lZwW2yWrxs/gkivTkhgb4Ixarc8d7Fqc1Juxmq2+jHou8w8GFq8x/ghsbHFlZZZw52Elu4fTzLmj58aOVYPj/xdUlWN7yRKn04wX2wd89Raqwv7KyHtH4gYLhOl0D3za8dR4Irkcgdsq35SgKSI0RAjmXHeTMw=
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
+ DM5PR11MB1578.namprd11.prod.outlook.com (2603:10b6:4:e::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.23; Thu, 23 Jul 2020 07:51:48 +0000
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b]) by DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b%6]) with mapi id 15.20.3216.024; Thu, 23 Jul 2020
+ 07:51:48 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <Codrin.Ciubotariu@microchip.com>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Nicolas.Ferre@microchip.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>
+Subject: Re: [PATCH net-next v2 0/7] Add an MDIO sub-node under MACB
+Thread-Topic: [PATCH net-next v2 0/7] Add an MDIO sub-node under MACB
+Thread-Index: AQHWYBNhIyVBpIRYr0OAbjzWw9KOlQ==
+Date:   Thu, 23 Jul 2020 07:51:48 +0000
+Message-ID: <8a78218a-9fbe-889d-8501-ad67ccb6e59b@microchip.com>
+References: <20200721171316.1427582-1-codrin.ciubotariu@microchip.com>
+ <0ec99957-57e9-b384-425a-ccf0e877f1a1@microchip.com>
+ <7cab13f6-ac54-8f5c-c1bf-35e6c3b5d9db@microchip.com>
+In-Reply-To: <7cab13f6-ac54-8f5c-c1bf-35e6c3b5d9db@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none
+ header.from=microchip.com;
+x-originating-ip: [213.233.110.107]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8e28297b-f1ab-4235-3d05-08d82edd40f4
+x-ms-traffictypediagnostic: DM5PR11MB1578:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB157892AE227824BC6673944187760@DM5PR11MB1578.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dMN1S7M8sH8DjdAkUxSMcNY0+iQ6IC/hkxpgrV50yxt5zDjWQ/JK7BWobPSwpgtKe5udrbnH5cm8vrSmp4p8S2qnBNmS5CJrCsfuHH90bUBEWLbWHBW4UTXzirqqHjdcMJptRAKJ5Lo+9Pxw4kGKo3LYET4cejl/m2i6lm2XZ6o8TQSwFTBS8AV85KGZalMNnyB6zsMI+5RcIXOxINeVBDELGtx4dAi/6QEQzhG/eVvhsmswSW7504obegdnaDKEDsjkx+pojn+i9y9Gv/URyqMPkzcPyn8C1OyV8AG2mSs6hoziw5YLt0YI5Wu+VborWLNynvPtM3cFZm6Xy+AYveTYChqwJd7zzVQfj10L4H9jVjQoWX/fwPlr1YocntZv
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(366004)(136003)(39860400002)(396003)(2616005)(26005)(53546011)(478600001)(6486002)(31686004)(6506007)(110136005)(186003)(83380400001)(71200400001)(66476007)(66446008)(64756008)(66556008)(91956017)(76116006)(8936002)(107886003)(31696002)(4326008)(316002)(54906003)(8676002)(86362001)(7416002)(6512007)(66946007)(2906002)(36756003)(5660300002)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: KCz6ex+hXqI0FAH/3jmGpNh7UafUFWy35KWD0oZYvqb3EoEX5MWDiJH4lZc3p6F3MZPbVhqGDFN+JHy8pYVXIMUG535O++iKUAFdOM1LM3uIvzwsoFcVu0rsEV25K4WlN5z83/Q96B9ZCmxT1oNiowIL502ymMxuS7wYghcNH909aFoFsk2Gk48bUrsbkMPCq2UP52DWNUlWO51/6RMxjBhHIXkyMclfdemEYqP+7zTpntv35woH6gqNtqeXLtcnqA4DCwBG4ExokKWVAoqQjZVzrixvotuM6nztbaTNMQ6zeQP9R1CBXYeTAXJ82OiZlu1CuxxKYZiPLLNdxP+mw5foLrf/3gxAz8eJSckAKvpyg0YFN44/pdjcc2yMAf6CMx21M1nMPkg8mI5ZXLCusUB2OyH3C4pBYliEjySej89/1wXpXInFllJQ1PV9KZU9moERyP+i623dsZbv4Vqvf9bwjb2EzFKz9XKzXNXOOWJXo8meXx0u5V9VvqaJGQ5Q
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <283181F64A83D845874B94714A0D4929@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3420.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e28297b-f1ab-4235-3d05-08d82edd40f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 07:51:48.3694
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zRw1JD05J480xnGSzDNcnRmUn1vYmCHxBDCjG2aMngLRTfGtltZDXpDLI3l2lk1ROVCLkwHjbrSDD8cPlvTBUj0vw4LYbaOR+0SwuOL3+JI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1578
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
-
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/pwm/Kconfig         |  11 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 269 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 281 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index cb8d739067d2..3486edab09c4 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,17 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
- 
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on OF && HAS_IOMEM
-+	depends on X86 || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index a59c710e98c7..db154a6b4f51 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..7c6c21512d53
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,269 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Limitations:
-+ * - The hardware supports fixed period which is dependent on 2/3 or 4
-+ *   wire fan mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define LGM_PWM_FAN_CON0		0x0
-+#define LGM_PWM_FAN_EN_EN		BIT(0)
-+#define LGM_PWM_FAN_EN_DIS		0x0
-+#define LGM_PWM_FAN_EN_MSK		BIT(0)
-+#define LGM_PWM_FAN_MODE_2WIRE		0x0
-+#define LGM_PWM_FAN_MODE_4WIRE		0x1
-+#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-+#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define LGM_PWM_FAN_CON1		0x4
-+#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
-+
-+#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-+#define LGM_PWM_DEFAULT_RPM		4000
-+#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define LGM_PWM_DC_BITS			8
-+
-+#define LGM_PWM_PERIOD_2WIRE_NSECS	40000000
-+#define LGM_PWM_PERIOD_4WIRE_NSECS	40000
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
-+}
-+
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-+				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
-+}
-+
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	int ret;
-+
-+	if (!state->enabled) {
-+		ret = lgm_pwm_enable(chip, 0);
-+		return ret;
-+	}
-+
-+	/*
-+	 * HW only supports NORMAL polarity
-+	 * HW supports fixed period which can not be changed/configured by user
-+	 */
-+	if (state->polarity != PWM_POLARITY_NORMAL ||
-+	    state->period != pc->period)
-+		return -EINVAL;
-+
-+	duty_cycle = min_t(u64, state->duty_cycle, state->period);
-+	/* reg_value = duty_ns * LGM_PWM_MAX_DUTY_CYCLE(0xff) / period_ns */
-+	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / state->period;
-+
-+	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-+				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-+	if (ret)
-+		return ret;
-+
-+	if (state->enabled)
-+		ret = lgm_pwm_enable(chip, 1);
-+
-+	return ret;
-+}
-+
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
-+
-+	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-+					  LGM_PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = DIV_ROUND_UP(duty * pc->period,
-+					 LGM_PWM_MAX_DUTY_CYCLE);
-+}
-+
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct device *dev = pc->chip.dev;
-+	struct regmap *regmap = pc->regmap;
-+	u32 max_rpm, fan_wire, con0_val, con0_mask;
-+
-+	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
-+		fan_wire = 2; /* default is 2 wire mode */
-+
-+	con0_mask = LGM_PWM_FAN_MODE_MSK;
-+
-+	switch (fan_wire) {
-+	case 4:
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_4WIRE);
-+		pc->period = LGM_PWM_PERIOD_4WIRE_NSECS;
-+		break;
-+	default:
-+		/* default is 2wire mode */
-+		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-+		pc->period = LGM_PWM_PERIOD_2WIRE_NSECS;
-+		break;
-+	}
-+
-+	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	max_rpm = min_t(u32, max_rpm, LGM_PWM_MAX_RPM);
-+	if (max_rpm == 0)
-+		max_rpm = LGM_PWM_DEFAULT_RPM;
-+
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK, max_rpm);
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, con0_mask, con0_val);
-+}
-+
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to init register map: %pe\n",
-+				pc->regmap);
-+		return ret;
-+	}
-+
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get clock: %pe\n", pc->clk);
-+		return ret;
-+	}
-+
-+	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get reset control: %pe\n",
-+				pc->rst);
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(pc->rst);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "cannot deassert reset control: %pe\n",
-+				ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
-+
-+	lgm_pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		clk_disable_unprepare(pc->clk);
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
-+}
-+
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_disable_unprepare(pc->clk);
-+	reset_control_assert(pc->rst);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-+
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
--- 
-2.11.0
-
+DQoNCk9uIDIyLjA3LjIwMjAgMTQ6MzgsIENvZHJpbiBDaXVib3Rhcml1IC0gTTE5OTQwIHdyb3Rl
+Og0KPiBPbiAyMi4wNy4yMDIwIDEzOjMyLCBDbGF1ZGl1IEJlem5lYSAtIE0xODA2MyB3cm90ZToN
+Cj4+DQo+Pg0KPj4gT24gMjEuMDcuMjAyMCAyMDoxMywgQ29kcmluIENpdWJvdGFyaXUgd3JvdGU6
+DQo+Pj4gQWRkaW5nIHRoZSBQSFkgbm9kZXMgZGlyZWN0bHkgdW5kZXIgdGhlIEV0aGVybmV0IG5v
+ZGUgYmVjYW1lIGRlcHJlY2F0ZWQsDQo+Pj4gc28gdGhlIGFpbSBvZiB0aGlzIHBhdGNoIHNlcmll
+cyBpcyB0byBtYWtlIE1BQ0IgdXNlIGFuIE1ESU8gbm9kZSBhcw0KPj4+IGNvbnRhaW5lciBmb3Ig
+TURJTyBkZXZpY2VzLg0KPj4+IFRoaXMgcGF0Y2ggc2VyaWVzIHN0YXJ0cyB3aXRoIGEgc21hbGwg
+cGF0Y2ggdG8gdXNlIHRoZSBkZXZpY2UtbWFuYWdlZA0KPj4+IGRldm1fbWRpb2J1c19hbGxvYygp
+LiBJbiB0aGUgbmV4dCB0d28gcGF0Y2hlcyB3ZSB1cGRhdGUgdGhlIGJpbmRpbmdzIGFuZA0KPj4+
+IGFkYXB0IG1hY2IgZHJpdmVyIHRvIHBhcnNlIHRoZSBkZXZpY2UtdHJlZSBQSFkgbm9kZXMgZnJv
+bSB1bmRlciBhbiBNRElPDQo+Pj4gbm9kZS4gVGhlIGxhc3QgcGF0Y2hlcyBhZGQgdGhlIE1ESU8g
+bm9kZSBpbiB0aGUgZGV2aWNlLXRyZWVzIG9mIHNhbWE1ZDIsDQo+Pj4gc2FtYTVkMywgc2FtYWQ0
+IGFuZCBzYW05eDYwIGJvYXJkcy4NCj4+Pg0KPj4NCj4+IFRlc3RlZCB0aGlzIHNlcmllcyBvbiBz
+YW1hNWQyX3hwbGFpbmVkIGluIHRoZSBmb2xsb3dpbmcgc2NlbmFyaW9zOg0KPj4NCj4+IDEvIFBI
+WSBiaW5kaW5ncyBmcm9tIHBhdGNoIDQvNzoNCj4+IG1kaW8gew0KPj4gCSNhZGRyZXNzLWNlbGxz
+ID0gPDE+Ow0KPj4gCSNzaXplLWNlbGxzID0gPDA+Ow0KPj4gCWV0aGVybmV0LXBoeUAxIHsNCj4+
+IAkJcmVnID0gPDB4MT47DQo+PiAJCWludGVycnVwdC1wYXJlbnQgPSA8JnBpb0E+Ow0KPj4gCQlp
+bnRlcnJ1cHRzID0gPFBJTl9QQzkgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4+IH07DQo+Pg0KPj4g
+Mi8gUEhZIGJpbmRpbmdzIGJlZm9yZSB0aGlzIHNlcmllczoNCj4+IGV0aGVybmV0LXBoeUAxIHsN
+Cj4+IAlyZWcgPSA8MHgxPjsNCj4+IAlpbnRlcnJ1cHQtcGFyZW50ID0gPCZwaW9BPjsNCj4+IAlp
+bnRlcnJ1cHRzID0gPFBJTl9QQzkgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4+IH07DQo+Pg0KPj4g
+My8gTm8gUEhZIGJpbmRpbmdzIGF0IGFsbC4NCj4+DQo+PiBBbGwgMyBjYXNlcyB3ZW50IE9LLg0K
+Pj4NCj4+IFlvdSBjYW4gYWRkOg0KPj4gVGVzdGVkLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRp
+dS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4+IEFja2VkLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xh
+dWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4gDQo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2ggQ2xh
+dWRpdSENCj4gVGhlcmUgaXMgc3RpbGwgb25lIG1vcmUgY2FzZSBpbiBteSBtaW5kLiBtYWNiIGNv
+dWxkIGJlIGEgZml4ZWQtbGluayB3aXRoIA0KPiBhbiBNRElPIERTQSBzd2l0Y2guIFdoaWxlIHRo
+ZSBtYWNiIHdvdWxkIGhhdmUgYSBmaXhlZCBjb25uZWN0aW9uIHdpdGggYSANCj4gcG9ydCBmcm9t
+IHRoZSBEU0Egc3dpdGNoLCB0aGUgc3dpdGNoIGNvdWxkIGJlIGNvbmZpZ3VyZWQgdXNpbmcgbWFj
+YidzIA0KPiBNRElPLiBUaGUgZHQgd291bGQgYmUgc29tZXRoaW5nIGxpa2U6DQo+IA0KPiBtYWNi
+IHsNCj4gCWZpeGVkLWxpbmsgew0KPiAJCS4uLg0KPiAJfTsNCj4gCW1kaW8gew0KPiAJCXN3aXRj
+aEAwIHsNCj4gCQkJLi4uDQo+IAkJfTsNCj4gCX07DQo+IH07DQoNCkRvIHlvdSBoYXZlIGEgc2V0
+dXAgZm9yIHRlc3RpbmcgdGhpcz8gQXQgdGhlIG1vbWVudCBJIGRvbid0IGtub3cgYQ0KY29uZmln
+dXJhdGlvbiBsaWtlIHRoaXMgdGhhdCBtYWNiIGlzIHdvcmtpbmcgd2l0aC4NCg0KPiANCj4gVG8g
+c3VwcG9ydCB0aGlzLCBpbiBwYXRjaCAzLzcgSSBzaG91bGQgZmlyc3QgY2hlY2sgZm9yIHRoZSBt
+ZGlvIG5vZGUgdG8gDQo+IHJldHVybiBvZl9tZGlvYnVzX3JlZ2lzdGVyKCkgYW5kIHRoZW4gY2hl
+Y2sgaWYgaXQncyBhIGZpeGVkLWxpbmsgdG8gDQo+IHJldHVybiBzaW1wbGUgbWRpb2J1c19yZWdp
+c3RlcigpLiBJIHdpbGwgYWRkcmVzcyB0aGlzIGluIHYzLi4uPiANCj4gVGhhbmtzIGFuZCBiZXN0
+IHJlZ2FyZHMsDQo+IENvZHJpbg0KPiANCj4+DQo+PiBUaGFuayB5b3UsDQo+PiBDbGF1ZGl1IEJl
+em5lYQ0KPj4NCj4+PiBDaGFuZ2VzIGluIHYyOg0KPj4+ICAgLSByZW5hbWVkIHBhdGNoIDIvNyBm
+cm9tICJtYWNiOiBiaW5kaW5ncyBkb2M6IHVzZSBhbiBNRElPIG5vZGUgYXMgYQ0KPj4+ICAgICBj
+b250YWluZXIgZm9yIFBIWSBub2RlcyIgdG8gImR0LWJpbmRpbmdzOiBuZXQ6IG1hY2I6IHVzZSBh
+biBNRElPDQo+Pj4gICAgIG5vZGUgYXMgYSBjb250YWluZXIgZm9yIFBIWSBub2RlcyINCj4+PiAg
+IC0gYWRkZWQgYmFjayBhIG5ld2xpbmUgcmVtb3ZlZCBieSBtaXN0YWtlIGluIHBhdGNoIDMvNw0K
+Pj4+DQo+Pj4gQ29kcmluIENpdWJvdGFyaXUgKDcpOg0KPj4+ICAgIG5ldDogbWFjYjogdXNlIGRl
+dmljZS1tYW5hZ2VkIGRldm1fbWRpb2J1c19hbGxvYygpDQo+Pj4gICAgZHQtYmluZGluZ3M6IG5l
+dDogbWFjYjogdXNlIGFuIE1ESU8gbm9kZSBhcyBhIGNvbnRhaW5lciBmb3IgUEhZIG5vZGVzDQo+
+Pj4gICAgbmV0OiBtYWNiOiBwYXJzZSBQSFkgbm9kZXMgZm91bmQgdW5kZXIgYW4gTURJTyBub2Rl
+DQo+Pj4gICAgQVJNOiBkdHM6IGF0OTE6IHNhbWE1ZDI6IGFkZCBhbiBtZGlvIHN1Yi1ub2RlIHRv
+IG1hY2INCj4+PiAgICBBUk06IGR0czogYXQ5MTogc2FtYTVkMzogYWRkIGFuIG1kaW8gc3ViLW5v
+ZGUgdG8gbWFjYg0KPj4+ICAgIEFSTTogZHRzOiBhdDkxOiBzYW1hNWQ0OiBhZGQgYW4gbWRpbyBz
+dWItbm9kZSB0byBtYWNiDQo+Pj4gICAgQVJNOiBkdHM6IGF0OTE6IHNhbTl4NjA6IGFkZCBhbiBt
+ZGlvIHN1Yi1ub2RlIHRvIG1hY2INCj4+Pg0KPj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL25ldC9tYWNiLnR4dCB8IDE1ICsrKysrKysrKysrKy0tLQ0KPj4+ICAgYXJjaC9h
+cm0vYm9vdC9kdHMvYXQ5MS1zYW05eDYwZWsuZHRzICAgICAgICAgICB8ICA4ICsrKysrKy0tDQo+
+Pj4gICBhcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDI3X3NvbTEuZHRzaSAgICAgIHwgMTYg
+KysrKysrKysrKy0tLS0tLQ0KPj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyN193
+bHNvbTEuZHRzaSAgICB8IDE3ICsrKysrKysrKystLS0tLS0tDQo+Pj4gICBhcmNoL2FybS9ib290
+L2R0cy9hdDkxLXNhbWE1ZDJfcHRjX2VrLmR0cyAgICAgIHwgMTMgKysrKysrKystLS0tLQ0KPj4+
+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQyX3hwbGFpbmVkLmR0cyAgICB8IDEyICsr
+KysrKysrLS0tLQ0KPj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQzX3hwbGFpbmVk
+LmR0cyAgICB8IDE2ICsrKysrKysrKysrKy0tLS0NCj4+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2F0
+OTEtc2FtYTVkNF94cGxhaW5lZC5kdHMgICAgfCAxMiArKysrKysrKy0tLS0NCj4+PiAgIGRyaXZl
+cnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMgICAgICAgfCAxOCArKysrKysrKysr
+KystLS0tLS0NCj4+PiAgIDkgZmlsZXMgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKSwgNDEgZGVs
+ZXRpb25zKC0pDQo+IA==
