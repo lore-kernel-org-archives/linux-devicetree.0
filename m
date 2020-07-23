@@ -2,250 +2,110 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A752C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344C7C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7321620714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595536634;
-	bh=CsKh+uI8RBUAeguUCkreM+7Br+qPHthtVRn/SK0oVIM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=txf8Po7n693VAYWXgZwxGEblf3UmACJsLUuPr27GGXV4S3lS+f/vXVci7WWmB/iQm
-	 PQVHphLQkAoqlJbE2NXKzSdMeL/ai/H8NNE7deRqxvXOWrDtIXBKNmMSpVFGT029wy
-	 gAu8YGrV9owRPUfqWoz7KhnLr5MFklkDI378JnCs=
+	by mail.kernel.org (Postfix) with ESMTP id 0AB342065E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7opUyK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbgGWUhO (ORCPT
+        id S1726029AbgGWUl3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:37:14 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46753 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgGWUhN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:37:13 -0400
-Received: by mail-io1-f67.google.com with SMTP id a12so7648701ion.13;
-        Thu, 23 Jul 2020 13:37:13 -0700 (PDT)
+        Thu, 23 Jul 2020 16:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgGWUl3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:41:29 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059F8C0619D3;
+        Thu, 23 Jul 2020 13:41:28 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f1so5846252wro.2;
+        Thu, 23 Jul 2020 13:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DEHuwTmHfM6jPX2Oo9IcWySJbO6MovJApsAE0g9jcS4=;
+        b=l7opUyK3fCQXpJQKsFzCdaoNL0cpR9THAbku/w3qFpjV6KsgCq2dVnfO/5qDyydF3o
+         RcW/CUT4UJIoZLxqro8XjYrE8YDayx0FVHCuVUzLhUr/dU0ewNklXcCBo9/xeY8FQv7A
+         wCFCbG4WGkrgNQQqJqVM0jll1OrQiLx7NPo9dAbNnEzS2mh3kaQyIU99lrY+eTCGd/LD
+         OXD+Hl1+Wr9u5gsO0d7jqG/oozWm4ro9rSvQ/TMfhEAIMJy6adLTzssgjAStjStD8K+4
+         0o8al43yK1CPPk0JMDGrUowYcNnIOoVEGPAy6da/LWfhf1DISsWr66uQNhAPFdTXeWNA
+         a4yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6nkqz8zGOU3urYFWNeUbOdQOY3hcOTYFkmXK97Wy0sc=;
-        b=lpng8KEhCeaVgJQ6RwE2sS+ShDzFrRs6EN2l9KRmxpE85bZQY1QKxoS8NdMLB7e/sB
-         PruvC4Id2IHkLTlk08J7oUPjt43JjBG9x5UuhFLVzpwq7tprYH18J/D5JPUJJ5fMnEVj
-         c38H3YIxuQzDcf9PCmdHqlcpFlbLtva39jYcd5FoowmG2Ners/lTqid9PpgZeOLYHTiJ
-         37urMaIM8X/2ww9SgEacQrPMUdtDeUo+POnbTqd6Lcy5cY1CHfHl24nMPy+KcIlFESW2
-         vGfuMeOyIVqO5C7Mtkw/eq9xc55kAPOuJ+Q54Ut718pxYkeHUKKAx4AcsymaoRsK0PgR
-         PbMg==
-X-Gm-Message-State: AOAM533hv5RX5nbfmr5Eo7AWHEIgTxLuLyuhi8rImPfYW4FU/hGAkx9l
-        xfn56r5bO+XlXigZlh35Bw==
-X-Google-Smtp-Source: ABdhPJyLxzJTOSuCRBbbSVeCMMXUCvUWmlkxvfC5/nxyt+iEdErKiX/49sT7x90v4qMwaYIbqsRHzw==
-X-Received: by 2002:a02:cc24:: with SMTP id o4mr6881649jap.105.1595536632720;
-        Thu, 23 Jul 2020 13:37:12 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i6sm1997252ilj.61.2020.07.23.13.37.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:37:12 -0700 (PDT)
-Received: (nullmailer pid 819123 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:37:10 -0000
-Date:   Thu, 23 Jul 2020 14:37:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v2 8/8] dt-bindings: net: dsa: Add documentation for
- Hellcreek switches
-Message-ID: <20200723203710.GA810197@bogus>
-References: <20200723081714.16005-1-kurt@linutronix.de>
- <20200723081714.16005-9-kurt@linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DEHuwTmHfM6jPX2Oo9IcWySJbO6MovJApsAE0g9jcS4=;
+        b=TCEi2nZ0XTRdmLBTmIa+0RTO73T8fr3Ohc+n0ywji0xAD/exKpbdNNxwR4/J7PzTqf
+         scrkDCS2pY3pXoH2iYO4l02eBK6Cb5qFxd3HWzuDrYpNIqtpFTj2qoofkTaCXTVKXtX9
+         ahSe3qJkJ/o7GlLIF53yRxhBua30oVCybNtm0tIT3ZeGFKogjXMmePz9tthvQvAxvpBM
+         4XwGxK1L5+1gMMgj0FaTFkqci/dQgsBI4TK0kcSjVxSvOuyUtE/Fc51LUySnQgdKfHrE
+         iCZydhgmPZmoGIGHzaH1is4Z2ZvUJqZqplFU4sKFKz/jE62FRU6U4aaK3mot3J+FjVRS
+         X2VQ==
+X-Gm-Message-State: AOAM53389Fr0t25t/g3NDbh1/NyOj2LkUWh5S0ujzBb+SYaxpsV6W7+9
+        PVRxFtXvxQGIpOLJqnXhKFrbI/whaXLmOPLMT5I=
+X-Google-Smtp-Source: ABdhPJwe2QpV4/JnbT/qj55tsLIxV0aWuNlNbtPgiz9hklOpzxMRpvjqQpO8ycTfm3THOAE1PJq4Bv+wkd8+sOYcLhU=
+X-Received: by 2002:a5d:464e:: with SMTP id j14mr5571416wrs.361.1595536887627;
+ Thu, 23 Jul 2020 13:41:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723081714.16005-9-kurt@linutronix.de>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net>
+In-Reply-To: <20200723195755.GV3428@piout.net>
+From:   Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Date:   Thu, 23 Jul 2020 21:41:16 +0100
+Message-ID: <CAC4G8N7Agb6pVVv6x9_pMMxkB9HnCFiaaC6EJb4-MNzEPd0Uhw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Rob Herring <robh@kernel.org>, a.zummo@towertech.it,
+        baruch@tkos.co.il, linux@armlinux.org.uk, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:17:14AM +0200, Kurt Kanzenbach wrote:
-> Add basic documentation and example.
-> 
-> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
-> ---
->  .../bindings/net/dsa/hellcreek.yaml           | 126 ++++++++++++++++++
->  1 file changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> new file mode 100644
-> index 000000000000..1b192ba7f4ca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/hellcreek.yaml
-> @@ -0,0 +1,126 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/dsa/hellcreek.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Hirschmann Hellcreek TSN Switch Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: dsa.yaml#
-> +
-> +maintainers:
-> +  - Andrew Lunn <andrew@lunn.ch>
-> +  - Florian Fainelli <f.fainelli@gmail.com>
-> +  - Vivien Didelot <vivien.didelot@gmail.com>
-> +  - Kurt Kanzenbach <kurt@linutronix.de>
-> +
-> +description:
-> +  The Hellcreek TSN Switch IP is a 802.1Q Ethernet compliant switch. It supports
-> +  the Precision Time Protocol, Hardware Timestamping as well the Time Aware
-> +  Shaper.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: hirschmann,hellcreek
+Hi Alexandre,
 
-Don't need 'oneOf' for 1 entry.
+Having a way to dynamically change the configuration would definitely
+be helpful in most cases. I decided to go with a DT property because
+in the case this patch tries to solve (the cubox-i) there isn't simply
+any other option - the default mode won't work due to the missing hw
+components. So, I thought that by defining it as a DT property it
+could somehow be locked to the hardware definition.
+Keep me posted
 
-> +
-> +  reg:
-> +    description:
-> +      The physical base address and size of TSN and PTP memory base
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  reg-names:
-> +    description:
-> +      Names of the physical base addresses
+Regards
 
-No need for generic descriptions. That's all 'reg-names'...
+PS: Sorry for the second message, forgot to disable html and the
+message couldn't be delivered to all recipients.
 
-> +    minItems: 2
-> +    maxItems: 2
-> +    items:
-> +      enum: ["reg", "ptp"]
+Alexandre Belloni <alexandre.belloni@bootlin.com> escreveu no dia
+quinta, 23/07/2020 =C3=A0(s) 20:57:
+>
 
-Why not 'tsn' as above instead of reg? In any case, the correct form is:
-
-items:
-  - const: reg
-  - const: ptp
-
-> +
-> +  leds:
-> +    type: object
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^led@[0-9]+$":
-> +          type: object
-> +          description: Hellcreek leds
-
-This should reference leds/common.yaml
-
-> +
-> +          properties:
-> +            reg:
-> +              items:
-> +                - enum: [0, 1]
-> +              description: Led number
-> +
-> +            label: true
-> +
-> +            default-state: true
-> +
-> +          required:
-> +            - reg
-> +
-> +          additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - ports
-
-Use the preferred 'ethernet-ports'.
-
-> +  - leds
-
-Add:
-
-unevaluatedProperties: false
-
-> +
-> +examples:
-> +  - |
-> +        switch0: switch@ff240000 {
-> +            compatible = "hirschmann,hellcreek";
-> +            status = "okay";
-
-Don't show status in examples.
-
-> +            reg = <0xff240000 0x1000>,
-> +                  <0xff250000 0x1000>;
-> +            reg-names = "reg", "ptp";
-> +            dsa,member = <0 0>;
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +                    label = "cpu";
-> +                    ethernet = <&gmac0>;
-> +                };
-> +
-> +                port@2 {
-> +                    reg = <2>;
-> +                    label = "lan0";
-> +                    phy-handle = <&phy1>;
-> +                };
-> +
-> +                port@3 {
-> +                    reg = <3>;
-> +                    label = "lan1";
-> +                    phy-handle = <&phy2>;
-> +                };
-> +            };
-> +
-> +            leds {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                led@0 {
-> +                    reg = <0>;
-> +                    label = "sync_good";
-> +                    default-state = "on";
-> +                };
-> +
-> +                led@1 {
-> +                    reg = <1>;
-> +                    label = "is_gm";
-> +                    default-state = "off";
-> +                };
-> +            };
-> +        };
-> -- 
-> 2.20.1
-> 
+> >
+> > I'm all for common properties, but is this common across vendors?
+> >
+>
+> This is but this shouldn't be a DT property as it has to be changed
+> dynamically. I'm working on an ioctl interface to change this
+> configuration.
+>
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
