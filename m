@@ -2,129 +2,172 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A6C433EA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B80C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6751622B43
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:09:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="V7NOUmd9"
+	by mail.kernel.org (Postfix) with ESMTP id 41E322065F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 10:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbgGWKJG (ORCPT
+        id S1727859AbgGWKLO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 06:09:06 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:19593 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgGWKJF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 06:09:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595498945; x=1627034945;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=Ke9E7JJ3zQ2XCPvF/ZiJvhJqLTFeRFCsv/7IuKKbagQ=;
-  b=V7NOUmd9VpHnjDvoasUeywKtXuDf4kzyNVEsZxoXFFjbkJcF94vmgjhX
-   db/Nn0tMurhj679SmlyPoi8BSluHZP3azKLfUHeTkGFVY055h/d/xD/j4
-   3N5FRvpIokdUycmzZnJFHiszWdEBQN6777cM6sUEYDM5jO/fG6bCgDs93
-   JG06E76+SOyPLuEEagEvkzRcPafnnqpBDOZqFL2FsEvnvfhAN1bafI2XU
-   5z3/v2BH45QD2WqpWzsIIOIKVQi6tv9oj8wNvPCupqGMkOiTGUx464dxa
-   jbylbgF8taTBhIdGPxV53DIItXj7Pj5N1bb4cD3mUe4/5O+iwZA/IpoLz
-   Q==;
-IronPort-SDR: ILYu3poOG836t6YdFhhy7gRwahSmw/PjhZTTy1y+ww68TrIdV3l/q3YZ1OYi6dpKEY6kFS3qYS
- HR+d2nKC7+zdK4+OpGOh/rBjwf947+pHLSxvKcD87AN7UTz3Yt8tO4irhrCCMLZAUFEnzq/oIE
- Ng+bTkCoXaB2d6sxUGWepoGjGiK56pCDVK81Vo8D341+ZwHLyfPpHeBpgDeizgHgxiMnvk3Aan
- Ql41m9S/EAtBNNAL7wrD8JXbdjMMH6SwpHZsKo2xJetKCYf6q+3eY/VD1mhGWobY/Pvm2uS5mj
- Vf8=
-X-IronPort-AV: E=Sophos;i="5.75,386,1589266800"; 
-   d="scan'208";a="85093580"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jul 2020 03:09:04 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 23 Jul 2020 03:08:22 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Thu, 23 Jul 2020 03:09:01 -0700
-References: <20200615133242.24911-1-lars.povlsen@microchip.com> <CAK8P3a1VGsMFfqaMXA2n49F84MYR5eYWvPT-sMHK1XYGGnNB0A@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 00/10] Adding support for Microchip Sparx5 SoC
-In-Reply-To: <CAK8P3a1VGsMFfqaMXA2n49F84MYR5eYWvPT-sMHK1XYGGnNB0A@mail.gmail.com>
-Date:   Thu, 23 Jul 2020 12:09:00 +0200
-Message-ID: <87v9iek0g3.fsf@soft-dev15.microsemi.net>
+        Thu, 23 Jul 2020 06:11:14 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:51939 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgGWKLO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 06:11:14 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MhCq4-1kU3Fl1Ht4-00eO2b; Thu, 23 Jul 2020 12:11:11 +0200
+Received: by mail-qk1-f177.google.com with SMTP id 2so679556qkf.10;
+        Thu, 23 Jul 2020 03:11:11 -0700 (PDT)
+X-Gm-Message-State: AOAM532kyoMDnZ1Ms2H/OnY+vQT6odNHvrXVNraM4kcJDrpSBKNQCxER
+        Fw63q/vOgq17zw7YKvnEzyVoxp0VCh8t98fGEmc=
+X-Google-Smtp-Source: ABdhPJyRBZh+Jnh8z1ps+hnBPrP8rDjvPm7uyIy6hqZTMrzSNVY+O9ozgvN2kAt4bsn8pb7YiQI/Bo1v4oLc+w7G1AU=
+X-Received: by 2002:a37:9004:: with SMTP id s4mr4252271qkd.286.1595499070036;
+ Thu, 23 Jul 2020 03:11:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200324104918.29578-1-hhhawa@amazon.com> <158946977180.3480.12435085393834819053@kwain>
+In-Reply-To: <158946977180.3480.12435085393834819053@kwain>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 Jul 2020 12:10:53 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3ndL0U=Q1HAxd3oTPfO6WwQZM3yQvr-TQEnA3ZzhQNYQ@mail.gmail.com>
+Message-ID: <CAK8P3a3ndL0U=Q1HAxd3oTPfO6WwQZM3yQvr-TQEnA3ZzhQNYQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     hhhawa@amazon.com, Rob Herring <robh+dt@kernel.org>,
+        Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+        arm-soc <arm@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        benh@amazon.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        hanochu@amazon.com, David Woodhouse <dwmw@amazon.co.uk>,
+        jonnyc@amazon.com, ronenk@amazon.com,
+        Talel Shenhar <talel@amazon.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:jmjQgQgR1kfpNwBKzXOjGaIt7P5xvz6Uq0aaEtr6Bf0DQwMhboH
+ gXvM0j2x2oNNS/2AqBL9uYf+rCm5jTNSMgZ0HP/44QEYWM2VnAm6Fvfx5l6efZG7lw38mpk
+ VLyhuXbvtJrY5AREcqJ6a8S3klnUqqW9nOAjogIg7mtsjijXlBzxovIvo7BhHhTmxmNa5sG
+ YdiMlfm4MZThljCdWRdQQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:s1PXoWdnRAk=:1CwqWG6FjcV4SYaJHsv8DX
+ mWq6MT1kJsQOC0o+Pn1DURac20De7ds0woW817skooUFIAcN1O8MFgGhbJyzpnyBAg2Y4/bY3
+ +hXP7QqSkzw+pGIgSjkC2/R3k4RyfOOrp2CeaM9ttY2YFUJUncgn/p9MBUiIdzqbuKzQYh6U6
+ dfLPY1phW5GOKrTfA3cZa8yjfnmUFCeMZThDp1ZoCliN9q5AJbc/LLnP69ytRzK1lW4fmUNjn
+ hdFtKdAZguz5jiVBB1L0ekeRhXPUenSTGYDuqBdDwe8nTkSOw16PtMloeRl9pIFRnreO4yBgx
+ 3j2iAuN81P7WAXqG9bHeESeBm0RPZHA7jOkVigMlm3pmy+otRvlIUZpn8onRBJ5095eHinzVW
+ 63bWS20pdLmStDngxKnsSaOdLeM3EW4x/AA9nves2PqlVx+Z6HhpxPG0/oTGd/NRSDUSODcGg
+ O7mITucxlPUdRCWFUx65u95JFCHbb1NJNNYk9VJzTOomK0MXbh9yzzSqjaTkd3fKR7Y00or42
+ S3R+pWk3X8203g0Wc3p2KF94cLGoGgsYG/keF/MX7w+x9/PAOPgf5bDD3r6P/fwT40AJmLhe7
+ +y1tkzDiy8uVAtJODG5VDGQvxnIij0dSxbTZo4WTmcPYyNBPuO7EF/k+ObwyQ328s6lkScMCM
+ jkNrsJ/xang/9aESMPk7SZrCGnqD/00e+37z/ojP6UEneTbNf++aWPVU3c0WIpzUCL77e9e/r
+ DwtaOYNFswgbmGAmPblV/fPbmiMNRuX3QyoiaoqBq5tOSxOQMb9MDrh54F7uiK7bPTnvRBRvM
+ HB2/hP5E8CwsUiD0uyQCBOjeegIG59Q6lg8vn011Ch5SARMGLxkvnXvmR7qDb5ulpdrtpi1Oc
+ rkv5bBUL0Uax3j4ZIMsK1EB1qE0TbsImGWWct6bNUbNNAjEklAVwL/ElQsRRF65S64XrR0nSt
+ cn4tyXBbrvA+mY8/mBosOhWsigjQqsNaf5UGmcCyugTbf4EmfXCPC
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Arnd Bergmann writes:
-
-> On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->>
->> This patch series adds support for Microchip Sparx5 SoC, the CPU
->> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
->> x 2 CPU core (A53).
->>
->> Although this is an ARM core, it shares some peripherals with the
->> Microsemi Ocelot MIPS SoC.
+On Thu, May 14, 2020 at 5:22 PM Antoine Tenart
+<antoine.tenart@bootlin.com> wrote:
 >
-> I've picked up this version of the series into an arm/newsoc branch in
-> the soc tree,
-> except for the pinctrl patch that Linus Walleij already merged.
+> [Adding arm-soc]
 >
-
-Great! Thanks a lot for following up!
-
-> I see you still have a few pending patches for other subsystems (spi, mmc)
-> and I'm not sure what the status is for those and am dropping them for the
-> moment.
+> Hi Hanna,
 >
-
-Yes, I had a question out for the SPI maintainer but did not get any
-feedback, so I was thinking just doing my own assumptions and refreshing
-the series - probably tomorrow.
-
-I also just bumped the MMC maintainer (Adrian) yesterday, as he did send
-a me an 'Acked-by', but it hasn't been merged it seems.
-
-> Once the bindings are accepted by the respective subsystem maintainers,
-> please send any remaining DT patches as a follow-up to what I've already
-> merged.
+> Sorry for the delay, the series was buried in my mails...
 >
+> Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
+>
+> Arnd, Olof, could you take this series directly as this will be the only
+> Alpine patches for this release (and for a long time)?
 
-I'll try to work out the puzzle, might need to reach out directly to to
-determine whats missing.
+Hi Hanna and Antoine,
 
-Later,
+I just came across this old series and noticed we had never merged it.
 
----Lars
+I don't know if the patches all still apply. Could you check and perhaps
+resend to soc@kernel.org if they are still good to go into the coming
+merge window?
 
->       Arnd
-
--- 
-Lars Povlsen,
-Microchip
+> Quoting Hanna Hawa (2020-03-24 11:49:12)
+> > This series organize the Amazon's Annapurna Labs Alpine device tree
+> > bindings, device tree folder and adds new device tree for Alpine v3.
+> >
+> > Changes since v4:
+> > -----------------
+> > - Re-order nodes in increasing order.
+> > - Add disable to UART nodes.
+> > - Add missing UART nodes (1,2,3)
+> > - Add comments for GIC/UART
+> > - Add io-fabric bus, and move uart nodes into it.
+> > - Fix MSIx range according Alpine function spec
+> >
+> > Changes since v3:
+> > -----------------
+> > - rebased and retested for tag Linux 5.6-rc2
+> >
+> > Changes since v2:
+> > -----------------
+> > - Move up a level for DT node without mmio regs.
+> > - Drop device_type from serial@fd883000 node.
+> > - Minor change name of PCIe node to: pcie@fbd00000
+> >
+> > Changes since v1:
+> > -----------------
+> > - Rename al,alpine DT binding to amazon,alpine
+> > - Rename al folder to be amazon
+> > - Update maintainers of amazon,alpine DT
+> > - Add missing alpine-v2 DT binding
+> > - Fix yaml schemas for alpine-v3-evp.dts:
+> >         - #size-cells:0:0: 0 is not one of [1, 2]
+> >         - arch-timer: interrupts: [[1, 13, 8, 1, 14, 8, 1, 11, 8, 1, 10,
+> >         8]] is too short
+> > - Change compatible string of alpine-v3-evp to amazon,al
+> >
+> > Hanna Hawa (5):
+> >   dt-bindings: arm: amazon: rename al,alpine DT binding to amazon,al
+> >   arm64: dts: amazon: rename al folder to be amazon
+> >   dt-bindings: arm: amazon: update maintainers of amazon,al DT bindings
+> >   dt-bindings: arm: amazon: add missing alpine-v2 DT binding
+> >   dt-bindings: arm: amazon: add Amazon Annapurna Labs Alpine V3
+> >
+> > Ronen Krupnik (1):
+> >   arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support
+> >
+> >  .../devicetree/bindings/arm/al,alpine.yaml    |  21 -
+> >  .../devicetree/bindings/arm/amazon,al.yaml    |  33 ++
+> >  MAINTAINERS                                   |   2 +-
+> >  arch/arm64/boot/dts/Makefile                  |   2 +-
+> >  arch/arm64/boot/dts/{al => amazon}/Makefile   |   1 +
+> >  .../boot/dts/{al => amazon}/alpine-v2-evp.dts |   0
+> >  .../boot/dts/{al => amazon}/alpine-v2.dtsi    |   0
+> >  arch/arm64/boot/dts/amazon/alpine-v3-evp.dts  |  24 ++
+> >  arch/arm64/boot/dts/amazon/alpine-v3.dtsi     | 408 ++++++++++++++++++
+> >  9 files changed, 468 insertions(+), 23 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/arm/amazon,al.yaml
+> >  rename arch/arm64/boot/dts/{al => amazon}/Makefile (64%)
+> >  rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
+> >  rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
+> >  create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
+> >  create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+> >
+> > --
+> > 2.17.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+> --
+> Antoine Ténart, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
