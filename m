@@ -4,144 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D69C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7695FC433E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1646D206F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E22207BB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 17:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595526426;
-	bh=iWe0Q7nmomG2NnIFs5YK7ec5i5PWHlfLDRUaSoZjCWI=;
+	s=default; t=1595526548;
+	bh=L7mAxmHVhkd9XAl/j8yi81JBdCHJCn6CjruuXCp81Ek=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HUGP3m9n/IxECmLGT0QxHGJyxcCe1Lkejb5lG7G0uDy8hO1WSn4qlDlCvUSUdoAL2
-	 0XyU3xfF7fZlW4enO6bGmlYMgTEJsZPPjHrY/+iu7KUt+ebTnEvsy9Al0XZiO2UO/I
-	 EE4YRKKgWeCk+v3MbSVr1YzpTcfXmVUw3fhzxnMs=
+	b=Gh9CBB9M8gfjc0fFH/pmS7vOlH7roDJK0k9xQp+9/3XTJ/FqxyjLQJMm7oGCLafVd
+	 xbI+UyBwnlZdFgpbEozo6wq9wzR1stRvfvwAEkHIbLCDDKkM5DKvULyPilD2yxHBO5
+	 ENz1Qk4j3FYvVH3NNe//WI9NSNg6QRgdD94y3SEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbgGWRrF (ORCPT
+        id S1729974AbgGWRtI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 13:47:05 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34953 "EHLO
+        Thu, 23 Jul 2020 13:49:08 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34263 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgGWRrF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:47:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id v8so7170525iox.2;
-        Thu, 23 Jul 2020 10:47:05 -0700 (PDT)
+        with ESMTP id S1726814AbgGWRtH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 13:49:07 -0400
+Received: by mail-io1-f66.google.com with SMTP id q74so7181067iod.1;
+        Thu, 23 Jul 2020 10:49:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=2u/Rq8wYBFTgkucJTkL8W/WVGPEOien8PbUmbomVeFg=;
-        b=P7ZHeLvNieyPL7vvUVb3U2IgtNZA86gmE431OW1NHbTMiy+DsZzmgAh4LBn2Htjg3n
-         iHMGIHSoJHJkWNoatAaKVUCVE6vnFvjYkDeJeGtQTtx+ERjb4Dna2zpHEqhcCJje5wpk
-         qxq5T8hlCQF4J6ioLynda4Ij4SNbwe0McxhLconbSoCwqAPddXMar63UruhXP0Q5Ko3k
-         WEfki2Io8OjElZDmrO2gknfra2BqVG5l0OfIzqTWuM0kf1uInLbeUiLYny/zD/RvPM5J
-         yd6X2QGVPOFPWa4ZmCQEVHmZ6V2DTyekzkdwLnVuvWxCKkMZ5DWtvs9lws+Ft9fPM/xr
-         Qi7g==
-X-Gm-Message-State: AOAM533KFH1kYp4b/nyTS6jiPuw96/F6CUR6iR131Xf6HSXq15x/HmXK
-        WfvN5WCe6iiEH2xUC3XCXw==
-X-Google-Smtp-Source: ABdhPJx2jePXlL5dDzYzVGWNvECUk7UdkUVtC6VOQEx6cg7dIZEBtv7lp9RU8mpCU2vNcX4K2kMtaQ==
-X-Received: by 2002:a05:6602:2555:: with SMTP id j21mr6071654ioe.11.1595526423819;
-        Thu, 23 Jul 2020 10:47:03 -0700 (PDT)
+        bh=2YqHLx33D3lKQvsVIeu4fr2sY1tMGjPB3BoYpQvDkyk=;
+        b=VcOXQGj8cS4Hu1inEHWtMPIDB9k7pUYZacGscPw3jELZxt33U2XFuPpQ4OkkG4bA9J
+         C+sfM9+bFa1kJcAayLq8wS5+rgrcVUz84s/whdM4LzujO97d5GN2WHs+m7btQI0R4UOU
+         DvoewFAJBy9RVyyapuW2pPjM8PFdQB3Ibjv1mHWZtPu/I6Aze8qv5LL19NusqNt3uKRn
+         DBYiSCc3izmKCwM0l9JzChiKMv7F7RQdtq1PSOndxx2lObmVqMlpT4/nRWP1Usc3sJfm
+         4Cv0ZbtUkMdtvOAp3/xFjwgUlseZ1mt1Cr2ywuBMngVXN/mvVUagm4GiyJS2HUQodBrK
+         tylQ==
+X-Gm-Message-State: AOAM531e2OZNW09HhsrbBHe31zzCKYbKfSsu8HZN4UAI/F5PnzH52NU5
+        J9QgTcrA1tsQpcnbVeGsprA8tO7LyA==
+X-Google-Smtp-Source: ABdhPJzMt9kdwyy1jgkZzCBgVSV/BYhakcwYiid0IQjxc9Xt7Tc5qUdDCRcJRJ0xVc1wcAH/BlPJGg==
+X-Received: by 2002:a02:cb97:: with SMTP id u23mr6003181jap.113.1595526546930;
+        Thu, 23 Jul 2020 10:49:06 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id p20sm1460825ili.72.2020.07.23.10.47.02
+        by smtp.gmail.com with ESMTPSA id v10sm1797167ilj.40.2020.07.23.10.49.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 10:47:03 -0700 (PDT)
-Received: (nullmailer pid 595294 invoked by uid 1000);
-        Thu, 23 Jul 2020 17:47:01 -0000
-Date:   Thu, 23 Jul 2020 11:47:01 -0600
+        Thu, 23 Jul 2020 10:49:06 -0700 (PDT)
+Received: (nullmailer pid 598211 invoked by uid 1000);
+        Thu, 23 Jul 2020 17:49:05 -0000
+Date:   Thu, 23 Jul 2020 11:49:05 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com, andriy.shevchenko@intel.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: pwm: keembay: Add bindings for Intel
- Keem Bay PWM
-Message-ID: <20200723174701.GA584130@bogus>
-References: <1595083628-20734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1595083628-20734-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+To:     miguelborgesdefreitas@gmail.com
+Cc:     a.zummo@towertech.it, baruch@tkos.co.il, linux@armlinux.org.uk,
+        alexandre.belloni@bootlin.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+Message-ID: <20200723174905.GA596242@bogus>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1595083628-20734-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+In-Reply-To: <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 10:47:08PM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
-> From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
+> From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
 > 
-> Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
+> This adds direct-switching mode as a configurable DT flag for
+> RTC modules supporting it (e.g. nxp pcf8523).
+> DSM switches the power source to the battery supply whenever the
+> VDD drops below VBAT. The option is recommended for hw designs
+> where VDD is always expected to be higher than VBAT.
 > 
-> Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+> Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
 > ---
->  .../devicetree/bindings/pwm/intel,keembay-pwm.yaml | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+> Changes in v2:
+> - Added extended commit message for git history
+> - Separate dt bindings documentation into a single patch
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-> new file mode 100644
-> index 00000000..e9388a7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/intel,keembay-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Keem Bay PWM Device Tree Bindings
-> +
-> +maintainers:
-> +  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - intel,keembay-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +required:
-> + - compatible
-> + - reg
-> + - clocks
-> + - '#pwm-cells'
+>  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
+>  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> index 0b1080c..f715a8f 100644
+> --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> @@ -4,10 +4,14 @@ Required properties:
+>  - compatible: Should contain "nxp,pcf8523".
+>  - reg: I2C address for chip.
+>  
+> -Optional property:
+> +Optional properties:
+>  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
+>    expressed in femto Farad (fF). Valid values are 7000 and 12500.
+>    Default value (if no value is specified) is 12500fF.
+> +- pm-enable-dsm: battery switch-over function is enabled in direct
+> +  switching mode. The power failure condition happens when VDD < VBAT,
+> +  without requiring VDD to drop below Vth(sw)bat.
+> +  Default value (if not provided) is the standard mode.
+>  
+>  Example:
+>  
+> @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
+>  	compatible = "nxp,pcf8523";
+>  	reg = <0x68>;
+>  	quartz-load-femtofarads = <7000>;
+> +	pm-enable-dsm;
+>  };
+> diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> index ee237b2..a0048f4 100644
+> --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> @@ -47,4 +47,11 @@ properties:
+>      description:
+>        Enables wake up of host system on alarm.
+>  
+> +  pm-enable-dsm:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Enables the battery switch-over function in direct switching
+> +      mode. Should be set in systems where VDD is higher than VBAT
+> +      at all times.
 
-Add:
-
-additionalProperties: false
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+I'm all for common properties, but is this common across vendors?
 
 > +
-> +examples:
-> +  - |
-> +    #define KEEM_BAY_A53_GPIO
-> +
-> +    pwm@203200a0 {
-> +      compatible = "intel,keembay-pwm";
-> +      reg = <0x203200a0 0xe8>;
-> +      clocks = <&scmi_clk KEEM_BAY_A53_GPIO>;
-> +      #pwm-cells = <2>;
-> +    };
+>  ...
 > -- 
-> 1.9.1
+> 1.8.3.1
 > 
