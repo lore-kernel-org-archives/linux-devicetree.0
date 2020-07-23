@@ -2,128 +2,83 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F5DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE87C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2938D206E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1581320792
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 21:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595537628;
-	bh=EftTCbC48jF4smaLeRLgfpq6KkfgpZYPW2rijTjCEP4=;
+	s=default; t=1595538451;
+	bh=TNfGXAveyZpzu10Q7xBJu2gjN/MC2AiNzJk2+KEQCt4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZEBNGoibLckuvIy3zfELHq2hlViXEmT0C9qsINnsHV3BiAiPjfPvD60KOqp613CQU
-	 DDjjROuoi7hAD8q/cKT1/Jm6ooeSX8pXSmPXFVJP++DQASk44pQmckOtaFdi+u31dT
-	 kis2f9V3/VePNQ/CQeOj582KYpQZAStKBq5sH/Yg=
+	b=R6kRtXPOLbd79cY0CO05VlFR6qw4OT/xpKMRhXCbksA3jyvaT1jxdrLV1HrNbYvMB
+	 zV40XaWMAg9E8nxUwPr7PoooIBmbSnUEG4/P2uLO9ldgvORZnvIDCbgeiF5h+DvPog
+	 bhEfV+OCHR/drdLG3Pqq0eoNH9f47bxcjFlhLo/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgGWUxr (ORCPT
+        id S1726608AbgGWVHa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:53:47 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45367 "EHLO
+        Thu, 23 Jul 2020 17:07:30 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33026 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgGWUxr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:53:47 -0400
-Received: by mail-io1-f67.google.com with SMTP id e64so7696417iof.12;
-        Thu, 23 Jul 2020 13:53:46 -0700 (PDT)
+        with ESMTP id S1726115AbgGWVHa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 17:07:30 -0400
+Received: by mail-io1-f67.google.com with SMTP id d18so7779093ion.0;
+        Thu, 23 Jul 2020 14:07:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ITHgt7Rp1pUPvPasYbFEExd3q0/gLF5DZdscQLiQgEw=;
-        b=OUNkVzCSN9oe61GvhoaIMNGOMxVK+Q3M9E2jcoR3LEWe2Hx/wZPVuF/zbGewE5VRa6
-         /YY2Wq6oomPndl2gb71rR5/uubobILK/rZjy2MEb1C1GAGKnXWtZBWRNHwFTbgHY2QG7
-         Dz4HIl4LFD4lpt4ctOvet+++QfvTgMVJwCknwNPdPPn+d/smbjNapVnbcBFsuLKc/aVD
-         6Hd/dw76mpuoslKu7vx1pitoRk0ErSXq4GDnupoxclwuro8rqDL9OqjuGtAzU2uUATsr
-         qvi6WDS4Oq0eDeSJAaBiImkXm3OQrS+F/oMJ7XTjPIgsxf4RlJk25/c+MnPigcbtCbum
-         vYQg==
-X-Gm-Message-State: AOAM530cvrTsVISjGDQ+votVeWrV+5m07u8tb3cswx6eU6TrkCBODo2M
-        R9IWZBVLpe9OjmpTFJYK2g==
-X-Google-Smtp-Source: ABdhPJwu8e69Y0kSTAIspRpvODB+BldtXHqBKiEe/jpBPO0AO31cywRDT52VomisXuK/kACvFQX/aw==
-X-Received: by 2002:a05:6602:2f88:: with SMTP id u8mr6878032iow.120.1595537626501;
-        Thu, 23 Jul 2020 13:53:46 -0700 (PDT)
+        bh=DqiJg+iVm+KO76sfvCQ1PcB5FB3q5avv7am6yCHETiw=;
+        b=IszeoXuHRUWe7GB6szpC/jmrtFHFzEqAFOwCwzEHA6jNzdc+tQtNMrQaRWxyolnAdz
+         kfcr/VReUFqUQnWboe2G4tICjaBdVYdq96/mk7tulwOB0biRMUq2RkzW+46qCcmxQ8gm
+         1mrxhfnoZxdN+GM6vtXHpkPEu5fd1/wk44KAN+fNuNCCuW6M1FzMVO6sDtbuUNo03en1
+         lyctyo+F3blt196pkwge6GO+aRkhqGatpcyYMti5d0GmYX+/KuqWaWHrZkAsGFHQORGw
+         D1qmLhHJ/yUqf6f+b9JkG0IR3lj8npjGafQKmgP7SyB6zPmJdIeBnr3u0cScdJaVrr0K
+         n/kw==
+X-Gm-Message-State: AOAM531+v3YckeJvePTnHoPGTvtos5p05kQd8iOnFKDF6w9XPtEcn7hz
+        txfje9xMt9T346JgDEycNRY7l6g42g==
+X-Google-Smtp-Source: ABdhPJw41flIcVg/c3woDitOvrf2Wnz/THl1yI2iKhN3PaLn3hSvaeMmDaHtlOtXhqqQjr/qpfOk1Q==
+X-Received: by 2002:a5d:97d1:: with SMTP id k17mr6942837ios.100.1595538449560;
+        Thu, 23 Jul 2020 14:07:29 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d9sm2004036ios.33.2020.07.23.13.53.44
+        by smtp.gmail.com with ESMTPSA id g1sm2001627ilk.51.2020.07.23.14.07.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 13:53:45 -0700 (PDT)
-Received: (nullmailer pid 841658 invoked by uid 1000);
-        Thu, 23 Jul 2020 20:53:43 -0000
-Date:   Thu, 23 Jul 2020 14:53:43 -0600
+        Thu, 23 Jul 2020 14:07:28 -0700 (PDT)
+Received: (nullmailer pid 860277 invoked by uid 1000);
+        Thu, 23 Jul 2020 21:07:26 -0000
+Date:   Thu, 23 Jul 2020 15:07:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Huihui Wang <huihui.wang@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH v1 1/2] dt-bindings: dma: mediatek: mark useless items as
- decrepted
-Message-ID: <20200723205343.GA839415@bogus>
-References: <20200717030203.14872-1-huihui.wang@mediatek.com>
- <20200717030203.14872-2-huihui.wang@mediatek.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: amlogic: add support for the
+ Beelink GS-King-X
+Message-ID: <20200723210726.GA860231@bogus>
+References: <20200718052258.2890-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200717030203.14872-2-huihui.wang@mediatek.com>
+In-Reply-To: <20200718052258.2890-1-christianshewitt@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 11:02:03AM +0800, Huihui Wang wrote:
-> From: huihui wang <huihui.wang@mediatek.com>
+On Sat, 18 Jul 2020 05:22:57 +0000, Christian Hewitt wrote:
+> The Shenzen AZW (Beelink) GS-King-X is based on the Amlogic W400 reference
+> board with an S922X-H chip.
 > 
-> Because we move dma address bits config to mtk-uart-apdma.c,
-> it is unnecessary to be configured in device tree.
-> Update the document at the same time.
-> 
-> Signed-off-by: huihui wang <huihui.wang@mediatek.com>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > ---
->  .../devicetree/bindings/dma/mtk-uart-apdma.txt        | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> index 2117db0ce4f2..926c86b21e8c 100644
-> --- a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> +++ b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> @@ -2,8 +2,9 @@
->  
->  Required properties:
->  - compatible should contain:
-> -  * "mediatek,mt2712-uart-dma" for MT2712 compatible APDMA
-> -  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
-> +  * "mediatek,mt2712-uart-dma" for MediaTek MT2712
-> +  * "mediatek,mt6577-uart-dma" for MediaTek MT6577
-> +  * "mediatek,mt6779-uart-dma" for MediaTek MT6779
 
-This looks like an unrelated change.
-
->  
->  - reg: The base address of the APDMA register bank.
->  
-> @@ -16,13 +17,12 @@ Required properties:
->    See ../clocks/clock-bindings.txt for details.
->  - clock-names: The APDMA clock for register accesses
->  
-> -- mediatek,dma-33bits: Present if the DMA requires support
-> +- mediatek,dma-33bits: Present if the DMA requires support (deprecated)
->  
->  Examples:
->  
->  	apdma: dma-controller@11000400 {
-> -		compatible = "mediatek,mt2712-uart-dma",
-> -			     "mediatek,mt6577-uart-dma";
-> +		compatible = "mediatek,mt6779-uart-dma";
->  		reg = <0 0x11000400 0 0x80>,
->  		      <0 0x11000480 0 0x80>,
->  		      <0 0x11000500 0 0x80>,
-> @@ -50,6 +50,5 @@ Examples:
->  		dma-requests = <12>;
->  		clocks = <&pericfg CLK_PERI_AP_DMA>;
->  		clock-names = "apdma";
-> -		mediatek,dma-33bits;
->  		#dma-cells = <1>;
->  	};
-> -- 
-> 2.18.0
+Acked-by: Rob Herring <robh@kernel.org>
