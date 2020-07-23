@@ -2,169 +2,80 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87A5C433EA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 22:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D84DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 22:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA92320714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 22:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C3F207C4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 22:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595543611;
+	bh=WF8mlF9JUGL2cs4cpi3ZKKPA3OgwnP2OybBvA3TvbJg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=dzsO2fBYuSLcA4I4BHFanDKBfUz+jhGJMJ+21TZKn8DkL5NbO8pCS7qDu7KHskmd1
+	 yAXQ6Z8f31E9bySUtu4EbZJnWaCXpnw7QCN9kULxvWoVaQX3LCug5JcwzuSJ5g6idY
+	 3ub8rjdLfsFspRpBmv4OudElHXqwAPm9DnT59b70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgGWW3G (ORCPT
+        id S1726608AbgGWWda (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 18:29:06 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:36640 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726922AbgGWW3F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 18:29:05 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 23 Jul 2020 18:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726535AbgGWWda (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 18:33:30 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14EAF634C87;
-        Fri, 24 Jul 2020 01:28:35 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jyjha-0000Tg-Pi; Fri, 24 Jul 2020 01:28:34 +0300
-Date:   Fri, 24 Jul 2020 01:28:34 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: Re: [PATCH v10 2/4] media: i2c: Add MAX9286 driver
-Message-ID: <20200723222834.GC829@valkosipuli.retiisi.org.uk>
-References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
- <20200612144713.502006-3-kieran.bingham+renesas@ideasonboard.com>
- <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 16E9D20792;
+        Thu, 23 Jul 2020 22:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595543610;
+        bh=WF8mlF9JUGL2cs4cpi3ZKKPA3OgwnP2OybBvA3TvbJg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=mJr1+HRWLfkrqqZcBv8z30Je6pG4jNh5uzBMOy4RhGdliXHNhgFtEtP1SR8/Kt31q
+         XmFqNonGAJnq7OE7TDsXe9aXRfz24F8JdXpZH5xPP6ABL0CdwsMG/yuzN7SpkVKTVc
+         jtwNxowBR3cpm26u9p+xxwcKLFQBTbPn+TiDFIdg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200626115433.125735-1-maxime@cerno.tech>
+References: <20200626115433.125735-1-maxime@cerno.tech>
+Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware binding
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date:   Thu, 23 Jul 2020 15:33:29 -0700
+Message-ID: <159554360936.3847286.15475733339258269501@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kieran,
+Quoting Maxime Ripard (2020-06-26 04:54:33)
+> The RaspberryPi firmware binding uses two compatible, include simple-bus.
+> The select statement generated by default will thus select any node that
+> has simple-bus, not all of them being the raspberrypi firmware node.
+>=20
+> This results in warnings being wrongfully reported. Let's add a custom
+> select statement to fix that.
+>=20
+> Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware bin=
+ding to YAML")
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+>=20
+> ---
 
-On Thu, Jul 16, 2020 at 10:02:24AM +0100, Kieran Bingham wrote:
-> Hi Sakari,
-> 
-> This is the output of checkpatch --strict on this driver. Sorry for not
-> detailing this in the commit or cover letter.
-
-No worries.
-
-> 
-> > ./patches/gmsl/v10/v10-0001-dt-bindings-media-i2c-Add-bindings-for-Maxim-Int.patch has style problems, please review.
-> > --------------------------------------------------------------
-> > ./patches/gmsl/v10/v10-0002-media-i2c-Add-MAX9286-driver.patch
-> > --------------------------------------------------------------
-> > CHECK: Prefer using the BIT macro
-> > #246: FILE: drivers/media/i2c/max9286.c:40:
-> > +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #251: FILE: drivers/media/i2c/max9286.c:45:
-> > +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #262: FILE: drivers/media/i2c/max9286.c:56:
-> > +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #268: FILE: drivers/media/i2c/max9286.c:62:
-> > +#define MAX9286_HVSRC_D14		(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #286: FILE: drivers/media/i2c/max9286.c:80:
-> > +#define MAX9286_DATATYPE_RGB565		(1 << 0)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #304: FILE: drivers/media/i2c/max9286.c:98:
-> > +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #312: FILE: drivers/media/i2c/max9286.c:106:
-> > +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
-> > 
-> > CHECK: Prefer using the BIT macro
-> > #316: FILE: drivers/media/i2c/max9286.c:110:
-> > +#define MAX9286_I2CSLVTO_256US		(1 << 0)
-> 
-> None of those are appropriate to use the BIT() macro, as they are all
-> entries of a specific field with a shift, such as:
-> 
-> #define MAX9286_FSYNCMODE_ECU           (3 << 6)
-> #define MAX9286_FSYNCMODE_EXT           (2 << 6)
-> #define MAX9286_FSYNCMODE_INT_OUT       (1 << 6)
-> #define MAX9286_FSYNCMODE_INT_HIZ       (0 << 6)
-> 
-> Checkpatch is only picking up on the "1 << x" variant of each entry.
-
-Ideally you should use "1U << x" everywhere. If you happen to have a
-register with 31st bit signifying something, mayhem would follow. So the
-practice is to make all such definitions unsigned.
-
-> 
-> 
-> > CHECK: Macro argument reuse 'source' - possible side-effects?
-> > #399: FILE: drivers/media/i2c/max9286.c:193:
-> > +#define for_each_source(priv, source) \
-> > +	for ((source) = NULL; ((source) = next_source((priv), (source))); )
-> 
-> This warns against possible side effects, but the 're-use' effects are
-> desired ;-)
-> 
-> If you'd prefer this macro to be re-written please let me know.
-
-Works for me. Some warnigns are just not useful. I bet quite a few macros
-elsewhere in the kernel would trigger this.
-
-> 
-> 
-> > CHECK: Lines should not end with a '('
-> > #1372: FILE: drivers/media/i2c/max9286.c:1166:
-> > +			ret = v4l2_fwnode_endpoint_parse(
-> 
-> Full code block:
-> 
-> >                         ret = v4l2_fwnode_endpoint_parse(
-> >                                         of_fwnode_handle(node), &vep);
-> >                         if (ret) {
-> >                                 of_node_put(node);
-> >                                 return ret;
-> >                         }
-> 
-> That one is awkward, and I chose to keep it as a lesser evil.
-> Of course now that we can officially go up to 120 chars, I could move
-> this line up.
-> 
-> If you'd like this to be moved to a single line now we can go over 80
-> chars, please confirm.
-
-I don't mind that. Mauro, any thoughts on this?
-
--- 
-Kind regards,
-
-Sakari Ailus
+Applied to clk-next but I had to fix the fixes tag.
