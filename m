@@ -7,95 +7,91 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE81CC433E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145D9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A200920709
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E129220792
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 20:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595534701;
-	bh=Sn6HoDY8PicNwWAOK0JVC4PUBrZWa9HKEhiZGKOtMwY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X3IwP9Sd1JXu1ktgaLVLYNn1TtzbYP2LptPQfkjKEMxLDRxbIY0MYgYOtyOsXw3q/
-	 2L+4rw5uRlQAmP3DLCW/FbbUQ5zk+2FFcfSJ+pWe5AT0RPVmBx0F8tF+B7C3k0EYIi
-	 CaekwX3i3QCY7dhIxtZhnp05y8Atmzdr8ZHL9w6A=
+	s=default; t=1595535016;
+	bh=eNKpwSJoIH/QWZoG8b/RRJYSwe76+p44J5pfJxf14y8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VIEA+PeDaeR8Cc7Em9CLjiL8bt91qPGZei2X7HGMuO7HHqsZFAChYI3g62qEO4Ft5
+	 XpbCs3ccBk0xCVUFh2qUCWGnckfkUMSiNqcl7HKo08+0TkAM2ENPjpG7in8R/Xr/hB
+	 /sFqaGiPfMjspTeiy80BYxaP2SAQy4CfJ+yrFEzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgGWUFB (ORCPT
+        id S1726033AbgGWUKQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 16:05:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgGWUFA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 23 Jul 2020 16:05:00 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381B520714;
-        Thu, 23 Jul 2020 20:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595534700;
-        bh=Sn6HoDY8PicNwWAOK0JVC4PUBrZWa9HKEhiZGKOtMwY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tdpfEy9/TuIlS1miYHevyg9cFfjUVIr0SMqJq3V1o5s1ty72i5pH3W7BATMwjL2qR
-         Ib52wGUhvGVSBQFyd2dBJOzs2aeT6bplY7LIfFOL7tiTfABk9SHywBqtfi0BlxwOPj
-         XySoNw2DeQ1PxhTshuc5XVW3TUx/R8VxVQXiWNyE=
-Received: by mail-oi1-f174.google.com with SMTP id k6so6088928oij.11;
-        Thu, 23 Jul 2020 13:05:00 -0700 (PDT)
-X-Gm-Message-State: AOAM5334jPcNVV4k0CzZEuB1YYAuP2lqAN9VQCKbJc80njn4b2CV+l/n
-        65TyONzxVip/ujEurzsC5Y3XWidyjaRdCEF18g==
-X-Google-Smtp-Source: ABdhPJwWExdLUboZbuKY45/47MrATnklTefnT1gGZt8ZndUCAi2L0lI0a9kQ51jX4lZbOJsqfWsizPieoSOvViwRY8M=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr5467888oif.106.1595534699564;
- Thu, 23 Jul 2020 13:04:59 -0700 (PDT)
+        Thu, 23 Jul 2020 16:10:16 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36719 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgGWUKQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 16:10:16 -0400
+Received: by mail-io1-f68.google.com with SMTP id t131so7605916iod.3;
+        Thu, 23 Jul 2020 13:10:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6qKebxTelJllWzX+vBkDTjUwXCky31GlyoLB/Us13RU=;
+        b=m1KZXjXETbceHodYwrOXIHlhGjcabQvxNMPpbhG4AKQoamlCNiCBOBvNyyZaklX3ae
+         jiA9R1M0KJo0A8IShcK8PKYQASEThHOXg6BReGMn0tmJvr5/n5buuq7dbouRav8g17lL
+         zlDlZ7QgUd/NiHGGZuzR8iYNx3QUzkJuUg/SsfNJKrMRBlPgGTT2JBl+/1zb6RuUEllQ
+         VJmjupLDalFl4IaZ9kWlvI9fqd541wzVakPmrWZYC0mrbgiOajq7n1WysUHJx6ALcq3q
+         OVQyRQpKpdkBARQRYNJRqE3/gLjUI2/8ydO4E3AV4XkINJ874Jk5nwobFWUxdwwrovzh
+         +ExQ==
+X-Gm-Message-State: AOAM532evdEofb3v68iq1JnLpI0fxYl0MX5uvw4xSuLeruByEISelU8m
+        k3+KC1V2VX6daQpH1UbzGg==
+X-Google-Smtp-Source: ABdhPJxGEX8Ak0s03CYs/Oeyc9EzvHmJLaxCDLLXIMq2atxOMK1p55BpCBZEw/SWFXye1D4dLGknwA==
+X-Received: by 2002:a05:6602:2184:: with SMTP id b4mr6883379iob.156.1595535015110;
+        Thu, 23 Jul 2020 13:10:15 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k7sm1963383iot.20.2020.07.23.13.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 13:10:14 -0700 (PDT)
+Received: (nullmailer pid 783482 invoked by uid 1000);
+        Thu, 23 Jul 2020 20:10:13 -0000
+Date:   Thu, 23 Jul 2020 14:10:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, git@xilinx.com,
+        saikrishna12468@gmail.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Updated binding for Versal
+ reset driver
+Message-ID: <20200723201013.GA783435@bogus>
+References: <1595402165-8282-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+ <1595402165-8282-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 MIME-Version: 1.0
-References: <20200626115433.125735-1-maxime@cerno.tech> <20200723154421.yzecsy5qctqbgbxc@gilmour.lan>
-In-Reply-To: <20200723154421.yzecsy5qctqbgbxc@gilmour.lan>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 23 Jul 2020 14:04:48 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLJGdxh4Taf5bSdh2+QvjhHsBvygeAS8nUp+hGf2uqTOg@mail.gmail.com>
-Message-ID: <CAL_JsqLJGdxh4Taf5bSdh2+QvjhHsBvygeAS8nUp+hGf2uqTOg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware binding
-To:     Maxime Ripard <maxime@cerno.tech>, Stephen Boyd <sboyd@kernel.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mike Turquette <mturquette@baylibre.com>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595402165-8282-2-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 9:44 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi Stephen, Mike,
->
-> On Fri, Jun 26, 2020 at 01:54:33PM +0200, Maxime Ripard wrote:
-> > The RaspberryPi firmware binding uses two compatible, include simple-bus.
-> > The select statement generated by default will thus select any node that
-> > has simple-bus, not all of them being the raspberrypi firmware node.
-> >
-> > This results in warnings being wrongfully reported. Let's add a custom
-> > select statement to fix that.
-> >
-> > Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML")
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> >
-> > ---
-> >
-> > The original binding has been merged through the clock tree, so it should
-> > be merged there.
->
-> Could you apply that patch to clk-next?
+On Wed, 22 Jul 2020 12:46:04 +0530, Sai Krishna Potthuri wrote:
+> Added documentation and Versal reset indices to describe
+> about Versal reset driver bindings.
+> In Versal all reset indices includes Class, SubClass, Type, Index
+> information whereas class refers to clock, reset, power etc.,
+> Underlying firmware in Versal have such classification and expects
+> the ID to be this way.
+> [13:0] - Index bits
+> [19:14] - Type bits
+> [25:20] - SubClass bits
+> [31:26] - Class bits.
+> 
+> Signed-off-by: Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
+> ---
+>  .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
+>  .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
+>  2 files changed, 112 insertions(+), 4 deletions(-)
+>  create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
+> 
 
-While I said 'simple-mfd' would be more appropriate, that's a separate
-issue I guess, so:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-BTW, qcom,msm8996-apcc.yaml is also breaking linux-next.
+Reviewed-by: Rob Herring <robh@kernel.org>
