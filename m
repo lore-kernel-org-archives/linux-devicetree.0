@@ -2,120 +2,102 @@ Return-Path: <SRS0=BM7I=BC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1ECC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E504C433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25BB820888
-	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gv5J7slR"
+	by mail.kernel.org (Postfix) with ESMTP id 2B3F62080D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 23 Jul 2020 01:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595466329;
+	bh=W2CYa/0UitifMAE40ODWZqF2evqHAMepGzJ4pFCBC0k=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=G/iBUK569Zmk8mxRr2ndqpXj59UcM9dDBY+IDLhtiBeiDmVetygfZBUqV1J0V2K5w
+	 yir6l/yN/VtWxmDnnpVKm9Y4si4A7vvfp3/FWvJTRNV5vGAfPoRKWv8sKfqKXieww1
+	 N0A3TgueqJtSlSPcs7X7F5N8EKjEabYbDG87v+aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733073AbgGWBCe (ORCPT
+        id S2387421AbgGWBF2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 22 Jul 2020 21:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728914AbgGWBCe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 22 Jul 2020 21:02:34 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FB3C0619DC
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 18:02:34 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s189so2190625pgc.13
-        for <devicetree@vger.kernel.org>; Wed, 22 Jul 2020 18:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nUCwRjT2pU2Gmv3Op2+ljHBnuLbX/BdWuYfwk3p2dPU=;
-        b=Gv5J7slRS2adw592HJRD5Dk1x0nICM0czHuAtw+Bea1LUJWvVeWd0EXViOfOPO1aIz
-         lZRq1TTWDGIpJFyqeXnKCiX4h5lGMCqz+sDdJoYXUjk2nk0smYwqWnSg3ia+ENWx3JL6
-         J3P2+rh7riPtr1zCP0JTRttUOoJt8xjmKnixeV5qmaJMSe8T1E39p3iyzDBlQ/bMcJgG
-         CgUONWqmmby9jG30sRUM7Kw4PSnEj4qGFFW1pVFZrnjJzniW8fYV5srexWGwLHMe67Tb
-         Xoo/sWsbkcjREY3TQbYqcS+/AG9DB2VIYxYjlkTctj6thbZspvKB0TG84njjduRKwvae
-         rdUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nUCwRjT2pU2Gmv3Op2+ljHBnuLbX/BdWuYfwk3p2dPU=;
-        b=P71bKNEAAQQ6Iq83fJvcbZ+SRd5JHMtKdYHKVuYzRczmyI1UR+8vC8Eg7p9XrFAupo
-         znxAcDc6w6t0mv8KmbUZ59Pyoo5zOOUCTgFayHGe+mIi1ok/OwH5tF/Pg4+l0mU/XkTB
-         jrHoKiKBPIy77w0Hvx6d4r9cgrdWAqqXRqqOQGj5tnwSb+fG2gwFk3zF61JyX8PGOzAf
-         Yp+Q7lIs7ZVm7HX1Lv0McEWmMUb3seCpUox0OT5rrPSPJwirxfVIUdJKzoyxHHINybP/
-         shgBHkpx/v5zfHDtjX9OnoHmaV7ruv7hqGGZbNuIcQNkLIDK5ij5PPZnTibKKgDRGY07
-         zCmQ==
-X-Gm-Message-State: AOAM5339Tn9KfEqzRLpgZqXJgxn9XYIpf1TJd4Aq/UjinTk3Af4HvHX2
-        oBQbozFxUSKYxlqyKZixgpEJDQwWsHUY0dbd8QW+QdzOaOo=
-X-Google-Smtp-Source: ABdhPJy3F0JIAPnQcvEuqhIjvTmhlNc50e2Fao3jv3xBkWy1mCNh+m6SvHBS7aYoHWIqwjhyNEQp/34XrbengBxtQHU=
-X-Received: by 2002:a63:495c:: with SMTP id y28mr2164282pgk.30.1595466153346;
- Wed, 22 Jul 2020 18:02:33 -0700 (PDT)
+        Wed, 22 Jul 2020 21:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733270AbgGWBF2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 22 Jul 2020 21:05:28 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0DEF2080D;
+        Thu, 23 Jul 2020 01:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595466327;
+        bh=W2CYa/0UitifMAE40ODWZqF2evqHAMepGzJ4pFCBC0k=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=0J1pLNs4srdlY758oP/2THuIFMZVT9hxJQSMive90bFdHGH6+nbirfrxeGSVL3LTd
+         FEDb7DfBOban1eIwGmg3oQ6s5N4HWHsvnHWpGitOtdFTll3xUArvAF+eU3pMkjpJ7h
+         NU+Nrqr8VQxmfC9GaSPK3UK+i9+JAROIxT8UX4Y8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200722201313.754671-1-saravanak@google.com> <20200722201313.754671-2-saravanak@google.com>
- <084158b7-f6dc-167f-b06d-db617fb2df29@gmail.com>
-In-Reply-To: <084158b7-f6dc-167f-b06d-db617fb2df29@gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 22 Jul 2020 18:01:57 -0700
-Message-ID: <CAGETcx-CajYnh=ZOkGBxrSUHe0uTAwJ_gZ8EJV1jrq-jNmaBVw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] of: property: Add device link support for
- pinctrl-0 through pinctrl-8
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
+References: <1594795010-9074-1-git-send-email-tdas@codeaurora.org> <1594795010-9074-3-git-send-email-tdas@codeaurora.org> <159531791606.3847286.11896325263133276429@swboyd.mtv.corp.google.com> <01daee94-756d-3970-9057-849de2b76430@codeaurora.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Wed, 22 Jul 2020 18:05:27 -0700
+Message-ID: <159546632701.3847286.14646561815611231678@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 1:56 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 2020-07-22 15:13, Saravana Kannan wrote:
-> > Add support for pinctrl-0 through pinctrl-8 explicitly instead of trying
-> > to add support for pinctrl-%d properties.
-> >
-> > Of all the pinctrl-* properties in dts files (20322), only 47% (9531)
-> > are pinctrl-%d properties. Of all the pinctrl-%d properties, 99.5%
-> > (9486) are made up of pinctrl-[0-2].
-> >
-> > Trying to parse all pinctrl-* properties and checking for pinctrl-%d is
-> > unnecessarily complicated. So, just add support for pinctrl-[0-8] for
-> > now. In the unlikely event we ever exceed pinctrl-8, we can come back
-> > and improve this.
->
-> If you were to implement the more general pinctrl-* case, roughly what would
-> it look like (pseudo-code or english description is fine).
+Quoting Taniya Das (2020-07-21 10:26:53)
+> Hi Stephen,
+>=20
+> Thanks for the review.
+>=20
+> On 7/21/2020 1:21 PM, Stephen Boyd wrote:
+>=20
+> >> +...
+> >> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-=
+bindings/clock/qcom,gcc-sc7180.h
+> >> index 992b67b..bdf43adc 100644
+> >> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> >> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> >> @@ -138,6 +138,7 @@
+> >>   #define GCC_MSS_Q6_MEMNOC_AXI_CLK                              128
+> >>   #define GCC_MSS_SNOC_AXI_CLK                                   129
+> >>   #define GCC_SEC_CTRL_CLK_SRC                                   130
+> >> +#define GCC_LPASS_CFG_NOC_SWAY_CLK                             131
+> >>  =20
+> >>   /* GCC resets */
+> >>   #define GCC_QUSB2PHY_PRIM_BCR                                  0
+> >=20
+> > This hunk should be in the next patch. Oh but then that patch should co=
+me
+> > before this one so the binding can use it. Either way, shouldn't be part
+> > of this patch.
+> >=20
+>=20
+>=20
+> We had a problem with the bot complaining about the clock handles being=20
+> used in the example.
+>=20
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1582540703=
+-6328-4-git-send-email-tdas@codeaurora.org/
+>=20
+> Thus I have kept the GCC bindings in the same patch.
+>=20
 
-So when I say "unnecessarily complicated", it's in terms of
-readability. I can't use these macros -- which are succinct 1 line
-entries that are super easy to understand.
-
-Pseudo code:
-parse_pinctrl(np, prop_name, index)
-{
-    if (doens't start with "pinctrl-")
-        return NULL;
-    ret = kstrtouint(propname + strlen("pinctrl"), 10, &val);
-
-    check that it's not something line "pinctrl-2nd-val" that'll still
-set val to 2.
-
-    parse phandle with args and return phandle node.
-}
-
-All this when effectively 99.5% of the DT just use pinctrl-0,
-pinctrl-1 and pinctrl-2. There are a few that use pinctrl-3. And
-literally 6 DT files in the entire kernel source tree use pinctrl-4 or
-greater.
-
-And for those 6 files, pinctrl-[0-8] really point to the same pinctrl
-node. So even if I didn't parse pinctrl-[4-8], all the device
-dependencies would be tracked properly.
-
--Saravana
+Ah ok. Well I'll fix it when you resend to fix the comment on patch 4.
