@@ -2,207 +2,138 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A05DC43445
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490BC433E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5387E2073E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A9720767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xoKXS7qO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6tgPHcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgGXLPB (ORCPT
+        id S1726591AbgGXLV6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 07:15:01 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:45346 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgGXLPA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 07:15:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595589299; x=1627125299;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=61qRLL/sx9zbGDY6/hWqsKu3Z0coKG4mMtti9uZcseg=;
-  b=xoKXS7qOKzX2+2GrtagKZF2pJ7QTGqkBGubr4HMnckZIW2345AGPo3By
-   4spN2WAF1JKwh7hR2FkXZfBinu51Rle5BgpKTPQQCEiytU/IftImH2Wzx
-   wsDjEM/hNCYJBEUFbsxKcxzFjMZFfjw46ocHEL9uSA1EDHaWM8pusJFx+
-   d3gXUcparYXUjlDyQbrizPU8olBh13KG3jNJVucfUNLRifanEdl07iZjR
-   QCHPji+3A1dM1/4YdnLlBMSCkiD5cpv7ZY8mMpMtyZhL/9DGkn1kUBM7O
-   TYMnh5iaYSK4r6D17//FIg1GgIMF1mfLFThURAip5bkrIGfhmbwPjCmR6
-   g==;
-IronPort-SDR: wxFztxzJ5sv5j+JoddDvcO2729fyo5BSf1MMDXdpbg9J+A7M34o05aVuNgAnB5nIUowMM3VaQo
- futwwUd9p15NrtU3u0jK3QnG/H0ItppVNqnStYMR+HBOD4nTEzVQreZ4NAfQor7n6o7KhtqiXz
- Tzm0QZqpdvHIYoNFRqG1E/EKG1bvMtJS4HYgjP/5YlWLMT6Kjf8e/9tWN02fdYBslsolmPoZBH
- NpAgXVhw/RfmZBdN0rADY0CYiExppmo19sVc3HOKEDu16cRNHHh04VMf67rUXwOXNfprWtuOju
- yd4=
-X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="81158516"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2020 04:14:57 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 24 Jul 2020 04:14:57 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 24 Jul 2020 04:14:14 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: [PATCH v4 6/6] arm64: dts: sparx5: Add spi-nand devices
-Date:   Fri, 24 Jul 2020 13:14:04 +0200
-Message-ID: <20200724111404.13293-7-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724111404.13293-1-lars.povlsen@microchip.com>
-References: <20200724111404.13293-1-lars.povlsen@microchip.com>
+        Fri, 24 Jul 2020 07:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgGXLV6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 07:21:58 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31014C0619D3
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 04:21:58 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 184so7943141wmb.0
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 04:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=QBcl5FK4EZqrtCnW5IQ5WndIaO7X61MMG438KlSxZ48=;
+        b=p6tgPHcxw7s+eIybTuztyk5Zh+ndlxFsb6LnTlTsA4B+g8xpvXitbOzuaGmCgfqRZb
+         giCezrtJy0QaopoXfIqaUbZHRnE5iVWB1cbawyhaA1ftF7mxE0rwYy54CkTF6S+TAbj9
+         wsgoL474l8C+LiDYwSs3Xgm/H+Rcn5CwIrD4E/2UOexcF95TC2wuxTFtgOPRIhrHiZaB
+         r2XvYlXNVFEuBXRInp4w/L4ZqgdCGK/k9GeraiDofbJx0KiZJOiz8wE1mUyIPccyoTEI
+         eQxP/4c8TCL7l6vYkJkPI5RlS/Lkz/dSezmCs60Qr+Fg8exa7O1URKW7Gh89H61GSWkm
+         ExhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QBcl5FK4EZqrtCnW5IQ5WndIaO7X61MMG438KlSxZ48=;
+        b=SeusiIpf6BGcnMCGAQiG95o4t/2b/cvT1GAcFbReMl96qvqia8BVp0bfhJxc/1TH9u
+         vGnlAT1ntPXCoQJmFiajRVB7kD/uQwBO30BydkNwlLBjYjgO1lharNkr3XVn8W82dBcm
+         SyZOwioaS5mDvYW9N42hIoNNoMfzaWlFdq9K5iHL33CfH11i1ZDFjw3JvZPLVILGxuwZ
+         e87QIkBGcdvBxVpGViPlkbkBP12+aI4F6o6co4lVQ/8de60d55ic0ekzFA3VpXTiqrzw
+         N8IuU+37qGpMzJ6laY1lNM/rSEY9ZxiwYTZ8c6ck3KYMyU2uDQpKQmJ3d8NHKeTGEAWn
+         tMaw==
+X-Gm-Message-State: AOAM53303yZtT2kYEWYUEmWRXFyV0ChQ8hKJHKmAX5CGGOz4aj+5cbV/
+        HRnfM0ig2MErE6oXceqjVULLZg==
+X-Google-Smtp-Source: ABdhPJyIZOVHqR8IywjbnF4AfvsOTpXs4INYnuhL6MUOJ25g639wiz/73ibH9ilrBLAIG2rjP2oPBA==
+X-Received: by 2002:a1c:4406:: with SMTP id r6mr8235833wma.161.1595589716944;
+        Fri, 24 Jul 2020 04:21:56 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id p14sm1020718wrx.90.2020.07.24.04.21.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Jul 2020 04:21:56 -0700 (PDT)
+Subject: Re: [PATCH v4 06/12] ASoC: qcom: lpass-cpu: fix concurrency issue
+To:     Rohit kumar <rohitkr@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
+ <1595413915-17867-7-git-send-email-rohitkr@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <eb3854ac-6480-f6ce-4325-bd00dd18be40@linaro.org>
+Date:   Fri, 24 Jul 2020 12:21:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <1595413915-17867-7-git-send-email-rohitkr@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch add spi-nand DT nodes to the applicable Sparx5 boards.
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 20 ++++++++++++
- .../arm64/boot/dts/microchip/sparx5_nand.dtsi | 31 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      | 14 +++++++++
- .../boot/dts/microchip/sparx5_pcb134.dts      |  1 +
- .../boot/dts/microchip/sparx5_pcb135.dts      |  1 +
- 5 files changed, 67 insertions(+)
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_nand.dtsi
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 2169746703dfb..8e9e3ed872496 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -212,6 +212,26 @@ gpio: pinctrl@6110101e0 {
- 			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
- 			#interrupt-cells = <2>;
- 
-+			cs1_pins: cs1-pins {
-+				pins = "GPIO_16";
-+				function = "si";
-+			};
-+
-+			cs2_pins: cs2-pins {
-+				pins = "GPIO_17";
-+				function = "si";
-+			};
-+
-+			cs3_pins: cs3-pins {
-+				pins = "GPIO_18";
-+				function = "si";
-+			};
-+
-+			si2_pins: si2-pins {
-+				pins = "GPIO_39", "GPIO_40", "GPIO_41";
-+				function = "si2";
-+			};
-+
- 			uart_pins: uart-pins {
- 				pins = "GPIO_10", "GPIO_11";
- 				function = "uart";
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_nand.dtsi b/arch/arm64/boot/dts/microchip/sparx5_nand.dtsi
-new file mode 100644
-index 0000000000000..03f107e427d70
---- /dev/null
-+++ b/arch/arm64/boot/dts/microchip/sparx5_nand.dtsi
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
-+ */
-+
-+&gpio {
-+	cs14_pins: cs14-pins {
-+		pins = "GPIO_44";
-+		function = "si";
-+	};
-+};
-+
-+&spi0 {
-+	pinctrl-0 = <&si2_pins>;
-+	pinctrl-names = "default";
-+	spi@e {
-+		compatible = "spi-mux";
-+		mux-controls = <&mux>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <14>; /* CS14 */
-+		spi-flash@6 {
-+			compatible = "spi-nand";
-+			pinctrl-0 = <&cs14_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6>; /* SPI2 */
-+			spi-max-frequency = <42000000>;
-+			rx-sample-delay-ns = <7>;  /* Tune for speed */
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index c1eb1d661174d..6b2da7c7520cc 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -53,6 +53,20 @@ spi-flash@9 {
- 			reg = <0x9>;	/* SPI */
- 		};
- 	};
-+	spi@1 {
-+		compatible = "spi-mux";
-+		mux-controls = <&mux 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>; /* CS1 */
-+		spi-flash@9 {
-+			compatible = "spi-nand";
-+			pinctrl-0 = <&cs1_pins>;
-+			pinctrl-names = "default";
-+			spi-max-frequency = <8000000>;
-+			reg = <0x9>;	/* SPI */
-+		};
-+	};
- };
- 
- &i2c1 {
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
-index feee4e99ff57c..45ca1af7e8500 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
-@@ -5,6 +5,7 @@
- 
- /dts-v1/;
- #include "sparx5_pcb134_board.dtsi"
-+#include "sparx5_nand.dtsi"
- 
- / {
- 	model = "Sparx5 PCB134 Reference Board (NAND)";
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
-index 20e409a9be196..647cdb38b1130 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
-@@ -5,6 +5,7 @@
- 
- /dts-v1/;
- #include "sparx5_pcb135_board.dtsi"
-+#include "sparx5_nand.dtsi"
- 
- / {
- 	model = "Sparx5 PCB135 Reference Board (NAND)";
--- 
-2.27.0
+On 22/07/2020 11:31, Rohit kumar wrote:
+> i2sctl register value is set to 0 during hw_free(). This
+> impacts any ongoing concurrent session on the same i2s
+> port. As trigger() stop already resets enable bit to 0,
+> there is no need of explicit hw_free. Removing it to
+> fix the issue.
+> 
+> Fixes: 80beab8e1d86 ("ASoC: qcom: Add LPASS CPU DAI driver")
+> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
 
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+> ---
+>   sound/soc/qcom/lpass-cpu.c | 16 ----------------
+>   1 file changed, 16 deletions(-)
+> 
+> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+> index 6b86f16..5d84f63 100644
+> --- a/sound/soc/qcom/lpass-cpu.c
+> +++ b/sound/soc/qcom/lpass-cpu.c
+> @@ -266,21 +266,6 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
+>   	return 0;
+>   }
+>   
+> -static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
+> -		struct snd_soc_dai *dai)
+> -{
+> -	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+> -	int ret;
+> -
+> -	ret = regmap_write(drvdata->lpaif_map,
+> -			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
+> -			   0);
+> -	if (ret)
+> -		dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
+> -
+> -	return ret;
+> -}
+> -
+>   static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
+>   		struct snd_soc_dai *dai)
+>   {
+> @@ -350,7 +335,6 @@ const struct snd_soc_dai_ops asoc_qcom_lpass_cpu_dai_ops = {
+>   	.startup	= lpass_cpu_daiops_startup,
+>   	.shutdown	= lpass_cpu_daiops_shutdown,
+>   	.hw_params	= lpass_cpu_daiops_hw_params,
+> -	.hw_free	= lpass_cpu_daiops_hw_free,
+>   	.prepare	= lpass_cpu_daiops_prepare,
+>   	.trigger	= lpass_cpu_daiops_trigger,
+>   };
+> 
