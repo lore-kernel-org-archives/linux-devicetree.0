@@ -2,126 +2,109 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBE7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29116C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6E3220768
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595598647;
-	bh=kUQlJC47iSe6M2DGwLKnxLxm68K3q0yDXR5BlVZeOq0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=BoYjbo7QIMFmyRQpyjw/eo2dnp0BRuKA0UmOVjs+PFo2kj1LjIRdjEV8qGrJpn8mC
-	 iERFm5Usefmohw6fFAElPi/+/H21M7cYZ3dhqLuN4sZ0gD3csHhTdrKE0iYDUKtx6h
-	 Fss89aPSbnmQ/I+skqVAZbt+/cghkC+98tRuKGlM=
+	by mail.kernel.org (Postfix) with ESMTP id 041C520656
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:59:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="o4tYZ167"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgGXNur (ORCPT
+        id S1726692AbgGXN7O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGXNuq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 09:50:46 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800C1C0619D3;
-        Fri, 24 Jul 2020 06:50:46 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f5so10036818ljj.10;
-        Fri, 24 Jul 2020 06:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=kUQlJC47iSe6M2DGwLKnxLxm68K3q0yDXR5BlVZeOq0=;
-        b=dPeXe6/UQ2wtvXiOKUEL6oqdDQbEH/zbCoWiNrdkxWowO5Vxf33tTLJRFpdLpalJR2
-         AXwGuP3JkyAzYQH3bqeQL9NXUfITrspiAzjXS1yf/UKntbrztz36jWgLBEdDuoGlo6Py
-         Pxe99WmG4/sEUjkUz7XhiH3gGVvaavsNmxyoyJtqrNI5FIOxrjJxy939JG+YxVaFvJhJ
-         SuQ3HnCGBy24g6AZlZ2/e94yEt6jxU4HBzDQH5DFH+SSK8FyXbKkVk9HlqkRcTjqgGao
-         iQDYlKQD4PZppjpd1Wu0TmpHlhr8bCRIEoOe8a5mK7eSmUBTPOrXgqi657+j3nhJddAL
-         CMqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=kUQlJC47iSe6M2DGwLKnxLxm68K3q0yDXR5BlVZeOq0=;
-        b=piXWqOMEzsU5PHJBP+5+noMC2SlVorcLj7OtoNhAs1T0PnBphGU5vYpezmPRmxx6J2
-         f/6IAlZ1hegcFy2vBtagykQaIjEREuiFgEdNQz/eo6VPnYbTGFQI0WL9AmGnJB3JfZ5W
-         JyWRa/gPetfLOKzXj7Oa8/uzEEd6YDxIaCmK2H7cfZen+l45Usf0/e94OG6UcJWDk6JC
-         NWqJf3auQ3KqIjUDHE8tSscwEZjP8VuXn+l6+9ukYkvrtcY/TZwLXsPh39w57Bvd6l8/
-         kgT4s5RsqUvns+go3ntJLDEAR5q0QqCWsMUaq9TxEKqts8YO73KKFKesex2CIHICjJqx
-         HV2A==
-X-Gm-Message-State: AOAM531UyAdqC86HC7t6WhzM1WixtlSEp+qljkfza0Cp06LR43aB1B+1
-        ugtT3GQYvMTQZL8CzNjfi88=
-X-Google-Smtp-Source: ABdhPJyxuqN2HEdFLAc+Q3u9eWCvpysSuKBqPGUda1JPOw+Hfp2im3d3RLNxHHtDAEIxAxjOTsvkRA==
-X-Received: by 2002:a2e:7601:: with SMTP id r1mr4719977ljc.111.1595598644870;
-        Fri, 24 Jul 2020 06:50:44 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id i3sm262139ljj.64.2020.07.24.06.50.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 06:50:44 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Amelie DELAUNAY <amelie.delaunay@st.com>,
+        Fri, 24 Jul 2020 09:59:14 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17018 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726658AbgGXN7O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:59:14 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ODrl1D022365;
+        Fri, 24 Jul 2020 15:58:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=KRUo6+0et9uIWzr/7OGkArIbrkrXoASlOdUHAzwrQ+c=;
+ b=o4tYZ167aIAxYvG71/FxDIp91Y1Gl3UWSaaPkCo/tPveq6Rp1PD4p6uJo7eG/TRCpSrr
+ 4oz3oWk5Ge+YQ9BVEoqj+gbxiP+M25v2/4yKJk2n0vb1y52THqdiO2oX9r8Ie9RGZN1y
+ w6pJ5JpPu5ini7M89305qeM9d8QaP6TLpYJdcPr8JwzJAKj491Nc+oM2J74+/cUGxhNj
+ DCAaWGs3usAwNJXCW1mODvpK2DtZxKnNt8ZM2YhzF2yBbDyIQHTMcFaTdzID+A8kbUSZ
+ LVz+Wm/JRsR8RD0wU/bQnzdQYlAvidy+qemtpIcFXMSSx5PQYfE17Lmk5QM6U717JD1u 4A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bsfq0hx2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 15:58:58 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3DBB110002A;
+        Fri, 24 Jul 2020 15:58:57 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2557C2B4D1F;
+        Fri, 24 Jul 2020 15:58:57 +0200 (CEST)
+Received: from lmecxl0995.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jul
+ 2020 15:58:56 +0200
+Subject: Re: [PATCH v3 0/3] Add USB role switch support to DWC2
+To:     Felipe Balbi <balbi@kernel.org>,
         Minas Harutyunyan <hminas@synopsys.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v3 0/3] Add USB role switch support to DWC2
-In-Reply-To: <4c44f596-d2c3-6d2f-bf28-9e3964b6e6f1@st.com>
-References: <20200724104711.5474-1-amelie.delaunay@st.com> <4c44f596-d2c3-6d2f-bf28-9e3964b6e6f1@st.com>
-Date:   Fri, 24 Jul 2020 16:50:39 +0300
-Message-ID: <878sf9owcw.fsf@kernel.org>
+References: <20200724104711.5474-1-amelie.delaunay@st.com>
+ <4c44f596-d2c3-6d2f-bf28-9e3964b6e6f1@st.com> <878sf9owcw.fsf@kernel.org>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <fcff5f96-8383-fd84-35f1-3eb291cd65df@st.com>
+Date:   Fri, 24 Jul 2020 15:58:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <878sf9owcw.fsf@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-24_04:2020-07-24,2020-07-24 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-(no top-posting, please)
-
 Hi,
 
-Amelie DELAUNAY <amelie.delaunay@st.com> writes:
-> Series dropped.
+On 7/24/20 3:50 PM, Felipe Balbi wrote:
+> 
+> (no top-posting, please)
+> 
+> Hi,
+> 
+> Amelie DELAUNAY <amelie.delaunay@st.com> writes:
+>> Series dropped.
+> 
+> what do you mean with this? Should I drop all patches related with this series?
+> 
 
-what do you mean with this? Should I drop all patches related with this ser=
-ies?
+As v1 patches were in your next branch, I've prepared a new patchset 
+which contains fixes, on top of you next branch :
+https://lore.kernel.org/patchwork/project/lkml/list/?series=454959
 
-=2D-=20
-balbi
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8a5y8ACgkQzL64meEa
-mQZwdw//cL+ayhQjvZnVUc/UnTmN0Gz5U4rAtml72uI2Db/O46+5Q6rNYt0SiPIF
-+uiB7fPCPAuYc6zUGLUBp0VelHkN9J6S92LG2TVDWw1Lry/AHVV9exuMcpxJJQxF
-P9qkqx58LJgXCYcqh6fEaMcda5sE8YwSquQb8NSAxtQbX2sZ131CDEH+jlprRREh
-Nlkg5rYqlH2t17wa8rZ/u8SVpiAJ1OXwP0hH+GqXvBm4tgOc6K2FVRYGvqm1fHM2
-BuQvNKCWAE6OkXeia8NxrAl7ME75zlyACkW6jDkVrTUt53QcLx6csjzElLiOmEpS
-t1z4iPud5bzBlHFn4/251TaojqP2SNXHpDGjaQ8lCeBPeqLTtH+SryxQSvpO3Jib
-F6a2a8Rue4GshKF/nCOkyHDbEVmUBo9Q4IFYL7DbHV7xJUfevfSne+Lp1a6DmDXm
-BdvqFvdLXlnrK/Q1Ym83E+VCWz19xJcDawUOMNeZI5llrl5QoMj/4r1uSjrg2Dez
-U8sXUoApM3s+9gUrU+rpgu4r10O0vRKgcoDIEj0N5+pGH1q0Ob+CvUmH/M4kOckV
-vkRkwgMWiGs94k2cI0XitObHTnh4PGZYkhPPIE35KSjo+lIub+1VwG/sZ+J5B0Q0
-Lak7Px3WwyvEXLJu50hshf94FTzduEx7ZiXrWD4hCYDWVr4ba3U=
-=Q6yp
------END PGP SIGNATURE-----
---=-=-=--
+What do you prefer ? Drop all patches related to the v1 "Add USB role 
+switch support to DWC2" series and I send a v4 in replacement or keep 
+all patches and wait for new series review ?
