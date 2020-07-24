@@ -2,51 +2,51 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EB9C433EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96FDC433F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB4D20771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C830721883
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y2AaeJzp"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r4sdoTiq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGXOTW (ORCPT
+        id S1726782AbgGXOTe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:19:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40452 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgGXOTV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 10:19:21 -0400
+        Fri, 24 Jul 2020 10:19:34 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52910 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgGXOTe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 10:19:34 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06OEJ5pn108640;
-        Fri, 24 Jul 2020 09:19:05 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06OEJQrV085906;
+        Fri, 24 Jul 2020 09:19:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595600345;
-        bh=KBmvYUHdmZfCvEZHlMZUacBrLZmVDRahlpdUcwDvbIM=;
+        s=ti-com-17Q1; t=1595600366;
+        bh=tCRyqOS7QzOz+wBhm7jyYwDjGFUQdR0oZraTRLE9x2o=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=y2AaeJzpbDAm4j6iv3yfn+c22we0mG/so9iCe2qcWUDnJ3R8z8iKi/Zxmr8DrKAqx
-         HmbU4UUx1d1EwhGGtfMMBlOop2V6cqnB1qJOcVnlur1s532Z6adVDtxduuzZBUOugP
-         75ee6IHx5ZkmqysHp906GqjYtpKUu4LdUWc4Gz+g=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06OEJ5sW004637;
-        Fri, 24 Jul 2020 09:19:05 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        b=r4sdoTiq02C4QyjomVMczWN8yC9TgXU15Xzbt47dg5deIWaaj9Teazykk3KX18pNK
+         4tReGgHNwpBD5JhKYvRtp1wm/f3Aha6WIRwvy1izN5BIllsVfBREnkJy8NJlnRTYL9
+         nAmTsaSxryEY23hWlZA545rXVNhSpscNxCJA4WNE=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06OEJQ22005108;
+        Fri, 24 Jul 2020 09:19:26 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
- Jul 2020 09:19:05 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 09:19:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 24 Jul 2020 09:19:05 -0500
+ Frontend Transport; Fri, 24 Jul 2020 09:19:26 -0500
 Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06OEIiXs016316;
-        Fri, 24 Jul 2020 09:19:01 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06OEIiXx016316;
+        Fri, 24 Jul 2020 09:19:22 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
 CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
@@ -58,9 +58,9 @@ CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>,
         Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v3 4/9] dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage of gic as parent
-Date:   Fri, 24 Jul 2020 19:48:32 +0530
-Message-ID: <20200724141837.4542-5-lokeshvutla@ti.com>
+Subject: [PATCH v3 9/9] irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
+Date:   Fri, 24 Jul 2020 19:48:37 +0530
+Message-ID: <20200724141837.4542-10-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724141837.4542-1-lokeshvutla@ti.com>
 References: <20200724141837.4542-1-lokeshvutla@ti.com>
@@ -73,73 +73,172 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Drop the firmware related dt-bindings and use the hardware specified
-interrupt numbers within Interrupt Router. This ensures interrupt router
-DT node need not assume any interrupt parent type.
+Driver assumes that Interrupt parent to Interrupt Aggregator is always
+Interrupt router. This is not true always and GIC can be a parent to
+Interrupt Aggregator. Update the driver to detect the parent and request
+the parent irqs accordingly.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- .../interrupt-controller/ti,sci-intr.txt      | 31 ++++++++++---------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/irqchip/irq-ti-sci-inta.c | 90 ++++++++++++++++++++++++++-----
+ 1 file changed, 77 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-index 1a8718f8855d..8b56b2de1c73 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-@@ -44,15 +44,17 @@ Required Properties:
- 			4: If intr supports level triggered interrupts.
- - interrupt-controller:	Identifies the node as an interrupt controller
- - #interrupt-cells:	Specifies the number of cells needed to encode an
--			interrupt source. The value should be 2.
--			First cell should contain the TISCI device ID of source
--			Second cell should contain the interrupt source offset
--			within the device.
-+			interrupt source. The value should be 1.
-+			First cell should contain interrupt router input number
-+			as specified by hardware.
- - ti,sci:		Phandle to TI-SCI compatible System controller node.
--- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
--- ti,sci-rm-range-girq:	Array of TISCI subtype ids representing the host irqs
--			assigned to this interrupt router. Each subtype id
--			corresponds to a range of host irqs.
-+- ti,sci-dev-id:	TISCI device id of interrupt controller.
-+- ti,interrupt-ranges:	Set of triplets containing ranges that convert
-+			the INTR output interrupt numbers to parent's
-+			interrupt number. Each triplet has following entries:
-+			- First entry specifies the base for intr output irq
-+			- Second entry specifies the base for parent irqs
-+			- Third entry specifies the limit
+diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+index 7e3ebf6ed2cd..00c17ade118a 100644
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -8,6 +8,7 @@
  
- For more details on TISCI IRQ resource management refer:
- http://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
-@@ -62,21 +64,20 @@ Example:
- The following example demonstrates both interrupt router node and the consumer
- node(main gpio) on the AM654 SoC:
+ #include <linux/err.h>
+ #include <linux/io.h>
++#include <linux/irq.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
+ #include <linux/interrupt.h>
+@@ -128,6 +129,37 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(irq_desc_get_chip(desc), desc);
+ }
  
--main_intr: interrupt-controller0 {
-+main_gpio_intr: interrupt-controller0 {
- 	compatible = "ti,sci-intr";
- 	ti,intr-trigger-type = <1>;
- 	interrupt-controller;
- 	interrupt-parent = <&gic500>;
--	#interrupt-cells = <2>;
-+	#interrupt-cells = <1>;
- 	ti,sci = <&dmsc>;
--	ti,sci-dst-id = <56>;
--	ti,sci-rm-range-girq = <0x1>;
-+	ti,sci-dev-id = <131>;
-+	ti,interrupt-ranges = <0 360 32>;
- };
++/**
++ * ti_sci_inta_xlate_irq() - Translate hwirq to parent's hwirq.
++ * @inta:	IRQ domain corresponding to Interrupt Aggregator
++ * @irq:	Hardware irq corresponding to the above irq domain
++ *
++ * Return parent irq number if translation is available else -ENOENT.
++ */
++static int ti_sci_inta_xlate_irq(struct ti_sci_inta_irq_domain *inta,
++				 u16 vint_id)
++{
++	struct device_node *np = dev_of_node(&inta->pdev->dev);
++	u32 base, parent_base, size;
++	const __be32 *range;
++	int len;
++
++	range = of_get_property(np, "ti,interrupt-ranges", &len);
++	if (!range)
++		return vint_id;
++
++	for (len /= sizeof(*range); len >= 3; len -= 3) {
++		base = be32_to_cpu(*range++);
++		parent_base = be32_to_cpu(*range++);
++		size = be32_to_cpu(*range++);
++
++		if (base <= vint_id && vint_id < base + size)
++			return vint_id - base + parent_base;
++	}
++
++	return -ENOENT;
++}
++
+ /**
+  * ti_sci_inta_alloc_parent_irq() - Allocate parent irq to Interrupt aggregator
+  * @domain:	IRQ domain corresponding to Interrupt Aggregator
+@@ -139,30 +171,55 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
+ 	struct ti_sci_inta_irq_domain *inta = domain->host_data;
+ 	struct ti_sci_inta_vint_desc *vint_desc;
+ 	struct irq_fwspec parent_fwspec;
++	struct device_node *parent_node;
+ 	unsigned int parent_virq;
+-	u16 vint_id;
++	u16 vint_id, p_hwirq;
++	int ret;
  
- main_gpio0: gpio@600000 {
- 	...
--	interrupt-parent = <&main_intr>;
--	interrupts = <57 256>, <57 257>, <57 258>,
--		     <57 259>, <57 260>, <57 261>;
-+	interrupt-parent = <&main_gpio_intr>;
-+	interrupts = <192>, <193>, <194>, <195>, <196>, <197>;
- 	...
- };
+ 	vint_id = ti_sci_get_free_resource(inta->vint);
+ 	if (vint_id == TI_SCI_RESOURCE_NULL)
+ 		return ERR_PTR(-EINVAL);
+ 
++	p_hwirq = ti_sci_inta_xlate_irq(inta, vint_id);
++	if (p_hwirq < 0) {
++		ret = p_hwirq;
++		goto free_vint;
++	}
++
+ 	vint_desc = kzalloc(sizeof(*vint_desc), GFP_KERNEL);
+-	if (!vint_desc)
+-		return ERR_PTR(-ENOMEM);
++	if (!vint_desc) {
++		ret = -ENOMEM;
++		goto free_vint;
++	}
+ 
+ 	vint_desc->domain = domain;
+ 	vint_desc->vint_id = vint_id;
+ 	INIT_LIST_HEAD(&vint_desc->list);
+ 
+-	parent_fwspec.fwnode = of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
+-	parent_fwspec.param_count = 2;
+-	parent_fwspec.param[0] = inta->pdev->id;
+-	parent_fwspec.param[1] = vint_desc->vint_id;
++	parent_node = of_irq_find_parent(dev_of_node(&inta->pdev->dev));
++	parent_fwspec.fwnode = of_node_to_fwnode(parent_node);
++	if (of_property_read_u32(parent_node, "#interrupt-cells",
++				 &parent_fwspec.param_count)) {
++		ret = -EINVAL;
++		goto free_vint_desc;
++	}
++
++	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
++		/* Parent is GIC */
++		parent_fwspec.param[0] = 0;
++		parent_fwspec.param[1] = p_hwirq - 32;
++		parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
++	} else {
++		/* Parent is Interrupt Router */
++		parent_fwspec.param[0] = p_hwirq;
++	}
+ 
+ 	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
+ 	if (parent_virq == 0) {
+-		kfree(vint_desc);
+-		return ERR_PTR(-EINVAL);
++		dev_err(&inta->pdev->dev, "Parent IRQ allocation failed\n");
++		ret = -EINVAL;
++		goto free_vint_desc;
++
+ 	}
+ 	vint_desc->parent_virq = parent_virq;
+ 
+@@ -171,6 +228,11 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
+ 					 ti_sci_inta_irq_handler, vint_desc);
+ 
+ 	return vint_desc;
++free_vint_desc:
++	kfree(vint_desc);
++free_vint:
++	ti_sci_release_resource(inta->vint, vint_id);
++	return ERR_PTR(ret);
+ }
+ 
+ /**
+@@ -555,15 +617,15 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
+-						 "ti,sci-rm-range-vint");
++	inta->vint = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
++					      TI_SCI_RESASG_SUBTYPE_IA_VINT);
+ 	if (IS_ERR(inta->vint)) {
+ 		dev_err(dev, "VINT resource allocation failed\n");
+ 		return PTR_ERR(inta->vint);
+ 	}
+ 
+-	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
+-						"ti,sci-rm-range-global-event");
++	inta->global_event = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
++					TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT);
+ 	if (IS_ERR(inta->global_event)) {
+ 		dev_err(dev, "Global event resource allocation failed\n");
+ 		return PTR_ERR(inta->global_event);
+@@ -594,6 +656,8 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&inta->vint_list);
+ 	mutex_init(&inta->vint_mutex);
+ 
++	dev_info(dev, "Interrupt Aggregator domain %d created\n", pdev->id);
++
+ 	return 0;
+ }
+ 
 -- 
 2.27.0
 
