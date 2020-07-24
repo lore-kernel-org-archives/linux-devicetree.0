@@ -2,273 +2,216 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD21C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5108AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C50206EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B9A206EB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595633089;
+	bh=Xq0D/3Ahn9nc9K3oRf4KbLNgsT57WhGyF47ymke7J1I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MoqL3VsJXSpHyAXUwF2jyYSBEbmZCEmheLDfKGaIztvy11Jq623bauU25COulXzVl
+	 Fk/EEYFHEc/BnP7vutUnvmVSRt7gnn1cEKLDcRdifTqSvq+k6OgMjp5yRVJilSLSwx
+	 eYFYT9MZJPDHu6zlfSWqFiXZuzEdOyn6GtSIH2V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgGXXD6 (ORCPT
+        id S1726455AbgGXXYs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 19:03:58 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:39416 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgGXXD5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 19:03:57 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9A8C88040A69;
-        Fri, 24 Jul 2020 23:03:48 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BeD3xAavDWHc; Sat, 25 Jul 2020 02:03:46 +0300 (MSK)
-Date:   Sat, 25 Jul 2020 02:03:42 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com>
+        Fri, 24 Jul 2020 19:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbgGXXYs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 19:24:48 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67BEB20759;
+        Fri, 24 Jul 2020 23:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595633087;
+        bh=Xq0D/3Ahn9nc9K3oRf4KbLNgsT57WhGyF47ymke7J1I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MIZBc67KRjS8ZLworVZFG+SYVi3xl9mvfo5oYUoKFTMujoPdru9o7MwwdmH77Hz6A
+         r5pXZ/CLYwX8cvPrWZWN7lvyEwy0pySxMxvV9jZ2MNAxDpeEp8dePxAQPFfKvZpyXI
+         UqJ0ZiKUFF37FOK8uWzT5urNtwDON1Im4IGLQKVs=
+Received: by mail-ej1-f43.google.com with SMTP id g7so3269266ejw.12;
+        Fri, 24 Jul 2020 16:24:47 -0700 (PDT)
+X-Gm-Message-State: AOAM531LrPg/Ejx2wwj729HwpYxmD8i4e9OQ2KmElb1J7vu4Rqz3NIVF
+        gVDtzLn5l94azFTjjxffAoRGpf30KJZWj23E5A==
+X-Google-Smtp-Source: ABdhPJwfhfPDr4sa3JCxhKDCTo0pXvPswGrmNiVpCVyLZxB4s1571M0BK+9I9DpZATfRGeAEvIM+EI8OA/dtKifFn2Q=
+X-Received: by 2002:a17:906:b888:: with SMTP id hb8mr11401027ejb.124.1595633085797;
+ Fri, 24 Jul 2020 16:24:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200723100317.GJ3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com> <1595469798-3824-8-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1595469798-3824-8-git-send-email-yongqiang.niu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 25 Jul 2020 07:24:34 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9hdvw7htuOkJmmmGR9SAev4O+kWuMopfP_F=8Vg=_U+A@mail.gmail.com>
+Message-ID: <CAAOTY_9hdvw7htuOkJmmmGR9SAev4O+kWuMopfP_F=8Vg=_U+A@mail.gmail.com>
+Subject: Re: [v7, PATCH 7/7] drm/mediatek: add support for mediatek SOC MT8183
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 01:03:17PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
-> > GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
-> > top of a GPIO chip. It's better from maintainability and readability
-> > point of view to use one instead of supporting a hand-written Generic
-> > IRQ-chip-based implementation. Moreover the new implementation won't
-> > cause much functional overhead but will provide a cleaner driver code.
-> > All of that makes the DW APB GPIO driver conversion pretty much justified
-> > especially seeing a tendency of the other GPIO drivers getting converted
-> > too.
-> > 
-> > Here is what we do in the framework of this commit to convert the driver
-> > to using the GPIO-lib-based IRQ-chip interface:
-> > 1) IRQ ack, mask and unmask callbacks are locally defined instead of
-> > using the Generic IRQ-chip ones.
-> > 2) An irq_chip structure instance is embedded into the dwapb_gpio
-> > private data. Note we can't have a static instance of that structure since
-> > GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
-> > A warning about that would have been printed by the GPIO-lib code if we
-> > used a single irq_chip structure instance for multiple DW APB GPIO
-> > controllers.
-> > 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
-> > descriptor. By default there is no IRQ enabled so any event raised will be
-> > handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
-> > is synthesized to have non-shared reference IRQ-lines, then as before the
-> > hierarchical and cascaded cases are distinguished by checking how many
-> > parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
-> > initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
-> > is used on a platform with shared IRQ line, then we simply won't let the
-> > GPIO-lib to initialize the parental IRQs, but will handle them locally in
-> > the driver.
-> > 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
-> > GPIO-lib IRQ-chip interface will create a new domain and accept a standard
-> > IRQ-chip structure pointer based on the setting we provided in the
-> > gpio_irq_chip structure.
-> > 5) Manually select a proper IRQ flow handler directly in the
-> > irq_set_type() callback by calling irq_set_handler_locked() method, since
-> > an ordinary (not Generic) irq_chip descriptor is now utilized.
-> 
+Hi Yongqiang:
 
-> Can you also emphasize that this make no regression to the 6a2f4b7dadd5 ("gpio:
-> dwapb: use a second irq chip")?
+Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8823=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8810:15=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> This patch add support for mediatek SOC MT8183
+> 1.ovl_2l share driver with ovl
 
-In fact I don't really see why that commit had been accepted in the first place.
-Both level and edge triggered IRQ types are implemented by means of the same
-callbacks and the same registers. The only handy thing in our case is the IRQ
-flow handler setting in accordance with the requested IRQ type, but that
-could be done by just calling irq_set_handler_locked() method without two-types
-complication. The commit log says: "So we can have at runtime two users where
-one is using edge and the other level." which isn't really correct since if an IRQ
-line is shared it can only be requested with the same trigger flags (see the
-inline comments in the __setup_irq() method definition). If an IRQ line isn't
-shared, then there can't be more than one user.
+I think this is done in [1], [2], [3], this patch just add the support
+of mt8183-ovl and mt8183-ovl-2l.
 
-Am I missing something?
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/drivers/gpu/drm/mediatek?h=3Dv5.8-rc6&id=3D132c6e250ed745443973cada8db17=
+cdbaebdf551
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/drivers/gpu/drm/mediatek?h=3Dv5.8-rc6&id=3D318462d1a568634ba09263cc730cb=
+0fb1d56c2b3
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/drivers/gpu/drm/mediatek?h=3Dv5.8-rc6&id=3D57148baac8b78461e394953cfd531=
+7bde8f795ab
 
-> 
-> (And I hope you have means to test that scenario, because in my case I have
->  only one IRQ and it's actually as input from other GPIO IRQ chip).
+> 2.rdma1 share drive with rdma0, but fifo size is different
 
-Alas I have DW APB GPIO with a single IRQ line attached too, so I can't test the
-hierarchical case, but only the cascaded one.
+I think this is done in [4], this patch just add the support of mt8183-rdma=
+.
 
-> 
-> > 6) Discard the custom GPIO-to-IRQ mapping function since GPIO-lib defines
-> > the standard method gpiochip_to_irq(), which will be used anyway no matter
-> > whether the custom to_irq callback is specified or not.
-> > 7) Discard the acpi_gpiochip_{request,free}_interrupts()
-> > invocations, since they will be called from
-> > gpiochip_add_irqchip()/gpiochip_irqchip_remove() anyway.
-> > 8) Alter CONFIG_GPIO_DWAPB kernel config to select
-> > CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
-> 
+[4] https://patchwork.kernel.org/patch/11679549/
 
-> I like the idea, but is it possible to split this?
+> 3.add mt8183 mutex private data, and mmsys private data
+> 4.add mt8183 main and external path module for crtc create
 
-Yeah, 6) and 7) could be unpinned to dedicated patches. Thanks for noticing
-this. I'll do that. But leaving the changes described before and not applying 8)
-will produce buildable but not working driver. So I'd prefer to leave 8) here.
+The fourth item is the mmsys private data in third item, so you need
+not to repeat it.
 
-> 
-> ...
-> 
-> >  static int dwapb_irq_set_type(struct irq_data *d, u32 type)
-> >  {
-> > -	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
-> > -	struct dwapb_gpio *gpio = igc->private;
-> > -	struct gpio_chip *gc = &gpio->ports[0].gc;
-> > +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
-> >  	irq_hw_number_t bit = irqd_to_hwirq(d);
-> >  	unsigned long level, polarity, flags;
-> > +	irq_flow_handler_t handler;
-> >  
-> >  	if (type & ~IRQ_TYPE_SENSE_MASK)
-> >  		return -EINVAL;
-> > @@ -274,26 +304,31 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
-> >  	case IRQ_TYPE_EDGE_BOTH:
-> >  		level |= BIT(bit);
-> >  		dwapb_toggle_trigger(gpio, bit);
-> > +		handler = handle_edge_irq;
-> >  		break;
-> >  	case IRQ_TYPE_EDGE_RISING:
-> >  		level |= BIT(bit);
-> >  		polarity |= BIT(bit);
-> > +		handler = handle_edge_irq;
-> >  		break;
-> >  	case IRQ_TYPE_EDGE_FALLING:
-> >  		level |= BIT(bit);
-> >  		polarity &= ~BIT(bit);
-> > +		handler = handle_edge_irq;
-> >  		break;
-> >  	case IRQ_TYPE_LEVEL_HIGH:
-> >  		level &= ~BIT(bit);
-> >  		polarity |= BIT(bit);
-> > +		handler = handle_level_irq;
-> >  		break;
-> >  	case IRQ_TYPE_LEVEL_LOW:
-> >  		level &= ~BIT(bit);
-> >  		polarity &= ~BIT(bit);
-> > +		handler = handle_level_irq;
-> >  		break;
-> >  	}
-> >  
-> > -	irq_setup_alt_chip(d, type);
-> > +	irq_set_handler_locked(d, handler);
-> 
+>
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c  | 18 ++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c |  6 ++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c   | 47 ++++++++++++++++++++++++++=
+++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c   | 43 ++++++++++++++++++++++++++=
++++
+>  4 files changed, 114 insertions(+)
+>
 
-> Can we rather do like other GPIO IRQ chip implementations are doing, i.e.
-> instead of repeating same handler in each branch, use one conditional:
-> 
-> 	if (type & IRQ_TYPE_LEVEL_MASK) {
-> 		...
-> 		irq_set_handler_locked(d, handle_level_irq);
-> 	} else if (type & IRQ_TYPE_EDGE_BOTH) {
-> 		...
-> 		irq_set_handler_locked(d, handle_edge_irq);
-> 	}
-> 
-> ?
+[snip]
 
-In fact I've picked up the repeating stuff from another GPIO IRQ driver
-./drivers/gpio/gpio-ep93xx.c . But your design of this code I like better.
-Thanks for suggesting it.
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_ddp.c
+> index 014c1bb..60788c1 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -15,6 +15,8 @@
+>
+>  #define MT2701_DISP_MUTEX0_MOD0                        0x2c
+>  #define MT2701_DISP_MUTEX0_SOF0                        0x30
+> +#define MT8183_DISP_MUTEX0_MOD0                        0x30
+> +#define MT8183_DISP_MUTEX0_SOF0                        0x2c
+>
+>  #define DISP_REG_MUTEX_EN(n)                   (0x20 + 0x20 * (n))
+>  #define DISP_REG_MUTEX(n)                      (0x24 + 0x20 * (n))
+> @@ -25,6 +27,18 @@
+>
+>  #define INT_MUTEX                              BIT(1)
+>
+> +#define MT8183_MUTEX_MOD_DISP_RDMA0            0
+> +#define MT8183_MUTEX_MOD_DISP_RDMA1            1
+> +#define MT8183_MUTEX_MOD_DISP_OVL0             9
+> +#define MT8183_MUTEX_MOD_DISP_OVL0_2L          10
+> +#define MT8183_MUTEX_MOD_DISP_OVL1_2L          11
+> +#define MT8183_MUTEX_MOD_DISP_WDMA0            12
+> +#define MT8183_MUTEX_MOD_DISP_COLOR0           13
+> +#define MT8183_MUTEX_MOD_DISP_CCORR0           14
+> +#define MT8183_MUTEX_MOD_DISP_AAL0             15
+> +#define MT8183_MUTEX_MOD_DISP_GAMMA0           16
+> +#define MT8183_MUTEX_MOD_DISP_DITHER0          17
+> +
+>  #define MT8173_MUTEX_MOD_DISP_OVL0             11
+>  #define MT8173_MUTEX_MOD_DISP_OVL1             12
+>  #define MT8173_MUTEX_MOD_DISP_RDMA0            13
+> @@ -74,6 +88,10 @@
+>  #define MUTEX_SOF_DSI2                 5
+>  #define MUTEX_SOF_DSI3                 6
+>
+> +#define MT8183_MUTEX_SOF_DPI0                  2
+> +#define MT8183_MUTEX_EOF_DSI0                  (MUTEX_SOF_DSI0 << 6)
+> +#define MT8183_MUTEX_EOF_DPI0                  (MT8183_MUTEX_SOF_DPI0 <<=
+ 6)
+> +
+>
+>  struct mtk_disp_mutex {
+>         int id;
+> @@ -153,6 +171,20 @@ struct mtk_ddp {
+>         [DDP_COMPONENT_WDMA1] =3D MT8173_MUTEX_MOD_DISP_WDMA1,
+>  };
+>
+> +static const unsigned int mt8183_mutex_mod[DDP_COMPONENT_ID_MAX] =3D {
+> +       [DDP_COMPONENT_AAL0] =3D MT8183_MUTEX_MOD_DISP_AAL0,
+> +       [DDP_COMPONENT_CCORR] =3D MT8183_MUTEX_MOD_DISP_CCORR0,
+> +       [DDP_COMPONENT_COLOR0] =3D MT8183_MUTEX_MOD_DISP_COLOR0,
+> +       [DDP_COMPONENT_DITHER] =3D MT8183_MUTEX_MOD_DISP_DITHER0,
+> +       [DDP_COMPONENT_GAMMA] =3D MT8183_MUTEX_MOD_DISP_GAMMA0,
+> +       [DDP_COMPONENT_OVL0] =3D MT8183_MUTEX_MOD_DISP_OVL0,
+> +       [DDP_COMPONENT_OVL_2L0] =3D MT8183_MUTEX_MOD_DISP_OVL0_2L,
+> +       [DDP_COMPONENT_OVL_2L1] =3D MT8183_MUTEX_MOD_DISP_OVL1_2L,
+> +       [DDP_COMPONENT_RDMA0] =3D MT8183_MUTEX_MOD_DISP_RDMA0,
+> +       [DDP_COMPONENT_RDMA1] =3D MT8183_MUTEX_MOD_DISP_RDMA1,
+> +       [DDP_COMPONENT_WDMA0] =3D MT8183_MUTEX_MOD_DISP_WDMA0,
+> +};
+> +
+>  static const unsigned int mt2712_mutex_sof[DDP_MUTEX_SOF_DSI3 + 1] =3D {
+>         [DDP_MUTEX_SOF_SINGLE_MODE] =3D MUTEX_SOF_SINGLE_MODE,
+>         [DDP_MUTEX_SOF_DSI0] =3D MUTEX_SOF_DSI0,
+> @@ -163,6 +195,12 @@ struct mtk_ddp {
+>         [DDP_MUTEX_SOF_DSI3] =3D MUTEX_SOF_DSI3,
+>  };
+>
+> +static const unsigned int mt8183_mutex_sof[DDP_MUTEX_SOF_DSI3 + 1] =3D {
+> +       [DDP_MUTEX_SOF_SINGLE_MODE] =3D MUTEX_SOF_SINGLE_MODE,
+> +       [DDP_MUTEX_SOF_DSI0] =3D MUTEX_SOF_DSI0 | MT8183_MUTEX_EOF_DSI0,
 
-> 
-> ...
-> 
-> > +		/*
-> > +		 * If more than one IRQ line is specified then try to
-> > +		 * initialize the hierarchical interrupts. Otherwise it's
-> > +		 * a simple cascaded case with a common IRQ signal.
-> > +		 */
-> > +		girq->num_parents = pp->irq[1] ? pp->ngpio : 1;
-> 
+I think this array is for 'sof', so you should drop MT8183_MUTEX_EOF_DSI0.
 
-> Can it be sparse in the array? (It's actually the main point why I went with
-> memchr_inv() instead of doing something like above)
+> +       [DDP_MUTEX_SOF_DPI0] =3D MT8183_MUTEX_SOF_DPI0 | MT8183_MUTEX_EOF=
+_DPI0,
 
-According to the DW APB GPIO databook it can be configured to provide either a
-combined IRQ line or multiple interrupt signals for each GPIO. It's up to
-the platform which of those signals are connected to an embedded IRQ
-controller. So I guess theoretically the array values can be sparse.
+Ditto.
 
-Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
-array case. I just thought it would work out-of-box. Before getting your comment
-and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
-passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
-seeing zero IRQ number was supposed to be considered as invalid. That method shall
-just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
-will fail to find a descriptor with invalid IRQ value and return NULL. So after
-getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
-have stopped setting the handler. But turns out it may work only for
-CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
-descriptor will be returned for zero IRQ number. That descriptor will be
-initialized with the passed parent_handler callback, which isn't what we want.
+Regards,
+Chun-Kuang.
 
-So in order to fix the problem we could follow either of the next paths:
-1) Just make sure the passed IRQs array is not sparse for instance by remapping
-   it to be linear.
-2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
-   gpiochip_add_irqchip() method.
-
-What to you think? Linus?
-
-> 
-> > +		girq->parents = pp->irq;
-> > +		girq->parent_handler_data = gpio;
-> > +		girq->parent_handler = dwapb_irq_handler;
-> 
-> ...
-> 
-
-> + blank line.
-
-Ok.
-
-> 
-> > +		/* This will let us handle the parent IRQ in the driver */
-> > +		girq->parents = NULL;
-> > +		girq->num_parents = 0;
-> > +		girq->parent_handler = NULL;
-> 
-
-> Shan't we do this before request_irq() call (at least for consistency with the
-> rest of the drivers)?
-
-Technically we shan't. Please elaborate which drivers you are referring to?
-Even the recent Linus' series "Use irqchip template" mostly does it in the
-same order.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> +};
+> +
+>  static const struct mtk_ddp_data mt2701_ddp_driver_data =3D {
+>         .mutex_mod =3D mt2701_mutex_mod,
+>         .mutex_sof =3D mt2712_mutex_sof,
+> @@ -184,6 +222,13 @@ struct mtk_ddp {
+>         .mutex_sof_reg =3D MT2701_DISP_MUTEX0_SOF0,
+>  };
+>
