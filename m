@@ -8,56 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86DFC433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FD4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2F84206E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1AEB206E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GSE9Xo3H"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HgXDl9TK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgGXXoU (ORCPT
+        id S1726742AbgGXXoX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 19:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49376 "EHLO
+        Fri, 24 Jul 2020 19:44:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgGXXoT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 19:44:19 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB2CC0619D3
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 16:44:19 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id i6so7416939qkn.22
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 16:44:19 -0700 (PDT)
+        with ESMTP id S1726573AbgGXXoW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 19:44:22 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A056BC0619D3
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 16:44:22 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id v18so1768191qvi.8
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 16:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cx5rtLU8xqliH8LTX82DtFOmXnkZhOGKEwyJ8VR9z80=;
-        b=GSE9Xo3HSLQ8K4OR7/wOyR7U9WgENeEP5zZGO+4owVsDbz5Dejlv7E7ipVfkrvZ1kv
-         G/RSI0eudaXFehUGRLeFUTKwjShcjT97LMBV69BTuVkoqCNnC4E1gBTVxoKOiLSQwMjf
-         nLo9dMWKgMLKfu0pOdtDOaBr5VHrZDqeN3HBFkaOY4itEKqRmdF+Q8PpxuHvopv3wq67
-         u5pYYoeZEokZrL9OKqFEi20ORBb7aLnDywbMRnQAsyjSPSvbxMsD0oiyuzeolkWbQYbu
-         9Z5tIXW0wqmxgzPrUVVC6DI1ugXK5mtfJKmDaJU4tAci2ctoaKgtZSKT12boNHUtbCM3
-         FySA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=EJx+C1HYJpJVI4jXDzDWz4LJBm2Ud6mpPDBO8ER+7Wc=;
+        b=HgXDl9TKIDoWYF/R/fYHaSb0seq98go57RS2bIjZWpUXOZMi6t6isak1S6tKCf0LZn
+         eV055hAWKgifbYzNam7PB8uIECiuOdwkcow/qKXUpAp4AM6RIOpp0WlS70wHr9kBbiQp
+         SEfuuZSp7HBaHyTbPyvPW/seQtfzS2XupEzp8mUx/zHn4f28dYpxGi0CJkAc9lIHxka7
+         2dglrGhL0jisZNwGFTEiIOxa/fs7Hy4gMikfFA4XP52JK6om7nV3tw6CGQc/GlYlHHj4
+         +fbXwQacjAi3Lxl99+V1ngtF12soKztTWZzvRzWIuOLr/fz7NVp6+7gHGJM3SPUiB7uC
+         xPXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cx5rtLU8xqliH8LTX82DtFOmXnkZhOGKEwyJ8VR9z80=;
-        b=g8x4JzS/EkrnyJ5NWR1M0PfyPMH7Y58eZx4nEr93sqXLs+PbKsWAedGEZt0xN61jAT
-         hIasE3Q6oTBcI6Z8SXcaQlnZ+KbQWxNbr+2MPkT9ojnty6eyAZxeUVI4zqHvu+pkd4IR
-         j2M/B8PI7T5hX/+bNA396mv3R7Sndd9yGnv7clmOKsYZMrgFxOvxOg6iGjuPXy1PVzE6
-         M4LiAZ0balyKvplcIhsE7RGIsl6RWDsFRl+0PPSZ3pHLoLL2lJiM77IbDy+GKr5CgANV
-         KT5owT7iSvLyNgFk+GQO/1JsU/eU2ZodbNYejsD9JgF274NjIlyNl2MF/obBs4n2UjpE
-         srsw==
-X-Gm-Message-State: AOAM532/Pps+sYkpBgy08/d2RNeFCBTzWtQYRMSTrW6whDuMbK89oWvs
-        CAuBMXYQWUh0yW0x9W1YHCbIosGAMC9iE48=
-X-Google-Smtp-Source: ABdhPJxol4qZmmuGdPWMn98HVFoQcIjnalYXFwE84XH5FOS0tGNY5axHz/B6a5xOisRHey4JcQ0xpUEB9HC2Ztk=
-X-Received: by 2002:a0c:eb46:: with SMTP id c6mr2030423qvq.137.1595634258604;
- Fri, 24 Jul 2020 16:44:18 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 16:44:14 -0700
-Message-Id: <20200724234415.1651639-1-saravanak@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=EJx+C1HYJpJVI4jXDzDWz4LJBm2Ud6mpPDBO8ER+7Wc=;
+        b=arijCCu7kIRw/wL+WfJyvJB4609rugZunL8TLHsX3+ZTqTDfdJnWhYpUlyxKZQZJLO
+         9QkTsGwY5iFqyatHzY0UbqsnAtMBAb0BIIE5QtzdPh4E/VW6YEAS3+zmNdLgVKe5td/h
+         WSLAZm+d+soIjkM9bMerLnT+i1gvhtzD52qakX0fmX77JolwdoKi4V1Rjmd4LVVEt2XE
+         6rbgsCjbA87FozK97GNg8bNZs5gaDepqkBgUEsu3U2PlfVOCf+HyIFDSBRQJwEhVkzLG
+         2HZLJy06Ezhk7Av2vV6MRHZUxm/zjlA8YRN86/OPmOtarXrccl0sTqfEr0zwaP74RAk+
+         kvpQ==
+X-Gm-Message-State: AOAM533sjH4Ke0I20SosW0mE8+F7U4MSsVpSFvU/d53qoy9Ix/Fpjnj/
+        k/UWdxJZ70za27+C400lmxMuD6PmKqjQH8A=
+X-Google-Smtp-Source: ABdhPJxPTlKJ7K9anYI69wdC69b+QBWLttCo2NrtIdtXsGifaFrPZASMRq8FQQ8b3DDRBVcMXrLQNKCt67TTE7E=
+X-Received: by 2002:a0c:ee4a:: with SMTP id m10mr11725156qvs.41.1595634261784;
+ Fri, 24 Jul 2020 16:44:21 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 16:44:15 -0700
+In-Reply-To: <20200724234415.1651639-1-saravanak@google.com>
+Message-Id: <20200724234415.1651639-2-saravanak@google.com>
 Mime-Version: 1.0
+References: <20200724234415.1651639-1-saravanak@google.com>
 X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH v2 1/2] of: property: Add device link support for multiple DT bindings
+Subject: [PATCH v2 2/2] of: property: Add device link support for pinctrl-0
+ through pinctrl-8
 From:   Saravana Kannan <saravanak@google.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>
@@ -69,43 +74,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for creating device links out of the following DT bindings:
-- interrupts-extended
-- nvmem-cells
-- phys
-- wakeup-parent
+Add support for pinctrl-0 through pinctrl-8 explicitly instead of trying
+to add support for pinctrl-%d properties.
+
+Of all the pinctrl-* properties in dts files (20322), only 47% (9531)
+are pinctrl-%d properties. Of all the pinctrl-%d properties, 99.5%
+(9486) are made up of pinctrl-[0-2]. 'pinctrl-8' is the current maximum
+found in dts files.
+
+Trying to parse all pinctrl-* properties and checking for pinctrl-%d is
+unnecessarily complicated. So, just add support for pinctrl-[0-8] for
+now. In the unlikely event we ever exceed pinctrl-8, we can come back
+and improve this.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
-v1->v2: No changes. Just sending again because v2 has changes in Patch 2/2.
+v1->v2:
+- Clarified in commit text that pinctrl-8 is the max found in the dts
+  files.
 
- drivers/of/property.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/of/property.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 6a5760f0d6cd..b06edeb1f88b 100644
+index b06edeb1f88b..d40d923ffeaf 100644
 --- a/drivers/of/property.c
 +++ b/drivers/of/property.c
-@@ -1269,6 +1269,11 @@ DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
- DEFINE_SIMPLE_PROP(power_domains, "power-domains", "#power-domain-cells")
- DEFINE_SIMPLE_PROP(hwlocks, "hwlocks", "#hwlock-cells")
- DEFINE_SIMPLE_PROP(extcon, "extcon", NULL)
-+DEFINE_SIMPLE_PROP(interrupts_extended, "interrupts-extended",
-+					"#interrupt-cells")
-+DEFINE_SIMPLE_PROP(nvmem_cells, "nvmem-cells", NULL)
-+DEFINE_SIMPLE_PROP(phys, "phys", "#phy-cells")
-+DEFINE_SIMPLE_PROP(wakeup_parent, "wakeup-parent", NULL)
+@@ -1274,6 +1274,15 @@ DEFINE_SIMPLE_PROP(interrupts_extended, "interrupts-extended",
+ DEFINE_SIMPLE_PROP(nvmem_cells, "nvmem-cells", NULL)
+ DEFINE_SIMPLE_PROP(phys, "phys", "#phy-cells")
+ DEFINE_SIMPLE_PROP(wakeup_parent, "wakeup-parent", NULL)
++DEFINE_SIMPLE_PROP(pinctrl0, "pinctrl-0", NULL)
++DEFINE_SIMPLE_PROP(pinctrl1, "pinctrl-1", NULL)
++DEFINE_SIMPLE_PROP(pinctrl2, "pinctrl-2", NULL)
++DEFINE_SIMPLE_PROP(pinctrl3, "pinctrl-3", NULL)
++DEFINE_SIMPLE_PROP(pinctrl4, "pinctrl-4", NULL)
++DEFINE_SIMPLE_PROP(pinctrl5, "pinctrl-5", NULL)
++DEFINE_SIMPLE_PROP(pinctrl6, "pinctrl-6", NULL)
++DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
++DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
  DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
  DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
  DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
-@@ -1294,6 +1299,10 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_power_domains, },
- 	{ .parse_prop = parse_hwlocks, },
- 	{ .parse_prop = parse_extcon, },
-+	{ .parse_prop = parse_interrupts_extended, },
-+	{ .parse_prop = parse_nvmem_cells, },
-+	{ .parse_prop = parse_phys, },
-+	{ .parse_prop = parse_wakeup_parent, },
+@@ -1303,6 +1312,15 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_nvmem_cells, },
+ 	{ .parse_prop = parse_phys, },
+ 	{ .parse_prop = parse_wakeup_parent, },
++	{ .parse_prop = parse_pinctrl0, },
++	{ .parse_prop = parse_pinctrl1, },
++	{ .parse_prop = parse_pinctrl2, },
++	{ .parse_prop = parse_pinctrl3, },
++	{ .parse_prop = parse_pinctrl4, },
++	{ .parse_prop = parse_pinctrl5, },
++	{ .parse_prop = parse_pinctrl6, },
++	{ .parse_prop = parse_pinctrl7, },
++	{ .parse_prop = parse_pinctrl8, },
  	{ .parse_prop = parse_regulators, },
  	{ .parse_prop = parse_gpio, },
  	{ .parse_prop = parse_gpios, },
