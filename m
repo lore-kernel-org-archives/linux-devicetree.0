@@ -2,99 +2,107 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC27C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 09:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B26EC433FE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 09:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8FF20767
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 09:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B4020768
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 09:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="CQ8oVLWP"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Z6dx0SmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgGXJIZ (ORCPT
+        id S1726863AbgGXJIi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:08:25 -0400
-Received: from mail-eopbgr50077.outbound.protection.outlook.com ([40.107.5.77]:36931
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Fri, 24 Jul 2020 05:08:38 -0400
+Received: from mail-vi1eur05on2043.outbound.protection.outlook.com ([40.107.21.43]:35680
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726861AbgGXJIY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:08:24 -0400
+        id S1728037AbgGXJIh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:08:37 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iZhUBMhxOZ/MPCfq7s/hDaym8M/NBH97Pcu3I0IpylwhAEnikxo9t1LLIZhnA3++8k1f3SJdGHnz6jAjXupzOW14Kk89IthSQ8PXS009cFEfIQjyY3QXZdPKM8EIFIt5pDGl95c2/lECN8YCBXYxGttcSlU0fds5TgLeX+LWWkByI8+6pq6SZOVDwcTs+5xkujXT7naFGVnxj0DgjWb7R74E30c18sdXC24WmXR4Kf/1eyUdofr4NX97+e9DWNkw69hf8bf1k+br2bGqVqkmaUbjy69vvodkZJ8x2HtDnbBMxmi9BDb4MXw13if3PxjnIjsjPoR9hqur2sUCxlxvuA==
+ b=gPsRHAKVOgkiuzcYhmh7lvgY5wQ5Yqj0dEvu7S7khz1Lt9gcghAaEn7ijIAfUjFx+0eCYyY04JnrNHBx6MZv3oAWJyLe1Rot1JDA3HL/oJD0bL67bcdZkLkwjM45bfac8x9MqAiEnSYmPfcjeyP5u5ULToz/RxPPAB4qC2x37T5aONnwpwvxbG6zNnh58Z7lLTETryyDd9MMxphwnm1ZYiJrLNIABtBRZwbgtdkeHO/2kAhq8RJ0etlCJYrN0wDXvkgBluh4dQ3/eIcmCwxx6ZYfW5Oh5/h7LMcUDzGoHIyyu1EXdJ6gqjOk74rHlZvjxSZmJ+CMsGLJvdQZFteksw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4aB3vYkq7eu8rLKcGsaxI+wW+pSzlOUqcKow7TDksfs=;
- b=n1qtmhbFDr0Hjhh51b4EPncwJoN+4HjFT8/4oR8jYQCZ02yWs+KqdhWamZLZVvkvSJdTS5SSb78OuRqooa2AgB8Q5L6po7Bied+Vo5dFmBqW3gJoeSWMv8V6MxXe97dPPcIdmFEG1bqYW8qrHXsHonTqeCxmmmlzY1lqX8qFg41d1s6PoHEXMzGeLDSc3KntlDF1aDcK5CtEQIr/R2bEG1bTPfaLwUjzm3cWm7PF7/7rgjJXuu2EE6eMwsmhFmjS8ilHCPOx0iAuNLoGNDH9eyQRdKvlpDAYMBzDw/Fut9mkAXEwg39+W/60qSebH2ay6Rbl0STHy8Jfno7qWDMQmg==
+ bh=m9daiHRo1mxt5cacqv8wV10od6W29rxvawkioiNZ+kE=;
+ b=BpCFOGoWdoAMikrro5kiXz+yLq4J7SjL3g6DsSvIu+xa0QpgVeaMiSFUr8Qe8NkIix+czh3w9cPoevF+95lSFLAw6o46V/JxWnOazzS2zTvWCzuZWbarzaraY2U1wuSq6k0/1N3+GdKePzyFz8fsjCY4gz/HH2MfiXAP81j9QuQ7stmL1jW8rZNmhzLweJnyCZmrVveWiWJC1lun0KiZCVwDo3R2LoEx+cJk7bGNNKRZWPxkm+n7aq/qrrmooBnbiOFVmkBtwzT4dNUJzlUXL7TZuqji1Psg32VlRNXvGTcVmG3bI+Rxht0nNsoMY8FdMTTm7bBtr4SoIq6kRgWj8A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4aB3vYkq7eu8rLKcGsaxI+wW+pSzlOUqcKow7TDksfs=;
- b=CQ8oVLWPwyhQxaJMiGiIHKeu3AwYiuElvvyYKTp5EqpHEEgqCXNgZj/KrQcBOxRupkTs4vD0f88Sc7GffsEdsWpIyc7x44GYTIbrR1PPNm44xbvMwuMlGruhwffdpxu4ggJudtlbnxyuSPI6va8/7h2aKqy3foWtVkNPUGhCAfI=
+ bh=m9daiHRo1mxt5cacqv8wV10od6W29rxvawkioiNZ+kE=;
+ b=Z6dx0SmBNre4H3JGu/5HeNApa/MGez+F0oSVdhtsD76FEmF8G5CnMYbo1fa4BCO4aT8zaTdO9V/XXl1l6q2YwRuap2qnXyzGvYL3fUcmcBe+64gWklmV9hbdeoZKde0muME0451WlSPuJw+GAwR8I/Uei5D7D+goWyZPJ8AOwSs=
 Authentication-Results: pengutronix.de; dkim=none (message not signed)
  header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
 Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
  (2603:10a6:803:22::27) by VI1PR04MB6960.eurprd04.prod.outlook.com
  (2603:10a6:803:12d::10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3195.23; Fri, 24 Jul
- 2020 09:08:19 +0000
+ 2020 09:08:31 +0000
 Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
  ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
  ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
- 09:08:19 +0000
+ 09:08:31 +0000
 From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
 To:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     lukas@mntmn.com, agx@sigxcpu.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
         Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     lukas@mntmn.com, agx@sigxcpu.org, laurentiu.palcu@oss.nxp.com
-Subject: [PATCH v8 0/5] Add support for iMX8MQ Display Controller Subsystem
-Date:   Fri, 24 Jul 2020 12:07:29 +0300
-Message-Id: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v8 5/5] dt-bindings: display: imx: add bindings for DCSS
+Date:   Fri, 24 Jul 2020 12:07:34 +0300
+Message-Id: <20200724090736.12228-6-laurentiu.palcu@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
+References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
 Content-Type: text/plain; charset="us-ascii"
 X-ClientProxiedBy: AM0PR10CA0128.EURPRD10.PROD.OUTLOOK.COM
  (2603:10a6:208:e6::45) To VI1PR0402MB3902.eurprd04.prod.outlook.com
  (2603:10a6:803:22::27)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR10CA0128.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:e6::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Fri, 24 Jul 2020 09:08:18 +0000
+Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR10CA0128.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:e6::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Fri, 24 Jul 2020 09:08:29 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [83.217.231.2]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3b178697-dda5-485d-4a99-08d82fb11ba1
+X-MS-Office365-Filtering-Correlation-Id: 5c2ca092-6efe-460e-1631-08d82fb122ab
 X-MS-TrafficTypeDiagnostic: VI1PR04MB6960:
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB6960E66951A8FFBB2472ABF1BE770@VI1PR04MB6960.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Microsoft-Antispam-PRVS: <VI1PR04MB6960B8CDFBD007751A16D8C3BE770@VI1PR04MB6960.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4LJ+B5namELbxRIgecGnSGe+4UZI83RPTjIV+aSI9Ia1pzpZxJ7xtlH++EQhU4rSuKRoE8gGVgpQnFoM2PhxZ59NfI0tKUOsq1ew+NgJ9pCtZVhO457fFnMbV2R+uLyqy5Rgbmb0bjHkSTieIyZzRGgO3YulKtlaaUH4gXenzmXmDD5Cbxj4GXgd993bQ/BqxbolvkE9qZ8jWQbDnpC5nuPe2SGaQI8ykTHiMmrzXizYcFz5+DEqsz30XkFxWOulUnK6ANuy77WqpkslN3quWE2y28Xr988v+FWmE93MrF4uq30OFCMPHz4jxdJGh9HHlNPbJY4m2An1g20I6HSUVkMv152nNltU2aPllZV0QVl3lANrq3e/vB9pZ4FP6ZRulz5QQJieKo8SeiRJluNEXR326CUrYQ/mbXH3sUgfbzQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(39860400002)(376002)(26005)(5660300002)(186003)(86362001)(6506007)(83380400001)(478600001)(966005)(1076003)(16526019)(52116002)(2616005)(66556008)(66946007)(66476007)(6512007)(6666004)(956004)(8676002)(2906002)(6486002)(4326008)(44832011)(8936002)(110136005)(316002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: nqXMH1jSC2tCUKG0Oap9JSiqDx5x0XU992ZC8k3dM84FV9iFxP2rlu/bnJ5VZQM3Df+ZgewzqtUX3n1VMcmed3wUEFORwn5DWGVxIZIQ+024I+Ga+1rLVDUXR4gu6goAcx+yVj4NcOdwThZqrfRBQ551vaC86OSWMZQCsBZBcdk0MYJEyBL+nHCVQTZ9pxM9hmRq0R4LibpS+ghdR1mfhZdnQeNeTm2/16ile2xTzoqh8v/2AFJlXlmHMqWu1aelpK6VXvP2g7toHH6BOuv3C1JFssOskbgBDeBGvTWSfXYcokOLqrDulYf8grZff1v2JAQ9fKFliAYBK9AHoHLlLLKnEzQRPQuuDT6HaNe/FYBw4VGEm6GNNloZBWy6mpy/SaK575dVyrPqrUPMSo74zJnA/pRyz0dnIrzzXWOoZnJ3ijTySLrpKHpxuKQm6rJ76E9001xF67uhCvlEh8oDuwdTH1q3us1L8qgmWGlLJAk=
+X-Microsoft-Antispam-Message-Info: R97y8X2nI5d4/lsCbk1AH1hjP1hMzjZ8czKvXMCYCI5PC12Ln14OksOhGRzXMa95nuNnAFgb0IpRSHxwEtOufddq2XJR6rFCCACGGj/v+IIotYrpg5F8F42SBBsjmcd8a9fJsjne5KxTz93zWzbQAgkxkx68hXPk6n3Fx+hnOUTxKu+W/cuJBYaJ996ccRl2v28Qh7q+VNAHDg4hDNQmD238Yy/ZQDcfv3hp0KLHpfBMTub3vx2dWD6j9qgIilfqlEtF1iWQgXte7d2gXCCyrUapcnG4J0Qd64g+Fa6dF8N84LEBJY/MC1T0AmMXnZpK5Cvn7BW1MQAytaWf+qbLTd0WfhhO0auFUbkr/H4OzXYZd9TeaPyfmTYpYygutFUTkIPBblehLgQUKAtnaL5/Qf3xOXMvvoxfT0i8qyZi/5nXdgFIbSITVJV0cYJImI0k
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(39860400002)(376002)(26005)(5660300002)(186003)(86362001)(6506007)(83380400001)(478600001)(1076003)(16526019)(52116002)(2616005)(66556008)(66946007)(66476007)(6512007)(6666004)(956004)(8676002)(2906002)(6486002)(4326008)(7416002)(44832011)(8936002)(110136005)(316002)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 5wd+JxmKF9bgbwFPb996qaLNvnQKLtphCJqM22sNaCL2420djbeNG9wYt8JMGawxuqL/YqoaKJLJ+Jhhl7aQvSViwU/L7ZFD8UKeh9JiRFJwPog4mYEzZ04lxrveI4wYhvGA1xRhDOe9a2yGLFqxYsOlEBOf7gLNF7PD3uZG9A9cPjFD595Z8EG97rmX+sDLNgfOBZXmiKR8JKOq1h3/TbuSmukAxU94uGawkdDC48j9y+3G+lvQQ29i7As5D4iXHwhzuWmH8rEuPZrfVULjaFZ/DnfQPeCXxd/E0SJKmpQUJ+PjNTiRWCwHLgHW9c0JT5NBnhLIWZOqbXV7PAEqR2mgKJUxKArvNcTzycmk4mlfchfDPYyEvQHP2IAJRsJ3gETpDUQdRJ9gELOB1xKROLdVXWynnErUhFq7YpB12YH1uS1XThH0Uy6ELN1NdMnw8ZAiskDAO5AatWBBZ34xWR08kTraK1jyzBXkgJzBanY=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b178697-dda5-485d-4a99-08d82fb11ba1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c2ca092-6efe-460e-1631-08d82fb122ab
 X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 09:08:19.4535
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 09:08:31.2088
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dZNjH5m5MgBjVqeH0mRyy5tfv1ovZyx5e91cQJpFafXJvY5Wtg1156aHEayY5v2ot9+xkEwtdjpI2V073hpBfg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: QYMZ3iJqSt5vSTkYWtDWa4HpoL39ij4eB4DQrad0HabwwqRoA3n5QXN3OJC2Jv57hBQZKxQD4PO/QL2kVkajQA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6960
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -103,144 +111,125 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 
-Hi,
+Add bindings for iMX8MQ Display Controller Subsystem.
 
-This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-includes only graphics plane support (no video planes), no HDR10 capabilities,
-no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-
-Support for the rest of the features will be added incrementally, in subsequent
-patches.
-
-The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-
-Thanks,
-Laurentiu
-
-Changes in v8:
- * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
-   out. SRC is not used in DCSS driver;
- * Nothing else changed;
-
-Changes in v7:
- * Added a patch to initialize the connector using the drm_bridge_connector
-   API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
-   Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
-   patches for ADV and NWL were needed, from our downstream tree, which
-   will be upstreamed soon by their author;
- * Rest of the patches are untouched;
-
-[1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
-[2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
-
-Changes in v6:
- * Addressed Rob's comment and added "additionalProperties: false" at
-   the end of the bindings' properties. However, this change surfaced
-   an issue with the assigned-clock* properties not being documented in
-   the properties section. Added the descriptions and the bindings patch
-   will need another review;
- * Added an entry for DCSS driver in the MAINTAINERS file;
- * Removed the component framework patch altogether;
-
-Changes in v5:
- * Rebased to latest;
- * Took out component framework support and made it a separate patch so
-   that people can still test with HDP driver, which makes use of it.
-   But the idea is to get rid of it once HDP driver's next versions
-   will remove component framework as well;
- * Slight improvement to modesetting: avoid cutting off the pixel clock
-   if the new mode and the old one are equal. Also, in this case, is
-   not necessary to wait for DTG to shut off. This would allow to switch
-   from 8b RGB to 12b YUV422, for example, with no interruptions (at least
-   from DCSS point of view);
- * Do not fire off CTXLD when going to suspend, unless it still has
-   entries that need to be committed to DCSS;
- * Addressed Rob's comments on bindings;
-
-Changes in v4:
- * Addressed Lucas and Philipp's comments:
-   * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
-   * Removed usage of devm_ functions since I'm already doing all the
-     clean-up in the submodules_deinit();
-   * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
-   * Removed en_completion variable from dcss_crtc since this was
-     introduced mainly to avoid vblank timeout warnings which were fixed
-     by arming the vblank event in flush() instead of begin();
-   * Removed clks_on and irq_enabled flags since all the calls to
-     enabling/disabling clocks and interrupts were balanced;
-   * Removed the custom atomic_commit callback and used the DRM core
-     helper and, in the process, got rid of a workqueue that wasn't
-     necessary anymore;
-   * Fixed some minor DT binding issues flagged by Philipp;
-   * Some other minor changes suggested by Lucas;
- * Removed YUV formats from the supported formats as these cannot work
-   without the HDR10 module CSCs and LUTs. Will add them back when I
-   will add support for video planes;
-
-Changes in v3:
- * rebased to latest linux-next and made it compile as drmP.h was
-   removed;
- * removed the patch adding the VIDEO2_PLL clock. It's already applied;
- * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
- * fixed a a spurious hang reported by Lukas Hartmann and encountered
-   by me several times;
- * mask DPR and DTG interrupts by default, as they may come enabled from
-   U-boot;
-
-Changes in v2:
- * Removed '0x' in node's unit-address both in DT and yaml;
- * Made the address region size lowercase, to be consistent;
- * Removed some left-over references to P010;
- * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
-   issues reported by kbuild for other architectures;
-
-
-Laurentiu Palcu (5):
-  drm/imx: compile imx directory by default
-  drm/imx: Add initial support for DCSS on iMX8MQ
-  drm/imx/dcss: use drm_bridge_connector API
-  MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
-  dt-bindings: display: imx: add bindings for DCSS
-
- .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 +++
- MAINTAINERS                                   |   8 +
- drivers/gpu/drm/Makefile                      |   2 +-
- drivers/gpu/drm/imx/Kconfig                   |   2 +
- drivers/gpu/drm/imx/Makefile                  |   1 +
- drivers/gpu/drm/imx/dcss/Kconfig              |   8 +
- drivers/gpu/drm/imx/dcss/Makefile             |   6 +
- drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
- drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
- drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
- drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
- drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
- drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
- drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
- drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
- drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
- drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
- drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
- drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
- drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
- 20 files changed, 4107 insertions(+), 1 deletion(-)
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
+ 1 file changed, 104 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
- create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
- create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
 
+diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+new file mode 100644
+index 000000000000..68e4635e4874
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+@@ -0,0 +1,104 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 NXP
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: iMX8MQ Display Controller Subsystem (DCSS)
++
++maintainers:
++  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
++
++description:
++
++  The DCSS (display controller sub system) is used to source up to three
++  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
++  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
++  image processing capabilities are included to provide a solution capable of
++  driving next generation high dynamic range displays.
++
++properties:
++  compatible:
++    const: nxp,imx8mq-dcss
++
++  reg:
++    items:
++      - description: DCSS base address and size, up to IRQ steer start
++      - description: DCSS BLKCTL base address and size
++
++  interrupts:
++    items:
++      - description: Context loader completion and error interrupt
++      - description: DTG interrupt used to signal context loader trigger time
++      - description: DTG interrupt for Vblank
++
++  interrupt-names:
++    items:
++      - const: ctxld
++      - const: ctxld_kick
++      - const: vblank
++
++  clocks:
++    items:
++      - description: Display APB clock for all peripheral PIO access interfaces
++      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
++      - description: RTRAM clock
++      - description: Pixel clock, can be driven either by HDMI phy clock or MIPI
++      - description: DTRC clock, needed by video decompressor
++
++  clock-names:
++    items:
++      - const: apb
++      - const: axi
++      - const: rtrm
++      - const: pix
++      - const: dtrc
++
++  assigned-clocks:
++    items:
++      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_AXI_ROOT
++      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_RTRM
++      - description: Phandle and clock specifier of either IMX8MQ_VIDEO2_PLL1_REF_SEL or
++                     IMX8MQ_VIDEO_PLL1_REF_SEL
++
++  assigned-clock-parents:
++    items:
++      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
++      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
++      - description: Phandle and clock specifier of IMX8MQ_CLK_27M
++
++  assigned-clock-rates:
++    items:
++      - description: Must be 800 MHz
++      - description: Must be 400 MHz
++
++  port:
++    type: object
++    description:
++      A port node pointing to the input port of a HDMI/DP or MIPI display bridge.
++
++additionalProperties: false
++
++examples:
++  - |
++    dcss: display-controller@32e00000 {
++        compatible = "nxp,imx8mq-dcss";
++        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
++        interrupts = <6>, <8>, <9>;
++        interrupt-names = "ctxld", "ctxld_kick", "vblank";
++        interrupt-parent = <&irqsteer>;
++        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
++                 <&clk 254>,<&clk 122>;
++        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
++        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
++        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
++        assigned-clock-rates = <800000000>,
++                               <400000000>;
++        port {
++            dcss_out: endpoint {
++                remote-endpoint = <&hdmi_in>;
++            };
++        };
++    };
++
 -- 
 2.23.0
 
