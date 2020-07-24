@@ -2,100 +2,131 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12390C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 16:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797A2C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 16:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E49952070B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 16:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549672067D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 16:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r6whtLyn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SmCLRJ44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgGXQ2n (ORCPT
+        id S1726719AbgGXQxD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:28:43 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:51422 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbgGXQ2n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:28:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595608122; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=2Tluwc+dc7SaCkWp19noOVVMBfhBEvUZgNi3cdWouqw=; b=r6whtLyn/OGRK70cQn2DPcLTPlvrdTeU1cklNmKhXm+VvR7vxrfCu0VTBWqsiiPZtH4UE5db
- luuWB2NGRhTtkqDks2aPD1CkR9SfAmsyGxZUK36j07TA1O4kNQjV05pa99Ah0GjULKyZl14C
- xiM2immWesP7BxSVhyl4Jk4U5+E=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5f1b0c2b7186ea1ee18605a0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 16:28:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8296C433C6; Fri, 24 Jul 2020 16:28:26 +0000 (UTC)
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3EBE5C433C9;
-        Fri, 24 Jul 2020 16:28:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3EBE5C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Fri, 24 Jul 2020 10:28:25 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        Fri, 24 Jul 2020 12:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgGXQxC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 12:53:02 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE75C0619D3
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 09:53:02 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o8so8524879wmh.4
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 09:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=as4fmSRb387YS8gfp6BovwXw3R68Emkk0kN+WY1ZJ10=;
+        b=SmCLRJ44dBBQotYlC662u00MDZ5k4Teg/q73JDHfyu2mT2tUikZZqtRgsqZZQPyNan
+         VppmGwKiMK3RvpLWpYUTI2sLrjBHbvI5+0/gtuTztc4plpqp5Z93XASHFJTd+XENm8m5
+         nibPgSJJwCaEXF5VNcX9o0a8XW67UuYXdFhnChbgX/gwRnOJpLNc25izUdZyKiEjOnFN
+         KZgmGB+zNkgaPcHl7DFcS3Z0MYB65kA03Fx8uJXrTxloFlE+vunIeY+vpjUhgeFLUT8e
+         7OcYiepqJJROILp1YgSjybupPwwdnhZS0bsYsqDSxbHhWtBw5CK+DrYXC+dv9vKd7DFO
+         ok3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=as4fmSRb387YS8gfp6BovwXw3R68Emkk0kN+WY1ZJ10=;
+        b=aMOqXthw6S3dE2sErD2HQPpStwVzeCNxXwvzhtzKKejbvkOyMrI9T9jIXZDje0+Px3
+         QnhN8o5dpS5s3dKLJVDeQ4EsJNbHgxRUYx4g2CYIF8vM0E851nvkAWiqv/kr49KQ0Rja
+         koX9oV0UZumNODUzF1sf0ZasD5zzoemcD8e0+79UNQjQCrQ4pwbqeyuPNCK/fE9M3fqM
+         vpusRYMm1zP8iSxGN5EvEfJSUuFKrm/mm9jXDZJ14OKVM/v+8zmRnVPhNJTBkVw/xA7d
+         sA+5/INBS/gdwzBOrl9vP+/vf5p6BktJPKkM5xiN/uw8bvOMG7m/GtyWyBZG1fHEbLyu
+         9hSA==
+X-Gm-Message-State: AOAM533MpA7UMoPZcJ6fO2rNCgUl8F+3pcZH0yHthrYj3m5ObOb3PtA/
+        6qyLYBCyrZ2KOhltGpMQXp63vQ==
+X-Google-Smtp-Source: ABdhPJzvcZscyx0ElMoCx6+ZPgt1DJp28aDHhZQ0OpmWwtl54FOTGkKDr5QqjN4KJyP0BhjX2+r1nw==
+X-Received: by 2002:a1c:59c2:: with SMTP id n185mr9920796wmb.104.1595609580911;
+        Fri, 24 Jul 2020 09:53:00 -0700 (PDT)
+Received: from [192.168.1.4] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id l15sm1838328wro.33.2020.07.24.09.52.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 09:53:00 -0700 (PDT)
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+To:     Lina Iyer <ilina@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
         linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-Message-ID: <20200724162825.GH9185@codeaurora.org>
 References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
  <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
  <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
  <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
+ <20200724162825.GH9185@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <d3fe38de-2f79-713f-eb9e-f72f4b9f6dc0@linaro.org>
+Date:   Fri, 24 Jul 2020 19:52:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
+In-Reply-To: <20200724162825.GH9185@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
->Hi Maulik/Lina,
->
->On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
->>Hi Rajendra,
->>
->>After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
->>below messages on db845:
->>
->>qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
->>current OPP for freq 533000097 (-34)
->>
->>^^^ This one is new.
->>
->>qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
->>
->>^^^ and this message is annoying, can we make it pr_debug in rpmh?
->
-How annoyingly often do you see this message?
-Usually, this is an indication of bad system state either on remote
-processors in the SoC or in Linux itself. On a smooth sailing build you
-should not see this 'warning'.
+Hi Lina,
 
->Would you be fine with moving this message to a pr_debug? Its currently
->a pr_info_ratelimited()
-I would rather not, moving this out of sight will mask a lot serious
-issues that otherwise bring attention to the developers.
+On 7/24/20 7:28 PM, Lina Iyer wrote:
+> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
+>> Hi Maulik/Lina,
+>>
+>> On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
+>>> Hi Rajendra,
+>>>
+>>> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+>>> below messages on db845:
+>>>
+>>> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+>>> current OPP for freq 533000097 (-34)
+>>>
+>>> ^^^ This one is new.
+>>>
+>>> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+>>>
+>>> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
+>>
+> How annoyingly often do you see this message?
 
---Lina
+I haven't gig deeply but on every driver pm_runtime_suspend (after
+applying Rajendra's patches). And I guess it comes after a call to
+dev_pm_opp_set_rate(dev, 0).
+
+IMO this is too often.
+
+> Usually, this is an indication of bad system state either on remote
+> processors in the SoC or in Linux itself. On a smooth sailing build you
+> should not see this 'warning'.
+> 
+>> Would you be fine with moving this message to a pr_debug? Its currently
+>> a pr_info_ratelimited()
+> I would rather not, moving this out of sight will mask a lot serious
+> issues that otherwise bring attention to the developers.
+> 
+> --Lina
+
+-- 
+regards,
+Stan
