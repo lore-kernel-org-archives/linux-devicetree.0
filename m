@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5845FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCAEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 287312074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262DB20737
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595593311;
-	bh=pKwG7sz23Jh8BAXh9JAwkl7Df1oVbQNtNUXu8orqNB0=;
+	s=default; t=1595593336;
+	bh=8PXCx60bJOB2VVd2llmJy4lMgQ91giqE48nQabhYHIs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Aa86Ox1mQV3YjU5FUzGEqCOlYsOPVPbqtKTzGJlCduh37IEuePYXpOYWW+UEqVBvW
-	 v+/U2pH+WaXt842z5U3QhMcH8KpYi15dVDoLXLp3UOhfSkrvOC7I+fOD8ZkK0q8Dqq
-	 qhZTdMSFjlSqiLBMb/NKQJjHnvmKcmmwmeWyq380=
+	b=BvNJjtkkq/7zWfx7wXQcCOlzMFoXTnCjsxmlj9RquD3sjBTVG7e81K6q9n/6ysRwf
+	 MsanLlw0Z7whvJEhj/DV/CAaJifhzKJDfwW784uini+1pByFY9TuWUINGdxp6RtbH8
+	 sPyF4SNLn1s0GY41l8D28m8FXzdBm/L+MAZC7i9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgGXMVu (ORCPT
+        id S1726989AbgGXMWP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 08:22:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgGXMVu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:21:50 -0400
+        id S1726258AbgGXMWP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:22:15 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711D520737;
-        Fri, 24 Jul 2020 12:21:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A59CC2074B;
+        Fri, 24 Jul 2020 12:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595593310;
-        bh=pKwG7sz23Jh8BAXh9JAwkl7Df1oVbQNtNUXu8orqNB0=;
+        s=default; t=1595593335;
+        bh=8PXCx60bJOB2VVd2llmJy4lMgQ91giqE48nQabhYHIs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eGqQpuA/nsqH8Q973vZszR/rnh/Gp5nGlYXQ1nr618nI+UDrFjh+iwCE+FtDhHtRJ
-         H67R5n7U58FQi2AGdugQWmDDzk2TcDK2M2m4cyNXW3rxp+zb/RBBASKxXMfWLB7b+v
-         6SUBkDL9SMis3R1e/0A2t/1yCCJx3dM7P8ExrEcY=
-Date:   Fri, 24 Jul 2020 13:21:34 +0100
+        b=y/wjC9A/oDApgq731MtfIyCOZrYiKVWbu6UV9mKKddRCYmUwAp4KPKzXQ87WkGdi0
+         dFemXfYLVI7DxFBNUtnopYEV8e4mkNKhWBWL9y0Na4rmj/iFTqcs68ztCcnidGhS5J
+         E/hMuWYUqksr3ogD2pICcfNMTQOwnaJzO74vsbnk=
+Date:   Fri, 24 Jul 2020 13:22:00 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -48,17 +48,16 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Josef Friedl <josef.friedl@speed.at>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Wen Su <wen.su@mediatek.com>
-Subject: Re: [PATCH 5/8] regulator: mt6359: Add support for MT6359 regulator
-Message-ID: <20200724122134.GD5664@sirena.org.uk>
+        srv_heupstream <srv_heupstream@mediatek.com>
+Subject: Re: [PATCH 6/8] regulator: mt6359: Set the enable time for LDOs
+Message-ID: <20200724122200.GE5664@sirena.org.uk>
 References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1595509133-5358-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1595509133-5358-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
+        protocol="application/pgp-signature"; boundary="gMR3gsNFwZpnI/Ts"
 Content-Disposition: inline
-In-Reply-To: <1595509133-5358-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1595509133-5358-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 X-Cookie: You will wish you hadn't.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -67,33 +66,29 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---xB0nW4MQa6jZONgY
+--gMR3gsNFwZpnI/Ts
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 23, 2020 at 08:58:50PM +0800, Hsin-Hsiung Wang wrote:
-> From: Wen Su <wen.su@mediatek.com>
->=20
-> The MT6359 is a regulator found on boards based on MediaTek MT6779 and
-> probably other SoCs. It is a so called pmic and connects as a slave to
-> SoC using SPI, wrapped inside the pmic-wrapper.
+On Thu, Jul 23, 2020 at 08:58:51PM +0800, Hsin-Hsiung Wang wrote:
+> Add the enable time for LDOs.
+> This patch is preparing for adding mt6359p regulator support.
 
 Acked-by: Mark Brown <broonie@kernel.org>
 
---xB0nW4MQa6jZONgY
+--gMR3gsNFwZpnI/Ts
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8a0k4ACgkQJNaLcl1U
-h9Du2gf/U/MC+yoZc1bEJJ7ZixaCMK6ZSIJlbMh6RlAKO1kQAQhLz9i3yinQPaai
-p8cRi3iERLnXzA3RxbvtG/Tq8JOSXZ6PjCVxjHp8OHmc+WMOb63rivRx4fyEzFj3
-FzQJWg7RxoBiJOQQm0dx0KPd0Di4ITh6UxA7jSGtQVVdkI24V/D+Hb47KeZGlOxt
-6awjyRSsyRgrwh686lJq9hinUieKmcyASf8ZnKuDUzqlI4FMC6xsz86/YGwKB82N
-m38XL/zdOMGDDC8yWdAkyn1PWKqgfYa9B3qkAUheivyiXWy1+6sN4UQ59cHoO2+B
-Z7DhweBclspPwW6xEE8Ts/MNL/TlvQ==
-=pp/5
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8a0mcACgkQJNaLcl1U
+h9ClHgf+Iv+wHsCGXF3YvUuwEgURaO7JIQ3MmUBIbBA9ydPNLInosIv5pzsEfzKU
+ksXKf6YrYRWtvGKZ/RI+yQy50doSXIsjpVdGtaSthXlkCtU3O85UmnYH2/XbgQWU
+39glGYpINamDCNkrNc7DqdtxXEwoymcfRktME+Hb/jhiunoGNi/nXXhi1lsgA2KE
+kLufn7w7rvstpsbmxgRjlbwN9bPQNLe4N/hMMLaI1vClZiYdlKPEsvL5eUZiMSUi
+9yQqKDVFzYFMsDsrdAwnqEP04OKIqgJ3WHoy5S8lZB23r6slnMddqXSSsPRNy9K8
+Q00IJm9y5cHVZ6Z5sWNDrNfJy9D4MA==
+=ZtYc
 -----END PGP SIGNATURE-----
 
---xB0nW4MQa6jZONgY--
+--gMR3gsNFwZpnI/Ts--
