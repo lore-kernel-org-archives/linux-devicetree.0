@@ -2,87 +2,137 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3468EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 03:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A84FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 03:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 038B220709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 03:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463E720792
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 03:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JEv6XUlp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TvLAYK/A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbgGXDdj (ORCPT
+        id S1726425AbgGXD4p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 23 Jul 2020 23:33:39 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50106 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbgGXDdj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 23 Jul 2020 23:33:39 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06O3XboZ066583;
-        Thu, 23 Jul 2020 22:33:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595561617;
-        bh=mjL2iRADnFeNVqMrnss31HTUWRouZ/4k4xQwhBjgLWg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JEv6XUlpQrJG3a06egbktPn6fcupYh+T5DnrI2/NS+OA7DF4CT/xpC8fgkzpOa2JE
-         S89I43Zm1ZRbe5bjHGkMTfXtolZIV1b+9Dg/mlZHBMUdn9im1YPJ7Wyk42YY4IRMhz
-         YNaunHy9VxlO3fAChnuyGO5FxxBZlCFTsLtf/7Wo=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06O3Xb0G122837;
-        Thu, 23 Jul 2020 22:33:37 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 23
- Jul 2020 22:33:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 23 Jul 2020 22:33:37 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06O3XZRE002832;
-        Thu, 23 Jul 2020 22:33:35 -0500
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-j721e: Fix interconnect node names
-To:     Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>
-CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200723211137.26641-1-s-anna@ti.com>
- <20200723211137.26641-3-s-anna@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <98551c8e-a69f-973c-6650-75fc008b5b28@ti.com>
-Date:   Fri, 24 Jul 2020 09:03:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 23 Jul 2020 23:56:45 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:35817 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgGXD4o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 23 Jul 2020 23:56:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595563003; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=jKEWa5p6iwN7F8E6ld+cf+QtH5BZYYsHm6Lj0pjjaxU=;
+ b=TvLAYK/ATwzosHacEf/civLs0jen2HV+GbvFe37z7mStC+HQfDops9ta4CLJJxb4Gs8nzrQG
+ wRYacinEW9EYi1hPiAiW201BOh63VqVtmdjiujy+g2xJJb/GXlla6FZlnA2RZdXCCYvwwJZc
+ 2Q6EOV3PvmMMGGd3JLivC92RY7M=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f1a5bed0cb8533c3b758613 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 03:56:29
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EC532C43395; Fri, 24 Jul 2020 03:56:28 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4BB7DC433C9;
+        Fri, 24 Jul 2020 03:56:28 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200723211137.26641-3-s-anna@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Fri, 24 Jul 2020 09:26:28 +0530
+From:   skakit@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org
+Subject: Re: [PATCH] arm64: dts: sc7180: Add wakeup support over UART RX
+In-Reply-To: <20200427165616.GF4525@google.com>
+References: <1587968844-26667-1-git-send-email-skakit@codeaurora.org>
+ <20200427165616.GF4525@google.com>
+Message-ID: <a2f118592a9039ee63098651f5e5c6f6@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Matthias,
 
-
-On 24/07/20 2:41 am, Suman Anna wrote:
-> The various CBASS interconnect nodes on K3 J721E SoCs are defined
-> using the node name "interconnect". This is not a valid node name
-> as per the dt-schema. Fix these node names to use the standard name
-> used for SoC interconnects, "bus".
+On 2020-04-27 22:26, Matthias Kaehlcke wrote:
+> Hi,
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> On Mon, Apr 27, 2020 at 11:57:24AM +0530, satya priya wrote:
+>> Add the necessary pinctrl and interrupts to make UART
+>> wakeup capable.
+>> 
+>> Signed-off-by: satya priya <skakit@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index 4216b57..3a49603 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -637,9 +637,12 @@
+>>  				reg = <0 0x0088c000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart3_default>;
+>> -				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart3_default>;
+> 
+> Why is the 'sleep' configuration needed if it's the same as 'default'?
 
+Sleep configuration is needed to make sure correct pinctrl setting is 
+done for RX.
+When we register wakeup interrupt, function select is changed to 0 or 
+GPIO, and after that when state on is called, down the line it is 
+checking the current state, if it's same as previous state(default), it 
+won't do any thing and returns 0. Thus the pinctrl setting for RX 
+remains with "GPIO" function select causing transfer failures.
 
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *state)
+{
+         if (p->state == state)
+                 return 0;
 
-Thanks and regards,
-Lokesh
+         return pinctrl_commit_state(p, state);
+}
+EXPORT_SYMBOL_GPL(pinctrl_select_state);
 
+However, in V2 we have added sleep state separately to make wakeup 
+feature work properly.
+
+> 
+>> +				interrupts-extended =
+>> +					<&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
+>> +					<&tlmm 41 0>;
+>>  				status = "disabled";
+>>  			};
+> 
+> This patch only adds wakeup support for uart3, which seems an arbitrary
+> choice at SoC level. Either it should do it for all UARTs of the 
+> SC7180,
+> or in the .dtsi of devices that use UART3 and need it to be wakeup 
+> capable.
+
+Ok. Added wakeup support to all the UARTs of SC7180 in V2.
+
+Thanks,
+Satya Priya
