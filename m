@@ -2,65 +2,64 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B942C433EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A645C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 236512074F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CD72074F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KrRpNFDp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dkXWHWOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgGXLWL (ORCPT
+        id S1726702AbgGXLWg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 07:22:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45928 "EHLO
+        Fri, 24 Jul 2020 07:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgGXLWL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 07:22:11 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C2CC0619D3
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 04:22:10 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id p14so7271916wmg.1
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 04:22:10 -0700 (PDT)
+        with ESMTP id S1726483AbgGXLWf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 07:22:35 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60115C0619D3
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 04:22:35 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f2so7961469wrp.7
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 04:22:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=GazPbHUQLsK8S7tpuO7AvOa0IiPz4pR+J44UaDqobHk=;
-        b=KrRpNFDpBZHHWPx0ETVhUqNHKnHacZ6r/gaay6WB7CS6mzqX5jorQsoiNCm9OqQcBl
-         vn7wpZGL/D2B4UwfH2LgfbjDEIh7Foz8/z7K/TCE6wAMpanMQOmDw+QkdhqmRS4bzNle
-         397s4Y+2q+fZhfj4/arSsxnViNt3HFGoVURr7YnynB++Exs/V9T5Tek+q7K/nfV3Uo0F
-         Y8m5px4KvbjmZVv3FS+mpGRsSnyoDcg3r4eBpmGyTV5SqGYyNS8Lfg3vaQf+D+6KAS3f
-         buZh9+8VeBnzqjOX9hyKTU/xIRqpDcsGFzwik6zJAJ/Vj27bgN2Fy/SOHZMyxzNnmtDq
-         82dQ==
+        bh=j3TiABU4YuyYeNKrOelGmkwg1BeSirg/J0P8Tu+QTf0=;
+        b=dkXWHWOOWMb8eHYcmzpjB3sEbqJzwpgXN1Z1yQXFSl91hmPZH/QYYnX+yF6sUVqrsp
+         VT/YaS0mAQikyAiLbPv4Una6PBi6aguSKM/RthldXb0+X594+o4sbHxXcXmT+Oe0GK9h
+         vO2pglNCt4zr/+n3lPTZtb30iKibnEbva3oBIX+q3XR6zbIifa2FzXLbawQG116bpXvN
+         MtOISIP7vHDtWV4OZahSf1AoarVh9dE/B8wIePtstXEkcQMRJwcxKuJH11oPtUiF5FgC
+         Uqiw97oolglLdvTCaI1CokjzOMzsDcEUiCY0DG3UliMCvGaKYaqvFrJp3W7QwGYjfhd4
+         AdXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GazPbHUQLsK8S7tpuO7AvOa0IiPz4pR+J44UaDqobHk=;
-        b=gW2epzCujHFsABdnUOBY/vx4CZuPKF35SewfzrTRiQ8Xu19/BTf8mtPoGHldY8BTdq
-         o9N7znYKT40T7nmfVuTKM8eZ2XPIITv7QiS4hCXnl4dI942RXTB0050lBKgG2ITnAloC
-         +xP+6++cV1rvF3lDbaPHZiBohCgFDo9BHNvrP7eJdAxdCIsTa1PgRqJkeXjNLQE5qLLY
-         K+Itgb1cTmQJFTh2lFsehZ2M3kdw6fLAx5Py4h7cAbYrdHoykUCKJC+7BVJuIVNCjxzg
-         AXoP6UpmK5MIKbVlGxU+c9N5UmnCi/3sIRov4fNrTzUdY+C/++Piul3n8STTCuisqzsU
-         u1Xg==
-X-Gm-Message-State: AOAM531nFLxYwxPlG5s72M9Iyfe8b1Oz56eVggGXvPSOeYHyMYZ2RRUe
-        8vsbJhz+o1W9LKvV/w31pIDOZQ==
-X-Google-Smtp-Source: ABdhPJzuISAaEC6wI6jIFPRKdMJneQLwLQbmOnvS88iKf9FErm/LSyy4iq1BlJvn6CgSM6jT0oW0fA==
-X-Received: by 2002:a7b:cb8d:: with SMTP id m13mr7724232wmi.120.1595589728701;
-        Fri, 24 Jul 2020 04:22:08 -0700 (PDT)
+        bh=j3TiABU4YuyYeNKrOelGmkwg1BeSirg/J0P8Tu+QTf0=;
+        b=LZQZhIFd3ifFOknsP4UGE2lJ7ZJNI6k7GoOabkiEBLBPfSAhhhMEYjP6mLEHVzkYpz
+         2q6BF/S42rdsEn/hct4T/Gop73Ul6MG+eVOJfcZe9qktticCPKwMgQrvSQFPEFsbZ8MH
+         K/Tw9eX7sm8iVHI8IaUP0vGUvJvFetcpXsMeXu/pz/WLn00C4LMHKYnbMGSQ5maSnypl
+         c8xmirB4SG/b+OIMm+ULJu4QwOywbNkrV+RtOdlkOUv61I94RLHemjQgFnSLGkFPygYn
+         lbul3azneNdOPGDKk6n6hSYEdCgKp07MyxPYaqZro3v7sBeREglgl4Rl0nVd2Cr7m+rr
+         jG5g==
+X-Gm-Message-State: AOAM533QQmrUASaLqCaK55dT7JHW5E2lf3aDkyLRdipm06NWNFyDOymb
+        qS3WFtu3mYN18/64VNiOpoECVaoxJeU=
+X-Google-Smtp-Source: ABdhPJx+JCHu39HcLo1ayDmJtm5ehJ3SrPKS1CL4dDAtwBX9f1TUc3Ogbt/Vj+aMmITJ4Q1mOcrGUQ==
+X-Received: by 2002:adf:f247:: with SMTP id b7mr8705570wrp.128.1595589754114;
+        Fri, 24 Jul 2020 04:22:34 -0700 (PDT)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id y20sm6394145wmi.8.2020.07.24.04.22.07
+        by smtp.googlemail.com with ESMTPSA id x204sm11429590wmg.2.2020.07.24.04.22.32
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Jul 2020 04:22:08 -0700 (PDT)
-Subject: Re: [PATCH v4 10/12] ASoC: qcom: lpass-cpu: Use platform_get_resource
+        Fri, 24 Jul 2020 04:22:33 -0700 (PDT)
+Subject: Re: [PATCH v4 00/12] ASoC: qcom: Add support for SC7180 lpass variant
 To:     Rohit kumar <rohitkr@codeaurora.org>, agross@kernel.org,
         bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
@@ -68,14 +67,13 @@ To:     Rohit kumar <rohitkr@codeaurora.org>, agross@kernel.org,
         linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
- <1595413915-17867-11-git-send-email-rohitkr@codeaurora.org>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <c0789d98-599a-6b67-ac42-9083a6c251f3@linaro.org>
-Date:   Fri, 24 Jul 2020 12:22:07 +0100
+Message-ID: <d1e6d60b-9f00-266d-74ad-8c18bbf8d142@linaro.org>
+Date:   Fri, 24 Jul 2020 12:22:32 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1595413915-17867-11-git-send-email-rohitkr@codeaurora.org>
+In-Reply-To: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,29 +85,53 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 On 22/07/2020 11:31, Rohit kumar wrote:
-> platform_get_resource_byname() is used when there
-> is list of reg entries. As lpass-cpu node has only
-> one reg entry, use platform_get_resource() instead.
+> This patch chain add audio support for SC7180 soc by doing the required
+> modification in existing common lpass-cpu/lpass-platform driver.
+> This also fixes some concurrency issue.
 > 
-> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
-> ---
->   sound/soc/qcom/lpass-cpu.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes since v3:
+> 	- Fixed yaml documentation comments and make dt_binding_check issues.
+> 	- Moved general fixes out of sc7180 specific patches as suggested by Srinivas.
+> 	- Update clock-names to make it same as existing platforms.
 > 
-> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-> index 5d84f63..1ee6d8b 100644
-> --- a/sound/soc/qcom/lpass-cpu.c
-> +++ b/sound/soc/qcom/lpass-cpu.c
-> @@ -575,7 +575,7 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
->   
->   	of_lpass_cpu_parse_dai_data(dev, drvdata);
->   
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpass-lpaif");
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   
->   	drvdata->lpaif = devm_ioremap_resource(dev, res);
->   	if (IS_ERR((void const __force *)drvdata->lpaif)) {
+> Ajit Pandey (4):
+>    ASoC: qcom: Add common array to initialize soc based core clocks
+>    ASoC: qcom: lpass-platform: Replace card->dev with component->dev
+>    include: dt-bindings: sound: Add sc7180-lpass bindings header
+>    ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
+> 
+> Rohit kumar (8):
+>    ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
+>    ASoC: qcom: lpass-platform: fix memory leak
+>    ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
+>    ASoC: qcom: lpass-cpu: fix concurrency issue
+>    dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
+>    ASoC: qcom: lpass-cpu: Use platform_get_resource
+>    ASoC: qcom: lpass-platform: Use platform_get_irq
+>    dt-bindings: sound: lpass-cpu: Move to yaml format
+
+
+Tested this on Dragon Board 410c!
+
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+--srini
+> 
+>   .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
+>   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 185 ++++++++++++++++++
+>   include/dt-bindings/sound/sc7180-lpass.h           |  10 +
+>   sound/soc/qcom/Kconfig                             |   5 +
+>   sound/soc/qcom/Makefile                            |   2 +
+>   sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
+>   sound/soc/qcom/lpass-cpu.c                         | 204 ++++++++++---------
+>   sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
+>   sound/soc/qcom/lpass-lpaif-reg.h                   | 157 ++++++++-------
+>   sound/soc/qcom/lpass-platform.c                    | 155 +++++++++++----
+>   sound/soc/qcom/lpass-sc7180.c                      | 216 +++++++++++++++++++++
+>   sound/soc/qcom/lpass.h                             |  63 +++++-
+>   12 files changed, 930 insertions(+), 299 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>   create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
+>   create mode 100644 sound/soc/qcom/lpass-sc7180.c
 > 
