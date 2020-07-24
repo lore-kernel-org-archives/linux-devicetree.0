@@ -2,104 +2,175 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1211EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 20:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4D6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0FDA206D7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 20:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F07E2070B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:11:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rM03taNB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSkUTzRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgGXUwO (ORCPT
+        id S1726780AbgGXVL7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 16:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50820 "EHLO
+        Fri, 24 Jul 2020 17:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGXUwO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 16:52:14 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97CA5C0619D3;
-        Fri, 24 Jul 2020 13:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xVoSEin0oXCI9Z11WKA8dMlCCn4fz58veTFmYbww9j4=; b=rM03taNBaiVcGPukQ/TrRYqMy
-        ndpmAXRoMO9TzFyK8ljLIRdNw5cEnWPMmcB4HSplfNAAdMp78OqLjPvcI5k0vpulmZ+eeFayiErRd
-        SHL8/TmJko0KeyKcioSPPwbA9YNwX5D/OzH+fwcw57pGGrKGxgjXOIBMe3mnhfg699K7jZUuCcRPw
-        HNUpsLY4bzS854NtWp61QwU3FlJRmGe7QZENJ/UOl6rbJhbCtECTulLjX6MEL2Cw5350Ns1zziFpg
-        tf2gLiv9fLOZYESI2SzBLdmz3Gmqv+GzEjZvCu5f1Hp3gzWu3xi/+DAz5gsjrWxmvA0qEvZwiMvTY
-        9IVwehB/g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43698)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jz4fq-0000Oe-6P; Fri, 24 Jul 2020 21:52:10 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jz4fp-0000u2-Gc; Fri, 24 Jul 2020 21:52:09 +0100
-Date:   Fri, 24 Jul 2020 21:52:09 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        kamel.bouhara@bootlin.com
-Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
- bus recovery
-Message-ID: <20200724205209.GC1551@shell.armlinux.org.uk>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
- <20200705211918.GB1055@kunai>
- <20200724193913.GD1227@ninjato>
+        with ESMTP id S1726411AbgGXVL6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 17:11:58 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D10C0619D3;
+        Fri, 24 Jul 2020 14:11:58 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id a9so2066876oof.12;
+        Fri, 24 Jul 2020 14:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=32A/vrWodJ+BXQ39fKXWfYJgwA/ZpA42pEyTyFICNY4=;
+        b=OSkUTzRFFG6RCEG7jFwkBHEBckqfzjEE9h1/uxk+PoDk+pQ5GVA0N00BcljH0cCsor
+         NVsdjYZQ55bSAZoH+pMzq7otfrlv+N6ahNwUbZDoEwIovrLJrbHlJn7SG5FTPUH8W8rN
+         sEVtfwYrR2em11V37/00XfWF6ckiAmUdTzUO45ppdMMfcDNmm9M48e1molbrJ3d89rgh
+         U6Uhk34FGaWbE/IUy47lWobysaBxKVR7xJkkFGkMGM5+5SaZsCvFeKMWfzHxr+64P3HP
+         SJMJiO7vEQ/hJkFWkOu3L1e1KTDpxA07ul5qqjYF51UvdhDoch7uZw5OpGn+F3MqGvFh
+         JWMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=32A/vrWodJ+BXQ39fKXWfYJgwA/ZpA42pEyTyFICNY4=;
+        b=cJFPLY9e2SSjx8m42kbcUHgjEicGvS7re+ENl6VIRx6SPxZdf/0oGZQ7MNmvfjTBhk
+         Olu2IrOQiDUGgx6I/bODtjLlQ+/X+wwyVQMdcKwPKb6AgHe9pjI1C9jR8kiy/EXesY0d
+         0vSrcOaKeL+MurxUAnizerDXzXy6eTEQUyM75WVU7bEV8TIOptPdIYP7hOXtDcuk9V/i
+         nMsUiVkvIgn4SmMwV32nWo6D0aib5BbTTZrX3Rt/wwqYwJdeuA7iZqY6Cdc+WcPw4qYq
+         2MdBOEYCAEsskjmBGUlhBT1Mq8NgHQMXlIDlsLpAiclYLnwbycyNEG1Wh678xVfcm4KT
+         g2ww==
+X-Gm-Message-State: AOAM530DagotO3/l7+dxJ2sY0OI9kcstA3NVp5Wn8EcmbTjf5f5E7g7A
+        gBzp3ZdTMnk6iU8IQLYer05w8FihSlWlJfwvxUoBKpT1
+X-Google-Smtp-Source: ABdhPJxSEMhig/5INwzyVFWMGkySOfLKrkW2RDf7R+3+uH6ipq7O9w4cfjL01QlFjgiZmOkFqqaLKEyX+6LwPAI5QWg=
+X-Received: by 2002:a4a:1d83:: with SMTP id 125mr11360872oog.18.1595625117897;
+ Fri, 24 Jul 2020 14:11:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724193913.GD1227@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200724193752.GE2729799@oden.dyn.berto.se>
+In-Reply-To: <20200724193752.GE2729799@oden.dyn.berto.se>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 24 Jul 2020 22:11:31 +0100
+Message-ID: <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: media: renesas,vin: Document
+ renesas-vin-ycbcr-8b-g property
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:39:13PM +0200, Wolfram Sang wrote:
-> On Sun, Jul 05, 2020 at 11:19:18PM +0200, Wolfram Sang wrote:
-> > 
-> > > +- pinctrl
-> > > +	add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
-> > > +	recovery, call it "gpio" or "recovery" state
-> > 
-> > I think we should stick with "gpio" only. That is what at91 and imx have
-> > in their bindings. pxa uses "recovery" as a pinctrl state name but I
-> > can't find any further use or documentation of that. PXA is not fully
-> > converted to the best of my knowledge, so maybe it is no problem for PXA
-> > to switch to "gpio", too? We should ask Russell King (cced).
+Hi Niklas,
 
-Fully converted to what?  The generic handling where the i2c core layer
-handles everything to do with recovery, including the switch between
-modes?
+Thank you for the review.
 
-i2c-pxa _intentionally_ carefully handles the switch between i2c mode and
-GPIO mode, and I don't see a generic driver doing that to avoid causing
-any additional glitches on the bus.  Given the use case that this recovery
-is targetted at, avoiding glitches is very important to keep.
+On Fri, Jul 24, 2020 at 8:37 PM Niklas <niklas.soderlund@ragnatech.se> wrot=
+e:
+>
+> Hi Lad,
+>
+> Thanks for your patch.
+>
+> On 2020-07-24 15:58:51 +0100, Lad Prabhakar wrote:
+> > Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit dat=
+a
+> > input pins.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/renesas,vin.yaml | 13 ++++++++=
++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b=
+/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> > index 53c0a72..7dfb781 100644
+> > --- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> > +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> > @@ -106,6 +106,12 @@ properties:
+> >
+> >            remote-endpoint: true
+> >
+> > +          renesas-vin-ycbcr-8b-g:
+>
+> I think the preferred format for vendor specific properties are
+> "<vendor>,<property>".
+>
+Indeed and I had it as renesas,vin-ycbcr-8b-g but dt_bindings_check
+complained about it.
 
-> > Russell, do you object naming the pinctrl state for bus recovery in
-> > the pxa i2c driver from "recovery" to "gpio"?
-> 
-> No response, so far. I suggest now to support the "recovery" naming but
-> mark it as deprecated. Opinions?
+> This nit apart I'm not sure a property is the right way here. Could it
+> not be possible on some designs to have two different sensors one wired
+> to DATA[7:0] and the other to DATA[15:8] and by controlling the
+> VNDRM2_YDS register at runtime switch between the two? If so adding a DT
+> property to hard-code one of the two options would prevent this. I fear
+> we need to think of a runtime way to deal with this.
+>
+Aha Gen2 and Gen3 hardware manuals have a bit different description
+about the YDS field. (I was working R8a7742 SoC so I referred Gen2
+manual)
 
-I don't have a preference on the exact naming.
+> The best way to do that I think is to extend the port@0 node to allow
+> for two endpoints, one for each of the two possible parallel sensors.
+> This would then have to be expressed in the media graph and selection if
+> YDS should be set or not depend on which media links are enabled.
+>
+In that case how do we handle endpoint matching each would have two
+subdevs to be matched. And in case non media-ctl cases we cannot
+switch between subdevs.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Cheers,
+--Prabhakar
+
+> > +            type: boolean
+> > +            description:
+> > +              If present this property specifies to selects VIN_G[7:0]=
+ as data pins for YCbCr422 8-bit data.
+> > +            default: false
+> > +
+> >          required:
+> >            - remote-endpoint
+> >
+> > @@ -168,6 +174,13 @@ properties:
+> >
+> >                remote-endpoint: true
+> >
+> > +              renesas-vin-ycbcr-8b-g:
+> > +                type: boolean
+> > +                description:
+> > +                  If present this property specifies to selects VIN_G[=
+7:0] as data pins for
+> > +                  YCbCr422 8-bit data.
+> > +                default: false
+> > +
+> >              required:
+> >                - remote-endpoint
+> >
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
