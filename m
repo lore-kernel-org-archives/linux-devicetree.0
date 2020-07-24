@@ -2,299 +2,130 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E175C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982BDC433EA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB35206D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OCr7V9Pv"
+	by mail.kernel.org (Postfix) with ESMTP id 71280206D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595598372;
+	bh=vu7AEch6tVK5sMQvHGR0dpGgNZ7jy5+kRB2EBTC0xyY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=KjBgdnQ4LUBHHhPpTn0MC2f+gjE73pVSgFinMbKseztn1tGxCMB47WDXGIYyOaatE
+	 Xab3vs2UwB2n51OgJgXdS+9JznER9RF5AaRQ2YwhKgdaa76GJMDlAUQDZSAuKB8jsB
+	 aiIkWO+9N8SregYfzMXPpBkTh+MS8lxbSCVIzv8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgGXNpL (ORCPT
+        id S1727125AbgGXNqI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
+        Fri, 24 Jul 2020 09:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGXNpL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 09:45:11 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C54B6C0619D3
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 06:45:10 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id o184so4940993vsc.0
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 06:45:10 -0700 (PDT)
+        with ESMTP id S1726235AbgGXNqH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 09:46:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3CEC0619D3;
+        Fri, 24 Jul 2020 06:46:07 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so10021469ljj.10;
+        Fri, 24 Jul 2020 06:46:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g/+5UoxaK0B/ouWKXhlnGp7tlvNSVwLA+fl6kPFBy3Q=;
-        b=OCr7V9PvnMgT+sB96Edxhs4Fa6YvkPB8pV2zkvYSzisExSkRA2oHnRwBTYa1D+8Pke
-         T833lNyfbhaGuRGE36rEbzToZ+w4ajlTEeaiN2xCMgTuug0VRSy0K9578WWtKKFTS3CC
-         w5K3xXdFEA+2XsYJ0VQ9GBTd9aaj8pyS1o/vQ=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=vu7AEch6tVK5sMQvHGR0dpGgNZ7jy5+kRB2EBTC0xyY=;
+        b=md52HGXBAlYTKVX/vc+E2YSVjr9cCh2sxaZhVBVMKsXRzJ4CSFyeQgo+AsUD4dBhbH
+         a+BJdAwGPp0mmtKuPJL/woOC7G3k+QGxLaapfHOUSN0vYTKjBXGf/ygoJDNZPNATlrL0
+         lNBgyM5+CJa8MnczwRhZChC9rFVwHfVd6CbkuRTgZgYh7KbAgWs/wIVNNOiIvRFqg4gz
+         xRvu7Hd09vR3832fkvN3VcVhqg2p/mq5PMfAt7NeAdPXmlGPQ/PKxc4K6BJY5ohcLDUt
+         Msp6JmptEwjxnEOlrjyoWSGU7e8dftJ575WnnlCkva/edVsbnfW6GLkF0WLowrlXU+NN
+         5pJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g/+5UoxaK0B/ouWKXhlnGp7tlvNSVwLA+fl6kPFBy3Q=;
-        b=R2Je8HoNYiLrIW+5NwlTxrLn6osGt7+FIRlQ/Y3FBHNGu2Dh5LiEw5eVwmr8ktRWwp
-         sy0hhUTYUQDtzvpE0ktwawDrySgaGb0C6LAspvpxFj5LYTibRvhcAkU51KecLrQ1DhYP
-         7Ze31NiF+BcUoKPtyfnDhjRaY8CTDPGZaX+8IZuNAmE4Wqi9FRm1WuPvN0E2YEpd/tCd
-         6kmkic04OfUWmGd+9jIsNtbPkiAJS67ZVBVdrIEFEiWFgU5XbnCX0PWQ6g/2HpejVn/V
-         HJ2o07aaaR1xlus/bL1scCNn/KlUd6DqlG0uwrVkTjLqSqNVtNPyW1vqWd6QuQNC0NtS
-         up4g==
-X-Gm-Message-State: AOAM533LJajF0V9+IgmU/bkodJDYjSninFulGrgk5rcSG8iF/fyDRKHX
-        rzQln8EyKTmZvDiDgiVADVXI6qJyzkDCm3yWM1QV3w==
-X-Google-Smtp-Source: ABdhPJzF8Cn+eUjgEJZZxSH4zV2/AuLt79M3/GOySgsHJwoMPWl9y7OO1PDUxu5v46KpEurVhelGQjKWin7Y5j6dqJQ=
-X-Received: by 2002:a67:f5c6:: with SMTP id t6mr7555224vso.14.1595598309872;
- Fri, 24 Jul 2020 06:45:09 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=vu7AEch6tVK5sMQvHGR0dpGgNZ7jy5+kRB2EBTC0xyY=;
+        b=nNo5euy3vaChnnTa84b86I5+FbwnRlQRTZ3gBk+6bCYSirDOt+ssoO8Ok5ZJe0sVam
+         Zz2Mw+EnCO0YkJTOj2K70Yjox54tSJwMOR39ozHOxRlmTcqgreca1DNCs2iGhw79camE
+         q3+tZ99clo32Y50RVJUNklBFUipmyvjMMyehw7UhBEfXi5QT88aPpWaJvUbzGnT7Q2AL
+         jDbhXW4qBqyYqMZt2EZ9sLFtwrciJR/rlyDMgoll5CEVUgjEu+Wh83i0egt4tJojNGje
+         pJromSbCZGWwxMmYvGNJbCrspYFyKR+xKlkN56tq0VxM30kEVlkhXuonfswxOgoEjtJb
+         yRRQ==
+X-Gm-Message-State: AOAM533Czrfj24CdhZGyUS1HbsF0YmpKP3WPjXrWYz4G0SOQQs/hKE6h
+        iqM3pessbjvqguy3LlyGXkI=
+X-Google-Smtp-Source: ABdhPJxRLBdkoLiQ3bIn3g2yWD91G8Xg1O///R4OxhiwVBRMiIkVf0EyOqY9YyLcvXE7EpEcZxM0Cw==
+X-Received: by 2002:a2e:9ac4:: with SMTP id p4mr4663110ljj.143.1595598363953;
+        Fri, 24 Jul 2020 06:46:03 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id i11sm289423lfl.31.2020.07.24.06.46.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 06:46:03 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Amelie DELAUNAY <amelie.delaunay@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 0/3] Add USB role switch support to DWC2
+In-Reply-To: <97cd44c1-9e19-94bc-54f8-204d79b79975@st.com>
+References: <20200616140717.28465-1-amelie.delaunay@st.com> <d8069a78-2640-d112-a2fb-d86b99a8e44f@st.com> <97cd44c1-9e19-94bc-54f8-204d79b79975@st.com>
+Date:   Fri, 24 Jul 2020 16:45:51 +0300
+Message-ID: <87blk5owkw.fsf@kernel.org>
 MIME-Version: 1.0
-References: <1595475600-23180-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1595475600-23180-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1595475600-23180-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 24 Jul 2020 21:44:58 +0800
-Message-ID: <CANMq1KAmVbNnXMV0Zw9ZBPtnnj283uemF+ctztaEzZi8ikB-jw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] soc: mediatek: pwrap: add arbiter capability
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Argus Lin <argus.lin@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 11:40 AM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+(please, no top-posting ;-)
+
+Hi,
+
+Amelie DELAUNAY <amelie.delaunay@st.com> writes:
+
+> Hi Felipe,
 >
-> Add arbiter capability for pwrap driver.
-> This patch is preparing for adding mt6873/8192 pwrap support.
->
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-pmic-wrap.c | 67 ++++++++++++++++++++++++++++++------
->  1 file changed, 56 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> index c897205..8d76ed4 100644
-> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> @@ -24,11 +24,13 @@
->  #define PWRAP_MT8135_BRIDGE_WDT_SRC_EN         0x54
->
->  /* macro for wrapper status */
-> +#define PWRAP_GET_SWINF_2_FSM(x)       (((x) >> 1) & 0x00000007)
+> I saw that you took DT patch (ARM: dts: stm32: enable usb-role-switch on=
+=20
+> USB OTG on stm32mp15xx-dkx) in your next branch. As it was already in
+> Alex' stm32-next branch, a potential merge conflict could occurred.
 
-I find this macro name a bit weird, because you are actually using
-this mask on PWRAP_WACS2_RDATA register value (just like
-PWRAP_GET_WACS_FSM below).
+Thanks for letting me know, I have dropped it.
 
-Should it be something like PWRAP_GET_WACS_ARB_FSM?!
+=2D-=20
+balbi
 
->  #define PWRAP_GET_WACS_RDATA(x)                (((x) >> 0) & 0x0000ffff)
->  #define PWRAP_GET_WACS_FSM(x)          (((x) >> 16) & 0x00000007)
->  #define PWRAP_GET_WACS_REQ(x)          (((x) >> 19) & 0x00000001)
->  #define PWRAP_STATE_SYNC_IDLE0         BIT(20)
->  #define PWRAP_STATE_INIT_DONE0         BIT(21)
-> +#define PWRAP_STATE_INIT_DONE1         BIT(15)
->
->  /* macro for WACS FSM */
->  #define PWRAP_WACS_FSM_IDLE            0x00
-> @@ -74,6 +76,7 @@
->  #define PWRAP_CAP_DCM          BIT(2)
->  #define PWRAP_CAP_INT1_EN      BIT(3)
->  #define PWRAP_CAP_WDT_SRC1     BIT(4)
-> +#define PWRAP_CAP_ARB          BIT(5)
->
->  /* defines for slave device wrapper registers */
->  enum dew_regs {
-> @@ -340,6 +343,8 @@ enum pwrap_regs {
->         PWRAP_DCM_DBC_PRD,
->         PWRAP_EINT_STA0_ADR,
->         PWRAP_EINT_STA1_ADR,
-> +       PWRAP_SWINF_2_WDATA_31_0,
-> +       PWRAP_SWINF_2_RDATA_31_0,
->
->         /* MT2701 only regs */
->         PWRAP_ADC_CMD_ADDR,
-> @@ -1108,16 +1113,30 @@ static void pwrap_writel(struct pmic_wrapper *wrp, u32 val, enum pwrap_regs reg)
->
->  static bool pwrap_is_fsm_idle(struct pmic_wrapper *wrp)
->  {
-> -       u32 val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +       u32 val;
-> +       bool ret;
-> +
-> +       val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +               ret = (PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE);
-> +       else
-> +               ret = (PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_IDLE);
->
-> -       return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE;
-> +       return ret;
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Those !HAS_CAP tests are a little hard to read. Also, ret isn't really needed.
+-----BEGIN PGP SIGNATURE-----
 
-So I'd do this:
-if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-    return PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_IDLE;
-
-return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE;
-
->  }
->
->  static bool pwrap_is_fsm_vldclr(struct pmic_wrapper *wrp)
->  {
-> -       u32 val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +       u32 val;
-> +       bool ret;
-> +
-> +       val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +               ret = (PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR);
-> +       else
-> +               ret = (PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR);
->
-> -       return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR;
-> +       return ret;
-
-ditto
-
->  }
->
->  /*
-> @@ -1172,13 +1191,21 @@ static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
->                 return ret;
->         }
->
-> -       pwrap_writel(wrp, (adr >> 1) << 16, PWRAP_WACS2_CMD);
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-
-ditto, I'd reverse all these tests.
-
-> +               pwrap_writel(wrp, (adr >> 1) << 16, PWRAP_WACS2_CMD);
-> +       else
-> +               pwrap_writel(wrp, adr, PWRAP_WACS2_CMD);
-
-Not 100% convinced if worth it, but you could also do:
-
-if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-   val = adr;
-else
-   val = (adr >> 1) << 16;
-
-pwrap_writel(wrp, val, PWRAP_WACS2_CMD);
-
->
->         ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_vldclr);
->         if (ret)
->                 return ret;
->
-> -       *rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp, PWRAP_WACS2_RDATA));
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +               *rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp,
-> +                                             PWRAP_WACS2_RDATA));
-> +       else
-> +               *rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp,
-> +                                             PWRAP_SWINF_2_RDATA_31_0));
-
-Similarly:
-
-if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-   val = pwrap_readl(wrp, PWRAP_SWINF_2_RDATA_31_0);
-else
-   val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
-
-*rdata = PWRAP_GET_WACS_RDATA(val);
-
-(or set the register address in an `reg` variable)
-
->
->         pwrap_writel(wrp, 1, PWRAP_WACS2_VLDCLR);
->
-> @@ -1228,8 +1255,13 @@ static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
->                 return ret;
->         }
->
-> -       pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
-> -                    PWRAP_WACS2_CMD);
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB)) {
-> +               pwrap_writel(wrp, BIT(31) | ((adr >> 1) << 16) | wdata,
-> +                            PWRAP_WACS2_CMD);
-> +       } else {
-> +               pwrap_writel(wrp, wdata, PWRAP_SWINF_2_WDATA_31_0);
-> +               pwrap_writel(wrp, BIT(29) | adr, PWRAP_WACS2_CMD);
-> +       }
->
->         return 0;
->  }
-> @@ -2022,6 +2054,7 @@ MODULE_DEVICE_TABLE(of, of_pwrap_match_tbl);
->  static int pwrap_probe(struct platform_device *pdev)
->  {
->         int ret, irq;
-> +       u32 rdata;
->         struct pmic_wrapper *wrp;
->         struct device_node *np = pdev->dev.of_node;
->         const struct of_device_id *of_slave_id = NULL;
-> @@ -2116,14 +2149,22 @@ static int pwrap_probe(struct platform_device *pdev)
->                 }
->         }
->
-> -       if (!(pwrap_readl(wrp, PWRAP_WACS2_RDATA) & PWRAP_STATE_INIT_DONE0)) {
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +               rdata = pwrap_readl(wrp, PWRAP_WACS2_RDATA) &
-> +                                   PWRAP_STATE_INIT_DONE0;
-> +       else
-> +               rdata = pwrap_readl(wrp, PWRAP_WACS2_RDATA) &
-> +                                   PWRAP_STATE_INIT_DONE1;
-> +       if (!rdata) {
-
-Maybe:
-
-if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-   mask_done = PWRAP_STATE_INIT_DONE1;
-else
-   mask_done = PWRAP_STATE_INIT_DONE0;
-
-if (!(pwrap_readl(wrp, PWRAP_WACS2_RDATA) & mask_done)) {
-
-
->                 dev_dbg(wrp->dev, "initialization isn't finished\n");
->                 ret = -ENODEV;
->                 goto err_out2;
->         }
->
->         /* Initialize watchdog, may not be done by the bootloader */
-> -       pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +               pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
-> +
->         /*
->          * Since STAUPD was not used on mt8173 platform,
->          * so STAUPD of WDT_SRC which should be turned off
-> @@ -2132,7 +2173,11 @@ static int pwrap_probe(struct platform_device *pdev)
->         if (HAS_CAP(wrp->master->caps, PWRAP_CAP_WDT_SRC1))
->                 pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN_1);
->
-> -       pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
-> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
-> +               pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
-> +       else
-> +               pwrap_writel(wrp, 0x3, PWRAP_TIMER_EN);
-> +
->         pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
->         /*
->          * We add INT1 interrupt to handle starvation and request exception
-> --
-> 2.6.4
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8a5g8ACgkQzL64meEa
+mQa6GA//dv6un4DfWkydBfBMjWWl9DuRCyLB80t59IsGJejlkudKuN4qaqQSbEI2
+DVpyiZKw/1Nt8aTpQJTJgsgf69vIzkhsxvkQ8tIrYZlXWwUoB/HKClA9R1gGR8Rq
+oI50A35v0hRHTFoE3TlOXxC+NBeGkHw+O+yCEhOFbevHJ5N9JW6s+Vkaur11mgc8
+kYIW1WYPrQ2oTAPlEgdv5HRoA2UCZX/E9poNn83gWSe8r3FL55huLPEb3Caem01y
+8LKRFgDSbvoiVrVZM+bQ7JUlu0ORvwKlTak4q4InvqE9VqAsHBstN7iNvutYwtCM
+X1RPT8npXN+mR8U+r1QZOZ549YDuVe/ToTPBoz6IaAf7H4OH2ET00nfEcEbJGWxJ
+rap1HuJDfKFJb+4B9j5lkqoaTE25JyNqk1XY3UBKtnU4tfMeJVHw8GxJIdy3xiM/
+knkPyZEk3nCRbcEoUaVhFPCvKzGweMtaer/xIw6VEM25bPZzRa2+r+2kz9k8nYnO
+WfXC2r1IS2WXJC5arwG5dStHuhngmEPzYQdvV0SPCnhMHwJO9Z5rmD3F8fRNsZMS
+e1kTs9dcurhVJz/Gm0RS/66kIJJGQT1xxf8/Z/sjln8+ShrPe1HDJlhsn3MEqP2l
+BMh1Hh8L66Sl4tNmIB8NKl0Zryn3G/gIL8w+ExILXYzPMzhRYkk=
+=6nN4
+-----END PGP SIGNATURE-----
+--=-=-=--
