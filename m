@@ -2,136 +2,76 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FD4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B609C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1AEB206E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HgXDl9TK"
+	by mail.kernel.org (Postfix) with ESMTP id 20E09206E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 23:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGXXoX (ORCPT
+        id S1726573AbgGXXr1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 19:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49388 "EHLO
+        Fri, 24 Jul 2020 19:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGXXoW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 19:44:22 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A056BC0619D3
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 16:44:22 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id v18so1768191qvi.8
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 16:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=EJx+C1HYJpJVI4jXDzDWz4LJBm2Ud6mpPDBO8ER+7Wc=;
-        b=HgXDl9TKIDoWYF/R/fYHaSb0seq98go57RS2bIjZWpUXOZMi6t6isak1S6tKCf0LZn
-         eV055hAWKgifbYzNam7PB8uIECiuOdwkcow/qKXUpAp4AM6RIOpp0WlS70wHr9kBbiQp
-         SEfuuZSp7HBaHyTbPyvPW/seQtfzS2XupEzp8mUx/zHn4f28dYpxGi0CJkAc9lIHxka7
-         2dglrGhL0jisZNwGFTEiIOxa/fs7Hy4gMikfFA4XP52JK6om7nV3tw6CGQc/GlYlHHj4
-         +fbXwQacjAi3Lxl99+V1ngtF12soKztTWZzvRzWIuOLr/fz7NVp6+7gHGJM3SPUiB7uC
-         xPXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=EJx+C1HYJpJVI4jXDzDWz4LJBm2Ud6mpPDBO8ER+7Wc=;
-        b=arijCCu7kIRw/wL+WfJyvJB4609rugZunL8TLHsX3+ZTqTDfdJnWhYpUlyxKZQZJLO
-         9QkTsGwY5iFqyatHzY0UbqsnAtMBAb0BIIE5QtzdPh4E/VW6YEAS3+zmNdLgVKe5td/h
-         WSLAZm+d+soIjkM9bMerLnT+i1gvhtzD52qakX0fmX77JolwdoKi4V1Rjmd4LVVEt2XE
-         6rbgsCjbA87FozK97GNg8bNZs5gaDepqkBgUEsu3U2PlfVOCf+HyIFDSBRQJwEhVkzLG
-         2HZLJy06Ezhk7Av2vV6MRHZUxm/zjlA8YRN86/OPmOtarXrccl0sTqfEr0zwaP74RAk+
-         kvpQ==
-X-Gm-Message-State: AOAM533sjH4Ke0I20SosW0mE8+F7U4MSsVpSFvU/d53qoy9Ix/Fpjnj/
-        k/UWdxJZ70za27+C400lmxMuD6PmKqjQH8A=
-X-Google-Smtp-Source: ABdhPJxPTlKJ7K9anYI69wdC69b+QBWLttCo2NrtIdtXsGifaFrPZASMRq8FQQ8b3DDRBVcMXrLQNKCt67TTE7E=
-X-Received: by 2002:a0c:ee4a:: with SMTP id m10mr11725156qvs.41.1595634261784;
- Fri, 24 Jul 2020 16:44:21 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 16:44:15 -0700
-In-Reply-To: <20200724234415.1651639-1-saravanak@google.com>
-Message-Id: <20200724234415.1651639-2-saravanak@google.com>
+        with ESMTP id S1726552AbgGXXr1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 19:47:27 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 856C3C0619D3;
+        Fri, 24 Jul 2020 16:47:27 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6DED312755EE5;
+        Fri, 24 Jul 2020 16:30:41 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 16:47:25 -0700 (PDT)
+Message-Id: <20200724.164725.2267540815357576064.davem@davemloft.net>
+To:     kurt@linutronix.de
+Cc:     kuba@kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, bigeasy@linutronix.de,
+        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
+        ilias.apalodimas@linaro.org, olteanv@gmail.com
+Subject: Re: [PATCH v2 0/8] Hirschmann Hellcreek DSA driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <87wo2t30v9.fsf@kurt>
+References: <20200723081714.16005-1-kurt@linutronix.de>
+        <20200723093339.7f2b6e27@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <87wo2t30v9.fsf@kurt>
+X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
-References: <20200724234415.1651639-1-saravanak@google.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH v2 2/2] of: property: Add device link support for pinctrl-0
- through pinctrl-8
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 16:30:41 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for pinctrl-0 through pinctrl-8 explicitly instead of trying
-to add support for pinctrl-%d properties.
+From: Kurt Kanzenbach <kurt@linutronix.de>
+Date: Fri, 24 Jul 2020 08:04:10 +0200
 
-Of all the pinctrl-* properties in dts files (20322), only 47% (9531)
-are pinctrl-%d properties. Of all the pinctrl-%d properties, 99.5%
-(9486) are made up of pinctrl-[0-2]. 'pinctrl-8' is the current maximum
-found in dts files.
+> On Thu Jul 23 2020, Jakub Kicinski wrote:
+>> Appears not to build:
+>>
+> 
+> Yeah, i know. This patch series depends on two other ones:
+> 
+>  * https://lkml.kernel.org/netdev/20200723074946.14253-1-kurt@linutronix.de/
+>  * https://lkml.kernel.org/netdev/20200720124939.4359-1-kurt@linutronix.de/
+> 
+> One of them has been merged, the other is being discussed. That series
+> includes the 'ptp_header' and the corresponding functions. So, for
+> compile testing you'll have to apply that series as well.
 
-Trying to parse all pinctrl-* properties and checking for pinctrl-%d is
-unnecessarily complicated. So, just add support for pinctrl-[0-8] for
-now. In the unlikely event we ever exceed pinctrl-8, we can come back
-and improve this.
+Please never submit patches for serious review when the dependencies
+haven't landed in the target tree yet.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
-v1->v2:
-- Clarified in commit text that pinctrl-8 is the max found in the dts
-  files.
+That makes so much wasted work for us and other reviewers.
 
- drivers/of/property.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index b06edeb1f88b..d40d923ffeaf 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1274,6 +1274,15 @@ DEFINE_SIMPLE_PROP(interrupts_extended, "interrupts-extended",
- DEFINE_SIMPLE_PROP(nvmem_cells, "nvmem-cells", NULL)
- DEFINE_SIMPLE_PROP(phys, "phys", "#phy-cells")
- DEFINE_SIMPLE_PROP(wakeup_parent, "wakeup-parent", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl0, "pinctrl-0", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl1, "pinctrl-1", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl2, "pinctrl-2", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl3, "pinctrl-3", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl4, "pinctrl-4", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl5, "pinctrl-5", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl6, "pinctrl-6", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
-+DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
- DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
- DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
- DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
-@@ -1303,6 +1312,15 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_nvmem_cells, },
- 	{ .parse_prop = parse_phys, },
- 	{ .parse_prop = parse_wakeup_parent, },
-+	{ .parse_prop = parse_pinctrl0, },
-+	{ .parse_prop = parse_pinctrl1, },
-+	{ .parse_prop = parse_pinctrl2, },
-+	{ .parse_prop = parse_pinctrl3, },
-+	{ .parse_prop = parse_pinctrl4, },
-+	{ .parse_prop = parse_pinctrl5, },
-+	{ .parse_prop = parse_pinctrl6, },
-+	{ .parse_prop = parse_pinctrl7, },
-+	{ .parse_prop = parse_pinctrl8, },
- 	{ .parse_prop = parse_regulators, },
- 	{ .parse_prop = parse_gpio, },
- 	{ .parse_prop = parse_gpios, },
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+Thank you.
 
