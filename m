@@ -2,55 +2,55 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38ADC433F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3815BC433FB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B184020768
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F842067D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 11:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pQs+c+eD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="f0tuoDhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgGXLOi (ORCPT
+        id S1726483AbgGXLOw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 07:14:38 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:42608 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgGXLOh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 07:14:37 -0400
+        Fri, 24 Jul 2020 07:14:52 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:23503 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgGXLOw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 07:14:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595589277; x=1627125277;
+  t=1595589291; x=1627125291;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=PhVb16dlb4qmPmqLOrMxx9+Ich2tP3QYypUEzEv+cvQ=;
-  b=pQs+c+eD7WgZUFjeg+RuBl1kVOEn7NOC2blXKJ+gNJ3wCS8PUweT+xUc
-   DCC5b5jGtjZt8SuBLgJRH/xT/47tuEKuiizdyVh+/YzaIAaIG6tn1ptw1
-   72m7BkoghwWHHVWaWxGPwKI/8taoAGALWn3jV+S/LQd2An84YT9u0A6gu
-   M3JZ/IP/1cGtERxiTFlH20MrfyQj9N+vMBDqPNtgH33MMeEfa2RYLxKM7
-   GjgwToYvoKgyf1syN9fgHf8dNhE62CgAroZUvBcUGviQS1Az56ytOgN9/
-   pbsGAmVCER5K06utgiGK7DH+iD64wXF6PifQc23xD8sUbpJ3mvi0wl5z7
-   Q==;
-IronPort-SDR: CSQ/tMQMJG1ZWwntCnRa77eZS07q+zvgBaEZLja5CnczAfWrEt48x27ZbRHs37FFQbMAnljBkL
- zuuyWY0tL0qAScPj4IAepHCNXT+I8oLhUMAhBmy7kgJYbWS+YLjnj0r3pro1Oe5bEi8rVHBa7J
- mSg0/DLFRehoQZb+8znB/xBgkYPQezgfJJLcUU8NsnkvoqhkxM/4WGrdTHgXwJqQcIn7jKaorL
- YeAX/y1FoAPQdpjCp8J/2iqdY4U4oLZHOhbvWcMR8bfm7xjIOBAK10xTa5edBwC1d4ZyosR+vS
- iMY=
+  bh=waqXZnk28E7CDrTE7Pdur3L9Lz9pzClbHiza62G0WAM=;
+  b=f0tuoDhVFP69LlvAgT/HphRGHkvHXjtkXfd0EiGiCXaPFfqOMbabBSlh
+   jWDmy15kk4m3+kHZGSkrKRPgGxOBRrTC1y0M8vEl7PfUVIynvk8CqVC7h
+   irrmbYhsv8BB4kSyqy3z204lTJqpN/iwFRa5LIBZv6aRykp6YN4FGAjeO
+   eDg8giTiBGsAmqSlfgt8KlJU6O0io8G03oBfLTxdsx9kP9VOB5xU0di0q
+   Kh1HLeVDcLuxbHBcZlbJrOrStnGikNvqi4t6kPbNYTmKOWx4DldsDEqnp
+   ePDsuuve8g11kPTou5gLOk1kEjW/zJj9XYGiBv9N0XBvEmeRRyWRrSz+Q
+   w==;
+IronPort-SDR: WAbbgNE1hKhldkGByJhpWpklO9SSHN044DLMhy8EFTHX5n2VBtoZ6cgSsGMLOomMNw6//JKEWu
+ Ujy7bRY681V7zVUPMUrCgzymcXVSO//q47THxAThhUnPBR2dPSlZT4KwSfInc7LrVUlAouvLHt
+ uWqvg/dV91yyg0A03xe0IIcMF/UO4B2k5NlkLIZs/WZmpo/0+CDh7sWCWhrjIcva8B404d9FMs
+ sv36Ij11KmAqrgpWRc0PxZZw1WYAMIQfeRV/jN7Nt078rH3IxLUte3vE3Wz+qaMHtno2535Q5X
+ lAQ=
 X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="84468734"
+   d="scan'208";a="85239387"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2020 04:14:37 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2020 04:14:51 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 24 Jul 2020 04:13:53 -0700
+ 15.1.1979.3; Fri, 24 Jul 2020 04:14:50 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 24 Jul 2020 04:13:54 -0700
+ 15.1.1979.3 via Frontend Transport; Fri, 24 Jul 2020 04:14:08 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
@@ -60,9 +60,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         Serge Semin <fancer.lancer@gmail.com>,
         Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: [PATCH v4 3/6] arm64: dts: sparx5: Add SPI controller and associated mmio-mux
-Date:   Fri, 24 Jul 2020 13:14:01 +0200
-Message-ID: <20200724111404.13293-4-lars.povlsen@microchip.com>
+Subject: [PATCH v4 5/6] arm64: dts: sparx5: Add spi-nor support
+Date:   Fri, 24 Jul 2020 13:14:03 +0200
+Message-ID: <20200724111404.13293-6-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724111404.13293-1-lars.povlsen@microchip.com>
 References: <20200724111404.13293-1-lars.povlsen@microchip.com>
@@ -74,68 +74,96 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds a SPI controller to the Microchip Sparx5 SoC, as well as the
-mmio-mux that is required to select the right SPI interface for a
-given SPI device.
+This add spi-nor device nodes to the Sparx5 reference boards.
 
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- arch/arm64/boot/dts/microchip/sparx5.dtsi | 27 ++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/microchip/sparx5_pcb125.dts  | 16 ++++++++++++++++
+ .../boot/dts/microchip/sparx5_pcb134_board.dtsi  | 16 ++++++++++++++++
+ .../boot/dts/microchip/sparx5_pcb135_board.dtsi  | 16 ++++++++++++++++
+ 3 files changed, 48 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 7e811e24f0e99..2169746703dfb 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -14,6 +14,7 @@ / {
- 	#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+index 573309fe45823..c1eb1d661174d 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+@@ -39,6 +39,22 @@ &sdhci0 {
+ 	microchip,clock-delay = <10>;
+ };
  
- 	aliases {
-+		spi0 = &spi0;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 	};
-@@ -119,8 +120,19 @@ gic: interrupt-controller@600300000 {
- 		};
- 
- 		cpu_ctrl: syscon@600000000 {
--			compatible = "microchip,sparx5-cpu-syscon", "syscon";
-+			compatible = "microchip,sparx5-cpu-syscon", "syscon",
-+				     "simple-mfd";
- 			reg = <0x6 0x00000000 0xd0>;
-+			mux: mux-controller {
-+				compatible = "mmio-mux";
-+				#mux-control-cells = <0>;
-+				/*
-+				 * SI_OWNER and SI2_OWNER in GENERAL_CTRL
-+				 * SPI:  value 9 - (SIMC,SIBM) = 0b1001
-+				 * SPI2: value 6 - (SIBM,SIMC) = 0b0110
-+				 */
-+				mux-reg-masks = <0x88 0xf0>;
-+			};
- 		};
- 
- 		reset@611010008 {
-@@ -155,6 +167,19 @@ uart1: serial@600102000 {
- 			status = "disabled";
- 		};
- 
-+		spi0: spi@600104000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "microchip,sparx5-spi";
-+			reg = <0x6 0x00104000 0x40>;
-+			num-cs = <16>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			clocks = <&ahb_clk>;
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
++&spi0 {
++	status = "okay";
++	spi@0 {
++		compatible = "spi-mux";
++		mux-controls = <&mux>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0>;	/* CS0 */
++		spi-flash@9 {
++			compatible = "jedec,spi-nor";
++			spi-max-frequency = <8000000>;
++			reg = <0x9>;	/* SPI */
 +		};
++	};
++};
 +
- 		timer1: timer@600105000 {
- 			compatible = "snps,dw-apb-timer";
- 			reg = <0x6 0x00105000 0x1000>;
+ &i2c1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+index 18a535a043686..35984785d611c 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+@@ -38,6 +38,22 @@ gpio-restart {
+ 	};
+ };
+ 
++&spi0 {
++	status = "okay";
++	spi@0 {
++		compatible = "spi-mux";
++		mux-controls = <&mux>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0>;	/* CS0 */
++		spi-flash@9 {
++			compatible = "jedec,spi-nor";
++			spi-max-frequency = <8000000>;
++			reg = <0x9>;	/* SPI */
++		};
++	};
++};
++
+ &gpio {
+ 	i2cmux_pins_i: i2cmux-pins-i {
+ 	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
+diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+index d71f11a10b3d2..7de66806b14b3 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+@@ -51,6 +51,22 @@ i2cmux_s32: i2cmux-3 {
+ 	};
+ };
+ 
++&spi0 {
++	status = "okay";
++	spi@0 {
++		compatible = "spi-mux";
++		mux-controls = <&mux>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0>; /* CS0 */
++		spi-flash@9 {
++			compatible = "jedec,spi-nor";
++			spi-max-frequency = <8000000>;
++			reg = <0x9>; /* SPI */
++		};
++	};
++};
++
+ &axi {
+ 	i2c0_imux: i2c0-imux@0 {
+ 		compatible = "i2c-mux-pinctrl";
 -- 
 2.27.0
 
