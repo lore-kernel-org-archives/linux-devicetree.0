@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5BCC433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0A0C433F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61922074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED5882073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="r9kmNSyi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1Y8ucun4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgGXKur (ORCPT
+        id S1726258AbgGXKu6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:50:47 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:55265 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGXKuq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 06:50:46 -0400
+        Fri, 24 Jul 2020 06:50:58 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:40568 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgGXKuz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 06:50:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595587845; x=1627123845;
+  t=1595587857; x=1627123857;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=faYv4zDljy8BCwm/ZtE+efuxM/WTnpKbumDhZlQt/gw=;
-  b=r9kmNSyiG/1zXBuOZsTAtT+wszlagexhKfgotpFP50/irHFQ87bZg1Q7
-   5gP4sYb98Cz2DQJQ3ODPC83znEaJZOzFiVI6SrYkQBWfU0Qvb7x1I3I1r
-   V76boP0HMmW5SMTrAIacCONbdA0Y7UmiafV6e/m1kCM5SOptnYG8SUqhS
-   QBdj+dKRDqJU26QAGAiltezjvUi1c8NGpIZLhxUaShmfppKYRvmtn8h18
-   sC/W56j9OTmKmYaeTPl7DkX/IFHuqaXfusUKQlej8P/wbWWZyLNLEhKYR
-   NrnDIPwlN/0JeD3RMz/OPpLCku61w3RRA8vZXkHUfOwbuTF7DAxbOZ0HV
-   w==;
-IronPort-SDR: IpvGd94rCdYvtCoStj5E3VEe1Dt1eU36W7Whi3G8pPBogN5/kCBxKQmoOcj2diT0hKrLs5ccOG
- 7qzYOfoGcU5aEby70aDy1hyLyTCsoSdwCePIadwO6lsXueRntU8KULrqFHepT4LSJMytQzV3Rw
- 2JgdJMkdiGZ+4r+EAgz5TsRo3eJv/8g5Cvmi1HPgTUbl92ltd2T7PjjAXxDva1AtLCwzA2EdF2
- BDkyLONWbP4wcKeN9VRRv0uVsCkap2By32/pbs2EMW0PIqdUDRFFdXdFOJ+J2aOa8CfQeot7tm
- CP0=
+  bh=n4qDjdS4aJARjsbRK53YPMVPhwJsBHC7jGieRK5mseY=;
+  b=1Y8ucun42+W51S+HFfCjzmUojzbMvBo5JlvKl/BTuLd8bfdDSep5wWrb
+   SR+pff/8LxXrIfqkbVIlST20dqWZ5/X9SWWz+1SrIeerTAbeLlZIs39wK
+   XCpp5468WiieASzZQ2sFrpSdaPZFhD/ytI8S947tXjUkGqXd5A8M9sxGa
+   LyDH8gqSFvq9Pjs/zPGeIQOzdpyatflc7SOf49KYohUf1yiyJIktfNVzw
+   z29Qovv4UNsQTCMV/RQfUOJTT2jKzdSBtF2Jj00C5F10PkmUP/EA6QPmJ
+   PPp/9DZ6jYRmY3liyBGQZfcJq/Q1UOUkgakJNyixbC2G6JlDS50wro2z+
+   A==;
+IronPort-SDR: LcoYlfsVMsYNce8usGky2WRqwRCWrMe2Mmk81h9WnehE5loCzjBq4aQm+f6svT9dalOvI2u2eb
+ QSumn23FEhXjQ2WL2/WD85aKgg1KpEzuqymhnoPrpG2T2++AN5Z+Z4aOr/WxSOvT60P9G4GXe0
+ uSgvyZ4PdY8tYW7jEghXc+uH0DCKCvHidxbuqM9zPC5nVHGOL9i0k1DJOKo/cRsmQWPaBIg+2/
+ O6kCBE53aQt2LuVTYL58D0ZbQ20ke9vggvaWN0NTWUdyMpK9JdDHJ0eimNbGn8oDCvitNWEbMs
+ Cks=
 X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="83152915"
+   d="scan'208";a="84467163"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2020 03:50:44 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2020 03:50:56 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 24 Jul 2020 03:50:01 -0700
+ 15.1.1979.3; Fri, 24 Jul 2020 03:50:11 -0700
 Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 24 Jul 2020 03:50:00 -0700
+ 15.1.1979.3 via Frontend Transport; Fri, 24 Jul 2020 03:50:09 -0700
 From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -60,9 +60,9 @@ CC:     <nicolas.ferre@microchip.com>, <claudiu.beznea@microchip.com>,
         <f.fainelli@gmail.com>, <robh+dt@kernel.org>,
         <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
         "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH net-next v3 1/7] net: macb: use device-managed devm_mdiobus_alloc()
-Date:   Fri, 24 Jul 2020 13:50:27 +0300
-Message-ID: <20200724105033.2124881-2-codrin.ciubotariu@microchip.com>
+Subject: [PATCH net-next v3 3/7] net: macb: parse PHY nodes found under an MDIO node
+Date:   Fri, 24 Jul 2020 13:50:29 +0300
+Message-ID: <20200724105033.2124881-4-codrin.ciubotariu@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200724105033.2124881-1-codrin.ciubotariu@microchip.com>
 References: <20200724105033.2124881-1-codrin.ciubotariu@microchip.com>
@@ -74,71 +74,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use the device-managed variant for the allocating the MDIO bus. This
-cleans-up the code a little on the remove and error paths.
+The MACB embeds an MDIO bus controller. For this reason, the PHY nodes
+were represented as sub-nodes in the MACB node. Generally, the
+Ethernet controller is different than the MDIO controller, so the PHYs
+are probed by a separate MDIO driver. Since adding the PHY nodes directly
+under the ETH node became deprecated, we adjust the MACB driver to look
+for an MDIO node and register the subnode MDIO devices.
 
 Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Tested-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Acked-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 
 Changes in v3:
- - added tags from Claudiu and Florian
+ - moved the check for the mdio node at the beginnging of
+   macb_mdiobus_register(). This way, the mdio devices will be probed even
+   if macb is a fixed-link
 
 Changes in v2:
- - none
+ - readded newline removed by mistake;
 
- drivers/net/ethernet/cadence/macb_main.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index a6a35e1b0115..89fe7af5e408 100644
+index 89fe7af5e408..cb0b3637651c 100644
 --- a/drivers/net/ethernet/cadence/macb_main.c
 +++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -769,7 +769,7 @@ static int macb_mii_init(struct macb *bp)
- 	/* Enable management port */
- 	macb_writel(bp, NCR, MACB_BIT(MPE));
+@@ -740,6 +740,16 @@ static int macb_mii_probe(struct net_device *dev)
+ static int macb_mdiobus_register(struct macb *bp)
+ {
+ 	struct device_node *child, *np = bp->pdev->dev.of_node;
++	struct device_node *mdio_node;
++	int ret;
++
++	/* if an MDIO node is present, it should contain the PHY nodes */
++	mdio_node = of_get_child_by_name(np, "mdio");
++	if (mdio_node) {
++		ret = of_mdiobus_register(bp->mii_bus, mdio_node);
++		of_node_put(mdio_node);
++		return ret;
++	}
  
--	bp->mii_bus = mdiobus_alloc();
-+	bp->mii_bus = devm_mdiobus_alloc(&bp->pdev->dev);
- 	if (!bp->mii_bus) {
- 		err = -ENOMEM;
- 		goto err_out;
-@@ -787,7 +787,7 @@ static int macb_mii_init(struct macb *bp)
- 
- 	err = macb_mdiobus_register(bp);
- 	if (err)
--		goto err_out_free_mdiobus;
-+		goto err_out;
- 
- 	err = macb_mii_probe(bp->dev);
- 	if (err)
-@@ -797,8 +797,6 @@ static int macb_mii_init(struct macb *bp)
- 
- err_out_unregister_bus:
- 	mdiobus_unregister(bp->mii_bus);
--err_out_free_mdiobus:
--	mdiobus_free(bp->mii_bus);
- err_out:
- 	return err;
- }
-@@ -4571,7 +4569,6 @@ static int macb_probe(struct platform_device *pdev)
- 
- err_out_unregister_mdio:
- 	mdiobus_unregister(bp->mii_bus);
--	mdiobus_free(bp->mii_bus);
- 
- err_out_free_netdev:
- 	free_netdev(dev);
-@@ -4599,7 +4596,6 @@ static int macb_remove(struct platform_device *pdev)
- 	if (dev) {
- 		bp = netdev_priv(dev);
- 		mdiobus_unregister(bp->mii_bus);
--		mdiobus_free(bp->mii_bus);
- 
- 		unregister_netdev(dev);
- 		tasklet_kill(&bp->hresp_err_tasklet);
+ 	if (of_phy_is_fixed_link(np))
+ 		return mdiobus_register(bp->mii_bus);
 -- 
 2.25.1
 
