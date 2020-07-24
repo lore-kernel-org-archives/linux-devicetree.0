@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60278C433F7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E96AC433F8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3935A2074B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3CD2074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zqdOy/Qv"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WQsvr9hJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgGXMiW (ORCPT
+        id S1726539AbgGXMiI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:38:22 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37261 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726892AbgGXMiQ (ORCPT
+        Fri, 24 Jul 2020 08:38:08 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35424 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726258AbgGXMiI (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:38:16 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OCbAbb009760;
-        Fri, 24 Jul 2020 14:37:54 +0200
+        Fri, 24 Jul 2020 08:38:08 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OCbOKm029988;
+        Fri, 24 Jul 2020 14:37:55 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=6UtDwAv3qeKN8/V4iakuFjxlVazOXqhLBzSsC4gvvww=;
- b=zqdOy/QvNklM6AW+mN788x7uBwT8sikiSgT0JxlV+O1ZVAccLT+ioS5QtuoYihE+k6fo
- HLM8tTMxetJAqOEjMxAmmKEAhIOLc1YWZboDkv0pfER2G5sLpWL6g2dWX+vkq3bxNO1M
- HOrkZnDw7AbZki+tM2sNk2ELaFsB6IRBsaM/fu3ue68KhTrXhVTeDzjddqyTbdysHeUw
- MjN+uUklAiSY0n+FkRZiLQTDw7hbAORXB3enq2qSuJiACM6ESlm0LUTLwbyTpMQYRIQu
- Y3pT0BpUF1iOzzfKEhlOn5VWZYgfUEKpe92CZq5fyPewyM2950j6H5Occe0QbBn0q715 +g== 
+ bh=ISBLyDTPf2HfIUmPPuAqhoT7vMfRrg71RmS3R2cEeZk=;
+ b=WQsvr9hJhHJMC5YSb0+4SNKoUnpUlDaJoQrpDhnEJFVurwTgF74FEb/hZy23v0AhcnEw
+ yVS6dlTN1hcVpTLbAM3vxdKaAP6DC6tVa6Y3cxcMFkT17/UlGu9yXsBIeuS29bjeKNfL
+ /cEp+F2KOEiHzcAzO1oIFob55TwH21oVPy60rFskkl6BkguiBkRbMZP/ycIJdsqVToQE
+ vZjW+Z+RXVgH3VyHBD/OHAYmpYT5LuLimpDrBqIB9ttuDn3kh5fKs5z9o/wP6YnL6bOn
+ OwNafZBdQZDUJQbG+ZVLpxfNIK+veqs1OyUJwRxtqwGdNFUAnkYOmuHXoGNFqFneWXlB aA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bs6vg3g6-1
+        by mx07-00178001.pphosted.com with ESMTP id 32bsahgcgt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 14:37:54 +0200
+        Fri, 24 Jul 2020 14:37:55 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B85B0100034;
-        Fri, 24 Jul 2020 14:37:53 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0B947100034;
+        Fri, 24 Jul 2020 14:37:55 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A460A2AF334;
-        Fri, 24 Jul 2020 14:37:53 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jul 2020 14:37:53
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA9782AF334;
+        Fri, 24 Jul 2020 14:37:54 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jul 2020 14:37:54
  +0200
 From:   Amelie Delaunay <amelie.delaunay@st.com>
 To:     Minas Harutyunyan <hminas@synopsys.com>,
@@ -62,16 +62,16 @@ CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         Fabrice Gasnier <fabrice.gasnier@st.com>,
         Amelie Delaunay <amelie.delaunay@st.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/4] dt-bindings: usb: dwc2: add optional usb-role-switch property
-Date:   Fri, 24 Jul 2020 14:37:45 +0200
-Message-ID: <20200724123748.25369-2-amelie.delaunay@st.com>
+Subject: [PATCH 3/4] usb: dwc2: drd: fix sleeping while spinlock atomic context
+Date:   Fri, 24 Jul 2020 14:37:47 +0200
+Message-ID: <20200724123748.25369-4-amelie.delaunay@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724123748.25369-1-amelie.delaunay@st.com>
 References: <20200724123748.25369-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-24_04:2020-07-24,2020-07-24 signatures=0
@@ -80,31 +80,74 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch documents the usb-role-switch property in dwc2 bindings, now
-that usb-role-switch support is available in dwc2 driver.
+If GINTSTS.CURMODE is not yet reflecting the expecting mode after calling
+dwc2_force_mode, we enter in the dwc2_wait_for_mode function while under
+spinlock atomic context.
+To avoid this situation, move the call to dwc2_force_mode after the
+spinlock atomic context.
 
 Fixes: bc0f0d4a5853 ("usb: dwc2: override PHY input signals with usb role switch support")
 Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- Documentation/devicetree/bindings/usb/dwc2.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/dwc2/drd.c | 27 +++++++--------------------
+ 1 file changed, 7 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index 9352a8ef60a6..7b226eeffe82 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -100,6 +100,10 @@ properties:
-   dr_mode:
-     enum: [host, peripheral, otg]
+diff --git a/drivers/usb/dwc2/drd.c b/drivers/usb/dwc2/drd.c
+index 5099841b1417..2d4176f5788e 100644
+--- a/drivers/usb/dwc2/drd.c
++++ b/drivers/usb/dwc2/drd.c
+@@ -70,6 +70,7 @@ static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
+ {
+ 	struct dwc2_hsotg *hsotg = usb_role_switch_get_drvdata(sw);
+ 	unsigned long flags;
++	int already = 0;
  
-+  usb-role-switch:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: Support role switch.
+ 	/* Skip session not in line with dr_mode */
+ 	if ((role == USB_ROLE_DEVICE && hsotg->dr_mode == USB_DR_MODE_HOST) ||
+@@ -88,26 +89,9 @@ static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
+ 	spin_lock_irqsave(&hsotg->lock, flags);
+ 
+ 	if (role == USB_ROLE_HOST) {
+-		if (dwc2_ovr_avalid(hsotg, true))
+-			goto unlock;
+-
+-		if (hsotg->dr_mode == USB_DR_MODE_OTG)
+-			/*
+-			 * This will raise a Connector ID Status Change
+-			 * Interrupt - connID A
+-			 */
+-			dwc2_force_mode(hsotg, true);
++		already = dwc2_ovr_avalid(hsotg, true);
+ 	} else if (role == USB_ROLE_DEVICE) {
+-		if (dwc2_ovr_bvalid(hsotg, true))
+-			goto unlock;
+-
+-		if (hsotg->dr_mode == USB_DR_MODE_OTG)
+-			/*
+-			 * This will raise a Connector ID Status Change
+-			 * Interrupt - connID B
+-			 */
+-			dwc2_force_mode(hsotg, false);
+-
++		already = dwc2_ovr_bvalid(hsotg, true);
+ 		/* This clear DCTL.SFTDISCON bit */
+ 		dwc2_hsotg_core_connect(hsotg);
+ 	} else {
+@@ -120,9 +104,12 @@ static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
+ 		}
+ 	}
+ 
+-unlock:
+ 	spin_unlock_irqrestore(&hsotg->lock, flags);
+ 
++	if (!already && hsotg->dr_mode == USB_DR_MODE_OTG)
++		/* This will raise a Connector ID Status Change Interrupt */
++		dwc2_force_mode(hsotg, role == USB_ROLE_HOST);
 +
-   g-rx-fifo-size:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: size of rx fifo size in gadget mode.
+ 	dev_dbg(hsotg->dev, "%s-session valid\n",
+ 		role == USB_ROLE_NONE ? "No" :
+ 		role == USB_ROLE_HOST ? "A" : "B");
 -- 
 2.17.1
 
