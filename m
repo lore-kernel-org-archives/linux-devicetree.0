@@ -2,111 +2,75 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC4AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 19:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0C7C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 20:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 571862070B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 19:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88C2206D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 20:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595619557;
-	bh=aEsJK/on98H+OBWg+Fvivyaoij+CSyJ7aAWyHCS83rA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PX5tqt2HgmqVegs1XyjsUfrPfumb+R0oBQ3D1cvpkjsxTLdyMOv9KQOlJyJloQzUq
-	 Tj1uoBxdUpeQfuZf8d3j1P/vgpJvC2UPZ1IpzxN6EpwSAhOJx5s0nWA1jAEXlyTEYc
-	 kskPiysnEhj6D5dKoZT6Nj8AkVFFWqCQ0DipCUig=
+	s=default; t=1595621123;
+	bh=6gYELWEdGtLiYztaOgtn8cus8iH/oHyezbcO0e7hKFw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=ayDG6HQkmWmTUoY2yTbl0wQnlaNWuCskxKYnVPitYxed/x9c1djjsRgEZolsM/HYY
+	 3J6es/k6nvz6JLBM60lrp3huUdkaYGq8bKTnwEKdJdb705U6Sb0ipWXVdjlUAGd6HW
+	 Ou5y2/3dfoZQPIx3TDpSijj1AkUP899BosKbP+Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgGXTjQ (ORCPT
+        id S1726539AbgGXUFX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55668 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 16:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbgGXTjQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:39:16 -0400
-Received: from localhost (p54b3305c.dip0.t-ipconnect.de [84.179.48.92])
+        id S1726381AbgGXUFX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 16:05:23 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F690206F6;
-        Fri, 24 Jul 2020 19:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEAA7206D7;
+        Fri, 24 Jul 2020 20:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595619556;
-        bh=aEsJK/on98H+OBWg+Fvivyaoij+CSyJ7aAWyHCS83rA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eiOTuRbtNrpPuvVetfi8oOZnREKbgxRLyG6liJKI+RarW/ryGKDl0WKv0ewht0HAL
-         RrH/HbI3u16u5kBSO2Dh59GpPlvL/N/VukGbfUj6tqPVtN5QXHVGuU303/OGpHuP4D
-         3Zy6iiSXfJgy02u8ltSNKLCxpW3eah0D8oRfQvik=
-Date:   Fri, 24 Jul 2020 21:39:13 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        kamel.bouhara@bootlin.com
-Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
- bus recovery
-Message-ID: <20200724193913.GD1227@ninjato>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
- <20200705211918.GB1055@kunai>
+        s=default; t=1595621122;
+        bh=6gYELWEdGtLiYztaOgtn8cus8iH/oHyezbcO0e7hKFw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=C6tMNpeyyLa+xh64K3GfwFjc8DttI7N49T3x2ITapTj6i8oPQc3eAbWZ0F8FYxAGB
+         IfVR3FVR1XLIDbgB4UMjmKtVbrVOJU/KUV6X02JVMH6GcroTch0yNR5c6soMOS0MmO
+         UdywUZFgLra33PIiQ/v7zSNnQwAQvSaWU7d1Mc+Y=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
-Content-Disposition: inline
-In-Reply-To: <20200705211918.GB1055@kunai>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1595606878-2664-3-git-send-email-tdas@codeaurora.org>
+References: <1595606878-2664-1-git-send-email-tdas@codeaurora.org> <1595606878-2664-3-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v5 2/4] dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Fri, 24 Jul 2020 13:05:21 -0700
+Message-ID: <159562112198.3847286.9616013416460856568@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---C+ts3FVlLX8+P6JN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jul 05, 2020 at 11:19:18PM +0200, Wolfram Sang wrote:
+Quoting Taniya Das (2020-07-24 09:07:56)
+> The LPASS(Low Power Audio Subsystem) clock provider have a bunch of gener=
+ic
+> properties that are needed in a device tree. Also add clock ids for GCC
+> LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
 >=20
-> > +- pinctrl
-> > +	add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
-> > +	recovery, call it "gpio" or "recovery" state
->=20
-> I think we should stick with "gpio" only. That is what at91 and imx have
-> in their bindings. pxa uses "recovery" as a pinctrl state name but I
-> can't find any further use or documentation of that. PXA is not fully
-> converted to the best of my knowledge, so maybe it is no problem for PXA
-> to switch to "gpio", too? We should ask Russell King (cced).
->=20
-> Russell, do you object naming the pinctrl state for bus recovery in
-> the pxa i2c driver from "recovery" to "gpio"?
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-No response, so far. I suggest now to support the "recovery" naming but
-mark it as deprecated. Opinions?
-
-
---C+ts3FVlLX8+P6JN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8bOOEACgkQFA3kzBSg
-KbatLxAAk2OVhHrxdm0fEryvCzcONGEOEuKWTg4HCQ4cut68iX+MXLitGPJ9+vWQ
-OtvgHiP6RQ/btXSkdxTdIrybUHke0J1++CzmDnWHkHmwUjECBKbfpxq/1WblwvC5
-np+5JNo0yCwuC89MfV5B9P7elybuwro+q2HtxiZuoeDBp040GV/0T0hvV++JOiF6
-TMLUYjP3ucaOI2KQEnSk931hVzoZE42uWoN8SdsOA/ieYETISy1cf1ghuq/WLh9A
-4tvjCnJ55yAgK4rVIn6koY6hYk9waDRgSn5zdn/XvE0KnzA+9Wm/B+qiH8WLk0IN
-DfoXNWMrssgQ11B1l3uhkHM21uTIJSpofhWA1lvi2rgXoXtIptWnNv4BsEg+NEfq
-Vh6qOaPpEVG2L0uqToSLLbcRqBQbfS1iUWLSvAjoGVNLdzW7334PFC5DZ8BnVOZv
-uXt1kpVFzSRkzPk+lpX4JjWPjMw764cpXlFTQXJRbo7pyQMXEPEf4Om3Uh5eRyiL
-uRjlFkwgvOrA9gLaep3WlSRQZmdw+JQbYGDOD6jNya80V/IkjGMrfXQu9k6F0nD/
-QLHhAErkdIIXxLczXftQiGvXc1sWp83Wo5wKZvwxIzaPRhvC/d7WNmXjR8WZ76mC
-a8GLnQnzsOFN/F8ubjoEB8ABtxUO1x7PYJQk+AFRmz2AUhj9GIE=
-=ZcrW
------END PGP SIGNATURE-----
-
---C+ts3FVlLX8+P6JN--
+I think Rob reviewed this v4 last time? Please pick up tags when
+resending.
