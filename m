@@ -2,183 +2,90 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B13AC433EA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 07:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DD7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 07:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 042B82073E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 07:06:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X626ck2/"
+	by mail.kernel.org (Postfix) with ESMTP id 789E92073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 07:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgGXHGS (ORCPT
+        id S1726559AbgGXHKV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:06:18 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:21167 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbgGXHGS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:06:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595574378; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Dk0aGUdOPthT8VlN9Qh+Ev+sNukDGkYigjembz8orGk=; b=X626ck2/Z1YioP9zAcl470gicIvLZtUe1eT8xglXRKK6wnZaxRlcAoMo3L+L/IrIZG2RbSO9
- gPJFVtUOWCpVt0UicUPFrCgWYwUCl/vv4axuFvU5chmk4Mbk7NsjdDBXDly0ajDaDaa2vF5G
- HGTx351Lpg/LPxwESTiLCnSAD6U=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f1a8844eef925b694369022 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 07:05:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6D92C433CB; Fri, 24 Jul 2020 07:05:40 +0000 (UTC)
-Received: from vnaralas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akolli)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A398C433C6;
-        Fri, 24 Jul 2020 07:05:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A398C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akolli@codeaurora.org
-From:   Anilkumar Kolli <akolli@codeaurora.org>
-To:     ath11k@lists.infradead.org
-Cc:     devicetree@vger.kernel.org, linux-wireless@vger.kernel.org,
-        akolli@codeaurora.org
-Subject: [PATCH v5 2/3] ath11k: copy ce service configs to hw_params
-Date:   Fri, 24 Jul 2020 12:35:24 +0530
-Message-Id: <1595574325-16300-3-git-send-email-akolli@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595574325-16300-1-git-send-email-akolli@codeaurora.org>
-References: <1595574325-16300-1-git-send-email-akolli@codeaurora.org>
+        Fri, 24 Jul 2020 03:10:21 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:52512 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726543AbgGXHKU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:10:20 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3986539|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0129791-0.000774184-0.986247;FP=0|0|0|0|0|-1|-1|-1;HT=e01l04362;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.I6po0ZJ_1595574611;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I6po0ZJ_1595574611)
+          by smtp.aliyun-inc.com(10.147.44.145);
+          Fri, 24 Jul 2020 15:10:16 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        mripard@kernel.org, wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
+        Yangtao Li <frank@allwinnertech.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 06/16] dt-bindings: nvmem: SID: add binding for A100's SID controller
+Date:   Fri, 24 Jul 2020 15:09:35 +0800
+Message-Id: <c884058c7395d514308f87e76f506b74894fed28.1595572867.git.frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-No functional changes, added target ce service configurations
-to hw_params.
+From: Yangtao Li <frank@allwinnertech.com>
 
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Add a binding for A100's SID controller.
+
+Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-V3:
- - added ce svc configs in hw_params
+ .../nvmem/allwinner,sun4i-a10-sid.yaml        | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
- drivers/net/wireless/ath/ath11k/ahb.c  | 20 +++++++++++++++-----
- drivers/net/wireless/ath/ath11k/core.c |  8 +-------
- drivers/net/wireless/ath/ath11k/core.h |  1 +
- drivers/net/wireless/ath/ath11k/hw.h   |  2 ++
- 4 files changed, 19 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-index 7e9bfeaaf4d2..aa74d27e5871 100644
---- a/drivers/net/wireless/ath/ath11k/ahb.c
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -152,7 +152,7 @@ static const struct ce_pipe_config target_ce_config_wlan[] = {
-  * This table is derived from the CE_PCI TABLE, above.
-  * It is passed to the Target at startup for use by firmware.
-  */
--static const struct service_to_pipe target_service_to_ce_map_wlan[] = {
-+static const struct service_to_pipe target_service_to_ce_map_wlan_ipq8074[] = {
- 	{
- 		.service_id = __cpu_to_le32(ATH11K_HTC_SVC_ID_WMI_DATA_VO),
- 		.pipedir = __cpu_to_le32(PIPEDIR_OUT),	/* out = UL = host -> target */
-@@ -644,8 +644,8 @@ static void ath11k_ahb_init_qmi_ce_config(struct ath11k_base *ab)
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+index daf1321d76ad..6687ab720304 100644
+--- a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
++++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
+@@ -15,14 +15,17 @@ allOf:
  
- 	cfg->tgt_ce_len = ARRAY_SIZE(target_ce_config_wlan) - 1;
- 	cfg->tgt_ce = target_ce_config_wlan;
--	cfg->svc_to_ce_map_len = ARRAY_SIZE(target_service_to_ce_map_wlan);
--	cfg->svc_to_ce_map = target_service_to_ce_map_wlan;
-+	cfg->svc_to_ce_map_len = ab->hw_params.svc_to_ce_map_len;
-+	cfg->svc_to_ce_map = ab->hw_params.svc_to_ce_map;
- }
+ properties:
+   compatible:
+-    enum:
+-      - allwinner,sun4i-a10-sid
+-      - allwinner,sun7i-a20-sid
+-      - allwinner,sun8i-a83t-sid
+-      - allwinner,sun8i-h3-sid
+-      - allwinner,sun50i-a64-sid
+-      - allwinner,sun50i-h5-sid
+-      - allwinner,sun50i-h6-sid
++    oneOf:
++      - const: allwinner,sun4i-a10-sid
++      - const: allwinner,sun7i-a20-sid
++      - const: allwinner,sun8i-a83t-sid
++      - const: allwinner,sun8i-h3-sid
++      - const: allwinner,sun50i-a64-sid
++      - items:
++          - const: allwinner,sun50i-a100-sid
++          - const: allwinner,sun50i-a64-sid
++      - const: allwinner,sun50i-h5-sid
++      - const: allwinner,sun50i-h6-sid
  
- static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
-@@ -853,8 +853,8 @@ static int ath11k_ahb_map_service_to_pipe(struct ath11k_base *ab, u16 service_id
- 	bool ul_set = false, dl_set = false;
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(target_service_to_ce_map_wlan); i++) {
--		entry = &target_service_to_ce_map_wlan[i];
-+	for (i = 0; i < ab->hw_params.svc_to_ce_map_len; i++) {
-+		entry = &ab->hw_params.svc_to_ce_map[i];
- 
- 		if (__le32_to_cpu(entry->service_id) != service_id)
- 			continue;
-@@ -950,6 +950,16 @@ static int ath11k_ahb_probe(struct platform_device *pdev)
- 		goto err_hal_srng_deinit;
- 	}
- 
-+	ret = ath11k_init_hw_params(ab);
-+	if (ret) {
-+		ath11k_err(ab, "failed to get hw params %d\n", ret);
-+		return ret;
-+	}
-+
-+	ab->hw_params.svc_to_ce_map_len =
-+			ARRAY_SIZE(target_service_to_ce_map_wlan_ipq8074);
-+	ab->hw_params.svc_to_ce_map = target_service_to_ce_map_wlan_ipq8074;
-+
- 	ath11k_ahb_init_qmi_ce_config(ab);
- 
- 	ret = ath11k_core_init(ab);
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index 38e830a2395b..0bf8bb1674dc 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -703,7 +703,7 @@ static void ath11k_core_restart(struct work_struct *work)
- 	complete(&ab->driver_recovery);
- }
- 
--static int ath11k_init_hw_params(struct ath11k_base *ab)
-+int ath11k_init_hw_params(struct ath11k_base *ab)
- {
- 	const struct ath11k_hw_params *hw_params = NULL;
- 	int i;
-@@ -746,12 +746,6 @@ int ath11k_core_init(struct ath11k_base *ab)
- 	}
- 	ab->tgt_rproc = prproc;
- 
--	ret = ath11k_init_hw_params(ab);
--	if (ret) {
--		ath11k_err(ab, "failed to get hw params %d\n", ret);
--		return ret;
--	}
--
- 	ret = ath11k_core_soc_create(ab);
- 	if (ret) {
- 		ath11k_err(ab, "failed to create soc core: %d\n", ret);
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index b6ccd9f93853..98b994984c25 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -852,6 +852,7 @@ struct ath11k_peer *ath11k_peer_find_by_id(struct ath11k_base *ab, int peer_id);
- int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab);
- int ath11k_core_init(struct ath11k_base *ath11k);
- void ath11k_core_deinit(struct ath11k_base *ath11k);
-+int ath11k_init_hw_params(struct ath11k_base *ab);
- struct ath11k_base *ath11k_core_alloc(struct device *dev, size_t priv_size,
- 				      enum ath11k_bus bus);
- void ath11k_core_free(struct ath11k_base *ath11k);
-diff --git a/drivers/net/wireless/ath/ath11k/hw.h b/drivers/net/wireless/ath/ath11k/hw.h
-index f31d53f6adb8..388cfb42ef93 100644
---- a/drivers/net/wireless/ath/ath11k/hw.h
-+++ b/drivers/net/wireless/ath/ath11k/hw.h
-@@ -116,6 +116,8 @@ struct ath11k_hw_params {
- 	} fw;
- 
- 	const struct ath11k_hw_ops *hw_ops;
-+	const struct service_to_pipe *svc_to_ce_map;
-+	int svc_to_ce_map_len;
- };
- 
- extern const struct ath11k_hw_ops ipq8074_ops;
+   reg:
+     maxItems: 1
 -- 
-2.7.4
+2.24.0
 
