@@ -2,229 +2,104 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92D6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 04:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8130BC433E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 05:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92FB62074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 04:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5993D20714
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 05:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gmqfhVFt"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Di956j2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgGXER1 (ORCPT
+        id S1726565AbgGXFcp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 00:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36434 "EHLO
+        Fri, 24 Jul 2020 01:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgGXER1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 00:17:27 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691E5C0619D3
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 21:17:27 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id w17so7002742oie.6
-        for <devicetree@vger.kernel.org>; Thu, 23 Jul 2020 21:17:27 -0700 (PDT)
+        with ESMTP id S1726277AbgGXFcp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 01:32:45 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30451C0619D3;
+        Thu, 23 Jul 2020 22:32:44 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id gg18so5310900ejb.6;
+        Thu, 23 Jul 2020 22:32:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YTT73fROBVT8TZbJViXVHJt1wjzukhaNdjZMHoT4MMM=;
-        b=gmqfhVFtR337ZrjFDzRLwS/pOwrr2MrmvoxgzuqKhyWihrkEJAP0OX2mekTSzg1lTh
-         4OUMLj+g/asCGM5+CFRMwA6QrVEYkt9ZHV2g9Fm9li9W3qYvQhsdGA8VUsGt9XIdkYFq
-         T74by6FB0sFWsSyWM35fUrjhYhFXNwswSuCi4Ikt33R2rcJ+lqyOWu9SRtUzaE2aZ5hN
-         HYOCF1X8xFXcJLig8HTMcWM5ChMEUGsUHPHsPAMPZJieMCK7+Soc88nUX/ZVh39kxb52
-         6IqGWyKyZurId3qZ86v4I5jdSPrXaiJgCm881mzgCp0YsCHbi3Qbay/RKd5XqVmnbqHz
-         z8KQ==
+        bh=lxeF3MdXzIoVsbazhbqXkh5Gq8fRGjKClAu6VjOvpaQ=;
+        b=Di956j2aZtrmMHcejr07uX82Ow70coVnOGXPMEEuPUjfwmVcAT2UMOPHutzGowc6ee
+         PrcgaF2BmKXQcGyY3GplupS/zOgati5XyXj7L+kKf0sWU3xvRDx/o3eysq3xLNtd5B8d
+         UIkRU1OgFsWoBWSJR53ArBd94RfbELr182ysY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YTT73fROBVT8TZbJViXVHJt1wjzukhaNdjZMHoT4MMM=;
-        b=AentKLgyefiKU7CRWqj3TXRoMZUw4ueoaBCKxcutKrDwzTjnG7vG1Uq8I0hYhFi2KB
-         N74Ra4V8Buhu+E0NgUKvFV+eh+ggi6liGfcupsAXIXgujwXlOSRTWjpD94gobn94l7ND
-         Gu2VrQIrkDKUYq+1jsr64UoVnx4Qqfm3mw/XD3bewFBD25goIoA9h9N6PZQK3KVAcypp
-         opD3JO0ECCl0G/9D2C1ofG17RtlfPXL1g0q0DQ6bclBtwPOEhaTKLCZhfEgeWwxLyJNh
-         Sh4EAPIcEBFvHYp6aV1ru1fwDAUfWRRhB1emlJCazmcU2emh1YRPF6obf8+rluDkdz5J
-         521w==
-X-Gm-Message-State: AOAM5328Nh+EcD48dHwQuT+P8jkJcL6iq+1lGizeu1tYVemye+HwYv44
-        RP9bHRShg2y5XkJJFi+dKKfIzvsr+yqqQH10g3sPfQ==
-X-Google-Smtp-Source: ABdhPJx/agHjYflbwk6fi2xXMZqsnu4VQ0/K/yAmmSRQzS/+TjeabhqhPYBCWVJmqyU41+AcbdUgXQZnaG5C8w8nTZQ=
-X-Received: by 2002:aca:2811:: with SMTP id 17mr6887468oix.166.1595564246768;
- Thu, 23 Jul 2020 21:17:26 -0700 (PDT)
+        bh=lxeF3MdXzIoVsbazhbqXkh5Gq8fRGjKClAu6VjOvpaQ=;
+        b=TaSgl7Ytas0s/M+CY9FxhPbTd3KvYqGa98YhsbRzYCo9xLeK8ABh1Bb5JRQIORUDad
+         GEBt7wiOqffg8ZTlBINb1zEgbELLsp6DK1sSoh+uro39llL7S5bhr7kh38lLGfb9i1gA
+         BouamtDZmgLJMxyU+lRNq0YeMpdzZ8XPAMAuUGD3T5IM/F8uaZhZ40AEx8lOBvBbMcL/
+         8lmm/8Va6zggi6edfEyBqHyvRBgLlroZAEoiaSnmFzdagaa4aj8Q0H4dM5EVEq+DhkMb
+         YYbIQ4Vh6pT8EUNoQeqpWq3IzmCWLVnR0mvDjc+EQpfDCK8BpMio7K/7hkTx9Ho6DM6/
+         Reow==
+X-Gm-Message-State: AOAM532A8LpomImtnX1LFSz4JnKatvVkfhUdeDQh0UcaOp0Q0JWKuI0M
+        0XvkN3tMXAupJJYGOXxzu4zizmGQuC653kj9YYs=
+X-Google-Smtp-Source: ABdhPJyvBQHzeEYsM37+wecHEG0VWauRr3W7csro+jM1re12/9nqf22Nc6d1EFG2E/ReH5XyqMDpOAvaHjCnOFMBhaA=
+X-Received: by 2002:a17:906:c187:: with SMTP id g7mr8032732ejz.108.1595568762913;
+ Thu, 23 Jul 2020 22:32:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200722055816.20768-1-sumit.semwal@linaro.org>
- <20200722055816.20768-2-sumit.semwal@linaro.org> <20200723175552.GA602630@bogus>
-In-Reply-To: <20200723175552.GA602630@bogus>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Fri, 24 Jul 2020 09:47:15 +0530
-Message-ID: <CAO_48GH3btOO9JyxqC2JEcqqxnP_Fxk_u4mvuaEy22TfMZ8pqA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: Add bindings for
- Tianma nt36672a panel
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20200723230539.17860-1-rentao.bupt@gmail.com>
+In-Reply-To: <20200723230539.17860-1-rentao.bupt@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 24 Jul 2020 05:32:30 +0000
+Message-ID: <CACPK8XdiHLcBBhXjCpTZotVPuRj4bFh0x8TFhSj1TBK2xB0SiQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] ARM: dts: aspeed: fixup wedge40 device tree
+To:     Tao Ren <rentao.bupt@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, 23 Jul 2020 at 23:05, <rentao.bupt@gmail.com> wrote:
+>
+> From: Tao Ren <rentao.bupt@gmail.com>
+>
+> The patch series update several devices' settings in Facebook Wedge40
+> device tree.
+>
+> Patch #1 disables a few i2c controllers as they are not being used at
+> present.
+>
+> Patch #2 enables adc device for voltage monitoring.
+>
+> Patch #3 enables pwm_tacho device for fan control and monitoring.
+>
+> Tao Ren (3):
+>   ARM: dts: aspeed: wedge40: disable a few i2c controllers
+>   ARM: dts: aspeed: wedge40: enable adc device
+>   ARM: dts: aspeed: wedge40: enable pwm_tacho device
 
-Thanks for the review!
+I have merged this series into the aspeed dt-for-5.9 branch.
 
-On Thu, 23 Jul 2020 at 23:25, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jul 22, 2020 at 11:28:15AM +0530, Sumit Semwal wrote:
-> > The nt36672a panel from Tianma is a FHD+ panel with a resolution of 1080x2246
-> > and 6.18 inches size. It is found in some of the Poco F1 phones.
-> >
-> > Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> > Change-Id: I401dfbfe23ff2d806c956002f45e349cb9688c16
->
-> You know better...
-Yes - Sorry :( - will correct.
->
-> > ---
-> > v2: remove ports node, making port@0 directly under panel@0 node.
-> > ---
-> >  .../display/panel/tianma,nt36672a.yaml        | 104 ++++++++++++++++++
-> >  1 file changed, 104 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> > new file mode 100644
-> > index 000000000000..cb1799fbbd32
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
-> > @@ -0,0 +1,104 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/tianma,nt36672a.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Tianma model NT36672A DSI Panel display driver
-> > +
-> > +maintainers:
-> > +  - Sumit Semwal <sumit.semwal@linaro.org>
-> > +
-> > +description: |
-> > +  The nt36672a panel from Tianma is a FHD+ LCD display panel with a resolution
-> > +  of 1080x2246. It is a video mode DSI panel.
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: tianma,nt36672a
-> > +
-> > +  reg:
-> > +    description: DSI virtual channel of the peripheral
-> > +
-> > +  reset-gpios:
-> > +    description: phandle of gpio for reset line - This should be 8mA, gpio
-> > +      can be configured using mux, pinctrl, pinctrl-names (active high)
-> > +
-> > +  vddio-supply:
-> > +    description: phandle of the regulator that provides the supply voltage
-> > +      Power IC supply
-> > +
-> > +  vddpos-supply:
-> > +    description: phandle of the positive boost supply regulator
-> > +
-> > +  vddneg-supply:
-> > +    description: phandle of the negative boost supply regulator
-> > +
-> > +  pinctrl-names:
-> > +    description: Pinctrl for panel active and suspend
-> > +
-> > +  pinctrl-0:
-> > +    description: Active pinctrls
-> > +
-> > +  pinctrl-1:
-> > +    description: Suspend pinctrls
-> > +
-> > +  port@0:
->
-> Just 'port' as there can only be 1 in this case.
->
-> You can do just: 'port: true' as panel-common.yaml already has a
-> definition.
+Cheers,
 
-Ok, let me try that and send out v3.
->
-> > +    type: object
-> > +    description: DSI input port driven by master DSI
-> > +    properties:
-> > +      reg:
-> > +        const: 0
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - vddi0-supply
-> > +  - vddpos-supply
-> > +  - vddneg-supply
-> > +  - reset-gpios
-> > +  - pinctrl-names
-> > +  - pinctrl-0
-> > +  - pinctrl-1
-> > +  - port@0
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |+
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    dsi0 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      panel@0 {
-> > +        compatible = "tianma,nt36672a";
-> > +        reg = <0>;
-> > +        vddi0-supply = <&vreg_l14a_1p88>;
-> > +        vddpos-supply = <&lab>;
-> > +        vddneg-supply = <&ibb>;
-> > +
-> > +        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
-> > +
-> > +        pinctrl-names = "panel_active", "panel_suspend";
-> > +        pinctrl-0 = <&sde_dsi_active>;
-> > +        pinctrl-1 = <&sde_dsi_suspend>;
-> > +
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        port@0 {
-> > +          reg = <0>;
-> > +          tianma_nt36672a_in_0: endpoint {
-> > +            remote-endpoint = <&dsi0_out>;
-> > +          };
-> > +        };
-> > +      };
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.27.0
-> >
->
+Joel
 
-Best,
-Sumit.
+>
+>  .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 42 +++++++++++++++----
+>  1 file changed, 34 insertions(+), 8 deletions(-)
+>
+> --
+> 2.17.1
+>
