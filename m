@@ -2,102 +2,140 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB7BC433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45251C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A42C2074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595597112;
-	bh=pp/ojK1FzfEWYVM4WBKudjbEzP9+0SYYLSoiNjE9YLU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Jq+iH9C1Wn6on6ys8iiU4cOZqpQePCCwT9fRDNeYMTaA8H1xFMdVGA7mX8c7SnM6G
-	 aX8BMawMryP2bfMOTDPXaFS/IH34u/2V112CEtKhLPd/Jw3Hg0kD1YYuMHlxFVjTag
-	 e2gGOkksWwSs2OcVs9w78dJXUnMrzwie4+lgbRDw=
+	by mail.kernel.org (Postfix) with ESMTP id 1F48020767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="a6Y/L91h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgGXNZL (ORCPT
+        id S1726235AbgGXN1o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgGXNZL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:25:11 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9AA2065F;
-        Fri, 24 Jul 2020 13:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595597111;
-        bh=pp/ojK1FzfEWYVM4WBKudjbEzP9+0SYYLSoiNjE9YLU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=w0c8S6XQ+gzkzI5LxJL+XfMrR2B7El+RZsYxvDnwnzjYv73NtN/9hjndd4B8c/C+s
-         uA97p96af+HrUn/IfyHzz6aoHGb20RrTkI6J064UIp5zTTa9KoM3kW1mLISRMsaXIp
-         e32E/jNou3sLIkTCyJ2e/Kfp2Fr3xpZxJ526gUy8=
-Received: by pali.im (Postfix)
-        id 2AA4788C; Fri, 24 Jul 2020 15:25:09 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH] pinctrl: armada-37xx: Add comment for pcie1_reset pin group
-Date:   Fri, 24 Jul 2020 15:24:57 +0200
-Message-Id: <20200724132457.7094-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 24 Jul 2020 09:27:44 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:55684 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgGXN1o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 09:27:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595597264; x=1627133264;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=GEQALP2YK7Y1RCK5HFtBMn6+lsbi6MEGwon9BiZrUcA=;
+  b=a6Y/L91hcu3G0Jl5gwy+HF4viwbxj5/li7OT6e9VXHLVi1+XkSGj4qhq
+   nA+KEYtkwXxiBS9gtnfWcmRjvSjQMSnuiru0Nk4qHxbvMPjIvRjPidxx9
+   Xhnu3K3csc6KAhwHtgxDFMBGM7Ltk1HbJUshKz6K3gjSuH9maiQzXoQBx
+   4=;
+IronPort-SDR: 5q+pCF6MlLntyqmyq76+dyVonwbRdqKLZHYclOsufOPVFK0FK5h0dMQt0QPn9ry4mBpjhSz2tb
+ L3FUXifnJhLQ==
+X-IronPort-AV: E=Sophos;i="5.75,390,1589241600"; 
+   d="scan'208";a="61287045"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 24 Jul 2020 13:27:42 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id A64BBA17F8;
+        Fri, 24 Jul 2020 13:27:40 +0000 (UTC)
+Received: from EX13D19EUB001.ant.amazon.com (10.43.166.229) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Jul 2020 13:27:40 +0000
+Received: from u8a88181e7b2355.ant.amazon.com (10.43.160.65) by
+ EX13D19EUB001.ant.amazon.com (10.43.166.229) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Jul 2020 13:27:31 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <arnd@arndb.de>, <robh+dt@kernel.org>, <tsahee@annapurnalabs.com>,
+        <antoine.tenart@bootlin.com>, <mchehab+huawei@kernel.org>,
+        <davem@davemloft.net>
+List-Id: <soc.lore.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <arm@kernel.org>,
+        <soc@kernel.org>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
+        <ronenk@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <eitan@amazon.com>, <hhhawa@amazon.com>
+Subject: [PATCH v6 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
+Date:   Fri, 24 Jul 2020 16:26:48 +0300
+Message-ID: <20200724132654.16549-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.65]
+X-ClientProxiedBy: EX13D32UWA004.ant.amazon.com (10.43.160.193) To
+ EX13D19EUB001.ant.amazon.com (10.43.166.229)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Group name 'pcie1' is misleading as it controls only PCIe reset pin. Like
-other PCIe groups it should have been called 'pcie1_reset'. But due to
-backward compatibility it is not possible to change existing group name.
-So just add comment describing this PCIe reset functionality.
+This series organize the Amazon's Annapurna Labs Alpine device tree
+bindings, device tree folder and adds new device tree for Alpine v3.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Changes since v5:
+-----------------
+- Rebase on v5.8-rc6
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 2bbc69b4dc99..d5b6c0a1c54a 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -316,7 +316,7 @@
- 				};
- 
- 				pcie_reset_pins: pcie-reset-pins {
--					groups = "pcie1";
-+					groups = "pcie1"; /* this actually controls "pcie1_reset" */
- 					function = "gpio";
- 				};
- 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 5f125bd6279d..8fd8b2af9216 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -196,7 +196,7 @@ static struct armada_37xx_pin_group armada_37xx_sb_groups[] = {
- 	PIN_GRP_GPIO("sdio_sb", 24, 6, BIT(2), "sdio"),
- 	PIN_GRP_GPIO("rgmii", 6, 12, BIT(3), "mii"),
- 	PIN_GRP_GPIO("smi", 18, 2, BIT(4), "smi"),
--	PIN_GRP_GPIO("pcie1", 3, 1, BIT(5), "pcie"),
-+	PIN_GRP_GPIO("pcie1", 3, 1, BIT(5), "pcie"), /* this actually controls "pcie1_reset" */
- 	PIN_GRP_GPIO("pcie1_clkreq", 4, 1, BIT(9), "pcie"),
- 	PIN_GRP_GPIO("pcie1_wakeup", 5, 1, BIT(10), "pcie"),
- 	PIN_GRP_GPIO("ptp", 20, 3, BIT(11) | BIT(12) | BIT(13), "ptp"),
+Changes since v4:
+-----------------
+- Re-order nodes in increasing order.
+- Add disable to UART nodes.
+- Add missing UART nodes (1,2,3)
+- Add comments for GIC/UART
+- Add io-fabric bus, and move uart nodes into it.
+- Fix MSIx range according Alpine function spec
+
+Changes since v3:
+-----------------
+- rebased and retested for tag Linux 5.6-rc2
+
+Changes since v2:
+-----------------
+- Move up a level for DT node without mmio regs.
+- Drop device_type from serial@fd883000 node.
+- Minor change name of PCIe node to: pcie@fbd00000
+
+Changes since v1:
+-----------------
+- Rename al,alpine DT binding to amazon,alpine
+- Rename al folder to be amazon
+- Update maintainers of amazon,alpine DT
+- Add missing alpine-v2 DT binding
+- Fix yaml schemas for alpine-v3-evp.dts:
+	- #size-cells:0:0: 0 is not one of [1, 2]
+	- arch-timer: interrupts: [[1, 13, 8, 1, 14, 8, 1, 11, 8, 1, 10,
+	8]] is too short
+- Change compatible string of alpine-v3-evp to amazon,al
+
+Hanna Hawa (5):
+  dt-bindings: arm: amazon: rename al,alpine DT binding to amazon,al
+  arm64: dts: amazon: rename al folder to be amazon
+  dt-bindings: arm: amazon: update maintainers of amazon,al DT bindings
+  dt-bindings: arm: amazon: add missing alpine-v2 DT binding
+  dt-bindings: arm: amazon: add Amazon Annapurna Labs Alpine V3
+
+Ronen Krupnik (1):
+  arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support
+
+ .../devicetree/bindings/arm/al,alpine.yaml    |  21 -
+ .../devicetree/bindings/arm/amazon,al.yaml    |  33 ++
+ MAINTAINERS                                   |   2 +-
+ arch/arm64/boot/dts/Makefile                  |   2 +-
+ arch/arm64/boot/dts/{al => amazon}/Makefile   |   1 +
+ .../boot/dts/{al => amazon}/alpine-v2-evp.dts |   0
+ .../boot/dts/{al => amazon}/alpine-v2.dtsi    |   0
+ arch/arm64/boot/dts/amazon/alpine-v3-evp.dts  |  24 ++
+ arch/arm64/boot/dts/amazon/alpine-v3.dtsi     | 408 ++++++++++++++++++
+ 9 files changed, 468 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
+ create mode 100644 Documentation/devicetree/bindings/arm/amazon,al.yaml
+ rename arch/arm64/boot/dts/{al => amazon}/Makefile (64%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+
 -- 
-2.20.1
+2.17.1
 
