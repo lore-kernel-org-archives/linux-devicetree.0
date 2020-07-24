@@ -2,173 +2,308 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AA2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 15:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83207C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 15:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771E9206D7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 15:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FDF2064B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 15:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595606149;
+	bh=ef9b9MrLIUtKbittV7a9VvvZiypl5gf/FW3sc+SuyUE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OxtUlol/F2AZBDniMZHNPj7RkeHPQ6HdG7BHjYJDThIShBl2ldJzMemaYjdLrQ9NQ
+	 YoUDnf8BD+3pdmH5Rejx7N2EG3h3hf75x6//1/diuuu9FhScOePyO4ftyNh1MuOX+t
+	 7HCVXKPGzdlUCvtGeZOStM1W1doCDyiydcorQz54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgGXPuu (ORCPT
+        id S1726739AbgGXPzs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 11:50:50 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:16777 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXPut (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 11:50:49 -0400
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06OFoYMS078994;
-        Sat, 25 Jul 2020 00:50:34 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp);
- Sat, 25 Jul 2020 00:50:34 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp)
-Received: from [192.168.1.2] (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06OFoXpE078987
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 25 Jul 2020 00:50:34 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] dt-bindings: sound: convert Everest ES8316 binding to
- yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200722180728.993812-1-katsuhiro@katsuster.net>
- <20200723212623.GA882284@bogus>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <58f31856-226b-41d5-deae-593e90d03598@katsuster.net>
-Date:   Sat, 25 Jul 2020 00:50:33 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 11:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgGXPzs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 11:55:48 -0400
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7102C2065E;
+        Fri, 24 Jul 2020 15:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595606146;
+        bh=ef9b9MrLIUtKbittV7a9VvvZiypl5gf/FW3sc+SuyUE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ml5zd+ARiR6k/XxHY36LPr4PFo4vCnU0ijem8l5bQMxvQB1uUcExCJoYluKyyYPF4
+         tlyFubWCFIDH8KnKqDGQcCUKNDeeLKfvgi0/uFn1rDkPL5TY64gx66gpe7zf4cSgLa
+         pkNP5edt4VdqRmlZkwycQ3bVIYdiafhw757ecgAg=
+Received: by mail-ej1-f41.google.com with SMTP id y10so10508381eje.1;
+        Fri, 24 Jul 2020 08:55:46 -0700 (PDT)
+X-Gm-Message-State: AOAM531RRL2N68FGNkkXapdR89UbWoWezil5abHwIJkI3z629RjU98BF
+        CMsGKlMdWLBWGDk+nkkNxmHayG9qRkHo0chQtQ==
+X-Google-Smtp-Source: ABdhPJy+hSjOTKEuuBWp5FZGv7u6g6/L+gNwd61AdxT8/pqjf8dQCr+Li/TNi3xesAxIUkGbqGnKH/ddFkpS6ODlrXA=
+X-Received: by 2002:a17:906:6959:: with SMTP id c25mr9580542ejs.375.1595606144973;
+ Fri, 24 Jul 2020 08:55:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200723212623.GA882284@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+ <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+ <1595389756.20193.12.camel@mtkswgap22> <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+ <1595484707.26237.12.camel@mtkswgap22> <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
+ <1595573719.24412.9.camel@mtkswgap22>
+In-Reply-To: <1595573719.24412.9.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 24 Jul 2020 23:55:33 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
+Message-ID: <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Rob,
+Hi, Neal:
 
-Thank you for review.
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8824=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:55=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Fri, 2020-07-24 at 00:32 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8823=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > Hi Chun-Kuang,
+> > >
+> > > On Wed, 2020-07-22 at 22:25 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=882=
+2=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > > On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8821=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > >
+> > > > > > > +
+> > > > > > > +/*
+> > > > > > > + * mtk_devapc_dump_vio_dbg - get the violation index and dum=
+p the full violation
+> > > > > > > + *                           debug information.
+> > > > > > > + */
+> > > > > > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_devapc_contex=
+t *ctx, u32 vio_idx)
+> > > > > > > +{
+> > > > > > > +       u32 shift_bit;
+> > > > > > > +
+> > > > > > > +       if (check_vio_mask(ctx, vio_idx))
+> > > > > > > +               return false;
+> > > > > > > +
+> > > > > > > +       if (!check_vio_status(ctx, vio_idx))
+> > > > > > > +               return false;
+> > > > > > > +
+> > > > > > > +       shift_bit =3D get_shift_group(ctx, vio_idx);
+> > > > > > > +
+> > > > > > > +       if (sync_vio_dbg(ctx, shift_bit))
+> > > > > > > +               return false;
+> > > > > > > +
+> > > > > > > +       devapc_extract_vio_dbg(ctx);
+> > > > > >
+> > > > > > I think get_shift_group(), sync_vio_dbg(), and
+> > > > > > devapc_extract_vio_dbg() should be moved out of vio_idx for-loo=
+p (the
+> > > > > > loop in devapc_violation_irq()) because these three function is=
+ not
+> > > > > > related to vio_idx.
+> > > > > > Another question: when multiple vio_idx violation occur, vio_ad=
+dr is
+> > > > > > related to which one vio_idx? The latest happened one?
+> > > > > >
+> > > > >
+> > > > > Actually, it's related to vio_idx. But we don't use it directly o=
+n these
+> > > > > function. I think below snip code might be better way to understa=
+nd it.
+> > > > >
+> > > > > for (...)
+> > > > > {
+> > > > >         check_vio_mask()
+> > > > >         check_vio_status()
+> > > > >
+> > > > >         // if get vio_idx, mask it temporarily
+> > > > >         mask_module_irq(true)
+> > > > >         clear_vio_status()
+> > > > >
+> > > > >         // dump violation info
+> > > > >         get_shift_group()
+> > > > >         sync_vio_dbg()
+> > > > >         devapc_extract_vio_dbg()
+> > > > >
+> > > > >         // unmask
+> > > > >         mask_module_irq(false)
+> > > > > }
+> > > >
+> > > > This snip code does not explain any thing. I could rewrite this cod=
+e as:
+> > > >
+> > > > for (...)
+> > > > {
+> > > >     check_vio_mask()
+> > > >     check_vio_status()
+> > > >
+> > > >     // if get vio_idx, mask it temporarily
+> > > >     mask_module_irq(true)
+> > > >     clear_vio_status()
+> > > >     // unmask
+> > > >     mask_module_irq(false)
+> > > > }
+> > > >
+> > > > // dump violation info
+> > > > get_shift_group()
+> > > > sync_vio_dbg()
+> > > > devapc_extract_vio_dbg()
+> > > >
+> > > > And my version is identical with your version, isn't it?
+> > >
+> > > Sorry, I did not explain it clearly. Let's me try again.
+> > > The reason why I put "dump violation info" between mask & unmask cont=
+ext
+> > > is because it has to stop interrupt first before dump violation info,
+> > > and then unmask it to prepare next violation.
+> > > These sequence guarantee that if multiple violation is triggered, we
+> > > still have information to debug.
+> > > If the code sequence in your version and multiple violation is
+> > > triggered, there might be no any information but keeps entering ISR.
+> > > Finally, system might be abnormal and watchdog timeout.
+> > > In this case, we still don't have any information to debug.
+> >
+> > I still don't understand why no information to debug. For example when
+> > vio_idx 5, 10, 15 has violation,
+> > You would mask vio_idx 5 to get information, but vio_idx 10, 15 does
+> > not mask yet.
+> > In your words, when vio_idx 10, 15 not mask, you would not get any
+> > debug information when you process vio_idx 5.
+> >
+> > In my version, I would clear all status, why keeps entering ISR?
+>
+> Think about this case, if someone tries to dump "AAA" module's register.
+> It would keep read reg base, base+0x4, base+0x8, ...
+> All these registers are in the same slave, which would be same vio_idx.
+> (Take vio_idx 5 as example)
+> In this case, vio_idx 5 will keep triggering interrupt. If you did not
+> do "dump violation info" between mask & unmask, you cannot get any
+> violation info until the last interrupt being handled.
+> Normally, system will crash before last interrupt coming.
 
-On 2020/07/24 6:26, Rob Herring wrote:
-> On Thu, Jul 23, 2020 at 03:07:28AM +0900, Katsuhiro Suzuki wrote:
->> This patch converts Everest Semiconductor ES8316 low power audio
->> CODEC binding to DT schema.
->>
->> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
->> ---
->>   .../bindings/sound/everest,es8316.txt         | 23 ---------
->>   .../bindings/sound/everest,es8316.yaml        | 49 +++++++++++++++++++
->>   2 files changed, 49 insertions(+), 23 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.txt
->>   create mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.txt b/Documentation/devicetree/bindings/sound/everest,es8316.txt
->> deleted file mode 100644
->> index 1bf03c5f2af4..000000000000
->> --- a/Documentation/devicetree/bindings/sound/everest,es8316.txt
->> +++ /dev/null
->> @@ -1,23 +0,0 @@
->> -Everest ES8316 audio CODEC
->> -
->> -This device supports both I2C and SPI.
->> -
->> -Required properties:
->> -
->> -  - compatible  : should be "everest,es8316"
->> -  - reg : the I2C address of the device for I2C
->> -
->> -Optional properties:
->> -
->> -  - clocks : a list of phandle, should contain entries for clock-names
->> -  - clock-names : should include as follows:
->> -         "mclk" : master clock (MCLK) of the device
->> -
->> -Example:
->> -
->> -es8316: codec@11 {
->> -	compatible = "everest,es8316";
->> -	reg = <0x11>;
->> -	clocks = <&clks 10>;
->> -	clock-names = "mclk";
->> -};
->> diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.yaml b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
->> new file mode 100644
->> index 000000000000..b713404dac4f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
->> @@ -0,0 +1,49 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/everest,es8316.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Everest ES8316 audio CODEC
->> +
->> +maintainers:
->> +  - Mark Brown <broonie@kernel.org>
-> 
-> Should be someone who knows and cares about the h/w which is not Mark.
-> 
+You have said that first vio_addr would be kept until it's 'handled'.
+So the first vio_addr reg_base would be kept even though other
+violation happen. And I could handle (clear status and dump info) it
+then vio_addr would next violation's address. I'm confused with your
+statement. If AAA is dumping register of vio_idx 5, BBB is dumping
+register of vio_idx 10, CCC is dumping register of vio_idx 15, I think
+you should mask all vio_idx not only one. So the code would be
 
-OK, so set first committer Daniel and me (I can check codes on real device)
-to maintainers.
+for all vio_idx {
+    mask_module_irq(true)
+}
 
-Best Regards,
-Katsuhiro Suzuki
+devapc_extract_vio_dbg()
 
+for all vio_idx {
+    clear_vio_status()
+    mask_module_irq(false)
+}
 
->> +
->> +properties:
->> +  compatible:
->> +    const: everest,es8316
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: clock for master clock (MCLK)
->> +
->> +  clock-names:
->> +    items:
->> +      - const: mclk
->> +
->> +  "#sound-dai-cells":
->> +    const: 0
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - "#sound-dai-cells"
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c0 {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +      es8316: codec@11 {
->> +        compatible = "everest,es8316";
->> +        reg = <0x11>;
->> +        clocks = <&clks 10>;
->> +        clock-names = "mclk";
->> +        #sound-dai-cells = <0>;
->> +      };
->> +    };
->> -- 
->> 2.27.0
->>
-
+>
+> >
+> > >
+> > > >
+> > > > >
+> > > > > About your question, vio_addr would be the first one.
+> > > >
+> > > > So other vio_addr would be dropped? Or hardware would keep all
+> > > > vio_addr and you have some way to get all vio_addr?
+> > > >
+> > >
+> > > In this case, hardware will drop other violation info and keep the fi=
+rst
+> > > one until it been handled.
+> >
+> > Does 'handled' mean status is cleared?
+>
+> "handled" means clear status and dump violation info.
+>
+> >
+> > Regards,
+> > Chun-Kuang.
+> >
+> > >
+> > > > >
+> > > > > > > +
+> > > > > > > +       return true;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +/*
+> > > > > > > + * devapc_violation_irq - the devapc Interrupt Service Routi=
+ne (ISR) will dump
+> > > > > > > + *                        violation information including wh=
+ich master violates
+> > > > > > > + *                        access slave.
+> > > > > > > + */
+> > > > > > > +static irqreturn_t devapc_violation_irq(int irq_number,
+> > > > > > > +                                       struct mtk_devapc_con=
+text *ctx)
+> > > > > > > +{
+> > > > > > > +       u32 vio_idx;
+> > > > > > > +
+> > > > > > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_i=
+dx++) {
+> > > > > > > +               if (!mtk_devapc_dump_vio_dbg(ctx, vio_idx))
+> > > > > > > +                       continue;
+> > > > > > > +
+> > > > > > > +               /* Ensure that violation info are written bef=
+ore
+> > > > > > > +                * further operations
+> > > > > > > +                */
+> > > > > > > +               smp_mb();
+> > > > > > > +
+> > > > > > > +               /*
+> > > > > > > +                * Mask slave's irq before clearing vio statu=
+s.
+> > > > > > > +                * Must do it to avoid nested interrupt and p=
+revent
+> > > > > > > +                * unexpected behavior.
+> > > > > > > +                */
+> > > > > > > +               mask_module_irq(ctx, vio_idx, true);
+> > > > > > > +
+> > > > > > > +               clear_vio_status(ctx, vio_idx);
+> > > > > > > +
+> > > > > > > +               mask_module_irq(ctx, vio_idx, false);
+> > > > > > > +       }
+> > > > > > > +
+> > > > > > > +       return IRQ_HANDLED;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +/*
+>
