@@ -2,131 +2,173 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF0EC433ED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AA2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 15:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8AAF206F0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771E9206D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 15:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgGXO7X (ORCPT
+        id S1726591AbgGXPuu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:59:23 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:18194 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727019AbgGXO7X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:59:23 -0400
-X-IronPort-AV: E=Sophos;i="5.75,391,1589209200"; 
-   d="scan'208";a="52751512"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 24 Jul 2020 23:59:22 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 34668425F8C1;
-        Fri, 24 Jul 2020 23:59:20 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Niklas <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] media: rcar-vin: Add support to read renesas-vin-ycbcr-8b-g property
-Date:   Fri, 24 Jul 2020 15:58:52 +0100
-Message-Id: <1595602732-25582-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 24 Jul 2020 11:50:50 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:16777 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGXPut (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 11:50:49 -0400
+Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06OFoYMS078994;
+        Sat, 25 Jul 2020 00:50:34 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp);
+ Sat, 25 Jul 2020 00:50:34 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav301.sakura.ne.jp)
+Received: from [192.168.1.2] (121.252.232.153.ap.dti.ne.jp [153.232.252.121])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06OFoXpE078987
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sat, 25 Jul 2020 00:50:34 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] dt-bindings: sound: convert Everest ES8316 binding to
+ yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200722180728.993812-1-katsuhiro@katsuster.net>
+ <20200723212623.GA882284@bogus>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <58f31856-226b-41d5-deae-593e90d03598@katsuster.net>
+Date:   Sat, 25 Jul 2020 00:50:33 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200723212623.GA882284@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support to read "renesas-vin-ycbcr-8b-g" DT property and select
-the data pins accordingly for YCbCr422-8bit input
+Hello Rob,
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- drivers/media/platform/rcar-vin/rcar-core.c | 4 +++-
- drivers/media/platform/rcar-vin/rcar-dma.c  | 7 +++++++
- drivers/media/platform/rcar-vin/rcar-vin.h  | 2 ++
- 3 files changed, 12 insertions(+), 1 deletion(-)
+Thank you for review.
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-index 7440c89..5273110 100644
---- a/drivers/media/platform/rcar-vin/rcar-core.c
-+++ b/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -624,6 +624,9 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
- 	vin->parallel = rvpe;
- 	vin->parallel->mbus_type = vep->bus_type;
- 
-+	vin->parallel->ycbcr_8b_g = fwnode_property_present(vep->base.local_fwnode,
-+							    "renesas-vin-ycbcr-8b-g");
-+
- 	switch (vin->parallel->mbus_type) {
- 	case V4L2_MBUS_PARALLEL:
- 		vin_dbg(vin, "Found PARALLEL media bus\n");
-@@ -659,7 +662,6 @@ static int rvin_parallel_init(struct rvin_dev *vin)
- 
- 	vin_dbg(vin, "Found parallel subdevice %pOF\n",
- 		to_of_node(vin->parallel->asd.match.fwnode));
--
- 	vin->notifier.ops = &rvin_parallel_notify_ops;
- 	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
- 	if (ret < 0) {
-diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-index 1a30cd0..5db4838 100644
---- a/drivers/media/platform/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-@@ -127,6 +127,8 @@
- #define VNDMR2_FTEV		(1 << 17)
- #define VNDMR2_VLV(n)		((n & 0xf) << 12)
- 
-+#define VNDMR2_YDS		BIT(22)
-+
- /* Video n CSI2 Interface Mode Register (Gen3) */
- #define VNCSI_IFMD_DES1		(1 << 26)
- #define VNCSI_IFMD_DES0		(1 << 25)
-@@ -698,6 +700,11 @@ static int rvin_setup(struct rvin_dev *vin)
- 		/* Data Enable Polarity Select */
- 		if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
- 			dmr2 |= VNDMR2_CES;
-+
-+		if (vin->parallel->ycbcr_8b_g && vin->mbus_code == MEDIA_BUS_FMT_UYVY8_2X8)
-+			dmr2 |= VNDMR2_YDS;
-+		else
-+			dmr2 &= ~VNDMR2_YDS;
- 	}
- 
- 	/*
-diff --git a/drivers/media/platform/rcar-vin/rcar-vin.h b/drivers/media/platform/rcar-vin/rcar-vin.h
-index c19d077..62a4bf2 100644
---- a/drivers/media/platform/rcar-vin/rcar-vin.h
-+++ b/drivers/media/platform/rcar-vin/rcar-vin.h
-@@ -95,6 +95,7 @@ struct rvin_video_format {
-  * @mbus_flags:	media bus configuration flags
-  * @source_pad:	source pad of remote subdevice
-  * @sink_pad:	sink pad of remote subdevice
-+ * @ycbcr_8b_g:	select data pins for YCbCr422-8bit
-  *
-  */
- struct rvin_parallel_entity {
-@@ -106,6 +107,7 @@ struct rvin_parallel_entity {
- 
- 	unsigned int source_pad;
- 	unsigned int sink_pad;
-+	bool ycbcr_8b_g;
- };
- 
- /**
--- 
-2.7.4
+On 2020/07/24 6:26, Rob Herring wrote:
+> On Thu, Jul 23, 2020 at 03:07:28AM +0900, Katsuhiro Suzuki wrote:
+>> This patch converts Everest Semiconductor ES8316 low power audio
+>> CODEC binding to DT schema.
+>>
+>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> ---
+>>   .../bindings/sound/everest,es8316.txt         | 23 ---------
+>>   .../bindings/sound/everest,es8316.yaml        | 49 +++++++++++++++++++
+>>   2 files changed, 49 insertions(+), 23 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.txt
+>>   create mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.txt b/Documentation/devicetree/bindings/sound/everest,es8316.txt
+>> deleted file mode 100644
+>> index 1bf03c5f2af4..000000000000
+>> --- a/Documentation/devicetree/bindings/sound/everest,es8316.txt
+>> +++ /dev/null
+>> @@ -1,23 +0,0 @@
+>> -Everest ES8316 audio CODEC
+>> -
+>> -This device supports both I2C and SPI.
+>> -
+>> -Required properties:
+>> -
+>> -  - compatible  : should be "everest,es8316"
+>> -  - reg : the I2C address of the device for I2C
+>> -
+>> -Optional properties:
+>> -
+>> -  - clocks : a list of phandle, should contain entries for clock-names
+>> -  - clock-names : should include as follows:
+>> -         "mclk" : master clock (MCLK) of the device
+>> -
+>> -Example:
+>> -
+>> -es8316: codec@11 {
+>> -	compatible = "everest,es8316";
+>> -	reg = <0x11>;
+>> -	clocks = <&clks 10>;
+>> -	clock-names = "mclk";
+>> -};
+>> diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.yaml b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
+>> new file mode 100644
+>> index 000000000000..b713404dac4f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/everest,es8316.yaml
+>> @@ -0,0 +1,49 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/sound/everest,es8316.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Everest ES8316 audio CODEC
+>> +
+>> +maintainers:
+>> +  - Mark Brown <broonie@kernel.org>
+> 
+> Should be someone who knows and cares about the h/w which is not Mark.
+> 
+
+OK, so set first committer Daniel and me (I can check codes on real device)
+to maintainers.
+
+Best Regards,
+Katsuhiro Suzuki
+
+
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: everest,es8316
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: clock for master clock (MCLK)
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: mclk
+>> +
+>> +  "#sound-dai-cells":
+>> +    const: 0
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - "#sound-dai-cells"
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    i2c0 {
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +      es8316: codec@11 {
+>> +        compatible = "everest,es8316";
+>> +        reg = <0x11>;
+>> +        clocks = <&clks 10>;
+>> +        clock-names = "mclk";
+>> +        #sound-dai-cells = <0>;
+>> +      };
+>> +    };
+>> -- 
+>> 2.27.0
+>>
 
