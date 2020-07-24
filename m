@@ -8,47 +8,47 @@ X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DCDC43464
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218F2C4346E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE94C20768
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAB92074A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="h1iuMYx4"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pk5bIdGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgGXKiI (ORCPT
+        id S1728017AbgGXKiU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:38:08 -0400
-Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:43040
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Fri, 24 Jul 2020 06:38:20 -0400
+Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:49672
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbgGXKiF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:38:05 -0400
+        id S1727991AbgGXKiS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:38:18 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MmtYcIS7vuwckIDTIv/cm6pGCXy4tGN7lGoXrtfej3jVB0kWAPHkvdzoLEAABGlOquwlwonJQ2h7UDJpqihf0CYrZRjq+gzkgKu3oQYqzpgS9dvSwBunRuYHzJSyVGFTCyU3ECZiIyj1cke7YMXvPTw4D0TMkr/r+WLK4QQx2zk87vsToDiRjqpNYzaRfdns6Ing+vjEuDSwCdbA7A78YTAg58zeLndm70LmHpycscm78xfsT8vWl/SNxNjAUuCd0U9p3UEEk0xiLE5KKt0VZTlUls9SA8jbO2/44SV+MHR9IPgxSFLwyx+MboJnYgEM5NyVYJEtUwv8k2QaJzrvnA==
+ b=BmVY5MITVKgmkwgZGma3xTZPKY0fcum7lVaOXENzVykM2b7UWb/8os3KNR0EQIp0+JsaDEZYM0lGxLFjaUyIjGYBn5J5iULEOiavC0NqCYDKjMaZkeB3FoWRi02n8Kiyic7XLQ+yqD4QHWto1bRZjdCZaYtDLiAe1KVLrGLNbCoaK73neaCD/s9HdlHJ2WPUnrev2wfx3xlCo4+xtO8CtQFblkSQqm9pf7wSCAwIrcLtVlFk0cG9aro8kckI9sfHrvell+iS1dkNLUgV/V4qeshVkWg3rkDUQCsBNppMh73Lw/Jz2p3iS6XYzwMJNyjxhwQVucNEDs+1vxxCPjb4AQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5jxJdGqHBF995O2koMhPVubVtg1S3gV8z8tbdE75gTs=;
- b=aKwueF9pKwSeTDiMRszGlUM5AX5gDBQKqEnVy3PkxcygJg/Lo2D4TVMFKgT5js5m2r8iXGtJRQLTG4VAqZOapnMsXCpDv7oAF6ocJ5ImYGrWyvXIeL0b2ykXKAl5OiRLto8oygtN45Ykcl5O7KRQPAGmGV8jTAwaWWZbdQhtkYUh/XoURRmSoFMJKhL/dUEwKgErVhHjvAu5LzrDF0Diiagbp1f9nbwOEhokLJnHl69POjjFQCS5PJVfG3uZor0GDaXbVYKtlYYSmW3Yj6mjhhTKWo22qExfpql2s8D0iX+iFotRlPJn1MJ1V2ON9ku3WVGjuPhVa7LPTWF2Bra5/w==
+ bh=sZvU3VGhVcTeYxe4fB6geATT0prKN/x1vEpROhK8pVc=;
+ b=HMXiciakCylmHSRRFqzK8nqkhsQiwdG6K6a8ovcLdl7fkGpR74BCjAmC6xcnMk1cdsleeS0gstyi5dBY3/OsxE+3cl53I5kXhbGj+yVnuGgCmThtKtcETAkEF02My2v+7T9TCW2pXdwikxXGV7h4kxgXw6F2IsXvmkWBPuv9JYLIbGXZbG52ULqOyQ60LSy9Vgof6sBCOf2nRWAYW4dbT5bjmC+eKlsTs0GBy8jPeFaD2XFsHDMZn6XRIXNE2tvNATTknHmy06sJoRplvDHMwtBVNVGDQTFPjgTr1gKW+8QqsH6PAK41mpR0HF8f6aGlKh/E2M5oORwdTc82usntIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5jxJdGqHBF995O2koMhPVubVtg1S3gV8z8tbdE75gTs=;
- b=h1iuMYx4o5K/wSMzSMrhx56bQtq34xuwWbUbUvJycdmxmhmZuS0zeNISCEC0Zm9dWMxiWzOaUTvZF9GwOse0iQzqSKE6QkKxgHqohFL9WAQdfaL4C5elJBrFfrImZPX/R4wgj0/f4Ab5QA1qat69kzcGD3rwqp28VXaEqSdjvsQ=
+ bh=sZvU3VGhVcTeYxe4fB6geATT0prKN/x1vEpROhK8pVc=;
+ b=pk5bIdGaPvpvJpL3YGPFLXpPXSxCFUFDALwxMdGxlVr5Kw8vxOzIk/9ksda/jVmkROWR5y2Jez43/cuos3PAoM8L0QjN4ZN9xQMFRUU2xdBHK+W6lcCkedF4Qr6l8FxE0O7F2+BOk2Vt6vKBelDzfgLN9T356BYzRGgNcx3g6NE=
 Authentication-Results: arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
  by VI1PR0402MB3710.eurprd04.prod.outlook.com (2603:10a6:803:25::29) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 24 Jul
- 2020 10:38:02 +0000
+ 2020 10:38:13 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
- 10:38:02 +0000
+ 10:38:13 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
 To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
         catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
@@ -59,9 +59,9 @@ To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v11 09/12] spi: imx: add new i.mx6ul compatible name in binding doc
-Date:   Sat, 25 Jul 2020 02:51:22 +0800
-Message-Id: <1595616685-9987-10-git-send-email-yibin.gong@nxp.com>
+Subject: [PATCH v11 11/12] dma: imx-sdma: add i.mx6ul compatible name
+Date:   Sat, 25 Jul 2020 02:51:24 +0800
+Message-Id: <1595616685-9987-12-git-send-email-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
 References: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
@@ -71,58 +71,57 @@ X-ClientProxiedBy: SG2PR02CA0046.apcprd02.prod.outlook.com
  (2603:10a6:803:119::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR02CA0046.apcprd02.prod.outlook.com (2603:1096:3:18::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3216.20 via Frontend Transport; Fri, 24 Jul 2020 10:37:56 +0000
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR02CA0046.apcprd02.prod.outlook.com (2603:1096:3:18::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3216.20 via Frontend Transport; Fri, 24 Jul 2020 10:38:08 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.67]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 68b3ede5-2c55-4563-cc1c-08d82fbda3ea
+X-MS-Office365-Filtering-Correlation-Id: 68d5d591-b89d-4994-1acb-08d82fbdaadb
 X-MS-TrafficTypeDiagnostic: VI1PR0402MB3710:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB37106BBDE7047B2203D628F289770@VI1PR0402MB3710.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB37105A58BBEDF19C8E09E5A389770@VI1PR0402MB3710.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:632;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zhi5bks/3eYhSIO7gqEMhsO8PN22ZvqykxLH4O3rcz4YXdMQFmAD/ZCHKUnhszikKb1BG3vzPxQp7/NTiI1qMnJ7iv0WmDPEfFzXHTZqmAp3EK46WKpIZyDMFCYSmToKGhjAn7fiCc8kddLopK9QOeBaP59sY9kmnQPSO/6oGklCwdnL0vBiD6HVDoN99TUbbWvz+sFh8TaoW9GZPyMmbj19O9b0HrlBk0QoJ8M860pNVKlVKA2Ukinqgio2Iln+yI2KzGuvlHOIp+BzeLwL4FAtkwCEFkyR/iUodga5QVNirPDR16UZ4lrUzP30RoSyQAFr42qip5Q4OiwowDa5OKlWdyGzcsGiVFjshc6H2ttnndk6Owzgh0VsOWPnoeyd
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(39860400002)(366004)(136003)(16526019)(186003)(66476007)(2906002)(8936002)(66556008)(478600001)(5660300002)(7416002)(52116002)(6512007)(36756003)(316002)(2616005)(6486002)(8676002)(26005)(6666004)(86362001)(4326008)(66946007)(956004)(6506007)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GE90Q4JivHq58MK8uTolV9PKBY49+ypSI7FNE1+TWOCo/QkxDuqiIMZVT4NXaQCJEojzuqNlTw3DEZRq2SStkTeVpRs9A7EULd9BD4IAljY1gfVgU/xZVC1zKYopl8svbKMHFavnCZP5AQRQzRvnqmMlZPWccJIB7a242HtQH00O1n8DXD9ephlq9CS6FxptJvKAlAk0ElOXK1gqXQu1T0F9cH3G24l445Rg+JWcUH4WNe1rZ0I0pFP268GwPE0SgTmxXD9x19F14ue4pOVE1UiOycKjtdrse9JW0cPt4RrsDxI2pDdb7L8rdc4HymfJ8D6W6Yn8fj6O/4rEtir81opi4w1/xpJaH4lwdRjcDsOXmJthjTrb4O/0oJoo50aFb0GgCUh2XGD7WFpQ0dBCfahhikT4YkyFxIAYtS2zl574X64+YUJaarnkSmKAtymHH60zGJmVvK3eTIIHvUuBlbwXfunT5MtbceKP7AAEMqE=
+X-Microsoft-Antispam-Message-Info: bsM3bMuEreoOVGTbH0uU68lUb7meg3r/Pt9JhagGUEvFVbmOj1ecWBuJeHLp8CoeUVtZxo73xEJlSUIGsKMCI1yUSMesx5p+bg8yKB0UBsahlLD76RED0b84Iq47LJuViIyyHNd4wyjhqDBN0XVwUKoEw/6q3NhA0UXItyz7OLBEjdVIz8Uo7zfaytLj3QWSgMfmdjvi+APfW22mAO7Hnkx6VKVGLW2fT2wkVwV14l8o41wT9r9BDzp/pIYEyz3io9ic0pVRg8VsUuNXK3BIBxu2/fXE7eUwoDnXcbRvzDVrg5UVE7T8YEqvYtqsTE1Xj0o+23lvYyWXxmHSuc7Vrz9PulOB5SWCeU2H1/4jkkI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(39860400002)(366004)(136003)(16526019)(186003)(66476007)(2906002)(8936002)(4744005)(66556008)(478600001)(5660300002)(7416002)(52116002)(6512007)(36756003)(316002)(2616005)(6486002)(8676002)(26005)(6666004)(86362001)(4326008)(66946007)(956004)(6506007)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 6blbqbqVOi+TkpW1uzYZ9pECg98Sz70RsA12fYCnsdhcXtEOekt+H+jsnO8eex6hAV1DSAukiHTVMPSyENUsFJ2mSWGfKkQ1LHsAOlBEh361l7m6ZVvTLvMW5ndGjLgYxToriFWswnSo6yuOcfHxXfn8IrDyudPHHwHeCVcRaSA51lBtUw9T6UOVSUc1f+Zi2cRzGqWnw3VYgBBpOD7XvCOxtvzNuImnk7wDI5D5f7tX8F2DrBk4nqrdfIXCJ7vm7nP3oHFUAiSl+drW26oW2x+iRoF2XC0EoyKOMoaeL1bULQekroDdW/8OdYYGozHgBT+WigMp89L4GM5alC0bwdIXUD5Tk8/Yo3AFD+YxRxvQWxAKJdTpO/Py1yfuNjrPKmd8CC9jDq4VPgWRgMMdc/84zR+XicIexC2d7jNRJq1DxwqfDxw9L1VRTcNgLQwLvSyK2oFt2PSfIpFWMIhjyXGCjXQVA6D3QhSpcy5Z8Yc=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68b3ede5-2c55-4563-cc1c-08d82fbda3ea
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68d5d591-b89d-4994-1acb-08d82fbdaadb
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 10:38:02.1381
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 10:38:13.7703
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AQexJS8eK11zeRehthypu8CnP4x/9F1Iq7IgP66wXrpaAQYwNsXAwg8lwR8Tw8wP9/b5T2CpvnGImuI8W7gIpw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: QaJIkXN5ecx+nUUTwSW0hZUCiE4Xnqkc5+CWEQ/P7XQUnwKDwQeofPsSLBrt33j6Z82/07Sv8Y5s/rzEdNGKjQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3710
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
+Add i.mx6ul compatible name in binding doc.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Mark Brown <broonie@kernel.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
+ Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 33bc58f..0a529ba 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -10,6 +10,7 @@ Required properties:
-   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
-   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
-+  - "fsl,imx6ul-ecspi" for SPI compatible with the one integrated on i.MX6UL and later Soc
-   - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
-   - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
-   - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
+diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+index c9e9740..12c316f 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+@@ -9,6 +9,7 @@ Required properties:
+       "fsl,imx53-sdma"
+       "fsl,imx6q-sdma"
+       "fsl,imx7d-sdma"
++      "fsl,imx6ul-sdma"
+       "fsl,imx8mq-sdma"
+       "fsl,imx8mm-sdma"
+       "fsl,imx8mn-sdma"
 -- 
 2.7.4
 
