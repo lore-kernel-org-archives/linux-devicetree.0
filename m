@@ -2,173 +2,113 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C08BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152A3C433F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF88206EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A0320748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bhcHp287"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UNs3Guih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgGXVgY (ORCPT
+        id S1727014AbgGXVhb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57686 "EHLO
+        Fri, 24 Jul 2020 17:37:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgGXVgY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 17:36:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A0AC0619E4
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 14:36:23 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so6145846pgb.6
-        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 14:36:23 -0700 (PDT)
+        with ESMTP id S1727783AbgGXVhb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 17:37:31 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C503FC0619D3;
+        Fri, 24 Jul 2020 14:37:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a14so9513350wra.5;
+        Fri, 24 Jul 2020 14:37:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=opG3nW4I5rCe1WXghjH5zHF3uH0DeDd34QtX5YmytYo=;
-        b=bhcHp287NTRAuUPpjDb0FIIrsLNcEo9h8fImzbO06pVAN20KtOUPdlZEcEsWy3Vj8M
-         anX8Wf5x0H5H1KFyaw7bQZlFmjA0iBUCpZB1aSYpOkqESuKAfhAp6ZXpLQDeavjhQVhN
-         PpPVmpK4yT9oH13DFieSVLeBj90yDBgjovfSU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UyLweN+II0ZCIyIgBj5I2+zaWb8dHrtfnlcwzt5oGNM=;
+        b=UNs3GuihAWHCTR9hET3VEcxcq7WMVX+ELHyM4UHV7CETbtCF1m5+/7KO22va1IUkIq
+         +1fkKnqssP31mj0evgJ/Lwak8npUBRJeFIutSGGylvGSFeDF63rQQ74j8M085mtP6IdL
+         yShmUAjK8An6YFzSSwW5w1U9F9mOSINZajKEAnI6IzSs70PQLb+9P5NRjd2r9PV9qBsJ
+         EJ2rMG/KvJVR89ZkHgvCwD8PJbsWXtzjQ0HmW1FWmsa3dpChDcNYGXDYBYa4CizLFDqH
+         GiHBdw8jaoFdAFbMk0OmDQloGdu7JQ17rAd+BLyRfZcbhq54xt2JsahGGFzwma1p3Gk0
+         fG4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=opG3nW4I5rCe1WXghjH5zHF3uH0DeDd34QtX5YmytYo=;
-        b=hTwYg/NwSaV58stuVVO+dTVwbhNIyCpwe8DC4AFPxigHHx0Mvh9FLWYgAy9DJ47xcg
-         FmOpVc2XF/jsCUbBFhOmG8Aiglq24jLiVT4WoNRYfGL6ePQrKpKh96rN8CDveBZwBQwP
-         LtqGi9K7CmAEj2ovZWT0XSSXmZZsODt5ZCdLTFmi+eUs1/r9fvMFmu3Vx9ghzc/ayK03
-         1Ib0WmBdTEznaUb45s7T1FFdu/7nKgXQDuJOVChwnO+TLplCQtiC5fs9JGkfjUAAWx0E
-         DldU8dth0lqT+cDKhC22+IfS87KbvVUuQFEDcNGnO5Ns9Lz5XCUwvtDV2urnZuU2J9BQ
-         mNiw==
-X-Gm-Message-State: AOAM5314jaW4D3UpIYCa7LkWi7NdJ3qmMgcIUykSMvf4wV6EUub2tewy
-        +2EVapT1ZNnOBRMyM1ijo0EM6Q==
-X-Google-Smtp-Source: ABdhPJy0zuMXOSAiFIUc2m9qjxFtdLkdHu6M3LtvCsg9sjsn7n8N6UxDl/jcILWQb8Bvpg3WVe7m1w==
-X-Received: by 2002:a63:ee48:: with SMTP id n8mr10324355pgk.292.1595626583401;
-        Fri, 24 Jul 2020 14:36:23 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id k98sm6809320pjb.42.2020.07.24.14.36.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UyLweN+II0ZCIyIgBj5I2+zaWb8dHrtfnlcwzt5oGNM=;
+        b=JhVsmAS2srevKmz61TKXYIuVBxgFNJSdtFFXU/qmD5G08+IsYfLzFZjv1SooU6O7la
+         wDcdwLpBbsjh/Ht5J/EEYNFkPCKOdKvHNHu05iuuGO+Kcueu7NElBABcY85mFLsa6C/F
+         v18madTkL0zGZ3fTJx44JgPAKcx4zj99jCkBnCeyLlLvAouoquGi6C5JXw0ydjNZ7TJ4
+         OH/+5SkLfZwBJ0YIVdPV9GcgNwMqR1QACWFjFCtO5yxes/nDqv4epxrmd4jSnScST8KI
+         fE+cdjljtEl5rifyA8YC8wOegPglhajBcUJcyGYo75x3sG1Bww0/1L++I9I6t2LeKciQ
+         zFQA==
+X-Gm-Message-State: AOAM5322bxnvQarNm+xNpeg9p760qUw8N2i3s65K9oDz1QUL1Sm7ZNy/
+        lP2/6veTLIOsgh2wiV+LwLo=
+X-Google-Smtp-Source: ABdhPJwLF1RqObtNpTGBQwMpigWEhUqbE+eLdxny/Qtkb5+QTqBldol986Ypp/6PgZjOITEYjaDXNg==
+X-Received: by 2002:adf:ea85:: with SMTP id s5mr3155449wrm.55.1595626649546;
+        Fri, 24 Jul 2020 14:37:29 -0700 (PDT)
+Received: from TimeMachine.localdomain (bband-dyn34.178-41-255.t-com.sk. [178.41.255.34])
+        by smtp.googlemail.com with ESMTPSA id 129sm8853400wmd.48.2020.07.24.14.37.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 14:36:22 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200724213329.899216-2-swboyd@chromium.org>
-References: <20200724213329.899216-1-swboyd@chromium.org> <20200724213329.899216-2-swboyd@chromium.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: iio: Add bindings for sx9310 sensor
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Daniel Campello <campello@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Fri, 24 Jul 2020 14:37:29 -0700 (PDT)
+From:   Martin Botka <martin.botka1@gmail.com>
+Cc:     Martin Botka <martin.botka1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        <devicetree@vger.kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Date:   Fri, 24 Jul 2020 14:36:22 -0700
-Message-ID: <159562658210.3847286.6400483831020769497@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH RFC 0/6] Add QCOM pwm-lpg and tri-led drivers
+Date:   Fri, 24 Jul 2020 23:36:50 +0200
+Message-Id: <20200724213659.273599-1-martin.botka1@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd (2020-07-24 14:33:25)
-> From: Daniel Campello <campello@chromium.org>
->=20
-> Adds device tree bandings for sx9310 sensor.
->=20
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> [swboyd@chromium.org: Add both regulators and make them optional]
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
+Hello,
+This series brings QCOM pwm-lpg and tri-led drivers from 4.14 that is required to support pmic-connected notification LED.
+This comes straight from downstream and I'm ready for your comments.
 
-I forgot to Cc devicetree list. Will do next time around.
+Fenglin Wu (6):
+  pwm: Add different PWM output types support
+  pwm: core: Add option to config PWM duty/period with u64 data length
+  pwm: pwm-qti-lpg: Add PWM driver for QTI LPG module
+  leds: leds-qti-tri-led: Add LED driver for QTI TRI_LED module
+  Documentation: Add binding for qti-tri-led
+  Documentation: Add binding for pwm-qti-lpg
 
--Stephen
+ .../bindings/leds/leds-qti-tri-led.txt        |   72 +
+ .../devicetree/bindings/pwm/pwm-qti-lpg.txt   |  163 +++
+ drivers/leds/Kconfig                          |    9 +
+ drivers/leds/Makefile                         |    1 +
+ drivers/leds/leds-qti-tri-led.c               |  640 ++++++++
+ drivers/pwm/Kconfig                           |   10 +
+ drivers/pwm/Makefile                          |    1 +
+ drivers/pwm/core.c                            |   56 +-
+ drivers/pwm/pwm-qti-lpg.c                     | 1284 +++++++++++++++++
+ drivers/pwm/sysfs.c                           |   56 +-
+ include/linux/pwm.h                           |  144 +-
+ 11 files changed, 2418 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-qti-tri-led.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
+ create mode 100644 drivers/leds/leds-qti-tri-led.c
+ create mode 100644 drivers/pwm/pwm-qti-lpg.c
 
->  .../iio/proximity/semtech,sx9310.yaml         | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semte=
-ch,sx9310.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx93=
-10.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.ya=
-ml
-> new file mode 100644
-> index 000000000000..ba734ee868c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech's SX9310 capacitive proximity sensor
-> +
-> +maintainers:
-> +  - Daniel Campello <campello@chromium.org>
-> +
-> +description: |
-> +  Semtech's SX9310/SX9311 capacitive proximity/button solution.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - semtech,sx9310
-> +      - semtech,sx9311
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      The sole interrupt generated by the device used to announce the
-> +      preceding reading request has finished and that data is
-> +      available or that a close/far proximity event has happened.
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Main power supply
-> +
-> +  svdd-supply:
-> +    description: Host interface power supply
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +      proximity@28 {
-> +        compatible =3D "semtech,sx9310";
-> +        reg =3D <0x28>;
-> +        interrupt-parent =3D <&pio>;
-> +        interrupts =3D <5 IRQ_TYPE_LEVEL_LOW 5>;
-> +        vdd-supply =3D <&pp3300_a>;
-> +        svdd-supply =3D <&pp1800_prox>;
-> +      };
-> +    };
+-- 
+2.27.0
+
