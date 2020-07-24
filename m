@@ -2,112 +2,127 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F1DC43446
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A38C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9115C2070E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0093206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 21:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EYQ2L2LW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ayj+gGQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgGXVna (ORCPT
+        id S1726607AbgGXV6G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:43:30 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37108 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbgGXVn0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 17:43:26 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06OLgpkG088853;
-        Fri, 24 Jul 2020 16:42:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595626971;
-        bh=EENDgKjYGdyjuwWFWxbHFsIqJ467mMOcoygJG/xnCoI=;
-        h=From:To:CC:Subject:Date;
-        b=EYQ2L2LWfZP6dD8JOenRLBNQPDb/OQs5WlBya1sjvMntH3dHBipDrHlcKPanQfDa+
-         FWNeBqUZJ7YL9xl7KcY5jepHyEYPcfQV64NMFRIkL5xHX9lfTM1jHgpcNwzr81B61O
-         OTniMLY8o22xvmkug62G2MTu+j/p30mCV4kUDxOU=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06OLgpNn103365
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Jul 2020 16:42:51 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 24
- Jul 2020 16:42:51 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 24 Jul 2020 16:42:51 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06OLgodS037326;
-        Fri, 24 Jul 2020 16:42:51 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Murali Karicheri <m-karicheri2@ti.com>,
+        Fri, 24 Jul 2020 17:58:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51496 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgGXV6F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 17:58:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OLq4sm002221;
+        Fri, 24 Jul 2020 21:57:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=1oBpwicAEdCFtd8cODZuHTMOvYVeTmLh/YcPQDEdJNc=;
+ b=ayj+gGQxh8t1wRDZ0NHcmvj5ruFMbbhoDIRWrhsqiGKOUFwzCcusI1w27U7G0Y5jxmCA
+ r2uI2s/O6DEG1E2Jl8yPoVf/sHteiPufnJEN814y47ye91X2IuGXI33Ee27YztDnx+Mw
+ 2d0HddH9jHUDZInOXi5meqUhKYZHeYLw0vn75uuLvFCP4Fz2OZwkAoXOLy85kQCSLLQG
+ 8Caju+WksZUvF5QicYL45BhtkehuUz6Rnb7yciNseGcrCOpaBy+9iN9dhedKAqi3UkFh
+ UCrdDbgGqY78R1fjPEVoThYPMg7OVXGZlwzizbdpzt7YN2BVWVmxMgu74Xd3Ac5/yxlf rw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32d6kt5ka6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jul 2020 21:57:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OLrC0K071765;
+        Fri, 24 Jul 2020 21:55:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 32g7xv0208-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 21:55:24 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06OLtMWK017794;
+        Fri, 24 Jul 2020 21:55:22 GMT
+Received: from dhcp-10-159-245-90.vpn.oracle.com (/10.159.245.90)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jul 2020 14:55:22 -0700
+Subject: Re: [RESEND PATCH] ARM: dts: keystone-k2g-evm: fix rgmii phy-mode for
+ ksz9031 phy
+To:     "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
-        <santosh.shilimkar@oracle.com>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
         "David S . Miller" <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org,
         Oleksij Rempel <o.rempel@pengutronix.de>,
         Andrew Lunn <andrew@lunn.ch>,
         Philippe Schenker <philippe.schenker@toradex.com>
-Subject: [RESEND PATCH] ARM: dts: keystone-k2g-evm: fix rgmii phy-mode for ksz9031 phy
-Date:   Sat, 25 Jul 2020 00:42:21 +0300
-Message-ID: <20200724214221.28125-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+References: <20200724214221.28125-1-grygorii.strashko@ti.com>
+From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <a91d2bad-b794-fe07-679a-e5096aa5ace8@oracle.com>
+Date:   Fri, 24 Jul 2020 14:55:19 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200724214221.28125-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=3 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=3
+ bulkscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 spamscore=0 adultscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240146
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
-KSZ9031 PHY") the networking is broken on keystone-k2g-evm board.
+Hi Arnd, Olof,
 
-The above board have phy-mode = "rgmii-id" and it is worked before because
-KSZ9031 PHY started with default RGMII internal delays configuration (TX
-off, RX on 1.2 ns) and MAC provided TX delay by default.
-After above commit, the KSZ9031 PHY starts handling phy mode properly and
-enables both RX and TX delays, as result networking is become broken.
+On 7/24/20 2:42 PM, Grygorii Strashko wrote:
+> Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+> KSZ9031 PHY") the networking is broken on keystone-k2g-evm board.
+> 
+> The above board have phy-mode = "rgmii-id" and it is worked before because
+> KSZ9031 PHY started with default RGMII internal delays configuration (TX
+> off, RX on 1.2 ns) and MAC provided TX delay by default.
+> After above commit, the KSZ9031 PHY starts handling phy mode properly and
+> enables both RX and TX delays, as result networking is become broken.
+> 
+> Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
+> behavior.
+> 
+> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Philippe Schenker <philippe.schenker@toradex.com>
+> Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+> Fix for one more broken TI board with KSZ9031 PHY.
+Can you please apply this patch to your v5.8 fixes branch and send it 
+upstream ? Without the fix K2G EVM board is broken with v5.8.
 
-Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
-behavior.
+Am hoping you can pick this up with pull request since it just one
+patch.
 
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Philippe Schenker <philippe.schenker@toradex.com>
-Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
-Fix for one more broken TI board with KSZ9031 PHY.
-
- arch/arm/boot/dts/keystone-k2g-evm.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
-index db640bab8c1d..8b3d64c913d8 100644
---- a/arch/arm/boot/dts/keystone-k2g-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
-@@ -402,7 +402,7 @@
- 
- &gbe0 {
- 	phy-handle = <&ethphy0>;
--	phy-mode = "rgmii-id";
-+	phy-mode = "rgmii-rxid";
- 	status = "okay";
- };
- 
--- 
-2.17.1
+Regards,
+Santosh
 
