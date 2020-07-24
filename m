@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7B7C433F2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF0EC433ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9025E206D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AAF206F0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgGXO7W (ORCPT
+        id S1727051AbgGXO7X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:59:22 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:48204 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726366AbgGXO7W (ORCPT
+        Fri, 24 Jul 2020 10:59:23 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:18194 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727019AbgGXO7X (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:59:22 -0400
+        Fri, 24 Jul 2020 10:59:23 -0400
 X-IronPort-AV: E=Sophos;i="5.75,391,1589209200"; 
-   d="scan'208";a="52962835"
+   d="scan'208";a="52751512"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 24 Jul 2020 23:59:19 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 24 Jul 2020 23:59:22 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8AD96425F8C1;
-        Fri, 24 Jul 2020 23:59:17 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 34668425F8C1;
+        Fri, 24 Jul 2020 23:59:20 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Niklas <niklas.soderlund@ragnatech.se>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -38,9 +38,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 1/2] dt-bindings: media: renesas,vin: Document renesas-vin-ycbcr-8b-g property
-Date:   Fri, 24 Jul 2020 15:58:51 +0100
-Message-Id: <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 2/2] media: rcar-vin: Add support to read renesas-vin-ycbcr-8b-g property
+Date:   Fri, 24 Jul 2020 15:58:52 +0100
+Message-Id: <1595602732-25582-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -49,46 +49,84 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit data
-input pins.
+Add support to read "renesas-vin-ycbcr-8b-g" DT property and select
+the data pins accordingly for YCbCr422-8bit input
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/media/renesas,vin.yaml | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/media/platform/rcar-vin/rcar-core.c | 4 +++-
+ drivers/media/platform/rcar-vin/rcar-dma.c  | 7 +++++++
+ drivers/media/platform/rcar-vin/rcar-vin.h  | 2 ++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-index 53c0a72..7dfb781 100644
---- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
-+++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-@@ -106,6 +106,12 @@ properties:
+diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+index 7440c89..5273110 100644
+--- a/drivers/media/platform/rcar-vin/rcar-core.c
++++ b/drivers/media/platform/rcar-vin/rcar-core.c
+@@ -624,6 +624,9 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
+ 	vin->parallel = rvpe;
+ 	vin->parallel->mbus_type = vep->bus_type;
  
-           remote-endpoint: true
- 
-+          renesas-vin-ycbcr-8b-g:
-+            type: boolean
-+            description:
-+              If present this property specifies to selects VIN_G[7:0] as data pins for YCbCr422 8-bit data.
-+            default: false
++	vin->parallel->ycbcr_8b_g = fwnode_property_present(vep->base.local_fwnode,
++							    "renesas-vin-ycbcr-8b-g");
 +
-         required:
-           - remote-endpoint
+ 	switch (vin->parallel->mbus_type) {
+ 	case V4L2_MBUS_PARALLEL:
+ 		vin_dbg(vin, "Found PARALLEL media bus\n");
+@@ -659,7 +662,6 @@ static int rvin_parallel_init(struct rvin_dev *vin)
  
-@@ -168,6 +174,13 @@ properties:
+ 	vin_dbg(vin, "Found parallel subdevice %pOF\n",
+ 		to_of_node(vin->parallel->asd.match.fwnode));
+-
+ 	vin->notifier.ops = &rvin_parallel_notify_ops;
+ 	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
+ 	if (ret < 0) {
+diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
+index 1a30cd0..5db4838 100644
+--- a/drivers/media/platform/rcar-vin/rcar-dma.c
++++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+@@ -127,6 +127,8 @@
+ #define VNDMR2_FTEV		(1 << 17)
+ #define VNDMR2_VLV(n)		((n & 0xf) << 12)
  
-               remote-endpoint: true
- 
-+              renesas-vin-ycbcr-8b-g:
-+                type: boolean
-+                description:
-+                  If present this property specifies to selects VIN_G[7:0] as data pins for
-+                  YCbCr422 8-bit data.
-+                default: false
++#define VNDMR2_YDS		BIT(22)
 +
-             required:
-               - remote-endpoint
+ /* Video n CSI2 Interface Mode Register (Gen3) */
+ #define VNCSI_IFMD_DES1		(1 << 26)
+ #define VNCSI_IFMD_DES0		(1 << 25)
+@@ -698,6 +700,11 @@ static int rvin_setup(struct rvin_dev *vin)
+ 		/* Data Enable Polarity Select */
+ 		if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
+ 			dmr2 |= VNDMR2_CES;
++
++		if (vin->parallel->ycbcr_8b_g && vin->mbus_code == MEDIA_BUS_FMT_UYVY8_2X8)
++			dmr2 |= VNDMR2_YDS;
++		else
++			dmr2 &= ~VNDMR2_YDS;
+ 	}
  
+ 	/*
+diff --git a/drivers/media/platform/rcar-vin/rcar-vin.h b/drivers/media/platform/rcar-vin/rcar-vin.h
+index c19d077..62a4bf2 100644
+--- a/drivers/media/platform/rcar-vin/rcar-vin.h
++++ b/drivers/media/platform/rcar-vin/rcar-vin.h
+@@ -95,6 +95,7 @@ struct rvin_video_format {
+  * @mbus_flags:	media bus configuration flags
+  * @source_pad:	source pad of remote subdevice
+  * @sink_pad:	sink pad of remote subdevice
++ * @ycbcr_8b_g:	select data pins for YCbCr422-8bit
+  *
+  */
+ struct rvin_parallel_entity {
+@@ -106,6 +107,7 @@ struct rvin_parallel_entity {
+ 
+ 	unsigned int source_pad;
+ 	unsigned int sink_pad;
++	bool ycbcr_8b_g;
+ };
+ 
+ /**
 -- 
 2.7.4
 
