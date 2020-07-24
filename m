@@ -2,108 +2,299 @@ Return-Path: <SRS0=+aE9=BD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA690C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E175C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9840F206D7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB35206D8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 24 Jul 2020 13:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="n8bXBDfD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OCr7V9Pv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGXN1w (ORCPT
+        id S1727060AbgGXNpL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:27:52 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:34157 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgGXN1w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 09:27:52 -0400
+        Fri, 24 Jul 2020 09:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgGXNpL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 09:45:11 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C54B6C0619D3
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 06:45:10 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id o184so4940993vsc.0
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 06:45:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595597272; x=1627133272;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=A5YLhLAtVcTBQUQVMo2Y1QqJpt3JeWTNosvh6n7q6bk=;
-  b=n8bXBDfDXpCsH4HUE3zgfc4Gh1ZULfaDRuVJ7KpeN9Do5Ys2O2SZMk0U
-   0PGY1nC1nQm6BbLmzEhXAUh8VnNW87my7api6eSDw4fMhtJdlnbdRDZ0W
-   aqu5vPoY/3a+Q2KfJ1CWUAOL729csQ7WxGvR5ziJh0atXgV2VJKza4ZiQ
-   o=;
-IronPort-SDR: z3MGceMuEAbb8VWysndLy8af739CobdyW0KgCeOsvAu3RW1y3dZ9QhgcmUQ7wu4oQO21pwJZWb
- ImhXct77BaAA==
-X-IronPort-AV: E=Sophos;i="5.75,390,1589241600"; 
-   d="scan'208";a="43878112"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 24 Jul 2020 13:27:49 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id 5FBFBA24EC;
-        Fri, 24 Jul 2020 13:27:48 +0000 (UTC)
-Received: from EX13D19EUB001.ant.amazon.com (10.43.166.229) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Jul 2020 13:27:47 +0000
-Received: from u8a88181e7b2355.ant.amazon.com (10.43.160.65) by
- EX13D19EUB001.ant.amazon.com (10.43.166.229) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 24 Jul 2020 13:27:39 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <arnd@arndb.de>, <robh+dt@kernel.org>, <tsahee@annapurnalabs.com>,
-        <antoine.tenart@bootlin.com>, <mchehab+huawei@kernel.org>,
-        <davem@davemloft.net>
-List-Id: <soc.lore.kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <arm@kernel.org>,
-        <soc@kernel.org>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
-        <ronenk@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
-        <hanochu@amazon.com>, <eitan@amazon.com>, <hhhawa@amazon.com>
-Subject: [PATCH v6 1/6] dt-bindings: arm: amazon: rename al,alpine DT binding to amazon,al
-Date:   Fri, 24 Jul 2020 16:26:49 +0300
-Message-ID: <20200724132654.16549-2-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724132654.16549-1-hhhawa@amazon.com>
-References: <20200724132654.16549-1-hhhawa@amazon.com>
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g/+5UoxaK0B/ouWKXhlnGp7tlvNSVwLA+fl6kPFBy3Q=;
+        b=OCr7V9PvnMgT+sB96Edxhs4Fa6YvkPB8pV2zkvYSzisExSkRA2oHnRwBTYa1D+8Pke
+         T833lNyfbhaGuRGE36rEbzToZ+w4ajlTEeaiN2xCMgTuug0VRSy0K9578WWtKKFTS3CC
+         w5K3xXdFEA+2XsYJ0VQ9GBTd9aaj8pyS1o/vQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g/+5UoxaK0B/ouWKXhlnGp7tlvNSVwLA+fl6kPFBy3Q=;
+        b=R2Je8HoNYiLrIW+5NwlTxrLn6osGt7+FIRlQ/Y3FBHNGu2Dh5LiEw5eVwmr8ktRWwp
+         sy0hhUTYUQDtzvpE0ktwawDrySgaGb0C6LAspvpxFj5LYTibRvhcAkU51KecLrQ1DhYP
+         7Ze31NiF+BcUoKPtyfnDhjRaY8CTDPGZaX+8IZuNAmE4Wqi9FRm1WuPvN0E2YEpd/tCd
+         6kmkic04OfUWmGd+9jIsNtbPkiAJS67ZVBVdrIEFEiWFgU5XbnCX0PWQ6g/2HpejVn/V
+         HJ2o07aaaR1xlus/bL1scCNn/KlUd6DqlG0uwrVkTjLqSqNVtNPyW1vqWd6QuQNC0NtS
+         up4g==
+X-Gm-Message-State: AOAM533LJajF0V9+IgmU/bkodJDYjSninFulGrgk5rcSG8iF/fyDRKHX
+        rzQln8EyKTmZvDiDgiVADVXI6qJyzkDCm3yWM1QV3w==
+X-Google-Smtp-Source: ABdhPJzF8Cn+eUjgEJZZxSH4zV2/AuLt79M3/GOySgsHJwoMPWl9y7OO1PDUxu5v46KpEurVhelGQjKWin7Y5j6dqJQ=
+X-Received: by 2002:a67:f5c6:: with SMTP id t6mr7555224vso.14.1595598309872;
+ Fri, 24 Jul 2020 06:45:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D32UWA004.ant.amazon.com (10.43.160.193) To
- EX13D19EUB001.ant.amazon.com (10.43.166.229)
+References: <1595475600-23180-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1595475600-23180-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1595475600-23180-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 24 Jul 2020 21:44:58 +0800
+Message-ID: <CANMq1KAmVbNnXMV0Zw9ZBPtnnj283uemF+ctztaEzZi8ikB-jw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] soc: mediatek: pwrap: add arbiter capability
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Argus Lin <argus.lin@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As preparation to add device tree binding for Amazon's Annapurna Labs
-Alpine v3 support. Rename al,alpine DT binding to amazon,al.
+On Thu, Jul 23, 2020 at 11:40 AM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> Add arbiter capability for pwrap driver.
+> This patch is preparing for adding mt6873/8192 pwrap support.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 67 ++++++++++++++++++++++++++++++------
+>  1 file changed, 56 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> index c897205..8d76ed4 100644
+> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> @@ -24,11 +24,13 @@
+>  #define PWRAP_MT8135_BRIDGE_WDT_SRC_EN         0x54
+>
+>  /* macro for wrapper status */
+> +#define PWRAP_GET_SWINF_2_FSM(x)       (((x) >> 1) & 0x00000007)
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- .../bindings/arm/{al,alpine.yaml => amazon,al.yaml}           | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/arm/{al,alpine.yaml => amazon,al.yaml} (74%)
+I find this macro name a bit weird, because you are actually using
+this mask on PWRAP_WACS2_RDATA register value (just like
+PWRAP_GET_WACS_FSM below).
 
-diff --git a/Documentation/devicetree/bindings/arm/al,alpine.yaml b/Documentation/devicetree/bindings/arm/amazon,al.yaml
-similarity index 74%
-rename from Documentation/devicetree/bindings/arm/al,alpine.yaml
-rename to Documentation/devicetree/bindings/arm/amazon,al.yaml
-index a70dff277e05..58eb4ad55a76 100644
---- a/Documentation/devicetree/bindings/arm/al,alpine.yaml
-+++ b/Documentation/devicetree/bindings/arm/amazon,al.yaml
-@@ -1,10 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/al,alpine.yaml#
-+$id: http://devicetree.org/schemas/arm/amazon,al.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Annapurna Labs Alpine Platform Device Tree Bindings
-+title: Amazon's Annapurna Labs Alpine Platform Device Tree Bindings
- 
- maintainers:
-   - Tsahee Zidenberg <tsahee@annapurnalabs.com>
--- 
-2.17.1
+Should it be something like PWRAP_GET_WACS_ARB_FSM?!
 
+>  #define PWRAP_GET_WACS_RDATA(x)                (((x) >> 0) & 0x0000ffff)
+>  #define PWRAP_GET_WACS_FSM(x)          (((x) >> 16) & 0x00000007)
+>  #define PWRAP_GET_WACS_REQ(x)          (((x) >> 19) & 0x00000001)
+>  #define PWRAP_STATE_SYNC_IDLE0         BIT(20)
+>  #define PWRAP_STATE_INIT_DONE0         BIT(21)
+> +#define PWRAP_STATE_INIT_DONE1         BIT(15)
+>
+>  /* macro for WACS FSM */
+>  #define PWRAP_WACS_FSM_IDLE            0x00
+> @@ -74,6 +76,7 @@
+>  #define PWRAP_CAP_DCM          BIT(2)
+>  #define PWRAP_CAP_INT1_EN      BIT(3)
+>  #define PWRAP_CAP_WDT_SRC1     BIT(4)
+> +#define PWRAP_CAP_ARB          BIT(5)
+>
+>  /* defines for slave device wrapper registers */
+>  enum dew_regs {
+> @@ -340,6 +343,8 @@ enum pwrap_regs {
+>         PWRAP_DCM_DBC_PRD,
+>         PWRAP_EINT_STA0_ADR,
+>         PWRAP_EINT_STA1_ADR,
+> +       PWRAP_SWINF_2_WDATA_31_0,
+> +       PWRAP_SWINF_2_RDATA_31_0,
+>
+>         /* MT2701 only regs */
+>         PWRAP_ADC_CMD_ADDR,
+> @@ -1108,16 +1113,30 @@ static void pwrap_writel(struct pmic_wrapper *wrp, u32 val, enum pwrap_regs reg)
+>
+>  static bool pwrap_is_fsm_idle(struct pmic_wrapper *wrp)
+>  {
+> -       u32 val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
+> +       u32 val;
+> +       bool ret;
+> +
+> +       val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+> +               ret = (PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE);
+> +       else
+> +               ret = (PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_IDLE);
+>
+> -       return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE;
+> +       return ret;
+
+Those !HAS_CAP tests are a little hard to read. Also, ret isn't really needed.
+
+So I'd do this:
+if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+    return PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_IDLE;
+
+return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_IDLE;
+
+>  }
+>
+>  static bool pwrap_is_fsm_vldclr(struct pmic_wrapper *wrp)
+>  {
+> -       u32 val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
+> +       u32 val;
+> +       bool ret;
+> +
+> +       val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+> +               ret = (PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR);
+> +       else
+> +               ret = (PWRAP_GET_SWINF_2_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR);
+>
+> -       return PWRAP_GET_WACS_FSM(val) == PWRAP_WACS_FSM_WFVLDCLR;
+> +       return ret;
+
+ditto
+
+>  }
+>
+>  /*
+> @@ -1172,13 +1191,21 @@ static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+>                 return ret;
+>         }
+>
+> -       pwrap_writel(wrp, (adr >> 1) << 16, PWRAP_WACS2_CMD);
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+
+ditto, I'd reverse all these tests.
+
+> +               pwrap_writel(wrp, (adr >> 1) << 16, PWRAP_WACS2_CMD);
+> +       else
+> +               pwrap_writel(wrp, adr, PWRAP_WACS2_CMD);
+
+Not 100% convinced if worth it, but you could also do:
+
+if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+   val = adr;
+else
+   val = (adr >> 1) << 16;
+
+pwrap_writel(wrp, val, PWRAP_WACS2_CMD);
+
+>
+>         ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_vldclr);
+>         if (ret)
+>                 return ret;
+>
+> -       *rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp, PWRAP_WACS2_RDATA));
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+> +               *rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp,
+> +                                             PWRAP_WACS2_RDATA));
+> +       else
+> +               *rdata = PWRAP_GET_WACS_RDATA(pwrap_readl(wrp,
+> +                                             PWRAP_SWINF_2_RDATA_31_0));
+
+Similarly:
+
+if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+   val = pwrap_readl(wrp, PWRAP_SWINF_2_RDATA_31_0);
+else
+   val = pwrap_readl(wrp, PWRAP_WACS2_RDATA);
+
+*rdata = PWRAP_GET_WACS_RDATA(val);
+
+(or set the register address in an `reg` variable)
+
+>
+>         pwrap_writel(wrp, 1, PWRAP_WACS2_VLDCLR);
+>
+> @@ -1228,8 +1255,13 @@ static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
+>                 return ret;
+>         }
+>
+> -       pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
+> -                    PWRAP_WACS2_CMD);
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB)) {
+> +               pwrap_writel(wrp, BIT(31) | ((adr >> 1) << 16) | wdata,
+> +                            PWRAP_WACS2_CMD);
+> +       } else {
+> +               pwrap_writel(wrp, wdata, PWRAP_SWINF_2_WDATA_31_0);
+> +               pwrap_writel(wrp, BIT(29) | adr, PWRAP_WACS2_CMD);
+> +       }
+>
+>         return 0;
+>  }
+> @@ -2022,6 +2054,7 @@ MODULE_DEVICE_TABLE(of, of_pwrap_match_tbl);
+>  static int pwrap_probe(struct platform_device *pdev)
+>  {
+>         int ret, irq;
+> +       u32 rdata;
+>         struct pmic_wrapper *wrp;
+>         struct device_node *np = pdev->dev.of_node;
+>         const struct of_device_id *of_slave_id = NULL;
+> @@ -2116,14 +2149,22 @@ static int pwrap_probe(struct platform_device *pdev)
+>                 }
+>         }
+>
+> -       if (!(pwrap_readl(wrp, PWRAP_WACS2_RDATA) & PWRAP_STATE_INIT_DONE0)) {
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+> +               rdata = pwrap_readl(wrp, PWRAP_WACS2_RDATA) &
+> +                                   PWRAP_STATE_INIT_DONE0;
+> +       else
+> +               rdata = pwrap_readl(wrp, PWRAP_WACS2_RDATA) &
+> +                                   PWRAP_STATE_INIT_DONE1;
+> +       if (!rdata) {
+
+Maybe:
+
+if (HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+   mask_done = PWRAP_STATE_INIT_DONE1;
+else
+   mask_done = PWRAP_STATE_INIT_DONE0;
+
+if (!(pwrap_readl(wrp, PWRAP_WACS2_RDATA) & mask_done)) {
+
+
+>                 dev_dbg(wrp->dev, "initialization isn't finished\n");
+>                 ret = -ENODEV;
+>                 goto err_out2;
+>         }
+>
+>         /* Initialize watchdog, may not be done by the bootloader */
+> -       pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+> +               pwrap_writel(wrp, 0xf, PWRAP_WDT_UNIT);
+> +
+>         /*
+>          * Since STAUPD was not used on mt8173 platform,
+>          * so STAUPD of WDT_SRC which should be turned off
+> @@ -2132,7 +2173,11 @@ static int pwrap_probe(struct platform_device *pdev)
+>         if (HAS_CAP(wrp->master->caps, PWRAP_CAP_WDT_SRC1))
+>                 pwrap_writel(wrp, wrp->master->wdt_src, PWRAP_WDT_SRC_EN_1);
+>
+> -       pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
+> +       if (!HAS_CAP(wrp->master->caps, PWRAP_CAP_ARB))
+> +               pwrap_writel(wrp, 0x1, PWRAP_TIMER_EN);
+> +       else
+> +               pwrap_writel(wrp, 0x3, PWRAP_TIMER_EN);
+> +
+>         pwrap_writel(wrp, wrp->master->int_en_all, PWRAP_INT_EN);
+>         /*
+>          * We add INT1 interrupt to handle starvation and request exception
+> --
+> 2.6.4
