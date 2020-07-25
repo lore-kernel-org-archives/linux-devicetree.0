@@ -2,88 +2,283 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD83C433E4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 15:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91175C433E4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 15:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A653206D7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 15:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68062206E3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 15:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFUoYUJz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KNjMmLzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgGYPbf (ORCPT
+        id S1726870AbgGYP6F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 11:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgGYPbf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 11:31:35 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80FCC08C5C0;
-        Sat, 25 Jul 2020 08:31:34 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id g7so4587255ejw.12;
-        Sat, 25 Jul 2020 08:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FR6Dp1DwruwS2azPHTv2qb7tleyh4uVI6t5Ki9azlJY=;
-        b=AFUoYUJzlD0ujrfjmTQivGD3aK3f626Pvakeu4Sg3IfEIDnJ3m1LhvT5ayAJsphM/R
-         UMIWUNDCVbfgcqbAB9VZkQRWnx35an9XabgBXSNB271/oeqjYBZiBmDOEDjEunw0+sjD
-         C7mL43cwcaNnI+KaxNACIuCCaR1WlYOtbzc3LRXoiF/yOUtgEYmtFDbwa+oDSfvJZVJE
-         9j6hS5oTB6WTCTBkXs5zWCT9tvr4jjBEVeNDSU2dPr+oaf/4PA58BM99374omurbdj3+
-         nD9Aj5L7YTtcruqhFgN9b+E7XDDfoM9QJ2V2MixEbHeE8J8qQSmQGN33/7sP91maudu6
-         OI0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FR6Dp1DwruwS2azPHTv2qb7tleyh4uVI6t5Ki9azlJY=;
-        b=Rl2sxRSnEVVQEC/t4J3YhqqRF8IeGm4CGVG47dU98M0r71uiLJyULgXc5DM8oV/2+o
-         5EO03Q54sbN89ek0Hll6o4X5WyVvNRX9f1f2Yy/Y+luI3lNzNfl2qEdSg0nMKF4Fx78G
-         l5fkZyoP9eB3xgBtHBSiYxtGiPtnS8JeBtLnYGkx8CqDmDlqO3VxsP6cBt5Su/Ug2XkP
-         3A3rJhkT4O5Lv76CqW2drZV5n43+ibluDG18XB9jU1CpGhBw83BeNWqXu5S8nJj1pF5C
-         plxIXvPBCbb4kx5nD56+BuNg7ww3dfRUHOe7NHwgmnNHyeYJqDaooj1EUvTLcLLdhnrO
-         TCug==
-X-Gm-Message-State: AOAM533vJJ9dsTe0DTmXueU0TODFlRKwtYvNxpyxsIklSE5L2UbUChRX
-        PQ5O3xDU0lXbIj1uANc5H1rD9gjy6oNSdIlaYek=
-X-Google-Smtp-Source: ABdhPJwodSebe7Q/3rJdh2eDl+klzcVBlt0lFi0R8BZlsZYXjCOayE3PYJWUPAE+Fd7Kn3lUrHABclLwiMNPZ+3blY4=
-X-Received: by 2002:a17:906:f106:: with SMTP id gv6mr11788715ejb.221.1595691093472;
- Sat, 25 Jul 2020 08:31:33 -0700 (PDT)
+        Sat, 25 Jul 2020 11:58:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43274 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgGYP6F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 11:58:05 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06PFv149053263;
+        Sat, 25 Jul 2020 10:57:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595692621;
+        bh=YxpekE3gXfNAX81VoMrv6eipbPSY+oakSDGHFDphNvA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KNjMmLzspdkLNhxNbTqwuE/nfK5H5HkdejWUSFeBWzcxxfxdW0MZlp7larvXP8Y5X
+         UQbDHF0lFSkuKl+8+1YFJR1qcXtCJUyWCreuPotGk5qepoAxany/YnoyUlvNvUryAA
+         DSRWiqoHCSnIpcXDmi6IlhXS932C3irhp1/hhuoU=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06PFv13J104174
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 25 Jul 2020 10:57:01 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 25
+ Jul 2020 10:57:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sat, 25 Jul 2020 10:57:00 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06PFv0Xm055814;
+        Sat, 25 Jul 2020 10:57:00 -0500
+Subject: Re: [PATCHv3 3/6] irqchip/irq-pruss-intc: Add support for shared and
+ invalid interrupts
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>, <robh+dt@kernel.org>,
+        <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <david@lechnology.com>,
+        <wmills@ti.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <2a6b0391f1395eb0aa15ffee6769184e@kernel.org>
+ <3a73bb14-9f7b-970d-fbae-f9c7bb7bdf1e@ti.com> <87imemxv3l.wl-maz@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <14a0978a-f38f-8cd7-3fee-b0e438513396@ti.com>
+Date:   Sat, 25 Jul 2020 10:57:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
- <20200724213659.273599-3-martin.botka1@gmail.com> <CADQ2G_G7N_iH523urk3wOieZ0bT7O88Vnnbq6r_h9A4GLXQ5Nw@mail.gmail.com>
- <20200725152442.GA11424@duo.ucw.cz>
-In-Reply-To: <20200725152442.GA11424@duo.ucw.cz>
-From:   Martin Botka <martin.botka1@gmail.com>
-Date:   Sat, 25 Jul 2020 17:30:57 +0200
-Message-ID: <CADQ2G_FmvAS_fzDzENxgx+G0JUiktgRvKL=LLCc1cYE=nATUDw@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
- with u64 data length
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87imemxv3l.wl-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +#include <linux/math64.h>
-> -               gain_q23 = (gain_q23 * dmic->boost_gain) / 100;
-> +               gain_q23 = div_u64(gain_q23 * dmic->boost_gain, 100);
+Hi Marc,
 
-Ok so using a macro.
+On 7/17/20 6:02 AM, Marc Zyngier wrote:
+> On Fri, 10 Jul 2020 21:59:17 +0100,
+> Suman Anna <s-anna@ti.com> wrote:
+> 
+> Hi Suman,
+> 
+> [...]
+> 
+>>
+>> Hi Marc,
+>>
+>> On 7/2/20 12:44 PM, Marc Zyngier wrote:
+>>> On 2020-07-02 15:17, Grzegorz Jaszczyk wrote:
+>>>> From: Suman Anna <s-anna@ti.com>
+>>>>
+>>>> The PRUSS INTC has a fixed number of output interrupt lines that are
+>>>> connected to a number of processors or other PRUSS instances or other
+>>>> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+>>>> are usually connected to the main Arm host processor and are referred
+>>>> to as host interrupts 0 through 7 from ARM/MPU perspective.
+>>>>
+>>>> All of these 8 host interrupts are not always exclusively connected
+>>>> to the Arm interrupt controller. Some SoCs have some interrupt lines
+>>>> not connected to the Arm interrupt controller at all, while a few others
+>>>> have the interrupt lines connected to multiple processors in which they
+>>>> need to be partitioned as per SoC integration needs. For example, AM437x
+>>>> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 5
+>>>> connected to the other PRUSS, while AM335x has host interrupt 0 shared
+>>>> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU and
+>>>> a DMA controller.
+>>>>
+>>>> Add support to the PRUSS INTC driver to allow both these shared and
+>>>> invalid interrupts by not returning a failure if any of these interrupts
+>>>> are skipped from the corresponding INTC DT node.
+>>>
+>>> That's not exactly "adding support", is it? It really is "ignore these
+>>> interrupts because they are useless from the main CPU's perspective",
+>>> right?
+>>
+>> Correct. We can rephrase this to something like
+>> "Add logic to the PRUSS INTC driver to ignore.."
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+>>>> ---
+>>>> v2->v3:
+>>>> - Extra checks for (intc->irqs[i]) in error/remove path was moved from
+>>>>    "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
+>>>>    interrupts" to this patch
+>>>> v1->v2:
+>>>> - https://patchwork.kernel.org/patch/11069757/
+>>>> ---
+>>>>   drivers/irqchip/irq-pruss-intc.c | 73
+>>>> +++++++++++++++++++++++++++++++++++++---
+>>>>   1 file changed, 68 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/irqchip/irq-pruss-intc.c
+>>>> b/drivers/irqchip/irq-pruss-intc.c
+>>>> index fb3dda3..49c936f 100644
+>>>> --- a/drivers/irqchip/irq-pruss-intc.c
+>>>> +++ b/drivers/irqchip/irq-pruss-intc.c
+>>>> @@ -65,11 +65,15 @@
+>>>>    * @irqs: kernel irq numbers corresponding to PRUSS host interrupts
+>>>>    * @base: base virtual address of INTC register space
+>>>>    * @domain: irq domain for this interrupt controller
+>>>> + * @shared_intr: bit-map denoting if the MPU host interrupt is shared
+>>>
+>>> nit: bitmap
+>>
+>> ok
+>>
+>>>
+>>>> + * @invalid_intr: bit-map denoting if host interrupt is not
+>>>> connected to MPU
+>>>>    */
+>>>>   struct pruss_intc {
+>>>>       unsigned int irqs[MAX_NUM_HOST_IRQS];
+>>>>       void __iomem *base;
+>>>>       struct irq_domain *domain;
+>>>> +    u16 shared_intr;
+>>>> +    u16 invalid_intr;
+>>>
+>>> Please represent bitmaps as an unsigned long.
+>>
+>> ok. We have atmost 8 interrupts coming in, but agree on the change
+>> since we are using the BIT() macro below.
+>>
+>>>
+>>>>   };
+>>>>
+>>>>   static inline u32 pruss_intc_read_reg(struct pruss_intc *intc,
+>>>> unsigned int reg)
+>>>> @@ -222,7 +226,8 @@ static int pruss_intc_probe(struct
+>>>> platform_device *pdev)
+>>>>           "host_intr4", "host_intr5", "host_intr6", "host_intr7", };
+>>>>       struct device *dev = &pdev->dev;
+>>>>       struct pruss_intc *intc;
+>>>> -    int i, irq;
+>>>> +    int i, irq, count;
+>>>> +    u8 temp_intr[MAX_NUM_HOST_IRQS] = { 0 };
+>>>>
+>>>>       intc = devm_kzalloc(dev, sizeof(*intc), GFP_KERNEL);
+>>>>       if (!intc)
+>>>> @@ -235,6 +240,52 @@ static int pruss_intc_probe(struct
+>>>> platform_device *pdev)
+>>>>           return PTR_ERR(intc->base);
+>>>>       }
+>>>>
+>>>> +    count = of_property_read_variable_u8_array(dev->of_node,
+>>>> +                           "ti,irqs-reserved",
+>>>> +                           temp_intr, 0,
+>>>> +                           MAX_NUM_HOST_IRQS);
+>>>> +    /*
+>>>> +     * The irqs-reserved is used only for some SoC's therefore not
+>>>> having
+>>>> +     * this property is still valid
+>>>> +     */
+>>>> +    if (count == -EINVAL)
+>>>> +        count = 0;
+>>>> +    if (count < 0)
+>>>> +        return count;
+>>>> +
+>>>> +    for (i = 0; i < count; i++) {
+>>>> +        if (temp_intr[i] >= MAX_NUM_HOST_IRQS) {
+>>>> +            dev_warn(dev, "ignoring invalid reserved irq %d\n",
+>>>> +                 temp_intr[i]);
+>>>> +            continue;
+>>>> +        }
+>>>> +
+>>>> +        intc->invalid_intr |= BIT(temp_intr[i]);
+>>>> +    }
+>>>> +
+>>>> +    count = of_property_read_variable_u8_array(dev->of_node,
+>>>> +                           "ti,irqs-shared",
+>>>> +                           temp_intr, 0,
+>>>> +                           MAX_NUM_HOST_IRQS);
+>>>> +    /*
+>>>> +     * The irqs-shared is used only for some SoC's therefore not having
+>>>> +     * this property is still valid
+>>>> +     */
+>>>> +    if (count == -EINVAL)
+>>>> +        count = 0;
+>>>> +    if (count < 0)
+>>>> +        return count;
+>>>> +
+>>>> +    for (i = 0; i < count; i++) {
+>>>> +        if (temp_intr[i] >= MAX_NUM_HOST_IRQS) {
+>>>> +            dev_warn(dev, "ignoring invalid shared irq %d\n",
+>>>> +                 temp_intr[i]);
+>>>> +            continue;
+>>>> +        }
+>>>> +
+>>>> +        intc->shared_intr |= BIT(temp_intr[i]);
+>>>> +    }
+>>>> +
+>>>
+>>> You probably want to move this in a separate function, since you populate a
+>>> common structure.
+>>>
+>>>>       pruss_intc_init(intc);
+>>>>
+>>>>       /* always 64 events */
+>>>> @@ -244,8 +295,14 @@ static int pruss_intc_probe(struct
+>>>> platform_device *pdev)
+>>>>           return -ENOMEM;
+>>>>
+>>>>       for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
+>>>> +        if (intc->invalid_intr & BIT(i))
+>>>> +            continue;
+>>>> +
+>>>>           irq = platform_get_irq_byname(pdev, irq_names[i]);
+>>>>           if (irq <= 0) {
+>>>> +            if (intc->shared_intr & BIT(i))
+>>>> +                continue;
+>>>
+>>> I don't really understand why you are treating these "shared" interrupts
+>>> differently from the invalid ones. In all cases, they shouldn't be used.
+>>
+>> The behavior is the same in how we handle it, but the difference is
+>> that an "invalid" one is never even connected to the ARM interrupt
+>> controller, while the "shared" one is a choice. So, unless this
+>> interrupt is being used/handled by a different processor/entity, you
+>> would not see this skipped from the dts node.
+> 
+> And I'm saying that all that matters is that you are discarding these
+> interrupts. Whether they are flagged invalid or shared, they are not
+> available to Linux. So the difference in handling is pointless and
+> only makes it harder to understand what you are doing.
 
-Thank you.
+The primary reason for using two properties and this logic was to 
+accurately describe the h/w and usage of these in the DT bindings to 
+distinguish the "never connected" vs the "optionally can be skipped" 
+interrupts rather than go by how these are handled in the driver. I feel 
+we will loose this description and make it confusing for SoC product 
+integration developers.
+
+Greg is planning to consolidate these for the next version. It would 
+have been nice if we could have retained them.
+
+regards
+Suman
