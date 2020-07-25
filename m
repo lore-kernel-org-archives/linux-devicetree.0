@@ -2,77 +2,117 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E12C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 03:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC77C433E8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 04:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF5820719
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 03:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8A020786
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 04:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="ibIWiXjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGYDxF (ORCPT
+        id S1726811AbgGYEo3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:53:05 -0400
-Received: from out28-97.mail.aliyun.com ([115.124.28.97]:58703 "EHLO
-        out28-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgGYDxF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Jul 2020 23:53:05 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1341577|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.040148-0.00170086-0.958151;FP=0|0|0|0|0|-1|-1|-1;HT=e01l10434;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.I7EgnZy_1595649141;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I7EgnZy_1595649141)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Sat, 25 Jul 2020 11:53:01 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, kishon@ti.com, vkoul@kernel.org,
-        gor@linux.ibm.com, hca@linux.ibm.com,
-        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: [PATCH v6 0/5] Add USB PHY support for new Ingenic SoCs.
-Date:   Sat, 25 Jul 2020 11:51:54 +0800
-Message-Id: <20200725035159.31231-1-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 25 Jul 2020 00:44:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGYEo2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 00:44:28 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F85C0619D3
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 21:44:27 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so9959488wrs.11
+        for <devicetree@vger.kernel.org>; Fri, 24 Jul 2020 21:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5VrwN5/UnygvMy3zMm6TjQrq+luQNTXvPZ+NbPuQVPA=;
+        b=ibIWiXjGWI4kz9I5MrfgGQdY71Zw+k0eXM7gC5w5R+lLsuD/rVVn4l5bB7vbyRpgSF
+         CV+8imaGR1JjGgXBgy9BLroi7X+UhQOc0W+LxYQAbq+YPThjVyOrAleyn+J44L5k/1pZ
+         ATDUYH0iFCuMMtfyo4nNuUBNgpolxBm3o3+jo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5VrwN5/UnygvMy3zMm6TjQrq+luQNTXvPZ+NbPuQVPA=;
+        b=MIRcxb7AW6Rd8FvgMOzFTl1M85kzAiBllzz5eI8NxrNJ9ySO5x/fj/UW1tezp11ohw
+         AVs4tksNYwb0ZoZnLv6PwytEu0/T3+aiBO31esqXoTX9WqLtxyyzrXkxWANsENJVzcy9
+         mnhWuQv6IvgmUl2hTRHZlpbUwB6Tb/7aoOfGwTUH8vuEZwOzGuSuNTyuxadZYny/+U3N
+         0uhI9RQrSv94LeCaKP2e+n6IuU48q7rJDVxdD/nsC05qF1zyd5qbt0/YU9uohHVGCcQ3
+         4+yaWeb006WIQUunSNjlGdCIw/slIOmB92I74IaqC5/mLE/6+U/ksyta7updGA4EGW8l
+         Yi5w==
+X-Gm-Message-State: AOAM531F8zREioJVRZGMzm8z3AmGtWTrBQcwUOEakh6HKk81cDpayzYU
+        u/9OtDuLbpvxxPDJLwUH2Beoha1ziwsl465AQrC5/g==
+X-Google-Smtp-Source: ABdhPJyibJBX0jw3LQVOdkevS7Z9trwmeRbeB+lDZ+bqAHr4vmhNL3sBrn1KJuO9i4ieIVDSG6EKmvewA3ljP/CM5q4=
+X-Received: by 2002:adf:cd91:: with SMTP id q17mr11312969wrj.5.1595652264082;
+ Fri, 24 Jul 2020 21:44:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200710094544.430258-1-daniel@0x0f.com> <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
+In-Reply-To: <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Sat, 25 Jul 2020 13:44:13 +0900
+Message-ID: <CAFr9PX=jMd1hogK9_JPU4N+QsDgiFyMMqON0_7-SytX2Kuh6Pg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/12] Initial MStar/Sigmastar ARMv7 SoC support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Marc Zyngier <maz@kernel.org>, Willy Tarreau <w@1wt.eu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-v5->v6:
-1.Fix the warning that appears during compilation.
-2.Used the generic PHY framework API to create the PHY,
-  and move the driver to driver/phy/ingenic.
+Hi Arnd,
 
-周琰杰 (Zhou Yanjie) (5):
-  dt-bindings: USB: Add bindings for new Ingenic SoCs.
-  USB: PHY: JZ4770: Unify code style and simplify code.
-  USB: PHY: JZ4770: Add support for new Ingenic SoCs.
-  USB: PHY: JZ4770: Reformat the code to align it.
-  USB: PHY: JZ4770: Usethe generic PHY framework.
+Thanks.
 
- .../bindings/usb/ingenic,jz4770-phy.yaml           |   6 +-
- drivers/phy/Kconfig                                |   1 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/ingenic/Kconfig                        |  12 +
- drivers/phy/ingenic/Makefile                       |   2 +
- drivers/phy/ingenic/phy-ingenic-usb.c              | 403 +++++++++++++++++++++
- drivers/usb/phy/Kconfig                            |   8 -
- drivers/usb/phy/Makefile                           |   1 -
- drivers/usb/phy/phy-jz4770.c                       | 243 -------------
- 9 files changed, 424 insertions(+), 253 deletions(-)
- create mode 100644 drivers/phy/ingenic/Kconfig
- create mode 100644 drivers/phy/ingenic/Makefile
- create mode 100644 drivers/phy/ingenic/phy-ingenic-usb.c
- delete mode 100644 drivers/usb/phy/phy-jz4770.c
+There is one small fix for the v5 set. One of the DTS file names got
+broken when I rebased on a different machine.
+I'll send a patch for that later today.
 
--- 
-2.11.0
+Cheer,
 
+Daniel
+
+On Fri, 24 Jul 2020 at 23:37, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, Jul 10, 2020 at 11:46 AM Daniel Palmer <daniel@0x0f.com> wrote:
+> >
+> > This patch set adds initial support for MStar/Sigmastar's
+> > Armv7 based SoCs. There is just enough here to get to a shell
+> > with an initramfs but support for a lot of the hardware is
+> > in progress and will follow.
+> >
+> > MStar also shipped chips with MIPS cores and ARM9 etc which
+> > are incompatible so I've tried to make the distinction in the
+> > code that this is strictly for the Armv7 based chips.
+> >
+> > Sorry for the spamming this. I just really want to make some
+> > progress on this because I'm worried the other bits that are
+> > needed for these SoCs (Really old AT91 support in macb and
+> > the fotg210 usb host) will be lost or stop working in the meantime.
+> > This already happened in u-boot.
+>
+> Hi Daniel,
+>
+> I just found the series again after looking through some backlog,
+> and noticing I missed your submission from July 10. This looks
+> all good to me now, so I've merged the series into the arm/newsoc
+> branch that already contains added support for the keembay and
+> sparx5 SoCs.
+>
+> If you require any changes to this, please send incremental
+> patches against the soc tree, and submit it to soc@kernel.org
+> so it makes it gets into patchwork.
+>
+>        Arnd
