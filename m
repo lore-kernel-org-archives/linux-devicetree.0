@@ -2,99 +2,77 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FB8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 07:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3137EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF21B206D8
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 07:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2K7kJtmm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UPsPbCdn"
+	by mail.kernel.org (Postfix) with ESMTP id EB82720738
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgGYHCW (ORCPT
+        id S1726984AbgGYHTe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 03:02:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42848 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGYHCW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 03:02:22 -0400
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595660540;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yptN0zJhNFdhUHhD2jECvgn65xMx3wbcq7OuSFx4rjU=;
-        b=2K7kJtmmLGvmYTpmyVuz7bL2jOofIR5y/fGzmK4R8PSy28uWwTqnyvdHvGtohSMHBHGwhZ
-        DZXJaT2Krmgzx25t/0UsoCiiUq5xh+kxQ8FnSbcE0QC0F+1H5aZuMvNy0n7pAc3mmzEhhn
-        l/dZH+ZWCxfEyVxZSfRPJKZnYKpqdGhVg3yFakFiSWdCDyi6edWHth1cxNq2zDKb5sBSab
-        XSiMlGg0ZP/WHu67SwVK7cKlfBk/K6/W9qVWoIgA2t5POD/oMgKr/y0TsQhGxrA/BRSUE6
-        3/EFdbZ+H80QIn3/T8SRb5/wpbpbYfO8YmjQ99RjxG38pxGFoDp9axBpriBK5g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595660540;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yptN0zJhNFdhUHhD2jECvgn65xMx3wbcq7OuSFx4rjU=;
-        b=UPsPbCdncT3P1Wi6JosR1rKAtIpdSMnh5r+svRWT2YwL42Wr7zHANOH0gOUsL4Y0ZSVjVI
-        CCLGDu4zc6pQKfBw==
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, bigeasy@linutronix.de,
-        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
-        ilias.apalodimas@linaro.org, olteanv@gmail.com
-Subject: Re: [PATCH v2 0/8] Hirschmann Hellcreek DSA driver
-In-Reply-To: <20200724.164725.2267540815357576064.davem@davemloft.net>
-References: <20200723081714.16005-1-kurt@linutronix.de> <20200723093339.7f2b6e27@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <87wo2t30v9.fsf@kurt> <20200724.164725.2267540815357576064.davem@davemloft.net>
-Date:   Sat, 25 Jul 2020 09:02:06 +0200
-Message-ID: <874kpwnklt.fsf@kurt>
+        Sat, 25 Jul 2020 03:19:34 -0400
+Received: from out28-51.mail.aliyun.com ([115.124.28.51]:58670 "EHLO
+        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgGYHTe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 03:19:34 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1404662|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.040148-0.00170086-0.958151;FP=18364405763956004600|2|2|11|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.I7IIM8t_1595661564;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I7IIM8t_1595661564)
+          by smtp.aliyun-inc.com(10.147.42.253);
+          Sat, 25 Jul 2020 15:19:29 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, kishon@ti.com, vkoul@kernel.org,
+        gor@linux.ibm.com, hca@linux.ibm.com,
+        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Add USB PHY support for new Ingenic SoCs.
+Date:   Sat, 25 Jul 2020 15:18:58 +0800
+Message-Id: <20200725071903.63315-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+v5->v6:
+1.Fix the warning that appears during compilation.
+2.Used the generic PHY framework API to create the PHY,
+  and move the driver to driver/phy/ingenic.
 
-On Fri Jul 24 2020, David Miller wrote:
-> Please never submit patches for serious review when the dependencies
-> haven't landed in the target tree yet.
->
-> That makes so much wasted work for us and other reviewers.
->
-> Thank you.
->
+周琰杰 (Zhou Yanjie) (5):
+  dt-bindings: USB: Add bindings for new Ingenic SoCs.
+  USB: PHY: JZ4770: Unify code style and simplify code.
+  USB: PHY: JZ4770: Add support for new Ingenic SoCs.
+  USB: PHY: JZ4770: Reformat the code to align it.
+  USB: PHY: JZ4770: Usethe generic PHY framework.
 
-OK, noted. Sorry for that.
+ .../bindings/usb/ingenic,jz4770-phy.yaml           |   6 +-
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/ingenic/Kconfig                        |  12 +
+ drivers/phy/ingenic/Makefile                       |   2 +
+ drivers/phy/ingenic/phy-ingenic-usb.c              | 403 +++++++++++++++++++++
+ drivers/usb/phy/Kconfig                            |   8 -
+ drivers/usb/phy/Makefile                           |   1 -
+ drivers/usb/phy/phy-jz4770.c                       | 243 -------------
+ 9 files changed, 424 insertions(+), 253 deletions(-)
+ create mode 100644 drivers/phy/ingenic/Kconfig
+ create mode 100644 drivers/phy/ingenic/Makefile
+ create mode 100644 drivers/phy/ingenic/phy-ingenic-usb.c
+ delete mode 100644 drivers/usb/phy/phy-jz4770.c
 
-Thanks,
-Kurt
+-- 
+2.11.0
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8b2O4ACgkQeSpbgcuY
-8KaAhA//Wn4wX46BAVF2a89qkj1k2ZaLFufJK5UBWA2TOCp2AocQVMlaNRppGBIH
-HAlTgaHUziXziB+w2OnMk+O3EOUrGUTmPovLpJFqi8Vrk9TQRYU0s2HOiVx7n8F9
-XHK5gTvJbMmMtcDsuhk3sISjBaGt4OvAPwktb66jf/27Q7d5AAvz5W9pvcf+Pf/O
-SjZjCbZ6XjDoMXQYykLppYed4Tc2cWqcs5x+DUUpuSxqu2bwPH4BDN+a+u3v+7x7
-fsEgHXnCtd07fYA8OrNPi7tS2LBOwbeLgRO1kGloxfKGTsU+lVQPSBIikiabFhtD
-6uluKZ2NLWRMf7pASGy+PRHCM0HSttYY8LtrtHVDT9PhT+mMzhG503+tusjGX23Q
-MoZaYZWx84yBaTz1UDMFCZW1mSDiqf/RNOjhQotlNwB1lfzi8Oa8zV6TMXzevHU7
-1x8vtqPxxiqdmKGS8gpaOJ3WQvq8fddRqqbEOLJZxRPCIsoiII0aSiMA9N4mUqAq
-zVvq0wujA2PPqvMoVrqWepBR1r4D9rbkyOjcSKIyIamXLHnYSvyV4rPiuTHoCc3+
-1OXdrI9vbtrmqnsKuEMXYSmYoqQVM7Z211dnM/g6lOl0mimm/x5KGmLZv+GJDcsc
-ur5zIkzTOqnlr2lhj6i59HDWr4812GVIG6Oaq+kcp7Z2eTGhTJQ=
-=Ncmj
------END PGP SIGNATURE-----
---=-=-=--
