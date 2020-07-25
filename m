@@ -2,50 +2,50 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46847C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FC8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E020206F6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42F8206D7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595686255;
-	bh=K5mDISNf+19YggF4dg2G2Pd6dD/CEpErQK90WHh7Xo0=;
+	s=default; t=1595685991;
+	bh=200ITbuEe3M2TvxpEwlfvByKVdkmxe/ut5IehvseWOo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xanNZSNOtQDmEijOvigk4dkgpsAH15bYl5ZDn9qTl+FUNuIp2hsMgAaOrYLbwLKh9
-	 TqeQa5guU7VSp7wlsB/rzEDlTksNKpdVo2npvJB1wGTfFPPBxny6kPFuHVgHp9tzqZ
-	 yL8oZ8ZPd6q0EwowC4/BWmxYPrMAHVbWy22pkwYA=
+	b=cgPd8ZAk5x65J1Ctlh/vN9/kw/uweSoI8I+y/J2DzChVNV55RlKsDCcssOjARGjG3
+	 CMn+1T/R47+pVKRy1Kkx51N4qK/8SSeqfhwT3j2dykIZB81Kx2EhHO27Di7IWkZ9/r
+	 srl8k/i8DAUzEWb8hmdIvDDR/QykMto4O5UwYA20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgGYOKy (ORCPT
+        id S1726745AbgGYOGb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 10:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
+        Sat, 25 Jul 2020 10:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgGYOKy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Jul 2020 10:10:54 -0400
+        id S1726652AbgGYOGa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Jul 2020 10:06:30 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09E8C206D7;
-        Sat, 25 Jul 2020 14:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D78962065F;
+        Sat, 25 Jul 2020 14:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595686253;
-        bh=K5mDISNf+19YggF4dg2G2Pd6dD/CEpErQK90WHh7Xo0=;
+        s=default; t=1595685990;
+        bh=200ITbuEe3M2TvxpEwlfvByKVdkmxe/ut5IehvseWOo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qysRIWEcIuhmGp7FUvaOYD5tjF+UQfqSNJaw75J3f29CSg5jbMYaurMGUatJszyh4
-         rgfMfkggM0DFh7RTXDGAOtCQCW27alO0amoXURKYSNn2bOXYn4zI+I42eEUoZI5olC
-         EtPFVj6MNMlqYRhJrrq2ifc37JnRDnCieEUVI1BA=
+        b=Ygs/gDp52VbYSXyJ5sNP0ujBlZV/Hm0dsKcwrFKMq5Wxs49T2Dwofb1jwu54kVL0i
+         bjUSvSycesb25cB61cifHQBD5XuJVmk+HieWYqagugoN3MEm2IxWPsvwwQVMxOsDCY
+         2Dfo2d9ZVAU6eclgKqA4/8MgXs+4prHoNtV10R2A=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1jzKt1-00EqzU-GW; Sat, 25 Jul 2020 15:10:51 +0100
-Date:   Sat, 25 Jul 2020 15:10:50 +0100
-Message-ID: <87zh7nwuqd.wl-maz@kernel.org>
+        id 1jzKom-00Eqvx-Al; Sat, 25 Jul 2020 15:06:28 +0100
+Date:   Sat, 25 Jul 2020 15:06:27 +0100
+Message-ID: <871rkzy9i4.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Lokesh Vutla <lokeshvutla@ti.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -58,10 +58,10 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>,
         Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v3 9/9] irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
-In-Reply-To: <20200724141837.4542-10-lokeshvutla@ti.com>
+Subject: Re: [PATCH v3 6/9] irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
+In-Reply-To: <20200724141837.4542-7-lokeshvutla@ti.com>
 References: <20200724141837.4542-1-lokeshvutla@ti.com>
-        <20200724141837.4542-10-lokeshvutla@ti.com>
+        <20200724141837.4542-7-lokeshvutla@ti.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -76,179 +76,291 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Jul 2020 15:18:37 +0100,
+On Fri, 24 Jul 2020 15:18:34 +0100,
 Lokesh Vutla <lokeshvutla@ti.com> wrote:
 > 
-> Driver assumes that Interrupt parent to Interrupt Aggregator is always
-> Interrupt router. This is not true always and GIC can be a parent to
-> Interrupt Aggregator. Update the driver to detect the parent and request
-> the parent irqs accordingly.
+> Driver assumes that Interrupt parent to Interrupt router is always GIC.
+> This is not true always and an Interrupt Router can be a parent to
+> Interrupt Router. Update the driver to detect the parent and request the
+> parent irqs accordingly.
 > 
 > Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > ---
->  drivers/irqchip/irq-ti-sci-inta.c | 90 ++++++++++++++++++++++++++-----
->  1 file changed, 77 insertions(+), 13 deletions(-)
+>  drivers/irqchip/irq-ti-sci-intr.c | 150 ++++++++++++++++++------------
+>  1 file changed, 91 insertions(+), 59 deletions(-)
 > 
-> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-> index 7e3ebf6ed2cd..00c17ade118a 100644
-> --- a/drivers/irqchip/irq-ti-sci-inta.c
-> +++ b/drivers/irqchip/irq-ti-sci-inta.c
-> @@ -8,6 +8,7 @@
+> diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
+> index 59d51a20bbd8..0b73816e77fc 100644
+> --- a/drivers/irqchip/irq-ti-sci-intr.c
+> +++ b/drivers/irqchip/irq-ti-sci-intr.c
+> @@ -17,29 +17,18 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/soc/ti/ti_sci_protocol.h>
 >  
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <linux/irq.h>
->  #include <linux/irqchip.h>
->  #include <linux/irqdomain.h>
->  #include <linux/interrupt.h>
-> @@ -128,6 +129,37 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
->  	chained_irq_exit(irq_desc_get_chip(desc), desc);
+> -#define TI_SCI_DEV_ID_MASK	0xffff
+> -#define TI_SCI_DEV_ID_SHIFT	16
+> -#define TI_SCI_IRQ_ID_MASK	0xffff
+> -#define TI_SCI_IRQ_ID_SHIFT	0
+> -#define HWIRQ_TO_DEVID(hwirq)	(((hwirq) >> (TI_SCI_DEV_ID_SHIFT)) & \
+> -				 (TI_SCI_DEV_ID_MASK))
+> -#define HWIRQ_TO_IRQID(hwirq)	((hwirq) & (TI_SCI_IRQ_ID_MASK))
+> -#define TO_HWIRQ(dev, index)	((((dev) & TI_SCI_DEV_ID_MASK) << \
+> -				 TI_SCI_DEV_ID_SHIFT) | \
+> -				((index) & TI_SCI_IRQ_ID_MASK))
+> -
+>  /**
+>   * struct ti_sci_intr_irq_domain - Structure representing a TISCI based
+>   *				   Interrupt Router IRQ domain.
+>   * @sci:	Pointer to TISCI handle
+> - * @dst_irq:	TISCI resource pointer representing GIC irq controller.
+> - * @dst_id:	TISCI device ID of the GIC irq controller.
+> + * @out_irqs:	TISCI resource pointer representing INTR irqs.
+> + * @pdev:	Pointer to platform device.
+>   * @type:	Specifies the trigger type supported by this Interrupt Router
+>   */
+>  struct ti_sci_intr_irq_domain {
+>  	const struct ti_sci_handle *sci;
+> -	struct ti_sci_resource *dst_irq;
+> -	u32 dst_id;
+> +	struct ti_sci_resource *out_irqs;
+> +	struct platform_device *pdev;
+>  	u32 type;
+>  };
+>  
+> @@ -70,15 +59,44 @@ static int ti_sci_intr_irq_domain_translate(struct irq_domain *domain,
+>  {
+>  	struct ti_sci_intr_irq_domain *intr = domain->host_data;
+>  
+> -	if (fwspec->param_count != 2)
+> +	if (fwspec->param_count != 1)
+>  		return -EINVAL;
+>  
+> -	*hwirq = TO_HWIRQ(fwspec->param[0], fwspec->param[1]);
+> +	*hwirq = fwspec->param[0];
+>  	*type = intr->type;
+>  
+>  	return 0;
 >  }
 >  
 > +/**
-> + * ti_sci_inta_xlate_irq() - Translate hwirq to parent's hwirq.
-> + * @inta:	IRQ domain corresponding to Interrupt Aggregator
+> + * ti_sci_intr_xlate_irq() - Translate hwirq to parent's hwirq.
+> + * @intr:	IRQ domain corresponding to Interrupt Router
 > + * @irq:	Hardware irq corresponding to the above irq domain
 > + *
 > + * Return parent irq number if translation is available else -ENOENT.
 > + */
-> +static int ti_sci_inta_xlate_irq(struct ti_sci_inta_irq_domain *inta,
-> +				 u16 vint_id)
+> +static int ti_sci_intr_xlate_irq(struct ti_sci_intr_irq_domain *intr, u32 irq)
 > +{
-> +	struct device_node *np = dev_of_node(&inta->pdev->dev);
-> +	u32 base, parent_base, size;
+> +	struct device_node *np = dev_of_node(&intr->pdev->dev);
+> +	u32 base, pbase, size, len;
 > +	const __be32 *range;
-> +	int len;
 > +
 > +	range = of_get_property(np, "ti,interrupt-ranges", &len);
 > +	if (!range)
-> +		return vint_id;
+> +		return irq;
 > +
 > +	for (len /= sizeof(*range); len >= 3; len -= 3) {
 > +		base = be32_to_cpu(*range++);
-> +		parent_base = be32_to_cpu(*range++);
+> +		pbase = be32_to_cpu(*range++);
 > +		size = be32_to_cpu(*range++);
 > +
-> +		if (base <= vint_id && vint_id < base + size)
-> +			return vint_id - base + parent_base;
+> +		if (base <= irq && irq < base + size)
+> +			return irq - base + pbase;
 > +	}
 > +
 > +	return -ENOENT;
 > +}
 > +
 >  /**
->   * ti_sci_inta_alloc_parent_irq() - Allocate parent irq to Interrupt aggregator
->   * @domain:	IRQ domain corresponding to Interrupt Aggregator
-> @@ -139,30 +171,55 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
->  	struct ti_sci_inta_irq_domain *inta = domain->host_data;
->  	struct ti_sci_inta_vint_desc *vint_desc;
->  	struct irq_fwspec parent_fwspec;
-> +	struct device_node *parent_node;
->  	unsigned int parent_virq;
-> -	u16 vint_id;
-> +	u16 vint_id, p_hwirq;
-> +	int ret;
+>   * ti_sci_intr_irq_domain_free() - Free the specified IRQs from the domain.
+>   * @domain:	Domain to which the irqs belong
+> @@ -89,66 +107,77 @@ static void ti_sci_intr_irq_domain_free(struct irq_domain *domain,
+>  					unsigned int virq, unsigned int nr_irqs)
+>  {
+>  	struct ti_sci_intr_irq_domain *intr = domain->host_data;
+> -	struct irq_data *data, *parent_data;
+> -	u16 dev_id, irq_index;
+> +	struct irq_data *data;
+> +	int out_irq;
 >  
->  	vint_id = ti_sci_get_free_resource(inta->vint);
->  	if (vint_id == TI_SCI_RESOURCE_NULL)
->  		return ERR_PTR(-EINVAL);
+> -	parent_data = irq_domain_get_irq_data(domain->parent, virq);
+>  	data = irq_domain_get_irq_data(domain, virq);
+> -	irq_index = HWIRQ_TO_IRQID(data->hwirq);
+> -	dev_id = HWIRQ_TO_DEVID(data->hwirq);
+> +	out_irq = (uintptr_t)data->chip_data;
 >  
-> +	p_hwirq = ti_sci_inta_xlate_irq(inta, vint_id);
-> +	if (p_hwirq < 0) {
-> +		ret = p_hwirq;
-> +		goto free_vint;
-> +	}
-> +
->  	vint_desc = kzalloc(sizeof(*vint_desc), GFP_KERNEL);
-> -	if (!vint_desc)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (!vint_desc) {
-> +		ret = -ENOMEM;
-> +		goto free_vint;
-> +	}
->  
->  	vint_desc->domain = domain;
->  	vint_desc->vint_id = vint_id;
->  	INIT_LIST_HEAD(&vint_desc->list);
->  
-> -	parent_fwspec.fwnode = of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
-> -	parent_fwspec.param_count = 2;
-> -	parent_fwspec.param[0] = inta->pdev->id;
-> -	parent_fwspec.param[1] = vint_desc->vint_id;
-> +	parent_node = of_irq_find_parent(dev_of_node(&inta->pdev->dev));
-> +	parent_fwspec.fwnode = of_node_to_fwnode(parent_node);
-> +	if (of_property_read_u32(parent_node, "#interrupt-cells",
-> +				 &parent_fwspec.param_count)) {
-> +		ret = -EINVAL;
-> +		goto free_vint_desc;
-> +	}
-> +
-> +	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
-> +		/* Parent is GIC */
-> +		parent_fwspec.param[0] = 0;
-> +		parent_fwspec.param[1] = p_hwirq - 32;
-> +		parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
-
-Same comment as on patch #6.
-
-> +	} else {
-> +		/* Parent is Interrupt Router */
-> +		parent_fwspec.param[0] = p_hwirq;
-> +	}
->  
->  	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
->  	if (parent_virq == 0) {
-> -		kfree(vint_desc);
-> -		return ERR_PTR(-EINVAL);
-> +		dev_err(&inta->pdev->dev, "Parent IRQ allocation failed\n");
-> +		ret = -EINVAL;
-> +		goto free_vint_desc;
-> +
->  	}
->  	vint_desc->parent_virq = parent_virq;
->  
-> @@ -171,6 +228,11 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
->  					 ti_sci_inta_irq_handler, vint_desc);
->  
->  	return vint_desc;
-> +free_vint_desc:
-> +	kfree(vint_desc);
-> +free_vint:
-> +	ti_sci_release_resource(inta->vint, vint_id);
-> +	return ERR_PTR(ret);
+> -	intr->sci->ops.rm_irq_ops.free_irq(intr->sci, dev_id, irq_index,
+> -					   intr->dst_id, parent_data->hwirq);
+> -	ti_sci_release_resource(intr->dst_irq, parent_data->hwirq);
+> +	intr->sci->ops.rm_irq_ops.free_irq(intr->sci,
+> +					   intr->pdev->id, data->hwirq,
+> +					   intr->pdev->id, out_irq);
+> +	ti_sci_release_resource(intr->out_irqs, out_irq);
+>  	irq_domain_free_irqs_parent(domain, virq, 1);
+>  	irq_domain_reset_irq_data(data);
 >  }
 >  
 >  /**
-> @@ -555,15 +617,15 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+> - * ti_sci_intr_alloc_gic_irq() - Allocate GIC specific IRQ
+> + * ti_sci_intr_alloc_parent_irq() - Allocate parent IRQ
+>   * @domain:	Pointer to the interrupt router IRQ domain
+>   * @virq:	Corresponding Linux virtual IRQ number
+>   * @hwirq:	Corresponding hwirq for the IRQ within this IRQ domain
+>   *
+> - * Returns 0 if all went well else appropriate error pointer.
+> + * Returns parent irq if all went well else appropriate error pointer.
+>   */
+> -static int ti_sci_intr_alloc_gic_irq(struct irq_domain *domain,
+> -				     unsigned int virq, u32 hwirq)
+> +static int ti_sci_intr_alloc_parent_irq(struct irq_domain *domain,
+> +					unsigned int virq, u32 hwirq)
+>  {
+>  	struct ti_sci_intr_irq_domain *intr = domain->host_data;
+> +	struct device_node *parent_node;
+>  	struct irq_fwspec fwspec;
+> -	u16 dev_id, irq_index;
+> -	u16 dst_irq;
+> -	int err;
+> -
+> -	dev_id = HWIRQ_TO_DEVID(hwirq);
+> -	irq_index = HWIRQ_TO_IRQID(hwirq);
+> +	u16 out_irq, p_hwirq;
+> +	int err = 0;
+>  
+> -	dst_irq = ti_sci_get_free_resource(intr->dst_irq);
+> -	if (dst_irq == TI_SCI_RESOURCE_NULL)
+> +	out_irq = ti_sci_get_free_resource(intr->out_irqs);
+> +	if (out_irq == TI_SCI_RESOURCE_NULL)
+>  		return -EINVAL;
+>  
+> -	fwspec.fwnode = domain->parent->fwnode;
+> -	fwspec.param_count = 3;
+> -	fwspec.param[0] = 0;	/* SPI */
+> -	fwspec.param[1] = dst_irq - 32; /* SPI offset */
+> -	fwspec.param[2] = intr->type;
+> +	p_hwirq = ti_sci_intr_xlate_irq(intr, out_irq);
+> +	if (p_hwirq < 0)
+> +		goto err_irqs;
+> +
+> +	parent_node = of_irq_find_parent(dev_of_node(&intr->pdev->dev));
+> +	fwspec.fwnode = of_node_to_fwnode(parent_node);
+> +	if (of_property_read_u32(parent_node, "#interrupt-cells",
+> +				 &fwspec.param_count))
+> +		goto err_irqs;
+> +
+> +	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
+> +		/* Parent is GIC */
+> +		fwspec.param[0] = 0;	/* SPI */
+> +		fwspec.param[1] = p_hwirq - 32; /* SPI offset */
+> +		fwspec.param[2] = intr->type;
+
+So you pick up param_count from the parent node, but:
+- you don't check that you have indeed at least 3 cells (unlikely to
+  fail, but still)
+- you leave the rest of the param array uninitialised if param_count
+  was > 3, which is allowed by the GICv3 binding.
+
+This definitely needs fixing.
+
+> +	} else {
+> +		/* Parent is Interrupt Router */
+> +		fwspec.param[0] = p_hwirq;
+> +	}
+>  
+>  	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
+>  	if (err)
+>  		goto err_irqs;
+>  
+> -	err = intr->sci->ops.rm_irq_ops.set_irq(intr->sci, dev_id, irq_index,
+> -						intr->dst_id, dst_irq);
+> +	err = intr->sci->ops.rm_irq_ops.set_irq(intr->sci,
+> +						intr->pdev->id, hwirq,
+> +						intr->pdev->id, out_irq);
+>  	if (err)
+>  		goto err_msg;
+>  
+> -	return 0;
+> +	return p_hwirq;
+>  
+>  err_msg:
+>  	irq_domain_free_irqs_parent(domain, virq, 1);
+>  err_irqs:
+> -	ti_sci_release_resource(intr->dst_irq, dst_irq);
+> +	ti_sci_release_resource(intr->out_irqs, out_irq);
+>  	return err;
+>  }
+>  
+> @@ -168,18 +197,19 @@ static int ti_sci_intr_irq_domain_alloc(struct irq_domain *domain,
+>  	struct irq_fwspec *fwspec = data;
+>  	unsigned long hwirq;
+>  	unsigned int flags;
+> -	int err;
+> +	int err, p_hwirq;
+>  
+>  	err = ti_sci_intr_irq_domain_translate(domain, fwspec, &hwirq, &flags);
+>  	if (err)
+>  		return err;
+>  
+> -	err = ti_sci_intr_alloc_gic_irq(domain, virq, hwirq);
+> -	if (err)
+> -		return err;
+> +	p_hwirq = ti_sci_intr_alloc_parent_irq(domain, virq, hwirq);
+> +	if (p_hwirq < 0)
+> +		return p_hwirq;
+>  
+>  	irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+> -				      &ti_sci_intr_irq_chip, NULL);
+> +				      &ti_sci_intr_irq_chip,
+> +				      (void *)(uintptr_t)p_hwirq);
+>  
+>  	return 0;
+>  }
+> @@ -214,6 +244,7 @@ static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
+>  	if (!intr)
+>  		return -ENOMEM;
+>  
+> +	intr->pdev = pdev;
+>  	ret = of_property_read_u32(dev_of_node(dev), "ti,intr-trigger-type",
+>  				   &intr->type);
+>  	if (ret) {
+> @@ -230,19 +261,18 @@ static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dst-id",
+> -				   &intr->dst_id);
+> +	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dev-id",
+> +				   &pdev->id);
+
+This feels very dodgy. You are hijacking a random field in the
+platform device data structure, which shouldn't be any of your
+business. What was wrong with having a separate field for something
+that is obviously platform specific?
+
+>  	if (ret) {
+> -		dev_err(dev, "missing 'ti,sci-dst-id' property\n");
+> +		dev_err(dev, "missing 'ti,sci-dev-id' property\n");
 >  		return -EINVAL;
 >  	}
 >  
-> -	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
-> -						 "ti,sci-rm-range-vint");
-> +	inta->vint = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
-> +					      TI_SCI_RESASG_SUBTYPE_IA_VINT);
-
-Same comment as on patch #6 as well, although the pdev->id hijacking
-already existed. I believe this should be fixed, unless you can
-explain why this can't possibly be implemented in a different way.
-
->  	if (IS_ERR(inta->vint)) {
->  		dev_err(dev, "VINT resource allocation failed\n");
->  		return PTR_ERR(inta->vint);
+> -	intr->dst_irq = devm_ti_sci_get_of_resource(intr->sci, dev,
+> -						    intr->dst_id,
+> -						    "ti,sci-rm-range-girq");
+> -	if (IS_ERR(intr->dst_irq)) {
+> +	intr->out_irqs = devm_ti_sci_get_resource(intr->sci, dev, pdev->id,
+> +					TI_SCI_RESASG_SUBTYPE_IR_OUTPUT);
+> +	if (IS_ERR(intr->out_irqs)) {
+>  		dev_err(dev, "Destination irq resource allocation failed\n");
+> -		return PTR_ERR(intr->dst_irq);
+> +		return PTR_ERR(intr->out_irqs);
 >  	}
 >  
-> -	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
-> -						"ti,sci-rm-range-global-event");
-> +	inta->global_event = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
-> +					TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT);
->  	if (IS_ERR(inta->global_event)) {
->  		dev_err(dev, "Global event resource allocation failed\n");
->  		return PTR_ERR(inta->global_event);
-> @@ -594,6 +656,8 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
->  	INIT_LIST_HEAD(&inta->vint_list);
->  	mutex_init(&inta->vint_mutex);
+>  	domain = irq_domain_add_hierarchy(parent_domain, 0, 0, dev_of_node(dev),
+> @@ -252,6 +282,8 @@ static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
 >  
-> +	dev_info(dev, "Interrupt Aggregator domain %d created\n", pdev->id);
+> +	dev_info(dev, "Interrupt Router %d domain created\n", pdev->id);
 > +
 >  	return 0;
 >  }
