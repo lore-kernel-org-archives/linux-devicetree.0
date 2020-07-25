@@ -2,85 +2,60 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6059CC433E8
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 06:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FB8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 07:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF89206F6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 06:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595658180;
-	bh=v+o6KDVU0hhUK3tFxWmgsHzU0c3K1RrkTsgOBzBkiUM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=B1JkA2/MfLVgK6wKDTSmLJYTZLfpBcENCHqSyyCFlPnxsZwV0oMQ1us981933KMql
-	 JF6e5513sWEVCaVZPVd0q06w68iPqqFktnIslVaoXW6dkj/Un3feD+nXLDKe0qogEe
-	 uUsBZ2WTX4+PeZnfduLgYRyBfMOQYcoVeOC+QkrA=
+	by mail.kernel.org (Postfix) with ESMTP id EF21B206D8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 07:02:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2K7kJtmm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UPsPbCdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgGYGW5 (ORCPT
+        id S1726434AbgGYHCW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 02:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgGYGW4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 02:22:56 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3143DC0619D3;
-        Fri, 24 Jul 2020 23:22:56 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id j22so432283lfm.2;
-        Fri, 24 Jul 2020 23:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=v+o6KDVU0hhUK3tFxWmgsHzU0c3K1RrkTsgOBzBkiUM=;
-        b=VgmeMWUtsBJLOAiQWnxQ27VL42WD1X/So5Qx8SPDdBWohI8Cewsz3MdAoQLXG+f7Uo
-         d7tW1y66veZB/XEhVvvhpvABJjBdg6FTwLqjcHcjJ7P/S/ykCxc9M914W/7hvWdvgdsU
-         1MjTOFvN2E42TEcGsguWDt9CA84gtPAOoLbNII3o0TNsMG3fpekpwQO1vN2gNV4qiAzE
-         SCXFQsELc5R/z76HaFqzfye8pKxcypWrqfUIUT2bywzzdjS3lhSpF+LyU/JTwTVhZfRq
-         uezH75OJ7HwUNCEUbB/VagvTGDp17WGpaWqrYWVX0mq23hr8XOK3tLlCWNgXZD2IFTuV
-         f+MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=v+o6KDVU0hhUK3tFxWmgsHzU0c3K1RrkTsgOBzBkiUM=;
-        b=sxq2Jq/SosPE3IiuktMpPhpgrbdfydKVSzbppcVBMipTykoBg6MABXFfnKCApIFhcl
-         dvMErvibkqvmKFxT0NMUtllBv7uAzyLW9uhT/NuKZWLl7kei8WhAB3sQk+jdtS8YKvDv
-         yG3h6FpjmIGGypz6t3/AwPte8L3PatIuQJtQFdVNFG2rm+Yh9i8MH93xOHKZ28FT1ST/
-         dh8T8mHIJZ+0TzFIA05s19C0FiC+9CFpQ9UVw1sLjM2JchRBKV5lcOxCY4tVlwMsa4bE
-         CTiaM4Xp/D99frDBU2henPW+fOoqJa6HGUYBKkZeQKsZ8IyGRUivzb5mchkSp/yMI2bT
-         TTZg==
-X-Gm-Message-State: AOAM533nmmaHlkAu06rtAAt5s4GOjlhOflKnLqQow1zLlxt7iLCk4YEJ
-        Hh3d9I+BUea74C/KlC+8cdqRoNOGXTk=
-X-Google-Smtp-Source: ABdhPJy/g2C0d5ows8tJWTqCtjK9g1uiCpxiqx7pz8GxYrQeQrZuYmoazscExS0BAkqc0Qo99uAgsg==
-X-Received: by 2002:a19:8c9:: with SMTP id 192mr6741144lfi.204.1595658174473;
-        Fri, 24 Jul 2020 23:22:54 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id m1sm977486lfa.22.2020.07.24.23.22.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 23:22:53 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     "Ramuthevar\,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-kernel@vger.kernel.org, p.zabel@pengutronix.de
-Cc:     gregkh@linuxfoundation.org, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        andriy.shevchenko@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] usb: phy: Add USB3 PHY support for Intel LGM SoC
-In-Reply-To: <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200611021246.3250-1-vadivel.muruganx.ramuthevar@linux.intel.com> <20200611021246.3250-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-Date:   Sat, 25 Jul 2020 09:22:49 +0300
-Message-ID: <87o8o4nmfa.fsf@kernel.org>
+        Sat, 25 Jul 2020 03:02:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42848 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgGYHCW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 03:02:22 -0400
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595660540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yptN0zJhNFdhUHhD2jECvgn65xMx3wbcq7OuSFx4rjU=;
+        b=2K7kJtmmLGvmYTpmyVuz7bL2jOofIR5y/fGzmK4R8PSy28uWwTqnyvdHvGtohSMHBHGwhZ
+        DZXJaT2Krmgzx25t/0UsoCiiUq5xh+kxQ8FnSbcE0QC0F+1H5aZuMvNy0n7pAc3mmzEhhn
+        l/dZH+ZWCxfEyVxZSfRPJKZnYKpqdGhVg3yFakFiSWdCDyi6edWHth1cxNq2zDKb5sBSab
+        XSiMlGg0ZP/WHu67SwVK7cKlfBk/K6/W9qVWoIgA2t5POD/oMgKr/y0TsQhGxrA/BRSUE6
+        3/EFdbZ+H80QIn3/T8SRb5/wpbpbYfO8YmjQ99RjxG38pxGFoDp9axBpriBK5g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595660540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yptN0zJhNFdhUHhD2jECvgn65xMx3wbcq7OuSFx4rjU=;
+        b=UPsPbCdncT3P1Wi6JosR1rKAtIpdSMnh5r+svRWT2YwL42Wr7zHANOH0gOUsL4Y0ZSVjVI
+        CCLGDu4zc6pQKfBw==
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, bigeasy@linutronix.de,
+        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
+        ilias.apalodimas@linaro.org, olteanv@gmail.com
+Subject: Re: [PATCH v2 0/8] Hirschmann Hellcreek DSA driver
+In-Reply-To: <20200724.164725.2267540815357576064.davem@davemloft.net>
+References: <20200723081714.16005-1-kurt@linutronix.de> <20200723093339.7f2b6e27@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com> <87wo2t30v9.fsf@kurt> <20200724.164725.2267540815357576064.davem@davemloft.net>
+Date:   Sat, 25 Jul 2020 09:02:06 +0200
+Message-ID: <874kpwnklt.fsf@kurt>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -88,41 +63,38 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-"Ramuthevar,Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> writes:
-
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel=
-.com>
+On Fri Jul 24 2020, David Miller wrote:
+> Please never submit patches for serious review when the dependencies
+> haven't landed in the target tree yet.
 >
-> Add support for USB PHY on Intel LGM SoC.
+> That makes so much wasted work for us and other reviewers.
 >
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@li=
-nux.intel.com>
+> Thank you.
+>
 
-use drivers/phy/ instead.
+OK, noted. Sorry for that.
 
-=2D-=20
-balbi
+Thanks,
+Kurt
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8bz7kACgkQzL64meEa
-mQZHYg/8CYRv6cfRk1zplKFpSlZUbTgesgFwovG0pSPay4eBDj8EFj0E0+SGA/ls
-Lmr9u3AxMwGe9//aiLVuFt9ASVvqhX2dkjM7lWYc2AcQoqO/3s9pDxvUo8uzjUgV
-02OKU5YsnOa6zBi8cHHG7/AlA2oLieX7Bold2KH/4qiwTK6frVXg3QK0cn0jOxCH
-gAelUoSwXomCHaUP4McC9mgJsCFToPjP5SJej8r2uS2hpW+aN1FAmu/jN3IYr+zc
-OemcMFxERkIspyw2GnmXeL/z8AGyKLzKVDgK54ygjXJxBrnHpLvALNB77F4mllMo
-3DkDMgNOtfOKB3eWSVQPxlwU5vI0mee3ZbVeFc9HxnJjmVD7bacRDnt+dJa5HWYC
-BXNVScSafgO3jl4DEWSRn8jTYDsu30J2+fJth32fbnmdsrUAdDzoprzJZ2x7V5rh
-uP4SPKYFd/NQ08M0NufEi7HOYWnXtY1lwcsZWKXb8KjCt99a2J4+v2CLeKt+18V5
-CUL6Zbg8Ov3aXME8yrcaU4koDzJkqkHWx/LMtrUd2/Slieg3keAOpg0/NbyghtWS
-7bN9hTX2FBKv+YsrgZL8I4T9a8cEm9JntK+cdNWhpsLHm2lE8ESAHi+WZ4/mVqJV
-HdLcJh8ugBhzpSsoFN5uu72n5J4KEOjDB86lsx9uYdumJqoNCvg=
-=aqSS
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl8b2O4ACgkQeSpbgcuY
+8KaAhA//Wn4wX46BAVF2a89qkj1k2ZaLFufJK5UBWA2TOCp2AocQVMlaNRppGBIH
+HAlTgaHUziXziB+w2OnMk+O3EOUrGUTmPovLpJFqi8Vrk9TQRYU0s2HOiVx7n8F9
+XHK5gTvJbMmMtcDsuhk3sISjBaGt4OvAPwktb66jf/27Q7d5AAvz5W9pvcf+Pf/O
+SjZjCbZ6XjDoMXQYykLppYed4Tc2cWqcs5x+DUUpuSxqu2bwPH4BDN+a+u3v+7x7
+fsEgHXnCtd07fYA8OrNPi7tS2LBOwbeLgRO1kGloxfKGTsU+lVQPSBIikiabFhtD
+6uluKZ2NLWRMf7pASGy+PRHCM0HSttYY8LtrtHVDT9PhT+mMzhG503+tusjGX23Q
+MoZaYZWx84yBaTz1UDMFCZW1mSDiqf/RNOjhQotlNwB1lfzi8Oa8zV6TMXzevHU7
+1x8vtqPxxiqdmKGS8gpaOJ3WQvq8fddRqqbEOLJZxRPCIsoiII0aSiMA9N4mUqAq
+zVvq0wujA2PPqvMoVrqWepBR1r4D9rbkyOjcSKIyIamXLHnYSvyV4rPiuTHoCc3+
+1OXdrI9vbtrmqnsKuEMXYSmYoqQVM7Z211dnM/g6lOl0mimm/x5KGmLZv+GJDcsc
+ur5zIkzTOqnlr2lhj6i59HDWr4812GVIG6Oaq+kcp7Z2eTGhTJQ=
+=Ncmj
 -----END PGP SIGNATURE-----
 --=-=-=--
