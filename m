@@ -2,136 +2,91 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77BBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964B4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD16D2070E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595688167;
-	bh=7ZD7iGe1bVQVPcYICPx/F6qdNS1AB+CvnrItQ4eJvAM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pGvWoyVy6+U8z9fTX817/hun4957VsFgp+tQqn0UKnVDS+lFQ5by0eyTzxOTouFZa
-	 7ApDg3tyn4ZODbjIe4vNCOPJunY6+kuyUI3z/wzbnkHiI+mLljFLOutU6RaK8P0pdF
-	 VskGwCSr+4JSoCLvuoOeYWvV7Kj5Cf+DlAIU6c/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 6D376206F6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tLdQphfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgGYOmr (ORCPT
+        id S1727768AbgGYO4K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 10:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbgGYOmr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Jul 2020 10:42:47 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F90320674;
-        Sat, 25 Jul 2020 14:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595688166;
-        bh=7ZD7iGe1bVQVPcYICPx/F6qdNS1AB+CvnrItQ4eJvAM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=maFYJdi5cNG71IRRw8530NvoWI59rgCxC98K4czY8TcqqTccQIF2OYKa2V5ncGzVg
-         oVSzcoNl9vV3Wy/rlFDTj0Xr6num6TIdGINVXgcxy2O9v24fWoz6zcCzI8rhWYx+r+
-         uQdOeBFlpPqw2+WzXSUrDT6/zHR8rhtkOsk70GO0=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jzLNs-00ErHQ-NG; Sat, 25 Jul 2020 15:42:44 +0100
+        Sat, 25 Jul 2020 10:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbgGYO4K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 10:56:10 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE57C08C5CE
+        for <devicetree@vger.kernel.org>; Sat, 25 Jul 2020 07:56:09 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id g7so4526844ejw.12
+        for <devicetree@vger.kernel.org>; Sat, 25 Jul 2020 07:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
+        bh=Z3BO379AIIOQgwO3FCcZpz1irg2T698dYZqqZ6uG+R4=;
+        b=tLdQphfJzsVs9dJ2Glsq2n5VdjG1lRATm6bxyUBb27Dch67O62baUNJo/untsiHJSZ
+         BPpQPAVJqkp+glVjPi5umUBc9fbT6Pj2lrotfhMrcPMR9NAlf1npGa/vRjGlKxriVrYT
+         GACmDPnCqmoh6O346YthLBMpOyqs2cW8g+7aFpDigBBkygHDwrTBRleB+Jrnd3YrtprR
+         drf7qCqYbQf+8CmIZDjFejZwfeSrwnMKwMfRQqvoh4yn3J9mD7dDfqhlDMNekD7RuGeI
+         q+pRM6LUaQQsYg9neVCqiCbwS9ifDndBqX497Npz6hgW9oNHCRKjiyKoFyV8RdcVPACp
+         v5Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:cc;
+        bh=Z3BO379AIIOQgwO3FCcZpz1irg2T698dYZqqZ6uG+R4=;
+        b=Ym1wk9lyVm2RlW9mLxh27HJFRHU6rq65Mz2TQn5Sdriny+Lca3GnzgX8vBLaBa09p5
+         dZHCblkys6Pnk5F1F5d/G5NiZqKcAVqn5JpfZbSrNWavRaKSkz1y+P192HBQqjgTu1B+
+         ev9Xi8AZz2WTEXvXPiVq1f5W/wVjvakOdttZzhBCB+xMkltXA42lPrS1VoDdIqL7cBkJ
+         4QMpxxXC4ZPoblTcn4TbF9hfZA43+FvqlKjvCJFMbYr/L8fgTJJPus+Fmjp1g/OgOuZY
+         ziMutdy7dJMUDyNVHYIefffbFkCgHrO/L9oXlU2h0fk7e672Ibp+ES3WaBCs+UMUmrrS
+         9bZg==
+X-Gm-Message-State: AOAM532K0HtVawhBsOoD37p8/YzFSlf+DdGVBJO5a+hLHkYSM0/ggd2E
+        3x/Zp/XHjJgXwOXp99O8Mw2/6iNJbLDJApTcye4=
+X-Received: by 2002:a17:906:b787:: with SMTP id dt7mt11099292ejb.320.1595688968572;
+ Sat, 25 Jul 2020 07:56:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 25 Jul 2020 15:42:44 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v3 6/9] irqchip/ti-sci-intr: Add support for INTR being a
- parent to INTR
-In-Reply-To: <e19a84ff-d990-d87a-1df0-fd5b10654e3a@ti.com>
-References: <20200724141837.4542-1-lokeshvutla@ti.com>
- <20200724141837.4542-7-lokeshvutla@ti.com> <871rkzy9i4.wl-maz@kernel.org>
- <e19a84ff-d990-d87a-1df0-fd5b10654e3a@ti.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <71b33062f87f66e8c865b9e80b36585c@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: lokeshvutla@ti.com, robh+dt@kernel.org, tglx@linutronix.de, nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, grygorii.strashko@ti.com, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, s-anna@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200724213659.273599-1-martin.botka1@gmail.com> <20200724213659.273599-3-martin.botka1@gmail.com>
+In-Reply-To: <20200724213659.273599-3-martin.botka1@gmail.com>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Sat, 25 Jul 2020 16:55:33 +0200
+Message-ID: <CADQ2G_G7N_iH523urk3wOieZ0bT7O88Vnnbq6r_h9A4GLXQ5Nw@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
+ with u64 data length
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-25 15:37, Lokesh Vutla wrote:
-> On 25/07/20 7:36 pm, Marc Zyngier wrote:
->> On Fri, 24 Jul 2020 15:18:34 +0100,
->> Lokesh Vutla <lokeshvutla@ti.com> wrote:
->>> 
->>> Driver assumes that Interrupt parent to Interrupt router is always 
->>> GIC.
->>> This is not true always and an Interrupt Router can be a parent to
->>> Interrupt Router. Update the driver to detect the parent and request 
->>> the
->>> parent irqs accordingly.
->>> 
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> ---
->>>  drivers/irqchip/irq-ti-sci-intr.c | 150 
->>> ++++++++++++++++++------------
->>>  1 file changed, 91 insertions(+), 59 deletions(-)
->>> 
->>> diff --git a/drivers/irqchip/irq-ti-sci-intr.c 
->>> b/drivers/irqchip/irq-ti-sci-intr.c
->>> index 59d51a20bbd8..0b73816e77fc 100644
->>> --- a/drivers/irqchip/irq-ti-sci-intr.c
->>> +++ b/drivers/irqchip/irq-ti-sci-intr.c
+Hello,
 
-[...]
+As can be seen this divides llu by llu in few warnings and error.
+At the time of sending i didn't realize it but this fails on 32 bit
+architectures.
 
->>> -	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dst-id",
->>> -				   &intr->dst_id);
->>> +	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dev-id",
->>> +				   &pdev->id);
->> 
->> This feels very dodgy. You are hijacking a random field in the
->> platform device data structure, which shouldn't be any of your
-> 
-> pdev->id is pretty much unused field today. I was kind of hoping that 
-> in future
-> it can be utilized to populated field with TISCI device IDs in some 
-> generic
-> manner. So thought of using it now.
+So i would like to ask how would you like this fixed ?
+Using macro or some other way ?
 
-It isn't unused. DT doesn't make active use of it for now, not that's 
-not
-something you can rely on.
+Thank you.
 
->> business. What was wrong with having a separate field for something
->> that is obviously platform specific?
-> 
-> No reason. I could just add a new filed in the intr structure.
-
-Please do.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Best regards,
+Martin
