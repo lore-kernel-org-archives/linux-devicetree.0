@@ -2,466 +2,124 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3E3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 21:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3971EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 21:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8F672070B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 21:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2117F206D8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 21:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgGYVPL (ORCPT
+        id S1727877AbgGYVTN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 17:15:11 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:42057 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgGYVPL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 17:15:11 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4BDf3b0WSDz1rrKb;
-        Sat, 25 Jul 2020 23:15:07 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4BDf3b0G8kz1qxpQ;
-        Sat, 25 Jul 2020 23:15:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 3CVC-xkSPJJp; Sat, 25 Jul 2020 23:15:05 +0200 (CEST)
-X-Auth-Info: HSQlf0Erqo0UD9qn3EIRXkkyjFTcqvO7iX8segQP5CQ=
-Received: from desktop.lan (ip-86-49-101-166.net.upcbroadband.cz [86.49.101.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 25 Jul 2020 17:19:13 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:51882 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727036AbgGYVTM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Jul 2020 17:19:12 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Sat, 25 Jul 2020 23:15:05 +0200 (CEST)
-From:   Marek Vasut <marex@denx.de>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Marek Vasut <marex@denx.de>, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org
-Subject: [PATCH 2/2] drm/bridge: tc358762: Add basic driver for Toshiba TC358762 DSI-to-DPI bridge
-Date:   Sat, 25 Jul 2020 23:14:57 +0200
-Message-Id: <20200725211457.5772-2-marex@denx.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200725211457.5772-1-marex@denx.de>
-References: <20200725211457.5772-1-marex@denx.de>
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 4A381634C87;
+        Sun, 26 Jul 2020 00:18:33 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jzRYv-0000qt-5L; Sun, 26 Jul 2020 00:18:33 +0300
+Date:   Sun, 26 Jul 2020 00:18:33 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, slongerbeam@gmail.com,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH 08/13] dt-bindings: media: ov5640: Remove data-shift
+Message-ID: <20200725211833.GE829@valkosipuli.retiisi.org.uk>
+References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
+ <20200717132859.237120-9-jacopo+renesas@jmondi.org>
+ <20200717205722.GJ5961@pendragon.ideasonboard.com>
+ <20200723222259.GB829@valkosipuli.retiisi.org.uk>
+ <20200723231549.GE21353@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723231549.GE21353@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add very basic driver for Toshiba TC358762 DSI-to-DPI bridge, derived
-from tc358764 driver and panel-raspberrypi-touchscreen. This driver is
-meant to replace the panel-raspberrypi-touchscreen too, as the bridge
-connection can be described in DT too.
+Hi Laurent,
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-To: dri-devel@lists.freedesktop.org
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org
----
- drivers/gpu/drm/bridge/Kconfig    |   9 +
- drivers/gpu/drm/bridge/Makefile   |   1 +
- drivers/gpu/drm/bridge/tc358762.c | 352 ++++++++++++++++++++++++++++++
- 3 files changed, 362 insertions(+)
- create mode 100644 drivers/gpu/drm/bridge/tc358762.c
+On Fri, Jul 24, 2020 at 02:15:49AM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> On Fri, Jul 24, 2020 at 01:22:59AM +0300, Sakari Ailus wrote:
+> > On Fri, Jul 17, 2020 at 11:57:22PM +0300, Laurent Pinchart wrote:
+> > > Hi Jacopo,
+> > > 
+> > > (CC'ing Sakari)
+> > > 
+> > > Thank you for the patch.
+> > > 
+> > > On Fri, Jul 17, 2020 at 03:28:54PM +0200, Jacopo Mondi wrote:
+> > > > The value of the data-shift property solely depend on the selected
+> > > > bus width and it's not freely configurable.
+> > > > 
+> > > > Remove it from the bindings document and update its users accordingly.
+> > > 
+> > > Hmmmm that's an interesting one. Sakari, what do you think ?
+> > > 
+> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/media/i2c/ov5640.yaml | 9 ---------
+> > > >  arch/arm/boot/dts/stm32mp157c-ev1.dts                   | 1 -
+> > > >  2 files changed, 10 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> > > > index 5e1662e848bd..ab700a1830aa 100644
+> > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
+> > > > @@ -92,12 +92,6 @@ properties:
+> > > >                parallel bus.
+> > > >              enum: [8, 10]
+> > > > 
+> > > > -          data-shift:
+> > > > -            description: |
+> > > > -              Shall be set to <2> for 8 bits parallel bus (lines 9:2 are used) or
+> > > > -              <0> for 10 bits parallel bus.
+> > > > -            enum: [0, 2]
+> > > 
+> > > Should you document in the description of bus-width that data-shift is
+> > > implied ?
+> > 
+> > The purpose of the datas-shift property is to convey how the parallel bus
+> > lines are connected for a given bus width for devices where it is
+> > configurable. As this device does not not support that, then indeed this
+> > property is not relevant for the device IMO.
+> 
+> Could you elaborate on this ? I believe the case that Jacopo is
+> describing connects D[9:2] from the sensor to D[7:0] of the receiver
+> (Jacopo, could you confirm ?). Isn't that what data-shift is for ?
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 43271c21d3fc..3e76e3fccb78 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -153,6 +153,15 @@ config DRM_THINE_THC63LVD1024
- 	help
- 	  Thine THC63LVD1024 LVDS/parallel converter driver.
- 
-+config DRM_TOSHIBA_TC358762
-+	tristate "TC358762 DSI/DPI bridge"
-+	depends on OF
-+	select DRM_MIPI_DSI
-+	select DRM_KMS_HELPER
-+	select DRM_PANEL
-+	help
-+	  Toshiba TC358762 DSI/DPI bridge driver.
-+
- config DRM_TOSHIBA_TC358764
- 	tristate "TC358764 DSI/LVDS bridge"
- 	depends on OF
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index d63d4b7e4347..b341c60ee96a 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_DRM_SII902X) += sii902x.o
- obj-$(CONFIG_DRM_SII9234) += sii9234.o
- obj-$(CONFIG_DRM_SIMPLE_BRIDGE) += simple-bridge.o
- obj-$(CONFIG_DRM_THINE_THC63LVD1024) += thc63lvd1024.o
-+obj-$(CONFIG_DRM_TOSHIBA_TC358762) += tc358762.o
- obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
- obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
- obj-$(CONFIG_DRM_TOSHIBA_TC358768) += tc358768.o
-diff --git a/drivers/gpu/drm/bridge/tc358762.c b/drivers/gpu/drm/bridge/tc358762.c
-new file mode 100644
-index 000000000000..6eb0c0c10623
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/tc358762.c
-@@ -0,0 +1,352 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Marek Vasut <marex@denx.de>
-+ *
-+ * Based on tc358764.c by
-+ *  Andrzej Hajda <a.hajda@samsung.com>
-+ *  Maciej Purski <m.purski@samsung.com>
-+ *
-+ * Based on rpi_touchscreen.c by
-+ *  Eric Anholt <eric@anholt.net>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/of_graph.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_fb_helper.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_of.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_print.h>
-+#include <drm/drm_probe_helper.h>
-+
-+/* PPI layer registers */
-+#define PPI_STARTPPI		0x0104 /* START control bit */
-+#define PPI_LPTXTIMECNT		0x0114 /* LPTX timing signal */
-+#define PPI_D0S_ATMR		0x0144
-+#define PPI_D1S_ATMR		0x0148
-+#define PPI_D0S_CLRSIPOCOUNT	0x0164 /* Assertion timer for Lane 0 */
-+#define PPI_D1S_CLRSIPOCOUNT	0x0168 /* Assertion timer for Lane 1 */
-+#define PPI_START_FUNCTION	1
-+
-+/* DSI layer registers */
-+#define DSI_STARTDSI		0x0204 /* START control bit of DSI-TX */
-+#define DSI_LANEENABLE		0x0210 /* Enables each lane */
-+#define DSI_RX_START		1
-+
-+/* LCDC/DPI Host Registers */
-+#define LCDCTRL			0x0420
-+
-+/* SPI Master Registers */
-+#define SPICMR			0x0450
-+#define SPITCR			0x0454
-+
-+/* System Controller Registers */
-+#define SYSCTRL			0x0464
-+
-+/* System registers */
-+#define LPX_PERIOD		3
-+
-+/* Lane enable PPI and DSI register bits */
-+#define LANEENABLE_CLEN		BIT(0)
-+#define LANEENABLE_L0EN		BIT(1)
-+#define LANEENABLE_L1EN		BIT(2)
-+
-+struct tc358762 {
-+	struct device *dev;
-+	struct drm_bridge bridge;
-+	struct drm_connector connector;
-+	struct regulator *regulator;
-+	struct drm_panel *panel;
-+	bool pre_enabled;
-+	int error;
-+};
-+
-+static int tc358762_clear_error(struct tc358762 *ctx)
-+{
-+	int ret = ctx->error;
-+
-+	ctx->error = 0;
-+	return ret;
-+}
-+
-+static void tc358762_write(struct tc358762 *ctx, u16 addr, u32 val)
-+{
-+	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-+	ssize_t ret;
-+	u8 data[6];
-+
-+	if (ctx->error)
-+		return;
-+
-+	data[0] = addr;
-+	data[1] = addr >> 8;
-+	data[2] = val;
-+	data[3] = val >> 8;
-+	data[4] = val >> 16;
-+	data[5] = val >> 24;
-+
-+	ret = mipi_dsi_generic_write(dsi, data, sizeof(data));
-+	if (ret < 0)
-+		ctx->error = ret;
-+}
-+
-+static inline struct tc358762 *bridge_to_tc358762(struct drm_bridge *bridge)
-+{
-+	return container_of(bridge, struct tc358762, bridge);
-+}
-+
-+static inline
-+struct tc358762 *connector_to_tc358762(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct tc358762, connector);
-+}
-+
-+static int tc358762_init(struct tc358762 *ctx)
-+{
-+	tc358762_write(ctx, DSI_LANEENABLE,
-+		       LANEENABLE_L0EN | LANEENABLE_CLEN);
-+	tc358762_write(ctx, PPI_D0S_CLRSIPOCOUNT, 5);
-+	tc358762_write(ctx, PPI_D1S_CLRSIPOCOUNT, 5);
-+	tc358762_write(ctx, PPI_D0S_ATMR, 0);
-+	tc358762_write(ctx, PPI_D1S_ATMR, 0);
-+	tc358762_write(ctx, PPI_LPTXTIMECNT, LPX_PERIOD);
-+
-+	tc358762_write(ctx, SPICMR, 0x00);
-+	tc358762_write(ctx, LCDCTRL, 0x00100150);
-+	tc358762_write(ctx, SYSCTRL, 0x040f);
-+	msleep(100);
-+
-+	tc358762_write(ctx, PPI_STARTPPI, PPI_START_FUNCTION);
-+	tc358762_write(ctx, DSI_STARTDSI, DSI_RX_START);
-+
-+	msleep(100);
-+
-+	return tc358762_clear_error(ctx);
-+}
-+
-+static int tc358762_get_modes(struct drm_connector *connector)
-+{
-+	struct tc358762 *ctx = connector_to_tc358762(connector);
-+
-+	return drm_panel_get_modes(ctx->panel, connector);
-+}
-+
-+static const
-+struct drm_connector_helper_funcs tc358762_connector_helper_funcs = {
-+	.get_modes = tc358762_get_modes,
-+};
-+
-+static const struct drm_connector_funcs tc358762_connector_funcs = {
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.destroy = drm_connector_cleanup,
-+	.reset = drm_atomic_helper_connector_reset,
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+};
-+
-+static void tc358762_disable(struct drm_bridge *bridge)
-+{
-+	struct tc358762 *ctx = bridge_to_tc358762(bridge);
-+	int ret = drm_panel_disable(bridge_to_tc358762(bridge)->panel);
-+
-+	if (ret < 0)
-+		dev_err(ctx->dev, "error disabling panel (%d)\n", ret);
-+}
-+
-+static void tc358762_post_disable(struct drm_bridge *bridge)
-+{
-+	struct tc358762 *ctx = bridge_to_tc358762(bridge);
-+	int ret;
-+
-+	/*
-+	 * The post_disable hook might be called multiple times.
-+	 * We want to avoid regulator imbalance below.
-+	 */
-+	if (!ctx->pre_enabled)
-+		return;
-+
-+	ctx->pre_enabled = false;
-+
-+	ret = drm_panel_unprepare(ctx->panel);
-+	if (ret < 0)
-+		dev_err(ctx->dev, "error unpreparing panel (%d)\n", ret);
-+
-+	ret = regulator_disable(ctx->regulator);
-+	if (ret < 0)
-+		dev_err(ctx->dev, "error disabling regulators (%d)\n", ret);
-+}
-+
-+static void tc358762_pre_enable(struct drm_bridge *bridge)
-+{
-+	struct tc358762 *ctx = bridge_to_tc358762(bridge);
-+	int ret;
-+
-+	ret = regulator_enable(ctx->regulator);
-+	if (ret < 0)
-+		dev_err(ctx->dev, "error enabling regulators (%d)\n", ret);
-+
-+	ret = tc358762_init(ctx);
-+	if (ret < 0)
-+		dev_err(ctx->dev, "error initializing bridge (%d)\n", ret);
-+
-+	ret = drm_panel_prepare(ctx->panel);
-+	if (ret < 0)
-+		dev_err(ctx->dev, "error preparing panel (%d)\n", ret);
-+
-+	ctx->pre_enabled = true;
-+}
-+
-+static void tc358762_enable(struct drm_bridge *bridge)
-+{
-+	struct tc358762 *ctx = bridge_to_tc358762(bridge);
-+	int ret = drm_panel_enable(ctx->panel);
-+
-+	if (ret < 0)
-+		dev_err(ctx->dev, "error enabling panel (%d)\n", ret);
-+}
-+
-+static int tc358762_attach(struct drm_bridge *bridge,
-+			   enum drm_bridge_attach_flags flags)
-+{
-+	struct tc358762 *ctx = bridge_to_tc358762(bridge);
-+	struct drm_device *drm = bridge->dev;
-+	int ret;
-+
-+	ret = drm_connector_init(drm, &ctx->connector,
-+				 &tc358762_connector_funcs,
-+				 DRM_MODE_CONNECTOR_DPI);
-+	if (ret) {
-+		DRM_ERROR("Failed to initialize connector\n");
-+		return ret;
-+	}
-+
-+	drm_connector_helper_add(&ctx->connector,
-+				 &tc358762_connector_helper_funcs);
-+	drm_connector_attach_encoder(&ctx->connector, bridge->encoder);
-+	drm_panel_attach(ctx->panel, &ctx->connector);
-+	ctx->connector.funcs->reset(&ctx->connector);
-+	drm_connector_register(&ctx->connector);
-+
-+	return 0;
-+}
-+
-+static void tc358762_detach(struct drm_bridge *bridge)
-+{
-+	struct tc358762 *ctx = bridge_to_tc358762(bridge);
-+
-+	drm_connector_unregister(&ctx->connector);
-+	drm_panel_detach(ctx->panel);
-+	ctx->panel = NULL;
-+	drm_connector_put(&ctx->connector);
-+}
-+
-+static const struct drm_bridge_funcs tc358762_bridge_funcs = {
-+	.disable = tc358762_disable,
-+	.post_disable = tc358762_post_disable,
-+	.enable = tc358762_enable,
-+	.pre_enable = tc358762_pre_enable,
-+	.attach = tc358762_attach,
-+	.detach = tc358762_detach,
-+};
-+
-+static int tc358762_parse_dt(struct tc358762 *ctx)
-+{
-+	struct device *dev = ctx->dev;
-+	int ret;
-+
-+	ret = drm_of_find_panel_or_bridge(ctx->dev->of_node, 1, 0, &ctx->panel,
-+					  NULL);
-+	if (ret && ret != -EPROBE_DEFER)
-+		dev_err(dev, "cannot find panel (%d)\n", ret);
-+
-+	return ret;
-+}
-+
-+static int tc358762_configure_regulators(struct tc358762 *ctx)
-+{
-+	ctx->regulator = devm_regulator_get(ctx->dev, "vddc");
-+	if (IS_ERR(ctx->regulator))
-+		return PTR_ERR(ctx->regulator);
-+
-+	return 0;
-+}
-+
-+static int tc358762_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct tc358762 *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(struct tc358762), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	ctx->dev = dev;
-+	ctx->pre_enabled = false;
-+
-+	/* TODO: Find out how to get dual-lane mode working */
-+	dsi->lanes = 1;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+			  MIPI_DSI_MODE_LPM;
-+
-+	ret = tc358762_parse_dt(ctx);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = tc358762_configure_regulators(ctx);
-+	if (ret < 0)
-+		return ret;
-+
-+	ctx->bridge.funcs = &tc358762_bridge_funcs;
-+	ctx->bridge.of_node = dev->of_node;
-+
-+	drm_bridge_add(&ctx->bridge);
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		drm_bridge_remove(&ctx->bridge);
-+		dev_err(dev, "failed to attach dsi\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int tc358762_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct tc358762 *ctx = mipi_dsi_get_drvdata(dsi);
-+
-+	mipi_dsi_detach(dsi);
-+	drm_bridge_remove(&ctx->bridge);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id tc358762_of_match[] = {
-+	{ .compatible = "toshiba,tc358762" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, tc358762_of_match);
-+
-+static struct mipi_dsi_driver tc358762_driver = {
-+	.probe = tc358762_probe,
-+	.remove = tc358762_remove,
-+	.driver = {
-+		.name = "tc358762",
-+		.of_match_table = tc358762_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(tc358762_driver);
-+
-+MODULE_AUTHOR("Marek Vasut <marex@denx.de>");
-+MODULE_DESCRIPTION("MIPI-DSI based Driver for TC358762 DSI/DPI Bridge");
-+MODULE_LICENSE("GPL v2");
+Yes, it is. But in this case what data-shift configures is not configurable
+as such but defined by another configuration, making the data-shift
+property redundant. We generally haven't documented redundant things in DT
+bindings --- for instance data-lanes is documented in bindings only if it
+is configurable.
+
+That said, it'd be nice to say which pins are used on less than full width
+busses.
+
 -- 
-2.27.0
+Regards,
 
+Sakari Ailus
