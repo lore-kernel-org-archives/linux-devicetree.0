@@ -2,164 +2,136 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E015C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 19:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D49C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 20:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED14206D7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 19:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE4D206C1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 20:57:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="AYL24dWC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WlszfhUb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Aeg99tkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgGYTSn (ORCPT
+        id S1728044AbgGYU5o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 15:18:43 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34397 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726381AbgGYTSn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Jul 2020 15:18:43 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0443B5C00CA;
-        Sat, 25 Jul 2020 15:18:42 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sat, 25 Jul 2020 15:18:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=r
-        WYFqMi0Bc4yD9F0ulehRfAQBdRpLQU+sbOfDtxKETM=; b=AYL24dWCsNSJoR3J7
-        49Z604uXy1bARXjeh+9TIP23BVdgIBBs/7KsJ5zdlayVP110mLvMNtIAQqggsAT7
-        5LIr4f2P1hS+dKF5IJUjIeXMADBxH1p5wO10AV+3JbwQT6x5Ezp7Wxqtz0LvFa9c
-        AfnllR5TOI4Erx3Y6OibtgZJonHkGF9gnwh447n4pwJr/25sfH8AGO/oEz5X26m8
-        l0F90yjTA4nlDGlFcc+46bfIYYuWri+ytwbuSJ5HV7Scnde+j5Nigl+Zv++z6Rnp
-        ndG3v61EcxaYw+nZmTVXF+Imk5WYCmddhPi090btGtnIZT6y9MdfWS4CAGMN0pxn
-        shTDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=rWYFqMi0Bc4yD9F0ulehRfAQBdRpLQU+sbOfDtxKE
-        TM=; b=WlszfhUbL/eAqIxpSEN+45puRzOzyhq7lKG/ppk62McHtQ+U4dPV2mi+L
-        uQfsLNWIpx2s0rtxHl614oyePRGj1C+vwbCRiqW5AcTMYOmUdaUBrPeQkpHRX/YY
-        BBO0W8hmnfdvhR0X3HEPqMNYW2HgMfG4uOd4ysyF9+W1PEfymdRk7Vt5dFFHrId6
-        1vqe4Z3CDNreFV5JttQbR31WN0u/SszWGN0pHkny3dXucqLlQ0gkng/dcY5nL78i
-        lyNQa4wZwRkRMVgBi5GTQ2FFVTZWBgZIqnwiUFU8XNcPPoknUejJQGLeNdtN6o6k
-        AmhtU+C5moPYl1hKpJQHIkz43n05Q==
-X-ME-Sender: <xms:kIUcX_j718I3fRag_OLmiodGDTbF-7Kj_qxAEkDlKLlq8EPcLXJv5A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheehgddufeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepgfevffetleehffejueekvdekvdeitdehveegfeekheeuieeiueet
-    uefgtedtgeegnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgr
-    nhgurdhorhhg
-X-ME-Proxy: <xmx:kIUcX8A07aJoVhbI5fnJbcab5Ew8DFOMY1ouuVh0gm-f5KRFYdHo9w>
-    <xmx:kIUcX_FNxJTuGDkpwEWlVX67SFrCyOkpYPT9h_w4SpZxjm79YqETBw>
-    <xmx:kIUcX8Qhq9L5tofcNWTI4_gi4XlYoB2qdnoIOBobyy4tnmTbu5ExTA>
-    <xmx:kYUcX2sqoZX4tKW10J1Gt0dRF1_Hq4YGTZldnHgBQbjJr3VtP9qF2w>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0B20530600A3;
-        Sat, 25 Jul 2020 15:18:40 -0400 (EDT)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_1/3=5d_dt-bindings=3a_gpio=3a_sunxi?=
- =?UTF-8?Q?=ef=bc=9acreate_a_DT_header_for_Allwinner_pin_controller?=
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, tiny.windzz@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200715115412.2544-1-frank@allwinnertech.com>
- <20200717160727.e6y5htg4sjd7bezi@gilmour.lan>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <db1908ae-817c-f30d-7b88-f4afa593b258@sholland.org>
-Date:   Sat, 25 Jul 2020 14:18:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 25 Jul 2020 16:57:44 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37460 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgGYU5o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 16:57:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06PKpTMt031644;
+        Sat, 25 Jul 2020 20:57:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=c/tTjfAoYR2u5Pr1+bu/2No2loWgjwb232GxlPbMfwA=;
+ b=Aeg99tkxe9p/CgP2LtKuzjlFzS+5xvoc1ug+IYmSRvr6VnfG/CvVNWLHeFSflLrK+BAq
+ Y9QHw+JnH39NQ+B6px0Arc/PSxDg2nNS/Xd84Imll18CyzVbIIAbxsACpSoKLCdjkRQu
+ B+4HHQ09LTPzPgezdors8rgQPWfqqhRfRqfdC9D7RBV+MPiAxEwFfqzhdluItL1wtmg8
+ Ei8ZRb/BP2ssBRzDctywVBHqL7Ffap+Mvkkqa9TNd5hA2yjgaelhqoQhxECA2e4wFYHR
+ of5ukM0IDtCYgThJFSxCwLC8/+nAX3JCk0Kz3Ujvx2xuSSAnNg2ZoEQCFfndBG1XpzoX Dw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32gcpksm5n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 25 Jul 2020 20:57:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06PKqX0Z009119;
+        Sat, 25 Jul 2020 20:57:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32gasf3nwt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Jul 2020 20:57:16 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06PKv1dA029834;
+        Sat, 25 Jul 2020 20:57:04 GMT
+Received: from dhcp-10-159-253-11.vpn.oracle.com (/10.159.253.11)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 25 Jul 2020 13:57:01 -0700
+Subject: Re: [RESEND PATCH] ARM: dts: keystone-k2g-evm: fix rgmii phy-mode for
+ ksz9031 phy
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "arm@kernel.org" <arm@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Philippe Schenker <philippe.schenker@toradex.com>
+References: <20200724214221.28125-1-grygorii.strashko@ti.com>
+ <a91d2bad-b794-fe07-679a-e5096aa5ace8@oracle.com>
+ <CAK8P3a3N70PbotC18K-SG9+XgfApHNZyCYvUgOyfrxrP55zSEw@mail.gmail.com>
+From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <feaa8f63-319a-1c3a-fcdd-804e74bbc8ec@oracle.com>
+Date:   Sat, 25 Jul 2020 13:56:50 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200717160727.e6y5htg4sjd7bezi@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAK8P3a3N70PbotC18K-SG9+XgfApHNZyCYvUgOyfrxrP55zSEw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9693 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=3 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007250174
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9693 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxlogscore=999
+ suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007250174
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Maxime,
-
-On 7/17/20 11:07 AM, Maxime Ripard wrote:
-> Hi!
-> 
-> On Wed, Jul 15, 2020 at 07:54:12PM +0800, Frank Lee wrote:
->> From: Yangtao Li <frank@allwinnertech.com>
+On 7/25/20 12:57 AM, Arnd Bergmann wrote:
+> On Fri, Jul 24, 2020 at 11:57 PM santosh.shilimkar@oracle.com
+> <santosh.shilimkar@oracle.com> wrote:
+>> On 7/24/20 2:42 PM, Grygorii Strashko wrote:
+>>> Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+>>> KSZ9031 PHY") the networking is broken on keystone-k2g-evm board.
+>>>
+>>> The above board have phy-mode = "rgmii-id" and it is worked before because
+>>> KSZ9031 PHY started with default RGMII internal delays configuration (TX
+>>> off, RX on 1.2 ns) and MAC provided TX delay by default.
+>>> After above commit, the KSZ9031 PHY starts handling phy mode properly and
+>>> enables both RX and TX delays, as result networking is become broken.
+>>>
+>>> Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
+>>> behavior.
+>>>
+>>> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+>>> Cc: Andrew Lunn <andrew@lunn.ch>
+>>> Cc: Philippe Schenker <philippe.schenker@toradex.com>
+>>> Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> ---
+>>> Fix for one more broken TI board with KSZ9031 PHY.
+>> Can you please apply this patch to your v5.8 fixes branch and send it
+>> upstream ? Without the fix K2G EVM board is broken with v5.8.
 >>
->> The sunxi gpio binding defines a few custom cells for its gpio specifier.
->> Provide bank name for those.
->>
->> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+>> Am hoping you can pick this up with pull request since it just one
+>> patch.
 > 
-> Thanks for working on this, I wanted to do it at some point but it kept
-> getting pushed further into my todo list.
+> I've applied it now, but would point out that it's generally better if you could
+> forward the patch to soc@kernel.org with your Signed-off-by if you come
+> across a similar patch again. That way it ends up in patchwork, and we
+> are more likely to pick it up quickly.
 > 
->> ---
->>  include/dt-bindings/gpio/sunxi-gpio.h | 29 +++++++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>  create mode 100644 include/dt-bindings/gpio/sunxi-gpio.h
->>
->> diff --git a/include/dt-bindings/gpio/sunxi-gpio.h b/include/dt-bindings/gpio/sunxi-gpio.h
->> new file mode 100644
->> index 000000000000..c692b4360da6
->> --- /dev/null
->> +++ b/include/dt-bindings/gpio/sunxi-gpio.h
-> 
-> So generally we've been using the compatible name as the file name. You
-> should follow that convention too, and since it was added with the A10,
-> using the A10 compatible.
-> 
->> @@ -0,0 +1,29 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * GPIO definitions for Allwinner SoCs
->> + *
->> + * Copyright (C) 2020 Yangtao Li <frank@allwinnertech.com>
->> + */
->> +
->> +#ifndef _DT_BINDINGS_SUNXI_GPIO_H
->> +#define _DT_BINDINGS_SUNXI_GPIO_H
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +
->> +/* pio */
->> +#define PA	0
->> +#define PB	1
->> +#define PC	2
->> +#define PD	3
->> +#define PE	4
->> +#define PF	5
->> +#define PG	6
->> +#define PH	7
->> +#define PI	8
->> +
->> +/* r-pio */
->> +#define PL	0
->> +#define PM	1
->> +#define PN	2
->> +
->> +#endif /* _DT_BINDINGS_SUNXI_GPIO_H */
-> 
-> Maybe we can go one step further and use a macro to have something like
-> PIN(A, 12) ?
-
-Since we have separate cells for the bank and pin, I don't think it would be
-appropriate to have a single macro generating both. And I'm not sure what the
-benefit of the macro would be, if all it does is forward its arguments. Are you
-concerned that P[A-M] could conflict with something else in the device tree?
-
-Cheers,
-Samuel
+Will do next time. Thanks for picking it up.
+Regards,
+Santosh
