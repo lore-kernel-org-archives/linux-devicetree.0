@@ -2,93 +2,124 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D32FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 16:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E299EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 17:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB6DB206D7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 16:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B630E206D7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 17:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E5WKmgEh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fGK05dKP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgGYQzd (ORCPT
+        id S1727813AbgGYRnQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 12:55:33 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45524 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726727AbgGYQzd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 12:55:33 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06PGtUZh097388;
-        Sat, 25 Jul 2020 11:55:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595696130;
-        bh=J7PAuoTJ9tjaudQfuqumdYnAXEwjoClheRwNhY+RPWE=;
-        h=From:To:CC:Subject:Date;
-        b=E5WKmgEh5JHfQiR6jrHSJH5WYtlq/lR8RwcXAwqA8Qew0CcFhS+6B5NzXYN4ctfXZ
-         eAt06EjmyBdeuR23n+fOx9LTuMmGcpEGAkvW9Nsi0u9nz6RPfGHqbSY4hiTNQOzM6C
-         tkt3MpaPGGNYs2A8fqAtPqU6J86udM3H7p3dj6qo=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06PGtUnv047713
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 25 Jul 2020 11:55:30 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 25
- Jul 2020 11:55:29 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Sat, 25 Jul 2020 11:55:29 -0500
-Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06PGtPLD026200;
-        Sat, 25 Jul 2020 11:55:26 -0500
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 0/3] arm64: dts: ti: ti-sci-inta/intr: Update to the latest bindings
-Date:   Sat, 25 Jul 2020 22:25:21 +0530
-Message-ID: <20200725165524.22151-1-lokeshvutla@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Sat, 25 Jul 2020 13:43:16 -0400
+Received: from crapouillou.net ([89.234.176.41]:36846 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726995AbgGYRnQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Jul 2020 13:43:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595698993; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=ltqw2GR77gneobFOKHAdqBVxbpmJ8lyAosN/a/eYu2M=;
+        b=fGK05dKPUN+WsoIaWKOaVG9Vac01YU5IB8GDHtEjSJ5/EJGgwnf31Xp0tlgPh7e28SS2b0
+        Px7FM1u03K+kfzu4I0631XjwAZg4AVNcCgUB9lT+ZUc6PW+HG4tEPBg3XJTrR0C+xFy6Qy
+        4XJ8jAfVfQheZqcWYJdac/8I647nUPU=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] MIPS: ingenic: JZ4725B: Add IPU node
+Date:   Sat, 25 Jul 2020 19:43:07 +0200
+Message-Id: <20200725174307.99327-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series updates the DT bindings for intr and inta and its consumer
-nodes. 
+Add a devicetree node for the Image Processing Unit (IPU) found in the
+JZ4725B. Connect it with graph nodes to the LCD node. The LCD driver
+will expect the IPU node to be accessed through graph port #8, as stated
+in the bindings documentation.
 
-Based on ti-sci-inta/intr dt binding update series[0]
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-[0] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=324167
+Notes:
+    Binding documentation was merged in the DRM tree (drm-misc-next branch).
+    See https://cgit.freedesktop.org/drm/drm-misc/plain/Documentation/devicetree/bindings/display/ingenic,ipu.yaml
 
-Lokesh Vutla (3):
-  arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
-  arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
-  arm64: dts: k3-am65: Update the RM resource types
+ arch/mips/boot/dts/ingenic/jz4725b.dtsi | 30 +++++++++++++++++++++++++
+ arch/mips/boot/dts/ingenic/rs90.dts     |  6 ++++-
+ 2 files changed, 35 insertions(+), 1 deletion(-)
 
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 36 ++++++++--------
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       | 12 +++---
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  8 ++--
- .../arm64/boot/dts/ti/k3-am654-base-board.dts |  4 +-
- .../dts/ti/k3-j721e-common-proc-board.dts     | 10 ++---
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 43 ++++++++++---------
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 12 +++---
- 7 files changed, 61 insertions(+), 64 deletions(-)
-
+diff --git a/arch/mips/boot/dts/ingenic/jz4725b.dtsi b/arch/mips/boot/dts/ingenic/jz4725b.dtsi
+index 89402a15f049..a8fca560878d 100644
+--- a/arch/mips/boot/dts/ingenic/jz4725b.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4725b.dtsi
+@@ -314,6 +314,36 @@ lcd: lcd-controller@13050000 {
+ 
+ 		clocks = <&cgu JZ4725B_CLK_LCD>;
+ 		clock-names = "lcd_pclk";
++
++		lcd_ports: ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@8 {
++				reg = <8>;
++
++				ipu_output: endpoint {
++					remote-endpoint = <&ipu_input>;
++				};
++			};
++		};
++	};
++
++	ipu: ipu@13080000 {
++		compatible = "ingenic,jz4725b-ipu";
++		reg = <0x13080000 0x64>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <30>;
++
++		clocks = <&cgu JZ4725B_CLK_IPU>;
++		clock-names = "ipu";
++
++		port {
++			ipu_input: endpoint {
++				remote-endpoint = <&ipu_output>;
++			};
++		};
+ 	};
+ 
+ 	bch: ecc-controller@130d0000 {
+diff --git a/arch/mips/boot/dts/ingenic/rs90.dts b/arch/mips/boot/dts/ingenic/rs90.dts
+index 246f97efe5ef..4eb1edbfc155 100644
+--- a/arch/mips/boot/dts/ingenic/rs90.dts
++++ b/arch/mips/boot/dts/ingenic/rs90.dts
+@@ -302,8 +302,12 @@ &tcu {
+ &lcd {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pins_lcd>;
++};
++
++&lcd_ports {
++	port@0 {
++		reg = <0>;
+ 
+-	port {
+ 		panel_output: endpoint {
+ 			remote-endpoint = <&panel_input>;
+ 		};
 -- 
 2.27.0
 
