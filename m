@@ -2,202 +2,105 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471E5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 08:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE97C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 08:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25DB4206C1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 08:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246702064C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 08:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="Pml4Fn1r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qt5OMN8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGYILu (ORCPT
+        id S1726434AbgGYIZS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 04:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
+        Sat, 25 Jul 2020 04:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGYILu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 04:11:50 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FDCC0619E6
-        for <devicetree@vger.kernel.org>; Sat, 25 Jul 2020 01:11:49 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id x9so12242912ljc.5
-        for <devicetree@vger.kernel.org>; Sat, 25 Jul 2020 01:11:49 -0700 (PDT)
+        with ESMTP id S1725944AbgGYIZQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 25 Jul 2020 04:25:16 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A79C0619D3;
+        Sat, 25 Jul 2020 01:25:16 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d2so782373lfj.1;
+        Sat, 25 Jul 2020 01:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=H1oRPc94SlBLh/nCq9oLvsXSUeG1h45qDvtu9A09LzU=;
-        b=Pml4Fn1rbe+NY6aDBeO2XkMCH1uwWSY6dkPo+dYo3SNwDCRAGmiMCiJfL/AaXjNj5y
-         WsK+eRFnpsseI8T9x6R8eCpGdNMNSaybOCeKEAjbCoERVeqYOdqK3igq8dVDyNsV0pUH
-         X7Ct1Nm729/ccJ2ZQvQ69bf7/Ech/7SuX70w33LezFsPlJ4XLpmUDNkqT/gT97gYOMQ8
-         TI3Nb7+9AxynlZTCdob0POXzLnbw6lLhcGHtnD0oRfD3XcpMQjoaVTo5HwAnheSqH7JL
-         OWaS0n7hZWfnnjnwpNfvDUcc8bmjTBLDe8T2WUEUrVlptcqgad4VDEYcyeNbFlgr2nLF
-         vjoQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/AujhH32yT1zynZA3gTaDD/1XbzOVKjmIAaSFERNLZY=;
+        b=qt5OMN8SiQIyahobJGEoaJiejlHsehvmlOEVGiAp6KNf2koAfjaRm9Fqr+DDOVA/oI
+         RGjZn744A0PRpg0ocy+Rwn1Y0kjYUeJnch9jb1ygbF2MGo4mLgTXtM/jF9TUnGn4aHoO
+         094Jv2TlFFGsMCNwRbXfahWXNK9HlRlsacAQ/t9A99M5aAw0C36WoNhTkIfriSTjc3BM
+         8bEFEBybQNxCebo9R1nKQTRFP/jfST3zhTEvXjHMWEL2iMluo4webGdrzldFsKdGaWoa
+         U4NsQsgcHcz25Q4xBczqdKA7MFWpmT0vhn8wvV7vrJE2miDd/a3HcURnpLxuSsKX0Ghg
+         pvcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=H1oRPc94SlBLh/nCq9oLvsXSUeG1h45qDvtu9A09LzU=;
-        b=qANx55mj+FvWcUoO54PkK7BRGBfNLgZVWATCQFCtuSnJIY/3XOfcIUpaNd/SKGdumQ
-         PWm9Qbz3GCAY38j8sukXZ/JIO8aIIBK4yRfL+sWMlT6CXIZKfQCKs3SAiA4v23HGnpHU
-         igrHHvaVdG7NXte09oT348EQWxwCHTD04qxa5e7Xhi7pq7K3NpAzQYuruib5tardNP4j
-         MRm5Y3/croeje3eLS0OWwEr4LqOGsvKSvA7/+s3UCmVZi/2I5yG/Ft5IJC9fnJv6enjY
-         y46rrAq51wdJrkKBlNEElRA2D4As+9YgQOSn5leLaw5ReNMbe+R/KLjIK0eMrLqW7gGr
-         vmtg==
-X-Gm-Message-State: AOAM530lkzx166Y0Tfj381zk59KWwuEt1U/nCALED1Q2JhVkPkgt75fS
-        VY0eLbY4eCcea5JasgaYBTBwhg==
-X-Google-Smtp-Source: ABdhPJxlyuztz4E1UazWiGbWbc4W5MiCiP3ofzw/n0pAh3yjmiwKeag06HmWeq1i5xDL5N/VimMbUQ==
-X-Received: by 2002:a05:651c:319:: with SMTP id a25mr6191668ljp.272.1595664707967;
-        Sat, 25 Jul 2020 01:11:47 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id x5sm827077ljm.132.2020.07.25.01.11.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/AujhH32yT1zynZA3gTaDD/1XbzOVKjmIAaSFERNLZY=;
+        b=fuSfKD+8b6aGTxVbyPi87zTxVT6U4a7ZF14y5qE9naaH1MjDbGsg/WE08RrlZd8gke
+         +B8kmg9knGVfJ6WQrDrdKA288yg3iBIhlu8Md0Qs/ABFGR0j6yeERdvw4CyhFAsSOePj
+         gmJungLflTdIriKCFr44bWajcf7CQ88vnyiJcQD1on2gQ8rN28pWll5wULVPlO8u0MC1
+         JzOBMVCIeXAOHj8oN6GHLfkLgZwf2UvBGusQko1grvi+Q4fUE1z94+tOW48n+SVLlJaD
+         DiIjhr8poO5fTlC88JFIGOYTOUudMM9Q9ecYcGTte8tnQXz37uY4GOI7bzBVh27523fm
+         Ux/Q==
+X-Gm-Message-State: AOAM533UaEu6fq1Ho2U1myDYjBeODcDTNGwK9tb+SzHsJ8a87LN0vtU6
+        5t/OnYB9Ht+jVRuzcWjY05t65irFC08=
+X-Google-Smtp-Source: ABdhPJzrpGEUvwZs8JXDolGzEMHZoQIprdqK9e6lIkIfYyki8sxCiOK55nT4jCWPTOjAe7muww0MBA==
+X-Received: by 2002:ac2:5933:: with SMTP id v19mr6898303lfi.94.1595665514461;
+        Sat, 25 Jul 2020 01:25:14 -0700 (PDT)
+Received: from luk-pc.lan (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
+        by smtp.googlemail.com with ESMTPSA id x4sm632835ljd.34.2020.07.25.01.25.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 01:11:47 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 10:11:46 +0200
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sat, 25 Jul 2020 01:25:13 -0700 (PDT)
+From:   LuK1337 <priv.luk@gmail.com>
+Cc:     =?UTF-8?q?=C5=81ukasz=20Patron?= <priv.luk@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH 1/2] dt-bindings: media: renesas,vin: Document
- renesas-vin-ycbcr-8b-g property
-Message-ID: <20200725081146.GF2729799@oden.dyn.berto.se>
-References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200724193752.GE2729799@oden.dyn.berto.se>
- <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: pm660: Fix missing pound sign in interrupt-cells
+Date:   Sat, 25 Jul 2020 10:24:17 +0200
+Message-Id: <20200725082417.8507-1-priv.luk@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lad,
+From: ≈Åukasz Patron <priv.luk@gmail.com>
 
-On 2020-07-24 22:11:31 +0100, Lad, Prabhakar wrote:
-> Hi Niklas,
-> 
-> Thank you for the review.
-> 
-> On Fri, Jul 24, 2020 at 8:37 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> >
-> > Hi Lad,
-> >
-> > Thanks for your patch.
-> >
-> > On 2020-07-24 15:58:51 +0100, Lad Prabhakar wrote:
-> > > Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit data
-> > > input pins.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/renesas,vin.yaml | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > index 53c0a72..7dfb781 100644
-> > > --- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > @@ -106,6 +106,12 @@ properties:
-> > >
-> > >            remote-endpoint: true
-> > >
-> > > +          renesas-vin-ycbcr-8b-g:
-> >
-> > I think the preferred format for vendor specific properties are
-> > "<vendor>,<property>".
-> >
-> Indeed and I had it as renesas,vin-ycbcr-8b-g but dt_bindings_check
-> complained about it.
+Also add a space after '=' while at it.
 
-I see, what was the error?
+Signed-off-by: ≈Åukasz Patron <priv.luk@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/pm660.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > This nit apart I'm not sure a property is the right way here. Could it
-> > not be possible on some designs to have two different sensors one wired
-> > to DATA[7:0] and the other to DATA[15:8] and by controlling the
-> > VNDRM2_YDS register at runtime switch between the two? If so adding a DT
-> > property to hard-code one of the two options would prevent this. I fear
-> > we need to think of a runtime way to deal with this.
-> >
-> Aha Gen2 and Gen3 hardware manuals have a bit different description
-> about the YDS field. (I was working R8a7742 SoC so I referred Gen2
-> manual)
-
-Ahh, I think we should use the Gen3 names as I find them overall an 
-improvement over the Gen2 ones.
-
-> 
-> > The best way to do that I think is to extend the port@0 node to allow
-> > for two endpoints, one for each of the two possible parallel sensors.
-> > This would then have to be expressed in the media graph and selection if
-> > YDS should be set or not depend on which media links are enabled.
-> >
-> In that case how do we handle endpoint matching each would have two
-> subdevs to be matched.
-
-It would be handle in the same was as the multiple endpoints in port@1.
-
-> And in case non media-ctl cases we cannot
-> switch between subdevs.
-
-For the Gen2 none media graph enabled mode this could be handled with 
-the S_INPUT ioctl. For this feature to be merged however I it needs to 
-be possible to select input both in Gen2 and Gen3 I'm afraid. I'm hoping 
-to one day breakout the non MC part of this driver into a new one and 
-mark it as deprecated and switch to the MC code paths for Gen2.
-
-> 
-> Cheers,
-> --Prabhakar
-> 
-> > > +            type: boolean
-> > > +            description:
-> > > +              If present this property specifies to selects VIN_G[7:0] as data pins for YCbCr422 8-bit data.
-> > > +            default: false
-> > > +
-> > >          required:
-> > >            - remote-endpoint
-> > >
-> > > @@ -168,6 +174,13 @@ properties:
-> > >
-> > >                remote-endpoint: true
-> > >
-> > > +              renesas-vin-ycbcr-8b-g:
-> > > +                type: boolean
-> > > +                description:
-> > > +                  If present this property specifies to selects VIN_G[7:0] as data pins for
-> > > +                  YCbCr422 8-bit data.
-> > > +                default: false
-> > > +
-> > >              required:
-> > >                - remote-endpoint
-> > >
-> > > --
-> > > 2.7.4
-> > >
-> >
-> > --
-> > Regards,
-> > Niklas Sˆderlund
-
+diff --git a/arch/arm64/boot/dts/qcom/pm660.dtsi b/arch/arm64/boot/dts/qcom/pm660.dtsi
+index ea0e9558d0f2..2e6a6f6c3b66 100644
+--- a/arch/arm64/boot/dts/qcom/pm660.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm660.dtsi
+@@ -44,7 +44,7 @@ pm660_gpios: gpios@c000 {
+ 			gpio-ranges = <&pm660_gpios 0 0 13>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-			interrupt-cells =<2>;
++			#interrupt-cells = <2>;
+ 		};
+ 	};
+ };
 -- 
-Regards,
-Niklas Sˆderlund
+2.26.2
+
