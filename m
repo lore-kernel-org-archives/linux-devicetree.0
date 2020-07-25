@@ -2,566 +2,265 @@ Return-Path: <SRS0=7Os6=BE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AF3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 12:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46847C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB818206F6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 12:59:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="w8eIqQco"
+	by mail.kernel.org (Postfix) with ESMTP id 1E020206F6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 25 Jul 2020 14:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595686255;
+	bh=K5mDISNf+19YggF4dg2G2Pd6dD/CEpErQK90WHh7Xo0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xanNZSNOtQDmEijOvigk4dkgpsAH15bYl5ZDn9qTl+FUNuIp2hsMgAaOrYLbwLKh9
+	 TqeQa5guU7VSp7wlsB/rzEDlTksNKpdVo2npvJB1wGTfFPPBxny6kPFuHVgHp9tzqZ
+	 yL8oZ8ZPd6q0EwowC4/BWmxYPrMAHVbWy22pkwYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgGYM7F (ORCPT
+        id S1726745AbgGYOKy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 25 Jul 2020 08:59:05 -0400
-Received: from crapouillou.net ([89.234.176.41]:57722 "EHLO crapouillou.net"
+        Sat, 25 Jul 2020 10:10:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgGYM7F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 25 Jul 2020 08:59:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595681941; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yNUyJeyP16I90PYzVoeeQozAUAYH6uxu6YR45xwBtBY=;
-        b=w8eIqQco6w0RfvECfW5efN5bP2SnV1DgxvcQIw4FopW5G5rv3EAqKvkMVl45kHSREnslQ/
-        q2ld2jtaBq4w3nmPXCAK5m6VwCxGuvCp/TZ3jGQgZ76h9e9vguGJ4DOfWPWsqu9sddlfle
-        7w9UxjSCCJwr4Bd3zZzcZ3NL/wh1MpE=
-Date:   Sat, 25 Jul 2020 14:58:50 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH RESEND v6 5/5] USB: PHY: JZ4770: Use the generic PHY
- framework.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, prasannatsmkumar@gmail.com,
-        kishon@ti.com, vkoul@kernel.org, gor@linux.ibm.com,
-        hca@linux.ibm.com, christophe.jaillet@wanadoo.fr,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Message-Id: <2201EQ.3JVH7TJO4AV3@crapouillou.net>
-In-Reply-To: <20200725073327.64216-1-zhouyanjie@wanyeetech.com>
-References: <20200725073327.64216-1-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        id S1726652AbgGYOKy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 25 Jul 2020 10:10:54 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E8C206D7;
+        Sat, 25 Jul 2020 14:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595686253;
+        bh=K5mDISNf+19YggF4dg2G2Pd6dD/CEpErQK90WHh7Xo0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qysRIWEcIuhmGp7FUvaOYD5tjF+UQfqSNJaw75J3f29CSg5jbMYaurMGUatJszyh4
+         rgfMfkggM0DFh7RTXDGAOtCQCW27alO0amoXURKYSNn2bOXYn4zI+I42eEUoZI5olC
+         EtPFVj6MNMlqYRhJrrq2ifc37JnRDnCieEUVI1BA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jzKt1-00EqzU-GW; Sat, 25 Jul 2020 15:10:51 +0100
+Date:   Sat, 25 Jul 2020 15:10:50 +0100
+Message-ID: <87zh7nwuqd.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v3 9/9] irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
+In-Reply-To: <20200724141837.4542-10-lokeshvutla@ti.com>
+References: <20200724141837.4542-1-lokeshvutla@ti.com>
+        <20200724141837.4542-10-lokeshvutla@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: lokeshvutla@ti.com, robh+dt@kernel.org, tglx@linutronix.de, nm@ti.com, t-kristo@ti.com, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, grygorii.strashko@ti.com, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, s-anna@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Zhou,
-
-I'm a bit lost in all these JZ4770 PHY patchsets...
-
-Anyway, the move from drivers/usb/phy to drivers/phy should be done=20
-before adding anything else to the driver, so right after the=20
-devicetree change. Here, your patch modifies things that were just=20
-introduced in the previous patches; that adds a lot of noise for=20
-nothing and is harder to review.
-
-If you really want to rename the function names and comments from=20
-jz4770_phy* to ingenic_usb_phy*, you can do it afterwards, within your=20
-current "unify code style" patch. Then add the patch to reformat the=20
-macros, and then finally finish the patchset by adding support for the=20
-new SoCs, because right now the macros introduced in the "add SoCs"=20
-patch are modified in the "reformat macros" patch.
-
-So I think you got the content right, just some reordering to do.
-
-
-Le sam. 25 juil. 2020 =C3=A0 15:33, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanji=
-e)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Used the generic PHY framework API to create the PHY,
-> and move the driver to driver/phy/ingenic.
->=20
-> Tested-by: =E5=91=A8=E6=AD=A3 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> Suggested-by: Felipe Balbi <balbi@kernel.org>
-> Co-developed-by: =E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi@ing=
-enic.com>
-> Signed-off-by: =E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi@ingen=
-ic.com>
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
+On Fri, 24 Jul 2020 15:18:37 +0100,
+Lokesh Vutla <lokeshvutla@ti.com> wrote:
+> 
+> Driver assumes that Interrupt parent to Interrupt Aggregator is always
+> Interrupt router. This is not true always and GIC can be a parent to
+> Interrupt Aggregator. Update the driver to detect the parent and request
+> the parent irqs accordingly.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > ---
->=20
-> Notes:
->     v6:
->     New patch.
->=20
->  drivers/phy/Kconfig                                |   1 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/ingenic/Kconfig                        |  12 ++
->  drivers/phy/ingenic/Makefile                       |   2 +
->  .../phy-jz4770.c =3D> phy/ingenic/phy-ingenic-usb.c} | 208=20
-> ++++++++++++---------
->  drivers/usb/phy/Kconfig                            |   8 -
->  drivers/usb/phy/Makefile                           |   1 -
->  7 files changed, 134 insertions(+), 99 deletions(-)
->  create mode 100644 drivers/phy/ingenic/Kconfig
->  create mode 100644 drivers/phy/ingenic/Makefile
->  rename drivers/{usb/phy/phy-jz4770.c =3D>=20
-> phy/ingenic/phy-ingenic-usb.c} (67%)
->=20
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index b3ed94b98d9b..96d7bb85f595 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -55,6 +55,7 @@ source "drivers/phy/broadcom/Kconfig"
->  source "drivers/phy/cadence/Kconfig"
->  source "drivers/phy/freescale/Kconfig"
->  source "drivers/phy/hisilicon/Kconfig"
-> +source "drivers/phy/ingenic/Kconfig"
->  source "drivers/phy/lantiq/Kconfig"
->  source "drivers/phy/marvell/Kconfig"
->  source "drivers/phy/mediatek/Kconfig"
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 310c149a9df5..0f88724b4387 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -18,6 +18,7 @@ obj-y					+=3D broadcom/	\
->  					   cadence/	\
->  					   freescale/	\
->  					   hisilicon/	\
-> +					   ingenic/	\
->  					   intel/	\
->  					   lantiq/	\
->  					   marvell/	\
-> diff --git a/drivers/phy/ingenic/Kconfig b/drivers/phy/ingenic/Kconfig
-> new file mode 100644
-> index 000000000000..b9581eae89dd
-> --- /dev/null
-> +++ b/drivers/phy/ingenic/Kconfig
-> @@ -0,0 +1,12 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Phy drivers for Ingenic platforms
-> +#
-> +config PHY_INGENIC_USB
-> +	tristate "Ingenic SoCs USB PHY Driver"
-> +	depends on (MACH_INGENIC && MIPS) || COMPILE_TEST
-> +	depends on USB_SUPPORT
-> +	select GENERIC_PHY
-> +	help
-> +	  This driver provides USB PHY support for the USB controller found
-> +	  on the JZ-series and X-series SoCs from Ingenic.
-> diff --git a/drivers/phy/ingenic/Makefile=20
-> b/drivers/phy/ingenic/Makefile
-> new file mode 100644
-> index 000000000000..65d5ea00fc9d
-> --- /dev/null
-> +++ b/drivers/phy/ingenic/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-y		+=3D phy-ingenic-usb.o
-> diff --git a/drivers/usb/phy/phy-jz4770.c=20
-> b/drivers/phy/ingenic/phy-ingenic-usb.c
-> similarity index 67%
-> rename from drivers/usb/phy/phy-jz4770.c
-> rename to drivers/phy/ingenic/phy-ingenic-usb.c
-> index 23d38cbc150e..c43d53b235d3 100644
-> --- a/drivers/usb/phy/phy-jz4770.c
-> +++ b/drivers/phy/ingenic/phy-ingenic-usb.c
-> @@ -7,12 +7,12 @@
->   */
->=20
->  #include <linux/clk.h>
-> +#include <linux/delay.h>
+>  drivers/irqchip/irq-ti-sci-inta.c | 90 ++++++++++++++++++++++++++-----
+>  1 file changed, 77 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+> index 7e3ebf6ed2cd..00c17ade118a 100644
+> --- a/drivers/irqchip/irq-ti-sci-inta.c
+> +++ b/drivers/irqchip/irq-ti-sci-inta.c
+> @@ -8,6 +8,7 @@
+>  
+>  #include <linux/err.h>
 >  #include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/regulator/consumer.h>
-> -#include <linux/usb/otg.h>
-> -#include <linux/usb/phy.h>
-> +#include <linux/phy/phy.h>
->=20
->  /* OTGPHY register offsets */
->  #define REG_USBPCR_OFFSET			0x00
-> @@ -97,66 +97,48 @@ enum ingenic_usb_phy_version {
->  struct ingenic_soc_info {
->  	enum ingenic_usb_phy_version version;
->=20
-> -	void (*usb_phy_init)(struct usb_phy *phy);
-> +	void (*usb_phy_init)(struct phy *phy);
->  };
->=20
-> -struct jz4770_phy {
-> +struct ingenic_usb_phy {
->  	const struct ingenic_soc_info *soc_info;
->=20
-> -	struct usb_phy phy;
-> -	struct usb_otg otg;
-> +	struct phy *phy;
->  	struct device *dev;
->  	void __iomem *base;
->  	struct clk *clk;
->  	struct regulator *vcc_supply;
->  };
->=20
-> -static inline struct jz4770_phy *otg_to_jz4770_phy(struct usb_otg=20
-> *otg)
-> +static int ingenic_usb_phy_init(struct phy *phy)
->  {
-> -	return container_of(otg, struct jz4770_phy, otg);
-> -}
-> -
-> -static inline struct jz4770_phy *phy_to_jz4770_phy(struct usb_phy=20
-> *phy)
-> -{
-> -	return container_of(phy, struct jz4770_phy, phy);
-> -}
-> -
-> -static int ingenic_usb_phy_set_peripheral(struct usb_otg *otg,
-> -				     struct usb_gadget *gadget)
-> -{
-> -	struct jz4770_phy *priv =3D otg_to_jz4770_phy(otg);
-> -	u32 reg;
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
-> +	int err;
->=20
-> -	if (priv->soc_info->version >=3D ID_X1000) {
-> -		reg =3D readl(priv->base + REG_USBPCR1_OFFSET);
-> -		reg |=3D USBPCR1_BVLD_REG;
-> -		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-> +	err =3D clk_prepare_enable(priv->clk);
-> +	if (err) {
-> +		dev_err(priv->dev, "Unable to start clock: %d\n", err);
-> +		return err;
->  	}
->=20
-> -	reg =3D readl(priv->base + REG_USBPCR_OFFSET);
-> -	reg &=3D ~USBPCR_USB_MODE;
-> -	reg |=3D USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL |=20
-> USBPCR_OTG_DISABLE;
-> -	writel(reg, priv->base + REG_USBPCR_OFFSET);
-> +	priv->soc_info->usb_phy_init(phy);
->=20
->  	return 0;
+> +#include <linux/irq.h>
+>  #include <linux/irqchip.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/interrupt.h>
+> @@ -128,6 +129,37 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
+>  	chained_irq_exit(irq_desc_get_chip(desc), desc);
 >  }
->=20
-> -static int ingenic_usb_phy_set_host(struct usb_otg *otg, struct=20
-> usb_bus *host)
-> +static int ingenic_usb_phy_exit(struct phy *phy)
->  {
-> -	struct jz4770_phy *priv =3D otg_to_jz4770_phy(otg);
-> -	u32 reg;
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->=20
-> -	reg =3D readl(priv->base + REG_USBPCR_OFFSET);
-> -	reg &=3D ~(USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL |=20
-> USBPCR_OTG_DISABLE);
-> -	reg |=3D USBPCR_USB_MODE;
-> -	writel(reg, priv->base + REG_USBPCR_OFFSET);
-> +	clk_disable_unprepare(priv->clk);
-> +	regulator_disable(priv->vcc_supply);
->=20
->  	return 0;
->  }
->=20
-> -static int ingenic_usb_phy_init(struct usb_phy *phy)
-> +static int ingenic_usb_phy_power_on(struct phy *phy)
->  {
-> -	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->  	int err;
->=20
->  	err =3D regulator_enable(priv->vcc_supply);
-> @@ -165,33 +147,71 @@ static int ingenic_usb_phy_init(struct usb_phy=20
-> *phy)
->  		return err;
->  	}
->=20
-> -	err =3D clk_prepare_enable(priv->clk);
-> -	if (err) {
-> -		dev_err(priv->dev, "Unable to start clock: %d\n", err);
-> -		return err;
-> -	}
-> -
-> -	priv->soc_info->usb_phy_init(phy);
-> -
->  	return 0;
->  }
->=20
-> -static void ingenic_usb_phy_shutdown(struct usb_phy *phy)
-> +static int ingenic_usb_phy_power_off(struct phy *phy)
->  {
-> -	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->=20
-> -	clk_disable_unprepare(priv->clk);
->  	regulator_disable(priv->vcc_supply);
+>  
+> +/**
+> + * ti_sci_inta_xlate_irq() - Translate hwirq to parent's hwirq.
+> + * @inta:	IRQ domain corresponding to Interrupt Aggregator
+> + * @irq:	Hardware irq corresponding to the above irq domain
+> + *
+> + * Return parent irq number if translation is available else -ENOENT.
+> + */
+> +static int ti_sci_inta_xlate_irq(struct ti_sci_inta_irq_domain *inta,
+> +				 u16 vint_id)
+> +{
+> +	struct device_node *np = dev_of_node(&inta->pdev->dev);
+> +	u32 base, parent_base, size;
+> +	const __be32 *range;
+> +	int len;
 > +
-> +	return 0;
->  }
->=20
-> -static void ingenic_usb_phy_remove(void *phy)
-> +static int ingenic_usb_phy_set_mode(struct phy *phy,
-> +				  enum phy_mode mode, int submode)
->  {
-> -	usb_remove_phy(phy);
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
-> +	u32 reg;
+> +	range = of_get_property(np, "ti,interrupt-ranges", &len);
+> +	if (!range)
+> +		return vint_id;
 > +
-> +	switch (mode) {
-> +	case PHY_MODE_USB_HOST:
-> +		reg =3D readl(priv->base + REG_USBPCR_OFFSET);
-> +		reg &=3D ~(USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL |=20
-> USBPCR_OTG_DISABLE);
-> +		reg |=3D USBPCR_USB_MODE;
-> +		writel(reg, priv->base + REG_USBPCR_OFFSET);
+> +	for (len /= sizeof(*range); len >= 3; len -= 3) {
+> +		base = be32_to_cpu(*range++);
+> +		parent_base = be32_to_cpu(*range++);
+> +		size = be32_to_cpu(*range++);
 > +
-> +		break;
-> +	case PHY_MODE_USB_DEVICE:
-> +		if (priv->soc_info->version >=3D ID_X1000) {
-> +			reg =3D readl(priv->base + REG_USBPCR1_OFFSET);
-> +			reg |=3D USBPCR1_BVLD_REG;
-> +			writel(reg, priv->base + REG_USBPCR1_OFFSET);
-> +		}
-> +
-> +		reg =3D readl(priv->base + REG_USBPCR_OFFSET);
-> +		reg &=3D ~USBPCR_USB_MODE;
-> +		reg |=3D USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL |=20
-> USBPCR_OTG_DISABLE;
-> +		writel(reg, priv->base + REG_USBPCR_OFFSET);
-> +
-> +		break;
-> +	case PHY_MODE_USB_OTG:
-> +		reg =3D readl(priv->base + REG_USBPCR_OFFSET);
-> +		reg &=3D ~USBPCR_OTG_DISABLE;
-> +		reg |=3D USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL | USBPCR_USB_MODE;
-> +		writel(reg, priv->base + REG_USBPCR_OFFSET);
-> +
-> +		break;
-> +	default:
-> +		return -EINVAL;
+> +		if (base <= vint_id && vint_id < base + size)
+> +			return vint_id - base + parent_base;
 > +	}
 > +
-> +	return 0;
->  }
->=20
-> -static void jz4770_usb_phy_init(struct usb_phy *phy)
-> +static const struct phy_ops ingenic_usb_phy_ops =3D {
-> +	.init		=3D ingenic_usb_phy_init,
-> +	.exit		=3D ingenic_usb_phy_exit,
-> +	.power_on	=3D ingenic_usb_phy_power_on,
-> +	.power_off	=3D ingenic_usb_phy_power_off,
-> +	.set_mode	=3D ingenic_usb_phy_set_mode,
-> +	.owner		=3D THIS_MODULE,
-> +};
-> +
-> +static void jz4770_usb_phy_init(struct phy *phy)
->  {
-> -	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->  	u32 reg;
->=20
->  	reg =3D USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS |
-> @@ -206,9 +226,9 @@ static void jz4770_usb_phy_init(struct usb_phy=20
-> *phy)
->  	usleep_range(300, 1000);
->  }
->=20
-> -static void jz4780_usb_phy_init(struct usb_phy *phy)
-> +static void jz4780_usb_phy_init(struct phy *phy)
->  {
-> -	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->  	u32 reg;
->=20
->  	reg =3D readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_USB_SEL |
-> @@ -224,9 +244,9 @@ static void jz4780_usb_phy_init(struct usb_phy=20
-> *phy)
->  	usleep_range(300, 1000);
->  }
->=20
-> -static void x1000_usb_phy_init(struct usb_phy *phy)
-> +static void x1000_usb_phy_init(struct phy *phy)
->  {
-> -	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->  	u32 reg;
->=20
->  	reg =3D readl(priv->base + REG_USBPCR1_OFFSET) |=20
-> USBPCR1_WORD_IF_16BIT;
-> @@ -243,9 +263,9 @@ static void x1000_usb_phy_init(struct usb_phy=20
-> *phy)
->  	usleep_range(300, 1000);
->  }
->=20
-> -static void x1830_usb_phy_init(struct usb_phy *phy)
-> +static void x1830_usb_phy_init(struct phy *phy)
->  {
-> -	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
-> +	struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->  	u32 reg;
->=20
->  	/* rdt */
-> @@ -298,75 +318,83 @@ static const struct of_device_id=20
-> ingenic_usb_phy_of_matches[] =3D {
->  };
->  MODULE_DEVICE_TABLE(of, ingenic_usb_phy_of_matches);
->=20
-> -static int jz4770_phy_probe(struct platform_device *pdev)
-> +static int ingenic_usb_phy_probe(struct platform_device *pdev)
->  {
-> -	struct device *dev =3D &pdev->dev;
-> -	struct jz4770_phy *priv;
-> +	struct ingenic_usb_phy *priv;
-> +	struct phy_provider *provider;
->  	int err;
->=20
-> -	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
->=20
-> +	priv->dev =3D &pdev->dev;
-> +
->  	priv->soc_info =3D device_get_match_data(&pdev->dev);
->  	if (!priv->soc_info) {
->  		dev_err(&pdev->dev, "Error: No device match found\n");
->  		return -ENODEV;
->  	}
->=20
-> -	platform_set_drvdata(pdev, priv);
-> -	priv->dev =3D dev;
-> -	priv->phy.dev =3D dev;
-> -	priv->phy.otg =3D &priv->otg;
-> -	priv->phy.label =3D "ingenic-usb-phy";
-> -	priv->phy.init =3D ingenic_usb_phy_init;
-> -	priv->phy.shutdown =3D ingenic_usb_phy_shutdown;
-> -
-> -	priv->otg.state =3D OTG_STATE_UNDEFINED;
-> -	priv->otg.usb_phy =3D &priv->phy;
-> -	priv->otg.set_host =3D ingenic_usb_phy_set_host;
-> -	priv->otg.set_peripheral =3D ingenic_usb_phy_set_peripheral;
-> -
->  	priv->base =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(priv->base)) {
-> -		dev_err(dev, "Failed to map registers\n");
-> +		dev_err(priv->dev, "Failed to map registers\n");
->  		return PTR_ERR(priv->base);
->  	}
->=20
-> -	priv->clk =3D devm_clk_get(dev, NULL);
-> +	priv->clk =3D devm_clk_get(priv->dev, NULL);
->  	if (IS_ERR(priv->clk)) {
->  		err =3D PTR_ERR(priv->clk);
->  		if (err !=3D -EPROBE_DEFER)
-> -			dev_err(dev, "Failed to get clock\n");
-> +			dev_err(priv->dev, "Failed to get clock\n");
->  		return err;
->  	}
->=20
-> -	priv->vcc_supply =3D devm_regulator_get(dev, "vcc");
-> +	priv->vcc_supply =3D devm_regulator_get(priv->dev, "vcc");
->  	if (IS_ERR(priv->vcc_supply)) {
->  		err =3D PTR_ERR(priv->vcc_supply);
->  		if (err !=3D -EPROBE_DEFER)
-> -			dev_err(dev, "Failed to get regulator\n");
-> +			dev_err(priv->dev, "Failed to get regulator\n");
->  		return err;
->  	}
->=20
-> -	err =3D usb_add_phy(&priv->phy, USB_PHY_TYPE_USB2);
-> -	if (err) {
-> -		if (err !=3D -EPROBE_DEFER)
-> -			dev_err(dev, "Unable to register PHY\n");
-> -		return err;
-> +	priv->phy =3D devm_phy_create(priv->dev, NULL, &ingenic_usb_phy_ops);
-> +	if (IS_ERR(priv)) {
-> +		dev_err(priv->dev, "Failed to create PHY: %ld\n",	PTR_ERR(priv));
-> +		return PTR_ERR(priv);
->  	}
->=20
-> -	return devm_add_action_or_reset(dev, ingenic_usb_phy_remove,=20
-> &priv->phy);
-> +	provider =3D devm_of_phy_provider_register(priv->dev,=20
-> of_phy_simple_xlate);
-> +	if (IS_ERR(provider)) {
-> +		dev_err(priv->dev, "Failed to register PHY provider: %ld\n",=20
-> PTR_ERR(provider));
-> +		return PTR_ERR(provider);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +	phy_set_drvdata(priv->phy, priv);
-> +
-> +	return 0;
+> +	return -ENOENT;
 > +}
 > +
-> +static int ingenic_usb_phy_remove(struct platform_device *pdev)
-> +{
-> +	struct ingenic_usb_phy *priv =3D platform_get_drvdata(pdev);
+>  /**
+>   * ti_sci_inta_alloc_parent_irq() - Allocate parent irq to Interrupt aggregator
+>   * @domain:	IRQ domain corresponding to Interrupt Aggregator
+> @@ -139,30 +171,55 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
+>  	struct ti_sci_inta_irq_domain *inta = domain->host_data;
+>  	struct ti_sci_inta_vint_desc *vint_desc;
+>  	struct irq_fwspec parent_fwspec;
+> +	struct device_node *parent_node;
+>  	unsigned int parent_virq;
+> -	u16 vint_id;
+> +	u16 vint_id, p_hwirq;
+> +	int ret;
+>  
+>  	vint_id = ti_sci_get_free_resource(inta->vint);
+>  	if (vint_id == TI_SCI_RESOURCE_NULL)
+>  		return ERR_PTR(-EINVAL);
+>  
+> +	p_hwirq = ti_sci_inta_xlate_irq(inta, vint_id);
+> +	if (p_hwirq < 0) {
+> +		ret = p_hwirq;
+> +		goto free_vint;
+> +	}
 > +
-> +	clk_disable_unprepare(priv->clk);
-> +	regulator_disable(priv->vcc_supply);
+>  	vint_desc = kzalloc(sizeof(*vint_desc), GFP_KERNEL);
+> -	if (!vint_desc)
+> -		return ERR_PTR(-ENOMEM);
+> +	if (!vint_desc) {
+> +		ret = -ENOMEM;
+> +		goto free_vint;
+> +	}
+>  
+>  	vint_desc->domain = domain;
+>  	vint_desc->vint_id = vint_id;
+>  	INIT_LIST_HEAD(&vint_desc->list);
+>  
+> -	parent_fwspec.fwnode = of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
+> -	parent_fwspec.param_count = 2;
+> -	parent_fwspec.param[0] = inta->pdev->id;
+> -	parent_fwspec.param[1] = vint_desc->vint_id;
+> +	parent_node = of_irq_find_parent(dev_of_node(&inta->pdev->dev));
+> +	parent_fwspec.fwnode = of_node_to_fwnode(parent_node);
+> +	if (of_property_read_u32(parent_node, "#interrupt-cells",
+> +				 &parent_fwspec.param_count)) {
+> +		ret = -EINVAL;
+> +		goto free_vint_desc;
+> +	}
 > +
-> +	return 0;
+> +	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
+> +		/* Parent is GIC */
+> +		parent_fwspec.param[0] = 0;
+> +		parent_fwspec.param[1] = p_hwirq - 32;
+> +		parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
+
+Same comment as on patch #6.
+
+> +	} else {
+> +		/* Parent is Interrupt Router */
+> +		parent_fwspec.param[0] = p_hwirq;
+> +	}
+>  
+>  	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
+>  	if (parent_virq == 0) {
+> -		kfree(vint_desc);
+> -		return ERR_PTR(-EINVAL);
+> +		dev_err(&inta->pdev->dev, "Parent IRQ allocation failed\n");
+> +		ret = -EINVAL;
+> +		goto free_vint_desc;
+> +
+>  	}
+>  	vint_desc->parent_virq = parent_virq;
+>  
+> @@ -171,6 +228,11 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
+>  					 ti_sci_inta_irq_handler, vint_desc);
+>  
+>  	return vint_desc;
+> +free_vint_desc:
+> +	kfree(vint_desc);
+> +free_vint:
+> +	ti_sci_release_resource(inta->vint, vint_id);
+> +	return ERR_PTR(ret);
 >  }
->=20
-> -static struct platform_driver ingenic_phy_driver =3D {
-> -	.probe		=3D jz4770_phy_probe,
-> +static struct platform_driver ingenic_usb_phy_driver =3D {
-> +	.probe		=3D ingenic_usb_phy_probe,
-> +	.remove		=3D ingenic_usb_phy_remove,
->  	.driver		=3D {
-> -		.name	=3D "jz4770-phy",
-> +		.name	=3D "ingenic-usb-phy",
->  		.of_match_table =3D of_match_ptr(ingenic_usb_phy_of_matches),
->  	},
->  };
-> -module_platform_driver(ingenic_phy_driver);
-> +module_platform_driver(ingenic_usb_phy_driver);
->=20
->  MODULE_AUTHOR("=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wan=
-yeetech.com>");
->  MODULE_AUTHOR("=E6=BC=86=E9=B9=8F=E6=8C=AF (Qi Pengzhen) <aric.pzqi@inge=
-nic.com>");
+>  
+>  /**
+> @@ -555,15 +617,15 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
+> -						 "ti,sci-rm-range-vint");
+> +	inta->vint = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
+> +					      TI_SCI_RESASG_SUBTYPE_IA_VINT);
 
-Finally, because of the renaming, the module name changed. To keep=20
-compatibility with userspace, I think you need to add a=20
-MODULE_ALIAS(jz4770_phy) here (but I'm not sure and maybe someone else=20
-should confirm that).
+Same comment as on patch #6 as well, although the pdev->id hijacking
+already existed. I believe this should be fixed, unless you can
+explain why this can't possibly be implemented in a different way.
 
-Cheers,
--Paul
+>  	if (IS_ERR(inta->vint)) {
+>  		dev_err(dev, "VINT resource allocation failed\n");
+>  		return PTR_ERR(inta->vint);
+>  	}
+>  
+> -	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
+> -						"ti,sci-rm-range-global-event");
+> +	inta->global_event = devm_ti_sci_get_resource(inta->sci, dev, pdev->id,
+> +					TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT);
+>  	if (IS_ERR(inta->global_event)) {
+>  		dev_err(dev, "Global event resource allocation failed\n");
+>  		return PTR_ERR(inta->global_event);
+> @@ -594,6 +656,8 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+>  	INIT_LIST_HEAD(&inta->vint_list);
+>  	mutex_init(&inta->vint_mutex);
+>  
+> +	dev_info(dev, "Interrupt Aggregator domain %d created\n", pdev->id);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.27.0
+> 
+> 
 
-> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-> index ef4787cd3d37..ff24fca0a2d9 100644
-> --- a/drivers/usb/phy/Kconfig
-> +++ b/drivers/usb/phy/Kconfig
-> @@ -184,12 +184,4 @@ config USB_ULPI_VIEWPORT
->  	  Provides read/write operations to the ULPI phy register set for
->  	  controllers with a viewport register (e.g. Chipidea/ARC=20
-> controllers).
->=20
-> -config JZ4770_PHY
-> -	tristate "Ingenic SoCs Transceiver Driver"
-> -	depends on MIPS || COMPILE_TEST
-> -	select USB_PHY
-> -	help
-> -	  This driver provides PHY support for the USB controller found
-> -	  on the JZ-series and X-series SoCs from Ingenic.
-> -
->  endmenu
-> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-> index b352bdbe8712..df1d99010079 100644
-> --- a/drivers/usb/phy/Makefile
-> +++ b/drivers/usb/phy/Makefile
-> @@ -24,4 +24,3 @@ obj-$(CONFIG_USB_MXS_PHY)		+=3D phy-mxs-usb.o
->  obj-$(CONFIG_USB_ULPI)			+=3D phy-ulpi.o
->  obj-$(CONFIG_USB_ULPI_VIEWPORT)		+=3D phy-ulpi-viewport.o
->  obj-$(CONFIG_KEYSTONE_USB_PHY)		+=3D phy-keystone.o
-> -obj-$(CONFIG_JZ4770_PHY)		+=3D phy-jz4770.o
-> --
-> 2.11.0
+Thanks,
 
+	M.
 
+-- 
+Without deviation from the norm, progress is not possible.
