@@ -2,38 +2,74 @@ Return-Path: <SRS0=vke8=BF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84AFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 12:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7CFC433E8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 14:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20E120714
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 12:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3822065E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 14:10:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwLpKE/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgGZM6L (ORCPT
+        id S1726666AbgGZOKd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:58:11 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:43051 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgGZM6L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 08:58:11 -0400
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 35ADE240007;
-        Sun, 26 Jul 2020 12:58:07 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH] dt-bindings: power: Convert ingenic,battery.txt to YAML
-Date:   Sun, 26 Jul 2020 14:56:05 +0200
-Message-Id: <20200726125605.7009-1-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.27.0
+        Sun, 26 Jul 2020 10:10:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGZOKd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 10:10:33 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE79C0619D2;
+        Sun, 26 Jul 2020 07:10:33 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id f7so1883816pln.13;
+        Sun, 26 Jul 2020 07:10:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TrYoViD1Na8p/cme/0P1ewz9+ldHUHX3U6cruBs/b7w=;
+        b=rwLpKE/5d8jiOco9iFTlU3Kol0FhAPrKr/EmdSyeybLew44LlqhWw6tgZyzkVoa1gj
+         MpVaDk7QcGKkjp3euq9IbPzC5RgLi2Jd5FZwc6pIdKTeUhHHkC2/few0syTQxzjrx8se
+         Tz+OMHnXXYzAr5B+sa5eY8xaN0+1tThQ4mJg6M29c0iuHqsbrPCT1KU7YIipslqYDGAq
+         NZfrBAI+/kFyFxyqVBAv6rd06p2QpSgdqX1ML8680nbay2dcmZMbBXq3Su8Ht1XImvZQ
+         6VfRnpopfXk1iP8XFUWaAxGfVoXMskR00DD6yVr5PFW7Hnp30pavKVTXtsGOExvdx4h0
+         rUZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TrYoViD1Na8p/cme/0P1ewz9+ldHUHX3U6cruBs/b7w=;
+        b=Xcry54P7OlUYtdf7Qjt+V3aGFRbzQuWpc7TMH4sd5Qo9cCxYgCJnlIySmyoWYTIPTP
+         jx3rLadKCQU5tx9xAFanlvCpv1GT6ThwFlljCMINfq2+oM7YlOp7iJMfkZc45OPg7Sqf
+         Vsf6TVT8v+1iBZlgWux0BLzaG2ILfpYGoQVRbQ4LCHWZ6jb8IBUqqlRfHgsbiZDP0SPo
+         W2bdG674pK0/83qKG7Rrd0TVC0Pwr8dTGEOWMmAfRXxVJWhe7AKQuyxVAGQu63qlw4k0
+         M6hTjfYpgkRGie9WIJ6qzWXYT0aADd+Z9SrjU75oaPSFvcI6UrsCuPz71GxPOyWPKAE1
+         k6lg==
+X-Gm-Message-State: AOAM533sid0eX/z1DWoDS4DEK8pOlsnuTtJZNmmi0TJnb/MLZP428+IE
+        6Lz3/i3/K6kRS4HFsP3e1sU=
+X-Google-Smtp-Source: ABdhPJzcsX2Jrk1eDQZ4+OMXJCv/qsPL+y/GTkaLnq+c1EKblPedhvB0zp3HeKmyAecGEypQRyfEkw==
+X-Received: by 2002:a17:90a:c693:: with SMTP id n19mr2771821pjt.53.1595772633082;
+        Sun, 26 Jul 2020 07:10:33 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6d98:886d:d028:8959:a8a3:a7bc])
+        by smtp.gmail.com with ESMTPSA id d14sm11901928pjc.20.2020.07.26.07.10.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 07:10:32 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Nishant Malpani <nish.malpani25@gmail.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [v4 2/2] dt-bindings: iio: gyro: Add DT binding doc for ADXRS290
+Date:   Sun, 26 Jul 2020 19:40:26 +0530
+Message-Id: <20200726141026.2888-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -41,127 +77,97 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the textual documentation of Device Tree bindings for the
-Ingenic JZ47xx SoCs battery to YAML.
+Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 ---
- .../bindings/power/supply/ingenic,battery.txt | 31 ---------
- .../power/supply/ingenic,battery.yaml         | 67 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 31 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
- create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-deleted file mode 100644
-index 66430bf73815..000000000000
---- a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--* Ingenic JZ47xx battery bindings
--
--Required properties:
--
--- compatible: Must be "ingenic,jz4740-battery".
--- io-channels: phandle and IIO specifier pair to the IIO device.
--  Format described in iio-bindings.txt.
--- monitored-battery: phandle to a "simple-battery" compatible node.
--
--The "monitored-battery" property must be a phandle to a node using the format
--described in battery.txt, with the following properties being required:
--
--- voltage-min-design-microvolt: Drained battery voltage.
--- voltage-max-design-microvolt: Fully charged battery voltage.
--
--Example:
--
--#include <dt-bindings/iio/adc/ingenic,adc.h>
--
--simple_battery: battery {
--	compatible = "simple-battery";
--	voltage-min-design-microvolt = <3600000>;
--	voltage-max-design-microvolt = <4200000>;
--};
--
--ingenic_battery {
--	compatible = "ingenic,jz4740-battery";
--	io-channels = <&adc INGENIC_ADC_BATTERY>;
--	io-channel-names = "battery";
--	monitored-battery = <&simple_battery>;
--};
-diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml b/Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml
+No changes in v4.
+
+No changes in v3.
+
+Changes in v2:
+  - use 'const' instead of 'enum' while setting the compatible string
+    since only a single item is expected
+  - add 'additionalProperties: false'
+---
+ .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 53 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
 new file mode 100644
-index 000000000000..8d36216f6c0e
+index 000000000000..61adb2c2454b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml
-@@ -0,0 +1,67 @@
++++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+@@ -0,0 +1,53 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019-2020 Artur Rojek
++# Copyright 2020 Analog Devices Inc.
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/power/supply/ingenic,battery.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Ingenic JZ47xx battery bindings
++title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
 +
 +maintainers:
-+  - Artur Rojek <contact@artur-rojek.eu>
++  - Nishant Malpani <nish.malpani25@gmail.com>
++
++description: |
++  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4740-battery
-+      - items:
-+        - enum:
-+          - ingenic,jz4725b-battery
-+          - ingenic,jz4770-battery
-+        - const: ingenic,jz4740-battery
++    const: adi,adxrs290
 +
-+  io-channels:
-+    items:
-+      - description: >
-+          phandle and IIO specifier pair to the IIO device.
-+          See Documentation/devicetree/bindings/iio/iio-bindings.txt for more
-+          details.
++  reg:
++    maxItems: 1
 +
-+  io-channel-names:
-+    const: "battery"
++  spi-max-frequency:
++    maximum: 5000000
 +
-+  monitored-battery:
-+    items:
-+      - description: >
-+          phandle to a "simple-battery" compatible node.
++  spi-cpol: true
 +
-+          This property must be a phandle to a node using the format described
-+          in battery.txt, with the following properties being required:
-+          - voltage-min-design-microvolt: drained battery voltage,
-+          - voltage-max-design-microvolt: fully charged battery voltage.
++  spi-cpha: true
 +
 +required:
 +  - compatible
-+  - io-channels
-+  - io-channel-names
-+  - monitored-battery
++  - reg
++  - spi-max-frequency
++  - spi-cpol
++  - spi-cpha
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/iio/adc/ingenic,adc.h>
-+
-+    simple_battery: battery {
-+            compatible = "simple-battery";
-+            voltage-min-design-microvolt = <3600000>;
-+            voltage-max-design-microvolt = <4200000>;
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        gyro@0 {
++                   compatible = "adi,adxrs290";
++                   reg = <0>;
++                   spi-max-frequency = <5000000>;
++                   spi-cpol;
++                   spi-cpha;
++        };
 +    };
-+
-+    ingenic-battery {
-+            compatible = "ingenic,jz4740-battery";
-+            io-channels = <&adc INGENIC_ADC_BATTERY>;
-+            io-channel-names = "battery";
-+            monitored-battery = <&simple_battery>;
-+    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 71ae9b184179..bb2cd4ee140c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ F:	drivers/iio/gyro/adxrs290.c
++F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+ 
+ ANALOG DEVICES INC ASOC CODEC DRIVERS
+ M:	Lars-Peter Clausen <lars@metafoo.de>
 -- 
-2.27.0
+2.20.1
 
