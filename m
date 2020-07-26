@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3319C43457
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BB0C43459
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D903206D8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA57206D8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkEdKGdF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flI8fWpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgGZLNs (ORCPT
+        id S1728092AbgGZLON (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40162 "EHLO
+        Sun, 26 Jul 2020 07:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZLNs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 07:13:48 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A12C0619D2;
-        Sun, 26 Jul 2020 04:13:47 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c2so4217516edx.8;
-        Sun, 26 Jul 2020 04:13:47 -0700 (PDT)
+        with ESMTP id S1725794AbgGZLOM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 07:14:12 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA3EC0619D2;
+        Sun, 26 Jul 2020 04:14:11 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id q4so6842949edv.13;
+        Sun, 26 Jul 2020 04:14:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UbgBtdsZGIemXshDXMwmxf8DoQcpEbxLRUMayd/h/0g=;
-        b=GkEdKGdFtTYQj/wFf/bU8fnqXSKDhM5E0FjRRZJL84pEHDMtWyOnAXT6OdfN3bhReH
-         sKyk7syptobl4TxxsRCJ2Bn7k/nQuTFBkLv3Gii5l6BaMg/RiOg8rhssAI8l8Z9aTqwO
-         n47zSWet0TK8BesjiHOnq7Yj/MN1tg9VGJX0gvgtHpC7YnDsU6MKf0d5rnh9gF6SkJa+
-         GvjFgW++sRaGks9UYMNByvlEGD7rXzJyPc6XZpQfkwn98nPPzwgt6W6jjnl8lJbL6577
-         vQEq6d5cWTmTzNBS10zqJ+6xWqFgtofWSJ6KOOVBHMwcGRl3OOqeo/2HPU/HwPzsDy2l
-         icVQ==
+        bh=LUfFfp9zNtMJeMOSyzmVf43tvY2MECImRif7MwVvOZU=;
+        b=flI8fWplXeV4NqYt+NbEwfj6/P3nVa9YaeYrW7eNtfbviem/4HL5Inm0sQX/LU+wKu
+         0EYMdvebZh9dh5VD0rEyMt13w/pU1oTvM8vCitMStOgAyl6YV6vbhbIGgtwyESO8mAYl
+         BWGvAy0X92bxhfnFtBGMPzTJCVAydVjHWdk9mM7NepqofVqGRExYpoGWDz4Ijj9ukxss
+         qeycSB33yVv2WWKCbv6TCh+AjydwDITQ3HRW7zbmC2cWNF3c1ligrz0H7F6m0682o7f8
+         YRuhLNd+quOdIMZHNEF6720oEbEKchLgYltiAfv3C0O+aSQcoW6XHb/fumE7Gt8+NOfE
+         6HOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UbgBtdsZGIemXshDXMwmxf8DoQcpEbxLRUMayd/h/0g=;
-        b=cODFBRq51n9kKsg9DMHb6j9D5wXoDisf2H1UcaXjsQQT/YyscMqvHQRmqtSpkibHvD
-         od22IdYhH8HZsUbi2orlPX7ms0Ycz8meu97Myw+Yyjc9xgFPktYlKScS6rdKTBzuJtnV
-         F/sTVssn/cSpfolGZS5BpkJEmEPGKNmfIffw4zKMoDap4SruflyCl2pRaFxQzIBtoa+V
-         gc/c2SD95xGQAjZC2c4SzmsyGvjlYapIY4cMw1vMqvca2Fou5EzWWfSW2eUWMI5/yQ1X
-         3XjugQ1/18mdDuHxHTW9LjZnoqVzjmNcQo7+sNyynMIn5U4/kAZZDx0VkRK3arjw2xzr
-         b/iw==
-X-Gm-Message-State: AOAM531S5HutGbWwezfmhDUkZMF6xP3KTncHYqjHK9x7AjjlsR4nQR75
-        cZIzJLcyapRdYvnRtB3onHE=
-X-Google-Smtp-Source: ABdhPJzOyixNGF0EsoqZKZkm/6+YqgQs81jjv0P0Oa8ZJNnWeDK79k8NR0e7xq+4mLzEswwNytYdaA==
-X-Received: by 2002:a05:6402:308e:: with SMTP id de14mr1187894edb.344.1595762026436;
-        Sun, 26 Jul 2020 04:13:46 -0700 (PDT)
+        bh=LUfFfp9zNtMJeMOSyzmVf43tvY2MECImRif7MwVvOZU=;
+        b=WSxpMCb02GUQqvtNIabbFK/Z2C6BapwL0tmaWtQ4zfmlBHEJAopm2Zm9EYIj+h3bgJ
+         hs/puu5m+AjHSe/9+wZno2+BxPGCXOd9vAnjitPxPNK27kJXF/2iy73x5KecRHyJxLAj
+         d4Ph+c7HITaCk9dGujxdYt1X8dcAwZrJrZQvZwXiftRLJ91uu9FOVuRNzWLhOE+9yjd0
+         OU7PMRozKFp+FPRDSbl9hW7d2rZpb8xTk5C27iFG9beUtIVZY1i3XygyucAFx93OlUTl
+         E6/J6HMEWcypmzeNsm+NH7NFSjX41jFdww/YFggLQDNvqb2GjJe1ZsIfSTmLAtyAybVd
+         grZw==
+X-Gm-Message-State: AOAM531/azrtaK7qE5SaLEovWhkXUoghwYh7OKhZ1Tn+AdyfafvPm15I
+        FLyztBI3g3zbyJhG66RS3Zc=
+X-Google-Smtp-Source: ABdhPJw5Eyc80VzfIucZdXtXwLwr8WKxsrf9o44YaVyHILn/zuotPfHFiHAb5I1Q8FGys+Yp0R07GQ==
+X-Received: by 2002:a50:ed89:: with SMTP id h9mr4636525edr.331.1595762050104;
+        Sun, 26 Jul 2020 04:14:10 -0700 (PDT)
 Received: from localhost.localdomain (abad207.neoplus.adsl.tpnet.pl. [83.6.167.207])
-        by smtp.googlemail.com with ESMTPSA id d23sm4696253ejj.74.2020.07.26.04.13.44
+        by smtp.googlemail.com with ESMTPSA id d23sm4696253ejj.74.2020.07.26.04.14.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 04:13:46 -0700 (PDT)
+        Sun, 26 Jul 2020 04:14:09 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     konradybcio@gmail.com
 Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
@@ -87,10 +87,10 @@ Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
         linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-clk@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH 3/9] drivers: usb: dwc3-qcom: Add sdm660 compatible
-Date:   Sun, 26 Jul 2020 13:12:00 +0200
-Message-Id: <20200726111215.22361-4-konradybcio@gmail.com>
+        linux-clk@vger.kernel.org
+Subject: [PATCH 5/9] drm/msm/mdp5: Add MDP5 configuration for SDM630
+Date:   Sun, 26 Jul 2020 13:12:02 +0200
+Message-Id: <20200726111215.22361-6-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200726111215.22361-1-konradybcio@gmail.com>
 References: <20200726111215.22361-1-konradybcio@gmail.com>
@@ -101,36 +101,126 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This commit adds support for the MDP5 IP on Snapdragon
+630. The configuration is different from SDM660's, as
+the latter one has two DSI outputs.
+
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
- drivers/usb/dwc3/dwc3-qcom.c                         | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 93 ++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-index dac10848dd7f..c5280d6406ec 100644
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
-@@ -16,6 +16,7 @@ properties:
-           - qcom,msm8996-dwc3
-           - qcom,msm8998-dwc3
-           - qcom,sc7180-dwc3
-+          - qcom,sdm660-dwc3
-           - qcom,sdm845-dwc3
-       - const: qcom,dwc3
- 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index 1dfd024cd06b..d6b3e1bb550a 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -753,6 +753,7 @@ static const struct of_device_id dwc3_qcom_of_match[] = {
- 	{ .compatible = "qcom,dwc3" },
- 	{ .compatible = "qcom,msm8996-dwc3" },
- 	{ .compatible = "qcom,msm8998-dwc3" },
-+	{ .compatible = "qcom,sdm660-dwc3" },
- 	{ .compatible = "qcom,sdm845-dwc3" },
- 	{ }
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+index 25a13a2a57a9..2e02de8a7e41 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+@@ -910,6 +910,98 @@ static const struct mdp5_cfg_hw msm8998_config = {
+ 	.max_clk = 412500000,
  };
+ 
++static const struct mdp5_cfg_hw sdm630_config = {
++	.name = "sdm630",
++	.mdp = {
++		.count = 1,
++		.caps = MDP_CAP_CDM |
++			MDP_CAP_SRC_SPLIT |
++			0,
++	},
++	.ctl = {
++		.count = 5,
++		.base = { 0x01000, 0x01200, 0x01400, 0x01600, 0x01800 },
++		.flush_hw_mask = 0xf4ffffff,
++	},
++	.pipe_vig = {
++		.count = 1,
++		.base = { 0x04000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SCALE	|
++			MDP_PIPE_CAP_CSC	|
++			MDP_PIPE_CAP_DECIMATION	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			0,
++	},
++	.pipe_rgb = {
++		.count = 4,
++		.base = { 0x14000, 0x16000, 0x18000, 0x1a000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SCALE	|
++			MDP_PIPE_CAP_DECIMATION	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			0,
++	},
++	.pipe_dma = {
++		.count = 2, /* driver supports max of 2 currently */
++		.base = { 0x24000, 0x26000, 0x28000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			0,
++	},
++	.pipe_cursor = {
++		.count = 1,
++		.base = { 0x34000 },
++		.caps = MDP_PIPE_CAP_HFLIP	|
++			MDP_PIPE_CAP_VFLIP	|
++			MDP_PIPE_CAP_SW_PIX_EXT	|
++			MDP_PIPE_CAP_CURSOR	|
++			0,
++	},
++
++	.lm = {
++		.count = 2,
++		.base = { 0x44000, 0x46000 },
++		.instances = {
++				{ .id = 0, .pp = 0, .dspp = 0,
++				  .caps = MDP_LM_CAP_DISPLAY |
++					  MDP_LM_CAP_PAIR, },
++				{ .id = 1, .pp = 1, .dspp = -1,
++				  .caps = MDP_LM_CAP_WB, },
++				},
++		.nb_stages = 8,
++		.max_width = 2048,
++		.max_height = 0xFFFF,
++	},
++	.dspp = {
++		.count = 1,
++		.base = { 0x54000 },
++	},
++	.ad = {
++		.count = 2,
++		.base = { 0x78000, 0x78800 },
++	},
++	.pp = {
++		.count = 3,
++		.base = { 0x70000, 0x71000, 0x72000 },
++	},
++	.cdm = {
++		.count = 1,
++		.base = { 0x79200 },
++	},
++	.intf = {
++		.base = { 0x6a000, 0x6a800 },
++		.connect = {
++			[0] = INTF_DISABLED,
++			[1] = INTF_DSI,
++		},
++	},
++	.max_clk = 412500000,
++};
++
+ static const struct mdp5_cfg_handler cfg_handlers_v1[] = {
+ 	{ .revision = 0, .config = { .hw = &msm8x74v1_config } },
+ 	{ .revision = 2, .config = { .hw = &msm8x74v2_config } },
+@@ -924,6 +1016,7 @@ static const struct mdp5_cfg_handler cfg_handlers_v1[] = {
+ 
+ static const struct mdp5_cfg_handler cfg_handlers_v3[] = {
+ 	{ .revision = 0, .config = { .hw = &msm8998_config } },
++	{ .revision = 3, .config = { .hw = &sdm630_config } },
+ };
+ 
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev);
 -- 
 2.27.0
 
