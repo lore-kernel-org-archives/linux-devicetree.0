@@ -2,172 +2,156 @@ Return-Path: <SRS0=vke8=BF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7CFC433E8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 14:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB457C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 14:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3822065E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 14:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E9F207BB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 14:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwLpKE/5"
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="cPtQupmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgGZOKd (ORCPT
+        id S1726781AbgGZO3O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 10:10:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39138 "EHLO
+        Sun, 26 Jul 2020 10:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGZOKd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 10:10:33 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE79C0619D2;
-        Sun, 26 Jul 2020 07:10:33 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id f7so1883816pln.13;
-        Sun, 26 Jul 2020 07:10:33 -0700 (PDT)
+        with ESMTP id S1725949AbgGZO3O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 10:29:14 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30D6C0619D4
+        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 07:29:12 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id d6so662059ejr.5
+        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 07:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TrYoViD1Na8p/cme/0P1ewz9+ldHUHX3U6cruBs/b7w=;
-        b=rwLpKE/5d8jiOco9iFTlU3Kol0FhAPrKr/EmdSyeybLew44LlqhWw6tgZyzkVoa1gj
-         MpVaDk7QcGKkjp3euq9IbPzC5RgLi2Jd5FZwc6pIdKTeUhHHkC2/few0syTQxzjrx8se
-         Tz+OMHnXXYzAr5B+sa5eY8xaN0+1tThQ4mJg6M29c0iuHqsbrPCT1KU7YIipslqYDGAq
-         NZfrBAI+/kFyFxyqVBAv6rd06p2QpSgdqX1ML8680nbay2dcmZMbBXq3Su8Ht1XImvZQ
-         6VfRnpopfXk1iP8XFUWaAxGfVoXMskR00DD6yVr5PFW7Hnp30pavKVTXtsGOExvdx4h0
-         rUZQ==
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7NgctBmCqLgQBnHYafy5r5rDsgw6j6oRlbINnPPqer0=;
+        b=cPtQupmk1fewrsDSJE9eb5vshcj32eD6Ersn4gDO9eNd6Ue1J8TTT513AbOaU188zs
+         AFhrKzbGgOthhgLIv7kksB+ClxWzSueRE1uglOlaoNsTsZyf9B+bzJiS+tpChshZNnBx
+         jG7QPFt44f1VS8a/+nZT2WeMe/G9NCBDPPm4HUnwcT9dy/zwJ5SzHwOmd7CTs+gwiBqj
+         bzjRkzNxOgk/XBF69w5CuAJhiGIlAC4SmYNINF4Buj0bhy9eQvwlc8yYeeo6BUAlSJfO
+         rCpj9D4E/yEXL1JlRHqSpG0lcFfNFaw3IXioKQHV91iwjY8z8na9xqtHPwMYUOlv9L+k
+         +zCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TrYoViD1Na8p/cme/0P1ewz9+ldHUHX3U6cruBs/b7w=;
-        b=Xcry54P7OlUYtdf7Qjt+V3aGFRbzQuWpc7TMH4sd5Qo9cCxYgCJnlIySmyoWYTIPTP
-         jx3rLadKCQU5tx9xAFanlvCpv1GT6ThwFlljCMINfq2+oM7YlOp7iJMfkZc45OPg7Sqf
-         Vsf6TVT8v+1iBZlgWux0BLzaG2ILfpYGoQVRbQ4LCHWZ6jb8IBUqqlRfHgsbiZDP0SPo
-         W2bdG674pK0/83qKG7Rrd0TVC0Pwr8dTGEOWMmAfRXxVJWhe7AKQuyxVAGQu63qlw4k0
-         M6hTjfYpgkRGie9WIJ6qzWXYT0aADd+Z9SrjU75oaPSFvcI6UrsCuPz71GxPOyWPKAE1
-         k6lg==
-X-Gm-Message-State: AOAM533sid0eX/z1DWoDS4DEK8pOlsnuTtJZNmmi0TJnb/MLZP428+IE
-        6Lz3/i3/K6kRS4HFsP3e1sU=
-X-Google-Smtp-Source: ABdhPJzcsX2Jrk1eDQZ4+OMXJCv/qsPL+y/GTkaLnq+c1EKblPedhvB0zp3HeKmyAecGEypQRyfEkw==
-X-Received: by 2002:a17:90a:c693:: with SMTP id n19mr2771821pjt.53.1595772633082;
-        Sun, 26 Jul 2020 07:10:33 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6d98:886d:d028:8959:a8a3:a7bc])
-        by smtp.gmail.com with ESMTPSA id d14sm11901928pjc.20.2020.07.26.07.10.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 07:10:32 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Nishant Malpani <nish.malpani25@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [v4 2/2] dt-bindings: iio: gyro: Add DT binding doc for ADXRS290
-Date:   Sun, 26 Jul 2020 19:40:26 +0530
-Message-Id: <20200726141026.2888-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7NgctBmCqLgQBnHYafy5r5rDsgw6j6oRlbINnPPqer0=;
+        b=ZqbEdGwndnyncCyj/u7RoMu09+7dg1rs8Zux0E9uKdTqGuly45Rd3J7MI+BocSxQK1
+         81/xSQpUUZSUvoRM6jMFfzNj0ek2CTa3bInaoVc232+JdLt11ZSLM8JVfSvKV3DznW4I
+         ltFjeOkJhmgskOu5k8OmqwEX9GnLbrsxEtjiQiesM6lweQfgi51YExBjKDN/uzUjJlFJ
+         mHmODfheqnGUIrUVYrUFLz8UCZcJ0wem1Ow1L/tEHDRIVKisAdkOMEqW3ib99AP9EzCB
+         Xc+CywQRSDIk3lwhU8TistyTLpqncY8ogycqMEgV43REonfYKGNA1805cKUljofd6Nr2
+         +R+A==
+X-Gm-Message-State: AOAM531vzIE/MvMrSje8oflGxRNaoSrVOwmgxs/k0YoRRrYKFziUc8gz
+        /w9pPGHPvGXN+8HQXiY/nF7YjkorQh98OyVDbiB66g==
+X-Google-Smtp-Source: ABdhPJzBeuYaugwjE9rJF2v3mAtHaNmHcXv/fPnmdymnSEvfi/ZfOBepfh/WGmh6X9cuHm1Lqxfnl3IKozqO1B3ATn0=
+X-Received: by 2002:a17:906:1e43:: with SMTP id i3mr16626277ejj.92.1595773751471;
+ Sun, 26 Jul 2020 07:29:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200713060842.471356-1-acourbot@chromium.org> <20200713060842.471356-8-acourbot@chromium.org>
+In-Reply-To: <20200713060842.471356-8-acourbot@chromium.org>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Sun, 26 Jul 2020 11:29:00 -0300
+Message-ID: <CAAEAJfA4Po9R25CzBxiFAV=7-7rPujLc79zLnXyXWk7xNbBtYA@mail.gmail.com>
+Subject: Re: [PATCH v3 07/16] media: mtk-vcodec: venc: specify supported
+ formats per-chip
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add devicetree binding document for ADXRS290, a dual-axis MEMS gyroscope.
+Hi Alexandre,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
+Last review on my side, this series looks mostly good.
 
-No changes in v4.
+On Mon, 13 Jul 2020 at 03:09, Alexandre Courbot <acourbot@chromium.org> wrote:
+>
+> Different chips have different supported bitrate ranges. Move the list
 
-No changes in v3.
+s/bitrate ranges/formats
 
-Changes in v2:
-  - use 'const' instead of 'enum' while setting the compatible string
-    since only a single item is expected
-  - add 'additionalProperties: false'
----
- .../bindings/iio/gyroscope/adi,adxrs290.yaml  | 53 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+> of supported formats to the platform data, and split the output and
+> capture formats into two lists to make it easier to find the default
+> format for each queue.
+>
+> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> ---
+>  .../platform/mtk-vcodec/mtk_vcodec_drv.h      |   8 ++
+>  .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 122 +++++++-----------
+>  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  40 ++++++
+>  3 files changed, 95 insertions(+), 75 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> index b8f913de8d80..59b4b750666b 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> @@ -313,6 +313,10 @@ enum mtk_chip {
+>   * @has_lt_irq: whether the encoder uses the LT irq
+>   * @min_birate: minimum supported encoding bitrate
+>   * @max_bitrate: maximum supported encoding bitrate
+> + * @capture_formats: array of supported capture formats
+> + * @num_capture_formats: number of entries in capture_formats
+> + * @output_formats: array of supported output formats
+> + * @num_output_formats: number of entries in output_formats
+>   */
+>  struct mtk_vcodec_enc_pdata {
+>         enum mtk_chip chip;
+> @@ -321,6 +325,10 @@ struct mtk_vcodec_enc_pdata {
+>         bool has_lt_irq;
+>         unsigned long min_bitrate;
+>         unsigned long max_bitrate;
+> +       const struct mtk_video_fmt *capture_formats;
+> +       size_t num_capture_formats;
+> +       const struct mtk_video_fmt *output_formats;
+> +       size_t num_output_formats;
+>  };
+>
+>  /**
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> index 50ba9da59153..05743a745a11 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> @@ -23,47 +23,9 @@
+>  #define DFT_CFG_WIDTH  MTK_VENC_MIN_W
+>  #define DFT_CFG_HEIGHT MTK_VENC_MIN_H
+>  #define MTK_MAX_CTRLS_HINT     20
+> -#define OUT_FMT_IDX            0
+> -#define CAP_FMT_IDX            4
+> -
+>
+>  static void mtk_venc_worker(struct work_struct *work);
+>
+> -static const struct mtk_video_fmt mtk_video_formats[] = {
+> -       {
+> -               .fourcc = V4L2_PIX_FMT_NV12M,
+> -               .type = MTK_FMT_FRAME,
+> -               .num_planes = 2,
 
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-new file mode 100644
-index 000000000000..61adb2c2454b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2020 Analog Devices Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/gyroscope/adi,adxrs290.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope
-+
-+maintainers:
-+  - Nishant Malpani <nish.malpani25@gmail.com>
-+
-+description: |
-+  Bindings for the Analog Devices ADXRS290 dual-axis MEMS gyroscope device.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADXRS290.pdf
-+
-+properties:
-+  compatible:
-+    const: adi,adxrs290
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 5000000
-+
-+  spi-cpol: true
-+
-+  spi-cpha: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - spi-max-frequency
-+  - spi-cpol
-+  - spi-cpha
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        gyro@0 {
-+                   compatible = "adi,adxrs290";
-+                   reg = <0>;
-+                   spi-max-frequency = <5000000>;
-+                   spi-cpol;
-+                   spi-cpha;
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 71ae9b184179..bb2cd4ee140c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1103,6 +1103,7 @@ M:	Nishant Malpani <nish.malpani25@gmail.com>
- L:	linux-iio@vger.kernel.org
- S:	Supported
- F:	drivers/iio/gyro/adxrs290.c
-+F:	Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
- 
- ANALOG DEVICES INC ASOC CODEC DRIVERS
- M:	Lars-Peter Clausen <lars@metafoo.de>
--- 
-2.20.1
+Again, not an issue with your patch, so feel free to ignore this.
 
+You may avoid keeping track of num_planes (or any other
+property of the pixel format) and use v4l2_fill_pixfmt_mp
+to get all the information you need.
+
+Thanks,
+Ezequiel
