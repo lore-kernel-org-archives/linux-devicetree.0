@@ -2,77 +2,111 @@ Return-Path: <SRS0=vke8=BF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B653C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 12:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5375FC433F1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 12:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F1220714
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 12:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595766872;
-	bh=eAlrwCkGaxj2oiht2tjkTxM5eF+LRyV8H2S//rwKV3U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=G26RvdhUAIptB5lpq0L/oqU8WNODYAH68k2VuONvNFQf9eCoUQT/grJ1uPOMHfAQa
-	 iVUHCpOHXy+tKdaAjeTNGVj7kCxPCVynMRFCEWkbUMEOXP2b8Zl2GBFayLnoDZr5i9
-	 noCXuvciYuwatQBu9Fh3VXCy8nmiQqWkMDf2+1fE=
+	by mail.kernel.org (Postfix) with ESMTP id 323012065E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 12:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="3MJ7whwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgGZMeb (ORCPT
+        id S1727840AbgGZMfi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:34:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36306 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 08:35:38 -0400
+Received: from www.zeus03.de ([194.117.254.33]:40024 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGZMeb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:34:31 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D69206D8;
-        Sun, 26 Jul 2020 12:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595766871;
-        bh=eAlrwCkGaxj2oiht2tjkTxM5eF+LRyV8H2S//rwKV3U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EMBU7P7XKWlZRdrGObVzCaZwqdkb14rHsmAp7n15osZp8wx49LWa3Syiw2oA9TS5q
-         kSHyjJDwrdoLxwWOr5Ab49nMsKhDeBNMessWObwGf3Uwyj9kDGjOByrQCLJUyPZNGj
-         35bFaFl0wX/MMpw4OHFKP3RDJW/8bnW/1hfKpVX8=
-Date:   Sun, 26 Jul 2020 13:34:27 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Matt Ranostay <matt.ranostay@konsulko.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: chemical: add O2 EZO module
- documentation
-Message-ID: <20200726133427.711b4157@archlinux>
-In-Reply-To: <20200723174731.GA596034@bogus>
-References: <20200720070330.259954-1-matt.ranostay@konsulko.com>
-        <20200720070330.259954-3-matt.ranostay@konsulko.com>
-        <20200723174731.GA596034@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726990AbgGZMf1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:35:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=hAn/LE/O5d3kxI+zRKnrNTOzPNdu
+        g55BS3PlBbqbkJU=; b=3MJ7whwPdGP07MOckxZuQXNLp9AS5PydqOUWUjnhNGs0
+        /ygHQgdVM2x4IK/MtT1F3yEwT1ut9AYnVGGr9FqADjhd+oPIpAvZr+BNTWUX27L4
+        F6X/cRcF8BiDuVy6q1EvbMDmKS5Tk/FLrY9aLvfbfUvL9xR/BgY+7WIXIm+KyS0=
+Received: (qmail 40443 invoked from network); 26 Jul 2020 14:35:24 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Jul 2020 14:35:24 +0200
+X-UD-Smtp-Session: l3s3148p1@wgOmcFer/o8gAwDPXy27AOM4pzPBFrIA
+Date:   Sun, 26 Jul 2020 14:35:23 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 12/20] dt-bindings: i2c: renesas,iic: Document r8a774e1
+ support
+Message-ID: <20200726123523.GD2484@ninjato>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YToU2i3Vx8H2dn7O"
+Content-Disposition: inline
+In-Reply-To: <1594811350-14066-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2020 11:47:31 -0600
-Rob Herring <robh@kernel.org> wrote:
 
-> On Mon, 20 Jul 2020 00:03:29 -0700, Matt Ranostay wrote:
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-> > ---
-> >  .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >   
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-Applied.
+--YToU2i3Vx8H2dn7O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Wed, Jul 15, 2020 at 12:09:02PM +0100, Lad Prabhakar wrote:
+> Document IIC controller for RZ/G2H (R8A774E1) SoC, which is compatible
+> with R-Car Gen3 SoC family.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
+as.com>
 
+Applied to for-next, thanks!
+
+
+--YToU2i3Vx8H2dn7O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8deIsACgkQFA3kzBSg
+KbZtUQ/+JiFdXGopN/62fLmk1CxZX8mBIzoyojCZ2h3EScRmzR7ZPXc+JBB2nDdj
+LW1Rnv2JMK+Grggia9/QsY4fPQHIyclI36TdZjYSqN6pf1CNCj1edHRwG3UmH5NX
+wDE/uaHhcDuluDGRxx4yeRugfTrIu2uPVaLEmLnWxeQLNPQetBGOYkhqrQ1Nq124
+DlNu+O274kobkRLex7AgtEDKQifMt5+xxWddrfpuitktDS2GuOQameQlVxLP0KJ9
+WLZMlv1Axh9jF9J/Zj+i1q3c1HAk/I5coZ5GLE0v5tjm38/lzo2ysi8lJbW7qyJK
+g9z/XvhRfD3FVm9+0Pejmf9/gmhzV7xHJQgELNOXrUvLs5v4ZeqPJxjGIF3ioSZb
+cURJ14zLCLzDya8omSqxlw9A+efai0pmWCqf0TA7U43USV1fXt2w6FbevI+rpqZG
+xuo/XSRsXgKSXZpGHUzf/YmYVNTNXZ9220lFmBgBoM3716H+SXlSlXjW42n40J3q
+KxhmVu+kCjATOz67YUjGeHM03FDh2u2/qkPFgO5fQOSBqinaub81RYUbZEBlGggu
++mr8XVxUe/GsIFHuevSwmRpSTyoSc1SCyt4W3OkyCEh1xsJWKnrbqeJhdjruqXZY
+HtmnMFsLCgIunvtHSMu7nQCJDI4Q7s9f+oxVxO1Wtx+RNrir5Yc=
+=YVyw
+-----END PGP SIGNATURE-----
+
+--YToU2i3Vx8H2dn7O--
