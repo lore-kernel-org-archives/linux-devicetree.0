@@ -2,95 +2,123 @@ Return-Path: <SRS0=vke8=BF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029A2C433E8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 15:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E6EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 16:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB6562065F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 15:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595779019;
-	bh=v13Fxhc84IN1axB88Du7lE/qbL3kockSOUNFFm3PwLg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZCNNktPKN8rgOnGQ9smfJRVc2cVa2O6lyrjgdeyUG1YNFu0nIOGQYTvDH+AwRkVr
-	 AAU6A+wdLul9YAhvgOC2p1XTZYl+E/ql6BnG9vzwTLEQiqPul95n403/2b7Q3LiBWU
-	 9BqgSk3a3wkTKX/hK1hg/8+MidX+VZ55tdROcDPo=
+	by mail.kernel.org (Postfix) with ESMTP id 7F7BB20714
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 16:54:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZYXiUPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGZP44 (ORCPT
+        id S1726117AbgGZQyl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgGZP44 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:56:56 -0400
-Received: from localhost.localdomain (unknown [194.230.155.213])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F0520714;
-        Sun, 26 Jul 2020 15:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595779015;
-        bh=v13Fxhc84IN1axB88Du7lE/qbL3kockSOUNFFm3PwLg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7k3bNuchI6J7q85gstyyJGj9DVLqYIPWtl2Iz1ybboZmf8HR7kHFI63b6Xu/+Ger
-         UosG0vy04u6lE2tFKYlrKBVHu9LhYy3n9AC/+IBL56xIrJQIdkBJKp7zJGwKEDJKv8
-         OD7p+oc0w7tnPqsNVESsJ0Qdf/eVXf1Hm7eAc2eY=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>,
+        Sun, 26 Jul 2020 12:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbgGZQyk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 12:54:40 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701F1C0619D2;
+        Sun, 26 Jul 2020 09:54:40 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so14676225eje.7;
+        Sun, 26 Jul 2020 09:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CBVgBFjkce72YAGTOc2I0NfR2QTyjZahMOR47tbfoe0=;
+        b=WZYXiUPxENKn4QSxY7fPf+iBaAhsNwecbIqIua+YO2effyaCG04XLdhlYe/ugtAfun
+         1fXbuueu1sL3HDK5Dtsz0YubABpEtjbQo7eptsxI/lBXgWB/3WVVVEEmE5w+FLXH6uKi
+         ZIeZey8Cvr8anwVeJAwUu0rt41msmaOcLhKWamXZ4XPPQloplOSyM69HBfahGiFQeaKe
+         VdrYrSXa5wP7b1gmFMJiWqd2K8TOxBosAvi2Z9c8hlyuujPC5uhKq+dgDVj4VMpUybxU
+         kiYkfmIFSDy/R08StwIylDGo6dkk0/l7B5Clr00ZfG0Jw2OpT/++z7w9JMSJTwfmA6aD
+         AyRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CBVgBFjkce72YAGTOc2I0NfR2QTyjZahMOR47tbfoe0=;
+        b=eU1/5pJJ/Y2cGdpiHfbQRzKvGY88AEUZ/0uLpQhgbFxWBcLlpToVVzyd4gjgDPeVxd
+         7Gx41iUTW7lLgsQVPmXL/HcmdNAPLbQW7EYppYSZOerdPweKGXr6okcfF2I6csVhze51
+         5UoDoSqgyPV1JTqbeU22/ARU63jFBUhBCgQIZMn/2BPKerlURuMZ/3XYLsjRhIV+7P6v
+         ai3XV70obt//9JJa1XAy7XqzGmNR4OqaGbp0Q+jqIACN054CP3pZkXB9kB44RMR/OXh6
+         522r90nCbMDte0w5xuneGgfNqQpPLvjPED69qaRfwTv4J+F+AbBaRU6wOTsxwAK1fKJX
+         XfuA==
+X-Gm-Message-State: AOAM530YLTH+/fyFXnKcMKzhVIhMtkdhb2OM9UPWb2q34x7j/zBEY1x6
+        SFz95O16mFBDcp8BySgK52NdCaoKYECdWuh8F6k=
+X-Google-Smtp-Source: ABdhPJwDnlAPaImQnrQAApbQ+w+cGsIt/2VZqafSu7Ti4+lytmzJqD4dBVNo+ZeSue4XBagNFOp/lX3pdQrzVmj/eOM=
+X-Received: by 2002:a17:906:f199:: with SMTP id gs25mr1970599ejb.161.1595782478958;
+ Sun, 26 Jul 2020 09:54:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200720154047.3611092-1-jcrouse@codeaurora.org> <20200720154047.3611092-8-jcrouse@codeaurora.org>
+In-Reply-To: <20200720154047.3611092-8-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sun, 26 Jul 2020 09:55:18 -0700
+Message-ID: <CAF6AEGu50KtjFHJO3Txrbjnn1xoG5WDyuU_e__RsGPXe-5Z46g@mail.gmail.com>
+Subject: Re: [PATCH v10 07/13] dt-bindings: arm-smmu: Add compatible string
+ for Adreno GPU SMMU
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 2/2] MAINTAINERS: Add linux-mips mailing list to JZ47xx entries
-Date:   Sun, 26 Jul 2020 17:55:59 +0200
-Message-Id: <20200726155559.4650-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200726155559.4650-1-krzk@kernel.org>
-References: <20200726155559.4650-1-krzk@kernel.org>
+        Will Deacon <will@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The entries for JZ47xx SoCs and its drivers lacked MIPS mailing list.
-Only MTD NAND driver pointed linux-mtd.  Add linux-mips so the relevant
-patches will get attention of MIPS developers.
+On Mon, Jul 20, 2020 at 8:41 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Every Qcom Adreno GPU has an embedded SMMU for its own use. These
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Paul Cercueil <paul@crapouillou.net>
+minor detail: this is true for a3xx and later but not a2xx ;-)
 
----
-
-Changes since v1:
-1. Do not update DMA driver entry
-2. Add ack
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 362863cae239..d1cc0afe0762 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8544,11 +8544,13 @@ F:	samples/bpf/ibumad_user.c
- INGENIC JZ4780 NAND DRIVER
- M:	Harvey Hunt <harveyhuntnexus@gmail.com>
- L:	linux-mtd@lists.infradead.org
-+L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	drivers/mtd/nand/raw/ingenic/
- 
- INGENIC JZ47xx SoCs
- M:	Paul Cercueil <paul@crapouillou.net>
-+L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	arch/mips/boot/dts/ingenic/
- F:	arch/mips/include/asm/mach-jz4740/
--- 
-2.17.1
-
+> devices depend on unique features such as split pagetables,
+> different stall/halt requirements and other settings. Identify them
+> with a compatible string so that they can be identified in the
+> arm-smmu implementation specific code.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index d7ceb4c34423..e52a1b146c97 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -38,6 +38,10 @@ properties:
+>                - qcom,sc7180-smmu-500
+>                - qcom,sdm845-smmu-500
+>            - const: arm,mmu-500
+> +      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+> +        items:
+> +          - const: qcom,adreno-smmu
+> +          - const: qcom,smmu-v2
+>        - items:
+>            - const: arm,mmu-500
+>            - const: arm,smmu-v2
+> --
+> 2.25.1
+>
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
