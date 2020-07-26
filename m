@@ -2,295 +2,187 @@ Return-Path: <SRS0=vke8=BF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94901C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 17:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2EDC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 18:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7984C2065F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 17:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B82D20714
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 18:37:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="rl6LjERp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbgGZRuh (ORCPT
+        id S1727116AbgGZShB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 13:50:37 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:32938 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgGZRuh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 13:50:37 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 7061420023;
-        Sun, 26 Jul 2020 19:50:32 +0200 (CEST)
-Date:   Sun, 26 Jul 2020 19:50:31 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch,
-        Laurent.pinchart@ideasonboard.com, robh+dt@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, praneeth@ti.com,
-        nsekhar@ti.com, jsarha@ti.com, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v7 3/3] drm: bridge: cdns-mhdp: Add j721e wrapper
-Message-ID: <20200726175031.GK3275923@ravnborg.org>
-References: <1595403640-12816-1-git-send-email-sjakhade@cadence.com>
- <1595403640-12816-4-git-send-email-sjakhade@cadence.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595403640-12816-4-git-send-email-sjakhade@cadence.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=sozttTNsAAAA:8 a=Br2UW1UjAAAA:8 a=P1BnusSwAAAA:8
-        a=e5mUnYsNAAAA:8 a=eEAO8_bJDlSYck1gigMA:9 a=CjuIK1q_8ugA:10
-        a=aeg5Gbbo78KNqacMgKqU:22 a=WmXOPjafLNExVIMTj843:22
-        a=D0XLA9XvdZm18NrgonBM:22 a=Vxmtnl_E_bksehYqCbjh:22
+        Sun, 26 Jul 2020 14:37:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgGZShB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 14:37:01 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7A3C0619D2
+        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 11:37:01 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n5so8150753pgf.7
+        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 11:37:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JHh5cFzdRiiCn+biAgSR51wErCAzwQcPpQ2EoQumVdo=;
+        b=rl6LjERpipRPZtBwIL7X4iy2CIPyQ9Zl+dJelxAOJONKIgwGqRBlkXFkvWZ8EwhYSM
+         u516NvJ09D+EaM0yT5gUtY81dZTgiVXri+b7BUkrUxwv2/4/XNigjYoFGcVgRPu/wF82
+         Kkh5vnopH8FYWb2qAomTJ9nmt6F4f2Z8srvfMtizs0z8n/Y1WV9iUH8G6uyFIV1eKkaH
+         bLs//RT0quniU7FesUVGE6MazpFJwnXnTTmrMa8Bn4hZOG/+O3EZ5FPa+O0LZiYQLaYL
+         nQJdWp34qygYaribmhcIPKTsJNIDyO2gm1VCn0hr1F6IuXQrNz2d9Ao9UllbMhiyHnuq
+         cVBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=JHh5cFzdRiiCn+biAgSR51wErCAzwQcPpQ2EoQumVdo=;
+        b=caPZrYJ7jqbKDUdItXqHx3nxTrjPgKnLV2ENtlcUFLiIaKjlCrvzGUsDTsmaNkzYxh
+         yFfHTggYDaB1PtkyCDWB89C4uuSBQkqsVcES6rSGxUcRQIGgaA3gWdlnhbXBKTxBFGku
+         RGZScaCWYxjHQ9zJSfNsZKDKrnLyH91iNn7V79ySZL8eHYKS0IGNI+PVk/y8LxMd3ZxY
+         VF1GiJmBnXEJq8ETSeOJEoGMVOtDPIFhAzeHOvPcMYIc2AddY78j2mrZtKgthpRifsr6
+         XUg13LEfYn7Wg+xLuzUTE6n7VZ1cjvcYVHsAVvYxlZEuLq5fj82yuurBCoC6U2nIAjnW
+         H1GQ==
+X-Gm-Message-State: AOAM5311hhEspekOygQqzNad//LjwhTCM31e9BCHbJuf7qKWlcT6OLBj
+        lqLbqBNsPRO6BCcCHrpO0oCAag==
+X-Google-Smtp-Source: ABdhPJwZi7YuLtKvHHHpTUUiFWqFIbWskKh6Eje8v+OZ3A5rX35gIG8XYiFjYgjx1VL/wj+izccBew==
+X-Received: by 2002:a65:63d4:: with SMTP id n20mr17384523pgv.213.1595788620755;
+        Sun, 26 Jul 2020 11:37:00 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id k63sm12740008pge.0.2020.07.26.11.36.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 11:37:00 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 11:37:00 -0700 (PDT)
+X-Google-Original-Date: Sun, 26 Jul 2020 11:36:53 PDT (-0700)
+Subject:     Re: [PATCH v4 4/4] dt-bindings: timer: Add CLINT bindings
+In-Reply-To: <CAAhSdy1Dx+oP0guRGvCFa61gL93R+pcQDYLdMpo+LaOjA5tvBQ@mail.gmail.com>
+CC:     atishp@atishpatra.org, devicetree@vger.kernel.org,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        daniel.lezcano@linaro.org, kernel@esmil.dk,
+        Anup Patel <Anup.Patel@wdc.com>, linux-kernel@vger.kernel.org,
+        Atish Patra <Atish.Patra@wdc.com>, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        tglx@linutronix.de, linux-riscv@lists.infradead.org,
+        aou@eecs.berkeley.edu
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     atishp@atishpatra.org, seanga2@gmail.com
+Message-ID: <mhng-5833da8b-f9df-46c4-8dbe-0240e39d7bc5@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Swapnil
+On Tue, 21 Jul 2020 20:55:31 PDT (-0700), anup@brainfault.org wrote:
+> On Tue, Jul 21, 2020 at 5:48 PM Sean Anderson <seanga2@gmail.com> wrote:
+>>
+>> On 7/20/20 9:15 PM, Atish Patra wrote:
+>> > On Fri, Jul 17, 2020 at 12:52 AM Anup Patel <anup.patel@wdc.com> wrote:
+>> >>
+>> >> We add DT bindings documentation for CLINT device.
+>> >>
+>> >> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+>> >> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>> >> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
+>> >> ---
+>> >>  .../bindings/timer/sifive,clint.yaml          | 58 +++++++++++++++++++
+>> >>  1 file changed, 58 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+>> >> new file mode 100644
+>> >> index 000000000000..8ad115611860
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+>> >> @@ -0,0 +1,58 @@
+>> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> >> +%YAML 1.2
+>> >> +---
+>> >> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
+>> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> >> +
+>> >> +title: SiFive Core Local Interruptor
+>> >> +
+>> >> +maintainers:
+>> >> +  - Palmer Dabbelt <palmer@dabbelt.com>
+>> >> +  - Anup Patel <anup.patel@wdc.com>
+>> >> +
+>> >> +description:
+>> >> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
+>> >> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
+>> >> +  interrupts. It directly connects to the timer and inter-processor interrupt
+>> >> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
+>> >> +  interrupt controller is the parent interrupt controller for CLINT device.
+>> >> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
+>> >> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
+>> >> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
+>> >> +
+>> >> +properties:
+>> >> +  compatible:
+>> >> +    items:
+>> >> +      - const: sifive,clint0
+>> >> +      - const: sifive,fu540-c000-clint
+>> >> +
+>> >> +    description:
+>> >> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
+>> >> +      Supported compatible strings are -
+>> >> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
+>> >> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
+>> >> +      CLINT v0 IP block with no chip integration tweaks.
+>> >> +      Please refer to sifive-blocks-ip-versioning.txt for details
+>> >> +
+>> >
+>> > As the DT binding suggests that the clint device should be named as "sifive,**",
+>> > I think we should change the DT property in kendryte dts as well.
+>>
+>> The kendryte device is based on Rocket Chip, not any SiFive IP/device.
+>> If anything, the general binding should be "chipsalliance,clint" and the
+>> specific bindings should be "sifive,clint" and "kendryte,clint" (or
+>> "canaan,clint").
+>
+> AFAIK, Palmer clearly mentioned in previous discussion that CLINT
+> spec is still owned by SiFive. No matter who implements CLINT device
+> in their SOC, we will need one compatible string to represent the
+> spec version (i.e. "sifive,clint0") and another compatible representing
+> specific implementation (for kendryte this can be "kendryte,k210-clint").
 
-Small nits in the following.
+I think "sifive,clint*" is the way to go here.  The Free Chips Foundation owns
+Rocket Chip, which contains an implementation of SiFive's CLINT specification,
+but as far as I can tell Free Chips itself does not produce a specification for
+the CLINT.  The only CLINT specifications I can find are for SiFive's chips and
+are copyright SiFive, and we generally prefer sticking to specifications rather
+than implementations for these sorts of things.
 
-	Sam
+To be honest, I'm not even sure the Free Chips CLINT is an implementation of
+the SiFive specification: we don't have the source code for those chips, and
+while I'm fairly sure the Chisel source code for the CLINT itself on SiFive's
+chips is very close to what was in Rocket Chip at the time those chips were
+built (though we don't have the source, so we don't know for user), device
+specifications depend on the broader SOC context they are embedded inside.  For
+example: SiFive's CLINT allows us to use simple MMIO reads of mtime to meet the
+RISC-V rdtime requirements, but other bus configurations may not meet those
+requirement<F6><F5>s.
 
-On Wed, Jul 22, 2020 at 09:40:40AM +0200, Swapnil Jakhade wrote:
-> Add j721e wrapper for mhdp, which sets up the clock and data muxes.
-> 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  drivers/gpu/drm/bridge/Kconfig           | 13 ++++
->  drivers/gpu/drm/bridge/Makefile          |  5 ++
->  drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 15 +++++
->  drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 75 ++++++++++++++++++++++++
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 19 ++++++
->  6 files changed, 128 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 6a4c324302a8..8c1738653b7e 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -38,6 +38,19 @@ config DRM_CDNS_MHDP
->  	  It takes a DPI stream as input and outputs it encoded
->  	  in DP format.
->  
-> +if DRM_CDNS_MHDP
-> +
-> +config DRM_CDNS_MHDP_J721E
-> +	depends on ARCH_K3_J721E_SOC
-> +	bool "J721E Cadence DPI/DP wrapper support"
-> +	default y
-> +	help
-> +	  Support J721E Cadence DPI/DP wrapper. This is a wrapper
-> +	  which adds support for J721E related platform ops. It
-> +	  initializes the J721e Display Port and sets up the
-> +	  clock and data muxes.
-> +endif
-> +
->  config DRM_CHRONTEL_CH7033
->  	tristate "Chrontel CH7033 Video Encoder"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 0080a9f80f29..f81d606e9598 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -2,6 +2,11 @@
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_CDNS_MHDP) += cdns-mhdp.o
->  cdns-mhdp-objs := cdns-mhdp-core.o
-> +
-> +ifeq ($(CONFIG_DRM_CDNS_MHDP_J721E),y)
-> +	cdns-mhdp-objs += cdns-mhdp-j721e.o
-> +endif
+If Free Chips publishes a specification for a CLINT and it's compatible with
+this version of SiFive's CLINT then I don't see any reason why we couldn't add
+that as a compatible string, but as it currently stands there is no Free Chips
+CLINT specification.  IMO it would be irresponsible for us to define one on
+their behalf.
 
-Use the idiomatic:
-cdns-mhdp-$(CONFIG_DRM_CDNS_MHDP_J721E) += cdns-mhdp-j721e.o
-
-
-> +
->  obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
->  obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
->  obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> index b16c5503cef1..eeb33c54334f 100644
-> --- a/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> @@ -38,6 +38,8 @@
->  
->  #include "cdns-mhdp-core.h"
->  
-> +#include "cdns-mhdp-j721e.h"
-> +
->  static DECLARE_WAIT_QUEUE_HEAD(fw_load_wq);
->  
->  static int cdns_mhdp_mailbox_read(struct cdns_mhdp_device *mhdp)
-> @@ -1691,6 +1693,16 @@ static int cdns_mhdp_attach(struct drm_bridge *bridge,
->  
->  	conn->display_info.bus_flags = DRM_BUS_FLAG_DE_HIGH;
->  
-> +	if (of_device_is_compatible(mhdp->dev->of_node, "ti,j721e-mhdp8546"))
-> +	/*
-> +	 * DP is internal to J7 SoC and we need to use DRIVE_POSEDGE
-> +	 * in the display controller. This is achieved for the time being
-> +	 * by defining SAMPLE_NEGEDGE here.
-> +	 */
-> +		conn->display_info.bus_flags |=
-> +					DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
-> +					DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE;
-> +
->  	ret = drm_connector_attach_encoder(conn, bridge->encoder);
->  	if (ret) {
->  		dev_err(mhdp->dev, "failed to attach connector to encoder\n");
-> @@ -2470,6 +2482,9 @@ static int cdns_mhdp_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id mhdp_ids[] = {
->  	{ .compatible = "cdns,mhdp8546", },
-> +#ifdef CONFIG_DRM_CDNS_MHDP_J721E
-> +	{ .compatible = "ti,j721e-mhdp8546", .data = &mhdp_ti_j721e_ops },
-> +#endif
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, mhdp_ids);
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.h b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> index d1bfcdef4249..4e176698caca 100644
-> --- a/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> @@ -343,6 +343,7 @@ struct cdns_mhdp_bridge_state {
->  
->  struct cdns_mhdp_device {
->  	void __iomem *regs;
-> +	void __iomem *j721e_regs;
->  
->  	struct device *dev;
->  	struct clk *clk;
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
-> new file mode 100644
-> index 000000000000..7555c217c9a0
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
-> @@ -0,0 +1,75 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI j721e Cadence MHDP DP wrapper
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + * Author: Jyri Sarha <jsarha@ti.com
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "cdns-mhdp-j721e.h"
-> +
-> +#define	REVISION			0x00
-> +#define	DPTX_IPCFG			0x04
-> +#define	ECC_MEM_CFG			0x08
-> +#define	DPTX_DSC_CFG			0x0c
-> +#define	DPTX_SRC_CFG			0x10
-> +#define	DPTX_VIF_SECURE_MODE_CFG	0x14
-> +#define	DPTX_VIF_CONN_STATUS		0x18
-> +#define	PHY_CLK_STATUS			0x1c
-> +
-> +#define DPTX_SRC_AIF_EN			BIT(16)
-> +#define DPTX_SRC_VIF_3_IN30B		BIT(11)
-> +#define DPTX_SRC_VIF_2_IN30B		BIT(10)
-> +#define DPTX_SRC_VIF_1_IN30B		BIT(9)
-> +#define DPTX_SRC_VIF_0_IN30B		BIT(8)
-> +#define DPTX_SRC_VIF_3_SEL_DPI5		BIT(7)
-> +#define DPTX_SRC_VIF_3_SEL_DPI3		0
-> +#define DPTX_SRC_VIF_2_SEL_DPI4		BIT(6)
-> +#define DPTX_SRC_VIF_2_SEL_DPI2		0
-> +#define DPTX_SRC_VIF_1_SEL_DPI3		BIT(5)
-> +#define DPTX_SRC_VIF_1_SEL_DPI1		0
-> +#define DPTX_SRC_VIF_0_SEL_DPI2		BIT(4)
-> +#define DPTX_SRC_VIF_0_SEL_DPI0		0
-> +#define DPTX_SRC_VIF_3_EN		BIT(3)
-> +#define DPTX_SRC_VIF_2_EN		BIT(2)
-> +#define DPTX_SRC_VIF_1_EN		BIT(1)
-> +#define DPTX_SRC_VIF_0_EN		BIT(0)
-> +
-> +/* TODO turn DPTX_IPCFG fw_mem_clk_en at pm_runtime_suspend. */
-> +
-> +static int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp)
-> +{
-> +	struct platform_device *pdev = to_platform_device(mhdp->dev);
-> +
-> +	mhdp->j721e_regs = devm_platform_ioremap_resource(pdev, 1);
-> +	if (IS_ERR(mhdp->j721e_regs))
-> +		return PTR_ERR(mhdp->j721e_regs);
-
-Use PTR_ERR_OR_ZERO() like this:
-
-	return PTR_ERR_OR_ZERO(mhdp->j721e_regs);
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
-> +{
-> +	/*
-> +	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
-> +	 * to eDP DPI2. This is the only supported SST configuration on
-> +	 * J721E.
-> +	 */
-> +	writel(DPTX_SRC_VIF_0_EN | DPTX_SRC_VIF_0_SEL_DPI2,
-> +	       mhdp->j721e_regs + DPTX_SRC_CFG);
-> +}
-> +
-> +static void cdns_mhdp_j721e_disable(struct cdns_mhdp_device *mhdp)
-> +{
-> +	/* Put everything to defaults  */
-> +	writel(0, mhdp->j721e_regs + DPTX_DSC_CFG);
-> +}
-> +
-> +const struct mhdp_platform_ops mhdp_ti_j721e_ops = {
-> +	.init = cdns_mhdp_j721e_init,
-> +	.enable = cdns_mhdp_j721e_enable,
-> +	.disable = cdns_mhdp_j721e_disable,
-> +};
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> new file mode 100644
-> index 000000000000..f1ff07b82d32
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * TI j721e Cadence MHDP DP wrapper
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + * Author: Jyri Sarha <jsarha@ti.com
-> + */
-> +
-> +#ifndef CDNS_MHDP_J721E_H
-> +#define CDNS_MHDP_J721E_H
-> +
-> +#include <linux/platform_device.h>
-> +#include "cdns-mhdp-core.h"
-> +
-> +struct mhdp_platform_ops;
-> +
-> +extern const struct mhdp_platform_ops mhdp_ti_j721e_ops;
-> +
-> +#endif /* !CDNS_MHDP_J721E_H */
-> -- 
-> 2.26.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I don't know anything about Kendryte's specifications, as I haven't read them
+myself.  Assuming they define the CLINT's behavior in their SOC manual, then
+adding something along the lines of "canaan,kendryte-k210-clint" seems
+reasonable to me -- don't really care that much about the specific name, but as
+we don't define the Kendryte SOCs then calling it anything more general than
+this specific SOC's CLINT seems unreasonable.  AFAIK the Kendryte people don't
+get involved with Linux development directly, so that's probably as much as we
+can define.
