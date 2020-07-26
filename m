@@ -2,97 +2,159 @@ Return-Path: <SRS0=vke8=BF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9080CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 10:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734FAC433E8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5D9206D8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 10:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525FD2065C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:13:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVUnJWDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725960AbgGZKRt (ORCPT
+        id S1727978AbgGZLNO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 06:17:49 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:34959 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgGZKRt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 06:17:49 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4BDzQh3DtGz1qrfg;
-        Sun, 26 Jul 2020 12:17:48 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4BDzQh2grnz1qw6g;
-        Sun, 26 Jul 2020 12:17:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id wIb5Xn2gAshz; Sun, 26 Jul 2020 12:17:47 +0200 (CEST)
-X-Auth-Info: mVyJjM3NMiq81ULrxbJfIYiSRE8Ut2MZmTSlhp3fQ8Q=
-Received: from [IPv6:::1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Sun, 26 Jul 2020 12:17:46 +0200 (CEST)
-Subject: Re: [PATCH 2/2] drm/bridge: tc358762: Add basic driver for Toshiba
- TC358762 DSI-to-DPI bridge
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-References: <20200725211457.5772-1-marex@denx.de>
- <20200725211457.5772-2-marex@denx.de> <20200726071517.GD1691925@ravnborg.org>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <a8d6b9ad-a9c4-925b-e9f8-00c803b30e9a@denx.de>
-Date:   Sun, 26 Jul 2020 12:17:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 26 Jul 2020 07:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgGZLNN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 07:13:13 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632CFC0619D2;
+        Sun, 26 Jul 2020 04:13:12 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id lx13so14224661ejb.4;
+        Sun, 26 Jul 2020 04:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tNAVT9gld8ytdUafqDbp0LRRq+hyh+iiBGbYdB7ZOxM=;
+        b=kVUnJWDPN6bBNQf+whJB42R11Hv00qYaftuHcTPkOHBGBB9Ot9QHSEiXRV21lvGbC1
+         Bsgbfz29Cq6a6xj7BsLQ43L3r5oSkDCIdrZSGKfviP6mnXibs5sWjDEZXIBh/gZNu9Df
+         4uvtqbWmHJT78ufd8xB7+mSBYIZaeorOj2pUBstnXtB+7QlKSG3H2UM9gvWZ/EWdPPji
+         K6B80g391V1xXyAuUo1xwi3HcBkMfxTQzb66zx38JqDqy7TKjGc1p2EpNOoA+PICCHsJ
+         vgCXEN7+OKlYxgmflGbK95V6aWfwWYLmjQsHseh4OnkYcV/vk+Zb8Hva/u+6Oi7qysQC
+         /BEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tNAVT9gld8ytdUafqDbp0LRRq+hyh+iiBGbYdB7ZOxM=;
+        b=trFtIVKGjeMnL1tlyvy2xyk7XpBlSxq4ZlJjjVjLikWsmI7FEZJogpKzA66+GjK3pm
+         lZ4hjCPukCIV4BtvRfLYMPilO5giiN/8Yab6wxZMoXufaa0LRUKEy8y3J8DKINE1tO26
+         8d1Hcz/aMTzTx2rNgRPi2eqGWbmQHtE4f+nhHUW9Qh7t1qFpcII/u02esDPxkkFDZCTJ
+         eLBhkd3wOo/EKbjfGlqwhqXzSTfL77T3S89rmq2T4JgLa9/ZT/LGpdRkYvR+Yua7Fqgr
+         WJf9+Agvbzr0HSzKwzznWVc5uhjU64n1evUMF2KVhM+IHcFnrovqjdcXPTRhvSY7+OMJ
+         SyVw==
+X-Gm-Message-State: AOAM5303JtkIaQOtvtuvAXxd18FF64XHw7qCgfIdX9fSR62qKogmWHsW
+        6Uj5LK9sOy+MePf5eKix1Qg=
+X-Google-Smtp-Source: ABdhPJxhh+2o7B1rrZWbt/vIi6TWE/wpm02xaRpF0P5sfdJfxl2Fsk/0i0N8uGD+jScbEkBbPA9T9g==
+X-Received: by 2002:a17:906:4558:: with SMTP id s24mr12647062ejq.144.1595761991022;
+        Sun, 26 Jul 2020 04:13:11 -0700 (PDT)
+Received: from localhost.localdomain (abad207.neoplus.adsl.tpnet.pl. [83.6.167.207])
+        by smtp.googlemail.com with ESMTPSA id d23sm4696253ejj.74.2020.07.26.04.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 04:13:10 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     konradybcio@gmail.com
+Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH 0/9] SDM630/36/60 driver enablement
+Date:   Sun, 26 Jul 2020 13:11:57 +0200
+Message-Id: <20200726111215.22361-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200726071517.GD1691925@ravnborg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/26/20 9:15 AM, Sam Ravnborg wrote:
-> Hi Marek.
+Hi!
 
-Hi,
+This series brings most of the changes that have been
+brought to sdm630/636/660 SoCs apart from device tree
+part (I cannot add anything unless some [1] smmu quirks
+are merged.. blame qcom!)
 
-> On Sat, Jul 25, 2020 at 11:14:57PM +0200, Marek Vasut wrote:
->> Add very basic driver for Toshiba TC358762 DSI-to-DPI bridge, derived
->> from tc358764 driver and panel-raspberrypi-touchscreen. This driver is
->> meant to replace the panel-raspberrypi-touchscreen too, as the bridge
->> connection can be described in DT too.
->>
->> Signed-off-by: Marek Vasut <marex@denx.de>
->> To: dri-devel@lists.freedesktop.org
->> Cc: Eric Anholt <eric@anholt.net>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Sam Ravnborg <sam@ravnborg.org>
->> Cc: devicetree@vger.kernel.org
->> ---
-> 
-> Two general comments.
-> - This driver should use the bridge panel - this will simplify the
->   driver in many places. We already have several good examples in-tree
->   that does this.
+So far, the platform is shaping up nicely, though some
+peripherals seem to be living their own lives (I'm looking
+at you, modem!)
 
-Can you list such an example ?
+The QPNP-REVID driver is taken from downstream but seems to
+work fine upstream. I understand it may need some cleaning-up
+before it's merged.
 
-> - The driver does not respect the "flags" argument in the attach
->   operation. All new bridge drivers shall respect the flags operation to
->   prepare for use in a setup with chained bridges.
->   In short the flags is used to determine if the display driver or the
->   bridge creates the connector.
->   When the bridge panel is introduced you can drop all the connector
->   creation code and just pass the flag to the bridge panel.
->   The bridge panel will then create the connector if requested.
->   This is possible because this simple bridge driver does not add
->   anything to the connector that the bridge panel does not know.
+Current out-of-tree progress can be seen at [2].
 
-OK
+[1] https://patchwork.kernel.org/patch/11643603/
+[2] https://github.com/konradybcio/linux/commits/ninges_labs
+
+Konrad Dybcio (8):
+  clk: qcom: gcc-sdm660: Add missing modem reset
+  phy: qcom-qusb2: Add support for SDM630/660
+  drivers: usb: dwc3-qcom: Add sdm660 compatible
+  drm/msm/dsi: Add phy configuration for SDM630/636/660
+  drm/msm/mdp5: Add MDP5 configuration for SDM630
+  drm/msm/dsi: Add DSI configuration for SDM660
+  drm/msm/mdp5: Add MDP5 configuration for SDM636/660
+  clk: qcom: gcc-sdm660: Fix up gcc_mss_mnoc_bimc_axi_clk
+
+Xiaozhe Shi (1):
+  soc/qcom: Add REVID driver
+
+ .../devicetree/bindings/display/msm/dsi.txt   |   1 +
+ .../bindings/phy/qcom,qusb2-phy.yaml          |   1 +
+ .../bindings/soc/qcom/qcom,qpnp-revid.yaml    |  38 ++
+ .../devicetree/bindings/usb/qcom,dwc3.yaml    |   1 +
+ drivers/clk/qcom/gcc-sdm660.c                 |   4 +
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c      | 198 ++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c             |  21 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h             |   1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c         |   2 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h         |   1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c    |  18 +
+ drivers/phy/qualcomm/phy-qcom-qusb2.c         |   7 +-
+ drivers/soc/qcom/Kconfig                      |   9 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/qpnp-revid.c                 | 288 ++++++++++++++
+ drivers/usb/dwc3/dwc3-qcom.c                  |   1 +
+ include/dt-bindings/clock/qcom,gcc-sdm660.h   |   1 +
+ include/linux/qpnp/qpnp-revid.h               | 369 ++++++++++++++++++
+ 18 files changed, 961 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
+ create mode 100644 drivers/soc/qcom/qpnp-revid.c
+ create mode 100644 include/linux/qpnp/qpnp-revid.h
+
+-- 
+2.27.0
+
