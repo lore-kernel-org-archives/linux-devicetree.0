@@ -2,234 +2,124 @@ Return-Path: <SRS0=vke8=BF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B99EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 21:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA70C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 22:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 523382065C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 21:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595797870;
-	bh=KiVubal74AV8jhtlRHoRy6J5S1SLY5rer2hyCC5ooKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cdaAfs2sCigpnXH8spBo9A1W7sJS6xvBdhpScbtgN+PXj0VwwjeS8qLhNL7SAMeoR
-	 kYtOW6NSxnAufuMYTs0qc+8TMQOHLkEmJVAVkM3Zb1mYGieiNA6XqKo8dqKgESA0/x
-	 SAXoNifvgfIhZDlNMn9fzMqQb8Xfx1CsqQp4nZng=
+	by mail.kernel.org (Postfix) with ESMTP id 9F1B620715
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 22:22:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgKdjra2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgGZVLH (ORCPT
+        id S1726522AbgGZWWm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 17:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbgGZVLH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 26 Jul 2020 17:11:07 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E03552065C;
-        Sun, 26 Jul 2020 21:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595797866;
-        bh=KiVubal74AV8jhtlRHoRy6J5S1SLY5rer2hyCC5ooKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bY1WRoM7Ehpn4XSH1kenSZhry5ttrRIASIBaok8KHF3Y18uGqmBe/+1pGqCmyzsuZ
-         uX/GSUJ4erLAUwatOXUQ4KFGkvyP2NUJ0qjlKITII+9v8tf8178yF5PE0HcJVRFTRc
-         X5DnbYV19qbOG46F6pAotAyfyQ2SWHUVQh/pI+Cc=
-Received: by earth.universe (Postfix, from userid 1000)
-        id A4FF23C0B87; Sun, 26 Jul 2020 23:11:03 +0200 (CEST)
-Date:   Sun, 26 Jul 2020 23:11:03 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: power: Convert ingenic,battery.txt to YAML
-Message-ID: <20200726211103.gt735j6365vqrqmt@earth.universe>
-References: <20200726125605.7009-1-contact@artur-rojek.eu>
+        Sun, 26 Jul 2020 18:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgGZWWm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 18:22:42 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90046C0619D2
+        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 15:22:41 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id v15so3418536lfg.6
+        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 15:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=THzlRqgN0rjUHiAQzqk5KhSMHf6FYVohjt3FnajZbYY=;
+        b=xgKdjra2/4+RInKaf0aGHk5SxaDW9Tyrest156u/U0OFV+DJgAsYR4dystOdKs+D66
+         4IeXMJLIvhADs010gssRPGW+q6hQ8Ln16U3pPkXi1PrYG2FtHJnQyCOl3/4z0g9dLvqC
+         jP+ipH4/XH6XZZ8JsPUTuq1F2QPsTJrxV2H8PnY0Jfz+IoIjQBXTXN2RxGcS6xQdRcJ5
+         0Yo6IPFgd6rjGcKpElh3zHPDRD+oFv7x0O1qOJxJUFFcKAko6crufHjGJA9yQORcwJE6
+         x2T5dBdzV+KjCTdXpouvhOxpwpeBG9+oHbycLFuC8ZHfzjbUSgARedRYyqGUhzzlU1DG
+         yYpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=THzlRqgN0rjUHiAQzqk5KhSMHf6FYVohjt3FnajZbYY=;
+        b=ug5JWqIBJvXZI61mupVnpia4I+BnxQBqPBhuTUdY3MTfIP+Px8Xdi7BPwe9kYk4HVL
+         n5HU2E1JdwvjAqvtxo3WOXQM54kXiW2J8MMehbDYwO0eD8qPV6zTACZaDR+mWSx3Q8Gf
+         IlAy+FloUG/iIFZMbfiprfjrtxn3Y39RUWp36mbzu1ESnoNmQ+h4LTd0PK0Uq6bIJdDR
+         CATb3LovLsGIyxeB8VmVvdv0uuhdbvEMtHQ9qDeklzPg21FnzDhWbM2Eh35NyzIps8ty
+         OKd23ljwriaWoFcWdyjFH6Cy9DPghSL3FB/1Q4YtljjIkKgqjElOKMdgd2+dgOdkJi2k
+         gruA==
+X-Gm-Message-State: AOAM533USjEr15baSeSJMQUX32NbXjyqqxa9k10zDLrFMxQ543epYRV2
+        lyxFuuGx7URgJlswgSy9Rl6xvskByOn+A3HIBfGbMQ==
+X-Google-Smtp-Source: ABdhPJxBOcrrdKBlfifvmb9beDuuI3k1zaBpTO89UwsFWSHiX+VtagPfGhMO2OwGzI0vOxcg+ZKMsrUmtwlzVcChOzk=
+X-Received: by 2002:a05:6512:3139:: with SMTP id p25mr3156807lfd.47.1595802159850;
+ Sun, 26 Jul 2020 15:22:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fshinpkyzrtxwpbz"
-Content-Disposition: inline
-In-Reply-To: <20200726125605.7009-1-contact@artur-rojek.eu>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+In-Reply-To: <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 27 Jul 2020 00:22:28 +0200
+Message-ID: <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, Jul 25, 2020 at 1:03 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 
---fshinpkyzrtxwpbz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> According to the DW APB GPIO databook it can be configured to provide either a
+> combined IRQ line or multiple interrupt signals for each GPIO. It's up to
+> the platform which of those signals are connected to an embedded IRQ
+> controller. So I guess theoretically the array values can be sparse.
+>
+> Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
+> array case. I just thought it would work out-of-box. Before getting your comment
+> and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
+> passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
+> seeing zero IRQ number was supposed to be considered as invalid. That method shall
+> just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
+> will fail to find a descriptor with invalid IRQ value and return NULL. So after
+> getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
+> have stopped setting the handler. But turns out it may work only for
+> CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
+> descriptor will be returned for zero IRQ number. That descriptor will be
+> initialized with the passed parent_handler callback, which isn't what we want.
 
-Hi,
+Ouch but different beahviour on the outside of the irqchip API depending
+on whether IRQs are sparse or not on some particular system seems to
+be a problem with irqchip reallty, if we wanna get to the bottom of things.
+(paging Marc)
 
-On Sun, Jul 26, 2020 at 02:56:05PM +0200, Artur Rojek wrote:
-> Convert the textual documentation of Device Tree bindings for the
-> Ingenic JZ47xx SoCs battery to YAML.
->=20
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->  .../bindings/power/supply/ingenic,battery.txt | 31 ---------
->  .../power/supply/ingenic,battery.yaml         | 67 +++++++++++++++++++
->  2 files changed, 67 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/ingeni=
-c,battery.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/ingeni=
-c,battery.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,batte=
-ry.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> deleted file mode 100644
-> index 66430bf73815..000000000000
-> --- a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -* Ingenic JZ47xx battery bindings
-> -
-> -Required properties:
-> -
-> -- compatible: Must be "ingenic,jz4740-battery".
-> -- io-channels: phandle and IIO specifier pair to the IIO device.
-> -  Format described in iio-bindings.txt.
-> -- monitored-battery: phandle to a "simple-battery" compatible node.
-> -
-> -The "monitored-battery" property must be a phandle to a node using the f=
-ormat
-> -described in battery.txt, with the following properties being required:
-> -
-> -- voltage-min-design-microvolt: Drained battery voltage.
-> -- voltage-max-design-microvolt: Fully charged battery voltage.
-> -
-> -Example:
-> -
-> -#include <dt-bindings/iio/adc/ingenic,adc.h>
-> -
-> -simple_battery: battery {
-> -	compatible =3D "simple-battery";
-> -	voltage-min-design-microvolt =3D <3600000>;
-> -	voltage-max-design-microvolt =3D <4200000>;
-> -};
-> -
-> -ingenic_battery {
-> -	compatible =3D "ingenic,jz4740-battery";
-> -	io-channels =3D <&adc INGENIC_ADC_BATTERY>;
-> -	io-channel-names =3D "battery";
-> -	monitored-battery =3D <&simple_battery>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,batte=
-ry.yaml b/Documentation/devicetree/bindings/power/supply/ingenic,battery.ya=
-ml
-> new file mode 100644
-> index 000000000000..8d36216f6c0e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019-2020 Artur Rojek
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/ingenic,battery.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Ingenic JZ47xx battery bindings
-> +
-> +maintainers:
-> +  - Artur Rojek <contact@artur-rojek.eu>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +        - ingenic,jz4740-battery
+> So in order to fix the problem we could follow either of the next paths:
+> 1) Just make sure the passed IRQs array is not sparse for instance by remapping
+>    it to be linear.
+> 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
+>    gpiochip_add_irqchip() method.
+>
+> What to you think? Linus?
 
-Can be simplified to:
+What about (3) fixing irqchip?
 
-- const: ingenic,jz4740-battery
+Else (2), making the code inside gpiolib be careful and skip over
+invalid IRQs.
 
-> +      - items:
-> +        - enum:
-> +          - ingenic,jz4725b-battery
-> +          - ingenic,jz4770-battery
-> +        - const: ingenic,jz4740-battery
-
-The patch introduces new compatible values without any mention in
-the patch description. Please move this into a second patch.
-
-> +
-> +  io-channels:
-> +    items:
-> +      - description: >
-> +          phandle and IIO specifier pair to the IIO device.
-> +          See Documentation/devicetree/bindings/iio/iio-bindings.txt for=
- more
-> +          details.
-> +
-> +  io-channel-names:
-> +    const: "battery"
-> +
-> +  monitored-battery:
-> +    items:
-> +      - description: >
-> +          phandle to a "simple-battery" compatible node.
-> +
-> +          This property must be a phandle to a node using the format des=
-cribed
-> +          in battery.txt, with the following properties being required:
-> +          - voltage-min-design-microvolt: drained battery voltage,
-> +          - voltage-max-design-microvolt: fully charged battery voltage.
-> +
-> +required:
-> +  - compatible
-> +  - io-channels
-> +  - io-channel-names
-> +  - monitored-battery
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
-> +
-> +    simple_battery: battery {
-> +            compatible =3D "simple-battery";
-> +            voltage-min-design-microvolt =3D <3600000>;
-> +            voltage-max-design-microvolt =3D <4200000>;
-> +    };
-> +
-> +    ingenic-battery {
-> +            compatible =3D "ingenic,jz4740-battery";
-> +            io-channels =3D <&adc INGENIC_ADC_BATTERY>;
-> +            io-channel-names =3D "battery";
-> +            monitored-battery =3D <&simple_battery>;
-> +    };
-
-Otherwise LGTM.
-
--- Sebastian
-
---fshinpkyzrtxwpbz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8d8WQACgkQ2O7X88g7
-+pq5rw//f36kz5rMPK/yVuL0cNKdLXzMLH4x8HrunW2UoyJl3WlHGGN2YP2fPl+N
-TL1Rwre1dmUDQkTPhaaEqj39bff8fkGHHuyWPW3qTFprwL8zuUrTU06VCzlKSc6p
-SwZWZ5sagmiBKDtSec6SiiO7F19UW5Jers+iiwA1aOcQIG+15M7dWAcdu2G6pzaJ
-2vHzxzCQlL08gL+IgVYYSF9HattEv9BnYljwWjVHF+48kP/G6/bT3tL7YHyY3DNZ
-0OmXU0IKmkZ7Q+ETQkfxeOjZ8PpbEWK58G5Dfv5t0iwIFLbpUKFTjVFmfrfmzdAT
-gZs9d2uWp1vCr6iQlOk5udxNWVEdRcAoPoMDtZg8g0zYR+ticKU6v028oOGnyPpr
-pMivGSHfo+7DFqMH5UBbibg6I5eXFKzQ9B0L2cDsEIZUwLRiGmko3eVF0qJAsoK8
-5x/4qU/Vz7XkZyma3KvrcDAmIB3HV1+HQv3GGEi76YG41mR82qbJ3EDejonXdKCM
-qXjhOg8SWxSJFVC7hZvGvndwXQxKe8PjU5zfkhO3nfCY25fkdE6qqewBqdQwxo6D
-6PPyHtjQ8gZ9k4gjTp1Rn1LH0x1LO8IFgLRq8oTkUDxQVJ3DUHausHlBpLjBycp1
-hJYClVa/tUYs2ppUmFpp7Wue/jcYSLqPu6dzyuFCe546VpSTeGc=
-=pmiS
------END PGP SIGNATURE-----
-
---fshinpkyzrtxwpbz--
+Yours,
+Linus Walleij
