@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A01DC433EB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC59C4345A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E3D2065C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCD82065C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WW5fOTnM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXAZG2TJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726042AbgGZLOA (ORCPT
+        id S1727935AbgGZLOX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40192 "EHLO
+        Sun, 26 Jul 2020 07:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZLN7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 07:13:59 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86183C0619D2;
-        Sun, 26 Jul 2020 04:13:59 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id n2so10079644edr.5;
-        Sun, 26 Jul 2020 04:13:59 -0700 (PDT)
+        with ESMTP id S1727892AbgGZLOX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 07:14:23 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EAAC0619D2;
+        Sun, 26 Jul 2020 04:14:23 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id kq25so1276561ejb.3;
+        Sun, 26 Jul 2020 04:14:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kblxKnxinnz+/M7vUiTqrcSx1B8yJRoEQmLOic6ozMk=;
-        b=WW5fOTnM8Sb/6XwqIAEb27IZfAR1oQnnp0fHyVrgofmjA3fYt80WX3Wn6+IFfpfb0z
-         tYsYYFFUdphAsqgGeU7ZR/x35oey0J/AsowhWuFqgN52xrZY0rPY517PJuhnR7V+EGO7
-         RUThcesCCqlZJzRNecLPZRmUAnugmKsi4s208jNdk7TutMUxDg3D6t4AY02pgBF4QbcW
-         jy+22HWWUejEGkGcJGWHmiHRjaf3FYn6p65o4dCCs8kxccm9sMmo0uM8u7hR/N1yjnUQ
-         gXrlLl8fXheqRk6DR/Vo9vAwH5RYD1kMWBc4/AEJnN3oCUYt+UJadF+ajaX72aDElbdY
-         7Dnw==
+        bh=37BF1UwxVP7CixpP1U6Ina051uTwRlG/juDBdj9kXV4=;
+        b=YXAZG2TJKcydz5dEyEcSkHS1L5TwH6/lU+Vvf6qFl3eFLWq0tk6ftDpI3RM0Y6WZZC
+         Ic0APMwNKBbIwG24yj7aEonzyJCMqIMYPKgE68dPyC5DKROwn/CtRTu2dW2YsPWaPmJR
+         ImUyqE+J+bXk4CMa/bAMkI3jNdbEWeg7tEqs2zzuFmmfUEZEYoeDkZfY87joNawLu0g/
+         fCIgQ8pUlg979SghIRlS1hF4c7jHZws+9rP221oy/7xDgSpBI3V+SmENpT16dbrcBXfn
+         AWgI7zF8WRS8Y1e02nxyrO0S32sHoBqsn6jZOBZ+AqpeVH9vhA0MqUvtRWyk6UlMYR2V
+         5PgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kblxKnxinnz+/M7vUiTqrcSx1B8yJRoEQmLOic6ozMk=;
-        b=jrmuVO3vaX0wpGwAFpX/bNVnH+i6vfM8PSuVresG2AsmnOtU6gxBkfAaGSPPmAH8uP
-         z9EeXjdS6PwtNYSvdUhiTiWrwYK2yoUUcVvwfk3r93NK7tjILtNlH0JAp57nwXdUqIM1
-         RsVEkAEAdx1Oau0A3RaW8xkingrPDw/zQg6FWGDxf7P/9oyZv7AXtj1cjyZDqK2iLN9r
-         SgYtJnKbWr0SQAqzUBz5S5AnAdcMaCms5ZaXwS07HPBl6PuP3TAQBad3VSpW09C8cnKQ
-         Dn/aFXW/rQRCDH1i8CDPV+zRHrf7oyKRIc1FipXz+uKlaGiwSkQ9KCZZevF//CXp04Yl
-         4U0A==
-X-Gm-Message-State: AOAM530qCMIZssqmjh/+EsO8YUeckc6mjx5KcHov+/keKfPR23fcjl1s
-        G5o9bspHLn9Ads2zGqH0YEY=
-X-Google-Smtp-Source: ABdhPJwn8KnXt0Jwp6P4CrpPb9OKxg2T+un1Dn0xfYJ60+M/Ch4V89+fkamHjPtgu6KCOwjVgazHIQ==
-X-Received: by 2002:a05:6402:b6c:: with SMTP id cb12mr16949597edb.116.1595762038257;
-        Sun, 26 Jul 2020 04:13:58 -0700 (PDT)
+        bh=37BF1UwxVP7CixpP1U6Ina051uTwRlG/juDBdj9kXV4=;
+        b=AkbtpHTh+H8y4Ya+7aAG+gdFaCr1/dnHbvm4TOChAic0gAs6rH5gvzebBYOqDufCCc
+         hfnUILW/ZndRzLa0Kg9KaapuItB1WjTDYCj60XW4FKsAfwjJRRvPAzsxSlNFdycast2z
+         l5GYmcc+3gEASRHrUTTQN+zTid10xAJvKq6gbdIkCw/K2pGThPJ7n/52b8kDJXgkHu/k
+         Q/nE6UKkmVtMQVeME+H4nfVRDOkAzcPqpd5+VYXT0YnQ6wQCwgm17+zDx3D+x6viFISb
+         dZFug7WmyyY2KxxmDR5rH41WqzV40heIEg7J5toqhtdmsQ9U+P5gUP+nEjlb85wc7gr3
+         kFQQ==
+X-Gm-Message-State: AOAM533DTVeHMtZJuU1aOQHdPnVwNeMqbJmgTTlS/RvwBORtEKnPEBwm
+        /jBaDYjBmQaPNumtKmMq2zo=
+X-Google-Smtp-Source: ABdhPJwTeEEQ2ZXZVpgawfqhB50ZrkrMpC5+cmMg9MzlJgq+tYGn96zmWoVuMYZ86Q5HRvZmLGQ2bw==
+X-Received: by 2002:a17:906:8489:: with SMTP id m9mr14318876ejx.94.1595762061902;
+        Sun, 26 Jul 2020 04:14:21 -0700 (PDT)
 Received: from localhost.localdomain (abad207.neoplus.adsl.tpnet.pl. [83.6.167.207])
-        by smtp.googlemail.com with ESMTPSA id d23sm4696253ejj.74.2020.07.26.04.13.55
+        by smtp.googlemail.com with ESMTPSA id d23sm4696253ejj.74.2020.07.26.04.14.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 04:13:57 -0700 (PDT)
+        Sun, 26 Jul 2020 04:14:21 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     konradybcio@gmail.com
 Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
@@ -88,9 +88,9 @@ Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
-Date:   Sun, 26 Jul 2020 13:12:01 +0200
-Message-Id: <20200726111215.22361-5-konradybcio@gmail.com>
+Subject: [PATCH 6/9] drm/msm/dsi: Add DSI configuration for SDM660
+Date:   Sun, 26 Jul 2020 13:12:03 +0200
+Message-Id: <20200726111215.22361-7-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200726111215.22361-1-konradybcio@gmail.com>
 References: <20200726111215.22361-1-konradybcio@gmail.com>
@@ -101,80 +101,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These SoCs make use of the 14nm phy, but at different
-addresses than other 14nm units.
+This also applies to sdm630/636 and their SDA
+counterparts.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../devicetree/bindings/display/msm/dsi.txt    |  1 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
- 4 files changed, 22 insertions(+)
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-index af95586c898f..7884fd7a85c1 100644
---- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-@@ -87,6 +87,7 @@ Required properties:
-   * "qcom,dsi-phy-20nm"
-   * "qcom,dsi-phy-28nm-8960"
-   * "qcom,dsi-phy-14nm"
-+  * "qcom,dsi-phy-14nm-660"
-   * "qcom,dsi-phy-10nm"
-   * "qcom,dsi-phy-10nm-8998"
- - reg: Physical base address and length of the registers of PLL, PHY. Some
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index f509ebd77500..009f5b843dd1 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -499,6 +499,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
- #ifdef CONFIG_DRM_MSM_DSI_14NM_PHY
- 	{ .compatible = "qcom,dsi-phy-14nm",
- 	  .data = &dsi_phy_14nm_cfgs },
-+	{ .compatible = "qcom,dsi-phy-14nm-660",
-+	  .data = &dsi_phy_14nm_660_cfgs },
- #endif
- #ifdef CONFIG_DRM_MSM_DSI_10NM_PHY
- 	{ .compatible = "qcom,dsi-phy-10nm",
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-index 24b294ed3059..ef8672d7b123 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-@@ -45,6 +45,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_28nm_lp_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_20nm_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_28nm_8960_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs;
-+extern const struct msm_dsi_phy_cfg dsi_phy_14nm_660_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_10nm_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs;
- 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
-index 1594f1422372..519400501bcd 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
-@@ -161,3 +161,21 @@ const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs = {
- 	.io_start = { 0x994400, 0x996400 },
- 	.num_dsi_phy = 2,
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+index 813d69deb5e8..f892f2cbe8bb 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+@@ -149,6 +149,25 @@ static const struct msm_dsi_config msm8998_dsi_cfg = {
+ 	.num_dsi = 2,
  };
+ 
++static const char * const dsi_sdm660_bus_clk_names[] = {
++	"iface", "bus", "core", "core_mmss",
++};
 +
-+const struct msm_dsi_phy_cfg dsi_phy_14nm_660_cfgs = {
-+	.type = MSM_DSI_PHY_14NM,
-+	.src_pll_truthtable = { {false, false}, {true, false} },
++static const struct msm_dsi_config sdm660_dsi_cfg = {
++	.io_offset = DSI_6G_REG_SHIFT,
 +	.reg_cfg = {
-+		.num = 1,
++		.num = 2,
 +		.regs = {
-+			{"vcca", 17000, 32},
++			{"vdd", 73400, 32 },	/* 0.9 V */
++			{"vdda", 12560, 4 },	/* 1.2 V */
 +		},
 +	},
-+	.ops = {
-+		.enable = dsi_14nm_phy_enable,
-+		.disable = dsi_14nm_phy_disable,
-+		.init = dsi_14nm_phy_init,
-+	},
-+	.io_start = { 0xc994400, 0xc996000 },
-+	.num_dsi_phy = 2,
++	.bus_clk_names = dsi_sdm660_bus_clk_names,
++	.num_bus_clks = ARRAY_SIZE(dsi_sdm660_bus_clk_names),
++	.io_start = { 0xc994000, 0xc996000 },
++	.num_dsi = 2,
 +};
++
+ static const char * const dsi_sdm845_bus_clk_names[] = {
+ 	"iface", "bus",
+ };
+@@ -240,6 +259,8 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+ 		&msm8996_dsi_cfg, &msm_dsi_6g_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V1_4_2,
+ 		&msm8976_dsi_cfg, &msm_dsi_6g_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_1_0,
++		&sdm660_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_0,
+ 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+index 217e24a65178..efd469d1db45 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+@@ -18,6 +18,7 @@
+ #define MSM_DSI_6G_VER_MINOR_V1_3_1	0x10030001
+ #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
+ #define MSM_DSI_6G_VER_MINOR_V1_4_2	0x10040002
++#define MSM_DSI_6G_VER_MINOR_V2_1_0	0x20010000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
+ #define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
 -- 
 2.27.0
 
