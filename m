@@ -2,129 +2,95 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFA8C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD7DC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7401C2073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF2720714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nA8ll4ov"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="goLiuJ7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731123AbgG0Re6 (ORCPT
+        id S1728650AbgG0Rrs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:34:58 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:58884 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731037AbgG0Re5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 13:34:57 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200727173454euoutp02d4e8f6748ef7a0ac3cd691f60b35fbb7~lrHzI-Anb1676516765euoutp02X
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 17:34:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200727173454euoutp02d4e8f6748ef7a0ac3cd691f60b35fbb7~lrHzI-Anb1676516765euoutp02X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1595871294;
-        bh=DPIsTcFj/GmRHGK9eB6V1JsDF43BAwnQ4GrYpgFXVlc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=nA8ll4ovg1vQ18csql6HRLL4ru1Qb3J1wdYZu+XVXTj5b/OIQKQxad3+SBwb3KGiS
-         /0/GdVrVcazgK2l15Gdjp9ktxTRW2hpS4qeVaPGDrEMjsgwudKW46hCWrmt7apljp9
-         hGPQJhdbjKRrTzYLhIS73lmks3QA3skcrD0YkXrI=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200727173454eucas1p1f10194a61bc0a961a599411d778e7f2f~lrHysoQSO0766507665eucas1p1d;
-        Mon, 27 Jul 2020 17:34:54 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 65.D0.05997.E301F1F5; Mon, 27
-        Jul 2020 18:34:54 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200727173453eucas1p20c8335a997c175d8a2694b7557f218ee~lrHyOs7I60366203662eucas1p2u;
-        Mon, 27 Jul 2020 17:34:53 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200727173453eusmtrp1f655b19d9b162ac1c075163ae6f734e0~lrHyOF66m1928319283eusmtrp1k;
-        Mon, 27 Jul 2020 17:34:53 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-32-5f1f103e40e8
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3C.F8.06017.D301F1F5; Mon, 27
-        Jul 2020 18:34:53 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200727173453eusmtip145a05451e07e1c8b885c219ccc0684d6~lrHxaFs3g2983629836eusmtip1S;
-        Mon, 27 Jul 2020 17:34:53 +0000 (GMT)
-Subject: Re: [PATCH v2 1/3] ASoC: samsung: Document DT bindings for Midas
- sound subsystem
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     broonie@kernel.org, simon@lineageos.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, linux-samsung-soc@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <0045d784-2dd2-1e0e-7495-fa335a32e46f@samsung.com>
-Date:   Mon, 27 Jul 2020 19:34:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Mon, 27 Jul 2020 13:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgG0Rrr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 13:47:47 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7753BC061794;
+        Mon, 27 Jul 2020 10:47:47 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so17915082eje.7;
+        Mon, 27 Jul 2020 10:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ijZvlgHQ+v2BWZ6VMCXnmgIYM9lqeQKC/Q58LwpkS18=;
+        b=goLiuJ7DPYB9oXd4K0FnBTft52vRIoaP8HHEoIjYGrc+tPTm98AuJdQQocC0tZrdIO
+         ISnBrkYunC/SuXetp8LVr0AUf/okLJ7rrydaj2DlRa14m/mvYjy2MO9Rvx0uPp+A8RyR
+         ymBD+HZEaA5cJTq65kSojT0vwfQ4HSr8m4XWE/Xzs+yGcAoqpMhdWdDComye4rXmIyNH
+         1mMPIkOzJGlzCzIIULku257QIFw6Zzwpm0koPrP4cP4qc+XHaUVgWdwTt7t3gSy+4oyy
+         m7HHgCRC9ms0IxORbtyaQdhlzBR/Pv7QY3qA5NofrhA7hDTOz7MJv713hvGuzUJiqbpc
+         bzxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ijZvlgHQ+v2BWZ6VMCXnmgIYM9lqeQKC/Q58LwpkS18=;
+        b=P8gocLr8pJH5qrOnoY0C4CUxh/G0zra+psMbip1xmnwTP/wkrFFkUphCIYEv/8mc8/
+         A9UBkAJdpXykiRyAhOXe+mtE6KbGFV2JON5STiSEaoenrSTCnlWCh6knHt45LqO55Pz1
+         HOWoszn/HP8tdcTXD/TkX3SWGMNk1nd3n7wGcAlUHbz79W8VeGh4sYVExZHgubu8Bxci
+         P3tNy1oSs7RurdP2BJZBS9OucUb1urTZ0OrABagrkelN/v7KwVWlG+46rfT0abnYRi6U
+         zBM+B49py1pEmBQH/1rrw4jg+oLbqhXaS/7g+jikgPTxNZRbZkUO1Zv+8/N6WBR2NJCc
+         caRA==
+X-Gm-Message-State: AOAM532De5d4j0PtlZ41XTLMxcq94779MnFY1BOPrfjhJCMd8yQTnO5N
+        7OhPowTDvwTYUVUKpjNhSUvf7E43KHEqFMu39tbd5gKGd9U=
+X-Google-Smtp-Source: ABdhPJyWjX1lCFQR4mrrLCa3z5egBfKg89MlfQ1v3c4dfSsnCgXyu7fZcZo4LE8I8xaNaz1PFPPa723qH/VZge8XLSU=
+X-Received: by 2002:a17:906:743:: with SMTP id z3mr21889697ejb.216.1595872066116;
+ Mon, 27 Jul 2020 10:47:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200727171520.GB3507@kozik-lap>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUYRTtm/fmzZvJ0ee4XSwXhqSF0kx/PChsQXD6U+qvUNRGfYySG/Nc
-        84/kUi6pZKIObhiYTJo6mZqp0TjlMjlTKCiahTBEmpahUS4tznxF/jvn3nu451wuTch6hO50
-        Yko6p05RJskpCdn7ctN8IojxijnZv+XKTr/RC9ju2k4hW71oodgmg0nIms1dIrbWPCxgOwwL
-        IrZwyCBie17NU+fEiq71G5RCpy2mFAWdOkpR3qNFinWdZ6gwQnImnktKzOTUfkFXJQmrG8NE
-        Wq8gO78iPA9ZUAmiaWACobH+SAmS0DKmDcH7e49EmGwgWJn5SGGyjmBiZ3OXiG2Kx0VmIW7c
-        R/CpeJTE5CuC9i81yDrlxERCQ8dNm8KZOQozP7/bFAQzhaBqbI2wNijGH26/KLcJpEwQ6Efq
-        bJhkfGDQoCOt2IWJhs6lPgGecYTxOgtpNS5mfKH0G28tE4wbzFmaBBh7Qd9qPWHdBYxeBF2b
-        gwS2HQzdU2UIYydYHu0RYXwQjFVlJBbkIyh7Oi/CpHL3HKPNfxWn4a1pi7JuJnbjdA744fJ5
-        2Kg1CfEl7WF21RGbsIc7vTUELkvhVpEMTx+CbW2NAGN3KLX8JiuRXLMnmWZPHM2eOJr/e5sR
-        qUVuXAafrOL4Uylcli+vTOYzUlS+canJOrT7S8Zfoxv9aGAnVo8YGsntpAnPPGNkQmUmn5Os
-        R0ATcmfphUljtEwar8y5zqlTY9QZSRyvRwdoUu4mDWhZipIxKmU6d43j0jj1v66AFrvnIfG+
-        1OnJgLOHc1ea7Def3A2e8Bj7zG+Htz9vW27wsCucyBspbv0QlxYWOB4R5Z3oEXE57ErrcfNs
-        Vdq7rZAt1dwalEYV1O2PkYek85rXF6vzHIa0O1S/JdB4SeXUaKxoySIeKEPlDyPNE96Lsa4L
-        HT8aTA5GXXxukU9DNmEKcJGTfILS/xih5pV/AF0pbhFHAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7q2AvLxBhPOGllcuXiIyWLjjPWs
-        FlMfPmGzmH/kHKvF+fMb2C1mnN/HZLH2yF12i9a9R9gttpy5zebA6bHhcxObx6ZVnWweLes3
-        sXn0bVnF6PF5k1wAa5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpq
-        TmZZapG+XYJextsv+5gLtjFVNPcHNTA+Yexi5OSQEDCR2Np2nrWLkYtDSGApo8S+GxvZuhg5
-        gBJSEvNblCBqhCX+XOtig6h5zygx7855sGZhgWiJuWvb2UBsEQFNiet/v4MNYha4zChx6clS
-        JoiOTYwSN86sAKtiEzCU6D3aB9bNK2AncejwTDCbRUBVYs+RTSwgtqhAnMTyLfPZIWoEJU7O
-        fMICchGngJ5E99dikDCzgLrEn3mXmCFscYlbT+YzQdjyEtvfzmGewCg0C0n3LCQts5C0zELS
-        soCRZRWjSGppcW56brGRXnFibnFpXrpecn7uJkZgHG479nPLDsaud8GHGAU4GJV4eA8clIsX
-        Yk0sK67MPcQowcGsJMLrdPZ0nBBvSmJlVWpRfnxRaU5q8SFGU6DfJjJLiSbnA1NEXkm8oamh
-        uYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxutqb+/VF2vGBF0vq7+bpD0/
-        x4/5dMaO9D+TVhavWhy4cr2W4M3HWZf7nXtu3uEtc7TqqmjYevJOm9j3OLu0+e9fejfnzlj0
-        5cefvmMnprX7veT5r1xULn6hrmvmzobl2yZ23hB3+Wkh+u3OHMWYtQ43NkR+sP37wdsn/DuH
-        f+OP7Bm1Jkua1JRYijMSDbWYi4oTASgWb8LZAgAA
-X-CMS-MailID: 20200727173453eucas1p20c8335a997c175d8a2694b7557f218ee
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200727163139eucas1p17420a06923fb625331b2ea867f75bb7e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200727163139eucas1p17420a06923fb625331b2ea867f75bb7e
-References: <CGME20200727163139eucas1p17420a06923fb625331b2ea867f75bb7e@eucas1p1.samsung.com>
-        <20200727163027.9242-1-s.nawrocki@samsung.com>
-        <20200727171520.GB3507@kozik-lap>
+References: <20200727092346.19780-1-amelie.delaunay@st.com> <20200727092346.19780-2-amelie.delaunay@st.com>
+In-Reply-To: <20200727092346.19780-2-amelie.delaunay@st.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 Jul 2020 19:47:35 +0200
+Message-ID: <CAFBinCA_GzdWC+L3Wj_PesRmNFP2rhpZ6jWhhNJP03O5AHc5Kw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: usb: dwc2: add optional
+ usb-role-switch property
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 27.07.2020 19:15, Krzysztof Kozlowski wrote:
->> +  cpu:
->> +    type: object
->> +    properties:
->> +      sound-dai:
->> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+Hello Amelie,
 
-> I think it is just a phandle, not an array?
+thank you for adding this patch!
 
-Yes, indeed. I will fix it and resend.
+On Mon, Jul 27, 2020 at 11:23 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
+>
+> This patch documents the usb-role-switch property in dwc2 bindings, now
+> that usb-role-switch support is available in dwc2 driver.
+>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+please add my:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
--- 
-Thanks,
-Sylwester
+
+Martin
