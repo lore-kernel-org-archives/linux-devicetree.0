@@ -2,127 +2,197 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F53C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADC9C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734142053B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C9E206E7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yRj+LeaS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SQNYbubV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgG0PYr (ORCPT
+        id S1730727AbgG0PiO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47092 "EHLO
+        Mon, 27 Jul 2020 11:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgG0PYr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 11:24:47 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC3CC061794;
-        Mon, 27 Jul 2020 08:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9vIfOIhjeocObHiDXZCLuAgghjol6nwY5lbJNZUDwNs=; b=yRj+LeaSFDkx9M/0AwgXuDtpj
-        T5mIneCQ+Kz2fI6q+xrI1xiG2gFiIlhJn4TsnFo3pl43IcA668M2w6DCDZ0adB5YbSguNwAtpBVVx
-        IfX7FRl0ab4WCz4vl7zD3Z87iPhtR+iWTznoAcBK4lgK/W/r4cnO3Ouhpgma+1mq78RubSHz0Ehhh
-        ewqZuHwYw4JKdQXvVoxcW+M6355G3QoNTW22mnVELnisjCHwOzfMbSoR+VBQ2vKLPKxh7WUWvs6P+
-        FT0CTG3rbg+LSHKgbt0Bvri2CECLbC0NOnr3n7nfdgmvCaeRaZqYmhlLUsgW9akij+ETbiKN0qy0W
-        9au3JzwCA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44848)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k04zY-00030U-Gc; Mon, 27 Jul 2020 16:24:40 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k04zX-0003l8-DE; Mon, 27 Jul 2020 16:24:39 +0100
-Date:   Mon, 27 Jul 2020 16:24:39 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh@kernel.org>, miguelborgesdefreitas@gmail.com,
-        a.zummo@towertech.it, baruch@tkos.co.il, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-Message-ID: <20200727152439.GK1551@shell.armlinux.org.uk>
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus>
- <20200723195755.GV3428@piout.net>
- <20200727094553.GH1551@shell.armlinux.org.uk>
- <20200727144938.GC239143@piout.net>
+        with ESMTP id S1728710AbgG0PiO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 11:38:14 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC69C061794
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 08:38:14 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id l6so8193187plt.7
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 08:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NkVbGEZqq2gtUYFFHihdCf9UlSJbj6QF8gPVaF8Bfbo=;
+        b=SQNYbubVmJC7AL7K9qiuOd/Gn3pZrb2Pj6GSZkzj5uiofy/xe8+FFypgWHTLDIlppl
+         JCleeZ9of5qVBsZWWlVx7kXEfl+m3LqjmR2QBW7rfu9QuEuS5xziWEVE6GYrMCSrSs7O
+         kXoF4xAo3teKyO/XcsnRddniMMAbVRMgsTEv33E/v4LDLxnHshM4KCBgvpoy/iQTXhIR
+         Btb28CisbS4v3W9GLSU1hM0q+zgKqoP8W0PEu1aTj9UldG7y3uuYRHT6tHkNmGwLJ2MN
+         99ss8OhFnJUsX021lCurIDBdvJGxzfmGkcXigsmA+phWdEJgEe+K7PpzOC3sq58gPFd7
+         W0Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NkVbGEZqq2gtUYFFHihdCf9UlSJbj6QF8gPVaF8Bfbo=;
+        b=OYgeV/fZMsfc7H8EGSUC95uLPIoGgc5Pn+nnCIq0lEehqKWA9Y+UZFhEkuhvDEQueB
+         ozL4KQWKOXFLjlnJthK413iBmjvusoAhgnjm+TG9dXKL+leASErIM21kNXi93/rbIP5e
+         61UEItsZKATAUbaADxLTTJUXGvsEqDt/TgpmsRKrNKxl9KkUuobfUwr3itnfDak/mcf2
+         6nvfag4EjUH1EHbYZrrMiE3wFeiFvh/x6V+npraE1hNMYmvBVs8mhd+UYBJJJRwZ7w1s
+         cGmELKx/CppIGK64bg2SKMAdT+b/hz+IrLvCSnzY/xB08Rt106S+bZRB628A08aQaHWm
+         Vruw==
+X-Gm-Message-State: AOAM532s4+7mQKrnrbRVppmnGnfgLsPbgl2EtKvRu+245lu9lxCbZTai
+        gxxvXtVg1Kw3539Aie7ANqf6bQ==
+X-Google-Smtp-Source: ABdhPJzAXd8kJn2pS6mbPjKZXLIavxQW9wr44q5/JPYSYykSlpkS173kdTtzJWxxIonR/XqZ3Jaxlg==
+X-Received: by 2002:a17:90a:ea0b:: with SMTP id w11mr2833577pjy.80.1595864293473;
+        Mon, 27 Jul 2020 08:38:13 -0700 (PDT)
+Received: from localhost ([223.190.9.130])
+        by smtp.gmail.com with ESMTPSA id y19sm4363801pfn.77.2020.07.27.08.38.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 Jul 2020 08:38:12 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 21:08:06 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Taniya Das <tdas@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+Message-ID: <20200727153806.kgegadvghmkevch3@vireshk-mac-ubuntu>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
+ <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
+ <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200727144938.GC239143@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 04:49:38PM +0200, Alexandre Belloni wrote:
-> On 27/07/2020 10:45:53+0100, Russell King - ARM Linux admin wrote:
-> > > This is but this shouldn't be a DT property as it has to be changed
-> > > dynamically. I'm working on an ioctl interface to change this
-> > > configuration.
+On 27-07-20, 17:38, Rajendra Nayak wrote:
+> 
+> On 7/27/2020 11:23 AM, Rajendra Nayak wrote:
 > > 
-> > Why does it need to be changed dynamically?  If the hardware components
-> > are not fitted to allow the RTC to be safely used without DSM, then
-> > why should userspace be able to disable DSM?
+> > 
+> > On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
+> > > Hi,
+> > > 
+> > > On 7/23/20 9:06 PM, Stanimir Varbanov wrote:
+> > > > Hi Rajendra,
+> > > > 
+> > > > After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+> > > > below messages on db845:
+> > > > 
+> > > > qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+> > > > current OPP for freq 533000097 (-34)
+> > > > 
+> > > > ^^^ This one is new.
+> > > > 
+> > > > qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+> > > > 
+> > > > ^^^ and this message is annoying, can we make it pr_debug in rpmh?
+> > > > 
+> > > > On 7/23/20 2:26 PM, Rajendra Nayak wrote:
+> > > > > Add the OPP tables in order to be able to vote on the performance state of
+> > > > > a power-domain.
+> > > > > 
+> > > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > > > > ---
+> > > > >   arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+> > > > >   1 file changed, 38 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > index e506793..5ca2265 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > @@ -3631,8 +3631,10 @@
+> > > > >               interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > > > >               power-domains = <&videocc VENUS_GDSC>,
+> > > > >                       <&videocc VCODEC0_GDSC>,
+> > > > > -                    <&videocc VCODEC1_GDSC>;
+> > > > > -            power-domain-names = "venus", "vcodec0", "vcodec1";
+> > > > > +                    <&videocc VCODEC1_GDSC>,
+> > > > > +                    <&rpmhpd SDM845_CX>;
+> > > > > +            power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
+> > > > > +            operating-points-v2 = <&venus_opp_table>;
+> > > > >               clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> > > > >                    <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> > > > >                    <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> > > > > @@ -3654,6 +3656,40 @@
+> > > > >               video-core1 {
+> > > > >                   compatible = "venus-encoder";
+> > > > >               };
+> > > > > +
+> > > > > +            venus_opp_table: venus-opp-table {
+> > > > > +                compatible = "operating-points-v2";
+> > > > > +
+> > > > > +                opp-100000000 {
+> > > > > +                    opp-hz = /bits/ 64 <100000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_min_svs>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-200000000 {
+> > > > > +                    opp-hz = /bits/ 64 <200000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_low_svs>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-320000000 {
+> > > > > +                    opp-hz = /bits/ 64 <320000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_svs>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-380000000 {
+> > > > > +                    opp-hz = /bits/ 64 <380000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_svs_l1>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-444000000 {
+> > > > > +                    opp-hz = /bits/ 64 <444000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_nom>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-533000000 {
+> > > > > +                    opp-hz = /bits/ 64 <533000000>;
+
+Is this the highest OPP in table ?
+
+> > > Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
+> > > defines 533000000 but the real calculated freq is 533000097.
+> > 
+> > I still don't quite understand why the videocc driver returns this
+> > frequency despite this not being in the freq table.
 > 
-> For RTCs with a standby mode, you want to be able to return to standby
-> mode.
+> Ok, so I see the same issue on sc7180 also. clk_round_rate() does seem to
+> return whats in the freq table, but clk_set_rate() goes ahead and sets it
+> to 533000097. Subsequently when we try to set a different OPP, it fails to
+> find the 'current' OPP entry for 533000097. This sounds like an issue with the OPP
+> framework? Should we not fall back to the highest OPP as the current OPP?
 > 
-> That would happen for example after factory flashing in that common use
-> case:
->  - the board is manufactured
->  - Vbackup is installed, the RTC switches to standby mode
->  - the board is then booted to flash a system, Vprimary is now present,
->    the RTC switches to DSM.
-> 
-> At this point, if the board is simply shut down, the RTC will start
-> draining Vbackup before leaving the factory. Instead, we want to be able
-> to return to standby mode until the final user switches the product on
-> for the first time.
+> Stephen/Viresh, any thoughts?
 
-I don't think you're understanding what's going on with this proposed
-patch.  The cubox-i does work today, and the RTC does survive most
-power-downs. There are situations where it doesn't.
-
-So, let's take your process above.
-
-- the board is manufactured
-- Vbackup is installed, the RTC switches to standby mode
-- the board is then booted to flash a system, Vprimary is now present
-- the board is powered down.  the RTC _might_ switch over to battery
-  if it notices the power failure in time, or it might not.  A random
-  sample of units leaving the factory have the RTC in standby mode.
-  Others are draining the battery.
-
-I'm not saying what you propose isn't a good idea.  I'm questioning
-why we should expose this in the generic kernel on platforms where
-it's likely to end up with the RTC being corrupted.
-
-Now, I question your idea that units should leave the factory without
-the RTC being programmed.  We know that lovely systemd goes utterly
-bonkers if the system time is beyond INT_MAX.  If the RTC leaves
-standby mode containing a date which we translate beyond INT_MAX,
-systemd will refuse to boot the system, and the user will have no
-way to set the correct time.  The user returns the device to the
-supplier as faulty...
+I think we (in all frameworks generally) try to set a frequency <=
+target frequency and so there may be a problem if the frequency is
+larger than highest supported. IOW, you need to fix tables a bit.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+viresh
