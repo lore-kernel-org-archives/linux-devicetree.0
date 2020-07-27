@@ -2,173 +2,113 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E118C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19832C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7646420729
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54642064B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NK7YhBPi"
+	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="R7lqQ6pN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgG0RDB (ORCPT
+        id S1729876AbgG0RF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
+        Mon, 27 Jul 2020 13:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgG0RDB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 13:03:01 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C552C061794;
-        Mon, 27 Jul 2020 10:03:01 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8C731556;
-        Mon, 27 Jul 2020 19:02:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595869372;
-        bh=BmUuid7qCzoWbedOU9sLebblb85wP/lsToqZ1PEAt7g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NK7YhBPigSjuPp+8tFWoURgc5JobClMElhBjG4x8/0HB1ty/e2Xrao9L3SD+DC6sv
-         m8+PkL77ie+LOjD+mEWtHHyPmrAwZniDzQlw0vPssSlSdwCgdIv3vxmAEhGzJOj/0b
-         sauWg5WMzGjPy7pRV1Xrucl5Y6ybdjam0Z2sNvuY=
-Date:   Mon, 27 Jul 2020 20:02:45 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] drm: dsi: Let host and device specify supported bus
-Message-ID: <20200727170245.GF17521@pendragon.ideasonboard.com>
-References: <20200727164613.19744-1-paul@crapouillou.net>
- <20200727164613.19744-3-paul@crapouillou.net>
+        with ESMTP id S1729380AbgG0RF0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 13:05:26 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B64DC0619D2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 10:05:26 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id gg18so14437778ejb.6
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 10:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1UWXuVxrTXPn2/C98wkkf6EevtHV1S1R04GoKomRKLw=;
+        b=R7lqQ6pNyaOi81+mhqvokLJeiXUFPNBwC3xsKxqjGxZb/k31uk7EKn6BoAnyjvbn5S
+         umAchjm85d039omd9hPDmJX7TMsYmZd7fl7WCzCJNXIOxmYMpU2UG/d2A3DnuJV9jYkw
+         HObkH8Tmtp3IlcOzSTwxKikid7ELzMjZcxWKX33SujUJUYjb1QcP23NVg6b2Z9j9rPnB
+         PhaYFjPvHYlQS48MvUQ11ajUsuyb5p2iTQbx/NB402O1P8e4jeMxVmbk/tY/Bn65r3kh
+         ibrzMKa53e3v1LP/eUFspBJbYORDRyf1V7s/OyEPLKdFiyAAQLQZIHw2elVliGPuU5vk
+         FpQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1UWXuVxrTXPn2/C98wkkf6EevtHV1S1R04GoKomRKLw=;
+        b=KmPvvptFxLlIPv+CdxWC8ZmeNAaA8KmU8CTpBqlVjM7I1yfgdv9+9JgIVXQy3FUqLn
+         vyqJBorcX1Psh8joUge0/byoNY/+uQD1WhRnljVjVl//o997o/JMOuH6zC86ipj8YszE
+         T97Uluu9zUXYwwuTNGNjYfaYnRRzUIslJw9folxNLmSfbnU1hlBKmW7s84JpGQjL2oaS
+         l5cbNz0Hkg9nwWBFgfSW+B2u5JGW/mCfCy7oTg62F0FSE0doTEojajrgEiNxWJ8OXJXU
+         RQYxgktHlJ4vle81OR29zalkaxn+kjpRqqVCnKJCIfH+MQBXTFb8UfZ3eBRqtkWIl4rj
+         xDLA==
+X-Gm-Message-State: AOAM533XyVKq60TXL5v+MPnElulkmKnKegrmhY3n25Mwe3L4+j3kraaW
+        TKQkftVUKYfnjMVgQIaHoFD0+1KRkZ9wSgOED51YMg==
+X-Google-Smtp-Source: ABdhPJww0X8+AryGC7QGb6Vr6z1aKgVHMeJd/legoaBgd3/asP7tfo1T4gXuCtDNqqBsPtTHiO/pshG2xA412Y2chEw=
+X-Received: by 2002:a17:906:cc48:: with SMTP id mm8mr20323361ejb.132.1595869524926;
+ Mon, 27 Jul 2020 10:05:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200727164613.19744-3-paul@crapouillou.net>
+References: <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-2-miguelborgesdefreitas@gmail.com> <20200723174905.GA596242@bogus>
+ <20200723195755.GV3428@piout.net> <20200727094553.GH1551@shell.armlinux.org.uk>
+ <20200727144938.GC239143@piout.net> <20200727152439.GK1551@shell.armlinux.org.uk>
+ <20200727154104.GE239143@piout.net> <20200727154335.GL1551@shell.armlinux.org.uk>
+ <CABdtJHuVaTa5T0-KdQ-wZQrmFQ6HO3FvgnTgSo3aOi+=SPzDZA@mail.gmail.com> <20200727161632.GF239143@piout.net>
+In-Reply-To: <20200727161632.GF239143@piout.net>
+From:   Jon Nettleton <jon@solid-run.com>
+Date:   Mon, 27 Jul 2020 19:04:48 +0200
+Message-ID: <CABdtJHukOOMN7zsrAUQYma==N_t+LYmgWLpqJvZZNwg8PBM7dA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Rob Herring <robh@kernel.org>,
+        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
+        a.zummo@towertech.it, Baruch Siach <baruch@tkos.co.il>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+On Mon, Jul 27, 2020 at 6:16 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 27/07/2020 17:55:50+0200, Jon Nettleton wrote:
+> > > So, can we please have that discussion, it is pertinent to this patch.
+> > >
+> >
+> > Thinking about this some more, I believe whether or not an IOCTL
+> > interface is in the works or needed is irrelevant.  This patch
+> > describes the hardware and how it is designed and the topic of
+> > discussion is if we need a simple boolean state, or if we need
+> > something that could be used to support dynamic configuration in the
+> > future.  I would rather make this decision now rather than keep
+> > tacking on boolean config options, or revisit a bunch of device-tree
+> > changes.
+>
+> Something that would describe the hardware is a property telling whether
+> the filter is present on VDD, not a property selecting DSM. The driver
+> can then chose to avoid standard mode when needed.
+>
 
-Thank you for the patch.
-
-On Mon, Jul 27, 2020 at 06:46:09PM +0200, Paul Cercueil wrote:
-> The current MIPI DSI framework can very well be used to support MIPI DBI
-> panels. In order to add support for the various bus types supported by
-> DBI, the DRM panel drivers should specify the bus type they will use,
-> and the DSI host drivers should specify the bus types they are
-> compatible with.
-> 
-> The DSI host driver can then use the information provided by the DBI/DSI
-> device driver, such as the bus type and the number of lanes, to
-> configure its hardware properly.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/gpu/drm/drm_mipi_dsi.c |  9 +++++++++
->  include/drm/drm_mipi_dsi.h     | 12 ++++++++++++
-
-Use the mipi_dsi_* API for DBI panels will be very confusing to say the
-least. Can we consider a global name refactoring to clarify all this ?
-
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-> index 5dd475e82995..11ef885de765 100644
-> --- a/drivers/gpu/drm/drm_mipi_dsi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dsi.c
-> @@ -281,6 +281,9 @@ int mipi_dsi_host_register(struct mipi_dsi_host *host)
->  {
->  	struct device_node *node;
->  
-> +	if (WARN_ON_ONCE(!host->bus_types))
-> +		host->bus_types = MIPI_DEVICE_TYPE_DSI;
-> +
->  	for_each_available_child_of_node(host->dev->of_node, node) {
->  		/* skip nodes without reg property */
->  		if (!of_find_property(node, "reg", NULL))
-> @@ -323,6 +326,12 @@ int mipi_dsi_attach(struct mipi_dsi_device *dsi)
->  {
->  	const struct mipi_dsi_host_ops *ops = dsi->host->ops;
->  
-> +	if (WARN_ON_ONCE(!dsi->bus_type))
-> +		dsi->bus_type = MIPI_DEVICE_TYPE_DSI;
-> +
-> +	if (!(dsi->bus_type & dsi->host->bus_types))
-> +		return -EINVAL;
-> +
->  	if (!ops || !ops->attach)
->  		return -ENOSYS;
->  
-> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-> index 360e6377e84b..65d2961fc054 100644
-> --- a/include/drm/drm_mipi_dsi.h
-> +++ b/include/drm/drm_mipi_dsi.h
-> @@ -63,6 +63,14 @@ struct mipi_dsi_packet {
->  int mipi_dsi_create_packet(struct mipi_dsi_packet *packet,
->  			   const struct mipi_dsi_msg *msg);
->  
-> +/* MIPI bus types */
-> +#define MIPI_DEVICE_TYPE_DSI		BIT(0)
-> +#define MIPI_DEVICE_TYPE_DBI_SPI_MODE1	BIT(1)
-> +#define MIPI_DEVICE_TYPE_DBI_SPI_MODE2	BIT(2)
-> +#define MIPI_DEVICE_TYPE_DBI_SPI_MODE3	BIT(3)
-> +#define MIPI_DEVICE_TYPE_DBI_M6800	BIT(4)
-> +#define MIPI_DEVICE_TYPE_DBI_I8080	BIT(5)
-> +
->  /**
->   * struct mipi_dsi_host_ops - DSI bus operations
->   * @attach: attach DSI device to DSI host
-> @@ -94,11 +102,13 @@ struct mipi_dsi_host_ops {
->   * struct mipi_dsi_host - DSI host device
->   * @dev: driver model device node for this DSI host
->   * @ops: DSI host operations
-> + * @bus_types: Bitmask of supported MIPI bus types
->   * @list: list management
->   */
->  struct mipi_dsi_host {
->  	struct device *dev;
->  	const struct mipi_dsi_host_ops *ops;
-> +	unsigned int bus_types;
->  	struct list_head list;
->  };
->  
-> @@ -162,6 +172,7 @@ struct mipi_dsi_device_info {
->   * @host: DSI host for this peripheral
->   * @dev: driver model device node for this peripheral
->   * @name: DSI peripheral chip type
-> + * @bus_type: MIPI bus type (MIPI_DEVICE_TYPE_DSI/...)
->   * @channel: virtual channel assigned to the peripheral
->   * @format: pixel format for video mode
->   * @lanes: number of active data lanes
-> @@ -178,6 +189,7 @@ struct mipi_dsi_device {
->  	struct device dev;
->  
->  	char name[DSI_DEV_NAME_SIZE];
-> +	unsigned int bus_type;
->  	unsigned int channel;
->  	unsigned int lanes;
->  	enum mipi_dsi_pixel_format format;
-
--- 
-Regards,
-
-Laurent Pinchart
+The filter being present or not is not the singular hardware
+requirement for making this determination.  There is no reason to make
+this some obtuse argument.  There are two states and you may want one
+or the other, or the ability to switch between them.  This is a flag
+to tell the driver how the hardware should be configured based on the
+board preference.  Let's find a simple consistent way to do this.
