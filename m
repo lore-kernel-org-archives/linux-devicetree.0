@@ -2,386 +2,134 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01498C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 03:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9F6C433FE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C998120773
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 03:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2B320773
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGJ595p1"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PUg+WSl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgG0DOA (ORCPT
+        id S1728023AbgG0DPK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgG0DOA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 23:14:00 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB564C0619D2
-        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 20:13:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s16so338708ljc.8
-        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 20:13:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AYtY7Du0SSIBmGOFfAIhObGrFtoQCfrN9p7cr9Hx2EE=;
-        b=SGJ595p10ldocrUFdXMnvf+IivoBgRjRAqRx/O3+1J5K5em/gqTC/vk84QVYxDkfVJ
-         jX9MYW3DBkQBh5uUSQnFYyGJPElfcJ0kZHm6nNEsGRgtgZd8Wlb1nfR3PPZhu54JsTgM
-         a2bNzb8ETDlx9NXTw0JSu4BiKgef5bG/tkoWS1tv5C2TYs2JbLyb/jjiqx9TwqVerAQt
-         pHuPjuaHKpiLgnZmQSrr0robfz9UyoIPyIIg6n88HFJmQWLYR2GMtd4ZDAdS0tcLHma8
-         lDcwavluHp48w0nAaJ9uemHksRiHN+G9bfdqN+QuLZ7L2EmMFKxecPLGAVPscw2n8PB+
-         yYPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AYtY7Du0SSIBmGOFfAIhObGrFtoQCfrN9p7cr9Hx2EE=;
-        b=DqTohY5P6cDNA5/ah1/T6VYJRLjKdYJqneQeT4oZCrLe9Ax1VviWG3OLnMDXAx3/xN
-         PGOQgVmzkGE39FexvaUcB/2X/slw74pn9vzAwd+j/SLv0QAkUqhdJ0gBIZIzoPJlYqCv
-         fPYPGaIdNSO7DBlSizJx+nS6jepzYAfeHF8aTrIWa6SnYlDflUpKMiIG95cEbFhPHERG
-         NHFqQut9iI1/aG2ZibLWR+FXLwqU0KpvlTtEmNHdBVZqaMcqxyx1vUZlzubUvgD8FPBK
-         LXViUgdo4ZtBfr3T9ld6i14L9B36Yx2yy6p0wLXdP0HUNpCX5nZsaOGxFoSr/YUpyr0h
-         46ZQ==
-X-Gm-Message-State: AOAM531YkXJJlrOnmqJD9rPbvPND4i3yuBeIJSN0o+uFoMhe2xYAc9Jd
-        Nq+u/yMtMZ2d7iZ3OK1wqmZh4oXkHwMWcNuZeWtkGg==
-X-Google-Smtp-Source: ABdhPJzjtxkHRQCOFbkzlTIoLleatG34kzs0z8sUrAYkt2zi0x5dSofrSESRDq4cEut8WAvF0ObtJCx6dIShD+aSofE=
-X-Received: by 2002:a05:651c:1106:: with SMTP id d6mr8654740ljo.214.1595819636012;
- Sun, 26 Jul 2020 20:13:56 -0700 (PDT)
+        Sun, 26 Jul 2020 23:15:10 -0400
+Received: from mail-eopbgr70071.outbound.protection.outlook.com ([40.107.7.71]:2453
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728005AbgG0DPK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 26 Jul 2020 23:15:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hfBy81JrpVKRwfmO4JiTZtG+A6gc+KyciaW7U+ChPrIoHvECgSKYmQr27y1E7uO5TWAWXS5j39uJzCDnck+jt8/4YFbdevDpFeC++hCp2Ybe5vcf6YuCCueVwO3vud4JFTyXGuXLl1ErJ0FyG8fE227AaPH36YEl4lQBRprxthJ+euN+Zr6gjUlTelcAWObOHuVFV1mfMDycNN6wf8B92T5ZhdwIXJ86Oh+IOxA0xRM2EelNDf91AEkmgP7fVNyuG5n0bKMjzPdRcdHVp3Ohnpy65JN41VnBLFiThmEaqH69nPmVU/dqGMYCPiGk2fPaQOCrWXok8L2NFmQ7N4XzCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LyQD/mohmovBFiPaqgEIxcyggY8VtPFEPLcJfoubqqo=;
+ b=LWuoulnKPRGnoADggFe4mkTQRjN/QGWFwhXF7C0xr5Vu8u4heFy1If9quIZ/8Zioxy9a8+eqGAVle1NbhbRuunKZg7lQ+q5b76O3YynONvVxcgrQmH+pzpyjwFq+HcjShL9QM1nfuuXPSmiRFvM7M3O/afIloHr/PA3uCRdENCTActU3EfyvwkpGw76XHaE/2VRkaBRvaUHP1BIxC+8JS5fUUtC35Hhv6Zbi6Omsg7ada/BML5iRTyJi9BjGOJaoNkShFC2AzWccMHG9b/5QEuKIdIjxMFlMbniHxkOp0e+VhIEj6bTIO9cOZZ1ioOO0o4oeUcF1/vA51xlpc45DFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LyQD/mohmovBFiPaqgEIxcyggY8VtPFEPLcJfoubqqo=;
+ b=PUg+WSl6zrbFvNwROg5QyY5ZYscQztuFt5tbIc5NlNMwJUNHu1NyjNoKrEF/pstn4T6kM4XQ5tQNtgJjpwrwFKxDY8JpNQdEtmBezmghuVAExCmoKAC1n9eVqZaYKqXmf6KHLKYh4Alqk1m3PRI7lT77TcpSV1bdY9FVTS6otUs=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB5623.eurprd04.prod.outlook.com (2603:10a6:20b:a9::13)
+ by AM6PR0402MB3880.eurprd04.prod.outlook.com (2603:10a6:209:1b::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.31; Mon, 27 Jul
+ 2020 03:15:06 +0000
+Received: from AM6PR04MB5623.eurprd04.prod.outlook.com
+ ([fe80::ccb9:b047:d156:2694]) by AM6PR04MB5623.eurprd04.prod.outlook.com
+ ([fe80::ccb9:b047:d156:2694%5]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 03:15:06 +0000
+From:   Clark Wang <xiaoning.wang@nxp.com>
+To:     broonie@kernel.org, robh+dt@kernel.org, Anson.Huang@nxp.com
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 4/4] dt-bindings: lpspi: New property in document DT bindings for LPSPI
+Date:   Mon, 27 Jul 2020 11:15:13 +0800
+Message-Id: <20200727031513.31774-1-xiaoning.wang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0151.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::31) To AM6PR04MB5623.eurprd04.prod.outlook.com
+ (2603:10a6:20b:a9::13)
 MIME-Version: 1.0
-References: <20200717084932.3449-1-masahisa.kojima@linaro.org>
- <20200717084932.3449-2-masahisa.kojima@linaro.org> <20200723023634.GI45081@linux.intel.com>
-In-Reply-To: <20200723023634.GI45081@linux.intel.com>
-From:   Masahisa Kojima <masahisa.kojima@linaro.org>
-Date:   Mon, 27 Jul 2020 12:13:44 +0900
-Message-ID: <CADQ0-X8wYq97iqoKHAoyTN3qJf_f243e3HEhzjkbNAT-8FEEGQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] tpm: tis: add support for MMIO TPM on SynQuacer
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ardb@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.71) by SG2PR01CA0151.apcprd01.prod.exchangelabs.com (2603:1096:4:8f::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 03:15:04 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.71]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ffb70e70-0e53-4dc9-ffc3-08d831db42d9
+X-MS-TrafficTypeDiagnostic: AM6PR0402MB3880:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR0402MB38808DD27E49B5B70727F9F8F3720@AM6PR0402MB3880.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oiqOudFvjfg0VAtbyiruOtelO4D977Xz8/RjIpJeia7qg/W/8Wit92+4N7aFzbC8SVWtN+A4aSCdQJtikV4+jNwIe6bM9ek+cInYD1R8HoGYUzLKDKMCO4SSrO0k8EYyOo8wm9FY5I7KNclsjrs2yBYUlRAjFgxERFWRkdbzrWMqQ6SQOkQdr/Qf5iLaxIBI5hGo6FQ0H/uZr2+HOAeVQAWk1MviD5PyoGApkQWVTM7++TT6Y+6rROS6vekMJNj9+PS0ACYMTBzyhZb4XsnrX7plEnfM6hDXquv3LjWZASjRHRPkmCXrtRFRL3u4o2bDJc6HEGfk8IUZ/degLhJexvXp9xsYYijVzrU02kUocB193sLbwOu+VdkPTPxAGlWZ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5623.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(66556008)(66946007)(66476007)(5660300002)(956004)(2616005)(8676002)(478600001)(6512007)(36756003)(316002)(4326008)(6486002)(6636002)(1076003)(6666004)(26005)(16526019)(52116002)(6506007)(186003)(83380400001)(86362001)(69590400007)(8936002)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ktgOimpwFpeer5vD9J9sxyaI2utqZ2GM0qcPtuBNNENcZbXFdbCfIP7ekIAmqtcz3ZLVGztmQaWJ8wws39s41NWU6YOqcd68a33x9rZEa697Rn2F3LTcA1PATkD6L/YutANsbHfe6XX4RABkB99vZMaZUgPRB75J8M781WZQ8CdVDvJwAzKq8QUUxTPpzyJh01vTvAc0Y3ihaPONr6BLIyi8bfZcx6/qEm0zEiNeBDsIhUqoXPYSL4lr/hS8L++uSTSKRpw9xXKrLE4rGqhuety0+O70FHq+hWQCAl5J4J6cS0AaXGkq5EtCj6cvFtaIWGaGEl7wT8fo4M0lXaTVKYVpHqVeEBhojgAuDn0fHiPcvLzAhD+PiuPR1/6vLY+fSCkra6AqAtrykfAokvwMxvQ5QlUhuaYwKBpcqlYC+5N+5dTIVPfdhibDvIZcInitNrQaawBtH+SLYjZ7ddVpJCyDa9iyQqchaug34j3xkEU=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffb70e70-0e53-4dc9-ffc3-08d831db42d9
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5623.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 03:15:06.5095
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PUmbuYfWXhOzseWvWUpeKZxhpQ+Ncs0KgmscdKdinlLzasR7K4BwNhsa7B/fzx6LbIBwdT5jt54bbwsSC3nNOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3880
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jarkko,
+Add "fsl,spi-only-use-cs1-sel" to fit i.MX8DXL-EVK.
+Spi common code does not support use of CS signals discontinuously.
+It only uses CS1 without using CS0. So, add this property to re-config
+chipselect value.
 
-Thank you for your comments.
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+---
+Changes:
+V2:
+ - New patch added in the v2 patchset.
+---
+ Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On Thu, 23 Jul 2020 at 11:36, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Fri, Jul 17, 2020 at 05:49:31PM +0900, Masahisa Kojima wrote:
-> > When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
-> > window that is backed by the SPI command sequencer in the SPI bus
-> > controller. This arrangement has the limitation that only byte size
-> > accesses are supported, and so we'll need to provide a separate module
-> > that take this into account.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-> > ---
-> >  drivers/char/tpm/Kconfig             |  12 ++
-> >  drivers/char/tpm/Makefile            |   1 +
-> >  drivers/char/tpm/tpm_tis_synquacer.c | 209 +++++++++++++++++++++++++++
-> >  3 files changed, 222 insertions(+)
-> >  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
-> >
-> > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> > index 58b4c573d176..a18c314da211 100644
-> > --- a/drivers/char/tpm/Kconfig
-> > +++ b/drivers/char/tpm/Kconfig
-> > @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
-> >         If you have a H1 secure module running Cr50 firmware on SPI bus,
-> >         say Yes and it will be accessible from within Linux.
-> >
-> > +config TCG_TIS_SYNQUACER
-> > +     tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface (MMIO - SynQuacer)"
-> > +     depends on ARCH_SYNQUACER
-> > +     select TCG_TIS_CORE
-> > +     help
-> > +       If you have a TPM security chip that is compliant with the
-> > +       TCG TIS 1.2 TPM specification (TPM1.2) or the TCG PTP FIFO
-> > +       specification (TPM2.0) say Yes and it will be accessible from
-> > +       within Linux on Socionext SynQuacer platform.
-> > +       To compile this driver as a module, choose  M here;
-> > +       the module will be called tpm_tis_synquacer.
-> > +
-> >  config TCG_TIS_I2C_ATMEL
-> >       tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
-> >       depends on I2C
-> > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> > index 9567e5197f74..84db4fb3a9c9 100644
-> > --- a/drivers/char/tpm/Makefile
-> > +++ b/drivers/char/tpm/Makefile
-> > @@ -21,6 +21,7 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
-> >  tpm-$(CONFIG_OF) += eventlog/of.o
-> >  obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
-> >  obj-$(CONFIG_TCG_TIS) += tpm_tis.o
-> > +obj-$(CONFIG_TCG_TIS_SYNQUACER) += tpm_tis_synquacer.o
-> >
-> >  obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
-> >  tpm_tis_spi-y := tpm_tis_spi_main.o
-> > diff --git a/drivers/char/tpm/tpm_tis_synquacer.c b/drivers/char/tpm/tpm_tis_synquacer.c
-> > new file mode 100644
-> > index 000000000000..ac2a1d2a5001
-> > --- /dev/null
-> > +++ b/drivers/char/tpm/tpm_tis_synquacer.c
-> > @@ -0,0 +1,209 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2020 Linaro Ltd.
-> > + *
-> > + * This device driver implements MMIO TPM on SynQuacer Platform.
-> > + */
-> > +#include <linux/acpi.h>
-> > +#include <linux/init.h>
-> > +#include <linux/module.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/kernel.h>
-> > +#include "tpm.h"
-> > +#include "tpm_tis_core.h"
-> > +
-> > +struct tpm_tis_synquacer_info {
-> > +     struct resource res;
-> > +     /* irq > 0 means: use irq $irq;
-> > +      * irq = 0 means: autoprobe for an irq;
-> > +      * irq = -1 means: no irq support
-> > +      */
-> > +     int irq;
-> > +};
->
-> According to the coding style, multi-line comments must begin with an
-> empty line.
->
-> Also it would be preferable to have the comment prepending the struct
-> for easier read:
->
-> /*
->  * irq > 0 means: use irq $irq;
->  * irq = 0 means: autoprobe for an irq;
->  * irq = -1 means: no irq support
->  */
-> struct tpm_tis_synquacer_info {
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
+index 143b94a1883a..22882e769e26 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
+@@ -34,6 +34,12 @@ properties:
+       - const: per
+       - const: ipg
+ 
++  fsl,spi-only-use-cs1-sel:
++    description:
++      spi common code does not support use of CS signals discontinuously.
++      i.MX8DXL-EVK board only uses CS1 without using CS0. Therefore, add
++      this property to re-config the chipselect value in the LPSPI driver.
++
+ required:
+   - compatible
+   - reg
+@@ -57,4 +63,5 @@ examples:
+                  <&clks IMX7ULP_CLK_DUMMY>;
+         clock-names = "per", "ipg";
+         spi-slave;
++        fsl,spi-only-use-cs1-sel;
+     };
+-- 
+2.17.1
 
-I will modify.
-
->
-> > +
-> > +struct tpm_tis_synquacer_phy {
-> > +     struct tpm_tis_data priv;
-> > +     void __iomem *iobase;
-> > +};
-> > +
-> > +static inline struct tpm_tis_synquacer_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *data)
-> > +{
-> > +     return container_of(data, struct tpm_tis_synquacer_phy, priv);
-> > +}
-> > +
-> > +static int tpm_tis_synquacer_read_bytes(struct tpm_tis_data *data, u32 addr,
-> > +                                     u16 len, u8 *result)
-> > +{
-> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> > +
-> > +     while (len--)
-> > +             *result++ = ioread8(phy->iobase + addr);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int tpm_tis_synquacer_write_bytes(struct tpm_tis_data *data, u32 addr,
-> > +                                      u16 len, const u8 *value)
-> > +{
-> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> > +
-> > +     while (len--)
-> > +             iowrite8(*value++, phy->iobase + addr);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int tpm_tis_synquacer_read16_bw(struct tpm_tis_data *data,
-> > +                                    u32 addr, u16 *result)
-> > +{
-> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> > +
-> > +     /*
-> > +      * Due to the limitation of SPI controller on SynQuacer,
-> > +      * 16/32 bits access must be done in byte-wise and descending order.
-> > +      */
-> > +     *result = (ioread8(phy->iobase + addr + 1) << 8) |
-> > +               (ioread8(phy->iobase + addr));
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int tpm_tis_synquacer_read32_bw(struct tpm_tis_data *data,
-> > +                                    u32 addr, u32 *result)
-> > +{
-> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> > +
-> > +     /*
-> > +      * Due to the limitation of SPI controller on SynQuacer,
-> > +      * 16/32 bits access must be done in byte-wise and descending order.
-> > +      */
-> > +     *result = (ioread8(phy->iobase + addr + 3) << 24) |
-> > +               (ioread8(phy->iobase + addr + 2) << 16) |
-> > +               (ioread8(phy->iobase + addr + 1) << 8) |
-> > +               (ioread8(phy->iobase + addr));
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int tpm_tis_synquacer_write32_bw(struct tpm_tis_data *data,
-> > +                                     u32 addr, u32 value)
-> > +{
-> > +     struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> > +
-> > +     /*
-> > +      * Due to the limitation of SPI controller on SynQuacer,
-> > +      * 16/32 bits access must be done in byte-wise and descending order.
-> > +      */
-> > +     iowrite8(value >> 24, phy->iobase + addr + 3);
-> > +     iowrite8(value >> 16, phy->iobase + addr + 2);
-> > +     iowrite8(value >> 8, phy->iobase + addr + 1);
-> > +     iowrite8(value, phy->iobase + addr);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct tpm_tis_phy_ops tpm_tcg_bw = {
-> > +     .read_bytes     = tpm_tis_synquacer_read_bytes,
-> > +     .write_bytes    = tpm_tis_synquacer_write_bytes,
-> > +     .read16         = tpm_tis_synquacer_read16_bw,
-> > +     .read32         = tpm_tis_synquacer_read32_bw,
-> > +     .write32        = tpm_tis_synquacer_write32_bw,
-> > +};
-> > +
-> > +static int tpm_tis_synquacer_init(struct device *dev,
-> > +                               struct tpm_tis_synquacer_info *tpm_info)
-> > +{
-> > +     struct tpm_tis_synquacer_phy *phy;
-> > +
-> > +     phy = devm_kzalloc(dev, sizeof(struct tpm_tis_synquacer_phy), GFP_KERNEL);
-> > +     if (phy == NULL)
-> > +             return -ENOMEM;
-> > +
-> > +     phy->iobase = devm_ioremap_resource(dev, &tpm_info->res);
-> > +     if (IS_ERR(phy->iobase))
-> > +             return PTR_ERR(phy->iobase);
-> > +
-> > +     return tpm_tis_core_init(dev, &phy->priv, tpm_info->irq, &tpm_tcg_bw,
-> > +                              ACPI_HANDLE(dev));
-> > +}
-> > +
-> > +static SIMPLE_DEV_PM_OPS(tpm_tis_synquacer_pm, tpm_pm_suspend, tpm_tis_resume);
-> > +
-> > +static int tpm_tis_synquacer_probe(struct platform_device *pdev)
-> > +{
-> > +     struct tpm_tis_synquacer_info tpm_info = {};
-> > +     struct resource *res;
-> > +
-> > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     if (res == NULL) {
-> > +             dev_err(&pdev->dev, "no memory resource defined\n");
-> > +             return -ENODEV;
-> > +     }
-> > +     tpm_info.res = *res;
-> > +
-> > +     tpm_info.irq = -1;
-> > +
-> > +     return tpm_tis_synquacer_init(&pdev->dev, &tpm_info);
-> > +}
-> > +
-> > +static int tpm_tis_synquacer_remove(struct platform_device *pdev)
-> > +{
-> > +     struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
-> > +
-> > +     tpm_chip_unregister(chip);
-> > +     tpm_tis_remove(chip);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id tis_synquacer_of_platform_match[] = {
-> > +     {.compatible = "socionext,synquacer-tpm-mmio"},
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, tis_synquacer_of_platform_match);
-> > +#endif
-> > +
-> > +#ifdef CONFIG_ACPI
-> > +static const struct acpi_device_id tpm_synquacer_acpi_tbl[] = {
-> > +     { "SCX0009" },
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, tpm_synquacer_acpi_tbl);
-> > +#endif
-> > +
-> > +static struct platform_driver tis_synquacer_drv = {
-> > +     .probe = tpm_tis_synquacer_probe,
-> > +     .remove = tpm_tis_synquacer_remove,
-> > +     .driver = {
-> > +             .name           = "tpm_tis_synquacer",
-> > +             .pm             = &tpm_tis_synquacer_pm,
-> > +             .of_match_table = of_match_ptr(tis_synquacer_of_platform_match),
-> > +             .acpi_match_table = ACPI_PTR(tpm_synquacer_acpi_tbl),
-> > +     },
-> > +};
-> > +
-> > +static int __init tpm_tis_synquacer_module_init(void)
-> > +{
-> > +     int rc;
-> > +
-> > +     rc = platform_driver_register(&tis_synquacer_drv);
-> > +     if (rc)
-> > +             return rc;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void __exit tpm_tis_synquacer_module_exit(void)
-> > +{
-> > +     platform_driver_unregister(&tis_synquacer_drv);
-> > +}
-> > +
-> > +module_init(tpm_tis_synquacer_module_init);
-> > +module_exit(tpm_tis_synquacer_module_exit);
-> > +MODULE_AUTHOR("Masahisa Kojima (masahisa.kojima@linaro.org)");
->
-> It is completely redundant field because authorship is part of the
-> commit object itself. And it does not tell the truth after a while
-> anyway. MODULE_AUTHOR() made more sense before there was any sort of
-> legit versio control in place.
->
-> I think it would be better not to have it as we don't have any use
-> for this data. It is just cruft hanging there.
-
-OK, I will remove MODULE_AUTHOR() line.
-I will also plan to remove MODULE_VERSION("2.0").
-tpm_tis_spi_main.c only has MODULE_DESCRIPTION() and MODULE_LICENSE(),
-I plan to follow this example.
-
-Regards,
-Masahisa
-
->
-> > +MODULE_DESCRIPTION("TPM MMIO Driver for Socionext SynQuacer platform");
-> > +MODULE_VERSION("2.0");
-> > +MODULE_LICENSE("GPL");
-> > --
-> > 2.20.1
-> >
->
-> /Jarkko
