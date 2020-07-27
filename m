@@ -2,227 +2,253 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B966C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E34CC433EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8A020759
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:14:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="qfYfHkNf"
+	by mail.kernel.org (Postfix) with ESMTP id DF7172073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgG0FOh (ORCPT
+        id S1726327AbgG0FUr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:14:37 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49279 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgG0FOh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:14:37 -0400
-IronPort-SDR: J8PSrQdwkLyZtxNztW0gJ37VQLkq7/emvL+qzN0PGwI/9Xy7eCreBg8DP6eGWi5tVu/zqZZpc8
- sdNzwjSvHz5A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="169069352"
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="169069352"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 22:14:35 -0700
-IronPort-SDR: YmhIz0kdxL0fGzemq6Yskj9l+oADETJ6n4rrlOeQgDJM4S402rRVdXFl9s42Hm1Fdj8U8tiU0a
- yk76PfIsXeaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="327901963"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Jul 2020 22:14:35 -0700
-Received: from fmsmsx102.amr.corp.intel.com (10.18.124.200) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 26 Jul 2020 22:14:35 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- FMSMSX102.amr.corp.intel.com (10.18.124.200) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 26 Jul 2020 22:14:34 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
- edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Sun, 26 Jul 2020 22:14:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oKwTU5TtZnbj0hiysuvWgv2QCfAky9PFa2gMAj/mbk+/G/KkGMI+gtUNgxcYsltMQ39+Pi1i9lubqlmw+wVzgbQHLe7JxH6Pd2dtB7OH4zPEUjQpvOljUomMRfeANnKDdiMbFSH7hh5A6aKX8taBuC6mTnOT0nLwoteMEWT8ux5xKfGv6Dwv9HuhY+f6PWfcfibPDpZvYVT017livWyM22VijyLPihZ989ssnXY/BRKIsjp+gpztGC/u1bE7g8CLvAjQnSufSgHoHmb5gKduEyShhwbCCNwwt2BLctWRH55J/qGqaT8SPCIdUsWlNiHE/McCTOhQyatUREXtiJjRyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EB02JPaLOaKnS8YkasV88eipd4b5yUHfWDoi3iP97G4=;
- b=SrpdACAJy3uMsJykGYzuz0dEdrMnsiCWvL2ZG8HtjESxXlKzOeIjmn8WBrZW0VCW6miEN2fJU2HmgbgNyShQIVN4fuH861rH76t9YJmPhB6weKgJpU97v1FkZREgTjfQhuVZKiAjLUrggwNqg77XkbHYBLGeiXDdJgt9ZillA0nQXERsjskD3vdE6PtusZJBovFoD5oZu9ILK251rZdEDGMfdR3KcP4CjdOlU6Jpo0+ZuAhdcH26J26EERV4Pv/0CGsY/slBQvmUHrGuxIcUBhiHKBWQfrcoa3xAOTxRu8XVi1Z9K23499vc3oHFN12lBmZ6Wz/T2g8LyeR4/I7+dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EB02JPaLOaKnS8YkasV88eipd4b5yUHfWDoi3iP97G4=;
- b=qfYfHkNfpC0Fd/hNawxD2KMyuv95GmTagb8OS7FNikSqMFzwCQStJllZfqTvmVgHqPbhd/taLrjehqF9l8BxGiblCOz9OY6OCmJPF7iPSTDleYCRbSBfYtnWEJIYD5HPj5991N+36oh2vuXl5/gZ+MaHsSayrVU75MgoPDRMGJ0=
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com (2603:10b6:805:57::20)
- by SN6PR11MB3391.namprd11.prod.outlook.com (2603:10b6:805:bc::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Mon, 27 Jul
- 2020 05:14:33 +0000
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::cd49:6ea7:530c:95e0]) by SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::cd49:6ea7:530c:95e0%4]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 05:14:33 +0000
-From:   "G Jaya Kumaran, Vineetha" <vineetha.g.jaya.kumaran@intel.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Wan Mohamad, Wan Ahmad Zainie" 
-        <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: RE: [PATCH v2 2/2] dt-bindings: pwm: keembay: Add bindings for Intel
- Keem Bay PWM
-Thread-Topic: [PATCH v2 2/2] dt-bindings: pwm: keembay: Add bindings for Intel
- Keem Bay PWM
-Thread-Index: AQHWXRK6rU+Xw8EsCkKh4s3bmFntnqkVeGSAgAV2juA=
-Date:   Mon, 27 Jul 2020 05:14:32 +0000
-Message-ID: <SN6PR11MB25755A006A1DA31727F2753EF6720@SN6PR11MB2575.namprd11.prod.outlook.com>
-References: <1595083628-20734-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1595083628-20734-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <20200723174701.GA584130@bogus>
-In-Reply-To: <20200723174701.GA584130@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [202.190.91.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a78a2915-5f30-4f3f-b7b3-08d831ebf2b6
-x-ms-traffictypediagnostic: SN6PR11MB3391:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB3391655C11C81BC09F7571FBF6720@SN6PR11MB3391.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1107;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AjjbvtXhRtfAFnu+JOidfXBsa17Q/KQ+mEYjSlgV7YmtSvvn1tWN+QPfUelnZ6lzXN3iN4LHIN66DeCEK3ahZRc8cbhfGmHZH0ZlA1yq78zR+VQf+9cZ7mmCYTt/rXd54zDSiF7peXh/oxcWu4bXrp6/K6mx0neTjQeDY0iv2hKFrfaIZVhmQb7G5i/XnkB857D5AvO23PHwWc38loeK2a07nhc2OXSV7MHlPix82V8CzNaedCXykUEv+BeH+HVvZ6VnUiiTad7I2YUHbiYNRQMjleSTuMYtGBE/+QrkA2fwJ4jlMNe1Hm26cpb+XeQZ2lsBjUTAOTePWm840GA0e+oyKUuX1q40eOXsi955SaLBwJluzJYbDNCMhZUONjeeSlISUlrvsl/Wn9ubInnVjg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2575.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(76116006)(4326008)(66946007)(66556008)(66446008)(7696005)(64756008)(6916009)(8936002)(33656002)(66476007)(71200400001)(9686003)(55016002)(2906002)(5660300002)(53546011)(52536014)(86362001)(966005)(478600001)(83380400001)(8676002)(186003)(54906003)(6506007)(26005)(316002)(107886003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: F6/jW7AkT8hKuxh3A9sobs9WJsXECCaJcscTXGKefglmdhNW71RLuJ28yCFNJ33Rs6dYTWjC0s3AFcP+PubLheYkkh5O1cbd1QRoGFlxX6uhfMMXKMksKIEIs8Vr2CYSMMTMdUFRnk/ld+ksOgiLE0B75Cmwy0KrIuLAo92lFbRoDsHUaZaauirmq6l9LmBa3op5NEULRdRFN9asfI7qAaVZzTROrmPF+B3hh/6EihI0HkpLX3qLTOx/rjtRxA3I5mOjHYJasXHnDZqBBvbeNLOI6ZkIkuxGC6sAbcxrnQfvhLsFFyJawlnKgRDFiOtbBPE0G2DTpUbr72mpczqHW9Zc8mVWBSIou32KAhzGNjw1wkEZa6uuBfs4X9J++g9P+GxmrcxILyLjxv6sHkcSZd0jOic4o9Cg7KIj6NvWFsGW92S1qT1T50ta/OOkM6wCCxMbjZroYEW9imaP/p+7jT1/PrRJz5XrXbVBIRssicrpjxFrAf+Z89ZsRCmPUNGz
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 Jul 2020 01:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgG0FUq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 01:20:46 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90830C0619D2
+        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 22:20:45 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzvYd-0005Ov-P9; Mon, 27 Jul 2020 07:20:15 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzvYc-0001Zu-AD; Mon, 27 Jul 2020 07:20:14 +0200
+Date:   Mon, 27 Jul 2020 07:20:14 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
+        robh+dt@kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 06/10] remoteproc: imx_rproc: add load hook
+Message-ID: <20200727052014.tadfgxyexkoxffy7@pengutronix.de>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200724080813.24884-7-peng.fan@nxp.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2575.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a78a2915-5f30-4f3f-b7b3-08d831ebf2b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2020 05:14:33.0162
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Qdpt5WO81NkgwvDUWw/5CJv9J18udpvXup+6+LSWHHYhdpaZYZvRatfaueIFT/hYSmliuzOImUDMwa0eIEnerHnPqjoYjwygOQIF+QyvR2hCSGmwnu5AmZWHakRTQha5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3391
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fbgyevojci4fu3gk"
+Content-Disposition: inline
+In-Reply-To: <20200724080813.24884-7-peng.fan@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:01:51 up 254 days, 20:20, 238 users,  load average: 0.18, 0.13,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Friday, July 24, 2020 1:47 AM
-> To: G Jaya Kumaran, Vineetha <vineetha.g.jaya.kumaran@intel.com>
-> Cc: thierry.reding@gmail.com; u.kleine-koenig@pengutronix.de; linux-
-> pwm@vger.kernel.org; devicetree@vger.kernel.org; Wan Mohamad, Wan
-> Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>; Shevchenko,
-> Andriy <andriy.shevchenko@intel.com>
-> Subject: Re: [PATCH v2 2/2] dt-bindings: pwm: keembay: Add bindings for
-> Intel Keem Bay PWM
+--fbgyevojci4fu3gk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jul 24, 2020 at 04:08:09PM +0800, Peng Fan wrote:
+> To i.MX8, we not able to see the correct data written into TCM when
+> using ioremap_wc, so use ioremap.
 >=20
-> On Sat, Jul 18, 2020 at 10:47:08PM +0800,
-> vineetha.g.jaya.kumaran@intel.com wrote:
-> > From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
-> >
-> > Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
-> >
-> > Signed-off-by: Vineetha G. Jaya Kumaran
-> > <vineetha.g.jaya.kumaran@intel.com>
-> > ---
-> >  .../devicetree/bindings/pwm/intel,keembay-pwm.yaml | 45
-> > ++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-> > b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-> > new file mode 100644
-> > index 00000000..e9388a7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/intel,keembay-
-> pwm.yaml
-> > @@ -0,0 +1,45 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) # Copyright
-> > +(C) 2020 Intel Corporation %YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pwm/intel,keembay-pwm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Intel Keem Bay PWM Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-> > +
-> > +allOf:
-> > +  - $ref: pwm.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - intel,keembay-pwm
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  "#pwm-cells":
-> > +    const: 2
-> > +
-> > +required:
-> > + - compatible
-> > + - reg
-> > + - clocks
-> > + - '#pwm-cells'
+> However common elf loader using memset.
 >=20
-> Add:
+> To arm64, "dc      zva, dst" is used in memset.
+> Per ARM DDI 0487A.j, chapter C5.3.8 DC ZVA, Data Cache Zero by VA,
 >=20
-> additionalProperties: false
+> "If the memory region being zeroed is any type of Device memory,
+> this instruction can give an alignment fault which is prioritized
+> in the same way as other alignment faults that are determined
+> by the memory type."
 >=20
-> With that,
+> On i.MX platforms, when elf is loaded to onchip TCM area, the region
+> is ioremapped, so "dc zva, dst" will trigger abort.
+>
+> So add i.MX specific loader to address the TCM write issue.
+
+First I wonted to ask, if it is AMR64 related issues, why do we handle
+it in iMX specific driver?
+
+But after searching and finding this thread:
+https://lkml.org/lkml/2020/4/18/93
+it looks to me like most of related maintainer questions, was not
+answered.
+
+> The change not impact i.MX6/7 function.
+
+Hm... it is impossible assumption,e except you was able to test all
+firmware variants it the wild.
+You changed behavior of ELF parser in the first place. It means,
+not iMX6/7 is affected, but firmware used on this platforms.
+
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/imx_rproc.c | 76 ++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 76 insertions(+)
 >=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rpro=
+c.c
+> index aee790efbf7b..c23726091228 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -4,6 +4,7 @@
+>   */
+> =20
+>  #include <linux/clk.h>
+> +#include <linux/elf.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+> @@ -15,6 +16,9 @@
+>  #include <linux/regmap.h>
+>  #include <linux/remoteproc.h>
+> =20
+> +#include "remoteproc_internal.h"
+> +#include "remoteproc_elf_helpers.h"
+> +
+>  #define IMX7D_SRC_SCR			0x0C
+>  #define IMX7D_ENABLE_M4			BIT(3)
+>  #define IMX7D_SW_M4P_RST		BIT(2)
+> @@ -247,10 +251,82 @@ static void *imx_rproc_da_to_va(struct rproc *rproc=
+, u64 da, size_t len)
+>  	return va;
+>  }
+> =20
+> +static int imx_rproc_elf_load_segments(struct rproc *rproc, const struct=
+ firmware *fw)
+> +{
+> +	struct device *dev =3D &rproc->dev;
+> +	const void *ehdr, *phdr;
+> +	int i, ret =3D 0;
+> +	u16 phnum;
+> +	const u8 *elf_data =3D fw->data;
+> +	u8 class =3D fw_elf_get_class(fw);
+> +	u32 elf_phdr_get_size =3D elf_size_of_phdr(class);
+> +
+> +	ehdr =3D elf_data;
+> +	phnum =3D elf_hdr_get_e_phnum(class, ehdr);
+> +	phdr =3D elf_data + elf_hdr_get_e_phoff(class, ehdr);
+> +
+> +	/* go through the available ELF segments */
+> +	for (i =3D 0; i < phnum; i++, phdr +=3D elf_phdr_get_size) {
+> +		u64 da =3D elf_phdr_get_p_paddr(class, phdr);
+> +		u64 memsz =3D elf_phdr_get_p_memsz(class, phdr);
+> +		u64 filesz =3D elf_phdr_get_p_filesz(class, phdr);
+> +		u64 offset =3D elf_phdr_get_p_offset(class, phdr);
+> +		u32 type =3D elf_phdr_get_p_type(class, phdr);
+> +		void *ptr;
+> +
+> +		if (type !=3D PT_LOAD)
+> +			continue;
+> +
+> +		dev_dbg(dev, "phdr: type %d da 0x%llx memsz 0x%llx filesz 0x%llx\n",
+> +			type, da, memsz, filesz);
+> +
+> +		if (filesz > memsz) {
+> +			dev_err(dev, "bad phdr filesz 0x%llx memsz 0x%llx\n",
+> +				filesz, memsz);
+> +			ret =3D -EINVAL;
+> +			break;
+> +		}
+> +
+> +		if (offset + filesz > fw->size) {
+> +			dev_err(dev, "truncated fw: need 0x%llx avail 0x%zx\n",
+> +				offset + filesz, fw->size);
+> +			ret =3D -EINVAL;
+> +			break;
+> +		}
+> +
+> +		if (!rproc_u64_fit_in_size_t(memsz)) {
+> +			dev_err(dev, "size (%llx) does not fit in size_t type\n",
+> +				memsz);
+> +			ret =3D -EOVERFLOW;
+> +			break;
+> +		}
+> +
+> +		/* grab the kernel address for this device address */
+> +		ptr =3D rproc_da_to_va(rproc, da, memsz);
+> +		if (!ptr) {
+> +			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
+> +				memsz);
+> +			ret =3D -EINVAL;
+> +			break;
+> +		}
+> +
+> +		/* put the segment where the remote processor expects it */
+> +		if (filesz)
+> +			memcpy_toio(ptr, elf_data + offset, filesz);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct rproc_ops imx_rproc_ops =3D {
+>  	.start		=3D imx_rproc_start,
+>  	.stop		=3D imx_rproc_stop,
+>  	.da_to_va       =3D imx_rproc_da_to_va,
+> +	.load		=3D imx_rproc_elf_load_segments,
+> +	.parse_fw	=3D rproc_elf_load_rsc_table,
+> +	.find_loaded_rsc_table =3D rproc_elf_find_loaded_rsc_table,
+> +	.sanity_check	=3D rproc_elf_sanity_check,
+> +	.get_boot_addr	=3D rproc_elf_get_boot_addr,
+>  };
+> =20
+>  static int imx_rproc_addr_init(struct imx_rproc *priv,
+> --=20
+> 2.16.4
+>=20
 >=20
 
-Thank you for reviewing, I will add this in V3.
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-> > +
-> > +examples:
-> > +  - |
-> > +    #define KEEM_BAY_A53_GPIO
-> > +
-> > +    pwm@203200a0 {
-> > +      compatible =3D "intel,keembay-pwm";
-> > +      reg =3D <0x203200a0 0xe8>;
-> > +      clocks =3D <&scmi_clk KEEM_BAY_A53_GPIO>;
-> > +      #pwm-cells =3D <2>;
-> > +    };
-> > --
-> > 1.9.1
-> >
+--fbgyevojci4fu3gk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8eZAkACgkQ4omh9DUa
+UbMr4xAAzb9KHRlNH/QhnvS0wxRRBZAU6U8LEO6qZrFn6a00IcQqY2y35hdAr5kf
+c8uo3kBuHbrw3aYeur6iNQA8cp57Uc70fK0a4jS7KOvDmjuttRyDN/GD2Gb6kY/a
+RoG33lQc0JA1gtLNoMA1VeX3Oaoghlvpv0VBrstPGHp+b61uDI2lFwF4KkhrEe0G
++HjTWxdkFiZ1g4kC5Ik8ZlaKwNfzTcJgnlaoQsQQkxECIILcZvmntru0YOdePM9t
+0/VOGJH+qA+Np7A5j/sb+D07RYMmcb1ek7GLTIgsndtMlHp66XkzKyObbLLfRnqU
+DQ8w4waaY9i8X2W3X9aaCi45dG2XJ9m7wvGohLp7Rr4b9bioo1lbNHNM2Jo0fEXE
+0X7XRACIKihQy3QmN2lX7zXK0kpQcq+gSV2kRvairRDuqYXm/lKoMsPMT3UAMbsu
+fCj7D66swuCfdoe05hwsqu93fbJP7Jdog3gCyHVoFxNcXT43ur4AwRkJkdU+yl2C
+TmK9U2hLq+DhnlBg0M+6yaf7t2P4kuu6BRy7kLzf+KrB4daU0nxqDF+404apbP0N
+Z6WgWETHEfn0i53mHIaVwAWdGLwJhNAsSAB3c82+D3TLozJyQgOrtWZK1VtcUnWq
+q20cBB7zMuOX82D5G+YVz6K1rwYb0MsLSVQT9J0VMDl24rHJBDw=
+=9PWb
+-----END PGP SIGNATURE-----
+
+--fbgyevojci4fu3gk--
