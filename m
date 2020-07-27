@@ -2,132 +2,135 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6798BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485C2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42D4E206E7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239852074F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xt1tz2xi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cj1m6D1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbgG0Pnm (ORCPT
+        id S1730258AbgG0Pso (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50086 "EHLO
+        Mon, 27 Jul 2020 11:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgG0Pnm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 11:43:42 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33188C061794;
-        Mon, 27 Jul 2020 08:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DTiJ9DCKSihE4ycmCvc3MBz3EguzZmtKetvhRYWhQ6s=; b=xt1tz2xi4gFW1RBYpqonj0wO2
-        Vhy82d52V/bO7PkJUW4NbK7p9SnY59C+3iPXG6bdK7L6MDy75jmSLRmUK1LT/rrwDfbmRXEmBoML/
-        l6ffTZkhsJitXdhUeWM2HSCSHhHGmHEbY682TCBWO+mny9ybadR8497BWvxGvccE4pkyqT8vOu580
-        +dUp6Gs8QEkDsjnraaOBYbQNvY1rjID70opjpsqtj/cwXf0XYSilmK+kFAgx82cteXuOGB6acUuAo
-        avLfdgmogGQ8hMyq1c6RmT+5iAn2y6HV3hd60P2oNixKLymg+h7oC7moU4uSXN/oBh3MI7tl0pKT3
-        NAaTsyBYw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44858)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k05Hs-00031S-09; Mon, 27 Jul 2020 16:43:36 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k05Hr-0003mQ-5e; Mon, 27 Jul 2020 16:43:35 +0100
-Date:   Mon, 27 Jul 2020 16:43:35 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh@kernel.org>, miguelborgesdefreitas@gmail.com,
-        a.zummo@towertech.it, baruch@tkos.co.il, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-Message-ID: <20200727154335.GL1551@shell.armlinux.org.uk>
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus>
- <20200723195755.GV3428@piout.net>
- <20200727094553.GH1551@shell.armlinux.org.uk>
- <20200727144938.GC239143@piout.net>
- <20200727152439.GK1551@shell.armlinux.org.uk>
- <20200727154104.GE239143@piout.net>
+        with ESMTP id S1726932AbgG0Pso (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 11:48:44 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D81C061794
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 08:48:44 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so11826101wrm.12
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 08:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ftDaS4GB93pqR50K0HNKbC88ac2C5NLman44G8+/LyE=;
+        b=cj1m6D1+swe4DvbRaDEeTwdxgGLAdA0culkB6Ks72KZ3YF/BmYDotHHfe2/+AUJG5l
+         l1rQsTXvM7RO+oJdHgpMCmmCSP6Fc3/xaC4bD+7HQfE3/PEwvhaUCjNrHXJAXdqkxtRk
+         RodYtqA8PhxVLQ1zWBEuQgu65kRlrj18zaVdbAQ4SEMeB6eRqwzIK62XZeogD9dcq/ac
+         D3ZLysh+S5EnyQtnrvczHZ7SmdSUv1gjIBClYk+jZ0N+1AgHT8+e+KuhRH0UXsRnzq9s
+         I0958lQD71PhvsJrMc5owFCmX3UvrPO/7PAEcHu/2AlLiAxvO8jnEBv2CHpTCKWXOUJL
+         WQTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ftDaS4GB93pqR50K0HNKbC88ac2C5NLman44G8+/LyE=;
+        b=Y9acCzD/prytm4IG5WhQVXGRB+aIXFzR+UpuaBDhjBUHJK3rHnoFUkYIOqmWvO46Ik
+         NfinUL8k1S8PWUYXJOVeHHhLimGEtQG7yzuPHmLL2/7/0d56QEJbdz8xlCpos4rxH3kO
+         sJjaA0KiObR8d4qj3MPvhwVbZ/I3M3wCpeFU5tKnD7oXUV5y1BztRcj7w3u50MLi8v3w
+         7vtZQiWtWgFOxqcetbMc5pKZVdrPzs+bqYh8C7jlDMjFyQEQrvmuQGn27pNvtgKlmfX4
+         ATAjgyJ8GhyHNGpCBvqO3ZB8yDRzoH3PIo+Rli+k9SrJSYtD1Sy8Z7b0cRV2/rJS7EfJ
+         hHJA==
+X-Gm-Message-State: AOAM533XDOwmXbsFEi2hdeltxdJzTEG9DhXSXhVOMdwAE7UVGjZu2O6q
+        WtXgY2e83m1A/S4LAZjogWe/pg==
+X-Google-Smtp-Source: ABdhPJwGZmIBqv2Morq7xO0TtkIaGYFP6yK8oChVVtxF7/hPI4hIcO8UKMwe98O/xQHW7Hh7Ry8XpQ==
+X-Received: by 2002:a5d:544f:: with SMTP id w15mr21015839wrv.208.1595864922765;
+        Mon, 27 Jul 2020 08:48:42 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id r206sm34232wma.6.2020.07.27.08.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 08:48:42 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 16:48:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Subject: Re: [PATCH 1/8] mfd: mt6358: refine interrupt code
+Message-ID: <20200727154840.GY1850026@dell>
+References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200727154104.GE239143@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 05:41:04PM +0200, Alexandre Belloni wrote:
-> On 27/07/2020 16:24:39+0100, Russell King - ARM Linux admin wrote:
-> > On Mon, Jul 27, 2020 at 04:49:38PM +0200, Alexandre Belloni wrote:
-> > > On 27/07/2020 10:45:53+0100, Russell King - ARM Linux admin wrote:
-> > > > > This is but this shouldn't be a DT property as it has to be changed
-> > > > > dynamically. I'm working on an ioctl interface to change this
-> > > > > configuration.
-> > > > 
-> > > > Why does it need to be changed dynamically?  If the hardware components
-> > > > are not fitted to allow the RTC to be safely used without DSM, then
-> > > > why should userspace be able to disable DSM?
-> > > 
-> > > For RTCs with a standby mode, you want to be able to return to standby
-> > > mode.
-> > > 
-> > > That would happen for example after factory flashing in that common use
-> > > case:
-> > >  - the board is manufactured
-> > >  - Vbackup is installed, the RTC switches to standby mode
-> > >  - the board is then booted to flash a system, Vprimary is now present,
-> > >    the RTC switches to DSM.
-> > > 
-> > > At this point, if the board is simply shut down, the RTC will start
-> > > draining Vbackup before leaving the factory. Instead, we want to be able
-> > > to return to standby mode until the final user switches the product on
-> > > for the first time.
-> > 
-> > I don't think you're understanding what's going on with this proposed
-> > patch.  The cubox-i does work today, and the RTC does survive most
-> > power-downs. There are situations where it doesn't.
-> > 
-> > So, let's take your process above.
-> > 
-> > - the board is manufactured
-> > - Vbackup is installed, the RTC switches to standby mode
-> > - the board is then booted to flash a system, Vprimary is now present
-> > - the board is powered down.  the RTC _might_ switch over to battery
-> >   if it notices the power failure in time, or it might not.  A random
-> >   sample of units leaving the factory have the RTC in standby mode.
-> >   Others are draining the battery.
-> > 
-> > I'm not saying what you propose isn't a good idea.  I'm questioning
-> > why we should expose this in the generic kernel on platforms where
-> > it's likely to end up with the RTC being corrupted.
-> > 
+On Thu, 23 Jul 2020, Hsin-Hsiung Wang wrote:
+
+> This patch refines the interrupt related code to support new chips.
+
+Refines in what way?
+
+What makes this better?
+
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/mt6358-irq.c        | 65 ++++++++++++++++++++++++-----------------
+>  include/linux/mfd/mt6358/core.h |  8 ++---
+>  2 files changed, 41 insertions(+), 32 deletions(-)
 > 
-> Note that I didn't say we should expose settings that are not working
-> but it is a different discussion.
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> index db734f2..4b094e5 100644
+> --- a/drivers/mfd/mt6358-irq.c
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -13,7 +13,9 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  
+> -static struct irq_top_t mt6358_ints[] = {
+> +#define MTK_PMIC_REG_WIDTH 16
+> +
+> +static const struct irq_top_t mt6358_ints[] = {
+>  	MT6358_TOP_GEN(BUCK),
+>  	MT6358_TOP_GEN(LDO),
+>  	MT6358_TOP_GEN(PSC),
+> @@ -24,6 +26,13 @@ static struct irq_top_t mt6358_ints[] = {
+>  	MT6358_TOP_GEN(MISC),
+>  };
+>  
+> +static struct pmic_irq_data mt6358_irqd = {
+> +	.num_top = ARRAY_SIZE(mt6358_ints),
+> +	.num_pmic_irqs = MT6358_IRQ_NR,
+> +	.top_int_status_reg = MT6358_TOP_INT_STATUS0,
+> +	.pmic_ints = mt6358_ints,
+> +};
 
-It isn't a different discussion - that is exactly what the point of
-my emails to you all along have been!
+Dynamically assigned driver data is usually preferred.
 
-So, can we please have that discussion, it is pertinent to this patch.
+Why have you gone static?
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
