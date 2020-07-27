@@ -2,180 +2,164 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26187C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D66FC433EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A587206D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D610E2083B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="rtFeL/3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbgG0NGi (ORCPT
+        id S1728963AbgG0Nd4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:06:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:59418 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbgG0NGh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:06:37 -0400
-IronPort-SDR: 2v0DxkGq+SM2aWK39bJXdQ6yAPqQh4b7pUQLm0w8fFGi1F47bYVl6gZTj58Vt3/EiWFAaNOFms
- qgYhgSp1xNEA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="139038469"
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="139038469"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 06:05:32 -0700
-IronPort-SDR: dm4Ln0TlqLC73NTofpZWW3ntYmjGkEGiQhlTD4Sfp5KSWJPzN0DxI79e2OcLzxsM1OrPykZol/
- A2mpmgx/NTcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="393977754"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 27 Jul 2020 06:05:29 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 27 Jul 2020 16:05:28 +0300
-Date:   Mon, 27 Jul 2020 16:05:28 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tobias Schramm <t.schramm@manjaro.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/4] usb: typec: Add
- typec_port_register_altmodes_from_fwnode()
-Message-ID: <20200727130528.GB883641@kuha.fi.intel.com>
-References: <20200714113617.10470-1-hdegoede@redhat.com>
- <20200714113617.10470-3-hdegoede@redhat.com>
+        Mon, 27 Jul 2020 09:33:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgG0Nd4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 09:33:56 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFCDC0619D2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 06:33:55 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id dk23so5214611ejb.11
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 06:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wP4Kt6O/vFKZf7I8OioZ5wu30mbV3QIkDu9uPSa2GcI=;
+        b=rtFeL/3bkvsvdTZCa/KswNcWitGjGI+n5qCO6lZ7yIQ+yJ7VoEsrbaumluptUIpXIR
+         gglMmLoYeTYvw7qniGc8izu5WjyIu3Hy5A5B8LHwnTbHdH7dbIsKgE/DALB2OSSCtiQl
+         k2izB4ykZudJid3QApa7/xi5gU5+naaadOidfWiiJ2HPLtLrLIWWwXOFs0I0qa4q5dwa
+         9Ik2ECh2HoCE6GFbAkVHLMC+1wbHFJmmBCMqqBmxkb+4XcnpqUZoJuMGOScfeVpiuzri
+         hoF+SL6zVOKwskJDGPLPCZzuv82uXzEB1uvqCDoSV+wMA/zeQ7TyqFGPMXqXHb4E06yK
+         xsDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wP4Kt6O/vFKZf7I8OioZ5wu30mbV3QIkDu9uPSa2GcI=;
+        b=hRkz+5nT610JRuND5qUy+SiOWnfb8IYs/jOfDt8ZIvfgjhLI5DiNie7eor8w5bOVnJ
+         hgIdoYhiqPDCUqZKOkgpsAYPrLaf2gV7O26Hiljf3iLcy7RceZf6+beNw0KRAzfCXfjK
+         pB6FXZXHKXZx4DThA+XlBps8QR1GaMf9KGHWXKRTwiWIHPnAWkG4gOCq7Xc6ni05foMY
+         tFNs3eSwy19G5NtNC6/FshhvajHnXqAStW2/wse/HIXDzf2t7bHpSYKsogJIAFZG3Pyn
+         VgFxMiQ9z8Guby73NeL3PFwCdhhyYGMalu1Na7YB0BOrhSM2j1oWujpbKUq5YUV9a0re
+         BEEw==
+X-Gm-Message-State: AOAM531kW/wKneMDADkf1rB7rjfKVTyhTYWLTgeo6rF6WyNGMqS199Z4
+        1QAbg8Wh/lL7PW7PX9rndjSEyqs9Ywl77WOjwh+RmA==
+X-Google-Smtp-Source: ABdhPJzJGn+4YDJzQefhbMCC1tH9BXbFde1p6PfI6RTnxkY59oNtWoUgcWF5pmJomBPWvBJQO23dmeziJ/HbuhtjAYs=
+X-Received: by 2002:a17:906:a204:: with SMTP id r4mr13603758ejy.552.1595856834293;
+ Mon, 27 Jul 2020 06:33:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714113617.10470-3-hdegoede@redhat.com>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net> <20200727094553.GH1551@shell.armlinux.org.uk>
+In-Reply-To: <20200727094553.GH1551@shell.armlinux.org.uk>
+From:   Jon Nettleton <jon@solid-run.com>
+Date:   Mon, 27 Jul 2020 15:33:17 +0200
+Message-ID: <CABdtJHu2BacX+EeVkCxFYWfNxJ-7Z5MP7BqVfF2KHy+XfJGN3w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
+        a.zummo@towertech.it, Baruch Siach <baruch@tkos.co.il>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hans,
+On Mon, Jul 27, 2020 at 11:46 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Thu, Jul 23, 2020 at 09:57:55PM +0200, Alexandre Belloni wrote:
+> > On 23/07/2020 11:49:05-0600, Rob Herring wrote:
+> > > On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
+> > > > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+> > > >
+> > > > This adds direct-switching mode as a configurable DT flag for
+> > > > RTC modules supporting it (e.g. nxp pcf8523).
+> > > > DSM switches the power source to the battery supply whenever the
+> > > > VDD drops below VBAT. The option is recommended for hw designs
+> > > > where VDD is always expected to be higher than VBAT.
+> > > >
+> > > > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+> > > > ---
+> > > > Changes in v2:
+> > > > - Added extended commit message for git history
+> > > > - Separate dt bindings documentation into a single patch
+> > > >
+> > > >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
+> > > >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
+> > > >  2 files changed, 13 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > > index 0b1080c..f715a8f 100644
+> > > > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > > @@ -4,10 +4,14 @@ Required properties:
+> > > >  - compatible: Should contain "nxp,pcf8523".
+> > > >  - reg: I2C address for chip.
+> > > >
+> > > > -Optional property:
+> > > > +Optional properties:
+> > > >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
+> > > >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
+> > > >    Default value (if no value is specified) is 12500fF.
+> > > > +- pm-enable-dsm: battery switch-over function is enabled in direct
+> > > > +  switching mode. The power failure condition happens when VDD < VBAT,
+> > > > +  without requiring VDD to drop below Vth(sw)bat.
+> > > > +  Default value (if not provided) is the standard mode.
+> > > >
+> > > >  Example:
+> > > >
+> > > > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
+> > > >   compatible = "nxp,pcf8523";
+> > > >   reg = <0x68>;
+> > > >   quartz-load-femtofarads = <7000>;
+> > > > + pm-enable-dsm;
+> > > >  };
+> > > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > > index ee237b2..a0048f4 100644
+> > > > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > > @@ -47,4 +47,11 @@ properties:
+> > > >      description:
+> > > >        Enables wake up of host system on alarm.
+> > > >
+> > > > +  pm-enable-dsm:
+> > > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > > +    description:
+> > > > +      Enables the battery switch-over function in direct switching
+> > > > +      mode. Should be set in systems where VDD is higher than VBAT
+> > > > +      at all times.
+> > >
+> > > I'm all for common properties, but is this common across vendors?
+> > >
+> >
+> > This is but this shouldn't be a DT property as it has to be changed
+> > dynamically. I'm working on an ioctl interface to change this
+> > configuration.
+>
+> Why does it need to be changed dynamically?  If the hardware components
+> are not fitted to allow the RTC to be safely used without DSM, then
+> why should userspace be able to disable DSM?
+>
 
-On Tue, Jul 14, 2020 at 01:36:15PM +0200, Hans de Goede wrote:
-> This can be used by Type-C controller drivers which use a standard
-> usb-connector fwnode, with altmodes sub-node, to describe the available
-> altmodes.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/usb/typec/class.c | 56 +++++++++++++++++++++++++++++++++++++++
->  include/linux/usb/typec.h |  7 +++++
->  2 files changed, 63 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index c9234748537a..47de2b2e3d54 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1607,6 +1607,62 @@ typec_port_register_altmode(struct typec_port *port,
->  }
->  EXPORT_SYMBOL_GPL(typec_port_register_altmode);
->  
-> +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
-> +	const struct typec_altmode_ops *ops, void *drvdata,
-> +	struct typec_altmode **altmodes, size_t n,
-> +	struct fwnode_handle *fwnode)
-> +{
-> +	struct fwnode_handle *altmodes_node, *child;
-> +	struct typec_altmode_desc desc;
-> +	struct typec_altmode *alt;
-> +	size_t index = 0;
-> +	u32 svid, vdo;
-> +	int ret;
-> +
-> +	altmodes_node = fwnode_get_named_child_node(fwnode, "altmodes");
-> +	if (!altmodes_node)
-> +		return;
-
-Do we need that? Why not just make the sub-nodes describing the
-alternate modes direct children of the connector node instead of
-grouping them under a special sub-node?
-
-If the child node of the connector has device properties "svid" and
-"vdo" then it is an alt mode that the connector supports, and it can't
-be anything else, no?
-
-
-> +	child = NULL;
-> +	while ((child = fwnode_get_next_child_node(altmodes_node, child))) {
-> +		ret = fwnode_property_read_u32(child, "svid", &svid);
-> +		if (ret) {
-> +			dev_err(&port->dev, "Error reading svid for altmode %s\n",
-> +				fwnode_get_name(child));
-> +			continue;
-> +		}
-> +
-> +		ret = fwnode_property_read_u32(child, "vdo", &vdo);
-> +		if (ret) {
-> +			dev_err(&port->dev, "Error reading vdo for altmode %s\n",
-> +				fwnode_get_name(child));
-> +			continue;
-> +		}
-> +
-> +		if (index >= n) {
-> +			dev_err(&port->dev, "Error not enough space for altmode %s\n",
-> +				fwnode_get_name(child));
-> +			continue;
-> +		}
-> +
-> +		desc.svid = svid;
-> +		desc.vdo = vdo;
-> +		desc.mode = index + 1;
-> +		alt = typec_port_register_altmode(port, &desc);
-> +		if (IS_ERR(alt)) {
-> +			dev_err(&port->dev, "Error registering altmode %s\n",
-> +				fwnode_get_name(child));
-> +			continue;
-> +		}
-> +
-> +		alt->ops = ops;
-> +		typec_altmode_set_drvdata(alt, drvdata);
-> +		altmodes[index] = alt;
-> +		index++;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(typec_port_register_altmodes_from_fwnode);
-> +
->  /**
->   * typec_register_port - Register a USB Type-C Port
->   * @parent: Parent device
-> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-> index 5daa1c49761c..fbe4bccb3a98 100644
-> --- a/include/linux/usb/typec.h
-> +++ b/include/linux/usb/typec.h
-> @@ -17,6 +17,7 @@ struct typec_partner;
->  struct typec_cable;
->  struct typec_plug;
->  struct typec_port;
-> +struct typec_altmode_ops;
->  
->  struct fwnode_handle;
->  struct device;
-> @@ -121,6 +122,12 @@ struct typec_altmode
->  struct typec_altmode
->  *typec_port_register_altmode(struct typec_port *port,
->  			     const struct typec_altmode_desc *desc);
-> +
-> +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
-> +	const struct typec_altmode_ops *ops, void *drvdata,
-> +	struct typec_altmode **altmodes, size_t n,
-> +	struct fwnode_handle *fwnode);
-> +
->  void typec_unregister_altmode(struct typec_altmode *altmode);
->  
->  struct typec_port *typec_altmode2port(struct typec_altmode *alt);
-> -- 
-> 2.26.2
-
-thanks,
-
--- 
-heikki
+My presumption would be if you had a system that ran at different
+system voltages depending if it is plugged in to mains or running on a
+battery.
