@@ -2,85 +2,85 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E390FC433EA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EED4C433FB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA75720714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150D420714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595873636;
-	bh=kvImriEl97CKx+QwIwT+Ke7mzrxrahDLf7tku3va3nw=;
+	s=default; t=1595873646;
+	bh=LWg6lS2bAWBAc68FRiPBOyPEeHgvgjIV2QRuQyG1usg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DuKseTe3pdIvIhzDimpwh64lsZOpHpBZXj9ALVqDx0bVAT4DNtjzp3yUkCjgnvfHm
-	 qwCTLsVF/IEpNRVwKW/meT5l+U9osn2h4pT/PSGPUqPpM5yaBZ/ubH4IOkbQFepxgM
-	 leMiPJDYx+LyisiTl0WNbiYMrJf7ckoOhnoOcPig=
+	b=iztmCFZI0HcioKYVJqqg/7idC8wSlNxgs0ZJRq/5JAJkJcHX8kkt63TnZupyoYe8O
+	 sDzu5+Vhf35Grp4g202pn0F+pb95HLoCpVwZTrSgKljBUicmd6foxPudItnbPtz8Ks
+	 KxAs7K2UvyTzSoIhbD0SCDIpBDIR1585Whjtztc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgG0SNw (ORCPT
+        id S1729331AbgG0SOA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:13:52 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36087 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728312AbgG0SNw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 14:13:52 -0400
-Received: by mail-il1-f194.google.com with SMTP id z3so3673526ilh.3;
-        Mon, 27 Jul 2020 11:13:51 -0700 (PDT)
+        Mon, 27 Jul 2020 14:14:00 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42153 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731250AbgG0SN7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 14:13:59 -0400
+Received: by mail-il1-f196.google.com with SMTP id i138so8006560ild.9;
+        Mon, 27 Jul 2020 11:13:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FezFginUTy2nglTrBQrbccgUu3m/rgDlVyShBQFXbuM=;
-        b=HfzXlKqcU5oWxENTYnB2cM0h/mDjkeheLT5qiOyyLv0UV5kzbx2wyw/Q/0Pi8tb9BH
-         kjtl+RIFEHVJ6J473PunNXxQuk5hJvoijHnyXsYcTiRhr9W69qb+pN0WevFXd1PJuq6V
-         0KDZ8FLpiogNRXDNAY8AYntD3xi9hrIRsMWYLAyKWoatfteE3Yk1br9Q3FzyOu1o5fJV
-         66bQRlQHriOvMkFigq+rRZCP3neNgaPK1GVBrmRF4/z+B3WQiuZoJn+w9QgPysMCeyv4
-         FwyQrf3FI4zEo16Lrif2i3rq99zOnvMBm0XNIODx6qaq8Owb6fP/Ea8GRgbboBTq1KLd
-         ZBRw==
-X-Gm-Message-State: AOAM530IK2lFEHVwffUu3GpyutQswwfdKRFlE05ez9GIWqkoBPpNScL1
-        zpWkQOxWx2W6JPrpYWHDtQ==
-X-Google-Smtp-Source: ABdhPJxcTZ1wWiZQBj6GSHPIlQHm9ClLpwRYBVSWGAnLwaItX6R/lSkREMbAFXVOnxUjPhxCOFMv7g==
-X-Received: by 2002:a05:6e02:8e4:: with SMTP id n4mr16683067ilt.96.1595873631429;
-        Mon, 27 Jul 2020 11:13:51 -0700 (PDT)
+        bh=qphSXwUDbDL/STSwZyNfj+0kNYsQNz0+uZs8OU4m+yA=;
+        b=qvBpVHSwS/omHvl2saFmqdD9UELRonQdpK3bPLQIxOezLda6RPWbCdDBLqpSQCXuUS
+         vJ/aE6yYLdYyBKidQ2RxfyKNhhE9rso0VwY4lvd8S6jh5mn8CovBiDX++hA68ZgcKFuq
+         0jxkKVaHUPwfN8uFzEiAMVaAAz9mXJhx3QPOfrQyRnORhllbokFDYh30mnCgGU3kGF0O
+         6Gg05a59kw99PVuVM9fFP1WCj7PoEnnY/N/K8/5ziHE3Pn7StQ9a2YKGhVUaDNQz+BuF
+         U3/R1KZ0/52Mj6BrNsOsKKB0uyXsv1YsmN7rEFw4BdPCYk0rYMztNiIOsAJfAoxV3dOE
+         XpwQ==
+X-Gm-Message-State: AOAM531ylHtovtu6XLArMXS3l7VlMASx5cuJO7/WeoXaTgW0/14AYbF3
+        ePUXRa1+KWsvmhsBSQ51mQ==
+X-Google-Smtp-Source: ABdhPJxgiypIQYIODHYWAN1gC3+lDaAHwErFKahF6Ut43xD7/abYM0/1Z1iU78NrtHLEqfkyGnVtBQ==
+X-Received: by 2002:a05:6e02:1213:: with SMTP id a19mr3107446ilq.129.1595873638096;
+        Mon, 27 Jul 2020 11:13:58 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c67sm9202464iof.16.2020.07.27.11.13.47
+        by smtp.gmail.com with ESMTPSA id z68sm1237830ilf.25.2020.07.27.11.13.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:13:50 -0700 (PDT)
-Received: (nullmailer pid 638435 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:13:46 -0000
-Date:   Mon, 27 Jul 2020 12:13:46 -0600
+        Mon, 27 Jul 2020 11:13:57 -0700 (PDT)
+Received: (nullmailer pid 638572 invoked by uid 1000);
+        Mon, 27 Jul 2020 18:13:52 -0000
+Date:   Mon, 27 Jul 2020 12:13:52 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Gross <agross@kernel.org>,
+Cc:     freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
         Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
         Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        Vinod Koul <vkoul@kernel.org>,
         Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Brian Masney <masneyb@onstation.org>,
+        Sean Paul <sean@poorly.run>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>, martin.botka1@gmail.com,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Harigovindan P <harigovi@codeaurora.org>,
         linux-clk@vger.kernel.org
 Subject: Re: [PATCH 9/9] soc/qcom: Add REVID driver
-Message-ID: <20200727181346.GA634850@bogus>
+Message-ID: <20200727181352.GB634850@bogus>
 References: <20200726111215.22361-1-konradybcio@gmail.com>
  <20200726111215.22361-10-konradybcio@gmail.com>
 MIME-Version: 1.0
@@ -92,7 +92,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 01:12:06PM +0200, Konrad Dybcio wrote:
+On Sun, 26 Jul 2020 13:12:06 +0200, Konrad Dybcio wrote:
 > From: Xiaozhe Shi <xiaozhes@codeaurora.org>
 > 
 > Add the REVID device driver. The REVID driver will print out the PMIC
@@ -104,9 +104,6 @@ On Sun, Jul 26, 2020 at 01:12:06PM +0200, Konrad Dybcio wrote:
 > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 > ---
 >  .../bindings/soc/qcom/qcom,qpnp-revid.yaml    |  38 ++
-
-Bindings should be a separate patch. checkpatch.pl will tell you this.
-
 >  drivers/soc/qcom/Kconfig                      |   9 +
 >  drivers/soc/qcom/Makefile                     |   1 +
 >  drivers/soc/qcom/qpnp-revid.c                 | 288 ++++++++++++++
@@ -115,3 +112,32 @@ Bindings should be a separate patch. checkpatch.pl will tell you this.
 >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
 >  create mode 100644 drivers/soc/qcom/qpnp-revid.c
 >  create mode 100644 include/linux/qpnp/qpnp-revid.h
+> 
+
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml:  while scanning a block scalar
+  in "<unicode string>", line 22, column 18
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 24, column 1
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+
+See https://patchwork.ozlabs.org/patch/1336467
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
