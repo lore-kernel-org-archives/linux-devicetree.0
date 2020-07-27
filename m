@@ -2,118 +2,94 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD836C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE2AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B413B20672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0C620809
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FTa08Jum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgG0Uzc (ORCPT
+        id S1726410AbgG0Uzs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:55:32 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45668 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgG0Uzb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 16:55:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 64C6B8030868;
-        Mon, 27 Jul 2020 20:55:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3kM3i7w2TsUD; Mon, 27 Jul 2020 23:55:21 +0300 (MSK)
-Date:   Mon, 27 Jul 2020 23:55:20 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 00/10] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200727205520.kteltxy6gbho226q@mobilestation>
-References: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
- <20200727090114.GM12965@vkoul-mobl>
+        Mon, 27 Jul 2020 16:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgG0Uzr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 16:55:47 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDEEC0619D5
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 13:55:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j20so9752468pfe.5
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 13:55:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bhP8c3ORdPWDlqnnbGuCZRHV46MZaJIZrpgZrFhGf0A=;
+        b=FTa08JumHKpL7dCKC6F3Y/47u+bsnLr2xoLj/mrKwMm9jY+pMPtRfLqaiYH5ajOiuy
+         gwazm9DFfePxGyl1LYAaSGP02ptms9TKzvb23nHDTO2FYNuIU9JcTYHTlwu84rQ516tL
+         nTujTvdWrvTobCmmr/ve2s3jKy/eDqOyoG5Ic=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bhP8c3ORdPWDlqnnbGuCZRHV46MZaJIZrpgZrFhGf0A=;
+        b=Z8w+GXFKWQcxKCh+6mPZyC4ubhPQkRexab5Zj94ROtgm+zercAuI4mTkhDsRW1hCsk
+         Fe1GJzvIzhkf/5hvcKaNjX/lgqxGfbqwC0ywDCJ8fXcQbgtOPBASbhgOq+qVp1hNeeMh
+         A+SLeMJO+MIJDYnIkZ7vYpHgO8dJlack5nQKd2zuS0vwUURDCF0IUQpYOrbPTUshzGbX
+         SaHAC+HKpdkBaLas+d6SNtYtIJQ1OdiOcvawC1GrXLGU5vkndsgFKku8ufe0CRz8F7ax
+         TQ0nQw3UOGN2cNeZylIFR1Pl9zuoleA040yLRkrdwodTrCbwoeVTA7yx0ELuXfP7Cuda
+         fRkw==
+X-Gm-Message-State: AOAM530zWa1+vBl7kwSaFWIVJsAESshn4D3ouoYPOA+4IXhuxnsrX6AM
+        oZyYpUKmTwBgDbQCk7d6+ru6dw==
+X-Google-Smtp-Source: ABdhPJxjpKz+El+vxYGRCL/Ty0XO15gWn2h9AfLlj9O3/ZH0J4sph2IftFtarPwxqF/aRzxx/DSE8Q==
+X-Received: by 2002:aa7:848b:: with SMTP id u11mr21353847pfn.72.1595883347093;
+        Mon, 27 Jul 2020 13:55:47 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id d9sm16200235pgv.45.2020.07.27.13.55.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 13:55:46 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:55:45 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, dianders@chromium.org,
+        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 4/6] arm64: dts: qcom: sdm845: Increase the number of
+ interconnect cells
+Message-ID: <20200727205545.GH3191083@google.com>
+References: <20200723130942.28491-1-georgi.djakov@linaro.org>
+ <20200723130942.28491-5-georgi.djakov@linaro.org>
+ <3c8c4aae7697d9d5a052b9dfd1ea0cf4@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200727090114.GM12965@vkoul-mobl>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <3c8c4aae7697d9d5a052b9dfd1ea0cf4@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 02:31:14PM +0530, Vinod Koul wrote:
-> On 23-07-20, 03:58, Serge Semin wrote:
-> > In the previous patchset I've written the next message:
-> > 
-> > > Folks, note I've removed the next patches from the series:
-> > > [PATCH v7 04/11] dmaengine: Introduce max SG list entries capability
-> > > [PATCH v7 11/11] dmaengine: dw: Initialize max_sg_nents capability
-> > > It turns out the problem with the asynchronous handling of Tx- and Rx-
-> > > SPI transfers interrupts is more complex than I expected. So in order to
-> > > solve the problem it isn't enough to split the SG list entries submission
-> > > up based on the max_sg_nents capability setting (though the synchronous
-> > > one-by-one SG list entries handling does fix a part of the problem). So
-> > > if and when I get to find a comprehensive solution for it I'll submit a
-> > > new series with fixups. Until then please consider to merge the patchset
-> > > in without those patches.
-> > 
-> > Those patches are returned back to the series. I've found a solution, which
-> > fixes the problem for our hardware. A new patchset with several fixes for the
-> > DW DMAC driver will be sent shortly after this one is merged in. Note the same
-> > concerns the DW APB SPI driver. So please review and merge in as soon as
-> > possible.
-> > 
-> > Regarding the patchset. Baikal-T1 SoC has an DW DMAC on-board to provide a
-> > Mem-to-Mem, low-speed peripherals Dev-to-Mem and Mem-to-Dev functionality.
-> > Mostly it's compatible with currently implemented in the kernel DW DMAC
-> > driver, but there are some peculiarities which must be taken into account
-> > in order to have the device fully supported.
-> > 
-> > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > channels, which alas have different max burst length configuration.
-> > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > subsystem doesn't set values exceeding these limitations otherwise the
-> > controller will hang up. In third currently we discovered the problem in using
-> > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > length exceeds the max lock size. In this case due to asynchronous handling of
-> > Tx- and Rx- SPI transfers interrupt we might end up with DW APB SSI Rx FIFO
-> > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > the user of the possible errors. In forth it's worth to set the DMA device max
-> > segment size with max block size config specific to the DW DMA controller. It
-> > shall help the DMA clients to create size-optimized SG-list items for the
-> > controller. This in turn will cause less dw_desc allocations, less LLP
-> > reinitializations, better DMA device performance.
-> > 
-> > Finally there is a bug in the algorithm of the nollp flag detection.
-> > In particular even if DW DMAC parameters state the multi-block transfers
-> > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > contiguous multi-block transfers will be only supported. We must take the
-> > flag into account when detecting the LLP support otherwise the driver just
-> > won't work correctly.
+On Mon, Jul 27, 2020 at 04:28:35PM +0530, Sibi Sankar wrote:
+> On 2020-07-23 18:39, Georgi Djakov wrote:
+> > Increase the number of interconnect-cells, as now we can include
+> > the tag information. The consumers can specify the path tag as an
+> > additional argument to the endpoints.
 > 
-> Applied all, thanks
+> Tested-by: Sibi Sankar <sibis@codeaurora.org>
+> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+> 
+> https://patchwork.kernel.org/patch/11655409/
+> I'll replace the tag ids with the
+> macros once ^^ lands.
 
-Great! Thank you very much. Now I can send out another set of patches for
-review.
+Great, I was going to ask about that :)
 
--Sergey
-
-> -- 
-> ~Vinod
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
