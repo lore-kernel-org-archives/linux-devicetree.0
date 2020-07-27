@@ -2,658 +2,373 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AE6C433F2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FF8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 14:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A158208E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="cGoo7LtZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4609020FC3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 14:47:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595861251;
+	bh=ra7ySkxUG6tdQ2Sev5kAIRiDu6mF6ko2V3p5aNPDPJc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RR3jFsbrZFwjuslc41K73AKkJZuSu2sXicXrOS036oQbVmNmteHJGbgEv8l3euyY9
+	 66rEPqMkR8cXM4rDGfWpmWcugxOwk21+yku2rlY7/8PX24dhyOV7yH6V7ft8v5FLK1
+	 TklRWP4P8PnWNrBDrV2eIKfYcHSOD795F8zlTri0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbgG0OIB (ORCPT
+        id S1727032AbgG0Ora (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729344AbgG0OH7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 10:07:59 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C47A7C0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 07:07:58 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id kq25so4265932ejb.3
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 07:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nT1TI3RxPBEy7BlndU+Bps3Ba+oHF9E8cOgtKQb8c0c=;
-        b=cGoo7LtZXm1kvyzIqbRda9bJx+cvQxh5Vaeb6mw/gX5COk59N1DykwBQw/fkceHZTJ
-         KzBhEybRXtGXUidZuOVEizIY/mGSJxyKjFLOl8sQMfC8WkvZJfZe6UXBWD4n3Pk0K95/
-         X8ibsRTXuS9PS1L94ce85cqTGpVuJNJCSZnrBEEhKdSnm2TBRSO/5jtmBmrFjq/5ApvH
-         092dg/oWDxL8sobtHjU8u6XMHFmgu37lEvE/evCoUv3MJfuhLtJ8KVqUzAie6ueiK2ji
-         g4vtYu8jKWK5/jhAE7bRsth4v+DuwJhFEEPh8wCtUdeSqCnJF8wqvKGJcSQm3f96hWBo
-         oTDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nT1TI3RxPBEy7BlndU+Bps3Ba+oHF9E8cOgtKQb8c0c=;
-        b=NaFo5Gf74uQR5IEq+TWnVCAerq2pKVCi55sO4c8zI3KxoWdTvzmgxEwKJeDYLe5WRl
-         FvLgfsvJu3NKQ3LzeqwhCn9hz3S9alSPVOokHFjQE2wBOTRoPGRodA1p4AmQkxeu3yyb
-         ZFHGT8tbZDmqerwWTQ3fYfdMbONa+kTrcxkkXyJY4jeX0e4PCVp+G4Dmp5LyDsbrbAim
-         /QrB+KUULI1x2nbitXQHMmGGQBF1CHQm4qxpJDIk9qd1Atq+OjezPaFgWtN0mSMnvGP9
-         JMZxBgXktEfX7dNMVqFgkQV2+xNcVAhRxDWsKfiXjH6JPvVLeYxb+6fOyrvq9IxqSAJ7
-         XVLA==
-X-Gm-Message-State: AOAM532nJmEmI3u0ogHRe4Qu4bFzkcmU0oMZQ1qTiObWCd6SHhLhLLRN
-        TiS+yDjJdaXTyF7E+84XRQx+IRsNrVs4IB2PolBg2A7vsIc=
-X-Google-Smtp-Source: ABdhPJw1P4bdb+RA9ETFj+Yto3mggpXJHfrjcalgWaW7gx2bqhDiHIJVSD4rPYtC2gmStwXgHZE5/Gb8KMCMYZZ/j2k=
-X-Received: by 2002:a17:906:aed4:: with SMTP id me20mr12951305ejb.141.1595858877148;
- Mon, 27 Jul 2020 07:07:57 -0700 (PDT)
+        Mon, 27 Jul 2020 10:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728434AbgG0Ora (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:47:30 -0400
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47780208E4;
+        Mon, 27 Jul 2020 14:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595861249;
+        bh=ra7ySkxUG6tdQ2Sev5kAIRiDu6mF6ko2V3p5aNPDPJc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TF2dtyfsIDQRwALZEtKEIJBBZLhz7MjWD1h9rT0N1cjMb4xqxeeRIRk7ENzGtUqcl
+         249z6ZfJuZ2do83K5kHDAzU8UMHstx7getoA4EnGDxRWPFCLO+5uQpSynbRfzuQ/s/
+         5I+u+Q36tKog5J3IeOWAlhiBjQ790O6cCwaf8dEY=
+Received: by mail-ej1-f47.google.com with SMTP id g11so5580647ejr.0;
+        Mon, 27 Jul 2020 07:47:29 -0700 (PDT)
+X-Gm-Message-State: AOAM530wqU6PjiEBRo320eQpo9ddmzw+p2QQQozUB88Eq/LMU7chl7zm
+        yovObqXqlRrD4DXicUSgUeIsbZKCCJkiua28Zw==
+X-Google-Smtp-Source: ABdhPJx8L+G/aF7IMetyVPuFX7TWQTopBRl2QWzS8clJFtiKlB8YVgmkr1f0mMdVne9ueI/35nYOM9rLDue3RzkM5BI=
+X-Received: by 2002:a17:906:7857:: with SMTP id p23mr20143758ejm.260.1595861247757;
+ Mon, 27 Jul 2020 07:47:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200713060842.471356-1-acourbot@chromium.org>
- <20200713060842.471356-5-acourbot@chromium.org> <CAAEAJfDrF_3Ys_9emvNsiwYV5pSfnLis=PoxSGeeKEWW3RE5yg@mail.gmail.com>
- <CAPBb6MUZFZdkUMvHLtiFz6bmjHVmKhjj=Lfw-nwqEG7JL=WEiQ@mail.gmail.com>
-In-Reply-To: <CAPBb6MUZFZdkUMvHLtiFz6bmjHVmKhjj=Lfw-nwqEG7JL=WEiQ@mail.gmail.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Mon, 27 Jul 2020 11:07:45 -0300
-Message-ID: <CAAEAJfCcQAg20F6KzXsqL2=x7PF3wO4K7bc9jUhkHwN3GaxfGQ@mail.gmail.com>
-Subject: Re: [PATCH v3 04/16] media: mtk-vcodec: venc: support SCP firmware
-To:     Alexandre Courbot <acourbot@chromium.org>
-Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        linux-media <linux-media@vger.kernel.org>,
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+ <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+ <1595389756.20193.12.camel@mtkswgap22> <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+ <1595484707.26237.12.camel@mtkswgap22> <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
+ <1595573719.24412.9.camel@mtkswgap22> <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
+ <1595819152.7630.13.camel@mtkswgap22>
+In-Reply-To: <1595819152.7630.13.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 27 Jul 2020 22:47:15 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
+Message-ID: <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
         "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-.
+Hi, Neal:
 
-On Mon, 27 Jul 2020 at 06:06, Alexandre Courbot <acourbot@chromium.org> wrote:
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8827=E6=97=
+=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:06=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On Sat, Jul 25, 2020 at 6:13 AM Ezequiel Garcia
-> <ezequiel@vanguardiasur.com.ar> wrote:
-> >
-> > Hi Alexandre,
-> >
-> > I'm slowly making progress on the series. Here's some more comments.
-> >
-> > On Mon, 13 Jul 2020 at 03:10, Alexandre Courbot <acourbot@chromium.org> wrote:
-> > >
-> > > From: Yunfei Dong <yunfei.dong@mediatek.com>
-> > >
-> > > Support the new extended firmware used by MT8183's encoder.
-> > >
-> >
-> > If you could add some more information about the MT8183 encoder
-> > and the extended firmware interface, it would make the review
-> > easier.
+> Hi Chun-Kuang,
 >
-> Sure, I'll try to expand that description a bit.
->
+> On Fri, 2020-07-24 at 23:55 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
 > >
-> > Some comments below, I have no idea how this hardware
-> > works, so maybe I won't make sense :-)
-> >
-> > > Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> > > [acourbot: refactor, cleanup and split]
-> > > Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
-> > > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> > > Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> > > ---
-> > >  .../platform/mtk-vcodec/mtk_vcodec_drv.h      | 12 +++
-> > >  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  | 34 ++++---
-> > >  .../platform/mtk-vcodec/venc/venc_h264_if.c   | 65 +++++++++++--
-> > >  .../platform/mtk-vcodec/venc/venc_vp8_if.c    |  3 +-
-> > >  .../media/platform/mtk-vcodec/venc_drv_if.h   |  6 ++
-> > >  .../media/platform/mtk-vcodec/venc_ipi_msg.h  | 15 ++-
-> > >  .../media/platform/mtk-vcodec/venc_vpu_if.c   | 97 +++++++++++++------
-> > >  .../media/platform/mtk-vcodec/venc_vpu_if.h   |  3 +-
-> > >  8 files changed, 181 insertions(+), 54 deletions(-)
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8824=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:55=E5=AF=AB=E9=81=93=EF=BC=9A
 > > >
-> > > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> > > index e132c4ec463a..45c8adfc6a0c 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> > > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> > > @@ -300,6 +300,17 @@ struct mtk_vcodec_ctx {
+> > > Hi Chun-Kuang,
 > > >
-> > >  };
+> > > On Fri, 2020-07-24 at 00:32 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=882=
+3=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > > On Wed, 2020-07-22 at 22:25 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8822=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > Hi Chun-Kuang,
+> > > > > > >
+> > > > > > > On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrote:
+> > > > > > > > Hi, Neal:
+> > > > > > > >
+> > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=
+=E6=9C=8821=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +/*
+> > > > > > > > > + * mtk_devapc_dump_vio_dbg - get the violation index and=
+ dump the full violation
+> > > > > > > > > + *                           debug information.
+> > > > > > > > > + */
+> > > > > > > > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_devapc_co=
+ntext *ctx, u32 vio_idx)
+> > > > > > > > > +{
+> > > > > > > > > +       u32 shift_bit;
+> > > > > > > > > +
+> > > > > > > > > +       if (check_vio_mask(ctx, vio_idx))
+> > > > > > > > > +               return false;
+> > > > > > > > > +
+> > > > > > > > > +       if (!check_vio_status(ctx, vio_idx))
+> > > > > > > > > +               return false;
+> > > > > > > > > +
+> > > > > > > > > +       shift_bit =3D get_shift_group(ctx, vio_idx);
+> > > > > > > > > +
+> > > > > > > > > +       if (sync_vio_dbg(ctx, shift_bit))
+> > > > > > > > > +               return false;
+> > > > > > > > > +
+> > > > > > > > > +       devapc_extract_vio_dbg(ctx);
+> > > > > > > >
+> > > > > > > > I think get_shift_group(), sync_vio_dbg(), and
+> > > > > > > > devapc_extract_vio_dbg() should be moved out of vio_idx for=
+-loop (the
+> > > > > > > > loop in devapc_violation_irq()) because these three functio=
+n is not
+> > > > > > > > related to vio_idx.
+> > > > > > > > Another question: when multiple vio_idx violation occur, vi=
+o_addr is
+> > > > > > > > related to which one vio_idx? The latest happened one?
+> > > > > > > >
+> > > > > > >
+> > > > > > > Actually, it's related to vio_idx. But we don't use it direct=
+ly on these
+> > > > > > > function. I think below snip code might be better way to unde=
+rstand it.
+> > > > > > >
+> > > > > > > for (...)
+> > > > > > > {
+> > > > > > >         check_vio_mask()
+> > > > > > >         check_vio_status()
+> > > > > > >
+> > > > > > >         // if get vio_idx, mask it temporarily
+> > > > > > >         mask_module_irq(true)
+> > > > > > >         clear_vio_status()
+> > > > > > >
+> > > > > > >         // dump violation info
+> > > > > > >         get_shift_group()
+> > > > > > >         sync_vio_dbg()
+> > > > > > >         devapc_extract_vio_dbg()
+> > > > > > >
+> > > > > > >         // unmask
+> > > > > > >         mask_module_irq(false)
+> > > > > > > }
+> > > > > >
+> > > > > > This snip code does not explain any thing. I could rewrite this=
+ code as:
+> > > > > >
+> > > > > > for (...)
+> > > > > > {
+> > > > > >     check_vio_mask()
+> > > > > >     check_vio_status()
+> > > > > >
+> > > > > >     // if get vio_idx, mask it temporarily
+> > > > > >     mask_module_irq(true)
+> > > > > >     clear_vio_status()
+> > > > > >     // unmask
+> > > > > >     mask_module_irq(false)
+> > > > > > }
+> > > > > >
+> > > > > > // dump violation info
+> > > > > > get_shift_group()
+> > > > > > sync_vio_dbg()
+> > > > > > devapc_extract_vio_dbg()
+> > > > > >
+> > > > > > And my version is identical with your version, isn't it?
+> > > > >
+> > > > > Sorry, I did not explain it clearly. Let's me try again.
+> > > > > The reason why I put "dump violation info" between mask & unmask =
+context
+> > > > > is because it has to stop interrupt first before dump violation i=
+nfo,
+> > > > > and then unmask it to prepare next violation.
+> > > > > These sequence guarantee that if multiple violation is triggered,=
+ we
+> > > > > still have information to debug.
+> > > > > If the code sequence in your version and multiple violation is
+> > > > > triggered, there might be no any information but keeps entering I=
+SR.
+> > > > > Finally, system might be abnormal and watchdog timeout.
+> > > > > In this case, we still don't have any information to debug.
+> > > >
+> > > > I still don't understand why no information to debug. For example w=
+hen
+> > > > vio_idx 5, 10, 15 has violation,
+> > > > You would mask vio_idx 5 to get information, but vio_idx 10, 15 doe=
+s
+> > > > not mask yet.
+> > > > In your words, when vio_idx 10, 15 not mask, you would not get any
+> > > > debug information when you process vio_idx 5.
+> > > >
+> > > > In my version, I would clear all status, why keeps entering ISR?
 > > >
-> > > +/**
-> > > + * struct mtk_vcodec_enc_pdata - compatible data for each IC
-> > > + *
-> > > + * @uses_ext: whether the encoder uses the extended firmware messaging format
-> > > + * @has_lt_irq: whether the encoder uses the LT irq
-> > > + */
-> > > +struct mtk_vcodec_enc_pdata {
-> > > +       bool uses_ext;
-> > > +       bool has_lt_irq;
+> > > Think about this case, if someone tries to dump "AAA" module's regist=
+er.
+> > > It would keep read reg base, base+0x4, base+0x8, ...
+> > > All these registers are in the same slave, which would be same vio_id=
+x.
+> > > (Take vio_idx 5 as example)
+> > > In this case, vio_idx 5 will keep triggering interrupt. If you did no=
+t
+> > > do "dump violation info" between mask & unmask, you cannot get any
+> > > violation info until the last interrupt being handled.
+> > > Normally, system will crash before last interrupt coming.
 > >
-> > Instead of this boolean here, I think it might be cleaner
-> > to have a small array of strings, listing the interrupts
-> > each variant requires.
+> > You have said that first vio_addr would be kept until it's 'handled'.
+> > So the first vio_addr reg_base would be kept even though other
+> > violation happen. And I could handle (clear status and dump info) it
+> > then vio_addr would next violation's address. I'm confused with your
+> > statement. If AAA is dumping register of vio_idx 5, BBB is dumping
+> > register of vio_idx 10, CCC is dumping register of vio_idx 15, I think
+> > you should mask all vio_idx not only one. So the code would be
 > >
-> > See drivers/staging/media/hantro/rk3288_vpu_hw.c
+> > for all vio_idx {
+> >     mask_module_irq(true)
+> > }
 > >
-> > It's future-proof and even if you don't plan to see
-> > future works: a) we never know and b) cleaner code,
-> > easier to maintain.
+> > devapc_extract_vio_dbg()
+> >
+> > for all vio_idx {
+> >     clear_vio_status()
+> >     mask_module_irq(false)
+> > }
+> >
 >
-> I tend to agree. Note however that this boolean is supposed to
-> disappear soon as there is another patch (not part of this series)
-> that will split the decoder into two nodes. The reason why we have
-> this boolean is because MT8173 actually controls *2* instances of this
-> encoder (one for H.264, one for VP8) that are actually separate
-> hardware.
+> I'm also consider this solution and I think it's much better to
+> understand hardware behavior.
 >
+> devapc_dump_vio_dbg()
+> {
+>         while(1) {
+>                 // might have multiple shift_bit raised
+>                 shift_bit =3D get_shift_group()
+>                 if (shift_bit >=3D 0 && shift bit <=3D 31)
+>                         sync_vio_dbg(shift_bit)
+>                         extract_vio_dbg()
 
-Well, if you are planning to get rid of this boolean,
-then ignore the comment.
+According to your statement, when multiple violation occur, only the
+first one is kept, others are dropped. I think we just need to dump
+debug info once.
 
-> MT8183 only has one instance of the encoder (for H.264, that chip has
-> no VP8 support), so I have added this boolean to control this. Once
-> the DT node split happens it will go away.
+Because only one violation information would be kept, why not only one
+group (equal to no group)?
 
-Will this DT change break compatibility?
+Regards,
+Chun-Kuang.
 
-> In the meantime, maybe we
-> can try to handle this better by looking at the number of interrupts
-> provided by the DT and enabling/disabling that extra interrupt based
-> on that. It will be 2 for MT8173 and 1 for MT8183, so that should work
-> fine.
+>                 else
+>                         break
+>         }
+> }
 >
-> >
-> > > +};
-> > > +
-> > >  /**
-> > >   * struct mtk_vcodec_dev - driver data
-> > >   * @v4l2_dev: V4L2 device to register video devices for.
-> > > @@ -348,6 +359,7 @@ struct mtk_vcodec_dev {
-> > >         spinlock_t irqlock;
-> > >         struct mtk_vcodec_ctx *curr_ctx;
-> > >         void __iomem *reg_base[NUM_MAX_VCODEC_REG_BASE];
-> > > +       const struct mtk_vcodec_enc_pdata *venc_pdata;
-> > >
-> > >         struct mtk_vcodec_fw *fw_handler;
-> > >
-> > > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> > > index 42530cd01a30..922bc8883811 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> > > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> > > @@ -244,6 +244,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> > >         if (IS_ERR(dev->fw_handler))
-> > >                 return PTR_ERR(dev->fw_handler);
-> > >
-> > > +       dev->venc_pdata = of_device_get_match_data(&pdev->dev);
-> > >         ret = mtk_vcodec_init_enc_pm(dev);
-> > >         if (ret < 0) {
-> > >                 dev_err(&pdev->dev, "Failed to get mt vcodec clock source!");
-> > > @@ -278,21 +279,24 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> > >                 ret = -EINVAL;
-> > >                 goto err_res;
-> > >         }
-> > > +       disable_irq(dev->enc_irq);
-> > >
-> >
-> > I am aware this is not an issue with this patch:
-> > requesting an interrupt and then immediately
-> > disabling the interrupt looks racy.
-> >
-> > Now, I haven't need this pattern myself,
-> > but from a quick grep I think you want to do:
-> >
-> >         irq_set_status_flags(irq, IRQ_NOAUTOEN);
-> >         ret = devm_request_irq(dev, irq, ...
-> >
-> > Perhaps something to fix (probably in another patch,
-> > before this one).
+> devapc_violation_irq()
+> {
+>         for all vio_idx {
+>                 mask_module_irq(true)
+>         }
 >
-> Nice suggestion, thanks. I will test and add a patch to this series.
+>         devapc_dump_vio_dbg()
 >
-> >
-> > > -       dev->enc_lt_irq = platform_get_irq(pdev, 1);
-> > > -       ret = devm_request_irq(&pdev->dev,
-> > > -                              dev->enc_lt_irq, mtk_vcodec_enc_lt_irq_handler,
-> > > -                              0, pdev->name, dev);
-> > > -       if (ret) {
-> > > -               dev_err(&pdev->dev,
-> > > -                       "Failed to install dev->enc_lt_irq %d (%d)",
-> > > -                       dev->enc_lt_irq, ret);
-> > > -               ret = -EINVAL;
-> > > -               goto err_res;
-> > > +       if (dev->venc_pdata->has_lt_irq) {
-> > > +               dev->enc_lt_irq = platform_get_irq(pdev, 1);
-> > > +               ret = devm_request_irq(&pdev->dev,
-> > > +                                      dev->enc_lt_irq,
-> > > +                                      mtk_vcodec_enc_lt_irq_handler,
-> > > +                                      0, pdev->name, dev);
-> > > +               if (ret) {
-> > > +                       dev_err(&pdev->dev,
-> > > +                               "Failed to install dev->enc_lt_irq %d (%d)",
-> > > +                               dev->enc_lt_irq, ret);
-> > > +                       ret = -EINVAL;
-> > > +                       goto err_res;
-> > > +               }
-> > > +               disable_irq(dev->enc_lt_irq); /* VENC_LT */
-> > >         }
-> > >
-> > > -       disable_irq(dev->enc_irq);
-> > > -       disable_irq(dev->enc_lt_irq); /* VENC_LT */
-> > >         mutex_init(&dev->enc_mutex);
-> > >         mutex_init(&dev->dev_mutex);
-> > >         spin_lock_init(&dev->irqlock);
-> > > @@ -373,8 +377,12 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> > >         return ret;
-> > >  }
-> > >
-> > > +static const struct mtk_vcodec_enc_pdata mt8173_pdata = {
-> > > +       .has_lt_irq = true,
-> > > +};
-> > > +
-> > >  static const struct of_device_id mtk_vcodec_enc_match[] = {
-> > > -       {.compatible = "mediatek,mt8173-vcodec-enc",},
-> > > +       {.compatible = "mediatek,mt8173-vcodec-enc", .data = &mt8173_pdata},
-> > >         {},
-> > >  };
-> > >  MODULE_DEVICE_TABLE(of, mtk_vcodec_enc_match);
-> > > diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-> > > index 7a00f050ec36..050787b2896c 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-> > > +++ b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-> > > @@ -24,6 +24,16 @@ static const char h264_filler_marker[] = {0x0, 0x0, 0x0, 0x1, 0xc};
-> > >  #define H264_FILLER_MARKER_SIZE ARRAY_SIZE(h264_filler_marker)
-> > >  #define VENC_PIC_BITSTREAM_BYTE_CNT 0x0098
-> > >
-> > > +/*
-> > > + * enum venc_h264_frame_type - h264 encoder output bitstream frame type
-> > > + */
-> > > +enum venc_h264_frame_type {
-> > > +       VENC_H264_IDR_FRM,
-> > > +       VENC_H264_I_FRM,
-> > > +       VENC_H264_P_FRM,
-> > > +       VENC_H264_B_FRM,
-> > > +};
-> > > +
-> > >  /*
-> > >   * enum venc_h264_vpu_work_buf - h264 encoder buffer index
-> > >   */
-> > > @@ -137,7 +147,8 @@ struct venc_h264_inst {
-> > >         struct mtk_vcodec_mem work_bufs[VENC_H264_VPU_WORK_BUF_MAX];
-> > >         struct mtk_vcodec_mem pps_buf;
-> > >         bool work_buf_allocated;
-> > > -       unsigned int frm_cnt;
-> > > +       u32 frm_cnt;    /* declared as u32 to properly overflow */
-> >
-> > This looks like it's fixing some issue not related to the 8183
-> > or the extended firmware. Perhaps you can add a
-> > more details comment?
+>         for all vio_idx {
+>                 clear_vio_status()
+>                 mask_module_irq(false)
+>         }
+> }
 >
-> Mmm, let me check that a bit closer because I know MT8183 communicates
-> with the firmware a bit differently, so this may require these fields.
-> But maybe we can split that part into another patch.
+> Is it more clear for this control flow?
+> Thanks !
 >
-> >
-> > > +       unsigned int skip_frm_cnt;
-> > >         unsigned int prepend_hdr;
-> > >         struct venc_vpu_inst vpu_inst;
-> > >         struct venc_h264_vsi *vsi;
-> > > @@ -327,6 +338,22 @@ static unsigned int h264_enc_wait_venc_done(struct venc_h264_inst *inst)
-> > >         return irq_status;
-> > >  }
 > > >
-> > > +static int h264_frame_type(struct venc_h264_inst *inst)
-> > > +{
-> > > +       if ((inst->vsi->config.gop_size != 0 &&
-> > > +               (inst->frm_cnt % inst->vsi->config.gop_size) == 0) ||
-> > > +               (inst->frm_cnt == 0 && inst->vsi->config.gop_size == 0)) {
-> > > +               /* IDR frame */
-> > > +               return VENC_H264_IDR_FRM;
-> > > +       } else if ((inst->vsi->config.intra_period != 0 &&
-> > > +               (inst->frm_cnt % inst->vsi->config.intra_period) == 0) ||
-> > > +               (inst->frm_cnt == 0 && inst->vsi->config.intra_period == 0)) {
-> > > +               /* I frame */
-> > > +               return VENC_H264_I_FRM;
-> > > +       } else {
-> > > +               return VENC_H264_P_FRM;  /* Note: B frames are not supported */
-> > > +       }
-> > > +}
-> > >  static int h264_encode_sps(struct venc_h264_inst *inst,
-> > >                            struct mtk_vcodec_mem *bs_buf,
-> > >                            unsigned int *bs_size)
-> > > @@ -337,7 +364,7 @@ static int h264_encode_sps(struct venc_h264_inst *inst,
-> > >         mtk_vcodec_debug_enter(inst);
+> > > >
+> > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > About your question, vio_addr would be the first one.
+> > > > > >
+> > > > > > So other vio_addr would be dropped? Or hardware would keep all
+> > > > > > vio_addr and you have some way to get all vio_addr?
+> > > > > >
+> > > > >
+> > > > > In this case, hardware will drop other violation info and keep th=
+e first
+> > > > > one until it been handled.
+> > > >
+> > > > Does 'handled' mean status is cleared?
 > > >
-> > >         ret = vpu_enc_encode(&inst->vpu_inst, H264_BS_MODE_SPS, NULL,
-> > > -                            bs_buf, bs_size);
-> > > +                            bs_buf, bs_size, NULL);
-> > >         if (ret)
-> > >                 return ret;
+> > > "handled" means clear status and dump violation info.
 > > >
-> > > @@ -364,7 +391,7 @@ static int h264_encode_pps(struct venc_h264_inst *inst,
-> > >         mtk_vcodec_debug_enter(inst);
+> > > >
+> > > > Regards,
+> > > > Chun-Kuang.
+> > > >
+> > > > >
+> > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +       return true;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > > +/*
+> > > > > > > > > + * devapc_violation_irq - the devapc Interrupt Service R=
+outine (ISR) will dump
+> > > > > > > > > + *                        violation information includin=
+g which master violates
+> > > > > > > > > + *                        access slave.
+> > > > > > > > > + */
+> > > > > > > > > +static irqreturn_t devapc_violation_irq(int irq_number,
+> > > > > > > > > +                                       struct mtk_devapc=
+_context *ctx)
+> > > > > > > > > +{
+> > > > > > > > > +       u32 vio_idx;
+> > > > > > > > > +
+> > > > > > > > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; v=
+io_idx++) {
+> > > > > > > > > +               if (!mtk_devapc_dump_vio_dbg(ctx, vio_idx=
+))
+> > > > > > > > > +                       continue;
+> > > > > > > > > +
+> > > > > > > > > +               /* Ensure that violation info are written=
+ before
+> > > > > > > > > +                * further operations
+> > > > > > > > > +                */
+> > > > > > > > > +               smp_mb();
+> > > > > > > > > +
+> > > > > > > > > +               /*
+> > > > > > > > > +                * Mask slave's irq before clearing vio s=
+tatus.
+> > > > > > > > > +                * Must do it to avoid nested interrupt a=
+nd prevent
+> > > > > > > > > +                * unexpected behavior.
+> > > > > > > > > +                */
+> > > > > > > > > +               mask_module_irq(ctx, vio_idx, true);
+> > > > > > > > > +
+> > > > > > > > > +               clear_vio_status(ctx, vio_idx);
+> > > > > > > > > +
+> > > > > > > > > +               mask_module_irq(ctx, vio_idx, false);
+> > > > > > > > > +       }
+> > > > > > > > > +
+> > > > > > > > > +       return IRQ_HANDLED;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > > +/*
 > > >
-> > >         ret = vpu_enc_encode(&inst->vpu_inst, H264_BS_MODE_PPS, NULL,
-> > > -                            bs_buf, bs_size);
-> > > +                            bs_buf, bs_size, NULL);
-> > >         if (ret)
-> > >                 return ret;
-> > >
-> > > @@ -410,13 +437,24 @@ static int h264_encode_frame(struct venc_h264_inst *inst,
-> > >  {
-> > >         int ret = 0;
-> > >         unsigned int irq_status;
-> > > +       struct venc_frame_info frame_info;
-> > >
-> > >         mtk_vcodec_debug_enter(inst);
-> > > -
-> > > +       /* Overflowing back to 0 is ok and expected here */
-> > > +       inst->frm_cnt++;
-> > > +       mtk_vcodec_debug(inst, "frm_cnt++ = %d\n ", inst->frm_cnt);
-> > > +       frame_info.frm_cnt = inst->frm_cnt;
-> > > +       frame_info.skip_frm_cnt = inst->skip_frm_cnt;
-> > > +       frame_info.frm_type = h264_frame_type(inst);
-> >
-> > Ditto: Is this chunk related to the new support,
-> > or is this addressing some current issue?
 >
-> I will need to re-read this part to understand which one it is, but
-> will split the patch if it turns out to make sense.
->
-> >
-> > > +       mtk_vcodec_debug(inst, "frm_cnt++ = %d,skip_frm_cnt =%d,frm_type=%d.\n",
-> > > +               frame_info.frm_cnt, frame_info.skip_frm_cnt,
-> > > +               frame_info.frm_type);
-> > >         ret = vpu_enc_encode(&inst->vpu_inst, H264_BS_MODE_FRAME, frm_buf,
-> > > -                            bs_buf, bs_size);
-> > > -       if (ret)
-> > > +                            bs_buf, bs_size, &frame_info);
-> > > +       if (ret) {
-> > > +               inst->frm_cnt--;
-> > >                 return ret;
-> > > +       }
-> > >
-> > >         /*
-> > >          * skip frame case: The skip frame buffer is composed by vpu side only,
-> > > @@ -427,19 +465,19 @@ static int h264_encode_frame(struct venc_h264_inst *inst,
-> > >                 memcpy(bs_buf->va,
-> > >                        inst->work_bufs[VENC_H264_VPU_WORK_BUF_SKIP_FRAME].va,
-> > >                        *bs_size);
-> > > -               ++inst->frm_cnt;
-> > > +               ++inst->skip_frm_cnt;
-> > >                 return ret;
-> > >         }
-> > >
-> > >         irq_status = h264_enc_wait_venc_done(inst);
-> > >         if (irq_status != MTK_VENC_IRQ_STATUS_FRM) {
-> > >                 mtk_vcodec_err(inst, "irq_status=%d failed", irq_status);
-> > > +               inst->frm_cnt--;
-> > >                 return -EIO;
-> > >         }
-> > >
-> > >         *bs_size = h264_read_reg(inst, VENC_PIC_BITSTREAM_BYTE_CNT);
-> > >
-> > > -       ++inst->frm_cnt;
-> > >         mtk_vcodec_debug(inst, "frm %d bs_size %d key_frm %d <-",
-> > >                          inst->frm_cnt, *bs_size, inst->vpu_inst.is_key_frm);
-> > >
-> > > @@ -464,6 +502,7 @@ static void h264_encode_filler(struct venc_h264_inst *inst, void *buf,
-> > >
-> > >  static int h264_enc_init(struct mtk_vcodec_ctx *ctx)
-> > >  {
-> > > +       const bool is_ext = ctx->dev->venc_pdata->uses_ext;
-> > >         int ret = 0;
-> > >         struct venc_h264_inst *inst;
-> > >
-> > > @@ -473,8 +512,9 @@ static int h264_enc_init(struct mtk_vcodec_ctx *ctx)
-> > >
-> > >         inst->ctx = ctx;
-> > >         inst->vpu_inst.ctx = ctx;
-> > > -       inst->vpu_inst.id = IPI_VENC_H264;
-> > > +       inst->vpu_inst.id = is_ext ? SCP_IPI_VENC_H264 : IPI_VENC_H264;
-> > >         inst->hw_base = mtk_vcodec_get_reg_addr(inst->ctx, VENC_SYS);
-> > > +       inst->frm_cnt = 0xffffffff;
-> > >
-> > >         mtk_vcodec_debug_enter(inst);
-> > >
-> > > @@ -629,7 +669,12 @@ static int h264_enc_set_param(void *handle,
-> > >                 inst->prepend_hdr = 1;
-> > >                 mtk_vcodec_debug(inst, "set prepend header mode");
-> > >                 break;
-> > > -
-> > > +       case VENC_SET_PARAM_FORCE_INTRA:
-> > > +       case VENC_SET_PARAM_GOP_SIZE:
-> > > +       case VENC_SET_PARAM_INTRA_PERIOD:
-> > > +               inst->frm_cnt = 0xffffffff;
-> > > +               inst->skip_frm_cnt = 0;
-> > > +               fallthrough;
-> > >         default:
-> > >                 ret = vpu_enc_set_param(&inst->vpu_inst, type, enc_prm);
-> > >                 break;
-> > > diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-> > > index 6426af514526..11abb191ada5 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-> > > +++ b/drivers/media/platform/mtk-vcodec/venc/venc_vp8_if.c
-> > > @@ -302,7 +302,8 @@ static int vp8_enc_encode_frame(struct venc_vp8_inst *inst,
-> > >
-> > >         mtk_vcodec_debug(inst, "->frm_cnt=%d", inst->frm_cnt);
-> > >
-> > > -       ret = vpu_enc_encode(&inst->vpu_inst, 0, frm_buf, bs_buf, bs_size);
-> > > +       ret = vpu_enc_encode(&inst->vpu_inst, 0, frm_buf, bs_buf, bs_size,
-> > > +                            NULL);
-> > >         if (ret)
-> > >                 return ret;
-> > >
-> > > diff --git a/drivers/media/platform/mtk-vcodec/venc_drv_if.h b/drivers/media/platform/mtk-vcodec/venc_drv_if.h
-> > > index 52fc9cc812fc..51b52625ca22 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/venc_drv_if.h
-> > > +++ b/drivers/media/platform/mtk-vcodec/venc_drv_if.h
-> > > @@ -92,6 +92,12 @@ struct venc_enc_param {
-> > >         unsigned int gop_size;
-> > >  };
-> > >
-> >
-> > How about a comment here documenting this struct?
->
-> Will comment if I can figure out what it is useful for. :)
->
-> >
-> > > +struct venc_frame_info {
-> > > +       unsigned int frm_cnt;           /* per frame update */
-> > > +       unsigned int skip_frm_cnt;      /* per frame update */
-> >
-> > I'd go for s/cnt/count, it's just 2 bytes
-> > and in the long run it'll make our life easier.
->
-> Ack.
->
-> >
-> > > +       unsigned int frm_type;          /* per frame update */
-> > > +};
-> > > +
-> > >  /*
-> > >   * struct venc_frm_buf - frame buffer information used in venc_if_encode()
-> > >   * @fb_addr: plane frame buffer addresses
-> > > diff --git a/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h b/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
-> > > index 28ee04ca6241..4cafbf92d9cd 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
-> > > +++ b/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
-> > > @@ -51,17 +51,22 @@ struct venc_ap_ipi_msg_init {
-> > >   * @vpu_inst_addr:     VPU encoder instance addr
-> > >   *                     (struct venc_vp8_vsi/venc_h264_vsi *)
-> > >   * @param_id:  parameter id (venc_set_param_type)
-> > > - * @data_item: number of items in the data array
-> > > + * @num_data:  number of items in the data array
-> > >   * @data[8]:   data array to store the set parameters
-> > >   */
-> > >  struct venc_ap_ipi_msg_set_param {
-> > >         uint32_t msg_id;
-> > >         uint32_t vpu_inst_addr;
-> > >         uint32_t param_id;
-> > > -       uint32_t data_item;
-> > > +       uint32_t num_data;
-> >
-> > This change looks either out of place, or unneeded.
-> > Or I'm missing something.
->
-> Yeah, it's just renaming this member to something that makes more
-> sense, "data_item" bringing absolutely no information about what this
-> does. Will make an extra patch for it.
->
-> >
-> > >         uint32_t data[8];
-> > >  };
-> > >
-> > > +struct venc_ap_ipi_msg_set_param_ext {
-> > > +       struct venc_ap_ipi_msg_set_param base;
-> > > +       uint32_t data_ext[24];
-> > > +};
-> > > +
-> > >  /**
-> > >   * struct venc_ap_ipi_msg_enc - AP to VPU enc cmd structure
-> > >   * @msg_id:    message id (AP_IPIMSG_XXX_ENC_ENCODE)
-> > > @@ -82,6 +87,12 @@ struct venc_ap_ipi_msg_enc {
-> > >         uint32_t bs_size;
-> > >  };
-> > >
-> >
-> > Ditto.
->
-> Ditto what? :) There is no code change right here.
->
-
-Oh, sorry. I meant: same feedback about adding a comment
-to the structure.
-
-> >
-> > > +struct venc_ap_ipi_msg_enc_ext {
-> > > +       struct venc_ap_ipi_msg_enc base;
-> > > +       uint32_t data_item;
-> > > +       uint32_t data[32];
-> > > +};
-> > > +
-> > >  /**
-> > >   * struct venc_ap_ipi_msg_deinit - AP to VPU deinit cmd structure
-> > >   * @msg_id:    message id (AP_IPIMSG_XXX_ENC_DEINIT)
-> > > diff --git a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-> > > index 53854127814b..6c77bf025172 100644
-> > > --- a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-> > > +++ b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-> > > @@ -116,49 +116,81 @@ int vpu_enc_init(struct venc_vpu_inst *vpu)
-> > >         return 0;
-> > >  }
-> > >
-> > > +static unsigned int venc_enc_param_crop_right(struct venc_vpu_inst *vpu,
-> > > +                                             struct venc_enc_param *enc_prm)
-> > > +{
-> > > +       unsigned int img_crop_right = enc_prm->buf_width - enc_prm->width;
-> > > +
-> > > +       return img_crop_right % 16;
-> > > +}
-> > > +
-> > > +static unsigned int venc_enc_param_crop_bottom(struct venc_enc_param *enc_prm)
-> > > +{
-> > > +       return round_up(enc_prm->height, 16) - enc_prm->height;
-> > > +}
-> > > +
-> > > +static unsigned int venc_enc_param_num_mb(struct venc_enc_param *enc_prm)
-> > > +{
-> > > +       return DIV_ROUND_UP(enc_prm->width, 16) *
-> > > +              DIV_ROUND_UP(enc_prm->height, 16);
-> >
-> > ^^^^
-> > You could define the macroblock size in a macro and
-> > use it in these various places.
->
-> Ack.
->
-> >
-> > > +}
-> > > +
-> > >  int vpu_enc_set_param(struct venc_vpu_inst *vpu,
-> > >                       enum venc_set_param_type id,
-> > >                       struct venc_enc_param *enc_param)
-> > >  {
-> > > -       struct venc_ap_ipi_msg_set_param out;
-> > > +       const bool is_ext = vpu->ctx->dev->venc_pdata->uses_ext;
-> > > +       size_t msg_size = is_ext ?
-> >
-> > How about you use vpu->id to check for is_ext?
->
-> Unfortunately vpu->id can be assigned an ipi_id or scp_ipi_id, which
-> are two different namespaces and which values can thus collide. So we
-> cannot use ID for this.
->
-> >
-> > I feel like querying the "is_ext" property like this
-> > is a layering violation.
-> >
-> > Or maybe better some firmware interface type
-> > should be set in struct venc_vpu_inst,
-> > so the venc_vpu_if driver is aware of its own type.
->
-> "is_ext" refers to whether the firmware uses an extended version of
-> the protocol to communicate, so using it here seems to be in place.
-
-Hm, maybe my comment wasn't really clear. I was trying
-to point out that both venc_h264_if.c and venc_vpu_if.c
-are using ctx->dev->venc_pdata->uses_ext to get
-the "is_ext".
-
-I.e. I would imagine it's cleaner to:
-
-diff --git a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-index 050787b2896c..1ad25b59356a 100644
---- a/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-+++ b/drivers/media/platform/mtk-vcodec/venc/venc_h264_if.c
-@@ -513,6 +513,7 @@ static int h264_enc_init(struct mtk_vcodec_ctx *ctx)
-        inst->ctx = ctx;
-        inst->vpu_inst.ctx = ctx;
-        inst->vpu_inst.id = is_ext ? SCP_IPI_VENC_H264 : IPI_VENC_H264;
-+       inst->vpu_inst.is_ext = is_ext;
-        inst->hw_base = mtk_vcodec_get_reg_addr(inst->ctx, VENC_SYS);
-        inst->frm_cnt = 0xffffffff;
-
-diff --git a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-index 472503701003..137453d66d8e 100644
---- a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-+++ b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-@@ -160,7 +160,7 @@ int vpu_enc_set_param(struct venc_vpu_inst *vpu,
-                      enum venc_set_param_type id,
-                      struct venc_enc_param *enc_param)
- {
--       const bool is_ext = vpu->ctx->dev->venc_pdata->uses_ext;
-+       const bool is_ext = vpu->is_ext;
-        size_t msg_size = is_ext ?
-                sizeof(struct venc_ap_ipi_msg_set_param_ext) :
-                sizeof(struct venc_ap_ipi_msg_set_param);
-@@ -228,7 +228,7 @@ int vpu_enc_encode(struct venc_vpu_inst *vpu,
-unsigned int bs_mode,
-                   unsigned int *bs_size,
-                   struct venc_frame_info *frame_info)
- {
--       const bool is_ext = vpu->ctx->dev->venc_pdata->uses_ext;
-+       const bool is_ext = vpu->is_ext;
-        size_t msg_size = is_ext ?
-                sizeof(struct venc_ap_ipi_msg_enc_ext) :
-                sizeof(struct venc_ap_ipi_msg_enc);
-
-IMHO, this makes the structure cleaner, but
-possibly this is just bikeshedding, so feel free to ignore.
-
-Cheers,
-Ezequiel
