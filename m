@@ -2,119 +2,156 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFB0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 22:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D8EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 22:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1384421775
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 22:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595889410;
-	bh=Q1+CdX6g1uX5/O4dcOLZ5AB/jAjBef9C9fNZJmce1m0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=br/6DA7bVpqIP1qTdF6oSaB5+gFt3WKNLVEhthWHw4txIvdJjjJ4sxpxWBqmA2vEZ
-	 R1+6e5N8oKccO1Zg/CXmnbI+8axBPRUgj+DSifpG4/3i5WxJMBjH71rozTSyZo1uD2
-	 zpPUtYMDEk1YKGMwkue2dgi6cdIy/9cJXMIeescU=
+	by mail.kernel.org (Postfix) with ESMTP id 3050520809
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 22:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GEtTL4vJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgG0Wgt (ORCPT
+        id S1726738AbgG0WjT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 18:36:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgG0Wgt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 18:36:49 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 582DA206D7;
-        Mon, 27 Jul 2020 22:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595889408;
-        bh=Q1+CdX6g1uX5/O4dcOLZ5AB/jAjBef9C9fNZJmce1m0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OX4KJ4iq2Aza8rqPoReQm3fxVnq8XzWC0xaUVoAK0XQvyPTpJhf0sFbyztkBGJS/R
-         44zN+Ed8FCn80kX+4SeRqPFP6+mg7L0deOIXJ4mRqKXpxpLRN4nhk9r0PzvwTuTkCz
-         FFhDe6wqOUi7SVs1c8zJahy/rDixare7AmYGvnYQ=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 1A3243C0B87; Tue, 28 Jul 2020 00:36:46 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 00:36:46 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     afd@ti.com, pali@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org
-Subject: Re: [PATCH v3 2/4] power: supply: bq27xxx_battery: Add the BQ27561
- Battery monitor
-Message-ID: <20200727223646.vjnkyrmipwin3pj6@earth.universe>
-References: <20200721163206.25438-1-dmurphy@ti.com>
- <20200721163206.25438-2-dmurphy@ti.com>
+        Mon, 27 Jul 2020 18:39:19 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50770 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgG0WjS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 18:39:18 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06RMdCSp117118;
+        Mon, 27 Jul 2020 17:39:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595889552;
+        bh=BvCgv2VkYscYUBrio/xCc/7/XZeeMfxy0YDyyGSGIo4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GEtTL4vJBR/HVnlMugvN7TlachHm/SgGkIZsvgQMGAQpS/BWl92b6CwoqdWh/p3eR
+         chjJNq4GlO0NOGmU50bfAXRJl5NXTk0r/5ZgLq3L/tMofRIRzodRA4ZGj0V3k/lAgs
+         g+SedXDNUP9HDI3TzHvv760aZhbCpmqDA3l65r/o=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06RMdCbb001847
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 17:39:12 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
+ Jul 2020 17:39:12 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 27 Jul 2020 17:39:12 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06RMdBwJ092701;
+        Mon, 27 Jul 2020 17:39:11 -0500
+Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+To:     Stefano Stabellini <stefano.stabellini@xilinx.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <stefanos@xilinx.com>,
+        <BLEVINSK@xilinx.com>, <tomase@xilinx.com>
+References: <20200630024922.32491-1-s-anna@ti.com>
+ <20200630024922.32491-2-s-anna@ti.com> <20200714171553.GA2522956@bogus>
+ <20200716171903.GA3286345@xps15>
+ <alpine.DEB.2.21.2007161232400.3886@sstabellini-ThinkPad-T480s>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <b7415d48-a354-5610-a657-08cdefc482a6@ti.com>
+Date:   Mon, 27 Jul 2020 17:39:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dzrshq2akzwyrchr"
-Content-Disposition: inline
-In-Reply-To: <20200721163206.25438-2-dmurphy@ti.com>
+In-Reply-To: <alpine.DEB.2.21.2007161232400.3886@sstabellini-ThinkPad-T480s>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Rob,
 
---dzrshq2akzwyrchr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 7/16/20 2:43 PM, Stefano Stabellini wrote:
+> On Thu, 16 Jul 2020, Mathieu Poirier wrote:
+>> Hi Rob,
+>>
+>> On Tue, Jul 14, 2020 at 11:15:53AM -0600, Rob Herring wrote:
+>>> On Mon, Jun 29, 2020 at 09:49:19PM -0500, Suman Anna wrote:
+>>>> The Texas Instruments K3 family of SoCs have one or more dual-core
+>>>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+>>>> can be split between multiple voltage domains as well. Add the device
+>>>> tree bindings document for these R5F subsystem devices. These R5F
+>>>> processors do not have an MMU, and so require fixed memory carveout
+>>>> regions matching the firmware image addresses. The nodes require more
+>>>> than one memory region, with the first memory region used for DMA
+>>>> allocations at runtime. The remaining memory regions are reserved
+>>>> and are used for the loading and running of the R5F remote processors.
+>>>> The R5F processors can also optionally use any internal on-chip SRAM
+>>>> memories either for executing code or using it as fast-access data.
+>>>>
+>>>> The added example illustrates the DT nodes for the single R5FSS device
+>>>> present on K3 AM65x family of SoCs.
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> ---
+>>>> v2:
+>>>>   - Renamed "lockstep-mode" property to "ti,cluster-mode"
+>>>
+>>> I don't think that's a move in the right direction given this is at
+>>> least partially a standard feature.
+>>>
+>>> As I said before, I'm very hesistant to accept anything here given I
+>>> know the desires and activity to define 'system Devicetrees' of which
+>>> TI is participating. While maybe an rproc node is sufficient for a
+>>> DSP, it seems multiple vendors have R cores and want to define them in
+>>> system DT.
 
-Hi,
+Ping on this discussion. TI is participating on the System DT evolution 
+in general, but we don't have any plans to use DTS on our remote cores. 
+We have our own auto-generated Chip-Support-Library (CSL) code that gets 
+used on our firmwares.
 
-On Tue, Jul 21, 2020 at 11:32:04AM -0500, Dan Murphy wrote:
-> Add the Texas Instruments BQ27561 battery monitor.  The register address
-> map is laid out the same as compared to other devices within the file.
-> The battery status register has differing bits to determine if the
-> battery is full, discharging or dead.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
+Also, most of the properties I defined are rather standard properties. I 
+have posted a revised v3 [1] after the common ti,sci properties 
+refactoring. This series is only waiting on the bindings. I am happy to 
+change any ti, prefixed properties. I had one open question [2] that I 
+am waiting for a response from you for identifying the R5F Core.
 
-Looks mostly good to me, but
+regards
+Suman
 
-[...]
+[1] https://patchwork.kernel.org/patch/11679331/
+[2] https://patchwork.kernel.org/comment/23273441/
 
-> @@ -1710,6 +1769,13 @@ static int bq27xxx_battery_capacity_level(struct b=
-q27xxx_device_info *di,
->  			level =3D POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
->  		else
->  			level =3D POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
-> +	} else if (di->opts & BQ27561_O_BITS) {
-> +		if (di->cache.flags & BQ27561_FLAG_FC)
-> +			level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-> +		else if (di->cache.flags & BQ27561_FLAG_DIS_CH)
-> +			level =3D POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+>>>
+>>> Though the system DT effort has not yet given any thought to what is the
+>>> view of one processor or instance to another instance (which is what
+>>> this binding is). We'll still need something defined for that, but I'd
+>>> expect that to be dependent on what is defined for system DT.
+>>
+>> Efforts related to the definition of the system DT are under way, something I
+>> expect to keep going on for some time to come.  I agree with the need to use the
+>> system DT to define remote processors and I look forward to the time we can do
+>> so.
+> 
+> I'll take this opportunity to add that I should be able to publicly
+> present a System Device Tree proposal for this during the next call (the
+> next one after the call early next week that has already a full agenda.)
+> 
+> 
+>> That being said we need to find a concensus on how to move forward with patches
+>> that are ready to be merged.  What is your opinion on that?
+> 
+> In my opinion we don't have to necessarily wait for System Device Tree
+> to make progress with those if they look OK.
+> 
 
-Shouldn't this be checking for FLAG_FDC instead of FLAG_DIS_CH?
-
--- Sebastian
-
---dzrshq2akzwyrchr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fVvsACgkQ2O7X88g7
-+pq4BhAAobVH8GBXmthjmhclE8H+qS3thRQaDNbpb4ind+SP2i5f9YdaIf9Nxa/e
-XFWS1SbU1AcTTs6jGE2OeGt8dHqIsp/fp/Nhpog17e+4/nujlMyYSqFJzasalGTd
-lz5zMvfmfIBbt++UcsccFXoUNG3YKNP/pc4rKMQNL4iyqEWyGj+S0SCqjBNe409U
-f0DMj2/32+RbJVB1GONooer/9drlpShdOND62ALDxXUBbVhT2Zh6bcMX0R7YRmSd
-RruoWxlHH1fUFeBNMQAcBal6WAxmPu23oLLDnXAvqcehioGnBWVMr4nVeeuMXpuV
-0/LLXgz5PIzwsGvVLq6jkLXzjPIH9uoaiyJoJyqGOBXVOal39tDG8Vt5stNilkNo
-zGUd9ebkxBVBcS5AhEWrPTEXkwKRwKs+wbIq6ccpfi22b3gI7GsjGLwBhdJBynvk
-DloHl/dM3+HpKo0h5S56cMnEFt/08WqetU2/83XW1+TRpVq3lH7jueTGWArK38qs
-FhHvs+pM3o2mWLrYIBTpEO3048Sb93vauby20MMP14CpSafrOfYZXYWcsoC4WIZa
-T99D19eSJvSpRULxjHHQqA+KN6lP+UZ4D8BDXCgeyXcen9DXr/N+WrE2CGzEWj5m
-1ImaoB45hu1HZgt53ezthI4Ak6EZzbg5ObRFl92zPSH/7hqD7rI=
-=G+a9
------END PGP SIGNATURE-----
-
---dzrshq2akzwyrchr--
