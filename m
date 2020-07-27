@@ -2,94 +2,84 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F50C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1ACC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 10:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8B62074F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595843640;
-	bh=aU7nbbmxURhHho/spFo6gDr2WLaiWunOy8aTUFZfyYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YnO3gm3U/Okk+dgfNyO4+gg+txhjkLMjktLaC0poHjzg/gaYndETQtVIb4pvJoLEK
-	 BtuCeK9aNEfhv5D09hmH8D123LKlFdJblk4dpIq5juhYHSPsnVgIbrUp4/XUP+Nw2S
-	 98Iyuj7Aw1fpzq5WvOT19gaI1wq3iaZJDLQfdaoc=
+	by mail.kernel.org (Postfix) with ESMTP id 2302F2070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 10:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgG0Jx7 (ORCPT
+        id S1727951AbgG0KFx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:53:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 06:05:53 -0400
+Received: from mailout08.rmx.de ([94.199.90.85]:40597 "EHLO mailout08.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgG0Jx7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:53:59 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727775AbgG0KFx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:05:53 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 207E52075A;
-        Mon, 27 Jul 2020 09:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595843639;
-        bh=aU7nbbmxURhHho/spFo6gDr2WLaiWunOy8aTUFZfyYk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xu3uzXpNJykBSNJ3260iKq72+1Nhgv8bEp410kTYw7z+zhQcYwCMDMyVh6k10Kgmc
-         A1c6O8cSu5tCq7zQoM20R+/NMhnmR0eKnOzGV+JryNTEUrqhWWuE8dsBAvhYmDctqL
-         TJRGGklJK3K/qM0JqyhfYsRer8ZES2FwsPlStimk=
-Date:   Mon, 27 Jul 2020 15:23:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Cc:     Felipe Balbi <balbi@kernel.org>, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com, kishon@ti.com,
-        gor@linux.ibm.com, hca@linux.ibm.com,
-        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v6 3/5] USB: PHY: JZ4770: Add support for new Ingenic
- SoCs.
-Message-ID: <20200727095355.GW12965@vkoul-mobl>
-References: <20200725035159.31231-1-zhouyanjie@wanyeetech.com>
- <20200725035159.31231-4-zhouyanjie@wanyeetech.com>
- <87r1t0nmpr.fsf@kernel.org>
- <1727b5db-5cdf-b88a-4672-bfb4e9809bb0@wanyeetech.com>
+        by mailout08.rmx.de (Postfix) with ESMTPS id 4BFb6P6jBSzMngK;
+        Mon, 27 Jul 2020 12:05:49 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BFb6323yVz2xFY;
+        Mon, 27 Jul 2020 12:05:31 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.121) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
+ 2020 12:05:31 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        Christian Eggers <ceggers@arri.de>
+Subject: [PATCH] dt-bindings: at25: fix syntax error in example code
+Date:   Mon, 27 Jul 2020 12:05:05 +0200
+Message-ID: <20200727100505.23908-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1727b5db-5cdf-b88a-4672-bfb4e9809bb0@wanyeetech.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.121]
+X-RMX-ID: 20200727-120531-4BFb6323yVz2xFY-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25-07-20, 15:34, Zhou Yanjie wrote:
-> Hi Felipe,
-> 
-> 在 2020/7/25 下午2:16, Felipe Balbi 写道:
-> > Hi,
-> > 
-> > 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com> writes:
-> > > Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
-> > > the X1000 SoC and the X1830 SoC from Ingenic.
-> > > 
-> > > Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> > > Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> > > Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> > > Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> > It would be better to move this driver to drivers/phy before adding
-> > support for new SoCs. We want to remove drivers/usb/phy/ in the near
-> > future, any help is welcome.
-> > 
-> Seems my mailbox have something wrong, the [5/5] patch in this series is
-> used to move this river to drivers/phy, but seems that it has not been sent
-> out correctly, I already resend it.
+Add missing semicolon.
 
-I have resend patches in my inbox but that seems missing patches too :(
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
+ Documentation/devicetree/bindings/eeprom/at25.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
+index fcacd97abd0a..fe91ecf1f61b 100644
+--- a/Documentation/devicetree/bindings/eeprom/at25.txt
++++ b/Documentation/devicetree/bindings/eeprom/at25.txt
+@@ -33,7 +33,7 @@ Additional compatible properties are also allowed.
+ Example:
+ 	eeprom@0 {
+ 		compatible = "st,m95256", "atmel,at25";
+-		reg = <0>
++		reg = <0>;
+ 		spi-max-frequency = <5000000>;
+ 		spi-cpha;
+ 		spi-cpol;
 -- 
-~Vinod
+Christian Eggers
+Embedded software developer
+
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+
