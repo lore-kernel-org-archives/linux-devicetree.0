@@ -2,117 +2,118 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568DAC433F2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD836C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339B022CE3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:53:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GO6DmSb1"
+	by mail.kernel.org (Postfix) with ESMTP id B413B20672
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgG0UxN (ORCPT
+        id S1726140AbgG0Uzc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:53:13 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14236 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbgG0Uvw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 16:51:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1f3e0e0000>; Mon, 27 Jul 2020 13:50:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 27 Jul 2020 13:51:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 13:51:52 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
- 2020 20:51:52 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 27 Jul 2020 20:51:52 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1f3e670003>; Mon, 27 Jul 2020 13:51:51 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v5 03/14] i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
-Date:   Mon, 27 Jul 2020 13:57:21 -0700
-Message-ID: <1595883452-17343-4-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 27 Jul 2020 16:55:32 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45668 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgG0Uzb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 16:55:31 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 64C6B8030868;
+        Mon, 27 Jul 2020 20:55:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3kM3i7w2TsUD; Mon, 27 Jul 2020 23:55:21 +0300 (MSK)
+Date:   Mon, 27 Jul 2020 23:55:20 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 00/10] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
+ peculiarities into account
+Message-ID: <20200727205520.kteltxy6gbho226q@mobilestation>
+References: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
+ <20200727090114.GM12965@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595883022; bh=XQCuT+X5xFWbpK2llLNhsmBbg0HBAV9bHrS0xwzVjM4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=GO6DmSb1g9D/k/gmCmeTJPzzsNel4EkC9dDMk/kfNe6Af8XUVorg3jO7zR2Faltg+
-         1Lu5YPr4JspLWeyeiR1CqD9PxqElG0jDuZ4M966m4nAJoQbu+FheCPWNn7FUB0/YgF
-         q/34dQxdGy+oPniDT0U6oN49R0d7oRVkKVlRnjNgHXkywvtmvgsvDbjWtTARnM4Lm2
-         VZWjaYf+aORvsPwzRCdFQ8aekeAnzf4oNJATCabwnSNE0v6j9YUegL+a7HzAhFwXpH
-         jlPBgHMv1JTND4BxPfIHW5XkUWDeU3jkFtAxWZHvjtnWn2jG3zMHyfN0k+LtGMIorL
-         L5zAHol9Ku5fA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200727090114.GM12965@vkoul-mobl>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-tegra_i2c_runtime_resume does not disable prior enabled clocks
-properly.
+On Mon, Jul 27, 2020 at 02:31:14PM +0530, Vinod Koul wrote:
+> On 23-07-20, 03:58, Serge Semin wrote:
+> > In the previous patchset I've written the next message:
+> > 
+> > > Folks, note I've removed the next patches from the series:
+> > > [PATCH v7 04/11] dmaengine: Introduce max SG list entries capability
+> > > [PATCH v7 11/11] dmaengine: dw: Initialize max_sg_nents capability
+> > > It turns out the problem with the asynchronous handling of Tx- and Rx-
+> > > SPI transfers interrupts is more complex than I expected. So in order to
+> > > solve the problem it isn't enough to split the SG list entries submission
+> > > up based on the max_sg_nents capability setting (though the synchronous
+> > > one-by-one SG list entries handling does fix a part of the problem). So
+> > > if and when I get to find a comprehensive solution for it I'll submit a
+> > > new series with fixups. Until then please consider to merge the patchset
+> > > in without those patches.
+> > 
+> > Those patches are returned back to the series. I've found a solution, which
+> > fixes the problem for our hardware. A new patchset with several fixes for the
+> > DW DMAC driver will be sent shortly after this one is merged in. Note the same
+> > concerns the DW APB SPI driver. So please review and merge in as soon as
+> > possible.
+> > 
+> > Regarding the patchset. Baikal-T1 SoC has an DW DMAC on-board to provide a
+> > Mem-to-Mem, low-speed peripherals Dev-to-Mem and Mem-to-Dev functionality.
+> > Mostly it's compatible with currently implemented in the kernel DW DMAC
+> > driver, but there are some peculiarities which must be taken into account
+> > in order to have the device fully supported.
+> > 
+> > First of all traditionally we replaced the legacy plain text-based dt-binding
+> > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+> > channels, which alas have different max burst length configuration.
+> > In particular first two channels may burst up to 128 bits (16 bytes) at a time
+> > while the rest of them just up to 32 bits. We must make sure that the DMA
+> > subsystem doesn't set values exceeding these limitations otherwise the
+> > controller will hang up. In third currently we discovered the problem in using
+> > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+> > natively implemented multi-block LLP transfers support and the SPI-transfer
+> > length exceeds the max lock size. In this case due to asynchronous handling of
+> > Tx- and Rx- SPI transfers interrupt we might end up with DW APB SSI Rx FIFO
+> > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+> > the DMAC to asynchronously execute the transfers we'd have to at least warn
+> > the user of the possible errors. In forth it's worth to set the DMA device max
+> > segment size with max block size config specific to the DW DMA controller. It
+> > shall help the DMA clients to create size-optimized SG-list items for the
+> > controller. This in turn will cause less dw_desc allocations, less LLP
+> > reinitializations, better DMA device performance.
+> > 
+> > Finally there is a bug in the algorithm of the nollp flag detection.
+> > In particular even if DW DMAC parameters state the multi-block transfers
+> > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+> > by the driver true multi-block LLP functionality unusable. This happens cause'
+> > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+> > contiguous multi-block transfers will be only supported. We must take the
+> > flag into account when detecting the LLP support otherwise the driver just
+> > won't work correctly.
+> 
+> Applied all, thanks
 
-This patch fixes it.
+Great! Thank you very much. Now I can send out another set of patches for
+review.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/i2c/busses/i2c-tegra.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+-Sergey
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index c91307b9..7b93c45 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -665,18 +665,23 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
- 	ret = clk_enable(i2c_dev->slow_clk);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to enable slow clock: %d\n", ret);
--		return ret;
-+		goto disable_fast_clk;
- 	}
- 
- 	ret = clk_enable(i2c_dev->div_clk);
- 	if (ret < 0) {
- 		dev_err(i2c_dev->dev,
- 			"Enabling div clk failed, err %d\n", ret);
--		clk_disable(i2c_dev->fast_clk);
--		return ret;
-+		goto disable_slow_clk;
- 	}
- 
- 	return 0;
-+
-+disable_slow_clk:
-+	clk_disable(i2c_dev->slow_clk);
-+disable_fast_clk:
-+	clk_disable(i2c_dev->fast_clk);
-+	return ret;
- }
- 
- static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
--- 
-2.7.4
-
+> -- 
+> ~Vinod
