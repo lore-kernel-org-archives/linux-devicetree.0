@@ -2,87 +2,119 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EC4C433F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5045C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A3C2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595879941;
-	bh=hCIc1fQiRnmWLSiSGdCuD0jCBuiVYlhLh5YzNLQE2u8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HzUwgiKkbBSg9aMj9CE71gHucJAhvEPLqXyFvnAm0jXAk0NjJ8ABZqyYNfYr7N/lz
-	 caMattfJRzINSyGXSMc+BWkiq14DrXkSKmugXcFOJXmnyipqIcZUWNxadHbI4sMzdh
-	 a5HpbcRnZd721zzjP802WJOXsvvwvoMZKu/VDKiQ=
+	by mail.kernel.org (Postfix) with ESMTP id A92292072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:00:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbgG0T7B (ORCPT
+        id S1728419AbgG0UAy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:59:01 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45473 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728092AbgG0T7A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 15:59:00 -0400
-Received: by mail-io1-f66.google.com with SMTP id e64so18277550iof.12;
-        Mon, 27 Jul 2020 12:59:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wDpeNiqqoyeATLrnrgf/k8/QCkhhtDi8rG/MLzLuc0k=;
-        b=DbmK052MzAjToZdvnG5RRb7lV+Wuzv+9oczMEOkSv1zvGxO+KgmsuAs4Jssn4fzeqn
-         MHg9cEjmd1HLRQR1ALrWmIpfCT/wcDUCnzmaBDKP9ZFGlTPgqsAnl19c1GBQo7GVFXlA
-         mHYvS78zINdfJJu0/AzpqmMsE3CIxnyfnUsPSfl2rnhPdEDSbA/hdO/ysI/475+GOoXi
-         oOXYqEEpqlYGmdwhAyDnSHkfIft3mQYTemuWzLV9TKGnq1NjzA+W6PF5JHX+RfcHHeBI
-         UWFmUbb5R1qjYA2ZbNphJscuGhb8TU0hhKtd7FLlT0TEdKeR7UclTuUtmF6BegkgUM7r
-         Jl7A==
-X-Gm-Message-State: AOAM5323DKbpDdz3Yn4QcAD+7zE5Te6hXA1k5GIlmgP++/K4sP1kbxtj
-        RnJ5sSXKKg6VdZr5zoujSA==
-X-Google-Smtp-Source: ABdhPJzW1pwaSNHbDZJzfOwWrG5ejhNl/nfoqakxm3RP0kGW2cWYySQVZ/+lFw/AjRp7TIf0aRuasQ==
-X-Received: by 2002:a05:6638:1414:: with SMTP id k20mr28371172jad.76.1595879939825;
-        Mon, 27 Jul 2020 12:58:59 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v5sm5428475ilg.88.2020.07.27.12.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 12:58:58 -0700 (PDT)
-Received: (nullmailer pid 782176 invoked by uid 1000);
-        Mon, 27 Jul 2020 19:58:56 -0000
-Date:   Mon, 27 Jul 2020 13:58:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: Re: [RFC PATCH v5 7/7] dt-bindings: thermal: tsens: Document ipq8064
- bindings
-Message-ID: <20200727195856.GA782129@bogus>
-References: <20200725181404.18951-1-ansuelsmth@gmail.com>
- <20200725181404.18951-8-ansuelsmth@gmail.com>
+        Mon, 27 Jul 2020 16:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG0UAx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 16:00:53 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DB9C061794
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 13:00:53 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k09Ik-0003r7-CU; Mon, 27 Jul 2020 22:00:46 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k09Ii-0001LM-QN; Mon, 27 Jul 2020 22:00:44 +0200
+Date:   Mon, 27 Jul 2020 22:00:44 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200727200044.qmrpjua3fewli3vo@pengutronix.de>
+References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
+ <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
+ <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
+ <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
+ <20200727070126.2juwfmra3i67lxfw@pengutronix.de>
+ <70fde2ba-b38f-a0d6-bc2d-89c074afd466@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="udb6nlegm2enchjz"
 Content-Disposition: inline
-In-Reply-To: <20200725181404.18951-8-ansuelsmth@gmail.com>
+In-Reply-To: <70fde2ba-b38f-a0d6-bc2d-89c074afd466@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 25 Jul 2020 20:14:03 +0200, Ansuel Smith wrote:
-> Document the use of bindings used for msm8960 tsens based devices.
-> msm8960 use the same gcc regs and is set as a child of the qcom gcc.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/thermal/qcom-tsens.yaml          | 50 ++++++++++++++++---
->  1 file changed, 43 insertions(+), 7 deletions(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--udb6nlegm2enchjz
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+On Mon, Jul 27, 2020 at 03:30:16PM +0800, Tanwar, Rahul wrote:
+> On 27/7/2020 3:01 pm, Uwe Kleine-K=F6nig wrote:
+> > In v4 you had:
+> >
+> > 	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+> > 	    state->period < pc->period)
+> > 		return -EINVAL;
+> >
+> > That's the right thing to do (even though I was unsettled at one point
+> > and wrote it was wrong). The check in v5 with state->period !=3D
+> > pc->period is wrong.
+>=20
+> Does that mean we should allow state->period >=3D pc->period cases?
+
+Yes, the driver is supposed to implement the longest period not longer
+than the requested one. This implies everything >=3D pc->period is fine.
+
+> If the state->period is greater than HW supported pc->period and
+> if we allow it then the duty cycle will again be evaluated to be
+> incorrect/higher than requested duty cycle. Am i missing something
+> else? Thanks.
+
+Yes, similar as with period you're supposed to implement the longest
+duty cycle your hardware supports and that is not longer than the
+requested duty cycle.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--udb6nlegm2enchjz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8fMmkACgkQwfwUeK3K
+7AmMIwgAj2/ZcC+tvYGBFv9yVeB6UDsy/sKUN3nqlJu/OeZ3y7N13gAy+p3IbmNl
+AVCGmQTRaUZv3aXXPRASXDktXF7x05ycXJiwTlavY9CKsScmXrkWUdjYJF7qujlV
+tsPDmA18PlWwycKsFsp2hj18TbITnwO3rGzeb9qQScLH2iGOH0tjWwKjKhADrz1M
+a9ThxUA0AeVCVlIx6f8tJ0CLIKeHrFf85CChfLcD67xh4CqEXo57uDbGnsSGwsa1
+wfKdLaeBYoRbpJIEsHUxfmZOfTCv7/V5TGcp7QURaNeUWZvJxRf7iDDP+er70mrX
+IieOWaZuvyQhfF5GuiRBqSLKQeZXZg==
+=Uk3U
+-----END PGP SIGNATURE-----
+
+--udb6nlegm2enchjz--
