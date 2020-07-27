@@ -2,121 +2,119 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631C9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 21:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFB0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 22:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 413672075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 21:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1384421775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 22:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595889410;
+	bh=Q1+CdX6g1uX5/O4dcOLZ5AB/jAjBef9C9fNZJmce1m0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=br/6DA7bVpqIP1qTdF6oSaB5+gFt3WKNLVEhthWHw4txIvdJjjJ4sxpxWBqmA2vEZ
+	 R1+6e5N8oKccO1Zg/CXmnbI+8axBPRUgj+DSifpG4/3i5WxJMBjH71rozTSyZo1uD2
+	 zpPUtYMDEk1YKGMwkue2dgi6cdIy/9cJXMIeescU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgG0VuP (ORCPT
+        id S1726676AbgG0Wgt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:50:15 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45926 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgG0VuP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 17:50:15 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id AF3D08030867;
-        Mon, 27 Jul 2020 21:50:12 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BaDuD-7nSK_l; Tue, 28 Jul 2020 00:50:12 +0300 (MSK)
-Date:   Tue, 28 Jul 2020 00:50:10 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200727215010.qzhvavmskfoaapi5@mobilestation>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com>
- <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
+        Mon, 27 Jul 2020 18:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgG0Wgt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 18:36:49 -0400
+Received: from earth.universe (unknown [185.213.155.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582DA206D7;
+        Mon, 27 Jul 2020 22:36:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595889408;
+        bh=Q1+CdX6g1uX5/O4dcOLZ5AB/jAjBef9C9fNZJmce1m0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OX4KJ4iq2Aza8rqPoReQm3fxVnq8XzWC0xaUVoAK0XQvyPTpJhf0sFbyztkBGJS/R
+         44zN+Ed8FCn80kX+4SeRqPFP6+mg7L0deOIXJ4mRqKXpxpLRN4nhk9r0PzvwTuTkCz
+         FFhDe6wqOUi7SVs1c8zJahy/rDixare7AmYGvnYQ=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 1A3243C0B87; Tue, 28 Jul 2020 00:36:46 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 00:36:46 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     afd@ti.com, pali@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh@kernel.org
+Subject: Re: [PATCH v3 2/4] power: supply: bq27xxx_battery: Add the BQ27561
+ Battery monitor
+Message-ID: <20200727223646.vjnkyrmipwin3pj6@earth.universe>
+References: <20200721163206.25438-1-dmurphy@ti.com>
+ <20200721163206.25438-2-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dzrshq2akzwyrchr"
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200721163206.25438-2-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 03:12:49PM +0300, Andy Shevchenko wrote:
-> On Sat, Jul 25, 2020 at 2:03 AM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> > On Thu, Jul 23, 2020 at 01:03:17PM +0300, Andy Shevchenko wrote:
-> > > On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
 
-...
- 
-> > > > +           /* This will let us handle the parent IRQ in the driver */
-> > > > +           girq->parents = NULL;
-> > > > +           girq->num_parents = 0;
-> > > > +           girq->parent_handler = NULL;
-> 
-> > > Shan't we do this before request_irq() call (at least for consistency with the
-> > > rest of the drivers)?
-> >
-> > Technically we shan't. Please elaborate which drivers you are referring to?
-> 
-> All of them? Recent patches for IRQ chip template do something like
-> 
-> girq = &...;
-> girq->foo = bar;
-> ...
-> ret = request_irq(...);
-> 
-> ...and here no more girq->baz = gaz; lines.
-> 
-> > Even the recent Linus' series "Use irqchip template" mostly does it in the
-> > same order.
-> 
-> Funny, that's what I;m referring to.
+--dzrshq2akzwyrchr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
-which make the initialization in the same order as mine:
-drivers/gpio/gpio-max732x.c
-drivers/gpio/gpio-pca953x.c
-drivers/gpio/gpio-pcf857x.c
-drivers/gpio/gpio-adp5588.c
+Hi,
 
-while the rest of them does it in the order suggested by you:
-drivers/gpio/gpio-pci-idio-16.c
-drivers/gpio/gpio-pcie-idio-24.c
-drivers/gpio/gpio-104-idio-16.c
-drivers/gpio/gpio-104-dio-48e.c
-drivers/gpio/gpio-ws16c48.c
-drivers/gpio/gpio-rcar.c
-drivers/gpio/gpio-wcove.c
-drivers/pinctrl/pinctrl-amd.c
-drivers/gpio/gpio-crystalcove.c
-drivers/pinctrl/pinctrl-mcp23s08.c
-drivers/pinctrl/pinctrl-sx150x.c
-drivers/pinctrl/pinctrl-stmfx.c
-drivers/gpio/gpio-tc3589x.c
+On Tue, Jul 21, 2020 at 11:32:04AM -0500, Dan Murphy wrote:
+> Add the Texas Instruments BQ27561 battery monitor.  The register address
+> map is laid out the same as compared to other devices within the file.
+> The battery status register has differing bits to determine if the
+> battery is full, discharging or dead.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 
-Then, let's use the same order here as the most of the drivers do just for
-consistency.
+Looks mostly good to me, but
 
--Sergey 
+[...]
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> @@ -1710,6 +1769,13 @@ static int bq27xxx_battery_capacity_level(struct b=
+q27xxx_device_info *di,
+>  			level =3D POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+>  		else
+>  			level =3D POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+> +	} else if (di->opts & BQ27561_O_BITS) {
+> +		if (di->cache.flags & BQ27561_FLAG_FC)
+> +			level =3D POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+> +		else if (di->cache.flags & BQ27561_FLAG_DIS_CH)
+> +			level =3D POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+
+Shouldn't this be checking for FLAG_FDC instead of FLAG_DIS_CH?
+
+-- Sebastian
+
+--dzrshq2akzwyrchr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fVvsACgkQ2O7X88g7
++pq4BhAAobVH8GBXmthjmhclE8H+qS3thRQaDNbpb4ind+SP2i5f9YdaIf9Nxa/e
+XFWS1SbU1AcTTs6jGE2OeGt8dHqIsp/fp/Nhpog17e+4/nujlMyYSqFJzasalGTd
+lz5zMvfmfIBbt++UcsccFXoUNG3YKNP/pc4rKMQNL4iyqEWyGj+S0SCqjBNe409U
+f0DMj2/32+RbJVB1GONooer/9drlpShdOND62ALDxXUBbVhT2Zh6bcMX0R7YRmSd
+RruoWxlHH1fUFeBNMQAcBal6WAxmPu23oLLDnXAvqcehioGnBWVMr4nVeeuMXpuV
+0/LLXgz5PIzwsGvVLq6jkLXzjPIH9uoaiyJoJyqGOBXVOal39tDG8Vt5stNilkNo
+zGUd9ebkxBVBcS5AhEWrPTEXkwKRwKs+wbIq6ccpfi22b3gI7GsjGLwBhdJBynvk
+DloHl/dM3+HpKo0h5S56cMnEFt/08WqetU2/83XW1+TRpVq3lH7jueTGWArK38qs
+FhHvs+pM3o2mWLrYIBTpEO3048Sb93vauby20MMP14CpSafrOfYZXYWcsoC4WIZa
+T99D19eSJvSpRULxjHHQqA+KN6lP+UZ4D8BDXCgeyXcen9DXr/N+WrE2CGzEWj5m
+1ImaoB45hu1HZgt53ezthI4Ak6EZzbg5ObRFl92zPSH/7hqD7rI=
+=G+a9
+-----END PGP SIGNATURE-----
+
+--dzrshq2akzwyrchr--
