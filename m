@@ -2,353 +2,186 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB5BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 12:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6B0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 12:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7B7206E7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 12:18:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fAx/kzPh"
+	by mail.kernel.org (Postfix) with ESMTP id 9E8EC2074F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 12:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgG0MSb (ORCPT
+        id S1728173AbgG0Ml3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:18:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbgG0MSa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 08:18:30 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921A5C0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 05:18:30 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g10so13283572wmc.1
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 05:18:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=IsIi8F409cZHxulKpoRZusE2JKJse5jBQoAXHe77xis=;
-        b=fAx/kzPhi93UH6If4IJtHoQ380OGDHKSQd4m8YGK3hgBa3OBdcP4nKwiJvYVBYxnMh
-         YFSzmLXLvhDPOIKnnhmVq4CLH4jOQ0LeQttRT78Rn+d8CsqVbQlz6djoCeGDP1d+2UH8
-         NtV6eFnt8fCRDDJAhM857eRUDqW0DlGV42gGWWcOWK5Spx+zmgNv7VCCNEsAH+xVp40d
-         vDPS2Ut9n5CSLUsh91TRI+CaaVQIr9TZUxvipaJilQs03+T12JlTOxeWd+/+922KNRBy
-         ysOFziCc27MA8HDwAv/bEV80MsXHadbYkb6MJakm4q15G2lJidBF363LWjfzklsDXLxe
-         IjvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=IsIi8F409cZHxulKpoRZusE2JKJse5jBQoAXHe77xis=;
-        b=fIPMOfBRHft63eJrhpgln2FlIQrp9mWTrD+FDF6WwNc4VDn+Zp/q8O5+S58Z5uvBzr
-         u/17m7XCxtggrBe59XzUZp15Dnsu/GtKNEMGdt9sqBmMTA3viTbyAbCYWJclEl+Ln7VU
-         odJRp9mp3KSd1TqL4GYW1Fpes5wk7rkMkO+YSrs6UUU8LUWEiPighb7B4W8Kv2NMzOF3
-         LLNH2dckJQRZHzAwTNFRprt+6g1N4Kk5maxn+J3hWW4CTfp44BCoHuL2JdKWCLEgeG/4
-         eGzfpxxjpHfPlEt9xHbv1umewvmNlYUobMsTtsrw9r7gpZZVfjEBSL1As6CDy7w7TLaW
-         HoGg==
-X-Gm-Message-State: AOAM533AQPa53FDsDmbgSLgG7TW/+Gy1A3RsoLwRm9NIkPnzIjhKVc0h
-        Lkp93W8LzmeFhYzRxmi2wjvouw==
-X-Google-Smtp-Source: ABdhPJx0797BC+zllD5zGvCbLm8HLRG8Q0wQ8GIbQod3XouY7f5MT+H0TmGiiKQ8+HBndxMDQTHixg==
-X-Received: by 2002:a1c:cc0c:: with SMTP id h12mr17958765wmb.111.1595852309197;
-        Mon, 27 Jul 2020 05:18:29 -0700 (PDT)
-Received: from localhost ([2a01:cb19:8ae7:9d00:1109:b730:da9f:832f])
-        by smtp.gmail.com with ESMTPSA id m14sm3573527wrx.76.2020.07.27.05.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 05:18:28 -0700 (PDT)
-References: <20200727114504.28536-1-fengping.yu@mediatek.com> <20200727114504.28536-3-fengping.yu@mediatek.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Mattijs Korpershoek <mkorpershoek@baylibre.com>
-To:     Fengping Yu <fengping.yu@mediatek.com>
-Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mon, 27 Jul 2020 08:41:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728125AbgG0Ml3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:41:29 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RCW4qG189784;
+        Mon, 27 Jul 2020 08:41:24 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hs8t2mvn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 08:41:24 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06RCeLGY028030;
+        Mon, 27 Jul 2020 12:41:21 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 32gcq0sbs0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 12:41:21 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06RCfJBi19988984
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 12:41:19 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7757E11C04A;
+        Mon, 27 Jul 2020 12:41:19 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7584311C058;
+        Mon, 27 Jul 2020 12:41:18 +0000 (GMT)
+Received: from [9.85.68.232] (unknown [9.85.68.232])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 27 Jul 2020 12:41:18 +0000 (GMT)
+From:   vishwanatha subbanna <vishwa@linux.vnet.ibm.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: [PATCH 1/2] rainier: Add leds that are off 9551 on Operator Panel
+Message-Id: <125895BF-8477-4107-9A80-47A5128D296C@linux.vnet.ibm.com>
+Date:   Mon, 27 Jul 2020 18:10:45 +0530
+Cc:     vishwanatha subbanna <vishwa@linux.vnet.ibm.com>
+To:     openbmc@lists.ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH v16 2/3] drivers: input: keyboard: Add mtk keypad driver
-In-reply-to: <20200727114504.28536-3-fengping.yu@mediatek.com>
-Date:   Mon, 27 Jul 2020 14:18:27 +0200
-Message-ID: <87v9i9w3qk.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 clxscore=1011 mlxlogscore=974 priorityscore=1501
+ adultscore=0 bulkscore=0 phishscore=0 malwarescore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270090
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fengping,
 
-Fengping Yu <fengping.yu@mediatek.com> writes:
+These are LEDs that are controlled by 9551
 
-> From: "fengping.yu" <fengping.yu@mediatek.com>
->
-> This adds matrix keypad support for Mediatek SoCs.
->
-> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
-> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
+---
+arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 82 ++++++++++++++++++++++++++++
+1 file changed, 82 insertions(+)
 
-Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+index 0b5c6cc..ecbce50 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+@@ -69,6 +69,38 @@
+		};
+	};
 
-> ---
->  drivers/input/keyboard/Kconfig   |  11 ++
->  drivers/input/keyboard/Makefile  |   1 +
->  drivers/input/keyboard/mtk-kpd.c | 209 +++++++++++++++++++++++++++++++
->  3 files changed, 221 insertions(+)
->  create mode 100644 drivers/input/keyboard/mtk-kpd.c
->
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 793ecbbda32c..1ee845c292c6 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -782,6 +782,17 @@ config KEYBOARD_BCM
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called bcm-keypad.
->  
-> +config KEYBOARD_MTK_KPD
-> +	tristate "MediaTek Keypad Support"
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	select INPUT_MATRIXKMAP
-> +	help
-> +	  Say Y here if you want to use the keypad on MediaTek SoCs.
-> +	  If unsure, say N.
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called mtk-kpd.
-> +
->  config KEYBOARD_MTK_PMIC
->  	tristate "MediaTek PMIC keys support"
->  	depends on MFD_MT6397
-> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-> index 1d689fdd5c00..6c9d852c377e 100644
-> --- a/drivers/input/keyboard/Makefile
-> +++ b/drivers/input/keyboard/Makefile
-> @@ -43,6 +43,7 @@ obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
->  obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
->  obj-$(CONFIG_KEYBOARD_MCS)		+= mcs_touchkey.o
->  obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
-> +obj-$(CONFIG_KEYBOARD_MTK_KPD)		+= mtk-kpd.o
->  obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
->  obj-$(CONFIG_KEYBOARD_NEWTON)		+= newtonkbd.o
->  obj-$(CONFIG_KEYBOARD_NOMADIK)		+= nomadik-ske-keypad.o
-> diff --git a/drivers/input/keyboard/mtk-kpd.c b/drivers/input/keyboard/mtk-kpd.c
-> new file mode 100644
-> index 000000000000..451b3bc61c6f
-> --- /dev/null
-> +++ b/drivers/input/keyboard/mtk-kpd.c
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + * Author Fengping Yu <fengping.yu@mediatek.com>
-> + */
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/input/matrix_keypad.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/property.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#define MTK_KPD_NAME		"mtk-kpd"
-> +#define MTK_KPD_MEM		0x0004
-> +#define MTK_KPD_DEBOUNCE	0x0018
-> +#define MTK_KPD_DEBOUNCE_MASK	GENMASK(13, 0)
-> +#define MTK_KPD_DEBOUNCE_MAX_US	256000
-> +#define MTK_KPD_NUM_MEMS	5
-> +#define MTK_KPD_NUM_BITS	136	/* 4*32+8 MEM5 only use 8 BITS */
-> +
-> +struct mtk_keypad {
-> +	struct regmap *regmap;
-> +	struct input_dev *input_dev;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	u32 n_rows;
-> +	u32 n_cols;
-> +	DECLARE_BITMAP(keymap_state, MTK_KPD_NUM_BITS);
-> +};
-> +
-> +static const struct regmap_config keypad_regmap_cfg = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = sizeof(u32),
-> +	.max_register = 36,
-> +};
-> +
-> +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct mtk_keypad *keypad = dev_id;
-> +	unsigned short *keycode = keypad->input_dev->keycode;
-> +	DECLARE_BITMAP(new_state, MTK_KPD_NUM_BITS);
-> +	DECLARE_BITMAP(change, MTK_KPD_NUM_BITS);
-> +	int bit_nr;
-> +	int pressed;
-> +	unsigned short code;
-> +
-> +	regmap_bulk_read(keypad->regmap, MTK_KPD_MEM,
-> +			new_state, MTK_KPD_NUM_MEMS);
-> +
-> +	bitmap_xor(change, new_state, keypad->keymap_state, MTK_KPD_NUM_BITS);
-> +
-> +	for_each_set_bit(bit_nr, change, MTK_KPD_NUM_BITS) {
-> +		/* 1: not pressed, 0: pressed */
-> +		pressed = !test_bit(bit_nr, new_state);
-> +		dev_dbg(&keypad->input_dev->dev, "%s",
-> +			pressed ? "pressed" : "released");
-> +
-> +		/* 32bit register only use low 16bit as keypad mem register */
-> +		code = keycode[bit_nr - 16 * (BITS_TO_U32(bit_nr) - 1)];
-> +
-> +		input_report_key(keypad->input_dev, code, pressed);
-> +		input_sync(keypad->input_dev);
-> +
-> +		dev_dbg(&keypad->input_dev->dev,
-> +			"report Linux keycode = %d\n", code);
-> +	}
-> +
-> +	bitmap_copy(keypad->keymap_state, new_state, MTK_KPD_NUM_BITS);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void kpd_clk_disable(void *data)
-> +{
-> +	clk_disable_unprepare(data);
-> +}
-> +
-> +static int kpd_pdrv_probe(struct platform_device *pdev)
-> +{
-> +	struct mtk_keypad *keypad;
-> +	unsigned int irq;
-> +	u32 debounce;
-> +	bool wakeup;
-> +	int ret;
-> +
-> +	keypad = devm_kzalloc(&pdev->dev, sizeof(*keypad), GFP_KERNEL);
-> +	if (!keypad)
-> +		return -ENOMEM;
-> +
-> +	keypad->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(keypad->base))
-> +		return PTR_ERR(keypad->base);
-> +
-> +	keypad->regmap = devm_regmap_init_mmio(&pdev->dev,
-> +					       keypad->base,
-> +					       &keypad_regmap_cfg);
-> +	if (IS_ERR(keypad->regmap)) {
-> +		dev_err(&pdev->dev,
-> +			"regmap init failed:%pe\n", keypad->regmap);
-> +		return PTR_ERR(keypad->regmap);
-> +	}
-> +
-> +	bitmap_fill(keypad->keymap_state, MTK_KPD_NUM_BITS);
-> +
-> +	keypad->input_dev = devm_input_allocate_device(&pdev->dev);
-> +	if (!keypad->input_dev) {
-> +		dev_err(&pdev->dev, "Failed to allocate input dev\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	keypad->input_dev->name = MTK_KPD_NAME;
-> +	keypad->input_dev->id.bustype = BUS_HOST;
-> +
-> +	ret = matrix_keypad_parse_properties(&pdev->dev, &keypad->n_rows,
-> +					     &keypad->n_cols);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to parse keypad params\n");
-> +		return ret;
-> +	}
-> +
-> +	if (device_property_read_u32(&pdev->dev, "mediatek,debounce-us",
-> +				     &debounce))
-> +		debounce = 16000;
-> +
-> +	if (debounce > MTK_KPD_DEBOUNCE_MAX_US) {
-> +		dev_err(&pdev->dev, "Debounce time exceeds the maximum allowed time %dus\n",
-> +			MTK_KPD_DEBOUNCE_MAX_US);
-> +		return -EINVAL;
-> +	}
-> +
-> +	wakeup = device_property_read_bool(&pdev->dev, "wakeup-source");
-> +
-> +	dev_dbg(&pdev->dev, "n_row=%d n_col=%d debounce=%d\n",
-> +		keypad->n_rows, keypad->n_cols, debounce);
-> +
-> +	ret = matrix_keypad_build_keymap(NULL, NULL,
-> +					 keypad->n_rows,
-> +					 keypad->n_cols,
-> +					 NULL,
-> +					 keypad->input_dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to build keymap\n");
-> +		return ret;
-> +	}
-> +
-> +	regmap_write(keypad->regmap, MTK_KPD_DEBOUNCE,
-> +		     debounce * 32 / 1000 & MTK_KPD_DEBOUNCE_MASK);
-> +
-> +	keypad->clk = devm_clk_get(&pdev->dev, "kpd");
-> +	if (IS_ERR(keypad->clk))
-> +		return PTR_ERR(keypad->clk);
-> +
-> +	ret = clk_prepare_enable(keypad->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "cannot prepare/enable keypad clock\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = devm_add_action_or_reset(&pdev->dev, kpd_clk_disable, keypad->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq,
-> +					NULL, kpd_irq_handler, IRQF_ONESHOT,
-> +					MTK_KPD_NAME, keypad);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to request IRQ#%d:%d\n",
-> +			irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = input_register_device(keypad->input_dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register device\n");
-> +		return ret;
-> +	}
-> +
-> +	ret =  device_init_wakeup(&pdev->dev, wakeup);
-> +	if (ret)
-> +		dev_warn(&pdev->dev, "device_init_wakeup fail\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id kpd_of_match[] = {
-> +	{ .compatible = "mediatek,mt6779-keypad" },
-> +	{ .compatible = "mediatek,mt6873-keypad" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver kpd_pdrv = {
-> +	.probe = kpd_pdrv_probe,
-> +	.driver = {
-> +		   .name = MTK_KPD_NAME,
-> +		   .of_match_table = kpd_of_match,
-> +	},
-> +};
-> +module_platform_driver(kpd_pdrv);
-> +
-> +MODULE_AUTHOR("Mediatek Corporation");
-> +MODULE_DESCRIPTION("MTK Keypad (KPD) Driver");
-> +MODULE_LICENSE("GPL");
++	leds {
++		compatible = "gpio-leds";
++
++		/* System ID LED that is at front on Op Panel */
++		front-sys-id0 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 0 GPIO_ACTIVE_LOW>;
++		};
++
++		/* System Attention Indicator ID LED that is at front on Op Panel */
++		front-check-log0 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 1 GPIO_ACTIVE_LOW>;
++		};
++
++		/* Enclosure Fault LED that is at front on Op Panel */
++		front-enc-fault1 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 2 GPIO_ACTIVE_LOW>;
++		};
++
++		/* System PowerOn LED that is at front on Op Panel */
++		front-sys-pwron0 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++
+};
+
+&gpio0 {
+@@ -514,6 +546,56 @@
+		};
+	};
+
++	pca1: pca9551@60 {
++		compatible = "nxp,pca9551";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		gpio@0 {
++			reg = <0>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@1 {
++			reg = <1>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@2 {
++			reg = <2>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@3 {
++			reg = <3>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@4 {
++			reg = <4>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@5 {
++			reg = <5>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@6 {
++			reg = <6>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@7 {
++			reg = <7>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++	};
++
+	dps: dps310@76 {
+		compatible = "infineon,dps310";
+		reg = <0x76>;
+-- 
+1.8.3.1
+
+
 
