@@ -2,77 +2,124 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B6CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFA3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03E82070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B115C20759
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595878778;
+	bh=Q0LB+Ls+o2Je5hENp6pGFgWXveWVdAfFNup4jeshilk=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=UfBnL7wGFnmwLDV1KnilJ3BcviGHZ5BESMenpkPVdacLeRwTF4vSWUy0GQU44NiJe
+	 koOznVlrmKMhIh4XFm0iyxvoEE+alSSr6p5+3K2/lZuanZ0DL/iyz0zprmV0pg2gpx
+	 jr8tJLuA4+1ojKb1Oaa8icuP5MZGeebdyViCCI/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgG0TZk (ORCPT
+        id S1727053AbgG0Tji (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:25:40 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:60217 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgG0TZk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 15:25:40 -0400
-X-Originating-IP: 193.22.133.58
-Received: from hyperion.localnet (unknown [193.22.133.58])
-        (Authenticated sender: relay@treewalker.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id D5A7920002;
-        Mon, 27 Jul 2020 19:24:52 +0000 (UTC)
-From:   Maarten ter Huurne <maarten@treewalker.org>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Noralf =?ISO-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: display: Document NewVision NV3052C DT node
-Date:   Mon, 27 Jul 2020 21:24:52 +0200
-Message-ID: <2191202.OZe27ScSiE@hyperion>
-In-Reply-To: <20200727191052.GA1011220@ravnborg.org>
-References: <20200727164613.19744-1-paul@crapouillou.net> <20200727164613.19744-2-paul@crapouillou.net> <20200727191052.GA1011220@ravnborg.org>
+        Mon, 27 Jul 2020 15:39:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726278AbgG0Tji (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:39:38 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E5A120738;
+        Mon, 27 Jul 2020 19:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595878777;
+        bh=Q0LB+Ls+o2Je5hENp6pGFgWXveWVdAfFNup4jeshilk=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=zu27qhQPAwnzyYyO3X5dKT4UTERtJU0cKI15HxsRh8Iwzb4Qfx02rQoCwKxvF9UUR
+         s3k2L06AgXPEUM+AFiQZhxDK3JLS6heeHa55y0rbj63S9ePUbMQv+2Cozx9iR6vU7G
+         b4f6y48sUg5gDFK5O/difyTQb3le7ZY7CB6hjM+Y=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200727155232.a4ccxdjooa5vjbfy@gilmour.lan>
+References: <20200626115433.125735-1-maxime@cerno.tech> <159554434893.3847286.8491922177659230646@swboyd.mtv.corp.google.com> <20200727155232.a4ccxdjooa5vjbfy@gilmour.lan>
+Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware binding
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Date:   Mon, 27 Jul 2020 12:39:36 -0700
+Message-ID: <159587877620.1360974.7617474978458949626@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Monday, 27 July 2020 21:10:52 CEST Sam Ravnborg wrote:
-> > +description: |
-> > +  This is a driver for 320x240 TFT panels,
-> 
-> The binding describes the HW, not the driver. So please re-phrase this
-> part.
-> 
-> This datasheet:
-> https://www.phoenixdisplay.com/wp-content/uploads/2019/05/NV3052C-Dat
-> asheet-V0.2.pdf tells that the driver supports additional resoltions.
-> I guess the 320x240 resolution is limited to the leadtek panel.
+Quoting Maxime Ripard (2020-07-27 08:52:32)
+> On Thu, Jul 23, 2020 at 03:45:48PM -0700, Stephen Boyd wrote:
+> > Quoting Maxime Ripard (2020-06-26 04:54:33)
+> > > The RaspberryPi firmware binding uses two compatible, include simple-=
+bus.
+> > > The select statement generated by default will thus select any node t=
+hat
+> > > has simple-bus, not all of them being the raspberrypi firmware node.
+> > >=20
+> > > This results in warnings being wrongfully reported. Let's add a custom
+> > > select statement to fix that.
+> > >=20
+> > > Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware=
+ binding to YAML")
+> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > >=20
+> > > ---
+> > >=20
+> > > The original binding has been merged through the clock tree, so it sh=
+ould
+> > > be merged there.
+> > >=20
+> > > Even though the original binding (and the DT) are using the simple-bus
+> > > compatible, this creates some DTC warnings since the firmware really =
+isn't
+> > > a bus, so the node name doesn't match what a bus should have, none of=
+ the
+> > > children have a reg property, #address-cells and #size-cells are miss=
+ing,
+> > > etc.
+> > >=20
+> > > I can only guess that simple-bus was used to make the sub-devices pro=
+be,
+> > > but maybe simple-mfd would be more appropriate here?
+> > > ---
+> > >  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml   | 9 +++++++=
+++
+> > >  1 file changed, 9 insertions(+)
+> >=20
+> > Hmm. I'm still seeing warnings.
+> >=20
+> > Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.=
+example.dts:23.37-26.15: Warning (simple_bus_reg): /example-0/firmware/cloc=
+ks: missing or emp
+> > ty reg/ranges property
+> > Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.=
+example.dt.yaml: firmware: $nodename:0: 'firmware' does not match '^(bus|so=
+c|axi|ahb|apb)(@[0-9a-f]+)?$'
+> > Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.=
+example.dt.yaml: firmware: '#address-cells' is a required property
+> > Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.=
+example.dt.yaml: firmware: '#size-cells' is a required property
+> > Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.=
+example.dt.yaml: firmware: 'ranges' is a required property
+>=20
+> Yeah, those are the warnings related to the issue we were discussing
+> with Rob. The patch should fix an hard error.
+>=20
+> I'll send a followup patch for the warnings.
 
-The word "driver" is overloaded ;)
-
-I guess "driver IC" would make it clearer.
-
-Bye,
-		Maarten
-
-
-
+Ah ok. Let me merge it up now.
