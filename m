@@ -2,463 +2,235 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB47C433EB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7912AC43445
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4A0120658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qfF0qzud"
+	by mail.kernel.org (Postfix) with ESMTP id 58ABC20658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgG0JYQ (ORCPT
+        id S1727016AbgG0JYj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:24:16 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37824 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728115AbgG0JYO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:24:14 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R9C2Qm031735;
-        Mon, 27 Jul 2020 11:23:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=bI124OYykUzKcWG7PU/dPcvkqnvWZOCR6lhsTg2eF/M=;
- b=qfF0qzudqug/rkyL4ZDD+xwC8Oy6iPZ7n4+bp/QgCl9pLyMRttxrekpOCq5gybYUv8Ck
- AWmpM5xnd7IGGu5/V7C1RJ7rdsIXUBVk3+HbzjKe16ih/dhlj6Nv5OIBhu8PF6x9sIPz
- 6KYVBryaXdd/p2fsPY8xNgRpNgmFcpyCrSAoM5fG+tytwoIncGf7n3/Q+10nZ2QnqFYg
- WNXkDxLOYjrtvg9wSCRjo3Eub4GoyEFzkKg8gAU7H2a6qhnsFAHirsQGZ0ev1BB9o8uv
- 5/t/nHMnCTfNAr9JRCeoSq9RvJh5akz4P+r555ohqgKmYRFhWYd/aw3X3pjBvMm6a+dB xg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32gbmg0732-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 11:23:57 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E23D0100034;
-        Mon, 27 Jul 2020 11:23:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D15532AE6B3;
-        Mon, 27 Jul 2020 11:23:56 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 11:23:56
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v4 2/3] usb: dwc2: override PHY input signals with usb role switch support
-Date:   Mon, 27 Jul 2020 11:23:45 +0200
-Message-ID: <20200727092346.19780-3-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200727092346.19780-1-amelie.delaunay@st.com>
-References: <20200727092346.19780-1-amelie.delaunay@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_06:2020-07-27,2020-07-27 signatures=0
+        Mon, 27 Jul 2020 05:24:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:22818 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726433AbgG0JYj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:24:39 -0400
+IronPort-SDR: /G4K0PHfoazfG//YvgI8hre6zoTTxhHL5+ucw1KKU6OTOEJCo7A7KFXrjZPYfVuky0L5ISijEp
+ 3yzt4bqFxiNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="235843702"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="235843702"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 02:24:35 -0700
+IronPort-SDR: x2QWd5fknoCMnraIoHiwPRglVOHNiwtKU5AgIsxJZeHnzwDYF9WQYM3L2quIbYzOfA2o4NCRa8
+ DJ+ijetUdfMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="303394156"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by orsmga002.jf.intel.com with ESMTP; 27 Jul 2020 02:24:32 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v5 10/10] net: eth: altera: update devicetree bindings documentation
+Date:   Mon, 27 Jul 2020 17:21:57 +0800
+Message-Id: <20200727092157.115937-11-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
+In-Reply-To: <20200727092157.115937-1-joyce.ooi@intel.com>
+References: <20200727092157.115937-1-joyce.ooi@intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for usb role switch to dwc2, by using overriding
-control of the PHY voltage valid and ID input signals.
+From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-iddig signal (ID) can be overridden:
-- when setting GUSBCFG_FORCEHOSTMODE, iddig input pin is overridden with 1;
-- when setting GUSBCFG_FORCEDEVMODE, iddig input pin is overridden with 0.
+Update devicetree bindings documentation to include msgdma
+prefetcher and ptp bindings.
 
-avalid/bvalid/vbusvalid signals can be overridden respectively with:
-- GOTGCTL_AVALOEN + GOTGCTL_AVALOVAL
-- GOTGCTL_BVALOEN + GOTGCTL_BVALOVAL
-- GOTGCTL_VBVALEN + GOTGCTL_VBVALOVAL
-
-It is possible to determine valid sessions thanks to usb role switch:
-- if USB_ROLE_NONE then !avalid && !bvalid && !vbusvalid
-- if USB_ROLE_DEVICE then !avalid && bvalid && vbusvalid
-- if USB_ROLE_HOST then avalid && !bvalid && vbusvalid
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes in v4:
-- Simplify call to dwc2_force_mode in drd.c
-- Add error_drd label in probe error path in platform.c
-Changes in v3:
-- Fix build issue reported by kernel test robot in drd.c
-Changes in v2:
-- Fix build issue reported by kernel test robot
-- Move call to dwc2_force_mode outside spinlock context
-- Add dwc2_drd_exit call in probe error path
+v2: no change
+v3: no change
+v4: no change
+v5: no change
 ---
- drivers/usb/dwc2/Kconfig    |   1 +
- drivers/usb/dwc2/Makefile   |   2 +-
- drivers/usb/dwc2/core.h     |   9 ++
- drivers/usb/dwc2/drd.c      | 180 ++++++++++++++++++++++++++++++++++++
- drivers/usb/dwc2/gadget.c   |   2 +-
- drivers/usb/dwc2/platform.c |  20 +++-
- 6 files changed, 210 insertions(+), 4 deletions(-)
- create mode 100644 drivers/usb/dwc2/drd.c
+ .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
+ 1 file changed, 84 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/usb/dwc2/Kconfig b/drivers/usb/dwc2/Kconfig
-index 16e1aa304edc..dceb8f32414e 100644
---- a/drivers/usb/dwc2/Kconfig
-+++ b/drivers/usb/dwc2/Kconfig
-@@ -47,6 +47,7 @@ config USB_DWC2_PERIPHERAL
- config USB_DWC2_DUAL_ROLE
- 	bool "Dual Role mode"
- 	depends on (USB=y && USB_GADGET=y) || (USB_DWC2=m && USB && USB_GADGET)
-+	select USB_ROLE_SWITCH
- 	help
- 	  Select this option if you want the driver to work in a dual-role
- 	  mode. In this mode both host and gadget features are enabled, and
-diff --git a/drivers/usb/dwc2/Makefile b/drivers/usb/dwc2/Makefile
-index 440320cc20a4..2bcd6945df46 100644
---- a/drivers/usb/dwc2/Makefile
-+++ b/drivers/usb/dwc2/Makefile
-@@ -3,7 +3,7 @@ ccflags-$(CONFIG_USB_DWC2_DEBUG)	+= -DDEBUG
- ccflags-$(CONFIG_USB_DWC2_VERBOSE)	+= -DVERBOSE_DEBUG
+diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
+index 0b7d4d3758ea..2f2d12603907 100644
+--- a/Documentation/devicetree/bindings/net/altera_tse.txt
++++ b/Documentation/devicetree/bindings/net/altera_tse.txt
+@@ -2,53 +2,86 @@
  
- obj-$(CONFIG_USB_DWC2)			+= dwc2.o
--dwc2-y					:= core.o core_intr.o platform.o
-+dwc2-y					:= core.o core_intr.o platform.o drd.o
- dwc2-y					+= params.o
+ Required properties:
+ - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
+-		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
++		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
++		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
++		implementations.
+ 		ALTR is supported for legacy device trees, but is deprecated.
+ 		altr should be used for all new designs.
+ - reg: Address and length of the register set for the device. It contains
+   the information of registers in the same order as described by reg-names
+ - reg-names: Should contain the reg names
+-  "control_port": MAC configuration space region
+-  "tx_csr":       xDMA Tx dispatcher control and status space region
+-  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
+-  "rx_csr" :      xDMA Rx dispatcher control and status space region
+-  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
+-  "rx_resp":      MSGDMA Rx dispatcher response space region
+-  "s1":		  SGDMA descriptor memory
+ - interrupts: Should contain the TSE interrupts and it's mode.
+ - interrupt-names: Should contain the interrupt names
+-  "rx_irq":       xDMA Rx dispatcher interrupt
+-  "tx_irq":       xDMA Tx dispatcher interrupt
++  "rx_irq":       DMA Rx dispatcher interrupt
++  "tx_irq":       DMA Tx dispatcher interrupt
+ - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
+ - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
+ - phy-mode: See ethernet.txt in the same directory.
+ - phy-handle: See ethernet.txt in the same directory.
+ - phy-addr: See ethernet.txt in the same directory. A configuration should
+ 		include phy-handle or phy-addr.
+-- altr,has-supplementary-unicast:
+-		If present, TSE supports additional unicast addresses.
+-		Otherwise additional unicast addresses are not supported.
+-- altr,has-hash-multicast-filter:
+-		If present, TSE supports a hash based multicast filter.
+-		Otherwise, hash-based multicast filtering is not supported.
+-
+ - mdio device tree subnode: When the TSE has a phy connected to its local
+ 		mdio, there must be device tree subnode with the following
+ 		required properties:
+-
+ 	- compatible: Must be "altr,tse-mdio".
+ 	- #address-cells: Must be <1>.
+ 	- #size-cells: Must be <0>.
  
- ifneq ($(filter y,$(CONFIG_USB_DWC2_HOST) $(CONFIG_USB_DWC2_DUAL_ROLE)),)
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index 9deff0400a92..7161344c6522 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -860,6 +860,7 @@ struct dwc2_hregs_backup {
-  *                      - USB_DR_MODE_PERIPHERAL
-  *                      - USB_DR_MODE_HOST
-  *                      - USB_DR_MODE_OTG
-+ * @role_sw:		usb_role_switch handle
-  * @hcd_enabled:	Host mode sub-driver initialization indicator.
-  * @gadget_enabled:	Peripheral mode sub-driver initialization indicator.
-  * @ll_hw_enabled:	Status of low-level hardware resources.
-@@ -1054,6 +1055,7 @@ struct dwc2_hsotg {
- 	struct dwc2_core_params params;
- 	enum usb_otg_state op_state;
- 	enum usb_dr_mode dr_mode;
-+	struct usb_role_switch *role_sw;
- 	unsigned int hcd_enabled:1;
- 	unsigned int gadget_enabled:1;
- 	unsigned int ll_hw_enabled:1;
-@@ -1376,6 +1378,11 @@ static inline int dwc2_is_device_mode(struct dwc2_hsotg *hsotg)
- 	return (dwc2_readl(hsotg, GINTSTS) & GINTSTS_CURMODE_HOST) == 0;
- }
+ 	For each phy on the mdio bus, there must be a node with the following
+ 	fields:
+-
+ 	- reg: phy id used to communicate to phy.
+ 	- device_type: Must be "ethernet-phy".
  
-+int dwc2_drd_init(struct dwc2_hsotg *hsotg);
-+void dwc2_drd_suspend(struct dwc2_hsotg *hsotg);
-+void dwc2_drd_resume(struct dwc2_hsotg *hsotg);
-+void dwc2_drd_exit(struct dwc2_hsotg *hsotg);
-+
- /*
-  * Dump core registers and SPRAM
-  */
-@@ -1392,6 +1399,7 @@ int dwc2_hsotg_resume(struct dwc2_hsotg *dwc2);
- int dwc2_gadget_init(struct dwc2_hsotg *hsotg);
- void dwc2_hsotg_core_init_disconnected(struct dwc2_hsotg *dwc2,
- 				       bool reset);
-+void dwc2_hsotg_core_disconnect(struct dwc2_hsotg *hsotg);
- void dwc2_hsotg_core_connect(struct dwc2_hsotg *hsotg);
- void dwc2_hsotg_disconnect(struct dwc2_hsotg *dwc2);
- int dwc2_hsotg_set_test_mode(struct dwc2_hsotg *hsotg, int testmode);
-@@ -1417,6 +1425,7 @@ static inline int dwc2_gadget_init(struct dwc2_hsotg *hsotg)
- { return 0; }
- static inline void dwc2_hsotg_core_init_disconnected(struct dwc2_hsotg *dwc2,
- 						     bool reset) {}
-+static inline void dwc2_hsotg_core_disconnect(struct dwc2_hsotg *hsotg) {}
- static inline void dwc2_hsotg_core_connect(struct dwc2_hsotg *hsotg) {}
- static inline void dwc2_hsotg_disconnect(struct dwc2_hsotg *dwc2) {}
- static inline int dwc2_hsotg_set_test_mode(struct dwc2_hsotg *hsotg,
-diff --git a/drivers/usb/dwc2/drd.c b/drivers/usb/dwc2/drd.c
-new file mode 100644
-index 000000000000..2d4176f5788e
---- /dev/null
-+++ b/drivers/usb/dwc2/drd.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * drd.c - DesignWare USB2 DRD Controller Dual-role support
-+ *
-+ * Copyright (C) 2020 STMicroelectronics
-+ *
-+ * Author(s): Amelie Delaunay <amelie.delaunay@st.com>
-+ */
-+
-+#include <linux/iopoll.h>
-+#include <linux/platform_device.h>
-+#include <linux/usb/role.h>
-+#include "core.h"
-+
-+static void dwc2_ovr_init(struct dwc2_hsotg *hsotg)
-+{
-+	unsigned long flags;
-+	u32 gotgctl;
-+
-+	spin_lock_irqsave(&hsotg->lock, flags);
-+
-+	gotgctl = dwc2_readl(hsotg, GOTGCTL);
-+	gotgctl |= GOTGCTL_BVALOEN | GOTGCTL_AVALOEN | GOTGCTL_VBVALOEN;
-+	gotgctl |= GOTGCTL_DBNCE_FLTR_BYPASS;
-+	gotgctl &= ~(GOTGCTL_BVALOVAL | GOTGCTL_AVALOVAL | GOTGCTL_VBVALOVAL);
-+	dwc2_writel(hsotg, gotgctl, GOTGCTL);
-+
-+	dwc2_force_mode(hsotg, false);
-+
-+	spin_unlock_irqrestore(&hsotg->lock, flags);
-+}
-+
-+static int dwc2_ovr_avalid(struct dwc2_hsotg *hsotg, bool valid)
-+{
-+	u32 gotgctl = dwc2_readl(hsotg, GOTGCTL);
-+
-+	/* Check if A-Session is already in the right state */
-+	if ((valid && (gotgctl & GOTGCTL_ASESVLD)) ||
-+	    (!valid && !(gotgctl & GOTGCTL_ASESVLD)))
-+		return -EALREADY;
-+
-+	if (valid)
-+		gotgctl |= GOTGCTL_AVALOVAL | GOTGCTL_VBVALOVAL;
-+	else
-+		gotgctl &= ~(GOTGCTL_AVALOVAL | GOTGCTL_VBVALOVAL);
-+	dwc2_writel(hsotg, gotgctl, GOTGCTL);
-+
-+	return 0;
-+}
-+
-+static int dwc2_ovr_bvalid(struct dwc2_hsotg *hsotg, bool valid)
-+{
-+	u32 gotgctl = dwc2_readl(hsotg, GOTGCTL);
-+
-+	/* Check if B-Session is already in the right state */
-+	if ((valid && (gotgctl & GOTGCTL_BSESVLD)) ||
-+	    (!valid && !(gotgctl & GOTGCTL_BSESVLD)))
-+		return -EALREADY;
-+
-+	if (valid)
-+		gotgctl |= GOTGCTL_BVALOVAL | GOTGCTL_VBVALOVAL;
-+	else
-+		gotgctl &= ~(GOTGCTL_BVALOVAL | GOTGCTL_VBVALOVAL);
-+	dwc2_writel(hsotg, gotgctl, GOTGCTL);
-+
-+	return 0;
-+}
-+
-+static int dwc2_drd_role_sw_set(struct usb_role_switch *sw, enum usb_role role)
-+{
-+	struct dwc2_hsotg *hsotg = usb_role_switch_get_drvdata(sw);
-+	unsigned long flags;
-+	int already = 0;
-+
-+	/* Skip session not in line with dr_mode */
-+	if ((role == USB_ROLE_DEVICE && hsotg->dr_mode == USB_DR_MODE_HOST) ||
-+	    (role == USB_ROLE_HOST && hsotg->dr_mode == USB_DR_MODE_PERIPHERAL))
-+		return -EINVAL;
-+
-+#if IS_ENABLED(CONFIG_USB_DWC2_PERIPHERAL) || \
-+	IS_ENABLED(CONFIG_USB_DWC2_DUAL_ROLE)
-+	/* Skip session if core is in test mode */
-+	if (role == USB_ROLE_NONE && hsotg->test_mode) {
-+		dev_dbg(hsotg->dev, "Core is in test mode\n");
-+		return -EBUSY;
-+	}
-+#endif
-+
-+	spin_lock_irqsave(&hsotg->lock, flags);
-+
-+	if (role == USB_ROLE_HOST) {
-+		already = dwc2_ovr_avalid(hsotg, true);
-+	} else if (role == USB_ROLE_DEVICE) {
-+		already = dwc2_ovr_bvalid(hsotg, true);
-+		/* This clear DCTL.SFTDISCON bit */
-+		dwc2_hsotg_core_connect(hsotg);
-+	} else {
-+		if (dwc2_is_device_mode(hsotg)) {
-+			if (!dwc2_ovr_bvalid(hsotg, false))
-+				/* This set DCTL.SFTDISCON bit */
-+				dwc2_hsotg_core_disconnect(hsotg);
-+		} else {
-+			dwc2_ovr_avalid(hsotg, false);
-+		}
-+	}
-+
-+	spin_unlock_irqrestore(&hsotg->lock, flags);
-+
-+	if (!already && hsotg->dr_mode == USB_DR_MODE_OTG)
-+		/* This will raise a Connector ID Status Change Interrupt */
-+		dwc2_force_mode(hsotg, role == USB_ROLE_HOST);
-+
-+	dev_dbg(hsotg->dev, "%s-session valid\n",
-+		role == USB_ROLE_NONE ? "No" :
-+		role == USB_ROLE_HOST ? "A" : "B");
-+
-+	return 0;
-+}
-+
-+int dwc2_drd_init(struct dwc2_hsotg *hsotg)
-+{
-+	struct usb_role_switch_desc role_sw_desc = {0};
-+	struct usb_role_switch *role_sw;
-+	int ret;
-+
-+	if (!device_property_read_bool(hsotg->dev, "usb-role-switch"))
-+		return 0;
-+
-+	role_sw_desc.driver_data = hsotg;
-+	role_sw_desc.fwnode = dev_fwnode(hsotg->dev);
-+	role_sw_desc.set = dwc2_drd_role_sw_set;
-+	role_sw_desc.allow_userspace_control = true;
-+
-+	role_sw = usb_role_switch_register(hsotg->dev, &role_sw_desc);
-+	if (IS_ERR(role_sw)) {
-+		ret = PTR_ERR(role_sw);
-+		dev_err(hsotg->dev,
-+			"failed to register role switch: %d\n", ret);
-+		return ret;
-+	}
-+
-+	hsotg->role_sw = role_sw;
-+
-+	/* Enable override and initialize values */
-+	dwc2_ovr_init(hsotg);
-+
-+	return 0;
-+}
-+
-+void dwc2_drd_suspend(struct dwc2_hsotg *hsotg)
-+{
-+	u32 gintsts, gintmsk;
-+
-+	if (hsotg->role_sw && !hsotg->params.external_id_pin_ctl) {
-+		gintmsk = dwc2_readl(hsotg, GINTMSK);
-+		gintmsk &= ~GINTSTS_CONIDSTSCHNG;
-+		dwc2_writel(hsotg, gintmsk, GINTMSK);
-+		gintsts = dwc2_readl(hsotg, GINTSTS);
-+		dwc2_writel(hsotg, gintsts | GINTSTS_CONIDSTSCHNG, GINTSTS);
-+	}
-+}
-+
-+void dwc2_drd_resume(struct dwc2_hsotg *hsotg)
-+{
-+	u32 gintsts, gintmsk;
-+
-+	if (hsotg->role_sw && !hsotg->params.external_id_pin_ctl) {
-+		gintsts = dwc2_readl(hsotg, GINTSTS);
-+		dwc2_writel(hsotg, gintsts | GINTSTS_CONIDSTSCHNG, GINTSTS);
-+		gintmsk = dwc2_readl(hsotg, GINTMSK);
-+		gintmsk |= GINTSTS_CONIDSTSCHNG;
-+		dwc2_writel(hsotg, gintmsk, GINTMSK);
-+	}
-+}
-+
-+void dwc2_drd_exit(struct dwc2_hsotg *hsotg)
-+{
-+	if (hsotg->role_sw)
-+		usb_role_switch_unregister(hsotg->role_sw);
-+}
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 5b9d23991c99..16c5f976f141 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -3530,7 +3530,7 @@ void dwc2_hsotg_core_init_disconnected(struct dwc2_hsotg *hsotg,
- 		dwc2_readl(hsotg, DOEPCTL0));
- }
+ The MAC address will be determined using the optional properties defined in
+ ethernet.txt.
  
--static void dwc2_hsotg_core_disconnect(struct dwc2_hsotg *hsotg)
-+void dwc2_hsotg_core_disconnect(struct dwc2_hsotg *hsotg)
- {
- 	/* set the soft-disconnect bit */
- 	dwc2_set_bit(hsotg, DCTL, DCTL_SFTDISCON);
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index b28e90e0b685..238004050557 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -314,6 +314,8 @@ static int dwc2_driver_remove(struct platform_device *dev)
- 	if (hsotg->gadget_enabled)
- 		dwc2_hsotg_remove(hsotg);
- 
-+	dwc2_drd_exit(hsotg);
++- altr,has-supplementary-unicast:
++		If present, TSE supports additional unicast addresses.
++		Otherwise additional unicast addresses are not supported.
++- altr,has-hash-multicast-filter:
++		If present, TSE supports a hash based multicast filter.
++		Otherwise, hash-based multicast filtering is not supported.
++- altr,has-ptp:
++		If present, TSE supports 1588 timestamping.  Currently only
++		supported with the msgdma prefetcher.
++- altr,tx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
++- altr,rx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
 +
- 	if (hsotg->params.activate_stm_id_vb_detection)
- 		regulator_disable(hsotg->usb33d);
- 
-@@ -533,10 +535,17 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 		dwc2_writel(hsotg, ggpio, GGPIO);
- 	}
- 
-+	retval = dwc2_drd_init(hsotg);
-+	if (retval) {
-+		if (retval != -EPROBE_DEFER)
-+			dev_err(hsotg->dev, "failed to initialize dual-role\n");
-+		goto error_init;
-+	}
++Required registers by compatibility string:
++ - "altr,tse-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"s1":		DMA descriptor memory
 +
- 	if (hsotg->dr_mode != USB_DR_MODE_HOST) {
- 		retval = dwc2_gadget_init(hsotg);
- 		if (retval)
--			goto error_init;
-+			goto error_drd;
- 		hsotg->gadget_enabled = 1;
- 	}
- 
-@@ -562,7 +571,7 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 		if (retval) {
- 			if (hsotg->gadget_enabled)
- 				dwc2_hsotg_remove(hsotg);
--			goto error_init;
-+			goto error_drd;
- 		}
- 		hsotg->hcd_enabled = 1;
- 	}
-@@ -594,6 +603,9 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	dwc2_debugfs_exit(hsotg);
- 	if (hsotg->hcd_enabled)
- 		dwc2_hcd_remove(hsotg);
-+error_drd:
-+	dwc2_drd_exit(hsotg);
++ - "altr,tse-msgdma-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_desc":      DMA Tx dispatcher descriptor space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_desc":      DMA Rx dispatcher descriptor space region
++	"rx_resp":      DMA Rx dispatcher response space region
 +
- error_init:
- 	if (hsotg->params.activate_stm_id_vb_detection)
- 		regulator_disable(hsotg->usb33d);
-@@ -612,6 +624,8 @@ static int __maybe_unused dwc2_suspend(struct device *dev)
- 	if (is_device_mode)
- 		dwc2_hsotg_suspend(dwc2);
- 
-+	dwc2_drd_suspend(dwc2);
++ - "altr,tse-msgdma-2.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_pref":      DMA Tx prefetcher configuration space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_pref":      DMA Rx prefetcher configuration space region
++	"tod_ctrl":     Time of Day Control register only required when
++			timestamping support is enabled.  Timestamping is
++			only supported with the msgdma-2.0 implementation.
 +
- 	if (dwc2->params.activate_stm_id_vb_detection) {
- 		unsigned long flags;
- 		u32 ggpio, gotgctl;
-@@ -692,6 +706,8 @@ static int __maybe_unused dwc2_resume(struct device *dev)
- 	/* Need to restore FORCEDEVMODE/FORCEHOSTMODE */
- 	dwc2_force_dr_mode(dwc2);
- 
-+	dwc2_drd_resume(dwc2);
++Optional properties:
++- local-mac-address: See ethernet.txt in the same directory.
++- max-frame-size: See ethernet.txt in the same directory.
 +
- 	if (dwc2_is_device_mode(dwc2))
- 		ret = dwc2_hsotg_resume(dwc2);
+ Example:
  
+ 	tse_sub_0_eth_tse_0: ethernet@1,00000000 {
+@@ -86,6 +119,11 @@ Example:
+ 				device_type = "ethernet-phy";
+ 			};
+ 
++			phy2: ethernet-phy@2 {
++				reg = <0x2>;
++				device_type = "ethernet-phy";
++			};
++
+ 		};
+ 	};
+ 
+@@ -111,3 +149,30 @@ Example:
+ 		altr,has-hash-multicast-filter;
+ 		phy-handle = <&phy1>;
+ 	};
++
++
++	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
++		compatible = "altr,tse-msgdma-2.0";
++		reg = 	<0x00000001 0x00002000 0x00000400>,
++			<0x00000001 0x00002400 0x00000020>,
++			<0x00000001 0x00002420 0x00000020>,
++			<0x00000001 0x00002440 0x00000020>,
++			<0x00000001 0x00002460 0x00000020>,
++			<0x00000001 0x00002480 0x00000040>;
++		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
++		interrupt-parent = <&hps_0_arm_gic_0>;
++		interrupts = <0 45 4>, <0 44 4>;
++		interrupt-names = "rx_irq", "tx_irq";
++		rx-fifo-depth = <2048>;
++		tx-fifo-depth = <2048>;
++		address-bits = <48>;
++		max-frame-size = <1500>;
++		local-mac-address = [ 00 00 00 00 00 00 ];
++		phy-mode = "sgmii";
++		altr,has-supplementary-unicast;
++		altr,has-hash-multicast-filter;
++		altr,has-ptp;
++		altr,tx-poll-cnt = <128>;
++		altr,rx-poll-cnt = <32>;
++		phy-handle = <&phy2>;
++	};
 -- 
-2.17.1
+2.13.0
 
