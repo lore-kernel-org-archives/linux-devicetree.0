@@ -2,97 +2,121 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8570DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 21:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631C9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 21:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEB42070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 21:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413672075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 21:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbgG0Vqv (ORCPT
+        id S1726140AbgG0VuP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:46:51 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:23305 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726110AbgG0Vqu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:46:50 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 27 Jul 2020 14:46:50 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 27 Jul 2020 14:46:49 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 9124A18FA; Mon, 27 Jul 2020 14:46:49 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 14:46:49 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Martin Botka <martin.botka1@gmail.com>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mon, 27 Jul 2020 17:50:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45926 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgG0VuP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 17:50:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AF3D08030867;
+        Mon, 27 Jul 2020 21:50:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BaDuD-7nSK_l; Tue, 28 Jul 2020 00:50:12 +0300 (MSK)
+Date:   Tue, 28 Jul 2020 00:50:10 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH RCC 1/6] pwm: Add different PWM output types support
-Message-ID: <20200727214649.GA32280@codeaurora.org>
-Mail-Followup-To: Martin Botka <martin.botka1@gmail.com>,
-        Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
- <20200724213659.273599-2-martin.botka1@gmail.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200727215010.qzhvavmskfoaapi5@mobilestation>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com>
+ <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200724213659.273599-2-martin.botka1@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:36:51PM +0200, Martin Botka wrote:
-> From: Fenglin Wu <fenglinw@codeaurora.org>
+On Sat, Jul 25, 2020 at 03:12:49PM +0300, Andy Shevchenko wrote:
+> On Sat, Jul 25, 2020 at 2:03 AM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Thu, Jul 23, 2020 at 01:03:17PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
+
+...
+ 
+> > > > +           /* This will let us handle the parent IRQ in the driver */
+> > > > +           girq->parents = NULL;
+> > > > +           girq->num_parents = 0;
+> > > > +           girq->parent_handler = NULL;
 > 
-> Normally, PWM channel has fixed output until software request to change
-> its settings. There are some PWM devices which their outputs could be
-> changed autonomously according to a predefined pattern programmed in
-> hardware. Add pwm_output_type enum type to identify these two different
-> PWM types and add relevant helper functions to set and get PWM output
-> types and pattern.
+> > > Shan't we do this before request_irq() call (at least for consistency with the
+> > > rest of the drivers)?
+> >
+> > Technically we shan't. Please elaborate which drivers you are referring to?
 > 
-> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> [konradybcio@gmail.com: Fast-forward from kernel 4.14 to 5.8]
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> Signed-off-by: Martin Botka <martin.botka1@gmail.com>
+> All of them? Recent patches for IRQ chip template do something like
+> 
+> girq = &...;
+> girq->foo = bar;
+> ...
+> ret = request_irq(...);
+> 
+> ...and here no more girq->baz = gaz; lines.
+> 
+> > Even the recent Linus' series "Use irqchip template" mostly does it in the
+> > same order.
+> 
+> Funny, that's what I;m referring to.
 
-Hello,
+It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
+which make the initialization in the same order as mine:
+drivers/gpio/gpio-max732x.c
+drivers/gpio/gpio-pca953x.c
+drivers/gpio/gpio-pcf857x.c
+drivers/gpio/gpio-adp5588.c
 
-Re-sending my reply as somehow the cc-fields got dropped when I posted
-earlier.
+while the rest of them does it in the order suggested by you:
+drivers/gpio/gpio-pci-idio-16.c
+drivers/gpio/gpio-pcie-idio-24.c
+drivers/gpio/gpio-104-idio-16.c
+drivers/gpio/gpio-104-dio-48e.c
+drivers/gpio/gpio-ws16c48.c
+drivers/gpio/gpio-rcar.c
+drivers/gpio/gpio-wcove.c
+drivers/pinctrl/pinctrl-amd.c
+drivers/gpio/gpio-crystalcove.c
+drivers/pinctrl/pinctrl-mcp23s08.c
+drivers/pinctrl/pinctrl-sx150x.c
+drivers/pinctrl/pinctrl-stmfx.c
+drivers/gpio/gpio-tc3589x.c
 
-This was the feedback received from the maintainers when I posted this
-patch last year [1]. Accordingly, we updated the patch to drop
-"output_pattern" altogether and made "output_type" read-only [2] -
-haven't attempted upstreaming this version yet.
+Then, let's use the same order here as the most of the drivers do just for
+consistency.
 
-[1]: https://lore.kernel.org/lkml/20190916140146.GC7488@ulmo/
-[2]: https://android-review.googlesource.com/c/kernel/common/+/1170135
+-Sergey 
 
-Thank you.
-
-Guru Das.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
