@@ -2,111 +2,316 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E762C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BEEC433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A2620719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD9820719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgG0IeQ (ORCPT
+        id S1726269AbgG0Ie4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgG0IeQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 04:34:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79694C061794
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 01:34:16 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzyaI-0000ik-4Y; Mon, 27 Jul 2020 10:34:10 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzyaG-0001dX-V7; Mon, 27 Jul 2020 10:34:08 +0200
-Date:   Mon, 27 Jul 2020 10:34:08 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Martin Botka <martin.botka1@gmail.com>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
- with u64 data length
-Message-ID: <20200727083408.jqm72hty62w7kxdc@pengutronix.de>
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
- <20200724213659.273599-3-martin.botka1@gmail.com>
- <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
- <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
- <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
- <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
- <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
+        Mon, 27 Jul 2020 04:34:56 -0400
+Received: from mailout07.rmx.de ([94.199.90.95]:42382 "EHLO mailout07.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbgG0Ie4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 04:34:56 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout07.rmx.de (Postfix) with ESMTPS id 4BFY5Q0RkvzBxd7;
+        Mon, 27 Jul 2020 10:34:50 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BFY4q211qz2TTNP;
+        Mon, 27 Jul 2020 10:34:19 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.102) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
+ 2020 10:34:19 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Rob Hering <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Richard Leitner" <richard.leitner@skidata.com>,
+        <devicetree@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ceggers@arri.de>
+Subject: [PATCH v3 1/4] dt-bindings: usb: Add Microchip USB253x/USB3x13/USB46x4 support
+Date:   Mon, 27 Jul 2020 10:33:30 +0200
+Message-ID: <20200727083333.19623-2-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727083333.19623-1-ceggers@arri.de>
+References: <20200726084116.GD448215@kroah.com>
+ <20200727083333.19623-1-ceggers@arri.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lvdzfpf3t7glasbo"
-Content-Disposition: inline
-In-Reply-To: <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.102]
+X-RMX-ID: 20200727-103419-4BFY4q211qz2TTNP-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add DT bindings for Microchip USB253x/USB3x13/USB46x4 driver.
 
---lvdzfpf3t7glasbo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
+ .../devicetree/bindings/usb/usb253x.yaml      | 234 ++++++++++++++++++
+ 1 file changed, 234 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb253x.yaml
 
-Hello Martin,
+diff --git a/Documentation/devicetree/bindings/usb/usb253x.yaml b/Documentation/devicetree/bindings/usb/usb253x.yaml
+new file mode 100644
+index 000000000000..88ea744147b6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/usb253x.yaml
+@@ -0,0 +1,234 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/usb253x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip USB253x/USB3x13/USB46x4 USB 2.0 Hi-Speed Hub Controller
++
++maintainers:
++  - Christian Eggers <ceggers@arri.de>
++
++description: |
++  http://ww1.microchip.com/downloads/en/AppNotes/00001801C.pdf
++
++properties:
++  compatible:
++    enum:
++      - microchip,usb2532
++      - microchip,usb2532i
++      - microchip,usb2533
++      - microchip,usb2533i
++      - microchip,usb2534
++      - microchip,usb2534i
++      - microchip,usb3613
++      - microchip,usb3613i
++      - microchip,usb3813
++      - microchip,usb3813i
++      - microchip,usb4604
++      - microchip,usb4604i
++      - microchip,usb4624
++      - microchip,usb4624i
++
++  reg:
++    maxItems: 1
++    description:
++      I2C address on the selected bus (usually <0x2D>).
++
++  reset-gpios:
++    maxItems: 1
++    description:
++      Specify the gpio for hub reset.
++
++  vdd-supply:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Specify the regulator supplying vdd.
++
++  skip-config:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Skip Hub configuration, but only send the USB-Attach command.
++
++  vendor-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 65535
++    description:
++      Set USB Vendor ID of the hub.
++
++  product-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 65535
++    description:
++      Set USB Product ID of the hub.
++
++  device-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 65535
++    description:
++      Set USB Device ID of the hub.
++
++  language-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 65535
++    description:
++      Set USB Language ID.
++
++  manufacturer:
++    $ref: /schemas/types.yaml#/definitions/string
++    description:
++      Set USB Manufacturer string (max. a total of 93 characters for
++      manufacturer, product and serial).
++
++  product:
++    $ref: /schemas/types.yaml#/definitions/string
++    description:
++      Set USB Product string (max. a total of 93 characters for
++      manufacturer, product and serial).
++
++  serial:
++    $ref: /schemas/types.yaml#/definitions/string
++    description:
++      Set USB Serial string (max. a total of 93 characters for
++      manufacturer, product and serial).
++
++  bus-powered:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Selects bus powered operation.
++
++  self-powered:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Selects self powered operation (default).
++
++  disable-hi-speed:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Disable USB Hi-Speed support.
++
++  multi-tt:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Selects multi-transaction-translator (default).
++
++  single-tt:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Selects single-transaction-translator.
++
++  disable-eop:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Disable End of Packet generation in full-speed mode.
++
++  ganged-sensing:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Select ganged over-current sense type in self-powered mode.
++
++  individual-sensing:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Select individual over-current sense type in self-powered mode (default).
++
++  ganged-port-switching:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Select ganged port power switching mode.
++
++  individual-port-switching:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Select individual port power switching mode (default).
++
++  dynamic-power-switching:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Enable auto-switching from self- to bus-powered operation if the local
++      power source is removed or unavailable.
++
++  oc-delay-us:
++    enum:
++      - 100
++      - 4000
++      - 8000
++      - 16000
++    default: 8000
++    description:
++      Delay time (in microseconds) for filtering the over-current sense inputs.
++      If an invalid value is given, the default is used instead.
++
++  compound-device:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Indicate the hub is part of a compound device.
++
++  port-mapping-mode:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Enable port mapping mode.
++
++  non-removable-ports:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Should specify the ports which have a non-removable device connected.
++
++  sp-disabled-ports:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Specifies the ports which will be self-power disabled.
++
++  bp-disabled-ports:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Specifies the ports which will be bus-power disabled.
++
++  power-on-time-ms:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    default: 100
++    minimum: 0
++    maximum: 510
++    description:
++      Specifies the time (in milliseconds) it takes from the time the host
++      initiates the power-on sequence to a port until the port has adequate
++      power.
++
++  hub-controller-port:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Hub port where the internal hub controller shall be connected. Usually
++      <number of ports>+1.
++
++additionalProperties: false
++
++required:
++  - compatible
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      usb2534i@2d {
++        compatible = "microchip,usb2534i";
++        reg = <0x2d>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_usb_hub>;
++        /* usb253x.c already assumes low-active, don't negate twice */
++        reset-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
++        /*skip-config;*/
++        /* T_ON,max = 4 ms for NCP380 */
++        power-on-time-ms = <4>;
++        manufacturer = "Foo";
++        product = "Foo-Bar";
++        /* port 2 is connected to an internal SD-Card reader */
++        non-removable-ports = <2>;
++        /* hub controller mapped to logical port 5 */
++        hub-controller-port = <5>;
++      };
++    };
++
++...
+-- 
+Christian Eggers
+Embedded software developer
 
-On Mon, Jul 27, 2020 at 09:58:01AM +0200, Martin Botka wrote:
-> > I hit "reply-to-all" and the mail only was sent to you because you wrote
-> > to only me.
->=20
-> Yes my reply was only to you. But your original message was sent only to =
-me too.
-> So when i clicked reply to all it was only you as you sent it only to me.
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
 
-Oh indeed. Bummer, and I was so sure to always reply to all :-|
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---lvdzfpf3t7glasbo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ekX0ACgkQwfwUeK3K
-7AnF8Af/auMYk0XSqHjSdH6o5BpdaRw4k2nwyrLlpPbA1EAo1doDPo+5qggDDEEI
-Hhasvj30vEfKAP5PHmRcwHSacAYoUrLgzL9vrO3VLDrSfq1+xPoR2oZNyvEwyNjY
-ORMuV/aXEqcOgjfqciLl/qjMouS5RFyMryESdDULaQTPtIPNJGtFAL63cWibRVB2
-jh8JDB9F/rijp8QsmEDDqEMVSyjbLoGWHdQJvbbd3N9Xy8Rke6Iob+AUXulnFzaC
-q1sOJT3ypUjDhMhvxNBUSMVto8pKUUPZfuJosWBWDpWmAA1Bqi93FvTNyAGKeo4E
-D7Ne9+lzuKLmtH6bwgskg/LCNtlsRA==
-=VGmX
------END PGP SIGNATURE-----
-
---lvdzfpf3t7glasbo--
