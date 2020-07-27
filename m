@@ -2,164 +2,94 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D66FC433EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2C1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D610E2083B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="rtFeL/3b"
+	by mail.kernel.org (Postfix) with ESMTP id CE44A20775
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595858209;
+	bh=aXB8OuZKjJ99TwcQL9C/buv5PV0zEHUF7o6/ZjPRQKs=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=sHrcITFygSCZLRBgSNd7Ri1j8eP0sU6opdRJq9oeiZXShyTi6e68DUo4bSAL2ViMM
+	 G/XXROi3/8AOeuYPt1RaJLFgQfEWNfw2/v183pdMzcuX3c76wj2rSHLxxpAHu8rXlS
+	 y6PHuRkefmaVDFTbv9cDU0lUzAqLSmSD6FgmyP6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgG0Nd4 (ORCPT
+        id S1727837AbgG0N4t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgG0Nd4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 09:33:56 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFCDC0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 06:33:55 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dk23so5214611ejb.11
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 06:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wP4Kt6O/vFKZf7I8OioZ5wu30mbV3QIkDu9uPSa2GcI=;
-        b=rtFeL/3bkvsvdTZCa/KswNcWitGjGI+n5qCO6lZ7yIQ+yJ7VoEsrbaumluptUIpXIR
-         gglMmLoYeTYvw7qniGc8izu5WjyIu3Hy5A5B8LHwnTbHdH7dbIsKgE/DALB2OSSCtiQl
-         k2izB4ykZudJid3QApa7/xi5gU5+naaadOidfWiiJ2HPLtLrLIWWwXOFs0I0qa4q5dwa
-         9Ik2ECh2HoCE6GFbAkVHLMC+1wbHFJmmBCMqqBmxkb+4XcnpqUZoJuMGOScfeVpiuzri
-         hoF+SL6zVOKwskJDGPLPCZzuv82uXzEB1uvqCDoSV+wMA/zeQ7TyqFGPMXqXHb4E06yK
-         xsDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wP4Kt6O/vFKZf7I8OioZ5wu30mbV3QIkDu9uPSa2GcI=;
-        b=hRkz+5nT610JRuND5qUy+SiOWnfb8IYs/jOfDt8ZIvfgjhLI5DiNie7eor8w5bOVnJ
-         hgIdoYhiqPDCUqZKOkgpsAYPrLaf2gV7O26Hiljf3iLcy7RceZf6+beNw0KRAzfCXfjK
-         pB6FXZXHKXZx4DThA+XlBps8QR1GaMf9KGHWXKRTwiWIHPnAWkG4gOCq7Xc6ni05foMY
-         tFNs3eSwy19G5NtNC6/FshhvajHnXqAStW2/wse/HIXDzf2t7bHpSYKsogJIAFZG3Pyn
-         VgFxMiQ9z8Guby73NeL3PFwCdhhyYGMalu1Na7YB0BOrhSM2j1oWujpbKUq5YUV9a0re
-         BEEw==
-X-Gm-Message-State: AOAM531kW/wKneMDADkf1rB7rjfKVTyhTYWLTgeo6rF6WyNGMqS199Z4
-        1QAbg8Wh/lL7PW7PX9rndjSEyqs9Ywl77WOjwh+RmA==
-X-Google-Smtp-Source: ABdhPJzJGn+4YDJzQefhbMCC1tH9BXbFde1p6PfI6RTnxkY59oNtWoUgcWF5pmJomBPWvBJQO23dmeziJ/HbuhtjAYs=
-X-Received: by 2002:a17:906:a204:: with SMTP id r4mr13603758ejy.552.1595856834293;
- Mon, 27 Jul 2020 06:33:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net> <20200727094553.GH1551@shell.armlinux.org.uk>
-In-Reply-To: <20200727094553.GH1551@shell.armlinux.org.uk>
-From:   Jon Nettleton <jon@solid-run.com>
-Date:   Mon, 27 Jul 2020 15:33:17 +0200
-Message-ID: <CABdtJHu2BacX+EeVkCxFYWfNxJ-7Z5MP7BqVfF2KHy+XfJGN3w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
-        a.zummo@towertech.it, Baruch Siach <baruch@tkos.co.il>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jul 2020 09:56:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726817AbgG0N4t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:56:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63E842070B;
+        Mon, 27 Jul 2020 13:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595858208;
+        bh=aXB8OuZKjJ99TwcQL9C/buv5PV0zEHUF7o6/ZjPRQKs=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=mywIZv0SX1ZOQi/CgjmoXgbexBj7H+kdN23PM1EAXQfZtSqwC3YEqelyT3RFHjsjb
+         K6WkE6qHikR8tn89kt3XJfRKKcSF6Zl6CT+9khxKQoOFsl+D0yDuSzX4shsMwavb1s
+         L8IoSn9ApKWyNj/vQ0wWWyyOw3WMZdErNNlWjSZY=
+Date:   Mon, 27 Jul 2020 14:56:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, Patrick Lai <plai@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <20200727082502.2341-1-stephan@gerhold.net>
+References: <20200727082502.2341-1-stephan@gerhold.net>
+Subject: Re: [PATCH] ASoC: dt-bindings: q6asm: Add Q6ASM_DAI_{TX_RX, TX, RX} defines
+Message-Id: <159585818664.22279.12867263399663815841.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:46 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Thu, Jul 23, 2020 at 09:57:55PM +0200, Alexandre Belloni wrote:
-> > On 23/07/2020 11:49:05-0600, Rob Herring wrote:
-> > > On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
-> > > > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > >
-> > > > This adds direct-switching mode as a configurable DT flag for
-> > > > RTC modules supporting it (e.g. nxp pcf8523).
-> > > > DSM switches the power source to the battery supply whenever the
-> > > > VDD drops below VBAT. The option is recommended for hw designs
-> > > > where VDD is always expected to be higher than VBAT.
-> > > >
-> > > > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > > ---
-> > > > Changes in v2:
-> > > > - Added extended commit message for git history
-> > > > - Separate dt bindings documentation into a single patch
-> > > >
-> > > >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
-> > > >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
-> > > >  2 files changed, 13 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > index 0b1080c..f715a8f 100644
-> > > > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > @@ -4,10 +4,14 @@ Required properties:
-> > > >  - compatible: Should contain "nxp,pcf8523".
-> > > >  - reg: I2C address for chip.
-> > > >
-> > > > -Optional property:
-> > > > +Optional properties:
-> > > >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-> > > >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
-> > > >    Default value (if no value is specified) is 12500fF.
-> > > > +- pm-enable-dsm: battery switch-over function is enabled in direct
-> > > > +  switching mode. The power failure condition happens when VDD < VBAT,
-> > > > +  without requiring VDD to drop below Vth(sw)bat.
-> > > > +  Default value (if not provided) is the standard mode.
-> > > >
-> > > >  Example:
-> > > >
-> > > > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
-> > > >   compatible = "nxp,pcf8523";
-> > > >   reg = <0x68>;
-> > > >   quartz-load-femtofarads = <7000>;
-> > > > + pm-enable-dsm;
-> > > >  };
-> > > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > index ee237b2..a0048f4 100644
-> > > > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > @@ -47,4 +47,11 @@ properties:
-> > > >      description:
-> > > >        Enables wake up of host system on alarm.
-> > > >
-> > > > +  pm-enable-dsm:
-> > > > +    $ref: /schemas/types.yaml#/definitions/flag
-> > > > +    description:
-> > > > +      Enables the battery switch-over function in direct switching
-> > > > +      mode. Should be set in systems where VDD is higher than VBAT
-> > > > +      at all times.
-> > >
-> > > I'm all for common properties, but is this common across vendors?
-> > >
-> >
-> > This is but this shouldn't be a DT property as it has to be changed
-> > dynamically. I'm working on an ioctl interface to change this
-> > configuration.
->
-> Why does it need to be changed dynamically?  If the hardware components
-> are not fitted to allow the RTC to be safely used without DSM, then
-> why should userspace be able to disable DSM?
->
+On Mon, 27 Jul 2020 10:25:02 +0200, Stephan Gerhold wrote:
+> Right now the direction of a DAI has to be specified as a literal
+> number in the device tree, e.g.:
+> 
+> 	dai@0 {
+> 		reg = <0>;
+> 		direction = <2>;
+> 	};
+> 
+> [...]
 
-My presumption would be if you had a system that ran at different
-system voltages depending if it is plugged in to mains or running on a
-battery.
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: dt-bindings: q6asm: Add Q6ASM_DAI_{TX_RX, TX, RX} defines
+      commit: 34facb04228b36006a37727fddee59cf069d95d4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
