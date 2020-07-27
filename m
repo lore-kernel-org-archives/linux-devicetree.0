@@ -2,137 +2,187 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6561C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 10:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299EFC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 10:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8882E2075A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 10:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CCF20786
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 10:30:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bNB8QPZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgG0KYX (ORCPT
+        id S1726842AbgG0K36 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:24:23 -0400
-Received: from mail-eopbgr80127.outbound.protection.outlook.com ([40.107.8.127]:65166
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726268AbgG0KYX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:24:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Af1Gv+dCJbZEJ20hPSwKj+eo0t++VyoW5YyIf7ELgXlb3eZha6G9IeW/ork5hBppdvoiaDVEbjqLu0P6gEYv/D49bfbuaNR0vHebcxlp2ZUYLJN9vqgjD0QAxDCqhvistb31wHYmH2plQdmFWbvZHCDL+p4owpL+ynbZAuJbR0sTWvwphOjD/Vj3ciY4GUVUD4bYGVq33MyB2IzxkP1FWRcE+07HwlJKxLH8lpts1LqFzNyHrqMm6VNb5+7n/vN6w2e5GFYpWl7yDeMEGUvSCp7Ro2QSqUlMpYPL/yGtIFt9OpceIYVrCYrQdUwwgrZ/NZRygLejjMlejc11HxTzLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+WZV233ZBu6WoCz0ORVvzF5G5kadcWYvPw4wFeIU/tE=;
- b=L/mecF+uTSEjAzH5sRpDRLvpftMe6qCflLyosdEV75UbGDFubQkLGlGB0Awl0luvlSrZPdO/sipKBmOJIoBmeUNNLgHanf2DzU16Ir7weT+414+k6eGHl3kNio9ctIIRFo2gdsnPDKaOlhDjxvxLwO67HQtgaNgHD/6vcUjdFfmW/hqxGHrFXoydxMFUBfdNfYE8inZqn45A8XBnFJlmr61vdFr4QNUPUqQy4EXR8AJin674tEeH0lg+6A/Y17ah7RvjEX/U6HrSrywf0xgE8F0XW6VMv7E6Jtj3pxRcST1fZM8sls3crnrsDeZq4S3JTpjhy7pqO6O/p9+mMU+67A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+WZV233ZBu6WoCz0ORVvzF5G5kadcWYvPw4wFeIU/tE=;
- b=Ihcv7gnRXJvfnK+ZpHdhqBrxBbSzgeLNMtw+IeZbCoL2ESNOw9Cwfk7qw1y9GBu7xcOzZI1MTAmPV8FfO7gsjYoRjS6XxgCALveGm1NmHDrnKJdN51CWDKo5pBwugR/+SZ4c1F+gKFbnfEcJq8IT/leiADoYZU5duGhXDBhkBz8=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=axentia.se;
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
- by DB6PR02MB3175.eurprd02.prod.outlook.com (2603:10a6:6:1d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.31; Mon, 27 Jul
- 2020 10:24:19 +0000
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::3890:7b1:97a6:1e47]) by DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::3890:7b1:97a6:1e47%7]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 10:24:19 +0000
-Subject: Re: [PATCH] dt-bindings: iio: io-channel-mux: Fix compatible string
- in example code
-To:     Christian Eggers <ceggers@arri.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jiri Kosina <trivial@kernel.org>
-References: <20200727101605.24384-1-ceggers@arri.de>
-From:   Peter Rosin <peda@axentia.se>
-Organization: Axentia Technologies AB
-Message-ID: <cbcf578d-37a0-b807-134b-f7cf2d3d9e02@axentia.se>
-Date:   Mon, 27 Jul 2020 12:24:17 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200727101605.24384-1-ceggers@arri.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: sv-SE
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HE1PR0401CA0093.eurprd04.prod.outlook.com
- (2603:10a6:7:54::22) To DB8PR02MB5482.eurprd02.prod.outlook.com
- (2603:10a6:10:eb::29)
+        Mon, 27 Jul 2020 06:29:58 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:61323 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgG0K36 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 06:29:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595845797; x=1627381797;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=SuaWi4FTxbOTrEcgWevsnR8S8cQMlrxxVNKNOCQhSZo=;
+  b=bNB8QPZzD6zEKDeiRXX0tjg81G/JzpsVQInqnEP9Y80xL3w4kuxllpvm
+   cAzLH3k05ilofyv88Uo162ihERTm+THCqotJzuYcvLWkROx19BqqTSQ8s
+   Bqs3reUmiBRcoTx4VwxcrnC8odn64x8JLPu1Ez5rSfXGgtwVqSBOvQZNV
+   D3ejGlKa9PnlGU1dvTzSl/5WYfg8tvvK8wo3ibWCj3ShVAVU0L51Ew9gr
+   VeQQOhmQG69TqgVNN55n6rwDZPleyilkJ4vQOc9PpfY6zVb9pbhqst6fn
+   cnL6SKDvU2vFMxUsNHKKmcGvD5GGwRmxvjWJDSy+uXHfv/w41nlonYRmD
+   Q==;
+IronPort-SDR: OaYGCwf7gPUIibsrB0X04TK4Fbb+JcZA3AsAvOyyjYuuRf30ux71aCwdgpjaXTh7WnAw5T9Lr/
+ sXZHA4BZA3xsnKC3FrALgcAvjl6ug4VwDJvXP9jRLG+mLBgWqfPtSB/fpLC3gDufvglDxlA2Ny
+ rcqfPz/ZcQs+JciDcVjQI4dPbGA4VwQWfhQvo1Qvnoc0E+p4u0E7usD+iFZi4QlURTXWyxVQM8
+ eK8miRcun8QdOV3EWK48Z5IhDN+GKx4AevSlsr+VJ2UPMvOjQyEN8rc0aSnOW1Dt1TQa1Yb1C1
+ pO4=
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="89224922"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 03:29:57 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 03:29:56 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 27 Jul 2020 03:29:08 -0700
+References: <20200727084211.6632-1-lars.povlsen@microchip.com> <20200727095009.GK4073@piout.net>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
+In-Reply-To: <20200727095009.GK4073@piout.net>
+Date:   Mon, 27 Jul 2020 12:29:52 +0200
+Message-ID: <87v9i9fdy7.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.13.3] (85.226.217.78) by HE1PR0401CA0093.eurprd04.prod.outlook.com (2603:10a6:7:54::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Mon, 27 Jul 2020 10:24:18 +0000
-X-Originating-IP: [85.226.217.78]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a59f8169-9c55-47d6-778e-08d832173913
-X-MS-TrafficTypeDiagnostic: DB6PR02MB3175:
-X-Microsoft-Antispam-PRVS: <DB6PR02MB3175B4E645E386D86ACB0EDFBC720@DB6PR02MB3175.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1107;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Svx3a2akVsgICuqiHLkStWW7YU0H+4l0HC4Llqxi3QfH0UbSMRWeK87dboj7x0l/6dRhYXRsk0OjkH64P6sF+DOKI4ZxnSVgxF6IlD8vw41nlUvTluvP5PvXACgh6x7b/2esRbepWGc7uRjUM1ftSLTnFB8h1eU6S1GmN3hfVE8mLu7BG6OjT79yr4qCux4/lEdoPLCtPesv47E19vZvyKZ2oMFJI/5EunGmg44Wyl73/eXF6W+xOdkkjt1fGhZyhhnnQY5lPuMKb1Yf2Dn6zCTkF8RtCpl/Acrf07tB646pPA09v9WHkjjbhgw+CeomEbv1JBdOscVICb5clp/B3WTVF/vUC8TLEkSMPhxv+aqDi7QA9TVBy1o+deXUmJ94
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(346002)(39830400003)(366004)(376002)(16576012)(31696002)(508600001)(54906003)(2906002)(4326008)(31686004)(6486002)(86362001)(2616005)(110136005)(66476007)(16526019)(52116002)(36756003)(5660300002)(186003)(316002)(26005)(53546011)(66556008)(83380400001)(8936002)(36916002)(8676002)(956004)(66946007)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: +twvtkTLDeXHjrFWPweizBQlxZGUsbu5bFXSUy7d8hYeOStSQUDc52U8dKeR6hFiCsqzGJ780ynh2ILYy7RCqjQIAclIBEY2LI4e7W8iz9wT5Z+rjabNmx5o0uQry8Q1Yu34VXhNqTBCi4XN/mh3tX9xAqeZYR15JeabH9IyOKduvd/d1gM2N1XSEdJPE9MtDju5iEvPAj8ipdGD9yW6hLybCmIwO7zEiXkeGo2c+fQaKhXlpMVGvPj4DIsvX+8Uuqb5Xa74193uTbixIgSLrcu5eqUy1oigXxU53wC8c0jzjWkSOeuCF0nR2ST1dIl4RGmf69+5kPgoIPHEmiaz829dW87T8mNstDvCzWHZbdwUkPLbrVNigjLSdRyCZsAeaZuzRucINmn/wJvQuDwiFa51TcAJPdodRpbke5ubVgq7Qu3bGu0zBLk8o2xMRVeveOnBefB9xShzB8086Y+FEWBCTenwAcv2w4oLWx/WD2M=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: a59f8169-9c55-47d6-778e-08d832173913
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5482.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 10:24:19.8147
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +l3QDToJKjQcp42Whs7uluk0aqYElNgfLvTZevn3yNgudEcoHrbBJv+jMz5yJxlT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR02MB3175
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi!
 
-Well spotted, thanks!
+Alexandre Belloni writes:
 
-On 2020-07-27 12:16, Christian Eggers wrote:
-> The correct compatible string is "gpio-mux" (see
-> bindings/mux/gpio-mux.txt).
-> 
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
+> Hi Lars,
+>
+> As Arnd stated, he already applied the patches so you have to send an
+> incremental patch to fix the clock driver.
+>
 
-Reviewed-by: Peter Rosin <peda@axentia.se>
+I actually wrote Arnd about this specifically, and he replied that a
+patch against either next or mainline was fine - so that's why I
+refreshed the lot (Including Reviewed-by: headers).
 
-Cheers,
-Peter
+But I will send an incremental patch just in case, no problem.
 
-> Cc: stable@vger.kernel.org
-> ---
->  .../devicetree/bindings/iio/multiplexer/io-channel-mux.txt      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-> index c82794002595..89647d714387 100644
-> --- a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-> +++ b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-> @@ -21,7 +21,7 @@ controller state. The mux controller state is described in
->  
->  Example:
->  	mux: mux-controller {
-> -		compatible = "mux-gpio";
-> +		compatible = "gpio-mux";
->  		#mux-control-cells = <0>;
->  
->  		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
-> 
+---Lars
+
+
+> On 27/07/2020 10:42:01+0200, Lars Povlsen wrote:
+>> This patch series adds support for Microchip Sparx5 SoC, the CPU
+>> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+>> x 2 CPU core (A53).
+>>
+>> Although this is an ARM core, it shares some peripherals with the
+>> Microsemi Ocelot MIPS SoC.
+>>
+>> NB: This version *only* updates the drivers/clk/clk-sparx5.c driver
+>>
+>> Changes in v4:
+>> - Updates to the clock driver per Stephen Boyd <sboyd@kernel.org>
+>>  - Remove unused include of of_address.h
+>>  - Remove unused member in s5_hw_clk struct
+>>  - Changed type (to unsigned long) for freq in s5_pll_conf struct
+>>  - Use .parent_data instead of looking up parent name
+>>  - Use devm_of_clk_add_hw_provider
+>>  - Some minor comsmetics
+>>
+>> Changes in v3:
+>> - a "gpio-restart" node has been added to the pcb134/pcb135 DT files.
+>> - pinctrl-ocelot.c: ENOTSUPP replaced by EOPNOTSUPP. Fixed non-static
+>>   ocelot_pinconf_set(), Fixed ocelot_hw_get_value() not returning proper
+>>   read value.
+>> - Rebased on v5.8-rc1
+>>
+>> Changes in v2:
+>> - Misc fixes to bindings/arm/microchip,sparx5.yaml
+>> - Changed clock driver to platform driver, using bitfields, recalc
+>>   properly implented, using proper clock parent.
+>> - arch/arm64/boot/dts/microchip/sparx5.dtsi:
+>>  - Added pmu and psci node, using PSCI
+>>  - Updates to GICv3 register spaces (GICV/GICH)
+>>  - Updated timer interrupt specifiers
+>> - pinctrl: ocelot: Fixed symbol clashes from powerpc
+>>
+>> Lars Povlsen (10):
+>>   dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+>>   arm64: sparx5: Add support for Microchip 2xA53 SoC
+>>   arm64: dts: sparx5: Add basic cpu support
+>>   arm64: dts: sparx5: Add pinctrl support
+>>   pinctrl: ocelot: Add Sparx5 SoC support
+>>   dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+>>   dt-bindings: clock: sparx5: Add bindings include file
+>>   clk: sparx5: Add Sparx5 SoC DPLL clock driver
+>>   arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+>>   arm64: dts: sparx5: Add i2c devices, i2c muxes
+>>
+>>  .../bindings/arm/microchip,sparx5.yaml        |  65 +++
+>>  .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
+>>  .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+>>  MAINTAINERS                                   |   9 +
+>>  arch/arm64/Kconfig.platforms                  |  14 +
+>>  arch/arm64/boot/dts/Makefile                  |   1 +
+>>  arch/arm64/boot/dts/microchip/Makefile        |   4 +
+>>  arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
+>>  .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+>>  .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+>>  .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
+>>  .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+>>  .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+>>  .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
+>>  .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+>>  .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+>>  drivers/clk/Makefile                          |   1 +
+>>  drivers/clk/clk-sparx5.c                      | 295 ++++++++++++
+>>  drivers/pinctrl/pinctrl-ocelot.c              | 430 +++++++++++++++++-
+>>  include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+>>  20 files changed, 1559 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+>>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+>>  create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+>>  create mode 100644 drivers/clk/clk-sparx5.c
+>>  create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
+>>
+>> --
+>> 2.27.0
+
+-- 
+Lars Povlsen,
+Microchip
