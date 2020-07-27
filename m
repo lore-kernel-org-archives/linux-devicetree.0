@@ -2,106 +2,214 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB35CC433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F06C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B340E2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V47joEy7"
+	by mail.kernel.org (Postfix) with ESMTP id 754342072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgG0Hlg (ORCPT
+        id S1726211AbgG0HiG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59332 "EHLO
+        Mon, 27 Jul 2020 03:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgG0Hlg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 03:41:36 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1293C0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:41:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id lw1so883779pjb.1
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=02L+nV06/zwmICNroTjg7mYMa/wTXN2VrRKBLAVM2dw=;
-        b=V47joEy77meF+oSYORGjxuLpKGaeEr7xnIXCBWjrzNaPfWMvv2QRB45d0IROIpCTOO
-         80nbmPjwyX5jPTo6BZfOxXcEMWPaVYTXVfJo+azQjZsMxvxNXq3LCe12uRk/2m8Ifli5
-         2PJ9EDDRyYjJ9BIe+vMXLuW3oWZVdsOwml30I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=02L+nV06/zwmICNroTjg7mYMa/wTXN2VrRKBLAVM2dw=;
-        b=PnmTb1wpGQH48T+naXWS9lZNTuNG/cQDaVtxX3N13ra66ba3xfyOHR6NNJieaPh2Ku
-         T7xSK5ExFlPuDFaUOwzimF+IFzZBKbfkp5jjEiPWp/PLr6UuUOWJI4QT4FEm85qtCRr3
-         NQcc3r8mlBsPmN5fwVn+wk00wfgCqaflz3LCykRb2AIEYZjaeMBkH2xybXC/SRLiqn3p
-         nyhDoloMNByvgwHwoPSRdAKJzfNfZ/GAYEWpYxKjQKI5NM2x2sZS5l507lmQqVoICFJV
-         Q91QpSE+N4MABNX7Hlq95b7bNrC2QUZpnUdp61BCvTw0TX9pJpCNahAmAOQGoQM9mLmV
-         oG2g==
-X-Gm-Message-State: AOAM532dfbBKr6S1W20JI3yPmwvoTy8hip1Zo8YFnBPgtPZV3zrPx1gP
-        1b4lm5btRiuwBSYnby/ZPTxY7g==
-X-Google-Smtp-Source: ABdhPJzuZ7ICmuF4ozEQuv167siP20VYHysSz7yu/BjNoHfuX0QIrN7rkJ7u6etQwGM3gpJ79LyGpA==
-X-Received: by 2002:a17:90a:204:: with SMTP id c4mr16807174pjc.165.1595835695486;
-        Mon, 27 Jul 2020 00:41:35 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:1a60:24ff:fe89:3e93])
-        by smtp.gmail.com with ESMTPSA id f2sm13966544pfb.184.2020.07.27.00.41.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:41:34 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: mt8173: elm: Fix nor_flash node property
-Date:   Mon, 27 Jul 2020 15:41:24 +0800
-Message-Id: <20200727074124.3779237-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+        with ESMTP id S1726892AbgG0HiF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 03:38:05 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1BAC0619D2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:38:05 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzxht-0002NO-VG; Mon, 27 Jul 2020 09:37:57 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzxht-0007xt-1v; Mon, 27 Jul 2020 09:37:57 +0200
+Date:   Mon, 27 Jul 2020 09:37:57 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+Message-ID: <20200727073757.r2vq6djh3a4dyfp6@pengutronix.de>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200724080813.24884-4-peng.fan@nxp.com>
+ <20200727062335.v2pxgu6kr6ao2qmh@pengutronix.de>
+ <DB6PR0402MB27601C875FF5F1E02DBF5C6488720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200727064151.767kc7622tcqmqfs@pengutronix.de>
+ <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lledsvdu3e7clex3"
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:08:39 up 254 days, 22:27, 241 users,  load average: 0.11, 0.11,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-bus-width and non-removable is not used by the driver.
-max-frequency should be spi-max-frequency for flash node.
 
-Fixes: 689b937bedde ("arm64: dts: mediatek: add mt8173 elm and hana board")
-Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+--lledsvdu3e7clex3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-index a5a12b2599a4..01522dd10603 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-@@ -431,12 +431,11 @@ &nor_flash {
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&nor_gpio1_pins>;
--	bus-width = <8>;
--	max-frequency = <50000000>;
--	non-removable;
-+
- 	flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
-+		spi-max-frequency = <50000000>;
- 	};
- };
- 
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+On Mon, Jul 27, 2020 at 06:51:00AM +0000, Peng Fan wrote:
+> > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+> >=20
+> > On Mon, Jul 27, 2020 at 06:28:20AM +0000, Peng Fan wrote:
+> > > Hi Oleksij,
+> > >
+> > > > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
+> > > >
+> > > > On Fri, Jul 24, 2020 at 04:08:06PM +0800, Peng Fan wrote:
+> > > > > We might need to map an region multiple times, becaue the region
+> > > > > might be shared between remote processors, such i.MX8QM with dual
+> > M4 cores.
+> > > > > So use devm_ioremap, not devm_ioremap_resource.
+> > > >
+> > > > Can you please give an example of this kind of shared resources and
+> > > > how they should be handled by two separate devices?
+> > >
+> > > This is to share vdevbuffer space, there is a vdevbuffer in device
+> > > tree, it will be shared between M4_0 and M4_1.
+> > >
+> > > For the buffer, it is Linux DMA API will handle the space.
+> >=20
+> > Why remoteproc need to care about it? If I see it correctly, from the l=
+inux
+> > perspective, it is one buffer and one driver is responsible for it. Or =
+do I missing
+> > some thing?
+>=20
+> We not have the vdev buffer in resource table, so I added in device tree,=
+ see below:
 
+Hm.. if vdev is not in resource table and should not be controlled by
+remoteproc, why do we need remoteproc?
+
+>         imx8qm_cm40: imx8qm_cm4@0 {
+>                 compatible =3D "fsl,imx8qm-cm4";
+>                 rsc-da =3D <0x90000000>;
+>                 mbox-names =3D "tx", "rx", "rxdb";
+>                 mboxes =3D <&lsio_mu5 0 1
+>                           &lsio_mu5 1 1
+>                           &lsio_mu5 3 1>;
+>                 mub-partition =3D <3>;
+>                 memory-region =3D <&vdev0vring0>, <&vdev0vring1>, <&vdevb=
+uffer>,
+>                                 <&vdev1vring0>, <&vdev1vring1>;
+>                 core-index =3D <0>;
+>                 core-id =3D <IMX_SC_R_M4_0_PID0>;
+>                 status =3D "okay";
+>                 power-domains =3D <&pd IMX_SC_R_M4_0_PID0>,
+>                                 <&pd IMX_SC_R_M4_0_MU_1A>;
+>         };
+>=20
+>         imx8qm_cm41: imx8x_cm4@1 {
+>                 compatible =3D "fsl,imx8qm-cm4";
+>                 rsc-da =3D <0x90100000>;
+>                 mbox-names =3D "tx", "rx", "rxdb";
+>                 mboxes =3D <&lsio_mu6 0 1
+>                           &lsio_mu6 1 1
+>                           &lsio_mu6 3 1>;
+>                 mub-partition =3D <4>;
+>                 memory-region =3D <&vdev2vring0>, <&vdev2vring1>, <&vdevb=
+uffer>,
+>                                 <&vdev3vring0>, <&vdev3vring1>;
+>                 core-index =3D <1>;
+>                 core-id =3D <IMX_SC_R_M4_1_PID0>;
+>                 status =3D "okay";
+>                 power-domains =3D <&pd IMX_SC_R_M4_1_PID0>,
+>                                 <&pd IMX_SC_R_M4_1_MU_1A>;
+>         };
+>=20
+>                 vdevbuffer: vdevbuffer {
+>                         compatible =3D "shared-dma-pool";
+>                         reg =3D <0 0x90400000 0 0x100000>;
+>                         no-map;
+>                 };
+>=20
+> I have the upper vdevbuffer node shared between M40 and M41 node.
+> The vdevbuffer will be used as virtio data buffer.
+>=20
+> And I have the following in rproc_add_virtio_dev to share vdevbuffer:
+>         /* Try to find dedicated vdev buffer carveout */
+>         mem =3D rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev-=
+>index);
+>         if (!mem)
+>                 mem =3D rproc_find_carveout_by_name(rproc, "vdevbuffer");
+
+With kernel v5.8-rc7 i get following call chain:
+rproc_boot()
+  rproc_fw_boot()
+    rproc_handle_vdev
+      rproc_vdev_do_start()
+        rproc_add_virtio_dev()
+
+
+So, at the end, we will call rproc_add_virtio_dev() only if we boot
+firmware by linux, or if we get at least the resource table.
+
+Since none of this seems to be the case, i still do not understand how
+it should work.
+
+> Hope this is clear.
+
+:) i still need some time to understand it.
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--lledsvdu3e7clex3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8ehFAACgkQ4omh9DUa
+UbNuvBAAzaHrZx+RWrM1K4wZ6lTlnlom0/YvoOHFJy6BFwR3G5839nr1109/x9Rg
+SBhifCjiIISDYSDl2MdlgAPxjjEcLfjIJH9PTCzk9YoXZOkBvCzTnxBxSePlXAol
+ezH+BJsu/Bfc9iva+cLflE3CAEAc80MESPXlMoQg6W7E7CS0CsvTh4MwuWWc0KDR
+a9lEI7axGKePILdQzK6r25cAerJwxH1YA4EWOg09Da9kwSnECMdcY+fI5Bp1aYxg
+zlpxbtcpwtLgeR3s+IzKSOEGkWeMQOOwumVJ5hEs2Rdl4GoPvWBt+YH34XYnziU3
+gTLCfpJkno5smfBOub49/6UA+wj8aDVzZaAWZj0/FwowFvmymgncl4RpSRtkqG1s
+k6xiBSBES+IIBHeZek7SINYI4UoA0rV4GnbzIFza6IzhB58mcv1a3i1S+TnNHEoi
+ZyR+tTyK7NdeuRoWO5W7dlgFa7pt1Y+pia1HGWiksnUY4xCsdaVm+Ugpm4OXY1KB
+9IneQA0QfggVk8BuXnP0i6qlQGc5abdLYhPM8SI71jzuRtMzt2O/yAKGt+mhHQTO
+VxNfoa+q7DVG/bce3Q3iRCK+BG92BznmYF7v+uiHEWuD/7tRcztXKjJkxxuu9MTc
+l+FN2vsU9w/tdeFrEivpA4yq/Lr5ExMvHYmjDzqnYj3NTlFdd88=
+=1uiY
+-----END PGP SIGNATURE-----
+
+--lledsvdu3e7clex3--
