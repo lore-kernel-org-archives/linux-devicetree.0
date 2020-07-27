@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD7DC433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B959C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF2720714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571F720714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="goLiuJ7D"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jLtvF/aQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgG0Rrs (ORCPT
+        id S1729480AbgG0RuC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41150 "EHLO
+        Mon, 27 Jul 2020 13:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgG0Rrr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 13:47:47 -0400
+        with ESMTP id S1726846AbgG0RuC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 13:50:02 -0400
 Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7753BC061794;
-        Mon, 27 Jul 2020 10:47:47 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id o18so17915082eje.7;
-        Mon, 27 Jul 2020 10:47:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425DEC061794;
+        Mon, 27 Jul 2020 10:50:02 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id kq25so5002746ejb.3;
+        Mon, 27 Jul 2020 10:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ijZvlgHQ+v2BWZ6VMCXnmgIYM9lqeQKC/Q58LwpkS18=;
-        b=goLiuJ7DPYB9oXd4K0FnBTft52vRIoaP8HHEoIjYGrc+tPTm98AuJdQQocC0tZrdIO
-         ISnBrkYunC/SuXetp8LVr0AUf/okLJ7rrydaj2DlRa14m/mvYjy2MO9Rvx0uPp+A8RyR
-         ymBD+HZEaA5cJTq65kSojT0vwfQ4HSr8m4XWE/Xzs+yGcAoqpMhdWdDComye4rXmIyNH
-         1mMPIkOzJGlzCzIIULku257QIFw6Zzwpm0koPrP4cP4qc+XHaUVgWdwTt7t3gSy+4oyy
-         m7HHgCRC9ms0IxORbtyaQdhlzBR/Pv7QY3qA5NofrhA7hDTOz7MJv713hvGuzUJiqbpc
-         bzxw==
+        bh=E3P4kvBv8Rleuknjs/EKTdnAw0nGwmEOuGwij7lqxeU=;
+        b=jLtvF/aQ5RtTONzbSrQDOZ1CQZgDhxf9HDJmnPZud7lgph0ilkpZaU78GtBhDuvd/2
+         XmfXbx35DAI4/SglbNcNHF7h7zU7e4p0cA0f0vciUXtNUk85F31iGXiz12kBr4+fWgRD
+         hb+sgtPHobb0bF263fhJxgjNXPA4nZiC0u01RdMJ7iuCtNx9s8Wrvl2lOVSatGcBy6Y7
+         SWxtFNAI6SpEcTTrI96iv1FIfoF6atpJdLZ4tM/SjnLDB5flQ6szb6JfblsDE3BNMXVY
+         wbvsp0o3+hXk3D4C2T0BZgwg2apRKpQYk/XrcaLxEAIr98Y9MMoaRATEJKcwDv8Sgoh8
+         61aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ijZvlgHQ+v2BWZ6VMCXnmgIYM9lqeQKC/Q58LwpkS18=;
-        b=P8gocLr8pJH5qrOnoY0C4CUxh/G0zra+psMbip1xmnwTP/wkrFFkUphCIYEv/8mc8/
-         A9UBkAJdpXykiRyAhOXe+mtE6KbGFV2JON5STiSEaoenrSTCnlWCh6knHt45LqO55Pz1
-         HOWoszn/HP8tdcTXD/TkX3SWGMNk1nd3n7wGcAlUHbz79W8VeGh4sYVExZHgubu8Bxci
-         P3tNy1oSs7RurdP2BJZBS9OucUb1urTZ0OrABagrkelN/v7KwVWlG+46rfT0abnYRi6U
-         zBM+B49py1pEmBQH/1rrw4jg+oLbqhXaS/7g+jikgPTxNZRbZkUO1Zv+8/N6WBR2NJCc
-         caRA==
-X-Gm-Message-State: AOAM532De5d4j0PtlZ41XTLMxcq94779MnFY1BOPrfjhJCMd8yQTnO5N
-        7OhPowTDvwTYUVUKpjNhSUvf7E43KHEqFMu39tbd5gKGd9U=
-X-Google-Smtp-Source: ABdhPJyWjX1lCFQR4mrrLCa3z5egBfKg89MlfQ1v3c4dfSsnCgXyu7fZcZo4LE8I8xaNaz1PFPPa723qH/VZge8XLSU=
-X-Received: by 2002:a17:906:743:: with SMTP id z3mr21889697ejb.216.1595872066116;
- Mon, 27 Jul 2020 10:47:46 -0700 (PDT)
+        bh=E3P4kvBv8Rleuknjs/EKTdnAw0nGwmEOuGwij7lqxeU=;
+        b=scPW5OJ+TZB6P9OGsHPw9eOKm/5HGVx1OkeXDIMEhmHLzFqxa6y43eMdC0M667F7QA
+         pgPafJ2aQaO1U4aaTSl1idTP/wWm3MzAHO+BCKuJXXP5GwS1Bhh/UDiSik7//zgwBttx
+         scam5ZEIwdkcQvsGk9BN4Vch2lT7t6UzK0jxanLEKa8yLT93GRVMA3mZwojLcyWz/GxG
+         0jPDEFRkoVeTmxopeBpM7WApNMnaeAfNKp1ARMIOLgIkU0pMT5jnZkkU/L9nY5IS7KvO
+         BwVbHxK3E7MP+X95dqiDSZCK2momCMk3y4xDvh4+vnLus6Ruu011gxRZGeQPs/UqoR4R
+         yQ1w==
+X-Gm-Message-State: AOAM531vIlPzU+ntyTBtN/hJcAmlw9nTbFQFf6g1zH7Ztv9CR6soszwm
+        q7qrC5oKiGTuvzDp9lqef9lVhv95TMs8gbUiI24=
+X-Google-Smtp-Source: ABdhPJx00cueCvmkr54gaDTC1tq+EK0jdh4p/C2xAIh4A01uMkWJLB4IiShofhBWPvcEAq/5YL+6MG9izDKcQfaj+q4=
+X-Received: by 2002:a17:906:aad2:: with SMTP id kt18mr4042699ejb.537.1595872200937;
+ Mon, 27 Jul 2020 10:50:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727092346.19780-1-amelie.delaunay@st.com> <20200727092346.19780-2-amelie.delaunay@st.com>
-In-Reply-To: <20200727092346.19780-2-amelie.delaunay@st.com>
+References: <20200727092346.19780-1-amelie.delaunay@st.com> <20200727092346.19780-4-amelie.delaunay@st.com>
+In-Reply-To: <20200727092346.19780-4-amelie.delaunay@st.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 27 Jul 2020 19:47:35 +0200
-Message-ID: <CAFBinCA_GzdWC+L3Wj_PesRmNFP2rhpZ6jWhhNJP03O5AHc5Kw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: usb: dwc2: add optional
- usb-role-switch property
+Date:   Mon, 27 Jul 2020 19:49:50 +0200
+Message-ID: <CAFBinCCXuUC4PHgrobYjj=yjA3Tz73Wwx0KWz+B6PfCw_OSi_w@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] usb: dwc2: don't use ID/Vbus detection if
+ usb-role-switch on STM32MP15 SoCs
 To:     Amelie Delaunay <amelie.delaunay@st.com>
 Cc:     Minas Harutyunyan <hminas@synopsys.com>,
         Felipe Balbi <balbi@kernel.org>,
@@ -79,18 +79,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Amelie,
-
-thank you for adding this patch!
+Hi Amelie,
 
 On Mon, Jul 27, 2020 at 11:23 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
+[...]
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index a3611cdd1dea..65f8596f6795 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -183,9 +183,11 @@ static void dwc2_set_stm32mp15_fsotg_params(struct dwc2_hsotg *hsotg)
+>  static void dwc2_set_stm32mp15_hsotg_params(struct dwc2_hsotg *hsotg)
+>  {
+>         struct dwc2_core_params *p = &hsotg->params;
+> +       struct device_node *np = hsotg->dev->of_node;
 >
-> This patch documents the usb-role-switch property in dwc2 bindings, now
-> that usb-role-switch support is available in dwc2 driver.
->
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-please add my:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>         p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
+> -       p->activate_stm_id_vb_detection = true;
+> +       p->activate_stm_id_vb_detection =
+> +               !of_property_read_bool(np, "usb-role-switch");
+the rest of params.c uses device_property_read_* instead of of_read_property_*
+I thought I'd mention it so you can decide yourself whether this is
+fine or needs to be changed
 
 
 Martin
