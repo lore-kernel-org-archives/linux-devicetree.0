@@ -7,153 +7,92 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F86C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26D4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626B5205CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C778E20656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3SWT0n3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGr5q/9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgG0LJX (ORCPT
+        id S1726744AbgG0LgY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
+        Mon, 27 Jul 2020 07:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgG0LJX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 07:09:23 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563D2C061794;
-        Mon, 27 Jul 2020 04:09:23 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w126so8712022pfw.8;
-        Mon, 27 Jul 2020 04:09:23 -0700 (PDT)
+        with ESMTP id S1726227AbgG0LgX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 07:36:23 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42371C061794;
+        Mon, 27 Jul 2020 04:36:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id x9so16834226ljc.5;
+        Mon, 27 Jul 2020 04:36:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MW0MiZ4Un8fYtTrl+x7jVZHspHstStb50IKw8Wvbd5U=;
-        b=n3SWT0n3IRqo/XZpzAMCvIjA2bsgz18mz3lk/BZ8mdf6tc/d5H8HBM6+bPfcA5uDd1
-         NK3BzFKo/8n+YcZleEuePGgFdERx2TwUf9OkjOmq38APw91WCwgQxtsJH92KJO7uqCBs
-         3bsqBoKYvM9BFB9xyGXI387chNDo0DAgzittyDl8CO+zUfwyeAfWqpyfCIfBzricbULG
-         a7w0KyarV0Q8ADxt8Y+hDtoJZDrqxB0sWQD9Gp7Z/lhpi01Z42FyVtXbBc1q85BnqzXu
-         T/NdDaXJ0TLefqccc/HBBFAJzxpHREQtbHzwCWAPW/Hi2+M7vTMe3GdCSvCxow4WV1nV
-         0umw==
+        bh=3duE7OBR2T4N2tYjRvsITkGu0zyZUrsrEinPE6byIJA=;
+        b=aGr5q/9QRAMaUt3j5VfbR3OdspD6ClP8KdgJUfmnmzsunPsBqGa5S9naW8YgBF/zwA
+         xk7mCre8gB5IbfeUa3zGFNF80ldeRdn79TISRGf+kftzYbjhBna3K5cPwBEv8QmiDqns
+         Eo1HRkKLdsARNMMznT6RAODNxdr2N0NiebCEwrOd4xHSWUDUrfiny+NM0DKHM3CxxbDA
+         4McAvoF2Ps7yD3wZq0QzvcBLQXxtVOSswIGiwuMiyQd/6e92DcK0KyXC/LN0EPpdxHHl
+         QtkCkh55wJjZ/9fPeyRlUoAaPUKJMpe917jU3ni6GSooU4CSsDX+8sMZqP9+0CW+Ttqq
+         iq+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MW0MiZ4Un8fYtTrl+x7jVZHspHstStb50IKw8Wvbd5U=;
-        b=IExg+qvpYJ3S5rsb/+MWweey7LDMdrIwdkEnc95apB/TpjZHLrk0IKguPj81pzXATE
-         Qkm3cPpWVep2CcIhT2i0B7i3NT01omq23pBq9nunOHZnw/bA0aJ3SVTrNkBbtkw/w+vB
-         cV7i/kn72OrKQcVcSQvFIOqs4uU7MkhkZqZbLvz1S3NppP+WSX3w2dND/lgR7vXi/Q/z
-         jgNfyB8sMYOnF/goxkTsjcjbQtE8lak8QtdWHazGPB5Ij7sTEXBrs4tJGFttQbJld91O
-         fg0k3mswErS5un6x/8jI7DD15b3ialS9cSNfbJx3MeDqIck/iteGqQ3VliHJPMmVKwLa
-         6EMg==
-X-Gm-Message-State: AOAM531N3KX2c2Ofs6pdouilRGK9L0RgQaJF+LgLaAaSJkZadgcyEuYE
-        cd2wIhW/VmGFDxE41PW2vZZnIYeLti8qklcAA+117AkS
-X-Google-Smtp-Source: ABdhPJwdOd5Pg+MJNemvTNNuhslAQA/KR66D738X15SQC3w6UkiaGGcHyDy3kerE7prulrKtu4m5Bgrsg7nnRf1dWZs=
-X-Received: by 2002:a63:924b:: with SMTP id s11mr18746092pgn.74.1595848162878;
- Mon, 27 Jul 2020 04:09:22 -0700 (PDT)
+        bh=3duE7OBR2T4N2tYjRvsITkGu0zyZUrsrEinPE6byIJA=;
+        b=SfXXH3H3WD7VWQ19KwEYH4upPiyVdgd9Eeci7v8a+Cp5KUxmC+EXzwY+yFrD47g7Jy
+         fFJKMzqZSzEjU3hnshdLqqiUBhqbUPVH2hJGACWDOJ2EFlotjFF1OYZfh3/KP8AeRUg0
+         88LPgYGKBURXWq7yfggydKyT49qTaLVmslCUX1rHhRmpzmziu2O1Vd1PPnTNGafVqYCh
+         LleLEqCRskfPVa2w+BnPG3ug+MdjskRQj3ZJxhct0oqpNOgRD7JG33YI9Tj9bj5Lp0oQ
+         DarIe2SrGLj8mm9Y4YWIsL9iDZhDh50c08qNYjss7U0xcQfs3wOn89AKapok3UY16DOR
+         OotA==
+X-Gm-Message-State: AOAM532bNfkaDlTKhhIiwZPd3XtbVh6K9rfCRt4UchO/eQof4lQTfwSo
+        z77CwDJnx2PZA3juYGmR3EspSHSBQ0G7PM1oZ2M=
+X-Google-Smtp-Source: ABdhPJySdoA0YQZX3SzX76PZs+yXIx9uSU6Htm2i166nkcxAQA1159Pl7aChK9+bUVbcPdHRJ+ZUOND1IY6QjMMDCyA=
+X-Received: by 2002:a2e:a168:: with SMTP id u8mr9049888ljl.178.1595849779599;
+ Mon, 27 Jul 2020 04:36:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727100336.32153-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-In-Reply-To: <20200727100336.32153-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 14:09:08 +0300
-Message-ID: <CAHp75VeO86j-onVJX-M7YmOZeQuX=Jx58jnT3dLkwCsBom1aTQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] phy: Add USB PHY support on Intel LGM SoC
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+References: <20200727105718.26225-1-ceggers@arri.de> <20200727105718.26225-2-ceggers@arri.de>
+In-Reply-To: <20200727105718.26225-2-ceggers@arri.de>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 27 Jul 2020 08:36:08 -0300
+Message-ID: <CAOMZO5ASnj7SpjjAEpWjRK-vMpFFKU00=rxKeBtaMSKE9pkX1g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6ull: Add rngb node
+To:     Christian Eggers <ceggers@arri.de>,
+        Horia Geanta Neag <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andriy Shevchenko <andriy.shevchenko@intel.com>,
-        Felipe Balbi <balbi@kernel.org>, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
+        Martin Kaiser <martin@kaiser.cx>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 1:08 PM Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
-> Requires minimal external components, a single resistor, for best operation.
-> Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
-> ---
+Hi Christian,
 
-> v7:
->   - No Change
+On Mon, Jul 27, 2020 at 8:00 AM Christian Eggers <ceggers@arri.de> wrote:
+>
+> The RNGB block on 6ull has no major differences, but it has no
+> switchable clock.
 
-I guess it's not the correct changelog entry.
-You moved file to another subsystem, didn't you?
-
-> v6:
->   - No Change
-> v5:
->   - As per Felipe and Greg's suggestion usb phy driver reviewed patches
->     changed the folder from drivers/usb/phy to drivers/phy
->   - Reviewed-By tag added in commit message
-> v4:
->   - Andy's review comments addressed
->   - drop the excess error debug prints
->   - error check optimized
->   - merge the split line to one line
-> v3:
->   - Andy's review comments update
->   - hardcode return value changed to actual return value from the callee
->   - add error check is fixed according to the above
->   - correct the assignment in redundant
->   - combine the split line into one line
-> v2:
->   - Address Phillip's review comments
->   - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
->   - re-design the assert and deassert fucntion calls as per review comments
->   - address kbuild bot warnings
->   - add the comments
-> v1:
->   - initial version
->
-> ---
-> dt-bindings: usb: Add USB PHY support for Intel LGM SoC
-> v7:
->   - Fixed the bot issue: usb-phy@e7e00000: '#phy-cells' is a required property
-> v6:
->   - Fixed the bot issue.
->   - replace node-name by usb-phy@ in example
-> v5:
->   - Reviewed-By tag added
-> v4:
->   - No Change
-> v3:
->   - No Change
-> v2:
->   - No Change
-> v1:
->   - initial version
->
->
-> Ramuthevar Vadivel Murugan (2):
->   dt-bindings: phy: Add USB PHY support for Intel LGM SoC
->   phy: Add USB3 PHY support for Intel LGM SoC
->
->  .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  58 +++++
->  drivers/phy/Kconfig                                |  11 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-lgm-usb.c                          | 278 +++++++++++++++++++++
->  4 files changed, 348 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
->  create mode 100644 drivers/phy/phy-lgm-usb.c
->
-> --
-> 2.11.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Horia has already sent a patch series that adds imx6ull rngb support:
+https://lkml.org/lkml/2020/7/23/173
