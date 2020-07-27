@@ -2,106 +2,85 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B367C433E8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE040C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B66520729
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8294F2075A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595873704;
-	bh=+dahNFR3cG5IMqanUiTRLH+qQQZzYR0gRNzYuaqQTaE=;
+	s=default; t=1595874008;
+	bh=bcOVSC6iwGmX4PhBNjaLhYR+tUBENZQVZ3yMoYlloLo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F2m3zsfMZL5LCZYYGfo1siq5RkLKEEciaWqg7OFc/X+9qGcMP+Aq/qYukgz7Unc/T
-	 HrqYFlVgyYhnDjZ/SoMcqWajyzOtHQENcYwhdl44YXaARRSjnIsR2b3EPE9lsTEFTq
-	 21ZXMKMZt6dKKVDAuZ23RAAwj9Q4c0sAe2jxqXI8=
+	b=uSKlC32t7B34bH10Si7bmJnKXAmabRnHEolitw8ebOnSE/i85DgWSvw56Ls4NJ72A
+	 hzqwa8nKTC8vUD9sAWCG6XUOIdYZUJxS/j/mE2Odl85jlPElwHCTsTC+YsLn6gsT5x
+	 HwBEYPziXzSl91kAezGg8NjZSzjGqlfGoBwVs01E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgG0SPD (ORCPT
+        id S1729647AbgG0SUI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:15:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36487 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbgG0SPD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 14:15:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id t15so9045455iob.3;
-        Mon, 27 Jul 2020 11:15:02 -0700 (PDT)
+        Mon, 27 Jul 2020 14:20:08 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43512 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729489AbgG0SUH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 14:20:07 -0400
+Received: by mail-il1-f195.google.com with SMTP id y18so5501582ilp.10;
+        Mon, 27 Jul 2020 11:20:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YYtw9YpjryNj+P7sa7ru3omMiZtT2NKQkuKuKcuEOlo=;
-        b=XvtbHvt7eq4TVhAVk/grZjhQZbiqfFnZgi+1gGPndNhRoCz/Y9bXSZETHr5GoK9Jpt
-         BTF7/+RSBkF+YCCNfUaFxBN3lkcuYzNNpZ03T3G1m2sNMkzrxQJrSF8Ei9F28nEJQBu5
-         MOUvXardMIMjmJrw5t/n2Io8qwqCkWdrgzDUMNDq/ycnxZixLILo6VW1abxNeq0GQcmj
-         qrx56xx0Ra8G1KOqRzzxwrh19WABumDTvdId9LgGQhQ+iGyR8Lox2UaeoGfw5mpARhHX
-         za84boVdhKnJB8Cbp2x6XiByky+V5Rrqgrs3QbXZFEDWlxaMGyaYZmCnUIH84QAVCtpT
-         /S0Q==
-X-Gm-Message-State: AOAM533E3D/XTtWhk3oGdwcyoGaIz9GO5ye8vT9HIyi0wgJORFFxV1Zm
-        wHQESouOMimyZ2HIcS0Ixf6DmaMN4g==
-X-Google-Smtp-Source: ABdhPJxw3k8fI2bDsS359EwMlDuaaKCNDuNufmiHEEdYDjipxMFi7lqPsgIdQi6mLZJlEs4bF4ND4g==
-X-Received: by 2002:a5d:9347:: with SMTP id i7mr25043985ioo.40.1595873702435;
-        Mon, 27 Jul 2020 11:15:02 -0700 (PDT)
+        bh=hHBgGmP6C/aVsle80stjB2DOBTx6fwthJHeqJ4Q1g+o=;
+        b=tuxxJOaVlwfj0E4rKjwNg9N9oa7a0PU2YS2CzOynIWgZLw89T1xkmMiAyYWYC/zdph
+         jxtbO+Orr42F4rHxLo+kq2rkj3rvJm8OW/seddvXAp5tNy6whQAdpheHiFXlEvdhRVD1
+         2UtJw8druo4rU0ubh6KhhYasVLXr9sPRULbRZB1df9v0GLMO//qTutg2XwKJ5zjq+u7+
+         Im3DaiX31M1xesvl5X962jWZwlNAP+VJddKkV00DVke9wtxJYtRTTirCBo0pjqyugVt2
+         N3nmkfGAA+CeY6sgsRuw0khM/Qn+KmFXneVBf6LXJgr4I4DcFzBiAUvjkCAOKMDmr+ls
+         1e2g==
+X-Gm-Message-State: AOAM533Yyiv72mYX7Hm2Q6vXhZOfVQcEs7RBG/E4HTzXZZQd3ctmpJRT
+        n6Fqo91tHe0quFye2HaSwA==
+X-Google-Smtp-Source: ABdhPJxq32PaoZ9jSiA8/vCo90i5yc8YqkH0UXNfMZI00ZGSughQbvZqqe9FqCxIhQs7xH2up94QLA==
+X-Received: by 2002:a92:1d1:: with SMTP id 200mr17557805ilb.71.1595874006899;
+        Mon, 27 Jul 2020 11:20:06 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i9sm8913885ile.48.2020.07.27.11.15.01
+        by smtp.gmail.com with ESMTPSA id t14sm5756318ios.18.2020.07.27.11.20.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:15:02 -0700 (PDT)
-Received: (nullmailer pid 640299 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:15:01 -0000
-Date:   Mon, 27 Jul 2020 12:15:01 -0600
+        Mon, 27 Jul 2020 11:20:06 -0700 (PDT)
+Received: (nullmailer pid 649107 invoked by uid 1000);
+        Mon, 27 Jul 2020 18:20:04 -0000
+Date:   Mon, 27 Jul 2020 12:20:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Darius Berghe <darius.berghe@analog.com>
-Cc:     jic23@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] ltc2471 driver yaml
-Message-ID: <20200727181501.GA639934@bogus>
-References: <20200727135834.84093-1-darius.berghe@analog.com>
- <20200727135834.84093-4-darius.berghe@analog.com>
+To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Cc:     lkundrak@v3.sk, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
+        heiko.stuebner@theobroma-systems.com, broonie@kernel.org,
+        linus.walleij@linaro.org, linux-stm32@st-md-mailman.stormreply.com,
+        sam@ravnborg.org, a.fatoum@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, mani@kernel.org,
+        allen.chen@ite.com.tw, alexandre.torgue@st.com, stephan@gerhold.net
+Subject: Re: [PATCH v5 2/3] dt-bindings: arm: stm32: document Odyssey
+ compatible
+Message-ID: <20200727182004.GA648872@bogus>
+References: <20200724145107.35772-1-marcin.sloniewski@gmail.com>
+ <20200724145107.35772-2-marcin.sloniewski@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727135834.84093-4-darius.berghe@analog.com>
+In-Reply-To: <20200724145107.35772-2-marcin.sloniewski@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Jul 2020 16:58:34 +0300, Darius Berghe wrote:
-> Add dt binding documentation for ltc2471 driver. This covers all supported
-> devices.
+On Fri, 24 Jul 2020 16:51:06 +0200, Marcin Sloniewski wrote:
+> Document device tree bindings of Seeed SoM and carrier board.
 > 
-> Signed-off-by: Darius Berghe <darius.berghe@analog.com>
+> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
 > ---
->  .../bindings/iio/adc/adi,ltc2471.yaml         | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+>  Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/iio/adc/adi,ltc2471.yaml#
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dts:22.13-26: Warning (reg_format): /example-0/i2c0/adc@14:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dts:20.18-23.13: Warning (avoid_default_addr_size): /example-0/i2c0/adc@14: Relying on default #address-cells value
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dts:20.18-23.13: Warning (avoid_default_addr_size): /example-0/i2c0/adc@14: Relying on default #size-cells value
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
-
-
-See https://patchwork.ozlabs.org/patch/1336970
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
