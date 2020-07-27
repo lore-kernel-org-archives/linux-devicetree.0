@@ -2,185 +2,121 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E05C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C17C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 06:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1047A2075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:54:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JxX00XJu"
+	by mail.kernel.org (Postfix) with ESMTP id 6852F207BB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 06:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgG0FyJ (ORCPT
+        id S1726140AbgG0GFB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:54:09 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:59575 "EHLO m43-7.mailgun.net"
+        Mon, 27 Jul 2020 02:05:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:20400 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgG0FyJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:54:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595829248; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=FTqA48hw8hnaqUdgwqT+jre/wJ4jEyk5sxdAz7+sHPY=; b=JxX00XJu32bkYs1dNAOxzxl5zHA1xyEJQqHmAOPZwREnQrjCQ9LO4PkOYlQcBBPFzVE14bv7
- StB9SHPmxord3NzV/bRs/iBvEDkpMCtJlFBZqPwjdfwhOgWaOpAB0U3oJ79C1gBVdKBSUzZ/
- pXIJJyfvMxEDd0beNv5PKrsB2Zg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f1e6bff8db7256a95ec7ca8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 05:54:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CB369C43395; Mon, 27 Jul 2020 05:54:06 +0000 (UTC)
-Received: from [192.168.1.12] (unknown [61.1.231.32])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6F0DC433CA;
-        Mon, 27 Jul 2020 05:54:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6F0DC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Taniya Das <tdas@codeaurora.org>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
-Date:   Mon, 27 Jul 2020 11:23:59 +0530
+        id S1726006AbgG0GFA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 02:05:00 -0400
+IronPort-SDR: 5GO/oIOCsY7AOev2+zWpeuCKfW4Jb+j76bUD8vSAbeFA4ghWcJBZPd3xYF9ImZ1cIVuluEHPDg
+ ZW11fW8GJXfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="148842551"
+X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
+   d="scan'208";a="148842551"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 23:05:00 -0700
+IronPort-SDR: ATP/V/OSOyilyayPRGX5a8AuuiTtLDt0SpZbXi9pG7yOYszbkEr/9NsdNqmQ1zO3owdu8oEOOQ
+ iRSsGgFLxFOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
+   d="scan'208";a="273166720"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 26 Jul 2020 23:05:00 -0700
+Received: from [10.249.75.97] (rtanwar-MOBL.gar.corp.intel.com [10.249.75.97])
+        by linux.intel.com (Postfix) with ESMTP id 3F769580297;
+        Sun, 26 Jul 2020 23:04:57 -0700 (PDT)
+Subject: Re: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
+ <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
+ <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
+Date:   Mon, 27 Jul 2020 14:04:56 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+Hi Uwe,
 
-On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
-> Hi,
-> 
-> On 7/23/20 9:06 PM, Stanimir Varbanov wrote:
->> Hi Rajendra,
->>
->> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
->> below messages on db845:
->>
->> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
->> current OPP for freq 533000097 (-34)
->>
->> ^^^ This one is new.
->>
->> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
->>
->> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
->>
->> On 7/23/20 2:26 PM, Rajendra Nayak wrote:
->>> Add the OPP tables in order to be able to vote on the performance state of
->>> a power-domain.
->>>
->>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>> ---
->>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
->>>   1 file changed, 38 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> index e506793..5ca2265 100644
->>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> @@ -3631,8 +3631,10 @@
->>>   			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->>>   			power-domains = <&videocc VENUS_GDSC>,
->>>   					<&videocc VCODEC0_GDSC>,
->>> -					<&videocc VCODEC1_GDSC>;
->>> -			power-domain-names = "venus", "vcodec0", "vcodec1";
->>> +					<&videocc VCODEC1_GDSC>,
->>> +					<&rpmhpd SDM845_CX>;
->>> +			power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
->>> +			operating-points-v2 = <&venus_opp_table>;
->>>   			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
->>>   				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
->>>   				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
->>> @@ -3654,6 +3656,40 @@
->>>   			video-core1 {
->>>   				compatible = "venus-encoder";
->>>   			};
->>> +
->>> +			venus_opp_table: venus-opp-table {
->>> +				compatible = "operating-points-v2";
->>> +
->>> +				opp-100000000 {
->>> +					opp-hz = /bits/ 64 <100000000>;
->>> +					required-opps = <&rpmhpd_opp_min_svs>;
->>> +				};
->>> +
->>> +				opp-200000000 {
->>> +					opp-hz = /bits/ 64 <200000000>;
->>> +					required-opps = <&rpmhpd_opp_low_svs>;
->>> +				};
->>> +
->>> +				opp-320000000 {
->>> +					opp-hz = /bits/ 64 <320000000>;
->>> +					required-opps = <&rpmhpd_opp_svs>;
->>> +				};
->>> +
->>> +				opp-380000000 {
->>> +					opp-hz = /bits/ 64 <380000000>;
->>> +					required-opps = <&rpmhpd_opp_svs_l1>;
->>> +				};
->>> +
->>> +				opp-444000000 {
->>> +					opp-hz = /bits/ 64 <444000000>;
->>> +					required-opps = <&rpmhpd_opp_nom>;
->>> +				};
->>> +
->>> +				opp-533000000 {
->>> +					opp-hz = /bits/ 64 <533000000>;
-> 
-> Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
-> defines 533000000 but the real calculated freq is 533000097.
+On 24/7/2020 12:15 am, Uwe Kleine-König wrote:
+> Hello,
+>
+> On Thu, Jul 23, 2020 at 03:44:18PM +0800, Rahul Tanwar wrote:
+>> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +			 const struct pwm_state *state)
+>> +{
+>> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
+>> +	u32 duty_cycle, val;
+>> +	int ret;
+>> +
+>> +	if (!state->enabled) {
+>> +		ret = lgm_pwm_enable(chip, 0);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * HW only supports NORMAL polarity
+>> +	 * HW supports fixed period which can not be changed/configured by user
+>> +	 */
+>> +	if (state->polarity != PWM_POLARITY_NORMAL ||
+>> +	    state->period != pc->period)
+>> +		return -EINVAL;
+> At least for state->polarity you have to check before state->enabled, as
+> the expectation on
+>
+>         .enabled = false
+>         .polarity = PWM_POLARITY_INVERSED
+>
+> is that the output becomes constant high. Also as confirmed at the end
+> of v4, state->period < pc->period was the right check to do.
 
-I still don't quite understand why the videocc driver returns this
-frequency despite this not being in the freq table.
-I would expect a clk_round_rate() when called with 533000097 to return
-a 533000000.
+For below case:
 
-Taniya, Do you know why?
+.enabled = false
+.polarity = PWM_POLARITY_INVERSED
 
-> 
-> If I change to opp-hz = /bits/ 64 <533000097> the error disappear.
-> 
-> I guess we have to revisit m/n and/or pre-divider for this freq when the
-> source pll is P_VIDEO_PLL0_OUT_MAIN PLL?
-> 
->>> +					required-opps = <&rpmhpd_opp_turbo>;
->>> +				};
->>> +			};
->>>   		};
->>>   
->>>   		videocc: clock-controller@ab00000 {
->>>
->>
-> 
+Since our HW does not support inversed polarity, the output for above case
+is expected to be constant low. And if we disable PWM before checking for
+polarity, the output becomes constant low. The code just does that. Sorry,
+i could not understand what is wrong with the code. It looks correct to me.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Given the fact that we support fixed period, if we allow
+state->period < pc->period case then the duty cycle will be evaluated as
+higher than the requested one because the state->period is lesser than
+the actual fixed period supported by the HW. Can you please elaborate
+on why you think we should allow state->period < pc->period case?
+
+Thanks,
+
+Regards,
+Rahul
+
