@@ -2,62 +2,62 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D322C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC9C433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18AE52074F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1902072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aFXOkM+B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qur/Atmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgG0Hn7 (ORCPT
+        id S1727041AbgG0HoF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59698 "EHLO
+        Mon, 27 Jul 2020 03:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0Hn7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 03:43:59 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2290BC0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:43:59 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id z188so767032pfc.6
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:43:59 -0700 (PDT)
+        with ESMTP id S1727038AbgG0HoE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 03:44:04 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12E4C0619D4
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:44:03 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d188so2563978pfd.2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:44:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yz4TcW9rTup6J1JHf4cL+vgG/kmFz0aHv9ruePdNsKs=;
-        b=aFXOkM+Be+7mBtbE26DlXdCZ1eQ7pGgqRGMDv7uP587bt+zwmfsY4EiU1e0wTOgTy3
-         Yw3ZlK7Y0MBV7i48If//5OPi/xfuJ7myy+YbKQ1g0MwO+4U+9eTWWoe8SzCgaZJ+dUEg
-         wOytugbcFSL9vY8q9xzzyKmeiWm+gq9jldEOniIwHuJnAzv+oWs4lo6i3X7j181HUNOl
-         0KY3hNz8ipRo93vT3i38xhYHmOosCK2Te7HhO1rdUrFxHyJBhMXzppT3SpiC7mbZp1jd
-         8txo/0j375SmCHvYFEEyagYwGcCTmwlqbqkY86RUt5BW3L3F47+v5SuVM5jnf3PrGnct
-         QBZA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5US/XCWACBZUG+u/wcd8ufH/ZA+g/IaYFSks30i6g9k=;
+        b=qur/AtmdKo9Z1/6syLwN1Bs4Sm/0w7BycwiIZCY7HuB+hYitWI7TQ8VkabtUNI47M/
+         29JN1tJWNYx+YxEysZUSk7IW1ZJlGbD9Y+yD1pR4biouLN2Rgnw9LfDEja2iMYVkyCgT
+         yZ/d/pZGG8Mcqy6Ki+qZBMYfcZc0+vmoTzIRvAG7jJs9FZk7wUpEIh5fU+gIpDRoqJNl
+         y8F1anTTNJ6r6hyPdW5JNd6JfWtEle2hAkZLUteWrM+AN2Vd/94lXUquyxFVmQxLl+cE
+         L4xu9F/uvyrIwP131jddQKfXgyD9Ix8VNsH3b6wUbBNMmzxO0zIxXBJ6+GTo0B3/ydWD
+         Y2tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Yz4TcW9rTup6J1JHf4cL+vgG/kmFz0aHv9ruePdNsKs=;
-        b=UmST3+2lhyNR9LE3NtScZlMElgid4fdHLUaT99K+GDDD1B7NB9hlR712SQu8kR2b5x
-         H5WoT1SW9BTLLtNtQZ87+HpwWPCOU/0RcGwzuvJKg3RbUMCgq6dP/grvWC77O3aOeKD1
-         Don2p2AtjnxAe6yAo/XCN7NYDn/HbZX+Jfk0MasU7BQNJ/idEAr503GdFG777ZLcUIS2
-         nuIauIWZkynJa5wum3H2vaygR3YTxgOlYvoJSiHLbLrQc1t4Ptk7uLcIlnzAVI9QYHBB
-         VlpOCY0SGAh7aOttM86R5nYIvjvQnyEJlgyfKUEoO4C+1g6M5sjyujC9ogiaiyNonIqZ
-         kz1w==
-X-Gm-Message-State: AOAM5318T9HNGTL7ReV7Km4DoaLEwwOiVczw5/96ePFix0+3nNRU0DSi
-        R15FBdKuRym0TNKIvJ4/rFT5yw==
-X-Google-Smtp-Source: ABdhPJzNAhwoobYuzfypI6jZj3vQId16bxmejaBmJhjHNhj5jBPLz54zUVzlg6Vppj/NNfSRoK5DIw==
-X-Received: by 2002:a63:6c49:: with SMTP id h70mr18571850pgc.150.1595835838525;
-        Mon, 27 Jul 2020 00:43:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5US/XCWACBZUG+u/wcd8ufH/ZA+g/IaYFSks30i6g9k=;
+        b=fJ3VssZfo7HS28N74c/nuvEanahs1IbkSBDXWz9SpzvXv1rj9iJi09GmpkFKhE5Ulh
+         uyGBTwg6jDx32jevXpzOTgEKppwS1hWw53AZiirxOL4lg7P29aYke1doMaBKCQnZ7me+
+         MpoXJmeTUMfDbObVAS88oD9Y2e52BFesh+nsDMof01OIEmEoNQOTB7aDWw2xaKKJuMOR
+         8yW/mrv+RXLHGqoqDu/dR9ew+LjZZPo5y9/XWAgvYPqssN9B2PmYf+hg+ZTrKxER4TM6
+         yte/NmjiqWmkSyYZuuK+6lx7hr3s/5IUT4v85X9lm4OByMX+BPo9K1kEQDo0xfFWKWfz
+         x1ew==
+X-Gm-Message-State: AOAM532t7aWm6Yk7BGUk3HUHxKTVlgaG9BSKoAOriSHitofvsLbbdnRM
+        TRwh8QzN2q6Ad9cR+th1n+BPrw==
+X-Google-Smtp-Source: ABdhPJzMXwH+bJlvAoqfT0h/bFkfqXsia+jQnXAdIqrualZwu256Gdg7aSGAbhqMTbYCq6zWUmBiug==
+X-Received: by 2002:a62:7991:: with SMTP id u139mr18349947pfc.87.1595835842812;
+        Mon, 27 Jul 2020 00:44:02 -0700 (PDT)
 Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id n22sm13062152pjq.25.2020.07.27.00.43.54
+        by smtp.gmail.com with ESMTPSA id n22sm13062152pjq.25.2020.07.27.00.43.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:43:57 -0700 (PDT)
+        Mon, 27 Jul 2020 00:44:01 -0700 (PDT)
 From:   Sumit Semwal <sumit.semwal@linaro.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -69,10 +69,12 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v3 0/2] Add support for Tianma nt36672a video mode panel
-Date:   Mon, 27 Jul 2020 13:13:46 +0530
-Message-Id: <20200727074348.26116-1-sumit.semwal@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: display: panel: Add bindings for Tianma nt36672a panel
+Date:   Mon, 27 Jul 2020 13:13:47 +0530
+Message-Id: <20200727074348.26116-2-sumit.semwal@linaro.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727074348.26116-1-sumit.semwal@linaro.org>
+References: <20200727074348.26116-1-sumit.semwal@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -80,35 +82,121 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some Poco F1 phones from Xiaomi have an nt36672a video mode panel; add support
-for the same.
-Most of the panel data is taken from downstream panel dts, and is converted to
-drm-panel based driver by me.
-It has been validated with v5.8-rc5 on Poco F1 phone; my tree with other
-dependent patches is here [1]
+The nt36672a panel from Tianma is a FHD+ panel with a resolution of
+1080x2246 and 6.18 inches size. It is found in some of the Poco F1
+phones.
 
-[1]: https://git.linaro.org/people/sumit.semwal/linux-dev.git/log/?h=dev/poco-panel-upstreaming
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
 
 ---
-v2: In dt-binding, removed ports node, making port@0 directly under panel@0 node.
-    Also updated the panel_on delay to a safer 200ms as needed for latest Android.
-v3: Replaced port@0 with just port in panel@0 node.
-
-[1]: 
-
-Sumit Semwal (2):
-  dt-bindings: display: panel: Add bindings for Tianma nt36672a panel
-  drm: panel: Add tianma nt36672a panel driver
-
- .../display/panel/tianma,nt36672a.yaml        |  95 ++
- MAINTAINERS                                   |   7 +
- drivers/gpu/drm/panel/Kconfig                 |  11 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-tianma-nt36672a.c | 859 ++++++++++++++++++
- 5 files changed, 973 insertions(+)
+v2: remove ports node, making port@0 directly under panel@0 node.
+v3: updated to replace port@0 to just 'port'.
+---
+ .../display/panel/tianma,nt36672a.yaml        | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-tianma-nt36672a.c
 
+diff --git a/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+new file mode 100644
+index 000000000000..03dc323332a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+@@ -0,0 +1,95 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/tianma,nt36672a.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Tianma model NT36672A DSI Panel display driver
++
++maintainers:
++  - Sumit Semwal <sumit.semwal@linaro.org>
++
++description: |
++  The nt36672a panel from Tianma is a FHD+ LCD display panel with a resolution
++  of 1080x2246. It is a video mode DSI panel.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: tianma,nt36672a
++
++  reg:
++    description: DSI virtual channel of the peripheral
++
++  reset-gpios:
++    description: phandle of gpio for reset line - This should be 8mA, gpio
++      can be configured using mux, pinctrl, pinctrl-names (active high)
++
++  vddio-supply:
++    description: phandle of the regulator that provides the supply voltage
++      Power IC supply
++
++  vddpos-supply:
++    description: phandle of the positive boost supply regulator
++
++  vddneg-supply:
++    description: phandle of the negative boost supply regulator
++
++  pinctrl-names:
++    description: Pinctrl for panel active and suspend
++
++  pinctrl-0:
++    description: Active pinctrls
++
++  pinctrl-1:
++    description: Suspend pinctrls
++
++  port: true
++
++required:
++  - compatible
++  - reg
++  - vddi0-supply
++  - vddpos-supply
++  - vddneg-supply
++  - reset-gpios
++  - pinctrl-names
++  - pinctrl-0
++  - pinctrl-1
++  - port
++
++unevaluatedProperties: false
++
++examples:
++  - |+
++    #include <dt-bindings/gpio/gpio.h>
++    dsi0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      panel@0 {
++        compatible = "tianma,nt36672a";
++        reg = <0>;
++        vddi0-supply = <&vreg_l14a_1p88>;
++        vddpos-supply = <&lab>;
++        vddneg-supply = <&ibb>;
++
++        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
++
++        pinctrl-names = "panel_active", "panel_suspend";
++        pinctrl-0 = <&sde_dsi_active>;
++        pinctrl-1 = <&sde_dsi_suspend>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++        port {
++          tianma_nt36672a_in_0: endpoint {
++            remote-endpoint = <&dsi0_out>;
++          };
++        };
++      };
++    };
++
++...
 -- 
 2.27.0
 
