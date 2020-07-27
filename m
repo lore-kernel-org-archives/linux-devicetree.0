@@ -7,93 +7,90 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84143C433FE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAFEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEFD20714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D832070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595873672;
-	bh=pVKMY7lDiPq79GD7FAvQ4agKAX3xRA0hdYXrlEkB1fk=;
+	s=default; t=1595873724;
+	bh=aA66v6dN7zvi7hT8+jDWpepyEwVN5MR32Ef27QQoFW8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m+Xb7RNbqd/NRvSQlLHsmd4naqBKNZVYKMkGMf+crZ5yMnARCujZQ7xTsZybCMJYM
-	 w1sy8BAn767GqphJoj2l0AHVs6rAEIKU1xPyawrnKVanJ3NmaeWaOJp1jKcfc80Qj4
-	 dQFzJMxODLbXWIqjLS6fQCgmHvgWI6c5rcMrNV9A=
+	b=Ua77uuSJtUuIqPOdrzv0N204hm0PS+75AW+77XI20dgYtrCfGDG0ujBZJMgDtvakM
+	 jF/AmJYzVvjdKMle6yHD0UJHcl4rKQDpBKWGcgLKbn1lyCqqqwb4BLSWi2U8QtyINb
+	 IkEnVD/A0PGj5sbZGAHCHXhDtqBAHf2Gjwx2m5pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731541AbgG0SO3 (ORCPT
+        id S1730380AbgG0SPY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:14:29 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:38659 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbgG0SO3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 14:14:29 -0400
-Received: by mail-il1-f195.google.com with SMTP id s21so13903498ilk.5;
-        Mon, 27 Jul 2020 11:14:28 -0700 (PDT)
+        Mon, 27 Jul 2020 14:15:24 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45184 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbgG0SPY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 14:15:24 -0400
+Received: by mail-io1-f65.google.com with SMTP id e64so17945332iof.12;
+        Mon, 27 Jul 2020 11:15:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=rPmxfYQDyT8r9CcnowDVVykigkQ+z869mGL3I9FOWwo=;
-        b=BdhgMsN66sRBooFq8ZkMQzcEIrYFHI4dS9ClZo+YjP37BDflDMJklDk/hbKpN0KUG1
-         j3WT6FAI5vHxe26gzwRxYnnqNFqVfJ8L4ivkBlZJ3tiyxQhCtA9CGPzuUzVE8WQ/QkVe
-         TaSNnVkcrATxn+Bp3P6mi46TADFKzvFlKdxn0IOZ/9Xj1MBMX2DF0DQEAKdyJHtt8wVY
-         gNy/qWr9roVJ3JzWDAQrfAoVqaXlyse88xJFABdTOiwi2qMTPFmIvsQEYAtHtZ33IIj5
-         kkrRHi7tx3uYAK1YQGIyEMgo24k+f1LsLewXKMNvDejRkJUafCQqIFGR6gx5pzW/prRc
-         HOGQ==
-X-Gm-Message-State: AOAM5328fCAoqGwOninl8eb2emrVgV1F/5kVkSgGp55kl8ZFXbUEVUkT
-        OB+IcYIGp+heiAevl5tnOg==
-X-Google-Smtp-Source: ABdhPJwOPsDlRJNd39fzhlpbhYZJWTt8o2fLoFjCpKxHuendknVSAZX52OcisWkASIdYEOtqu66cqA==
-X-Received: by 2002:a05:6e02:545:: with SMTP id i5mr20290346ils.59.1595873668199;
-        Mon, 27 Jul 2020 11:14:28 -0700 (PDT)
+        bh=GPySXAZCXNAPcxTnIrbRyNITLVf9/SCdJpSv4va/tXo=;
+        b=QcYkV8bFgXOn/DIaAZH1GM0SlHu9gxHFQ+10LaNwp/etHQxFja0r/zx4UZi4r3HCgC
+         a8AYbe9EHn16GQHMfVPwXojxnzy+XwmbUGLPCPCSc4d5ddtj+AF0Axj/Yx4gc9x9I65d
+         SrTtf3x7StpAu66jO5rfGZaBfVilPaNh7aX0s5Nphe699dFWfVAfQWHlp/vr80B9jayp
+         BA8R5JgYmMcr7sdjEUKzT3BKfCjwdewCeMoxtpPBKYBv4HjZrU8EAsM3+n3qPQmxT0v2
+         /im2tJGfcpVX88fmLNNiZLjKJEyZB/uNlXBopHmvxswi6X+0FhstE78pAUe9VJ+4lfv4
+         rkUg==
+X-Gm-Message-State: AOAM5307R7BEc0HERffMshd3yt1Q/NUBg4Emqm8mSdEXgQWTesFwEDeM
+        l0w+BhKCM27zsmawEgaAuLTXKkdRTw==
+X-Google-Smtp-Source: ABdhPJwhusEJrY0gD6pxlBikusEFjEJ7+Axs4d+t20HxTMW2fq6sMJs0tIgnLEW2CSDknTVU0cycdA==
+X-Received: by 2002:a6b:6211:: with SMTP id f17mr19106841iog.34.1595873722942;
+        Mon, 27 Jul 2020 11:15:22 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b11sm1133142ile.32.2020.07.27.11.14.25
+        by smtp.gmail.com with ESMTPSA id c25sm1533544ilf.63.2020.07.27.11.15.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:14:27 -0700 (PDT)
-Received: (nullmailer pid 639381 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:14:24 -0000
-Date:   Mon, 27 Jul 2020 12:14:24 -0600
+        Mon, 27 Jul 2020 11:15:22 -0700 (PDT)
+Received: (nullmailer pid 640852 invoked by uid 1000);
+        Mon, 27 Jul 2020 18:15:21 -0000
+Date:   Mon, 27 Jul 2020 12:15:21 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Talel Shenhar <talel@amazon.com>
-Cc:     robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        mchehab@kernel.org, davem@davemloft.net, catalin.marinas@arm.com,
-        devicetree@vger.kernel.org, ronenk@amazon.com, james.morse@arm.com,
-        bp@alien8.de, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, hhhawa@amazon.com, hanochu@amazon.com,
-        mark.rutland@arm.com, eitan@amazon.com, will@kernel.org,
-        nicolas.ferre@microchip.com, jonnyc@amazon.com,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v8 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-Message-ID: <20200727181424.GA639053@bogus>
-References: <20200726191555.5210-1-talel@amazon.com>
- <20200726191555.5210-2-talel@amazon.com>
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: light: add AMS AS73211 support
+Message-ID: <20200727181521.GA640662@bogus>
+References: <20200727144741.3927-1-ceggers@arri.de>
+ <20200727144741.3927-2-ceggers@arri.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200726191555.5210-2-talel@amazon.com>
+In-Reply-To: <20200727144741.3927-2-ceggers@arri.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 26 Jul 2020 22:15:54 +0300, Talel Shenhar wrote:
-> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+On Mon, 27 Jul 2020 16:47:40 +0200, Christian Eggers wrote:
+> Add DT bindings for AMS AS73211 XYZ True Color Sensor.
 > 
-> Signed-off-by: Talel Shenhar <talel@amazon.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
 > ---
->  .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>  .../bindings/iio/light/ams,as73211.yaml       | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml: example-0: edac@f0080000:reg:0: [0, 4027056128, 0, 65536] is too long
+Documentation/devicetree/bindings/iio/light/ams,as73211.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/iio/light/ams,as73211.yaml#
 
 
-See https://patchwork.ozlabs.org/patch/1336532
+See https://patchwork.ozlabs.org/patch/1337022
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
