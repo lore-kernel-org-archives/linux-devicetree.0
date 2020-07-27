@@ -2,102 +2,158 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA87C433FB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F86C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9370F2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626B5205CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 11:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3SWT0n3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgG0LHg (ORCPT
+        id S1726298AbgG0LJX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:07:36 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:45915 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgG0LHe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 07:07:34 -0400
-Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N5VLY-1ksLsH2eE6-0170OO; Mon, 27 Jul 2020 13:07:31 +0200
-Received: by mail-qv1-f42.google.com with SMTP id s15so2778448qvv.7;
-        Mon, 27 Jul 2020 04:07:31 -0700 (PDT)
-X-Gm-Message-State: AOAM533HndIsn7C3eJfJtiaRP6SJnOrlJpjKhwuyUJbBR8t7Ul8IEshi
-        WTie9KP6tuSWckZzxlidtav9DErxuzLgBbq74+Y=
-X-Google-Smtp-Source: ABdhPJzxOngJK6stFBNtdHenz0ykV74orh0S+FvohVN1V01bLg69miZWGOg43PNVNxMAXwrpCMzVbqT41VdOkXRTOnM=
-X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr20821335qvb.210.1595848050219;
- Mon, 27 Jul 2020 04:07:30 -0700 (PDT)
+        Mon, 27 Jul 2020 07:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgG0LJX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 07:09:23 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563D2C061794;
+        Mon, 27 Jul 2020 04:09:23 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w126so8712022pfw.8;
+        Mon, 27 Jul 2020 04:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MW0MiZ4Un8fYtTrl+x7jVZHspHstStb50IKw8Wvbd5U=;
+        b=n3SWT0n3IRqo/XZpzAMCvIjA2bsgz18mz3lk/BZ8mdf6tc/d5H8HBM6+bPfcA5uDd1
+         NK3BzFKo/8n+YcZleEuePGgFdERx2TwUf9OkjOmq38APw91WCwgQxtsJH92KJO7uqCBs
+         3bsqBoKYvM9BFB9xyGXI387chNDo0DAgzittyDl8CO+zUfwyeAfWqpyfCIfBzricbULG
+         a7w0KyarV0Q8ADxt8Y+hDtoJZDrqxB0sWQD9Gp7Z/lhpi01Z42FyVtXbBc1q85BnqzXu
+         T/NdDaXJ0TLefqccc/HBBFAJzxpHREQtbHzwCWAPW/Hi2+M7vTMe3GdCSvCxow4WV1nV
+         0umw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MW0MiZ4Un8fYtTrl+x7jVZHspHstStb50IKw8Wvbd5U=;
+        b=IExg+qvpYJ3S5rsb/+MWweey7LDMdrIwdkEnc95apB/TpjZHLrk0IKguPj81pzXATE
+         Qkm3cPpWVep2CcIhT2i0B7i3NT01omq23pBq9nunOHZnw/bA0aJ3SVTrNkBbtkw/w+vB
+         cV7i/kn72OrKQcVcSQvFIOqs4uU7MkhkZqZbLvz1S3NppP+WSX3w2dND/lgR7vXi/Q/z
+         jgNfyB8sMYOnF/goxkTsjcjbQtE8lak8QtdWHazGPB5Ij7sTEXBrs4tJGFttQbJld91O
+         fg0k3mswErS5un6x/8jI7DD15b3ialS9cSNfbJx3MeDqIck/iteGqQ3VliHJPMmVKwLa
+         6EMg==
+X-Gm-Message-State: AOAM531N3KX2c2Ofs6pdouilRGK9L0RgQaJF+LgLaAaSJkZadgcyEuYE
+        cd2wIhW/VmGFDxE41PW2vZZnIYeLti8qklcAA+117AkS
+X-Google-Smtp-Source: ABdhPJwdOd5Pg+MJNemvTNNuhslAQA/KR66D738X15SQC3w6UkiaGGcHyDy3kerE7prulrKtu4m5Bgrsg7nnRf1dWZs=
+X-Received: by 2002:a63:924b:: with SMTP id s11mr18746092pgn.74.1595848162878;
+ Mon, 27 Jul 2020 04:09:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727084211.6632-1-lars.povlsen@microchip.com>
- <20200727095009.GK4073@piout.net> <87v9i9fdy7.fsf@soft-dev15.microsemi.net>
-In-Reply-To: <87v9i9fdy7.fsf@soft-dev15.microsemi.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 13:07:14 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0CMqqFWM+QXC0wXxrfKBN0U5cyx_naBx+hS3V3SG2KOQ@mail.gmail.com>
-Message-ID: <CAK8P3a0CMqqFWM+QXC0wXxrfKBN0U5cyx_naBx+hS3V3SG2KOQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        SoC Team <soc@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200727100336.32153-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20200727100336.32153-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 14:09:08 +0300
+Message-ID: <CAHp75VeO86j-onVJX-M7YmOZeQuX=Jx58jnT3dLkwCsBom1aTQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] phy: Add USB PHY support on Intel LGM SoC
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Felipe Balbi <balbi@kernel.org>, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:VQrKRxNjIjvZRIEeCkAz30oJy/i+x4XOwSIIe22zj3vGPVX3xwW
- B8VT/nfb1I30p30rKj0Uuy9yjvkMzVHBSgnUOQ8npY2A/JwnN1j3vnSOhJadJa8D1e4ebjg
- I5kbFM46k8uMAK3FbSb8Jv819zX3TKO1LSnoASLFe4nDLMzVfbJdHE/4mYjvR6obfUWNR7X
- aSsD2jCdSZREqoHIzpZkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zn333mraLCU=:K6u21uNyZfQWEhNs0LPmaG
- 0QCJBEOZ3RHArxr3HqpP347CBeQvh3hlTODTwJxmnRvFvGZ8ZC3nA2LalvBrtIG2zFi8KzpaN
- SZmj4R24ZiRSpzYnPD8kUTwSOd1k4MXTT3FMsVt77CCxkf6iHzGBV22Z2EWxJVi2erzNFDfNO
- 0eiJIJ0yo3dmThIQ0abPzum8M+hdaRITncovfY8fjijsYbx1FDCYKQLSbwyW51S3zK7loORi5
- 8YHUMa/7GsGpoWBz3kZuzBr/+hXtNhWVZwJ+EF/SOn/u3wsx9nG9inHenmkYryeC5I8+2efaX
- L3C4ReXq3CI522YkCfzs3BTqUJDdydCcIKWUNQM/HzEusSDq+31rpDIF6KHfw1vCB+VYUB9HM
- 9iL9MWFBF2j5DFT78ON2EvgsUdNhr4NOMZsTXbTj1vENSSHGmj4Vu/eajf4xsgx8f1nEgoG5L
- Ymc3I2fd3BLbSvwyoqMbxJrJSyjBaimXZzZ2G7r44JdxJFY96bIz2qhGWdZ0aWDKbQhs/ScQz
- yFq6jVAA0a3KyZAJwCPBHbQAgds95ppbuzCtG1ro8g07kYeqnhZWYjJrwcsYfWiaiwEMZLCap
- ff8gz2HZvFv1I39IqObBJKTUNGMFfvCUEcK44Vf0MnNAU1+hzHWGqklYTkARxbmGZlbjsCb0P
- w01HN5rJK1vMXhwEIlEr68wo90nTUSDYpRfn7sJL3UfRv9MeafJ4iU9p3zRle7tQyopNx3NAO
- fTxMCBNz5Brwp1GOpvZIqSKTroFsw5AE7uAjLbNzAyS++7/KOE3aOY6qDoFiyqB9Kr4okwC/U
- uJggSSGGIp1oBJ2CyHQdrk6AIntMvQX/V9yrvNh4398Rs0/TWswyhblAjJEkPulvDEyS0tYlm
- 8cZ5PKBg0dTaHVi4HwJ72TmgnuZJIATMfSDgujwO9QGCOgSaVSsSS/t7frgautm6I+wBraBmm
- uzHiAaQiyByeq6hm1akvyrg2RktphnyECXJgpW3RtidbAg5PMCVc/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:30 PM Lars Povlsen
-<lars.povlsen@microchip.com> wrote:
-> Alexandre Belloni writes:
-> > As Arnd stated, he already applied the patches so you have to send an
-> > incremental patch to fix the clock driver.
-> >
+On Mon, Jul 27, 2020 at 1:08 PM Ramuthevar,Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 >
-> I actually wrote Arnd about this specifically, and he replied that a
-> patch against either next or mainline was fine - so that's why I
-> refreshed the lot (Including Reviewed-by: headers).
+> The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+> Requires minimal external components, a single resistor, for best operation.
+> Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
+> ---
 
-I think I misunderstood your question. To clarify: Alexandre is right,
-you should not resend patches that have already been merged but
-instead send the incremental patches if you need further changes.
+> v7:
+>   - No Change
 
-I thought your question was about the case where your patch
-series has conflicts against another unrelated set of changes
-that may have been merged already.
+I guess it's not the correct changelog entry.
+You moved file to another subsystem, didn't you?
 
-> But I will send an incremental patch just in case, no problem.
+> v6:
+>   - No Change
+> v5:
+>   - As per Felipe and Greg's suggestion usb phy driver reviewed patches
+>     changed the folder from drivers/usb/phy to drivers/phy
+>   - Reviewed-By tag added in commit message
+> v4:
+>   - Andy's review comments addressed
+>   - drop the excess error debug prints
+>   - error check optimized
+>   - merge the split line to one line
+> v3:
+>   - Andy's review comments update
+>   - hardcode return value changed to actual return value from the callee
+>   - add error check is fixed according to the above
+>   - correct the assignment in redundant
+>   - combine the split line into one line
+> v2:
+>   - Address Phillip's review comments
+>   - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+>   - re-design the assert and deassert fucntion calls as per review comments
+>   - address kbuild bot warnings
+>   - add the comments
+> v1:
+>   - initial version
+>
+> ---
+> dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+> v7:
+>   - Fixed the bot issue: usb-phy@e7e00000: '#phy-cells' is a required property
+> v6:
+>   - Fixed the bot issue.
+>   - replace node-name by usb-phy@ in example
+> v5:
+>   - Reviewed-By tag added
+> v4:
+>   - No Change
+> v3:
+>   - No Change
+> v2:
+>   - No Change
+> v1:
+>   - initial version
+>
+>
+> Ramuthevar Vadivel Murugan (2):
+>   dt-bindings: phy: Add USB PHY support for Intel LGM SoC
+>   phy: Add USB3 PHY support for Intel LGM SoC
+>
+>  .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  58 +++++
+>  drivers/phy/Kconfig                                |  11 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-lgm-usb.c                          | 278 +++++++++++++++++++++
+>  4 files changed, 348 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+>  create mode 100644 drivers/phy/phy-lgm-usb.c
+>
+> --
+> 2.11.0
+>
 
-Thanks,
 
-      Arnd
+-- 
+With Best Regards,
+Andy Shevchenko
