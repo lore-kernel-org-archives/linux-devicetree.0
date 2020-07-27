@@ -2,100 +2,130 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F50C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4EBC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301EA208E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595870305;
-	bh=+BtY1gXQuzt+gs+zPIuIDgEDq3OncCsVhwsW5Q6dSgs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dsdyiI2uE47/80QckXPE+Lr3+gSb230v7dCgETEQmMAcuhV6jcvxU1VxxryKNj55+
-	 Lhzxi7e22RVqmE43DL0geOQtvr1gtU8hldyJp9jKxsFLWRL2u0RUcTwX9RiHqMiBJb
-	 VFSGD9u8aBn60PvBVilEevdX3b+t8H5dMsdeEUgw=
+	by mail.kernel.org (Postfix) with ESMTP id 9FA03208E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgG0RSY (ORCPT
+        id S1730621AbgG0RY2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:18:24 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45476 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgG0RSY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 13:18:24 -0400
-Received: by mail-ed1-f66.google.com with SMTP id di22so5541808edb.12;
-        Mon, 27 Jul 2020 10:18:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0k4jIH1gSgo1iTNyMMauxWmx+NsRK7IQO1nAgcxxRgk=;
-        b=oeKc4Zlj5IWLellB6AYlu1qxoGGZ+LQB4UQnuSRhSjFBqrgQZwD/WGS4UuvDJbeLEZ
-         593fT4aJDHKaCn+PeaL9iSsNm0S1qHJ2W/cT5aE7HMVXY3JwlN/HVHPo40kMkf7Lw4hf
-         O+b9+NxvaR9Qug/rk9TkFGXr44Jq41794SwSsdVfIMB/RRfU363kKb31YNPLO95gzSH8
-         CL7VnDP6DM3kU9SeN3Zyl3DAuRHE23hxDe0JaQeoWIvzBahmJ9wNu9Uan27KE7UmPql0
-         GznBu85lEzVemDwi2Q6llqFIqjm3SXUdCwFjDgZ2afWerrSAcmVdIPn9xFbyzGZAsL0C
-         Rf8Q==
-X-Gm-Message-State: AOAM532uLA/5iuU3w8TcyHGljQUcECbaJ18IVN+FUOzWn/en5UDiexcb
-        yF6RnMyeaXnGbhJXrMm+2fgNvt26fck=
-X-Google-Smtp-Source: ABdhPJxTxksxPRcpsDCoyrpO6+LcacicP6eSXof2gvuPMink0TfhYhM/bbzXRymtvtFdU28AZwGSug==
-X-Received: by 2002:a50:bb2f:: with SMTP id y44mr22324357ede.351.1595870302547;
-        Mon, 27 Jul 2020 10:18:22 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id w22sm7455914ejj.123.2020.07.27.10.18.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Jul 2020 10:18:21 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 19:18:19 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     broonie@kernel.org, simon@lineageos.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] ARM: dts: exynos: Add sound support to Midas
-Message-ID: <20200727171819.GC3507@kozik-lap>
-References: <20200727163027.9242-1-s.nawrocki@samsung.com>
- <CGME20200727163148eucas1p1ed653cb71a473aa02c7508b2cc9beccf@eucas1p1.samsung.com>
- <20200727163027.9242-3-s.nawrocki@samsung.com>
+        Mon, 27 Jul 2020 13:24:28 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2541 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730611AbgG0RY1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:24:27 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A785D395796E4E15A9F2;
+        Mon, 27 Jul 2020 18:24:26 +0100 (IST)
+Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 18:24:26 +0100
+Date:   Mon, 27 Jul 2020 18:24:25 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Darius Berghe <darius.berghe@analog.com>
+CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jic23@kernel.org>,
+        <robh@kernel.org>, "Mike Looijmans" <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v3 3/3] ltc2471 driver yaml
+Message-ID: <20200727182425.00001db9@huawei.com>
+In-Reply-To: <20200727135834.84093-4-darius.berghe@analog.com>
+References: <20200727135834.84093-1-darius.berghe@analog.com>
+        <20200727135834.84093-4-darius.berghe@analog.com>
+Organization: Huawei tech. R&D (UK)  Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200727163027.9242-3-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.227.96.57]
+X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 06:30:27PM +0200, Sylwester Nawrocki wrote:
-> From: Simon Shields <simon@lineageos.org>
-> 
-> Update the never-mainlined "samsung,trats2-audio" binding and instead
-> use the new "samsung,midas-audio" binding.
-> 
-> Signed-off-by: Simon Shields <simon@lineageos.org>
-> [s.nawrocki: fixed DAPM routing entries for MICBIAS1/2, adjusted to
->  new cpu/codec binding, corrected the regulator nodes indexing]
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes for v2:
->  - reordering to maintain alphabetical order,
->  - corrected the fixed voltage regulator nodes indexing,
->  - whitespace fixes.
-> ---
->  arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi | 42 +++++++++++++++-
->  arch/arm/boot/dts/exynos4412-i9300.dts      |  4 ++
->  arch/arm/boot/dts/exynos4412-midas.dtsi     | 78 ++++++++++++++++++++++++-----
->  arch/arm/boot/dts/exynos4412-n710x.dts      | 37 +++++++++++++-
->  4 files changed, 145 insertions(+), 16 deletions(-)
+On Mon, 27 Jul 2020 16:58:34 +0300
+Darius Berghe <darius.berghe@analog.com> wrote:
 
-Looks good, thanks. Unless few more DTS patches come in, I will not make
-another pull request (it is quite late). I'll take it then after merge
-window.
+> Add dt binding documentation for ltc2471 driver. This covers all supported
+> devices.
+> 
+> Signed-off-by: Darius Berghe <darius.berghe@analog.com>
 
-Best regards,
-Krzysztof
++CC Mike given the doc lists him as maintainer.
+
+> ---
+>  .../bindings/iio/adc/adi,ltc2471.yaml         | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> new file mode 100644
+> index 000000000000..d5b35a1fa651
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2020 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ltc2471.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices LTC2471 16-bit I2C Sigma-Delta ADC
+> +
+> +maintainers:
+> +  - Mike Looijmans <mike.looijmans@topic.nl>
+> +
+> +description: |
+> +  Analog Devices LTC2461 (single-ended) and LTC2463 (differential) 16-bit
+> +  I2C Sigma-Delta ADC with 60sps output rate.
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/24613fa.pdf
+> +
+> +  Analog Devices LTC2471 (single-ended) and LTC2473 (differential) 16-bit
+> +  I2C Sigma-Delta ADC with selectable 208/833sps output rate.
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/24713fb.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ltc2461
+> +      - adi,ltc2463
+> +      - adi,ltc2471
+> +      - adi,ltc2473
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  avcc-supply:
+> +    description:
+> +      Phandle to the Avcc power supply (2.7V - 5.5V)
+
+additionalProperties: false
+
+should be fine here I think...
+I keep forgetting this one myself.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      adc@14 {
+> +        compatible = "adi,ltc2461";
+> +        reg = <0x14>;
+> +      };
+> +    };
+> +
+
