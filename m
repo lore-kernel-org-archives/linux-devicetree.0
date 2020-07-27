@@ -2,167 +2,107 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB67DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B66C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E0B2075D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C632070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qH2CjIts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgG0HBf (ORCPT
+        id S1726222AbgG0H36 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53140 "EHLO
+        Mon, 27 Jul 2020 03:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0HBf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 03:01:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54ABDC0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 00:01:35 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzx8a-0006aD-Qt; Mon, 27 Jul 2020 09:01:28 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzx8Y-0006Jq-RX; Mon, 27 Jul 2020 09:01:26 +0200
-Date:   Mon, 27 Jul 2020 09:01:26 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200727070126.2juwfmra3i67lxfw@pengutronix.de>
-References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
- <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
- <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
- <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
+        with ESMTP id S1726213AbgG0H36 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 03:29:58 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1047EC0619D2;
+        Mon, 27 Jul 2020 00:29:58 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b13so8975173edz.7;
+        Mon, 27 Jul 2020 00:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/SS2tH+znVFwsX6rkJmypmxpV9S8bPpCHrpiOj20R8U=;
+        b=qH2CjItsOC8efLdB17RxpsOOHLZm4nhmPZjXQjWEBhOQnAdYEy0Innx9mODaTuBUsL
+         lc4Xx3skXLxB5fc4ds5e9RXXaqbf1vA8cpt5xXaFPWEswgwnFVu2TjEwy+NZcFikUED7
+         qXRQFwRtJTJaQSUu9Fb/33Y5OfAOUm021ySeRYyVGDbcOcpPpCBiJ2gL13LA1DZplcjH
+         IE2yFB33XhnLfuXMunOTgjVcXLmihi47JbQau27elL2GS7lNiyg5PHiG7dcf1HTM0/va
+         rvraSilnxV3oG0xgMrXubRYQR4pxejYUfAw78qdYbfu0VcPNJApCrwQNbFnzqoC6mMz2
+         wQVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/SS2tH+znVFwsX6rkJmypmxpV9S8bPpCHrpiOj20R8U=;
+        b=HAwMD0PgohW3DIAun89Ce6IwMNnygeM1oraF8nOnGPatTKBuXbxxaM2Uk5RXWn8N6t
+         jRaAHvh3RKm7yx5KpQCucMOMF7X/OjrVh2aS56aPYcFLXGDzhXKjIOdiiCnIgr98jIZL
+         DCvK/6HyEB0VbRBHHSLMUeuk653A6GmoZC/N+7/TsvkBYPP51uiRQIVsXghdcLjvEeiD
+         G76NXxDjRuCAR2xXEpyQYqLtnWKLD8e0E5+p+LG39gKHzlePM48AlDRYZx899qMInLXZ
+         3dL5SF8FDcLygFg2VNi0CiMaOf/FqjYObUe+KEPhcuhOVOPLuf0KFypTpeKFIumtUJtg
+         onRQ==
+X-Gm-Message-State: AOAM533jpvaUpXe80Lo8GIoWalLJCSk8MzVglAGW0venLXDWioYxUZiB
+        ypxSxa9tAFTrhE1NXgZ/xUD/bAY/so39mktu9p4=
+X-Google-Smtp-Source: ABdhPJx3zAe7GHpQ50dWJVcLEvnofVYIk9+W7vz3pQLvKKXzZ14wYkHL2FIwpfb1D6I8xQVjFIllx4rqnAGOS7GoibU=
+X-Received: by 2002:a05:6402:84e:: with SMTP id b14mr7308362edz.322.1595834996797;
+ Mon, 27 Jul 2020 00:29:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ddzwp66u6avxreag"
-Content-Disposition: inline
-In-Reply-To: <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-3-martin.botka1@gmail.com> <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+ <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
+In-Reply-To: <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Mon, 27 Jul 2020 09:29:19 +0200
+Message-ID: <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
+ with u64 data length
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hello Uwe,
 
---ddzwp66u6avxreag
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, Jul 25, 2020 at 09:12:23PM +0200, Martin Botka wrote:
+>> > Note there is already a series that changes these values to u64. See
+>> > a9d887dc1c60ed67f2271d66560cdcf864c4a578 in linux-next.
+>>
+>> Amazing. But isn't there the same issue with it as this one where this
+>> would fail to build on 32 bit architecture?
+>
+> In theory all these cases are coped for. I didn't see any problems yet,
+> so I still assume also the 32 bit archs are fine.
 
-On Mon, Jul 27, 2020 at 02:04:56PM +0800, Tanwar, Rahul wrote:
->=20
-> Hi Uwe,
->=20
-> On 24/7/2020 12:15 am, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >
-> > On Thu, Jul 23, 2020 at 03:44:18PM +0800, Rahul Tanwar wrote:
-> >> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> >> +			 const struct pwm_state *state)
-> >> +{
-> >> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
-> >> +	u32 duty_cycle, val;
-> >> +	int ret;
-> >> +
-> >> +	if (!state->enabled) {
-> >> +		ret =3D lgm_pwm_enable(chip, 0);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	/*
-> >> +	 * HW only supports NORMAL polarity
-> >> +	 * HW supports fixed period which can not be changed/configured by u=
-ser
-> >> +	 */
-> >> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
-> >> +	    state->period !=3D pc->period)
-> >> +		return -EINVAL;
-> > At least for state->polarity you have to check before state->enabled, as
-> > the expectation on
-> >
-> >         .enabled =3D false
-> >         .polarity =3D PWM_POLARITY_INVERSED
-> >
-> > is that the output becomes constant high. Also as confirmed at the end
-> > of v4, state->period < pc->period was the right check to do.
->=20
-> For below case:
->=20
-> .enabled =3D false
-> .polarity =3D PWM_POLARITY_INVERSED
->=20
-> Since our HW does not support inversed polarity, the output for above case
-> is expected to be constant low. And if we disable PWM before checking for
-> polarity, the output becomes constant low. The code just does that. Sorry,
-> i could not understand what is wrong with the code. It looks correct to m=
-e.
+OK then all is fine. I will drop the patch in V2.
 
-As your hardware can only support normal polarity, the code must have:
+Also Uwe i just realized that you sent the original message and also
+this reply only to me and not to anyone else.
+Could you please send the messages also to everyone else ?
 
-	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-		return -EINVAL;
+Thank you.
 
-	if (!state->enabled) {
-		ret =3D lgm_pwm_enable(chip, 0);
-		return ret;
-	}
-
-That's what I meant writing: "At least for state->polarity you have to
-check before state->enabled".
-
-> Given the fact that we support fixed period, if we allow
-> state->period < pc->period case then the duty cycle will be evaluated as
-> higher than the requested one because the state->period is lesser than
-> the actual fixed period supported by the HW. Can you please elaborate
-> on why you think we should allow state->period < pc->period case?
-
-You should not allow it. In v4 you had:
-
-	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
-	    state->period < pc->period)
-		return -EINVAL;
-
-That's the right thing to do (even though I was unsettled at one point
-and wrote it was wrong). The check in v5 with state->period !=3D
-pc->period is wrong.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ddzwp66u6avxreag
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ee8MACgkQwfwUeK3K
-7AkRDAgAiUnatkQl/KD0wuhWITucTaiQM4Qo2QZDKhy/JLydo0U0VKR3+A/uN3QN
-W3gcMAu9xeocUFMKtbrWAgCVczK+k1yfI9w5EB6fHRl65MlH5J3MwfDvib1EAIcm
-H0kA9zCdlD5UujmGB6cJhgs+mnpJobdM/EV1OMGon8FlZ7AvopWJ34HZFFsUvA6P
-FCme/aqyHZ92V6dAfemLY9J2yy7bjMiZUOhFAp13/3kwCWKaPL/IIL3Z5ShLCWMO
-ASO/dZjP3PT5oDryiKq43XR2zftEVzgw+gKroVhvuN8Vo1n3MHVeNvdvq52m2C7C
-KCKTd+qGQy0VWGG+M2xuI/7n8xHZZg==
-=NaYd
------END PGP SIGNATURE-----
-
---ddzwp66u6avxreag--
+Best regards,
+Martin
