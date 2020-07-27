@@ -2,148 +2,92 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A01C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D0BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A03E42074F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bmiSU3rf"
+	by mail.kernel.org (Postfix) with ESMTP id 3AFBB2074F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 09:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595843481;
+	bh=/Nkd3YBv64YbNEYFecnspgikZgRL+85WrksxxlVoT0I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZOaRNusD1lsdWE5gbYCFwoP140IUZHShkmQ/pe24IJYOICBEvvUomqduvQOoK/f4C
+	 UjO/m00d7ds5N0W6/uMAfboo8j+b3swKU0GTNLTvLmFl5qq5W1Ya0ZeOVt9PaSIIjv
+	 pThrkdH7G0j6OgTlDziSK0t8wHt7JIT93m/+AIcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgG0JqD (ORCPT
+        id S1726929AbgG0JvU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgG0JqD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 05:46:03 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC07C061794;
-        Mon, 27 Jul 2020 02:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ICcPARetP40zUorjS7dcYCqx0YJx8qUK4R318qaC2G4=; b=bmiSU3rfKiA+hjvdrfEZbldwW
-        5o7JEI+ATlaX78/5TW8fpGu0LNJ+qrq8e0gLOjeveOBJFNPTW+En2OI8jcR7tn74XRZOtTxPZq1v/
-        r/lq0lubttsxW+uEBNMX8IN2w9/bzzld/gcjAeGhTWtq1E2BeaOJcieMKeXlg4QgL2fSmlJbf18b1
-        nNAZPtkIJCLCKJlS4dR5rCoAuiHTbwZB5Z2azfdLRZebMVYTfFPkP0F46qGPc7G4Ugn8nUMP3Ftrx
-        Trxb46LgvkYjjBF9KyiQMb6I9FleJ/KqHVB8tZ5aR/cnF8bNAUDP1Ak2DsFnGdveBhrIZIzumCb9C
-        ehG6V1cCQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44750)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jzzhj-0002fr-Sw; Mon, 27 Jul 2020 10:45:55 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jzzhh-0003Yi-Sb; Mon, 27 Jul 2020 10:45:53 +0100
-Date:   Mon, 27 Jul 2020 10:45:53 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Rob Herring <robh@kernel.org>, miguelborgesdefreitas@gmail.com,
-        a.zummo@towertech.it, baruch@tkos.co.il, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-Message-ID: <20200727094553.GH1551@shell.armlinux.org.uk>
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus>
- <20200723195755.GV3428@piout.net>
+        Mon, 27 Jul 2020 05:51:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgG0JvU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:51:20 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28CD820759;
+        Mon, 27 Jul 2020 09:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595843480;
+        bh=/Nkd3YBv64YbNEYFecnspgikZgRL+85WrksxxlVoT0I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VGVwa5C3r0p7g3xdE0OicJ5ZPXih40I1dEWTzt7TI0B1iKKgIJgAp8uLai4TrXCbn
+         1vz3BtkhI3uniG7qPbvD9VEdq91WHgb1YAHhlgAYxS8sF0+2oJSe6NWBNr10+yIZe0
+         Awo16hVElKS/ty7yqR7WrqJnTmtSSQfpuEKHoRBs=
+Date:   Mon, 27 Jul 2020 15:21:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com, kishon@ti.com,
+        gor@linux.ibm.com, hca@linux.ibm.com,
+        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Re: [PATCH v6 3/5] USB: PHY: JZ4770: Add support for new Ingenic
+ SoCs.
+Message-ID: <20200727095115.GV12965@vkoul-mobl>
+References: <20200725035159.31231-1-zhouyanjie@wanyeetech.com>
+ <20200725035159.31231-4-zhouyanjie@wanyeetech.com>
+ <87r1t0nmpr.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200723195755.GV3428@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87r1t0nmpr.fsf@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 09:57:55PM +0200, Alexandre Belloni wrote:
-> On 23/07/2020 11:49:05-0600, Rob Herring wrote:
-> > On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
-> > > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > 
-> > > This adds direct-switching mode as a configurable DT flag for
-> > > RTC modules supporting it (e.g. nxp pcf8523).
-> > > DSM switches the power source to the battery supply whenever the
-> > > VDD drops below VBAT. The option is recommended for hw designs
-> > > where VDD is always expected to be higher than VBAT.
-> > > 
-> > > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > ---
-> > > Changes in v2:
-> > > - Added extended commit message for git history
-> > > - Separate dt bindings documentation into a single patch
-> > > 
-> > >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
-> > >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
-> > >  2 files changed, 13 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > index 0b1080c..f715a8f 100644
-> > > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > @@ -4,10 +4,14 @@ Required properties:
-> > >  - compatible: Should contain "nxp,pcf8523".
-> > >  - reg: I2C address for chip.
-> > >  
-> > > -Optional property:
-> > > +Optional properties:
-> > >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-> > >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
-> > >    Default value (if no value is specified) is 12500fF.
-> > > +- pm-enable-dsm: battery switch-over function is enabled in direct
-> > > +  switching mode. The power failure condition happens when VDD < VBAT,
-> > > +  without requiring VDD to drop below Vth(sw)bat.
-> > > +  Default value (if not provided) is the standard mode.
-> > >  
-> > >  Example:
-> > >  
-> > > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
-> > >  	compatible = "nxp,pcf8523";
-> > >  	reg = <0x68>;
-> > >  	quartz-load-femtofarads = <7000>;
-> > > +	pm-enable-dsm;
-> > >  };
-> > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > index ee237b2..a0048f4 100644
-> > > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > @@ -47,4 +47,11 @@ properties:
-> > >      description:
-> > >        Enables wake up of host system on alarm.
-> > >  
-> > > +  pm-enable-dsm:
-> > > +    $ref: /schemas/types.yaml#/definitions/flag
-> > > +    description:
-> > > +      Enables the battery switch-over function in direct switching
-> > > +      mode. Should be set in systems where VDD is higher than VBAT
-> > > +      at all times.
-> > 
-> > I'm all for common properties, but is this common across vendors?
-> > 
+On 25-07-20, 09:16, Felipe Balbi wrote:
 > 
-> This is but this shouldn't be a DT property as it has to be changed
-> dynamically. I'm working on an ioctl interface to change this
-> configuration.
+> Hi,
+> 
+> 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com> writes:
+> > Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
+> > the X1000 SoC and the X1830 SoC from Ingenic.
+> >
+> > Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> > Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+> > Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+> > Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> 
+> It would be better to move this driver to drivers/phy before adding
+> support for new SoCs. We want to remove drivers/usb/phy/ in the near
+> future, any help is welcome.
 
-Why does it need to be changed dynamically?  If the hardware components
-are not fitted to allow the RTC to be safely used without DSM, then
-why should userspace be able to disable DSM?
+Yeah I was about to ask why should this patch up drivers/usb/phy/ rather
+than move to drivers/phy, thanks for confirming that :)
+
+Looking forward to move
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+~Vinod
