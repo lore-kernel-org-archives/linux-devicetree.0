@@ -2,253 +2,312 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E34CC433EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4EAC433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF7172073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3020820759
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgG0FUr (ORCPT
+        id S1727016AbgG0FaT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:20:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgG0FUq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 01:20:46 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90830C0619D2
-        for <devicetree@vger.kernel.org>; Sun, 26 Jul 2020 22:20:45 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jzvYd-0005Ov-P9; Mon, 27 Jul 2020 07:20:15 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jzvYc-0001Zu-AD; Mon, 27 Jul 2020 07:20:14 +0200
-Date:   Mon, 27 Jul 2020 07:20:14 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
-        robh+dt@kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 06/10] remoteproc: imx_rproc: add load hook
-Message-ID: <20200727052014.tadfgxyexkoxffy7@pengutronix.de>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-7-peng.fan@nxp.com>
+        Mon, 27 Jul 2020 01:30:19 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:44880 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727001AbgG0FaS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 01:30:18 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5S0bW011271;
+        Mon, 27 Jul 2020 01:30:01 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5da4n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:30:01 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06R5TxLF047678
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 27 Jul 2020 01:29:59 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 26 Jul 2020 22:29:57 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Sun, 26 Jul 2020 22:29:57 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksR007624;
+        Mon, 27 Jul 2020 01:29:54 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v6 5/9] hwmon: pmbus: adm1266: read blackbox
+Date:   Mon, 27 Jul 2020 08:31:17 +0300
+Message-ID: <20200727053121.23288-6-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200727053121.23288-1-alexandru.tachici@analog.com>
+References: <20200727053121.23288-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fbgyevojci4fu3gk"
-Content-Disposition: inline
-In-Reply-To: <20200724080813.24884-7-peng.fan@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:01:51 up 254 days, 20:20, 238 users,  load average: 0.18, 0.13,
- 0.04
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270040
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
---fbgyevojci4fu3gk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use the nvmem kernel api to expose the black box
+chip functionality to userspace.
 
-On Fri, Jul 24, 2020 at 04:08:09PM +0800, Peng Fan wrote:
-> To i.MX8, we not able to see the correct data written into TCM when
-> using ioremap_wc, so use ioremap.
->=20
-> However common elf loader using memset.
->=20
-> To arm64, "dc      zva, dst" is used in memset.
-> Per ARM DDI 0487A.j, chapter C5.3.8 DC ZVA, Data Cache Zero by VA,
->=20
-> "If the memory region being zeroed is any type of Device memory,
-> this instruction can give an alignment fault which is prioritized
-> in the same way as other alignment faults that are determined
-> by the memory type."
->=20
-> On i.MX platforms, when elf is loaded to onchip TCM area, the region
-> is ioremapped, so "dc zva, dst" will trigger abort.
->
-> So add i.MX specific loader to address the TCM write issue.
+Using this feature, the device is capable of recording
+to nonvolatile flash memory the vital data about the
+system status that caused the system to perform a
+black box write.
 
-First I wonted to ask, if it is AMR64 related issues, why do we handle
-it in iMX specific driver?
+A blackbox is 64 bytes of data containing all the
+status registers, last two states of the sequencer,
+timestamp and counters. The mapping of this data is
+described in the adm1266 datasheet.
 
-But after searching and finding this thread:
-https://lkml.org/lkml/2020/4/18/93
-it looks to me like most of related maintainer questions, was not
-answered.
+On power-up the driver sets the unix time to
+the adm1266 using the SET_RTC command. This value
+is incremented by an internal clock and it is used
+as timestamp for the black box feature.
 
-> The change not impact i.MX6/7 function.
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/hwmon/pmbus/adm1266.c | 165 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 165 insertions(+)
 
-Hm... it is impossible assumption,e except you was able to test all
-firmware variants it the wild.
-You changed behavior of ELF parser in the first place. It means,
-not iMX6/7 is affected, but firmware used on this platforms.
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index dbffc6d12e87..c06465100320 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -15,12 +15,19 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/nvmem-consumer.h>
++#include <linux/nvmem-provider.h>
+ #include "pmbus.h"
+ #include <linux/slab.h>
++#include <linux/timekeeping.h>
+ 
++#define ADM1266_BLACKBOX_CONFIG	0xD3
+ #define ADM1266_PDIO_CONFIG	0xD4
+ #define ADM1266_READ_STATE	0xD9
++#define ADM1266_READ_BLACKBOX	0xDE
++#define ADM1266_SET_RTC		0xDF
+ #define ADM1266_GPIO_CONFIG	0xE1
++#define ADM1266_BLACKBOX_INFO	0xE6
+ #define ADM1266_PDIO_STATUS	0xE9
+ #define ADM1266_GPIO_STATUS	0xEA
+ 
+@@ -37,6 +44,9 @@
+ #define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
+ #define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
+ 
++#define ADM1266_BLACKBOX_OFFSET		0x7F700
++#define ADM1266_BLACKBOX_SIZE		64
++
+ #define ADM1266_PMBUS_BLOCK_MAX		255
+ 
+ struct adm1266_data {
+@@ -45,11 +55,22 @@ struct adm1266_data {
+ 	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
+ 	struct i2c_client *client;
+ 	struct dentry *debugfs_dir;
++	struct nvmem_config nvmem_config;
++	struct nvmem_device *nvmem;
++	u8 *dev_mem;
+ 	struct mutex buf_mutex;
+ 	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+ 	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+ };
+ 
++static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
++	{
++		.name           = "blackbox",
++		.offset         = ADM1266_BLACKBOX_OFFSET,
++		.bytes          = 2048,
++	},
++};
++
+ DECLARE_CRC8_TABLE(pmbus_crc_table);
+ 
+ /*
+@@ -321,6 +342,142 @@ static void adm1266_init_debugfs(struct adm1266_data *data)
+ 					    data->debugfs_dir, adm1266_state_read);
+ }
+ 
++#if IS_ENABLED(CONFIG_NVMEM)
++static int adm1266_nvmem_read_blackbox(struct adm1266_data *data, u8 *read_buff)
++{
++	int record_count;
++	char index;
++	u8 buf[5];
++	int ret;
++
++	ret = i2c_smbus_read_block_data(data->client, ADM1266_BLACKBOX_INFO, buf);
++	if (ret < 0)
++		return ret;
++
++	if (ret != 4)
++		return -EIO;
++
++	record_count = buf[3];
++
++	for (index = 0; index < record_count; index++) {
++		ret = adm1266_pmbus_block_xfer(data, ADM1266_READ_BLACKBOX, 1, &index, read_buff);
++		if (ret < 0)
++			return ret;
++
++		if (ret != ADM1266_BLACKBOX_SIZE)
++			return -EIO;
++
++		read_buff += ADM1266_BLACKBOX_SIZE;
++	}
++
++	return 0;
++}
++
++static bool adm1266_cell_is_accessed(const struct nvmem_cell_info *mem_cell, unsigned int offset,
++				     size_t bytes)
++{
++	unsigned int start_addr = offset;
++	unsigned int end_addr = offset + bytes;
++	unsigned int cell_start = mem_cell->offset;
++	unsigned int cell_end = mem_cell->offset + mem_cell->bytes;
++
++	return start_addr <= cell_end && cell_start <= end_addr;
++}
++
++static int adm1266_read_mem_cell(struct adm1266_data *data, const struct nvmem_cell_info *mem_cell)
++{
++	u8 *mem_offset;
++	int ret;
++
++	switch (mem_cell->offset) {
++	case ADM1266_BLACKBOX_OFFSET:
++		mem_offset = data->dev_mem + mem_cell->offset;
++
++		memset(mem_offset, 0, ADM1266_BLACKBOX_SIZE);
++
++		ret = adm1266_nvmem_read_blackbox(data, mem_offset);
++		if (ret)
++			dev_err(&data->client->dev, "Could not read blackbox!");
++		return ret;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int adm1266_nvmem_read(void *priv, unsigned int offset, void *val,
++			      size_t bytes)
++{
++	const struct nvmem_cell_info *mem_cell;
++	struct adm1266_data *data = priv;
++	int ret;
++	int i;
++
++	for (i = 0; i < data->nvmem_config.ncells; i++) {
++		mem_cell = &adm1266_nvmem_cells[i];
++		if (!adm1266_cell_is_accessed(mem_cell, offset, bytes))
++			continue;
++
++		ret = adm1266_read_mem_cell(data, mem_cell);
++		if (ret < 0)
++			return ret;
++	}
++
++	memcpy(val, data->dev_mem + offset, bytes);
++
++	return 0;
++}
++
++static int adm1266_config_nvmem(struct adm1266_data *data)
++{
++	data->nvmem_config.name = dev_name(&data->client->dev);
++	data->nvmem_config.dev = &data->client->dev;
++	data->nvmem_config.root_only = true;
++	data->nvmem_config.read_only = true;
++	data->nvmem_config.owner = THIS_MODULE;
++	data->nvmem_config.reg_read = adm1266_nvmem_read;
++	data->nvmem_config.cells = adm1266_nvmem_cells;
++	data->nvmem_config.ncells = ARRAY_SIZE(adm1266_nvmem_cells);
++	data->nvmem_config.priv = data;
++	data->nvmem_config.stride = 1;
++	data->nvmem_config.word_size = 1;
++	data->nvmem_config.size = 0x80000;
++
++	data->dev_mem = devm_kzalloc(&data->client->dev, data->nvmem_config.size, GFP_KERNEL);
++	if (!data->dev_mem)
++		return -ENOMEM;
++
++	data->nvmem = devm_nvmem_register(&data->client->dev, &data->nvmem_config);
++	if (IS_ERR(data->nvmem)) {
++		dev_err(&data->client->dev, "Could not register nvmem!");
++		return PTR_ERR(data->nvmem);
++	}
++
++	return 0;
++}
++#else
++static int adm1266_config_nvmem(struct adm1266_data *data)
++{
++	return 0;
++}
++#endif /* CONFIG_NVMEM */
++
++static int adm1266_set_rtc(struct adm1266_data *data)
++{
++	time64_t kt;
++	char write_buf[6];
++	int i;
++
++	kt = ktime_get_seconds();
++
++	memset(write_buf, 0, sizeof(write_buf));
++
++	for (i = 0; i < 4; i++)
++		write_buf[2 + i] = (kt >> (i * 8)) & 0xFF;
++
++	return i2c_smbus_write_block_data(data->client, ADM1266_SET_RTC, sizeof(write_buf),
++					  write_buf);
++}
++
+ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
+ 	struct adm1266_data *data;
+@@ -344,6 +501,14 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = adm1266_set_rtc(data);
++	if (ret < 0)
++		return ret;
++
++	ret = adm1266_config_nvmem(data);
++	if (ret < 0)
++		return ret;
++
+ 	ret = pmbus_do_probe(client, id, &data->info);
+ 	if (ret)
+ 		return ret;
+-- 
+2.20.1
 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 76 ++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 76 insertions(+)
->=20
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rpro=
-c.c
-> index aee790efbf7b..c23726091228 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -4,6 +4,7 @@
->   */
-> =20
->  #include <linux/clk.h>
-> +#include <linux/elf.h>
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
-> @@ -15,6 +16,9 @@
->  #include <linux/regmap.h>
->  #include <linux/remoteproc.h>
-> =20
-> +#include "remoteproc_internal.h"
-> +#include "remoteproc_elf_helpers.h"
-> +
->  #define IMX7D_SRC_SCR			0x0C
->  #define IMX7D_ENABLE_M4			BIT(3)
->  #define IMX7D_SW_M4P_RST		BIT(2)
-> @@ -247,10 +251,82 @@ static void *imx_rproc_da_to_va(struct rproc *rproc=
-, u64 da, size_t len)
->  	return va;
->  }
-> =20
-> +static int imx_rproc_elf_load_segments(struct rproc *rproc, const struct=
- firmware *fw)
-> +{
-> +	struct device *dev =3D &rproc->dev;
-> +	const void *ehdr, *phdr;
-> +	int i, ret =3D 0;
-> +	u16 phnum;
-> +	const u8 *elf_data =3D fw->data;
-> +	u8 class =3D fw_elf_get_class(fw);
-> +	u32 elf_phdr_get_size =3D elf_size_of_phdr(class);
-> +
-> +	ehdr =3D elf_data;
-> +	phnum =3D elf_hdr_get_e_phnum(class, ehdr);
-> +	phdr =3D elf_data + elf_hdr_get_e_phoff(class, ehdr);
-> +
-> +	/* go through the available ELF segments */
-> +	for (i =3D 0; i < phnum; i++, phdr +=3D elf_phdr_get_size) {
-> +		u64 da =3D elf_phdr_get_p_paddr(class, phdr);
-> +		u64 memsz =3D elf_phdr_get_p_memsz(class, phdr);
-> +		u64 filesz =3D elf_phdr_get_p_filesz(class, phdr);
-> +		u64 offset =3D elf_phdr_get_p_offset(class, phdr);
-> +		u32 type =3D elf_phdr_get_p_type(class, phdr);
-> +		void *ptr;
-> +
-> +		if (type !=3D PT_LOAD)
-> +			continue;
-> +
-> +		dev_dbg(dev, "phdr: type %d da 0x%llx memsz 0x%llx filesz 0x%llx\n",
-> +			type, da, memsz, filesz);
-> +
-> +		if (filesz > memsz) {
-> +			dev_err(dev, "bad phdr filesz 0x%llx memsz 0x%llx\n",
-> +				filesz, memsz);
-> +			ret =3D -EINVAL;
-> +			break;
-> +		}
-> +
-> +		if (offset + filesz > fw->size) {
-> +			dev_err(dev, "truncated fw: need 0x%llx avail 0x%zx\n",
-> +				offset + filesz, fw->size);
-> +			ret =3D -EINVAL;
-> +			break;
-> +		}
-> +
-> +		if (!rproc_u64_fit_in_size_t(memsz)) {
-> +			dev_err(dev, "size (%llx) does not fit in size_t type\n",
-> +				memsz);
-> +			ret =3D -EOVERFLOW;
-> +			break;
-> +		}
-> +
-> +		/* grab the kernel address for this device address */
-> +		ptr =3D rproc_da_to_va(rproc, da, memsz);
-> +		if (!ptr) {
-> +			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
-> +				memsz);
-> +			ret =3D -EINVAL;
-> +			break;
-> +		}
-> +
-> +		/* put the segment where the remote processor expects it */
-> +		if (filesz)
-> +			memcpy_toio(ptr, elf_data + offset, filesz);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static const struct rproc_ops imx_rproc_ops =3D {
->  	.start		=3D imx_rproc_start,
->  	.stop		=3D imx_rproc_stop,
->  	.da_to_va       =3D imx_rproc_da_to_va,
-> +	.load		=3D imx_rproc_elf_load_segments,
-> +	.parse_fw	=3D rproc_elf_load_rsc_table,
-> +	.find_loaded_rsc_table =3D rproc_elf_find_loaded_rsc_table,
-> +	.sanity_check	=3D rproc_elf_sanity_check,
-> +	.get_boot_addr	=3D rproc_elf_get_boot_addr,
->  };
-> =20
->  static int imx_rproc_addr_init(struct imx_rproc *priv,
-> --=20
-> 2.16.4
->=20
->=20
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---fbgyevojci4fu3gk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8eZAkACgkQ4omh9DUa
-UbMr4xAAzb9KHRlNH/QhnvS0wxRRBZAU6U8LEO6qZrFn6a00IcQqY2y35hdAr5kf
-c8uo3kBuHbrw3aYeur6iNQA8cp57Uc70fK0a4jS7KOvDmjuttRyDN/GD2Gb6kY/a
-RoG33lQc0JA1gtLNoMA1VeX3Oaoghlvpv0VBrstPGHp+b61uDI2lFwF4KkhrEe0G
-+HjTWxdkFiZ1g4kC5Ik8ZlaKwNfzTcJgnlaoQsQQkxECIILcZvmntru0YOdePM9t
-0/VOGJH+qA+Np7A5j/sb+D07RYMmcb1ek7GLTIgsndtMlHp66XkzKyObbLLfRnqU
-DQ8w4waaY9i8X2W3X9aaCi45dG2XJ9m7wvGohLp7Rr4b9bioo1lbNHNM2Jo0fEXE
-0X7XRACIKihQy3QmN2lX7zXK0kpQcq+gSV2kRvairRDuqYXm/lKoMsPMT3UAMbsu
-fCj7D66swuCfdoe05hwsqu93fbJP7Jdog3gCyHVoFxNcXT43ur4AwRkJkdU+yl2C
-TmK9U2hLq+DhnlBg0M+6yaf7t2P4kuu6BRy7kLzf+KrB4daU0nxqDF+404apbP0N
-Z6WgWETHEfn0i53mHIaVwAWdGLwJhNAsSAB3c82+D3TLozJyQgOrtWZK1VtcUnWq
-q20cBB7zMuOX82D5G+YVz6K1rwYb0MsLSVQT9J0VMDl24rHJBDw=
-=9PWb
------END PGP SIGNATURE-----
-
---fbgyevojci4fu3gk--
