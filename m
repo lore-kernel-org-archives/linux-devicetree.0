@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143FDC43462
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E4EC43466
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC9C20719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5FE20719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 08:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ylAkfkkV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="N8+VXSlD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgG0Imx (ORCPT
+        id S1726311AbgG0InG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:42:53 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:51847 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgG0Imx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 04:42:53 -0400
+        Mon, 27 Jul 2020 04:43:06 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:13862 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgG0Imw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 04:42:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595839372; x=1627375372;
+  t=1595839370; x=1627375370;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=av96gdlbS1AAsgFBMUd7NU2FM+6z/EWUo8ouVdZxMr4=;
-  b=ylAkfkkVtTtGk5ztwDXIPbDiiFSufyaMKUOXZ2UftuzcjVk0SjQQ/UkY
-   4cmpb1yhD2ODfedKlcn2LHCptEgIyZoJtBqKblcpSGnDWegJk6NJcaK2N
-   QRxb8sV1HPGzsRjZxJWFPu3Ps0reC96iZu9C81TlQGNuPgA0VtLLkWnFg
-   f1d+qOtIV2eO7W+ABhkSGpLGCvrNqbRp6JpXcxUvvczHmsX8xn165oiWh
-   akMAL9CKIugeKK1gJbWjTZTle2wkBuYVof8/FFnmFQ3GghgoVsrkSOjp6
-   X4OyDjNqEqJOgyKgY6AQi7reix4yDfh/5MJvQVSXdgYveFlYTfuKEvO3/
-   w==;
-IronPort-SDR: 2IFNTPLw08LvjK2oOQRz8Ny4l9639SvO5Em2ID6GvhaMWjnxi15M5X4Cc12ev+OzapiMW31r5h
- MxsDt9llI8hQ3kbwv6lPTLnFxAj5v91I9HjsGhvcC5DN54EKFaZTPj52WKPmPjIRAfnnrPkfui
- 8y1GARXuK5IHlRPF8ScH1mo5bVcaCc8LvjDn6uF1eC+mMpKKrbKBwzX6OiWatYKV/n9gM+i6lr
- +Z76troMDt88RE++uZwYcIDiSQK/21hRRIcj2hpyULtXUgS7QpLNlVw1tLOdzY3+UnT+VSilhk
- u1U=
+  bh=7thvExZSalBZUH4+8/Ip/j0mToLKwhEPjKW89XaoI1M=;
+  b=N8+VXSlDitPNrao9YdQtIzYWibz7qBWm28cVqBW06N+MTbTEL8woxqg2
+   sLtbZTxVIQCQ6QKQawSOrICaKvwcHbiDVvqeSPDP+EDg/hXhtMvuayHzq
+   VfW8hHSWWCBJ7mC7Sogj9c+/ml53ExUtClrI4n6RNoHbliOMxpcAW0deB
+   26OmGoVPoZpDid4N8FE7ClhaE4a25QIpr1AynLaY9yo6a3yi05IXdOZh3
+   H32z1s0LMnab4IRXkuR/Ve9OARRt5pate0BNGxiQ/1geJsUCKmwWkYZf9
+   G81sSEy26873f9dQpD3euQBxPHDfQez68HihN1R7fpMVtV/BbZ/yMSRp7
+   g==;
+IronPort-SDR: PfeTjsj7r7Z6Hdd6VN7YfJVIhO0KmAIHff55XlRf+2ypfq6pDauPBokTbXdzEDqt+w2pckUy+o
+ vHoZUBQ/w5ivlaXvC246vC77GMLPuRZzPKZ+DAqmTebtuX6WOL+WDoLbKmGQOtBbGbv2RL2GZQ
+ SJQpONYmqplAWz4sqQXlyx/nzMraUtiiIAEDVe19Nwl/dWcV+Br/CV4WiX2LDz0VEhgZLisRHv
+ kP1Cr/vS2p0uGAeLnNq1wKJCij4ejZYsH5loNMvCEq3bD3ndZMwdOkyKwoIc/xPOi4Sn36We9Q
+ 0es=
 X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="89213877"
+   d="scan'208";a="20643783"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 01:42:40 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 01:42:49 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 01:42:39 -0700
+ 15.1.1979.3; Mon, 27 Jul 2020 01:42:48 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 01:42:36 -0700
+ 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 01:42:45 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 List-Id: <soc.lore.kernel.org>
 To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
@@ -66,9 +66,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v4 05/10] pinctrl: ocelot: Add Sparx5 SoC support
-Date:   Mon, 27 Jul 2020 10:42:06 +0200
-Message-ID: <20200727084211.6632-6-lars.povlsen@microchip.com>
+Subject: [PATCH v4 08/10] clk: sparx5: Add Sparx5 SoC DPLL clock driver
+Date:   Mon, 27 Jul 2020 10:42:09 +0200
+Message-ID: <20200727084211.6632-9-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727084211.6632-1-lars.povlsen@microchip.com>
 References: <20200727084211.6632-1-lars.povlsen@microchip.com>
@@ -80,585 +80,328 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This add support for Sparx5 pinctrl, using the ocelot drives as
-basis. It adds pinconfig support as well, as supported by the
-platform.
+This adds a device driver for the Sparx5 SoC DPLL clock
 
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/pinctrl/pinctrl-ocelot.c | 430 ++++++++++++++++++++++++++++++-
- 1 file changed, 429 insertions(+), 1 deletion(-)
+ drivers/clk/Makefile     |   1 +
+ drivers/clk/clk-sparx5.c | 295 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 296 insertions(+)
+ create mode 100644 drivers/clk/clk-sparx5.c
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index 95c225bc7572f..425a3d764f009 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -25,6 +25,23 @@
- #include "pinconf.h"
- #include "pinmux.h"
- 
-+#define ocelot_clrsetbits(addr, clear, set) \
-+	writel((readl(addr) & ~(clear)) | (set), (addr))
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index ca9af11d33913..da8fcf147eb13 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_COMMON_CLK_CDCE925)	+= clk-cdce925.o
+ obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
+ obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
+ obj-$(CONFIG_ARCH_EFM32)		+= clk-efm32gg.o
++obj-$(CONFIG_ARCH_SPARX5)		+= clk-sparx5.o
+ obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
+ obj-$(CONFIG_COMMON_CLK_FSL_SAI)	+= clk-fsl-sai.o
+ obj-$(CONFIG_COMMON_CLK_GEMINI)		+= clk-gemini.o
+diff --git a/drivers/clk/clk-sparx5.c b/drivers/clk/clk-sparx5.c
+new file mode 100644
+index 0000000000000..0fad0c1a01862
+--- /dev/null
++++ b/drivers/clk/clk-sparx5.c
+@@ -0,0 +1,295 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Microchip Sparx5 SoC Clock driver.
++ *
++ * Copyright (c) 2019 Microchip Inc.
++ *
++ * Author: Lars Povlsen <lars.povlsen@microchip.com>
++ */
 +
-+/* PINCONFIG bits (sparx5 only) */
-+enum {
-+	PINCONF_BIAS,
-+	PINCONF_SCHMITT,
-+	PINCONF_DRIVE_STRENGTH,
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/clk-provider.h>
++#include <linux/bitfield.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++#include <linux/platform_device.h>
++#include <dt-bindings/clock/microchip,sparx5.h>
++
++#define PLL_DIV		GENMASK(7, 0)
++#define PLL_PRE_DIV	GENMASK(10, 8)
++#define PLL_ROT_DIR	BIT(11)
++#define PLL_ROT_SEL	GENMASK(13, 12)
++#define PLL_ROT_ENA	BIT(14)
++#define PLL_CLK_ENA	BIT(15)
++
++#define MAX_SEL 4
++#define MAX_PRE BIT(3)
++
++static const u8 sel_rates[MAX_SEL] = { 0, 2*8, 2*4, 2*2 };
++
++static const char *clk_names[N_CLOCKS] = {
++	"core", "ddr", "cpu2", "arm2",
++	"aux1", "aux2", "aux3", "aux4",
++	"synce",
 +};
 +
-+#define BIAS_PD_BIT BIT(4)
-+#define BIAS_PU_BIT BIT(3)
-+#define BIAS_BITS   (BIAS_PD_BIT|BIAS_PU_BIT)
-+#define SCHMITT_BIT BIT(2)
-+#define DRIVE_BITS  GENMASK(1, 0)
-+
-+/* GPIO standard registers */
- #define OCELOT_GPIO_OUT_SET	0x0
- #define OCELOT_GPIO_OUT_CLR	0x4
- #define OCELOT_GPIO_OUT		0x8
-@@ -42,12 +59,17 @@
- enum {
- 	FUNC_NONE,
- 	FUNC_GPIO,
-+	FUNC_IRQ0,
- 	FUNC_IRQ0_IN,
- 	FUNC_IRQ0_OUT,
-+	FUNC_IRQ1,
- 	FUNC_IRQ1_IN,
- 	FUNC_IRQ1_OUT,
-+	FUNC_EXT_IRQ,
- 	FUNC_MIIM,
-+	FUNC_PHY_LED,
- 	FUNC_PCI_WAKE,
-+	FUNC_MD,
- 	FUNC_PTP0,
- 	FUNC_PTP1,
- 	FUNC_PTP2,
-@@ -59,24 +81,36 @@ enum {
- 	FUNC_SG1,
- 	FUNC_SG2,
- 	FUNC_SI,
-+	FUNC_SI2,
- 	FUNC_TACHO,
- 	FUNC_TWI,
- 	FUNC_TWI2,
-+	FUNC_TWI3,
- 	FUNC_TWI_SCL_M,
- 	FUNC_UART,
- 	FUNC_UART2,
-+	FUNC_UART3,
-+	FUNC_PLL_STAT,
-+	FUNC_EMMC,
-+	FUNC_REF_CLK,
-+	FUNC_RCVRD_CLK,
- 	FUNC_MAX
- };
- 
- static const char *const ocelot_function_names[] = {
- 	[FUNC_NONE]		= "none",
- 	[FUNC_GPIO]		= "gpio",
-+	[FUNC_IRQ0]		= "irq0",
- 	[FUNC_IRQ0_IN]		= "irq0_in",
- 	[FUNC_IRQ0_OUT]		= "irq0_out",
-+	[FUNC_IRQ1]		= "irq1",
- 	[FUNC_IRQ1_IN]		= "irq1_in",
- 	[FUNC_IRQ1_OUT]		= "irq1_out",
-+	[FUNC_EXT_IRQ]		= "ext_irq",
- 	[FUNC_MIIM]		= "miim",
-+	[FUNC_PHY_LED]		= "phy_led",
- 	[FUNC_PCI_WAKE]		= "pci_wake",
-+	[FUNC_MD]		= "md",
- 	[FUNC_PTP0]		= "ptp0",
- 	[FUNC_PTP1]		= "ptp1",
- 	[FUNC_PTP2]		= "ptp2",
-@@ -88,12 +122,19 @@ static const char *const ocelot_function_names[] = {
- 	[FUNC_SG1]		= "sg1",
- 	[FUNC_SG2]		= "sg2",
- 	[FUNC_SI]		= "si",
-+	[FUNC_SI2]		= "si2",
- 	[FUNC_TACHO]		= "tacho",
- 	[FUNC_TWI]		= "twi",
- 	[FUNC_TWI2]		= "twi2",
-+	[FUNC_TWI3]		= "twi3",
- 	[FUNC_TWI_SCL_M]	= "twi_scl_m",
- 	[FUNC_UART]		= "uart",
- 	[FUNC_UART2]		= "uart2",
-+	[FUNC_UART3]		= "uart3",
-+	[FUNC_PLL_STAT]		= "pll_stat",
-+	[FUNC_EMMC]		= "emmc",
-+	[FUNC_REF_CLK]		= "ref_clk",
-+	[FUNC_RCVRD_CLK]	= "rcvrd_clk",
- };
- 
- struct ocelot_pmx_func {
-@@ -111,6 +152,7 @@ struct ocelot_pinctrl {
- 	struct pinctrl_dev *pctl;
- 	struct gpio_chip gpio_chip;
- 	struct regmap *map;
-+	void __iomem *pincfg;
- 	struct pinctrl_desc *desc;
- 	struct ocelot_pmx_func func[FUNC_MAX];
- 	u8 stride;
-@@ -324,6 +366,152 @@ static const struct pinctrl_pin_desc jaguar2_pins[] = {
- 	JAGUAR2_PIN(63),
- };
- 
-+#define SPARX5_P(p, f0, f1, f2)					\
-+static struct ocelot_pin_caps sparx5_pin_##p = {			\
-+	.pin = p,							\
-+	.functions = {							\
-+		FUNC_GPIO, FUNC_##f0, FUNC_##f1, FUNC_##f2		\
-+	},								\
-+}
-+
-+SPARX5_P(0,  SG0,       PLL_STAT,  NONE);
-+SPARX5_P(1,  SG0,       NONE,      NONE);
-+SPARX5_P(2,  SG0,       NONE,      NONE);
-+SPARX5_P(3,  SG0,       NONE,      NONE);
-+SPARX5_P(4,  SG1,       NONE,      NONE);
-+SPARX5_P(5,  SG1,       NONE,      NONE);
-+SPARX5_P(6,  IRQ0_IN,   IRQ0_OUT,  SFP);
-+SPARX5_P(7,  IRQ1_IN,   IRQ1_OUT,  SFP);
-+SPARX5_P(8,  PTP0,      NONE,      SFP);
-+SPARX5_P(9,  PTP1,      SFP,       TWI_SCL_M);
-+SPARX5_P(10, UART,      NONE,      NONE);
-+SPARX5_P(11, UART,      NONE,      NONE);
-+SPARX5_P(12, SG1,       NONE,      NONE);
-+SPARX5_P(13, SG1,       NONE,      NONE);
-+SPARX5_P(14, TWI,       TWI_SCL_M, NONE);
-+SPARX5_P(15, TWI,       NONE,      NONE);
-+SPARX5_P(16, SI,        TWI_SCL_M, SFP);
-+SPARX5_P(17, SI,        TWI_SCL_M, SFP);
-+SPARX5_P(18, SI,        TWI_SCL_M, SFP);
-+SPARX5_P(19, PCI_WAKE,  TWI_SCL_M, SFP);
-+SPARX5_P(20, IRQ0_OUT,  TWI_SCL_M, SFP);
-+SPARX5_P(21, IRQ1_OUT,  TACHO,     SFP);
-+SPARX5_P(22, TACHO,     IRQ0_OUT,  TWI_SCL_M);
-+SPARX5_P(23, PWM,       UART3,     TWI_SCL_M);
-+SPARX5_P(24, PTP2,      UART3,     TWI_SCL_M);
-+SPARX5_P(25, PTP3,      SI,        TWI_SCL_M);
-+SPARX5_P(26, UART2,     SI,        TWI_SCL_M);
-+SPARX5_P(27, UART2,     SI,        TWI_SCL_M);
-+SPARX5_P(28, TWI2,      SI,        SFP);
-+SPARX5_P(29, TWI2,      SI,        SFP);
-+SPARX5_P(30, SG2,       SI,        PWM);
-+SPARX5_P(31, SG2,       SI,        TWI_SCL_M);
-+SPARX5_P(32, SG2,       SI,        TWI_SCL_M);
-+SPARX5_P(33, SG2,       SI,        SFP);
-+SPARX5_P(34, NONE,      TWI_SCL_M, EMMC);
-+SPARX5_P(35, SFP,       TWI_SCL_M, EMMC);
-+SPARX5_P(36, SFP,       TWI_SCL_M, EMMC);
-+SPARX5_P(37, SFP,       NONE,      EMMC);
-+SPARX5_P(38, NONE,      TWI_SCL_M, EMMC);
-+SPARX5_P(39, SI2,       TWI_SCL_M, EMMC);
-+SPARX5_P(40, SI2,       TWI_SCL_M, EMMC);
-+SPARX5_P(41, SI2,       TWI_SCL_M, EMMC);
-+SPARX5_P(42, SI2,       TWI_SCL_M, EMMC);
-+SPARX5_P(43, SI2,       TWI_SCL_M, EMMC);
-+SPARX5_P(44, SI,        SFP,       EMMC);
-+SPARX5_P(45, SI,        SFP,       EMMC);
-+SPARX5_P(46, NONE,      SFP,       EMMC);
-+SPARX5_P(47, NONE,      SFP,       EMMC);
-+SPARX5_P(48, TWI3,      SI,        SFP);
-+SPARX5_P(49, TWI3,      NONE,      SFP);
-+SPARX5_P(50, SFP,       NONE,      TWI_SCL_M);
-+SPARX5_P(51, SFP,       SI,        TWI_SCL_M);
-+SPARX5_P(52, SFP,       MIIM,      TWI_SCL_M);
-+SPARX5_P(53, SFP,       MIIM,      TWI_SCL_M);
-+SPARX5_P(54, SFP,       PTP2,      TWI_SCL_M);
-+SPARX5_P(55, SFP,       PTP3,      PCI_WAKE);
-+SPARX5_P(56, MIIM,      SFP,       TWI_SCL_M);
-+SPARX5_P(57, MIIM,      SFP,       TWI_SCL_M);
-+SPARX5_P(58, MIIM,      SFP,       TWI_SCL_M);
-+SPARX5_P(59, MIIM,      SFP,       NONE);
-+SPARX5_P(60, RECO_CLK,  NONE,      NONE);
-+SPARX5_P(61, RECO_CLK,  NONE,      NONE);
-+SPARX5_P(62, RECO_CLK,  PLL_STAT,  NONE);
-+SPARX5_P(63, RECO_CLK,  NONE,      NONE);
-+
-+#define SPARX5_PIN(n) {					\
-+	.number = n,						\
-+	.name = "GPIO_"#n,					\
-+	.drv_data = &sparx5_pin_##n				\
-+}
-+
-+static const struct pinctrl_pin_desc sparx5_pins[] = {
-+	SPARX5_PIN(0),
-+	SPARX5_PIN(1),
-+	SPARX5_PIN(2),
-+	SPARX5_PIN(3),
-+	SPARX5_PIN(4),
-+	SPARX5_PIN(5),
-+	SPARX5_PIN(6),
-+	SPARX5_PIN(7),
-+	SPARX5_PIN(8),
-+	SPARX5_PIN(9),
-+	SPARX5_PIN(10),
-+	SPARX5_PIN(11),
-+	SPARX5_PIN(12),
-+	SPARX5_PIN(13),
-+	SPARX5_PIN(14),
-+	SPARX5_PIN(15),
-+	SPARX5_PIN(16),
-+	SPARX5_PIN(17),
-+	SPARX5_PIN(18),
-+	SPARX5_PIN(19),
-+	SPARX5_PIN(20),
-+	SPARX5_PIN(21),
-+	SPARX5_PIN(22),
-+	SPARX5_PIN(23),
-+	SPARX5_PIN(24),
-+	SPARX5_PIN(25),
-+	SPARX5_PIN(26),
-+	SPARX5_PIN(27),
-+	SPARX5_PIN(28),
-+	SPARX5_PIN(29),
-+	SPARX5_PIN(30),
-+	SPARX5_PIN(31),
-+	SPARX5_PIN(32),
-+	SPARX5_PIN(33),
-+	SPARX5_PIN(34),
-+	SPARX5_PIN(35),
-+	SPARX5_PIN(36),
-+	SPARX5_PIN(37),
-+	SPARX5_PIN(38),
-+	SPARX5_PIN(39),
-+	SPARX5_PIN(40),
-+	SPARX5_PIN(41),
-+	SPARX5_PIN(42),
-+	SPARX5_PIN(43),
-+	SPARX5_PIN(44),
-+	SPARX5_PIN(45),
-+	SPARX5_PIN(46),
-+	SPARX5_PIN(47),
-+	SPARX5_PIN(48),
-+	SPARX5_PIN(49),
-+	SPARX5_PIN(50),
-+	SPARX5_PIN(51),
-+	SPARX5_PIN(52),
-+	SPARX5_PIN(53),
-+	SPARX5_PIN(54),
-+	SPARX5_PIN(55),
-+	SPARX5_PIN(56),
-+	SPARX5_PIN(57),
-+	SPARX5_PIN(58),
-+	SPARX5_PIN(59),
-+	SPARX5_PIN(60),
-+	SPARX5_PIN(61),
-+	SPARX5_PIN(62),
-+	SPARX5_PIN(63),
++struct s5_hw_clk {
++	struct clk_hw hw;
++	void __iomem *reg;
 +};
 +
- static int ocelot_get_functions_count(struct pinctrl_dev *pctldev)
- {
- 	return ARRAY_SIZE(ocelot_function_names);
-@@ -382,6 +570,7 @@ static int ocelot_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 	 * ALT[1]
- 	 * This is racy because both registers can't be updated at the same time
- 	 * but it doesn't matter much for now.
-+	 * Note: ALT0/ALT1 are organized specially for 64 gpio targets
- 	 */
- 	regmap_update_bits(info->map, REG_ALT(0, info, pin->pin),
- 			   BIT(p), f << p);
-@@ -458,6 +647,219 @@ static int ocelot_pctl_get_group_pins(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
-+static int ocelot_hw_get_value(struct ocelot_pinctrl *info,
-+			       unsigned int pin,
-+			       unsigned int reg,
-+			       int *val)
++struct s5_clk_data {
++	void __iomem *base;
++	struct s5_hw_clk s5_hw[N_CLOCKS];
++};
++
++struct s5_pll_conf {
++	unsigned long freq;
++	u8 div;
++	bool rot_ena;
++	u8 rot_sel;
++	u8 rot_dir;
++	u8 pre_div;
++};
++
++#define to_s5_pll(hw) container_of(hw, struct s5_hw_clk, hw)
++
++static unsigned long s5_calc_freq(unsigned long parent_rate,
++				  const struct s5_pll_conf *conf)
 +{
-+	int ret = -EOPNOTSUPP;
++	unsigned long rate = parent_rate / conf->div;
 +
-+	if (info->pincfg) {
-+		u32 regcfg = readl(info->pincfg + (pin * sizeof(u32)));
++	if (conf->rot_ena) {
++		int sign = conf->rot_dir ? -1 : 1;
++		int divt = sel_rates[conf->rot_sel] * (1 + conf->pre_div);
++		int divb = divt + sign;
 +
-+		ret = 0;
-+		switch (reg) {
-+		case PINCONF_BIAS:
-+			*val = regcfg & BIAS_BITS;
-+			break;
-+
-+		case PINCONF_SCHMITT:
-+			*val = regcfg & SCHMITT_BIT;
-+			break;
-+
-+		case PINCONF_DRIVE_STRENGTH:
-+			*val = regcfg & DRIVE_BITS;
-+			break;
-+
-+		default:
-+			ret = -EOPNOTSUPP;
-+			break;
-+		}
++		rate = mult_frac(rate, divt, divb);
++		rate = roundup(rate, 1000);
 +	}
-+	return ret;
++
++	return rate;
 +}
 +
-+static int ocelot_hw_set_value(struct ocelot_pinctrl *info,
-+			       unsigned int pin,
-+			       unsigned int reg,
-+			       int val)
++static void s5_search_fractional(unsigned long rate,
++				 unsigned long parent_rate,
++				 int div,
++				 struct s5_pll_conf *conf)
 +{
-+	int ret = -EOPNOTSUPP;
++	struct s5_pll_conf best;
++	ulong cur_offset, best_offset = rate;
++	int d, i, j;
 +
-+	if (info->pincfg) {
-+		void __iomem *regaddr = info->pincfg + (pin * sizeof(u32));
++	memset(conf, 0, sizeof(*conf));
++	conf->div = div;
++	conf->rot_ena = 1;	/* Fractional rate */
 +
-+		ret = 0;
-+		switch (reg) {
-+		case PINCONF_BIAS:
-+			ocelot_clrsetbits(regaddr, BIAS_BITS, val);
-+			break;
-+
-+		case PINCONF_SCHMITT:
-+			ocelot_clrsetbits(regaddr, SCHMITT_BIT, val);
-+			break;
-+
-+		case PINCONF_DRIVE_STRENGTH:
-+			if (val <= 3)
-+				ocelot_clrsetbits(regaddr, DRIVE_BITS, val);
-+			else
-+				ret = -EINVAL;
-+			break;
-+
-+		default:
-+			ret = -EOPNOTSUPP;
-+			break;
++	for (d = 0; best_offset > 0 && d <= 1 ; d++) {
++		conf->rot_dir = !!d;
++		for (i = 0; best_offset > 0 && i < MAX_PRE; i++) {
++			conf->pre_div = i;
++			for (j = 1; best_offset > 0 && j < MAX_SEL; j++) {
++				conf->rot_sel = j;
++				conf->freq = s5_calc_freq(parent_rate, conf);
++				cur_offset = abs(rate - conf->freq);
++				if (cur_offset < best_offset) {
++					best_offset = cur_offset;
++					best = *conf;
++				}
++			}
 +		}
 +	}
-+	return ret;
++
++	/* Best match */
++	*conf = best;
 +}
 +
-+static int ocelot_pinconf_get(struct pinctrl_dev *pctldev,
-+			      unsigned int pin, unsigned long *config)
++static unsigned long s5_calc_params(unsigned long rate,
++				    unsigned long parent_rate,
++				    struct s5_pll_conf *conf)
 +{
-+	struct ocelot_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
-+	u32 param = pinconf_to_config_param(*config);
-+	int val, err;
++	if (parent_rate % rate) {
++		struct s5_pll_conf alt1, alt2;
++		int div;
 +
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		err = ocelot_hw_get_value(info, pin, PINCONF_BIAS, &val);
-+		if (err)
-+			return err;
-+		if (param == PIN_CONFIG_BIAS_DISABLE)
-+			val = (val == 0 ? true : false);
-+		else if (param == PIN_CONFIG_BIAS_PULL_DOWN)
-+			val = (val & BIAS_PD_BIT ? true : false);
-+		else    /* PIN_CONFIG_BIAS_PULL_UP */
-+			val = (val & BIAS_PU_BIT ? true : false);
-+		break;
++		div = DIV_ROUND_CLOSEST_ULL(parent_rate, rate);
++		s5_search_fractional(rate, parent_rate, div, &alt1);
 +
-+	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+		err = ocelot_hw_get_value(info, pin, PINCONF_SCHMITT, &val);
-+		if (err)
-+			return err;
-+
-+		val = (val & SCHMITT_BIT ? true : false);
-+		break;
-+
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		err = ocelot_hw_get_value(info, pin, PINCONF_DRIVE_STRENGTH,
-+					  &val);
-+		if (err)
-+			return err;
-+		break;
-+
-+	case PIN_CONFIG_OUTPUT:
-+		err = regmap_read(info->map, REG(OCELOT_GPIO_OUT, info, pin),
-+				  &val);
-+		if (err)
-+			return err;
-+		val = !!(val & BIT(pin % 32));
-+		break;
-+
-+	case PIN_CONFIG_INPUT_ENABLE:
-+	case PIN_CONFIG_OUTPUT_ENABLE:
-+		err = regmap_read(info->map, REG(OCELOT_GPIO_OE, info, pin),
-+				  &val);
-+		if (err)
-+			return err;
-+		val = val & BIT(pin % 32);
-+		if (param == PIN_CONFIG_OUTPUT_ENABLE)
-+			val = !!val;
-+		else
-+			val = !val;
-+		break;
-+
-+	default:
-+		return -EOPNOTSUPP;
++		/* Straight match? */
++		if (alt1.freq == rate) {
++			*conf = alt1;
++		} else {
++			/* Try without rounding divider */
++			div = parent_rate / rate;
++			if (div != alt1.div) {
++				s5_search_fractional(rate, parent_rate, div,
++						     &alt2);
++				/* Select the better match */
++				if (abs(rate - alt1.freq) <
++				    abs(rate - alt2.freq))
++					*conf = alt1;
++				else
++					*conf = alt2;
++			}
++		}
++	} else {
++		/* Straight fit */
++		memset(conf, 0, sizeof(*conf));
++		conf->div = parent_rate / rate;
 +	}
 +
-+	*config = pinconf_to_config_packed(param, val);
++	return conf->freq;
++}
++
++static int s5_pll_enable(struct clk_hw *hw)
++{
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	u32 val = readl(pll->reg);
++
++	val |= PLL_CLK_ENA;
++	writel(val, pll->reg);
 +
 +	return 0;
 +}
 +
-+static int ocelot_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			      unsigned long *configs, unsigned int num_configs)
++static void s5_pll_disable(struct clk_hw *hw)
 +{
-+	struct ocelot_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
-+	u32 param, arg, p;
-+	int cfg, err = 0;
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	u32 val = readl(pll->reg);
 +
-+	for (cfg = 0; cfg < num_configs; cfg++) {
-+		param = pinconf_to_config_param(configs[cfg]);
-+		arg = pinconf_to_config_argument(configs[cfg]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			arg = (param == PIN_CONFIG_BIAS_DISABLE) ? 0 :
-+			(param == PIN_CONFIG_BIAS_PULL_UP) ? BIAS_PU_BIT :
-+			BIAS_PD_BIT;
-+
-+			err = ocelot_hw_set_value(info, pin, PINCONF_BIAS, arg);
-+			if (err)
-+				goto err;
-+
-+			break;
-+
-+		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+			arg = arg ? SCHMITT_BIT : 0;
-+			err = ocelot_hw_set_value(info, pin, PINCONF_SCHMITT,
-+						  arg);
-+			if (err)
-+				goto err;
-+
-+			break;
-+
-+		case PIN_CONFIG_DRIVE_STRENGTH:
-+			err = ocelot_hw_set_value(info, pin,
-+						  PINCONF_DRIVE_STRENGTH,
-+						  arg);
-+			if (err)
-+				goto err;
-+
-+			break;
-+
-+		case PIN_CONFIG_OUTPUT_ENABLE:
-+		case PIN_CONFIG_INPUT_ENABLE:
-+		case PIN_CONFIG_OUTPUT:
-+			p = pin % 32;
-+			if (arg)
-+				regmap_write(info->map,
-+					     REG(OCELOT_GPIO_OUT_SET, info,
-+						 pin),
-+					     BIT(p));
-+			else
-+				regmap_write(info->map,
-+					     REG(OCELOT_GPIO_OUT_CLR, info,
-+						 pin),
-+					     BIT(p));
-+			regmap_update_bits(info->map,
-+					   REG(OCELOT_GPIO_OE, info, pin),
-+					   BIT(p),
-+					   param == PIN_CONFIG_INPUT_ENABLE ?
-+					   0 : BIT(p));
-+			break;
-+
-+		default:
-+			err = -EOPNOTSUPP;
-+		}
-+	}
-+err:
-+	return err;
++	val &= ~PLL_CLK_ENA;
++	writel(val, pll->reg);
 +}
 +
-+static const struct pinconf_ops ocelot_confops = {
-+	.is_generic = true,
-+	.pin_config_get = ocelot_pinconf_get,
-+	.pin_config_set = ocelot_pinconf_set,
-+	.pin_config_config_dbg_show = pinconf_generic_dump_config,
-+};
++static int s5_pll_set_rate(struct clk_hw *hw,
++			   unsigned long rate,
++			   unsigned long parent_rate)
++{
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	struct s5_pll_conf conf;
++	unsigned long eff_rate;
++	u32 val;
 +
- static const struct pinctrl_ops ocelot_pctl_ops = {
- 	.get_groups_count = ocelot_pctl_get_groups_count,
- 	.get_group_name = ocelot_pctl_get_group_name,
-@@ -484,6 +886,16 @@ static struct pinctrl_desc jaguar2_desc = {
- 	.owner = THIS_MODULE,
- };
- 
-+static struct pinctrl_desc sparx5_desc = {
-+	.name = "sparx5-pinctrl",
-+	.pins = sparx5_pins,
-+	.npins = ARRAY_SIZE(sparx5_pins),
-+	.pctlops = &ocelot_pctl_ops,
-+	.pmxops = &ocelot_pmx_ops,
-+	.confops = &ocelot_confops,
-+	.owner = THIS_MODULE,
-+};
++	eff_rate = s5_calc_params(rate, parent_rate, &conf);
++	if (eff_rate != rate)
++		return -EOPNOTSUPP;
 +
- static int ocelot_create_group_func_map(struct device *dev,
- 					struct ocelot_pinctrl *info)
- {
-@@ -511,7 +923,8 @@ static int ocelot_create_group_func_map(struct device *dev,
- 		}
- 
- 		for (i = 0; i < npins; i++)
--			info->func[f].groups[i] = info->desc->pins[pins[i]].name;
-+			info->func[f].groups[i] =
-+				info->desc->pins[pins[i]].name;
- 	}
- 
- 	kfree(pins);
-@@ -744,6 +1157,7 @@ static int ocelot_gpiochip_register(struct platform_device *pdev,
- static const struct of_device_id ocelot_pinctrl_of_match[] = {
- 	{ .compatible = "mscc,ocelot-pinctrl", .data = &ocelot_desc },
- 	{ .compatible = "mscc,jaguar2-pinctrl", .data = &jaguar2_desc },
-+	{ .compatible = "microchip,sparx5-pinctrl", .data = &sparx5_desc },
- 	{},
- };
- 
-@@ -752,6 +1166,7 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct ocelot_pinctrl *info;
- 	void __iomem *base;
-+	struct resource *res;
- 	int ret;
- 	struct regmap_config regmap_config = {
- 		.reg_bits = 32,
-@@ -773,6 +1188,7 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	info->stride = 1 + (info->desc->npins - 1) / 32;
++	val = readl(pll->reg) & PLL_CLK_ENA;
++	val |= FIELD_PREP(PLL_DIV, conf.div);
++	if (conf.rot_ena) {
++		val |= PLL_ROT_ENA;
++		val |= FIELD_PREP(PLL_ROT_SEL, conf.rot_sel);
++		val |= FIELD_PREP(PLL_PRE_DIV, conf.pre_div);
++		if (conf.rot_dir)
++			val |= PLL_ROT_DIR;
++	}
++	writel(val, pll->reg);
 +
- 	regmap_config.max_register = OCELOT_GPIO_SD_MAP * info->stride + 15 * 4;
- 
- 	info->map = devm_regmap_init_mmio(dev, base, &regmap_config);
-@@ -783,6 +1199,16 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
- 	dev_set_drvdata(dev, info->map);
- 	info->dev = dev;
- 
-+	/* Pinconf registers */
-+	if (info->desc->confops) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(base))
-+			dev_dbg(dev, "Failed to ioremap config registers (no extended pinconf)\n");
-+		else
-+			info->pincfg = base;
++	return 0;
++}
++
++static unsigned long s5_pll_recalc_rate(struct clk_hw *hw,
++					unsigned long parent_rate)
++{
++	struct s5_hw_clk *pll = to_s5_pll(hw);
++	struct s5_pll_conf conf;
++	u32 val;
++
++	val = readl(pll->reg);
++
++	if (val & PLL_CLK_ENA) {
++		conf.div     = FIELD_GET(PLL_DIV, val);
++		conf.pre_div = FIELD_GET(PLL_PRE_DIV, val);
++		conf.rot_ena = FIELD_GET(PLL_ROT_ENA, val);
++		conf.rot_dir = FIELD_GET(PLL_ROT_DIR, val);
++		conf.rot_sel = FIELD_GET(PLL_ROT_SEL, val);
++
++		conf.freq = s5_calc_freq(parent_rate, &conf);
++	} else {
++		conf.freq = 0;
 +	}
 +
- 	ret = ocelot_pinctrl_register(pdev, info);
- 	if (ret)
- 		return ret;
-@@ -791,6 +1217,8 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	dev_info(dev, "driver registered\n");
++	return conf.freq;
++}
 +
- 	return 0;
- }
- 
++static long s5_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++			      unsigned long *parent_rate)
++{
++	struct s5_pll_conf conf;
++
++	return s5_calc_params(rate, *parent_rate, &conf);
++}
++
++static const struct clk_ops s5_pll_ops = {
++	.enable		= s5_pll_enable,
++	.disable	= s5_pll_disable,
++	.set_rate	= s5_pll_set_rate,
++	.round_rate	= s5_pll_round_rate,
++	.recalc_rate	= s5_pll_recalc_rate,
++};
++
++static struct clk_hw *s5_clk_hw_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct s5_clk_data *s5_clk = data;
++	unsigned int idx = clkspec->args[0];
++
++	if (idx >= N_CLOCKS) {
++		pr_err("%s: invalid index %u\n", __func__, idx);
++		return ERR_PTR(-EINVAL);
++	}
++
++	return &s5_clk->s5_hw[idx].hw;
++}
++
++static int s5_clk_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	int i, ret;
++	struct s5_clk_data *s5_clk;
++	struct clk_parent_data pdata = { .index = 0 };
++	struct clk_init_data init = {
++		.ops = &s5_pll_ops,
++		.num_parents = 1,
++		.parent_data = &pdata,
++	};
++
++	s5_clk = devm_kzalloc(dev, sizeof(*s5_clk), GFP_KERNEL);
++	if (!s5_clk)
++		return -ENOMEM;
++
++	s5_clk->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(s5_clk->base))
++		return PTR_ERR(s5_clk->base);
++
++	for (i = 0; i < N_CLOCKS; i++) {
++		struct s5_hw_clk *s5_hw = &s5_clk->s5_hw[i];
++
++		init.name = clk_names[i];
++		s5_hw->reg = s5_clk->base + (i * 4);
++		s5_hw->hw.init = &init;
++		ret = devm_clk_hw_register(dev, &s5_hw->hw);
++		if (ret) {
++			dev_err(dev, "failed to register %s clock\n",
++				init.name);
++			return ret;
++		}
++	}
++
++	return devm_of_clk_add_hw_provider(dev, s5_clk_hw_get, s5_clk);
++}
++
++static const struct of_device_id s5_clk_dt_ids[] = {
++	{ .compatible = "microchip,sparx5-dpll", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, s5_clk_dt_ids);
++
++static struct platform_driver s5_clk_driver = {
++	.probe  = s5_clk_probe,
++	.driver = {
++		.name = "sparx5-clk",
++		.of_match_table = s5_clk_dt_ids,
++	},
++};
++builtin_platform_driver(s5_clk_driver);
 -- 
 2.27.0
 
