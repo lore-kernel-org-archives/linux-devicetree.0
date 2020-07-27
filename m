@@ -2,169 +2,152 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9726DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDA6C433EA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74FF3207BB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BDB2065E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 15:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ixGxfPuv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XsUkdQHd"
+	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="CZYJVHdA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgG0Pwg (ORCPT
+        id S1731072AbgG0P43 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:52:36 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50933 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728466AbgG0Pwg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:52:36 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4346A5804FA;
-        Mon, 27 Jul 2020 11:52:35 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 27 Jul 2020 11:52:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=yRQPP6g5muRZYYQON1y3sN6Yh6q
-        NLVGPrU54d2fUDTw=; b=ixGxfPuv6+H3FsDDsBUrQKkkLg7bn+klIXKUM/k3qXh
-        x3BYJ3ecxLhUAlnIVtu/dPPe6pQPNuD2LMUvqmwO9TCTHaI68VewatS3IhGxB6iw
-        0yVNi3US3zXNthXvNa95XvoMJSvsR9w1swCvTPMvQ5T4bYQ/jRuzTophWJC5mxqQ
-        JtjshY+g1Nr3mAxK3oOzGMLMjMwz6dOB5TkuvKXrQqGj0SkUfwMtto5eqRSNcsV1
-        jRT0EwNuX1WMBPH3fb3FjTCL8ErKQe/holE2QXKZbAbcCbgz9Qo3BfNipYuZcHQk
-        FSaneB4+QGm+UDBXIWu5V4XXJpsoDSUSgT5GFbuTeTg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=yRQPP6
-        g5muRZYYQON1y3sN6Yh6qNLVGPrU54d2fUDTw=; b=XsUkdQHdgXLAF32JLoBjo4
-        ZqCHmL80XDMnRGwLJeOs/NNXexxtXjgESS5QMjXUJeeXOJjS1jlJc8ZioY9Xo0FE
-        ERjuXLTZV1vz72VV3tslABL3Os9HHfPBOImCwFJ+H0bRZJHdBYXaD0zBX3YkIqHw
-        0cwoiNXVnR4k+Iw3xDB/1nGSefhX33Y3NG28plbMi9IVU1b4xwY+w/LXig7REbsn
-        uC4Pya1LO0il4TQN0pSyrW/EFGkPr/cGN6oFy9Ro5vDtgtOpHq0n7HMsNPrfkqmI
-        pOej3ewqX4iaKjeXF0Ws2hnJc4JnxniMhNYmVJQeJlKBDi8Df/GvUgv43Iyl8fPw
-        ==
-X-ME-Sender: <xms:QvgeXzAnFYcQT1H0jtBT-QudsPbTbB3wFvt8svzkTE69ZTan9LzQyQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedriedtgdeliecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:QvgeX5jrbI1bjsZM8CZZQh_Ox2eB8fuOoNifs5nILHt9pLJ6v4jISg>
-    <xmx:QvgeX-k3iwoh53U2Hn32tcOUWCBWd3XdTVvIGLiwRUScAdWp9zzxhg>
-    <xmx:QvgeX1yQMW8OLDwc6FhI6bWlzJTQXKYr5TaQBZzOPVBWXig1vPah5w>
-    <xmx:Q_geX9SLyHUWzuS2ezCtEubdXJrLVagxIszg9Y-_kga_A4YVK7WNQQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2BB96328005A;
-        Mon, 27 Jul 2020 11:52:34 -0400 (EDT)
-Date:   Mon, 27 Jul 2020 17:52:32 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] dt-bindings: arm: bcm: Add a select to the RPI Firmware
- binding
-Message-ID: <20200727155232.a4ccxdjooa5vjbfy@gilmour.lan>
-References: <20200626115433.125735-1-maxime@cerno.tech>
- <159554434893.3847286.8491922177659230646@swboyd.mtv.corp.google.com>
+        Mon, 27 Jul 2020 11:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbgG0P43 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 11:56:29 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303BCC0619D2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 08:56:29 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id f14so1737029ejb.2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 08:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b1XOxgs+ESH1/h8P2K3MXhzlqoLMlitlCI9KqWLboA8=;
+        b=CZYJVHdAzY438h4GmyeOZBJQ3RJwFLYRn2E1DQxZ5Wezrb7oXcGMUySyBcYrem9oJy
+         v85wJKg5Rry75jt4q6esgMorhv+VWA221Nuuh5qDR5tG7dD9q/LbW6zFOy2DW2bvdrJv
+         ZNvdyj5EbtQj6TmMRDcsjCv2mWuGyN0FcsmIs93lPfCDGeJQWQRjQ404EeNfqdNnGcFt
+         XZC1sEOze1Vc5O8S/dxoJFzqKDS8l3ev1Y1e8lQkG7Kaf0NZxeZFNYTXoaB2XOwyfgX+
+         Du1cltEgNV4JdfnK0pNQ6BMRBpMrFN2f6ZQNYq0BSmbOH2DBb9/L9dpaGCLi2/5G6HeL
+         Eedw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b1XOxgs+ESH1/h8P2K3MXhzlqoLMlitlCI9KqWLboA8=;
+        b=K8We7abvlPHe1edi/0npJCFwkXdOjhK4TsGyuMmNfuDklJ+sNlfTMetdxIDxOWz/U3
+         EvlD0KL30HUcvXbHGbSuqeER43wDuUWTBOoDCJ4LtN2hzr2AvR9IhAKPAGe6JKHnXqy+
+         h0Ph3e6MwknwxggtQ1XCHFT4TaLEXkRxtlGaPDfnHC8yfcOiWNCBFrbI6GREihZCsRDr
+         C2Lj5gplCKfVb7xonlqla8KSEvmblUPT7Shbm6fFfpnifbrrEOI+2wJepDNx5Zsdwagc
+         2wQkHh1Jw82YKQjt4IhRrq2j+rTekfRozwXvadF4ZMaJv7M2vhQsJul66OyI3mGWELYQ
+         jvtA==
+X-Gm-Message-State: AOAM533VVWs2emwsmJNBZo9RZwclD3ZoPjK0xtp9YT5DmOg6SKdvFYAw
+        P5LMEvkaT3pCK6LG9bgJ1UZahGY3/VsgHUY79aIhywpt
+X-Google-Smtp-Source: ABdhPJyNSLUvhPPAp68+3bvGDOcxxHsEMX1B13+H02YFrz1OJkOjrSCdVMD5/2ncg2y+CTRAol+zwks9nnOn444jfsY=
+X-Received: by 2002:a17:906:600f:: with SMTP id o15mr6771795ejj.41.1595865387804;
+ Mon, 27 Jul 2020 08:56:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cnvfzqh5i3kjod3a"
-Content-Disposition: inline
-In-Reply-To: <159554434893.3847286.8491922177659230646@swboyd.mtv.corp.google.com>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net>
+ <20200727094553.GH1551@shell.armlinux.org.uk> <20200727144938.GC239143@piout.net>
+ <20200727152439.GK1551@shell.armlinux.org.uk> <20200727154104.GE239143@piout.net>
+ <20200727154335.GL1551@shell.armlinux.org.uk>
+In-Reply-To: <20200727154335.GL1551@shell.armlinux.org.uk>
+From:   Jon Nettleton <jon@solid-run.com>
+Date:   Mon, 27 Jul 2020 17:55:50 +0200
+Message-ID: <CABdtJHuVaTa5T0-KdQ-wZQrmFQ6HO3FvgnTgSo3aOi+=SPzDZA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
+        a.zummo@towertech.it, Baruch Siach <baruch@tkos.co.il>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 5:43 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Jul 27, 2020 at 05:41:04PM +0200, Alexandre Belloni wrote:
+> > On 27/07/2020 16:24:39+0100, Russell King - ARM Linux admin wrote:
+> > > On Mon, Jul 27, 2020 at 04:49:38PM +0200, Alexandre Belloni wrote:
+> > > > On 27/07/2020 10:45:53+0100, Russell King - ARM Linux admin wrote:
+> > > > > > This is but this shouldn't be a DT property as it has to be changed
+> > > > > > dynamically. I'm working on an ioctl interface to change this
+> > > > > > configuration.
+> > > > >
+> > > > > Why does it need to be changed dynamically?  If the hardware components
+> > > > > are not fitted to allow the RTC to be safely used without DSM, then
+> > > > > why should userspace be able to disable DSM?
+> > > >
+> > > > For RTCs with a standby mode, you want to be able to return to standby
+> > > > mode.
+> > > >
+> > > > That would happen for example after factory flashing in that common use
+> > > > case:
+> > > >  - the board is manufactured
+> > > >  - Vbackup is installed, the RTC switches to standby mode
+> > > >  - the board is then booted to flash a system, Vprimary is now present,
+> > > >    the RTC switches to DSM.
+> > > >
+> > > > At this point, if the board is simply shut down, the RTC will start
+> > > > draining Vbackup before leaving the factory. Instead, we want to be able
+> > > > to return to standby mode until the final user switches the product on
+> > > > for the first time.
+> > >
+> > > I don't think you're understanding what's going on with this proposed
+> > > patch.  The cubox-i does work today, and the RTC does survive most
+> > > power-downs. There are situations where it doesn't.
+> > >
+> > > So, let's take your process above.
+> > >
+> > > - the board is manufactured
+> > > - Vbackup is installed, the RTC switches to standby mode
+> > > - the board is then booted to flash a system, Vprimary is now present
+> > > - the board is powered down.  the RTC _might_ switch over to battery
+> > >   if it notices the power failure in time, or it might not.  A random
+> > >   sample of units leaving the factory have the RTC in standby mode.
+> > >   Others are draining the battery.
+> > >
+> > > I'm not saying what you propose isn't a good idea.  I'm questioning
+> > > why we should expose this in the generic kernel on platforms where
+> > > it's likely to end up with the RTC being corrupted.
+> > >
+> >
+> > Note that I didn't say we should expose settings that are not working
+> > but it is a different discussion.
+>
+> It isn't a different discussion - that is exactly what the point of
+> my emails to you all along have been!
+>
+> So, can we please have that discussion, it is pertinent to this patch.
+>
 
---cnvfzqh5i3kjod3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 23, 2020 at 03:45:48PM -0700, Stephen Boyd wrote:
-> Quoting Maxime Ripard (2020-06-26 04:54:33)
-> > The RaspberryPi firmware binding uses two compatible, include simple-bu=
-s.
-> > The select statement generated by default will thus select any node that
-> > has simple-bus, not all of them being the raspberrypi firmware node.
-> >=20
-> > This results in warnings being wrongfully reported. Let's add a custom
-> > select statement to fix that.
-> >=20
-> > Fixes: 5bc0b9be8544 ("dt-bindings: arm: bcm: Convert BCM2835 firmware b=
-inding to YAML")
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> >=20
-> > ---
-> >=20
-> > The original binding has been merged through the clock tree, so it shou=
-ld
-> > be merged there.
-> >=20
-> > Even though the original binding (and the DT) are using the simple-bus
-> > compatible, this creates some DTC warnings since the firmware really is=
-n't
-> > a bus, so the node name doesn't match what a bus should have, none of t=
-he
-> > children have a reg property, #address-cells and #size-cells are missin=
-g,
-> > etc.
-> >=20
-> > I can only guess that simple-bus was used to make the sub-devices probe,
-> > but maybe simple-mfd would be more appropriate here?
-> > ---
-> >  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml   | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
->=20
-> Hmm. I'm still seeing warnings.
->=20
-> Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.ex=
-ample.dts:23.37-26.15: Warning (simple_bus_reg): /example-0/firmware/clocks=
-: missing or emp
-> ty reg/ranges property
-> Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.ex=
-ample.dt.yaml: firmware: $nodename:0: 'firmware' does not match '^(bus|soc|=
-axi|ahb|apb)(@[0-9a-f]+)?$'
-> Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.ex=
-ample.dt.yaml: firmware: '#address-cells' is a required property
-> Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.ex=
-ample.dt.yaml: firmware: '#size-cells' is a required property
-> Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.ex=
-ample.dt.yaml: firmware: 'ranges' is a required property
-
-Yeah, those are the warnings related to the issue we were discussing
-with Rob. The patch should fix an hard error.
-
-I'll send a followup patch for the warnings.
-
-Thanks!
-Maxime
-
---cnvfzqh5i3kjod3a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXx74QAAKCRDj7w1vZxhR
-xYGrAP9Ni9TAwcktS86DHN6KA5JIf3rWa7BMB3kQEyzRqn8iEAD9EovEJz61mLgr
-BWHTC1A9D+AO+4xo2pelFpdXuBiyTQc=
-=CvaM
------END PGP SIGNATURE-----
-
---cnvfzqh5i3kjod3a--
+Thinking about this some more, I believe whether or not an IOCTL
+interface is in the works or needed is irrelevant.  This patch
+describes the hardware and how it is designed and the topic of
+discussion is if we need a simple boolean state, or if we need
+something that could be used to support dynamic configuration in the
+future.  I would rather make this decision now rather than keep
+tacking on boolean config options, or revisit a bunch of device-tree
+changes.
