@@ -2,82 +2,153 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE95C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF662C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4AB52074F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4712075D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 20:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595882419;
-	bh=rUt9rhTuXxrDU9oSTEBd/GawsqrRg//hGHy5AT4wb1c=;
+	s=default; t=1595882677;
+	bh=l3BPaepxqdMUgPeHzaQPpwBApbyngWFfAIbCpH62N4E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KvdzdttIJtdmBdHQ6ZaqtNwC/Jz1ltzCQe1BtHcWuZ8zY9OpSLyLm6zg6MaB2NzzT
-	 O6PN9tjQ5PDnEvwuW2oDD6RjjIdPccNUzFBNXfRhKAX3gave7EQMXXLb+BmC5gBIQS
-	 bn21Nw1e8r8+VNOh/wBmP9iRx9lN1Nh4GIytOM/8=
+	b=dipQ3uUT+XTdxP4oBX7zMTqHVFOEvdBFvKzCUyStNpFMNviHJO5nQ78/BdT00aG5j
+	 FWBUjpcrGM4RXTo+xmv6yTRWUVJ1oM7RChNvcZoI9grCmqn1QjBwzdPJoYqgQdNKl4
+	 Pm3yCCcSzZQPghPOLu1qQFVcEnQ50gcuYZDOz/sU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgG0UkT (ORCPT
+        id S1726983AbgG0Uoh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:40:19 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45399 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgG0UkT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 16:40:19 -0400
-Received: by mail-il1-f195.google.com with SMTP id b18so9087295ilo.12;
-        Mon, 27 Jul 2020 13:40:18 -0700 (PDT)
+        Mon, 27 Jul 2020 16:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgG0Uog (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 16:44:36 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283A2C061794;
+        Mon, 27 Jul 2020 13:38:50 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id l17so4065204ilq.13;
+        Mon, 27 Jul 2020 13:38:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=3Td7E5j/pYqR2qW0Pg0Jh7MYMZ/6aP3UbVq7wrH2KwU=;
-        b=P7ufcaAyPe0G8VWMfCVYgKcTx59t54PnBkR4gWC5D50omrx0TCx8zMCp2jqdnt/qVL
-         tftjfVnBwG/LVb6+fBXsUn1skCVuRrPAiWcSyLscxXjmFwMLz6M68pDsfn3krlygF9pu
-         GQ+dOcHI8U8IfMZvIhlbVGjBC67MsAdOtoj3xRKK1YJt9Km85wgWB283bMi4ldIlQ0oD
-         6UD6Eu1L6eiskAa5uYfXH8ZWMqd955h37XBL75c9HwrpWOosZi+LpYsPh/XAo+G/kZIy
-         RFrI5RIAIAAcStj9DOiG0/T6XlUqjZGeL0vUN4I39vE393+RLyTFvpHHpc1QuNPwtCmD
-         DHRA==
-X-Gm-Message-State: AOAM532cgPHfoVpKNeIsv6qCI5r4siov1r8v1N4iJGZbVK2MtxmSvf6k
-        FSVjU5Gy1hieT4+bJ4OsbwPqrjX0Fw==
-X-Google-Smtp-Source: ABdhPJzar3qYNFH1SZmi3V2Zmsfs0YajeL0JEZlhth0eNa+AC1Dv2WRzclj3usZ6oEjse4MS+1c1Bg==
-X-Received: by 2002:a05:6e02:ead:: with SMTP id u13mr26030263ilj.46.1595882418215;
-        Mon, 27 Jul 2020 13:40:18 -0700 (PDT)
+        bh=cKdW+grdmMQSHxJMAoZvPNlBL11Q09cWhyyo13ys2bI=;
+        b=I7oqel0uPK5yNykeEPGkM2wntlhQHCyZChnUcWmgYtx1IBCUw1BngS2drpCSOwXShV
+         tyntXnpf7s1DwuorTHYqh3kFcfXGAOBG4mHZKf0sq0yhJorPasp0fbAcVp8PPVA87wD/
+         cfSGd1+o8yuNoca3uAJDIPYp6P+hHeo/aqG7lBjlW5wOg1x0Xu5hkrJ4+aqGPFFgvFGV
+         Dgdfq92GQc6amxiRixw0Jp7Y9tXwcNlZt54AUgyX2T6MMut49kXB4+hyGLRFUeiXv/dT
+         qckXgY/0r6pL9z115tsy2Ng6+HlvcmQe/42shhr1nlihWra1gu2wMZ1KMRucM+NoYWHF
+         qMHw==
+X-Gm-Message-State: AOAM532dskbRb5zYjRsYq4Lq5cPEiOcoy3yIr3hrHHmRVAmqE2TVg8Vm
+        o2ukUPlL1/t01ndtaxh/PA==
+X-Google-Smtp-Source: ABdhPJy9O/ZdIIW2uzTQWTdhUSFiitu2eaLf82UdvHppY862YgDtihIZUI+Ug5Bc98jvfGhPnhKwGg==
+X-Received: by 2002:a92:9fcb:: with SMTP id z72mr25457987ilk.195.1595882329431;
+        Mon, 27 Jul 2020 13:38:49 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id w22sm2280193ioc.24.2020.07.27.13.40.17
+        by smtp.gmail.com with ESMTPSA id b20sm9124735ila.5.2020.07.27.13.38.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 13:40:17 -0700 (PDT)
-Received: (nullmailer pid 836467 invoked by uid 1000);
-        Mon, 27 Jul 2020 20:40:16 -0000
-Date:   Mon, 27 Jul 2020 14:40:16 -0600
+        Mon, 27 Jul 2020 13:38:48 -0700 (PDT)
+Received: (nullmailer pid 834377 invoked by uid 1000);
+        Mon, 27 Jul 2020 20:38:47 -0000
+Date:   Mon, 27 Jul 2020 14:38:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc:     b.zolnierkie@samsung.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v4] video: fbdev: ssd1307fb: Added support to Column
- offset
-Message-ID: <20200727204016.GA836415@bogus>
-References: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v4 4/6] dt-bindings: snps,dw-apb-ssi: Add sparx5 support,
+ plus rx-sample-delay-ns property
+Message-ID: <20200727203847.GA782308@bogus>
+References: <20200724111404.13293-1-lars.povlsen@microchip.com>
+ <20200724111404.13293-5-lars.povlsen@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
+In-Reply-To: <20200724111404.13293-5-lars.povlsen@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 24 Jul 2020 17:22:18 -0300, Rodrigo Alencar wrote:
-> This patch provides support for displays like VGM128064B0W10,
-> which requires a column offset of 2, i.e., its segments starts
-> in SEG2 and ends in SEG129.
+On Fri, Jul 24, 2020 at 01:14:02PM +0200, Lars Povlsen wrote:
+> This has the following changes for the snps,dw-apb-ss DT bindings:
 > 
-> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+> - Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
+>   controller
+> 
+> - Add the property "rx-sample-delay-ns"
+> 
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
->  Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
->  drivers/video/fbdev/ssd1307fb.c                         | 8 ++++++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
+>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> index c62cbe79f00dd..c0adaad1aa695 100644
+> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> @@ -36,6 +36,8 @@ properties:
+>                - mscc,ocelot-spi
+>                - mscc,jaguar2-spi
+>            - const: snps,dw-apb-ssi
+> +      - description: Microchip Sparx5 SoC SPI Controller
+> +        const: microchip,sparx5-spi
+>        - description: Amazon Alpine SPI Controller
+>          const: amazon,alpine-dw-apb-ssi
+>        - description: Renesas RZ/N1 SPI Controller
+> @@ -93,6 +95,12 @@ properties:
+>        - const: tx
+>        - const: rx
+>  
+> +  rx-sample-delay-ns:
+> +    description: Default value of the rx-sample-delay-ns property.
+> +      This value will be used if the property is not explicitly defined
+> +      for a SPI slave device. Default value is 0. See below.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Acked-by: Rob Herring <robh@kernel.org>
+Don't need a type for properties with unit suffixes.
+
+Also, add:
+
+'default: 0'
+
+> +
+>  patternProperties:
+>    "^.*@[0-9a-f]+$":
+>      type: object
+> @@ -107,6 +115,13 @@ patternProperties:
+>        spi-tx-bus-width:
+>          const: 1
+>  
+> +      rx-sample-delay-ns:
+> +        description: SPI Rx sample delay offset, unit is nanoseconds.
+> +          The delay from the default sample time before the actual
+> +          sample of the rxd input signal occurs. The "rx_sample_delay"
+> +          is an optional feature of the designware controller, and the
+> +          upper limit is also subject to controller configuration.
+> +
+>  unevaluatedProperties: false
+>  
+>  required:
+> @@ -129,5 +144,11 @@ examples:
+>        num-cs = <2>;
+>        cs-gpios = <&gpio0 13 0>,
+>                   <&gpio0 14 0>;
+> +      rx-sample-delay-ns = <3>;
+> +      spi-flash@1 {
+> +        compatible = "spi-nand";
+> +        reg = <1>;
+> +        rx-sample-delay-ns = <7>;
+> +      };
+>      };
+>  ...
+> -- 
+> 2.27.0
+> 
