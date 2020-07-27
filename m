@@ -2,245 +2,107 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730E0C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F5FC433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF1920672
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595836547;
-	bh=klIYZ3z3AZ82e3hAd5ya/zhpvWBojtO3/DLyBwGwpHA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=x8HtZC5psGtW3gQuw+DMtAapOdFsz+tUFQcxzkr++jzIHzZ5Si+bO2EP/IcGTDsKB
-	 hzUM5XSHxDMLkB120wbw2oLn4CzT7EURPPFJDU1Ud2JUeWphGEonGOp7WKRjmn/Ztk
-	 EbMTgCnPIAXhmhoMICbvQisC89CVb9X6axVXVLuM=
+	by mail.kernel.org (Postfix) with ESMTP id ED71620672
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E44rSvPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgG0Hzn (ORCPT
+        id S1727904AbgG0H6m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgG0Hzn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:55:43 -0400
-Received: from localhost.localdomain (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0AA320672;
-        Mon, 27 Jul 2020 07:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595836542;
-        bh=klIYZ3z3AZ82e3hAd5ya/zhpvWBojtO3/DLyBwGwpHA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fcx2rUQXA8HJhCYavhUebUtAby8I1DMdXZV1YYeNYIHbB0QCfO6xAo1G/ywddtxcg
-         Nsb55Ip7/oiqwz13Z/c0TKnTV5QC1NrfucD90T1VuptwznRdQ95njxQYlBxi7iOPRj
-         /rMVqBb5ldQ+YVYhCunj7CYj+uootpc6l3akxsEE=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845-db845c: Add hdmi bridge nodes
-Date:   Mon, 27 Jul 2020 13:25:32 +0530
-Message-Id: <20200727075532.1932134-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Mon, 27 Jul 2020 03:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgG0H6l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 03:58:41 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CB4C0619D2;
+        Mon, 27 Jul 2020 00:58:41 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id b13so9033331edz.7;
+        Mon, 27 Jul 2020 00:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/REZwXRz5HY7fev5AIX1xp+FPLMsQ7CaayNFnZrrTs4=;
+        b=E44rSvPDKHSJX+gzJpv/MuvSGtQjfA11R0Nh4HxsD6D1B5bHRPLrkBH/vfDoZksV83
+         KsSWhzHTRZo0Rww/ofA+K5yQKW1aK/xVe5AoztxOw7HbSy/gedDM5c3cg4U0sejJpgUs
+         L284SKbEPvZ9oC7+Qkf3jPB9mH7i8w1kTu6VIcKGXZBSgCcPR+GVUdqII/E7ZVwsZGqo
+         yQE8GVLKAn3SA6J/4ebOZ/a7264TG3A+cMu4rLHy0hPG9lsal2aHAavjUUsEYWSOoq31
+         YEguXeDWgrFftAuF7xlHV4Ax8OXRBLt1pBzq/yAKq8nWIfmTA0IT5g400Sksqt/2AeKY
+         Xbdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/REZwXRz5HY7fev5AIX1xp+FPLMsQ7CaayNFnZrrTs4=;
+        b=ZOKO49eS8GZa+zR5IjKGAB0gyG8RGqxyWsQMO/2KamomWXYh8YwSj92wNYrXjoJq4Y
+         QtnuXG3nzVAc6iuSOGUGncQ3dvO5iFXstmG93XBPdTsUZwgppzCg9/qIcNtr0tJpsnS2
+         e0MSMBvRMrSTgG2jgg/opgMhs6fKNlWz13Upj8vnkqnwl5BiTlyt61DPG6HSh4x7IZ1Z
+         AAdSNBElLy0UjBKrscKgTUwXP8aQIF7B8QB6rzn0uLfTpLd0Q0VTQ2Jmsk7yRsXLIB/r
+         o5iyyRm+5CX6ERK9ZrNiN6axBhFSovZ2J3bvKeFDItBanKJ4E2HEZ+aNO6FRNrgJOquX
+         9iEg==
+X-Gm-Message-State: AOAM530bpWDojYtO79z/E15mB+MbW9F1YDvIK2g6FkfRbo4ivOfKtkQf
+        doCeXiS+qWkclbhsla0JXFp5YjuuCTAzE/hLZts=
+X-Google-Smtp-Source: ABdhPJxmdLhj0c/I/e6nCS/GkX9N03ZFRIjfJxIDkT8JXKbvvnm424ImsRXPevmDiHhJhXEiXih0lG99CTDFI8Na8CQ=
+X-Received: by 2002:aa7:d4c1:: with SMTP id t1mr20176260edr.253.1595836719999;
+ Mon, 27 Jul 2020 00:58:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-3-martin.botka1@gmail.com> <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+ <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
+ <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com> <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
+In-Reply-To: <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Mon, 27 Jul 2020 09:58:01 +0200
+Message-ID: <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
+ with u64 data length
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hello,
 
-Enable MDSS and DSI and add the LT9611 HDMI bridge. Also add the HDMI
-audio nodes.
+> I hit "reply-to-all" and the mail only was sent to you because you wrote
+> to only me.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 118 +++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+Yes my reply was only to you. But your original message was sent only to me too.
+So when i clicked reply to all it was only you as you sent it only to me.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index c00797bd3b07..a2a98680ccf5 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -74,6 +74,17 @@ bt {
- 		};
- 	};
- 
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&lt9611_out>;
-+			};
-+		};
-+	};
-+
- 	lt9611_1v8: lt9611-vdd18-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "LT9611_1V8";
-@@ -382,6 +393,25 @@ &cdsp_pas {
- 	firmware-name = "qcom/sdm845/cdsp.mdt";
- };
- 
-+&dsi0 {
-+	status = "okay";
-+	vdda-supply = <&vreg_l26a_1p2>;
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&lt9611_a>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi0_phy {
-+	status = "okay";
-+	vdds-supply = <&vreg_l1a_0p875>;
-+};
-+
- &gcc {
- 	protected-clocks = <GCC_QSPI_CORE_CLK>,
- 			   <GCC_QSPI_CORE_CLK_SRC>,
-@@ -395,6 +425,48 @@ zap-shader {
- 	};
- };
- 
-+&i2c10 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	lt9611_codec: hdmi-bridge@3b {
-+		compatible = "lontium,lt9611";
-+		reg = <0x3b>;
-+		#sound-dai-cells = <1>;
-+
-+		interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
-+
-+		reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
-+
-+		vdd-supply = <&lt9611_1v8>;
-+		vcc-supply = <&lt9611_3v3>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lt9611_irq_pin>, <&dsi_sw_sel>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lt9611_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				lt9611_a: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &i2c11 {
- 	/* On Low speed expansion */
- 	label = "LS-I2C1";
-@@ -407,6 +479,14 @@ &i2c14 {
- 	status = "okay";
- };
- 
-+&mdss {
-+	status = "okay";
-+};
-+
-+&mdss_mdp {
-+	status = "okay";
-+};
-+
- &mss_pil {
- 	status = "okay";
- 	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
-@@ -612,6 +692,21 @@ cpu {
- 		};
- 	};
- 
-+	hdmi-dai-link {
-+		link-name = "HDMI Playback";
-+		cpu {
-+			sound-dai = <&q6afedai QUATERNARY_MI2S_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+
-+		codec {
-+			sound-dai =  <&lt9611_codec 0>;
-+		};
-+	};
-+
- 	slim-dai-link {
- 		link-name = "SLIM Playback";
- 		cpu {
-@@ -686,6 +781,21 @@ mclk3 {
- 		};
- 	};
- 
-+	dsi_sw_sel: dsi-sw-sel {
-+		pins = "gpio120";
-+		function = "gpio";
-+
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-high;
-+	};
-+
-+	lt9611_irq_pin: lt9611-irq {
-+		pins = "gpio84";
-+		function = "gpio";
-+		bias-disable;
-+	};
-+
- 	pcie0_default_state: pcie0-default {
- 		clkreq {
- 			pins = "gpio36";
-@@ -943,6 +1053,14 @@ pinmux {
- 	};
- };
- 
-+&qup_i2c10_default {
-+	pinconf {
-+		pins = "gpio55", "gpio56";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
- &qup_uart6_default {
- 	pinmux {
- 		pins = "gpio45", "gpio46", "gpio47", "gpio48";
--- 
-2.26.2
+> Also threading is somehow strange because your reply to my mail
 
+Yes Gmail would not allow me to reply to your message and also send it
+to everyone so i had to reply to Andy's email which is why the
+threading is broken there. Sorry for that.
+
+> So I assume all the strange things happened on your side until proved
+> otherwise. :-)
+
+I think i just proved otherwise :)
+
+Best Regards,
+Martin
