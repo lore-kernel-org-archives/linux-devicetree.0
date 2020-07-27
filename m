@@ -6,73 +6,85 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F78C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FC0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8856C2070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 17:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE42020FC3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 18:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595872634;
-	bh=b32XTX1XQ+y/l+CgJD+znvZZXn1BHXXUseG7MmRbt+4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ryEGUKHxlcOdH6rANfIpI/DWRvOGKjHy/2TRx2bDNOz8jE80D8W0J0ONZy5mWAnnD
-	 J38bYKUvNO19ixQwij4e2yeuZiFuDSXhWSC/Z7ajkkiy3ToPWUngYrH9/35h5Pxo/t
-	 h+c+0iU0lBT3pzevC/ml3oCEqPwUukSQwNuF81fU=
+	s=default; t=1595872989;
+	bh=HP1cvhXI99uqxhI4e4M7X/JwgtzCU9FZxfWggylJpA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gVbO3VCOmympJdEtPwPo0s0G2ZN31nw9op12EgEQ1w4n0q2vJ8w2kHLTA0i2K/mKZ
+	 KB+JJT/69mlzw0Wf0RJqSpMsbzFX9TvO3mmPXXKCW6CbnaoYsq9Ufzo0KhO3DBDNrs
+	 +FpiF/fQAH7HfR02+vtpoibMLtPg351cTvsWNScU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgG0R5O (ORCPT
+        id S1729184AbgG0SDJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729144AbgG0R5N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:57:13 -0400
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70EAB2070B;
-        Mon, 27 Jul 2020 17:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595872633;
-        bh=b32XTX1XQ+y/l+CgJD+znvZZXn1BHXXUseG7MmRbt+4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YfXMo3jdfPbMo2gu2fedR/aEY+rIBrXOPF6ofAi0mfuWnSG+S5P4aptNKTsDdrZP7
-         zAloiDNZ/Nz2zdQrWIn+QsHXT4nSs8DlZ7HK1+Br6UDNobUXSXP71li9QfCL3nRkus
-         skRGl5Drk7qcAZHD4pBAA1DeplUSoo8+qG5X0fzI=
-Received: by mail-oi1-f175.google.com with SMTP id k22so15102322oib.0;
-        Mon, 27 Jul 2020 10:57:13 -0700 (PDT)
-X-Gm-Message-State: AOAM532W/fHj38l0rm9nzyJLsnHOMjyrFW5Ia4tKt5SbQKWm+qnbQwRW
-        jETGT1pYADBFBFVonkPrtHH9oE/5RLOluDRgsw==
-X-Google-Smtp-Source: ABdhPJwAcp63yZtFOBxfQhzVkOA6Wmzqkrl7P2Pgr74yZqTy5C39I68LgvhubC4Q4YC4ROg89/rTUj7cPt/fqj0clHA=
-X-Received: by 2002:aca:30d2:: with SMTP id w201mr358560oiw.147.1595872632903;
- Mon, 27 Jul 2020 10:57:12 -0700 (PDT)
+        Mon, 27 Jul 2020 14:03:09 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37577 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729006AbgG0SDJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 14:03:09 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so13877653ilh.4
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 11:03:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RCNcjvwCoYUHXC7Yk0AFiXRgo47Lb1U99nkXBjcPUKY=;
+        b=BFOt/qyoY1fHdkv2IdWePJ0vf7clkUK+DxgcirRLZblttSNoHwnywu45LBKJoTS9dH
+         aRVepGK8Qo1sTKnQ9//GWM/K/oJ24GBgXO3kv7xJLBSgRg79kdXc9asYuAE6kqEJYrv0
+         e2Dnsynb64mDY/bSg+ht3VqyEkQHCg7WGw7Gc3Zeym2TcidQ+oWZtO4/okAdrFTXDZJM
+         8V7dWZI+yREXRyNdftg283KHRV3+YbnjTEwynTNrAy74H4moIhwpkx5CiRkdSPfmWWCm
+         lUy+npD0TuRD2SlmWevQ7b16sYfcFmaHshiIrUz/xAh5EXN9MFez+mvkAAPMaqnfVh0U
+         gF8g==
+X-Gm-Message-State: AOAM533gNHeJS8IfCOSAO5g/6igc178isVvd71od7b1sNBOxmFQrTyfz
+        tiKeFd2ZxCtf3xwteLrL6w==
+X-Google-Smtp-Source: ABdhPJymM2Xuf2q5KMkZQzfccoLE7MnU8poHCTqxBV+bzuvVmW5uhyckKx9NScW8jPkW56Qxc9XftQ==
+X-Received: by 2002:a92:7f04:: with SMTP id a4mr4206539ild.10.1595872987209;
+        Mon, 27 Jul 2020 11:03:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h1sm9286270iob.8.2020.07.27.11.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 11:03:06 -0700 (PDT)
+Received: (nullmailer pid 620488 invoked by uid 1000);
+        Mon, 27 Jul 2020 18:03:04 -0000
+Date:   Mon, 27 Jul 2020 12:03:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v4 04/10] dt-bindings: irqchip: ti,sci-intr: Update
+ bindings to drop the usage of gic as parent
+Message-ID: <20200727180304.GA619600@bogus>
+References: <20200725163700.20583-1-lokeshvutla@ti.com>
+ <20200725163700.20583-5-lokeshvutla@ti.com>
 MIME-Version: 1.0
-References: <20200727100505.23908-1-ceggers@arri.de>
-In-Reply-To: <20200727100505.23908-1-ceggers@arri.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 27 Jul 2020 11:56:59 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+jJFNQmxnXeA1HmBhM4aUH-qspdTCSRVvEfh0OVDF+DQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+jJFNQmxnXeA1HmBhM4aUH-qspdTCSRVvEfh0OVDF+DQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: at25: fix syntax error in example code
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <trivial@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725163700.20583-5-lokeshvutla@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 4:05 AM Christian Eggers <ceggers@arri.de> wrote:
->
-> Add missing semicolon.
->
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
+On Sat, Jul 25, 2020 at 10:06:54PM +0530, Lokesh Vutla wrote:
+> Drop the firmware related dt-bindings and use the hardware specified
+> interrupt numbers within Interrupt Router. This ensures interrupt router
+> DT node need not assume any interrupt parent type.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > ---
->  Documentation/devicetree/bindings/eeprom/at25.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../interrupt-controller/ti,sci-intr.txt      | 31 ++++++++++---------
+>  1 file changed, 16 insertions(+), 15 deletions(-)
 
-At this point, I'd prefer to see this converted to schema instead of
-trivial fixes. Then the tooling will catch these syntax errors.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
