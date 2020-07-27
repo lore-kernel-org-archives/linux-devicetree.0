@@ -2,181 +2,96 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43409C433EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C094EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D93B20719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E8120719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 19:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jYbLK+sw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgG0TLA (ORCPT
+        id S1728049AbgG0TRX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:11:00 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:34164 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgG0TK7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 15:10:59 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CF9E98046C;
-        Mon, 27 Jul 2020 21:10:53 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 21:10:52 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Mon, 27 Jul 2020 15:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbgG0TRW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 15:17:22 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07895C0619D4
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 12:17:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id j20so9615707pfe.5
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 12:17:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nJD8ANcLO/VUZAQvdaY1B7X+QEC8ivatXB0HOFF0ZtY=;
+        b=jYbLK+swZ7oxpeCHFmdwpZfHpXputie5W/EjIQUbE8weTwlTEepQhsfFuOurIFeN9B
+         GswDdi46JYQ9aLEeP6SEQOpDHpVuNdXW4MZ/cG9ljtiIVjQct65sI7OUGEQKxmTnESOE
+         4D9DRhVUAC18CbCTeCtF2sGDcMNnIaJjApsoM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nJD8ANcLO/VUZAQvdaY1B7X+QEC8ivatXB0HOFF0ZtY=;
+        b=pmnLjJabqtG7928vjrIFKrlLyjvtXHUNs0e6fb44gSCwQra0b44qXXSxLFcEX5iOiF
+         s+HOLcLkl8p3Hb96aGNCghUnWy4J/7Kmv7UaAiGn0ozHruXPb7sovcYUHvJMAYGvdrds
+         NZkahC8G60wc4sc/tCCioSPEX5Y6l1v6vMHdPYgGkU5coqFLNifxIr6UtXMsMO3iWS1g
+         vizSLRJiXgRuQNeYU1RtUcse63rTgS2qJze+9goFzGpimgWOww5FqBPLvAhbE/qSoQ0i
+         lDuKfVGHiR5NCIbWfvXA/FV62Dh/9xlB4kPFGFPftFkrkUh0B5l65+JdlRTB4cC4h9K7
+         KpqQ==
+X-Gm-Message-State: AOAM531l4aRQrkcylZNyPk3mNDQ0a+4n9eKqtgRfTavKSKBNgmvHQ5W4
+        p0Jk3BH5vKy1SXX4KyW4XY9yYw==
+X-Google-Smtp-Source: ABdhPJyxz8nTCcV4GFjF0/DzhCHEFEk9iyfb6jBZGO5755r2yYlLAHzxDMoJDgSbCpD92ecQxHBIqg==
+X-Received: by 2002:a63:182:: with SMTP id 124mr19887757pgb.288.1595877441496;
+        Mon, 27 Jul 2020 12:17:21 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id f18sm15177144pgv.84.2020.07.27.12.17.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 12:17:20 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:17:19 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: display: Document NewVision NV3052C DT
- node
-Message-ID: <20200727191052.GA1011220@ravnborg.org>
-References: <20200727164613.19744-1-paul@crapouillou.net>
- <20200727164613.19744-2-paul@crapouillou.net>
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v10 1/2] usb: dwc3: qcom: Add interconnect support in
+ dwc3 driver
+Message-ID: <20200727191719.GB3191083@google.com>
+References: <1595528857-25357-1-git-send-email-sanm@codeaurora.org>
+ <1595528857-25357-2-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200727164613.19744-2-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=gEfo2CItAAAA:8 a=cFL5_wh2AAAA:8
-        a=47UgJTjCgcInOTyXzTsA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=yWaY75k36LOQ25BSl4KT:22
+In-Reply-To: <1595528857-25357-2-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul.
-
-On Mon, Jul 27, 2020 at 06:46:08PM +0200, Paul Cercueil wrote:
-> Add documentation for the Device Tree node for LCD panels based on the
-> NewVision NV3052C controller.
+On Thu, Jul 23, 2020 at 11:57:36PM +0530, Sandeep Maheswaram wrote:
+> Add interconnect support in dwc3-qcom driver to vote for bus
+> bandwidth.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-
-Very happy to see work on RG-350 :-)
-Some feedback below.
-
-	Sam
-
-> ---
->  .../display/panel/newvision,nv3052c.yaml      | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
+> This requires for two different paths - from USB to
+> DDR. The other is from APPS to USB.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml b/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
-> new file mode 100644
-> index 000000000000..751a28800fc2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/newvision,nv3052c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NewVision NV3052C TFT LCD panel driver with SPI control bus
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +description: |
-> +  This is a driver for 320x240 TFT panels,
-The binding describes the HW, not the driver. So please re-phrase this
-part.
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
 
-This datasheet: https://www.phoenixdisplay.com/wp-content/uploads/2019/05/NV3052C-Datasheet-V0.2.pdf
-tells that the driver supports additional resoltions.
-I guess the 320x240 resolution is limited to the leadtek panel.
-
-> +  accepting a variety of input
-> +  streams that get adapted and scaled to the panel. The panel output has
-> +  960 TFT source driver pins and 240 TFT gate driver pins, VCOM, VCOML and
-> +  VCOMH outputs.
-> +
-> +  The panel must obey the rules for a SPI slave device as specified in
-> +  spi/spi-controller.yaml
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - leadtek,ltk035c5444t-spi
-> +
-> +      - const: newvision,nv3052c
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  reset-gpios: true
-> +  port: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-Do the panel need any power?
-I had expected to see a power-supply node as mandatory.
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    spi {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      display@0 {
-> +        compatible = "leadtek,ltk035c5444t-spi", "newvision,nv3052c";
-> +        reg = <0>;
-> +
-> +        spi-max-frequency = <15000000>;
-> +        spi-3wire;
-> +        reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
-
-
-> +        backlight = <&backlight>;
-> +        power-supply = <&vcc>;
-These would fail later due to "unevaluatedProperties: false".
-Add them above like
-  backlight: true
-  power-supply: true
-
-as done for reset-gpios for example.
-
-> +
-> +        port {
-> +          panel_input: endpoint {
-> +              remote-endpoint = <&panel_output>;
-> +          };
-> +        };
-> +      };
-> +    };
-Personally I prefer 4 space indent. But there is no fixed rule (yet)
-what to use.
-
-> +
-> +...
-> -- 
-> 2.27.0
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
