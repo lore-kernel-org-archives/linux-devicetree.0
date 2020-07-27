@@ -2,111 +2,197 @@ Return-Path: <SRS0=xnVj=BG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2350C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 00:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80580C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 02:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC75720738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 00:26:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Shm0qTlI"
+	by mail.kernel.org (Postfix) with ESMTP id 6276320714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 27 Jul 2020 02:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgG0AZw (ORCPT
+        id S1726841AbgG0Cl2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 26 Jul 2020 20:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgG0AZw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 20:25:52 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0396EC0619D2;
-        Sun, 26 Jul 2020 17:25:51 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id v4so5642259ljd.0;
-        Sun, 26 Jul 2020 17:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GKnOu6p3RfixuqRD3S1qs+Z1A7aJHu+EzkEkVp7wuI4=;
-        b=Shm0qTlIgExezzQDG02ewiytrxTdTlFNuf81amBugZdEAACLhDAnQJFlN5TWe7GTl/
-         rHNWDAlfHOrfIU9sZXwGiHL08BDIJHWOhumvV3SB04XIYHVdGzsI7yhtAYshn0D68syI
-         AAqd0f+IjpucFGfFNTvaexbuqqrlczUrFNC7QZSWvQMGyq0zV8N4mpE3m5pEL4DgOnEY
-         r5suHNBPgNDT9sfVVpNREEGKktZBsC0i4BztDx3p40TGVqKjGdY5eEDZZR886F2ugiR/
-         uDBnPay8bCRyPpbEPLgNIMhkdN93mpiFyN+kcTK6GM+dskvzFxIKpl8twF2yCxKSUD4k
-         JJUQ==
+        Sun, 26 Jul 2020 22:41:28 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37239 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgG0Cl2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 26 Jul 2020 22:41:28 -0400
+Received: by mail-il1-f195.google.com with SMTP id r12so11809757ilh.4;
+        Sun, 26 Jul 2020 19:41:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GKnOu6p3RfixuqRD3S1qs+Z1A7aJHu+EzkEkVp7wuI4=;
-        b=WLThu9xaflXIjgg38w31gvKPbbVBu66RjYaT7Q0202GLh+NoplkCswDYd94GyCMbqC
-         jpQOIojkjJUln34CQ6DP8kaSGDoKzIZpTHvSz4j8A05kv0+HKMCJ3VStyt8/7d2LDhKT
-         Jdw6bnqBSSnaAWhA1Dj92yhpFID0yrnEpBwdPCPzpyfYgt/uu2kfUE20dEmUKt66jILt
-         cDO2xNKm6uTjljlI/pAGY84Dwjf6RSc7ddvdlmjji7+ZFOfpd5iTunO/qCx/Oyp87FJb
-         QivLM51Y8tntKh2GHT4G+4AP+yY90Ps3hmOL2hGh2hJm3eNXZsULA0KMyLU/UKqStoU6
-         SlEA==
-X-Gm-Message-State: AOAM532W8btD4DJafSZT0JIrXSu0qqO5+ccDOrpPQHljEzCFnjfLUJfR
-        SJes73gGijbsBd6j6zWrGrZ9zZnM
-X-Google-Smtp-Source: ABdhPJxwmNHqgZ0KpbLsAZAfgqCcfjiJWhzQTm93xQrBExY7mKMKds0N90A6ux1p4RD7yyJn7eGXfw==
-X-Received: by 2002:a2e:6c0d:: with SMTP id h13mr8629273ljc.394.1595809550157;
-        Sun, 26 Jul 2020 17:25:50 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id p13sm3021471lfc.63.2020.07.26.17.25.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jul 2020 17:25:49 -0700 (PDT)
-Subject: Re: [RFC PATCH v4 00/14] Support for Tegra video capture from
- external sensor
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
- <cb080da3-5ae5-bb83-8f5c-65d1fe17cb67@xs4all.nl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e7fd1d23-ea4d-2c17-e3cb-b27f9eb4f687@gmail.com>
-Date:   Mon, 27 Jul 2020 03:25:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hxBCzF4sEdVcGB9on95Q5MqqVkkXMRnrOfrJamWLZSg=;
+        b=dtoDtQw1f6evRUTm0/t8DENgjo+3OFMNoIMyV4oxLoC5yHm6nlj0AJI6Uw6lkc6Ip5
+         EOemzFO2qb1Gbpv9dZH1gY8lnxqAyBIuMgHvG9/E2MEkIk2mrpZyurrE+/9F+OKB/tzQ
+         SqMz+ATcLvjRN//nq08kLA9W0pjXB9MlDWnZaytXzYSqnHxlzOcITY5AO1+EOqlGXxUk
+         j20gR1wGWXUR2uIsSrsAFVcmilgUS3/PWSvojDRGVH7ILMJXNEVtkIlvu0xRr+4i6yMH
+         Y2OcbYbw8aBM63SgUKDsynoF8vzc2/k6SceFa2R69xKfHb3nzpRUkcm0o1krCtnIGDUg
+         BJmQ==
+X-Gm-Message-State: AOAM530+b8tK2EKHqIICpkMBLBgMNx+Sfxe4/WTjrsjoqrofyhn6t35z
+        86mM0RhzYsn6bYTq6JcXa7H/Rk1wPsK6f2OU5yiVXltwCNDXdA==
+X-Google-Smtp-Source: ABdhPJyPwq1U2CZ80IZGzBds/tCPF/CyydICyyqjM8NFZvKy4Q8c246iVsGdnQG+G6/LcYmCBUNqgdVmzYmXmZRYOzg=
+X-Received: by 2002:a05:6e02:e08:: with SMTP id a8mr22345863ilk.171.1595817686422;
+ Sun, 26 Jul 2020 19:41:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cb080da3-5ae5-bb83-8f5c-65d1fe17cb67@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com> <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Mon, 27 Jul 2020 10:41:15 +0800
+Message-ID: <CAAhV-H6xVi=6WPhiZ=oJDho_jY_nHZRc5-FSs8O9YKwCYzxh9w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-24.07.2020 12:43, Hans Verkuil пишет:
-> Thierry, Dmitry,
-> 
-> I'm happy with this series from a media perspective. However, patches 1-5 fix
-> various i2c-tegra.c issues and patch 12 changes mipi calibration functions in
-> drivers/gpu that patch 13 relies on.
-> 
-> I think the i2c-tegra.c patches can be merged independently into the i2c
-> subsystem, but patch 12 needs to be merged with the media patches. So for patch
-> 12 I need an Acked-by from Thierry.
-> 
-> I can also take the i2c-tegra patches if preferred, but there too I need Acks.
-> Dmitry, can you either take these i2c patches, or reply with Acks if you want
-> me to take it?
+For the whole series,
 
-Hello, Hans and everyone! The I2C patches are good to me.
+Tested-by: Huacai Chen <chenhc@lemote.com>
+Reviewed-by: Huacai Chen <chenhc@lemote.com>
 
-Either way of merging the patches should be fine since it's a hardware
-bring up phase, and thus, it's not critical if patches will be applied
-in a wrong order.
 
-I'm listed as a reviewer and not a maintainer of the Tegra I2C driver,
-so it should be up to Thierry and Wolfram to decide how to merge the I2C
-patches.
+On Sat, Jul 25, 2020 at 9:48 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Previously, we're hardcoding resserved ISA I/O Space in code, now
+> we're processing reverved I/O via DeviceTree directly. Using the ranges
+> property to determine the size and address of reserved I/O space.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> --
+> v2: Use range_parser instead of pci_range_parser
+> ---
+>  arch/mips/loongson64/init.c | 87 ++++++++++++++++++++++++++-----------
+>  1 file changed, 62 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+> index 59ddadace83f..8ba22c30f312 100644
+> --- a/arch/mips/loongson64/init.c
+> +++ b/arch/mips/loongson64/init.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/irqchip.h>
+>  #include <linux/logic_pio.h>
+>  #include <linux/memblock.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>  #include <asm/bootinfo.h>
+>  #include <asm/traps.h>
+>  #include <asm/smp-ops.h>
+> @@ -63,41 +65,76 @@ void __init prom_free_prom_memory(void)
+>  {
+>  }
+>
+> -static __init void reserve_pio_range(void)
+> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, resource_size_t hw_start,
+> +                                   resource_size_t size)
+>  {
+> +       int ret = 0;
+>         struct logic_pio_hwaddr *range;
+> +       unsigned long vaddr;
+>
+>         range = kzalloc(sizeof(*range), GFP_ATOMIC);
+>         if (!range)
+> -               return;
+> +               return -ENOMEM;
+>
+> -       range->fwnode = &of_root->fwnode;
+> -       range->size = MMIO_LOWER_RESERVED;
+> -       range->hw_start = LOONGSON_PCIIO_BASE;
+> +       range->fwnode = fwnode;
+> +       range->size = size;
+> +       range->hw_start = hw_start;
+>         range->flags = LOGIC_PIO_CPU_MMIO;
+>
+> -       if (logic_pio_register_range(range)) {
+> -               pr_err("Failed to reserve PIO range for legacy ISA\n");
+> -               goto free_range;
+> +       ret = logic_pio_register_range(range);
+> +       if (ret) {
+> +               kfree(range);
+> +               return ret;
+> +       }
+> +
+> +       /* Legacy ISA must placed at the start of PCI_IOBASE */
+> +       if (range->io_start != 0) {
+> +               logic_pio_unregister_range(range);
+> +               kfree(range);
+> +               return -EINVAL;
+>         }
+>
+> -       if (WARN(range->io_start != 0,
+> -                       "Reserved PIO range does not start from 0\n"))
+> -               goto unregister;
+> -
+> -       /*
+> -        * i8259 would access I/O space, so mapping must be done here.
+> -        * Please remove it when all drivers can be managed by logic_pio.
+> -        */
+> -       ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
+> -                               LOONGSON_PCIIO_BASE,
+> -                               pgprot_device(PAGE_KERNEL));
+> -
+> -       return;
+> -unregister:
+> -       logic_pio_unregister_range(range);
+> -free_range:
+> -       kfree(range);
+> +       vaddr = PCI_IOBASE + range->io_start;
+> +
+> +       ioremap_page_range(vaddr, vaddr + size, hw_start, pgprot_device(PAGE_KERNEL));
+> +
+> +       return 0;
+> +}
+> +
+> +static __init void reserve_pio_range(void)
+> +{
+> +       struct device_node *np;
+> +
+> +       for_each_node_by_name(np, "isa") {
+> +               struct of_range range;
+> +               struct of_range_parser parser;
+> +
+> +               pr_info("ISA Bridge: %pOF\n", np);
+> +
+> +               if (of_range_parser_init(&parser, np)) {
+> +                       pr_info("Failed to parse resources.\n");
+> +                       break;
+> +               }
+> +
+> +               for_each_of_range(&parser, &range) {
+> +                       switch (range.flags & IORESOURCE_TYPE_BITS) {
+> +                       case IORESOURCE_IO:
+> +                               pr_info(" IO 0x%016llx..0x%016llx  ->  0x%016llx\n",
+> +                                       range.cpu_addr,
+> +                                       range.cpu_addr + range.size - 1,
+> +                                       range.bus_addr);
+> +                               if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
+> +                                       pr_warn("Failed to reserve legacy IO in Logic PIO\n");
+> +                               break;
+> +                       case IORESOURCE_MEM:
+> +                               pr_info(" MEM 0x%016llx..0x%016llx  ->  0x%016llx\n",
+> +                                       range.cpu_addr,
+> +                                       range.cpu_addr + range.size - 1,
+> +                                       range.bus_addr);
+> +                               break;
+> +                       }
+> +               }
+> +       }
+>  }
+>
+>  void __init arch_init_irq(void)
+> --
+> 2.28.0.rc1
+>
