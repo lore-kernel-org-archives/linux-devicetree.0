@@ -2,182 +2,118 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16564C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3A0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E97412074F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B07207F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:56:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXR+wOlg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MeAMExUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgG1Sck (ORCPT
+        id S1732529AbgG1S4s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729290AbgG1Scj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 14:32:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE826C061794;
-        Tue, 28 Jul 2020 11:32:39 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so12460916pgc.5;
-        Tue, 28 Jul 2020 11:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0CJZdiTv9YjW5gmkn7MZ3onrZp2HvYjHfrFhdh1hacc=;
-        b=GXR+wOlgxjJHTTlAsjSNyBWwI67JSO5Goy9s9gzQSRj3GA55xgDpw0wTHqk6fQRShk
-         rs4oprTE6N6/KGedLmiXuv0tdepVZqEQGj7P4HIwYZSk5toaK3CfQH78TAgqSh19ghse
-         DmhLzczBwCOqwmN7ZPNYRfyis2wWM78LZfWZUxug2zVsYgdK3I7U40bsJDgegQA9K/uA
-         G3Xhlm7YyOqUwYEhWDTCcqIHPWzcRfhsPN6BgoDmdh5B3FGnOLPOHXITxo8PxfQQaSrP
-         rk5VQxbyui4QJPC9ZyFwAFnirjidLNDn010PCIQYLOIwMoLshmsvEvqgtdRfcfnrbJ1n
-         WyPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0CJZdiTv9YjW5gmkn7MZ3onrZp2HvYjHfrFhdh1hacc=;
-        b=qD0Rja0S8eRFn/oT8fdz3pskCuWlYIhx2l5C42sIEKA6RqkJS+wpqTZInwDd+GmK8C
-         U5GMey7B1tYZFJmcyqUR2AT3BW+enJdjiKapuHeIzglr8XLOHwPFBxFyponajo/kphIZ
-         aSDgl+yrODaThM50cLjVD8GuO+GvHsIuwxX0BYV/tb8pP6k+OylljozC4Gt1W/sNeFt4
-         FZTQKzNUXA/a8r1qH4occuAWMbwl3x9uLUWDXvdj6dpJsuUkAnZZf+GHvpGgD6ayCJsE
-         l8KefM/bKTXQWWqSkQ6utMOsIaf+wU0YaaNTG16LFxl4ftT/P4I8d3Zv44rib74bofch
-         8qrQ==
-X-Gm-Message-State: AOAM532MIg+95qf2EaWDa915h9j8+V8QbKlzRmkQobAsNOC6T9soDsqZ
-        5genwhU04g8ICpRLIeHpK517k/ltDtzjUoFX0vwadTDl3Zo=
-X-Google-Smtp-Source: ABdhPJyzqp0OZvelN5rU3slTQ04M1PavIytmSAd91VE5xBLhL5DeXjaBZbXWcCxv7h9tvhtgI4kMhPhqJJHuzlBotzg=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr26272462pgi.203.1595961158424;
- Tue, 28 Jul 2020 11:32:38 -0700 (PDT)
+        Tue, 28 Jul 2020 14:56:48 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38682 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728782AbgG1S4s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 14:56:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SIukBo042254;
+        Tue, 28 Jul 2020 13:56:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595962606;
+        bh=TsBj4IyXyiAC4vsRIW7YyeVgfCcS4eXV9QnjvdxD88E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MeAMExUNGridwucgq9A9A8v3aBYvEJlze23Bzj7tKfJtGmoR136GXiDn/V4spyTCZ
+         t/Cw46I3hVP+uun5EGolqwOe3tGigNwhDhUkQSkRp6Yf5wihgZqzIf0YP6Tphz2Xfp
+         bl3lCeC6mi6rkOYxD0Tc4/IZNz/x/sjuyEFNxu4s=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SIukBP000847
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 13:56:46 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Jul 2020 13:56:46 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Jul 2020 13:56:45 -0500
+Received: from [10.250.35.195] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SIujXk051016;
+        Tue, 28 Jul 2020 13:56:45 -0500
+Subject: Re: [PATCH v4 2/4] power: supply: bq27xxx_battery: Add the BQ27561
+ Battery monitor
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     <afd@ti.com>, <pali@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh@kernel.org>
+References: <20200728141113.31518-1-dmurphy@ti.com>
+ <20200728141113.31518-2-dmurphy@ti.com>
+ <20200728181755.6bkhp7j3cqtpooof@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <7035eebd-0324-6cf0-1de7-75eb4524cb94@ti.com>
+Date:   Tue, 28 Jul 2020 13:56:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.13.I14600506d0f725bf800c8da4ef89fdb3c3fb45cd@changeid>
- <CAHp75VdSxkgd-+CBTNUJD+WUdOX3e1x3Ysap=D9+33Yo1Kk+yA@mail.gmail.com> <855ea08a4c41bc107f88699230309675bd9075b0.camel@perches.com>
-In-Reply-To: <855ea08a4c41bc107f88699230309675bd9075b0.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 21:32:22 +0300
-Message-ID: <CAHp75VcyZohv3SoGZ5OoMafzVuRDL7ih85zXBZwHPMsXwoaxJg@mail.gmail.com>
-Subject: Re: [PATCH 13/15] iio: sx9310: Add newlines to printks
-To:     Joe Perches <joe@perches.com>
-Cc:     Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200728181755.6bkhp7j3cqtpooof@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 9:24 PM Joe Perches <joe@perches.com> wrote:
-> On Tue, 2020-07-28 at 21:19 +0300, Andy Shevchenko wrote:
-> > On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
-> > > From: Stephen Boyd <swboyd@chromium.org>
-> > >
-> > > Printks in the kernel have newlines at the end. Add them to the few
-> >
-> > Printk()s
-> >
-> > > printks in this driver.
-> >
-> > printk()s
+Sebastian
+
+On 7/28/20 1:17 PM, Sebastian Reichel wrote:
+> Hi,
 >
-> Random kernel pedantry.
-> This patch should not need to be respun for any of these.
+> On Tue, Jul 28, 2020 at 09:11:11AM -0500, Dan Murphy wrote:
+>> Add the Texas Instruments BQ27561 battery monitor.  The register address
+>> map is laid out the same as compared to other devices within the file.
+>> The battery status register has differing bits to determine if the
+>> battery is full, discharging or dead.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/power/supply/bq27xxx_battery.c     | 68 +++++++++++++++++++++-
+>>   drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
+>>   include/linux/power/bq27xxx_battery.h      |  1 +
+>>   3 files changed, 70 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+>> index 942c92127b6d..654d38bcd7e0 100644
+>> --- a/drivers/power/supply/bq27xxx_battery.c
+>> +++ b/drivers/power/supply/bq27xxx_battery.c
+>> @@ -43,6 +43,7 @@
+>>    * http://www.ti.com/product/bq27411-g1
+>>    * http://www.ti.com/product/bq27441-g1
+>>    * http://www.ti.com/product/bq27621-g1
+>> + * https://www.ti.com/lit/gpn/bq27z561
+> Applying this failed, because I applied a patch converting the
+> http urls to https. I would have fixed this silently, but it made
+> me notice the chip name is bq27z561 instead of simply bq27561.
+>
+> You named it without the 'z' everywhere, is there a reason?
+> Searching for bq27561 basically only finds your patches and
+> you decided not to drop the z for the bq28z610.
 
-If for above I can agree with you, below is definitely subject to improvement.
+At the time I was working on the BQ27750 as well and that has no letters 
+in it so I was following that part number.
+
+I will add the z in and rebase so the patch applies cleanly
+
+Dan
 
 >
-> > > Reviewed-by: Daniel Campello <campello@chromium.org>
-> > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > > Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
-> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > > Signed-off-by: Daniel Campello <campello@chromium.org>
-> >
-> > It has ordering issues
-> > Should be
-> >
-> > Fixes:
-> > SoB: Stephen
-> > Rb: Douglas
-> > Rb: Daniel
-> > SoB: Daniel
-> >
-> >
-> > > ---
-> > >
-> > >  drivers/iio/proximity/sx9310.c | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > > index 3f981d28ee4056..4553ee83a016a3 100644
-> > > --- a/drivers/iio/proximity/sx9310.c
-> > > +++ b/drivers/iio/proximity/sx9310.c
-> > > @@ -809,7 +809,7 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
-> > >         if (ret) {
-> > >                 if (ret == -ETIMEDOUT)
-> > >                         dev_err(&data->client->dev,
-> > > -                               "0x02 << 3l compensation timed out: 0x%02x",
-> > > +                               "0x02 << 3l compensation timed out: 0x%02x\n",
-> >
-> > Looks like ping-pong style in the series, i.e. you may fix this when
-> > you introduced this line.
-> >
-> > Check the rest (and not only printk()s) for the similar style and
-> > avoid the latter.
-> >
-> > >                                 val);
-> > >                 return ret;
-> > >         }
-> > > @@ -855,7 +855,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
-> > >
-> > >         ddata = (uintptr_t)device_get_match_data(dev);
-> > >         if (ddata != whoami) {
-> > > -               dev_err(dev, "WHOAMI does not match device data: %u", whoami);
-> > > +               dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
-> > >                 return -ENODEV;
-> > >         }
-> > >
-> > > @@ -867,7 +867,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
-> > >                 indio_dev->name = "sx9311";
-> > >                 break;
-> > >         default:
-> > > -               dev_err(dev, "unexpected WHOAMI response: %u", whoami);
-> > > +               dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
-> > >                 return -ENODEV;
-> > >         }
-> > >
-> > > @@ -896,7 +896,7 @@ static int sx9310_probe(struct i2c_client *client)
-> > >
-> > >         ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
-> > >         if (ret) {
-> > > -               dev_err(dev, "error in reading WHOAMI register: %d", ret);
-> > > +               dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
-> > >                 return ret;
-> > >         }
-> > >
-> > > --
-> > > 2.28.0.rc0.142.g3c755180ce-goog
-> > >
-> >
-> >
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> -- Sebastian
