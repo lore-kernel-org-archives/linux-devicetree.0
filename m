@@ -2,210 +2,235 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06963C433EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDFBC433ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D48792064B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCF6206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d13uPu0+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Vp/+hTH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgG1LD6 (ORCPT
+        id S1729029AbgG1LT2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgG1LD6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 07:03:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81825C061794;
-        Tue, 28 Jul 2020 04:03:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f5so20634392ljj.10;
-        Tue, 28 Jul 2020 04:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jX6sjTJPEr15dOzF7TYKeW7hD2/3KOKGSVAXq2cMBEc=;
-        b=d13uPu0+A8NFdVShzGvgGo4igAAaBdTaVAmAtFt4WF3hQWPCzgOZa3msY075ut5XaJ
-         k8eWcH8d33j3q9R5BTwumU5UEfPfG5MTo6ELaMCYTqMjNlWtwJloALgvmhwktj4sniV8
-         e++cuzk30jO7afhKJycMTVt00m3AUpWl4YGo4Av4UjOXJyE+zRFn2qXnSJ0GsbX/2uQd
-         MKsWo4z2zGaowAA5XbZi69CFjkNvsCB2sbxIbEzvdoHPKd16q+8t7TjVPRZBHICf4yz2
-         296srKHU3RreyC48COtmJUgeAjyVGp1ojNLE/2Y4AIH5NH6CsIEwAXQXpqYgFpmMi3a4
-         MlDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jX6sjTJPEr15dOzF7TYKeW7hD2/3KOKGSVAXq2cMBEc=;
-        b=KXQfqZX/5M6K2GnUEIog1q4URisQFVSNogKqQv3w06XIJm6eSSAT5PFAE392l5SK8b
-         2VVNFmLPid/5yyMXNg/Fa/LIan5+ySrW0Fhz1CXh2R21ZWsxMnPgCAvrKIg/QLbCknDr
-         7olXKFAAhbJfvVEVnncweW6KxSYD21N/Dfpm/gnPtJE6e8sDhMbyqTHc0JblaWd07ZYJ
-         Ny3fqwDyTYWT/5Go+DA0SoN+0P3Pjp01lTa/hNH6/hKuh01kO+eR0ncWd5arVosY+DNO
-         MtB5yEG8bLal/uzUUB7QRZMXgF03FSj5OG/ngoRsBQBeAZLIrc0s+tOyin5BDlsXvDaB
-         PIuQ==
-X-Gm-Message-State: AOAM533mVQ7sgNXN2zS8T7NULMRtBBGY4SVdas3qYaVzefYQ2ajEfPYx
-        C8llCZulo4OhVc7dzA5tob99udjS
-X-Google-Smtp-Source: ABdhPJy21QLY/yVjHkncbE+RD0wsgXFjz+XHQdbpbJEUed+zywipzYvk8mjCf8LoQO76elRFDDdGzg==
-X-Received: by 2002:a2e:7308:: with SMTP id o8mr5524141ljc.414.1595934235729;
-        Tue, 28 Jul 2020 04:03:55 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id k25sm2905238ljk.87.2020.07.28.04.03.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 04:03:55 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
- till calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
-Date:   Tue, 28 Jul 2020 14:03:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 07:19:28 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43362 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729040AbgG1LT2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:19:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595935166; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Muazobp+CoNoesOGLA1mVEIXf62DcclBDFYpySE7pm8=;
+ b=Vp/+hTH33bOLIxcK2rcyszkSrMgqj8cDuFjKKykTLSsNtenYi3Qwqg9ljQljpp2bHa7Zsi4A
+ qVC2tgPnrf2xXvNCDgfKbEx4GgTdhcuhgkD11XRWWkZSCodJBkio99gawvaQqdTcUWUVOV4K
+ kEDK/1+Ar8GtQrMKNKYzVKY9EbM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f2009ab634c4259e399c915 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 11:19:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EB621C433B1; Tue, 28 Jul 2020 11:19:06 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sbhanu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 859B0C433CA;
+        Tue, 28 Jul 2020 11:19:05 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 16:49:05 +0530
+From:   sbhanu@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, rnayak@codeaurora.org,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        devicetree-owner@vger.kernel.org
+Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for eMMC
+ and SDcard
+In-Reply-To: <20200727191029.GA3191083@google.com>
+References: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
+ <20200724171018.GZ3191083@google.com>
+ <7ffcb56e9e6723f4bae687e0f491cb93@codeaurora.org>
+ <20200727191029.GA3191083@google.com>
+Message-ID: <e83f559bb8691cd602f35e3bd739e5c4@codeaurora.org>
+X-Sender: sbhanu@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-27.07.2020 23:57, Sowjanya Komatineni пишет:
-> With the split of MIPI calibration into tegra_mipi_calibrate() and
-> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
-> is done.
+On 2020-07-28 00:40, Matthias Kaehlcke wrote:
+> Hi,
 > 
-> So, this patch skips disabling MIPI clock after triggering start of
-> calibration and disables it only after waiting for done status from
-> the calibration logic.
+> On Mon, Jul 27, 2020 at 12:20:38PM +0530, sbhanu@codeaurora.org wrote:
+>> On 2020-07-24 22:40, Matthias Kaehlcke wrote:
+>> > Hi Shaik,
+>> >
+>> > On Tue, Jul 21, 2020 at 04:16:21PM +0530, Shaik Sajida Bhanu wrote:
+>> > > From: Pradeep P V K <ppvk@codeaurora.org>
+>> > >
+>> > > Add the bandwidth domain supporting performance state and
+>> > > the corresponding OPP tables for the sdhc device on sc7180.
+>> > >
+>> > > Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+>> > > ---
+>> > >
+>> > > Changes since V1:
+>> > > 	- Incorporated review comments by Bjorn Andersson.
+>> > > ---
+>> > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
+>> > >  1 file changed, 15 insertions(+)
+>> > >
+>> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> > > index 68f9894..d78a066 100644
+>> > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> > > @@ -684,6 +684,9 @@
+>> > >  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+>> > >  					<&gcc GCC_SDCC1_AHB_CLK>;
+>> > >  			clock-names = "core", "iface";
+>> > > +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
+>> > > +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
+>> > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+>> > >  			power-domains = <&rpmhpd SC7180_CX>;
+>> > >  			operating-points-v2 = <&sdhc1_opp_table>;
+>> > >
+>> > > @@ -704,11 +707,15 @@
+>> > >  				opp-100000000 {
+>> > >  					opp-hz = /bits/ 64 <100000000>;
+>> > >  					required-opps = <&rpmhpd_opp_low_svs>;
+>> > > +					opp-peak-kBps = <100000 100000>;
+>> > > +					opp-avg-kBps = <100000 50000>;
+>> > >  				};
+>> > >
+>> > >  				opp-384000000 {
+>> > >  					opp-hz = /bits/ 64 <384000000>;
+>> > >  					required-opps = <&rpmhpd_opp_svs_l1>;
+>> > > +					opp-peak-kBps = <600000 900000>;
+>> > > +					opp-avg-kBps = <261438 300000>;
+>> > >  				};
+>> > >  			};
+>> > >  		};
+>> > > @@ -2476,6 +2483,10 @@
+>> > >  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+>> > >  					<&gcc GCC_SDCC2_AHB_CLK>;
+>> > >  			clock-names = "core", "iface";
+>> > > +
+>> > > +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
+>> > > +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
+>> > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+>> > >  			power-domains = <&rpmhpd SC7180_CX>;
+>> > >  			operating-points-v2 = <&sdhc2_opp_table>;
+>> > >
+>> > > @@ -2489,11 +2500,15 @@
+>> > >  				opp-100000000 {
+>> > >  					opp-hz = /bits/ 64 <100000000>;
+>> > >  					required-opps = <&rpmhpd_opp_low_svs>;
+>> > > +					opp-peak-kBps = <160000 100000>;
+>> > > +					opp-avg-kBps = <80000 50000>;
+>> > >  				};
+>> > >
+>> > >  				opp-202000000 {
+>> > >  					opp-hz = /bits/ 64 <202000000>;
+>> > >  					required-opps = <&rpmhpd_opp_svs_l1>;
+>> > > +					opp-peak-kBps = <200000	120000>;
+>> > > +					opp-avg-kBps = <100000 60000>;
+>> > >  				};
+>> > >  			};
+>> > >  		};
+>> >
+>> > Does the sdhci-msm driver actually have BW scaling support at this
+>> > point?
+>> >
+>> 
+>> yes
+>> 
+>> > There is commit 4ece9795be56 ("mmc: sdhci-msm: Add interconnect
+>> > bandwidth scaling support"), whose commit message says "make sure
+>> > interconnect driver is ready before handling interconnect scaling.".
+>> >
+>> > I haven't seen any patch adding the scaling support (supposedly by
+>> > adding dev_pm_opp_set_bw() calls?). Did I miss it? If not it seems
+>> > it would make sense to post it in a series together with this patch,
+>> > as far as I can tell this patch alone does nothing in practical terms.
+>> >
+>> > grep sdhc /sys/kernel/debug/interconnect/interconnect_summary
+>> >   8804000.sdhci                          0            0            0
+>> >   7c4000.sdhci                           0            0            0
+>> >   7c4000.sdhci                           0            0            0
+>> >   8804000.sdhci                          0            0            0
+>> >   ...
+>> 
+>> "mmc: sdhci-msm: Use OPP API to set clk/perf
+>> state"(https://lkml.org/lkml/2020/4/8/425) and "mmc: sdhci-msm: Add
+>> interconnect bandwidth scaling 
+>> support"(https://lkml.org/lkml/2020/3/12/60)
+>> with these two patches scaling will be supported for sdhci-msm driver.
 > 
-> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
-> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
-> with their usage.
+> Are you testing with exactly these patches or with the ones that landed
+> upstream? At least the second one changed substantially
 > 
-> As MIPI clock is left enabled and in case of any failures with CSI input
-> streaming tegra_mipi_finish_calibration() will not get invoked.
-> So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
-> and consumer drivers can call this in such cases.
+>> the values  in  grep sdhc
+>> /sys/kernel/debug/interconnect/interconnect_summary will be zero 
+>> during
+>> device is in suspend state...
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/gpu/drm/tegra/dsi.c |  4 ++--
->  drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
->  include/linux/host1x.h      |  5 +++--
->  3 files changed, 15 insertions(+), 13 deletions(-)
+> Yes, I forgot to mention that I started MMC IO before looking at
+> 'interconnect_summary'.
 > 
-> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-> index 3820e8d..a7864e9 100644
-> --- a/drivers/gpu/drm/tegra/dsi.c
-> +++ b/drivers/gpu/drm/tegra/dsi.c
-> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
->  		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
->  	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
->  
-> -	err = tegra_mipi_calibrate(dsi->mipi);
-> +	err = tegra_mipi_start_calibration(dsi->mipi);
->  	if (err < 0)
->  		return err;
->  
-> -	return tegra_mipi_wait(dsi->mipi);
-> +	return tegra_mipi_finish_calibration(dsi->mipi);
->  }
->  
->  static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
-> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
-> index e606464..b15ab6e 100644
-> --- a/drivers/gpu/host1x/mipi.c
-> +++ b/drivers/gpu/host1x/mipi.c
-> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
->  }
->  EXPORT_SYMBOL(tegra_mipi_disable);
->  
-> -int tegra_mipi_wait(struct tegra_mipi_device *device)
-> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
-> +{
+>> and the values in  grep sdhc
+>> /sys/kernel/debug/interconnect/interconnect_summary during device in 
+>> resume
+>> state will be like the following::
+>> 
+>> cicalhost / # cat /sys/kernel/debug/interconnect/interconnect_summary 
+>> | grep
+>> sdh
+>>   8804000.sdhci                          0        60000       120000
+>>   7c4000.sdhci                           0       300000       900000
+>>   7c4000.sdhci                           0       300000       900000
+>>   8804000.sdhci                          0        60000       120000
+>>   8804000.sdhci                          0       100000       200000
+>>   7c4000.sdhci                           0       261438       600000
+>>   8804000.sdhci                          0        60000       120000
+> 
+> On my system the bandwidth is never set:
+> 
+> 3.590152] sdhci_msm 7c4000.sdhci: DBG: old/new frequencies (384000000
+> Hz) are same, nothing to do
+> https://elixir.bootlin.com/linux/v5.7.8/source/drivers/opp/core.c#L847
+> 
+> This happens every time, even after the bandwith is set to 0. The 
+> problem
+> seems to be that opp_table->clk doesn't change for target_freq = 0.
+> 
+> My system is based on v5.4, so it is possible that my kernel is missing 
+> some
+> relevant patch from upstream.
+Hi matthias,
 
-Doesn't MIPI_CAL need to be reset here?
+In order to aviod confusion this patch is continuation of the below 
+patch::
+"mmc: sdhci-msm: Add interconnect bandwidth scaling support" 
+(https://lkml.org/lkml/2020/6/9/160).
 
-> +	clk_disable(device->mipi->clk);
-> +}
-> +EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
-> +
-> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
->  {
->  	struct tegra_mipi *mipi = device->mipi;
->  	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
->  	u32 value;
->  	int err;
->  
-> -	err = clk_enable(device->mipi->clk);
-> -	if (err < 0)
-> -		return err;
-> -
->  	mutex_lock(&device->mipi->lock);
->  
->  	err = readl_relaxed_poll_timeout(status_reg, value,
-> @@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
->  
->  	return err;
->  }
-> -EXPORT_SYMBOL(tegra_mipi_wait);
-> +EXPORT_SYMBOL(tegra_mipi_finish_calibration);
->  
-> -int tegra_mipi_calibrate(struct tegra_mipi_device *device)
-> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
->  {
->  	const struct tegra_mipi_soc *soc = device->mipi->soc;
->  	unsigned int i;
-> @@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
->  	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
-
-This function sets MIPI_CAL_CLKEN_OVR bit, does it mean that MIPI clock
-becomes always-ON?
-
-I don't see where MIPI_CAL_CLKEN_OVR is unset.
-
->  	mutex_unlock(&device->mipi->lock);
-> -	clk_disable(device->mipi->clk);
->  
->  	return 0;
->  }
-> -EXPORT_SYMBOL(tegra_mipi_calibrate);
-> +EXPORT_SYMBOL(tegra_mipi_start_calibration);
->  
->  static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
->  	{ .data = MIPI_CAL_CONFIG_CSIA },
-> diff --git a/include/linux/host1x.h b/include/linux/host1x.h
-> index 20c885d..b490dda 100644
-> --- a/include/linux/host1x.h
-> +++ b/include/linux/host1x.h
-> @@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
->  void tegra_mipi_free(struct tegra_mipi_device *device);
->  int tegra_mipi_enable(struct tegra_mipi_device *device);
->  int tegra_mipi_disable(struct tegra_mipi_device *device);
-> -int tegra_mipi_calibrate(struct tegra_mipi_device *device);
-> -int tegra_mipi_wait(struct tegra_mipi_device *device);
-> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
-> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
-> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
->  
->  #endif
-> 
+Thanks,
+sajida
 
