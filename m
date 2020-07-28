@@ -2,137 +2,128 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E452C433FC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486AEC433ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E868206D4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:31:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="aJ4aYQms"
+	by mail.kernel.org (Postfix) with ESMTP id 3334A206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgG1Mbv (ORCPT
+        id S1729909AbgG1Msr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:31:51 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:58928 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729571AbgG1Mbh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 08:31:37 -0400
-X-UUID: e355b37e488a409b8355118d22fb3ba6-20200728
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=JXjGlkK/YIWf9M/m8rQeaHnLeFDyiE8gIxUc5tlncsU=;
-        b=aJ4aYQmsPNKxbapRv62rY8U3hux8si7YDtqsrwsbGV5j4sAKH7AWckMUHHKp/K1vpqUN8GETLfVyOsv4HablCunYr/4fOjIrbabqIV66zGgfC5OXd4kGwp2KoZn6PyTDy+/UbWMutVWJvt9pwmclnu4ETDbctv5saZoa370Nprs=;
-X-UUID: e355b37e488a409b8355118d22fb3ba6-20200728
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2017542670; Tue, 28 Jul 2020 20:31:32 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 28 Jul 2020 20:31:30 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 28 Jul 2020 20:31:29 +0800
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <robh+dt@kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <qii.wang@mediatek.com>, <qiangming.xia@mediatek.com>
-Subject: [PATCH v2 1/4] i2c: mediatek: Add apdma sync in i2c driver
-Date:   Tue, 28 Jul 2020 20:30:43 +0800
-Message-ID: <1595939446-5484-2-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1595939446-5484-1-git-send-email-qii.wang@mediatek.com>
-References: <1595939446-5484-1-git-send-email-qii.wang@mediatek.com>
+        Tue, 28 Jul 2020 08:48:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:34550 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729379AbgG1Msp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 08:48:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5ED431FB;
+        Tue, 28 Jul 2020 05:48:44 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DD4A3F718;
+        Tue, 28 Jul 2020 05:48:42 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 13:48:35 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Will Deacon <will@kernel.org>, Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2 05/12] ACPI/IORT: Add an input ID to
+ acpi_dma_configure()
+Message-ID: <20200728124835.GA14596@e121166-lin.cambridge.arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+ <20200619082013.13661-6-lorenzo.pieralisi@arm.com>
+ <20200709093514.GC18149@e121166-lin.cambridge.arm.com>
+ <20200715091326.GA30074@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200715091326.GA30074@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-V2l0aCB0aGUgYXBkbWEgcmVtb3ZlIGhhbmQtc2hha2Ugc2lnbmFsLCBpdCBuZWVkIHRvIGtlZXAg
-aTJjIGFuZA0KYXBkbWEgaW4gc3luYyBtYW51YWxseS4NCg0KUmV2aWV3ZWQtYnk6IFlpbmdqb2Ug
-Q2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBNYXR0aGlhcyBC
-cnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KU2lnbmVkLW9mZi1ieTogUWlpIFdhbmcg
-PHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2
-NXh4LmMgfCAyMyArKysrKysrKysrKysrKysrKysrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyMCBp
-bnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMv
-YnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCmlu
-ZGV4IGRlZWY2OWUuLmU2Yjk4NGEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJj
-LW10NjV4eC5jDQorKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQpAQCAtNDgs
-NiArNDgsOSBAQA0KIA0KICNkZWZpbmUgSTJDX0RNQV9DT05fVFgJCQkweDAwMDANCiAjZGVmaW5l
-IEkyQ19ETUFfQ09OX1JYCQkJMHgwMDAxDQorI2RlZmluZSBJMkNfRE1BX0FTWU5DX01PREUJCTB4
-MDAwNA0KKyNkZWZpbmUgSTJDX0RNQV9TS0lQX0NPTkZJRwkJMHgwMDEwDQorI2RlZmluZSBJMkNf
-RE1BX0RJUl9DSEFOR0UJCTB4MDIwMA0KICNkZWZpbmUgSTJDX0RNQV9TVEFSVF9FTgkJMHgwMDAx
-DQogI2RlZmluZSBJMkNfRE1BX0lOVF9GTEFHX05PTkUJCTB4MDAwMA0KICNkZWZpbmUgSTJDX0RN
-QV9DTFJfRkxBRwkJMHgwMDAwDQpAQCAtMjA1LDYgKzIwOCw3IEBAIHN0cnVjdCBtdGtfaTJjX2Nv
-bXBhdGlibGUgew0KIAl1bnNpZ25lZCBjaGFyIHRpbWluZ19hZGp1c3Q6IDE7DQogCXVuc2lnbmVk
-IGNoYXIgZG1hX3N5bmM6IDE7DQogCXVuc2lnbmVkIGNoYXIgbHRpbWluZ19hZGp1c3Q6IDE7DQor
-CXVuc2lnbmVkIGNoYXIgYXBkbWFfc3luYzogMTsNCiB9Ow0KIA0KIHN0cnVjdCBtdGtfaTJjX2Fj
-X3RpbWluZyB7DQpAQCAtMzExLDYgKzMxNSw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0K
-IAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVz
-dCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-bXRrX2kyY19jb21wYXRpYmxlIG10NjU3N19jb21wYXQgPSB7DQpAQCAtMzI0LDYgKzMyOSw3IEBA
-IHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFf
-c3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9
-Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10NjU4OV9jb21w
-YXQgPSB7DQpAQCAtMzM3LDYgKzM0Myw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAku
-dGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9
-IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRr
-X2kyY19jb21wYXRpYmxlIG10NzYyMl9jb21wYXQgPSB7DQpAQCAtMzUwLDYgKzM1Nyw3IEBAIHN0
-cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3lu
-YyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0K
-IA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10ODE3M19jb21wYXQg
-PSB7DQpAQCAtMzYyLDYgKzM3MCw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGlt
-aW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAs
-DQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2ky
-Y19jb21wYXRpYmxlIG10ODE4M19jb21wYXQgPSB7DQpAQCAtMzc1LDYgKzM4NCw3IEBAIHN0cnVj
-dCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9
-IDEsDQogCS5sdGltaW5nX2FkanVzdCA9IDEsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0K
-IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19pMmNfb2ZfbWF0Y2hbXSA9IHsN
-CkBAIC03OTgsNiArODA4LDcgQEAgc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVj
-dCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KIAl1MTYgc3RhcnRfcmVnOw0K
-IAl1MTYgY29udHJvbF9yZWc7DQogCXUxNiByZXN0YXJ0X2ZsYWcgPSAwOw0KKwl1MTYgZG1hX3N5
-bmMgPSAwOw0KIAl1MzIgcmVnXzRnX21vZGU7DQogCXU4ICpkbWFfcmRfYnVmID0gTlVMTDsNCiAJ
-dTggKmRtYV93cl9idWYgPSBOVUxMOw0KQEAgLTg1MSwxMCArODYyLDE2IEBAIHN0YXRpYyBpbnQg
-bXRrX2kyY19kb190cmFuc2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAq
-bXNncywNCiAJCW10a19pMmNfd3JpdGV3KGkyYywgbnVtLCBPRkZTRVRfVFJBTlNBQ19MRU4pOw0K
-IAl9DQogDQorCWlmIChpMmMtPmRldl9jb21wLT5hcGRtYV9zeW5jKSB7DQorCQlkbWFfc3luYyA9
-IEkyQ19ETUFfU0tJUF9DT05GSUcgfCBJMkNfRE1BX0FTWU5DX01PREU7DQorCQlpZiAoaTJjLT5v
-cCA9PSBJMkNfTUFTVEVSX1dSUkQpDQorCQkJZG1hX3N5bmMgfD0gSTJDX0RNQV9ESVJfQ0hBTkdF
-Ow0KKwl9DQorDQogCS8qIFByZXBhcmUgYnVmZmVyIGRhdGEgdG8gc3RhcnQgdHJhbnNmZXIgKi8N
-CiAJaWYgKGkyYy0+b3AgPT0gSTJDX01BU1RFUl9SRCkgew0KIAkJd3JpdGVsKEkyQ19ETUFfSU5U
-X0ZMQUdfTk9ORSwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9JTlRfRkxBRyk7DQotCQl3cml0ZWwo
-STJDX0RNQV9DT05fUlgsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsNCisJCXdyaXRlbChJ
-MkNfRE1BX0NPTl9SWCB8IGRtYV9zeW5jLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7DQog
-DQogCQlkbWFfcmRfYnVmID0gaTJjX2dldF9kbWFfc2FmZV9tc2dfYnVmKG1zZ3MsIDEpOw0KIAkJ
-aWYgKCFkbWFfcmRfYnVmKQ0KQEAgLTg3Nyw3ICs4OTQsNyBAQCBzdGF0aWMgaW50IG10a19pMmNf
-ZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cgKm1zZ3MsDQog
-CQl3cml0ZWwobXNncy0+bGVuLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX1JYX0xFTik7DQogCX0g
-ZWxzZSBpZiAoaTJjLT5vcCA9PSBJMkNfTUFTVEVSX1dSKSB7DQogCQl3cml0ZWwoSTJDX0RNQV9J
-TlRfRkxBR19OT05FLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0lOVF9GTEFHKTsNCi0JCXdyaXRl
-bChJMkNfRE1BX0NPTl9UWCwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9DT04pOw0KKwkJd3JpdGVs
-KEkyQ19ETUFfQ09OX1RYIHwgZG1hX3N5bmMsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsN
-CiANCiAJCWRtYV93cl9idWYgPSBpMmNfZ2V0X2RtYV9zYWZlX21zZ19idWYobXNncywgMSk7DQog
-CQlpZiAoIWRtYV93cl9idWYpDQpAQCAtOTAwLDcgKzkxNyw3IEBAIHN0YXRpYyBpbnQgbXRrX2ky
-Y19kb190cmFuc2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywN
-CiAJCXdyaXRlbChtc2dzLT5sZW4sIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfVFhfTEVOKTsNCiAJ
-fSBlbHNlIHsNCiAJCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFiYXNlICsgT0ZG
-U0VUX0lOVF9GTEFHKTsNCi0JCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFiYXNl
-ICsgT0ZGU0VUX0NPTik7DQorCQl3cml0ZWwoSTJDX0RNQV9DTFJfRkxBRyB8IGRtYV9zeW5jLCBp
-MmMtPnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7DQogDQogCQlkbWFfd3JfYnVmID0gaTJjX2dldF9k
-bWFfc2FmZV9tc2dfYnVmKG1zZ3MsIDEpOw0KIAkJaWYgKCFkbWFfd3JfYnVmKQ0KLS0gDQoxLjku
-MQ0K
+On Wed, Jul 15, 2020 at 10:13:26AM +0100, Lorenzo Pieralisi wrote:
+> On Thu, Jul 09, 2020 at 10:35:14AM +0100, Lorenzo Pieralisi wrote:
+> > On Fri, Jun 19, 2020 at 09:20:06AM +0100, Lorenzo Pieralisi wrote:
+> > > Some HW devices are created as child devices of proprietary busses,
+> > > that have a bus specific policy defining how the child devices
+> > > wires representing the devices ID are translated into IOMMU and
+> > > IRQ controllers device IDs.
+> > > 
+> > > Current IORT code provides translations for:
+> > > 
+> > > - PCI devices, where the device ID is well identified at bus level
+> > >   as the requester ID (RID)
+> > > - Platform devices that are endpoint devices where the device ID is
+> > >   retrieved from the ACPI object IORT mappings (Named components single
+> > >   mappings). A platform device is represented in IORT as a named
+> > >   component node
+> > > 
+> > > For devices that are child devices of proprietary busses the IORT
+> > > firmware represents the bus node as a named component node in IORT
+> > > and it is up to that named component node to define in/out bus
+> > > specific ID translations for the bus child devices that are
+> > > allocated and created in a bus specific manner.
+> > > 
+> > > In order to make IORT ID translations available for proprietary
+> > > bus child devices, the current ACPI (and IORT) code must be
+> > > augmented to provide an additional ID parameter to acpi_dma_configure()
+> > > representing the child devices input ID. This ID is bus specific
+> > > and it is retrieved in bus specific code.
+> > > 
+> > > By adding an ID parameter to acpi_dma_configure(), the IORT
+> > > code can map the child device ID to an IOMMU stream ID through
+> > > the IORT named component representing the bus in/out ID mappings.
+> > > 
+> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: Hanjun Guo <guohanjun@huawei.com>
+> > > Cc: Sudeep Holla <sudeep.holla@arm.com>
+> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > Cc: Robin Murphy <robin.murphy@arm.com>
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > ---
+> > >  drivers/acpi/arm64/iort.c | 59 +++++++++++++++++++++++++++++----------
+> > >  drivers/acpi/scan.c       |  8 ++++--
+> > >  include/acpi/acpi_bus.h   |  9 ++++--
+> > >  include/linux/acpi.h      |  7 +++++
+> > >  include/linux/acpi_iort.h |  7 +++--
+> > >  5 files changed, 67 insertions(+), 23 deletions(-)
+> > 
+> > Hi Rafael,
+> > 
+> > just to ask if the ACPI core changes in this patch are OK with you,
+> > thank you very much.
+> 
+> Hi Rafael,
+> 
+> are you OK with ACPI core changes in this patch ?
+> 
+> Please let me know, thanks.
 
+Hi Rafael,
+
+gentle ping, I think we are missing v5.9, we would need your feedback
+on this please.
+
+Thanks,
+Lorenzo
