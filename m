@@ -2,93 +2,104 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34995C433EA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ECAC433EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A72C20792
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D6A2074F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="kUEIcXxr"
+	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="Jq+p3mdD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbgG1PhQ (ORCPT
+        id S1730886AbgG1PhZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:37:16 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:42152 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730924AbgG1PhQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 11:37:16 -0400
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 00F531FF08;
-        Tue, 28 Jul 2020 15:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595950636; bh=TzqPA5cK+YdXdB2JFRhq4i3Z0RERIdIF9jrXnm6aed8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kUEIcXxrJ5i51TFqKO0kQa6VI4uQsu63fDxvZB7Wo03whQwrQNy9IdD/xOa1p3JkD
-         kCqQWFqGyXzVytA4zRqp69nZZkA2dwcvg0U2XYGwj9WMM7voSsIxIcY54AcPWgKO0z
-         qIUF0X6ISWdMJX4CZazm6qtnnpx4lb+NeaMeOBmxNWOWr2d6St5loUQ/pP/Q4oWGZa
-         ywXMDZoKQBWTzRSob46VZuiogAlC+4pLwudWff3fQFqG1uI2O7A7ePeNrCvZoA9okI
-         RLiZ04h7Rb6lbVeweb2oaNLzao4hQ8fLn8ZADxXeELAv0ZadmEoDFXXSonT2tIwIlT
-         OC23x2gNeB6PQ==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Tue, 28 Jul 2020 11:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730812AbgG1PhZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 11:37:25 -0400
+X-Greylist: delayed 458 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Jul 2020 08:37:23 PDT
+Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3D82C061794;
+        Tue, 28 Jul 2020 08:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mail.ustc.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+        Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
+        Content-Transfer-Encoding; bh=RLDRMzacuIzxp34iLQ+6d7m8ju3XEgqhsf
+        NFqrpDofo=; b=Jq+p3mdDkZvrfAqXndM/JCH98jzvA4TTj9qXTf0Nys2KxPZ/t7
+        zDpE0+ddh9CgAnnYdpaiXwF/3/HGjpdhIknUroB3f8GioYHU4KJ06KnksnFrfhDO
+        VMsZq9vJLbhkZ6Bn3vpUCmLlhr16bgDiSbw0uOaacSb7dzVhmvAdqCc08=
+Received: from xhacker (unknown [101.86.17.135])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygCHj_diRCBfgxI2AA--.17695S3;
+        Tue, 28 Jul 2020 23:29:42 +0800 (CST)
+Date:   Tue, 28 Jul 2020 23:25:30 +0800
+From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-Date:   Tue, 28 Jul 2020 23:36:54 +0800
-Message-Id: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.28.0.rc1
+        Saravanan Sekar <sravanhome@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 3/4] dt-bindings: regulator: mp886x: support
+ mps,switch-frequency
+Message-ID: <20200728232530.62a11639@xhacker>
+In-Reply-To: <20200728232327.71ab3729@xhacker>
+References: <20200728232327.71ab3729@xhacker>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LkAmygCHj_diRCBfgxI2AA--.17695S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xryktw13Wr1fWrWUGrW5Awb_yoWDZwb_W3
+        WxA3W8Cw4rJFyFkF48tFs2kryrJw4Ikr1kZr17Jryvv34a93yDCr9xtr92yr4xua1UZF1Y
+        9wn3XrZ8KrsIgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb38YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+        IE14v26r18M28IrcIa0xkI8VCY1x0267AKxVWUCVW8JwA2ocxC64kIII0Yj41l84x0c7CE
+        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6x
+        kF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF
+        7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F4
+        0Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC
+        6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+        1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+        AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73UjIFyTuYvjxU2uc_DUUUU
+X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-This series convert reservation of Loongson64 Logic PIO into DeviceTree based
-method.
+Both MP8867 and MP8869 support different switch frequency.
 
-It can be used to replace Huacai's
-"MIPS: Loongson64: Reserve legacy MMIO space according to bridge type".
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ Documentation/devicetree/bindings/regulator/mps,mp886x.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks.
-
-v2:
-  - Address Rob and Huacai's review comments.
-v3:
-  - Address Rob, Thomas's review comments.
-v4:
-  - Fix typo & grammar issue according to Xuerui's suggestion.
-
-Jiaxun Yang (5):
-  of_address: Add bus type match for pci ranges parser
-  MIPS: Loongson64: Process ISA Node in DeviceTree
-  MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-  MIPS: Loongson64: DTS: Fix ISA and PCI I/O ranges for RS780E PCH
-  MIPS: Loongson64: Add ISA node for LS7A PCH
-
- arch/mips/boot/dts/loongson/ls7a-pch.dtsi     |  7 ++
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  4 +-
- arch/mips/include/asm/io.h                    |  2 -
- arch/mips/include/asm/mach-generic/spaces.h   |  4 +
- .../mips/include/asm/mach-loongson64/spaces.h |  3 +-
- arch/mips/loongson64/init.c                   | 87 +++++++++++++------
- drivers/of/address.c                          | 29 ++++---
- include/linux/of_address.h                    |  4 +
- 8 files changed, 97 insertions(+), 43 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/regulator/mps,mp886x.yaml b/Documentation/devicetree/bindings/regulator/mps,mp886x.yaml
+index 500a7b3a59aa..991f2de7eda8 100644
+--- a/Documentation/devicetree/bindings/regulator/mps,mp886x.yaml
++++ b/Documentation/devicetree/bindings/regulator/mps,mp886x.yaml
+@@ -27,6 +27,11 @@ properties:
+       values R1 and R2 of the feedback voltage divider in kilo ohms.
+     $ref: "/schemas/types.yaml#/definitions/uint32-array"
+ 
++  mps,switch-frequency:
++    description: The valid switch frequency in Hertz.
++    enum: [500000, 750000, 1000000, 1250000, 1500000]
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++
+ required:
+   - compatible
+   - reg
 -- 
-2.28.0.rc1
+2.28.0.rc0
+
 
