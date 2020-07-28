@@ -2,286 +2,151 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B041EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C57C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D172070A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:44:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="jykl9cwY"
+	by mail.kernel.org (Postfix) with ESMTP id 14CBF20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgG1Cow (ORCPT
+        id S1726662AbgG1Cw0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:44:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgG1Cov (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 22:44:51 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747CEC0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:44:51 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id g26so17429364qka.3
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VyLDDLuDdqJmiGManC5xlHnemIFzVpCwA6D+aqPNpOw=;
-        b=jykl9cwY2F2Czc5rRconhPiQak6LZ4ryBQmOeMUpbiKr4vE0R3DizxGa1Aj1gg6If/
-         e0Ecqb14ImiL4Yx1I8PpFB0tzG/EpezHQfxDhpqL4qg3W6TphO9jSrJw6zPh1OsZc9p+
-         JDHZpdqn1wq1G600ggQmiLHa9JGonuLFV0Orfeu1vf335JFckFdfhDxQz1tv3iS89gCp
-         z5OLQoKh/uguTW01GivksOubgHPpZCPSNHAsdJorqgh05bzrJDGNywbos1AEopvD10gs
-         Frc/jr1yjSpGPCb8jzPSJBk95mqvIN84jWoGMTPSzOg4N3DdfWGVNo5TBMxTsfR14lSr
-         w1oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VyLDDLuDdqJmiGManC5xlHnemIFzVpCwA6D+aqPNpOw=;
-        b=oVCc2WWWEJVxR9z9KL4Hf99sUQjvAarRvhyhARuIZdCw8CBRNsCLw9lEJEy6DvxHhg
-         7eMGskz0rO2gv0vyZQbKL6fX08y2lxheAOripBNuKXUtZDpubfpegAx60iWpzmhs/x26
-         lFDUAkzoALl6yg5sWJM4PKy1GlZJkKDDjZ5Tlst3XaIleI11axbHYgiWOoXB/UQsH/7l
-         OzQSZXmxziPCtoPlE8GLWdq436/jpR5Km51aUNdu4BWinxXfNYCx+8H0M1sV3Sd2T24q
-         I3whRvbtgEmnsWeusr2IkbyJnUDdQp4dhSnMCLOcNcUp4mgPV6K8SzopIl+/86B9Kq1w
-         sSag==
-X-Gm-Message-State: AOAM530yXLedXFWZrP8vLWq2cA2/VnAV0CkO4pwlLsBEWIPU/KLNwiMu
-        4HoLLmuER7SZl0bSFYteMZDLWg==
-X-Google-Smtp-Source: ABdhPJzHOV4SgTMQIq93f+E1lwTrJWKjLM4N+7OAIb4AMuHWJqBSAnMxenK4JBTGQhq4JgtcF+IsaQ==
-X-Received: by 2002:a37:8b01:: with SMTP id n1mr26580784qkd.370.1595904290530;
-        Mon, 27 Jul 2020 19:44:50 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q16sm20538793qkn.115.2020.07.27.19.44.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 19:44:50 -0700 (PDT)
-Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: sm8250: add interconnect nodes
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-References: <20200713154121.22094-1-jonathan@marek.ca>
- <20200713154121.22094-8-jonathan@marek.ca>
- <630319740d3f06cfb0435cae025e0ca1@codeaurora.org>
- <2b77bdaf-0c9e-c054-77d1-3bc21e857773@marek.ca>
- <4d984ecd68adc249f12eeb18bb7e5792@codeaurora.org>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <ec865088-bac6-e43f-c7ea-82a2198636eb@marek.ca>
-Date:   Mon, 27 Jul 2020 22:43:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 27 Jul 2020 22:52:26 -0400
+Received: from mga02.intel.com ([134.134.136.20]:11682 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726410AbgG1Cw0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Jul 2020 22:52:26 -0400
+IronPort-SDR: QHtNdDhkiT8I8/zp93dQ73ZxQQsZFsBX6cLlpJXK3FD4a7tbAu+0jmdi1WrQFvm6d4c5FcdEsz
+ 7tbJ0ePaS13w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="139176066"
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="139176066"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 19:52:25 -0700
+IronPort-SDR: kVT+Jj3jiiE4C4mJPZ0JmNmCvf/xJemv7VYmNj69HcWNdoOTZD189vW7bc5chdG5f8kBb50yzC
+ 1KT3rDSrzLqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="464289859"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 27 Jul 2020 19:52:25 -0700
+Received: from [10.226.38.26] (unknown [10.226.38.26])
+        by linux.intel.com (Postfix) with ESMTP id 79832580295;
+        Mon, 27 Jul 2020 19:52:09 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v7 0/2] phy: Add USB PHY support on Intel LGM SoC
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andriy Shevchenko <andriy.shevchenko@intel.com>,
+        Felipe Balbi <balbi@kernel.org>, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com, vkoul@kernel.org
+References: <20200727100336.32153-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CAHp75VeO86j-onVJX-M7YmOZeQuX=Jx58jnT3dLkwCsBom1aTQ@mail.gmail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <4354752f-3e36-fbf1-a863-495aff80dacb@linux.intel.com>
+Date:   Tue, 28 Jul 2020 10:52:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <4d984ecd68adc249f12eeb18bb7e5792@codeaurora.org>
+In-Reply-To: <CAHp75VeO86j-onVJX-M7YmOZeQuX=Jx58jnT3dLkwCsBom1aTQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/24/20 12:55 PM, Sibi Sankar wrote:
-> On 2020-07-24 20:06, Jonathan Marek wrote:
->> On 7/24/20 10:13 AM, Sibi Sankar wrote:
->>> Hey Jonathan,
->>>
->>> Thanks for the patch! Please use the
->>> suggested register space definitions
->>> instead.
->>>
+Hi Andy,
+
+On 27/7/2020 7:09 pm, Andy Shevchenko wrote:
+> On Mon, Jul 27, 2020 at 1:08 PM Ramuthevar,Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 >>
->> Thanks for the suggestions, I was unsure what to use for the sizes.
->> The reg field is unused by the upstream driver so it is hard to figure
->> out.
->>
->> However, I'm not sure about some of your suggestions for the base
->> address. For example, for "mc_virt" you suggest 0x0163d000, and I have
->> 0x09100000. In the downstream dts, "mc_virt-base" is 0x9100000 and
->> qcom,base-offset for fab_mc_virt is 0. Do you have an explanation for
->> why your suggestion is so different?
+>> The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+>> Requires minimal external components, a single resistor, for best operation.
+>> Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
+>> ---
 > 
-> AFAIK for providers with virt suffix the
-> register space definition is just an
-> arbitrary choice and doesn't matter.
-> Since mc_virt was just re-using gem_noc
-> address space I suggested we stick to
-> how it was done on sc7180 i.e place it
-> between system_noc and aggre1_noc.
+>> v7:
+>>    - No Change
 > 
+> I guess it's not the correct changelog entry.
+> You moved file to another subsystem, didn't you?
 
-I sent a v3 with most of your suggestions applied as-is, except for:
-- sm8150: aggre2_noc, reduced size to 0x20000 to avoid overlap with 
-compute_noc region
-- sm8250: compute_noc, reduced size to 0xa180 to avoid overlap with 
-mmss_noc region (could have been 0xd000, but 0xa180 makes it match the 
-region in the downstream dts, so seemed more likely to be correct)
+Already added in v5 changelog, kindly please see below , Thanks!
 
-I did notice other inconsistencies, but since this is unused by the 
-upstream driver I don't want to think about it too much..
-
+> 
+>> v6:
+>>    - No Change
+>> v5:
+>>    - As per Felipe and Greg's suggestion usb phy driver reviewed patches
+>>      changed the folder from drivers/usb/phy to drivers/phy
+>>    - Reviewed-By tag added in commit message
+>> v4:
+>>    - Andy's review comments addressed
+>>    - drop the excess error debug prints
+>>    - error check optimized
+>>    - merge the split line to one line
+>> v3:
+>>    - Andy's review comments update
+>>    - hardcode return value changed to actual return value from the callee
+>>    - add error check is fixed according to the above
+>>    - correct the assignment in redundant
+>>    - combine the split line into one line
+>> v2:
+>>    - Address Phillip's review comments
+>>    - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+>>    - re-design the assert and deassert fucntion calls as per review comments
+>>    - address kbuild bot warnings
+>>    - add the comments
+>> v1:
+>>    - initial version
 >>
->>> On 2020-07-13 21:11, Jonathan Marek wrote:
->>>> Add the interconnect dts nodes for sm8250.
->>>>
->>>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->>>> ---
->>>>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 82 ++++++++++++++++++++++++++++
->>>>  1 file changed, 82 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>>> b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>>> index 636e2196138c..dfc1b7fa7d85 100644
->>>> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>>> @@ -11,6 +11,7 @@
->>>>  #include <dt-bindings/power/qcom-aoss-qmp.h>
->>>>  #include <dt-bindings/power/qcom-rpmpd.h>
->>>>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->>>> +#include <dt-bindings/interconnect/qcom,sm8250.h>
->>>
->>> please fix ^^ sort order
->>>
->>>>
->>>>  / {
->>>>      interrupt-parent = <&intc>;
->>>> @@ -978,6 +979,55 @@ spi13: spi@a94000 {
->>>>              };
->>>>          };
->>>>
->>>> +        config_noc: interconnect@1500000 {
->>>> +            compatible = "qcom,sm8250-config-noc";
->>>> +            reg = <0 0x01500000 0 0x1000>;
->>>
->>> 0x01500000 0xa580
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        ipa_virt: interconnect@1620000 {
->>>> +            compatible = "qcom,sm8250-ipa-virt";
->>>> +            reg = <0 0x01620000 0 0x1000>;
->>>
->>> 0x01e00000 0x1000
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        system_noc: interconnect@1632000 {
->>>> +            compatible = "qcom,sm8250-system-noc";
->>>> +            reg = <0 0x01632000 0 0x1000>;
->>>
->>> 0x01620000 0x1C200
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        aggre1_noc: interconnect@16e2000 {
->>>> +            compatible = "qcom,sm8250-aggre1-noc";
->>>> +            reg = <0 0x016e2000 0 0x1000>;
->>>
->>> 0x016e0000 0x1f180
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        aggre2_noc: interconnect@1703000 {
->>>> +            compatible = "qcom,sm8250-aggre2-noc";
->>>> +            reg = <0 0x01703000 0 0x1000>;
->>>
->>> 0x01700000 0x33000
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        compute_noc: interconnect@1733000 {
->>>> +            compatible = "qcom,sm8250-compute-noc";
->>>> +            reg = <0 0x01733000 0 0x1000>;
->>>
->>> 0x01733000 0xd180
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        mmss_noc: interconnect@174a000 {
->>>> +            compatible = "qcom,sm8250-mmss-noc";
->>>> +            reg = <0 0x0174a000 0 0x1000>;
->>>
->>> 0x01740000 0x1f080
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>>          ufs_mem_hc: ufshc@1d84000 {
->>>>              compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
->>>>                       "jedec,ufs-2.0";
->>>> @@ -1364,6 +1414,34 @@ usb_2_ssphy: lane@88eb200 {
->>>>              };
->>>>          };
->>>>
->>>> +        dc_noc: interconnect@90c0000 {
->>>> +            compatible = "qcom,sm8250-dc-noc";
->>>> +            reg = <0 0x090c0000 0 0x1000>;
->>>
->>> 0x090c0000 0x4200
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        mc_virt: interconnect@9100000 {
->>>> +            compatible = "qcom,sm8250-mc-virt";
->>>> +            reg = <0 0x09100000 0 0x1000>;
->>>
->>> 0x0163d000 0x1000
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        gem_noc: interconnect@9121000 {
->>>> +            compatible = "qcom,sm8250-gem-noc";
->>>> +            reg = <0 0x09121000 0 0x1000>;
->>>
->>> 0x09100000 0xb4000
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>> +        npu_noc: interconnect@9990000 {
->>>> +            compatible = "qcom,sm8250-npu-noc";
->>>> +            reg = <0 0x09990000 0 0x1000>;
->>>
->>> 0x09990000 0x1600
->>>
->>>> +            #interconnect-cells = <1>;
->>>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>>> +        };
->>>> +
->>>>          usb_1: usb@a6f8800 {
->>>>              compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
->>>>              reg = <0 0x0a6f8800 0 0x400>;
->>>> @@ -2359,6 +2437,10 @@ rpmhpd_opp_turbo_l1: opp10 {
->>>>                      };
->>>>                  };
->>>>              };
->>>> +
->>>> +            apps_bcm_voter: bcm_voter {
->>>> +                compatible = "qcom,bcm-voter";
->>>> +            };
->>>>          };
->>>>      };
->>>
+>> ---
+>> dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+>> v7:
+>>    - Fixed the bot issue: usb-phy@e7e00000: '#phy-cells' is a required property
+>> v6:
+>>    - Fixed the bot issue.
+>>    - replace node-name by usb-phy@ in example
+>> v5:
+>>    - Reviewed-By tag added
+>> v4:
+>>    - No Change
+>> v3:
+>>    - No Change
+>> v2:
+>>    - No Change
+>> v1:
+>>    - initial version
+>>
+>>
+>> Ramuthevar Vadivel Murugan (2):
+>>    dt-bindings: phy: Add USB PHY support for Intel LGM SoC
+>>    phy: Add USB3 PHY support for Intel LGM SoC
+>>
+>>   .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  58 +++++
+>>   drivers/phy/Kconfig                                |  11 +
+>>   drivers/phy/Makefile                               |   1 +
+>>   drivers/phy/phy-lgm-usb.c                          | 278 +++++++++++++++++++++
+>>   4 files changed, 348 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+>>   create mode 100644 drivers/phy/phy-lgm-usb.c
+>>
+>> --
+>> 2.11.0
+>>
+> 
 > 
