@@ -2,123 +2,119 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6022C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7AFC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C23F8207FC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595954280;
-	bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rEPaxDM3PT7pfxBMQAj8jnIz6fYZaLfOH4LO2jw5hJNmabvMsMmokCjUxGWr/SwCt
-	 tWpkFcyMmAcSkv73hY2qMtqFRzyl03fpC6RpW3cKS5Hid9Kq9Ud2olyx17Ua/YzsiH
-	 7nWof6V7EQ5XKBbqqPG2FMOdVUJt0C3jRibS2QFw=
+	by mail.kernel.org (Postfix) with ESMTP id 280E92053B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Tz/+keQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731450AbgG1QiA (ORCPT
+        id S1731268AbgG1QwZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731443AbgG1Qh7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:37:59 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 28 Jul 2020 12:52:25 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:24255 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731367AbgG1QwZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:52:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595955145; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=AjBQsr/q2VwWU+HOXBWpjQEU8xvyWcP1N9vbtsdor4E=; b=Tz/+keQmcNPmQPj3qS2YLjgS8yrujopZeTq9Ha/XvsWPk/gOg8TX21wJIO+FU/BFSLEWFR3j
+ YgzHbkNu/TKMGmu3+cE8OdIAhCbrO1ju1zvqkAMIenydfVNDaVkDS7l2RBMZquTFoQaNRWQf
+ kIBdahMG4oiBHaZJqB/0/fOI9fs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f2057be35f3e3d316d1697c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 16:52:14
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 304D2C43391; Tue, 28 Jul 2020 16:52:14 +0000 (UTC)
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ABAD2053B;
-        Tue, 28 Jul 2020 16:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595954279;
-        bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2I46v+1m8oKmJ9VQeo6N0nZjzcRmXs1Ru/C4qbubwOnEDs27BOFW3Kl+HdEPSSiBk
-         fu7YtYgh8gzbomyi98+V8kVZYGGWkFSh6gateSBafHcHZIcZ4DjQC26w9JylQyHBzx
-         y4cWhePYSIuGjTcYQT0/UjYg1ZER9QYZh1A14SgU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k0Sc1-00FiFS-5h; Tue, 28 Jul 2020 17:37:57 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 17:37:57 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
-        robh+dt@kernel.org, lee.jones@linaro.org,
+        (Authenticated sender: ilina)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61528C433C6;
+        Tue, 28 Jul 2020 16:52:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61528C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 28 Jul 2020 10:52:12 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        david@lechnology.com, wmills@ti.com, praneeth@ti.com
-Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
- reserved interrupts
-In-Reply-To: <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, praneeth@ti.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+Message-ID: <20200728165212.GA32586@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
+ <20200724162825.GH9185@codeaurora.org>
+ <159589714088.1360974.13205114501389777927@swboyd.mtv.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <159589714088.1360974.13205114501389777927@swboyd.mtv.corp.google.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-28 10:18, Grzegorz Jaszczyk wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> The PRUSS INTC has a fixed number of output interrupt lines that are
-> connected to a number of processors or other PRUSS instances or other
-> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
-> are usually connected to the main Arm host processor and are referred
-> to as host interrupts 0 through 7 from ARM/MPU perspective.
-> 
-> All of these 8 host interrupts are not always exclusively connected
-> to the Arm interrupt controller. Some SoCs have some interrupt lines
-> not connected to the Arm interrupt controller at all, while a few 
-> others
-> have the interrupt lines connected to multiple processors in which they
-> need to be partitioned as per SoC integration needs. For example, 
-> AM437x
-> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 
-> 5
-> connected to the other PRUSS, while AM335x has host interrupt 0 shared
-> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU 
-> and
-> a DMA controller.
-> 
-> Add logic to the PRUSS INTC driver to ignore both these shared and
-> invalid interrupts.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> ---
-> v3->v4:
-> - Due to changes in DT bindings which converts irqs-reserved
->   property from uint8-array to bitmask requested by Rob introduce
->   relevant changes in the driver.
-> - Merge the irqs-reserved and irqs-shared to one property since they
->   can be handled by one logic (relevant change was introduced to DT
->   binding).
+On Mon, Jul 27 2020 at 18:45 -0600, Stephen Boyd wrote:
+>Quoting Lina Iyer (2020-07-24 09:28:25)
+>> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
+>> >Hi Maulik/Lina,
+>> >
+>> >On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
+>> >>Hi Rajendra,
+>> >>
+>> >>After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+>> >>below messages on db845:
+>> >>
+>> >>qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+>> >>current OPP for freq 533000097 (-34)
+>> >>
+>> >>^^^ This one is new.
+>> >>
+>> >>qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+>> >>
+>> >>^^^ and this message is annoying, can we make it pr_debug in rpmh?
+>> >
+>> How annoyingly often do you see this message?
+>> Usually, this is an indication of bad system state either on remote
+>> processors in the SoC or in Linux itself. On a smooth sailing build you
+>> should not see this 'warning'.
+>>
+>> >Would you be fine with moving this message to a pr_debug? Its currently
+>> >a pr_info_ratelimited()
+>> I would rather not, moving this out of sight will mask a lot serious
+>> issues that otherwise bring attention to the developers.
+>>
+>
+>I removed this warning message in my patch posted to the list[1]. If
+>it's a serious problem then I suppose a timeout is more appropriate, on
+>the order of several seconds or so and then a pr_warn() and bail out of
+>the async call with an error.
+>
+The warning used to capture issues that happen within a second and it
+helps capture system related issues. Timing out after many seconds
+overlooks the system issues that generally tend to resolve itself, but
+nevertheless need to be investigated.
 
-This isn't what I asked for in my initial review.
+--Lina
 
-I repeatedly asked for the *handling* to be common, not for the
-properties to be merged. I don't mind either way, but I understood
-there were two properties for a good reason. Has this reason gone?
-
-Anyway, I'll come back to it once I start reviewing the series
-again.
-
-          M.
--- 
-Jazz is not dead. It just smells funny...
+>[1] https://lore.kernel.org/r/20200724211711.810009-1-sboyd@kernel.org
