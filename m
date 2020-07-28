@@ -8,45 +8,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCB9C433EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153DAC433EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0C220658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E852D20658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bCcO5AQU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iuLgBp5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgG1FSK (ORCPT
+        id S1726251AbgG1FSS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:18:10 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33682 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgG1FSJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 01:18:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06S5HnqN042203;
-        Tue, 28 Jul 2020 00:17:49 -0500
+        Tue, 28 Jul 2020 01:18:18 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44924 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgG1FSS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 01:18:18 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06S5IAO1080305;
+        Tue, 28 Jul 2020 00:18:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595913469;
-        bh=/D5VA7+K8MPVBXvUkuEX+a8cL3vO3llLk69PPnVxhR4=;
+        s=ti-com-17Q1; t=1595913490;
+        bh=R6TlP/6xbx2/KVgdquWCX4cF9ciZRHK8VnUU+ZpIjzY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=bCcO5AQU3sE8a28vKNShobaqZBLnrEg8LW9I32qaFMzVsGyTiTliXHgOVI24FwB6V
-         oRsWG3JPKaH0la9cr0/5LNOnZ9cIjAOjWVSt2j9nkfsX/PgP+GLuebhQr4vE7txrbR
-         QPehh4Bu5bJ9ImyFKVWwJe9WeN+La+RcwfJGTL2k=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S5HnRs028707;
-        Tue, 28 Jul 2020 00:17:49 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+        b=iuLgBp5oR6C7vezhfDZ+NzYo2ReLDlhOXJGMM8qkBo4+zs8lA7ggjHaeTyNWagsha
+         Y5RUGMgfThpOZ+xdLCfiqxK6HVSs5W3pF9RVxadJ+JkBz6SAt3fRW/OlFeB5kbQvai
+         Hazbf0+aJD5zJhPnJXa4+39SPGrYUSMantqLztZc=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06S5IAUw104460
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 00:18:10 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 00:17:49 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 00:18:10 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 00:17:49 -0500
+ Frontend Transport; Tue, 28 Jul 2020 00:18:10 -0500
 Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S5Hasu005947;
-        Tue, 28 Jul 2020 00:17:45 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S5Hat1005947;
+        Tue, 28 Jul 2020 00:18:06 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
 CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
@@ -58,9 +59,9 @@ CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>,
         Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v5 02/10] firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
-Date:   Tue, 28 Jul 2020 10:47:27 +0530
-Message-ID: <20200728051735.6187-3-lokeshvutla@ti.com>
+Subject: [PATCH v5 07/10] dt-bindings: irqchip: ti,sci-inta: Update docs to support different parent.
+Date:   Tue, 28 Jul 2020 10:47:32 +0530
+Message-ID: <20200728051735.6187-8-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728051735.6187-1-lokeshvutla@ti.com>
 References: <20200728051735.6187-1-lokeshvutla@ti.com>
@@ -73,132 +74,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-struct ti_sci_rm_type_map is no longer used. Drop its definition and its
-declarations.
+Drop the firmware related interrupt ranges and use the hardware specified
+interrupt numbers within Interrupt Aggregator. This ensures interrupt
+aggregator DT node need not assume any interrupt parent type.
 
-Acked-by: Nishanth Menon <nm@ti.com>
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- drivers/firmware/ti_sci.c | 56 +--------------------------------------
- 1 file changed, 1 insertion(+), 55 deletions(-)
+ .../interrupt-controller/ti,sci-inta.txt       | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 930a65ed78ad..a81ddec9e669 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -64,22 +64,6 @@ struct ti_sci_xfers_info {
- 	spinlock_t xfer_lock;
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
+index 7841cb099e13..b14abec580a2 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
+@@ -43,13 +43,14 @@ TISCI Interrupt Aggregator Node:
+ - msi-controller:	Identifies the node as an MSI controller.
+ - interrupt-parent:	phandle of irq parent.
+ - ti,sci:		Phandle to TI-SCI compatible System controller node.
+-- ti,sci-dev-id:	TISCI device ID of the Interrupt Aggregator.
+-- ti,sci-rm-range-vint:	Array of TISCI subtype ids representing vints(inta
+-			outputs) range within this INTA, assigned to the
+-			requesting host context.
+-- ti,sci-rm-range-global-event:	Array of TISCI subtype ids representing the
+-			global events range reaching this IA and are assigned
+-			to the requesting host context.
++- ti,sci-dev-id:	TISCI device id of interrupt controller.
++- ti,interrupt-ranges:	Set of triplets containing ranges that convert
++			the INTA output interrupt numbers to parent's
++			interrupt number. Each triplet has following entries:
++			- First entry specifies the base for vint
++			- Second entry specifies the base for parent irqs
++			- Third entry specifies the limit
++
+ 
+ Example:
+ --------
+@@ -61,6 +62,5 @@ main_udmass_inta: interrupt-controller@33d00000 {
+ 	interrupt-parent = <&main_navss_intr>;
+ 	ti,sci = <&dmsc>;
+ 	ti,sci-dev-id = <179>;
+-	ti,sci-rm-range-vint = <0x0>;
+-	ti,sci-rm-range-global-event = <0x1>;
++	ti,interrupt-ranges = <0 0 256>;
  };
- 
--/**
-- * struct ti_sci_rm_type_map - Structure representing TISCI Resource
-- *				management representation of dev_ids.
-- * @dev_id:	TISCI device ID
-- * @type:	Corresponding id as identified by TISCI RM.
-- *
-- * Note: This is used only as a work around for using RM range apis
-- *	for AM654 SoC. For future SoCs dev_id will be used as type
-- *	for RM range APIs. In order to maintain ABI backward compatibility
-- *	type is not being changed for AM654 SoC.
-- */
--struct ti_sci_rm_type_map {
--	u32 dev_id;
--	u16 type;
--};
--
- /**
-  * struct ti_sci_desc - Description of SoC integration
-  * @default_host_id:	Host identifier representing the compute entity
-@@ -87,14 +71,12 @@ struct ti_sci_rm_type_map {
-  * @max_msgs: Maximum number of messages that can be pending
-  *		  simultaneously in the system
-  * @max_msg_size: Maximum size of data per message that can be handled.
-- * @rm_type_map: RM resource type mapping structure.
-  */
- struct ti_sci_desc {
- 	u8 default_host_id;
- 	int max_rx_timeout_ms;
- 	int max_msgs;
- 	int max_msg_size;
--	struct ti_sci_rm_type_map *rm_type_map;
- };
- 
- /**
-@@ -1710,33 +1692,6 @@ static int ti_sci_cmd_core_reboot(const struct ti_sci_handle *handle)
- 	return ret;
- }
- 
--static int ti_sci_get_resource_type(struct ti_sci_info *info, u16 dev_id,
--				    u16 *type)
--{
--	struct ti_sci_rm_type_map *rm_type_map = info->desc->rm_type_map;
--	bool found = false;
--	int i;
--
--	/* If map is not provided then assume dev_id is used as type */
--	if (!rm_type_map) {
--		*type = dev_id;
--		return 0;
--	}
--
--	for (i = 0; rm_type_map[i].dev_id; i++) {
--		if (rm_type_map[i].dev_id == dev_id) {
--			*type = rm_type_map[i].type;
--			found = true;
--			break;
--		}
--	}
--
--	if (!found)
--		return -EINVAL;
--
--	return 0;
--}
--
- /**
-  * ti_sci_get_resource_range - Helper to get a range of resources assigned
-  *			       to a host. Resource is uniquely identified by
-@@ -1760,7 +1715,6 @@ static int ti_sci_get_resource_range(const struct ti_sci_handle *handle,
- 	struct ti_sci_xfer *xfer;
- 	struct ti_sci_info *info;
- 	struct device *dev;
--	u16 type;
- 	int ret = 0;
- 
- 	if (IS_ERR(handle))
-@@ -1780,15 +1734,9 @@ static int ti_sci_get_resource_range(const struct ti_sci_handle *handle,
- 		return ret;
- 	}
- 
--	ret = ti_sci_get_resource_type(info, dev_id, &type);
--	if (ret) {
--		dev_err(dev, "rm type lookup failed for %u\n", dev_id);
--		goto fail;
--	}
--
- 	req = (struct ti_sci_msg_req_get_resource_range *)xfer->xfer_buf;
- 	req->secondary_host = s_host;
--	req->type = type & MSG_RM_RESOURCE_TYPE_MASK;
-+	req->type = dev_id & MSG_RM_RESOURCE_TYPE_MASK;
- 	req->subtype = subtype & MSG_RM_RESOURCE_SUBTYPE_MASK;
- 
- 	ret = ti_sci_do_xfer(info, xfer);
-@@ -3352,7 +3300,6 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
- 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
- 	.max_msgs = 20,
- 	.max_msg_size = 64,
--	.rm_type_map = NULL,
- };
- 
- /* Description for AM654 */
-@@ -3363,7 +3310,6 @@ static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
- 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
- 	.max_msgs = 20,
- 	.max_msg_size = 60,
--	.rm_type_map = NULL,
- };
- 
- static const struct of_device_id ti_sci_of_match[] = {
 -- 
 2.27.0
 
