@@ -7,44 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCCFC433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F314CC433E0
 	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FCC206D8
+	by mail.kernel.org (Postfix) with ESMTP id DE13A2065E
 	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgG1MM5 (ORCPT
+        id S1729497AbgG1MM6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:12:57 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:36765 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729204AbgG1MMz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 08:12:55 -0400
+        Tue, 28 Jul 2020 08:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729237AbgG1MM4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 08:12:56 -0400
+Received: from mail-out.m-online.net (mail-out.m-online.net [IPv6:2001:a60:0:28:0:1:25:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748F4C0619D2
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 05:12:56 -0700 (PDT)
 Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4BGFtY3b8Cz1qrfB;
-        Tue, 28 Jul 2020 14:12:51 +0200 (CEST)
+        by mail-out.m-online.net (Postfix) with ESMTP id 4BGFtZ1Gk1z1rtN9;
+        Tue, 28 Jul 2020 14:12:54 +0200 (CEST)
 Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4BGFtW3fv7z1qtx2;
-        Tue, 28 Jul 2020 14:12:51 +0200 (CEST)
+        by mail.m-online.net (Postfix) with ESMTP id 4BGFtZ0NQHz1qtx2;
+        Tue, 28 Jul 2020 14:12:54 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at mnet-online.de
 Received: from mail.mnet-online.de ([192.168.8.182])
         by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 9h9wSR9bfz6V; Tue, 28 Jul 2020 14:12:50 +0200 (CEST)
-X-Auth-Info: UiD4BFtP08VJdzysvJ4r5E7HciQj1rRJk9fNTQ2VMMQ=
+        with ESMTP id y_Vlt41bg4wq; Tue, 28 Jul 2020 14:12:52 +0200 (CEST)
+X-Auth-Info: WEcLSrqT4qSnpUDFXP5DoZwuRr8ideXdJSZKhzKPoK8=
 Received: from desktop.lan (ip-86-49-101-166.net.upcbroadband.cz [86.49.101.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 28 Jul 2020 14:12:50 +0200 (CEST)
+        Tue, 28 Jul 2020 14:12:52 +0200 (CEST)
 From:   Marek Vasut <marex@denx.de>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Marek Vasut <marex@denx.de>, Eric Anholt <eric@anholt.net>,
         Rob Herring <robh+dt@kernel.org>,
         Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org
-Subject: [PATCH V2 1/3] dt-bindings: Add vendor prefix for Powertip
-Date:   Tue, 28 Jul 2020 14:12:44 +0200
-Message-Id: <20200728121246.23304-1-marex@denx.de>
+Subject: [PATCH V2 3/3] drm/panel: simple: Add DT bindings for Powertip PH800480T013
+Date:   Tue, 28 Jul 2020 14:12:46 +0200
+Message-Id: <20200728121246.23304-3-marex@denx.de>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200728121246.23304-1-marex@denx.de>
+References: <20200728121246.23304-1-marex@denx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -52,7 +57,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Powertip Tech. Corp. is an LCD panel manufacturer.
+Add support for Powertip PH800480T013 800x480 parallel LCD, this
+one is used in the Raspberry Pi 7" touchscreen display unit.
 
 Signed-off-by: Marek Vasut <marex@denx.de>
 To: dri-devel@lists.freedesktop.org
@@ -61,24 +67,57 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 Cc: devicetree@vger.kernel.org
 ---
-V2: No change
+V2: Add bus_flags and connector_type
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index f3d847832fdc..5b1343a8d198 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -830,6 +830,8 @@ patternProperties:
-     description: Poslab Technology Co., Ltd.
-   "^pov,.*":
-     description: Point of View International B.V.
-+  "^powertip,.*":
-+    description: Powertip Tech. Corp.
-   "^powervr,.*":
-     description: PowerVR (deprecated, use img)
-   "^primux,.*":
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index cb6550d37e85..298e3a26d9ee 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -3000,6 +3000,31 @@ static const struct panel_desc pda_91_00156_a0  = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+ };
+ 
++static const struct drm_display_mode powertip_ph800480t013_idf02_mode = {
++	.clock = 24750,
++	.hdisplay = 800,
++	.hsync_start = 800 + 54,
++	.hsync_end = 800 + 54 + 2,
++	.htotal = 800 + 54 + 2 + 44,
++	.vdisplay = 480,
++	.vsync_start = 480 + 49,
++	.vsync_end = 480 + 49 + 2,
++	.vtotal = 480 + 49 + 2 + 22,
++};
++
++static const struct panel_desc powertip_ph800480t013_idf02  = {
++	.modes = &powertip_ph800480t013_idf02_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
++		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.connector_type = DRM_MODE_CONNECTOR_DPI,
++};
+ 
+ static const struct drm_display_mode qd43003c0_40_mode = {
+ 	.clock = 9000,
+@@ -4012,6 +4037,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "pda,91-00156-a0",
+ 		.data = &pda_91_00156_a0,
++	}, {
++		.compatible = "powertip,ph800480t013-idf02",
++		.data = &powertip_ph800480t013_idf02,
+ 	}, {
+ 		.compatible = "qiaodian,qd43003c0-40",
+ 		.data = &qd43003c0_40,
 -- 
 2.27.0
 
