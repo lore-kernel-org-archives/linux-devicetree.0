@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B7C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 19:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40ACC433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 19:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D30A20656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 19:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9058F207F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 19:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lH4opCzK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SPKVrvhR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbgG1TcI (ORCPT
+        id S1732839AbgG1ThL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 15:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
+        Tue, 28 Jul 2020 15:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729706AbgG1TcH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 15:32:07 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB84AC061794
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 12:32:06 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j19so12627500pgm.11
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 12:32:06 -0700 (PDT)
+        with ESMTP id S1732721AbgG1ThI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 15:37:08 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED27AC061794
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 12:37:07 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id lx9so517125pjb.2
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 12:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=kMhjJ3hvBgwbKsHhi3fqlBSIcNca41e66swSh7pO1VQ=;
-        b=lH4opCzKcnaxkoNblG1ud2QZbtBFLhw2H3rp5dDPbiW3HhSPtCkBbyCHXIbINNXpxP
-         UAyojB0odJhtwfhIB2tej5Wk3vnVMjUCsvDj6ltv/ot3+DN06yuN8vjzaiHPzYhCrhS3
-         pkCOpuBQ2Ud2WwjRbvNxw+zE1ouOO4fW+DxY0=
+        bh=WOytNOYdjoyQeyYGVaSbj/fyQAzB+x+3wm3EXC3QX2Y=;
+        b=SPKVrvhRFhpeKXlLyjw5E/NFgSx9MbKRg+6J4RzF9Amj9FdlXPwWWQ3/aSD74RQ02O
+         bAMVX7KZIAkurguRcNjvMsQkSEK7EvCUjs49sCDJTCre8XUB0QMH7tMWpZsvrmsGS083
+         bnde4uXYzHj3iAWiYPYZRyv00gpaBHgLvbhSs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=kMhjJ3hvBgwbKsHhi3fqlBSIcNca41e66swSh7pO1VQ=;
-        b=ULY39IgccPDQNtRJvbwTASPzD+revqV3kmCnOSa2YaZrHUOkpXIkfDeJuRaAtCXDmg
-         YCqoV+Xxvk2OFJPUZ1mFuTqEIOroqsXG4KitVZ/b92EQ1q9mve5Cmlqn1gGPV9Z7jPBf
-         ePWA8qOcMjReMfscFInO4N9TECI4htDZpQVwYSAVgy0nb4QjZZ2myPm/mvzwEuchhjzP
-         VQ62Z4o05J5yMLmcXvAEf3ha1PbNQ5LKOLENI3gMNMWiJKiWaRjSpy8C9PR+/gEpvgmI
-         X8hGhwrP5JnZX34fyEiWHHTGs32MQDSGzn6DwAZtcFmIczN8iWj7bfCZ7M6reg0XudZY
-         B5rA==
-X-Gm-Message-State: AOAM532fPV9il8hSZOaLll49mYDIniqjg9nADGXETos4qKB7nP1bOdBz
-        qt0PwOhYK+jY8C3pb5TLrXbscA==
-X-Google-Smtp-Source: ABdhPJwf4+mQndf+Efryc8XYmv3htvQaK+VS/A7pthKtDJT/NG+gtXYtnhykek9ejf8PLjN7bw9d4g==
-X-Received: by 2002:aa7:9186:: with SMTP id x6mr26598292pfa.103.1595964726370;
-        Tue, 28 Jul 2020 12:32:06 -0700 (PDT)
+        bh=WOytNOYdjoyQeyYGVaSbj/fyQAzB+x+3wm3EXC3QX2Y=;
+        b=NsC0tO3Ha8YiOB3thJ5Ju13NnyS12k3vIo7VOgzb6GNfCigNf/WcjDjS3jziLZVOfM
+         t0EfQa3Y5VQfnKRaXwGq1XMICNmYOmhZpqCFGgtRmromanIuCa3KbkLhINbxoYT/X7JX
+         CJTO1esuBSwHG5V9h+sO3Io0BxKfPtG23zTrufslmRqnhbOsXzYcWDcq8Zmis3eUfdM1
+         AObs3MAaXh5VI+BADYzOklBVL/5/DsppnxEFFT7TRAaQZ8UYLItrP3vaN9TLCyMhU+ru
+         p1fmJMyRFVVMTBjuHl6vx17fnkmIXcHHEdnpvYGHPH/EFtT4YYP0NBofZrF4nPJPNbN2
+         fwbw==
+X-Gm-Message-State: AOAM533PAtksbUMcXsw5Pff/44ovhAXrD3Q3mhEu3S56dbZF8vm8Ur7i
+        IK0gR5EveWnZxITKGBJVFBrpIg==
+X-Google-Smtp-Source: ABdhPJyAbJyTn98AQzC1WWA2O6iMJbhi2p9+5jYQ3N7r4vZaonu2H4R7Z6jDh72fQ1+hADV9yUmRQQ==
+X-Received: by 2002:a17:90a:a58d:: with SMTP id b13mr6400002pjq.55.1595965027396;
+        Tue, 28 Jul 2020 12:37:07 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id w3sm19358687pff.56.2020.07.28.12.32.05
+        by smtp.gmail.com with ESMTPSA id a193sm1837778pfa.105.2020.07.28.12.37.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 12:32:05 -0700 (PDT)
+        Tue, 28 Jul 2020 12:37:06 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200728091057.5.I0ea31fe183b99838b28213df05b0e7912db3ba29@changeid>
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.5.I0ea31fe183b99838b28213df05b0e7912db3ba29@changeid>
-Subject: Re: [PATCH 05/15] iio: sx9310: Change from .probe to .probe_new
+In-Reply-To: <20200728091057.7.I3a5582a3e1589e351f6335b39f52e5ccc5f46b61@changeid>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.7.I3a5582a3e1589e351f6335b39f52e5ccc5f46b61@changeid>
+Subject: Re: [PATCH 07/15] iio: sx9310: Use long instead of int for channel bitmaps
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Daniel Campello <campello@chromium.org>,
         Douglas Anderson <dianders@chromium.org>,
         Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
@@ -74,19 +75,40 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
 To:     Daniel Campello <campello@chromium.org>,
         LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Jul 2020 12:32:04 -0700
-Message-ID: <159596472439.1360974.16024041965670839787@swboyd.mtv.corp.google.com>
+Date:   Tue, 28 Jul 2020 12:37:05 -0700
+Message-ID: <159596502543.1360974.12774369809044939362@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Daniel Campello (2020-07-28 08:12:48)
-> Uses .probe_new in place of .probe. Also uses device_get_match_data()
-> for whoami matching.
->=20
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> ---
+Quoting Daniel Campello (2020-07-28 08:12:50)
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx931=
+0.c
+> index fb5c16f2aa6b1a..2465064971d0a7 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -538,13 +540,13 @@ static void sx9310_push_events(struct iio_dev *indi=
+o_dev)
+>                 return;
+>         }
+> =20
+> -       for (chan =3D 0; chan < SX9310_NUM_CHANNELS; chan++) {
+> +       for_each_set_bit(chan, &data->chan_event, SX9310_NUM_CHANNELS) {
+>                 int dir;
+>                 u64 ev;
+> -               bool new_prox =3D val & BIT(chan);
+> +               bool new_prox;
+> +
+> +               new_prox =3D val & BIT(chan);
+> =20
+> -               if (!(data->chan_event & BIT(chan)))
+> -                       continue;
+>                 if (new_prox =3D=3D data->prox_stat[chan])
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Why not make 'prox_stat' a bitmap too and then xor them to iterate over
+that bitmap instead?
+
+>                         /* No change on this channel. */
+>                         continue;
