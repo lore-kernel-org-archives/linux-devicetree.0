@@ -2,142 +2,124 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B5FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00EFC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E00720714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88C92070A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="euyrUyjG"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="bqUQy7jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgG1CBj (ORCPT
+        id S1726951AbgG1Cjo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:01:39 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40714 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgG1CBj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 22:01:39 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06S21J05028510;
-        Mon, 27 Jul 2020 21:01:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595901679;
-        bh=/DEzhGCZ80qo2cNy8CvwVXA12uEz5BdlSDpo13GOpcs=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=euyrUyjGe8/fGfpXrN4FyI26Xr+uTxZRNTyez7MgDq2zr8N9IYeO+kU/WrnIKqP7p
-         B1cVFJGFGaX/3SEx2aiihZ572cISVhvvzICxPX4ikZ9ssdtJYNnRQclDXv1A1FU35z
-         JivNqoL0NqoSrbxWM5crDHdOJmTBDJLpvdesJYfU=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06S21JWl035015
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 21:01:19 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 27
- Jul 2020 21:01:18 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 27 Jul 2020 21:01:18 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S21IIt037251;
-        Mon, 27 Jul 2020 21:01:18 -0500
-Date:   Mon, 27 Jul 2020 21:01:18 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v4 00/10] irqchip: ti, sci-intr/inta: Update the dt
- bindings to accept different interrupt parents
-Message-ID: <20200728020118.4htkwg2ge4xdiyg6@akan>
-References: <20200725163700.20583-1-lokeshvutla@ti.com>
+        Mon, 27 Jul 2020 22:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgG1Cjn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 22:39:43 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB581C061794
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:39:43 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id a19so2497561qvy.3
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JpBwI5rh1VmR9dJCXKb+bJH00mu8Lm9wehnoKvU4jcQ=;
+        b=bqUQy7jhnL0rGAZVXzl2pr3NWaTgdIriU12FTryPEPMVY5wt51fHrXJ0vbVkcfIr4d
+         WAYoI66DcIz8Z2qRIvZ5yKiv5D8YgwxBTnylMztk4s16k5XUIlc/re9PODqvhvkRtB5B
+         TVZSkva+UhquRQULicJzDN9icgzBm2blLaIyZTP9OL8mv9ugJTBJiyDe6iSjRBOZvOBv
+         sA1vH0643u/pUW6E2y/lTzK2XhtF6fnFY5q02YCUSNgODaW+bprgm2eXlDdmxyLptMyH
+         yBoE+/88gElgn3TEvFtyRfqbBLxv6nxBgMXkuxf+SNdXWTYMbOiK7VH6fSm1eh9enAGr
+         DsZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JpBwI5rh1VmR9dJCXKb+bJH00mu8Lm9wehnoKvU4jcQ=;
+        b=DW4hHzfJBlP4VKq9UUAFG10bYtryVcreTScxlA9rDQs0dyqSrj1X6EsT30++oEJrEb
+         H6EAzmj0qNO1ljsxf1PCVr//t/sZQdNDWeBIGbD8+Fzp4dS+Zji7PkfpThf0bOO/NKw5
+         0P488gV9Fm0FVIyxM+wrpDQMwglGjDYAKSTsTLBMYiKSZJRTLMYQcf3GQ/hq9CYx8ePl
+         1YHhDsX7VUXXfTMEZoz5Dk5Jc9otIStS/dxVWtp2nBBismOLPcxjfpBVOYvt4lOmCYEl
+         I+H5d4eFccUqok0Sau6nAJQUwt8rG3F6uqejMGRoUb7hzbyNgtbaQ184Ib0KftJJPFkM
+         OIRg==
+X-Gm-Message-State: AOAM531yUsk4mt/bt0TgaLUwiYGa1PhlTLmNcH7ES2ry4jpndFBBZrJO
+        lre1Ghv2RBtpB+Od23qpbGgS6O0aITk=
+X-Google-Smtp-Source: ABdhPJz9E9SJY8pj6+WMHEhK2Nhev880nCCsyeRYYub0FM05PwJIPJreA7LDFUu+Z4vWX3RN2jcOLA==
+X-Received: by 2002:ad4:49a1:: with SMTP id u1mr7434725qvx.245.1595903982912;
+        Mon, 27 Jul 2020 19:39:42 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id z3sm13885548qkc.4.2020.07.27.19.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 19:39:42 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-pm@vger.kernel.org (open list:INTERCONNECT API),
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 0/7] Add SM8150 and SM8250 interconnect drivers
+Date:   Mon, 27 Jul 2020 22:37:59 -0400
+Message-Id: <20200728023811.5607-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7hchlkj56sfzpj2v"
-Content-Disposition: inline
-In-Reply-To: <20200725163700.20583-1-lokeshvutla@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---7hchlkj56sfzpj2v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Most of this is generated from downstream dts using a script.
 
-On 22:06-20200725, Lokesh Vutla wrote:
-> Lokesh Vutla (10):
->   firmware: ti_sci: Drop the device id to resource type translation
->   firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
->   firmware: ti_sci: Add support for getting resource with subtype
->   dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage
->     of gic as parent
->   dt-bindings: irqchip: Convert ti,sci-intr bindings to yaml
->   irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
->   dt-bindings: irqchip: ti,sci-inta: Update docs to support different
->     parent.
->   dt-bindings: irqchip: Convert ti,sci-inta bindings to yaml
->   irqchip/ti-sci-inta: Do not store TISCI device id in platform device
->     id field
->   irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
->=20
->  .../interrupt-controller/ti,sci-inta.txt      |  66 --------
->  .../interrupt-controller/ti,sci-inta.yaml     |  98 +++++++++++
->  .../interrupt-controller/ti,sci-intr.txt      |  82 ---------
->  .../interrupt-controller/ti,sci-intr.yaml     | 102 ++++++++++++
->  MAINTAINERS                                   |   4 +-
->  drivers/firmware/ti_sci.c                     | 155 ++++++++----------
->  drivers/irqchip/irq-ti-sci-inta.c             |  95 +++++++++--
->  drivers/irqchip/irq-ti-sci-intr.c             | 152 ++++++++++-------
->  include/linux/soc/ti/ti_sci_protocol.h        |  13 ++
+v2: single yaml file for RPMh interconnect bindings, drop display RSC
+v3:
+ - removed the sc7180 example from the combined yaml file, two
+   examples with conflicting includes doesn't seem possible
+ - Removed MASTER_ALC and bcm_alc (sm8150 and sm8250)
+ - Set keep alive for SH0, MC0, MM0, SN0 and CN0 (both)
+ - Used Sibi Sankar's suggestions for reg base/size in dts
 
-For the firmware related changes:
+Jonathan Marek (7):
+  dt-bindings: interconnect: single yaml file for RPMh interconnect
+    drivers
+  dt-bindings: interconnect: Add Qualcomm SM8150 DT bindings
+  dt-bindings: interconnect: Add Qualcomm SM8250 DT bindings
+  interconnect: qcom: Add SM8150 interconnect provider driver
+  interconnect: qcom: Add SM8250 interconnect provider driver
+  arm64: dts: qcom: sm8150: add interconnect nodes
+  arm64: dts: qcom: sm8250: add interconnect nodes
 
-Acked-by: Nishanth Menon <nm@ti.com>
+ .../{qcom,sdm845.yaml => qcom,rpmh.yaml}      |  42 +-
+ .../bindings/interconnect/qcom,sc7180.yaml    |  85 ---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          |  82 +++
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  82 +++
+ drivers/interconnect/qcom/Kconfig             |  20 +
+ drivers/interconnect/qcom/Makefile            |   4 +
+ drivers/interconnect/qcom/sm8150.c            | 635 +++++++++++++++++
+ drivers/interconnect/qcom/sm8150.h            | 152 ++++
+ drivers/interconnect/qcom/sm8250.c            | 651 ++++++++++++++++++
+ drivers/interconnect/qcom/sm8250.h            | 162 +++++
+ .../dt-bindings/interconnect/qcom,sm8150.h    | 162 +++++
+ .../dt-bindings/interconnect/qcom,sm8250.h    | 172 +++++
+ 12 files changed, 2161 insertions(+), 88 deletions(-)
+ rename Documentation/devicetree/bindings/interconnect/{qcom,sdm845.yaml => qcom,rpmh.yaml} (60%)
+ delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 drivers/interconnect/qcom/sm8150.c
+ create mode 100644 drivers/interconnect/qcom/sm8150.h
+ create mode 100644 drivers/interconnect/qcom/sm8250.c
+ create mode 100644 drivers/interconnect/qcom/sm8250.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sm8150.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,sm8250.h
 
-I assume you will take care of the comments from Rob for the yaml
-conversion and get his ack as well.
+-- 
+2.26.1
 
---=20
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5=
- 849D 1736 249D
-
---7hchlkj56sfzpj2v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE+KKGk1TrgjIXoxo03bWEnRc2JJ0FAl8fhtEACgkQ3bWEnRc2
-JJ2GEw/9HDbBuK5t72A525ISoKmGLOeMFChcqWHDVeMCKfdiClctQbtx2eBnxnjR
-3gdv8ysT+7Ps2Hft9rJswrK9Cj/nZEz+0q07wQCKCvRI9WHXAUObEzl/vk8KL14n
-0C/RYjtEglWYdYA/AdY1r7h2m7+71vNLi9wB9CPU8Ia7Uq8Hr23BenGtXOWhgeYH
-T+iOdjlai2jOj5HgzUWyNOTkfncBuy152U2x8VYvkJf+fEFYMVEEw0I5HGM2P8r9
-bpdorQej+UGEQviw8ATvcnT4V27QCHPcOuBeb8QROJGUxEs6r54fAESPU97krK4S
-RE7TPLBmUl/tCIQnb6s0JMCZKDWaZCjImyzILX7H34H/bMN13ypFxs0xJOAgtfpe
-GN3EpFEAHuXEXFkHr4tSaDHVQjAiLaCCl6kD5otscc/g7d/c+ZxX4zNIqs+QO1Zw
-oYNSyCXtDv08Eb0ejSLkZVBSOgNACgzCfvSU7JrsXhOJnuxpQiBaWHi05INcSvJ2
-bnpMxf2LPeQ8Q7ruM+ILQjBIVYDIl28zZiURudsAt1g1Q+xuY6fyjMItWzZAOmBu
-ln+aLJla36XDfG8UtnTolawHn7LhSEICmOGdqAiQSqXZeCj2dVqpQ80MEbbfLfNB
-RCqOzzMoLXR1JbGJzApU9f/o+0n9HzruTpPeMHqqEmrZ9mSIqRA=
-=Y44g
------END PGP SIGNATURE-----
-
---7hchlkj56sfzpj2v--
