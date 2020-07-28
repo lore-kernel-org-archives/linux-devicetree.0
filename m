@@ -2,118 +2,95 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3A0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8C9C433EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11B07207F5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DA0207FC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 19:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MeAMExUN"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="blU+NE79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732529AbgG1S4s (ORCPT
+        id S1732709AbgG1TSh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:56:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38682 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728782AbgG1S4s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 14:56:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SIukBo042254;
-        Tue, 28 Jul 2020 13:56:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595962606;
-        bh=TsBj4IyXyiAC4vsRIW7YyeVgfCcS4eXV9QnjvdxD88E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MeAMExUNGridwucgq9A9A8v3aBYvEJlze23Bzj7tKfJtGmoR136GXiDn/V4spyTCZ
-         t/Cw46I3hVP+uun5EGolqwOe3tGigNwhDhUkQSkRp6Yf5wihgZqzIf0YP6Tphz2Xfp
-         bl3lCeC6mi6rkOYxD0Tc4/IZNz/x/sjuyEFNxu4s=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SIukBP000847
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 13:56:46 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 13:56:46 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 13:56:45 -0500
-Received: from [10.250.35.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SIujXk051016;
-        Tue, 28 Jul 2020 13:56:45 -0500
-Subject: Re: [PATCH v4 2/4] power: supply: bq27xxx_battery: Add the BQ27561
- Battery monitor
-To:     Sebastian Reichel <sre@kernel.org>
-CC:     <afd@ti.com>, <pali@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <robh@kernel.org>
-References: <20200728141113.31518-1-dmurphy@ti.com>
- <20200728141113.31518-2-dmurphy@ti.com>
- <20200728181755.6bkhp7j3cqtpooof@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <7035eebd-0324-6cf0-1de7-75eb4524cb94@ti.com>
-Date:   Tue, 28 Jul 2020 13:56:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 15:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728751AbgG1TSg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 15:18:36 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A93C061794;
+        Tue, 28 Jul 2020 12:18:36 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id v22so4858250edy.0;
+        Tue, 28 Jul 2020 12:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oa15p4iXa6GJWXcRKbHat247Q7cvm1xa0u7tYmwOk/s=;
+        b=blU+NE79hmQP+AWK2v6QHIjREnaP4/YLScYIEh3rWReHYQ1hpM4CB6natewhEcZJg3
+         At/DtAoJ9fBGj4g3ZnXIMFH10prYf+AFTHKPO+8fGRN1w55P9BQqv5CG5MoRsyeuOUGy
+         POKNlHiYWWDnRAmGiURfH6NrFotdNYkduTjxfX1eU8AGv+UrcTi8XLXCxBpX95UH/nrL
+         VkdM0HjfPkXJVbmw5xo9QFfmCuDC7uGtgEvhLlgy6LaFCwHAms40eJR1/qxhoNZR63Us
+         RkobSo+XmF/XkyPrpesTskiyKBR75/rYao7GhgZ+zXjoQJs1dT76PdO1tV+cozSe21+o
+         52EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oa15p4iXa6GJWXcRKbHat247Q7cvm1xa0u7tYmwOk/s=;
+        b=Uy4PPF4woKMyS4JMu3Q8HWUxMMcMppymWPzWFO6BqnxBP+0fmOjBK6P7V1tSYLiaSJ
+         FSMI7a1eWs4SHcT78TgnltknunaOvUZHJKLWLsb3N/ZNYecj9pq/3+Y6YZc8Xm5ipCtX
+         TkuOU7c5ZwCnkFlajsyRqrIvG7ty6ZQwP3ilZaKMxH+zyw2kfIfnqgucNbU85FP4ZdSX
+         /IMvp3OrwQylnw3FoD3IZer9TR0MIbtrR7YiuwHx1sytaGFVPxwqRx0Lhqmt+TK947BI
+         9hqI8YTgkYn+EwXc29Wx4X77wNJeGhC9hFwm9f1N7j7F1jIwNsirRv7YlDg3sb5qsCgf
+         GsYQ==
+X-Gm-Message-State: AOAM5317sbn/o/tDDTFAyNXOBIcr5GsnBpRQP394iRbL/Fxv1fVIAGR3
+        WsG0EwYB2GkZtLxd8doVuAFQ32wrNjvL85Kq5lA=
+X-Google-Smtp-Source: ABdhPJy5S7ubQoYm3tHb4jW0VlpjbyrDB7KIdVKen1wY3pcq2mMJd8xXnF7ClZtX7lLSpJPEPi2etzzsUrRn6G+1/8E=
+X-Received: by 2002:a05:6402:1d0a:: with SMTP id dg10mr26396667edb.110.1595963915038;
+ Tue, 28 Jul 2020 12:18:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200728181755.6bkhp7j3cqtpooof@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200728074602.14218-1-amelie.delaunay@st.com> <20200728074602.14218-4-amelie.delaunay@st.com>
+In-Reply-To: <20200728074602.14218-4-amelie.delaunay@st.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 28 Jul 2020 21:18:24 +0200
+Message-ID: <CAFBinCDd_9HJA4TT2mS007xFyO4jovt+Xrpejppzzq2Ty-JDmg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] usb: dwc2: don't use ID/Vbus detection if
+ usb-role-switch on STM32MP15 SoCs
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sebastian
+Hi Amelie,
 
-On 7/28/20 1:17 PM, Sebastian Reichel wrote:
-> Hi,
+On Tue, Jul 28, 2020 at 9:46 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
 >
-> On Tue, Jul 28, 2020 at 09:11:11AM -0500, Dan Murphy wrote:
->> Add the Texas Instruments BQ27561 battery monitor.  The register address
->> map is laid out the same as compared to other devices within the file.
->> The battery status register has differing bits to determine if the
->> battery is full, discharging or dead.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/power/supply/bq27xxx_battery.c     | 68 +++++++++++++++++++++-
->>   drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
->>   include/linux/power/bq27xxx_battery.h      |  1 +
->>   3 files changed, 70 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
->> index 942c92127b6d..654d38bcd7e0 100644
->> --- a/drivers/power/supply/bq27xxx_battery.c
->> +++ b/drivers/power/supply/bq27xxx_battery.c
->> @@ -43,6 +43,7 @@
->>    * http://www.ti.com/product/bq27411-g1
->>    * http://www.ti.com/product/bq27441-g1
->>    * http://www.ti.com/product/bq27621-g1
->> + * https://www.ti.com/lit/gpn/bq27z561
-> Applying this failed, because I applied a patch converting the
-> http urls to https. I would have fixed this silently, but it made
-> me notice the chip name is bq27z561 instead of simply bq27561.
+> If usb-role-switch is present in the device tree, it means that ID and Vbus
+> signals are not connected to the OTG controller but to an external
+> component (GPIOs, Type-C controller). In this configuration, usb role
+> switch is used to force valid sessions on STM32MP15 SoCs.
 >
-> You named it without the 'z' everywhere, is there a reason?
-> Searching for bq27561 basically only finds your patches and
-> you decided not to drop the z for the bq28z610.
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+thank you for updating this patch - please add my:
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-At the time I was working on the BQ27750 as well and that has no letters 
-in it so I was following that part number.
 
-I will add the z in and rebase so the patch applies cleanly
-
-Dan
-
->
-> -- Sebastian
+Martin
