@@ -2,52 +2,51 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5477FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33AAC433ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C09620658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3F020658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:18:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y8qo5FoE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WJkKroYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgG1FSN (ORCPT
+        id S1726854AbgG1FSY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:18:13 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47142 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgG1FSN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 01:18:13 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06S5Hr7q096192;
-        Tue, 28 Jul 2020 00:17:53 -0500
+        Tue, 28 Jul 2020 01:18:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33722 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgG1FSY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 01:18:24 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06S5IJVf042299;
+        Tue, 28 Jul 2020 00:18:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595913473;
-        bh=v0P0kEwd+3S5M7UitmXi0NKwnurO9CWy6cgt5TsxxOE=;
+        s=ti-com-17Q1; t=1595913499;
+        bh=gjnGcczhsR6D66k3Zb6TBPSYtQ+3WexiORvyEXw2dkI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=y8qo5FoEOghjSHCeAxTcRSEHPcGBo2c8DcN/OU23boG24kYwbZGaIbe2JBNO7GCXN
-         DZ8om+o5h2vSfbfLP215WtmjboKExt3xsoFshW1ajNPPTBCjPRe9uf2VO+c8uiGVEH
-         kLY3rYxQiW938CXs31OR77JB6JCXaeZFfefvp1qM=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06S5HrVe103801
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jul 2020 00:17:53 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        b=WJkKroYJgJqL0V1B7w8uWrhbcpLAfCSNFmu9u4o6farl9zvOcMxflU9kuksZFJpPt
+         QxubDYI+nTApdB4/ssEkMo2mxLkJXvfs8TBT6jc1+1GQdJVHiFpuEYeVc6Eyseuc5K
+         /RHLwFXzsVxI6kC0/Aq3IQ9s0mlBhtgHP9oQqUC0=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S5III3029823;
+        Tue, 28 Jul 2020 00:18:19 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
- Jul 2020 00:17:53 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2020 00:18:18 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 28 Jul 2020 00:17:53 -0500
+ Frontend Transport; Tue, 28 Jul 2020 00:18:18 -0500
 Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S5Hasv005947;
-        Tue, 28 Jul 2020 00:17:49 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06S5Hat3005947;
+        Tue, 28 Jul 2020 00:18:15 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
 CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
@@ -59,9 +58,9 @@ CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>,
         Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v5 03/10] firmware: ti_sci: Add support for getting resource with subtype
-Date:   Tue, 28 Jul 2020 10:47:28 +0530
-Message-ID: <20200728051735.6187-4-lokeshvutla@ti.com>
+Subject: [PATCH v5 09/10] irqchip/ti-sci-inta: Do not store TISCI device id in platform device id field
+Date:   Tue, 28 Jul 2020 10:47:34 +0530
+Message-ID: <20200728051735.6187-10-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728051735.6187-1-lokeshvutla@ti.com>
 References: <20200728051735.6187-1-lokeshvutla@ti.com>
@@ -74,196 +73,88 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With SYSFW ABI 3.0 changes, interrupts coming out of an interrupt
-controller is identified by a type and it is consistent across SoCs.
-Similarly global events for Interrupt aggregator. So add an API to get
-resource range using a resource type.
+Even though DT doesn't make active use of id field in platform_device, we cannot
+hijack it to store TISCI device id. So create a field in struct ti_sci_inta
+for storing TISCI id and drop usage of id field in platform_device.
 
-Acked-by: Nishanth Menon <nm@ti.com>
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- drivers/firmware/ti_sci.c              | 89 +++++++++++++++++++-------
- include/linux/soc/ti/ti_sci_protocol.h | 13 ++++
- 2 files changed, 80 insertions(+), 22 deletions(-)
+ drivers/irqchip/irq-ti-sci-inta.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index a81ddec9e669..918117be4a73 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -3208,61 +3208,50 @@ u32 ti_sci_get_num_resources(struct ti_sci_resource *res)
- EXPORT_SYMBOL_GPL(ti_sci_get_num_resources);
- 
- /**
-- * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to a device
-+ * devm_ti_sci_get_resource_sets() - Get a TISCI resources assigned to a device
-  * @handle:	TISCI handle
-  * @dev:	Device pointer to which the resource is assigned
-  * @dev_id:	TISCI device id to which the resource is assigned
-- * @of_prop:	property name by which the resource are represented
-+ * @sub_types:	Array of sub_types assigned corresponding to device
-+ * @sets:	Number of sub_types
-  *
-  * Return: Pointer to ti_sci_resource if all went well else appropriate
-  *	   error pointer.
+diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+index 7e3ebf6ed2cd..f2d2f29991b9 100644
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -83,6 +83,7 @@ struct ti_sci_inta_vint_desc {
+  * @vint_mutex:		Mutex to protect vint_list
+  * @base:		Base address of the memory mapped IO registers
+  * @pdev:		Pointer to platform device.
++ * @ti_sci_id:		TI-SCI device identifier
   */
--struct ti_sci_resource *
--devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
--			    struct device *dev, u32 dev_id, char *of_prop)
-+static struct ti_sci_resource *
-+devm_ti_sci_get_resource_sets(const struct ti_sci_handle *handle,
-+			      struct device *dev, u32 dev_id, u32 *sub_types,
-+			      u32 sets)
- {
- 	struct ti_sci_resource *res;
- 	bool valid_set = false;
--	u32 resource_subtype;
- 	int i, ret;
- 
- 	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
- 	if (!res)
- 		return ERR_PTR(-ENOMEM);
- 
--	ret = of_property_count_elems_of_size(dev_of_node(dev), of_prop,
--					      sizeof(u32));
--	if (ret < 0) {
--		dev_err(dev, "%s resource type ids not available\n", of_prop);
--		return ERR_PTR(ret);
--	}
--	res->sets = ret;
--
-+	res->sets = sets;
- 	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
- 				 GFP_KERNEL);
- 	if (!res->desc)
- 		return ERR_PTR(-ENOMEM);
- 
- 	for (i = 0; i < res->sets; i++) {
--		ret = of_property_read_u32_index(dev_of_node(dev), of_prop, i,
--						 &resource_subtype);
--		if (ret)
--			return ERR_PTR(-EINVAL);
--
- 		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
--							resource_subtype,
-+							sub_types[i],
- 							&res->desc[i].start,
- 							&res->desc[i].num);
- 		if (ret) {
- 			dev_dbg(dev, "dev = %d subtype %d not allocated for this host\n",
--				dev_id, resource_subtype);
-+				dev_id, sub_types[i]);
- 			res->desc[i].start = 0;
- 			res->desc[i].num = 0;
- 			continue;
- 		}
- 
- 		dev_dbg(dev, "dev = %d, subtype = %d, start = %d, num = %d\n",
--			dev_id, resource_subtype, res->desc[i].start,
-+			dev_id, sub_types[i], res->desc[i].start,
- 			res->desc[i].num);
- 
- 		valid_set = true;
-@@ -3280,6 +3269,62 @@ devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
- 	return ERR_PTR(-EINVAL);
- }
- 
-+/**
-+ * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to a device
-+ * @handle:	TISCI handle
-+ * @dev:	Device pointer to which the resource is assigned
-+ * @dev_id:	TISCI device id to which the resource is assigned
-+ * @of_prop:	property name by which the resource are represented
-+ *
-+ * Return: Pointer to ti_sci_resource if all went well else appropriate
-+ *	   error pointer.
-+ */
-+struct ti_sci_resource *
-+devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-+			    struct device *dev, u32 dev_id, char *of_prop)
-+{
-+	struct ti_sci_resource *res;
-+	u32 *sub_types;
-+	int sets;
-+
-+	sets = of_property_count_elems_of_size(dev_of_node(dev), of_prop,
-+					       sizeof(u32));
-+	if (sets < 0) {
-+		dev_err(dev, "%s resource type ids not available\n", of_prop);
-+		return ERR_PTR(sets);
-+	}
-+
-+	sub_types = kcalloc(sets, sizeof(*sub_types), GFP_KERNEL);
-+	if (!sub_types)
-+		return ERR_PTR(-ENOMEM);
-+
-+	of_property_read_u32_array(dev_of_node(dev), of_prop, sub_types, sets);
-+	res = devm_ti_sci_get_resource_sets(handle, dev, dev_id, sub_types,
-+					    sets);
-+
-+	kfree(sub_types);
-+	return res;
-+}
-+EXPORT_SYMBOL_GPL(devm_ti_sci_get_of_resource);
-+
-+/**
-+ * devm_ti_sci_get_resource() - Get a resource range assigned to the device
-+ * @handle:	TISCI handle
-+ * @dev:	Device pointer to which the resource is assigned
-+ * @dev_id:	TISCI device id to which the resource is assigned
-+ * @suub_type:	TISCI resource subytpe representing the resource.
-+ *
-+ * Return: Pointer to ti_sci_resource if all went well else appropriate
-+ *	   error pointer.
-+ */
-+struct ti_sci_resource *
-+devm_ti_sci_get_resource(const struct ti_sci_handle *handle, struct device *dev,
-+			 u32 dev_id, u32 sub_type)
-+{
-+	return devm_ti_sci_get_resource_sets(handle, dev, dev_id, &sub_type, 1);
-+}
-+EXPORT_SYMBOL_GPL(devm_ti_sci_get_resource);
-+
- static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
- 				void *cmd)
- {
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 9531ec823298..68e47f6324be 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -220,6 +220,9 @@ struct ti_sci_rm_core_ops {
- 				    u16 *range_start, u16 *range_num);
+ struct ti_sci_inta_irq_domain {
+ 	const struct ti_sci_handle *sci;
+@@ -93,6 +94,7 @@ struct ti_sci_inta_irq_domain {
+ 	struct mutex vint_mutex;
+ 	void __iomem *base;
+ 	struct platform_device *pdev;
++	u32 ti_sci_id;
  };
  
-+#define TI_SCI_RESASG_SUBTYPE_IR_OUTPUT		0
-+#define TI_SCI_RESASG_SUBTYPE_IA_VINT		0xa
-+#define TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT	0xd
- /**
-  * struct ti_sci_rm_irq_ops: IRQ management operations
-  * @set_irq:		Set an IRQ route between the requested source
-@@ -556,6 +559,9 @@ u32 ti_sci_get_num_resources(struct ti_sci_resource *res);
- struct ti_sci_resource *
- devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
- 			    struct device *dev, u32 dev_id, char *of_prop);
-+struct ti_sci_resource *
-+devm_ti_sci_get_resource(const struct ti_sci_handle *handle, struct device *dev,
-+			 u32 dev_id, u32 sub_type);
+ #define to_vint_desc(e, i) container_of(e, struct ti_sci_inta_vint_desc, \
+@@ -156,7 +158,7 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
  
- #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 	parent_fwspec.fwnode = of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
+ 	parent_fwspec.param_count = 2;
+-	parent_fwspec.param[0] = inta->pdev->id;
++	parent_fwspec.param[0] = inta->ti_sci_id;
+ 	parent_fwspec.param[1] = vint_desc->vint_id;
  
-@@ -609,6 +615,13 @@ devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
- {
- 	return ERR_PTR(-EINVAL);
- }
-+
-+static inline struct ti_sci_resource *
-+devm_ti_sci_get_resource(const struct ti_sci_handle *handle, struct device *dev,
-+			 u32 dev_id, u32 sub_type);
-+{
-+	return ERR_PTR(-EINVAL);
-+}
- #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
+@@ -202,7 +204,7 @@ static struct ti_sci_inta_event_desc *ti_sci_inta_alloc_event(struct ti_sci_inta
  
- #endif	/* __TISCI_PROTOCOL_H */
+ 	err = inta->sci->ops.rm_irq_ops.set_event_map(inta->sci,
+ 						      dev_id, dev_index,
+-						      inta->pdev->id,
++						      inta->ti_sci_id,
+ 						      vint_desc->vint_id,
+ 						      event_desc->global_event,
+ 						      free_bit);
+@@ -299,7 +301,7 @@ static void ti_sci_inta_free_irq(struct ti_sci_inta_event_desc *event_desc,
+ 	inta->sci->ops.rm_irq_ops.free_event_map(inta->sci,
+ 						 HWIRQ_TO_DEVID(hwirq),
+ 						 HWIRQ_TO_IRQID(hwirq),
+-						 inta->pdev->id,
++						 inta->ti_sci_id,
+ 						 vint_desc->vint_id,
+ 						 event_desc->global_event,
+ 						 event_desc->vint_bit);
+@@ -549,21 +551,21 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = of_property_read_u32(dev->of_node, "ti,sci-dev-id", &pdev->id);
++	ret = of_property_read_u32(dev->of_node, "ti,sci-dev-id", &inta->ti_sci_id);
+ 	if (ret) {
+ 		dev_err(dev, "missing 'ti,sci-dev-id' property\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
++	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, inta->ti_sci_id,
+ 						 "ti,sci-rm-range-vint");
+ 	if (IS_ERR(inta->vint)) {
+ 		dev_err(dev, "VINT resource allocation failed\n");
+ 		return PTR_ERR(inta->vint);
+ 	}
+ 
+-	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
+-						"ti,sci-rm-range-global-event");
++	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, inta->ti_sci_id,
++							 "ti,sci-rm-range-global-event");
+ 	if (IS_ERR(inta->global_event)) {
+ 		dev_err(dev, "Global event resource allocation failed\n");
+ 		return PTR_ERR(inta->global_event);
 -- 
 2.27.0
 
