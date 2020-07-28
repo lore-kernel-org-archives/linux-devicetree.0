@@ -2,194 +2,136 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAC4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 04:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D93C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 04:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C980D20792
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 04:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DEF21775
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 04:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="ASOVaySf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EASfrngd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgG1EIW (ORCPT
+        id S1725851AbgG1ERh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 00:08:22 -0400
-Received: from [115.28.160.31] ([115.28.160.31]:54742 "EHLO
-        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726004AbgG1EIV (ORCPT
+        Tue, 28 Jul 2020 00:17:37 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:54052 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726353AbgG1ERh (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 00:08:21 -0400
-Received: from hanazono.local (unknown [116.236.177.53])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        Tue, 28 Jul 2020 00:17:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595909856; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=hCNM+2Lv+dQQBLrGuQbA6lyFD5H/2pzjFUsxm4GPBrU=; b=EASfrngd76WsCHcGmJQWRxIs5DogMtMA07IHijgViVEBTneRREXXfCGzHA5yP8iR3V5GtGFf
+ OqcZ6ODA5kCl+i1UDyljm/Y4tDJ7tsBxaEg9cRJ3TcBeTzHF1mZQuhuyXCPXkMdnkfekONAJ
+ ZJhz4AUy7ruj7PaBCV5dBG7b8Tc=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f1fa6df70ff737ddba4a70d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 04:17:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3E52BC43395; Tue, 28 Jul 2020 04:17:35 +0000 (UTC)
+Received: from [192.168.1.12] (unknown [61.3.20.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 5BEBF6006D;
-        Tue, 28 Jul 2020 12:08:12 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
-        t=1595909292; bh=7sU+b2S5OQeF51fBW5K0xFQWC95f2Va54OtBp2iiUT0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ASOVaySfrnbNQNSf6P2yQu7oteymYDCChKRnXURc05Td9jut3RI28PEHnB6lGLGEB
-         SdYAN4AeDs1LPBYioJT9e8seGa9b+jyrazqi/Nq4/Kcyqcvrw1HiCKHbpLqlTzC9wu
-         P2EYUkAeg0n09nVgq/K7iSYvyIGoTKiMJ1/GmY1I=
-Subject: Re: [PATCH v3 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
- <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
-From:   WANG Xuerui <kernel@xen0n.name>
-Message-ID: <b239011a-d946-17b8-3d29-995f1158d0bf@xen0n.name>
-Date:   Tue, 28 Jul 2020 12:08:11 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:80.0)
- Gecko/20100101 Thunderbird/80.0a1
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FA49C433C6;
+        Tue, 28 Jul 2020 04:17:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4FA49C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Taniya Das <tdas@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
+ <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
+ <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
+ <20200727153806.kgegadvghmkevch3@vireshk-mac-ubuntu>
+ <159589753282.1360974.11628682178494669632@swboyd.mtv.corp.google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <e08e9822-7c0c-29d7-67b2-245af66b623a@codeaurora.org>
+Date:   Tue, 28 Jul 2020 09:47:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200725014529.1143208-3-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <159589753282.1360974.11628682178494669632@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jiaxun,
 
+On 7/28/2020 6:22 AM, Stephen Boyd wrote:
+> Quoting Viresh Kumar (2020-07-27 08:38:06)
+>> On 27-07-20, 17:38, Rajendra Nayak wrote:
+>>> On 7/27/2020 11:23 AM, Rajendra Nayak wrote:
+>>>> On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
+>>>>>>> +
+>>>>>>> +                opp-533000000 {
+>>>>>>> +                    opp-hz = /bits/ 64 <533000000>;
+>>
+>> Is this the highest OPP in table ?
+>>
+>>>>> Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
+>>>>> defines 533000000 but the real calculated freq is 533000097.
+>>>>
+>>>> I still don't quite understand why the videocc driver returns this
+>>>> frequency despite this not being in the freq table.
+>>>
+>>> Ok, so I see the same issue on sc7180 also. clk_round_rate() does seem to
+>>> return whats in the freq table, but clk_set_rate() goes ahead and sets it
+> 
+> I'm happy to see clk_round_rate() return the actual rate that would be
+> achieved and not just the rate that is in the frequency tables. Would
+> that fix the problem? 
 
-On 2020/7/25 09:45, Jiaxun Yang wrote:
-> Previously, we're hardcoding resserved ISA I/O Space in code, now
-"reserved"; also "in code" seems redundant (we're "hard-coding", aren't we?)
-> we're processing reverved I/O via DeviceTree directly. Using the ranges
-another "reserved" typo, but better restructure the whole clause.
-> property to determine the size and address of reserved I/O space.
-This sentence has no verb. Maybe you mean "Use"?
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> --
-> v2: Use range_parser instead of pci_range_parser
-> ---
->  arch/mips/loongson64/init.c | 87 ++++++++++++++++++++++++++-----------
->  1 file changed, 62 insertions(+), 25 deletions(-)
->
-> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-> index 59ddadace83f..8ba22c30f312 100644
-> --- a/arch/mips/loongson64/init.c
-> +++ b/arch/mips/loongson64/init.c
-> @@ -7,6 +7,8 @@
->  #include <linux/irqchip.h>
->  #include <linux/logic_pio.h>
->  #include <linux/memblock.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <asm/bootinfo.h>
->  #include <asm/traps.h>
->  #include <asm/smp-ops.h>
-> @@ -63,41 +65,76 @@ void __init prom_free_prom_memory(void)
->  {
->  }
->  
-> -static __init void reserve_pio_range(void)
-> +static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, resource_size_t hw_start,
-> +				    resource_size_t size)
->  {
-> +	int ret = 0;
->  	struct logic_pio_hwaddr *range;
-> +	unsigned long vaddr;
->  
->  	range = kzalloc(sizeof(*range), GFP_ATOMIC);
->  	if (!range)
-> -		return;
-> +		return -ENOMEM;
->  
-> -	range->fwnode = &of_root->fwnode;
-> -	range->size = MMIO_LOWER_RESERVED;
-> -	range->hw_start = LOONGSON_PCIIO_BASE;
-> +	range->fwnode = fwnode;
-> +	range->size = size;
-> +	range->hw_start = hw_start;
->  	range->flags = LOGIC_PIO_CPU_MMIO;
->  
-> -	if (logic_pio_register_range(range)) {
-> -		pr_err("Failed to reserve PIO range for legacy ISA\n");
-> -		goto free_range;
-> +	ret = logic_pio_register_range(range);
-> +	if (ret) {
-> +		kfree(range);
-> +		return ret;
-> +	}
-> +
-> +	/* Legacy ISA must placed at the start of PCI_IOBASE */
-> +	if (range->io_start != 0) {
-> +		logic_pio_unregister_range(range);
-> +		kfree(range);
-> +		return -EINVAL;
->  	}
->  
-> -	if (WARN(range->io_start != 0,
-> -			"Reserved PIO range does not start from 0\n"))
-> -		goto unregister;
-> -
-> -	/*
-> -	 * i8259 would access I/O space, so mapping must be done here.
-> -	 * Please remove it when all drivers can be managed by logic_pio.
-> -	 */
-> -	ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
-> -				LOONGSON_PCIIO_BASE,
-> -				pgprot_device(PAGE_KERNEL));
-> -
-> -	return;
-> -unregister:
-> -	logic_pio_unregister_range(range);
-> -free_range:
-> -	kfree(range);
-> +	vaddr = PCI_IOBASE + range->io_start;
-> +
-> +	ioremap_page_range(vaddr, vaddr + size, hw_start, pgprot_device(PAGE_KERNEL));
-> +
-> +	return 0;
-> +}
-> +
-> +static __init void reserve_pio_range(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	for_each_node_by_name(np, "isa") {
-> +		struct of_range range;
-> +		struct of_range_parser parser;
-> +
-> +		pr_info("ISA Bridge: %pOF\n", np);
-> +
-> +		if (of_range_parser_init(&parser, np)) {
-> +			pr_info("Failed to parse resources.\n");
-> +			break;
-> +		}
-> +
-> +		for_each_of_range(&parser, &range) {
-> +			switch (range.flags & IORESOURCE_TYPE_BITS) {
-> +			case IORESOURCE_IO:
-> +				pr_info(" IO 0x%016llx..0x%016llx  ->  0x%016llx\n",
-> +					range.cpu_addr,
-> +					range.cpu_addr + range.size - 1,
-> +					range.bus_addr);
-> +				if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
-> +					pr_warn("Failed to reserve legacy IO in Logic PIO\n");
-> +				break;
-> +			case IORESOURCE_MEM:
-> +				pr_info(" MEM 0x%016llx..0x%016llx  ->  0x%016llx\n",
-> +					range.cpu_addr,
-> +					range.cpu_addr + range.size - 1,
-> +					range.bus_addr);
-> +				break;
-> +			}
-> +		}
-> +	}
->  }
->  
->  void __init arch_init_irq(void)
+It would, but only if I also update the OPP table to have 533000097
+instead of 533000000 (which I guess is needed anyway)
+If this is the actual frequency that's achievable, then perhaps even the clock
+freq table should have this? 533000097 and not 533000000?
+That way clk_round_rate() would return the actual rate that's achieved and
+we don't need any extra math. Isn't that the reason these freq tables exist
+anyway.
+
+> It may be that we need to make clk_round_rate() do
+> some more math on qcom platforms and actually figure out what the rate
+> is going to be instead of blindly trust the frequency that has been set
+> in the tables.
+> 
+>>> to 533000097. Subsequently when we try to set a different OPP, it fails to
+>>> find the 'current' OPP entry for 533000097. This sounds like an issue with the OPP
+>>> framework? Should we not fall back to the highest OPP as the current OPP?
+>>>
+>>> Stephen/Viresh, any thoughts?
+>>
+>> I think we (in all frameworks generally) try to set a frequency <=
+>> target frequency and so there may be a problem if the frequency is
+>> larger than highest supported. IOW, you need to fix tables a bit.
+>>
+> 
+> Rounding is annoying for sure.
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
