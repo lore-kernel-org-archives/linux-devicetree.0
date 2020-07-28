@@ -2,132 +2,147 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A010C433E5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90DBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E492070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFE220656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="agnVKpBK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wy+aWiBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgG1UPV (ORCPT
+        id S1728255AbgG1ULr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:15:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728590AbgG1UPV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 16:15:21 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1552CC0619D4
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 13:15:21 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so1377842pgf.7
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 13:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=tqZMz16pvW2AijIRQi4zUGCh+M0EN/UmSMDkjaIZOyM=;
-        b=agnVKpBKvxL7cmQ2YRR6UlkjTqmr2v7BFp5jUSNqFj4eD46vMXV31Db3meKNfH7BJW
-         4KVCWX7y8rKr3SrRZGkHZgVIVAZK6p8Q9b1VZpOQchmHZbx/jXxPnjVyyrBwPtm/NODx
-         VlOFom+kFTlw0apOLdcp5w/6hiJ9GbyxcJxj0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=tqZMz16pvW2AijIRQi4zUGCh+M0EN/UmSMDkjaIZOyM=;
-        b=sT1j+fEa6M+rDpu43ZiXFK8TKyvX+WMStZdHFM/aErfCvH4Juqpuq+CIb1SK9cuqD8
-         KTx5SncU3eCvS/v7XRdpzf/tVhn81pVlQUFV4XQrKmxapzaoLTn9zrHqwuX9HNrn4tx5
-         dzgF9zpByQ8soJA45Mj/+Nf6oAx1qZ61WqXg90vSuxPAGOqAfQv/dEnI0asfBvVclAmo
-         qO9wyP3ZIfJDQdRnS6lhDrD4g/C1Y8tn4qK7LhHzqimMpvldo8qi7fCnGKZ1TJZ3Qxoc
-         4kHpyBiLqGfkz0qpK28/hCzxOtpDDRugVIfzUg01U3oQD5b3SO7Zkw0n17GeHjG3WjQ3
-         U75A==
-X-Gm-Message-State: AOAM530IZ4BP1J3Rafpii+pf36bKhcKPMLuu1l7eVchLuEKVXDpcwZhl
-        8mZEMVuOCwEUsGNyc3vEOXAQ7miEhf0=
-X-Google-Smtp-Source: ABdhPJy1L3+1VlaDSMLSfdVxBXSlBNoRZxKyEwfJn034n/+sp9DsAfEYTBXzXsBl1zfgDMoSjm665Q==
-X-Received: by 2002:a63:f1a:: with SMTP id e26mr26558253pgl.80.1595967320319;
-        Tue, 28 Jul 2020 13:15:20 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id v78sm9204748pfc.121.2020.07.28.13.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 13:15:19 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 28 Jul 2020 16:11:47 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:29555 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728149AbgG1ULq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 16:11:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595967105; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=z/j1eXS9EsRM+o+Wag/W7GMKYxap+SCTtlHOOgi+aoQ=; b=wy+aWiBTkZGIe0TQWqod+9LZRLRI+ROzyY1jVi9ViQ8iIuwnknFoG0hnCuEAuX/4kDbIvmRa
+ COwoErG6lAnLr8XM2ZYcqt0x1D8h9zPQEbnUOBcEq9klDFN/11/utWCrr5EszUJeEv0Vt2jY
+ fgrvY/AqEGh9tTF/SIu2TzJhRfg=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
+ 5f208677aa44a6db05bd5e33 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 20:11:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9DA97C43391; Tue, 28 Jul 2020 20:11:35 +0000 (UTC)
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8721C433C6;
+        Tue, 28 Jul 2020 20:11:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8721C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 28 Jul 2020 14:11:33 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+Message-ID: <20200728201133.GB32586@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
+ <20200724162825.GH9185@codeaurora.org>
+ <159589714088.1360974.13205114501389777927@swboyd.mtv.corp.google.com>
+ <20200728165212.GA32586@codeaurora.org>
+ <159596590401.1360974.283437162250734878@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAHcu+VaDBj87stJ9JJkuerJkr8=-g68FhUUnKvfpN8uYaMBUhQ@mail.gmail.com>
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.3.I2a1314232ace4323af96f9981c1e1a4f31f78049@changeid> <CAHp75VfOhoJrHEnC_Wh2qnOMX0pT1Jx92B0TFQ5=cfZsTSNSOg@mail.gmail.com> <CAHcu+VaDBj87stJ9JJkuerJkr8=-g68FhUUnKvfpN8uYaMBUhQ@mail.gmail.com>
-Subject: Re: [PATCH 03/15] iio: sx9310: Fix irq handling
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Daniel Campello <campello@chromium.org>
-Date:   Tue, 28 Jul 2020 13:15:17 -0700
-Message-ID: <159596731796.1360974.3913058992312532558@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <159596590401.1360974.283437162250734878@swboyd.mtv.corp.google.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Daniel Campello (2020-07-28 13:07:00)
-> On Tue, Jul 28, 2020 at 12:08 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org>=
- wrote:
-> > >
-> > > Fixes enable/disable irq handling at various points. The driver needs=
- to
-> > > only enable/disable irqs if there is an actual irq handler installed.
-> >
-> > > -       enable_irq(data->client->irq);
-> > > +       if (!ret)
-> > > +               enable_irq(data->client->irq);
-> > >
-> > >         return ret;
-> > >  }
-> >
-> > Can it be a usual pattern?
-> >
-> >   if (ret)
-> >     return ret;
-> >   ...
-> >   return 0;
->=20
-> I think this way is more readable. The alternative would have to be
-> something like this:
->=20
-> ....
-> if (ret)
->   goto out;
-> mutex_unlock(&data->mutex);
-> enable_irq(data->client->irq);
-> return 0;
->=20
-> out:
-> mutex_unlock(&data->mutex);
-> return ret;
->=20
+On Tue, Jul 28 2020 at 13:51 -0600, Stephen Boyd wrote:
+>Quoting Lina Iyer (2020-07-28 09:52:12)
+>> On Mon, Jul 27 2020 at 18:45 -0600, Stephen Boyd wrote:
+>> >Quoting Lina Iyer (2020-07-24 09:28:25)
+>> >> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
+>> >> >Hi Maulik/Lina,
+>> >> >
+>> >> >On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
+>> >> >>Hi Rajendra,
+>> >> >>
+>> >> >>After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+>> >> >>below messages on db845:
+>> >> >>
+>> >> >>qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+>> >> >>current OPP for freq 533000097 (-34)
+>> >> >>
+>> >> >>^^^ This one is new.
+>> >> >>
+>> >> >>qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+>> >> >>
+>> >> >>^^^ and this message is annoying, can we make it pr_debug in rpmh?
+>> >> >
+>> >> How annoyingly often do you see this message?
+>> >> Usually, this is an indication of bad system state either on remote
+>> >> processors in the SoC or in Linux itself. On a smooth sailing build you
+>> >> should not see this 'warning'.
+>> >>
+>> >> >Would you be fine with moving this message to a pr_debug? Its currently
+>> >> >a pr_info_ratelimited()
+>> >> I would rather not, moving this out of sight will mask a lot serious
+>> >> issues that otherwise bring attention to the developers.
+>> >>
+>> >
+>> >I removed this warning message in my patch posted to the list[1]. If
+>> >it's a serious problem then I suppose a timeout is more appropriate, on
+>> >the order of several seconds or so and then a pr_warn() and bail out of
+>> >the async call with an error.
+>> >
+>> The warning used to capture issues that happen within a second and it
+>> helps capture system related issues. Timing out after many seconds
+>> overlooks the system issues that generally tend to resolve itself, but
+>> nevertheless need to be investigated.
+>>
+>
+>Is it correct to read "system related issues" as performance problems
+>where the thread is spinning forever trying to send a message and it
+>can't? So the problem is mostly that it's an unbounded amount of time
+>before the message is sent to rpmh and this printk helps identify those
+>situations where that is happening?
+>
+Yes, but mostly a short period of time like when other processors are in
+the middle of a restart or resource states changes have taken unusual
+amounts of time. The system will generally recover from this without
+crashing in this case. User action is investigation of the situation
+leading to these messages.
 
-I think the suggestion is
+>Otherwise as you say above it's a bad system state where the rpmh
+>processor has gotten into a bad state like a crash? Can we recover from
+>that? Or is the only recovery a reboot of the system? Does the rpmh
+>processor reboot the system if it crashes?
+We cannot recover from such a state. The remote processor will reboot if
+it detects a failure at it's end. If the system entered a bad state, it
+is possible that RPMH requests start timing out in Linux and remote
+processor may not detect it. Hence, the timeout in rpmh_write() API. The
+advised course of action is a restart as there is no way to recover from
+this state.
 
-	mutex_unlock(&data->mutex);
-	if (ret)
-		return ret;
+--Lina
 
-	enable_irq(data->client->irq);
 
-	return 0;
