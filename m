@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1D9C433ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FACC433F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872FB206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2441206D8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:02:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/fy/zDO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhGRjwGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgG1MBs (ORCPT
+        id S1729364AbgG1MBB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40966 "EHLO
+        Tue, 28 Jul 2020 08:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729371AbgG1MBL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 08:01:11 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5105BC0619D6;
-        Tue, 28 Jul 2020 05:01:11 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id di22so7425109edb.12;
-        Tue, 28 Jul 2020 05:01:11 -0700 (PDT)
+        with ESMTP id S1728433AbgG1MA5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 08:00:57 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA2ECC061794;
+        Tue, 28 Jul 2020 05:00:56 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id g11so8594744ejr.0;
+        Tue, 28 Jul 2020 05:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vT8ZV4Bq4gzHVcR91/D21EVr7w9iR11fQIpmJgM0Dvc=;
-        b=b/fy/zDOmY78YcvR22i9uHPf+2jBxYwFvQbMFWvlk9MeWqridccNEJTDranDM7EsjX
-         2ceJURiFs9EyS+YSBekTpeJ+YV1YRddDuFqmdPHl3HRUNXcJrpbumxcA48mTqq/f8zt0
-         TEd95IrfcRuMYivwcTD2Ah/+dVWX5XY3pGiVrqOElLdk9GW/dsqbNuIioMwy9gu105bZ
-         45RIgCvjYVhQdIQSTwRxDMd8482WEfwLsh02Oni5foa0L5RSuQoZmb+jR7JbbEKPaY/d
-         PVbGovYbTsOabg1FFFps3C/4bOcwlx74nw+ARVWJX/6JmBlW+GqQYBGgHiJzo+K6igSm
-         xIoQ==
+        bh=ffWqQU26EKVHaH4j5TG8VdhwKZhWQGA8HNUdkfskr1g=;
+        b=XhGRjwGTZha6i/yTV+XGzgtJ19Gpn6Af6MpVejeJZv1Ob0nHEtEPTmGQvdHj3wWeZA
+         OJZRDvM6CrenC/peuCellSxg58Q4YTrRF1dHzSaa3fgYzUmbHlyyskhKISTaJ+sLl0Gy
+         DfDy1rkA0aRQtYqOIixVSIWH7sBRc1B5idFtHZTITgoTOQ0hfWv1gcGbIdF+boZ1DoAu
+         3p7P28gHeupe8x3ElEg43Wi7QvNT9fift1ztA3iKy+3XzofKPQEIaDz1/0ghSRQpXe+U
+         /P9e6pouDZGt/j4cNvXT3TlGcB3uuegPRs2iBiaiY084iDzgAyK8sNnGEHgcbTc3mnTK
+         28Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vT8ZV4Bq4gzHVcR91/D21EVr7w9iR11fQIpmJgM0Dvc=;
-        b=T0XxvdkT/1Mx/P5qKG+7JsUdecprDxfHIjHkIfz1O4WgzgFFC4nCL36uxe8M8ye9Vn
-         KDLrMDlGHR6j2XxzjQhUXpIw4J3UC0cbHMuNSRuszJ2JtAeNQg/EFJAcqhPBJGZP9dOH
-         6ACAcoNxu5Sldu6Z5g/uKNLLSFEbn3lIFUGStOftVTaKUMN48bq+0AFCtxR73xXd+GZy
-         e6cgpkizAl2LoC5bbdnzbYrq4m2CgifQXTjJI8vkUlGs9GFqvW8muZCyIC/CeB8HVQK6
-         c/zPMpnliPfJmMw76Xg4Mwf/m7loA+2rfPCuofo3yz/4qisYVEc1CrBM+uMbmMwKQQV1
-         2jeg==
-X-Gm-Message-State: AOAM533HAMEpmhYIrEPI0N/t/5mRO5F+i9AjtFksVo5HyHVx13sreszd
-        zQh6JwfE6RZCEcpq19Zab7A=
-X-Google-Smtp-Source: ABdhPJwe4ZEVDE4FkHAKG2x8LbFNgryPXaH3YyrGBpsWxx6ONnPXJf166yCsK9ac9CUXk3hHEZcvjQ==
-X-Received: by 2002:a50:dacd:: with SMTP id s13mr12961085edj.271.1595937670088;
-        Tue, 28 Jul 2020 05:01:10 -0700 (PDT)
+        bh=ffWqQU26EKVHaH4j5TG8VdhwKZhWQGA8HNUdkfskr1g=;
+        b=IsfMU3g70eiRBBqp1KIV2gKI7M6I42SfKXbeE9KlYM3SFikGQNB5dZWkQhwU3AMZV8
+         G/K6Vf0Toj8cW547bvFd/iwykpdo86TvnhZKsvy7XQLQe2p7VvVSJ/tW5h6Mr7sftNif
+         NsdWbQ55xuTN9YHe/Yqq9s3vNJ+zxezhdz9ssGxeUf1DiDmCirbe2voftcvclPoZrgWA
+         ZsjUu1XrkCq7GJmlLdF3b1SMybMlMmX+N4kOdAFi259KhnqK9omv0VERXqiLe1p8L2x/
+         6NIcwnzYZ5aSMNjWKAf7OAPJrxUTTPbLdvnJQ7XU8bPIrEE2QIbp0QsLT9dCeSpp3KIH
+         25ug==
+X-Gm-Message-State: AOAM53232v38bdlU4SUzNuIvdmp9V5Gn7DCqmV1utONccmGJjoSHRwMw
+        Gii/E8eEWJuUcE2Uuy3hp2A=
+X-Google-Smtp-Source: ABdhPJySGywHKrMDtAGMCMCJezKcwlgt4bsxbE49z3gC/dJPNUvkaEKJIGl938aoMrw8a1SBIpiq/w==
+X-Received: by 2002:a17:906:3789:: with SMTP id n9mr26589606ejc.512.1595937655665;
+        Tue, 28 Jul 2020 05:00:55 -0700 (PDT)
 Received: from localhost.localdomain (abad207.neoplus.adsl.tpnet.pl. [83.6.167.207])
-        by smtp.googlemail.com with ESMTPSA id m20sm9066959ejk.90.2020.07.28.05.01.08
+        by smtp.googlemail.com with ESMTPSA id m20sm9066959ejk.90.2020.07.28.05.00.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 05:01:09 -0700 (PDT)
+        Tue, 28 Jul 2020 05:00:55 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     konradybcio@gmail.com
 Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH 7/9] arm64: dts: qcom: kitakami: Add Synaptics touchscreen
-Date:   Tue, 28 Jul 2020 14:00:46 +0200
-Message-Id: <20200728120049.90632-8-konradybcio@gmail.com>
+Subject: [PATCH 1/9] arm64: dts: qcom: msm8992: Add support for SDHCI2
+Date:   Tue, 28 Jul 2020 14:00:40 +0200
+Message-Id: <20200728120049.90632-2-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728120049.90632-1-konradybcio@gmail.com>
 References: <20200728120049.90632-1-konradybcio@gmail.com>
@@ -81,75 +81,89 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All Kitakami devices seem to use the Synaptics RMI4
-touchscreen attached to the same i2c bus. Configure and
-enable it.
+This will let us use SD cards on our devices.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../qcom/msm8994-sony-xperia-kitakami.dtsi    | 45 ++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 58 +++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-index 4032b7478f04..696cd39852f4 100644
---- a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-@@ -138,7 +138,34 @@ &blsp_i2c5 {
- &blsp_i2c6 {
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index 188fff2095f1..9b42ac42b171 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -269,6 +269,28 @@ sdhc_1: sdhci@f9824900 {
+ 			status = "disabled";
+ 		};
  
--	/* Synaptics touchscreen */
-+	rmi4-i2c-dev@2c {
-+		compatible = "syna,rmi4-i2c";
-+		reg = <0x2c>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++		sdhc_2: sdhci@f98a4900 {
++			compatible = "qcom,sdhci-msm-v4";
++			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
++			reg-names = "hc_mem", "core_mem";
 +
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <42 IRQ_TYPE_EDGE_FALLING>;
++			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ts_int_active &ts_reset_active>;
++			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
++				<&gcc GCC_SDCC2_AHB_CLK>,
++				<&xo_board>;
++			clock-names = "core", "iface", "xo";
 +
-+		vdd-supply = <&pm8994_l22>;
-+		vio-supply = <&pm8994_s4>;
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on>;
++			pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off>;
 +
-+		syna,reset-delay-ms = <220>;
-+		syna,startup-delay-ms = <220>;
-+
-+		rmi4-f01@1 {
-+			reg = <0x01>;
-+			syna,nosleep-mode = <1>;
++			bus-width = <4>;
++			status = "disabled";
 +		};
 +
-+		rmi4-f11@11 {
-+			reg = <0x11>;
-+			syna,sensor-type = <1>;
-+		};
-+	};
- };
+ 		blsp1_uart2: serial@f991e000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0xf991e000 0x1000>;
+@@ -573,6 +595,42 @@ i2c13_sleep: i2c13-sleep {
+ 				drive-strength = <2>;
+ 				bias-disable;
+ 			};
++
++			sdc2_clk_on: sdc2-clk-on {
++				pins = "sdc2_clk";
++				bias-disable;
++				drive-strength = <16>;
++			};
++
++			sdc2_clk_off: sdc2-clk-off {
++				pins = "sdc2_clk";
++				bias-disable;
++				drive-strength = <2>;
++			};
++
++			sdc2_cmd_on: sdc2-cmd-on {
++				pins = "sdc2_cmd";
++				bias-pull-up;
++				drive-strength = <10>;
++			};
++
++			sdc2_cmd_off: sdc2-cmd-off {
++				pins = "sdc2_cmd";
++				bias-pull-up;
++				drive-strength = <2>;
++			};
++
++			sdc2_data_on: sdc2-data-on {
++				pins = "sdc2_data";
++				bias-pull-up;
++				drive-strength = <10>;
++			};
++
++			sdc2_data_off: sdc2-data-off {
++				pins = "sdc2_data";
++				bias-pull-up;
++				drive-strength = <2>;
++			};
+ 		};
+ 	};
  
- &blsp1_uart2 {
-@@ -233,3 +260,19 @@ &sdhc1 {
- 	 * vqmmc-supply = <&pm8994_s4>;
- 	 */
- };
-+
-+&tlmm {
-+	ts_int_active: ts-int-active {
-+		pins = "gpio42";
-+		drive-strength = <2>;
-+		bias-disable;
-+		input-enable;
-+	};
-+
-+	ts_reset_active: ts-reset-active {
-+		pins = "gpio109";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
 -- 
 2.27.0
 
