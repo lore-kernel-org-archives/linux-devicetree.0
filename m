@@ -2,260 +2,415 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FD0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FCCC433EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF502250E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429CC2177B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:57:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="aJnGZRBX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgG1Hzv (ORCPT
+        id S1727983AbgG1H5y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:55:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59436 "EHLO
+        Tue, 28 Jul 2020 03:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgG1Hzu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 03:55:50 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C19C061794
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 00:55:50 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k0KSi-0000xu-DU; Tue, 28 Jul 2020 09:55:48 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1k0KSi-0005rg-0A; Tue, 28 Jul 2020 09:55:48 +0200
-Date:   Tue, 28 Jul 2020 09:55:47 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and early boot
-Message-ID: <20200728075547.u7bk22xnmu5jjpoo@pengutronix.de>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200727063839.kfgrtperzkygvjr2@pengutronix.de>
- <DB6PR0402MB2760FBC0109E98A447BB716588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200727075441.lgscydoj3txupeay@pengutronix.de>
- <DB6PR0402MB27605640244CE751317E6DE888720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200728072651.zcflghll4wa7rm55@pengutronix.de>
- <DB6PR0402MB27603441BEE037ECCB3F021088730@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+        with ESMTP id S1727798AbgG1H5x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 03:57:53 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E76BC061794;
+        Tue, 28 Jul 2020 00:57:53 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A69F222F00;
+        Tue, 28 Jul 2020 09:57:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1595923068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k5vr5u2CwCzWonURU4FUJ7Qx0KdSzpRO+jGgc5tpaZ4=;
+        b=aJnGZRBXgjyowmj1Nw/blJsXNKWHvVlXJjqofsf24qgiRvczfkyVePpySUTExaysc7Ag/E
+        3oO2fWhzUREsA8aeFk6XHMA4tXxdT4nGgpTnTuo9BGeHqIJuI/xPzaZSh0/g4QxcMPBSgB
+        AEMmw8OIZ8zoAlbuwZ1a09xXi3rYnCQ=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zr56xg4gghcrtcpk"
-Content-Disposition: inline
-In-Reply-To: <DB6PR0402MB27603441BEE037ECCB3F021088730@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:54:57 up 255 days, 23:13, 251 users,  load average: 0.05, 0.08,
- 0.04
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 09:57:47 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+In-Reply-To: <20200728072422.GF1850026@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc> <20200728072422.GF1850026@dell>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
+X-Sender: michael@walle.cc
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Am 2020-07-28 09:24, schrieb Lee Jones:
+> On Sun, 26 Jul 2020, Michael Walle wrote:
+> 
+>> Add a device tree bindings for the board management controller found 
+>> on
+>> the Kontron SMARC-sAL28 board.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>> Changes since v5:
+>>  - none
+>> 
+>> Changes since v4:
+>>  - fix the regex of the unit-address
+>> 
+>> Changes since v3:
+>>  - see cover letter
+>> 
+>>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
+>>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
+>>  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
+>>  .../bindings/mfd/kontron,sl28cpld.yaml        | 153 
+>> ++++++++++++++++++
+>>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
+>>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
+>>  6 files changed, 358 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml 
+>> b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> new file mode 100644
+>> index 000000000000..9a63a158a796
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: GPIO driver for the sl28cpld board management controller
+>> +
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  This module is part of the sl28cpld multi-function device. For more
+>> +  details see 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+> 
+> Paths are normally relative.
 
---zr56xg4gghcrtcpk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+grep Documentation/ Documentation
 
-On Tue, Jul 28, 2020 at 07:50:04AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and ear=
-ly
-> > boot
-> >=20
-> > On Mon, Jul 27, 2020 at 09:18:31AM +0000, Peng Fan wrote:
-> > > > Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and
-> > > > early boot
-> > > >
-> > > > On Mon, Jul 27, 2020 at 06:44:32AM +0000, Peng Fan wrote:
-> > > > > Hi Oleksij,
-> > > > >
-> > > > > > Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M
-> > > > > > and early boot
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Fri, Jul 24, 2020 at 04:08:03PM +0800, Peng Fan wrote:
-> > > > > > > This patchset is to support i.MX8MQ/M coproc booted before li=
-nux.
-> > > > > > > Since i.MX8MQ/M was not supported, several patches are needed
-> > > > > > > to first support the platform, then support early boot case.
-> > > > > > >
-> > > > > > > I intended to included i.MX8QM/QXP, but that would introduce a
-> > > > > > > large patchset, so not included. But the clk/syscon optional
-> > > > > > > patch for i.MX8QM/QXP was still kept here to avoid rebase err=
-or.
-> > > > > >
-> > > > > > Thank you for your work.
-> > > > > >
-> > > > > > Can you please provide more information about big picture of th=
-is
-> > work.
-> > > > > >
-> > > > > > If I see it correctly, we have here support for i.MX8MM, which
-> > > > > > seems to be able to fully control Cortex M4 (enable CPU core, e=
-tc...).
-> > > > >
-> > > > > Yes.
-> > > >
-> > > > In this case, I would recommend to mainline the i.MX8MM part
-> > > > first/separately.
-> > >
-> > > Only the last patch is to support earlyboot, all others is imx8mm par=
-t.
-> >=20
-> > ok
-> >=20
-> > > >
-> > > > > >
-> > > > > > And other case, where remoteproc is running on application
-> > > > > > processor and can't or should not touch M4 (i.MX7ULP,
-> > > > > > i.MX8QM/QXP..). Since M4 provides some functionality, you are
-> > > > > > trying to reuse remoteproc framework to get resource table
-> > > > > > present in ELF header and to dynamically load things. For some
-> > > > > > reasons this header provides more information then needed, so
-> > > > > > you are changing the ELF parser in the kernel
-> > > > to workaround it.
-> > > > >
-> > > > > Not exactly.
-> > > > >
-> > > > > For i.MX8MM, we support two cases. M4 kicked by U-Boot, M4 kicked
-> > > > > by
-> > > > Linux remoteproc.
-> > > > > For i.MX8QM/QXP, the typical usecase is M4 kicked by SCFW, but we
-> > > > > will also add M4 kicked by Linux remoteproc.
-> > > > > For i.MX7ULP, I would only support M4 dual boot case, M4 control
-> > > > everything.
-> > > >
-> > > > From current state of discussion, i'm not sure what role plays
-> > > > remoteproc in the scenario where M4 is started before linux.
-> > > > Especially if we are not using resource table.
-> > >
-> > > We are using resource table from an address, not in elf file.
-> > > This is the new feature in Linux-next to support coproc booted early.
-> > >
-> > > >
-> > > > > The reason the change the elf parser is that when M4 elf is loaded
-> > > > > by Linux remoteproc, It use memset to clear area.
-> > > >
-> > > > The use of memset, depends on ELF format. Fix/change the linker
-> > > > script on your firmware and memset will be never called.
-> > > >
-> > > > > However we use ioremap, memset on ARM64 will report crash to
-> > > > > device nGnRE memory. And we could not use ioremap_wc to TCM area,
-> > > > > since it could have data correctly written into TCM.
-> > > >
-> > > > I have strong feeling, that we are talking about badly or not
-> > > > properly formatted ELF binary. I would prefer to double check it,
-> > > > before we will apply fixes on wrong place.
-> > > >
-> > > > > Maintainer not wanna to drop memset in common code, and TI guys
-> > > > > suggest add i.MX specific elf stuff. So I add elf handler in i.MX=
- code.
-> > > >
-> > > > I think, removing memset may damage current users of imx_rproc driv=
-er.
-> > > > Since, like I said: the use of memset depends on ELF format.
-> > >
-> > > In my elf file, the last PT_LOAD contains data/bss/heap/stack. I'll
-> > > check with our MCU guys, we only need the specific data loaded.
-> > >
-> > > Elf file type is EXEC (Executable file) Entry point 0x1ffe0355 There
-> > > are 3 program headers, starting at offset 52
-> > >
-> > > Program Headers:
-> > >   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz
-> > Flg Align
-> > >   LOAD           0x010000 0x1ffe0000 0x1ffe0000 0x00240 0x00240
-> > R   0x10000
-> > >   LOAD           0x010240 0x1ffe0240 0x1ffe0240 0x03e90 0x03e90
-> > RWE 0x10000
-> > >   LOAD           0x020000 0x20000000 0x1ffe40d0 0x00068 0x0ad00
-> > RW  0x10000
-> > >
-> > >  Section to Segment mapping:
-> > >   Segment Sections...
-> > >    00     .interrupts
-> > >    01     .resource_table .text .ARM .init_array .fini_array
-> > >    02     .data .bss .heap .stack
-> >=20
-> > Here is an example of formatting ELF for remoteproc:
-> > https://git.pengutronix.de/cgit/ore/OSELAS.BSP-Pengutronix-DualKit/tree=
-/loc
-> > al_src/remoteproc-elf/linker.ld
-> > https://git.pengutronix.de/cgit/ore/OSELAS.BSP-Pengutronix-DualKit/tree=
-/loc
-> > al_src/remoteproc-elf/imx7m4.S
-> >=20
-> > In this example I pack linux in to remoteproc elf image and start linux=
- on
-> > imx7d-m4 part.
-> > Will be interesting if you can do the same on imx8* SoCs ;)
->=20
-> In NXP release, the m4 elf files have data/bss/heap/stack in the same
-> data area, so the linker merged them into one segment and cause
-> memsz > filesz.
->=20
-> I think I need to propose platform specific elf memset/memcpy,
-> such as rproc_elf_memcpy, rproc_elf_memset,
->=20
-> To i.MX, need use memset_io and memcpy_toio, taking TCM
-> as device memory.
->=20
-> Note: memset without io will cause abort when memsz>filesz.
-> So use memset_io is safe.
+I know there are a lot false positives (esp in the first one)..
 
-Sounds good, i would prefer this way.
+$ grep -r "\.\./" Documentation | wc -l
+1826
+$ grep -r "Documentation/" Documentation|wc -l
+2862
 
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+>> +  There are three flavors of the GPIO controller, one full featured
+>> +  input/output with interrupt support (kontron,sl28cpld-gpio), one
+>> +  output-only (kontron,sl28-gpo) and one input-only 
+>> (kontron,sl28-gpi).
+>> +
+>> +  Each controller supports 8 GPIO lines.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - kontron,sl28cpld-gpio
+>> +      - kontron,sl28cpld-gpi
+>> +      - kontron,sl28cpld-gpo
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +  "#gpio-cells":
+>> +    const: 2
+>> +
+>> +  gpio-controller: true
+>> +
+>> +  gpio-line-names:
+>> +      minItems: 1
+>> +      maxItems: 8
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#gpio-cells"
+>> +  - gpio-controller
+>> +
+>> +additionalProperties: false
+>> diff --git 
+>> a/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml 
+>> b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>> new file mode 100644
+>> index 000000000000..1cebd61c6c32
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+>> @@ -0,0 +1,27 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/hwmon/kontron,sl28cpld-hwmon.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Hardware monitoring driver for the sl28cpld board management 
+>> controller
+>> +
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  This module is part of the sl28cpld multi-function device. For more
+>> +  details see 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - kontron,sl28cpld-fan
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +
+>> +additionalProperties: false
+>> diff --git 
+>> a/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml 
+>> b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>> new file mode 100644
+>> index 000000000000..4c39e9ff9aea
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: 
+>> http://devicetree.org/schemas/interrupt-controller/kontron,sl28cpld-intc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Interrupt controller driver for the sl28cpld board management 
+>> controller
+>> +
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  This module is part of the sl28cpld multi-function device. For more
+>> +  details see 
+>> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
+>> +
+>> +  The following interrupts are available. All types and levels are 
+>> fixed
+>> +  and handled by the board management controller.
+>> +
+>> +  ==== ============= ==================================
+>> +   IRQ line/device   description
+>> +  ==== ============= ==================================
+>> +    0  RTC_INT#      Interrupt line from on-board RTC
+>> +    1  SMB_ALERT#    Event on SMB_ALERT# line (P1)
+>> +    2  ESPI_ALERT0#  Event on ESPI_ALERT0# line (S43)
+>> +    3  ESPI_ALERT1#  Event on ESPI_ALERT1# line (S44)
+>> +    4  PWR_BTN#      Event on PWR_BTN# line (P128)
+>> +    5  SLEEP#        Event on SLEEP# line (S149)
+>> +    6  watchdog      Interrupt of the internal watchdog
+>> +    7  n/a           not used
+>> +  ==== ============= ==================================
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - kontron,sl28cpld-intc
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +required:
+>> +  - compatible
+>> +  - interrupts
+>> +  - "#interrupt-cells"
+>> +  - interrupt-controller
+>> +
+>> +additionalProperties: false
+>> diff --git 
+>> a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml 
+>> b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>> new file mode 100644
+>> index 000000000000..e3a62db678e7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+>> @@ -0,0 +1,153 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Kontron's sl28cpld board management controller
+> 
+> "S128CPLD" ?
 
---zr56xg4gghcrtcpk
-Content-Type: application/pgp-signature; name="signature.asc"
+still not, its sl28cpld, think of a project/code name, not the product
+appended with CPLD.
 
------BEGIN PGP SIGNATURE-----
+> "Board Management Controller (BMC)" ?
 
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8f2f8ACgkQ4omh9DUa
-UbMiRA/9EtUGM3624lRjzYAxczQgqe2vYquaps9/MyZarnC3pL9V01Pu+vor7ac1
-WZRycoYC8kzhKuCLKykSaLda/Z7W/MUZ4kL4C7powYrPpxaRVh5cSIT/baYicR9F
-PNnJkSJrJ35bIYqg7aCGHmzcymZi1q8mJGQ4bycgDjgGwC7c3bbpUYhisWnLaHYt
-DdzR5G9XZ77mXq0pbHa5E9dodRVsTWzy78hHpt6ChR/AKDbQ0iNczdBUDdsUcZE/
-7itAkxsh8l0qBJHchBjmRh4J5W7a85zGte/DG5LKPbzkuIYHXGXCz2D1BLwiJibW
-WpwwU18J1ok7byCUZ3kOw0aanB4IQjpbuzL9YWRYi8Z4sIhLonuZred84I7FiKYq
-2YJ/pJZBdaSLRPlfly2KhoBB6bW0OKpsFY+dUuTMfyI6M3MEZLKUA3aElAC3epYA
-lVHEmiWo4amVELR5okS/XjyHVf/UuZ+KrTZZilI6hN8NU0n6YGWn6te2p26XryCo
-6all/0DGfnFsGhbEnwd+y/+8y7dSTC9yLWoaSWgql4Qyu2Ol2k8x+VOxyW17vt5D
-99n+noDbdCNjtmL6FZ/zXi8qEXITdMXvJ3UxzVy1aa5DxXCsOqNUtUykK/jKQiTq
-bPa8jhymbYw6x/pOXa/HyxmMa4jvlkuQURaDgmaIhgnifwfT+iY=
-=MHWV
------END PGP SIGNATURE-----
+sounds like IPMI, which I wanted to avoid.
 
---zr56xg4gghcrtcpk--
+> 
+>> +maintainers:
+>> +  - Michael Walle <michael@walle.cc>
+>> +
+>> +description: |
+>> +  The board management controller may contain different IP blocks 
+>> like
+>> +  watchdog, fan monitoring, PWM controller, interrupt controller and 
+>> a
+>> +  GPIO controller.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: kontron,sl28cpld-r1
+> 
+> We don't usually code revision numbers in compatible strings.
+> 
+> Is there any way to pull this from the H/W?
+
+No, unfortunately you can't. And I really want to keep that, in case
+in the future there are some backwards incompatible changes.
+
+>> +  reg:
+>> +    description:
+>> +      I2C device address.
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 2
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +patternProperties:
+>> +  "^gpio(@[0-9a-f]+)?$":
+>> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
+>> +
+>> +  "^hwmon(@[0-9a-f]+)?$":
+>> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
+>> +
+>> +  "^interrupt-controller(@[0-9a-f]+)?$":
+>> +    $ref: ../interrupt-controller/kontron,sl28cpld-intc.yaml
+>> +
+>> +  "^pwm(@[0-9a-f]+)?$":
+>> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
+>> +
+>> +  "^watchdog(@[0-9a-f]+)?$":
+>> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
+>> +
+>> +required:
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - compatible
+>> +  - reg
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    i2c {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        sl28cpld@4a {
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +            compatible = "kontron,sl28cpld-r1";
+>> +            reg = <0x4a>;
+> 
+> Nit: Could you put the 'reg' and 'compatible' at the top please?
+> 
+> Same for all nodes.
+
+Sure, I've looked at previous examples, but they are not
+consistent, but it looked to me if the "#" properties are
+listed first.
+
+-michael
