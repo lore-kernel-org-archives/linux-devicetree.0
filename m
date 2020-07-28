@@ -2,150 +2,127 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05B0C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6835CC433E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AE520829
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D08720809
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="uV1+pGhc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mziHtOWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgG1JGF (ORCPT
+        id S1728185AbgG1JTh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42100 "EHLO
+        Tue, 28 Jul 2020 05:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbgG1JGF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 05:06:05 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E992C061794;
-        Tue, 28 Jul 2020 02:06:05 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8BAFE22FEB;
-        Tue, 28 Jul 2020 11:06:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595927163;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+qDlqdqnrq63mY3zRI+KJrgTKuzim4rp3TqdEiL1TrU=;
-        b=uV1+pGhcvzIch3KaWSEO4peivbsttnPu6bAB5yDvHKD9/huxFx5wREsoGhVj3FQ1BZTi3f
-        7eLiluHJKu5CBhGP4cA4MN+oohWSpB8t9yWLECZdrFFot0qB+92L6q1k9gj8Ltxmak3yKv
-        OfFyMiseV14azylQP0wV94+3NmQi+dM=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 11:06:02 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-In-Reply-To: <20200728085616.GD2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-3-michael@walle.cc> <20200728072422.GF1850026@dell>
- <1065b0107ce6fd88b2bdd704bf45346b@walle.cc> <20200728082707.GB2419169@dell>
- <a47993ca4c77ab1ee92f6693debb3c87@walle.cc> <20200728085616.GD2419169@dell>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <2fd3b880e36aa65e880b801092b51945@walle.cc>
-X-Sender: michael@walle.cc
+        with ESMTP id S1728081AbgG1JTh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 05:19:37 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144B4C0619D2
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 02:19:37 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id r19so20307702ljn.12
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 02:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Jlap9/5dk8KWtoGhWc1HZn/eJR07N3yz1dFQNoUI38w=;
+        b=mziHtOWcHiK9xk6wplNEr+rCLC0uTh86OzZiTA4tEgTmuB7tv/AE3R7555cvtrDOOo
+         XjWKr4SfobnGZOL1fZ8zA/sGslNPbu/b6ghKwF0UqQdhb/uVmllgJ4JUbJdYNV1F2vKq
+         FPNssOe2JNWl21ebgCs9pRR+LdXWxncEWz4n0Hhq6ZCpNDBVuXPXtcc9cjD3PT3pU/wg
+         Hbh/TiYQlsXo3vJnnntu3izDQN4Cb1+n5aEinkh+ZHKN28Rp3DyWCFU6OPB2TDz2Xh4B
+         TtcyiQgzlP835rYBfW6tk12eFNyZnnEmtPkZK+idJ4dLw6dlyND6n15c2j+hNthSTVw2
+         eB3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Jlap9/5dk8KWtoGhWc1HZn/eJR07N3yz1dFQNoUI38w=;
+        b=hWiMcjKNKQl8EkqoYhQpx+8djP9NryAWqXOUSpVGKeRvH5FSP/gsGs0f06H+TTAV1z
+         RWj5JtGbxg9+Y45s3Kz0XS4a8w0jP3Yh88T3T3GfWuMJAKJjKudohwwLm5iEEySsHxG4
+         i8bVXvOUoFUGJJqpIQfwuH6eJWqA+ZMr/vk6cpvXa5feybZmZ0pjRy3Lnlx7O5UokMAq
+         arfxrcS0Zn4U0AqNImdQSualX0q7sf1X2GV5vUJR2Utk0D7Wp0tPFvOi3O36ohwX1HBe
+         YYFpat/Pm/xDZszb+w7f5o4TSx634h1XcGm9rfVfALLQZreknTjoSxeCBW+ycz1+Kty3
+         ZYDA==
+X-Gm-Message-State: AOAM530czLBa+AVNPO7HdTcRqoe0wepaLxaoIaFFF0ftw9zP0jD0aKPT
+        yWEMZJulVY1M8ye6sEGS8Rbnvw==
+X-Google-Smtp-Source: ABdhPJxMiZn/Up98ifKkjiIq6quC8AJuLfL/IJJqn+36Kj8wcZa176x/QHlVa1aXvg+qFan6srj8Rw==
+X-Received: by 2002:a2e:964d:: with SMTP id z13mr11721612ljh.98.1595927975435;
+        Tue, 28 Jul 2020 02:19:35 -0700 (PDT)
+Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
+        by smtp.gmail.com with ESMTPSA id q22sm3643270lfc.33.2020.07.28.02.19.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Jul 2020 02:19:34 -0700 (PDT)
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        s-anna@ti.com
+Cc:     grzegorz.jaszczyk@linaro.org, robh+dt@kernel.org,
+        lee.jones@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        wmills@ti.com, praneeth@ti.com
+Subject: [PATCH v4 0/5] Add TI PRUSS Local Interrupt Controller IRQChip driver
+Date:   Tue, 28 Jul 2020 11:18:33 +0200
+Message-Id: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-07-28 10:56, schrieb Lee Jones:
->> > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
->> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > > > > +
->> > > > > +title: Kontron's sl28cpld board management controller
->> > > >
->> > > > "S128CPLD" ?
->> > >
->> > > still not, its sl28cpld, think of a project/code name, not the product
->> > > appended with CPLD.
->> > >
->> > > > "Board Management Controller (BMC)" ?
->> > >
->> > > sounds like IPMI, which I wanted to avoid.
->> >
->> > Is there a datasheet?
->> 
->> No there isn't.
-> 
-> Then what are you working from?
+Hi All,
 
-Ok, there is no public datasheet. If that wasn't clear before, I'm 
-working
-for that company that also implemented that CPLD.
+The following is a v4 version of the series [1][2][3] that adds an IRQChip
+driver for the local interrupt controller present within a Programmable
+Real-Time Unit and Industrial Communication Subsystem (PRU-ICSS) present on a
+number of TI SoCs including OMAP architecture based AM335x, AM437x, AM57xx SoCs,
+Keystone 2 architecture based 66AK2G SoCs, Davinci architecture based
+OMAP-L138/DA850 SoCs and the latest K3 architecture based AM65x and J721E SoCs.
+Please see the v1 cover-letter [1] for details about the features of this
+interrupt controller.  More details can be found in any of the supported SoC
+TRMs.  Eg: Chapter 30.1.6 of AM5728 TRM [4]
 
->> > > > > +maintainers:
->> > > > > +  - Michael Walle <michael@walle.cc>
->> > > > > +
->> > > > > +description: |
->> > > > > +  The board management controller may contain different IP blocks
->> > > > > like
->> > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
->> > > > > and a
->> > > > > +  GPIO controller.
->> > > > > +
->> > > > > +properties:
->> > > > > +  compatible:
->> > > > > +    const: kontron,sl28cpld-r1
->> > > >
->> > > > We don't usually code revision numbers in compatible strings.
->> > > >
->> > > > Is there any way to pull this from the H/W?
->> > >
->> > > No, unfortunately you can't. And I really want to keep that, in case
->> > > in the future there are some backwards incompatible changes.
->> >
->> > Rob,
->> >
->> > I know you reviewed this already, but you can give your opinion on
->> > this specifically please?  I know that we have pushed back on this in
->> > the past.
->> 
->> Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
->> implementation of this. A future "sl28cpld-r2" might look completely
->> different and might not suite the simple MFD at all. "sl28cpld" is
->> a made up name - as "sl28cpld-r1" is, too.
-> 
-> Well that sounds bogus for a start.  I guess that's one of the
-> problems with trying to support programmable H/W in S/W.
+Please see the individual patches for exact changes in each patch, following are
+the main changes from v3:
+ - Change interrupt-cells to 3 in order to provide 2-level mapping description
+   in DT for interrupts routed to the main CPU as Marc requested (patch #1 and
+   patch #2).
+ - Get rid of the two distinct code paths in the xlate function and allow to
+   proceed only with 3 parameters description as Marc suggested (patch #2).
+ - Due to above modification squash patch #6 of previous patchset into patch #2.
+ - Merge the irqs-reserved and irqs-shared to one property (patch #1 and #2).
 
-What sounds bogus? That we name the implementation sl28cpld? How
-is that different to like adt7411? Its just a name made up by the
-vendor. So if there is a new version of the adt7411 the vendor
-might name it adt7412. We name it sl28cpld-r2. So what is the
-problem here?
+[1] https://patchwork.kernel.org/cover/11034561/
+[2] https://patchwork.kernel.org/cover/11069749/
+[3] https://patchwork.kernel.org/cover/11639055/
+[4] http://www.ti.com/lit/pdf/spruhz6
 
--michael
+Best regards
+Grzegorz
+
+David Lechner (1):
+  irqchip/irq-pruss-intc: Implement irq_{get,set}_irqchip_state ops
+
+Grzegorz Jaszczyk (1):
+  irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
+    interrupts
+
+Suman Anna (3):
+  dt-bindings: irqchip: Add PRU-ICSS interrupt controller bindings
+  irqchip/irq-pruss-intc: Add logic for handling reserved interrupts
+  irqchip/irq-pruss-intc: Add support for ICSSG INTC on K3 SoCs
+
+ .../interrupt-controller/ti,pruss-intc.yaml        | 157 +++++
+ drivers/irqchip/Kconfig                            |  10 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-pruss-intc.c                   | 659 +++++++++++++++++++++
+ 4 files changed, 827 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
+ create mode 100644 drivers/irqchip/irq-pruss-intc.c
+
+-- 
+2.7.4
+
