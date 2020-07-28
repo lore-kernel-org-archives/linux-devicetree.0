@@ -2,149 +2,242 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4225EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43199C4345C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21BE320714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595941242;
-	bh=gFqoQd8zm9f/gkq2q/fUpGYmoA4BFCCv6PgUfqz8iQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2UwL97XhWDO9ySiO4YFc/bYGDmGPFAFpwnzoAnOY5oom+lcsge31vhfc1NAl0jOq4
-	 bp2afZQVMytFRbGfGNgGhOznvr5PYpYNAstaiqoHjdQ1ssDrFiJ1Mq86i1TGsNzUdS
-	 asebLnyTayDlUuzKDJKd0rhXidvJhHvOqcarJjVo=
+	by mail.kernel.org (Postfix) with ESMTP id 228E2207F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:11:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XNrIdy39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgG1NAl (ORCPT
+        id S1729981AbgG1NLd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:00:41 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35498 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgG1NAk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 09:00:40 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 93so4631354otx.2;
-        Tue, 28 Jul 2020 06:00:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gQxWRGpK+7J5zPyI+x2auaL/xO1F0G6D2eChmPkLka4=;
-        b=jpWuEcrD9XhEVv/7ZcG5mOXpiy/nx0mKDBfo3NY7T+oOBbXHdbCuk8pLafHQNm204I
-         Krw1i40hFAs8T0ohYtKVpMP7sstJ/CvWh9ZItNwt0LLYdWaB4YrCJA12H7cVO6q337cC
-         92+AaNG3xRc8wHiXRDhz1lXD8TpCKGcapHVHVBMNl1iuh4YjU/jyctx+rYtWcLZkHYt4
-         sMlFkLxqyUKKI9AAJgC/YYvgbYncxb4ndpfFhiMDDn0A6sklt5pFxMHTssXE/vdqJpG4
-         k8yaC7yRD1WmKL/BZyfvYSiTOlLqxr1oERfZfg4VL6pDUGRrPWUAb8EgWFxrHDQ5HSbB
-         qXNg==
-X-Gm-Message-State: AOAM533IBH7yJfmB9XmRAT8jMB8XEwC+r7eSAsL9Msmqga+wOX3vXjIc
-        hvAlcUC92BHczEo63St4fIA8Tm+jpKV8lEC0E+8=
-X-Google-Smtp-Source: ABdhPJyjkPbmbdSrKoRnxAHeoGfwpBzGL7q9+aCpuvVIqlYJ3d/ztRYP2FQgQ2jADdtZcBOiq9wpwzTBFyKVN4fiMIs=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr24293860oth.262.1595941239566;
- Tue, 28 Jul 2020 06:00:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com>
- <20200619082013.13661-1-lorenzo.pieralisi@arm.com> <20200619082013.13661-6-lorenzo.pieralisi@arm.com>
- <20200709093514.GC18149@e121166-lin.cambridge.arm.com> <20200715091326.GA30074@e121166-lin.cambridge.arm.com>
- <20200728124835.GA14596@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200728124835.GA14596@e121166-lin.cambridge.arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 28 Jul 2020 15:00:28 +0200
-Message-ID: <CAJZ5v0irrPd7kNqDX=BoPx7pf0zBgBRy3FHze5CA_UWi5Jv0Ag@mail.gmail.com>
-Subject: Re: [PATCH v2 05/12] ACPI/IORT: Add an input ID to acpi_dma_configure()
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Will Deacon <will@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 Jul 2020 09:11:33 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35799 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730047AbgG1NL3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 09:11:29 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200728131127euoutp02112bcb0247d3e76911679a951e591305~l7LDYI7JA2565525655euoutp02e
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 13:11:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200728131127euoutp02112bcb0247d3e76911679a951e591305~l7LDYI7JA2565525655euoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595941887;
+        bh=LxXAXNiNU2/+HZuMBh9dY62HizQSIWMo4cmZejA+I1Q=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=XNrIdy395zjmhcghyppKw3D4af+mKZb7IvQOolDzvqfDIcXzz3rr3DOOjsRriqTgF
+         KDBH3/jTOK+zCJ1lzNcysWyk6ZdhwG/sHZRHXYXouERaMPeGSD8E38Y4kpXmdGBGsQ
+         N2oAXew4/oKjGnNtskfJMHAN37fNWEATRaYKUADM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200728131126eucas1p1c5d36b6ae691176384dee4f62fa200ff~l7LDFoDnl3202632026eucas1p1V;
+        Tue, 28 Jul 2020 13:11:26 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 19.2B.06456.EF3202F5; Tue, 28
+        Jul 2020 14:11:26 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200728131126eucas1p16365622c52f91104373a2cd3e0ebb619~l7LCztZ251537115371eucas1p1l;
+        Tue, 28 Jul 2020 13:11:26 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200728131126eusmtrp2f5371e3065140d16723cde541d90084c~l7LCzC6790544805448eusmtrp2I;
+        Tue, 28 Jul 2020 13:11:26 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-85-5f2023fea0e2
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 92.85.06017.EF3202F5; Tue, 28
+        Jul 2020 14:11:26 +0100 (BST)
+Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200728131126eusmtip261a0343f852ecdbdfc93314fb68e9cdd~l7LCVXo5e0123701237eusmtip2r;
+        Tue, 28 Jul 2020 13:11:26 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     broonie@kernel.org, krzk@kernel.org
+Cc:     simon@lineageos.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        linux-samsung-soc@vger.kernel.org, s.nawrocki@samsung.com
+Subject: [PATCH v3 1/3] ASoC: samsung: Document DT bindings for Midas sound
+ subsystem
+Date:   Tue, 28 Jul 2020 15:11:09 +0200
+Message-Id: <20200728131111.14334-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNIsWRmVeSWpSXmKPExsWy7djP87r/lBXiDV6vt7C4cvEQk8XGGetZ
+        LaY+fMJmMf/IOVaL8+c3sFvMOL+PyWLtkbvsFq17j7BbHH7Tzmqx5cxtNgcujw2fm9g8Nq3q
+        ZPNoWb+JzaNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyLl3+xFjwX7biUtt11gbGDrEuRk4O
+        CQETiV1ne5m7GLk4hARWMEr8WLeBCcL5wigxcWkzG0iVkMBnRondxy1hOl49/sACUbScUeLi
+        2Z3McB3Hb95iBKliEzCU6D3aB2aLCKhL3J/RxApSxCxwk1Fi5qY+oLEcHMIC4RJd/cIgJouA
+        qkRTdxlIOa+AtcTFyXsYIZbJS6zecABsvoTAezaJ/wsb2SESLhLf1vdB2cISr45vgbJlJP7v
+        nM8E0dDMKNGz+zY7hDOBUeL+8QVQY60l7pz7BXYEs4CmxPpd+iCmhICjROtTYQiTT+LGW0GQ
+        YmYgc9K26cwQYV6JjjYhiBkqEr9XTWeCsKUkup/8Z4GwPSQ2XHsAVi4kECtxZY3TBEa5WQib
+        FjAyrmIUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMEqf/Hf+0g/HrpaRDjAIcjEo8vDNE
+        FeKFWBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIhRmoNFSZzXeNHLWCGB9MSS
+        1OzU1ILUIpgsEwenVAOj0IUpQWJ1bxQTDn169XS26tze7l+Lt6Y+NHzENmflUu3O6lsm8Vbi
+        xQs3tHVtKPVJu2nxt3f23Yhah8ogr4MnZz37J8OonvFlwsdJVgInHe4HbZvV46iQdWSuwpNz
+        xS95Vuc2VV48yKT75v5ng4X60xKeHtzx5k8B//br3zf+fb7shtE6xYX3ryixFGckGmoxFxUn
+        AgBn5i3ADgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsVy+t/xe7r/lBXiDabuVbG4cvEQk8XGGetZ
+        LaY+fMJmMf/IOVaL8+c3sFvMOL+PyWLtkbvsFq17j7BbHH7Tzmqx5cxtNgcujw2fm9g8Nq3q
+        ZPNoWb+JzaNvyypGj8+b5AJYo/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV
+        9O1sUlJzMstSi/TtEvQyLl3+xFjwX7biUtt11gbGDrEuRk4OCQETiVePP7B0MXJxCAksZZTY
+        desZkMMBlJCSmN+iBFEjLPHnWhcbRM0nRomeO29YQBJsAoYSvUf7GEFsEQFNiY55t1lBipgF
+        HjJK7D9+HywhLBAqcWH7LWaQoSwCqhJN3WUgYV4Ba4mLk/cwQiyQl1i94QDzBEaeBYwMqxhF
+        UkuLc9Nzi430ihNzi0vz0vWS83M3MQIDdNuxn1t2MHa9Cz7EKMDBqMTDO0NUIV6INbGsuDL3
+        EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxhNgXZPZJYSTc4HRk9eSbyhqaG5haWhubG5
+        sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGCLun90L8vu9WXqyYLHNG82eBduMe3ll8
+        GTVTxZvsLF+y9H4Tcdl4fweHbJLcbeXQolJFx+0Cd+dq8i51imvTZl2f6bKuL1hC/HA6z+vS
+        a45zngVNcV/MJbbDYuYGNm1HdotQgXVeTMx7+Fc2fWuUV2zgyrtl7N9/SdX4koJJ16F3ryI+
+        eyuxFGckGmoxFxUnAgCaSdh+ZgIAAA==
+X-CMS-MailID: 20200728131126eucas1p16365622c52f91104373a2cd3e0ebb619
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200728131126eucas1p16365622c52f91104373a2cd3e0ebb619
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200728131126eucas1p16365622c52f91104373a2cd3e0ebb619
+References: <CGME20200728131126eucas1p16365622c52f91104373a2cd3e0ebb619@eucas1p1.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 2:48 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Wed, Jul 15, 2020 at 10:13:26AM +0100, Lorenzo Pieralisi wrote:
-> > On Thu, Jul 09, 2020 at 10:35:14AM +0100, Lorenzo Pieralisi wrote:
-> > > On Fri, Jun 19, 2020 at 09:20:06AM +0100, Lorenzo Pieralisi wrote:
-> > > > Some HW devices are created as child devices of proprietary busses,
-> > > > that have a bus specific policy defining how the child devices
-> > > > wires representing the devices ID are translated into IOMMU and
-> > > > IRQ controllers device IDs.
-> > > >
-> > > > Current IORT code provides translations for:
-> > > >
-> > > > - PCI devices, where the device ID is well identified at bus level
-> > > >   as the requester ID (RID)
-> > > > - Platform devices that are endpoint devices where the device ID is
-> > > >   retrieved from the ACPI object IORT mappings (Named components single
-> > > >   mappings). A platform device is represented in IORT as a named
-> > > >   component node
-> > > >
-> > > > For devices that are child devices of proprietary busses the IORT
-> > > > firmware represents the bus node as a named component node in IORT
-> > > > and it is up to that named component node to define in/out bus
-> > > > specific ID translations for the bus child devices that are
-> > > > allocated and created in a bus specific manner.
-> > > >
-> > > > In order to make IORT ID translations available for proprietary
-> > > > bus child devices, the current ACPI (and IORT) code must be
-> > > > augmented to provide an additional ID parameter to acpi_dma_configure()
-> > > > representing the child devices input ID. This ID is bus specific
-> > > > and it is retrieved in bus specific code.
-> > > >
-> > > > By adding an ID parameter to acpi_dma_configure(), the IORT
-> > > > code can map the child device ID to an IOMMU stream ID through
-> > > > the IORT named component representing the bus in/out ID mappings.
-> > > >
-> > > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Cc: Will Deacon <will@kernel.org>
-> > > > Cc: Hanjun Guo <guohanjun@huawei.com>
-> > > > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > > > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > > > Cc: Robin Murphy <robin.murphy@arm.com>
-> > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > > ---
-> > > >  drivers/acpi/arm64/iort.c | 59 +++++++++++++++++++++++++++++----------
-> > > >  drivers/acpi/scan.c       |  8 ++++--
-> > > >  include/acpi/acpi_bus.h   |  9 ++++--
-> > > >  include/linux/acpi.h      |  7 +++++
-> > > >  include/linux/acpi_iort.h |  7 +++--
-> > > >  5 files changed, 67 insertions(+), 23 deletions(-)
-> > >
-> > > Hi Rafael,
-> > >
-> > > just to ask if the ACPI core changes in this patch are OK with you,
-> > > thank you very much.
+This patch adds documentation of DT biding for the Midas sound complex.
+Partially based on the *txt version by Simon Shields <simon@lineageos.org>.
 
-Sorry for the delay, I was offline last week.
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+Changes for v3:
+ - change the sound-dai property type in cpu, codec nodes from
+   phandle-array to phandle
 
-> > Hi Rafael,
-> >
-> > are you OK with ACPI core changes in this patch ?
+Changes for v2:
+ - fix wrong *-gpios entries in the example,
+ - mark sound-dai properties as required.
+---
+ .../bindings/sound/samsung,midas-audio.yaml        | 108 +++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
 
-Yes, I am.
+diff --git a/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml b/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+new file mode 100644
+index 0000000..1c755de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/samsung,midas-audio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Midas audio complex with WM1811 codec
++
++maintainers:
++  - Sylwester Nawrocki <s.nawrocki@samsung.com>
++
++properties:
++  compatible:
++    const: samsung,midas-audio
++
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: The user-visible name of this sound complex.
++
++  cpu:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle
++        description: phandle to the I2S controller
++    required:
++      - sound-dai
++
++  codec:
++    type: object
++    properties:
++      sound-dai:
++        $ref: /schemas/types.yaml#/definitions/phandle
++        description: phandle to the WM1811 CODEC
++    required:
++      - sound-dai
++
++  samsung,audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: |
++      List of the connections between audio components; each entry is
++      a pair of strings, the first being the connection's sink, the second
++      being the connection's source; valid names for sources and sinks are
++      the WM1811's pins (as documented in its binding), and the jacks
++      on the board: HP, SPK, Main Mic, Sub Mic, Headset Mic.
++
++  mic-bias-supply:
++    description: Supply for the micbias on the Main microphone
++
++  submic-bias-supply:
++    description: Supply for the micbias on the Sub microphone
++
++  fm-sel-gpios:
++    description: GPIO pin for FM selection
++
++  lineout-sel-gpios:
++    description: GPIO pin for line out selection
++
++required:
++  - compatible
++  - model
++  - cpu
++  - codec
++  - samsung,audio-routing
++  - mic-bias-supply
++  - submic-bias-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    sound {
++        compatible = "samsung,midas-audio";
++        model = "Midas";
++
++        fm-sel-gpios = <&gpaa0 3 GPIO_ACTIVE_HIGH>;
++
++        mic-bias-supply = <&mic_bias_reg>;
++        submic-bias-supply = <&submic_bias_reg>;
++
++        samsung,audio-routing =
++                "HP", "HPOUT1L",
++                "HP", "HPOUT1R",
++
++                "SPK", "SPKOUTLN",
++                "SPK", "SPKOUTLP",
++                "SPK", "SPKOUTRN",
++                "SPK", "SPKOUTRP",
++
++                "RCV", "HPOUT2N",
++                "RCV", "HPOUT2P",
++
++                "IN1LP", "Main Mic",
++                "IN1LN", "Main Mic",
++                "IN1RP", "Sub Mic",
++                "IN1LP", "Sub Mic";
++
++        cpu {
++            sound-dai = <&i2s0>;
++        };
++
++        codec {
++            sound-dai = <&wm1811>;
++        };
++
++    };
+-- 
+2.7.4
 
-Please feel free to route it through whatever tree you think would be
-appropriate.
-
-Thanks!
