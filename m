@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05F5C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52EBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3CF52070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0CE20825
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:14:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJzW4k0L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdDpa7U7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgG1SMG (ORCPT
+        id S1728511AbgG1SOc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
+        Tue, 28 Jul 2020 14:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728163AbgG1SMG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 14:12:06 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EA0C061794;
-        Tue, 28 Jul 2020 11:12:06 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l63so12399847pge.12;
-        Tue, 28 Jul 2020 11:12:06 -0700 (PDT)
+        with ESMTP id S1728050AbgG1SOb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 14:14:31 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE44C061794;
+        Tue, 28 Jul 2020 11:14:31 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id il6so303275pjb.0;
+        Tue, 28 Jul 2020 11:14:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XjLgJ2kx9zASOVgXbtMLwC0IMtJSKoc5t3BdK9GAuJo=;
-        b=AJzW4k0LNMklpfjGajVomvel9jSSofc/qtP22y2foIkQNOWsu9C7dBsOK+HAGQ/kM1
-         K9UyRGpr0XVDlwEoJVrsP2PaF3F+9rVj/YmiVilXx7odzLr/cn9Ki3DZSsj5x7rBRJ4V
-         HrAcXz7r9bz3jM4+SEzsMDo2EBeLhdpPRyfcZOHkrnoemEf+eMNpWyvz9PgY2+8NAmy/
-         695LykbpcjHNNzEgoWT6mcDPEnjik5cx0GezoXzH8qBrQRA9VFgFJGndeEKIA72SqblX
-         vK/m2t7ruYNvpUMoDAFtLalSG/atbDQT6UyUrtXQkFijwhduwhQv2nS67eMnQBjA3qle
-         ApKw==
+        bh=xPfWteNuEXgFZuXXeO7IhILnI3TLTwJdRgXJjFfk1rA=;
+        b=bdDpa7U7HD8JOEPfv+fYkOAfrUoI05RUnLRodD0MfT+cqu0EzyoVAqVRcheORJlBT4
+         gb5P31Cq5sjyRXNDYrOhrRLdBihBwFG4UjeA0VTAkciRLvPXzKi1ab4tehbcNvoMkeuH
+         D9A1tzxxnhZGMYW0/1Mj1rTjFoYM6wNBitFzyB0iUiVLb62UAohSCa6ss8dntrXcSb9V
+         LEHc/obNB2TsOO8/iIpGtSYlwVlDff00I1RRaZj+7kzaZEEPcosPeJtVVfs02OSrxe9Y
+         fe/cv/9EqeW94KkI/Do6oAeGx4AZLAjUiVEe9Ehry9OZ6ixOMKdEGqmexaWoUGL/E6zM
+         +dsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XjLgJ2kx9zASOVgXbtMLwC0IMtJSKoc5t3BdK9GAuJo=;
-        b=cutxH45/FNUkBJTPV5jJBE8olcHEWq6dK0R6f41ifutJEs1zHTlc7A4WMnfGlyY/5s
-         xTLxnYZ3hfz/bhMHPKtwZ4vkkMDjqUa8BL3XJQ9D8hjJMTAeB50kWCDXKB3JHc/0J9Xd
-         F04N4qvpXaax0erqzs2fAyfv9/W6grqCHqBp3fw2iX1SSeWoXMvjJProQS5pNOmlXid8
-         H6ljDYOcWQDq8xWdyokcoQHVx4tDv29nwsScGtB4EGxgDlMST2pW8HlwOUVSWyoLLfFq
-         zR2uhNtFHaS96L01RCVl6PVme3nZkQA6bV/+rmvpJ4BjxfLZpEF2KVZxuw4SbUwubw0g
-         gj8A==
-X-Gm-Message-State: AOAM533ZmtQ3j5xK03Jjbzm4dHH/t5UEA9qs1/LbrI7ghLHIgFFxKC6e
-        ca+B0hcCN8fw6JJce2h6jrN983NxgvzVGDq1ZaQ=
-X-Google-Smtp-Source: ABdhPJyB4lC+0j5ouKy9XkcsTDxBljab2ETqN5PtDotkP5Og0M57wSLtS1cLz8XQBkX/hpCetjA44N3rEjS1Xb3nfqw=
-X-Received: by 2002:a62:7b4e:: with SMTP id w75mr12355913pfc.130.1595959925726;
- Tue, 28 Jul 2020 11:12:05 -0700 (PDT)
+        bh=xPfWteNuEXgFZuXXeO7IhILnI3TLTwJdRgXJjFfk1rA=;
+        b=Fr3MhSVWagH/8dltwDy9Heil4sE/uF1rF48QeKNCLufTF/n2GAMIryM+oRyNafNT5i
+         7/qdnXLBczFEUNN5zk+1uPbi4X1tVZjD8+x2hijB52I+Cm7/DrxU7diV4O4o6sy9aMG8
+         4kFuk2fziD1RTX09KV6kaaEYzjarfpcsDpZq2BnpZI1gYZ7TtdNpqoc74Z23P4Rp3RGr
+         6u8/+N82/aju8/6UZvbeHwisqJ9qOjEAc2asdz+S2qv6VJXL+0V1P04L1lMcNI/mWJBI
+         Z54mtL9MMSAExptZj2A+SeA7yUfas4MlSh0Hem522EJWx/FevQtyVFzmDap9TuBEl1EZ
+         VtdQ==
+X-Gm-Message-State: AOAM533jra/hmAcWisdAh68zSUamPT0HA8X/np7bOIofEnvIrruLev/L
+        ybzEQ/Ybjwup56H4TduHjcOswv43Mg/NM1mwHb8jLPOO+7/Raw==
+X-Google-Smtp-Source: ABdhPJzIfTTUoQm76ap/H9WvznCcQvzCKUmZIaQ8YO4ge1+1fHQen5gj2Bzt1qEDN2kklC6mi1M06d219xg3NvIBQHM=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr5884904pjp.228.1595960071147;
+ Tue, 28 Jul 2020 11:14:31 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.6.I27a5605d9cb3ff643ef040c4ef932a30df9a8fac@changeid>
-In-Reply-To: <20200728091057.6.I27a5605d9cb3ff643ef040c4ef932a30df9a8fac@changeid>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.8.I34c7a1bfca7fe3d607f8876ef9f10c22153556d2@changeid>
+In-Reply-To: <20200728091057.8.I34c7a1bfca7fe3d607f8876ef9f10c22153556d2@changeid>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 21:11:49 +0300
-Message-ID: <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com>
-Subject: Re: [PATCH 06/15] iio: sx9310: Align memory
+Date:   Tue, 28 Jul 2020 21:14:14 +0300
+Message-ID: <CAHp75VfQ5N_EOF7NKUsfuy8c43B1PrvPTaqOpHPRVEO9DPj8kA@mail.gmail.com>
+Subject: Re: [PATCH 08/15] iio: sx9310: Use regmap_read_poll_timeout() for compensation
 To:     Daniel Campello <campello@chromium.org>
 Cc:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -83,30 +83,65 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Tue, Jul 28, 2020 at 6:15 PM Daniel Campello <campello@chromium.org> wrote:
 >
-> Use __aligned(8) to ensure that the timestamp is correctly aligned
-> when we call push_to_buffers
->
+> Simplify compensation stage by using regmap_read_poll_timeout().
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
 > Signed-off-by: Daniel Campello <campello@chromium.org>
 > ---
 >
->  drivers/iio/proximity/sx9310.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/iio/proximity/sx9310.c | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
 >
 > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index de52afd7c13333..fb5c16f2aa6b1a 100644
+> index 2465064971d0a7..3956fd679c6db9 100644
 > --- a/drivers/iio/proximity/sx9310.c
 > +++ b/drivers/iio/proximity/sx9310.c
-> @@ -131,8 +131,8 @@ struct sx9310_data {
->          */
->         bool prox_stat[SX9310_NUM_CHANNELS];
->         bool trigger_enabled;
-> -       __be16 buffer[SX9310_NUM_CHANNELS +
-> -                     4]; /* 64-bit data + 64-bit timestamp */
-> +       /* 64-bit data + 64-bit timestamp buffer */
-> +       __be16 buffer[SX9310_NUM_CHANNELS + 4] __aligned(8);
+> @@ -796,7 +796,7 @@ static const struct sx9310_reg_default sx9310_default_regs[] = {
+>  static int sx9310_init_compensation(struct iio_dev *indio_dev)
+>  {
+>         struct sx9310_data *data = iio_priv(indio_dev);
+> -       int i, ret;
+> +       int ret;
+>         unsigned int val;
+>         unsigned int ctrl0;
+>
+> @@ -810,22 +810,17 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
+>         if (ret < 0)
+>                 return ret;
+>
+> -       for (i = 100; i >= 0; i--) {
+> -               msleep(20);
+> -               ret = regmap_read(data->regmap, SX9310_REG_STAT1, &val);
+> -               if (ret < 0)
+> -                       goto out;
+> -               if (!(val & SX9310_COMPSTAT_MASK))
+> -                       break;
+> -       }
+> -
+> -       if (i < 0) {
+> -               dev_err(&data->client->dev,
+> -                       "initial compensation timed out: 0x%02x", val);
+> -               ret = -ETIMEDOUT;
+> +       ret = regmap_read_poll_timeout(data->regmap, SX9310_REG_STAT1, val,
+> +                                      !(val & SX9310_REG_STAT1_COMPSTAT_MASK),
+> +                                      20000, 2000000);
+> +       if (ret) {
+> +               if (ret == -ETIMEDOUT)
+> +                       dev_err(&data->client->dev,
+> +                               "0x02 << 3l compensation timed out: 0x%02x",
+> +                               val);
+> +               return ret;
+>         }
+>
+> -out:
+>         regmap_write(data->regmap, SX9310_REG_PROX_CTRL0, ctrl0);
+>         return ret;
+>  }
+> --
+> 2.28.0.rc0.142.g3c755180ce-goog
+>
 
-If the data amount (channels) is always the same, please, use struct approach.
-Otherwise put a comment explaining dynamic data.
 
 -- 
 With Best Regards,
