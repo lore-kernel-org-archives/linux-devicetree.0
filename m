@@ -4,97 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5742C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5A4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 971352070B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA682177B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgG1HdZ (ORCPT
+        id S1727062AbgG1Heo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:33:25 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:59395 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgG1HdY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 03:33:24 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M5wY1-1jstSr2c6V-007SDZ; Tue, 28 Jul 2020 09:33:22 +0200
-Received: by mail-qk1-f182.google.com with SMTP id d14so17758976qke.13;
-        Tue, 28 Jul 2020 00:33:22 -0700 (PDT)
-X-Gm-Message-State: AOAM532BQ+s5ICG6L12NLE9Hs+FfQYc0wbilyCn6Kwj4XGW6/2v/5AcH
-        Dwo0TOcF9S2lstanQijrSzHQk+6iP+WkYWCa890=
-X-Google-Smtp-Source: ABdhPJyH+gWHXjrGEuHOeWvO276kXhceg1tMppa3WwG/C7HXdHfY+pk3TGktoWb4j9eUkwKsfNI2wnx9708ArU04HS8=
-X-Received: by 2002:a37:b942:: with SMTP id j63mr12955439qkf.138.1595921601417;
- Tue, 28 Jul 2020 00:33:21 -0700 (PDT)
+        Tue, 28 Jul 2020 03:34:44 -0400
+Received: from mailout08.rmx.de ([94.199.90.85]:37971 "EHLO mailout08.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727034AbgG1Heo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 03:34:44 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout08.rmx.de (Postfix) with ESMTPS id 4BG7jX4GPwzMpPp
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 09:34:40 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BG7jT6ptFz2xjY
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 09:34:37 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.112) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 28 Jul
+ 2020 09:34:36 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: at25: fix syntax error in example code
+Date:   Tue, 28 Jul 2020 09:34:36 +0200
+Message-ID: <797979108.27KzEp727H@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <CAL_Jsq+jJFNQmxnXeA1HmBhM4aUH-qspdTCSRVvEfh0OVDF+DQ@mail.gmail.com>
+References: <20200727100505.23908-1-ceggers@arri.de> <CAL_Jsq+jJFNQmxnXeA1HmBhM4aUH-qspdTCSRVvEfh0OVDF+DQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200626080642.4244-1-krzk@kernel.org> <20200728143650.32818d3c@xhacker.debian>
-In-Reply-To: <20200728143650.32818d3c@xhacker.debian>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 28 Jul 2020 09:33:05 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
-Message-ID: <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: berlin: Align L2 cache-controller nodename with dtschema
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, SoC Team <soc@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:KC+4x0xayWr25E4c58DHjwTtcrQ/oG63hi4Ypr6VRrcziXCQJDu
- ceUoZfQuoucqHFJxB7NwxCZOtdLgXZycTOd6eVEVBW4rTGNqXh2B2jIAUl6KxZpk6wXUD0a
- 1Nyity52Cep2K4IQ7gF4vsvTHn4DXltoJtozIDT+XfdnIkuzfFxQ8vlWuCNnYfv89s9WUmy
- cnT2t9MJQMFShc4N/Dg+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0fLPHurEOpY=:BaNYWA0+5811ripqKSxdCe
- 6/S66Kj94Y2wM8os4wJ6JEXkKFzMwDDKD+lVmrT3Gjf+GWbcLxHVEamVhfwP47gE69sG3C99R
- o5RoHxuCreDK+4FR+wkEIElIycYtdSJJtVf2INXuB4vxFIoRTFCHv41W71feWBS3Et/2F7xxe
- jDBlHgH4BL10MXAYiXnmsFYnrOSQeulTVmyGXTUieYkGR1duceuU0SEiO7yLU6bKwDJ8Cu6nT
- m0zEl4gjskqY4HSbvmQjH3h2jv0t0cWAyHhJTgUi0z2eB5AVALinvUGsK4w2QYRnMVm8UCjH0
- OZdTghrhnvlamKAP4UDILWtV3dUBnHHN1PdCqHNO6HwMYnXWBWh1atZMer3/0F7kYFpMrC4IJ
- LfPFb9KBZvfFGd1zXVySrFcDh3hGhBv6u1errfSFiJmksX9IvJZ9xVt9w3bxfpmgm/MIWTtt+
- Rp5/82ioNoYianyB6Lvh8qpe5QwLwPcv2luRVF2B206IydYxFetqfR7kKO6yKIA7J/k0FmJ0P
- cYx8MDaRFf0QguSSmQnOt3HzWiHiHjkelb1elTu7Txso8wvSnSwIrkyBAfC29fOAabvnYJ8kA
- vb5uDMUQPqSfP0wBumOtLc6Y36mIowuC5DmVD4shoNmtDGqujX0R/X3UOMmoHRdLOU2JakWDR
- +16nXo34E5p5/RWFNVWl1FCsALRLoGs5BwRX1fcr79m06z7OCTp2IHzqhyREJiYkLxsOeSFIK
- GOgrwFaD1+2LV7nyUebRxze5MF2Vlv4UTd9bQeo4H4JlouVS6bfaf/7C/rAsh9cLBi7D61hvD
- QLbgACCREmKsSjoLzqK6G9DKEPVWeghf3Zlcqb97MD+a2peo8fn1PHwTlyIUgHIwZMRk4wC
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.112]
+X-RMX-ID: 20200728-093437-4BG7jT6ptFz2xjY-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 8:37 AM Jisheng Zhang
-<Jisheng.Zhang@synaptics.com> wrote:
->
-> Hi arm-soc,
->
->
-> On Fri, 26 Jun 2020 10:06:41 +0200 Krzysztof Kozlowski wrote:
->
-> >
-> >
-> > Fix dtschema validator warnings like:
-> >     l2-cache-controller@ac0000: $nodename:0:
-> >         'l2-cache-controller@ac0000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Reviewed-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
->
-> As for berlin linux-5.9, we only have this one patch, could you please
-> directly take this patch?
+On Monday, 27 July 2020, 19:56:59 CEST, Rob Herring wrote:
+> On Mon, Jul 27, 2020 at 4:05 AM Christian Eggers <ceggers@arri.de> wrote:
+> > Add missing semicolon.
+> > 
+> > Signed-off-by: Christian Eggers <ceggers@arri.de>
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/eeprom/at25.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> At this point, I'd prefer to see this converted to schema instead of
+> trivial fixes. Then the tooling will catch these syntax errors.
+> 
+While trying to convert the at25 binding to yaml, I ran into the following problem:
 
-Applied now. To ensure we actually see the patch, it's better if you can just
-send a new copy with your added Signed-off-by to soc@kernel.org than to
-reply to the original email.
+> Required properties:
+> - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
+> 
+>   Example "<vendor>,<type>" values:
+>     "anvo,anv32e61w"
+>     "microchip,25lc040"
+>     "st,m95m02"
+>     "st,m95256"
 
-Thanks,
+The current binding uses arbitrary values for the compatible string,
+only "atmel,at25" is really known by the driver. All other hardware related
+settings are provided as separate properties.
 
-     Arnd
+When I specify
+
+  compatible:
+    enum:
+      - atmel,at25
+
+I get an error in dt_binding_check:
+
+Documentation/devicetree/bindings/eeprom/at25.example.dt.yaml: eeprom@0: compatible: Additional items are not allowed ('atmel,at25' was unexpected)
+Documentation/devicetree/bindings/eeprom/at25.example.dt.yaml: eeprom@0: compatible:0: 'st,m95256' is not one of ['atmel,at25']
+Documentation/devicetree/bindings/eeprom/at25.example.dt.yaml: eeprom@0: compatible: ['st,m95256', 'atmel,at25'] is too long
+
+How to handle this correctly?
+
+regards
+Christian
+
+
