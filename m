@@ -2,164 +2,248 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE67AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80294C433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B4A20656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5584622CA1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BloFnMYM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlfx3Hvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgG1ILI (ORCPT
+        id S1727922AbgG1IPO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:11:08 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:54328 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727856AbgG1ILH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 04:11:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595923866; x=1627459866;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=4348zSQswPRrH20ua261huy5XthZgYClc7uZbxDiXss=;
-  b=BloFnMYMDUNlfRnyraH1QD+B6QqXi8D6yahBhbSmU7Rn6rIygDFoutO6
-   u1gubUlWHJP1Nin5KJrdtPf24tUGu5NToQD25fMw054axTMYuZl2kI5pb
-   jG+LomAq41K4p9G0e52b5IcxrrgETbmBvnyjZrxu4v7Kh+ZjsnRxb2wDE
-   SjorAN/XwUkGjjQlCs4yRK9NFYGjG6VOANWb2UVxq0NFH1v5+WTfUmxnk
-   Qg+lvl3vqRSVFZhQ/1bPN/FUYpqs0deGPsE3wPMmkYsj9Tnly3VftLlYE
-   3U45BDPl1ZTaSLzdQvm8UrvjMjs0gwcdG3sWupJYIV6ZuDdlI2jeYSJiq
-   w==;
-IronPort-SDR: u0DQ0eKwBMew6XCiVSZ6TNgz94sf4p5fEp5KHy8R4066+bkamL02aFIDa/PnprqNt7eLr68+0O
- bdwaZdRFNX3d+PZCspEgWoLORjBExQfhW1PLxMGaME/1kwbkmFz8kyYFa9qIp3tufYwjk+pPtN
- yA1WkCcvGJwbSgD2GHiaHUjIV/LjQK2/8u8bNmSJdo3H8SmAWPfolmFlnNV80IoZpcshXAYiPe
- q7Cms7O27/x1xxDD5OZksFJvaZIS2LZWhn70jtDPdXSklcadkY8v3um+VybJnSOzHzkwoVqZR1
- 3LQ=
-X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
-   d="scan'208";a="83485204"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jul 2020 01:11:06 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 28 Jul 2020 01:10:19 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Tue, 28 Jul 2020 01:11:03 -0700
-References: <20200724111404.13293-1-lars.povlsen@microchip.com> <20200724111404.13293-5-lars.povlsen@microchip.com> <20200727203847.GA782308@bogus>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v4 4/6] dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus rx-sample-delay-ns property
-In-Reply-To: <20200727203847.GA782308@bogus>
-Date:   Tue, 28 Jul 2020 10:11:02 +0200
-Message-ID: <87sgdcf4a1.fsf@soft-dev15.microsemi.net>
+        Tue, 28 Jul 2020 04:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgG1IPN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 04:15:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C37C0619D7
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 01:15:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a14so17374772wra.5
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 01:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=HvwG2XGS6BDybxzaDD/+TuGAKBON3irqrqJCB9747RQ=;
+        b=xlfx3HvuSB0z5GqSk3Qy6MOhKencPFggfCX8hujwu/RDWI/B7jZFJe06PSK7DC1Ssx
+         dEepVkCzLe6s8V+lH6GirW/mRTJKmhk6c2/3CEefSxa1CHXXvTMtYWGTVsITPhwpBdyC
+         WJNtfWmkqvyaKoi3YA6pcFiJ07zI7lOAij4CpBfYTMN9v0amx/QgmB2ZMmTx7ka9M8Ul
+         XWsw7ELJwLkLs8POxJOA5yZjZHraPZpoR1/5p8Kq+dIS1ikdFR6g4ru3FNnb8WZf9m2m
+         9boRgLly3U5/fL5YqILefz1/moUHuZkSfLiE4f8IvsC3wdMHg1ixjCMqK+NfGRm/FPu4
+         aoLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HvwG2XGS6BDybxzaDD/+TuGAKBON3irqrqJCB9747RQ=;
+        b=NcNbKaj5s5CNjDYW5vRu47eTdqksY3ai/Q5MYREi9RSiO7frS477QanoLpR5h/PEuV
+         BpVVbNcFPZDD1+Y/YKjAz3U9iD4zujD3+hzFWq3mv4RU+ccIggX3/QxNMceRoY9yw06u
+         gZYsumLNL2+EglwHddvcApTe2zNx4LzNyeKOFT1rkTic47IWWWxGAxNwatWIbDOs8Oa6
+         drwQBt8k04zAmJUSmZwmkbnZuQGmg2qvFA6vVjdY+Io9pGRAg/LKqFpeBfD/zDTRqrRD
+         Akxnsxtz3AkE4sTpTYU/H38Btv4y22fnKKDWxd3hTk5b6sonF+grvYkLhRWe0vKTx8e1
+         l10Q==
+X-Gm-Message-State: AOAM533LBy1Hk9PYL8G9XYypvnqama8jVCY6VOyVN//ZbFjrCZqL7C2d
+        LrLM6pzQ8QU9lSajp8v9pFqpgA==
+X-Google-Smtp-Source: ABdhPJyEBmzjP5p5bqlnkhXS1LyF2jze2TsaWelEULtD2Qvk55SkGf3FY3CVzhFz57n6yU7y/EsR2A==
+X-Received: by 2002:adf:eccc:: with SMTP id s12mr26590888wro.157.1595924108740;
+        Tue, 28 Jul 2020 01:15:08 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id p6sm2982576wmg.0.2020.07.28.01.15.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 01:15:08 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 09:15:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 01/13] mfd: add simple regmap based I2C driver
+Message-ID: <20200728081506.GA2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-2-michael@walle.cc>
+ <20200728071949.GE1850026@dell>
+ <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <23a9ecf5fe4f15b9b20a91cc292aca80@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, 28 Jul 2020, Michael Walle wrote:
 
-Rob Herring writes:
+> Am 2020-07-28 09:19, schrieb Lee Jones:
+> > On Sun, 26 Jul 2020, Michael Walle wrote:
+> > 
+> > > There are I2C devices which contain several different functions but
+> > > doesn't require any special access functions. For these kind of
+> > > drivers
+> > > an I2C regmap should be enough.
+> > > 
+> > > Create an I2C driver which creates an I2C regmap and enumerates its
+> > > children. If a device wants to use this as its MFD core driver, it has
+> > > to add an individual compatible string. It may provide its own regmap
+> > > configuration.
+> > > 
+> > > Subdevices can use dev_get_regmap() on the parent to get their regmap
+> > > instance.
+> > > 
+> > > Signed-off-by: Michael Walle <michael@walle.cc>
+> > > ---
+> > > Changes since v5:
+> > >  - removed "select MFD_CORE" in Kconfig
+> > >  - removed help text in Kconfig, we assume that the users of this
+> > 
+> > That's the opposite of what I asked for.
+> 
+> What is the use to describe the symbol, if it is not user selectable?
+> I'm not aware this is done anywhere in the kernel, am I missing
+> something?
 
-> On Fri, Jul 24, 2020 at 01:14:02PM +0200, Lars Povlsen wrote:
->> This has the following changes for the snps,dw-apb-ss DT bindings:
->>
->> - Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
->>   controller
->>
->> - Add the property "rx-sample-delay-ns"
->>
->> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
->> ---
->>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 21 +++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->> index c62cbe79f00dd..c0adaad1aa695 100644
->> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->> @@ -36,6 +36,8 @@ properties:
->>                - mscc,ocelot-spi
->>                - mscc,jaguar2-spi
->>            - const: snps,dw-apb-ssi
->> +      - description: Microchip Sparx5 SoC SPI Controller
->> +        const: microchip,sparx5-spi
->>        - description: Amazon Alpine SPI Controller
->>          const: amazon,alpine-dw-apb-ssi
->>        - description: Renesas RZ/N1 SPI Controller
->> @@ -93,6 +95,12 @@ properties:
->>        - const: tx
->>        - const: rx
->>
->> +  rx-sample-delay-ns:
->> +    description: Default value of the rx-sample-delay-ns property.
->> +      This value will be used if the property is not explicitly defined
->> +      for a SPI slave device. Default value is 0. See below.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->
-> Don't need a type for properties with unit suffixes.
->
-> Also, add:
->
-> 'default: 0'
->
+You mean in menuconfig?
 
-Hi Rob!
+I find 'help's helpful even outside of menuconfig.
 
-Thank you for your input, all duly noted.
+Surely I'm not the only one who reads them 'raw'?
 
----Lars
+> > >    driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
+> > >    a small description to the driver itself.
+> > >  - removed "struct simple_mfd_i2c_config" and use regmap_config
+> > >    directly
+> > >  - changed builtin_i2c_driver() to module_i2c_driver(), added
+> > >    MODULE_ boilerplate
+> > >  - cleaned up the included files
+> > > 
+> > > Changes since v4:
+> > >  - new patch. Lee, please bear with me. I didn't want to delay the
+> > >    new version (where a lot of remarks on the other patches were
+> > >    addressed) even more, just because we haven't figured out how
+> > >    to deal with the MFD part. So for now, I've included this one.
+> > > 
+> > >  drivers/mfd/Kconfig          |  5 ++++
+> > >  drivers/mfd/Makefile         |  1 +
+> > >  drivers/mfd/simple-mfd-i2c.c | 55
+> > > ++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 61 insertions(+)
+> > >  create mode 100644 drivers/mfd/simple-mfd-i2c.c
+> > > 
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 33df0837ab41..c08539c7a166 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -1162,6 +1162,11 @@ config MFD_SI476X_CORE
+> > >  	  To compile this driver as a module, choose M here: the
+> > >  	  module will be called si476x-core.
+> > > 
+> > > +config MFD_SIMPLE_MFD_I2C
+> > > +	tristate
+> > > +	depends on I2C
+> > > +	select REGMAP_I2C
+> > 
+> > Please provide a full help.
+> 
+> See above.
+> 
+> > 
+> > >  config MFD_SM501
+> > >  	tristate "Silicon Motion SM501"
+> > >  	depends on HAS_DMA
+> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > index a60e5f835283..78d24a3e7c9e 100644
+> > > --- a/drivers/mfd/Makefile
+> > > +++ b/drivers/mfd/Makefile
+> > > @@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> > >  obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+> > > 
+> > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> > > +obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
+> > > diff --git a/drivers/mfd/simple-mfd-i2c.c
+> > > b/drivers/mfd/simple-mfd-i2c.c
+> > > new file mode 100644
+> > > index 000000000000..45090ddad104
+> > > --- /dev/null
+> > > +++ b/drivers/mfd/simple-mfd-i2c.c
+> > > @@ -0,0 +1,55 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * A very simple I2C MFD driver
+> > 
+> > Simple MFD - I2C
+> 
+> ok.
+> 
+> > > + * The driver enumerates its children and registers a common
+> > > regmap. Use
+> > > + * dev_get_regmap(pdev->dev.parent, NULL) in the child nodes to
+> > > fetch that
+> > > + * regmap instance.
+> > 
+> > This driver creates a single register map with the intention for it to
+> > be shared by all sub-devices.  Children can use their parent's device
+> > structure (dev.parent) in order reference it.
+> 
+> Should this be appended or should it replace my paragraph? If its the
+> latter,
+> the "enumeration of the children" is missing.
 
->> +
->>  patternProperties:
->>    "^.*@[0-9a-f]+$":
->>      type: object
->> @@ -107,6 +115,13 @@ patternProperties:
->>        spi-tx-bus-width:
->>          const: 1
->>
->> +      rx-sample-delay-ns:
->> +        description: SPI Rx sample delay offset, unit is nanoseconds.
->> +          The delay from the default sample time before the actual
->> +          sample of the rxd input signal occurs. The "rx_sample_delay"
->> +          is an optional feature of the designware controller, and the
->> +          upper limit is also subject to controller configuration.
->> +
->>  unevaluatedProperties: false
->>
->>  required:
->> @@ -129,5 +144,11 @@ examples:
->>        num-cs = <2>;
->>        cs-gpios = <&gpio0 13 0>,
->>                   <&gpio0 14 0>;
->> +      rx-sample-delay-ns = <3>;
->> +      spi-flash@1 {
->> +        compatible = "spi-nand";
->> +        reg = <1>;
->> +        rx-sample-delay-ns = <7>;
->> +      };
->>      };
->>  ...
->> --
->> 2.27.0
->>
+If you want to keep that part, try:
+
+This driver creates a single register map with the intention for it to
+be shared by all sub-devices.  Children can use their parent's device
+structure (dev.parent) in order reference it.
+
+Once the register map has been successfully initialised, any
+sub-devices represented by child nodes in Device Tree will be
+subsequently registered.
+
+> > > + * In the future this driver might be extended to support also
+> > > other interfaces
+> > > + * like SPI etc.
+> > 
+> > Remove this please.
+> 
+> Why would you remove information about the intention of this driver? If
+> someone
+> looks for a place to implement its SPI/I3C/Slimbus MFD driver this might
+> come
+> in handy.
+
+By all means put something similar in the commit log, but it has no
+place in the driver itself.  Besides, if we were to add support for
+SPI, it is likely to be a completely separate/unrelated driver.
 
 -- 
-Lars Povlsen,
-Microchip
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
