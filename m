@@ -2,1002 +2,282 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F88C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 10:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F01C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 10:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF5C20792
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 10:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A9020792
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 10:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wwtA/dNH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWtVLdfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgG1KMt (ORCPT
+        id S1728491AbgG1KZW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:12:49 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:58054 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728445AbgG1KMt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 06:12:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595931168; x=1627467168;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gA09eDITk9lz6oD6qpT6jl6wNxnxJFvH9YVWgduWI7U=;
-  b=wwtA/dNH77Yp0MPwuMNSD0+x1ilRX2+Z1k4PZOKWmbfuc5X/TY7DtjKN
-   DXpyGKRGeg8za/szD3e6uoNFOH4nF+Lq4WXBXpYRPaiPdPmWBvr6/dXZI
-   d75OGaTGB+7mB+SirWIMC6cqJiELMiUw0kwcSw9Ufvo6N6fndUON5uXIz
-   +SKC1xhtU58qoDy8P3egFr/BCpCgfqP2lLoHpkgXGCXvVVD907U84OEYa
-   iH6DRu+BiyE1d94qMCHnQH992zswLzlrGewYJpD9uMN44Peub6e4xcygm
-   bXaNIaao5a+2FDN8QeDIZJ6rrCEpRH+THBwB9/Q4YRSS5QaDsD7Z7mryN
-   Q==;
-IronPort-SDR: 0F203wyJBtkammrcPBvzmzSquoLA2Le3FuICeVM8y145SvSVzZrdiPyIsDrtq0977GfL+YpwHy
- b3+7jvfhIcd7HPsEVkrmFT3QcFM78CVs2mZca0RzC7Frkl65qt+MxY7rwf31E24CNz/uB7Ljl7
- GR4a0mUz9DSKac8gLqCE+QulZq3vPaQDFP8tgbnGuBDHcqbZkI6Y3jJU3d1IKz8bV/QuU/4Lq5
- hlWmAGUpmb1pscS1Iqr9N/fmX9HanWjPWcKkHwg70BY2I89aSMcWtwk2fVgQsF671adOjnwLdW
- TtU=
-X-IronPort-AV: E=Sophos;i="5.75,406,1589266800"; 
-   d="scan'208";a="85607383"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jul 2020 03:12:47 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 28 Jul 2020 03:12:46 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 28 Jul 2020 03:11:58 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <perex@perex.cz>, <tiwai@suse.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 2/2] ASoC: mchp-spdiftx: add driver for S/PDIF TX Controller
-Date:   Tue, 28 Jul 2020 13:07:44 +0300
-Message-ID: <20200728100744.2820112-2-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200728100744.2820112-1-codrin.ciubotariu@microchip.com>
-References: <20200728100744.2820112-1-codrin.ciubotariu@microchip.com>
+        Tue, 28 Jul 2020 06:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbgG1KZV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 06:25:21 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C32BC061794;
+        Tue, 28 Jul 2020 03:25:21 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id k22so17030573oib.0;
+        Tue, 28 Jul 2020 03:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c9eDEWn1oEoc77W2XMgWcgmmSn3pQA5mrUEY8YypgbM=;
+        b=lWtVLdfRXKLA0oafpiA7O2552zaBd438hBmjbAkSLj2O9mYcpWWFoSJEsXmZqn6Tvk
+         pNQ2x8Gr6+QPnxUd7JYB6ZFYmXjDQ6U/PKiGujZ43GO06+F8+wz2HSehaqn9VnSwdNdz
+         B0nkkdpOTNaYWpfTuRyC0J6rVUscABWPvy1FXcOcTPdo6xIMpVuWK6PYhBb0hsnCz93v
+         HQiEjjPFf0LDn4rvdSwrf4zpDq/ofqsh8FUWb/4msViF1TXcdKsKpus68w2RXEp33+K/
+         eLn4rjz48ppidlmY11a4xuD4kKzJwI4Jn52t7Glw0Mfu/hjOnvap9T2HKRn9Urcf/zqt
+         ikDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c9eDEWn1oEoc77W2XMgWcgmmSn3pQA5mrUEY8YypgbM=;
+        b=X6ZznwkT1j+NQKYOTM4q5m7bfB3qdHPFRz2cNt1TfgWFerCbFFLexeOQ7Rmm5QDD6F
+         ZTbFlgx01j+TbLq9mfhz3yjojF3rvDVnwfsZtVz/avKGFXsS1Ix8GT+ZtRzl+lAiFiCO
+         icOCTjUcFse946HXrO4Tb5pv66OHIhMEZ8zsYZRiLlqZXkMLKTcyTswR7/p9gdnwS5F1
+         E8mj0k5clzsKQz/g1sbnwNfu3ZZrQxi6KBA44c8Kacm5P40IMa/X7lIa55pXFkFT6wrA
+         O76IBExXzsZkpurIZ+RHy5wVSsfwLLS/bmzeeq7aSM1AyLVJTwOJURv5FlLnmdZ6fDvs
+         ZJdQ==
+X-Gm-Message-State: AOAM533yPjXbKHvZ7HTTDc/Cys0RLrJNazh7pBeum8QxO/VR5aPmOk8a
+        inhN74x2up5M7FMUWI/OiiFPmhQsuFoTsE32BNg=
+X-Google-Smtp-Source: ABdhPJzQ5HZKTcRLoUciu8PdxQvObJp/E6hTnZ1nO7O2D46wmPBVRBbL0JFWuUmbkGTLGTYHLQPqQtDuyN6QViIforY=
+X-Received: by 2002:aca:5296:: with SMTP id g144mr2841338oib.129.1595931920837;
+ Tue, 28 Jul 2020 03:25:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1595469798-3824-3-git-send-email-yongqiang.niu@mediatek.com>
+ <CAFqH_51sKR-tUHhdJs4N5KaGq-4+oFsAOhZsJqpFk0ikZjJ=mg@mail.gmail.com> <1595647675.13250.18.camel@mhfsdcap03>
+In-Reply-To: <1595647675.13250.18.camel@mhfsdcap03>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Tue, 28 Jul 2020 12:25:09 +0200
+Message-ID: <CAFqH_52KOJx-80z4Jx2f_Hp9UVH3zrtk5VaJD1nE8OUY-St4YA@mail.gmail.com>
+Subject: Re: [v7, PATCH 2/7] mtk-mmsys: add mmsys private data
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The new SPDIF TX controller is a serial port compliant with the IEC-
-60958 standard. It also supports programmable User Data and Channel
-Status fields.
+Hi Yongqiang,
 
-This IP is embedded in Microchip's sama7g5 SoC.
+Missatge de Yongqiang Niu <yongqiang.niu@mediatek.com> del dia ds., 25
+de jul. 2020 a les 5:29:
+>
+> On Thu, 2020-07-23 at 11:32 +0200, Enric Balletbo Serra wrote:
+> > Hi Yongqiang Niu,
+> >
+> > Thank you for your patch.
+> >
+> > Missatge de Yongqiang Niu <yongqiang.niu@mediatek.com> del dia dj., 23
+> > de jul. 2020 a les 4:05:
+> > >
+> > > add mmsys private data
+> > >
+> >
+> > I think this change requires a better explanation of what you are
+> > doing. Although I'm really uncomfortable with this change, why you
+> > need to create a new mt2701-mmsys file?
+>
+> reason:
+> 1.there will more and more Mediatek Soc upstream, and the display path
+> connection function mtk_mmsys_ddp_mout_en, mtk_mmsys_ddp_sel_in and
+> mtk_mmsys_ddp_sout_sel will complicated more and more,
+> 2. many of the connection are only used in some SoC, and useless for
+> other SoC and not readable,
+> 3. if we add a new SoC connection, we need check is this affect other
+> Soc,
+> >
+> > > Feature: drm/mediatek
+> >
+> > Remove this.
+> next version will remove this
+> >
+> > > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> > > ---
+> > >  drivers/soc/mediatek/Makefile             |   1 +
+> > >  drivers/soc/mediatek/mmsys/Makefile       |   2 +
+> > >  drivers/soc/mediatek/mmsys/mt2701-mmsys.c | 250 +++++++++++++++++++++++++++
+> > >  drivers/soc/mediatek/mtk-mmsys.c          | 271 +++++-------------------------
+> > >  include/linux/soc/mediatek/mtk-mmsys.h    |  15 ++
+> > >  5 files changed, 314 insertions(+), 225 deletions(-)
+> > >  create mode 100644 drivers/soc/mediatek/mmsys/Makefile
+> > >  create mode 100644 drivers/soc/mediatek/mmsys/mt2701-mmsys.c
+> > >
+> > > diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+> > > index 2afa7b9..b37ac2c 100644
+> > > --- a/drivers/soc/mediatek/Makefile
+> > > +++ b/drivers/soc/mediatek/Makefile
+> > > @@ -3,3 +3,4 @@ obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
+> > >  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
+> > >  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
+> > >  obj-$(CONFIG_MTK_MMSYS) += mtk-mmsys.o
+> > > +obj-$(CONFIG_MTK_MMSYS) += mmsys/
+> > > diff --git a/drivers/soc/mediatek/mmsys/Makefile b/drivers/soc/mediatek/mmsys/Makefile
+> > > new file mode 100644
+> > > index 0000000..33b0dab
+> > > --- /dev/null
+> > > +++ b/drivers/soc/mediatek/mmsys/Makefile
+> > > @@ -0,0 +1,2 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > +obj-y += mt2701-mmsys.o
+> > > diff --git a/drivers/soc/mediatek/mmsys/mt2701-mmsys.c b/drivers/soc/mediatek/mmsys/mt2701-mmsys.c
+> > > new file mode 100644
+> > > index 0000000..b8e53b0
+> > > --- /dev/null
+> > > +++ b/drivers/soc/mediatek/mmsys/mt2701-mmsys.c
+> > > @@ -0,0 +1,250 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +//
+> > > +// Copyright (c) 2020 MediaTek Inc.
+> > > +
+> > > +#include <linux/device.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/of_device.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/soc/mediatek/mtk-mmsys.h>
+> > > +
+> > > +#define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN      0x040
+> > > +#define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN      0x044
+> > > +#define DISP_REG_CONFIG_DISP_OD_MOUT_EN                0x048
+> > > +#define DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN     0x04c
+> > > +#define DISP_REG_CONFIG_DISP_UFOE_MOUT_EN      0x050
+> > > +#define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN     0x084
+> > > +#define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN     0x088
+> > > +#define DISP_REG_CONFIG_DSIE_SEL_IN            0x0a4
+> > > +#define DISP_REG_CONFIG_DSIO_SEL_IN            0x0a8
+> > > +#define DISP_REG_CONFIG_DPI_SEL_IN             0x0ac
+> > > +#define DISP_REG_CONFIG_DISP_RDMA2_SOUT                0x0b8
+> > > +#define DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN     0x0c4
+> > > +#define DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN     0x0c8
+> > > +#define DISP_REG_CONFIG_MMSYS_CG_CON0          0x100
+> > > +
+> > > +#define DISP_REG_CONFIG_DISP_OVL_MOUT_EN       0x030
+> > > +#define DISP_REG_CONFIG_OUT_SEL                        0x04c
+> > > +#define DISP_REG_CONFIG_DSI_SEL                        0x050
+> > > +#define DISP_REG_CONFIG_DPI_SEL                        0x064
+> > > +
+> > > +#define OVL0_MOUT_EN_COLOR0                    0x1
+> > > +#define OD_MOUT_EN_RDMA0                       0x1
+> > > +#define OD1_MOUT_EN_RDMA1                      BIT(16)
+> > > +#define UFOE_MOUT_EN_DSI0                      0x1
+> > > +#define COLOR0_SEL_IN_OVL0                     0x1
+> > > +#define OVL1_MOUT_EN_COLOR1                    0x1
+> > > +#define GAMMA_MOUT_EN_RDMA1                    0x1
+> > > +#define RDMA0_SOUT_DPI0                                0x2
+> > > +#define RDMA0_SOUT_DPI1                                0x3
+> > > +#define RDMA0_SOUT_DSI1                                0x1
+> > > +#define RDMA0_SOUT_DSI2                                0x4
+> > > +#define RDMA0_SOUT_DSI3                                0x5
+> > > +#define RDMA1_SOUT_DPI0                                0x2
+> > > +#define RDMA1_SOUT_DPI1                                0x3
+> > > +#define RDMA1_SOUT_DSI1                                0x1
+> > > +#define RDMA1_SOUT_DSI2                                0x4
+> > > +#define RDMA1_SOUT_DSI3                                0x5
+> > > +#define RDMA2_SOUT_DPI0                                0x2
+> > > +#define RDMA2_SOUT_DPI1                                0x3
+> > > +#define RDMA2_SOUT_DSI1                                0x1
+> > > +#define RDMA2_SOUT_DSI2                                0x4
+> > > +#define RDMA2_SOUT_DSI3                                0x5
+> > > +#define DPI0_SEL_IN_RDMA1                      0x1
+> > > +#define DPI0_SEL_IN_RDMA2                      0x3
+> > > +#define DPI1_SEL_IN_RDMA1                      (0x1 << 8)
+> > > +#define DPI1_SEL_IN_RDMA2                      (0x3 << 8)
+> > > +#define DSI0_SEL_IN_RDMA1                      0x1
+> > > +#define DSI0_SEL_IN_RDMA2                      0x4
+> > > +#define DSI1_SEL_IN_RDMA1                      0x1
+> > > +#define DSI1_SEL_IN_RDMA2                      0x4
+> > > +#define DSI2_SEL_IN_RDMA1                      (0x1 << 16)
+> > > +#define DSI2_SEL_IN_RDMA2                      (0x4 << 16)
+> > > +#define DSI3_SEL_IN_RDMA1                      (0x1 << 16)
+> > > +#define DSI3_SEL_IN_RDMA2                      (0x4 << 16)
+> > > +#define COLOR1_SEL_IN_OVL1                     0x1
+> > > +
+> > > +#define OVL_MOUT_EN_RDMA                       0x1
+> > > +#define BLS_TO_DSI_RDMA1_TO_DPI1               0x8
+> > > +#define BLS_TO_DPI_RDMA1_TO_DSI                        0x2
+> > > +#define DSI_SEL_IN_BLS                         0x0
+> > > +#define DPI_SEL_IN_BLS                         0x0
+> > > +#define DSI_SEL_IN_RDMA                                0x1
+> > > +
+> > > +static unsigned int mtk_mmsys_ddp_mout_en(enum mtk_ddp_comp_id cur,
+> > > +                                         enum mtk_ddp_comp_id next,
+> > > +                                         unsigned int *addr)
+> > > +{
+> >
+> > Can't be reused this function for all devices? You did in the previous
+> > series, why not now?
+>
+> can not reused, that why need add mmsys private data like before
+> version.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- sound/soc/atmel/Kconfig        |  12 +
- sound/soc/atmel/Makefile       |   2 +
- sound/soc/atmel/mchp-spdiftx.c | 864 +++++++++++++++++++++++++++++++++
- 3 files changed, 878 insertions(+)
- create mode 100644 sound/soc/atmel/mchp-spdiftx.c
+You did in the previous series, would that mean that your previous
+series were wrong or nonworking or break on some SoCs?
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 71f2d42188c4..93beb7d670a3 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -132,4 +132,16 @@ config SND_MCHP_SOC_I2S_MCC
- 	  and supports a Time Division Multiplexed (TDM) interface with
- 	  external multi-channel audio codecs.
- 
-+config SND_MCHP_SOC_SPDIFTX
-+	tristate "Microchip ASoC driver for boards using S/PDIF TX"
-+	depends on OF && (ARCH_AT91 || COMPILE_TEST)
-+	select SND_SOC_GENERIC_DMAENGINE_PCM
-+	select REGMAP_MMIO
-+	help
-+	  Say Y or M if you want to add support for Microchip S/PDIF TX ASoc
-+	  driver on the following Microchip platforms:
-+	  - sama7g5
-+
-+	  This S/PDIF TX driver is compliant with IEC-60958 standard and
-+	  includes programable User Data and Channel Status fields.
- endif
-diff --git a/sound/soc/atmel/Makefile b/sound/soc/atmel/Makefile
-index c7d2989791be..3fd89a0063df 100644
---- a/sound/soc/atmel/Makefile
-+++ b/sound/soc/atmel/Makefile
-@@ -5,6 +5,7 @@ snd-soc-atmel-pcm-dma-objs := atmel-pcm-dma.o
- snd-soc-atmel_ssc_dai-objs := atmel_ssc_dai.o
- snd-soc-atmel-i2s-objs := atmel-i2s.o
- snd-soc-mchp-i2s-mcc-objs := mchp-i2s-mcc.o
-+snd-soc-mchp-spdiftx-objs := mchp-spdiftx.o
- 
- # pdc and dma need to both be built-in if any user of
- # ssc is built-in.
-@@ -17,6 +18,7 @@ endif
- obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
- obj-$(CONFIG_SND_ATMEL_SOC_I2S) += snd-soc-atmel-i2s.o
- obj-$(CONFIG_SND_MCHP_SOC_I2S_MCC) += snd-soc-mchp-i2s-mcc.o
-+obj-$(CONFIG_SND_MCHP_SOC_SPDIFTX) += snd-soc-mchp-spdiftx.o
- 
- # AT91 Machine Support
- snd-soc-sam9g20-wm8731-objs := sam9g20_wm8731.o
-diff --git a/sound/soc/atmel/mchp-spdiftx.c b/sound/soc/atmel/mchp-spdiftx.c
-new file mode 100644
-index 000000000000..738f6788212e
---- /dev/null
-+++ b/sound/soc/atmel/mchp-spdiftx.c
-@@ -0,0 +1,864 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Driver for Microchip S/PDIF TX Controller
-+//
-+// Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries
-+//
-+// Author: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/spinlock.h>
-+
-+#include <sound/asoundef.h>
-+#include <sound/dmaengine_pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+
-+/*
-+ * ---- S/PDIF Transmitter Controller Register map ----
-+ */
-+#define SPDIFTX_CR			0x00	/* Control Register */
-+#define SPDIFTX_MR			0x04	/* Mode Register */
-+#define SPDIFTX_CDR			0x0C	/* Common Data Register */
-+
-+#define SPDIFTX_IER			0x14	/* Interrupt Enable Register */
-+#define SPDIFTX_IDR			0x18	/* Interrupt Disable Register */
-+#define SPDIFTX_IMR			0x1C	/* Interrupt Mask Register */
-+#define SPDIFTX_ISR			0x20	/* Interrupt Status Register */
-+
-+#define SPDIFTX_CH1UD(reg)	(0x50 + (reg) * 4)	/* User Data 1 Register x */
-+#define SPDIFTX_CH1S(reg)	(0x80 + (reg) * 4)	/* Channel Status 1 Register x */
-+
-+#define SPDIFTX_VERSION			0xF0
-+
-+/*
-+ * ---- Control Register (Write-only) ----
-+ */
-+#define SPDIFTX_CR_SWRST		BIT(0)	/* Software Reset */
-+#define SPDIFTX_CR_FCLR			BIT(1)	/* FIFO clear */
-+
-+/*
-+ * ---- Mode Register (Read/Write) ----
-+ */
-+/* Transmit Enable */
-+#define SPDIFTX_MR_TXEN_MASK		GENMASK(0, 0)
-+#define SPDIFTX_MR_TXEN_DISABLE		(0 << 0)
-+#define SPDIFTX_MR_TXEN_ENABLE		(1 << 0)
-+
-+/* Multichannel Transfer */
-+#define SPDIFTX_MR_MULTICH_MASK		GENAMSK(1, 1)
-+#define SPDIFTX_MR_MULTICH_MONO		(0 << 1)
-+#define SPDIFTX_MR_MULTICH_DUAL		(1 << 1)
-+
-+/* Data Word Endian Mode */
-+#define SPDIFTX_MR_ENDIAN_MASK		GENMASK(2, 2)
-+#define SPDIFTX_MR_ENDIAN_LITTLE	(0 << 2)
-+#define SPDIFTX_MR_ENDIAN_BIG		(1 << 2)
-+
-+/* Data Justification */
-+#define SPDIFTX_MR_JUSTIFY_MASK		GENMASK(3, 3)
-+#define SPDIFTX_MR_JUSTIFY_LSB		(0 << 3)
-+#define SPDIFTX_MR_JUSTIFY_MSB		(1 << 3)
-+
-+/* Common Audio Register Transfer Mode */
-+#define SPDIFTX_MR_CMODE_MASK			GENMASK(5, 4)
-+#define SPDIFTX_MR_CMODE_INDEX_ACCESS		(0 << 4)
-+#define SPDIFTX_MR_CMODE_TOGGLE_ACCESS		(1 << 4)
-+#define SPDIFTX_MR_CMODE_INTERLVD_ACCESS	(2 << 4)
-+
-+/* Valid Bits per Sample */
-+#define SPDIFTX_MR_VBPS_MASK		GENMASK(13, 8)
-+#define SPDIFTX_MR_VBPS(bps)		(((bps) << 8) & SPDIFTX_MR_VBPS_MASK)
-+
-+/* Chunk Size */
-+#define SPDIFTX_MR_CHUNK_MASK		GENMASK(19, 16)
-+#define SPDIFTX_MR_CHUNK(size)		(((size) << 16) & SPDIFTX_MR_CHUNK_MASK)
-+
-+/* Validity Bits for Channels 1 and 2 */
-+#define SPDIFTX_MR_VALID1			BIT(24)
-+#define SPDIFTX_MR_VALID2			BIT(25)
-+
-+/* Disable Null Frame on underrrun */
-+#define SPDIFTX_MR_DNFR_MASK		GENMASK(27, 27)
-+#define SPDIFTX_MR_DNFR_INVALID		(0 << 27)
-+#define SPDIFTX_MR_DNFR_VALID		(1 << 27)
-+
-+/* Bytes per Sample */
-+#define SPDIFTX_MR_BPS_MASK		GENMASK(29, 28)
-+#define SPDIFTX_MR_BPS(bytes) \
-+	((((bytes) - 1) << 28) & SPDIFTX_MR_BPS_MASK)
-+
-+/*
-+ * ---- Interrupt Enable/Disable/Mask/Status Register (Write/Read-only) ----
-+ */
-+#define SPDIFTX_IR_TXRDY		BIT(0)
-+#define SPDIFTX_IR_TXEMPTY		BIT(1)
-+#define SPDIFTX_IR_TXFULL		BIT(2)
-+#define SPDIFTX_IR_TXCHUNK		BIT(3)
-+#define SPDIFTX_IR_TXUDR		BIT(4)
-+#define SPDIFTX_IR_TXOVR		BIT(5)
-+#define SPDIFTX_IR_CSRDY		BIT(6)
-+#define SPDIFTX_IR_UDRDY		BIT(7)
-+#define SPDIFTX_IR_TXRDYCH(ch)		BIT((ch) + 8)
-+#define SPDIFTX_IR_SECE			BIT(10)
-+#define SPDIFTX_IR_TXUDRCH(ch)		BIT((ch) + 11)
-+#define SPDIFTX_IR_BEND			BIT(13)
-+
-+static bool mchp_spdiftx_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SPDIFTX_MR:
-+	case SPDIFTX_IMR:
-+	case SPDIFTX_ISR:
-+	case SPDIFTX_CH1UD(0):
-+	case SPDIFTX_CH1UD(1):
-+	case SPDIFTX_CH1UD(2):
-+	case SPDIFTX_CH1UD(3):
-+	case SPDIFTX_CH1UD(4):
-+	case SPDIFTX_CH1UD(5):
-+	case SPDIFTX_CH1S(0):
-+	case SPDIFTX_CH1S(1):
-+	case SPDIFTX_CH1S(2):
-+	case SPDIFTX_CH1S(3):
-+	case SPDIFTX_CH1S(4):
-+	case SPDIFTX_CH1S(5):
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool mchp_spdiftx_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SPDIFTX_CR:
-+	case SPDIFTX_MR:
-+	case SPDIFTX_CDR:
-+	case SPDIFTX_IER:
-+	case SPDIFTX_IDR:
-+	case SPDIFTX_CH1UD(0):
-+	case SPDIFTX_CH1UD(1):
-+	case SPDIFTX_CH1UD(2):
-+	case SPDIFTX_CH1UD(3):
-+	case SPDIFTX_CH1UD(4):
-+	case SPDIFTX_CH1UD(5):
-+	case SPDIFTX_CH1S(0):
-+	case SPDIFTX_CH1S(1):
-+	case SPDIFTX_CH1S(2):
-+	case SPDIFTX_CH1S(3):
-+	case SPDIFTX_CH1S(4):
-+	case SPDIFTX_CH1S(5):
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool mchp_spdiftx_precious_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SPDIFTX_CDR:
-+	case SPDIFTX_ISR:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config mchp_spdiftx_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = SPDIFTX_VERSION,
-+	.readable_reg = mchp_spdiftx_readable_reg,
-+	.writeable_reg = mchp_spdiftx_writeable_reg,
-+	.precious_reg = mchp_spdiftx_precious_reg,
-+};
-+
-+#define SPDIFTX_GCLK_RATIO	128
-+
-+#define SPDIFTX_CS_BITS		192
-+#define SPDIFTX_UD_BITS		192
-+
-+struct mchp_spdiftx_mixer_control {
-+	unsigned char				ch_stat[SPDIFTX_CS_BITS / 8];
-+	unsigned char				user_data[SPDIFTX_UD_BITS / 8];
-+	spinlock_t				lock;
-+};
-+
-+struct mchp_spdiftx_dev {
-+	struct mchp_spdiftx_mixer_control	control;
-+	struct snd_dmaengine_dai_dma_data	playback;
-+	struct device				*dev;
-+	struct regmap				*regmap;
-+	struct clk				*pclk;
-+	struct clk				*gclk;
-+	unsigned int				fmt;
-+	const struct mchp_i2s_caps		*caps;
-+	int					gclk_enabled:1;
-+};
-+
-+static inline int mchp_spdiftx_is_running(struct mchp_spdiftx_dev *dev)
-+{
-+	u32 mr;
-+
-+	regmap_read(dev->regmap, SPDIFTX_MR, &mr);
-+	return !!(mr & SPDIFTX_MR_TXEN_ENABLE);
-+}
-+
-+static void mchp_spdiftx_channel_status_write(struct mchp_spdiftx_dev *dev)
-+{
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	u32 val;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ctrl->ch_stat) / 4; i++) {
-+		val = (ctrl->ch_stat[(i * 4) + 0] << 0) |
-+		      (ctrl->ch_stat[(i * 4) + 1] << 8) |
-+		      (ctrl->ch_stat[(i * 4) + 2] << 16) |
-+		      (ctrl->ch_stat[(i * 4) + 3] << 24);
-+
-+		regmap_write(dev->regmap, SPDIFTX_CH1S(i), val);
-+	}
-+}
-+
-+static void mchp_spdiftx_user_data_write(struct mchp_spdiftx_dev *dev)
-+{
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	u32 val;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ctrl->user_data) / 4; i++) {
-+		val = (ctrl->user_data[(i * 4) + 0] << 0) |
-+		      (ctrl->user_data[(i * 4) + 1] << 8) |
-+		      (ctrl->user_data[(i * 4) + 2] << 16) |
-+		      (ctrl->user_data[(i * 4) + 3] << 24);
-+
-+		regmap_write(dev->regmap, SPDIFTX_CH1UD(i), val);
-+	}
-+}
-+
-+static irqreturn_t mchp_spdiftx_interrupt(int irq, void *dev_id)
-+{
-+	struct mchp_spdiftx_dev *dev = dev_id;
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	u32 sr, imr, pending, idr = 0;
-+
-+	regmap_read(dev->regmap, SPDIFTX_ISR, &sr);
-+	regmap_read(dev->regmap, SPDIFTX_IMR, &imr);
-+	pending = sr & imr;
-+
-+	if (!pending)
-+		return IRQ_NONE;
-+
-+	if (pending & SPDIFTX_IR_TXUDR) {
-+		dev_warn(dev->dev, "underflow detected\n");
-+		idr |= SPDIFTX_IR_TXUDR;
-+	}
-+
-+	if (pending & SPDIFTX_IR_TXOVR) {
-+		dev_warn(dev->dev, "overflow detected\n");
-+		idr |= SPDIFTX_IR_TXOVR;
-+	}
-+
-+	if (pending & SPDIFTX_IR_UDRDY) {
-+		spin_lock(&ctrl->lock);
-+		mchp_spdiftx_user_data_write(dev);
-+		spin_unlock(&ctrl->lock);
-+		idr |= SPDIFTX_IR_UDRDY;
-+	}
-+
-+	if (pending & SPDIFTX_IR_CSRDY) {
-+		spin_lock(&ctrl->lock);
-+		mchp_spdiftx_channel_status_write(dev);
-+		spin_unlock(&ctrl->lock);
-+		idr |= SPDIFTX_IR_CSRDY;
-+	}
-+
-+	regmap_write(dev->regmap, SPDIFTX_IDR, idr);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int mchp_spdiftx_dai_startup(struct snd_pcm_substream *substream,
-+				    struct snd_soc_dai *dai)
-+{
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+	int err;
-+
-+	err = clk_prepare_enable(dev->pclk);
-+	if (err) {
-+		dev_err(dev->dev,
-+			"failed to enable the peripheral clock: %d\n", err);
-+		return err;
-+	}
-+
-+	/* Software reset the IP */
-+	regmap_write(dev->regmap, SPDIFTX_CR,
-+		     SPDIFTX_CR_SWRST | SPDIFTX_CR_FCLR);
-+
-+	return 0;
-+}
-+
-+static void mchp_spdiftx_dai_shutdown(struct snd_pcm_substream *substream,
-+				      struct snd_soc_dai *dai)
-+{
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+
-+	/* Disable interrupts */
-+	regmap_write(dev->regmap, SPDIFTX_IDR, 0xffffffff);
-+
-+	clk_disable_unprepare(dev->pclk);
-+}
-+
-+static int mchp_spdiftx_trigger(struct snd_pcm_substream *substream, int cmd,
-+				struct snd_soc_dai *dai)
-+{
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	u32 mr;
-+	int running;
-+	int ret;
-+
-+	/* do not start/stop while channel status or user data is updated */
-+	spin_lock(&ctrl->lock);
-+	regmap_read(dev->regmap, SPDIFTX_MR, &mr);
-+	running = !!(mr & SPDIFTX_MR_TXEN_ENABLE);
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		if (!running) {
-+			mr &= ~SPDIFTX_MR_TXEN_MASK;
-+			mr |= SPDIFTX_MR_TXEN_ENABLE;
-+		}
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		if (running) {
-+			mr &= ~SPDIFTX_MR_TXEN_MASK;
-+			mr |= SPDIFTX_MR_TXEN_DISABLE;
-+		}
-+		break;
-+	default:
-+		spin_unlock(&ctrl->lock);
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_write(dev->regmap, SPDIFTX_MR, mr);
-+	spin_unlock(&ctrl->lock);
-+	if (ret) {
-+		dev_err(dev->dev, "unable to disable TX: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mchp_spdiftx_hw_params(struct snd_pcm_substream *substream,
-+				  struct snd_pcm_hw_params *params,
-+				  struct snd_soc_dai *dai)
-+{
-+	unsigned long flags;
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	u32 mr;
-+	unsigned int bps = params_physical_width(params) / 8;
-+	int ret;
-+
-+	dev_dbg(dev->dev, "%s() rate=%u format=%#x width=%u channels=%u\n",
-+		__func__, params_rate(params), params_format(params),
-+		params_width(params), params_channels(params));
-+
-+	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
-+		dev_err(dev->dev, "Capture is not supported\n");
-+		return -EINVAL;
-+	}
-+
-+	regmap_read(dev->regmap, SPDIFTX_MR, &mr);
-+
-+	if (mr & SPDIFTX_MR_TXEN_ENABLE) {
-+		dev_err(dev->dev, "PCM already running\n");
-+		return -EBUSY;
-+	}
-+
-+	/* Defaults: Toggle mode, justify to LSB, chunksize 1 */
-+	mr = SPDIFTX_MR_CMODE_TOGGLE_ACCESS | SPDIFTX_MR_JUSTIFY_LSB;
-+	dev->playback.maxburst = 1;
-+	switch (params_channels(params)) {
-+	case 1:
-+		mr |= SPDIFTX_MR_MULTICH_MONO;
-+		break;
-+	case 2:
-+		mr |= SPDIFTX_MR_MULTICH_DUAL;
-+		if (bps > 2)
-+			dev->playback.maxburst = 2;
-+		break;
-+	default:
-+		dev_err(dev->dev, "unsupported number of channels: %d\n",
-+			params_channels(params));
-+		return -EINVAL;
-+	}
-+	mr |= SPDIFTX_MR_CHUNK(dev->playback.maxburst);
-+
-+	switch (params_format(params)) {
-+	case SNDRV_PCM_FORMAT_S8:
-+		mr |= SPDIFTX_MR_VBPS(8);
-+		break;
-+	case SNDRV_PCM_FORMAT_S16_BE:
-+		mr |= SPDIFTX_MR_ENDIAN_BIG;
-+		fallthrough;
-+	case SNDRV_PCM_FORMAT_S16_LE:
-+		mr |= SPDIFTX_MR_VBPS(16);
-+		break;
-+	case SNDRV_PCM_FORMAT_S18_3BE:
-+		mr |= SPDIFTX_MR_ENDIAN_BIG;
-+		fallthrough;
-+	case SNDRV_PCM_FORMAT_S18_3LE:
-+		mr |= SPDIFTX_MR_VBPS(18);
-+		break;
-+	case SNDRV_PCM_FORMAT_S20_3BE:
-+		mr |= SPDIFTX_MR_ENDIAN_BIG;
-+		fallthrough;
-+	case SNDRV_PCM_FORMAT_S20_3LE:
-+		mr |= SPDIFTX_MR_VBPS(20);
-+		break;
-+	case SNDRV_PCM_FORMAT_S24_3BE:
-+		mr |= SPDIFTX_MR_ENDIAN_BIG;
-+		fallthrough;
-+	case SNDRV_PCM_FORMAT_S24_3LE:
-+		mr |= SPDIFTX_MR_VBPS(24);
-+		break;
-+	case SNDRV_PCM_FORMAT_S24_BE:
-+		mr |= SPDIFTX_MR_ENDIAN_BIG;
-+		fallthrough;
-+	case SNDRV_PCM_FORMAT_S24_LE:
-+		mr |= SPDIFTX_MR_VBPS(24);
-+		break;
-+	case SNDRV_PCM_FORMAT_S32_BE:
-+		mr |= SPDIFTX_MR_ENDIAN_BIG;
-+		fallthrough;
-+	case SNDRV_PCM_FORMAT_S32_LE:
-+		mr |= SPDIFTX_MR_VBPS(32);
-+		break;
-+	default:
-+		dev_err(dev->dev, "unsupported PCM format: %d\n",
-+			params_format(params));
-+		return -EINVAL;
-+	}
-+
-+	mr |= SPDIFTX_MR_BPS(bps);
-+
-+	spin_lock_irqsave(&ctrl->lock, flags);
-+	ctrl->ch_stat[3] &= ~IEC958_AES3_CON_FS;
-+	switch (params_rate(params)) {
-+	case 22050:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_22050;
-+		break;
-+	case 24000:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_24000;
-+		break;
-+	case 32000:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_32000;
-+		break;
-+	case 44100:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_44100;
-+		break;
-+	case 48000:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_48000;
-+		break;
-+	case 88200:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_88200;
-+		break;
-+	case 96000:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_96000;
-+		break;
-+	case 176400:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_176400;
-+		break;
-+	case 192000:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_192000;
-+		break;
-+	case 8000:
-+	case 11025:
-+	case 16000:
-+	case 64000:
-+		ctrl->ch_stat[3] |= IEC958_AES3_CON_FS_NOTID;
-+		break;
-+	default:
-+		dev_err(dev->dev, "unsupported sample frequency: %u\n",
-+			params_rate(params));
-+		spin_unlock_irqrestore(&ctrl->lock, flags);
-+		return -EINVAL;
-+	}
-+	mchp_spdiftx_channel_status_write(dev);
-+	spin_unlock_irqrestore(&ctrl->lock, flags);
-+	mr |= SPDIFTX_MR_VALID1 | SPDIFTX_MR_VALID2;
-+
-+	if (dev->gclk_enabled) {
-+		clk_disable_unprepare(dev->gclk);
-+		dev->gclk_enabled = 0;
-+	}
-+	ret = clk_set_rate(dev->gclk, params_rate(params) *
-+				      SPDIFTX_GCLK_RATIO);
-+	if (ret) {
-+		dev_err(dev->dev,
-+			"unable to change gclk rate to: rate %u * ratio %u\n",
-+			params_rate(params), SPDIFTX_GCLK_RATIO);
-+		return ret;
-+	}
-+	ret = clk_prepare_enable(dev->gclk);
-+	if (ret) {
-+		dev_err(dev->dev, "unable to enable gclk: %d\n", ret);
-+		return ret;
-+	}
-+	dev->gclk_enabled = 1;
-+	dev_dbg(dev->dev, "%s(): GCLK set to %d\n", __func__,
-+		params_rate(params) * SPDIFTX_GCLK_RATIO);
-+
-+	/* Enable interrupts */
-+	regmap_write(dev->regmap, SPDIFTX_IER,
-+		     SPDIFTX_IR_TXUDR | SPDIFTX_IR_TXOVR);
-+
-+	regmap_write(dev->regmap, SPDIFTX_MR, mr);
-+
-+	return 0;
-+}
-+
-+static int mchp_spdiftx_hw_free(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+
-+	regmap_write(dev->regmap, SPDIFTX_IDR,
-+		     SPDIFTX_IR_TXUDR | SPDIFTX_IR_TXOVR);
-+	if (dev->gclk_enabled) {
-+		clk_disable_unprepare(dev->gclk);
-+		dev->gclk_enabled = 0;
-+	}
-+
-+	return regmap_write(dev->regmap, SPDIFTX_CR,
-+			    SPDIFTX_CR_SWRST | SPDIFTX_CR_FCLR);
-+}
-+
-+
-+static const struct snd_soc_dai_ops mchp_spdiftx_dai_ops = {
-+	.startup	= mchp_spdiftx_dai_startup,
-+	.shutdown	= mchp_spdiftx_dai_shutdown,
-+	.trigger	= mchp_spdiftx_trigger,
-+	.hw_params	= mchp_spdiftx_hw_params,
-+	.hw_free	= mchp_spdiftx_hw_free,
-+};
-+
-+#define MCHP_SPDIFTX_RATES	SNDRV_PCM_RATE_8000_192000
-+
-+#define MCHP_SPDIFTX_FORMATS	(SNDRV_PCM_FMTBIT_S8 |		\
-+				 SNDRV_PCM_FMTBIT_S16_LE |	\
-+				 SNDRV_PCM_FMTBIT_U16_BE |	\
-+				 SNDRV_PCM_FMTBIT_S18_3LE |	\
-+				 SNDRV_PCM_FMTBIT_S18_3BE |	\
-+				 SNDRV_PCM_FMTBIT_S20_3LE |	\
-+				 SNDRV_PCM_FMTBIT_S20_3BE |	\
-+				 SNDRV_PCM_FMTBIT_S24_3LE |	\
-+				 SNDRV_PCM_FMTBIT_S24_3BE |	\
-+				 SNDRV_PCM_FMTBIT_S24_LE |	\
-+				 SNDRV_PCM_FMTBIT_S24_BE |	\
-+				 SNDRV_PCM_FMTBIT_S32_LE |	\
-+				 SNDRV_PCM_FMTBIT_S32_BE	\
-+				 )
-+
-+static int mchp_spdiftx_info(struct snd_kcontrol *kcontrol,
-+			     struct snd_ctl_elem_info *uinfo)
-+{
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_IEC958;
-+	uinfo->count = 1;
-+
-+	return 0;
-+}
-+
-+static int mchp_spdiftx_cs_get(struct snd_kcontrol *kcontrol,
-+			       struct snd_ctl_elem_value *uvalue)
-+{
-+	unsigned long flags;
-+	struct snd_soc_dai *dai = snd_kcontrol_chip(kcontrol);
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+
-+	spin_lock_irqsave(&ctrl->lock, flags);
-+	memcpy(uvalue->value.iec958.status, ctrl->ch_stat,
-+	       sizeof(ctrl->ch_stat));
-+	spin_unlock_irqrestore(&ctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int mchp_spdiftx_cs_put(struct snd_kcontrol *kcontrol,
-+			       struct snd_ctl_elem_value *uvalue)
-+{
-+	unsigned long flags;
-+	struct snd_soc_dai *dai = snd_kcontrol_chip(kcontrol);
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	int changed = 0;
-+	int i;
-+
-+	spin_lock_irqsave(&ctrl->lock, flags);
-+	for (i = 0; i < ARRAY_SIZE(ctrl->ch_stat); i++) {
-+		if (ctrl->ch_stat[i] != uvalue->value.iec958.status[i])
-+			changed = 1;
-+		ctrl->ch_stat[i] = uvalue->value.iec958.status[i];
-+	}
-+
-+	if (changed) {
-+		/* don't enable IP while we copy the channel status */
-+		if (mchp_spdiftx_is_running(dev)) {
-+			/*
-+			 * if SPDIF is running, wait for interrupt to write
-+			 * channel status
-+			 */
-+			regmap_write(dev->regmap, SPDIFTX_IER,
-+				     SPDIFTX_IR_CSRDY);
-+		} else {
-+			mchp_spdiftx_channel_status_write(dev);
-+		}
-+	}
-+	spin_unlock_irqrestore(&ctrl->lock, flags);
-+
-+	return changed;
-+}
-+
-+static int mchp_spdiftx_cs_mask(struct snd_kcontrol *kcontrol,
-+				struct snd_ctl_elem_value *uvalue)
-+{
-+	memset(uvalue->value.iec958.status, 0xff,
-+	       sizeof(uvalue->value.iec958.status));
-+
-+	return 0;
-+}
-+
-+static int mchp_spdiftx_subcode_get(struct snd_kcontrol *kcontrol,
-+				    struct snd_ctl_elem_value *uvalue)
-+{
-+	struct snd_soc_dai *dai = snd_kcontrol_chip(kcontrol);
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ctrl->lock, flags);
-+	memcpy(uvalue->value.iec958.subcode, ctrl->user_data,
-+	       sizeof(ctrl->user_data));
-+	spin_unlock_irqrestore(&ctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int mchp_spdiftx_subcode_put(struct snd_kcontrol *kcontrol,
-+				    struct snd_ctl_elem_value *uvalue)
-+{
-+	unsigned long flags;
-+	struct snd_soc_dai *dai = snd_kcontrol_chip(kcontrol);
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+	struct mchp_spdiftx_mixer_control *ctrl = &dev->control;
-+	int changed = 0;
-+	int i;
-+
-+	spin_lock_irqsave(&ctrl->lock, flags);
-+	for (i = 0; i < ARRAY_SIZE(ctrl->user_data); i++) {
-+		if (ctrl->user_data[i] != uvalue->value.iec958.subcode[i])
-+			changed = 1;
-+
-+		ctrl->user_data[i] = uvalue->value.iec958.subcode[i];
-+	}
-+	if (changed) {
-+		if (mchp_spdiftx_is_running(dev)) {
-+			/*
-+			 * if SPDIF is running, wait for interrupt to write
-+			 * user data
-+			 */
-+			regmap_write(dev->regmap, SPDIFTX_IER,
-+				     SPDIFTX_IR_UDRDY);
-+		} else {
-+			mchp_spdiftx_user_data_write(dev);
-+		}
-+	}
-+	spin_unlock_irqrestore(&ctrl->lock, flags);
-+
-+	return changed;
-+}
-+
-+static struct snd_kcontrol_new mchp_spdiftx_ctrls[] = {
-+	/* Channel status controller */
-+	{
-+		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
-+		.name = SNDRV_CTL_NAME_IEC958("", PLAYBACK, DEFAULT),
-+		.access = SNDRV_CTL_ELEM_ACCESS_READWRITE |
-+			SNDRV_CTL_ELEM_ACCESS_VOLATILE,
-+		.info = mchp_spdiftx_info,
-+		.get = mchp_spdiftx_cs_get,
-+		.put = mchp_spdiftx_cs_put,
-+	},
-+	{
-+		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
-+		.name = SNDRV_CTL_NAME_IEC958("", PLAYBACK, MASK),
-+		.access = SNDRV_CTL_ELEM_ACCESS_READ,
-+			SNDRV_CTL_ELEM_ACCESS_VOLATILE,
-+		.info = mchp_spdiftx_info,
-+		.get = mchp_spdiftx_cs_mask,
-+	},
-+	/* User bits controller */
-+	{
-+		.iface = SNDRV_CTL_ELEM_IFACE_PCM,
-+		.name = "IEC958 Subcode Playback Default",
-+		.access = SNDRV_CTL_ELEM_ACCESS_READWRITE,
-+		.info = mchp_spdiftx_info,
-+		.get = mchp_spdiftx_subcode_get,
-+		.put = mchp_spdiftx_subcode_put,
-+	},
-+};
-+
-+static int mchp_spdiftx_dai_probe(struct snd_soc_dai *dai)
-+{
-+	struct mchp_spdiftx_dev *dev = snd_soc_dai_get_drvdata(dai);
-+
-+	snd_soc_dai_init_dma_data(dai, &dev->playback, NULL);
-+
-+	/* Add controls */
-+	snd_soc_add_dai_controls(dai, mchp_spdiftx_ctrls,
-+				 ARRAY_SIZE(mchp_spdiftx_ctrls));
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_dai_driver mchp_spdiftx_dai = {
-+	.name = "mchp-spdiftx",
-+	.probe	= mchp_spdiftx_dai_probe,
-+	.playback = {
-+		.stream_name = "S/PDIF TX Playback",
-+		.channels_min = 1,
-+		.channels_max = 2,
-+		.rates = MCHP_SPDIFTX_RATES,
-+		.formats = MCHP_SPDIFTX_FORMATS,
-+	},
-+	.ops = &mchp_spdiftx_dai_ops,
-+};
-+
-+static const struct snd_soc_component_driver mchp_spdiftx_component = {
-+	.name		= "mchp-spdiftx",
-+};
-+
-+static const struct of_device_id mchp_spdiftx_dt_ids[] = {
-+	{
-+		.compatible = "microchip,sama7g5-spdiftx",
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, mchp_spdiftx_dt_ids);
-+static int mchp_spdiftx_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	const struct of_device_id *match;
-+	struct mchp_spdiftx_dev *dev;
-+	struct resource *mem;
-+	struct regmap *regmap;
-+	void __iomem *base;
-+	struct mchp_spdiftx_mixer_control *ctrl;
-+	int irq;
-+	int err;
-+
-+	/* Get memory for driver data. */
-+	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return -ENOMEM;
-+
-+	/* Get hardware capabilities. */
-+	match = of_match_node(mchp_spdiftx_dt_ids, np);
-+	if (match)
-+		dev->caps = match->data;
-+
-+	/* Map I/O registers. */
-+	base = devm_platform_get_and_ioremap_resource(pdev, 0, &mem);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+				       &mchp_spdiftx_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	/* Request IRQ */
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	err = devm_request_irq(&pdev->dev, irq, mchp_spdiftx_interrupt, 0,
-+			       dev_name(&pdev->dev), dev);
-+	if (err)
-+		return err;
-+
-+	/* Get the peripheral clock */
-+	dev->pclk = devm_clk_get(&pdev->dev, "pclk");
-+	if (IS_ERR(dev->pclk)) {
-+		err = PTR_ERR(dev->pclk);
-+		dev_err(&pdev->dev,
-+			"failed to get the peripheral clock: %d\n", err);
-+		return err;
-+	}
-+
-+	/* Get the generic clock */
-+	dev->gclk = devm_clk_get(&pdev->dev, "gclk");
-+	if (IS_ERR(dev->gclk)) {
-+		err = PTR_ERR(dev->gclk);
-+		dev_err(&pdev->dev,
-+			"failed to get the PMC generic clock: %d\n", err);
-+		return err;
-+	}
-+
-+	ctrl = &dev->control;
-+	spin_lock_init(&ctrl->lock);
-+
-+	/* Init channel status */
-+	ctrl->ch_stat[0] = IEC958_AES0_CON_NOT_COPYRIGHT |
-+			   IEC958_AES0_CON_EMPHASIS_NONE;
-+
-+	dev->dev = &pdev->dev;
-+	dev->regmap = regmap;
-+	platform_set_drvdata(pdev, dev);
-+
-+	dev->playback.addr = (dma_addr_t)mem->start + SPDIFTX_CDR;
-+	dev->playback.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+
-+	err = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to register PMC: %d\n", err);
-+		return err;
-+	}
-+
-+	err = devm_snd_soc_register_component(&pdev->dev,
-+					      &mchp_spdiftx_component,
-+					      &mchp_spdiftx_dai, 1);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to register component: %d\n", err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver mchp_spdiftx_driver = {
-+	.probe	= mchp_spdiftx_probe,
-+	.driver	= {
-+		.name	= "mchp_spdiftx",
-+		.of_match_table = of_match_ptr(mchp_spdiftx_dt_ids),
-+	},
-+};
-+
-+module_platform_driver(mchp_spdiftx_driver);
-+
-+MODULE_AUTHOR("Codrin Ciubotariu <codrin.ciubotariu@microchip.com>");
-+MODULE_DESCRIPTION("Microchip S/PDIF TX Controller Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.1
+I agree that you need per SoC data, what I am complaining is the idea
+of having pointers to functions instead of just having the registers
+or the media paths per SoC. You can have private data for registers,
+something like this:
 
+static const struct mtk_mmsys_driver_data mt8183_mmsys_driver_data = {
+        .clk_driver = "clk-mt8183-mm",
+        .regs = {
+                .ovl0_mout_en = MT8183_DISP_OVL0_MOUT_EN,
+                .rdma0_sout_sel_in = MT8183_DISP_RDMA0_SOUT_SEL_IN,
+                .rdma0_sout_color0 = MT8183_RDMA0_SOUT_COLOR0,
+                .rdma1_sout_sel_in = MT8183_DISP_RDMA1_SOUT_SEL_IN,
+                .rdma1_sout_dsi0 = MT8183_RDMA1_SOUT_DSI0,
+                .dpi0_sel_in = MT8183_DISP_DPI0_SEL_IN,
+                .dpi0_sel_in_rdma1 = MT8183_DPI0_SEL_IN_RDMA1,
+                .dsi0_sel_in = MT8183_DISP_DSI0_SEL_IN,
+                .dsi0_sel_in_rdma1 = MT8183_DSI0_SEL_IN_RDMA1,
+        },
+};
+
+And you can also have the media configuration paths in the driver
+data, similar to what you did for mt8183 but not for the others. But,
+I'd recommend to do this in a second step, and go step-by-step. Your
+v6 and v7 are quite different, but IMHO I'm more in favor of what you
+did for v6 (as a first step to support mt8183) than this patchset. For
+v7 I was expecting just to move the bits that needed to mtk-mmsys, not
+such rework. Said all that, I'm not the maintainer and is up to the
+maintainer to decide the direction that driver should take.
+
+> but that still not a good idea.
+>
+> the next path like this will be more readable, and more easy to maintain
+> https://patchwork.kernel.org/patch/11679539/
+
+Ack, that's more readable and probably should be the direction to go,
+always assuming we have the *data* (mmsys_path_sel, etc.) per SoC and
+the functions  mtk_mmsys_ddp_mout_en(),  mtk_mmsys_ddp_sel_in(),
+mtk_mmsys_ddp_sout_sel() common for all SoCs.
+
+Thanks,
+ Enric
+
+[snip]
