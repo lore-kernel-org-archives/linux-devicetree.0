@@ -2,116 +2,99 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFB1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5742C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F5A207E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="z00tIkug"
+	by mail.kernel.org (Postfix) with ESMTP id 971352070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgG1H15 (ORCPT
+        id S1727892AbgG1HdZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:27:57 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34080 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726990AbgG1H15 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 03:27:57 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06S7I0mM015172;
-        Tue, 28 Jul 2020 09:27:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=L908e2AdQSAptw2MG0+5KEEyg20P0DnrpSzY3TXAojs=;
- b=z00tIkugcratI9e5e77HQjJo3ixY/oHxNREc9N4lcN5UzKrNzBPI0m9+aTks0zETaszu
- ydeTDMAExij1wXWKKUz37quocYSk3p4XsbdmC6mjXqaPmDRf3BLHDlIxBJtXbNb6p3g4
- MUvyqlAM4iumBCxTPVJCOwPPiE543J63KLul1mzH5kvL2qrE55a1VjH2zUMPiPBbYec3
- M4AefGRuV4Gfh6JoBihACujluFq8q3hQEWNIUI7CATa5oSytZj/uI5g6yJZ4gJ6NP2P2
- hwk2d5XcOkLrrtoEzd/qxVLNBz6MGGn3XASQ3e6HcM10B7VT9Q7cSqCthJkSl7SYe3Zr vg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32gbmg4q00-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 09:27:39 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8562A100034;
-        Tue, 28 Jul 2020 09:27:38 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7063121F0BF;
-        Tue, 28 Jul 2020 09:27:38 +0200 (CEST)
-Received: from lmecxl0995.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 28 Jul
- 2020 09:27:37 +0200
-Subject: Re: [PATCH v4 3/3] usb: dwc2: don't use ID/Vbus detection if
- usb-role-switch on STM32MP15 SoCs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        USB <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-References: <20200727092346.19780-1-amelie.delaunay@st.com>
- <20200727092346.19780-4-amelie.delaunay@st.com>
- <CAFBinCCXuUC4PHgrobYjj=yjA3Tz73Wwx0KWz+B6PfCw_OSi_w@mail.gmail.com>
- <CAHp75Ve75d+K87cokb4YYgim_wU0gTidGuiPs3BmohRKfTh5gA@mail.gmail.com>
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-Message-ID: <19ba2fe3-56d1-32a9-3897-27a36ab58c2c@st.com>
-Date:   Tue, 28 Jul 2020 09:27:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 28 Jul 2020 03:33:25 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:59395 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgG1HdY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 03:33:24 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M5wY1-1jstSr2c6V-007SDZ; Tue, 28 Jul 2020 09:33:22 +0200
+Received: by mail-qk1-f182.google.com with SMTP id d14so17758976qke.13;
+        Tue, 28 Jul 2020 00:33:22 -0700 (PDT)
+X-Gm-Message-State: AOAM532BQ+s5ICG6L12NLE9Hs+FfQYc0wbilyCn6Kwj4XGW6/2v/5AcH
+        Dwo0TOcF9S2lstanQijrSzHQk+6iP+WkYWCa890=
+X-Google-Smtp-Source: ABdhPJyH+gWHXjrGEuHOeWvO276kXhceg1tMppa3WwG/C7HXdHfY+pk3TGktoWb4j9eUkwKsfNI2wnx9708ArU04HS8=
+X-Received: by 2002:a37:b942:: with SMTP id j63mr12955439qkf.138.1595921601417;
+ Tue, 28 Jul 2020 00:33:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Ve75d+K87cokb4YYgim_wU0gTidGuiPs3BmohRKfTh5gA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_01:2020-07-27,2020-07-28 signatures=0
+References: <20200626080642.4244-1-krzk@kernel.org> <20200728143650.32818d3c@xhacker.debian>
+In-Reply-To: <20200728143650.32818d3c@xhacker.debian>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 28 Jul 2020 09:33:05 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
+Message-ID: <CAK8P3a26kvOP=3EEDaOFtO5YbqTwBsUr_eKDc5nWxw=NgzZ0MQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: berlin: Align L2 cache-controller nodename with dtschema
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, SoC Team <soc@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:KC+4x0xayWr25E4c58DHjwTtcrQ/oG63hi4Ypr6VRrcziXCQJDu
+ ceUoZfQuoucqHFJxB7NwxCZOtdLgXZycTOd6eVEVBW4rTGNqXh2B2jIAUl6KxZpk6wXUD0a
+ 1Nyity52Cep2K4IQ7gF4vsvTHn4DXltoJtozIDT+XfdnIkuzfFxQ8vlWuCNnYfv89s9WUmy
+ cnT2t9MJQMFShc4N/Dg+Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0fLPHurEOpY=:BaNYWA0+5811ripqKSxdCe
+ 6/S66Kj94Y2wM8os4wJ6JEXkKFzMwDDKD+lVmrT3Gjf+GWbcLxHVEamVhfwP47gE69sG3C99R
+ o5RoHxuCreDK+4FR+wkEIElIycYtdSJJtVf2INXuB4vxFIoRTFCHv41W71feWBS3Et/2F7xxe
+ jDBlHgH4BL10MXAYiXnmsFYnrOSQeulTVmyGXTUieYkGR1duceuU0SEiO7yLU6bKwDJ8Cu6nT
+ m0zEl4gjskqY4HSbvmQjH3h2jv0t0cWAyHhJTgUi0z2eB5AVALinvUGsK4w2QYRnMVm8UCjH0
+ OZdTghrhnvlamKAP4UDILWtV3dUBnHHN1PdCqHNO6HwMYnXWBWh1atZMer3/0F7kYFpMrC4IJ
+ LfPFb9KBZvfFGd1zXVySrFcDh3hGhBv6u1errfSFiJmksX9IvJZ9xVt9w3bxfpmgm/MIWTtt+
+ Rp5/82ioNoYianyB6Lvh8qpe5QwLwPcv2luRVF2B206IydYxFetqfR7kKO6yKIA7J/k0FmJ0P
+ cYx8MDaRFf0QguSSmQnOt3HzWiHiHjkelb1elTu7Txso8wvSnSwIrkyBAfC29fOAabvnYJ8kA
+ vb5uDMUQPqSfP0wBumOtLc6Y36mIowuC5DmVD4shoNmtDGqujX0R/X3UOMmoHRdLOU2JakWDR
+ +16nXo34E5p5/RWFNVWl1FCsALRLoGs5BwRX1fcr79m06z7OCTp2IHzqhyREJiYkLxsOeSFIK
+ GOgrwFaD1+2LV7nyUebRxze5MF2Vlv4UTd9bQeo4H4JlouVS6bfaf/7C/rAsh9cLBi7D61hvD
+ QLbgACCREmKsSjoLzqK6G9DKEPVWeghf3Zlcqb97MD+a2peo8fn1PHwTlyIUgHIwZMRk4wC
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jul 28, 2020 at 8:37 AM Jisheng Zhang
+<Jisheng.Zhang@synaptics.com> wrote:
+>
+> Hi arm-soc,
+>
+>
+> On Fri, 26 Jun 2020 10:06:41 +0200 Krzysztof Kozlowski wrote:
+>
+> >
+> >
+> > Fix dtschema validator warnings like:
+> >     l2-cache-controller@ac0000: $nodename:0:
+> >         'l2-cache-controller@ac0000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> Reviewed-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+>
+> As for berlin linux-5.9, we only have this one patch, could you please
+> directly take this patch?
 
-On 7/27/20 9:44 PM, Andy Shevchenko wrote:
-> On Mon, Jul 27, 2020 at 10:04 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->> On Mon, Jul 27, 2020 at 11:23 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
-> 
->> > -       p->activate_stm_id_vb_detection = true;
->> > +       p->activate_stm_id_vb_detection =
->> > +               !of_property_read_bool(np, "usb-role-switch");
->> the rest of params.c uses device_property_read_* instead of of_read_property_*
->> I thought I'd mention it so you can decide yourself whether this is
->> fine or needs to be changed
-> 
-> Better to change and leave all on one line.
-> 
+Applied now. To ensure we actually see the patch, it's better if you can just
+send a new copy with your added Signed-off-by to soc@kernel.org than to
+reply to the original email.
 
-Thank you both for your review. I'll change it in upcoming v5. I'm still 
-not used to exceed the 80 columns :)
+Thanks,
 
-Regards,
-Amelie
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+     Arnd
