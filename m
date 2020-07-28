@@ -2,126 +2,149 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EF5C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 22:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D39C433EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 22:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6208C2075D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 22:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308362070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 22:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YSMp1E7R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tG4rNdPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgG1WHU (ORCPT
+        id S1729731AbgG1WXe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 18:07:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50308 "EHLO
+        Tue, 28 Jul 2020 18:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729567AbgG1WHU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 18:07:20 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110E7C0619D2
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 15:07:20 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g8so942132wmk.3
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 15:07:19 -0700 (PDT)
+        with ESMTP id S1729717AbgG1WXe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 18:23:34 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E04C0619D4
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 15:23:33 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id e13so20374472qkg.5
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 15:23:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yNjtG/Ppk+gQT7Qol4h75D+wSaMe69jZnCwP/w16s9g=;
-        b=YSMp1E7RF4zNZ07R1alwQIvbeDMjPIZWwOYZNtvhdv9dCGDoCauAecZz0txiTF8MYA
-         Cmn0+Ib/Uv9RNGi5cqtJdsBS1l3bCnRjtV0TOhao9EoWJ9dajr9/xpWTZgbqAEgW0AVB
-         QTdMT5EAF5AspHw6YefR+Bg+h6lgvYfd2XyGI0FooYUnnzH8fZddF9SW7EHZXtM40aRh
-         YnHAfisOXakQWfO+khJT4FsZ69YO6V3UVQ2TcHm9X0O6omRlrdwzc0S5O59dHosM3iu8
-         rg89PH87STYM/U3wQrKBrLupiJoLm/HuTNxN8GYeZ+RA/cSm51WOy4qQ/QTgiRwbBVYT
-         U6XQ==
+        bh=8wMDzveqXMcU7qz1vEvMmj5Kh0jEuVD57A0b/vJIJrw=;
+        b=tG4rNdPI8R5LdMMO8xwPde56cVxcwd5fZAw2kzauifqgPFPeBuZ9hEyUHhD85W8bcI
+         M1T/PlI64ZhklmxrEyELMjberZDJ4KzNnazmhwE09VlAAj0XK22zP/a/RK+PvrSp+Dnw
+         /kkHshyydV5SLhk3KWYkA4xDfl/IEjoYJ5GkZ4EoshWFgVSVIYnqm32wkBDc1LGr7m0N
+         HgzWw9A3e0iQmRej8ZPgpGbNn9sSZ2XIGEd3opB1tb8IvxSd7SFVVhcpRuKxcTXFy7C+
+         nDujLhiAkU2NKuhnqQJRM1pocRepvEnfkf/zdOdHFkbxcH1jSPE5wsMu/GvGsW2QmqB5
+         Cq2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yNjtG/Ppk+gQT7Qol4h75D+wSaMe69jZnCwP/w16s9g=;
-        b=d28gPpsjCvwbWIgWs1pMRcZ8etTjlaOdwtYuW56/hp+ZM162DHXKmmuV99eOR0WmUA
-         nzdy/8Sh6FNtWhK0ZKNm0s5tJfmQcGP4psiCis5Lf+Md6p/YlahHSaQI8X0lv4VRpre2
-         +pyYKh4KyG2tkm4pu040+wLx3M9V1p1Z/OzxAWzlLRo4vRX6VuAoB2lo1WKoiQVEl4WJ
-         pd70cfxqaZTsy7IsiUoKiGlQTPTZ5cQ4Z5xp8SGuIrfwrA2vDcRvaDt5nfxgSA+iRH0V
-         R3EFkDIYZVWtn6yRQvKeYYBooamYKq4TRxf+8St578ko7eMggS8gYxo1r3PsNAIxUbTn
-         Ucyw==
-X-Gm-Message-State: AOAM533APcQr+Y3+h9Sech4QF79WlVyYt+ojuqbqKhV5ZNZzY+wZRpcR
-        TcnzliJ6U+rOSWLvmk0FrfxUM/XqYyV+PRNaefWPCg==
-X-Google-Smtp-Source: ABdhPJx8ktpw7PKb8X9C7utuR4EGxd5Zemvet/KyKeb+2tSmKYlWKuFXwDYE1wjg1fBRGU9xyTq7VmjUuwJedxftAag=
-X-Received: by 2002:a1c:e908:: with SMTP id q8mr6125255wmc.59.1595974038580;
- Tue, 28 Jul 2020 15:07:18 -0700 (PDT)
+        bh=8wMDzveqXMcU7qz1vEvMmj5Kh0jEuVD57A0b/vJIJrw=;
+        b=Wy4B19RmppSP5pzaa6m7uB4c2zjNF3lyyaTzPxt18UlOLje+uw7vqxio/scGxbXWoo
+         WTtjrjkIWFcfUhtNcyryvsnNvNM7A9fVr387t+WJgb5Lsv9E5oziijkrCLKaKywzpzBW
+         kT0goSQXy13rVGuJV2ByLkvDzP6fOqKGPQeuUPef6oJMN1rC4S/0URXSjQDoK0FP4jkl
+         4DOlcEOWIWmnO1NnqzYAOxecMPvnZVKtuG02i2XPgYfmdNTrO3Q0RnlJYyL106e7KhFi
+         xKYD4jxaXbYt5JxlDmGbwKkIsJ/vOb8S0IUWvEIF09C0erAfVU4ji7S6hum27bpbocHh
+         vmHw==
+X-Gm-Message-State: AOAM532l1S1tcCln/F4kSqLkBAvP1kN5IUC1KEPYkR0Apti4kit0fbwf
+        QKR3wt4yM3snHVKq9PnisPOjISj49mQ+m/DaFe2Q1Q==
+X-Google-Smtp-Source: ABdhPJzBuFDwbTuAKAxLAKDoRVzjoMzJAgky0l1xUfwlCP1+u+1EBHu/d0wQurDqGyYI3vgcw/PLrAXzP60vhB16MLo=
+X-Received: by 2002:a05:620a:4ca:: with SMTP id 10mr27297992qks.306.1595975012973;
+ Tue, 28 Jul 2020 15:23:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.10.Ibe84fae61cd914c116e6d59ffeb644f1cbecd601@changeid>
- <159596523705.1360974.7169089810545711557@swboyd.mtv.corp.google.com>
- <CAHcu+VbYrbWStNNaidDygY=d4f6F5tXUxWtsuH0x3oVeELGWVA@mail.gmail.com> <159597194837.1360974.9212489704079396891@swboyd.mtv.corp.google.com>
-In-Reply-To: <159597194837.1360974.9212489704079396891@swboyd.mtv.corp.google.com>
-From:   Daniel Campello <campello@google.com>
-Date:   Tue, 28 Jul 2020 16:06:42 -0600
-Message-ID: <CAHcu+VZ032uZ==-Lqix=x61pdurNXjOiKvrKTaKJqUyUgn8OGQ@mail.gmail.com>
-Subject: Re: [PATCH 10/15] iio: sx9310: Simplify error return handling
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org> <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
+In-Reply-To: <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Wed, 29 Jul 2020 00:23:22 +0200
+Message-ID: <CAMxfBF7uaFMhGDTmVjZiAEiUxNFSBnh-qcEz3rSDhFTkWkrLkw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
+ reserved interrupts
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        "Mills, William" <wmills@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 3:32 PM Stephen Boyd <swboyd@chromium.org> wrote:
+Hi Marc
+
+On Tue, 28 Jul 2020 at 18:37, Marc Zyngier <maz@kernel.org> wrote:
 >
-> Quoting Daniel Campello (2020-07-28 14:23:29)
-> > On Tue, Jul 28, 2020 at 1:40 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Daniel Campello (2020-07-28 08:12:53)
-> > > > @@ -368,13 +368,13 @@ static int sx9310_wait_for_sample(struct sx9310_data *data)
-> > > >  static int sx9310_read_proximity(struct sx9310_data *data,
-> > > >                                  const struct iio_chan_spec *chan, int *val)
-> > > >  {
-> > > > -       int ret = 0;
-> > > > +       int ret;
-> > > >         __be16 rawval;
-> > > >
-> > > >         mutex_lock(&data->mutex);
-> > > >
-> > > >         ret = sx9310_get_read_channel(data, chan->channel);
-> > > > -       if (ret < 0)
-> > > > +       if (ret)
-> > > >                 goto out;
-> > > >
-> > > >         if (data->client->irq) {
-> > > > @@ -394,11 +394,11 @@ static int sx9310_read_proximity(struct sx9310_data *data,
-> > > >
-> > > >         mutex_lock(&data->mutex);
-> > > >
-> > > > -       if (ret < 0)
-> > > > +       if (ret)
-> > > >                 goto out_disable_irq;
-> > >
-> > > Why is this condition checked after grabbing the mutex? Shouldn't it be
-> > > checked before grabbing the mutex? Or is that supposed to be a
-> > > mutex_unlock()?
-> > We acquire the lock before jumping to out_disable_irq which is before
-> > a mutex_unlock()
+> On 2020-07-28 10:18, Grzegorz Jaszczyk wrote:
+> > From: Suman Anna <s-anna@ti.com>
+> >
+> > The PRUSS INTC has a fixed number of output interrupt lines that are
+> > connected to a number of processors or other PRUSS instances or other
+> > devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+> > are usually connected to the main Arm host processor and are referred
+> > to as host interrupts 0 through 7 from ARM/MPU perspective.
+> >
+> > All of these 8 host interrupts are not always exclusively connected
+> > to the Arm interrupt controller. Some SoCs have some interrupt lines
+> > not connected to the Arm interrupt controller at all, while a few
+> > others
+> > have the interrupt lines connected to multiple processors in which they
+> > need to be partitioned as per SoC integration needs. For example,
+> > AM437x
+> > and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt
+> > 5
+> > connected to the other PRUSS, while AM335x has host interrupt 0 shared
+> > between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU
+> > and
+> > a DMA controller.
+> >
+> > Add logic to the PRUSS INTC driver to ignore both these shared and
+> > invalid interrupts.
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> > ---
+> > v3->v4:
+> > - Due to changes in DT bindings which converts irqs-reserved
+> >   property from uint8-array to bitmask requested by Rob introduce
+> >   relevant changes in the driver.
+> > - Merge the irqs-reserved and irqs-shared to one property since they
+> >   can be handled by one logic (relevant change was introduced to DT
+> >   binding).
 >
-> Does this function need to hold the mutex lock around get/put_read_channel?
-Yes, both get/put_read_channel and get/put_event_channel use
-sx9310_update_chan_en which is updating data->chan_{read,event}
-bitmaps.
-> It drops the lock while waiting and then regrabs it which seems to
-> imply that another reader could come in and try to get the channel again
-> during the wait. So put another way, it may be simpler to shorten the
-> lock area and then bail out of this function to a place where the lock
-> isn't held already on the return path.
+> This isn't what I asked for in my initial review.
+>
+> I repeatedly asked for the *handling* to be common, not for the
+> properties to be merged. I don't mind either way, but I understood
+> there were two properties for a good reason. Has this reason gone?
+
+Yes, I am aware that you've asked for common handling. Nevertheless
+due to this change the usage of irqs-shared had to change. Previously
+Suman's intention was to always skip the irqs-reserved, while allowing
+to try getting interrupts even from irqs-shared list but in case of
+failure (during platform_get_irq_byname) it wasn't treated as an
+error.
+In other words: in the previous approach if the interrupt from
+irqs-shared was present in DT interrupts property it was treated as a
+valid resource. If the irqs-shared interrupt wasn't present in DT
+interrupts property it was skipped (similar to the irqs-reserved
+case).
+
+Now after your request for handling both in a common way the
+interpretation of irqs-shared had to change. Therefore there's no need
+to have seperate property for them. Now it is simpler: if some
+interrupt is present in irqs-reserved it will be skipped.
+
+>
+> Anyway, I'll come back to it once I start reviewing the series
+> again.
+>
+
+Ok, thank you,
+Grzegorz
