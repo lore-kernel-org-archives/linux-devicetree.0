@@ -2,123 +2,223 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F58C43465
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C25CC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D57620829
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BarEV0ov"
+	by mail.kernel.org (Postfix) with ESMTP id 1D3452075D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbgG1XGX (ORCPT
+        id S1730100AbgG1XsR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
+        Tue, 28 Jul 2020 19:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730036AbgG1XFk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 19:05:40 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4F4C0619DC
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 16:05:38 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id w12so8953209iom.4
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 16:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ckdl4rRSej+TpSQNUfdzpqHgfB1W1nhYEbGg+nzFza8=;
-        b=BarEV0ovrLCUh0MdcCNuv9Iya/tsHqfYXc1+zb7Pr+Rgdv9Sr9OxrYmLSvCrGEC+an
-         /huzljzKU+yIifhVNdt6i4SdeCPwgHzSMJ/52KURRXP11KIEgFhJ+DWKU/hCoANgTd5G
-         yZgNmU9zkD2Ov5Vnw4m5O6ugjPKQekbh5sLH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ckdl4rRSej+TpSQNUfdzpqHgfB1W1nhYEbGg+nzFza8=;
-        b=INdNju/vM/Bgnq/LAJD+zlkAhSlfjTmP+0EpR2a4+US55Xxr1imecYyGYh229eHz5w
-         UZJEnx+uIj36iPUgClioYwFJEgasnQ3eVHw/pHB6TzPqnzoc55rZhlc/Q0pWWnKphgRe
-         udjxC3gNXyZI1XO3k0QC/THEaMU1rhXWiF25lDzJU/2LQza8wLjNXWbaKka4vPlx5KT0
-         BB9GOn4dmEgBUcYB/345fWzq2/4Vr6KKQEYl9wvS/WBW48S2XOeN0QhZP40U9+88NDc4
-         HyasX/V0AD0P0hkseQ5czMTUSzAY8m5SBnhvTvWJr7FeLy5NpCumBBJAu129Pk2HnQL5
-         k9xw==
-X-Gm-Message-State: AOAM5324Q/2tv2Fl0IYuq0/BeFS8PyXWs/q20WAh74wX7eoKyZRBYPr3
-        HBFmVC/F0l54kTsuQTLgxxxJCt//10ffYQ==
-X-Google-Smtp-Source: ABdhPJzGSH1oEOQzZQiA6n/X77Umratilf3Tp30+qtl4G3Ep3KRfzTXFX9YiySzRFD4aKYorhSkqcA==
-X-Received: by 2002:a05:6602:29c9:: with SMTP id z9mr30956817ioq.4.1595977538023;
-        Tue, 28 Jul 2020 16:05:38 -0700 (PDT)
-Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id w10sm148945ilo.10.2020.07.28.16.05.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 16:05:37 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        kbuild test robot <lkp@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v2 04/14] iio: sx9310: Remove acpi and of table macros
-Date:   Tue, 28 Jul 2020 17:05:10 -0600
-Message-Id: <20200728170317.v2.4.I9bf713a86d6076b44441ef5f534f9c240271699a@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
-References: <20200728151258.1222876-1-campello@chromium.org>
- <20200728230520.2011240-1-campello@chromium.org>
+        with ESMTP id S1729380AbgG1XsR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 19:48:17 -0400
+X-Greylist: delayed 2069 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Jul 2020 16:48:16 PDT
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 772A8C061794;
+        Tue, 28 Jul 2020 16:48:16 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 06SNCXiI022851;
+        Wed, 29 Jul 2020 01:12:33 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 06SNCX2E015946;
+        Wed, 29 Jul 2020 01:12:33 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 06SNCWBm015943;
+        Wed, 29 Jul 2020 01:12:32 +0200
+X-Authentication-Warning: haar.felk.cvut.cz: pisa set sender to pisa@cmp.felk.cvut.cz using -f
+From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
+To:     Rob Herring <robh@kernel.org>, c.emde@osadl.org
+Subject: Re: [PATCH v3 2/6] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
+Date:   Wed, 29 Jul 2020 01:12:31 +0200
+User-Agent: KMail/1.9.10
+Cc:     devicetree@vger.kernel.org, mkl@pengutronix.de,
+        linux-can@vger.kernel.org, socketcan@hartkopp.net,
+        wg@grandegger.com, davem@davemloft.net, mark.rutland@arm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
+        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com
+References: <cover.1576922226.git.pisa@cmp.felk.cvut.cz> <61533d59378822f8c808abf193b40070810d3d35.1576922226.git.pisa@cmp.felk.cvut.cz> <20200103235359.GA23875@bogus>
+In-Reply-To: <20200103235359.GA23875@bogus>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <202007290112.32007.pisa@cmp.felk.cvut.cz>
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 06SNCXiI022851
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+        score=-1.328, required 6, autolearn=not spam, BAYES_00 -0.50,
+        KHOP_HELO_FCRDNS 0.12, NICE_REPLY_A -0.95, SPF_HELO_NONE 0.00,
+        SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1596582754.89795@XM9drRIrFDItwaXL8PMKQQ
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Avoids unused warnings due to acpi/of table macros.
+Hello Rob,
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Daniel Campello <campello@chromium.org>
+On Saturday 04 of January 2020 00:53:59 Rob Herring wrote:
+> On Sat, Dec 21, 2019 at 03:07:31PM +0100, pisa@cmp.felk.cvut.cz wrote:
+> > From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> >
+> > Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> > ---
+> >  .../devicetree/bindings/net/can/ctu,ctucanfd.txt   | 61
+> > ++++++++++++++++++++++ 1 file changed, 61 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
+>
+> Bindings are moving DT schema format now. Not something I'd require on a
+> respin I've already reviewed, but OTOH it's been 10 months to respin
+> from v2. So:
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> If you have a v4, then please convert to a schema.
+
+The first, thanks much for Device-tree part review, it is only
+one received from relevant person for last six months.
+So I have wait update for v4 patches and focused on teaching
+forced to be distance one
+  https://cw.fel.cvut.cz/wiki/courses/b35apo/lectures/start
+another part of the CTU CAN FD project.
+
+QEMU emulation for the CTU CAN FD IP core
+is result of Jan Charvat's bachelor thesis led by me.
+The patches are waiting for QEMU developers review
+
+  https://lists.nongnu.org/archive/html/qemu-devel/2020-07/msg04653.html
+
+The other people have significant interrest in our project,
+Oliver Hartkopp, CAN in Automation representatives etc.
+
+https://can-newsletter.org/hardware/semiconductors/200609_open-source-ip-core-compliant-with-iso-can-fd_ctu/
+
+https://can-newsletter.org/hardware/semiconductors/181121_can-fd-core-as-an-open-project_university
+
+Project is integrated into complex CAN LIN etc.. tester build for Skoda Auto based on Intel SoC as well.
+
+I am trying to resolve that only one review feedback which I have received before v4
+patches sending. I have spent half day to update and integrate self build packages
+to my stable Debian to can run
+
+   make -k dt_binding_check
+
+but unfortunately, I have not achieved promissing result even when tested on Linux kernel
+unpatched sources. I used actual git dt-schema/dt-doc-validate with 5.4 kernel
+build but I get only long series of
+
+pi@baree:/usr/src/linux-5.4-rt/_build/arm/px6$ make dt_binding_check -k
+GNUmakefile:40: *** mixed implicit and normal rules: deprecated syntax
+make -C /usr/src/linux-5.4-rt O=/usr/src/linux-5.4-rt/_build/arm/px6/ ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- QTDIR=/usr/share/qt4 dt_binding_check
+  CHKDT   Documentation/devicetree/bindings/arm/actions.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/actions.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/actions.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/al,alpine.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/al,alpine.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/al,alpine.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/altera.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/altera.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/altera.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml:  found incompatible YAML document
+  in "<unicode string>", line 2, column 1
+make[3]: *** [/usr/src/linux-5.4-rt/Documentation/devicetree/bindings/Makefile:12: Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.example.dts] Error 1
+  CHKDT   Documentation/devicetree/bindings/arm/amlogic.yaml
+
+The same for ctu,ctucanfd.yam .
+Please, if you have working setup, test if the followup content of
+Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+is acceptable
+
+Thanks in advance,
+
+Pavel
+
+# SPDX-License-Identifier: GPL-2.0
+%YAML 1.2
 ---
+$id: http://devicetree.org/schemas/net/can/ctu,ctucanfd.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
 
-Changes in v2:
- - Added #include <linux/mod_devicetable.h>
+title: CTU CAN FD Open-source IP Core Device Tree Bindings
 
- drivers/iio/proximity/sx9310.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+description: |
+  Open-source CAN FD IP core developed at the Czech Technical University in Prague
 
-diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 108d82ba81146e..04b646ae8a1009 100644
---- a/drivers/iio/proximity/sx9310.c
-+++ b/drivers/iio/proximity/sx9310.c
-@@ -15,8 +15,8 @@
- #include <linux/i2c.h>
- #include <linux/irq.h>
- #include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-@@ -1051,8 +1051,8 @@ MODULE_DEVICE_TABLE(i2c, sx9310_id);
- static struct i2c_driver sx9310_driver = {
- 	.driver = {
- 		.name	= "sx9310",
--		.acpi_match_table = ACPI_PTR(sx9310_acpi_match),
--		.of_match_table = of_match_ptr(sx9310_of_match),
-+		.acpi_match_table = sx9310_acpi_match,
-+		.of_match_table = sx9310_of_match,
- 		.pm = &sx9310_pm_ops,
- 	},
- 	.probe		= sx9310_probe,
--- 
-2.28.0.163.g6104cc2f0b6-goog
+  The core sources and documentation on project page
+    [1] sources : https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
+    [2] datasheet : https://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
 
+  Integration in Xilinx Zynq SoC based system together with
+  OpenCores SJA1000 compatible controllers
+    [3] project : https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top
+  Martin Jerabek dimploma thesis with integration and testing
+  framework description
+    [4] PDF : https://dspace.cvut.cz/bitstream/handle/10467/80366/F3-DP-2019-Jerabek-Martin-Jerabek-thesis-2019-canfd.pdf
+
+maintainers:
+  - Pavel Pisa <pisa@cmp.felk.cvut.cz>
+  - Ondrej Ille <ondrej.ille@gmail.com>
+  - Martin Jerabek <martin.jerabek01@gmail.com>
+
+properties:
+  compatible:
+    oneOf:
+      - items:
+          - const: ctu,ctucanfd
+          - const: ctu,canfd-2
+      - const: ctu,ctucanfd
+
+  reg:
+    description:
+      mapping into bus address space, offset and size
+    maxItems: 1
+
+  interrupts:
+    description: |
+      interrupt source. For Zynq SoC system, format is <(is_spi) (number) (type)>
+      where is_spi defines if it is SPI (shared peripheral) interrupt,
+      the second number is translated to the vector by addition of 32
+      on Zynq-7000 systems and type is IRQ_TYPE_LEVEL_HIGH (4) for Zynq.
+    maxItems: 1
+
+  clocks:
+    description: |
+      phandle of reference clock (100 MHz is appropriate
+      for FPGA implementation on Zynq-7000 system).
+    maxItems: 1
+
+required:
+  - compatible
+  - reg
+  - interrupts
+  - clocks
+
+additionalProperties: false
+
+examples:
+  - |
+    ctu_can_fd_0: can@43c30000 {
+      compatible = "ctu,ctucanfd";
+      interrupts = <0 30 4>;
+      clocks = <&clkc 15>;
+      reg = <0x43c30000 0x10000>;
+    };
