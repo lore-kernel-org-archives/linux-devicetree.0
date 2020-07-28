@@ -2,182 +2,108 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1844AC433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8F5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 14:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0134D2075D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F92206D4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 14:04:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LdI8BzQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbgG1N7n (ORCPT
+        id S1730264AbgG1OEP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:59:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44372 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730226AbgG1N7n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:59:43 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SDWnP3075655;
-        Tue, 28 Jul 2020 09:59:41 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jfr7a6u1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 09:59:40 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SDseMa020319;
-        Tue, 28 Jul 2020 13:59:36 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 32gcy48as1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 13:59:36 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SDxZsM38207920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 13:59:35 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A64B0B2064;
-        Tue, 28 Jul 2020 13:59:35 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8BFBCB206A;
-        Tue, 28 Jul 2020 13:59:35 +0000 (GMT)
-Received: from gfw170.aus.stglabs.ibm.com (unknown [9.3.62.224])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Jul 2020 13:59:35 +0000 (GMT)
-Received: by gfw170.aus.stglabs.ibm.com (Postfix, from userid 298080)
-        id 4199A2AB; Tue, 28 Jul 2020 08:59:35 -0500 (CDT)
-From:   Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
-To:     joel@jms.id.au
-Cc:     vishwa@linux.vnet.ibm.com, devicetree@vger.kernel.org,
-        eajames@linux.ibm.com
-Subject: [PATCH 1/2] rainier: Add leds that are off 9551 on Operator Panel
-Date:   Tue, 28 Jul 2020 08:59:30 -0500
-Message-Id: <1595944770-18106-1-git-send-email-vishwa@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-28_11:2020-07-28,2020-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=846
- adultscore=0 phishscore=0 malwarescore=0 suspectscore=1 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007280103
+        Tue, 28 Jul 2020 10:04:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58244 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730211AbgG1OEP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 10:04:15 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06SE4D6C110713;
+        Tue, 28 Jul 2020 09:04:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1595945053;
+        bh=XRCyFICfAbzoSRKBaeClzmOc5bpzSUxQPEJq6VvvJi8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LdI8BzQj93XvNZkZ4d4oESBsQm56cgloU20cB8l7PycNEa3+0aQqKRs0t3l667Hdv
+         OnvPzyHESd0qTXUbz4bDMZFJKl8zP3o2HbwYRvOEPxHN2qGnV5UuopVDlI8HDPchXP
+         QOo5hNE1gGSE2sqqHtxkJaNbzO32ABIypk1bDxfM=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06SE4Dvx057786
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jul 2020 09:04:13 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 28
+ Jul 2020 09:04:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 28 Jul 2020 09:04:13 -0500
+Received: from [10.250.35.192] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06SE4D1n101658;
+        Tue, 28 Jul 2020 09:04:13 -0500
+Subject: Re: [PATCH v3 2/4] power: supply: bq27xxx_battery: Add the BQ27561
+ Battery monitor
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     <afd@ti.com>, <pali@kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh@kernel.org>
+References: <20200721163206.25438-1-dmurphy@ti.com>
+ <20200721163206.25438-2-dmurphy@ti.com>
+ <20200727223646.vjnkyrmipwin3pj6@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <bc31b9d8-d114-e776-84fd-e05a014b74eb@ti.com>
+Date:   Tue, 28 Jul 2020 09:04:08 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200727223646.vjnkyrmipwin3pj6@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These are LEDs that are controlled by 9551
+Sebastian
 
-Signed-off-by: Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
----
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 82 ++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+On 7/27/20 5:36 PM, Sebastian Reichel wrote:
+> Hi,
+>
+> On Tue, Jul 21, 2020 at 11:32:04AM -0500, Dan Murphy wrote:
+>> Add the Texas Instruments BQ27561 battery monitor.  The register address
+>> map is laid out the same as compared to other devices within the file.
+>> The battery status register has differing bits to determine if the
+>> battery is full, discharging or dead.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+> Looks mostly good to me, but
+>
+> [...]
+>
+>> @@ -1710,6 +1769,13 @@ static int bq27xxx_battery_capacity_level(struct bq27xxx_device_info *di,
+>>   			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+>>   		else
+>>   			level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+>> +	} else if (di->opts & BQ27561_O_BITS) {
+>> +		if (di->cache.flags & BQ27561_FLAG_FC)
+>> +			level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+>> +		else if (di->cache.flags & BQ27561_FLAG_DIS_CH)
+>> +			level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+> Shouldn't this be checking for FLAG_FDC instead of FLAG_DIS_CH?
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index 0b5c6cc..ecbce50 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -69,6 +69,38 @@
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		/* System ID LED that is at front on Op Panel */
-+		front-sys-id0 {
-+			retain-state-shutdown;
-+			default-state = "keep";
-+			gpios = <&pca1 0 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		/* System Attention Indicator ID LED that is at front on Op Panel */
-+		front-check-log0 {
-+			retain-state-shutdown;
-+			default-state = "keep";
-+			gpios = <&pca1 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		/* Enclosure Fault LED that is at front on Op Panel */
-+		front-enc-fault1 {
-+			retain-state-shutdown;
-+			default-state = "keep";
-+			gpios = <&pca1 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		/* System PowerOn LED that is at front on Op Panel */
-+		front-sys-pwron0 {
-+			retain-state-shutdown;
-+			default-state = "keep";
-+			gpios = <&pca1 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
- };
- 
- &gpio0 {
-@@ -514,6 +546,56 @@
- 		};
- 	};
- 
-+	pca1: pca9551@60 {
-+		compatible = "nxp,pca9551";
-+		reg = <0x60>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		gpio@0 {
-+			reg = <0>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@1 {
-+			reg = <1>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@2 {
-+			reg = <2>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@3 {
-+			reg = <3>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@4 {
-+			reg = <4>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@5 {
-+			reg = <5>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@6 {
-+			reg = <6>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+
-+		gpio@7 {
-+			reg = <7>;
-+			type = <PCA955X_TYPE_GPIO>;
-+		};
-+	};
-+
- 	dps: dps310@76 {
- 		compatible = "infineon,dps310";
- 		reg = <0x76>;
--- 
-1.8.3.1
+Yes.
 
+Dan
+
+
+> -- Sebastian
