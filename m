@@ -2,85 +2,111 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23AAC433EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562BFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8283D2074F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFB9207FC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595953888;
-	bh=PYdkKnxxcQFMv3YJQCfo1uY3iy0vMXSKSgcJLUonuwA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=wxwYW4gKI6wDJw+k4KeJ3YX4sKXK8Ottx7IatvUsaPBp95M+pI430iHOeyi0u3RyJ
-	 t6E6Ao8T09Rw5TrzWOK7lMOwPNLZOvtO4tzUhubK5m80J/YqYz2EZ9xvZPE+934Hfp
-	 KO83VOrXLodcRU2TkRJpd69XLyn7xpLmEkAt0dUo=
+	s=default; t=1595954022;
+	bh=CyO+KG7FzzjL3u5xcfWSbfuodTo1aFszHfxmh23DayQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0VLHV6zMr4rn5LVwLOVpDTyQ0KJckjisOEe4fgp/qp0Hz3w77E2PuTOvSGNASfVO3
+	 yPBIadxANfQGiHA4TiXYHpIwsmk3hGtNP5b2i9Hb7j8CXy0WG8rM2FTnQBp6TW7aj+
+	 NAbe4tzdEXAgHLQbGZ56q8L/wkNc23kjihtKBgzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731409AbgG1QbZ (ORCPT
+        id S1731231AbgG1Qdl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46934 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:33:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731070AbgG1QbY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:31:24 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1731191AbgG1Qdl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:33:41 -0400
+Received: from localhost (p54b330d0.dip0.t-ipconnect.de [84.179.48.208])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFFC920825;
-        Tue, 28 Jul 2020 16:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E09B2074F;
+        Tue, 28 Jul 2020 16:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595953883;
-        bh=PYdkKnxxcQFMv3YJQCfo1uY3iy0vMXSKSgcJLUonuwA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=yv/UdIWHabVmupxBbnxvN2V/4hviSAwkU0frmQc0+sBWuMreFl7R+3jQ2neFgXLsI
-         ghQfM2OzTMLrgzTNmIKO39WIsHG2gLQ4vd35oVPnHcdpaI6x7QIQvdXXiAnmkVGtH2
-         EcbhCqFDxiTdmEy5dppbKv2Iq8ICfyInr7ftgGmY=
-Date:   Tue, 28 Jul 2020 17:31:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <20200724155933.1040501-1-katsuhiro@katsuster.net>
-References: <20200724155933.1040501-1-katsuhiro@katsuster.net>
-Subject: Re: [PATCH v2] dt-bindings: sound: convert Everest ES8316 binding to yaml
-Message-Id: <159595383113.15027.17968086750577561184.b4-ty@kernel.org>
+        s=default; t=1595954020;
+        bh=CyO+KG7FzzjL3u5xcfWSbfuodTo1aFszHfxmh23DayQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s3QrGWs6r41cwRLi3jaM7WnG9VMjZ38NgXikHq81mnPXeHly87gXe1Gdnt+Oa8ILn
+         WMcPea7hK8lcMan/78/gjXWYPQk8o5bsU8IP7f3qqXCgtMTZzifwpGkNNbSfGPhFlc
+         hXJoX0fJrdTMFqYhxTXf5OLU+QgCqZWvduAImpek=
+Date:   Tue, 28 Jul 2020 18:33:37 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH v5 01/14] i2c: tegra: Don't mark VI I2C as IRQ safe
+ runtime PM
+Message-ID: <20200728163337.GA3736@ninjato>
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-2-git-send-email-skomatineni@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Content-Disposition: inline
+In-Reply-To: <1595883452-17343-2-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 25 Jul 2020 00:59:33 +0900, Katsuhiro Suzuki wrote:
-> This patch converts Everest Semiconductor ES8316 low power audio
-> CODEC binding to DT schema.
 
-Applied to
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+On Mon, Jul 27, 2020 at 01:57:19PM -0700, Sowjanya Komatineni wrote:
+> Tegra VI I2C is part of VE power domain and typically used for
+> camera usecases.
+>=20
+> VE power domain is not always on and is non-IRQ safe. So, IRQ safe
+> device cannot be attached to a non-IRQ safe domain as it prevents
+> powering off the PM domain and generic power domain driver will warn.
+>=20
+> Current driver marks all I2C devices as IRQ safe and VI I2C device
+> does not require IRQ safe as it will not be used for atomic transfers.
+>=20
+> This patch has fix to make VI I2C as non-IRQ safe.
+>=20
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Thanks!
+Applied to for-next, thanks!
 
-[1/1] ASoC: convert Everest ES8316 binding to yaml
-      commit: 92e67a9c4f206dc9c859c405e67448a8be59ac5d
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+-----BEGIN PGP SIGNATURE-----
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gU10ACgkQFA3kzBSg
+KbZ3Hw/+JjUetYWJoT3e1Gow35An6YJAiMVml8O8As0dKNoOqQxvKRwPzWLycd/a
++KvB6iWzLLth8Fd74qmC9ksj3aQcI3ABTZJtkFmi9l1xui/AnfzrqwUHrLqxBqo0
+URq5URAUQDd0qRkk5t65otVrSSLf9V04KQL53VriUefnvKUk8TMq1GTHG5T7a+Z5
+Pk/4mUV5QcdPMv4j5H83ri/0JJZw2EAMRQFKCK7Vr3Mj0/4y3W5DNkJb7u368wZ3
+z7KOT6x5vgt3NKwe4x8bPRjeIn6R7BPgaiIrYoO3XDCgN7JBAShVOkCquvhXGR7u
+amYZ1YkXtv8hL0eGin4Stc2NFt/WTYz7FP0WtDoJ7Yx/x/ilIA17C7dw7iNBqVY9
+Ra05N4oKGROtl5XgdcLIV0skNuVunJ5p2iqci1xIO/Q3gnH6cCRIBOeN1xtNjEIR
+wr4pKBBpuU6UlJcfg08r5epbGTEach07HiijY5H5CVkQa0hg5eWWu4KRdFYgvJUb
+rWoH96/4oxZZRMORpMUw1bA9AkZFUXTH/6zZ3VTadkznUCYjO8fqzDNYKpwcxUG3
+8FbT/x7WL52H+J0ZwRlAxWBU297l0V6JpdO+YHfRp9p2oi9LbUF6nl+kkOZR07zW
+76nFW+M44VWlKxeCmgRLtVTHTIUZTRMw4GKalr7c3pwSetzEpo0=
+=tHZF
+-----END PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+--pf9I7BMVVzbSWLtt--
