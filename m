@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739ADC4345B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D4CC43462
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5026021775
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC4121775
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 05:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FFJEqir1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jLhs3co0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgG1FCJ (ORCPT
+        id S1726787AbgG1FCk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 01:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60730 "EHLO
+        Tue, 28 Jul 2020 01:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726929AbgG1FCH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 01:02:07 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD0EC061794
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 22:02:06 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l63so11190745pge.12
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 22:02:06 -0700 (PDT)
+        with ESMTP id S1726857AbgG1FB5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 01:01:57 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14B1BC0619D2
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 22:01:57 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id m22so11192386pgv.9
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 22:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=quJpJ8MFVCXxN2uUe5uCTDrzupsmhmPuwJ3x/xpP/Nw=;
-        b=FFJEqir1hVkStEtfk+rEgzo8ZUuB5JUH7sJuO0JVeZhFlRfq6eDnq0M4SOi7xAzJNL
-         Lg/B3hHFlX31yqXoVUvS53JbUcgSOfKFc9jlDruvAYag4p2p8uxI5CayvTuyOTxTzb2Y
-         CmbNlaHf7A4Fl7V3TquMd4DohiBBSI7zhVcCs=
+        bh=GzlYUZg9l79IbjjLQqSE/48BZ7PWQ7uRxN6Q6PXEhSQ=;
+        b=jLhs3co02jfrEEgXDA7ysPbXZIOT6+aQEIY05gAffMbBj6QlSdbkT1FE0S6W0cG6T5
+         LU7+PgVpV29MsP3Qg1Yxoh289spWujm0eYaBb+R7lp2zVr4J+NF9fbtPpXlJLSxdVlHy
+         UXZIQfVfLs8E8wHYwC6oick+9vhx7X2X4GaVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=quJpJ8MFVCXxN2uUe5uCTDrzupsmhmPuwJ3x/xpP/Nw=;
-        b=KZ5uUbwRwJnfcG4JFx4N6PWZ9mUMBCsnkqubcK8H7IQyOpVBtRZtvb8OkyIzmSu1CP
-         v0NCQkP4OJxvZWX43ZKYMaZvaM9sFJaqU8O1SJA3u6fTZnzAVIGemalnoHKfMLnn3M9l
-         naLJVTVuF7kHImwdosuP9Jzr7sz6uchU6SA+0BVnSmVNNf8FBhKwe5qJA0bX5BJsKBqD
-         m6HPU7I/xiPk1wLi5cTovzkO1KbqZ7K5q993eNOoz3n1vdb9mUlvWUBn6AJB2HavqrDc
-         59CDHcKvtEzu3LtCR+4UR+uRH9ELOxi3zT2BNL+T0NSwStkrR844y6J5xgTELUoTi9I7
-         9hUQ==
-X-Gm-Message-State: AOAM53093kun4cnLUKCfMVcpIUKEAwzb/bv0yV0au+X+v+0YhdSRyRq2
-        VBevQT1dhGs7Ygi+buxIKVd5tQ==
-X-Google-Smtp-Source: ABdhPJxRMJ3gCBUPChJ2eZ/7cp0FgFLdngDiw44ugrhRF2b1gUjV2mSJdfqzvUQMjkMMzXOG1e/voQ==
-X-Received: by 2002:a65:428d:: with SMTP id j13mr23297111pgp.211.1595912526277;
-        Mon, 27 Jul 2020 22:02:06 -0700 (PDT)
+        bh=GzlYUZg9l79IbjjLQqSE/48BZ7PWQ7uRxN6Q6PXEhSQ=;
+        b=QgYm/oqVm3sXoKnehZX7JbFPWr+dcG7X/Fw6SIEgqDCR0MXLtt1K9dvDNSwi0tUruT
+         f3/HkFlrfAixrnoOAxK3E0PAxiJ1rX/K3vWQS7SKyEUI24PlVPWgcinRYMJpuv+xizNB
+         /2kuz5zU7zPDrAK+DyR9NcoZx6LIvyqdi+OJuD0swzZvqZAlUDD+HfpFboXGD7oLaK7D
+         jCS6YHc90f0mZSpVN+ywy8umM4UPYfQ6PffgWn74f0Mk+3uqVVKhhGhS1HpIbrRPIQQ5
+         7Nx9+6ak9BEzzyqS32mubrWFAgPlq2kIdqPWEGuxcAkn4kYrqm72k/Qm9EiO2a1/0yz7
+         BtFQ==
+X-Gm-Message-State: AOAM530ODraJjM0VGk7O22MeXMZWkNpRVH0Uk8wM0xSQHkb/4cpgDhs2
+        dSJQt9sjKnoD7ledM76sMylLAg==
+X-Google-Smtp-Source: ABdhPJyZAgI1AxksVIP03OkPyiL9SyEpbcrgBE+N4KENj9Tb2I3RCkhBC6+eGBSrdfJEuXkYWgCaQg==
+X-Received: by 2002:a63:f814:: with SMTP id n20mr22114160pgh.92.1595912516165;
+        Mon, 27 Jul 2020 22:01:56 -0700 (PDT)
 Received: from localhost ([2401:fa00:1:10:3e52:82ff:fe5e:cc9d])
-        by smtp.gmail.com with ESMTPSA id a26sm17578156pgm.20.2020.07.27.22.02.03
+        by smtp.gmail.com with ESMTPSA id b185sm16194692pfa.148.2020.07.27.22.01.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 22:02:05 -0700 (PDT)
+        Mon, 27 Jul 2020 22:01:55 -0700 (PDT)
 From:   Claire Chang <tientzu@chromium.org>
 To:     robh+dt@kernel.org, frowand.list@gmail.com, hch@lst.de,
         m.szyprowski@samsung.com, robin.murphy@arm.com
@@ -65,9 +65,9 @@ Cc:     treding@nvidia.com, gregkh@linuxfoundation.org,
         bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         drinkcat@chromium.org, tfiga@chromium.org, tientzu@chromium.org
-Subject: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
-Date:   Tue, 28 Jul 2020 13:01:39 +0800
-Message-Id: <20200728050140.996974-5-tientzu@chromium.org>
+Subject: [RFC v2 2/5] swiotlb: Add device swiotlb pool
+Date:   Tue, 28 Jul 2020 13:01:37 +0800
+Message-Id: <20200728050140.996974-3-tientzu@chromium.org>
 X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
 In-Reply-To: <20200728050140.996974-1-tientzu@chromium.org>
 References: <20200728050140.996974-1-tientzu@chromium.org>
@@ -78,73 +78,231 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce the new compatible string, device-swiotlb-pool, for restricted
-DMA. One can specify the address and length of the device swiotlb memory
-region by device-swiotlb-pool in the device tree.
+Add the initialization function to create device swiotlb pools from
+matching reserved-memory nodes in the device tree.
 
 Signed-off-by: Claire Chang <tientzu@chromium.org>
 ---
- .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ include/linux/device.h |   4 ++
+ kernel/dma/swiotlb.c   | 148 +++++++++++++++++++++++++++++++++--------
+ 2 files changed, 126 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-index 4dd20de6977f..78850896e1d0 100644
---- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-@@ -51,6 +51,24 @@ compatible (optional) - standard definition
-           used as a shared pool of DMA buffers for a set of devices. It can
-           be used by an operating system to instantiate the necessary pool
-           management subsystem if necessary.
-+        - device-swiotlb-pool: This indicates a region of memory meant to be
-+          used as a pool of device swiotlb buffers for a given device. When
-+          using this, the no-map and reusable properties must not be set, so the
-+          operating system can create a virtual mapping that will be used for
-+          synchronization. Also, there must be a restricted-dma property in the
-+          device node to specify the indexes of reserved-memory nodes. One can
-+          specify two reserved-memory nodes in the device tree. One with
-+          shared-dma-pool to handle the coherent DMA buffer allocation, and
-+          another one with device-swiotlb-pool for regular DMA to/from system
-+          memory, which would be subject to bouncing. The main purpose for
-+          restricted DMA is to mitigate the lack of DMA access control on
-+          systems without an IOMMU, which could result in the DMA accessing the
-+          system memory at unexpected times and/or unexpected addresses,
-+          possibly leading to data leakage or corruption. The feature on its own
-+          provides a basic level of protection against the DMA overwriting buffer
-+          contents at unexpected times. However, to protect against general data
-+          leakage and system memory corruption, the system needs to provide a
-+          way to restrict the DMA to a predefined memory region.
-         - vendor specific string in the form <vendor>,[<device>-]<usage>
- no-map (optional) - empty property
-     - Indicates the operating system must not create a virtual mapping
-@@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
- 			compatible = "acme,multimedia-memory";
- 			reg = <0x77000000 0x4000000>;
- 		};
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 79ce404619e6..f40f711e43e9 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -575,6 +575,10 @@ struct device {
+ 	struct cma *cma_area;		/* contiguous memory area for dma
+ 					   allocations */
+ #endif
++#ifdef CONFIG_SWIOTLB
++	struct io_tlb_mem	*dma_io_tlb_mem;
++#endif
 +
-+		wifi_coherent_mem_region: wifi_coherent_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0x50000000 0x400000>;
-+		};
-+
-+		wifi_device_swiotlb_region: wifi_device_swiotlb_region {
-+			compatible = "device-swiotlb-pool";
-+			reg = <0x50400000 0x4000000>;
-+		};
- 	};
+ 	/* arch specific additions */
+ 	struct dev_archdata	archdata;
  
- 	/* ... */
-@@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
- 		memory-region = <&multimedia_reserved>;
- 		/* ... */
- 	};
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index f83911fa14ce..eaa101b3e75b 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -36,6 +36,10 @@
+ #include <linux/scatterlist.h>
+ #include <linux/mem_encrypt.h>
+ #include <linux/set_memory.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_fdt.h>
++#include <linux/of_reserved_mem.h>
+ #ifdef CONFIG_DEBUG_FS
+ #include <linux/debugfs.h>
+ #endif
+@@ -298,20 +302,14 @@ static void swiotlb_cleanup(void)
+ 	max_segment = 0;
+ }
+ 
+-int
+-swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
++static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
++				    size_t size)
+ {
+-	struct io_tlb_mem *mem = &io_tlb_default_mem;
+-	unsigned long i, bytes;
+-
+-	bytes = nslabs << IO_TLB_SHIFT;
++	unsigned long i;
+ 
+-	mem->nslabs = nslabs;
+-	mem->start = virt_to_phys(tlb);
+-	mem->end = mem->start + bytes;
+-
+-	set_memory_decrypted((unsigned long)tlb, bytes >> PAGE_SHIFT);
+-	memset(tlb, 0, bytes);
++	mem->nslabs = size >> IO_TLB_SHIFT;
++	mem->start = start;
++	mem->end = mem->start + size;
+ 
+ 	/*
+ 	 * Allocate and initialize the free list array.  This array is used
+@@ -336,11 +334,6 @@ swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
+ 	}
+ 	mem->index = 0;
+ 
+-	swiotlb_print_info();
+-
+-	late_alloc = 1;
+-
+-	swiotlb_set_max_segment(mem->nslabs << IO_TLB_SHIFT);
+ 	spin_lock_init(&mem->lock);
+ 
+ 	return 0;
+@@ -354,6 +347,38 @@ swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
+ 	return -ENOMEM;
+ }
+ 
++int swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs)
++{
++	struct io_tlb_mem *mem = &io_tlb_default_mem;
++	unsigned long bytes;
++	int ret;
 +
-+	pcie_wifi: pcie_wifi@0,0 {
-+		memory-region = <&wifi_coherent_mem_region>,
-+			 <&wifi_device_swiotlb_region>;
-+		restricted-dma = <0>, <1>;
-+		/* ... */
-+	};
- };
++	bytes = nslabs << IO_TLB_SHIFT;
++
++	set_memory_decrypted((unsigned long)tlb, bytes >> PAGE_SHIFT);
++	memset(tlb, 0, bytes);
++
++	ret = swiotlb_init_io_tlb_mem(mem, virt_to_phys(tlb), bytes);
++	if (ret)
++		return ret;
++
++	swiotlb_print_info();
++
++	late_alloc = 1;
++
++	swiotlb_set_max_segment(mem->nslabs << IO_TLB_SHIFT);
++
++	return 0;
++}
++
++static void swiotlb_free_pages(struct io_tlb_mem *mem)
++{
++	free_pages((unsigned long)mem->orig_addr,
++		   get_order(mem->nslabs * sizeof(phys_addr_t)));
++	free_pages((unsigned long)mem->list,
++		   get_order(mem->nslabs * sizeof(int)));
++}
++
+ void __init swiotlb_exit(void)
+ {
+ 	struct io_tlb_mem *mem = &io_tlb_default_mem;
+@@ -362,10 +387,7 @@ void __init swiotlb_exit(void)
+ 		return;
+ 
+ 	if (late_alloc) {
+-		free_pages((unsigned long)mem->orig_addr,
+-			   get_order(mem->nslabs * sizeof(phys_addr_t)));
+-		free_pages((unsigned long)mem->list, get_order(mem->nslabs *
+-							       sizeof(int)));
++		swiotlb_free_pages(mem);
+ 		free_pages((unsigned long)phys_to_virt(mem->start),
+ 			   get_order(mem->nslabs << IO_TLB_SHIFT));
+ 	} else {
+@@ -687,16 +709,90 @@ bool is_swiotlb_active(void)
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 
+-static int __init swiotlb_create_debugfs(void)
++static void swiotlb_create_debugfs(struct io_tlb_mem *mem, const char *name,
++				   struct dentry *node)
+ {
+-	struct io_tlb_mem *mem = &io_tlb_default_mem;
+-
+-	mem->debugfs = debugfs_create_dir("swiotlb", NULL);
++	mem->debugfs = debugfs_create_dir(name, node);
+ 	debugfs_create_ulong("io_tlb_nslabs", 0400, mem->debugfs, &mem->nslabs);
+ 	debugfs_create_ulong("io_tlb_used", 0400, mem->debugfs, &mem->used);
++}
++
++static int __init swiotlb_create_default_debugfs(void)
++{
++	swiotlb_create_debugfs(&io_tlb_default_mem, "swiotlb", NULL);
++
+ 	return 0;
+ }
+ 
+-late_initcall(swiotlb_create_debugfs);
++late_initcall(swiotlb_create_default_debugfs);
+ 
+ #endif
++
++static int device_swiotlb_init(struct reserved_mem *rmem,
++				       struct device *dev)
++{
++	struct io_tlb_mem *mem;
++	int ret;
++
++	if (dev->dma_io_tlb_mem)
++		return 0;
++
++	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
++	if (!mem)
++		return -ENOMEM;
++
++	if (!devm_memremap(dev, rmem->base, rmem->size, MEMREMAP_WB)) {
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	ret = swiotlb_init_io_tlb_mem(mem, rmem->base, rmem->size);
++	if (ret)
++		goto cleanup;
++
++	swiotlb_create_debugfs(mem, dev_name(dev), io_tlb_default_mem.debugfs);
++
++	dev->dma_io_tlb_mem = mem;
++
++	return 0;
++
++cleanup:
++	kfree(mem);
++
++	return ret;
++}
++
++static void device_swiotlb_release(struct reserved_mem *rmem,
++					   struct device *dev)
++{
++	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
++
++	dev->dma_io_tlb_mem = NULL;
++
++	debugfs_remove_recursive(mem->debugfs);
++	swiotlb_free_pages(mem);
++	kfree(mem);
++}
++
++static const struct reserved_mem_ops rmem_device_swiotlb_ops = {
++	.device_init	= device_swiotlb_init,
++	.device_release	= device_swiotlb_release,
++};
++
++static int __init device_swiotlb_pool_setup(struct reserved_mem *rmem)
++{
++	unsigned long node = rmem->fdt_node;
++
++	if (of_get_flat_dt_prop(node, "reusable", NULL) ||
++	    of_get_flat_dt_prop(node, "linux,cma-default", NULL) ||
++	    of_get_flat_dt_prop(node, "linux,dma-default", NULL) ||
++	    of_get_flat_dt_prop(node, "no-map", NULL))
++		return -EINVAL;
++
++	rmem->ops = &rmem_device_swiotlb_ops;
++	pr_info("Reserved memory: created device swiotlb memory pool at %pa, size %ld MiB\n",
++		&rmem->base, (unsigned long)rmem->size / SZ_1M);
++	return 0;
++}
++
++RESERVEDMEM_OF_DECLARE(dma, "device-swiotlb-pool", device_swiotlb_pool_setup);
 -- 
 2.28.0.rc0.142.g3c755180ce-goog
 
