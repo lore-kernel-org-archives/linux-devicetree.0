@@ -4,129 +4,180 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_QUOTING autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE5BC433EA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1844AC433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43B562074F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0134D2075D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgG1N7u (ORCPT
+        id S1730285AbgG1N7n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:59:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49512 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730226AbgG1N7t (ORCPT
+        Tue, 28 Jul 2020 09:59:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44372 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730226AbgG1N7n (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:59:49 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SDWxMn036126;
-        Tue, 28 Jul 2020 09:59:48 -0400
+        Tue, 28 Jul 2020 09:59:43 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SDWnP3075655;
+        Tue, 28 Jul 2020 09:59:41 -0400
 Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32jkw23a24-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jfr7a6u1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 09:59:48 -0400
+        Tue, 28 Jul 2020 09:59:40 -0400
 Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SDscFD020305;
-        Tue, 28 Jul 2020 13:59:47 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma02dal.us.ibm.com with ESMTP id 32gcy48asy-1
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SDseMa020319;
+        Tue, 28 Jul 2020 13:59:36 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma02dal.us.ibm.com with ESMTP id 32gcy48as1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Jul 2020 13:59:47 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SDxisa66388420
+        Tue, 28 Jul 2020 13:59:36 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SDxZsM38207920
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Jul 2020 13:59:44 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E550136055;
-        Tue, 28 Jul 2020 13:59:46 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC2FA136051;
-        Tue, 28 Jul 2020 13:59:45 +0000 (GMT)
+        Tue, 28 Jul 2020 13:59:35 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A64B0B2064;
+        Tue, 28 Jul 2020 13:59:35 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BFBCB206A;
+        Tue, 28 Jul 2020 13:59:35 +0000 (GMT)
 Received: from gfw170.aus.stglabs.ibm.com (unknown [9.3.62.224])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Jul 2020 13:59:45 +0000 (GMT)
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jul 2020 13:59:35 +0000 (GMT)
 Received: by gfw170.aus.stglabs.ibm.com (Postfix, from userid 298080)
-        id 8936B2AB; Tue, 28 Jul 2020 08:59:45 -0500 (CDT)
+        id 4199A2AB; Tue, 28 Jul 2020 08:59:35 -0500 (CDT)
 From:   Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
 To:     joel@jms.id.au
 Cc:     vishwa@linux.vnet.ibm.com, devicetree@vger.kernel.org,
         eajames@linux.ibm.com
-Subject: [PATCH 2/2] rainier: Add LEDs that are controlled by ASPEED
-Date:   Tue, 28 Jul 2020 08:59:43 -0500
-Message-Id: <1595944783-18172-1-git-send-email-vishwa@linux.vnet.ibm.com>
+Subject: [PATCH 1/2] rainier: Add leds that are off 9551 on Operator Panel
+Date:   Tue, 28 Jul 2020 08:59:30 -0500
+Message-Id: <1595944770-18106-1-git-send-email-vishwa@linux.vnet.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-28_11:2020-07-28,2020-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- phishscore=0 mlxlogscore=803 spamscore=0 clxscore=1015 malwarescore=0
- priorityscore=1501 impostorscore=0 suspectscore=1 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=846
+ adultscore=0 phishscore=0 malwarescore=0 suspectscore=1 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2007280103
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These are the LEDs that have direct GPIO connection from ASPEED
+These are LEDs that are controlled by 9551
 
 Signed-off-by: Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 82 ++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
 
 diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index ecbce50..dc68c49 100644
+index 0b5c6cc..ecbce50 100644
 --- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
 +++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -72,6 +72,26 @@
- 	leds {
- 		compatible = "gpio-leds";
+@@ -69,6 +69,38 @@
+ 		};
+ 	};
  
-+		/* BMC Card fault LED at the back */
-+		bmc-ingraham0 {
-+			gpios = <&gpio0 ASPEED_GPIO(H, 1) GPIO_ACTIVE_LOW>;
++	leds {
++		compatible = "gpio-leds";
++
++		/* System ID LED that is at front on Op Panel */
++		front-sys-id0 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 0 GPIO_ACTIVE_LOW>;
 +		};
 +
-+		/* Enclosure ID LED at the back */
-+		rear-enc-id0 {
-+			gpios = <&gpio0 ASPEED_GPIO(H, 2) GPIO_ACTIVE_LOW>;
++		/* System Attention Indicator ID LED that is at front on Op Panel */
++		front-check-log0 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 1 GPIO_ACTIVE_LOW>;
 +		};
 +
-+		/* Enclosure fault LED at the back */
-+		rear-enc-fault0 {
-+			gpios = <&gpio0 ASPEED_GPIO(H, 3) GPIO_ACTIVE_LOW>;
++		/* Enclosure Fault LED that is at front on Op Panel */
++		front-enc-fault1 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 2 GPIO_ACTIVE_LOW>;
 +		};
 +
-+		/* PCIE slot power LED */
-+		pcieslot-power {
-+			gpios = <&gpio0 ASPEED_GPIO(P, 4) GPIO_ACTIVE_LOW>;
++		/* System PowerOn LED that is at front on Op Panel */
++		front-sys-pwron0 {
++			retain-state-shutdown;
++			default-state = "keep";
++			gpios = <&pca1 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++
+ };
+ 
+ &gpio0 {
+@@ -514,6 +546,56 @@
+ 		};
+ 	};
+ 
++	pca1: pca9551@60 {
++		compatible = "nxp,pca9551";
++		reg = <0x60>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		gpio@0 {
++			reg = <0>;
++			type = <PCA955X_TYPE_GPIO>;
 +		};
 +
- 		/* System ID LED that is at front on Op Panel */
- 		front-sys-id0 {
- 			retain-state-shutdown;
-@@ -112,7 +132,7 @@
- 	/*E0-E7*/	"","","","","","","","",
- 	/*F0-F7*/	"","","","","","","","",
- 	/*G0-G7*/	"","","","","","","","",
--	/*H0-H7*/	"","","","","","","","",
-+	/*H0-H7*/	"","bmc-ingraham0","rear-enc-id0","rear-enc-fault0","","","","",
- 	/*I0-I7*/	"","","","","","","","",
- 	/*J0-J7*/	"","","","","","","","",
- 	/*K0-K7*/	"","","","","","","","",
-@@ -120,7 +140,7 @@
- 	/*M0-M7*/	"","","","","","","","",
- 	/*N0-N7*/	"","","","","","","","",
- 	/*O0-O7*/	"","","","","","","","",
--	/*P0-P7*/	"","","","","","","","",
-+	/*P0-P7*/	"","","","","pcieslot-power","","","",
- 	/*Q0-Q7*/	"cfam-reset","","","","","","","",
- 	/*R0-R7*/	"","","","","","","","",
- 	/*S0-S7*/	"presence-ps0","presence-ps1","presence-ps2","presence-ps3",
++		gpio@1 {
++			reg = <1>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@2 {
++			reg = <2>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@3 {
++			reg = <3>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@4 {
++			reg = <4>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@5 {
++			reg = <5>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@6 {
++			reg = <6>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++
++		gpio@7 {
++			reg = <7>;
++			type = <PCA955X_TYPE_GPIO>;
++		};
++	};
++
+ 	dps: dps310@76 {
+ 		compatible = "infineon,dps310";
+ 		reg = <0x76>;
 -- 
 1.8.3.1
 
