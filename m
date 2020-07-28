@@ -2,170 +2,192 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6B4C433F2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6D8C433FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BC420809
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D913A20809
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UqckbfU0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUZBUOCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgG1JUB (ORCPT
+        id S1728478AbgG1JUV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:20:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        Tue, 28 Jul 2020 05:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728403AbgG1JUA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 05:20:00 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE5C8C0619D4
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 02:19:59 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id b30so10593489lfj.12
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 02:19:59 -0700 (PDT)
+        with ESMTP id S1728157AbgG1JUU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 05:20:20 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF62C0619D2
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l2so6992205wrc.7
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 02:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4zsWyblv4WYqOLRqFANl/g337TI8guVn11cXGgyt8Y0=;
-        b=UqckbfU0UoUqAEx3PUc0VVyr7US4m3M4LDoKEHI42J+xeM4TM4pTOwXt8KPCpiGRe8
-         eP6trKsNWEcrx3Kc8ZpHtDWYIy8eBNJhtmrOlEx+YsOi85o4NHE/WjxNvrNaVKBcvxuM
-         R1E7Rxd2QmEP+mDEyrVwDwow8yQTMkS/54MGBaLAri006UgG2ISyTAzXBEd7zxHVCcmA
-         EP7WL4h1pLr5786+Vt93AzyHtAGl422GpdMu5ZjRxI2Qe2eRwwS8SV9TNNBcpkvoH8Sv
-         KXr1qHGKmIozzcYJbbXfgd0RHpvysV1Vo7Iwc+6F/ay3A3/bU5ageHf0Qsdzr5mSaVmK
-         gEOg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
+        b=AUZBUOCz+C3rUbC09PBQb07wRcuG+Z5atNFGMx6frCJ20iuSZPlI4T6fknCpq3V/8J
+         ojiJjQXoLXIm3nkm0LEBfBv4OXrf6lLG5QUbLRzA1+ixupmRCG4MzcvFiTqizHNPbH0/
+         XzZPxU1YUQ+SgMlRBsA9NL/4k859nPxCoBO9wQkfPvgYBC6dcegsVSQ0fwQnFb4QzrYu
+         42VuVYpxQicy5tc5KWqBaCx7kbfyxq98OarVugo1rGHxL3+GnsB9B7O188y2FlBsK/iu
+         vL/PJFJmQe8WxNKsi7xYRRKw4KqAxMCJXsa9lwAaHXh2uJACBdEFn16gde0U6hWIzf4p
+         1RCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=4zsWyblv4WYqOLRqFANl/g337TI8guVn11cXGgyt8Y0=;
-        b=i96JvPKEmC3qMyVL8p/Czj7K+pB0TtU4H+5wFo6Qj29kIBSPsJeEsp1l7fZ0dMog8i
-         hZ+vXM1n5JmQCUWTBT6qNiH5NJMtxRsbb74hMt3rVdhKRYgk80U8GKZzugXk30gLNNO0
-         s8zDCfidMSuv1a0ujhl1aDnpzKS39mac/AK5k15MA9W4Ex3v9E88uEyPEZszXNzvTziE
-         Wuam1aoA8TnfnwJcWmLvHh/Xt5Nno03P3iMcudNQR6xqwIUU+ARzGT4bns6euO8I9DhP
-         XP+jycSVS8MQ7f867plaRuq9BQ9jLN8bnv0r2iPeKpkJ41yMZQmU3Zc996GYF7qszzZs
-         uPSw==
-X-Gm-Message-State: AOAM530h2XwLMg6GJr6fZlxju2rjb1NU9pAVFyApjavRJqydk1SWY7G6
-        ZY7ccIMqFFYpzberW2OvufZkgA==
-X-Google-Smtp-Source: ABdhPJxRJWE+gM9SiYoY7IFMYw8V87jNUKTEVCIhStBNKuL376Wh3ooXVpFqkBhf2mcG3Y2uIQ9+IA==
-X-Received: by 2002:a19:ae0a:: with SMTP id f10mr13963168lfc.100.1595927998173;
-        Tue, 28 Jul 2020 02:19:58 -0700 (PDT)
-Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id q22sm3643270lfc.33.2020.07.28.02.19.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Jul 2020 02:19:57 -0700 (PDT)
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        s-anna@ti.com
-Cc:     grzegorz.jaszczyk@linaro.org, robh+dt@kernel.org,
-        lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        wmills@ti.com, praneeth@ti.com
-Subject: [PATCH v4 4/5] irqchip/irq-pruss-intc: Implement irq_{get,set}_irqchip_state ops
-Date:   Tue, 28 Jul 2020 11:18:37 +0200
-Message-Id: <1595927918-19845-5-git-send-email-grzegorz.jaszczyk@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=beBH51PBvrNiVY21fyB1FDMkBD4/1CfVqZsExUAdGms=;
+        b=SqOoAplxs8tQxr43oYSJnx1OGglTjoGOkrjAdTks1p74qZ0/U18uQiFjk/dfwep4SM
+         PcAjpOLrQEuvgeOoEMACbslwtY7Ffii/8vbU7nNzBBvyHb1d24CHAs7ifD+uE1PbJ6GV
+         NYmA+xL698XYJ1fsOrPkwVm5Pb9fjrMblD8Gh7Kh+tZY0SJg36ejtZIIlQaujxk5/TF3
+         GdZau+HetYXTMZaamV0tquTT9l8DmbKJQfNL4ZBHf0D3OEpXcddZ5wgtzgjfLseh7KiY
+         RpBGIYiA3RXOagFQey9pRpeLb+rRTHlbMs4yKx9EB6IQ3NTwxp9kzT6l6Az+7cnNWMcx
+         33Aw==
+X-Gm-Message-State: AOAM533y7QBLc79duP4BKt1WLuKqx/ZlT+3C1rvreKZOt4PoNR+6PVlq
+        EudThGaXtPyRH+xCcEO5btZC8Q==
+X-Google-Smtp-Source: ABdhPJwnXEtbFH1jcD4yCv++hVxdGTxMKRMWQHHEoQcyflVcKHgUz+6JPotbQr2eHetriRLig3jKsA==
+X-Received: by 2002:adf:e94a:: with SMTP id m10mr12079678wrn.249.1595928019115;
+        Tue, 28 Jul 2020 02:20:19 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id t141sm3376553wmt.26.2020.07.28.02.20.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 02:20:18 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 10:20:16 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200728092016.GE2419169@dell>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-3-michael@walle.cc>
+ <20200728072422.GF1850026@dell>
+ <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
+ <20200728082707.GB2419169@dell>
+ <a47993ca4c77ab1ee92f6693debb3c87@walle.cc>
+ <20200728085616.GD2419169@dell>
+ <2fd3b880e36aa65e880b801092b51945@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2fd3b880e36aa65e880b801092b51945@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+On Tue, 28 Jul 2020, Michael Walle wrote:
 
-This implements the irq_get_irqchip_state and irq_set_irqchip_state
-callbacks for the TI PRUSS INTC driver. The set callback can be used
-by drivers to "kick" a PRU by injecting a PRU system event.
+> Am 2020-07-28 10:56, schrieb Lee Jones:
+> > > > > > > +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title: Kontron's sl28cpld board management controller
+> > > > > >
+> > > > > > "S128CPLD" ?
+> > > > >
+> > > > > still not, its sl28cpld, think of a project/code name, not the product
+> > > > > appended with CPLD.
+> > > > >
+> > > > > > "Board Management Controller (BMC)" ?
+> > > > >
+> > > > > sounds like IPMI, which I wanted to avoid.
+> > > >
+> > > > Is there a datasheet?
+> > > 
+> > > No there isn't.
+> > 
+> > Then what are you working from?
+> 
+> Ok, there is no public datasheet. If that wasn't clear before, I'm working
+> for that company that also implemented that CPLD.
 
-Example:
-     irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
+No, that wasn't clear.  You said there was no datasheet.
 
-Signed-off-by: David Lechner <david@lechnology.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Reviewed-by: Lee Jones <lee.jones@linaro.org>
----
-v3->v4:
-- Update commit message
-v2->v3:
-- Get rid of unnecessary pruss_intc_check_write() and use
-  pruss_intc_write_reg directly.
-v1->v2:
-- https://patchwork.kernel.org/patch/11069769/
----
- drivers/irqchip/irq-pruss-intc.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+> > > > > > > +maintainers:
+> > > > > > > +  - Michael Walle <michael@walle.cc>
+> > > > > > > +
+> > > > > > > +description: |
+> > > > > > > +  The board management controller may contain different IP blocks
+> > > > > > > like
+> > > > > > > +  watchdog, fan monitoring, PWM controller, interrupt controller
+> > > > > > > and a
+> > > > > > > +  GPIO controller.
+> > > > > > > +
+> > > > > > > +properties:
+> > > > > > > +  compatible:
+> > > > > > > +    const: kontron,sl28cpld-r1
+> > > > > >
+> > > > > > We don't usually code revision numbers in compatible strings.
+> > > > > >
+> > > > > > Is there any way to pull this from the H/W?
+> > > > >
+> > > > > No, unfortunately you can't. And I really want to keep that, in case
+> > > > > in the future there are some backwards incompatible changes.
+> > > >
+> > > > Rob,
+> > > >
+> > > > I know you reviewed this already, but you can give your opinion on
+> > > > this specifically please?  I know that we have pushed back on this in
+> > > > the past.
+> > > 
+> > > Oh, come one. That is an arbitrary string. "sl28cpld-r1" is the first
+> > > implementation of this. A future "sl28cpld-r2" might look completely
+> > > different and might not suite the simple MFD at all. "sl28cpld" is
+> > > a made up name - as "sl28cpld-r1" is, too.
+> > 
+> > Well that sounds bogus for a start.  I guess that's one of the
+> > problems with trying to support programmable H/W in S/W.
+> 
+> What sounds bogus? That we name the implementation sl28cpld?
+> How is that different to like adt7411? Its just a name made up by
+> the vendor. So if there is a new version of the adt7411 the vendor 
+> might name it adt7412.
 
-diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-index cf9a59b..c13ba14 100644
---- a/drivers/irqchip/irq-pruss-intc.c
-+++ b/drivers/irqchip/irq-pruss-intc.c
-@@ -7,6 +7,7 @@
-  *	Suman Anna <s-anna@ti.com>
-  */
- 
-+#include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
-@@ -316,6 +317,43 @@ static void pruss_intc_irq_relres(struct irq_data *data)
- 	module_put(THIS_MODULE);
- }
- 
-+static int pruss_intc_irq_get_irqchip_state(struct irq_data *data,
-+					    enum irqchip_irq_state which,
-+					    bool *state)
-+{
-+	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-+	u32 reg, mask, srsr;
-+
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+
-+	reg = PRU_INTC_SRSR(data->hwirq / 32);
-+	mask = BIT(data->hwirq % 32);
-+
-+	srsr = pruss_intc_read_reg(intc, reg);
-+
-+	*state = !!(srsr & mask);
-+
-+	return 0;
-+}
-+
-+static int pruss_intc_irq_set_irqchip_state(struct irq_data *data,
-+					    enum irqchip_irq_state which,
-+					    bool state)
-+{
-+	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-+
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+
-+	if (state)
-+		pruss_intc_write_reg(intc, PRU_INTC_SISR, data->hwirq);
-+	else
-+		pruss_intc_write_reg(intc, PRU_INTC_SICR, data->hwirq);
-+
-+	return 0;
-+}
-+
- static struct irq_chip pruss_irqchip = {
- 	.name = "pruss-intc",
- 	.irq_ack = pruss_intc_irq_ack,
-@@ -323,6 +361,8 @@ static struct irq_chip pruss_irqchip = {
- 	.irq_unmask = pruss_intc_irq_unmask,
- 	.irq_request_resources = pruss_intc_irq_reqres,
- 	.irq_release_resources = pruss_intc_irq_relres,
-+	.irq_get_irqchip_state = pruss_intc_irq_get_irqchip_state,
-+	.irq_set_irqchip_state = pruss_intc_irq_set_irqchip_state,
- };
- 
- static int pruss_intc_validate_mapping(struct pruss_intc *intc, int event,
+Using an arbitrary string as a compatible would be bogus.
+
+So here 'sl28cpld' is the device name, so it's not actually
+arbitrary.  That's a good start.
+
+> We name it sl28cpld-r2. So what is the problem here?
+
+Do you though?  So 'sl28cpld-r1' is the name of the device?  The name
+that is quoted from the (private) datasheet?  Because looking at the
+implementation and going by the conversation, it sounds as though
+you-re only adding the '-r1' piece to the compatible string for
+revision identification.  Which if true, is not usually allowed and
+warrants intervention by Rob.
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
