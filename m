@@ -5,71 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F135C433EA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38E3C433F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9502177B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59332083E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 23:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TZWUiLVg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FEh+/Fwg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgG1XFl (ORCPT
+        id S1730237AbgG1XFu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 19:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
+        Tue, 28 Jul 2020 19:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730000AbgG1XFi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 19:05:38 -0400
+        with ESMTP id S1730229AbgG1XFt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 19:05:49 -0400
 Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0AEC0619D9
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 16:05:37 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id z17so2625336ill.6
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 16:05:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5CEC0619DA
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 16:05:48 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t4so17737586iln.1
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 16:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yB4ZXCGQ1JEGOfvNZP5XQymR9PIbmXgMQ7k1yBNC7+0=;
-        b=TZWUiLVgdzBSVQ8ehHoWvxsFsvZOlwYh2RA995Xk0SeIB5lojUqfXW+jZP1U3n+GL2
-         Xk6KYQPdJ5DcwymB7zahDqTGP5gYuCp6GHTG/w7IwscCnQAKhrTt71EneVwZaS7j6s3b
-         13/gDZDeQhoqcejz1MLPILwrnjL9tieoKXsPs=
+        bh=AM59jIQYU2CvWOeFM3ngOpDG1QHH1+7BTtSJzp1GFow=;
+        b=FEh+/FwgUzqP+c5bzHLYHINr+d192UCaIZiMxxT67ECRBXi+JBTwyim6DMlrKBPLdM
+         zyC8o+DppB6BHO2L4XRveDASnVzPOsbTxgLMwbhEHigBwLC0H1tvUJ+wNlRxLkBa4Ctw
+         SmMveWRwhdCahFGFdsifE4Eqse1/dkEAvyq1A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yB4ZXCGQ1JEGOfvNZP5XQymR9PIbmXgMQ7k1yBNC7+0=;
-        b=B9C+13m1rp4LmzaHbXXQGYhSYVuAVvQPzhmJ+7A2Ui7ao+st2m/xNUn5C4cGTXTRrM
-         2RgGfXb4WDP6AvrwiPwwGG0B8Bnd7f2HICH0HlzfoLUnN61MM9Ahmbl8MyQFJfe3xp12
-         +5UiRxyJuewm8fWsIzaLDK210ztSTx/RWxcwEdbxN8KUC5K6MPmt0ryD7yg+Nzz4q1n8
-         BFW9ZJo1h5qKu0aEXnbOyBhCfn3P5TgLjXYJRuPa0dN5zxUHlbJLpK/OV809X7Rk26Ky
-         aNkMLOJ2q+SFBMq09YnxrmkJN5YGpPk7UM3MzhEC/NIWehvl0/w8tHY9DEhK4cwb+6mi
-         VEhg==
-X-Gm-Message-State: AOAM530yn0gdpYRP5zhOY9o493E5uKijchkNShMKLDUwOu/AaHeBTWxo
-        LSeKpzviaH6D/M/g+PDBdSDDvWwPN+2prA==
-X-Google-Smtp-Source: ABdhPJxyqh6fZnwI/oBquEbPHEqKgLClPDF5XQaEKahEFm6sAgt/aLF0XyQguVSO3mWUe05YVJnOMg==
-X-Received: by 2002:a92:5f43:: with SMTP id t64mr4036524ilb.14.1595977536895;
-        Tue, 28 Jul 2020 16:05:36 -0700 (PDT)
+        bh=AM59jIQYU2CvWOeFM3ngOpDG1QHH1+7BTtSJzp1GFow=;
+        b=fnBLG9JnZI+zrTbO1Qx8cQW0AT1+yxlreKOgrwJwZcVY1LmxXdHhGoiVib+wbc7sKB
+         9u4TlAQTfU3Z8RTUD/Cvhq6c1hvaOrQdjOST6Ivx5cK4Y757coSau73FcW7oBKGF+bVE
+         8odVY/4MLSAA+LiPqLIxom5FH9CF0UvWHC9iH91mgXR0X59uGLwOdyOQjKppKdahRT/S
+         Q90TRbT2TObUBZm3bG9GyvZyyuKdE/7vNjpTOIzvEQK+Y6iUjhfumscfaCknHTYCWOsR
+         6oPthTy2hXRWIADHhfeC/DO6E5UaU8Jvdee7t6YKDyCGtEJY7ouHKFwDkq1te44fIBSC
+         VMXw==
+X-Gm-Message-State: AOAM530/fkVMXVspX0b998s9iUbFkOPiZZBlD5i31IJySk8+3r8Fd4dD
+        eeWEeVJ0FvJ4MqjFky/S80yoRepXe6pUMQ==
+X-Google-Smtp-Source: ABdhPJxvRCgWq7gqc0hnPFB/W3nKDK5a7ATpFyEVwGjnraxwV/R33ljGYEyoojjknLpWN3J8FIqn9w==
+X-Received: by 2002:a92:89c9:: with SMTP id w70mr23431764ilk.250.1595977547204;
+        Tue, 28 Jul 2020 16:05:47 -0700 (PDT)
 Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id w10sm148945ilo.10.2020.07.28.16.05.35
+        by smtp.gmail.com with ESMTPSA id w10sm148945ilo.10.2020.07.28.16.05.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 16:05:36 -0700 (PDT)
+        Tue, 28 Jul 2020 16:05:46 -0700 (PDT)
 From:   Daniel Campello <campello@chromium.org>
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Daniel Campello <campello@chromium.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
         Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v2 03/14] iio: sx9310: Fix irq handling
-Date:   Tue, 28 Jul 2020 17:05:09 -0600
-Message-Id: <20200728170317.v2.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+        linux-iio@vger.kernel.org
+Subject: [PATCH v2 13/14] iio: sx9310: Drop channel_users[]
+Date:   Tue, 28 Jul 2020 17:05:19 -0600
+Message-Id: <20200728170317.v2.13.Ia5c5fdbdfff576ab5d034cde46c25cc66a4baf50@changeid>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
 References: <20200728151258.1222876-1-campello@chromium.org>
@@ -81,81 +84,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fixes enable/disable irq handling at various points. The driver needs to
-only enable/disable irqs if there is an actual irq handler installed.
+From: Stephen Boyd <swboyd@chromium.org>
 
+This struct member isn't used. Drop it.
+
+Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Daniel Campello <campello@chromium.org>
 Signed-off-by: Daniel Campello <campello@chromium.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
 
-Changes in v2:
- - Reordered error handling on sx9310_resume()
+Changes in v2: None
 
- drivers/iio/proximity/sx9310.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/iio/proximity/sx9310.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 07895d4b935d12..108d82ba81146e 100644
+index b15ace422862ff..6607732edd034a 100644
 --- a/drivers/iio/proximity/sx9310.c
 +++ b/drivers/iio/proximity/sx9310.c
-@@ -376,13 +376,15 @@ static int sx9310_read_proximity(struct sx9310_data *data,
- 	if (ret < 0)
- 		goto out;
+@@ -132,7 +132,6 @@ struct sx9310_data {
+ 	struct completion completion;
+ 	unsigned long chan_read;
+ 	unsigned long chan_event;
+-	int channel_users[SX9310_NUM_CHANNELS];
+ 	unsigned int whoami;
+ };
  
--	ret = sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
--	if (ret < 0)
--		goto out_put_channel;
-+	if (data->client->irq) {
-+		ret = sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
-+		if (ret)
-+			goto out_put_channel;
-+	}
- 
- 	mutex_unlock(&data->mutex);
- 
--	if (data->client->irq > 0) {
-+	if (data->client->irq) {
- 		ret = wait_for_completion_interruptible(&data->completion);
- 		reinit_completion(&data->completion);
- 	} else {
-@@ -401,9 +403,11 @@ static int sx9310_read_proximity(struct sx9310_data *data,
- 	*val = sign_extend32(be16_to_cpu(rawval),
- 			     (chan->address == SX9310_REG_DIFF_MSB ? 11 : 15));
- 
--	ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
--	if (ret < 0)
--		goto out_put_channel;
-+	if (data->client->irq) {
-+		ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
-+		if (ret)
-+			goto out_put_channel;
-+	}
- 
- 	ret = sx9310_put_read_channel(data, chan->channel);
- 	if (ret < 0)
-@@ -414,7 +418,8 @@ static int sx9310_read_proximity(struct sx9310_data *data,
- 	return IIO_VAL_INT;
- 
- out_disable_irq:
--	sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
-+	if (data->client->irq)
-+		sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
- out_put_channel:
- 	sx9310_put_read_channel(data, chan->channel);
- out:
-@@ -1011,10 +1016,11 @@ static int __maybe_unused sx9310_resume(struct device *dev)
- 
- out:
- 	mutex_unlock(&data->mutex);
-+	if (ret)
-+		return ret;
- 
- 	enable_irq(data->client->irq);
--
--	return ret;
-+	return 0;
- }
- 
- static const struct dev_pm_ops sx9310_pm_ops = {
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
