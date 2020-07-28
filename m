@@ -2,104 +2,123 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B481C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6022C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2562074F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23F8207FC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595954050;
-	bh=uXUumP2+sNTXnE6EHRt6PUDgwtUeHTn5j+dNJH7KOVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eXT0ynnzoi3FPRunraUNv7znLRQIgjqTM3f53PiHzEpGEGCGUUo5H7c41RbUqg/Kf
-	 Vc4ApOsDscLtAEb6nSezidkEg94c8KIP16wMb85cpJyVbTr47UU4kyZ6NzDsynsZFr
-	 CuDmWJuyQvSqIlKAzKWrg7DBPnACyJ3uWJhNeTFk=
+	s=default; t=1595954280;
+	bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rEPaxDM3PT7pfxBMQAj8jnIz6fYZaLfOH4LO2jw5hJNmabvMsMmokCjUxGWr/SwCt
+	 tWpkFcyMmAcSkv73hY2qMtqFRzyl03fpC6RpW3cKS5Hid9Kq9Ud2olyx17Ua/YzsiH
+	 7nWof6V7EQ5XKBbqqPG2FMOdVUJt0C3jRibS2QFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbgG1QeJ (ORCPT
+        id S1731450AbgG1QiA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 12:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731422AbgG1QeJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:34:09 -0400
-Received: from localhost (p54b330d0.dip0.t-ipconnect.de [84.179.48.208])
+        id S1731443AbgG1Qh7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 12:37:59 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A79D20792;
-        Tue, 28 Jul 2020 16:34:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ABAD2053B;
+        Tue, 28 Jul 2020 16:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595954048;
-        bh=uXUumP2+sNTXnE6EHRt6PUDgwtUeHTn5j+dNJH7KOVE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cgrVwCnMxj91VP8xHGJ7740Jinf4MxWMNJ3NEkmqJ/yCMP4Dv2nlppxBjd3sCU4v6
-         CYFGKgh/oAIlXBgvSjuyyHcTn5tEK3k1OtiztCbtU2pcqzMDgv3CofEG+R75TuusMP
-         qvBF2E1miBiyOvrRv3rZ8yIwTrVjnBIfw5MNasxs=
-Date:   Tue, 28 Jul 2020 18:34:05 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v5 05/14] i2c: tegra: Avoid tegra_i2c_init_dma() for
- Tegra210 vi i2c
-Message-ID: <20200728163405.GE3736@ninjato>
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-6-git-send-email-skomatineni@nvidia.com>
+        s=default; t=1595954279;
+        bh=UaTT6eelrtF58zWytNG0egvpELFC0XFjYD4HTtCZOO0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2I46v+1m8oKmJ9VQeo6N0nZjzcRmXs1Ru/C4qbubwOnEDs27BOFW3Kl+HdEPSSiBk
+         fu7YtYgh8gzbomyi98+V8kVZYGGWkFSh6gateSBafHcHZIcZ4DjQC26w9JylQyHBzx
+         y4cWhePYSIuGjTcYQT0/UjYg1ZER9QYZh1A14SgU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k0Sc1-00FiFS-5h; Tue, 28 Jul 2020 17:37:57 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FN+gV9K+162wdwwF"
-Content-Disposition: inline
-In-Reply-To: <1595883452-17343-6-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 28 Jul 2020 17:37:57 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com,
+        robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        david@lechnology.com, wmills@ti.com, praneeth@ti.com
+Subject: Re: [PATCH v4 3/5] irqchip/irq-pruss-intc: Add logic for handling
+ reserved interrupts
+In-Reply-To: <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <1ae8b42d0e7a09caf01197b11cea2fff@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, s-anna@ti.com, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com, praneeth@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2020-07-28 10:18, Grzegorz Jaszczyk wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> The PRUSS INTC has a fixed number of output interrupt lines that are
+> connected to a number of processors or other PRUSS instances or other
+> devices (like DMA) on the SoC. The output interrupt lines 2 through 9
+> are usually connected to the main Arm host processor and are referred
+> to as host interrupts 0 through 7 from ARM/MPU perspective.
+> 
+> All of these 8 host interrupts are not always exclusively connected
+> to the Arm interrupt controller. Some SoCs have some interrupt lines
+> not connected to the Arm interrupt controller at all, while a few 
+> others
+> have the interrupt lines connected to multiple processors in which they
+> need to be partitioned as per SoC integration needs. For example, 
+> AM437x
+> and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 
+> 5
+> connected to the other PRUSS, while AM335x has host interrupt 0 shared
+> between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU 
+> and
+> a DMA controller.
+> 
+> Add logic to the PRUSS INTC driver to ignore both these shared and
+> invalid interrupts.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> ---
+> v3->v4:
+> - Due to changes in DT bindings which converts irqs-reserved
+>   property from uint8-array to bitmask requested by Rob introduce
+>   relevant changes in the driver.
+> - Merge the irqs-reserved and irqs-shared to one property since they
+>   can be handled by one logic (relevant change was introduced to DT
+>   binding).
 
---FN+gV9K+162wdwwF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This isn't what I asked for in my initial review.
 
-On Mon, Jul 27, 2020 at 01:57:23PM -0700, Sowjanya Komatineni wrote:
-> VI I2C is on host1x bus so APB DMA can't be used for Tegra210 VI
-> I2C and there are no tx and rx dma channels for VI I2C.
->=20
-> So, avoid attempt of requesting DMA channels.
->=20
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+I repeatedly asked for the *handling* to be common, not for the
+properties to be merged. I don't mind either way, but I understood
+there were two properties for a good reason. Has this reason gone?
 
-Applied to for-next, thanks!
+Anyway, I'll come back to it once I start reviewing the series
+again.
 
-
---FN+gV9K+162wdwwF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8gU30ACgkQFA3kzBSg
-KbbAPg//ehPzd9wKNGR8liN8/pgm4FABYGaxyQIuEG4paVvdgwUOoQ0ZW+itZsTJ
-svnQjlamrbF65Yq1whqDLBiPMwfowGK6DUb9S2s9tyo4X2qsNJY9c2QTDZCnHqA2
-DOM52p7v1lN1wTb8bSFCgxA59TEkKuWpkJSvjN0fAXQ7mpq1ioH4su7+SQ6aqNVQ
-eg6XZPhsmg9uoneHBpaAT4irs7fR1X+GWppEwn2vMAGxcLEf5HaI/yhY2aalIpxu
-lAHfXBJK5Jreqn497B7WXT5WMJ97a/IXPbvW51S7Y0OAKpsrBgG/w4ga2Wqltj0C
-QfMY8aCukQhGRhlmUeC+kULlrcY1bhVAI20cIjNxLhaFCnymGAjCKU14MO75tfwl
-PdsyVnd/OvKhAKW/7lLXZyWNJK41xQ0sRgOT3C3Mg1+KdfWFJB9c8hqynjBnvuZb
-J0bdYJ1mNRVOEFn3QXOOb3BnYFdUhl03LYJYax+NEzZxbiZYyn7NjoPW+J1eBsjL
-cxOtzP12AbIXDj+EWVBGn2B0HrTIQhQMovsdgaDS7tW7ahUGnESO3EdpH0yF6Jk2
-+LnVRpFB1aHxze/dFahBmjBPtODTJQrsmHz5b93Nw5bjHWm10c+ro+IQF19V3/qW
-47na6KqnvslbLzHUiWW4WX5GMKYQYHbWY+dSwB8X7MEjAU/aysw=
-=cUam
------END PGP SIGNATURE-----
-
---FN+gV9K+162wdwwF--
+          M.
+-- 
+Jazz is not dead. It just smells funny...
