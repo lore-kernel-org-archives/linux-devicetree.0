@@ -2,104 +2,131 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_QUOTING autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F9C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE5BC433EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73DC020663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595943985;
-	bh=2l4nZ5zEun3ITHFRFbhR5oj+u34Wm7h0bAZkj3TkoYU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LxTfOZ5W2dfeZZL6rIQ97MhdwQXQ+4FyN8Yq/sJjIlBiH/ASG/YEmNOXvoEHdnvyD
-	 eKu9HoSowkdquu7dgB6izK0ru4zrf4I4S+rIWIHr0Iiv1VHPj6HPAVWDpNk+ZGwQ+V
-	 dQ5SL9JEA+5kpXgw66HDezj6dpTK1cs6wDtqihlk=
+	by mail.kernel.org (Postfix) with ESMTP id 43B562074F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 13:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgG1NqT (ORCPT
+        id S1730286AbgG1N7u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 09:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbgG1NqT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 09:46:19 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93BC7206D7;
-        Tue, 28 Jul 2020 13:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595943978;
-        bh=2l4nZ5zEun3ITHFRFbhR5oj+u34Wm7h0bAZkj3TkoYU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EOlS+6JoJuSj9+Yx5l+IHRPcQCwPSoO9EgS/DmRloNif3HD9f1rUEmBmCqPuu4/1E
-         IQ6MpBtNipOLmwcYStorTyMeevlXl39vouJJ1qOLOreKBTyzMSwBRuCCGvgd+AkpFD
-         OQjl0fSdqVzY8uH3uz/Qagx8Ql8+OYCozBJu5LDA=
-Received: by mail-ot1-f47.google.com with SMTP id a65so5736304otc.8;
-        Tue, 28 Jul 2020 06:46:18 -0700 (PDT)
-X-Gm-Message-State: AOAM533hhLvckwuiox2/2jKK41lwx3nFKtHlpdRYAuL3bKIyCX2N76dH
-        d5GkFJJiu+whT9nC7DI20uMEIkKRhr8HHHGkjQ==
-X-Google-Smtp-Source: ABdhPJyGMvLSy2o12/O4HMAGmyUT2I5c4ZQOAvLI2HQi1RCoYju+FyDtWZCrssFH21dUA3s0muQ53gKip1xGHsvcb+g=
-X-Received: by 2002:a9d:46c:: with SMTP id 99mr24620844otc.192.1595943977984;
- Tue, 28 Jul 2020 06:46:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
- <20200725014529.1143208-2-jiaxun.yang@flygoat.com> <CAL_JsqKePrUW3-HoSnQawqhgg23XJ7MxzawD7TKt-__q3jM55g@mail.gmail.com>
- <20200728083308.GD9062@alpha.franken.de>
-In-Reply-To: <20200728083308.GD9062@alpha.franken.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 28 Jul 2020 07:46:04 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+oswHvuF0BaM27CP0j9aHg1whAOv7bZneFjdkDX=MnSg@mail.gmail.com>
-Message-ID: <CAL_Jsq+oswHvuF0BaM27CP0j9aHg1whAOv7bZneFjdkDX=MnSg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] of_address: Add bus type match for pci ranges parser
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 28 Jul 2020 09:59:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49512 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730226AbgG1N7t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 09:59:49 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06SDWxMn036126;
+        Tue, 28 Jul 2020 09:59:48 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jkw23a24-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 09:59:48 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06SDscFD020305;
+        Tue, 28 Jul 2020 13:59:47 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02dal.us.ibm.com with ESMTP id 32gcy48asy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jul 2020 13:59:47 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06SDxisa66388420
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jul 2020 13:59:44 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E550136055;
+        Tue, 28 Jul 2020 13:59:46 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC2FA136051;
+        Tue, 28 Jul 2020 13:59:45 +0000 (GMT)
+Received: from gfw170.aus.stglabs.ibm.com (unknown [9.3.62.224])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jul 2020 13:59:45 +0000 (GMT)
+Received: by gfw170.aus.stglabs.ibm.com (Postfix, from userid 298080)
+        id 8936B2AB; Tue, 28 Jul 2020 08:59:45 -0500 (CDT)
+From:   Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
+To:     joel@jms.id.au
+Cc:     vishwa@linux.vnet.ibm.com, devicetree@vger.kernel.org,
+        eajames@linux.ibm.com
+Subject: [PATCH 2/2] rainier: Add LEDs that are controlled by ASPEED
+Date:   Tue, 28 Jul 2020 08:59:43 -0500
+Message-Id: <1595944783-18172-1-git-send-email-vishwa@linux.vnet.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-28_11:2020-07-28,2020-07-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=803 spamscore=0 clxscore=1015 malwarescore=0
+ priorityscore=1501 impostorscore=0 suspectscore=1 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007280103
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 2:39 AM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Mon, Jul 27, 2020 at 11:50:14AM -0600, Rob Herring wrote:
-> > On Fri, Jul 24, 2020 at 7:45 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> > >
-> > > So the parser can be used to parse range property of ISA bus.
-> > >
-> > > As they're all using PCI-like method of range property, there is no need
-> > > start a new parser.
-> > >
-> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > >
-> > > --
-> > > v2: Drop useless check, fix some na for bus_addr
-> > >         add define of of_range_parser_init according to
-> > >         Rob's suggestion.
-> > > v3: Abstract out has_flags. simplify define.
-> > > ---
-> > >  drivers/of/address.c       | 29 +++++++++++++++++------------
-> > >  include/linux/of_address.h |  4 ++++
-> > >  2 files changed, 21 insertions(+), 12 deletions(-)
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Rob, are you ok with merging this via the mips-next tree ?
+These are the LEDs that have direct GPIO connection from ASPEED
 
-That's my expectation hence the Reviewed-by.
+Signed-off-by: Vishwanatha Subbanna <vishwa@linux.vnet.ibm.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-Rob
+diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+index ecbce50..dc68c49 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+@@ -72,6 +72,26 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
++		/* BMC Card fault LED at the back */
++		bmc-ingraham0 {
++			gpios = <&gpio0 ASPEED_GPIO(H, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		/* Enclosure ID LED at the back */
++		rear-enc-id0 {
++			gpios = <&gpio0 ASPEED_GPIO(H, 2) GPIO_ACTIVE_LOW>;
++		};
++
++		/* Enclosure fault LED at the back */
++		rear-enc-fault0 {
++			gpios = <&gpio0 ASPEED_GPIO(H, 3) GPIO_ACTIVE_LOW>;
++		};
++
++		/* PCIE slot power LED */
++		pcieslot-power {
++			gpios = <&gpio0 ASPEED_GPIO(P, 4) GPIO_ACTIVE_LOW>;
++		};
++
+ 		/* System ID LED that is at front on Op Panel */
+ 		front-sys-id0 {
+ 			retain-state-shutdown;
+@@ -112,7 +132,7 @@
+ 	/*E0-E7*/	"","","","","","","","",
+ 	/*F0-F7*/	"","","","","","","","",
+ 	/*G0-G7*/	"","","","","","","","",
+-	/*H0-H7*/	"","","","","","","","",
++	/*H0-H7*/	"","bmc-ingraham0","rear-enc-id0","rear-enc-fault0","","","","",
+ 	/*I0-I7*/	"","","","","","","","",
+ 	/*J0-J7*/	"","","","","","","","",
+ 	/*K0-K7*/	"","","","","","","","",
+@@ -120,7 +140,7 @@
+ 	/*M0-M7*/	"","","","","","","","",
+ 	/*N0-N7*/	"","","","","","","","",
+ 	/*O0-O7*/	"","","","","","","","",
+-	/*P0-P7*/	"","","","","","","","",
++	/*P0-P7*/	"","","","","pcieslot-power","","","",
+ 	/*Q0-Q7*/	"cfam-reset","","","","","","","",
+ 	/*R0-R7*/	"","","","","","","","",
+ 	/*S0-S7*/	"presence-ps0","presence-ps1","presence-ps2","presence-ps3",
+-- 
+1.8.3.1
+
