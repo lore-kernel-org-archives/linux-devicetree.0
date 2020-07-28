@@ -2,141 +2,152 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57358C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94E7C433EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B7820775
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954B12083E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 09:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="g/sxF58G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgG1JrY (ORCPT
+        id S1728277AbgG1Jwl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 05:47:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbgG1JrY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 05:47:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C814C061794
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 02:47:24 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0MCf-0006Wm-VV; Tue, 28 Jul 2020 11:47:21 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k0MCe-00025Z-98; Tue, 28 Jul 2020 11:47:20 +0200
-Date:   Tue, 28 Jul 2020 11:47:20 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-7-michael@walle.cc>
- <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
- <58b53cacc5289f17f669159beeeada03@walle.cc>
+        Tue, 28 Jul 2020 05:52:41 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:6031 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbgG1Jwk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 05:52:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595929960; x=1627465960;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=lD6zfUc60R832pir/a+PG9I7SOgBDc1RGjG/M7AaRkg=;
+  b=g/sxF58GpFnk/I1l2QIGeaNQuq0f9BndUQSpwIa7VJa56xc0Po1hAeO8
+   nZDx5ob6S5CNRAldu3QFSdh+yqzmllgtGB7l6+mvis5vxIDWu7d8+Ejzk
+   xeTkbz1yOROhNkRs2bmPgIk9hzlfD3FVtF2bAWOU6ywQRyU4PUrJ6YQcJ
+   8=;
+IronPort-SDR: 7d+qg/gJSzVffrMVHDKuA5jB2YfUmeCbEJh9tMLZJcfKYe9h0BLJiqdCOMUFOammVVv0sPsu/L
+ MMbzpX9vQgzw==
+X-IronPort-AV: E=Sophos;i="5.75,405,1589241600"; 
+   d="scan'208";a="62276090"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 28 Jul 2020 09:52:23 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id 559E0A21D1;
+        Tue, 28 Jul 2020 09:52:22 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 28 Jul 2020 09:52:21 +0000
+Received: from uf25486d27d2d5b.ant.amazon.com (10.43.161.71) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 28 Jul 2020 09:52:12 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
+        <talel@amazon.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <eitan@amazon.com>
+Subject: [PATCH v9 0/2] Amazon's Annapurna Labs Memory Controller EDAC
+Date:   Tue, 28 Jul 2020 12:51:53 +0300
+Message-ID: <20200728095155.18506-1-talel@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="htulbp2bdc2ny5pv"
-Content-Disposition: inline
-In-Reply-To: <58b53cacc5289f17f669159beeeada03@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.71]
+X-ClientProxiedBy: EX13D34UWC002.ant.amazon.com (10.43.162.137) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series introduces support for Amazon's Annapurna Labs Memory
+Controller EDAC driver.
 
---htulbp2bdc2ny5pv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v8:
+================
+- added cells address and size description to dt-binding yaml doc
 
-Hallo,
+Changes since v7:
+=================
+- rebased and retested for tag Linux 5.8-rc1
 
-On Tue, Jul 28, 2020 at 10:21:22AM +0200, Michael Walle wrote:
-> Am 2020-07-28 09:43, schrieb Uwe Kleine-K=F6nig:
-> > On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
-> > > +static int sl28cpld_pwm_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct sl28cpld_pwm *priv;
-> > > +	struct pwm_chip *chip;
-> > > +	int ret;
-> > > +
-> > > +	if (!pdev->dev.parent)
-> > > +		return -ENODEV;
-> > > +
-> > > +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > > +	if (!priv)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	priv->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> > > +	if (!priv->regmap)
-> >=20
-> > Error message here?
->=20
-> This shouldn't really happen and I put it into the same category
-> as the two above and report no error. But I can add it.
+Changes since v6:
+=================
+- removed unused defines
+- user-visible strings changed to capital
+- removed static function names prefix from internal functions (external
+  used function, such as devm/interrupts-handlers/probe, left with the
+  prefix to allow stack trace visibility)
+- sorted function local variables declaration in a reverse Christmas tree order
+- fixed use of wrong syndrome defines
+- added a comment to interrupts handling (polling mode with interrupt mode)
+- added grain definition
+- appended "or BSD-2-Clause" to dt binding SPDX
 
-For kzalloc it is right to not emit an error because a failing kzalloc
-is already loud on its own. I missed the first error path, that should
-get a message, too.
+Changes since v5:
+=================
+- rebased and retested for tag Linux 5.6-rc2
+- added Reviewed-By for dt-binding (Rob Herring <robh@kernel.org>)
+- added Reviewed-By for driver (James Morse <james.morse@arm.com>)
 
-> Generally, it looked to me that more and more drivers don't
-> really report errors anymore, but just return with an -EWHATEVER.
-> So if someone can shed some light here, I'm all ears.
+Changes since v4:
+=================
+- fixed dt-binding interrupt to have min of 1
+- updated dt-binding GPL-2.0 to GPL-2.0-only
+- changed writel to relaxed flavor
+- added managed device driver unwind
 
-IMHO it's wrong not to add error messages. At one point in time it will
-fail and then you're happy if you don't have to add printks all over the
-place first to debug that.
+Changes since v3:
+=================
+- removed quotation marks and hyphen from compatible dt-binding
+- added interrupts and interrupt-names description to dt-binding
+- added missing include to dt-binding
 
-Best regards
-Uwe
+Changes since v2:
+=================
+- added missing includes
+- aggregated variables to same line
+- removed ranks read
+- added spinlock to mc reporting
+- made irq handler clearer
+- freed irq before freeing device memory
+- changed Kconfig to tristate
+- added COMPILE_TEST to Kconfig
+- converted dt binding to new scheme
+- used devm_platform_ioremap_resource instead of get&ioremap
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Changes since v1:
+=================
+- updated dt binding node name and added Rob Reviewed-By
+- removed auto selecting of this driver
 
---htulbp2bdc2ny5pv
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Talel Shenhar (2):
+  dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory
+    Controller EDAC
+  EDAC: al-mc-edac: Introduce Amazon's Annapurna Labs Memory Controller
+    EDAC
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8f9CUACgkQwfwUeK3K
-7AlkpAf9GX/MdqMREp3J4dX8H7TLp3wVx7/FOTFnrRDTkszIftG16IG7J9g1qiyY
-lN54gRXDEtuTo7PfeKcJ09lh/jT2xRPE/Y6kHSW6BQKNw2C0S74Pv2UMc1aYWsvZ
-GlE/2BL1tB7F7+OLVIFRhL5N5O0QKaBO5bxaC/DKd4ZAnvbLPloAcysP0kHzqvXP
-H72qdOstHSP5znm4z6+Vcb7xiI9XiT9GWgnumpwo1f6s58SEGsbQUiLRLXIkRURN
-LKzxXtqSMbW1n+U34jSgI6BI+wyDAGQz0iJ0WxKV6DUa5IO7IqucION92J9s7w32
-ntP5cEULmXHKeTvOGXgM59juqdxEtg==
-=KNkY
------END PGP SIGNATURE-----
+ .../bindings/edac/amazon,al-mc-edac.yaml      |  67 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/edac/Kconfig                          |   7 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/al_mc_edac.c                     | 354 ++++++++++++++++++
+ 5 files changed, 436 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+ create mode 100644 drivers/edac/al_mc_edac.c
 
---htulbp2bdc2ny5pv--
+-- 
+2.17.1
+
