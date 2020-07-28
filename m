@@ -2,297 +2,163 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F6DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843E4C433EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6FFF205CB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638AE2075D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BIXGnqzR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HjmRgKoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgG1L3S (ORCPT
+        id S1729209AbgG1LnS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 07:29:18 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:18040 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729048AbgG1L3R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 07:29:17 -0400
+        Tue, 28 Jul 2020 07:43:18 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:62276 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729188AbgG1LnR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 07:43:17 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595935756; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=CcLK88lh/BtsVoCv6ZwYLRovjym50gqwIUY2ef+0XcU=;
- b=BIXGnqzRqyI+4PUS8OmCIysg3qSgUOz6y9kc8n4szR2faCl8pkGCo0z/jquEczDIjDdtLQxV
- uYzdt0cMCgY4lvM1WH3ghNqfHsUCd7yIUvMDBpggd5z90KJTzWgge9Qslzo1eCFA68PIKrN6
- SSOEPWA5+OzH8LQ6HrLYr7yqDw4=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ s=smtp; t=1595936596; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: To: From:
+ Subject: Sender; bh=C2g3qCsM1rQjNC6Re9u3OWUPrxkKyricosFKiC3IGhw=; b=HjmRgKoVrPlW+CJAcnT3ZGXJq/h99U0JpbtyAZroojGZICK3QK2mHUEpjmpEzmzLx16UsvQM
+ CGWd/yqm1Z+/1efKTfxgB6Vnqi05YVkIy6VUqb4IH9KlSMLGxTAsuhy6/vOjZEzZiGW/9QdN
+ Zekn+NhrgTm49rOjwDRJ4kijrVA=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f200bfc7186ea1ee12466dc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 11:29:00
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f200f54a61bb9e3f5cf3e92 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Jul 2020 11:43:16
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5568DC4339C; Tue, 28 Jul 2020 11:28:59 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id 175F4C433AD; Tue, 28 Jul 2020 11:43:15 +0000 (UTC)
+Received: from [192.168.0.129] (unknown [183.83.142.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47B02C433C6;
-        Tue, 28 Jul 2020 11:28:58 +0000 (UTC)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A0FBC433C6;
+        Tue, 28 Jul 2020 11:43:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A0FBC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+Subject: Re: [PATCH v4 00/12] ASoC: qcom: Add support for SC7180 lpass variant
+From:   Rohit Kumar <rohitkr@codeaurora.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
+ <d1e6d60b-9f00-266d-74ad-8c18bbf8d142@linaro.org>
+ <cb02a3d7-a947-852d-739f-a5f4b823f06a@codeaurora.org>
+Message-ID: <b5cb020c-4fc8-376f-3308-71bf3a244d26@codeaurora.org>
+Date:   Tue, 28 Jul 2020 17:13:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 16:58:58 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] dt-bindings: interconnect: Add Qualcomm SM8250 DT
- bindings
-In-Reply-To: <20200728023811.5607-4-jonathan@marek.ca>
-References: <20200728023811.5607-1-jonathan@marek.ca>
- <20200728023811.5607-4-jonathan@marek.ca>
-Message-ID: <f92f1ab213aa9a3e43b3e44087533d94@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <cb02a3d7-a947-852d-739f-a5f4b823f06a@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-28 08:08, Jonathan Marek wrote:
-> The Qualcomm SM8250 platform has several bus fabrics that could be
-> controlled and tuned dynamically according to the bandwidth demand.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+On 7/27/2020 3:20 PM, Rohit Kumar wrote:
+>
+> On 7/24/2020 4:52 PM, Srinivas Kandagatla wrote:
+>>
+>>
+>> On 22/07/2020 11:31, Rohit kumar wrote:
+>>> This patch chain add audio support for SC7180 soc by doing the required
+>>> modification in existing common lpass-cpu/lpass-platform driver.
+>>> This also fixes some concurrency issue.
+>>>
+>>> Changes since v3:
+>>>     - Fixed yaml documentation comments and make dt_binding_check 
+>>> issues.
+>>>     - Moved general fixes out of sc7180 specific patches as 
+>>> suggested by Srinivas.
+>>>     - Update clock-names to make it same as existing platforms.
+>>>
+>>> Ajit Pandey (4):
+>>>    ASoC: qcom: Add common array to initialize soc based core clocks
+>>>    ASoC: qcom: lpass-platform: Replace card->dev with component->dev
+>>>    include: dt-bindings: sound: Add sc7180-lpass bindings header
+>>>    ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
+>>>
+>>> Rohit kumar (8):
+>>>    ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
+>>>    ASoC: qcom: lpass-platform: fix memory leak
+>>>    ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
+>>>    ASoC: qcom: lpass-cpu: fix concurrency issue
+>>>    dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
+>>>    ASoC: qcom: lpass-cpu: Use platform_get_resource
+>>>    ASoC: qcom: lpass-platform: Use platform_get_irq
+>>>    dt-bindings: sound: lpass-cpu: Move to yaml format
+>>
+>>
+> Thanks Srini for review and testing.
+>
+> Mark, I am planning to repost patch07 onwards to address comments by 
+> Rob as
+>
+> there are no comments till patch06 and they are just fixes.
 
-> ---
->  .../bindings/interconnect/qcom,rpmh.yaml      |  11 ++
->  .../dt-bindings/interconnect/qcom,sm8250.h    | 172 ++++++++++++++++++
->  2 files changed, 183 insertions(+)
->  create mode 100644 include/dt-bindings/interconnect/qcom,sm8250.h
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> index e95ccd7b4b5a..18c48a2ce191 100644
-> --- a/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml
-> @@ -56,6 +56,17 @@ properties:
->        - qcom,sm8150-mc-virt
->        - qcom,sm8150-mmss-noc
->        - qcom,sm8150-system-noc
-> +      - qcom,sm8250-aggre1-noc
-> +      - qcom,sm8250-aggre2-noc
-> +      - qcom,sm8250-compute-noc
-> +      - qcom,sm8250-config-noc
-> +      - qcom,sm8250-dc-noc
-> +      - qcom,sm8250-gem-noc
-> +      - qcom,sm8250-ipa-virt
-> +      - qcom,sm8250-mc-virt
-> +      - qcom,sm8250-mmss-noc
-> +      - qcom,sm8250-npu-noc
-> +      - qcom,sm8250-system-noc
-> 
->    '#interconnect-cells':
->      const: 1
-> diff --git a/include/dt-bindings/interconnect/qcom,sm8250.h
-> b/include/dt-bindings/interconnect/qcom,sm8250.h
-> new file mode 100644
-> index 000000000000..1b4d9fbe888d
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,sm8250.h
-> @@ -0,0 +1,172 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Qualcomm SM8250 interconnect IDs
-> + *
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SM8250_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_SM8250_H
-> +
-> +#define MASTER_A1NOC_CFG		0
-> +#define MASTER_QSPI_0			1
-> +#define MASTER_QUP_1			2
-> +#define MASTER_QUP_2			3
-> +#define MASTER_TSIF			4
-> +#define MASTER_PCIE_2			5
-> +#define MASTER_SDCC_4			6
-> +#define MASTER_UFS_MEM			7
-> +#define MASTER_USB3			8
-> +#define MASTER_USB3_1			9
-> +#define A1NOC_SNOC_SLV			10
-> +#define SLAVE_ANOC_PCIE_GEM_NOC_1	11
-> +#define SLAVE_SERVICE_A1NOC		12
-> +
-> +#define MASTER_A2NOC_CFG		0
-> +#define MASTER_QDSS_BAM			1
-> +#define MASTER_QUP_0			2
-> +#define MASTER_CNOC_A2NOC		3
-> +#define MASTER_CRYPTO_CORE_0		4
-> +#define MASTER_IPA			5
-> +#define MASTER_PCIE			6
-> +#define MASTER_PCIE_1			7
-> +#define MASTER_QDSS_ETR			8
-> +#define MASTER_SDCC_2			9
-> +#define MASTER_UFS_CARD			10
-> +#define A2NOC_SNOC_SLV			11
-> +#define SLAVE_ANOC_PCIE_GEM_NOC		12
-> +#define SLAVE_SERVICE_A2NOC		13
-> +
-> +#define MASTER_NPU			0
-> +#define SLAVE_CDSP_MEM_NOC		1
-> +
-> +#define SNOC_CNOC_MAS			0
-> +#define MASTER_QDSS_DAP			1
-> +#define SLAVE_A1NOC_CFG			2
-> +#define SLAVE_A2NOC_CFG			3
-> +#define SLAVE_AHB2PHY_SOUTH		4
-> +#define SLAVE_AHB2PHY_NORTH		5
-> +#define SLAVE_AOSS			6
-> +#define SLAVE_CAMERA_CFG		7
-> +#define SLAVE_CLK_CTL			8
-> +#define SLAVE_CDSP_CFG			9
-> +#define SLAVE_RBCPR_CX_CFG		10
-> +#define SLAVE_RBCPR_MMCX_CFG		11
-> +#define SLAVE_RBCPR_MX_CFG		12
-> +#define SLAVE_CRYPTO_0_CFG		13
-> +#define SLAVE_CX_RDPM			14
-> +#define SLAVE_DCC_CFG			15
-> +#define SLAVE_CNOC_DDRSS		16
-> +#define SLAVE_DISPLAY_CFG		17
-> +#define SLAVE_GRAPHICS_3D_CFG		18
-> +#define SLAVE_IMEM_CFG			19
-> +#define SLAVE_IPA_CFG			20
-> +#define SLAVE_IPC_ROUTER_CFG		21
-> +#define SLAVE_LPASS			22
-> +#define SLAVE_CNOC_MNOC_CFG		23
-> +#define SLAVE_NPU_CFG			24
-> +#define SLAVE_PCIE_0_CFG		25
-> +#define SLAVE_PCIE_1_CFG		26
-> +#define SLAVE_PCIE_2_CFG		27
-> +#define SLAVE_PDM			28
-> +#define SLAVE_PIMEM_CFG			29
-> +#define SLAVE_PRNG			30
-> +#define SLAVE_QDSS_CFG			31
-> +#define SLAVE_QSPI_0			32
-> +#define SLAVE_QUP_0			33
-> +#define SLAVE_QUP_1			34
-> +#define SLAVE_QUP_2			35
-> +#define SLAVE_SDCC_2			36
-> +#define SLAVE_SDCC_4			37
-> +#define SLAVE_SNOC_CFG			38
-> +#define SLAVE_TCSR			39
-> +#define SLAVE_TLMM_NORTH		40
-> +#define SLAVE_TLMM_SOUTH		41
-> +#define SLAVE_TLMM_WEST			42
-> +#define SLAVE_TSIF			43
-> +#define SLAVE_UFS_CARD_CFG		44
-> +#define SLAVE_UFS_MEM_CFG		45
-> +#define SLAVE_USB3			46
-> +#define SLAVE_USB3_1			47
-> +#define SLAVE_VENUS_CFG			48
-> +#define SLAVE_VSENSE_CTRL_CFG		49
-> +#define SLAVE_CNOC_A2NOC		50
-> +#define SLAVE_SERVICE_CNOC		51
-> +
-> +#define MASTER_CNOC_DC_NOC		0
-> +#define SLAVE_LLCC_CFG			1
-> +#define SLAVE_GEM_NOC_CFG		2
-> +
-> +#define MASTER_GPU_TCU			0
-> +#define MASTER_SYS_TCU			1
-> +#define MASTER_AMPSS_M0			2
-> +#define MASTER_GEM_NOC_CFG		3
-> +#define MASTER_COMPUTE_NOC		4
-> +#define MASTER_GRAPHICS_3D		5
-> +#define MASTER_MNOC_HF_MEM_NOC		6
-> +#define MASTER_MNOC_SF_MEM_NOC		7
-> +#define MASTER_ANOC_PCIE_GEM_NOC	8
-> +#define MASTER_SNOC_GC_MEM_NOC		9
-> +#define MASTER_SNOC_SF_MEM_NOC		10
-> +#define SLAVE_GEM_NOC_SNOC		11
-> +#define SLAVE_LLCC			12
-> +#define SLAVE_MEM_NOC_PCIE_SNOC		13
-> +#define SLAVE_SERVICE_GEM_NOC_1		14
-> +#define SLAVE_SERVICE_GEM_NOC_2		15
-> +#define SLAVE_SERVICE_GEM_NOC		16
-> +
-> +#define MASTER_IPA_CORE			0
-> +#define SLAVE_IPA_CORE			1
-> +
-> +#define MASTER_LLCC			0
-> +#define SLAVE_EBI_CH0			1
-> +
-> +#define MASTER_CNOC_MNOC_CFG		0
-> +#define MASTER_CAMNOC_HF		1
-> +#define MASTER_CAMNOC_ICP		2
-> +#define MASTER_CAMNOC_SF		3
-> +#define MASTER_VIDEO_P0			4
-> +#define MASTER_VIDEO_P1			5
-> +#define MASTER_VIDEO_PROC		6
-> +#define MASTER_MDP_PORT0		7
-> +#define MASTER_MDP_PORT1		8
-> +#define MASTER_ROTATOR			9
-> +#define SLAVE_MNOC_HF_MEM_NOC		10
-> +#define SLAVE_MNOC_SF_MEM_NOC		11
-> +#define SLAVE_SERVICE_MNOC		12
-> +
-> +#define MASTER_NPU_SYS			0
-> +#define MASTER_NPU_CDP			1
-> +#define MASTER_NPU_NOC_CFG		2
-> +#define SLAVE_NPU_CAL_DP0		3
-> +#define SLAVE_NPU_CAL_DP1		4
-> +#define SLAVE_NPU_CP			5
-> +#define SLAVE_NPU_INT_DMA_BWMON_CFG	6
-> +#define SLAVE_NPU_DPM			7
-> +#define SLAVE_ISENSE_CFG		8
-> +#define SLAVE_NPU_LLM_CFG		9
-> +#define SLAVE_NPU_TCM			10
-> +#define SLAVE_NPU_COMPUTE_NOC		11
-> +#define SLAVE_SERVICE_NPU_NOC		12
-> +
-> +#define MASTER_SNOC_CFG			0
-> +#define A1NOC_SNOC_MAS			1
-> +#define A2NOC_SNOC_MAS			2
-> +#define MASTER_GEM_NOC_SNOC		3
-> +#define MASTER_GEM_NOC_PCIE_SNOC	4
-> +#define MASTER_PIMEM			5
-> +#define MASTER_GIC			6
-> +#define SLAVE_APPSS			7
-> +#define SNOC_CNOC_SLV			8
-> +#define SLAVE_SNOC_GEM_NOC_GC		9
-> +#define SLAVE_SNOC_GEM_NOC_SF		10
-> +#define SLAVE_OCIMEM			11
-> +#define SLAVE_PIMEM			12
-> +#define SLAVE_SERVICE_SNOC		13
-> +#define SLAVE_PCIE_0			14
-> +#define SLAVE_PCIE_1			15
-> +#define SLAVE_PCIE_2			16
-> +#define SLAVE_QDSS_STM			17
-> +#define SLAVE_TCU			18
-> +
-> +#endif
+Hello Mark,
 
+Are you planning to review/merge the changes till patch06. If not, I 
+will resend those
+
+patches along with comments addressed on patch07 onwards.
+
+Thanks,
+
+Rohit
+
+
+>
+>> Tested this on Dragon Board 410c!
+>>
+>> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> --srini
+>>>
+>>>   .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
+>>>   .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 185 
+>>> ++++++++++++++++++
+>>>   include/dt-bindings/sound/sc7180-lpass.h           |  10 +
+>>>   sound/soc/qcom/Kconfig                             |   5 +
+>>>   sound/soc/qcom/Makefile                            |   2 +
+>>>   sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
+>>>   sound/soc/qcom/lpass-cpu.c                         | 204 
+>>> ++++++++++---------
+>>>   sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
+>>>   sound/soc/qcom/lpass-lpaif-reg.h                   | 157 
+>>> ++++++++-------
+>>>   sound/soc/qcom/lpass-platform.c                    | 155 
+>>> +++++++++++----
+>>>   sound/soc/qcom/lpass-sc7180.c                      | 216 
+>>> +++++++++++++++++++++
+>>>   sound/soc/qcom/lpass.h                             |  63 +++++-
+>>>   12 files changed, 930 insertions(+), 299 deletions(-)
+>>>   delete mode 100644 
+>>> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+>>>   create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
+>>>   create mode 100644 sound/soc/qcom/lpass-sc7180.c
+>>>
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
+
