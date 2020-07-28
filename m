@@ -2,175 +2,152 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D96C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884F9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759E220714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8M0BeTA"
+	by mail.kernel.org (Postfix) with ESMTP id 6C568207F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgG1SVX (ORCPT
+        id S1732344AbgG1SYU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728886AbgG1SVW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 14:21:22 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE71BC061794;
-        Tue, 28 Jul 2020 11:21:22 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id l2so5080076pff.0;
-        Tue, 28 Jul 2020 11:21:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xBNFTWpWvbuyYttTx5FJzXMGIoQ5ioCfp2lUjYaRrnY=;
-        b=r8M0BeTAbK7MU3O/JzGv8BetoHJjwe74GKR5eBzjwBtUixkGTnzPJulv8DoiD3z0M+
-         4cbsGiwrbXTjReT++CKT9dpb5yZnxX0AkMu1zaE1p3vGgvEn343GDrS/fihDAwDJ4QXT
-         as/vsiHkN5wpWaT6Q0vUOyRJfRJDdcXK17MaP/ZMiCz5hsSaQoym6+VDNdzX4Z8zjYVn
-         pC1ccgdRQmFQUQURw/RXsWVKj+ZT2UGziMEGMvWDR4z60RX6TOzL7+VkkyHSjDHnmE1p
-         fpNScszPS06stwU7LOSXR3yjYeLYCBNtWwQcsPQnqBixwGj/ftP4l8W50Z9syEEluI6B
-         40Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xBNFTWpWvbuyYttTx5FJzXMGIoQ5ioCfp2lUjYaRrnY=;
-        b=WrWKpAJfUGAyUM+QTmBRKbf3jQX16tAp7IO8z60ez70Gf0CpXznFAO9aZUnXtnnTsV
-         MlerEa+wEZSTEujcHhN8MgwnAaSWRnTII6HQyMzT2XDj8x43uhXDiA2ktT4ouJ5Xd3Hv
-         76R969R5gSQYbCrEkzeHn1C4O4bDBdLTpoKqflTj6KM8llU+iZI+xUWvF+9yFKxYpQVt
-         cL3kZtOfpwbonBqmS/SgiKg/XrTMDLFTL+86YsF7A0FzIRvvxX6rHJxAbgf1f5VY6Ofv
-         6n+ggjp/wpMEbHJXhj4572D3Hv+boR/g28ol3WHVbwCwjI+sL64lB4QSwaPMdELGaeo/
-         wSgQ==
-X-Gm-Message-State: AOAM530sx9lNTzKliha+8C9zmOXj5Yop5HyrKmzjHchtTOJrwuQP6n4t
-        OU1L/25TPlOaolKI4nJIvmM8SVzroSJXPOBhjoY=
-X-Google-Smtp-Source: ABdhPJyzjIBZqt/Egn+xHr1LfK5t+AM9WogDpOm8Biuj3PSoqJG9tJ651RR9hyabsZIN4dcRn9ruYcpxyCiNQ5F2ewc=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr25056868pgn.4.1595960482322;
- Tue, 28 Jul 2020 11:21:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.15.Iaf4d717d1908ef22c88922b556e1eb803ae019c6@changeid>
-In-Reply-To: <20200728091057.15.Iaf4d717d1908ef22c88922b556e1eb803ae019c6@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Jul 2020 21:21:05 +0300
-Message-ID: <CAHp75Veo8UWSe_FtpF-gVgTd85vL0E2+61HHc1vKvyeVekd0ng@mail.gmail.com>
-Subject: Re: [PATCH 15/15] iio: sx9310: Enable vdd and svdd regulators at probe
-To:     Daniel Campello <campello@chromium.org>
+        Tue, 28 Jul 2020 14:24:20 -0400
+Received: from smtprelay0162.hostedemail.com ([216.40.44.162]:35734 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728401AbgG1SYU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 14:24:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3DBF1182CF689;
+        Tue, 28 Jul 2020 18:24:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: copy85_0111d2226f6c
+X-Filterd-Recvd-Size: 4570
+Received: from XPS-9350 (unknown [172.58.27.230])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 28 Jul 2020 18:24:15 +0000 (UTC)
+Message-ID: <855ea08a4c41bc107f88699230309675bd9075b0.camel@perches.com>
+Subject: Re: [PATCH 13/15] iio: sx9310: Add newlines to printks
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Daniel Campello <campello@chromium.org>
 Cc:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Jonathan Cameron <jic23@kernel.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Douglas Anderson <dianders@chromium.org>,
         Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Date:   Tue, 28 Jul 2020 11:24:07 -0700
+In-Reply-To: <CAHp75VdSxkgd-+CBTNUJD+WUdOX3e1x3Ysap=D9+33Yo1Kk+yA@mail.gmail.com>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+         <20200728151258.1222876-1-campello@chromium.org>
+         <20200728091057.13.I14600506d0f725bf800c8da4ef89fdb3c3fb45cd@changeid>
+         <CAHp75VdSxkgd-+CBTNUJD+WUdOX3e1x3Ysap=D9+33Yo1Kk+yA@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
->
-> From: Stephen Boyd <swboyd@chromium.org>
->
-> Enable the main power supply (vdd) and digital IO power supply (svdd)
-> during probe so that the i2c communication and device works properly on
-> boards that aggressively power gate these supplies.
->
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Daniel Campello <campello@chromium.org>
+On Tue, 2020-07-28 at 21:19 +0300, Andy Shevchenko wrote:
+> On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
+> > From: Stephen Boyd <swboyd@chromium.org>
+> > 
+> > Printks in the kernel have newlines at the end. Add them to the few
+> 
+> Printk()s
+> 
+> > printks in this driver.
+> 
+> printk()s
 
-Again wrong order.
-After fixing,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Random kernel pedantry.
+This patch should not need to be respun for any of these.
 
-> ---
->
->  drivers/iio/proximity/sx9310.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index 202018b726e32f..24a2360b6314ef 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -18,6 +18,7 @@
->  #include <linux/module.h>
->  #include <linux/pm.h>
->  #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->
->  #include <linux/iio/buffer.h>
-> @@ -118,6 +119,7 @@ struct sx9310_data {
->         struct i2c_client *client;
->         struct iio_trigger *trig;
->         struct regmap *regmap;
-> +       struct regulator_bulk_data supplies[2];
->         /*
->          * Last reading of the proximity status for each channel.
->          * We only send an event to user space when this changes.
-> @@ -873,6 +875,13 @@ static int sx9310_set_indio_dev_name(struct device *dev,
->         return 0;
->  }
->
-> +static void sx9310_regulator_disable(void *_data)
-> +{
-> +       struct sx9310_data *data = _data;
-> +
-> +       regulator_bulk_disable(ARRAY_SIZE(data->supplies), data->supplies);
-> +}
-> +
->  static int sx9310_probe(struct i2c_client *client)
->  {
->         int ret;
-> @@ -886,6 +895,8 @@ static int sx9310_probe(struct i2c_client *client)
->
->         data = iio_priv(indio_dev);
->         data->client = client;
-> +       data->supplies[0].supply = "vdd";
-> +       data->supplies[1].supply = "svdd";
->         mutex_init(&data->mutex);
->         init_completion(&data->completion);
->
-> @@ -893,6 +904,21 @@ static int sx9310_probe(struct i2c_client *client)
->         if (IS_ERR(data->regmap))
->                 return PTR_ERR(data->regmap);
->
-> +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->supplies),
-> +                                     data->supplies);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-> +       if (ret)
-> +               return ret;
-> +       /* Must wait for Tpor time after initial power up */
-> +       usleep_range(1000, 1100);
-> +
-> +       ret = devm_add_action_or_reset(dev, sx9310_regulator_disable, data);
-> +       if (ret)
-> +               return ret;
-> +
->         ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
->         if (ret) {
->                 dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
-> --
-> 2.28.0.rc0.142.g3c755180ce-goog
->
+> > Reviewed-by: Daniel Campello <campello@chromium.org>
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > Signed-off-by: Daniel Campello <campello@chromium.org>
+> 
+> It has ordering issues
+> Should be
+> 
+> Fixes:
+> SoB: Stephen
+> Rb: Douglas
+> Rb: Daniel
+> SoB: Daniel
+> 
+> 
+> > ---
+> > 
+> >  drivers/iio/proximity/sx9310.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> > index 3f981d28ee4056..4553ee83a016a3 100644
+> > --- a/drivers/iio/proximity/sx9310.c
+> > +++ b/drivers/iio/proximity/sx9310.c
+> > @@ -809,7 +809,7 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
+> >         if (ret) {
+> >                 if (ret == -ETIMEDOUT)
+> >                         dev_err(&data->client->dev,
+> > -                               "0x02 << 3l compensation timed out: 0x%02x",
+> > +                               "0x02 << 3l compensation timed out: 0x%02x\n",
+> 
+> Looks like ping-pong style in the series, i.e. you may fix this when
+> you introduced this line.
+> 
+> Check the rest (and not only printk()s) for the similar style and
+> avoid the latter.
+> 
+> >                                 val);
+> >                 return ret;
+> >         }
+> > @@ -855,7 +855,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+> > 
+> >         ddata = (uintptr_t)device_get_match_data(dev);
+> >         if (ddata != whoami) {
+> > -               dev_err(dev, "WHOAMI does not match device data: %u", whoami);
+> > +               dev_err(dev, "WHOAMI does not match device data: %u\n", whoami);
+> >                 return -ENODEV;
+> >         }
+> > 
+> > @@ -867,7 +867,7 @@ static int sx9310_set_indio_dev_name(struct device *dev,
+> >                 indio_dev->name = "sx9311";
+> >                 break;
+> >         default:
+> > -               dev_err(dev, "unexpected WHOAMI response: %u", whoami);
+> > +               dev_err(dev, "unexpected WHOAMI response: %u\n", whoami);
+> >                 return -ENODEV;
+> >         }
+> > 
+> > @@ -896,7 +896,7 @@ static int sx9310_probe(struct i2c_client *client)
+> > 
+> >         ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
+> >         if (ret) {
+> > -               dev_err(dev, "error in reading WHOAMI register: %d", ret);
+> > +               dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
+> >                 return ret;
+> >         }
+> > 
+> > --
+> > 2.28.0.rc0.142.g3c755180ce-goog
+> > 
+> 
+> 
 
-
--- 
-With Best Regards,
-Andy Shevchenko
