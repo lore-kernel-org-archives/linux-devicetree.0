@@ -2,63 +2,63 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EE7C43458
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78F3C4345A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 716CF206D7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84CF2206D7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 12:01:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsigjsbc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRnrQL2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgG1MBh (ORCPT
+        id S1729446AbgG1MBt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 08:01:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
+        Tue, 28 Jul 2020 08:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729375AbgG1MBQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 08:01:16 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD82BC0619D2;
-        Tue, 28 Jul 2020 05:01:15 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dk23so8490045ejb.11;
-        Tue, 28 Jul 2020 05:01:15 -0700 (PDT)
+        with ESMTP id S1729369AbgG1MBH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 08:01:07 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E6DC0619D4;
+        Tue, 28 Jul 2020 05:01:06 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id d6so6532033ejr.5;
+        Tue, 28 Jul 2020 05:01:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3xVG670XkylcieeabI4BfFgFxbC/3cUWewC6wtfaP/Y=;
-        b=lsigjsbcLg4U0fz2DXXJx6Dx+9kRltx8Q3OJh91jCAowBbFWJ66z7d6Ix651wJndte
-         phN2g7QbZsy7xyqCeea088Lo5Q3ER78cU0gPdo/FWYfRKKcWSoG8eRjcl3jJZc63OkAv
-         ByonmGBlh1OkelbbArUgZM9YYcCIjlRb0swiaDUG++flRzoUKqVdMSsFBY3Z4S7D+O9R
-         oYde/E3lxnG9o6I2nCli3NP4vAgVbKpvEJKgZ8QnmibB9141v0Gw3UtWV4wI0X1QIPgb
-         3n0NVGj0jlXVLvtyrnWA6p0DlFwmxCOsYfcpy+6yXrlAgedKefXV072QIJjeAk6xu/nP
-         cjoQ==
+        bh=I2q93FVdT16iSOi/3vPrG4ZH4MZNlbJkhzRjHUU4qvI=;
+        b=DRnrQL2jiANg1LCEiHbcsMAemscesJxlF/BScJWltuEPtWJgaKFG+PVuGW9l0rqJsy
+         E8CxWg5HAmLffJCYMTwu3R53mcEt7eAThyslDukHxhqQJaQCg9l2e77xM++LCPfI/PRa
+         a+9EifrOoaLfBUPW9n176A0RbCbC2Esmr0yQ28XLlN8lureqJostUIVXq2i8iq9r+o4A
+         s8IqRl0nIncUTgC3Wr+P96B85iqWJxtWJIE0ErLTwwCE5zTd2LLrl8f1z8PMquFy5Ger
+         2QC4oF7hDe9kUiwO/I6AGWx9xt3ugCbPI+X3zakiZobmrle8YiJiINKCaxDAbU9CrlqB
+         a6XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3xVG670XkylcieeabI4BfFgFxbC/3cUWewC6wtfaP/Y=;
-        b=T6Z/fPPfziYhlNp4MVIY9UWlzUqpwYCm+z03+H3xQKVMkCzXffHR6RZjpl1nEk/frf
-         4IhrVNAXzAo+u4p8fb7LxpmpY8H4A3qFdI2XC8gVtnoWBIx5UR5VP5FeUZkz9W5ST/XB
-         52cAvsDUg8ynvTlz6hibdjWt/6l4GbvvSrcN6GD2fMqaRTtLtHLPWM7pVmjZy5eo+Lqh
-         /P8AM8dKQYh2Dt4HXW2ZQH1ZdkFkRyf7Y7y1Nkv8uQb7xQRW4xfae9dZrHZCCZrINjFM
-         kMIZd3doK27uEaf7IUSYuVGGYuPzkjRC/L7JjqfnX+rRiYS//3tenJEH3MqXfVB7TkQo
-         WjUg==
-X-Gm-Message-State: AOAM5302dZ9Ab+Lk0QcuA2WNyZzZKH0gJegzu4bZYZILIFvH1zg8AQPX
-        FVoLr3d4IiBF+xOk3FLVYERS7ZxOROA=
-X-Google-Smtp-Source: ABdhPJzjg/8EY4mfnf/6DLLQKoIP4Iig8B48JFS1ys9qasBiMgYlTjXxbuVtY01YIiaWgRl/1jOSCA==
-X-Received: by 2002:a17:906:12cd:: with SMTP id l13mr18816915ejb.385.1595937674557;
-        Tue, 28 Jul 2020 05:01:14 -0700 (PDT)
+        bh=I2q93FVdT16iSOi/3vPrG4ZH4MZNlbJkhzRjHUU4qvI=;
+        b=gAYlgul+qoGGwEP7VWwSaKFQz7Q/jfSWkJ0kmobcPHHbMefRCM8nYv/MttCo5TIvGp
+         VpklOqnnmtih6GdkZioRlLD8hNNSB9YqO/7ABX7XTlo7s/Xh65RlAFpOUhG/NJYkB7Y5
+         Q2ovNh77Z5e9V31biYwSxCVhJo4trEa+fJ9GKH6TifwYaCZeaw9SM9fl+mN13eg2k1cP
+         UhtYEdt07vATsNxIhRx+HmevUdjfl47mc/kmRD90bN9l7XujIfagGycfCG2WeXTM2VEZ
+         j98ge58002i7+mnAWVuxy2T/euVoJuB58b2iv3g2cNgGm3dZ0vnmn+HtHyLNxgAFvSyU
+         nesA==
+X-Gm-Message-State: AOAM533FuR8bJ8Hc3Wv6F3CwFT9UbqylFfDrxfxmoj2ufsqXMWvL8rik
+        qaggfHiVcWABEjh1Wov1AJ8=
+X-Google-Smtp-Source: ABdhPJwzGWglviFaa19/EAZZVusEB9PVJX6tezEMVsH20V9O0umhp+H6N0A8L8X4h48ZE69Gi09zBQ==
+X-Received: by 2002:a17:906:b2d0:: with SMTP id cf16mr15708293ejb.514.1595937665567;
+        Tue, 28 Jul 2020 05:01:05 -0700 (PDT)
 Received: from localhost.localdomain (abad207.neoplus.adsl.tpnet.pl. [83.6.167.207])
-        by smtp.googlemail.com with ESMTPSA id m20sm9066959ejk.90.2020.07.28.05.01.13
+        by smtp.googlemail.com with ESMTPSA id m20sm9066959ejk.90.2020.07.28.05.01.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 05:01:14 -0700 (PDT)
+        Tue, 28 Jul 2020 05:01:05 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     konradybcio@gmail.com
 Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH 9/9] arm64: dts: qcom: kitakami: Enable SDHCI2
-Date:   Tue, 28 Jul 2020 14:00:48 +0200
-Message-Id: <20200728120049.90632-10-konradybcio@gmail.com>
+Subject: [PATCH 5/9] arm64: dts: qcom: msm8992: Add USB support
+Date:   Tue, 28 Jul 2020 14:00:44 +0200
+Message-Id: <20200728120049.90632-6-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728120049.90632-1-konradybcio@gmail.com>
 References: <20200728120049.90632-1-konradybcio@gmail.com>
@@ -81,28 +81,56 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This enables the use of uSD cards.
+This is a very basic dwc3 configuration (no PHYs yet),
+but it works.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 31 +++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-index 696cd39852f4..806e8ee00833 100644
---- a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
-@@ -261,6 +261,10 @@ &sdhc1 {
- 	 */
- };
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index c7dc81311f6a..c9502fcf5d70 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -242,6 +242,37 @@ frame@f9028000 {
+ 			};
+ 		};
  
-+&sdhc2 {
-+	status = "okay";
-+};
++		usb3: usb@f92f8800 {
++			compatible = "qcom,msm8996-dwc3", "qcom,dwc3";
++			reg = <0xf92f8800 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
 +
- &tlmm {
- 	ts_int_active: ts-int-active {
- 		pins = "gpio42";
++			clocks = <&gcc GCC_USB30_MASTER_CLK>,
++				 <&gcc GCC_SYS_NOC_USB3_AXI_CLK>,
++				 <&gcc GCC_USB30_SLEEP_CLK>,
++				 <&gcc GCC_USB30_MOCK_UTMI_CLK>;
++			clock-names = "core", "iface", "sleep", "mock_utmi", "ref", "xo";
++
++			assigned-clocks = <&gcc GCC_USB30_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <120000000>;
++
++			power-domains = <&gcc USB30_GDSC>;
++			qcom,select-utmi-as-pipe-clk;
++
++			dwc3@f9200000 {
++				compatible = "snps,dwc3";
++				reg = <0xf9200000 0xcc00>;
++				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
++				maximum-speed = "high-speed";
++				dr_mode = "peripheral";
++			};
++		};
++
+ 		sdhc_1: sdhci@f9824900 {
+ 			compatible = "qcom,sdhci-msm-v4";
+ 			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
 -- 
 2.27.0
 
