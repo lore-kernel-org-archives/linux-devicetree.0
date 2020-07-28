@@ -2,146 +2,210 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4B9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 10:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06963C433EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E26CB207E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 10:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48792064B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 11:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vDkkyU+5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d13uPu0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgG1Kv1 (ORCPT
+        id S1728930AbgG1LD6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 06:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
+        Tue, 28 Jul 2020 07:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728919AbgG1Kv0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 06:51:26 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C4B5C0619D5
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 03:51:25 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so17842598wrw.1
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 03:51:25 -0700 (PDT)
+        with ESMTP id S1728788AbgG1LD6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 07:03:58 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81825C061794;
+        Tue, 28 Jul 2020 04:03:57 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so20634392ljj.10;
+        Tue, 28 Jul 2020 04:03:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=LzOc135fINoaOyyxwY4N4SP5+/4WZUgI3XQn3ZBQrDA=;
-        b=vDkkyU+5XaTOEmRQYW0CYyR4mlMX1mtnZDopRBrR16WWZAymHLppooL3WbRsemUOlF
-         7JAG9CCFFBkNo1ck8oAFsHnGGCFpddbJZI4FvPPe/5vgXZIxS7pdXreW0pAmXl4fefVk
-         uemgsa2HPMS2pgMJSiY5gsoUuJ22Uc9FFMkDS50upr4Y5t/bruJsOn96uJd/Xej/4+wJ
-         r3z4kV7L9g728y5x+aNOBIj6JRK/2vA+lFuGJCCKMNnmmCY7vsMSYcIdJpOO1Lj/2Nk6
-         unQbNqxObw8nTIlx8MnFNeMtUIVxddRTqJvHuyaU1npKp/UQnousCC6p6CUsu9YCp0JA
-         N8gg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jX6sjTJPEr15dOzF7TYKeW7hD2/3KOKGSVAXq2cMBEc=;
+        b=d13uPu0+A8NFdVShzGvgGo4igAAaBdTaVAmAtFt4WF3hQWPCzgOZa3msY075ut5XaJ
+         k8eWcH8d33j3q9R5BTwumU5UEfPfG5MTo6ELaMCYTqMjNlWtwJloALgvmhwktj4sniV8
+         e++cuzk30jO7afhKJycMTVt00m3AUpWl4YGo4Av4UjOXJyE+zRFn2qXnSJ0GsbX/2uQd
+         MKsWo4z2zGaowAA5XbZi69CFjkNvsCB2sbxIbEzvdoHPKd16q+8t7TjVPRZBHICf4yz2
+         296srKHU3RreyC48COtmJUgeAjyVGp1ojNLE/2Y4AIH5NH6CsIEwAXQXpqYgFpmMi3a4
+         MlDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=LzOc135fINoaOyyxwY4N4SP5+/4WZUgI3XQn3ZBQrDA=;
-        b=UB6+0F6rWxfrcTZNq/uDdjBBbOWu9J6HCx7hw/XcqE8eI+HNaI45Xb3wxn4YhfrhGH
-         Aip9uwI0Fn+ZCbaVJJ8eFpgIaXizKHXYiqajrKfSDPpPLDs8eXUddPLwFyNgKBAWwspH
-         ABNzRDy9KDF9iTvMaxJqvgXSVLJ4NVStr+NLMug+F7GbNktAy6vrW6xWVCw2jAeBuNp2
-         pJSyESIuQtuDehZk7VGbf1zwTEYpIfYDkqZg92pk46alwckg6VE0qdqoJZDld/sZdyIt
-         C93YYy6TismFvDGCBarJ3gVIfGrBZSAmMye/NBQ13S9DqYPE3Egmn2wd69jfu1o6gEF9
-         JrdQ==
-X-Gm-Message-State: AOAM531A80l+dXiN/EeRxxwBLHnbafnuvkhESDekiuMun/2kjnxH3dqi
-        U3HI7WaiD0rh/7Z7udRXsEmkeQ==
-X-Google-Smtp-Source: ABdhPJyXBEeI4zvLVf/tRWpqopuL2jSNCu4L9LZnKQaZP1mCTaWKou6fjAB0L+zVU5NonfUp5NxoSw==
-X-Received: by 2002:a5d:4a90:: with SMTP id o16mr23540803wrq.87.1595933483925;
-        Tue, 28 Jul 2020 03:51:23 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id y189sm4194196wmd.27.2020.07.28.03.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:51:23 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 11:51:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200728105121.GG2419169@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-7-michael@walle.cc>
- <20200728074352.ckyfso5zwsfgupjx@pengutronix.de>
- <58b53cacc5289f17f669159beeeada03@walle.cc>
- <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jX6sjTJPEr15dOzF7TYKeW7hD2/3KOKGSVAXq2cMBEc=;
+        b=KXQfqZX/5M6K2GnUEIog1q4URisQFVSNogKqQv3w06XIJm6eSSAT5PFAE392l5SK8b
+         2VVNFmLPid/5yyMXNg/Fa/LIan5+ySrW0Fhz1CXh2R21ZWsxMnPgCAvrKIg/QLbCknDr
+         7olXKFAAhbJfvVEVnncweW6KxSYD21N/Dfpm/gnPtJE6e8sDhMbyqTHc0JblaWd07ZYJ
+         Ny3fqwDyTYWT/5Go+DA0SoN+0P3Pjp01lTa/hNH6/hKuh01kO+eR0ncWd5arVosY+DNO
+         MtB5yEG8bLal/uzUUB7QRZMXgF03FSj5OG/ngoRsBQBeAZLIrc0s+tOyin5BDlsXvDaB
+         PIuQ==
+X-Gm-Message-State: AOAM533mVQ7sgNXN2zS8T7NULMRtBBGY4SVdas3qYaVzefYQ2ajEfPYx
+        C8llCZulo4OhVc7dzA5tob99udjS
+X-Google-Smtp-Source: ABdhPJy21QLY/yVjHkncbE+RD0wsgXFjz+XHQdbpbJEUed+zywipzYvk8mjCf8LoQO76elRFDDdGzg==
+X-Received: by 2002:a2e:7308:: with SMTP id o8mr5524141ljc.414.1595934235729;
+        Tue, 28 Jul 2020 04:03:55 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id k25sm2905238ljk.87.2020.07.28.04.03.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Jul 2020 04:03:55 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
+ till calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
+ <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
+Date:   Tue, 28 Jul 2020 14:03:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200728094720.x6pucwxsfwvz6nvv@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Jul 2020, Uwe Kleine-König wrote:
-> On Tue, Jul 28, 2020 at 10:21:22AM +0200, Michael Walle wrote:
-> > Am 2020-07-28 09:43, schrieb Uwe Kleine-König:
-> > > On Sun, Jul 26, 2020 at 01:18:27AM +0200, Michael Walle wrote:
-> > > > +static int sl28cpld_pwm_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct sl28cpld_pwm *priv;
-> > > > +	struct pwm_chip *chip;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!pdev->dev.parent)
-> > > > +		return -ENODEV;
-> > > > +
-> > > > +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > > > +	if (!priv)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	priv->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> > > > +	if (!priv->regmap)
-> > > 
-> > > Error message here?
-> > 
-> > This shouldn't really happen and I put it into the same category
-> > as the two above and report no error. But I can add it.
+27.07.2020 23:57, Sowjanya Komatineni пишет:
+> With the split of MIPI calibration into tegra_mipi_calibrate() and
+> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+> is done.
 > 
-> For kzalloc it is right to not emit an error because a failing kzalloc
-> is already loud on its own. I missed the first error path, that should
-> get a message, too.
+> So, this patch skips disabling MIPI clock after triggering start of
+> calibration and disables it only after waiting for done status from
+> the calibration logic.
 > 
-> > Generally, it looked to me that more and more drivers don't
-> > really report errors anymore, but just return with an -EWHATEVER.
-> > So if someone can shed some light here, I'm all ears.
+> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
+> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+> with their usage.
 > 
-> IMHO it's wrong not to add error messages. At one point in time it will
-> fail and then you're happy if you don't have to add printks all over the
-> place first to debug that.
+> As MIPI clock is left enabled and in case of any failures with CSI input
+> streaming tegra_mipi_finish_calibration() will not get invoked.
+> So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
+> and consumer drivers can call this in such cases.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/gpu/drm/tegra/dsi.c |  4 ++--
+>  drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+>  include/linux/host1x.h      |  5 +++--
+>  3 files changed, 15 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+> index 3820e8d..a7864e9 100644
+> --- a/drivers/gpu/drm/tegra/dsi.c
+> +++ b/drivers/gpu/drm/tegra/dsi.c
+> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
+>  		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>  	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+>  
+> -	err = tegra_mipi_calibrate(dsi->mipi);
+> +	err = tegra_mipi_start_calibration(dsi->mipi);
+>  	if (err < 0)
+>  		return err;
+>  
+> -	return tegra_mipi_wait(dsi->mipi);
+> +	return tegra_mipi_finish_calibration(dsi->mipi);
+>  }
+>  
+>  static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
+> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+> index e606464..b15ab6e 100644
+> --- a/drivers/gpu/host1x/mipi.c
+> +++ b/drivers/gpu/host1x/mipi.c
+> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
+>  }
+>  EXPORT_SYMBOL(tegra_mipi_disable);
+>  
+> -int tegra_mipi_wait(struct tegra_mipi_device *device)
+> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+> +{
 
-Error messages should only be omitted for -ENOMEM and if something is
-already being printed out, ideally by the sub-system API.
+Doesn't MIPI_CAL need to be reset here?
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> +	clk_disable(device->mipi->clk);
+> +}
+> +EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
+> +
+> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
+>  {
+>  	struct tegra_mipi *mipi = device->mipi;
+>  	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
+>  	u32 value;
+>  	int err;
+>  
+> -	err = clk_enable(device->mipi->clk);
+> -	if (err < 0)
+> -		return err;
+> -
+>  	mutex_lock(&device->mipi->lock);
+>  
+>  	err = readl_relaxed_poll_timeout(status_reg, value,
+> @@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
+>  
+>  	return err;
+>  }
+> -EXPORT_SYMBOL(tegra_mipi_wait);
+> +EXPORT_SYMBOL(tegra_mipi_finish_calibration);
+>  
+> -int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
+>  {
+>  	const struct tegra_mipi_soc *soc = device->mipi->soc;
+>  	unsigned int i;
+> @@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+>  	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+
+This function sets MIPI_CAL_CLKEN_OVR bit, does it mean that MIPI clock
+becomes always-ON?
+
+I don't see where MIPI_CAL_CLKEN_OVR is unset.
+
+>  	mutex_unlock(&device->mipi->lock);
+> -	clk_disable(device->mipi->clk);
+>  
+>  	return 0;
+>  }
+> -EXPORT_SYMBOL(tegra_mipi_calibrate);
+> +EXPORT_SYMBOL(tegra_mipi_start_calibration);
+>  
+>  static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
+>  	{ .data = MIPI_CAL_CONFIG_CSIA },
+> diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+> index 20c885d..b490dda 100644
+> --- a/include/linux/host1x.h
+> +++ b/include/linux/host1x.h
+> @@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
+>  void tegra_mipi_free(struct tegra_mipi_device *device);
+>  int tegra_mipi_enable(struct tegra_mipi_device *device);
+>  int tegra_mipi_disable(struct tegra_mipi_device *device);
+> -int tegra_mipi_calibrate(struct tegra_mipi_device *device);
+> -int tegra_mipi_wait(struct tegra_mipi_device *device);
+> +int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
+> +int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
+> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
+>  
+>  #endif
+> 
+
