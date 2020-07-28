@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F5EC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72F8C433EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F30C20759
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915A620714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 02:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WwZw+pP+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUASXs1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgG1Czl (ORCPT
+        id S1726916AbgG1Cz5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 27 Jul 2020 22:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41332 "EHLO
+        Mon, 27 Jul 2020 22:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgG1Czk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 22:55:40 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F7BC061794
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:55:40 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ha11so3367809pjb.1
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:55:40 -0700 (PDT)
+        with ESMTP id S1726410AbgG1Cz4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 27 Jul 2020 22:55:56 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A2AC061794
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:55:56 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id 72so9155058ple.0
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 19:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vj4PvrUowPqtbuJaQ0O2q3BF0NyACCC69JsA6UDc3eI=;
-        b=WwZw+pP+nfELKn3wI03HThV4YaBFoLIXqlFNgKBZrNnS80bc1dFNTFkfT6igDZKcWx
-         2fHNyDXG4ort0eu9UmmN5X3yJxwADl5nnjGPmWH2sLS1ueMvDNrlJQNXLyC4vMQO22UX
-         zvY1I3ilK1mcvGkbW//ckjGAsI1o4eFsDNmTadBtgKvPJi4GKJj/9tlTyZuugIIzi0um
-         2Ly2kdCtVMM2GVYGWaki2mOMXBk4lXJCTZZ6W2JmiFjV93N7rMuN8M3bUVdxi0nvjT1p
-         3u0SsE6yQwMHidDq+IhnWzF/9sJavbAbzvdZg7LvsAhyUvtasixdMeEUVTqI4N3eds7U
-         X6rg==
+        bh=xHSue0CpQdznRDxP9HpcUml2ldWS2kI8QAiHMjwZsXk=;
+        b=IUASXs1vJ1qA+xjSALYyZt+BdzR4rFVXPkh++rAUOBtW4OALDpHw7FcO3xHVgYiCZi
+         /YC0T0Q0QLAJEIuYlDEdC1B/0lHyq08IcxsTpffEYRgOHUp9eokDwJOdobX6OdNzBHWC
+         gGcYXpgJsy8sknso3kDuoeJs6DXH8C14Ig2m2/U9A0WirUen7R0UEmzCcRSwFy9C3O6y
+         uT1Psxj5VOB05ySDtvIJD0K7WY0C16kRQvrosHcpWR9tO52rvSAp66ctAIUgqGXmj6ld
+         TjtuqaiXR2CRNGWf58N1Bkqc8KG77MsTq5894zZ+AanQ/gD0JZ1MuBQZexHCIGFfiDy9
+         xipQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=vj4PvrUowPqtbuJaQ0O2q3BF0NyACCC69JsA6UDc3eI=;
-        b=mxN6tmBVTqHz5ItpQtOGLtUSfz5DdKl5f7XvD7gg1L/3XFekrg4gF199y4aOyo8XCW
-         hUHctF04cJ9qWiWIfGWmFWflOCl7I1rkdg8iJFuhAFvrkkLexQFqxFD+HAKI/ZPdZpxI
-         w4Y6YBrvVAqbkRyM631YclYrteJ85f+j6sRgTVKSAz9fcNhAPKnrn8pBKgsQeHtxyLrN
-         1mK1DVGv+GttvBRBsrGNQnzUivHRacfbbWlJGT+qzlmGtvSgUVs/C/ukf2crLWyrU/il
-         0stXEiNyvvWbDCEIgJbEOzwAUUVL1ReHFWCzXG5oCBNgc0VlSmmH5qFfQapDZOxwiLGa
-         ZI1A==
-X-Gm-Message-State: AOAM5334zQC9TpdLXrck62DpPCMaMWA6p1q59IdleR3RuswLgJLXNZNg
-        MbonvoaW/f5n4vTXb25by31cYw3FVLY=
-X-Google-Smtp-Source: ABdhPJw20CHD8mN7rFluEkumrPGtEiQB31mr0omh55p2NAHuyCUiXQXuszlrRL1rXIImDWKp/DWCXg==
-X-Received: by 2002:a17:902:7484:: with SMTP id h4mr7136949pll.139.1595904940300;
-        Mon, 27 Jul 2020 19:55:40 -0700 (PDT)
+        bh=xHSue0CpQdznRDxP9HpcUml2ldWS2kI8QAiHMjwZsXk=;
+        b=Oujazh1Np2KovBz4en5Vy5N456r0Y4VDOJOjcNUxv0fkqU5LsOUu3uapj/60EKLotj
+         r85fStYDuooqs80oiDCuxKgS1t/aAS++J43P6mQjfzsiWbksd1AiyobDKuC28EQ2qW66
+         guWei+1vt/9jNK1eBTphg4IsFXwWqxlw+/ietBbc2jicoVOxjJ6l+5jPTqNivbTrAinq
+         Zm9CIMXhMVP4WAijdkjMdv98F4QobwppUi7sPvkQajEErY7H8UOgs3L7/xox6CKNde+1
+         8qhfdsuRZCAxM3Ius9BlJ5nWpw7zMXifWZ7mCkTHoZO1B/T36MAtv4unk2SXZqJNoXBt
+         oqcQ==
+X-Gm-Message-State: AOAM531BD+nZnkmd6um5VOKD8ZA7ldbt6CsvWOI8BADn6lNbTP42EWIm
+        5ETKn2lRiCrSPdds9IzxiHI=
+X-Google-Smtp-Source: ABdhPJwjK0HYoPAp5SbegcVvL9vysGStO3XCD+1r9RziUs8rO+gT/2vi8u418QOHBxw3jN5+WNU4uQ==
+X-Received: by 2002:a17:902:d704:: with SMTP id w4mr21994938ply.278.1595904956348;
+        Mon, 27 Jul 2020 19:55:56 -0700 (PDT)
 Received: from localhost.localdomain ([45.124.203.15])
-        by smtp.gmail.com with ESMTPSA id w9sm15147407pfq.178.2020.07.27.19.55.36
+        by smtp.gmail.com with ESMTPSA id w9sm15147407pfq.178.2020.07.27.19.55.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 19:55:38 -0700 (PDT)
+        Mon, 27 Jul 2020 19:55:55 -0700 (PDT)
 From:   Joel Stanley <joel@jms.id.au>
 To:     linux-fsi@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Andrew Jeffery <andrew@aj.id.au>,
         Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 1/5] dt-bindings: fsi: Document gpios
-Date:   Tue, 28 Jul 2020 12:25:23 +0930
-Message-Id: <20200728025527.174503-2-joel@jms.id.au>
+Subject: [PATCH 5/5] fsi: aspeed: Support CFAM reset GPIO
+Date:   Tue, 28 Jul 2020 12:25:27 +0930
+Message-Id: <20200728025527.174503-6-joel@jms.id.au>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200728025527.174503-1-joel@jms.id.au>
 References: <20200728025527.174503-1-joel@jms.id.au>
@@ -76,42 +76,94 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The FSI master has some associated GPIOs that may be present on some
-hardware configurations.
+Systems have a line for restting the remote CFAM. This is not part of
+the FSI master, but is associated with it, so it makes sense to include
+it in the master driver.
 
+This exposes a sysfs interface to reset the cfam, abstracting away the
+direction and polarity of the GPIO, as well as the timing of the reset
+pulse. Userspace will be blocked until the reset pulse is finished.
+
+The reset is hard coded to be in the range of (900, 1000) us. It was
+observed with a scope to regularly be just over 1ms.
+
+If the device tree property is not preset the driver will silently
+continue.
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- .../devicetree/bindings/fsi/fsi-master-aspeed.txt    | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/fsi/fsi-master-aspeed.c | 43 +++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-index b758f91914f7..a513e65ec0c9 100644
---- a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-+++ b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-@@ -12,6 +12,13 @@ Required properties:
-  - pinctrl-0: phandle to pinctrl node
-  - pinctrl-names: pinctrl state
+diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
+index 2531e826ba8b..c006ec008a1a 100644
+--- a/drivers/fsi/fsi-master-aspeed.c
++++ b/drivers/fsi/fsi-master-aspeed.c
+@@ -22,6 +22,7 @@ struct fsi_master_aspeed {
+ 	struct device		*dev;
+ 	void __iomem		*base;
+ 	struct clk		*clk;
++	struct gpio_desc	*cfam_reset_gpio;
+ };
  
-+Optional properties:
-+ - cfam-reset-gpios: GPIO for CFAM reset
-+
-+ - fsi-routing-gpios: GPIO for setting the FSI mux (internal or cabled)
-+ - fsi-mux-gpios: GPIO for detecting the desired FSI mux state
-+
-+
- Examples:
+ #define to_fsi_master_aspeed(m) \
+@@ -425,6 +426,43 @@ static int aspeed_master_init(struct fsi_master_aspeed *aspeed)
+ 	return 0;
+ }
  
-     fsi-master {
-@@ -21,4 +28,9 @@ Examples:
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_fsi1_default>;
- 	clocks = <&syscon ASPEED_CLK_GATE_FSICLK>;
++static ssize_t cfam_reset_store(struct device *dev, struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct fsi_master_aspeed *aspeed = dev_get_drvdata(dev);
 +
-+	fsi-routing-gpios = <&gpio0 ASPEED_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
-+	fsi-mux-gpios = <&gpio0 ASPEED_GPIO(B, 0) GPIO_ACTIVE_HIGH>;
++	gpiod_set_value(aspeed->cfam_reset_gpio, 1);
++	usleep_range(900, 1000);
++	gpiod_set_value(aspeed->cfam_reset_gpio, 0);
 +
-+	cfam-reset-gpios = <&gpio0 ASPEED_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
-     };
++	return count;
++}
++
++static DEVICE_ATTR(cfam_reset, 0200, NULL, cfam_reset_store);
++
++static int setup_cfam_reset(struct fsi_master_aspeed *aspeed)
++{
++	struct device *dev = aspeed->dev;
++	struct gpio_desc *gpio;
++	int rc;
++
++	gpio = devm_gpiod_get_optional(dev, "cfam-reset", GPIOD_OUT_LOW);
++	if (IS_ERR(gpio))
++		return PTR_ERR(gpio);
++	if (!gpio)
++		return 0;
++
++	aspeed->cfam_reset_gpio = gpio;
++
++	rc = device_create_file(dev, &dev_attr_cfam_reset);
++	if (rc) {
++		devm_gpiod_put(dev, gpio);
++		return rc;
++	}
++
++	return 0;
++}
++
+ static int tacoma_cabled_fsi_fixup(struct device *dev)
+ {
+ 	struct gpio_desc *routing_gpio, *mux_gpio;
+@@ -507,6 +545,11 @@ static int fsi_master_aspeed_probe(struct platform_device *pdev)
+ 		return rc;
+ 	}
+ 
++	rc = setup_cfam_reset(aspeed);
++	if (rc) {
++		dev_err(&pdev->dev, "CFAM reset GPIO setup failed\n");
++	}
++
+ 	writel(0x1, aspeed->base + OPB_CLK_SYNC);
+ 	writel(OPB1_XFER_ACK_EN | OPB0_XFER_ACK_EN,
+ 			aspeed->base + OPB_IRQ_MASK);
 -- 
 2.27.0
 
