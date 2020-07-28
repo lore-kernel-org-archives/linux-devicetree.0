@@ -2,91 +2,96 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC42C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2967AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 17:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82EAA2065C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 16:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595955317;
-	bh=rJVDQqY5WUvFsOu1EgRX9G1KnNLENwbxshwoQwQR3p4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cK566WaqoFOuwLBhQlMFHCnvUiChgjArw12UVZP3GZX60J4UToJXKamk+cu7YlupV
-	 cYHi3s7AbPuUnBbXnyVOZAdaSIycobj2SkwugIfihboSuMHMTYiPJDNILl4JfezWyB
-	 5kIljathfHUYYEsO0Jvv390qf7ux+Cy6UFc7G4cY=
+	by mail.kernel.org (Postfix) with ESMTP id 03B0C207FC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 17:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbgG1QzR (ORCPT
+        id S1731548AbgG1RBj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 12:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
+        Tue, 28 Jul 2020 13:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731504AbgG1QzQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 12:55:16 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731478AbgG1RBj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 13:01:39 -0400
+Received: from localhost.localdomain (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20702053B;
-        Tue, 28 Jul 2020 16:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595955316;
-        bh=rJVDQqY5WUvFsOu1EgRX9G1KnNLENwbxshwoQwQR3p4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wphuh2vgRP2NmEjnKL/5WhUCKFXp+LcT7YqJVHmw80vzlb5hYsg1+TCnZNO1xijV3
-         ff3mBUbM5YPw7DzfyjG55DZ5fKlsnV7zhOQm6hOxsiIaLs7EcdXUiB4yoQjM3s8ouI
-         CBtWyKxHVMqPKp5uH2ReQkcjAPv3ltdxZ9Zb+XUk=
-Date:   Tue, 28 Jul 2020 17:54:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3] ASoC: dt-bindings: ak4613: switch to yaml base
- Documentation
-Message-ID: <20200728165458.GC24701@sirena.org.uk>
-References: <87y2nk2tfd.wl-kuninori.morimoto.gx@renesas.com>
- <CAL_JsqJ8PyuZLXj4bLwyConb+GdH83hjPPj2mHbqNy=w9m-joA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6971C2053B;
+        Tue, 28 Jul 2020 17:01:35 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        iommu@lists.linux-foundation.org,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Joerg Roedel <joro@8bytes.org>, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping APIs
+Date:   Tue, 28 Jul 2020 18:01:33 +0100
+Message-Id: <159595564192.31263.3059824977932788766.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com> <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ8PyuZLXj4bLwyConb+GdH83hjPPj2mHbqNy=w9m-joA@mail.gmail.com>
-X-Cookie: You will be misunderstood by everyone.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, 19 Jun 2020 09:20:01 +0100, Lorenzo Pieralisi wrote:
+> This series is a v2 of a previous posting:
+> 
+> v1 -> v2
+> 
+> - Removed _rid() wrappers
+> - Fixed !CONFIG_ACPI compilation issue
+> - Converted of_pci_iommu_init() to use of_iommu_configure_dev_id()
+> 
+> [...]
 
---zCKi3GIZzVBPywwA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to arm64 (for-next/msi-iommu), thanks!
 
-On Mon, Jul 27, 2020 at 08:39:23AM -0600, Rob Herring wrote:
+[01/12] ACPI/IORT: Make iort_match_node_callback walk the ACPI namespace for NC
+        https://git.kernel.org/arm64/c/07d2e59f27cd
+[02/12] ACPI/IORT: Make iort_get_device_domain IRQ domain agnostic
+        https://git.kernel.org/arm64/c/d1718a1b7a86
+[03/12] ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
+        https://git.kernel.org/arm64/c/39c3cf566cea
+[04/12] ACPI/IORT: Remove useless PCI bus walk
+        https://git.kernel.org/arm64/c/3a3d208beede
+[05/12] ACPI/IORT: Add an input ID to acpi_dma_configure()
+        https://git.kernel.org/arm64/c/b8e069a2a8da
+[06/12] of/iommu: Make of_map_rid() PCI agnostic
+        https://git.kernel.org/arm64/c/746a71d02b5d
+[07/12] of/device: Add input id to of_dma_configure()
+        https://git.kernel.org/arm64/c/a081bd4af4ce
+[08/12] dt-bindings: arm: fsl: Add msi-map device-tree binding for fsl-mc bus
+        https://git.kernel.org/arm64/c/5bda70c6162d
+[09/12] of/irq: make of_msi_map_get_device_domain() bus agnostic
+        https://git.kernel.org/arm64/c/6f881aba0110
+[10/12] of/irq: Make of_msi_map_rid() PCI bus agnostic
+        https://git.kernel.org/arm64/c/2bcdd8f2c07f
+[11/12] bus/fsl-mc: Refactor the MSI domain creation in the DPRC driver
+        https://git.kernel.org/arm64/c/998fb7badf03
+[12/12] bus: fsl-mc: Add ACPI support for fsl-mc
+        https://git.kernel.org/arm64/c/6305166c8771
 
-> I haven't seen any follow-up to my audio-graph-card.yaml comments, so
-> please revert this.
+-- 
+Catalin
 
-OK, Morimoto-san please resubmit as a series with the audio-graph-card
-when you get back to that.
-
---zCKi3GIZzVBPywwA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8gWGEACgkQJNaLcl1U
-h9DjEgf/flTiTV9yDbY8qM8OA6yHxLt7VbCKxsA1FUtPKBoCgMfbawzKmYcVLArI
-aamcAdgU1VXbJivony07qipiIF2I4fND1DcK5h1tjgH4UmRGe/4geoZfSJ8xxlTJ
-5FnL0ojGnsCuM2hi20XAFHBNoRAcAD0irnyOUR/HXrRA6N1r6Jlhih1tkP9FH740
-FFZwwyGtlBZ09/nPdig1dzfkxqqtkgupTRxdBmaA3WNAFU9y5XL1QQ7Bhlu8f4yM
-ibjmpePvAYbcUqIYp5q5VH6PgDzmhwUtd/mC2SGedAlVpq2kiocMgpnKbScApN7W
-+iwbD1kRjKBsHeI4rCdUxkdAhMDnBA==
-=Evbh
------END PGP SIGNATURE-----
-
---zCKi3GIZzVBPywwA--
