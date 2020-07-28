@@ -2,96 +2,124 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2967AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 17:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93DAC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 17:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03B0C207FC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 17:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896B220786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 17:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731548AbgG1RBj (ORCPT
+        id S1731922AbgG1RYb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 13:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731478AbgG1RBj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 13:01:39 -0400
-Received: from localhost.localdomain (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 28 Jul 2020 13:24:31 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:44020 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731684AbgG1RYb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 13:24:31 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6971C2053B;
-        Tue, 28 Jul 2020 17:01:35 +0000 (UTC)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        iommu@lists.linux-foundation.org,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joerg Roedel <joro@8bytes.org>, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] ACPI/OF: Upgrade MSI/IOMMU ID mapping APIs
-Date:   Tue, 28 Jul 2020 18:01:33 +0100
-Message-Id: <159595564192.31263.3059824977932788766.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
-References: <20200521130008.8266-1-lorenzo.pieralisi@arm.com> <20200619082013.13661-1-lorenzo.pieralisi@arm.com>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 0FCD4804F6;
+        Tue, 28 Jul 2020 19:24:26 +0200 (CEST)
+Date:   Tue, 28 Jul 2020 19:24:25 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Marek Vasut <marex@denx.de>
+Cc:     dri-devel@lists.freedesktop.org, Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 3/3] drm/panel: simple: Add DT bindings for Powertip
+ PH800480T013
+Message-ID: <20200728172425.GA1114934@ravnborg.org>
+References: <20200728121246.23304-1-marex@denx.de>
+ <20200728121246.23304-3-marex@denx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728121246.23304-3-marex@denx.de>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=-VAfIpHNAAAA:8 a=VwQbUJbxAAAA:8
+        a=7gkXJVJtAAAA:8 a=KoOJ8eiH_lwS9MUCcoAA:9 a=CjuIK1q_8ugA:10
+        a=Vxmtnl_E_bksehYqCbjh:22 a=srlwD-8ojaedGGhPAyx8:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 19 Jun 2020 09:20:01 +0100, Lorenzo Pieralisi wrote:
-> This series is a v2 of a previous posting:
+On Tue, Jul 28, 2020 at 02:12:46PM +0200, Marek Vasut wrote:
+> Add support for Powertip PH800480T013 800x480 parallel LCD, this
+> one is used in the Raspberry Pi 7" touchscreen display unit.
 > 
-> v1 -> v2
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> To: dri-devel@lists.freedesktop.org
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+> V2: Add bus_flags and connector_type
+
+Hi Marek.
+
+Applied the 3 patches to drm-misc-next.
+Fixed subject while applying this patch.
+
+	Sam
+
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> - Removed _rid() wrappers
-> - Fixed !CONFIG_ACPI compilation issue
-> - Converted of_pci_iommu_init() to use of_iommu_configure_dev_id()
-> 
-> [...]
-
-Applied to arm64 (for-next/msi-iommu), thanks!
-
-[01/12] ACPI/IORT: Make iort_match_node_callback walk the ACPI namespace for NC
-        https://git.kernel.org/arm64/c/07d2e59f27cd
-[02/12] ACPI/IORT: Make iort_get_device_domain IRQ domain agnostic
-        https://git.kernel.org/arm64/c/d1718a1b7a86
-[03/12] ACPI/IORT: Make iort_msi_map_rid() PCI agnostic
-        https://git.kernel.org/arm64/c/39c3cf566cea
-[04/12] ACPI/IORT: Remove useless PCI bus walk
-        https://git.kernel.org/arm64/c/3a3d208beede
-[05/12] ACPI/IORT: Add an input ID to acpi_dma_configure()
-        https://git.kernel.org/arm64/c/b8e069a2a8da
-[06/12] of/iommu: Make of_map_rid() PCI agnostic
-        https://git.kernel.org/arm64/c/746a71d02b5d
-[07/12] of/device: Add input id to of_dma_configure()
-        https://git.kernel.org/arm64/c/a081bd4af4ce
-[08/12] dt-bindings: arm: fsl: Add msi-map device-tree binding for fsl-mc bus
-        https://git.kernel.org/arm64/c/5bda70c6162d
-[09/12] of/irq: make of_msi_map_get_device_domain() bus agnostic
-        https://git.kernel.org/arm64/c/6f881aba0110
-[10/12] of/irq: Make of_msi_map_rid() PCI bus agnostic
-        https://git.kernel.org/arm64/c/2bcdd8f2c07f
-[11/12] bus/fsl-mc: Refactor the MSI domain creation in the DPRC driver
-        https://git.kernel.org/arm64/c/998fb7badf03
-[12/12] bus: fsl-mc: Add ACPI support for fsl-mc
-        https://git.kernel.org/arm64/c/6305166c8771
-
--- 
-Catalin
-
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index cb6550d37e85..298e3a26d9ee 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -3000,6 +3000,31 @@ static const struct panel_desc pda_91_00156_a0  = {
+>  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+>  };
+>  
+> +static const struct drm_display_mode powertip_ph800480t013_idf02_mode = {
+> +	.clock = 24750,
+> +	.hdisplay = 800,
+> +	.hsync_start = 800 + 54,
+> +	.hsync_end = 800 + 54 + 2,
+> +	.htotal = 800 + 54 + 2 + 44,
+> +	.vdisplay = 480,
+> +	.vsync_start = 480 + 49,
+> +	.vsync_end = 480 + 49 + 2,
+> +	.vtotal = 480 + 49 + 2 + 22,
+> +};
+> +
+> +static const struct panel_desc powertip_ph800480t013_idf02  = {
+> +	.modes = &powertip_ph800480t013_idf02_mode,
+> +	.num_modes = 1,
+> +	.size = {
+> +		.width = 152,
+> +		.height = 91,
+> +	},
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH |
+> +		     DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
+> +		     DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.connector_type = DRM_MODE_CONNECTOR_DPI,
+> +};
+>  
+>  static const struct drm_display_mode qd43003c0_40_mode = {
+>  	.clock = 9000,
+> @@ -4012,6 +4037,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "pda,91-00156-a0",
+>  		.data = &pda_91_00156_a0,
+> +	}, {
+> +		.compatible = "powertip,ph800480t013-idf02",
+> +		.data = &powertip_ph800480t013_idf02,
+>  	}, {
+>  		.compatible = "qiaodian,qd43003c0-40",
+>  		.data = &qd43003c0_40,
+> -- 
+> 2.27.0
