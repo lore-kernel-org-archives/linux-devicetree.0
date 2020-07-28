@@ -2,415 +2,164 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FCCC433EA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE67AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429CC2177B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 07:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B4A20656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="aJnGZRBX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BloFnMYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgG1H5y (ORCPT
+        id S1727930AbgG1ILI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 03:57:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgG1H5x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 03:57:53 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E76BC061794;
-        Tue, 28 Jul 2020 00:57:53 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A69F222F00;
-        Tue, 28 Jul 2020 09:57:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595923068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k5vr5u2CwCzWonURU4FUJ7Qx0KdSzpRO+jGgc5tpaZ4=;
-        b=aJnGZRBXgjyowmj1Nw/blJsXNKWHvVlXJjqofsf24qgiRvczfkyVePpySUTExaysc7Ag/E
-        3oO2fWhzUREsA8aeFk6XHMA4tXxdT4nGgpTnTuo9BGeHqIJuI/xPzaZSh0/g4QxcMPBSgB
-        AEMmw8OIZ8zoAlbuwZ1a09xXi3rYnCQ=
+        Tue, 28 Jul 2020 04:11:08 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:54328 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbgG1ILH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 04:11:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595923866; x=1627459866;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=4348zSQswPRrH20ua261huy5XthZgYClc7uZbxDiXss=;
+  b=BloFnMYMDUNlfRnyraH1QD+B6QqXi8D6yahBhbSmU7Rn6rIygDFoutO6
+   u1gubUlWHJP1Nin5KJrdtPf24tUGu5NToQD25fMw054axTMYuZl2kI5pb
+   jG+LomAq41K4p9G0e52b5IcxrrgETbmBvnyjZrxu4v7Kh+ZjsnRxb2wDE
+   SjorAN/XwUkGjjQlCs4yRK9NFYGjG6VOANWb2UVxq0NFH1v5+WTfUmxnk
+   Qg+lvl3vqRSVFZhQ/1bPN/FUYpqs0deGPsE3wPMmkYsj9Tnly3VftLlYE
+   3U45BDPl1ZTaSLzdQvm8UrvjMjs0gwcdG3sWupJYIV6ZuDdlI2jeYSJiq
+   w==;
+IronPort-SDR: u0DQ0eKwBMew6XCiVSZ6TNgz94sf4p5fEp5KHy8R4066+bkamL02aFIDa/PnprqNt7eLr68+0O
+ bdwaZdRFNX3d+PZCspEgWoLORjBExQfhW1PLxMGaME/1kwbkmFz8kyYFa9qIp3tufYwjk+pPtN
+ yA1WkCcvGJwbSgD2GHiaHUjIV/LjQK2/8u8bNmSJdo3H8SmAWPfolmFlnNV80IoZpcshXAYiPe
+ q7Cms7O27/x1xxDD5OZksFJvaZIS2LZWhn70jtDPdXSklcadkY8v3um+VybJnSOzHzkwoVqZR1
+ 3LQ=
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="83485204"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jul 2020 01:11:06 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 28 Jul 2020 01:10:19 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Tue, 28 Jul 2020 01:11:03 -0700
+References: <20200724111404.13293-1-lars.povlsen@microchip.com> <20200724111404.13293-5-lars.povlsen@microchip.com> <20200727203847.GA782308@bogus>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v4 4/6] dt-bindings: snps,dw-apb-ssi: Add sparx5 support, plus rx-sample-delay-ns property
+In-Reply-To: <20200727203847.GA782308@bogus>
+Date:   Tue, 28 Jul 2020 10:11:02 +0200
+Message-ID: <87sgdcf4a1.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 28 Jul 2020 09:57:47 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-In-Reply-To: <20200728072422.GF1850026@dell>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-3-michael@walle.cc> <20200728072422.GF1850026@dell>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <1065b0107ce6fd88b2bdd704bf45346b@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-07-28 09:24, schrieb Lee Jones:
-> On Sun, 26 Jul 2020, Michael Walle wrote:
-> 
->> Add a device tree bindings for the board management controller found 
->> on
->> the Kontron SMARC-sAL28 board.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Rob Herring writes:
+
+> On Fri, Jul 24, 2020 at 01:14:02PM +0200, Lars Povlsen wrote:
+>> This has the following changes for the snps,dw-apb-ss DT bindings:
+>>
+>> - Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
+>>   controller
+>>
+>> - Add the property "rx-sample-delay-ns"
+>>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 >> ---
->> Changes since v5:
->>  - none
->> 
->> Changes since v4:
->>  - fix the regex of the unit-address
->> 
->> Changes since v3:
->>  - see cover letter
->> 
->>  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
->>  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
->>  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
->>  .../bindings/mfd/kontron,sl28cpld.yaml        | 153 
->> ++++++++++++++++++
->>  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
->>  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
->>  6 files changed, 358 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml 
->> b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->> new file mode 100644
->> index 000000000000..9a63a158a796
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->> @@ -0,0 +1,54 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: GPIO driver for the sl28cpld board management controller
->> +
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  This module is part of the sl28cpld multi-function device. For more
->> +  details see 
->> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
-> 
-> Paths are normally relative.
+>>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 21 +++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>> index c62cbe79f00dd..c0adaad1aa695 100644
+>> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+>> @@ -36,6 +36,8 @@ properties:
+>>                - mscc,ocelot-spi
+>>                - mscc,jaguar2-spi
+>>            - const: snps,dw-apb-ssi
+>> +      - description: Microchip Sparx5 SoC SPI Controller
+>> +        const: microchip,sparx5-spi
+>>        - description: Amazon Alpine SPI Controller
+>>          const: amazon,alpine-dw-apb-ssi
+>>        - description: Renesas RZ/N1 SPI Controller
+>> @@ -93,6 +95,12 @@ properties:
+>>        - const: tx
+>>        - const: rx
+>>
+>> +  rx-sample-delay-ns:
+>> +    description: Default value of the rx-sample-delay-ns property.
+>> +      This value will be used if the property is not explicitly defined
+>> +      for a SPI slave device. Default value is 0. See below.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>
+> Don't need a type for properties with unit suffixes.
+>
+> Also, add:
+>
+> 'default: 0'
+>
 
-grep Documentation/ Documentation
+Hi Rob!
 
-I know there are a lot false positives (esp in the first one)..
+Thank you for your input, all duly noted.
 
-$ grep -r "\.\./" Documentation | wc -l
-1826
-$ grep -r "Documentation/" Documentation|wc -l
-2862
+---Lars
 
-> 
->> +  There are three flavors of the GPIO controller, one full featured
->> +  input/output with interrupt support (kontron,sl28cpld-gpio), one
->> +  output-only (kontron,sl28-gpo) and one input-only 
->> (kontron,sl28-gpi).
 >> +
->> +  Each controller supports 8 GPIO lines.
+>>  patternProperties:
+>>    "^.*@[0-9a-f]+$":
+>>      type: object
+>> @@ -107,6 +115,13 @@ patternProperties:
+>>        spi-tx-bus-width:
+>>          const: 1
+>>
+>> +      rx-sample-delay-ns:
+>> +        description: SPI Rx sample delay offset, unit is nanoseconds.
+>> +          The delay from the default sample time before the actual
+>> +          sample of the rxd input signal occurs. The "rx_sample_delay"
+>> +          is an optional feature of the designware controller, and the
+>> +          upper limit is also subject to controller configuration.
 >> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - kontron,sl28cpld-gpio
->> +      - kontron,sl28cpld-gpi
->> +      - kontron,sl28cpld-gpo
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +
->> +  interrupt-controller: true
->> +
->> +  "#gpio-cells":
->> +    const: 2
->> +
->> +  gpio-controller: true
->> +
->> +  gpio-line-names:
->> +      minItems: 1
->> +      maxItems: 8
->> +
->> +required:
->> +  - compatible
->> +  - "#gpio-cells"
->> +  - gpio-controller
->> +
->> +additionalProperties: false
->> diff --git 
->> a/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml 
->> b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
->> new file mode 100644
->> index 000000000000..1cebd61c6c32
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
->> @@ -0,0 +1,27 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/hwmon/kontron,sl28cpld-hwmon.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Hardware monitoring driver for the sl28cpld board management 
->> controller
->> +
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  This module is part of the sl28cpld multi-function device. For more
->> +  details see 
->> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - kontron,sl28cpld-fan
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +
->> +additionalProperties: false
->> diff --git 
->> a/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml 
->> b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
->> new file mode 100644
->> index 000000000000..4c39e9ff9aea
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
->> @@ -0,0 +1,54 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: 
->> http://devicetree.org/schemas/interrupt-controller/kontron,sl28cpld-intc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Interrupt controller driver for the sl28cpld board management 
->> controller
->> +
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  This module is part of the sl28cpld multi-function device. For more
->> +  details see 
->> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml.
->> +
->> +  The following interrupts are available. All types and levels are 
->> fixed
->> +  and handled by the board management controller.
->> +
->> +  ==== ============= ==================================
->> +   IRQ line/device   description
->> +  ==== ============= ==================================
->> +    0  RTC_INT#      Interrupt line from on-board RTC
->> +    1  SMB_ALERT#    Event on SMB_ALERT# line (P1)
->> +    2  ESPI_ALERT0#  Event on ESPI_ALERT0# line (S43)
->> +    3  ESPI_ALERT1#  Event on ESPI_ALERT1# line (S44)
->> +    4  PWR_BTN#      Event on PWR_BTN# line (P128)
->> +    5  SLEEP#        Event on SLEEP# line (S149)
->> +    6  watchdog      Interrupt of the internal watchdog
->> +    7  n/a           not used
->> +  ==== ============= ==================================
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - kontron,sl28cpld-intc
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +
->> +  interrupt-controller: true
->> +
->> +required:
->> +  - compatible
->> +  - interrupts
->> +  - "#interrupt-cells"
->> +  - interrupt-controller
->> +
->> +additionalProperties: false
->> diff --git 
->> a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml 
->> b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> new file mode 100644
->> index 000000000000..e3a62db678e7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> @@ -0,0 +1,153 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Kontron's sl28cpld board management controller
-> 
-> "S128CPLD" ?
+>>  unevaluatedProperties: false
+>>
+>>  required:
+>> @@ -129,5 +144,11 @@ examples:
+>>        num-cs = <2>;
+>>        cs-gpios = <&gpio0 13 0>,
+>>                   <&gpio0 14 0>;
+>> +      rx-sample-delay-ns = <3>;
+>> +      spi-flash@1 {
+>> +        compatible = "spi-nand";
+>> +        reg = <1>;
+>> +        rx-sample-delay-ns = <7>;
+>> +      };
+>>      };
+>>  ...
+>> --
+>> 2.27.0
+>>
 
-still not, its sl28cpld, think of a project/code name, not the product
-appended with CPLD.
-
-> "Board Management Controller (BMC)" ?
-
-sounds like IPMI, which I wanted to avoid.
-
-> 
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  The board management controller may contain different IP blocks 
->> like
->> +  watchdog, fan monitoring, PWM controller, interrupt controller and 
->> a
->> +  GPIO controller.
->> +
->> +properties:
->> +  compatible:
->> +    const: kontron,sl28cpld-r1
-> 
-> We don't usually code revision numbers in compatible strings.
-> 
-> Is there any way to pull this from the H/W?
-
-No, unfortunately you can't. And I really want to keep that, in case
-in the future there are some backwards incompatible changes.
-
->> +  reg:
->> +    description:
->> +      I2C device address.
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +patternProperties:
->> +  "^gpio(@[0-9a-f]+)?$":
->> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
->> +
->> +  "^hwmon(@[0-9a-f]+)?$":
->> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
->> +
->> +  "^interrupt-controller(@[0-9a-f]+)?$":
->> +    $ref: ../interrupt-controller/kontron,sl28cpld-intc.yaml
->> +
->> +  "^pwm(@[0-9a-f]+)?$":
->> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
->> +
->> +  "^watchdog(@[0-9a-f]+)?$":
->> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
->> +
->> +required:
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - compatible
->> +  - reg
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    i2c {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        sl28cpld@4a {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            compatible = "kontron,sl28cpld-r1";
->> +            reg = <0x4a>;
-> 
-> Nit: Could you put the 'reg' and 'compatible' at the top please?
-> 
-> Same for all nodes.
-
-Sure, I've looked at previous examples, but they are not
-consistent, but it looked to me if the "#" properties are
-listed first.
-
--michael
+-- 
+Lars Povlsen,
+Microchip
