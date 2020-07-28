@@ -2,152 +2,105 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86980C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 06:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4498CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 06:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64CC020792
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 06:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E19420792
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 06:33:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wXWPNw43"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X3iAUbzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgG1GcX (ORCPT
+        id S1727895AbgG1Gdm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 02:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46458 "EHLO
+        Tue, 28 Jul 2020 02:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgG1GcX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 02:32:23 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E016C0619D2
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 23:32:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t10so4043472plz.10
-        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 23:32:23 -0700 (PDT)
+        with ESMTP id S1727887AbgG1Gdm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 02:33:42 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2975C061794
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 23:33:41 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f18so6192391wmc.0
+        for <devicetree@vger.kernel.org>; Mon, 27 Jul 2020 23:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R1XV7yzuiaQ7OtaNP9ZBw60TBoQeSPX4RFj4H0V2PEE=;
-        b=wXWPNw434KkwEOsqYkpoS8zrjZS8Asyrx7oJ58T34KdJ38mBxeSc/JedI7kLjrCV9w
-         a1SeHnXVUSIHRQfSX8Oh9rtBTLprjbV0MJUddTmM1vUmZM+GJBKTIVoFmdNvrSgBG0kL
-         UH4Gy/0Ef0oP62w48kOvxuyLrvzF+sh9TB0nG9ZijbpcW4OLFD3XzhKzh+TA+/JP/ZAY
-         yuhxhcRYD62jV8Wlkj+/8onMTNs4Dz1EWtm46SGM1vNDfhWql1olb7AYPoobfNZMqBG5
-         pmy7/JNnln9kC2vhzZpSJrM1bTgYjA7DYQug6koEHpTV8OCuVRY6CQuRgN1fQQ+FdOKR
-         QSxw==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+9ymQbKkfvO2y0f7evJNoJIbYaR/0FS5usSf9zZXVSk=;
+        b=X3iAUbzcAVC2eGpCBvjCn4obAVo7l+i3+wwa7yIxH/WmhUWBjuFq7hGzz+fvnSyaAB
+         quMvdv5Qi/JkmwdW4QFJllKbLYmPkiabffTbT1uJpqUBUcuN3ybpia01rAKe0pviFXV4
+         pn9HVSNZVHlsv3vHcTlRyakcLbag1Lm0myAzUxLVBzeNtZXOhdUpyOnKf7eHu1lRJoRL
+         2x+BoJIcXgKB2tderQzucrwj5kbuv3/SQl/n4jod67tA0T/Zb6UilZLrfdQyEbHMZpUm
+         nOeYxCxqZKOGnK33Na20Pw/+zsJR0JnXZN5Ljy8cM6+CHnL24CTbRFcq1irhI+CCND/x
+         J1GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R1XV7yzuiaQ7OtaNP9ZBw60TBoQeSPX4RFj4H0V2PEE=;
-        b=BQ0iw0Z8ayjv+n9WPJE8b8aoYcKOqOqFWRHpDyTlCK6MC7TRM5lWlQQJzDkkKycgk1
-         8tHB2S8/XPmAV4L9a2n94QCD9Hd3yJwE464RO4soi45AphXeLWxdaLkymWfxBgUZMhNM
-         zf+oA7zSQMcl/3EfpgPVSv2VYiWYXWVBN5V/g8fIzY4cZycFYc6XldrVv1hIHezG85IH
-         Ybk4Rji0H+7JswCnyS+FFS/trJhItFl60ygw9OTaCmle5eLAb8vIFfJ8PGFcVen9IuQX
-         mOZg1I0q5w9bb7sLGWfNfbObIzXapFSL2d0ibdUWFcDBzvrDPymFsBfmZ0nrgQlrxaVS
-         4xWg==
-X-Gm-Message-State: AOAM531aUe0gJZlS46gCkMTiHm+z97fDe0JwuAdjj7Uhtlqv7RtK5S4/
-        fBjfCxaRMq+0xWobjZs9lDA9/A==
-X-Google-Smtp-Source: ABdhPJxteaqumaf0pqol1Li/6eDvJDAmSa/xIX4yFwUUeZrYYWwHSASFU/w3SiEOCbWX3klVCCEOWg==
-X-Received: by 2002:a17:90b:3010:: with SMTP id hg16mr2897765pjb.69.1595917942810;
-        Mon, 27 Jul 2020 23:32:22 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a3sm17274887pgd.73.2020.07.27.23.32.21
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+9ymQbKkfvO2y0f7evJNoJIbYaR/0FS5usSf9zZXVSk=;
+        b=lfrb58K+FtX2Q3OAv4zfKPrdpD8jTei07LhqESagKQH9iieEHWTst0SIPDu1GkGOZ/
+         5ORuEklh1+TUL6G6jsgPGWwH35dqKI/b2tB0GlCOHAx94zRovpepyC/MvBYxs20bfVKr
+         l0r3REmbKrW5W2pGz45ayJhYXdsG47tujtnohN/c0uCTzYwhDw71JArGrgsiPGWMBzhc
+         TQ3MAGgNdiS+nqxvigVZ3NfkWO4BWdLsWcftfZ5inGWqsnj3/Iw5HK46d5BzTWSnmJm2
+         qNCU5GIhEiCUxzGpzVmSrF/u8OamWer1UdbI4Cf0beag7MPh5Ty51jxuyoQVjrukjeRM
+         dMTw==
+X-Gm-Message-State: AOAM530m9YIDXqI8+q9TjQ/CLxxQrW+0By0+PS9L4Qa0eadQVutqcHm8
+        lo3Rx+PnlJaB8EOQutcDY8R4Bg==
+X-Google-Smtp-Source: ABdhPJzjVOkrHdjavp13uvCll7m2KDhHn6VDGg3h7jEdKnRlL7BYK4WvIkBkSIt4th7SG9tF/xjpCw==
+X-Received: by 2002:a7b:c921:: with SMTP id h1mr2351362wml.29.1595918020669;
+        Mon, 27 Jul 2020 23:33:40 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id c10sm16074682wro.84.2020.07.27.23.33.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 23:32:21 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 23:28:50 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH 2/4] arm64: dts: qcom: sc7180: Add iommus property to ETR
-Message-ID: <20200728062850.GC202429@builder.lan>
-References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <2312c9a10e7251d69e31e4f51c0f1d70e6f2f2f5.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <20200621072213.GG128451@builder.lan>
- <f40621b2b01f836a8a97686707599dd0@codeaurora.org>
- <e270acd3f7db076c043f1b982b1efea0@codeaurora.org>
- <20200727205834.GA202429@builder.lan>
- <207e6b6a297d5ce1bdcac204e297389b@codeaurora.org>
+        Mon, 27 Jul 2020 23:33:40 -0700 (PDT)
+Date:   Tue, 28 Jul 2020 07:33:38 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Subject: Re: [PATCH 2/8] dt-bindings: mfd: Add compatible for the MediaTek
+ MT6359 PMIC
+Message-ID: <20200728063338.GZ1850026@dell>
+References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1595509133-5358-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <207e6b6a297d5ce1bdcac204e297389b@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595509133-5358-3-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 27 Jul 21:40 PDT 2020, Sai Prakash Ranjan wrote:
+On Thu, 23 Jul 2020, Hsin-Hsiung Wang wrote:
 
-> On 2020-07-28 02:28, Bjorn Andersson wrote:
-> > On Tue 23 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
-> > 
-> > > Hi Bjorn,
-> > > 
-> > > On 2020-06-21 13:39, Sai Prakash Ranjan wrote:
-> > > > Hi Bjorn,
-> > > >
-> > > > On 2020-06-21 12:52, Bjorn Andersson wrote:
-> > > > > On Tue 09 Jun 06:30 PDT 2020, Sai Prakash Ranjan wrote:
-> > > > >
-> > > > > > Define iommus property for Coresight ETR component in
-> > > > > > SC7180 SoC with the SID and mask to enable SMMU
-> > > > > > translation for this master.
-> > > > > >
-> > > > >
-> > > > > We don't have &apps_smmu in linux-next, as we've yet to figure out how
-> > > > > to disable the boot splash or support the stream mapping handover.
-> > > > >
-> > > > > So I'm not able to apply this.
-> > > > >
-> > > >
-> > > > This is for SC7180 which has apps_smmu not SM8150.
-> > > >
-> > > 
-> > > Please let me know if this needs further explanation.
-> > > 
-> > 
-> > I must have commented on the wrong patch, sorry about that. The SM8150
-> > patch in this series does not compile due to the lack of &apps_smmu.
-> > 
-> > I've picked the other 3 patches.
-> > 
+> This adds compatible for the MediaTek MT6359 PMIC.
 > 
-> Thanks Bjorn, I can resend SM8150 coresight change when SMMU support lands
-> for it
-> since coresight ETR won't work without it on android bootloaders.
-> 
-> As for the other 3 patches, Patch 1 and Patch 2 will apply cleanly to the
-> right coresight
-> nodes but due to the missing unique context in Patch 3, it could be applied
-> to some other node.
-> We had to upload this change 3 times in chromium tree to get it applied to
-> the right replicator node :)
-> and this property in Patch 3 is important to fix a hard lockup. I'm not sure
-> why this patch is missing
-> the proper context :/
-> 
-> I couldn't find the changes yet in qcom/for-next or other branches to see if
-> it is
-> applied to right replicator node. In case you haven't applied it yet, Patch
-> 3 change
-> should be applied to "replicator@6b06000" node.
-> 
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 
-Thanks for pointing that out, I've fixed up the incorrectly applied
-change. (Still not published the branch)
+For my own reference (apply this as-is to your sign-off block):
 
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-For the future I believe you can pass -U <n> to git format-patch to get
-<n> number of lines of context. Making that bigger than the default 3
-should help for the coresight patches.
-
-Thanks,
-Bjorn
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
