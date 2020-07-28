@@ -2,127 +2,383 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF19C433E8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A808C433EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7D320809
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c9srD6dU"
+	by mail.kernel.org (Postfix) with ESMTP id 38CF520829
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 08:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgG1Iw2 (ORCPT
+        id S1728350AbgG1Iwb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 04:52:28 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:59844 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728331AbgG1Iw1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 04:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1595926346; x=1627462346;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=O/7K7U+F4Hb9vBOmcbLlJMixNNgJMZmG2fifr+2GFKA=;
-  b=c9srD6dU/0MjULvx9YelTSIMnxQ9VHC1GI18qaf5FalkjdAJMqFINV+r
-   10NL/cQf9O1I0EEWERGVWWvZzKy/k+vp0c8cvWeId1I5UoOwjZIzZEAEF
-   FHpPZnDwoWaA5u0AARfSozzFbaOD4IDkUWEb3OawK7b7deFhtBePaR/MP
-   Y=;
-IronPort-SDR: v5AyA2WaLe/fVEXJlCh/dAYzaCRzy9KqDqZk8MHTdyswVU5rz0vbDEfC+9dZA+H0U+yEWI5vzp
- JsrIxpes6BgQ==
-X-IronPort-AV: E=Sophos;i="5.75,405,1589241600"; 
-   d="scan'208";a="44426518"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 28 Jul 2020 08:52:24 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-1968f9fa.us-west-2.amazon.com (Postfix) with ESMTPS id 04A21A2704;
-        Tue, 28 Jul 2020 08:52:22 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 28 Jul 2020 08:52:22 +0000
-Received: from [192.168.5.124] (10.43.161.145) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 28 Jul
- 2020 08:52:13 +0000
-Subject: Re: [PATCH v8 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
- Labs Memory Controller EDAC
-To:     Rob Herring <robh@kernel.org>
-CC:     <robh+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <mchehab@kernel.org>, <davem@davemloft.net>,
-        <catalin.marinas@arm.com>, <devicetree@vger.kernel.org>,
-        <ronenk@amazon.com>, <james.morse@arm.com>, <bp@alien8.de>,
-        <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <hhhawa@amazon.com>, <hanochu@amazon.com>, <mark.rutland@arm.com>,
-        <eitan@amazon.com>, <will@kernel.org>,
-        <nicolas.ferre@microchip.com>, <jonnyc@amazon.com>,
-        <gregkh@linuxfoundation.org>
-References: <20200726191555.5210-1-talel@amazon.com>
- <20200726191555.5210-2-talel@amazon.com> <20200727181424.GA639053@bogus>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <a07d6f7e-eae7-aa14-972c-72e69460b1e9@amazon.com>
-Date:   Tue, 28 Jul 2020 11:52:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200727181424.GA639053@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.161.145]
-X-ClientProxiedBy: EX13D10UWB001.ant.amazon.com (10.43.161.111) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+        Tue, 28 Jul 2020 04:52:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12582 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbgG1Iwa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:52:30 -0400
+IronPort-SDR: 1Zh1rel2ToMJoQRfQFUEI5y9+nuUU8eXMg7FirkyGxvcY0rP8pKY2CTUcflcmBrRFblDXhHCjo
+ gSCfuE69HFSg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="148637993"
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="148637993"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2020 01:52:29 -0700
+IronPort-SDR: v64oe1KUI3nkqUBI1QVa6+ULmP+iuxdpg4d15HqCEaKZnS0kqs56M3FjqWpMF7KzAeQKvN1IzQ
+ hV+YLszBDAIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,405,1589266800"; 
+   d="scan'208";a="272252850"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Jul 2020 01:52:26 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v6 2/2] Add PWM fan controller driver for LGM SoC
+Date:   Tue, 28 Jul 2020 16:52:13 +0800
+Message-Id: <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
+References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+This PWM controller does not have any other consumer, it is a
+dedicated PWM controller for fan attached to the system. Add
+driver for this PWM fan controller.
 
-On 7/27/2020 9:14 PM, Rob Herring wrote:
-> On Sun, 26 Jul 2020 22:15:54 +0300, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
->>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
->>   1 file changed, 52 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
->>
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml: example-0: edac@f0080000:reg:0: [0, 4027056128, 0, 65536] is too long
->
->
-> See https://patchwork.ozlabs.org/patch/1336532
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
->
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
->
-> Please check and re-submit.
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ drivers/pwm/Kconfig         |  11 ++
+ drivers/pwm/Makefile        |   1 +
+ drivers/pwm/pwm-intel-lgm.c | 268 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 280 insertions(+)
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
-Thanks Rob,
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index cb8d739067d2..3486edab09c4 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -232,6 +232,17 @@ config PWM_IMX_TPM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-imx-tpm.
+ 
++config PWM_INTEL_LGM
++	tristate "Intel LGM PWM support"
++	depends on OF && HAS_IOMEM
++	depends on X86 || COMPILE_TEST
++	select REGMAP_MMIO
++	help
++	  Generic PWM fan controller driver for LGM SoC.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-intel-lgm.
++
+ config PWM_IQS620A
+ 	tristate "Azoteq IQS620A PWM support"
+ 	depends on MFD_IQS62X || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index a59c710e98c7..db154a6b4f51 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
+ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+ obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+ obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
++obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
+ obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+ obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+ obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
+diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+new file mode 100644
+index 000000000000..61a722647f28
+--- /dev/null
++++ b/drivers/pwm/pwm-intel-lgm.c
+@@ -0,0 +1,268 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Intel Corporation.
++ *
++ * Limitations:
++ * - The hardware supports fixed period which is dependent on 2/3 or 4
++ *   wire fan mode.
++ * - Supports normal polarity. Does not support changing polarity.
++ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
++ *   keep track of running period.
++ * - When duty cycle is changed, PWM output may be a mix of previous setting
++ *   and new setting for the first period. From second period, the output is
++ *   based on new setting.
++ * - It is a dedicated PWM fan controller. There are no other consumers for
++ *   this PWM controller.
++ */
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++
++#define LGM_PWM_FAN_CON0		0x0
++#define LGM_PWM_FAN_EN_EN		BIT(0)
++#define LGM_PWM_FAN_EN_DIS		0x0
++#define LGM_PWM_FAN_EN_MSK		BIT(0)
++#define LGM_PWM_FAN_MODE_2WIRE		0x0
++#define LGM_PWM_FAN_MODE_4WIRE		0x1
++#define LGM_PWM_FAN_MODE_MSK		BIT(1)
++#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
++
++#define LGM_PWM_FAN_CON1		0x4
++#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
++
++#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
++#define LGM_PWM_DEFAULT_RPM		4000
++#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
++
++#define LGM_PWM_DC_BITS			8
++
++#define LGM_PWM_PERIOD_2WIRE_NSECS	40000000
++#define LGM_PWM_PERIOD_4WIRE_NSECS	40000
++
++struct lgm_pwm_chip {
++	struct pwm_chip chip;
++	struct regmap *regmap;
++	struct clk *clk;
++	struct reset_control *rst;
++	u32 period;
++};
++
++static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
++{
++	return container_of(chip, struct lgm_pwm_chip, chip);
++}
++
++static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
++{
++	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
++	struct regmap *regmap = pc->regmap;
++
++	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
++				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
++}
++
++static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			 const struct pwm_state *state)
++{
++	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
++	u32 duty_cycle, val;
++	int ret;
++
++	/*
++	 * HW only supports only NORMAL polarity
++	 * HW supports fixed period
++	 */
++	if (state->polarity != PWM_POLARITY_NORMAL ||
++	    state->period < pc->period)
++		return -EINVAL;
++
++	if (!state->enabled) {
++		ret = lgm_pwm_enable(chip, 0);
++		return ret;
++	}
++
++	duty_cycle = min_t(u64, state->duty_cycle, pc->period);
++	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
++
++	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
++				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
++	if (ret)
++		return ret;
++
++	if (state->enabled)
++		ret = lgm_pwm_enable(chip, 1);
++
++	return ret;
++}
++
++static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			      struct pwm_state *state)
++{
++	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
++	u32 duty, val;
++
++	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
++					  LGM_PWM_FAN_EN_EN);
++	state->polarity = PWM_POLARITY_NORMAL;
++	state->period = pc->period; /* fixed period */
++
++	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
++	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
++	state->duty_cycle = DIV_ROUND_UP(duty * pc->period,
++					 LGM_PWM_MAX_DUTY_CYCLE);
++}
++
++static const struct pwm_ops lgm_pwm_ops = {
++	.get_state = lgm_pwm_get_state,
++	.apply = lgm_pwm_apply,
++	.owner = THIS_MODULE,
++};
++
++static void lgm_pwm_init(struct lgm_pwm_chip *pc)
++{
++	struct device *dev = pc->chip.dev;
++	struct regmap *regmap = pc->regmap;
++	u32 max_rpm, fan_wire, con0_val, con0_mask;
++
++	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
++		fan_wire = 2; /* default is 2 wire mode */
++
++	con0_mask = LGM_PWM_FAN_MODE_MSK;
++
++	switch (fan_wire) {
++	case 4:
++		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_4WIRE);
++		pc->period = LGM_PWM_PERIOD_4WIRE_NSECS;
++		break;
++	default:
++		/* default is 2wire mode */
++		con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
++		pc->period = LGM_PWM_PERIOD_2WIRE_NSECS;
++		break;
++	}
++
++	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
++		max_rpm = LGM_PWM_DEFAULT_RPM;
++
++	max_rpm = min_t(u32, max_rpm, LGM_PWM_MAX_RPM);
++	if (max_rpm == 0)
++		max_rpm = LGM_PWM_DEFAULT_RPM;
++
++	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK, max_rpm);
++	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, con0_mask, con0_val);
++}
++
++static const struct regmap_config lgm_pwm_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++};
++
++static int lgm_pwm_probe(struct platform_device *pdev)
++{
++	struct lgm_pwm_chip *pc;
++	struct device *dev = &pdev->dev;
++	void __iomem *io_base;
++	int ret;
++
++	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
++	if (!pc)
++		return -ENOMEM;
++
++	io_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(io_base))
++		return PTR_ERR(io_base);
++
++	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
++	if (IS_ERR(pc->regmap)) {
++		ret = PTR_ERR(pc->regmap);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to init register map: %pe\n",
++				pc->regmap);
++		return ret;
++	}
++
++	pc->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(pc->clk)) {
++		ret = PTR_ERR(pc->clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to get clock: %pe\n", pc->clk);
++		return ret;
++	}
++
++	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
++	if (IS_ERR(pc->rst)) {
++		ret = PTR_ERR(pc->rst);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to get reset control: %pe\n",
++				pc->rst);
++		return ret;
++	}
++
++	ret = reset_control_deassert(pc->rst);
++	if (ret) {
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "cannot deassert reset control: %pe\n",
++				ERR_PTR(ret));
++		return ret;
++	}
++
++	ret = clk_prepare_enable(pc->clk);
++	if (ret) {
++		dev_err(dev, "failed to enable clock\n");
++		reset_control_assert(pc->rst);
++		return ret;
++	}
++
++	pc->chip.dev = dev;
++	pc->chip.ops = &lgm_pwm_ops;
++	pc->chip.npwm = 1;
++
++	lgm_pwm_init(pc);
++
++	ret = pwmchip_add(&pc->chip);
++	if (ret < 0) {
++		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
++		clk_disable_unprepare(pc->clk);
++		reset_control_assert(pc->rst);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, pc);
++	return 0;
++}
++
++static int lgm_pwm_remove(struct platform_device *pdev)
++{
++	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&pc->chip);
++	if (ret < 0)
++		return ret;
++
++	clk_disable_unprepare(pc->clk);
++	reset_control_assert(pc->rst);
++
++	return 0;
++}
++
++static const struct of_device_id lgm_pwm_of_match[] = {
++	{ .compatible = "intel,lgm-pwm" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
++
++static struct platform_driver lgm_pwm_driver = {
++	.driver = {
++		.name = "intel-pwm",
++		.of_match_table = lgm_pwm_of_match,
++	},
++	.probe = lgm_pwm_probe,
++	.remove = lgm_pwm_remove,
++};
++module_platform_driver(lgm_pwm_driver);
+-- 
+2.11.0
 
-Indeed I am not able to see this error.
-
-Even tried updating dt-schema.
-
-Even targeted check didn't give anything:
-
-linux-ras$ make dt_binding_check 
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-   CHKDT Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-   DTC 
-Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml
-   CHECK 
-Documentation/devicetree/bindings/edac/amazon,al-mc-edac.example.dt.yaml
-
-ill look into it and publish v9.
-
->
