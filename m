@@ -2,122 +2,132 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1A1C433E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A010C433E5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D50220656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E492070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 20:15:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="agnVKpBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgG1UMz (ORCPT
+        id S1728643AbgG1UPV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 16:12:55 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:56321 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728365AbgG1UMy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 16:12:54 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4BGSXN21JPz1rt4G;
-        Tue, 28 Jul 2020 22:12:52 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4BGSXN1hCcz1qrgD;
-        Tue, 28 Jul 2020 22:12:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id OHtkq9POG9_6; Tue, 28 Jul 2020 22:12:51 +0200 (CEST)
-X-Auth-Info: lGXjcFGVCzYqnYucj7HX8wu5hDVJDesVUOuUk4MBRfo=
-Received: from desktop.lan (ip-86-49-101-166.net.upcbroadband.cz [86.49.101.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 28 Jul 2020 22:12:51 +0200 (CEST)
-From:   Marek Vasut <marex@denx.de>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Marek Vasut <marex@denx.de>, Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org
-Subject: [PATCH 3/3] drm/panel: simple: Add Chefree CH101OLHLWH-002 panel
-Date:   Tue, 28 Jul 2020 22:12:42 +0200
-Message-Id: <20200728201242.4336-3-marex@denx.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200728201242.4336-1-marex@denx.de>
-References: <20200728201242.4336-1-marex@denx.de>
+        Tue, 28 Jul 2020 16:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728590AbgG1UPV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 16:15:21 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1552CC0619D4
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 13:15:21 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id h12so1377842pgf.7
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 13:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=tqZMz16pvW2AijIRQi4zUGCh+M0EN/UmSMDkjaIZOyM=;
+        b=agnVKpBKvxL7cmQ2YRR6UlkjTqmr2v7BFp5jUSNqFj4eD46vMXV31Db3meKNfH7BJW
+         4KVCWX7y8rKr3SrRZGkHZgVIVAZK6p8Q9b1VZpOQchmHZbx/jXxPnjVyyrBwPtm/NODx
+         VlOFom+kFTlw0apOLdcp5w/6hiJ9GbyxcJxj0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=tqZMz16pvW2AijIRQi4zUGCh+M0EN/UmSMDkjaIZOyM=;
+        b=sT1j+fEa6M+rDpu43ZiXFK8TKyvX+WMStZdHFM/aErfCvH4Juqpuq+CIb1SK9cuqD8
+         KTx5SncU3eCvS/v7XRdpzf/tVhn81pVlQUFV4XQrKmxapzaoLTn9zrHqwuX9HNrn4tx5
+         dzgF9zpByQ8soJA45Mj/+Nf6oAx1qZ61WqXg90vSuxPAGOqAfQv/dEnI0asfBvVclAmo
+         qO9wyP3ZIfJDQdRnS6lhDrD4g/C1Y8tn4qK7LhHzqimMpvldo8qi7fCnGKZ1TJZ3Qxoc
+         4kHpyBiLqGfkz0qpK28/hCzxOtpDDRugVIfzUg01U3oQD5b3SO7Zkw0n17GeHjG3WjQ3
+         U75A==
+X-Gm-Message-State: AOAM530IZ4BP1J3Rafpii+pf36bKhcKPMLuu1l7eVchLuEKVXDpcwZhl
+        8mZEMVuOCwEUsGNyc3vEOXAQ7miEhf0=
+X-Google-Smtp-Source: ABdhPJy1L3+1VlaDSMLSfdVxBXSlBNoRZxKyEwfJn034n/+sp9DsAfEYTBXzXsBl1zfgDMoSjm665Q==
+X-Received: by 2002:a63:f1a:: with SMTP id e26mr26558253pgl.80.1595967320319;
+        Tue, 28 Jul 2020 13:15:20 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id v78sm9204748pfc.121.2020.07.28.13.15.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 13:15:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHcu+VaDBj87stJ9JJkuerJkr8=-g68FhUUnKvfpN8uYaMBUhQ@mail.gmail.com>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.3.I2a1314232ace4323af96f9981c1e1a4f31f78049@changeid> <CAHp75VfOhoJrHEnC_Wh2qnOMX0pT1Jx92B0TFQ5=cfZsTSNSOg@mail.gmail.com> <CAHcu+VaDBj87stJ9JJkuerJkr8=-g68FhUUnKvfpN8uYaMBUhQ@mail.gmail.com>
+Subject: Re: [PATCH 03/15] iio: sx9310: Fix irq handling
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Daniel Campello <campello@chromium.org>
+Date:   Tue, 28 Jul 2020 13:15:17 -0700
+Message-ID: <159596731796.1360974.3913058992312532558@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the Chefree CH101OLHLWH-002 10.1" (1280x800)
-color TFT LCD panel, connected over LVDS.
+Quoting Daniel Campello (2020-07-28 13:07:00)
+> On Tue, Jul 28, 2020 at 12:08 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org>=
+ wrote:
+> > >
+> > > Fixes enable/disable irq handling at various points. The driver needs=
+ to
+> > > only enable/disable irqs if there is an actual irq handler installed.
+> >
+> > > -       enable_irq(data->client->irq);
+> > > +       if (!ret)
+> > > +               enable_irq(data->client->irq);
+> > >
+> > >         return ret;
+> > >  }
+> >
+> > Can it be a usual pattern?
+> >
+> >   if (ret)
+> >     return ret;
+> >   ...
+> >   return 0;
+>=20
+> I think this way is more readable. The alternative would have to be
+> something like this:
+>=20
+> ....
+> if (ret)
+>   goto out;
+> mutex_unlock(&data->mutex);
+> enable_irq(data->client->irq);
+> return 0;
+>=20
+> out:
+> mutex_unlock(&data->mutex);
+> return ret;
+>=20
 
-Timings are taken from the datasheet version P0.5.
+I think the suggestion is
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-To: dri-devel@lists.freedesktop.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: devicetree@vger.kernel.org
----
- drivers/gpu/drm/panel/panel-simple.c | 33 ++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+	mutex_unlock(&data->mutex);
+	if (ret)
+		return ret;
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 298e3a26d9ee..a8e1f6306923 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1414,6 +1414,36 @@ static const struct panel_desc cdtech_s070wv95_ct16 = {
- 	},
- };
- 
-+static const struct display_timing chefree_ch101olhlwh_002_timing = {
-+	.pixelclock = { 68900000, 71100000, 73400000 },
-+	.hactive = { 1280, 1280, 1280 },
-+	.hfront_porch = { 65, 80, 95 },
-+	.hback_porch = { 64, 79, 94 },
-+	.hsync_len = { 1, 1, 1 },
-+	.vactive = { 800, 800, 800 },
-+	.vfront_porch = { 7, 11, 14 },
-+	.vback_porch = { 7, 11, 14 },
-+	.vsync_len = { 1, 1, 1 },
-+	.flags = DISPLAY_FLAGS_DE_HIGH,
-+};
-+
-+static const struct panel_desc chefree_ch101olhlwh_002 = {
-+	.timings = &chefree_ch101olhlwh_002_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 217,
-+		.height = 135,
-+	},
-+	.delay = {
-+		.enable = 200,
-+		.disable = 200,
-+	},
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct drm_display_mode chunghwa_claa070wp03xg_mode = {
- 	.clock = 66770,
- 	.hdisplay = 800,
-@@ -3845,6 +3875,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "cdtech,s070wv95-ct16",
- 		.data = &cdtech_s070wv95_ct16,
-+	}, {
-+		.compatible = "chefree,ch101olhlwh-002",
-+		.data = &chefree_ch101olhlwh_002,
- 	}, {
- 		.compatible = "chunghwa,claa070wp03xg",
- 		.data = &chunghwa_claa070wp03xg,
--- 
-2.27.0
+	enable_irq(data->client->irq);
 
+	return 0;
