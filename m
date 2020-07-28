@@ -2,83 +2,79 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF5BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 163B62065C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58E32065C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l6hUntl9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhJzTBeI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgG1VYJ (ORCPT
+        id S1729407AbgG1V0s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 17:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
+        Tue, 28 Jul 2020 17:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgG1VYJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 17:24:09 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E650CC061794
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:24:08 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id w9so22086727ejc.8
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:24:08 -0700 (PDT)
+        with ESMTP id S1729243AbgG1V0r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 17:26:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A164C0619D2
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:26:47 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 184so947407wmb.0
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:26:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=A40P7qvWDr7hSDOUUBLZppAbSNbGdWqbtbvvJ8/dneg=;
-        b=l6hUntl9Y1jAFAvRM3OZ07jD1ncrYLjRRWnW80nV17Xay1+XqKIYJY8f4s7XOS7gvf
-         LBoRYt9/GuIYjVwqGCaSfSzZRvzCBPQtJSGB3HyLhDgUeQLBCkzsPt5zUnFzQLQxBuOF
-         i7m583btWK9pCPqDWcZPEummRV7tcoi+UVTBc=
+        bh=4COYxTSTRnEzjznO2W6thCBJlNbZdidcvO9PjI7DyOk=;
+        b=vhJzTBeIpGarovZTpfjGx2Wa4L/R56gWYMM4br6jBZCGiL2RRlaYq6F4HADG0Jjh7q
+         7Shwf2OOdpkL8UVhuKmh7ZmlASrWEca4vvwloDyjOrKINAPXNaHEGtDRpr0znTDrmaua
+         483jKJ7GAIXEtLrDBZcp2eBOuVkAkNJne8hkdo8Q5YJSQ0zCAMZNG4bjgm6bLgy53Rdc
+         8nkfTTqq/EjxzgNheidLNbMFafSvM+iXL2mqii/7G62yoWSTo0zW+7CrOFteXyjjABxc
+         I6doe35twysT/7Csc71/R79KFQHEslNiMmAxLzM+m+Z/SZfijuV9ZxBPlryaFjXwSmYr
+         4Ujw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A40P7qvWDr7hSDOUUBLZppAbSNbGdWqbtbvvJ8/dneg=;
-        b=aAH1izsy5+9woxG8kmPITyZJLnW53NwYrwHyFG3ydP3txu730ahWqwoSs2NnHvO1xc
-         0PfMk0O5tL6y+xUvxkEFfW0hd4+GjkxawTS56iMOdcxGOaVHAFzWAlKj7gnqndhut68D
-         hWilXsonrEcOAWTLEUqfxYErvq2mX7XumJhic8BaUCmn8dtvmPKK23lioiKIYFo9RQWb
-         AZMa1oSN2QDLC2sg8uaJr3vuKEKnErRbypaY25B1GzoKmgnqCgyDcWmyusCD7yrqhPE6
-         nax6EJW/FKsUmtSJ6f3XH0ZjQLrDbhs5ZEBqa2/+l3EBQAoyDfJ2N4CyuAy+myE8+RNe
-         X1TQ==
-X-Gm-Message-State: AOAM531GD42l/Kn5J2sx9XZf1ltAH2hZh056hNDZuwkC6T2Qo78WvuGG
-        tJq/9RdURFehvnbLdkMh9DhbCLTULfs=
-X-Google-Smtp-Source: ABdhPJyPUGlaSsI5ZcBJw4Qxl6PSY40+NxdylQvUMCOh7u94QedffhlzqOkwQ8aZArACd0Xm0Z2dJQ==
-X-Received: by 2002:a17:906:57da:: with SMTP id u26mr28203090ejr.157.1595971447001;
-        Tue, 28 Jul 2020 14:24:07 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id bw7sm9779028ejb.5.2020.07.28.14.24.06
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2020 14:24:06 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id f18so19643064wrs.0
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:24:06 -0700 (PDT)
-X-Received: by 2002:a5d:6641:: with SMTP id f1mr26569681wrw.307.1595971445556;
- Tue, 28 Jul 2020 14:24:05 -0700 (PDT)
+        bh=4COYxTSTRnEzjznO2W6thCBJlNbZdidcvO9PjI7DyOk=;
+        b=c6uWNTFEcFy9VjRFLS4psw1R0vYY/zJ69UZxSschvRtnGwAcqLx1O+hGSdxDftNI7P
+         baTDxA2rt1mvRN1fjvcuDi+pdTvXa+zqqiVZHLxMHpEzP5VFKGH6/3b7hyE5FnqaTZ9+
+         +XAPn0ilSRSVKUYrxxoFA8yMjC44BDkHRCYAnvVlkVtgtYkvMcg91g2e3m+koRYcOzXz
+         Ep+OTQ/+2TxcjfdEYkKNwypQkemK4stAAlcy2wIigBeGYbdmbihZG9MM1CGZjDXhB8Ce
+         phSLn/ssQhUxpqAqPaXKKU9PQPmjrX7WGr0M+l6EU+81TI57sbqu1JBpNzdOMAgMPchk
+         VK8w==
+X-Gm-Message-State: AOAM533t1abbAnEEfFRJv8YjUrWmtXy3W/kCDl9gc0bIgSbpQiDmHwoX
+        PD6hnExK2WT1C4sjdMh6SuP3ijlybBWypGpbXSe2ZA==
+X-Google-Smtp-Source: ABdhPJxRU30KGbLhwtAg0ELxyVwt4UfnHqz95LfEc0Qp6GL8XOPE3pFebCMm7ev+0CUib1mosoa7cggc2QZ9CjzdnSY=
+X-Received: by 2002:a1c:7d12:: with SMTP id y18mr5391985wmc.115.1595971605637;
+ Tue, 28 Jul 2020 14:26:45 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.10.Ibe84fae61cd914c116e6d59ffeb644f1cbecd601@changeid>
- <159596523705.1360974.7169089810545711557@swboyd.mtv.corp.google.com>
-In-Reply-To: <159596523705.1360974.7169089810545711557@swboyd.mtv.corp.google.com>
-From:   Daniel Campello <campello@chromium.org>
-Date:   Tue, 28 Jul 2020 15:23:29 -0600
-X-Gmail-Original-Message-ID: <CAHcu+VbYrbWStNNaidDygY=d4f6F5tXUxWtsuH0x3oVeELGWVA@mail.gmail.com>
-Message-ID: <CAHcu+VbYrbWStNNaidDygY=d4f6F5tXUxWtsuH0x3oVeELGWVA@mail.gmail.com>
-Subject: Re: [PATCH 10/15] iio: sx9310: Simplify error return handling
-To:     Stephen Boyd <swboyd@chromium.org>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.6.I27a5605d9cb3ff643ef040c4ef932a30df9a8fac@changeid>
+ <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com>
+In-Reply-To: <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com>
+From:   Daniel Campello <campello@google.com>
+Date:   Tue, 28 Jul 2020 15:26:09 -0600
+Message-ID: <CAHcu+VbxtAz-2y9FLdraqhYjzHKmi-5O=MioSU1caupT_y6PrQ@mail.gmail.com>
+Subject: Re: [PATCH 06/15] iio: sx9310: Align memory
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Jonathan Cameron <jic23@kernel.org>,
         Douglas Anderson <dianders@chromium.org>,
         Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
         linux-iio <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -86,43 +82,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 1:40 PM Stephen Boyd <swboyd@chromium.org> wrote:
+On Tue, Jul 28, 2020 at 12:11 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Quoting Daniel Campello (2020-07-28 08:12:53)
-> > @@ -368,13 +368,13 @@ static int sx9310_wait_for_sample(struct sx9310_data *data)
-> >  static int sx9310_read_proximity(struct sx9310_data *data,
-> >                                  const struct iio_chan_spec *chan, int *val)
-> >  {
-> > -       int ret = 0;
-> > +       int ret;
-> >         __be16 rawval;
+> On Tue, Jul 28, 2020 at 6:15 PM Daniel Campello <campello@chromium.org> wrote:
 > >
-> >         mutex_lock(&data->mutex);
+> > Use __aligned(8) to ensure that the timestamp is correctly aligned
+> > when we call push_to_buffers
 > >
-> >         ret = sx9310_get_read_channel(data, chan->channel);
-> > -       if (ret < 0)
-> > +       if (ret)
-> >                 goto out;
+> > Signed-off-by: Daniel Campello <campello@chromium.org>
+> > ---
 > >
-> >         if (data->client->irq) {
-> > @@ -394,11 +394,11 @@ static int sx9310_read_proximity(struct sx9310_data *data,
+> >  drivers/iio/proximity/sx9310.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
 > >
-> >         mutex_lock(&data->mutex);
-> >
-> > -       if (ret < 0)
-> > +       if (ret)
-> >                 goto out_disable_irq;
+> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> > index de52afd7c13333..fb5c16f2aa6b1a 100644
+> > --- a/drivers/iio/proximity/sx9310.c
+> > +++ b/drivers/iio/proximity/sx9310.c
+> > @@ -131,8 +131,8 @@ struct sx9310_data {
+> >          */
+> >         bool prox_stat[SX9310_NUM_CHANNELS];
+> >         bool trigger_enabled;
+> > -       __be16 buffer[SX9310_NUM_CHANNELS +
+> > -                     4]; /* 64-bit data + 64-bit timestamp */
+> > +       /* 64-bit data + 64-bit timestamp buffer */
+> > +       __be16 buffer[SX9310_NUM_CHANNELS + 4] __aligned(8);
 >
-> Why is this condition checked after grabbing the mutex? Shouldn't it be
-> checked before grabbing the mutex? Or is that supposed to be a
-> mutex_unlock()?
-We acquire the lock before jumping to out_disable_irq which is before
-a mutex_unlock()
+> If the data amount (channels) is always the same, please, use struct approach.
+> Otherwise put a comment explaining dynamic data.
+I'm not sure what you mean here. I have a comment above for the size
+of the array.
 >
-> >
-> >         ret = sx9310_read_prox_data(data, chan, &rawval);
-> > -       if (ret < 0)
-> > +       if (ret)
-> >                 goto out_disable_irq;
-> >
-> >         *val = sign_extend32(be16_to_cpu(rawval),
+> --
+> With Best Regards,
+> Andy Shevchenko
