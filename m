@@ -2,91 +2,94 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA084C433EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA81C433E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3172078E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="li/cSlM2"
+	by mail.kernel.org (Postfix) with ESMTP id AF91120825
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595951125;
+	bh=S7cdXSF/HmmzofXdj18m6G6gj8O49SL+F1PwSdtySqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KZwssXIuBRy4j1vNXcfxj52HhJGjhAd8hXjd2xWkBbboVsjg1nY8KNgzzUsoBkAJT
+	 AB/1BB0MFe5y+d0em9XiFlcgbPGzvlumSILrmf/GE0P3A5cs8CKcSNr85uvHfDP0m4
+	 YUj1SNRa23NM4XBykaDwzeNFDe20u8o7wo0ksfzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgG1PiQ (ORCPT
+        id S1730955AbgG1PpZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730694AbgG1PiP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 11:38:15 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5863C061794;
-        Tue, 28 Jul 2020 08:38:15 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 8AC2F1FF16;
-        Tue, 28 Jul 2020 15:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595950695; bh=vaKD7IUjG1etsvFupW6edy8t9lQ2LBk8C1F1iGCfaLk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=li/cSlM2F3UMdtc81nCh4jvrGEteH9GvUeH960QB1Ux3/jnmHiYXA/ADeiynIOgRZ
-         vCJOrkdQ+eHPHdhwenddzWXUsbR2MScD131Duwv1zwq9sEZGvZ+e6Wa281bmjpDHnT
-         haqG+orBN7dOp6wNb4UWZxCObVPXAPo11hC45MWXi7ZFzlxVe1MpXlhaSftaP5SlR5
-         /xk520HeyhQFRkhZNIvdLEKbgZXWvIbLfghCsIcP8XcNRkkZWNhGyKQH5SKsUW6ioE
-         3aNg/EC3r6aQEx/vBruDF1wI+Jf2jj2KlM63Mj1uKZNNTzG8np0pGSJKZvWnrHNWj/
-         K5G8fpHKn4dRA==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Tue, 28 Jul 2020 11:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730949AbgG1PpZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 11:45:25 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D12122065E;
+        Tue, 28 Jul 2020 15:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595951124;
+        bh=S7cdXSF/HmmzofXdj18m6G6gj8O49SL+F1PwSdtySqU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UyaZbqQvEVUln/Hp4xGo59mb6FQCUFCQrAoAoCDIF6gTuLBBqnS9XxQr2wUvt74Xj
+         pyJLH3Nl02fb+wRIEhZXGRNKM8EN9DjvzpwKJnYN9N2VQv76ffYqs0WPj7f+OhFgZc
+         merm7S7rNIk5aevSI/+VaUQHO6Dj8C7a06EoBMCI=
+Date:   Tue, 28 Jul 2020 16:45:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/5] MIPS: Loongson64: Add ISA node for LS7A PCH
-Date:   Tue, 28 Jul 2020 23:36:59 +0800
-Message-Id: <20200728153708.1296374-6-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.28.0.rc1
-In-Reply-To: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
-References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+        Saravanan Sekar <sravanhome@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: regulator: Convert mp886x to json-schema
+Message-ID: <20200728154505.GB24701@sirena.org.uk>
+References: <20200728232327.71ab3729@xhacker>
+ <20200728232417.5272843b@xhacker>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
+Content-Disposition: inline
+In-Reply-To: <20200728232417.5272843b@xhacker>
+X-Cookie: You will be misunderstood by everyone.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Although currently we're not enabling any ISA device in devicetree,
-but this node is required to express the ranges of address reserved
-for ISA.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/boot/dts/loongson/ls7a-pch.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+--bCsyhTFzCvuiizWE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-index 1c286bb8c703..e574a062dfae 100644
---- a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-+++ b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
-@@ -367,5 +367,12 @@ pci_bridge@14,0 {
- 				interrupt-map = <0 0 0 0 &pic 39 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
-+
-+		isa {
-+			compatible = "isa";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges = <1 0 0 0x18000000 0x20000>;
-+		};
- 	};
- };
--- 
-2.28.0.rc1
+On Tue, Jul 28, 2020 at 11:24:17PM +0800, Jisheng Zhang wrote:
+> From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+>=20
+> Convert the mp886x binding to DT schema format using json-schema.
 
+Please put any schema conversions at the end of the series if they're in
+one - there's often a backlog on review of them so it means they don't
+hold up any other work.
+
+--bCsyhTFzCvuiizWE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8gSAEACgkQJNaLcl1U
+h9DcZAf+JiDWWPjf8n1mEkguii5q1B9q862vN2R7bA7dJ6sUs9eWiJFyWIe8ZTfL
+6aT0IhiGRDCsDnV8aYTVC4+I3ojuegoS1sySs5iNGSx2yIf2PhV+Q8JWoF+/D9zh
+IEOE7P2U69+UQFuIN1yE6HxEHq6OXmlEBNYBRMlUBWz0Fv4zntEe44MHKJKKz5xf
+k8ZcY4rW0v2V6Y+ipO5AQMsxNxHUbrO1H0GgguirSH35dqW2gScYW8zKPJrlZDl4
+US6+i+WbrE74NqZ1erukAHcqK8HbPW3T6QfMUgE2+PJpOJW81FaAKGkGwudKlHZ2
+LnjUKvAi7CBhGbTcZLuCbBaKuX9hXQ==
+=GVkK
+-----END PGP SIGNATURE-----
+
+--bCsyhTFzCvuiizWE--
