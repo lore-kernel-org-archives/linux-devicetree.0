@@ -2,118 +2,104 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F56C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A58E32065C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B042065C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 21:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhJzTBeI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V5MukAfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgG1V0s (ORCPT
+        id S1729455AbgG1V27 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 17:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44034 "EHLO
+        Tue, 28 Jul 2020 17:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgG1V0r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 17:26:47 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A164C0619D2
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:26:47 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 184so947407wmb.0
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:26:47 -0700 (PDT)
+        with ESMTP id S1729428AbgG1V27 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 17:28:59 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B03FC0619D2
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:28:59 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mt12so695594pjb.4
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 14:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4COYxTSTRnEzjznO2W6thCBJlNbZdidcvO9PjI7DyOk=;
-        b=vhJzTBeIpGarovZTpfjGx2Wa4L/R56gWYMM4br6jBZCGiL2RRlaYq6F4HADG0Jjh7q
-         7Shwf2OOdpkL8UVhuKmh7ZmlASrWEca4vvwloDyjOrKINAPXNaHEGtDRpr0znTDrmaua
-         483jKJ7GAIXEtLrDBZcp2eBOuVkAkNJne8hkdo8Q5YJSQ0zCAMZNG4bjgm6bLgy53Rdc
-         8nkfTTqq/EjxzgNheidLNbMFafSvM+iXL2mqii/7G62yoWSTo0zW+7CrOFteXyjjABxc
-         I6doe35twysT/7Csc71/R79KFQHEslNiMmAxLzM+m+Z/SZfijuV9ZxBPlryaFjXwSmYr
-         4Ujw==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=kPGoT8s13omTFNLCI8y7UaQObCEr5Pzu6OocwkPR56Y=;
+        b=V5MukAfmPZeP4aIDTIhSue8ndeaeyGkhpdAHPu2hyKKHhOzb1iz8DoClfumxbPXtlV
+         N93kujMyBKOCP/idEO/LXjf4GNbna4zE7cgBq52Jv35fyyxO7u7YAofQNnubN9m7mW+A
+         oaA9D09fzYr3DaRrgaHZdqjAF6ClKK4d6Pxqw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4COYxTSTRnEzjznO2W6thCBJlNbZdidcvO9PjI7DyOk=;
-        b=c6uWNTFEcFy9VjRFLS4psw1R0vYY/zJ69UZxSschvRtnGwAcqLx1O+hGSdxDftNI7P
-         baTDxA2rt1mvRN1fjvcuDi+pdTvXa+zqqiVZHLxMHpEzP5VFKGH6/3b7hyE5FnqaTZ9+
-         +XAPn0ilSRSVKUYrxxoFA8yMjC44BDkHRCYAnvVlkVtgtYkvMcg91g2e3m+koRYcOzXz
-         Ep+OTQ/+2TxcjfdEYkKNwypQkemK4stAAlcy2wIigBeGYbdmbihZG9MM1CGZjDXhB8Ce
-         phSLn/ssQhUxpqAqPaXKKU9PQPmjrX7WGr0M+l6EU+81TI57sbqu1JBpNzdOMAgMPchk
-         VK8w==
-X-Gm-Message-State: AOAM533t1abbAnEEfFRJv8YjUrWmtXy3W/kCDl9gc0bIgSbpQiDmHwoX
-        PD6hnExK2WT1C4sjdMh6SuP3ijlybBWypGpbXSe2ZA==
-X-Google-Smtp-Source: ABdhPJxRU30KGbLhwtAg0ELxyVwt4UfnHqz95LfEc0Qp6GL8XOPE3pFebCMm7ev+0CUib1mosoa7cggc2QZ9CjzdnSY=
-X-Received: by 2002:a1c:7d12:: with SMTP id y18mr5391985wmc.115.1595971605637;
- Tue, 28 Jul 2020 14:26:45 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=kPGoT8s13omTFNLCI8y7UaQObCEr5Pzu6OocwkPR56Y=;
+        b=bqCc1cKeZaVLSOmnR8wabwyDiUEupaf+Dn4Zn1d1+o5iwZnGwKrFs4Ca3zCPcEEMHo
+         iBkp9SkeYD6WJujwJXxuQ++PEo8LgLgk5j52z2gdzkPB++i/6nYy89kgkKIcbxbR3PeM
+         54NF5FTo6Z5oe7E3H6k5hRKWZLrCCnhI3BevHHu/Rde3O/5hxPYtvNd5aTex9YRBV68W
+         DV+s9C3LB2WpvTXGjMb85CkuJCMvxFMXuhbHUHdop09zPTPNGnphWdHLk5KVMR0B3QyO
+         9p7J344jqd0jf0klJLLoaEL+iuf4jtBRbKL+SCX5YStYIWsbVltgroXRPZ5CKxzPvyS5
+         aMaQ==
+X-Gm-Message-State: AOAM530VCuWTu94s0RoJSCTMLEMzBcVlg+c6XwVxebk9irLQ2ltKvdko
+        iUnjKUmmQaNeIO9JdRzu7aSr+7GCvQc=
+X-Google-Smtp-Source: ABdhPJy0cOg/GfVtiku/hOfqRfko3DsvECjRR2zpYmFdCae290d7JSv7mlpJxoudN1Jln3ld6Y2Nww==
+X-Received: by 2002:a17:902:b58f:: with SMTP id a15mr25193175pls.87.1595971738617;
+        Tue, 28 Jul 2020 14:28:58 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id t1sm18950308pgq.66.2020.07.28.14.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jul 2020 14:28:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
- <20200728151258.1222876-1-campello@chromium.org> <20200728091057.6.I27a5605d9cb3ff643ef040c4ef932a30df9a8fac@changeid>
- <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com>
-In-Reply-To: <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com>
-From:   Daniel Campello <campello@google.com>
-Date:   Tue, 28 Jul 2020 15:26:09 -0600
-Message-ID: <CAHcu+VbxtAz-2y9FLdraqhYjzHKmi-5O=MioSU1caupT_y6PrQ@mail.gmail.com>
-Subject: Re: [PATCH 06/15] iio: sx9310: Align memory
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHcu+Va0DVm1Pw__jYF_EhZHSQnSqb_zex2NN1M67zc=FTAitA@mail.gmail.com>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid> <20200728151258.1222876-1-campello@chromium.org> <20200728091057.4.I33c50453845a8167969130d514af86e573b6ef31@changeid> <CAHp75VcRBCmRdGh5WVGDY28AzNhBufkoNkrEZ7uEFCW2MsJ=qg@mail.gmail.com> <CAHcu+Va0DVm1Pw__jYF_EhZHSQnSqb_zex2NN1M67zc=FTAitA@mail.gmail.com>
+Subject: Re: [PATCH 04/15] iio: sx9310: Remove acpi and of table macros
+From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Jonathan Cameron <jic23@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
         Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
         Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>,
         linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Daniel Campello <campello@chromium.org>
+Date:   Tue, 28 Jul 2020 14:28:56 -0700
+Message-ID: <159597173651.1360974.12339018912922779958@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:11 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Jul 28, 2020 at 6:15 PM Daniel Campello <campello@chromium.org> wrote:
+Quoting Daniel Campello (2020-07-28 13:47:15)
+> On Tue, Jul 28, 2020 at 12:09 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
 > >
-> > Use __aligned(8) to ensure that the timestamp is correctly aligned
-> > when we call push_to_buffers
+> > On Tue, Jul 28, 2020 at 6:16 PM Daniel Campello <campello@chromium.org>=
+ wrote:
+> > >
+> > > Avoids unused warnings due to acpi/of table macros.
+> > >
 > >
-> > Signed-off-by: Daniel Campello <campello@chromium.org>
-> > ---
-> >
-> >  drivers/iio/proximity/sx9310.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > index de52afd7c13333..fb5c16f2aa6b1a 100644
-> > --- a/drivers/iio/proximity/sx9310.c
-> > +++ b/drivers/iio/proximity/sx9310.c
-> > @@ -131,8 +131,8 @@ struct sx9310_data {
-> >          */
-> >         bool prox_stat[SX9310_NUM_CHANNELS];
-> >         bool trigger_enabled;
-> > -       __be16 buffer[SX9310_NUM_CHANNELS +
-> > -                     4]; /* 64-bit data + 64-bit timestamp */
-> > +       /* 64-bit data + 64-bit timestamp buffer */
-> > +       __be16 buffer[SX9310_NUM_CHANNELS + 4] __aligned(8);
->
-> If the data amount (channels) is always the same, please, use struct approach.
-> Otherwise put a comment explaining dynamic data.
-I'm not sure what you mean here. I have a comment above for the size
-of the array.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+> > At the same time I would check if mod_devicetable.h is included.
+> I did the following and no error showed up:
+> #ifndef LINUX_MOD_DEVICETABLE_H
+> #error Missing include
+> #endif
+
+That's fine, but it's usually better to avoid implicit include
+dependencies so that order of includes doesn't matter and so that if the
+headers change outside of this driver this driver doesn't have to be
+fixed to include something it needs like mod_devicetable.h
