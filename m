@@ -2,126 +2,172 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A07C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C4BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAC020809
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595960279;
-	bh=5vq1INeu5FXV8HgUInTtWnDacbvKHUXhSIMQvzhdJUY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AV20wyO7Rmk110kwnFaxdSyEdrXWSr1PXmTh6hdXVE2p7QIHUP3UchRJmiF7xq6XD
-	 Vt9HYTqFWdF7Drz4S7+gzwf2V59DuunDNGAN16SNM64LVpnCcZIlpR/g5s4zwZAnhG
-	 pJSyNKRAeSWqYk3NsU5ZXYX2n81VtPsdDqDFadJg=
+	by mail.kernel.org (Postfix) with ESMTP id DA6E62070B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 18:13:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivPrXV3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgG1SR6 (ORCPT
+        id S1732234AbgG1SNp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 14:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgG1SR6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 14:17:58 -0400
-Received: from earth.universe (dyndsl-091-096-060-166.ewe-ip-backbone.de [91.96.60.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1CDF2070B;
-        Tue, 28 Jul 2020 18:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595960278;
-        bh=5vq1INeu5FXV8HgUInTtWnDacbvKHUXhSIMQvzhdJUY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sdeKeQ9B8TAahhIF9nk2UVxwCRImgOoHnRfRBo3FBb+Zxv7GSSoI8gC3BsWws9Zhn
-         ibPwLNkijspxEE8F7/fCY9om8Fln1pnXJCxYpkJMf8Tha6H7vE0wqAYE1EUJmPe3Gs
-         v1cd6ViBWzoZRE1sLTRTxRW3GYgIrBIOmObk6BFs=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 8C2AC3C0B87; Tue, 28 Jul 2020 20:17:55 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 20:17:55 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     afd@ti.com, pali@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org
-Subject: Re: [PATCH v4 2/4] power: supply: bq27xxx_battery: Add the BQ27561
- Battery monitor
-Message-ID: <20200728181755.6bkhp7j3cqtpooof@earth.universe>
-References: <20200728141113.31518-1-dmurphy@ti.com>
- <20200728141113.31518-2-dmurphy@ti.com>
+        Tue, 28 Jul 2020 14:13:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbgG1SNo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 14:13:44 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1DBC061794;
+        Tue, 28 Jul 2020 11:13:44 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gc9so275076pjb.2;
+        Tue, 28 Jul 2020 11:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QPvjG9j2BN8cyR/cfGBwubrHZFbmpe+LnsdHjeHgIHY=;
+        b=ivPrXV3XQfUlY3N7dYX4C2l6t69FyxrMyVjXxKjveIYf3UXNduBmBDV+qVkbc7/rPS
+         41VPioIz+Cjkc0Sw+b1HN+2wcVXB9Nq/XAyRFj9og1Ie4bLJK0ki4etgh1/O7ELmYkwq
+         4bAzCSfid37szaEDieuPHVHf2HiwxYs4hOBh+O3icByuZg7kKPtf0ZQDnSMhYvtX6nbD
+         63/tVYKXJ9VcLX27w4GJv6BsG64t87prELZG2sqk3c1xLKb82U9/gPjW4UtjjEbWmojN
+         x4lUgeqNo3gMNXggb7pN8vUkSP4TGzNNDQD2oXmsHYNHcYNXctMUcamHfkupCpRKLmFq
+         T00Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QPvjG9j2BN8cyR/cfGBwubrHZFbmpe+LnsdHjeHgIHY=;
+        b=UsTrSAQZEPfrVy+C6ROz94ZT2thW2KVvCXfSUAt200rFxPmBLZ+oICWE2i1XVKNxZh
+         wF8DPWqflFR1K6oWExpm57yOFy6YCmYZ41sBc7nps+hmGFSA6aDI6Qz5xsBp3WXBCAmy
+         q50bONbfx6sT2imqPR053WpCGg0aZI9LOADJrquRWV2dsSuQz61sSa1EtuC7AixdzTut
+         /vD6u2WG4HgAgJqupRb5ANsuB2YiIofSQvgm0EMAPD3ZuD/oKObVSkJowE8e5rNUMoiS
+         LmDeNI5+5naiHckC8pOPZB1yfRtFTth0rUMgEGVrud2IxCt0zfbB4cJH6POdQMih4rkz
+         O5XA==
+X-Gm-Message-State: AOAM532N7AQBuovbzZYiO6sAXlvYAQG1kR2LXARwhPHbY8KDACLiU1V4
+        HFWrQphIMrelsCrvQrC47nEadj9pNaAYQfHOI6I=
+X-Google-Smtp-Source: ABdhPJwIXmuOZrbZg1gTuoHvLx6ZXV/fM05llaPrvjjgJ6UmCiIC516oRmzyXP7SToFyF9NEhULt84v7421hRVwqVEA=
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr8571455pla.18.1595960024217;
+ Tue, 28 Jul 2020 11:13:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5wfexptlluq3ij3y"
-Content-Disposition: inline
-In-Reply-To: <20200728141113.31518-2-dmurphy@ti.com>
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.7.I3a5582a3e1589e351f6335b39f52e5ccc5f46b61@changeid>
+In-Reply-To: <20200728091057.7.I3a5582a3e1589e351f6335b39f52e5ccc5f46b61@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 28 Jul 2020 21:13:27 +0300
+Message-ID: <CAHp75Vfq7NqP=iTSELE7=ntiG5P24ig_cPoUFB1t4AwVXTFNOg@mail.gmail.com>
+Subject: Re: [PATCH 07/15] iio: sx9310: Use long instead of int for channel bitmaps
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 6:14 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> Uses for_each_set_bit() macro to loop over channel bitmaps.
+>
 
---5wfexptlluq3ij3y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Hi,
-
-On Tue, Jul 28, 2020 at 09:11:11AM -0500, Dan Murphy wrote:
-> Add the Texas Instruments BQ27561 battery monitor.  The register address
-> map is laid out the same as compared to other devices within the file.
-> The battery status register has differing bits to determine if the
-> battery is full, discharging or dead.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
 > ---
->  drivers/power/supply/bq27xxx_battery.c     | 68 +++++++++++++++++++++-
->  drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
->  include/linux/power/bq27xxx_battery.h      |  1 +
->  3 files changed, 70 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
-y/bq27xxx_battery.c
-> index 942c92127b6d..654d38bcd7e0 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -43,6 +43,7 @@
->   * http://www.ti.com/product/bq27411-g1
->   * http://www.ti.com/product/bq27441-g1
->   * http://www.ti.com/product/bq27621-g1
-> + * https://www.ti.com/lit/gpn/bq27z561
+>
+>  drivers/iio/proximity/sx9310.c | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index fb5c16f2aa6b1a..2465064971d0a7 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -136,7 +136,8 @@ struct sx9310_data {
+>         /* Remember enabled channels and sample rate during suspend. */
+>         unsigned int suspend_ctrl0;
+>         struct completion completion;
+> -       unsigned int chan_read, chan_event;
+> +       unsigned long chan_read;
+> +       unsigned long chan_event;
+>         int channel_users[SX9310_NUM_CHANNELS];
+>         unsigned int whoami;
+>  };
+> @@ -279,15 +280,16 @@ static const struct regmap_config sx9310_regmap_config = {
+>  };
+>
+>  static int sx9310_update_chan_en(struct sx9310_data *data,
+> -                                unsigned int chan_read,
+> -                                unsigned int chan_event)
+> +                                unsigned long chan_read,
+> +                                unsigned long chan_event)
+>  {
+>         int ret;
+> +       unsigned long channels = chan_read | chan_event;
+>
+> -       if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
+> +       if ((data->chan_read | data->chan_event) != channels) {
+>                 ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
+>                                          SX9310_REG_PROX_CTRL0_SENSOREN_MASK,
+> -                                        chan_read | chan_event);
+> +                                        channels);
+>                 if (ret)
+>                         return ret;
+>         }
+> @@ -538,13 +540,13 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
+>                 return;
+>         }
+>
+> -       for (chan = 0; chan < SX9310_NUM_CHANNELS; chan++) {
+> +       for_each_set_bit(chan, &data->chan_event, SX9310_NUM_CHANNELS) {
+>                 int dir;
+>                 u64 ev;
+> -               bool new_prox = val & BIT(chan);
+> +               bool new_prox;
+> +
+> +               new_prox = val & BIT(chan);
+>
+> -               if (!(data->chan_event & BIT(chan)))
+> -                       continue;
+>                 if (new_prox == data->prox_stat[chan])
+>                         /* No change on this channel. */
+>                         continue;
+> @@ -712,13 +714,13 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
+>  static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+>         struct sx9310_data *data = iio_priv(indio_dev);
+> -       unsigned int channels = 0;
+> +       unsigned long channels = 0;
+>         int bit, ret;
+>
+>         mutex_lock(&data->mutex);
+>         for_each_set_bit(bit, indio_dev->active_scan_mask,
+>                          indio_dev->masklength)
+> -               channels |= BIT(indio_dev->channels[bit].channel);
+> +               __set_bit(indio_dev->channels[bit].channel, &channels);
+>
+>         ret = sx9310_update_chan_en(data, channels, data->chan_event);
+>         mutex_unlock(&data->mutex);
+> --
+> 2.28.0.rc0.142.g3c755180ce-goog
+>
 
-Applying this failed, because I applied a patch converting the
-http urls to https. I would have fixed this silently, but it made
-me notice the chip name is bq27z561 instead of simply bq27561.
 
-You named it without the 'z' everywhere, is there a reason?
-Searching for bq27561 basically only finds your patches and
-you decided not to drop the z for the bq28z610.
-
--- Sebastian
-
---5wfexptlluq3ij3y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8ga8YACgkQ2O7X88g7
-+pq61A/9HALzLbaV2nB6FTOZLs3BMj4LSQ1/WIesGXn03CnKce4akvgjygjlAbhj
-NYTXV/3SbI8BXgfnTd6ooetOqVmRwoHOo7Z7wtNCTyW38v53uM60GX1TGEiEVSb1
-2SD/2W/vzmOjQfsWKm5+xTfhpBPFnV4Y2KTnmgzVBUtiI+dXUdc1FLSBNfksQnlL
-nS2f7BN1IWUaaR0GyUub2yeaExzpEDvYritor9tbDBH3IFjYoRrDsBkyp3DFh9fG
-+9nlNjIz7QkE5yjaCx68/iZfjSSAEWv28DTjSo7dh24fBrshz4dQ1185Tb7Xiz9F
-POa9E+Cl4VhhDd5QWDCgo9VC392TZE5GRhFTJwXT25RJ1sn5A+zFVYxKK35aks92
-DKXLmFVUMG2fF3aULBl2mHFccxKq4TIDR9BZypBgjOkyt74NgW6CrJnCU2cleWet
-N3XrKiyK901IAd/BF+YLthmuTfiolFz3jwkpgIzix4A6fJ1+dOzXamL/TLk2dT8w
-MdR5dRnZwgGNYk3R/GsgE36VXLjIvgMtjvAwbD9ergm8XqiBr5Hk+ooUr3o+CPmF
-ilRQ7h7pwhIjnmnqdr7ZHrzNFgjT9rIBt7lSbKi2SrI2hNBNe/GBoe49AcvJtqlt
-M5nV4tgf91iZ0bTTlHfgcnxtBX5OhDWXdM257OZtjdz8e3Agf/M=
-=pMEP
------END PGP SIGNATURE-----
-
---5wfexptlluq3ij3y--
+-- 
+With Best Regards,
+Andy Shevchenko
