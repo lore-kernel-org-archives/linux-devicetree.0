@@ -2,94 +2,193 @@ Return-Path: <SRS0=YUp6=BH=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70CBC43446
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7C3C433EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9648220786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A997120786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 28 Jul 2020 15:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="lbWovlqV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="bICUAXN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgG1Phi (ORCPT
+        id S1731022AbgG1Phk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 11:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
+        Tue, 28 Jul 2020 11:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730812AbgG1Ph0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 11:37:26 -0400
-Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DFFC9C0619D2;
-        Tue, 28 Jul 2020 08:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mail.ustc.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
-        Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=SP4UMFb1WB1izsQH5BQcEb4/cjOimxk03MhDuSg/fAg=; b=lbWovlqVroe9i
-        iHaB3ynvggOzei7ex54GSZ7SiTHuUUBIudqn5ll964LT+Zpbkgjo4GlB/cPn9ob0
-        qtdpPJ9jWebkEZeh4RKLCz2xB5O9UsfbFaFAInr3xZTMv29yDJpEaDPLMT4Fu5q9
-        5d5x3f+nSQC26pu9j9aVEs3Oic61Fo=
-Received: from xhacker (unknown [101.86.17.135])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygCHj_diRCBfgxI2AA--.17695S4;
-        Tue, 28 Jul 2020 23:29:43 +0800 (CST)
-Date:   Tue, 28 Jul 2020 23:23:27 +0800
-From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        with ESMTP id S1730979AbgG1Phk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 11:37:40 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C41C061794;
+        Tue, 28 Jul 2020 08:37:40 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 128D51FF10;
+        Tue, 28 Jul 2020 15:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1595950660; bh=Dq9Fd1D4T3cB1coSZCOwx/CX9dxAaAo3bdZhd0RaPvw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bICUAXN8jX7oP8ISzKwh4hbY2CxNn4SC7TQh2wDtnERpIY0pX7u4msmd3325IR+Vr
+         MtQtCMAi7ZsjCwFkqXpxRu41GAxcLg81EjHLTNoT3xTRtIH+Ek0DBihoggaiMwxZ+K
+         mPe6UWk7dql1yB60F71t9vEBJ9fzmLgF1Nn3qbg8g1bb23t6ouleKJAStL+tb5JtBB
+         VvQoMon625mkPbQ0SLITQpM4gIqGZGv5hrxoVneTuzLwPX5+Z/7mB0N8KbmChQ2Ccg
+         1PNQ/lnKeiUCxmrIhlxsG1TxWvlXhcQjWgPYoTidaSsgEN1mvYJalZYIHTHYKk9bHi
+         u6fZlCYbw5XUw==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 0/4] regulator: mp886x: two features and dt json convert
-Message-ID: <20200728232327.71ab3729@xhacker>
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/5] MIPS: Loongson64: Process ISA Node in DeviceTree
+Date:   Tue, 28 Jul 2020 23:36:56 +0800
+Message-Id: <20200728153708.1296374-3-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.28.0.rc1
+In-Reply-To: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygCHj_diRCBfgxI2AA--.17695S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xryktw13WrWxXryrGryfJFb_yoWfCFcE9r
-        yxAa47Gw4DZF1rCayIyFsrt34YyF4Iqa4kXFy7trZ0yry7Za4UGrZxXr9Fvr4xWayUAFn7
-        Wwn7JrWSyry3WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb3xYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-        IE14v26r15M28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CE
-        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6x
-        kF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY
-        1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4
-        xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCa
-        FVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-        AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-        17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-        IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-        IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-        C2KfnxnUUI43ZEXa7IU01v35UUUUU==
-X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Previously, we're hardcoding reserved ISA I/O Space in, now
+we're processing it I/O via DeviceTree directly.
+The ranges property if ISA node is used to determine the size and address
+of reserved I/O space.
 
-This is to improve the mp886x regulator driver support.
-patch1 converts dt binding to json-schema
-patch2 implments .set_ramp_delay
-patch3 and patch3 support the switch freq setting
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+--
+v2: Use range_parser instead of pci_range_parser
+v4: Fix typos & grammar problem thanks to Xuerui.
+---
+ arch/mips/loongson64/init.c | 87 ++++++++++++++++++++++++++-----------
+ 1 file changed, 62 insertions(+), 25 deletions(-)
 
-Jisheng Zhang (4):
-  dt-bindings: regulator: Convert mp886x to json-schema
-  regulator: mp886x: implement set_ramp_delay
-  dt-bindings: regulator: mp886x: support mps,switch-frequency
-  regulator: mp886x: support setting switch freq
-
- .../devicetree/bindings/regulator/mp886x.txt  |  27 -----
- .../bindings/regulator/mps,mp886x.yaml        |  58 ++++++++++
- drivers/regulator/mp886x.c                    | 109 +++++++++++++++++-
- 3 files changed, 164 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/mp886x.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp886x.yaml
-
+diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+index 59ddadace83f..8ba22c30f312 100644
+--- a/arch/mips/loongson64/init.c
++++ b/arch/mips/loongson64/init.c
+@@ -7,6 +7,8 @@
+ #include <linux/irqchip.h>
+ #include <linux/logic_pio.h>
+ #include <linux/memblock.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ #include <asm/bootinfo.h>
+ #include <asm/traps.h>
+ #include <asm/smp-ops.h>
+@@ -63,41 +65,76 @@ void __init prom_free_prom_memory(void)
+ {
+ }
+ 
+-static __init void reserve_pio_range(void)
++static int __init add_legacy_isa_io(struct fwnode_handle *fwnode, resource_size_t hw_start,
++				    resource_size_t size)
+ {
++	int ret = 0;
+ 	struct logic_pio_hwaddr *range;
++	unsigned long vaddr;
+ 
+ 	range = kzalloc(sizeof(*range), GFP_ATOMIC);
+ 	if (!range)
+-		return;
++		return -ENOMEM;
+ 
+-	range->fwnode = &of_root->fwnode;
+-	range->size = MMIO_LOWER_RESERVED;
+-	range->hw_start = LOONGSON_PCIIO_BASE;
++	range->fwnode = fwnode;
++	range->size = size;
++	range->hw_start = hw_start;
+ 	range->flags = LOGIC_PIO_CPU_MMIO;
+ 
+-	if (logic_pio_register_range(range)) {
+-		pr_err("Failed to reserve PIO range for legacy ISA\n");
+-		goto free_range;
++	ret = logic_pio_register_range(range);
++	if (ret) {
++		kfree(range);
++		return ret;
++	}
++
++	/* Legacy ISA must placed at the start of PCI_IOBASE */
++	if (range->io_start != 0) {
++		logic_pio_unregister_range(range);
++		kfree(range);
++		return -EINVAL;
+ 	}
+ 
+-	if (WARN(range->io_start != 0,
+-			"Reserved PIO range does not start from 0\n"))
+-		goto unregister;
+-
+-	/*
+-	 * i8259 would access I/O space, so mapping must be done here.
+-	 * Please remove it when all drivers can be managed by logic_pio.
+-	 */
+-	ioremap_page_range(PCI_IOBASE, PCI_IOBASE + MMIO_LOWER_RESERVED,
+-				LOONGSON_PCIIO_BASE,
+-				pgprot_device(PAGE_KERNEL));
+-
+-	return;
+-unregister:
+-	logic_pio_unregister_range(range);
+-free_range:
+-	kfree(range);
++	vaddr = PCI_IOBASE + range->io_start;
++
++	ioremap_page_range(vaddr, vaddr + size, hw_start, pgprot_device(PAGE_KERNEL));
++
++	return 0;
++}
++
++static __init void reserve_pio_range(void)
++{
++	struct device_node *np;
++
++	for_each_node_by_name(np, "isa") {
++		struct of_range range;
++		struct of_range_parser parser;
++
++		pr_info("ISA Bridge: %pOF\n", np);
++
++		if (of_range_parser_init(&parser, np)) {
++			pr_info("Failed to parse resources.\n");
++			break;
++		}
++
++		for_each_of_range(&parser, &range) {
++			switch (range.flags & IORESOURCE_TYPE_BITS) {
++			case IORESOURCE_IO:
++				pr_info(" IO 0x%016llx..0x%016llx  ->  0x%016llx\n",
++					range.cpu_addr,
++					range.cpu_addr + range.size - 1,
++					range.bus_addr);
++				if (add_legacy_isa_io(&np->fwnode, range.cpu_addr, range.size))
++					pr_warn("Failed to reserve legacy IO in Logic PIO\n");
++				break;
++			case IORESOURCE_MEM:
++				pr_info(" MEM 0x%016llx..0x%016llx  ->  0x%016llx\n",
++					range.cpu_addr,
++					range.cpu_addr + range.size - 1,
++					range.bus_addr);
++				break;
++			}
++		}
++	}
+ }
+ 
+ void __init arch_init_irq(void)
 -- 
-2.28.0.rc0
-
+2.28.0.rc1
 
