@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C1AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDD720663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F5E20663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bm9FpQwJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLHbE57X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgG2LDA (ORCPT
+        id S1726909AbgG2LDR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
+        Wed, 29 Jul 2020 07:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgG2LCy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 07:02:54 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D38C061794
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:52 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id v15so8231399lfg.6
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:52 -0700 (PDT)
+        with ESMTP id S1726842AbgG2LC4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 07:02:56 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F9C3C0619DA
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:55 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b25so24557559ljp.6
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FyosKiUG1TEw/awaC9dtkQGLFQT+7T/cshoI2oy7Wsk=;
-        b=Bm9FpQwJkxa0g3btzp9YwxLVyI5W3BkWDQ9/hNloBuojKm6pp+k5TaHmeRe7YubDPj
-         3Lkh6IN8F6YwHAVK383LGm2196M9bjOnBJFiYaWXvBvchtmjyZH5WroS5B0mxa+oli97
-         jW4fswZouyyugZFUTNJ1DnjX/mrRI3dpd4TmMnObbiDDLUPjNHTB4Jj4hrUxos2ZN646
-         bXykKbRrIrtnGycLbU9GJhBuxl3QmuFPL8D4LG5ELAxNXiIg/Gnr2xe7ygPyAtzDi99e
-         Qz1HYbHaP2Uw9TmuOGeHmnJlPNPAzdl2kR4dk+1uYyCMfyMlYySd35uUCzpvawtKZq4Z
-         vdiw==
+        bh=gf7cv2SFIbdtlnGIIkL7k9OE8WL9LTH6+emgR/zQp4Y=;
+        b=ZLHbE57Xrx/TPW6fyBjKZ4HFPTD8aCMjiF/g9R77/NYupMLxx0EkeWq8hl66ENUsJn
+         AvubfKp5u5Gv7drFCny8A1HL+Yd5qU8PG6b2Yp+6K8v0iufbi1Z1XkAG0pG1m8Y2MVN8
+         s6KGiIvAnieDGi8/CFOkjP2KEUnPozZ1X7o3voWYEXDwhZd2QXKenDTQff6spCGx2rdR
+         +rEF9n9gnL+Rp0fQGFDQ38POtiTNTI4QpNfbRQw34nA8z67m6VhIUFSKreBbuQdbfx4O
+         cxRqko6iBR8sYfvOIK80V3I3xSbbPwJGocWUinntbJUpLAQLee9Ene5dMwcxjbR2JJWU
+         HVsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FyosKiUG1TEw/awaC9dtkQGLFQT+7T/cshoI2oy7Wsk=;
-        b=kv71tbLOQoq6fVZQSo/y5dZJVayre3rfPE4gQWnJzYopKtNU4drizbFx6Hlmm7y6fL
-         5ZDWxLGC1AQ7Ml88w+hJ0/XTDRo8vJBb/ade6mLmysVHOktRzknBg4jPp3TYYMT/cvZc
-         HVGAMu91pEfBoeT7n44EJVbiLr1QrSumrOxozMe/d+ls8V1PZJNvf7OGYMpggOhTFKJk
-         atQOgopuWQDmCcN1Yzn/4ADKvnGZfHXPINAtvpjAHQNCwX8ZPplXZqg74GtVASw3YvDq
-         wd53qD9FejQePnct/pl5CMToh5+BhIgj/ZRKuHaLynq5/QTzJcYghsLrcsZvPbzTDVfL
-         BnqA==
-X-Gm-Message-State: AOAM530rFOGuy/i+LZJychp/V8MTieDklppwmskIc7fg2ykkHz0Q7N43
-        uRpMDbWhTNlJTACFVI0xCSeBOg==
-X-Google-Smtp-Source: ABdhPJzIl8kWXfg0hf4axvRV+gDifot4zuMszXOeHVllnjKTGt3enXvKU4Nyo9QkAKo6Wtokwazgew==
-X-Received: by 2002:a19:228a:: with SMTP id i132mr17056699lfi.178.1596020571254;
-        Wed, 29 Jul 2020 04:02:51 -0700 (PDT)
+        bh=gf7cv2SFIbdtlnGIIkL7k9OE8WL9LTH6+emgR/zQp4Y=;
+        b=BMW+lVUqWNX7AVWxKCrL/+FV3Z9Mrvpa+jTP8fqSwgfMQ9GsFNL1Yb/+298DfDQ5HT
+         o2B35iF2GQTE8aHv4Fh42BzNvT38+IxKLEkC31adY1HnRvcVivia+8L80TUlhwbcgTW8
+         lnXnIDpxNZRnwxjleBQd+MtOTCyuBUIq8NEHCT1MC2qKkl2AgpyXBxd+7gidmP8TXBZl
+         0q7QMMpuoFGFcFpMuqAdem1Y+n2FBO874JjB8vKSMfgKILKu1r8bFTH3J/ljqOzXeUvY
+         SQoc55MmfX6/RZkPNi9lfpiuprSfpfwZGhzAAWNMDMjeeH2QjxcbOsNJTq7Ll3oFG3LE
+         JdRA==
+X-Gm-Message-State: AOAM530oUBZlbHVCk68jHK9pXdnsDSBhhGbNOVzBfKp1ncz3L/5NHmlN
+        BWKxSggriOf92Tz77cFXcnv/HA==
+X-Google-Smtp-Source: ABdhPJyitBHf4z//24bE/wVIWN+Nxe4X98g0ie3HwNXAk9SBLq5d3xt7fZLrj9T/mgXKz48baDAFMg==
+X-Received: by 2002:a05:651c:319:: with SMTP id a25mr15139192ljp.272.1596020573965;
+        Wed, 29 Jul 2020 04:02:53 -0700 (PDT)
 Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id e12sm329283ljk.74.2020.07.29.04.02.50
+        by smtp.gmail.com with ESMTPSA id e12sm329283ljk.74.2020.07.29.04.02.52
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jul 2020 04:02:50 -0700 (PDT)
+        Wed, 29 Jul 2020 04:02:53 -0700 (PDT)
 From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
 To:     ssantosh@kernel.org, s-anna@ti.com
 Cc:     grzegorz.jaszczyk@linaro.org, santosh.shilimkar@oracle.com,
         robh+dt@kernel.org, lee.jones@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wmills@ti.com, praneeth@ti.com, "Andrew F . Davis" <afd@ti.com>
-Subject: [PATCH 5/6] soc: ti: pruss: Add support for PRU-ICSS subsystems on 66AK2G SoC
-Date:   Wed, 29 Jul 2020 13:02:07 +0200
-Message-Id: <1596020528-19510-6-git-send-email-grzegorz.jaszczyk@linaro.org>
+        wmills@ti.com, praneeth@ti.com
+Subject: [PATCH 6/6] soc: ti: pruss: enable support for ICSSG subsystems on K3 AM65x SoCs
+Date:   Wed, 29 Jul 2020 13:02:08 +0200
+Message-Id: <1596020528-19510-7-git-send-email-grzegorz.jaszczyk@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
 References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
@@ -77,26 +77,30 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Suman Anna <s-anna@ti.com>
 
-The 66AK2G SoC supports two PRU-ICSS instances, named PRUSS0 and PRUSS1,
-each of which has two PRU processor cores. The two PRU-ICSS instances
-are identical to each other with few minor SoC integration differences,
-and are very similar to the PRU-ICSS1 of AM57xx/AM43xx. The Shared Data
-RAM size is larger and the number of interrupts coming into MPU INTC
-is like the instances on AM437x. There are also few other differences
-attributing to integration in Keystone architecture (like no SYSCFG
-register or PRCM handshake protocols). Other IP level differences
-include different constant table, differences in system event interrupt
-input sources etc. They also do not have a programmable module reset
-line like those present on AM33xx/AM43xx SoCs. The modules are reset
+The K3 AM65x family of SoCs have the next generation of the PRU-ICSS
+processor subsystem capable of supporting Gigabit Ethernet, and is
+commonly referred to as ICSSG. These SoCs contain typically three
+ICSSG instances named ICSSG0, ICSSG1 and ICSSG2. The three ICSSGs are
+identical to each other for the most part with minor SoC integration
+differences and capabilities. The ICSSG2 supports slightly enhanced
+features like SGMII mode Ethernet, while the ICSS0 and ICSSG1 instances
+are limited to MII mode only.
+
+The ICSSGs on K3 AM65x SoCs are in general super-sets of the PRUSS on the
+AM57xx/66AK2G SoCs. They include two additional auxiliary PRU cores called
+RTUs and few other additional sub-modules. The interrupt integration is
+also different on the K3 AM65x SoCs and are propagated through various
+SoC-level Interrupt Router and Interrupt Aggregator blocks. Other IP level
+differences include different constant tables, differences in system event
+interrupt input sources etc. They also do not have a programmable module
+reset line like those present on AM33xx/AM43xx SoCs. The modules are reset
 just like any other IP with the SoC's global cold/warm resets.
 
-The existing PRUSS platform driver has been enhanced to support these
-66AK2G PRU-ICSS instances through new 66AK2G specific compatible for
-properly probing and booting all the different PRU cores in each
-PRU-ICSS processor subsystem. A build dependency with ARCH_KEYSTONE
-is added to enable the driver to be built in K2G-only configuration.
+The existing pruss platform driver has been updated to support these new
+ICSSG instances through new AM65x specific compatibles. A build dependency
+with ARCH_K3 is added to enable building all the existing PRUSS platform
+drivers for this ARMv8 platform.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
 Signed-off-by: Suman Anna <s-anna@ti.com>
 Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
 ---
@@ -105,27 +109,27 @@ Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-index 99dbc14..c290343 100644
+index c290343..f5b82ff 100644
 --- a/drivers/soc/ti/Kconfig
 +++ b/drivers/soc/ti/Kconfig
 @@ -103,7 +103,7 @@ config TI_K3_SOCINFO
  
  config TI_PRUSS
  	tristate "TI PRU-ICSS Subsystem Platform drivers"
--	depends on SOC_AM33XX || SOC_AM43XX || SOC_DRA7XX
-+	depends on SOC_AM33XX || SOC_AM43XX || SOC_DRA7XX || ARCH_KEYSTONE
+-	depends on SOC_AM33XX || SOC_AM43XX || SOC_DRA7XX || ARCH_KEYSTONE
++	depends on SOC_AM33XX || SOC_AM43XX || SOC_DRA7XX || ARCH_KEYSTONE || ARCH_K3
  	select MFD_SYSCON
  	help
  	  TI PRU-ICSS Subsystem platform specific support.
 diff --git a/drivers/soc/ti/pruss.c b/drivers/soc/ti/pruss.c
-index 5df4caa..d5f128e 100644
+index d5f128e..ccc9783 100644
 --- a/drivers/soc/ti/pruss.c
 +++ b/drivers/soc/ti/pruss.c
-@@ -162,6 +162,7 @@ static const struct of_device_id pruss_of_match[] = {
- 	{ .compatible = "ti,am4376-pruss0", .data = &am437x_pruss0_data, },
+@@ -163,6 +163,7 @@ static const struct of_device_id pruss_of_match[] = {
  	{ .compatible = "ti,am4376-pruss1", .data = &am437x_pruss1_data, },
  	{ .compatible = "ti,am5728-pruss" },
-+	{ .compatible = "ti,k2g-pruss" },
+ 	{ .compatible = "ti,k2g-pruss" },
++	{ .compatible = "ti,am654-icssg" },
  	{},
  };
  MODULE_DEVICE_TABLE(of, pruss_of_match);
