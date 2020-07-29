@@ -2,103 +2,216 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE88C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72373C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3FC0206D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596041785;
-	bh=+MZqyVWBIfhGZ4yHMK6lksl+VqeE7shOnnLZ4HlPZvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D1st6DbRCbVvA//0hGvrLm1QWQm662Hznl75Bzv+9L6vT50gkHCHl3cfAGH1eft39
-	 O9HMS88E12GpORVykHGkzPAfAVfjErQ5sGOG1ZS1uPdrin7jHDsgZFsBU41a7bMSBT
-	 0pg/nnqbLXl5wPmhI7wcwnlSLE4c9a4PCXoL4pa4=
+	by mail.kernel.org (Postfix) with ESMTP id 5A65B207F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgG2Q4Z (ORCPT
+        id S1726615AbgG2Q7I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbgG2Q4Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 12:56:25 -0400
-Received: from earth.universe (dyndsl-095-033-172-175.ewe-ip-backbone.de [95.33.172.175])
+        Wed, 29 Jul 2020 12:59:08 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:42130 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG2Q7I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 12:59:08 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82A4D2053B;
-        Wed, 29 Jul 2020 16:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596041784;
-        bh=+MZqyVWBIfhGZ4yHMK6lksl+VqeE7shOnnLZ4HlPZvA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q6CCe3yu1QwaqqVA8UrDH8H4DrJJwH0O8OmUh5UDF5KXrpMsGbrJOeK90O7zzk/tG
-         M/bnifCx2HcU53xmXAP+txGCY29m9JPxFaPbx7kQEdQ2u7JaOSC5COibw/e1SeUd7t
-         3fC91zZSGIgmUgEdt2MMQbcY84PAF7hEN1N9GTRk=
-Received: by earth.universe (Postfix, from userid 1000)
-        id DC4883C0B87; Wed, 29 Jul 2020 18:56:22 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 18:56:22 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     afd@ti.com, pali@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org
-Subject: Re: [PATCH v5 2/4] power: supply: bq27xxx_battery: Add the BQ27z561
- Battery monitor
-Message-ID: <20200729165622.jbncn2dqgugrhykx@earth.universe>
-References: <20200729120609.22427-1-dmurphy@ti.com>
- <20200729120609.22427-2-dmurphy@ti.com>
- <a757fcf1-0215-3926-f74c-22183457be3e@ti.com>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D6107806BC;
+        Wed, 29 Jul 2020 18:59:05 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 18:59:04 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Marek Vasut <marex@denx.de>
+Cc:     dri-devel@lists.freedesktop.org, Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] dt-bindings: Add DT bindings for Toshiba TC358762
+ DSI-to-DPI bridge
+Message-ID: <20200729165904.GB1372716@ravnborg.org>
+References: <20200729164554.114735-1-marex@denx.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oka4kkleniibgdes"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a757fcf1-0215-3926-f74c-22183457be3e@ti.com>
+In-Reply-To: <20200729164554.114735-1-marex@denx.de>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=-VAfIpHNAAAA:8 a=VwQbUJbxAAAA:8
+        a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8 a=wLk5mgfxucYYyhUj8NMA:9
+        a=-9lf9JVBwhYZPLep:21 a=NXM7E4vtB9kfhu_y:21 a=CjuIK1q_8ugA:10
+        a=Vxmtnl_E_bksehYqCbjh:22 a=srlwD-8ojaedGGhPAyx8:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Marek.
 
---oka4kkleniibgdes
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 29, 2020 at 06:45:53PM +0200, Marek Vasut wrote:
+> Add DT bindings for Toshiba TC358762 DSI-to-DPI bridge, this
+> one is used in the Raspberry Pi 7" touchscreen display unit.
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> To: dri-devel@lists.freedesktop.org
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+> V2: Fix dt_binding_check errors
+> ---
+>  .../display/bridge/toshiba,tc358762.yaml      | 125 ++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358762.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358762.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358762.yaml
+> new file mode 100644
+> index 000000000000..6cd4c0d86c13
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358762.yaml
+> @@ -0,0 +1,125 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358762.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Toshiba TC358762 MIPI DSI to MIPI DPI bridge
+> +
+> +maintainers:
+> +  - Marek Vasut <marex@denx.de>
+> +
+> +description: |
+> +  The TC358762 is bridge device which converts MIPI DSI to MIPI DPI.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - toshiba,tc358762
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: virtual channel number of a DSI peripheral
+> +
+> +  vddc-supply:
+> +    description: Regulator for 1.2V internal core power.
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          Video port for MIPI DSI input
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +        patternProperties:
+Not happy with the use of "patternProperties" when there is no pattern.
 
-Hi,
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@1:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description: |
+> +          Video port for MIPI DPI output (panel or connector).
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +        patternProperties:
+Same here.
 
-On Wed, Jul 29, 2020 at 10:55:54AM -0500, Dan Murphy wrote:
-> > +<<<<<<< HEAD
->=20
-> Need to remove this artifact from a rebase.
->=20
-> Not sure how this got here as it does not appear in my source.
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +        required:
+> +          - reg
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vddc-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c1 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bridge@0 {
+> +        reg = <0>;
+> +        compatible = "toshiba,tc358762";
+> +        vddc-supply = <&vcc_1v2_reg>;
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            bridge_in: endpoint {
+> +              remote-endpoint = <&dsi_out>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +            bridge_out: endpoint {
+> +              remote-endpoint = <&panel_in>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
 
-You don't see it in your source, since you removed it in patch 4.
+Add:
+<empty line>
+...
 
--- Sebastian
+Where "..." is the end-marker (or somethig like that in yaml).
 
---oka4kkleniibgdes
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8hqjYACgkQ2O7X88g7
-+po97g/+LBZX+P6d3sqAAtfAiF+zlxy/54zNauGdOIgBFFPdjUmTgX8t3ial8BHm
-OrW8wY5LOqqM5teVkFfufBt8H3GQzMvHqcnUjK2+pRpW1sPXhYimsJxIfXvwsmZQ
-JTUkfJ0HmMpZfaT0l4bwv8CU+1fYsNbJdGr2737wLYZRvqT+I65IDaQCjgSlV7Oi
-ySGNCVJBwgXuoERB0k/eXxUeeny5qM0KelnGp1xNOJ1UyVqz8Uln6uZzfTm2PF2F
-u2hTogPS45ar9VORhje2F3WNEbZja8k7OiWpmoMNg8aPy8XZZnf48s7G1XczjXDU
-jbNRhpbL1X6Eh0jpJoqG6u/t2AgOIaSY+c8DvHVwDL0bV5oYk+Mb/PKrIWY4dRfw
-zWbYdVr+j792AKeKc62rbaFz4d+N+d73zw169qyRP+Wfm+zeE6AQGxlLPd3vPMNJ
-4Hv7tw3kTvPAuL0LVIr69v1js0cYVesfVpB+MuoCpnNTV+vAUgJGIVQOoIAX7bTM
-CK3DmrfjcWyZMx0b1ZWRw8iqaUMijvL1Wg91m5NOI93SkMPRYd5Pt4MDlAI+z1hp
-LQAYzIwv2qX+MrVF70rrSIZsTWj4YTKXVCAVPB+Z1cYYqAck9htK9YHWMXITgCvE
-MEoz8MBM27qKXeaLgfEYnWpHC/j4UYOBZCL42U2088btM/RLThA=
-=J8uF
------END PGP SIGNATURE-----
-
---oka4kkleniibgdes--
+> -- 
+> 2.27.0
