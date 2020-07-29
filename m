@@ -7,174 +7,116 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50E3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61447C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD7320838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD8320809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aDCiK9iv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LykoZLGI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgG2RLA (ORCPT
+        id S1726476AbgG2RVB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:11:00 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33990 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgG2RK7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 13:10:59 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DE22429E;
-        Wed, 29 Jul 2020 19:10:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1596042657;
-        bh=riwybW52EjlFX38PbzROSyTfxzjJON7hQACGRPsGFqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aDCiK9ivoRvkZNPZgMRw4Oi/wfssbYvl0JQ9tXWoU+XCfzqRw12iwFb831vGoOPXP
-         QVSMzw38dLJLUgqnX2bwFpXgUYFMcKyvFnOCH32VvlumEQvHNDIMd1PbOMWjRBqY29
-         qMQialmS1i97H78AOWJdP75VZSsyhyl5nTrTCFAk=
-Date:   Wed, 29 Jul 2020 20:10:47 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        devicetree@vger.kernel.org, od@zcrc.me,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/6] dt-bindings: display: Document NewVision NV3052C DT
- node
-Message-ID: <20200729171047.GA18755@pendragon.ideasonboard.com>
-References: <20200727164613.19744-1-paul@crapouillou.net>
- <20200727164613.19744-2-paul@crapouillou.net>
+        Wed, 29 Jul 2020 13:21:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbgG2RVB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 13:21:01 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C1B0C0619D2
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 10:21:01 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id s26so13264981pfm.4
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 10:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RkhmVmn+F8zZR3MXN6wM+ixzJP6uusXl8abDcaadbwU=;
+        b=LykoZLGIweffexQ73NX4n24tMeVD1jxrVEhBFJdBzix3ieNIhRJ1UyAW2pW9Xdc6Dd
+         +T4eZ8jXk9fGCOP3GjK/h9dTk9cRzBH9ZARUErXgO7WCIRjN5z9dJu3Smaps7hgACjS4
+         17VDpJ+EICAYp1oBGgmLp3aHiR6vfBiz686B/12/P5/yoOLRxFRhwyVPzowlRukVAVuN
+         8k0+DWeyk5EvjcRrjsQE6/hA3qY8SGfBBfOd53gR4i2ZqHrp0/g1s6JwMpxyh77i6rqE
+         j/vlvZj51WYAmbYXW9+Cu1ovFP6kdt+lU6uMfD8fdFRm1kAeE4xZwo4G3iNGEIlxH2B9
+         7s1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RkhmVmn+F8zZR3MXN6wM+ixzJP6uusXl8abDcaadbwU=;
+        b=BXpclzUFP/9beulyELawoM+uUTA+CexDCSBU2LbeZD2qxGFqWj9DabhVBhhGcrfiGJ
+         Wwyt5StvLqECmZijy46b0tbIB0w8TD4OzcdtZY/ZrJgiq20hlrUbsVMkNSxHLGU1jfFs
+         tyqmtiAd11DeHx4HJcXRM8Fz0Qx5oAVKFyiqS+0DPeoi01OsrgBn8prQATwGYFPW6WOY
+         rGT4mBei+FInl7OXIrPX127IllCKVIEx/9TGNiOnGObGVQ6znNXF+/zxfrw/bXHTMfVB
+         3C/m+LtjXai7IyK3fIn5A/1INcpVCA4y07S0oqEN/I12ILfwK9jg5xAsSI7HPhWjUXp5
+         I7eQ==
+X-Gm-Message-State: AOAM530wWSLGF48TkimxvRpbUlC7tDHFlcSgtgg4hrCywmNrE+9WasfN
+        q/GKqvz73qOEHOa/XWNs2fR69g==
+X-Google-Smtp-Source: ABdhPJzYsG6bJfs+OjDq/bcVUSUtHseUIVoDgm8UZLKpJ5a7m2X7FhMkTfYyTY/cwe3oMahk3ykPTw==
+X-Received: by 2002:a63:3c09:: with SMTP id j9mr30423593pga.206.1596043260739;
+        Wed, 29 Jul 2020 10:21:00 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id j11sm2950518pfn.38.2020.07.29.10.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 10:21:00 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 11:20:58 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 14/14] dts: bindings: coresight: ETMv4.4 system
+ register access only units
+Message-ID: <20200729172058.GA3060370@xps15>
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-15-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727164613.19744-2-paul@crapouillou.net>
+In-Reply-To: <20200722172040.1299289-15-suzuki.poulose@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
-
-Thank you for the patch.
-
-On Mon, Jul 27, 2020 at 06:46:08PM +0200, Paul Cercueil wrote:
-> Add documentation for the Device Tree node for LCD panels based on the
-> NewVision NV3052C controller.
+On Wed, Jul 22, 2020 at 06:20:40PM +0100, Suzuki K Poulose wrote:
+> Document the bindings for ETMv4.4 and later with only system register
+> access.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
->  .../display/panel/newvision,nv3052c.yaml      | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
+>  Documentation/devicetree/bindings/arm/coresight.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml b/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
-> new file mode 100644
-> index 000000000000..751a28800fc2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/newvision,nv3052c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NewVision NV3052C TFT LCD panel driver with SPI control bus
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index d711676b4a51..cfe47bdda728 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -34,9 +34,13 @@ its hardware characteristcs.
+>  					Program Flow Trace Macrocell:
+>  			"arm,coresight-etm3x", "arm,primecell";
+>  
+> -		- Embedded Trace Macrocell (version 4.x):
+> +		- Embedded Trace Macrocell (version 4.x), with memory mapped access.
+>  			"arm,coresight-etm4x", "arm,primecell";
+>  
+> +		- Embedded Trace Macrocell (version 4.4 and later) with system
+> +		  register access only.
+> +			"arm,coresight-etm-v4.4";
 
-s/driver/driver IC/ (or driver chip, or controller, or any other similar
-term) to avoid confusion with device drivers.
+I would rather call this "arm,coresight-etm-v4.4+" so that the binding's
+semantic is still relevant when dealing with ETM v4.5 and onward. 
 
-Do I understand that the NV3052C also supports control through DSI ?
-Shouldn't this appear in the DT bindings ? Do I assume correctly that
-the panel will be controlled either through SPI or through DSI, but not
-through both ?
-
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +description: |
-> +  This is a driver for 320x240 TFT panels, accepting a variety of input
-> +  streams that get adapted and scaled to the panel. The panel output has
-> +  960 TFT source driver pins and 240 TFT gate driver pins, VCOM, VCOML and
-> +  VCOMH outputs.
-> +
-> +  The panel must obey the rules for a SPI slave device as specified in
-> +  spi/spi-controller.yaml
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - leadtek,ltk035c5444t-spi
-
-According to its datasheet, that panel is 640x480 :-)
-
-I think you need a bit of documentation to explain that two compatible
-strings are needed, one matching the panel type, and a second one
-matching the chip.
+Thanks,
+Mathieu
 
 > +
-> +      - const: newvision,nv3052c
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  reset-gpios: true
-> +  port: true
-
-The NV3052C requires multiple power supplies, I think this needs to be
-taken into account here.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    spi {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      display@0 {
-> +        compatible = "leadtek,ltk035c5444t-spi", "newvision,nv3052c";
-> +        reg = <0>;
-> +
-> +        spi-max-frequency = <15000000>;
-> +        spi-3wire;
-> +        reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
-> +        backlight = <&backlight>;
-> +        power-supply = <&vcc>;
-> +
-> +        port {
-> +          panel_input: endpoint {
-> +              remote-endpoint = <&panel_output>;
-> +          };
-> +        };
-> +      };
-> +    };
-> +
-> +...
-
--- 
-Regards,
-
-Laurent Pinchart
+>  		- Coresight programmable Replicator :
+>  			"arm,coresight-dynamic-replicator", "arm,primecell";
+>  
+> -- 
+> 2.24.1
+> 
