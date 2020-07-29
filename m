@@ -2,237 +2,262 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F14C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 20:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BF4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 20:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4D320663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 20:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596055099;
-	bh=ZtMcHWQnSDUOUOzW/vC7NhMNa3Qp8SiMpTQ/mWVh7U0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NsSwcBR5l29T6JGfJENoGdQBEAhAm9x7e2g1Hq6UWsoF2S+pzwo1T0UzRWSJXadaW
-	 EdjQp9l+KPYz2FS6XJR+DTyhAgh6ds4lNGNb+qu2xkkPHsfzKpdg9PGfVB4uU7gCCg
-	 dXG8AXeSRzJOlyT7bXVMpG655JUhRhBvsU3RT7Ao=
+	by mail.kernel.org (Postfix) with ESMTP id 9BB6F20663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 20:38:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u3ztOMEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgG2UiP (ORCPT
+        id S1727017AbgG2Uiq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 16:38:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgG2UiP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 16:38:15 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16602082E;
-        Wed, 29 Jul 2020 20:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596055094;
-        bh=ZtMcHWQnSDUOUOzW/vC7NhMNa3Qp8SiMpTQ/mWVh7U0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y4T3sk8fvc7n3G47mmUhCqU/gvics2lWHwuY1amVr6/L9M3minKu19QoXvidQ1gFm
-         2PicXlIDKJWr4nzY5QSl3YD+ujUHUoCc4ClM/YaNVhc8dMdtFdOY1sSAabyiTcSwNL
-         NEXzNhn71xkoOmtD/vyc0Krs5EKvk1sM0Te4ZfgY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 00BBE3C0B87; Wed, 29 Jul 2020 22:38:12 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 22:38:12 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     afd@ti.com, pali@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh@kernel.org
-Subject: Re: [PATCH v6 4/4] power: supply: bq27xxx_battery: Add the BQ28z610
- Battery monitor
-Message-ID: <20200729203812.v4etph4qcfius3ka@earth.universe>
-References: <20200729183145.6066-1-dmurphy@ti.com>
- <20200729183145.6066-4-dmurphy@ti.com>
+        Wed, 29 Jul 2020 16:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgG2Uip (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 16:38:45 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1130C061794;
+        Wed, 29 Jul 2020 13:38:45 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id t6so4805405ooh.4;
+        Wed, 29 Jul 2020 13:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8i7JA74dcDdZD4r2vHndd0TrafQ0rw7tAC4FR7aF7N0=;
+        b=u3ztOMEzQpHszSipRCwuHDFWeE+7VuScg5q+wWy9BZzxsEz4fThqqQh+Hdq//WZst9
+         EYw9Pt/SXJxXGjrujN8H0Vm6GvYAKFccv0i4yzgRL1/naznbNbWfMVVuhh/GAW2TaxfV
+         W3x2EO6kFsU6S8f8+Ju1kxAPA2GlNse42ICHvAeTNSlHTSwNQcjuQqc9EuJE7sS0LUkh
+         Ey79hRg+aRny+8+JUYYt4RHoFAygUfH4okYRx3Tw65bWRt5SryH/Oh+Mk+E4odqCEX3c
+         EtS0sWrOCE3/bh5lE8XSLrcfbkLRolDpcMN4YWbLhcrxbsI12MKObu7jRqVVwC6ScYHk
+         b8ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8i7JA74dcDdZD4r2vHndd0TrafQ0rw7tAC4FR7aF7N0=;
+        b=a60BK/5jVc1eED8dOBwhJ/xVyNhSaMOwmGGaH/P/1s1Udjljc/K5V8vAIAZ7fD/HEz
+         UZurqdFfXP4q1v638uKTE6IcYfU2jABQvVELtIW793f56N8QGHcL1n+5y6Vl7xCGlM5O
+         MqZdyGKePB6iyBPgG7d04f29pdKxslI3YZkYKSPS5x+Cq/SwwFHQ32Ae1lyTqRnQ+e4h
+         jzm5StSE5F7H2WPkyWurjz8e2qN6lRWXHwLnptLg68AXaD4lus9YO074oLQoXfeMGJ/j
+         xXipDX/xJ4/QkATX00apTBIA+IS0MP1nTUzzsOqGUcJVeakdk+KOpQODIJASu2MgafEI
+         ky/Q==
+X-Gm-Message-State: AOAM531IZrFnbsM0l3YEFBoeAFcCl68WNjYWq1jEFvgkjHJHhhAVhB3e
+        xt3eja8Lm2Ft6K9A1PH3HEb/ii2Ga/tBACBrKEA=
+X-Google-Smtp-Source: ABdhPJy+U91ZQ6GeEgbrSsl5nCEIm7jAagWhVwoqHuIhjvjoQCh1ujevt1AmD67c2PTa/e3nSIgJaW9HesqIkiD4U38=
+X-Received: by 2002:a4a:a782:: with SMTP id l2mr15095oom.62.1596055124954;
+ Wed, 29 Jul 2020 13:38:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k3uapmft6h66ytra"
-Content-Disposition: inline
-In-Reply-To: <20200729183145.6066-4-dmurphy@ti.com>
+References: <20200729122602.9561-1-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20200729122602.9561-1-biju.das.jz@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 29 Jul 2020 21:38:18 +0100
+Message-ID: <CA+V-a8utOfONMXjxT56SQ9VdrzwihE-thhPvu4HLjrr_0m11Zg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: iwg22d-sodimm: Fix dt nodes sorting
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Biju,
 
---k3uapmft6h66ytra
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch.
 
-Hi,
-
-On Wed, Jul 29, 2020 at 01:31:45PM -0500, Dan Murphy wrote:
-> Add the Texas Instruments BQ28z610 battery monitor.
-> The register address map is laid out the same as compared to other
-> devices within the file.
->=20
-> The battery status register bits are similar to the bq27z561 but they
-> are different compared to other fuel gauge devices within this file.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+On Wed, Jul 29, 2020 at 1:26 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+>
+> Some device nodes in the r8a7745-iwg22d-sodimm.dts are not sorted
+> alphabetically. This patch fixes the sorting of nodes and also fixes a
+> typo in the stmpe node.
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 > ---
+> This patch is tested against renesas-devel
+> ---
+>  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 104 ++++++++++----------
+>  1 file changed, 52 insertions(+), 52 deletions(-)
+>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks, queued.
+Cheers,
+Prabhakar
 
--- Sebastian
-
->  drivers/power/supply/bq27xxx_battery.c     | 42 ++++++++++++++++++++++
->  drivers/power/supply/bq27xxx_battery_i2c.c |  2 ++
->  include/linux/power/bq27xxx_battery.h      |  1 +
->  3 files changed, 45 insertions(+)
->=20
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
-y/bq27xxx_battery.c
-> index a05b9a2d112d..a123f6e21f08 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -44,6 +44,7 @@
->   * https://www.ti.com/product/bq27441-g1
->   * https://www.ti.com/product/bq27621-g1
->   * https://www.ti.com/product/bq27z561
-> + * https://www.ti.com/product/bq28z610
->   */
-> =20
->  #include <linux/device.h>
-> @@ -462,6 +463,26 @@ static u8
->  		[BQ27XXX_REG_DCAP] =3D 0x3c,
->  		[BQ27XXX_REG_AP] =3D 0x22,
->  		BQ27XXX_DM_REG_ROWS,
-> +	},
-> +	bq28z610_regs[BQ27XXX_REG_MAX] =3D {
-> +		[BQ27XXX_REG_CTRL] =3D 0x00,
-> +		[BQ27XXX_REG_TEMP] =3D 0x06,
-> +		[BQ27XXX_REG_INT_TEMP] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_VOLT] =3D 0x08,
-> +		[BQ27XXX_REG_AI] =3D 0x14,
-> +		[BQ27XXX_REG_FLAGS] =3D 0x0a,
-> +		[BQ27XXX_REG_TTE] =3D 0x16,
-> +		[BQ27XXX_REG_TTF] =3D 0x18,
-> +		[BQ27XXX_REG_TTES] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_TTECP] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_NAC] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_FCC] =3D 0x12,
-> +		[BQ27XXX_REG_CYCT] =3D 0x2a,
-> +		[BQ27XXX_REG_AE] =3D 0x22,
-> +		[BQ27XXX_REG_SOC] =3D 0x2c,
-> +		[BQ27XXX_REG_DCAP] =3D 0x3c,
-> +		[BQ27XXX_REG_AP] =3D 0x22,
-> +		BQ27XXX_DM_REG_ROWS,
->  	};
-> =20
->  static enum power_supply_property bq27000_props[] =3D {
-> @@ -717,6 +738,25 @@ static enum power_supply_property bq27z561_props[] =
-=3D {
->  	POWER_SUPPLY_PROP_MANUFACTURER,
+> diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> index b15b1b088a32..5f7f230de529 100644
+> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> @@ -53,6 +53,25 @@
+>                 clock-frequency = <26000000>;
+>         };
+>
+> +       backlight_lcd: backlight {
+> +               compatible = "pwm-backlight";
+> +               pwms = <&tpu 3 5000000 PWM_POLARITY_INVERTED>;
+> +               brightness-levels = <0 4 8 16 32 64 128 255>;
+> +               default-brightness-level = <7>;
+> +       };
+> +
+> +       lcd_panel: lcd {
+> +               compatible = "edt,etm043080dh6gp";
+> +               power-supply = <&vccq_panel>;
+> +               backlight = <&backlight_lcd>;
+> +
+> +               port {
+> +                       lcd_in: endpoint {
+> +                               remote-endpoint = <&du_out_rgb0>;
+> +                       };
+> +               };
+> +       };
+> +
+>         rsnd_sgtl5000: sound {
+>                 compatible = "simple-audio-card";
+>                 simple-audio-card,format = "i2s";
+> @@ -68,18 +87,6 @@
+>                 };
+>         };
+>
+> -       vccq_sdhi0: regulator-vccq-sdhi0 {
+> -               compatible = "regulator-gpio";
+> -
+> -               regulator-name = "SDHI0 VccQ";
+> -               regulator-min-microvolt = <1800000>;
+> -               regulator-max-microvolt = <3300000>;
+> -
+> -               gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+> -               gpios-states = <1>;
+> -               states = <3300000 1>, <1800000 0>;
+> -       };
+> -
+>         vccq_panel: regulator-vccq-panel {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "Panel VccQ";
+> @@ -89,38 +96,16 @@
+>                 enable-active-high;
+>         };
+>
+> -       backlight_lcd: backlight {
+> -               compatible = "pwm-backlight";
+> -               pwms = <&tpu 3 5000000 PWM_POLARITY_INVERTED>;
+> -               brightness-levels = <0 4 8 16 32 64 128 255>;
+> -               default-brightness-level = <7>;
+> -       };
+> -
+> -       lcd_panel: lcd {
+> -               compatible = "edt,etm043080dh6gp";
+> -               power-supply = <&vccq_panel>;
+> -               backlight = <&backlight_lcd>;
+> -
+> -               port {
+> -                       lcd_in: endpoint {
+> -                               remote-endpoint = <&du_out_rgb0>;
+> -                       };
+> -               };
+> -       };
+> -};
+> -
+> -&du {
+> -       pinctrl-0 = <&du0_pins>;
+> -       pinctrl-names = "default";
+> +       vccq_sdhi0: regulator-vccq-sdhi0 {
+> +               compatible = "regulator-gpio";
+>
+> -       status = "okay";
+> +               regulator-name = "SDHI0 VccQ";
+> +               regulator-min-microvolt = <1800000>;
+> +               regulator-max-microvolt = <3300000>;
+>
+> -       ports {
+> -               port@0 {
+> -                       endpoint {
+> -                               remote-endpoint = <&lcd_in>;
+> -                       };
+> -               };
+> +               gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+> +               gpios-states = <1>;
+> +               states = <3300000 1>, <1800000 0>;
+>         };
 >  };
-> =20
-> +static enum power_supply_property bq28z610_props[] =3D {
-> +	POWER_SUPPLY_PROP_STATUS,
-> +	POWER_SUPPLY_PROP_PRESENT,
-> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +	POWER_SUPPLY_PROP_CURRENT_NOW,
-> +	POWER_SUPPLY_PROP_CAPACITY,
-> +	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
-> +	POWER_SUPPLY_PROP_TEMP,
-> +	POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW,
-> +	POWER_SUPPLY_PROP_TIME_TO_FULL_NOW,
-> +	POWER_SUPPLY_PROP_TECHNOLOGY,
-> +	POWER_SUPPLY_PROP_CHARGE_FULL,
-> +	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-> +	POWER_SUPPLY_PROP_CYCLE_COUNT,
-> +	POWER_SUPPLY_PROP_POWER_AVG,
-> +	POWER_SUPPLY_PROP_HEALTH,
-> +	POWER_SUPPLY_PROP_MANUFACTURER,
+>
+> @@ -150,6 +135,21 @@
+>         status = "okay";
+>  };
+>
+> +&du {
+> +       pinctrl-0 = <&du0_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +
+> +       ports {
+> +               port@0 {
+> +                       endpoint {
+> +                               remote-endpoint = <&lcd_in>;
+> +                       };
+> +               };
+> +       };
 > +};
 > +
->  struct bq27xxx_dm_reg {
->  	u8 subclass_id;
->  	u8 offset;
-> @@ -813,6 +853,7 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] =3D {
->  #endif
-> =20
->  #define bq27z561_dm_regs 0
-> +#define bq28z610_dm_regs 0
-> =20
->  #define BQ27XXX_O_ZERO	0x00000001
->  #define BQ27XXX_O_OTDC	0x00000002 /* has OTC/OTD overtemperature flags */
-> @@ -865,6 +906,7 @@ static struct {
->  	[BQ27441]   =3D BQ27XXX_DATA(bq27441,   0x80008000, BQ27XXX_O_UTOT | BQ=
-27XXX_O_CFGUP | BQ27XXX_O_RAM),
->  	[BQ27621]   =3D BQ27XXX_DATA(bq27621,   0x80008000, BQ27XXX_O_UTOT | BQ=
-27XXX_O_CFGUP | BQ27XXX_O_RAM),
->  	[BQ27Z561]  =3D BQ27XXX_DATA(bq27z561,  0         , BQ27Z561_O_BITS),
-> +	[BQ28Z610]  =3D BQ27XXX_DATA(bq28z610,  0         , BQ27Z561_O_BITS),
+>  &hscif1 {
+>         pinctrl-0 = <&hscif1_pins>;
+>         pinctrl-names = "default";
+> @@ -171,6 +171,15 @@
+>         status = "okay";
+>         clock-frequency = <400000>;
+>
+> +       sgtl5000: codec@a {
+> +               compatible = "fsl,sgtl5000";
+> +               #sound-dai-cells = <0>;
+> +               reg = <0x0a>;
+> +               clocks = <&audio_clock>;
+> +               VDDA-supply = <&reg_3p3v>;
+> +               VDDIO-supply = <&reg_3p3v>;
+> +       };
+> +
+>         stmpe811@44 {
+>                 compatible = "st,stmpe811";
+>                 reg = <0x44>;
+> @@ -179,7 +188,7 @@
+>
+>                 /* 3.25 MHz ADC clock speed */
+>                 st,adc-freq = <1>;
+> -               /* ADC converstion time: 80 clocks */
+> +               /* ADC conversion time: 80 clocks */
+>                 st,sample-time = <4>;
+>                 /* 12-bit ADC */
+>                 st,mod-12b = <1>;
+> @@ -203,15 +212,6 @@
+>                         st,touch-det-delay = <5>;
+>                 };
+>         };
+> -
+> -       sgtl5000: codec@a {
+> -               compatible = "fsl,sgtl5000";
+> -               #sound-dai-cells = <0>;
+> -               reg = <0x0a>;
+> -               clocks = <&audio_clock>;
+> -               VDDA-supply = <&reg_3p3v>;
+> -               VDDIO-supply = <&reg_3p3v>;
+> -       };
 >  };
-> =20
->  static DEFINE_MUTEX(bq27xxx_list_lock);
-> diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/s=
-upply/bq27xxx_battery_i2c.c
-> index 15f4e75786ab..ab02456d69e5 100644
-> --- a/drivers/power/supply/bq27xxx_battery_i2c.c
-> +++ b/drivers/power/supply/bq27xxx_battery_i2c.c
-> @@ -254,6 +254,7 @@ static const struct i2c_device_id bq27xxx_i2c_id_tabl=
-e[] =3D {
->  	{ "bq27441", BQ27441 },
->  	{ "bq27621", BQ27621 },
->  	{ "bq27z561", BQ27Z561 },
-> +	{ "bq28z610", BQ28Z610 },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(i2c, bq27xxx_i2c_id_table);
-> @@ -288,6 +289,7 @@ static const struct of_device_id bq27xxx_battery_i2c_=
-of_match_table[] =3D {
->  	{ .compatible =3D "ti,bq27441" },
->  	{ .compatible =3D "ti,bq27621" },
->  	{ .compatible =3D "ti,bq27z561" },
-> +	{ .compatible =3D "ti,bq28z610" },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, bq27xxx_battery_i2c_of_match_table);
-> diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/=
-bq27xxx_battery.h
-> index 1f6ea5d5063d..987d9652aa4e 100644
-> --- a/include/linux/power/bq27xxx_battery.h
-> +++ b/include/linux/power/bq27xxx_battery.h
-> @@ -31,6 +31,7 @@ enum bq27xxx_chip {
->  	BQ27441,
->  	BQ27621,
->  	BQ27Z561,
-> +	BQ28Z610,
->  };
-> =20
->  struct bq27xxx_device_info;
-> --=20
-> 2.28.0
->=20
-
---k3uapmft6h66ytra
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8h3jQACgkQ2O7X88g7
-+ppp9g//dMUOavZiN1FqPSL4Qsxsx7nyHPyY/mahN6Ekbgg4S/Dwu3Le+d6VG1mC
-mbtR1D48o/ZoZR0Z5wfbR+2eNbIcGUae/IzVHFNXiuqAosHdykHuHNJ25S3kzBfi
-b9lbKaGdi7eFXjg7lPGrWYYO8dt768sL1ShMjaQjYTv+Bt1FZHfyuDASzaETXXDZ
-P9WADGOV4I3dV9Llyi7mK662j/PwdjGJrC1FkQofGvS8rvuA/AL0BqbZVM2Gro1X
-XEH6bFzyHKl35Afa1aUKAeq3x57wdp5onj3VSbyLfBA1/Jof9VXcukwx0l8cEu0b
-uB3S+0rq72BHv/XOi/3xf3f+rHHerHyAt3/ScCGJaEeM7mQjARu1YNlFbZwWBS6B
-/BR0VZmZPCxFdbp7U4TVU9gr1u3QYQkPl0Ie47Wjl+h0TihC9aI9aODsRBprtNEp
-J6Qluhd+AB1Z140yFhLErjKJ4a31UUEmNZMwbHKz+cj4mta1PvxFyKRhTDWl4Bls
-npsnEKIB4cMXwJK+Q7amL7Mhcmt1ZMNlAS7JSCZdAcMB48iIps6DPETie14m1Q6a
-Zr0vVjRrYQjlRw1YfOlUAGUDhJpSME0bRNBak1Q+D14c+TKmX3sCy+wUeGYRXCt1
-1Jkct0RYnObHRZ3AtMYiJKDHQYceHZ8bCvuGbq2ZbhTunY4c8SA=
-=rSL2
------END PGP SIGNATURE-----
-
---k3uapmft6h66ytra--
+>
+>  &pci1 {
+> --
+> 2.17.1
+>
