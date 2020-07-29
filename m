@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEA3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040FDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C03E22B43
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49D220FC3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:08:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="v1LXIVF7"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="iDXM1/8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgG2PIE (ORCPT
+        id S1726857AbgG2PII (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:08:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37650 "EHLO
+        Wed, 29 Jul 2020 11:08:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgG2PIE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 11:08:04 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AECDC061794
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 08:08:04 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id m22so14383393pgv.9
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 08:08:04 -0700 (PDT)
+        with ESMTP id S1726806AbgG2PIH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 11:08:07 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542C7C061794
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 08:08:07 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id k18so5843986pfp.7
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 08:08:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rVogIxgDbFpKEnc2TvUT3powwKOjhzEzUdbOqW/tUl8=;
-        b=v1LXIVF7mkdh7FgGzsKCTpqSCqNmesjM2EXQjHqz9dTOmwzqyXsMRjftwhjAeBiw3w
-         U4wrskzCyaqi1dVzDfKoAOyrGmGKa0LzdwbcZa/vmRdiKg12vRLptYtd1QGqQhpBXFNW
-         njHWuv8ubOl7MO4sjqHimzTgHb5iQWkOOfxB0=
+        bh=c4vnIQdazwv0RnAO3xap/+yfl/5PtuE2gJfge3l6agU=;
+        b=iDXM1/8SawXZ5E83U80On87e5K4aZufAnhJ2GwdylXS1tgKwkzY2zqreO4WDQE5w7J
+         eXRSbMf8FgJNXTH0aB7mwA2cVJMbWJjE16zDLhhwz5Q4/Ofed/JiHF6OD7M/Uv0Yg3pP
+         iBQlFniCRithPNU26p9ZA5Mdd/qRwvkOnNm5c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rVogIxgDbFpKEnc2TvUT3powwKOjhzEzUdbOqW/tUl8=;
-        b=R9ISOQKGcyZMNZwwkQO8kLkpPWQhb22YLf8NFbKDXM1Iab1cgPKoYZl+o6c+Ju45b/
-         zmAEIT3+85bn1yGDHp+eImwf1axqHSuLvPXGoep3DTCfDIr9iBk8Uosn0H9Hdkcd9ogm
-         31Y75znOSRp7WPybByVawgw0BO8CicMyTQfd+ZZ1zSyNK6UjWYUbfefIuRLksx4ax40S
-         Lvm0q7XVmEP7ioOtr38VsgjIpThyIEG/x8/73/uz5fUSiJsRA5Mw0RkNik7Gx/aMQu6T
-         0DGMJzfsyMBcgWp3XbpSIAqh6zOTsX3ATXcgWamPCGbb2kTST6Whwr/pyed7Va9a0+3x
-         if6A==
-X-Gm-Message-State: AOAM5304/l1w1oYkpmr8MZlj1ZozmEpbmY5050L3EPzGZC659BBtaUfU
-        etsfr/fziG15qA5aX0s1G4sAMg==
-X-Google-Smtp-Source: ABdhPJxHb8vfoFnXpcAydflPLzAkP3b2h3f7mUtrqgqBxfDdRNZ53hGv+S7rJE4QMlReKaAhQVFftg==
-X-Received: by 2002:a65:484c:: with SMTP id i12mr31148110pgs.145.1596035283531;
-        Wed, 29 Jul 2020 08:08:03 -0700 (PDT)
+        bh=c4vnIQdazwv0RnAO3xap/+yfl/5PtuE2gJfge3l6agU=;
+        b=NYP8VAA0ITS/Av/mrXgX8k+RxgOhX73MNM+TVOnpbfhONIuhIdnhdMYlvv/TZg0iaz
+         1HxQDUF8ngj53YkhdrqitZ/ULez5vaNRFlRsk6NnkTS6bDVUyjz/qybD6fIdh/uH0yuQ
+         KBrz8Glj7kBY60X80pUmLEsU10Hia3q73jhYVeWHq6bD4A4udFbKfmmCS/4DyHGor7Yi
+         t50c0jDoEzirnGax/XQv183qwmJg5UfLwDk7RYxMcSInfta22oNBNSFkJsW1RzaD4zaX
+         0nmRX/H0j5xlzuN+66TvBvuS5y7HVOMP/Pa9Rmhsz4mrPnhJA0hp5ER2csXkq1LYAS3Y
+         tyVw==
+X-Gm-Message-State: AOAM532PfEvwG4I0E7IgIwwYhKW7s7JRewJpD2jZAUmpJyKB4Rb2Txfe
+        mNHm0Tk2FvBso2jqaoTZnGuN3g==
+X-Google-Smtp-Source: ABdhPJzqnctBQjLflJW7XAfkHJZ7HeS4kd6WtFxf8/eUYhk1P3OYbgfPq6TBFkRp/sbmurW6dnlnnA==
+X-Received: by 2002:a63:5a60:: with SMTP id k32mr29215121pgm.73.1596035286619;
+        Wed, 29 Jul 2020 08:08:06 -0700 (PDT)
 Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id q11sm2688058pgr.69.2020.07.29.08.07.59
+        by smtp.googlemail.com with ESMTPSA id q11sm2688058pgr.69.2020.07.29.08.08.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 08:08:01 -0700 (PDT)
+        Wed, 29 Jul 2020 08:08:05 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, arnd@arndb.de, robh@kernel.org,
         Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH 2/3] dt-bindings: arm: mstar: remove the binding description for mstar,pmsleep
-Date:   Thu, 30 Jul 2020 00:07:47 +0900
-Message-Id: <20200729150748.1945589-3-daniel@0x0f.com>
+Subject: [PATCH 3/3] ARM: mstar: Correct the compatible string for pmsleep
+Date:   Thu, 30 Jul 2020 00:07:48 +0900
+Message-Id: <20200729150748.1945589-4-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200729150748.1945589-1-daniel@0x0f.com>
 References: <20200729150748.1945589-1-daniel@0x0f.com>
@@ -74,64 +74,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove the unneeded binding description.
-Compatible string is in mfd/syscon.yaml now.
+The compatible string for the pmsleep region has changed.
+Update the MStar/Sigmastar v7 base dtsi with the new string.
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 ---
- .../bindings/arm/mstar/mstar,pmsleep.yaml     | 43 -------------------
- 1 file changed, 43 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml
+ arch/arm/boot/dts/mstar-v7.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml b/Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml
-deleted file mode 100644
-index 0b45e7012ceb..000000000000
---- a/Documentation/devicetree/bindings/arm/mstar/mstar,pmsleep.yaml
-+++ /dev/null
-@@ -1,43 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
--# Copyright 2020 thingy.jp.
--%YAML 1.2
-----
--$id: "http://devicetree.org/schemas/arm/mstar/mstar,pmsleep.yaml#"
--$schema: "http://devicetree.org/meta-schemas/core.yaml#"
--
--title: MStar/SigmaStar Armv7 SoC pmsleep register region
--
--maintainers:
--  - Daniel Palmer <daniel@thingy.jp>
--
--description: |
--  MStar/Sigmastar's Armv7 SoCs contain a region of registers that are
--  in the always on domain that the vendor code calls the "pmsleep" area.
--
--  This area contains registers and bits for a broad range of functionality
--  ranging from registers that control going into deep sleep to bits that
--  turn things like the internal temperature sensor on and off.
--
--properties:
--  compatible:
--    oneOf:
--      - items:
--         - enum:
--             - mstar,pmsleep
--         - const: syscon
--
--  reg:
--    maxItems: 1
--
--required:
--  - compatible
--  - reg
--
--additionalProperties: false
--
--examples:
--  - |
--    pmsleep: pmsleep@1c00 {
--        compatible = "mstar,pmsleep", "syscon";
--        reg = <0x1c00 0x100>;
--    };
+diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
+index c7458c67c4df..3b7b9b793736 100644
+--- a/arch/arm/boot/dts/mstar-v7.dtsi
++++ b/arch/arm/boot/dts/mstar-v7.dtsi
+@@ -74,7 +74,7 @@ riu: bus@1f000000 {
+ 			ranges = <0x0 0x1f000000 0x00400000>;
+ 
+ 			pmsleep: syscon@1c00 {
+-				compatible = "mstar,pmsleep", "syscon";
++				compatible = "mstar,msc313-pmsleep", "syscon";
+ 				reg = <0x1c00 0x100>;
+ 			};
+ 
 -- 
 2.27.0
 
