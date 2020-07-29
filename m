@@ -6,130 +6,97 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EBAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DE6206D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3038206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oyS/q/ka"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WUNBhIpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgG2HOT (ORCPT
+        id S1727045AbgG2HRG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:14:19 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32143 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbgG2HOS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:14:18 -0400
+        Wed, 29 Jul 2020 03:17:06 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:31375 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726476AbgG2HRG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:17:06 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596006858; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=mee1C+QC0fGadDkqCYd+GCVz3YCcwnJujaxX+uKJFqM=; b=oyS/q/kamfVibWtijnMfW45Tb2hqrxvZ6EbWwxKH3TAsY1lE34iz+fPv4jLPhF0FKAHG/GDg
- scSXlXMzOg0wyodoMd3LLtJvDjuSzkAxup95bserdGZMENEVMguX/rtsiUxViMWfqN7S3eZw
- zoHSOQDVOhQdsGiI/WxeG7C2YM0=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1596007025; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=YneErWWmjZG2O+EK9sMYOtk5QgPXdqNPT0hjlzSs7f4=; b=WUNBhIpL72Sq9vBcylnZpYXgO8heVdbtm9GHYVr2oaQX+8BE8FcuFLMTUNzhso5umIoCTtpg
+ Ko3vsUR9r2IoPtDW9pmkmawWbl6uVk8fsBCSeoUrwoey8d7A8ME3KcaOlIedybhf/bXwDyLB
+ s07Mk9LiaP8Pwp40c5Ef5oPMjN4=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5f2121acbd0c3f0296900b13 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 07:13:48
+ smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
+ 5f2122717186ea1ee15ead71 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 07:17:05
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CBBABC433A0; Wed, 29 Jul 2020 07:13:47 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        id 63B88C433C6; Wed, 29 Jul 2020 07:17:04 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA065C433C6;
-        Wed, 29 Jul 2020 07:13:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA065C433C6
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5EA7C433C9;
+        Wed, 29 Jul 2020 07:16:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5EA7C433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, heikki.krogerus@linux.intel.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v6 0/4] Introduce PMIC based USB type C detection
-Date:   Wed, 29 Jul 2020 00:13:36 -0700
-Message-Id: <20200729071340.7673-1-wcheng@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v5 0/5] DVFS support for Venus
+Date:   Wed, 29 Jul 2020 12:46:40 +0530
+Message-Id: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changes in v6:
- - Removed qcom_usb_vbus-regulator.c and qcom,usb-vbus-regulator.yaml from the
-   series as they have been merged on regulator.git
- - Added seperate references to the usb-connector.yaml in qcom,pmic-typec.yaml
-   instead of referencing the entire schema.
+v5: Fixed the opp-tables (patch 4/5) to avoid -ERANGE from
+dev_pm_opp_set_rate
 
-Changes in v5:
- - Fix dt_binding_check warning/error in qcom,pmic-typec.yaml
+v4: Moved code from probe/remove/runtime_suspend into
+different pm_ops callbacks
 
-Changes in v4:
- - Modified qcom,pmic-typec binding to include the SS mux and the DRD remote
-   endpoint nodes underneath port@1, which is assigned to the SSUSB path
-   according to usb-connector
- - Added usb-connector reference to the typec dt-binding
- - Added tags to the usb type c and vbus nodes
- - Removed "qcom" tags from type c and vbus nodes
- - Modified Kconfig module name, and removed module alias from the typec driver
- 
-Changes in v3:
- - Fix driver reference to match driver name in Kconfig for
-   qcom_usb_vbus-regulator.c
- - Utilize regulator bitmap helpers for enable, disable and is enabled calls in
-   qcom_usb_vbus-regulator.c
- - Use of_get_regulator_init_data() to initialize regulator init data, and to
-   set constraints in qcom_usb_vbus-regulator.c
- - Remove the need for a local device structure in the vbus regulator driver
- 
-Changes in v2:
- - Use devm_kzalloc() in qcom_pmic_typec_probe()
- - Add checks to make sure return value of typec_find_port_power_role() is
-   valid
- - Added a VBUS output regulator driver, which will be used by the PMIC USB
-   type c driver to enable/disable the source
- - Added logic to control vbus source from the PMIC type c driver when
-   UFP/DFP is detected
- - Added dt-binding for this new regulator driver
- - Fixed Kconfig typec notation to match others
- - Leave type C block disabled until enabled by a platform DTS
+v3: Renamed the optional power domain as cx
 
-Add the required drivers for implementing type C orientation and role
-detection using the Qualcomm PMIC.  Currently, PMICs such as the PM8150B
-have an integrated type C block, which can be utilized for this.  This
-series adds the dt-binding, PMIC type C driver, and DTS nodes.
+v2: Fixed up the labels of OPP nodes in patch 4
+    Included the bindings update patch as part of this series,
+    a resend of https://lore.kernel.org/patchwork/patch/1241077/
 
-The PMIC type C driver will register itself as a type C port w/ a
-registered type C switch for orientation, and will fetch a USB role switch
-handle for the role notifications.  It will also have the ability to enable
-the VBUS output to any connected devices based on if the device is behaving
-as a UFP or DFP.
+These patches add DVFS support for Venus
 
-Wesley Cheng (4):
-  usb: typec: Add QCOM PMIC typec detection driver
-  dt-bindings: usb: Add Qualcomm PMIC type C controller dt-binding
-  arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
-  arm64: boot: dts: qcom: pm8150b: Add DTS node for PMIC VBUS booster
+Patch 1 will need to be picked by Rob.
+Patch 2 and 3 will need to be picked by Stan,
+Patch 4 and 5 should land via the qcom tree.
 
- .../bindings/usb/qcom,pmic-typec.yaml         | 131 +++++++++
- arch/arm64/boot/dts/qcom/pm8150b.dtsi         |  15 +-
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts       |   4 +
- drivers/usb/typec/Kconfig                     |  12 +
- drivers/usb/typec/Makefile                    |   1 +
- drivers/usb/typec/qcom-pmic-typec.c           | 275 ++++++++++++++++++
- 6 files changed, 437 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
- create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
+Rajendra Nayak (5):
+  dt-bindings: media: venus: Add an optional power domain for perf
+    voting
+  media: venus: core: Fix error handling in probe
+  media: venus: core: Add support for opp tables/perf voting
+  arm64: dts: sdm845: Add OPP tables and power-domains for venus
+  arm64: dts: sc7180: Add OPP tables and power-domains for venus
+
+ .../bindings/media/qcom,sc7180-venus.yaml          |  6 +-
+ .../bindings/media/qcom,sdm845-venus-v2.yaml       |  6 +-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 35 +++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 +++++++++-
+ drivers/media/platform/qcom/venus/core.c           | 17 ++--
+ drivers/media/platform/qcom/venus/core.h           |  5 ++
+ drivers/media/platform/qcom/venus/pm_helpers.c     | 92 ++++++++++++++++++++--
+ 7 files changed, 183 insertions(+), 18 deletions(-)
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
