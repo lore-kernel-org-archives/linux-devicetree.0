@@ -2,192 +2,169 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6DAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F2FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5D6020FC3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA9A2084D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgG2QHH (ORCPT
+        id S1726385AbgG2QWa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:07:07 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:53362 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgG2QHH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 12:07:07 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9EA898030866;
-        Wed, 29 Jul 2020 16:07:01 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vcQPxmkk7SoN; Wed, 29 Jul 2020 19:07:00 +0300 (MSK)
-Date:   Wed, 29 Jul 2020 19:06:59 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200729160659.jcz7nl6qvd7lami2@mobilestation>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com>
- <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
- <20200729125837.b27ncvd2eeixstba@mobilestation>
- <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
+        Wed, 29 Jul 2020 12:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG2QWa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 12:22:30 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1678C061794;
+        Wed, 29 Jul 2020 09:22:29 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 7291A298404
+Subject: Re: [PATCH 2/3] ARM: l2c: update prefetch bits in L2X0_AUX_CTRL using
+ DT value
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+ <79a628daef56c2d542e379f550de21da4fe3c901.1596028601.git.guillaume.tucker@collabora.com>
+ <20200729141801.GB1551@shell.armlinux.org.uk>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <a85d7b4e-abfd-268a-01a5-f78068d7e30c@collabora.com>
+Date:   Wed, 29 Jul 2020 17:22:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200729141801.GB1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 06:10:24PM +0300, Andy Shevchenko wrote:
-> On Wed, Jul 29, 2020 at 3:58 PM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> > On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
+On 29/07/2020 15:18, Russell King - ARM Linux admin wrote:
+> On Wed, Jul 29, 2020 at 02:47:32PM +0100, Guillaume Tucker wrote:
+>> The L310_PREFETCH_CTRL register bits 28 and 29 to enable data and
+>> instruction prefetch respectively can also be accessed via the
+>> L2X0_AUX_CTRL register.  They appear to be actually wired together in
+>> hardware between the registers.  Changing them in the prefetch
+>> register only will get undone when restoring the aux control register
+>> later on.  For this reason, set these bits in both registers during
+>> initialisation according to the DT attributes.
 > 
-> ...
+> How will that happen?
 > 
-> > Sorry for a delay with a response to this issue. I had to give it a more thorough
-> > thought since the problem is a bit more complex than it seemed originally. As I
-> > see it now It might be wrong to implement the cases 2) and 3), but 1) is more
-> > appropriate.
-> >
-> > First of all we need to note that GPIOlib framework provides the next parameters
-> > to describe the IRQ-chip:
-> > gc->irq.num_parents - number of parental IRQ numbers.
-> > gc->irq.parents[] - array of parental IRQ numbers.
-> > *gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
-> > *gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
-> >
-> > Using that set we can handle any case of linear and sparse parental IRQs. Here
-> > is how it can be implemented in the framework of DW APB GPIO controller.
-> >
-> > DW APB GPIO can be synthesized with two configs:
-> > 1) Combined IRQ line (GPIO_INTR_IO == True),
-> > 2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
-> >
-> > Obviously the former case is trivial:
-> >
-> >      IRQ_combined
-> >     ______^________
-> >    /_ _ _ _ _ ___ _\
-> >    |_|_|_|_|_|...|_| - GPIOs
-> >
-> > In that case
-> > gc->irq.num_parents = 1;
-> > gc->irq.parents[0] = IRQ_combined;
-> > *gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
-> >
-> > The later one (when multiple interrupt signals are involved) can be a bit more
-> > complicated. It can be also split up into two cases:
-> > 2a) One-on-one GPIO-IRQ mapping.
-> > 2b) Sparse GPIO-IRQ mapping.
-> >
-> > It's straightforward to implement 2a):
-> >
-> >    i1i2i3i4i5 ... iN
-> >     _ _ _ _ _ ___ _
-> >    |_|_|_|_|_|...|_| - GPIOs
-> >
+> We write the auxiliary control register before the prefetch control
+> register, so the prefetch control register will take precedence.  See
+> l2c310_configure() - l2c_configure() writes the auxiliary control
+> register, and the function writes the prefetch control register later.
 
-> > In that case
-> > gc->irq.num_parents = ngpio;
-> > gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
-> > gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
-> > *gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
-> >
-> 
-> This case puzzles me. Why is it not NULL and 0 and actually you handle
-> everything as a nested case?
+What I'm seeing is that outer_cache.configure() gets called, at
+least on exynos4412-odroidx2.  See l2c_enable():
 
-The code provided above is a sketch. Don't consider it literally. In reality
-of course valid_mask will be not NULL, memory for which will be allocated by
-the GPIOlib itself. The mask will be initialized by means of the
-gc->irq.init_valid_mask() callback.
+	if (outer_cache.configure)
+		outer_cache.configure(&l2x0_saved_regs);
+	else
+		l2x0_data->configure(base);
 
-> 
-> > The complication starts when we get to implementing 2b):
-> >
-> >    i1 xi3i4 x ... iN
-> >     _ _ _ _ _ ___ _
-> >    |_|_|_|_|_|...|_| - GPIOs
-> 
-> So does this.
-> 
-> Valid mask will define exactly GPIOs that are IRQs. So, we will handle
-> only nested IRQs which are valid.
+Then instead of l2c310_configure(), exynos_l2_configure() gets
+called and writes prefetch_ctrl right before aux_ctrl.  Should
+exynos_l2_configure() be changed to swap the register writes?
 
-Right.
 
-> 
-> > In order to cover this case we need to answer on two question.
-> > Firstly how to get such platform config? I am not sure about ACPI, but
-> > aside from straightforward platform_data-based setup such configuration
-> > can be reached by setting up the "interrupts-extended" DT-property with
-> > zeroed phandle.
-> >
-> > Ok, since it's possible to meet such platform config, we need to think
-> > how to handle it and here is the second question. How to describe such
-> > case in the framework of GPIOlib-IRQchip?
-> >
-> > So from my side it was wrong to set the sparse IRQs array to
-> > gc->irq.parents. Instead I should have scanned the sparse IRQs array,
-> > calculated the number of non-empty parental IRQs, created an array of linear
-> > (non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
-> > sparse parental IRQs array. In other words it was wrong to assume, that
-> > each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
-> > array just describes the parental IRQs and nothing else.
-> >
-> > Shortly speaking here is how the GPIOlib IRQchip parameters should be
-> > initialized in this case:
-> > gc->irq.num_parents - number of valid parental IRQs.
-> > gc->irq.parents - non-sparse, linear array of valid IRQs.
-> > *gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
-> > callback, which indicates valid IRQ/GPIO IDs.
-> > *gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
-> > pass through the gc->irq.parents pointer).
-> >
-> > After that GPIOlib IRQchip should work just fine without need to be patched
-> > in order to check whether the passed parental IRQs are valid or not.
-> >
-> > Please correct me if I am wrong in some aspects of the solution described above.
-> > I'll send a fix of the problem shortly.
+> I think the real issue is that Exynos has been modifying the prefetch
+> settings via its machine .aux_mask / .aux_val configuration, and the
+> opposite is actually true: the prefetch control register values will
+> overwrite the attempt to modify the auxiliary control values set through
+> the machine .aux_mask/.aux_val.
+
+Yes with l2c310_configure() but not with exynos_l2_configure().
+
+To be clear, this is what I've found to be happening, if you
+switch to using the device tree prefetch attributes and clear
+the bits in the default l2c_aux_val (see PATCH 3/3):
+
+1. l2x0_of_init() first gets called with the default aux_val
+
+2. l2c310_of_parse() sets the bits in l2x0_saved_regs.prefetch_ctrl
+   but not in aux_val (unless you apply this patch 2/3)
+
+3. l2c_enable() calls exynos_l2_configure() which writes
+   prefetch_ctrl and then aux_ctrl - thus setting the prefetch bits
+   and then clearing them just after
+
+4. l2c310_enable() reads back aux_ctrl and prefetch, both of which
+   now have the bits cleared (the pr_info() message about prefetch
+   enabled gets skipped)
+
+
+That's why I thought it would be safer to set the prefetch bits
+in both registers so it should work regardless if the
+initialisation sequence.  Also, if we want these bits to be
+changed, we should clear them in the aux_mask value to not get
+another error message about register corruption - so I'm doing
+that too.
+
+Thanks,
+Guillaume
+
+
+>> Fixes: ec3bd0e68a67 ("ARM: 8391/1: l2c: add options to overwrite prefetching behavior")
+>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+>> ---
+>>  arch/arm/mm/cache-l2x0.c | 16 ++++++++++++----
+>>  1 file changed, 12 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+>> index 12c26eb88afb..43d91bfd2360 100644
+>> --- a/arch/arm/mm/cache-l2x0.c
+>> +++ b/arch/arm/mm/cache-l2x0.c
+>> @@ -1249,20 +1249,28 @@ static void __init l2c310_of_parse(const struct device_node *np,
+>>  
+>>  	ret = of_property_read_u32(np, "prefetch-data", &val);
+>>  	if (ret == 0) {
+>> -		if (val)
+>> +		if (val) {
+>>  			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> -		else
+>> +			*aux_val |= L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +		} else {
+>>  			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +			*aux_val &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>> +		}
+>> +		*aux_mask &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
+>>  	} else if (ret != -EINVAL) {
+>>  		pr_err("L2C-310 OF prefetch-data property value is missing\n");
+>>  	}
+>>  
+>>  	ret = of_property_read_u32(np, "prefetch-instr", &val);
+>>  	if (ret == 0) {
+>> -		if (val)
+>> +		if (val) {
+>>  			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> -		else
+>> +			*aux_val |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> +		} else {
+>>  			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> +			*aux_val &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>> +		}
+>> +		*aux_mask &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
+>>  	} else if (ret != -EINVAL) {
+>>  		pr_err("L2C-310 OF prefetch-instr property value is missing\n");
+>>  	}
+>> -- 
+>> 2.20.1
+>>
+>>
 > 
 
-> Maybe I'm missing something, but looks like you are solving the issue
-> which is not so complex / doesn't exist.
-
-As I see it now the problem was to provide a suitable config for GPIO-lib IRQ-chip
-so one would correctly perceive our DW APB GPIO-IRQ setup with single/sparse/linear
-IRQs. My point in the message before was to explain how that problem could be solved
-without patching GPIO-lib or IRQ-chip implementations. I shared my thoughts to make
-sure the suggested solution is correct, to make sure I didn't miss something in
-my considerations.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
