@@ -2,257 +2,852 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C74FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 03:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88326C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 03:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD422075A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 03:26:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="RBZe9EIr"
+	by mail.kernel.org (Postfix) with ESMTP id 55F87206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 03:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgG2D0f (ORCPT
+        id S1726299AbgG2DdL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:26:35 -0400
-Received: from mail-eopbgr70058.outbound.protection.outlook.com ([40.107.7.58]:9203
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726047AbgG2D0e (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:26:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HJ01NbfJZLkZSL0lcGfc6gWIaKaCfGzuRYPcXci/bUYU0AXSflCMQfqfaTMY5QoLToWiO6pQ/fMgeGuAVgSFk0zecxJ9qPxPwHAp0bge+my4OdzvihspHtwg2Gn5OQIbno9W8CIE6fWxWdlMUWxwfWkBynB+dLZ/qDixsqKzXTeoyFXPgluBtvs+GOCvLpwZiNy4cAw7XivEogLffZi4bAiM1Mhvg5waeWKccZ3S1c0G0qCDNjK+w2FQCj+MRwT9U8NCN13BuW7s2oiI7cH7RFQ0vPUFnvCgS4yqYbb2vsBWuzLD18G1pPNYxmytPwVCeAxXvReAh97PVtqLJbnozw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u6prKVQceWMiMAnsba9s8b2BXjcUiwD8lSsLi4HDrx4=;
- b=l181Ydh20wvL0lcpR/BIV62z5wGhPPgP3qVbJ51K/z8r8gFSkPg4o07fpXBMMLT8Wu7gzTeJr0rr0796jkNDZY6SgnbGXzJA6/cK3zQtmR3nSrg0bH3wVFhaCYEQdS1iG44WMnrWuqSw4U10HdUD7GU1q9BgNbm84W1bOdxq/GpXAMsycd+eCh9NHLRnBrRWZoXt+B6ExPCbcwAv/ZREx2W4WHAQ0CwEikkDXJ13JRen8fp4SIq4TSoTTu+vNSczjXTZzWaYPuwE3TkkYnW8bTCqqlz1qtHRcPX2MpnF4HqiN5NoDc40FYmEAcNVM4gE4gsa/emN9OOxtBdKs1yg/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=neutral (sender ip is
- 193.240.111.57) smtp.rcpttodomain=arm.com smtp.mailfrom=diasemi.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=diasemi.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u6prKVQceWMiMAnsba9s8b2BXjcUiwD8lSsLi4HDrx4=;
- b=RBZe9EIrqzZJS3Y4NzlnZOmT473D6CReYATKE/WhJAZtnii7/ih243lWWWtCOAK2r1pDUMDG9EX9PPJvZBuD81KKr3VCBUf4TIbAwR9UMSjJjh12xKa8PQrPpZSWScRGR0ELs0/0rZYET8RZR91rwhoVq16GfPgsqly9ibJJhUI=
-Received: from AM6PR02CA0020.eurprd02.prod.outlook.com (2603:10a6:20b:6e::33)
- by DB8PR10MB3308.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:113::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Wed, 29 Jul
- 2020 03:26:28 +0000
-Received: from AM5EUR02FT028.eop-EUR02.prod.protection.outlook.com
- (2603:10a6:20b:6e:cafe::2e) by AM6PR02CA0020.outlook.office365.com
- (2603:10a6:20b:6e::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend
- Transport; Wed, 29 Jul 2020 03:26:28 +0000
-X-MS-Exchange-Authentication-Results: spf=neutral (sender IP is
- 193.240.111.57) smtp.mailfrom=diasemi.com; arm.com; dkim=none (message not
- signed) header.d=none;arm.com; dmarc=fail action=none
- header.from=diasemi.com;
-Received-SPF: Neutral (protection.outlook.com: 193.240.111.57 is neither
- permitted nor denied by domain of diasemi.com)
-Received: from mailrelay1.diasemi.com (193.240.111.57) by
- AM5EUR02FT028.mail.protection.outlook.com (10.152.8.115) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.3216.10 via Frontend Transport; Wed, 29 Jul 2020 03:26:28 +0000
-Received: from NB-EX-CASHUB01.diasemi.com (10.1.16.141) by
- DB-EX-CASHUB02.diasemi.com (10.0.16.142) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Wed, 29 Jul 2020 05:26:28 +0200
-Received: from krsrvapps-03.diasemi.com (10.93.17.2) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Wed, 29 Jul 2020 05:26:27 +0200
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- B476A13F673; Wed, 29 Jul 2020 12:26:25 +0900 (KST)
-Message-ID: <1ae033bd7906a0076121b41aa5bb67436390c4bf.1595991580.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1595991580.git.Roy.Im@diasemi.com>
-References: <cover.1595991580.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Wed, 29 Jul 2020 11:59:40 +0900
-Subject: [PATCH v18 2/3] dt-bindings: input: Add document bindings for DA7280
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 257ae90a-4df1-4ddd-3f64-08d8336f2e80
-X-MS-TrafficTypeDiagnostic: DB8PR10MB3308:
-X-Microsoft-Antispam-PRVS: <DB8PR10MB3308F9B8806F68D2067D3A17A2700@DB8PR10MB3308.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 60m72fznwZy3diIfZgPVWT54+ZV6QbXPC7bXtkOMIt4DCQVLdlKuonydG9zLazcf7Og8xMngUW0XeRXmt0F0QhpOX85zERu+jTljOeYA2dUx8cjtG9vWru2Bmzhr5PCTKlPhtOHwxKwfLQEa7o55bfixYIulzzZpMisYON3VjHxn3QKGEtwnvne6q2V3A8Xjw/UI1WadmFtvrzUkfk+g/N+Aok1NDVUd/CNB6noUvWWmHVJ3LJZM/f0x3a1QfOYRvjLtE4OLJePIZ3E3wvsy7yudUjbGegxGt4owFpokPDj6ERzBXsvEB4fsIZMqGhhgNEN42UG9NKV5farCN2RWpWhENtcDbne8aCnfFXIK/AGgRAgtdfJRreMwnQaLfJGyV1xP4y6UEvHUtM7EVEO3sDEt5FyWwPcI/Bup7ErtLLOTXan0RHRQSnlFhCPF9AGn
-X-Forefront-Antispam-Report: CIP:193.240.111.57;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(396003)(376002)(136003)(346002)(46966005)(6666004)(36756003)(54906003)(6266002)(4326008)(316002)(83380400001)(42186006)(110136005)(356005)(82310400002)(33310700002)(82740400003)(47076004)(81166007)(86362001)(70586007)(2906002)(8676002)(478600001)(70206006)(26005)(186003)(5660300002)(2616005)(8936002)(426003)(336012)(36906005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2020 03:26:28.5067
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 257ae90a-4df1-4ddd-3f64-08d8336f2e80
-X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.111.57];Helo=[mailrelay1.diasemi.com]
-X-MS-Exchange-CrossTenant-AuthSource: AM5EUR02FT028.eop-EUR02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3308
+        Tue, 28 Jul 2020 23:33:11 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:62528 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726245AbgG2DdK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 23:33:10 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 28 Jul 2020 20:33:08 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 28 Jul 2020 20:33:04 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 15E662182C; Wed, 29 Jul 2020 09:03:02 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, ansuelsmth@gmail.com,
+        bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V3] dt-bindings: pci: convert QCOM pci bindings to YAML
+Date:   Wed, 29 Jul 2020 09:02:55 +0530
+Message-Id: <1595993575-24761-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for DA7280 haptic driver.
-Example bindings for DA7280 are added.
+Convert QCOM pci bindings to YAML schema
 
-Reviewed-by: Rob Herring <robh@kernel.org>.
-
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
-v18: No changes.
-v17: No changes.
-v16: No changes.
-v15: No changes.
-v14: No changes.
-v13: No changes.
-v12: No changes.
-v11: No changes.
-v10: No changes.
-v9: No changes.
-v8: Updated descriptions for new properties.
-v7: No changes.
-v6: No changes.
-v5: Updated descriptions and fixed errors.
-v4: Fixed commit message, properties.
-v3: Fixed subject format.
-v2: No changes
+[V3]
+ * Rebased V2 including recent patches from Ansuel
+ * Addressed Review comments from Rob
+ * Apart from properties commented by Rob interrupt-map is also
+   removed as it is documented in pci-bus.yaml and throwing error when
+   included
+ * check patch warning 
+   "Use of 'slave' is deprecated, please '(secondary|target|...)', instead."
+   is not addressed in this patch as it requires changes in code and dts
+ .../devicetree/bindings/pci/qcom,pcie.txt          | 337 ----------------
+ .../devicetree/bindings/pci/qcom,pcie.yaml         | 437 +++++++++++++++++++++
+ 2 files changed, 437 insertions(+), 337 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
-
- .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
-
-diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+deleted file mode 100644
+index 02bc81b..0000000
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ /dev/null
+@@ -1,337 +0,0 @@
+-* Qualcomm PCI express root complex
+-
+-- compatible:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Value should contain
+-			- "qcom,pcie-ipq8064" for ipq8064
+-			- "qcom,pcie-ipq8064-v2" for ipq8064 rev 2 or ipq8065
+-			- "qcom,pcie-apq8064" for apq8064
+-			- "qcom,pcie-apq8084" for apq8084
+-			- "qcom,pcie-msm8996" for msm8996 or apq8096
+-			- "qcom,pcie-ipq4019" for ipq4019
+-			- "qcom,pcie-ipq8074" for ipq8074
+-			- "qcom,pcie-qcs404" for qcs404
+-			- "qcom,pcie-sdm845" for sdm845
+-
+-- reg:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: Register ranges as listed in the reg-names property
+-
+-- reg-names:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Must include the following entries
+-			- "parf"   Qualcomm specific registers
+-			- "dbi"	   DesignWare PCIe registers
+-			- "elbi"   External local bus interface registers
+-			- "config" PCIe configuration space
+-
+-- device_type:
+-	Usage: required
+-	Value type: <string>
+-	Definition: Should be "pci". As specified in designware-pcie.txt
+-
+-- #address-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: Should be 3. As specified in designware-pcie.txt
+-
+-- #size-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: Should be 2. As specified in designware-pcie.txt
+-
+-- ranges:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: As specified in designware-pcie.txt
+-
+-- interrupts:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: MSI interrupt
+-
+-- interrupt-names:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Should contain "msi"
+-
+-- #interrupt-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: Should be 1. As specified in designware-pcie.txt
+-
+-- interrupt-map-mask:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: As specified in designware-pcie.txt
+-
+-- interrupt-map:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: As specified in designware-pcie.txt
+-
+-- clocks:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: List of phandle and clock specifier pairs as listed
+-		    in clock-names property
+-
+-- clock-names:
+-	Usage: required
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "iface"	Configuration AHB clock
+-
+-- clock-names:
+-	Usage: required for ipq/apq8064
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "core"	Clocks the pcie hw block
+-			- "phy"		Clocks the pcie PHY block
+-			- "aux" 	Clocks the pcie AUX block
+-			- "ref" 	Clocks the pcie ref block
+-- clock-names:
+-	Usage: required for apq8084/ipq4019
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "aux"		Auxiliary (AUX) clock
+-			- "bus_master"	Master AXI clock
+-			- "bus_slave"	Slave AXI clock
+-
+-- clock-names:
+-	Usage: required for msm8996/apq8096
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "pipe"	Pipe Clock driving internal logic
+-			- "aux"		Auxiliary (AUX) clock
+-			- "cfg"		Configuration clock
+-			- "bus_master"	Master AXI clock
+-			- "bus_slave"	Slave AXI clock
+-
+-- clock-names:
+-	Usage: required for ipq8074
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "iface"	PCIe to SysNOC BIU clock
+-			- "axi_m"	AXI Master clock
+-			- "axi_s"	AXI Slave clock
+-			- "ahb"		AHB clock
+-			- "aux"		Auxiliary clock
+-
+-- clock-names:
+-	Usage: required for qcs404
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "iface"	AHB clock
+-			- "aux"		Auxiliary clock
+-			- "master_bus"	AXI Master clock
+-			- "slave_bus"	AXI Slave clock
+-
+--clock-names:
+-	Usage: required for sdm845
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "aux"		Auxiliary clock
+-			- "cfg"		Configuration clock
+-			- "bus_master"	Master AXI clock
+-			- "bus_slave"	Slave AXI clock
+-			- "slave_q2a"	Slave Q2A clock
+-			- "tbu"		PCIe TBU clock
+-			- "pipe"	PIPE clock
+-
+-- resets:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: List of phandle and reset specifier pairs as listed
+-		    in reset-names property
+-
+-- reset-names:
+-	Usage: required for ipq/apq8064
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "axi"  AXI reset
+-			- "ahb"  AHB reset
+-			- "por"  POR reset
+-			- "pci"  PCI reset
+-			- "phy"  PHY reset
+-
+-- reset-names:
+-	Usage: required for apq8084
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "core" Core reset
+-
+-- reset-names:
+-	Usage: required for ipq/apq8064
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "axi_m"		AXI master reset
+-			- "axi_s"		AXI slave reset
+-			- "pipe"		PIPE reset
+-			- "axi_m_vmid"		VMID reset
+-			- "axi_s_xpu"		XPU reset
+-			- "parf"		PARF reset
+-			- "phy"			PHY reset
+-			- "axi_m_sticky"	AXI sticky reset
+-			- "pipe_sticky"		PIPE sticky reset
+-			- "pwr"			PWR reset
+-			- "ahb"			AHB reset
+-			- "phy_ahb"		PHY AHB reset
+-			- "ext"			EXT reset
+-
+-- reset-names:
+-	Usage: required for ipq8074
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "pipe"		PIPE reset
+-			- "sleep"		Sleep reset
+-			- "sticky"		Core Sticky reset
+-			- "axi_m"		AXI Master reset
+-			- "axi_s"		AXI Slave reset
+-			- "ahb"			AHB Reset
+-			- "axi_m_sticky"	AXI Master Sticky reset
+-
+-- reset-names:
+-	Usage: required for qcs404
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "axi_m"		AXI Master reset
+-			- "axi_s"		AXI Slave reset
+-			- "axi_m_sticky"	AXI Master Sticky reset
+-			- "pipe_sticky"		PIPE sticky reset
+-			- "pwr"			PWR reset
+-			- "ahb"			AHB reset
+-
+-- reset-names:
+-	Usage: required for sdm845
+-	Value type: <stringlist>
+-	Definition: Should contain the following entries
+-			- "pci"			PCIe core reset
+-
+-- power-domains:
+-	Usage: required for apq8084 and msm8996/apq8096
+-	Value type: <prop-encoded-array>
+-	Definition: A phandle and power domain specifier pair to the
+-		    power domain which is responsible for collapsing
+-		    and restoring power to the peripheral
+-
+-- vdda-supply:
+-	Usage: required
+-	Value type: <phandle>
+-	Definition: A phandle to the core analog power supply
+-
+-- vdda_phy-supply:
+-	Usage: required for ipq/apq8064
+-	Value type: <phandle>
+-	Definition: A phandle to the analog power supply for PHY
+-
+-- vdda_refclk-supply:
+-	Usage: required for ipq/apq8064
+-	Value type: <phandle>
+-	Definition: A phandle to the analog power supply for IC which generates
+-		    reference clock
+-- vddpe-3v3-supply:
+-	Usage: optional
+-	Value type: <phandle>
+-	Definition: A phandle to the PCIe endpoint power supply
+-
+-- phys:
+-	Usage: required for apq8084 and qcs404
+-	Value type: <phandle>
+-	Definition: List of phandle(s) as listed in phy-names property
+-
+-- phy-names:
+-	Usage: required for apq8084 and qcs404
+-	Value type: <stringlist>
+-	Definition: Should contain "pciephy"
+-
+-- <name>-gpios:
+-	Usage: optional
+-	Value type: <prop-encoded-array>
+-	Definition: List of phandle and GPIO specifier pairs. Should contain
+-			- "perst-gpios"	PCIe endpoint reset signal line
+-			- "wake-gpios"	PCIe endpoint wake signal line
+-
+-* Example for ipq/apq8064
+-	pcie@1b500000 {
+-		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
+-		reg = <0x1b500000 0x1000
+-		       0x1b502000 0x80
+-		       0x1b600000 0x100
+-		       0x0ff00000 0x100000>;
+-		reg-names = "dbi", "elbi", "parf", "config";
+-		device_type = "pci";
+-		linux,pci-domain = <0>;
+-		bus-range = <0x00 0xff>;
+-		num-lanes = <1>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		ranges = <0x81000000 0 0 0x0fe00000 0 0x00100000   /* I/O */
+-			  0x82000000 0 0 0x08000000 0 0x07e00000>; /* memory */
+-		interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
+-		interrupt-names = "msi";
+-		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc 0 36 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-				<0 0 0 2 &intc 0 37 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-				<0 0 0 3 &intc 0 38 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+-		clocks = <&gcc PCIE_A_CLK>,
+-			 <&gcc PCIE_H_CLK>,
+-			 <&gcc PCIE_PHY_CLK>,
+-			 <&gcc PCIE_AUX_CLK>,
+-			 <&gcc PCIE_ALT_REF_CLK>;
+-		clock-names = "core", "iface", "phy", "aux", "ref";
+-		resets = <&gcc PCIE_ACLK_RESET>,
+-			 <&gcc PCIE_HCLK_RESET>,
+-			 <&gcc PCIE_POR_RESET>,
+-			 <&gcc PCIE_PCI_RESET>,
+-			 <&gcc PCIE_PHY_RESET>,
+-			 <&gcc PCIE_EXT_RESET>;
+-		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
+-		pinctrl-0 = <&pcie_pins_default>;
+-		pinctrl-names = "default";
+-	};
+-
+-* Example for apq8084
+-	pcie0@fc520000 {
+-		compatible = "qcom,pcie-apq8084", "snps,dw-pcie";
+-		reg = <0xfc520000 0x2000>,
+-		      <0xff000000 0x1000>,
+-		      <0xff001000 0x1000>,
+-		      <0xff002000 0x2000>;
+-		reg-names = "parf", "dbi", "elbi", "config";
+-		device_type = "pci";
+-		linux,pci-domain = <0>;
+-		bus-range = <0x00 0xff>;
+-		num-lanes = <1>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		ranges = <0x81000000 0 0          0xff200000 0 0x00100000   /* I/O */
+-			  0x82000000 0 0x00300000 0xff300000 0 0x00d00000>; /* memory */
+-		interrupts = <GIC_SPI 243 IRQ_TYPE_NONE>;
+-		interrupt-names = "msi";
+-		#interrupt-cells = <1>;
+-		interrupt-map-mask = <0 0 0 0x7>;
+-		interrupt-map = <0 0 0 1 &intc 0 244 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+-				<0 0 0 2 &intc 0 245 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+-				<0 0 0 3 &intc 0 247 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+-				<0 0 0 4 &intc 0 248 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+-		clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+-			 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+-			 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+-			 <&gcc GCC_PCIE_0_AUX_CLK>;
+-		clock-names = "iface", "master_bus", "slave_bus", "aux";
+-		resets = <&gcc GCC_PCIE_0_BCR>;
+-		reset-names = "core";
+-		power-domains = <&gcc PCIE0_GDSC>;
+-		vdda-supply = <&pma8084_l3>;
+-		phys = <&pciephy0>;
+-		phy-names = "pciephy";
+-		perst-gpio = <&tlmm 70 GPIO_ACTIVE_LOW>;
+-		pinctrl-0 = <&pcie0_pins_default>;
+-		pinctrl-names = "default";
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 new file mode 100644
-index 0000000..e6b719d
+index 0000000..2eef6d5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-@@ -0,0 +1,109 @@
-+Dialog Semiconductor DA7280 Haptics bindings
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -0,0 +1,437 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +
-+Required properties:
-+- compatible: Should be "dlg,da7280".
-+- reg: Specifies the I2C slave address.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+- interrupt-parent : Specifies the phandle of the interrupt controller to
-+  which the IRQs from DA7280 are delivered to.
++title: Qualcomm PCI express root complex
 +
-+- dlg,actuator-type: Set Actuator type. it should be one of:
-+  "LRA" - Linear Resonance Actuator type.
-+  "ERM-bar" - Bar type Eccentric Rotating Mass.
-+  "ERM-coin" - Coin type Eccentric Rotating Mass.
++maintainers:
++  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
 +
-+- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
-+  Possible values:
-+	1 - Direct register override(DRO) mode triggered by i2c(default),
-+	2 - PWM data source mode controlled by PWM duty,
-+- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
-+  Possible values:
-+	1 - Register triggered waveform memory(RTWM) mode, the pattern
-+	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
-+	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
-+	    control are required to enable/disable and it needs to keep
-+	    device enabled by sending magnitude (X > 0),
-+	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
-+	The default value is 1 for both of the operation modes.
-+	For more details, please see the datasheet.
++description:
++  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
++  wrappers.
 +
-+- dlg,nom-microvolt: Nominal actuator voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,imax-microamp: Actuator max current rating.
-+  Valid values: 0 - 252000.
-+  Default: 130000.
-+- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
-+  Valid values: 0 - 1500000000.
++properties:
++  compatible:
++    enum:
++      - qcom,pcie-apq8064
++      - qcom,pcie-apq8084
++      - qcom,pcie-ipq4019
++      - qcom,pcie-ipq8064
++      - qcom,pcie-ipq8064-v2
++      - qcom,pcie-ipq8074
++      - qcom,pcie-msm8996
++      - qcom,pcie-qcs404
++      - qcom,pcie-sdm845
 +
-+Optional properties:
-+- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
-+  PWM properties should be named "pwms". And number of cell is different
-+  for each pwm device.
-+  (See Documentation/devicetree/bindings/pwm/pwm.txt
-+   for further information relating to pwm properties)
++  reg:
++    maxItems: 4
 +
-+- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
-+  to play back when RTWM-MODE is enabled.
-+  Valid range: 0 - 15.
-+- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
-+  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
-+  when gpi0 is triggered, 'N' must be 0 - 2.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-mode: the pattern mode which can select either
-+  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
-+- dlg,gpiN-polarity: gpiN polarity which can be chosen among
-+  "Rising-edge", "Falling-edge" and "Both-edge",
-+  'N' must be 0 - 2
-+  Haptic will work by this edge option in case of ETWM mode.
++  reg-names:
++    items:
++      - const: dbi
++      - const: elbi
++      - const: parf
++      - const: config
 +
-+- dlg,resonant-freq-hz: use in case of LRA.
-+  the frequency range: 50 - 300.
-+  Default: 205.
++  ranges:
++    maxItems: 2
 +
-+- dlg,bemf-sens-enable: Enable for internal loop computations.
-+- dlg,freq-track-enable: Enable for resonant frequency tracking.
-+- dlg,acc-enable: Enable for active acceleration.
-+- dlg,rapid-stop-enable: Enable for rapid stop.
-+- dlg,amp-pid-enable: Enable for the amplitude PID.
-+- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
-+  the device during initialization. This is an array of 100 values(u8).
++  interrupts:
++    items:
++      - description: MSI interrupts
 +
-+For further information, see device datasheet.
++  interrupt-names:
++    const: msi
 +
-+======
++  interrupt-map-mask: true
 +
-+Example:
++  clocks:
++    minItems: 1
++    maxItems: 7
 +
-+	haptics: da7280-haptics@4a {
-+		compatible = "dlg,da7280";
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		dlg,actuator-type = "LRA";
-+		dlg,dlg,const-op-mode = <1>;
-+		dlg,dlg,periodic-op-mode = <1>;
-+		dlg,nom-microvolt = <2000000>;
-+		dlg,abs-max-microvolt = <2000000>;
-+		dlg,imax-microamp = <170000>;
-+		dlg,resonant-freq-hz = <180>;
-+		dlg,impd-micro-ohms = <10500000>;
-+		dlg,freq-track-enable;
-+		dlg,rapid-stop-enable;
-+		dlg,mem-array = <
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+		>;
++  clock-names:
++    minItems: 1
++    maxItems: 7
 +
-+	};
++  resets:
++    minItems: 1
++    maxItems: 12
++
++  reset-names:
++    minItems: 1
++    maxItems: 12
++
++  power-domains:
++    maxItems: 1
++
++  vdda-supply:
++    description: phandle to power supply
++
++  vdda_phy-supply:
++    description: phandle to the power supply to PHY
++
++  vdda_refclk-supply:
++    description: phandle to power supply for ref clock generator
++
++  vddpe-3v3-supply:
++    description: PCIe endpoint power supply
++
++  phys:
++    maxItems: 1
++
++  phy-names:
++    const: pciephy
++
++  perst-gpios:
++    description: Endpoint reset signal line
++    maxItems: 1
++
++  num-lanes:
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - interrupt-names
++  - "#interrupt-cells"
++  - interrupt-map-mask
++  - interrupt-map
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - phys
++  - phy-names
++
++allOf:
++ - $ref: /schemas/pci/pci-bus.yaml#
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-apq8064
++   then:
++     properties:
++       clocks:
++         items:
++           - description: clock for pcie hw block
++           - description: clock for pcie phy block
++       clock-names:
++         items:
++           - const: core
++           - const: phy
++       resets:
++         items:
++           - description: AXI reset
++           - description: AHB reset
++           - description: POR reset
++           - description: PCI reset
++           - description: PHY reset
++       reset-names:
++         items:
++           - const: axi
++           - const: ahb
++           - const: por
++           - const: pci
++           - const: phy
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-apq8084
++   then:
++     properties:
++       clocks:
++         items:
++           - description: AUX clock
++           - description: Master AXI clock
++           - description: Slave AXI clock
++       clock-names:
++         items:
++           - const: aux
++           - const: bus_master
++           - const: bus_slave
++       resets:
++         items:
++           - description: core reset
++       reset-names:
++         items:
++           - const: core
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-ipq4019
++   then:
++     properties:
++       clocks:
++         items:
++           - description: AUX clock
++           - description: Master AXI clock
++           - description: Slave AXI clock
++       clock-names:
++         items:
++           - const: aux
++           - const: master_bus
++           - const: master_slave
++       resets:
++         items:
++           - description: AXI master reset
++           - description: AXI slave reset
++           - description: PCIE pipe reset
++           - description: AXI vmid reset
++           - description: AXI XPU reset
++           - description: parf reset
++           - description: PHY reset
++           - description: AXI master sticky reset
++           - description: PCIE pipe sticky reset
++           - description: pwr reset
++           - description: AHB reset
++           - description: PHY AHB reset
++       reset-names:
++         items:
++           - const: axi_m
++           - const: axi_s
++           - const: pipe
++           - const: axi_m_vmid
++           - const: axi_s_xpu
++           - const: parf
++           - const: phy
++           - const: axi_m_sticky
++           - const: pipe_sticky
++           - const: pwr
++           - const: ahb
++           - const: phy_ahb
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-ipq8064
++             - qcom,pcie-ipq8064-v2
++   then:
++     properties:
++       clocks:
++         items:
++           - description: core clock
++           - description: interface clock
++           - description: phy clock
++           - description: Auxilary clock
++           - description: reference clock
++       clock-names:
++         items:
++           - const: core
++           - const: iface
++           - const: phy
++           - const: aux
++           - const: ref
++       resets:
++         items:
++           - description: AXI reset
++           - description: AHB reset
++           - description: POR reset
++           - description: PCI reset
++           - description: PHY reset
++           - description: External reset
++       reset-names:
++         items:
++           - const: axi
++           - const: ahb
++           - const: por
++           - const: pci
++           - const: phy
++           - const: ext
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-ipq8074
++   then:
++     properties:
++       clocks:
++         items:
++           - description: sys noc interface clock
++           - description: AXI master clock
++           - description: AXI slave clock
++           - description: AHB clock
++           - description: Auxilary clock
++       clock-names:
++         items:
++           - const: iface
++           - const: axi_m
++           - const: axi_s
++           - const: ahb
++           - const: aux
++       resets:
++         items:
++           - description: PIPE reset
++           - description: PCIe sleep reset
++           - description: PCIe sticky reset
++           - description: AXI master reset
++           - description: AXI slave reset
++           - description: AHB reset
++           - description: AXI master sticky reset
++       reset-names:
++         items:
++           - const: pipe
++           - const: sleep
++           - const: sticky
++           - const: axi_m
++           - const: axi_s
++           - const: ahb
++           - const: axi_m_sticky
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-msm8996
++   then:
++     properties:
++       clocks:
++         items:
++           - description: PCIe pipe clock
++           - description: Auxilary clock
++           - description: AHB config clock
++           - description: AXI master clock
++           - description: AXI slave clock
++       clock-names:
++         items:
++           - const: pipe
++           - const: aux
++           - const: cfg
++           - const: bus_master
++           - const: bus_slave
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-qcs404
++   then:
++     properties:
++       clocks:
++         items:
++           - description: interface clock
++           - description: Auxilary clock
++           - description: AXI master clock
++           - description: AXI slave clock
++       clock-names:
++         items:
++           - const: iface
++           - const: aux
++           - const: master_bus
++           - const: slave_bus
++       resets:
++         items:
++           - description: AXI master reset
++           - description: AXI slave reset
++           - description: AXI master sticky reset
++           - description: PCIe pipe sticky reset
++           - description: power reset
++           - description: AHB reset
++       reset-names:
++         items:
++           - const: axi_m
++           - const: axi_s
++           - const: axi_m_sticky
++           - const: pipe_sticky
++           - const: pwr
++           - const: ahb
++ - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - qcom,pcie-sdm845
++   then:
++     properties:
++       clocks:
++         items:
++           - description: PCIE pipe clock
++           - description: Auxilary clock
++           - description: AHB config clock
++           - description: AXI Master clock
++           - description: AXI Slave clock
++           - description: AXI Slave Q2A clock
++           - description: NOC TBU clock
++       clock-names:
++         items:
++           - const: pipe
++           - const: aux
++           - const: cfg
++           - const: bus_master
++           - const: bus_slave
++           - const: slave_q2a
++           - const: tbu
++       resets:
++         items:
++           - description: PCI reset
++       reset-names:
++         items:
++           - const: pci
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    pcie: pci@10000000 {
++        compatible = "qcom,pcie-qcs404";
++        reg =  <0x10000000 0xf1d>,
++               <0x10000f20 0xa8>,
++               <0x07780000 0x2000>,
++               <0x10001000 0x2000>;
++        reg-names = "dbi", "elbi", "parf", "config";
++        device_type = "pci";
++        linux,pci-domain = <0>;
++        bus-range = <0x00 0xff>;
++        num-lanes = <1>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++
++        ranges = <0x01000000 0 0          0x10003000 0 0x00010000>, /* I/O */
++                 <0x02000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
++
++        interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "msi";
++        #interrupt-cells = <1>;
++        interrupt-map-mask = <0 0 0 0x7>;
++        interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
++                        <0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
++                        <0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
++                        <0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
++        clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++                 <&gcc GCC_PCIE_0_AUX_CLK>,
++                 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
++                 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
++        clock-names = "iface", "aux", "master_bus", "slave_bus";
++
++        resets = <&gcc 18>,
++                 <&gcc 17>,
++                 <&gcc 15>,
++                 <&gcc 19>,
++                 <&gcc GCC_PCIE_0_BCR>,
++                 <&gcc 16>;
++        reset-names = "axi_m",
++                      "axi_s",
++                      "axi_m_sticky",
++                      "pipe_sticky",
++                      "pwr",
++                      "ahb";
++
++        phys = <&pcie_phy>;
++        phy-names = "pciephy";
++
++    };
 -- 
-end-of-patch for PATCH v18
+2.7.4
 
