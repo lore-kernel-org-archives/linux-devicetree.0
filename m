@@ -2,302 +2,192 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B7AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C113EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A0E206D7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:18:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YK9gwc94"
+	by mail.kernel.org (Postfix) with ESMTP id A510E2070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgG2HSD (ORCPT
+        id S1727885AbgG2Hdk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:18:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:38118 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgG2HSD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:18:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596007082; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=2kTnzFc7G0V4XXGYI2l3CfvRi7yu22bU8/YlCLr+FcY=; b=YK9gwc94S41OqJvWf0G12Wx5QdeJudwaicKa9nbIoUdH5thOVSqsSI4tm2FVAPV3SdY6Ifey
- WDysxSOpK5IuUievF43SfK6kPYR/wnn17Q0FVYXIY63Zu/ShH4y4/lczPE4IV99JyeKTYHN0
- snIsr+DYiVcXc3+gG2+phyHRPYg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f21227b1db0b33fd8c0ef62 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 07:17:15
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DE172C433B6; Wed, 29 Jul 2020 07:17:14 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E94CC433A1;
-        Wed, 29 Jul 2020 07:17:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E94CC433A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v5 3/5] media: venus: core: Add support for opp tables/perf voting
-Date:   Wed, 29 Jul 2020 12:46:43 +0530
-Message-Id: <1596007005-30425-4-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
-References: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
+        Wed, 29 Jul 2020 03:33:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgG2Hdj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 03:33:39 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6BE4C061794
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 00:33:39 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0gae-0004yu-Q8; Wed, 29 Jul 2020 09:33:28 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0gaZ-0004VP-OU; Wed, 29 Jul 2020 09:33:23 +0200
+Date:   Wed, 29 Jul 2020 09:33:23 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH v3 2/3] Input: snvs_pwrkey - enable snvs clock as needed
+Message-ID: <20200729073323.pse772mh44bzgdai@pengutronix.de>
+References: <20200723074314.3304-1-horia.geanta@nxp.com>
+ <20200723074314.3304-3-horia.geanta@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723074314.3304-3-horia.geanta@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:19:17 up 256 days, 22:37, 248 users,  load average: 0.06, 0.09,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support to add OPP tables and perf voting on the OPP powerdomain.
-This is needed so venus votes on the corresponding performance state
-for the OPP powerdomain along with setting the core clock rate.
+Hi,
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.c       |  2 +
- drivers/media/platform/qcom/venus/core.h       |  5 ++
- drivers/media/platform/qcom/venus/pm_helpers.c | 92 ++++++++++++++++++++++++--
- 3 files changed, 92 insertions(+), 7 deletions(-)
+On 20-07-23 10:43, Horia Geantă wrote:
+> From: André Draszik <git@andred.net>
+> 
+> At the moment, enabling this driver without the SNVS RTC driver
+> being active will hang the kernel as soon as the power button
+> is pressed.
+> 
+> The reason is that in that case the SNVS isn't enabled, and
+> any attempt to read the SNVS registers will simply hang forever.
+> 
+> Ensure the clock is enabled (during the interrupt handler) to
+> make this driver work.
+> 
+> Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
+> and commit edb190cb1734
+> ("rtc: snvs: make sure clock is enabled for interrupt handle")
+> for similar updates to the snvs rtc driver.
+> 
+> Signed-off-by: André Draszik <git@andred.net>
+> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+> ---
+>  drivers/input/keyboard/snvs_pwrkey.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
+> index 2f5e3ab5ed63..382d2ae82c9b 100644
+> --- a/drivers/input/keyboard/snvs_pwrkey.c
+> +++ b/drivers/input/keyboard/snvs_pwrkey.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_wakeirq.h>
+> +#include <linux/clk.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/regmap.h>
+>  
+> @@ -38,6 +39,7 @@ struct pwrkey_drv_data {
+>  	int wakeup;
+>  	struct timer_list check_timer;
+>  	struct input_dev *input;
+> +	struct clk *clk;
+>  	u8 minor_rev;
+>  };
+>  
+> @@ -47,7 +49,10 @@ static void imx_imx_snvs_check_for_events(struct timer_list *t)
+>  	struct input_dev *input = pdata->input;
+>  	u32 state;
+>  
+> +	clk_enable(pdata->clk);
+>  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
+> +	clk_disable(pdata->clk);
+> +
+>  	state = state & SNVS_HPSR_BTN ? 1 : 0;
+>  
+>  	/* only report new event if status changed */
+> @@ -74,11 +79,13 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+>  
+>  	pm_wakeup_event(input->dev.parent, 0);
+>  
+> +	clk_enable(pdata->clk);
+> +
+>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+>  	if (lp_status & SNVS_LPSR_SPO) {
+>  		if (pdata->minor_rev == 0) {
+>  			/*
+> -			 * The first generation i.MX6 SoCs only sends an
+> +			 * The first generation i.MX[6|7] SoCs only send an
+>  			 * interrupt on button release. To mimic power-key
+>  			 * usage, we'll prepend a press event.
+>  			 */
+> @@ -96,6 +103,8 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
+>  	/* clear SPO status */
+>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+>  
+> +	clk_disable(pdata->clk);
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index bfcaba3..a3e98a5 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -525,6 +525,7 @@ static const struct venus_resources sdm845_res_v2 = {
- 	.vcodec_clks_num = 2,
- 	.vcodec_pmdomains = { "venus", "vcodec0", "vcodec1" },
- 	.vcodec_pmdomains_num = 3,
-+	.opp_pmdomain = (const char *[]) { "cx", NULL },
- 	.vcodec_num = 2,
- 	.max_load = 3110400,	/* 4096x2160@90 */
- 	.hfi_version = HFI_VERSION_4XX,
-@@ -570,6 +571,7 @@ static const struct venus_resources sc7180_res = {
- 	.vcodec_clks_num = 2,
- 	.vcodec_pmdomains = { "venus", "vcodec0" },
- 	.vcodec_pmdomains_num = 2,
-+	.opp_pmdomain = (const char *[]) { "cx", NULL },
- 	.vcodec_num = 1,
- 	.hfi_version = HFI_VERSION_4XX,
- 	.vmem_id = VIDC_RESOURCE_NONE,
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 7118612..b0cc544 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -62,6 +62,7 @@ struct venus_resources {
- 	unsigned int vcodec_clks_num;
- 	const char * const vcodec_pmdomains[VIDC_PMDOMAINS_NUM_MAX];
- 	unsigned int vcodec_pmdomains_num;
-+	const char **opp_pmdomain;
- 	unsigned int vcodec_num;
- 	enum hfi_version hfi_version;
- 	u32 max_load;
-@@ -145,8 +146,12 @@ struct venus_core {
- 	struct clk *vcodec1_clks[VIDC_VCODEC_CLKS_NUM_MAX];
- 	struct icc_path *video_path;
- 	struct icc_path *cpucfg_path;
-+	struct opp_table *opp_table;
-+	bool has_opp_table;
- 	struct device_link *pd_dl_venus;
- 	struct device *pmdomains[VIDC_PMDOMAINS_NUM_MAX];
-+	struct device_link *opp_dl_venus;
-+	struct device *opp_pmdomain;
- 	struct video_device *vdev_dec;
- 	struct video_device *vdev_enc;
- 	struct v4l2_device v4l2_dev;
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index abf9315..0308d20 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -9,6 +9,7 @@
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_opp.h>
- #include <linux/pm_runtime.h>
- #include <linux/types.h>
- #include <media/v4l2-mem2mem.h>
-@@ -66,10 +67,9 @@ static void core_clks_disable(struct venus_core *core)
- 
- static int core_clks_set_rate(struct venus_core *core, unsigned long freq)
- {
--	struct clk *clk = core->clks[0];
- 	int ret;
- 
--	ret = clk_set_rate(clk, freq);
-+	ret = dev_pm_opp_set_rate(core->dev, freq);
- 	if (ret)
- 		return ret;
- 
-@@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
- 
- static int vcodec_domains_get(struct device *dev)
- {
-+	int ret;
-+	struct opp_table *opp_table;
-+	struct device **opp_virt_dev;
- 	struct venus_core *core = dev_get_drvdata(dev);
- 	const struct venus_resources *res = core->res;
- 	struct device *pd;
- 	unsigned int i;
- 
- 	if (!res->vcodec_pmdomains_num)
--		return -ENODEV;
-+		goto skip_pmdomains;
- 
- 	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
- 		pd = dev_pm_domain_attach_by_name(dev,
-@@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
- 	if (!core->pd_dl_venus)
- 		return -ENODEV;
- 
-+skip_pmdomains:
-+	if (!core->has_opp_table)
-+		return 0;
-+
-+	/* Attach the power domain for setting performance state */
-+	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+		goto opp_attach_err;
-+	}
-+
-+	core->opp_pmdomain = *opp_virt_dev;
-+	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
-+					     DL_FLAG_RPM_ACTIVE |
-+					     DL_FLAG_PM_RUNTIME |
-+					     DL_FLAG_STATELESS);
-+	if (!core->opp_dl_venus) {
-+		ret = -ENODEV;
-+		goto opp_dl_add_err;
-+	}
-+
- 	return 0;
-+
-+opp_dl_add_err:
-+	dev_pm_domain_detach(core->opp_pmdomain, true);
-+opp_attach_err:
-+	if (core->pd_dl_venus) {
-+		device_link_del(core->pd_dl_venus);
-+		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
-+			if (IS_ERR_OR_NULL(core->pmdomains[i]))
-+				continue;
-+			dev_pm_domain_detach(core->pmdomains[i], true);
-+		}
-+	}
-+	return ret;
- }
- 
- static void vcodec_domains_put(struct device *dev)
-@@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
- 	unsigned int i;
- 
- 	if (!res->vcodec_pmdomains_num)
--		return;
-+		goto skip_pmdomains;
- 
- 	if (core->pd_dl_venus)
- 		device_link_del(core->pd_dl_venus);
-@@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
- 			continue;
- 		dev_pm_domain_detach(core->pmdomains[i], true);
- 	}
-+
-+skip_pmdomains:
-+	if (!core->has_opp_table)
-+		return;
-+
-+	if (core->opp_dl_venus)
-+		device_link_del(core->opp_dl_venus);
-+
-+	dev_pm_domain_detach(core->opp_pmdomain, true);
- }
- 
- static int core_get_v4(struct device *dev)
-@@ -811,19 +857,46 @@ static int core_get_v4(struct device *dev)
- 	if (legacy_binding)
- 		return 0;
- 
-+	core->opp_table = dev_pm_opp_set_clkname(dev, "core");
-+	if (IS_ERR(core->opp_table))
-+		return PTR_ERR(core->opp_table);
-+
-+	if (core->res->opp_pmdomain) {
-+		ret = dev_pm_opp_of_add_table(dev);
-+		if (!ret) {
-+			core->has_opp_table = true;
-+		} else if (ret != -ENODEV) {
-+			dev_err(dev, "invalid OPP table in device tree\n");
-+			dev_pm_opp_put_clkname(core->opp_table);
-+			return ret;
-+		}
-+	}
-+
- 	ret = vcodec_domains_get(dev);
--	if (ret)
-+	if (ret) {
-+		if (core->has_opp_table)
-+			dev_pm_opp_of_remove_table(dev);
-+		dev_pm_opp_put_clkname(core->opp_table);
- 		return ret;
-+	}
- 
- 	return 0;
- }
- 
- static void core_put_v4(struct device *dev)
- {
-+	struct venus_core *core = dev_get_drvdata(dev);
-+
- 	if (legacy_binding)
- 		return;
- 
- 	vcodec_domains_put(dev);
-+
-+	if (core->has_opp_table)
-+		dev_pm_opp_of_remove_table(dev);
-+	if (core->opp_table)
-+		dev_pm_opp_put_clkname(core->opp_table);
-+
- }
- 
- static int core_power_v4(struct device *dev, int on)
-@@ -831,10 +904,15 @@ static int core_power_v4(struct device *dev, int on)
- 	struct venus_core *core = dev_get_drvdata(dev);
- 	int ret = 0;
- 
--	if (on == POWER_ON)
-+	if (on == POWER_ON) {
- 		ret = core_clks_enable(core);
--	else
-+	} else {
-+		/* Drop the performance state vote */
-+		if (core->opp_pmdomain)
-+			dev_pm_opp_set_rate(dev, 0);
-+
- 		core_clks_disable(core);
-+	}
- 
- 	return ret;
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I'm not so happy about clk_enable/disable() during the interrupt
+routine since those routines should be handled fast. Since we assume
+that the clock is always on I would rather call clk_prepare_enable()
+during probe() and keep the clock on.
 
+> +
+>  	return IRQ_HANDLED;
+>  }
+>  
+> @@ -140,6 +149,23 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
+>  	if (pdata->irq < 0)
+>  		return -EINVAL;
+>  
+> +	pdata->clk = devm_clk_get_optional(&pdev->dev, "snvs-pwrkey");
+> +	if (IS_ERR(pdata->clk))
+> +		return PTR_ERR(pdata->clk);
+> +
+> +	error = clk_prepare(pdata->clk);
+> +	if (error) {
+> +		dev_err(&pdev->dev, "failed to prepare the snvs clock\n");
+> +		return error;
+> +	}
+> +	error = devm_add_action_or_reset(&pdev->dev,
+> +			(void(*)(void *))clk_unprepare,
+> +			pdata->clk);
+
+I'm not a fan about those casts. However, the intentation should be
+fixed.
+
+Regards,
+  Marco
+
+> +	if (error) {
+> +		dev_err(&pdev->dev, "failed to add reset action on 'snvs-pwrkey'");
+> +		return error;
+> +	}
+> +
+>  	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);
+>  	pdata->minor_rev = vid & 0xff;
