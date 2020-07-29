@@ -2,192 +2,68 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C113EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD542C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A510E2070B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47AC20809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FPlMU8kT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgG2Hdk (ORCPT
+        id S1726710AbgG2Hjt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgG2Hdj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 03:33:39 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6BE4C061794
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 00:33:39 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0gae-0004yu-Q8; Wed, 29 Jul 2020 09:33:28 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k0gaZ-0004VP-OU; Wed, 29 Jul 2020 09:33:23 +0200
-Date:   Wed, 29 Jul 2020 09:33:23 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Message-ID: <20200729073323.pse772mh44bzgdai@pengutronix.de>
-References: <20200723074314.3304-1-horia.geanta@nxp.com>
- <20200723074314.3304-3-horia.geanta@nxp.com>
+        Wed, 29 Jul 2020 03:39:49 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:2401 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726290AbgG2Hjt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 03:39:49 -0400
+X-UUID: 8659ffe249e3428e81cf13ed42f5532b-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Ziu9RVkLC78aEOY1MEgT8/CO2GXVUt9odl7fiCsyBTo=;
+        b=FPlMU8kTfLhxjtjievhmrVgqOJyCwxrUx1NxjyIbYOSi8b1tJDp/1fT6s1o/FzxhLA6VixgV0nFsf4bbtxYRGo9I2hJ6peSaU7GOlXhs12zscbqT7KQAhWBW9R2oroe8Q6PPmAITYqXsDOecPw/hbv8ARCp2JADEm9WN3MHRDNI=;
+X-UUID: 8659ffe249e3428e81cf13ed42f5532b-20200729
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 451770969; Wed, 29 Jul 2020 15:39:46 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 15:39:44 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 15:39:45 +0800
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <seiya.wang@mediatek.com>
+Subject: [PATCH 0/2] adjust the reset assert and deassert interface 
+Date:   Wed, 29 Jul 2020 15:39:15 +0800
+Message-ID: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200723074314.3304-3-horia.geanta@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:19:17 up 256 days, 22:37, 248 users,  load average: 0.06, 0.09,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+MS4gYWRqdXN0IHRoZSByZXNldCBhc3NlcnQgYW5kIGRlYXNzZXJ0IGludGVyZmFjZQ0KdG8gbWFr
+ZSBpdCBtb3JlIGNvbXBhdGlibGUuDQoyLiBhZGQgaW5mcmFjZmdfcnN0IGRldmljZSBub2RlLg0K
+DQpDcnlzdGFsIEd1byAoMik6DQogIHJlc2V0LWNvbnRyb2xsZXI6IHRpOiBhZGp1c3QgdGhlIHJl
+c2V0IGFzc2VydCBhbmQgZGVhc3NlcnQgaW50ZXJmYWNlDQogIGFybTY0OiBkdHM6IG10ODE5Mjog
+YWRkIGluZnJhY2ZnX3JzdCBub2RlDQoNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210
+ODE5Mi5kdHNpIHwgMTAgKysrKysrKysrLQ0KIGRyaXZlcnMvcmVzZXQvcmVzZXQtdGktc3lzY29u
+LmMgICAgICAgICAgfCAxMyArKysrKysrKysrKy0tDQogMiBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNl
+cnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0K
 
-On 20-07-23 10:43, Horia Geantă wrote:
-> From: André Draszik <git@andred.net>
-> 
-> At the moment, enabling this driver without the SNVS RTC driver
-> being active will hang the kernel as soon as the power button
-> is pressed.
-> 
-> The reason is that in that case the SNVS isn't enabled, and
-> any attempt to read the SNVS registers will simply hang forever.
-> 
-> Ensure the clock is enabled (during the interrupt handler) to
-> make this driver work.
-> 
-> Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
-> and commit edb190cb1734
-> ("rtc: snvs: make sure clock is enabled for interrupt handle")
-> for similar updates to the snvs rtc driver.
-> 
-> Signed-off-by: André Draszik <git@andred.net>
-> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> ---
->  drivers/input/keyboard/snvs_pwrkey.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> index 2f5e3ab5ed63..382d2ae82c9b 100644
-> --- a/drivers/input/keyboard/snvs_pwrkey.c
-> +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of_address.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_wakeirq.h>
-> +#include <linux/clk.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
->  
-> @@ -38,6 +39,7 @@ struct pwrkey_drv_data {
->  	int wakeup;
->  	struct timer_list check_timer;
->  	struct input_dev *input;
-> +	struct clk *clk;
->  	u8 minor_rev;
->  };
->  
-> @@ -47,7 +49,10 @@ static void imx_imx_snvs_check_for_events(struct timer_list *t)
->  	struct input_dev *input = pdata->input;
->  	u32 state;
->  
-> +	clk_enable(pdata->clk);
->  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
-> +	clk_disable(pdata->clk);
-> +
->  	state = state & SNVS_HPSR_BTN ? 1 : 0;
->  
->  	/* only report new event if status changed */
-> @@ -74,11 +79,13 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
->  
->  	pm_wakeup_event(input->dev.parent, 0);
->  
-> +	clk_enable(pdata->clk);
-> +
->  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
->  	if (lp_status & SNVS_LPSR_SPO) {
->  		if (pdata->minor_rev == 0) {
->  			/*
-> -			 * The first generation i.MX6 SoCs only sends an
-> +			 * The first generation i.MX[6|7] SoCs only send an
->  			 * interrupt on button release. To mimic power-key
->  			 * usage, we'll prepend a press event.
->  			 */
-> @@ -96,6 +103,8 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
->  	/* clear SPO status */
->  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
->  
-> +	clk_disable(pdata->clk);
-
-I'm not so happy about clk_enable/disable() during the interrupt
-routine since those routines should be handled fast. Since we assume
-that the clock is always on I would rather call clk_prepare_enable()
-during probe() and keep the clock on.
-
-> +
->  	return IRQ_HANDLED;
->  }
->  
-> @@ -140,6 +149,23 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	if (pdata->irq < 0)
->  		return -EINVAL;
->  
-> +	pdata->clk = devm_clk_get_optional(&pdev->dev, "snvs-pwrkey");
-> +	if (IS_ERR(pdata->clk))
-> +		return PTR_ERR(pdata->clk);
-> +
-> +	error = clk_prepare(pdata->clk);
-> +	if (error) {
-> +		dev_err(&pdev->dev, "failed to prepare the snvs clock\n");
-> +		return error;
-> +	}
-> +	error = devm_add_action_or_reset(&pdev->dev,
-> +			(void(*)(void *))clk_unprepare,
-> +			pdata->clk);
-
-I'm not a fan about those casts. However, the intentation should be
-fixed.
-
-Regards,
-  Marco
-
-> +	if (error) {
-> +		dev_err(&pdev->dev, "failed to add reset action on 'snvs-pwrkey'");
-> +		return error;
-> +	}
-> +
->  	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);
->  	pdata->minor_rev = vid & 0xff;
