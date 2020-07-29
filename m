@@ -2,193 +2,193 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87EAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371FFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A97BA2083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E99B20809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:06:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="j1LzN7/s";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fOth9n7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgG2M6s (ORCPT
+        id S1726533AbgG2NGm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:58:48 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:52606 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG2M6r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 08:58:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DFBAF8030866;
-        Wed, 29 Jul 2020 12:58:38 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id F5-UpB_0Hej0; Wed, 29 Jul 2020 15:58:38 +0300 (MSK)
-Date:   Wed, 29 Jul 2020 15:58:37 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200729125837.b27ncvd2eeixstba@mobilestation>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com>
- <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+        Wed, 29 Jul 2020 09:06:42 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42405 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726449AbgG2NGm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:06:42 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 289D95C00E5;
+        Wed, 29 Jul 2020 09:06:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 29 Jul 2020 09:06:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=J0gkjEVatecFtNdADLnL+o/V0J0
+        cfjnclX8z6uKd3cE=; b=j1LzN7/saHum3d5UzbV3Pe772Zau/6Ca/hrHqHXnnro
+        /Y4Qlz6eYLjfzdR/NQ6/N9ArliQyTuRCYFZ9H07X/X8vyLq3yZT4U12JdUFEfQKd
+        uN8hFVPWlgWoLQ2He5W/Ay/yCJNa6OQtrpvDYYv+yBzPafJkEF/C4k+FJqZ7GS9M
+        Pfmes6SSRXXE10D8vihARbsmPZOD24yQ3D3fVvpetRs5Wvas40oUrT+rFq8I8ZBo
+        j+Cf/mZ9lv3I2LU2tRmj9XLA4eICWd3unJKLDJ9wIb2jA2I8XOoxaAMewZSxGftq
+        6WbL3/9VdpEqKXiAwRURyVA4r9I9O6bD0KUz+LNXW4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=J0gkjE
+        VatecFtNdADLnL+o/V0J0cfjnclX8z6uKd3cE=; b=fOth9n7v8I0wpr7gQbnNiC
+        A6XIlQzqjW6PMfbjFQuDWhK85aWtwQtJIi/tGRtCa17Ige0Q2RBgJn4zdym/K54y
+        OLdDg3gq8dhWmE2WFw0MxpB9l3x1fVS390rY10TQsqxxv8hwXZRKp7iYWsNSpzNu
+        FsyxXxLUV+GZGaQwYB7RXk+xVAZIzI7e2HZ5C5tRYlbyPUOK5OPf7agEYtnerRXW
+        bwqPOmupc/3p2o5y0WuLQowkWmBRdAOu+kxaLkSoDBvzyjtACBCRWAA72lczkBn2
+        KJETtTgjmmKhcvazE15c/Ry3OMNMP97bY+2y6x9lkMwdjeYQdM0lRgnyj5G4L1ww
+        ==
+X-ME-Sender: <xms:X3QhXyzO6kdDNevDJ3r77MkUbKK9NdFtXLErP1AiihmJ0O7bz7-S4g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrieeggdeiudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:X3QhX-RsuxTIFpLe08SocNfb8802LfOveZD799966dBizHpMCnmyww>
+    <xmx:X3QhX0WNMkmIN60Q3wF8iCZTebxzNiYhZARlv6i086X9CvO8hrUeow>
+    <xmx:X3QhX4iQ8esGsI6exJWlCsmXGZD0PF9VEtu3iVaQDrFJN6l4GDjL6Q>
+    <xmx:YXQhX3-Jj-zE0f-dUtgltmEUYC9qKRnKRYnRucKjOfFaGRdRfd_7mg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0612E3280065;
+        Wed, 29 Jul 2020 09:06:38 -0400 (EDT)
+Date:   Wed, 29 Jul 2020 15:06:37 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        wens@csie.org, tiny.windzz@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: =?utf-8?Q?sunxi=EF=BC=9Acreat?=
+ =?utf-8?Q?e?= a DT header for Allwinner pin controller
+Message-ID: <20200729130637.5md3tr6zg7s4wrmh@gilmour.lan>
+References: <20200715115412.2544-1-frank@allwinnertech.com>
+ <20200717160727.e6y5htg4sjd7bezi@gilmour.lan>
+ <db1908ae-817c-f30d-7b88-f4afa593b258@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5to65lel25fuxowa"
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <db1908ae-817c-f30d-7b88-f4afa593b258@sholland.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
-> On Sat, Jul 25, 2020 at 1:03 AM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> 
-> > According to the DW APB GPIO databook it can be configured to provide either a
-> > combined IRQ line or multiple interrupt signals for each GPIO. It's up to
-> > the platform which of those signals are connected to an embedded IRQ
-> > controller. So I guess theoretically the array values can be sparse.
-> >
-> > Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
-> > array case. I just thought it would work out-of-box. Before getting your comment
-> > and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
-> > passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
-> > seeing zero IRQ number was supposed to be considered as invalid. That method shall
-> > just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
-> > will fail to find a descriptor with invalid IRQ value and return NULL. So after
-> > getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
-> > have stopped setting the handler. But turns out it may work only for
-> > CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
-> > descriptor will be returned for zero IRQ number. That descriptor will be
-> > initialized with the passed parent_handler callback, which isn't what we want.
-> 
-> Ouch but different beahviour on the outside of the irqchip API depending
-> on whether IRQs are sparse or not on some particular system seems to
-> be a problem with irqchip reallty, if we wanna get to the bottom of things.
-> (paging Marc)
-> 
-> > So in order to fix the problem we could follow either of the next paths:
-> > 1) Just make sure the passed IRQs array is not sparse for instance by remapping
-> >    it to be linear.
-> > 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
-> >    gpiochip_add_irqchip() method.
-> >
-> > What to you think? Linus?
-> 
 
-> What about (3) fixing irqchip?
-> 
-> Else (2), making the code inside gpiolib be careful and skip over
-> invalid IRQs.
+--5to65lel25fuxowa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for a delay with a response to this issue. I had to give it a more thorough
-thought since the problem is a bit more complex than it seemed originally. As I
-see it now It might be wrong to implement the cases 2) and 3), but 1) is more
-appropriate.
+Hi,
 
-First of all we need to note that GPIOlib framework provides the next parameters
-to describe the IRQ-chip:
-gc->irq.num_parents - number of parental IRQ numbers.
-gc->irq.parents[] - array of parental IRQ numbers.
-*gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
-*gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
+On Sat, Jul 25, 2020 at 02:18:39PM -0500, Samuel Holland wrote:
+> On 7/17/20 11:07 AM, Maxime Ripard wrote:
+> > Hi!
+> >=20
+> > On Wed, Jul 15, 2020 at 07:54:12PM +0800, Frank Lee wrote:
+> >> From: Yangtao Li <frank@allwinnertech.com>
+> >>
+> >> The sunxi gpio binding defines a few custom cells for its gpio specifi=
+er.
+> >> Provide bank name for those.
+> >>
+> >> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> >=20
+> > Thanks for working on this, I wanted to do it at some point but it kept
+> > getting pushed further into my todo list.
+> >=20
+> >> ---
+> >>  include/dt-bindings/gpio/sunxi-gpio.h | 29 +++++++++++++++++++++++++++
+> >>  1 file changed, 29 insertions(+)
+> >>  create mode 100644 include/dt-bindings/gpio/sunxi-gpio.h
+> >>
+> >> diff --git a/include/dt-bindings/gpio/sunxi-gpio.h b/include/dt-bindin=
+gs/gpio/sunxi-gpio.h
+> >> new file mode 100644
+> >> index 000000000000..c692b4360da6
+> >> --- /dev/null
+> >> +++ b/include/dt-bindings/gpio/sunxi-gpio.h
+> >=20
+> > So generally we've been using the compatible name as the file name. You
+> > should follow that convention too, and since it was added with the A10,
+> > using the A10 compatible.
+> >=20
+> >> @@ -0,0 +1,29 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +/*
+> >> + * GPIO definitions for Allwinner SoCs
+> >> + *
+> >> + * Copyright (C) 2020 Yangtao Li <frank@allwinnertech.com>
+> >> + */
+> >> +
+> >> +#ifndef _DT_BINDINGS_SUNXI_GPIO_H
+> >> +#define _DT_BINDINGS_SUNXI_GPIO_H
+> >> +
+> >> +#include <dt-bindings/gpio/gpio.h>
+> >> +
+> >> +/* pio */
+> >> +#define PA	0
+> >> +#define PB	1
+> >> +#define PC	2
+> >> +#define PD	3
+> >> +#define PE	4
+> >> +#define PF	5
+> >> +#define PG	6
+> >> +#define PH	7
+> >> +#define PI	8
+> >> +
+> >> +/* r-pio */
+> >> +#define PL	0
+> >> +#define PM	1
+> >> +#define PN	2
+> >> +
+> >> +#endif /* _DT_BINDINGS_SUNXI_GPIO_H */
+> >=20
+> > Maybe we can go one step further and use a macro to have something like
+> > PIN(A, 12) ?
+>=20
+> Since we have separate cells for the bank and pin, I don't think it would=
+ be
+> appropriate to have a single macro generating both.
 
-Using that set we can handle any case of linear and sparse parental IRQs. Here
-is how it can be implemented in the framework of DW APB GPIO controller.
+Yeah, but it's "just" an encoding issue though, it's not a major concern
+if it makes our life easier.
 
-DW APB GPIO can be synthesized with two configs:
-1) Combined IRQ line (GPIO_INTR_IO == True),
-2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
+> And I'm not sure what the benefit of the macro would be, if all it
+> does is forward its arguments. Are you concerned that P[A-M] could
+> conflict with something else in the device tree?
 
-Obviously the former case is trivial:
+There's indeed a bunch of names that are fairly generic and could be
+conflicting with others (PD for power domain is the first one that comes
+to my mind). Using a prefix would make the GPIO descriptors pretty long,
+so it wasn't ideal either. A macro makes it readable without increasing
+too much the risks of conflicts
 
-     IRQ_combined
-    ______^________
-   /_ _ _ _ _ ___ _\
-   |_|_|_|_|_|...|_| - GPIOs
+Maxime
 
-In that case
-gc->irq.num_parents = 1;
-gc->irq.parents[0] = IRQ_combined;
-*gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
+--5to65lel25fuxowa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The later one (when multiple interrupt signals are involved) can be a bit more
-complicated. It can be also split up into two cases:
-2a) One-on-one GPIO-IRQ mapping.
-2b) Sparse GPIO-IRQ mapping.
+-----BEGIN PGP SIGNATURE-----
 
-It's straightforward to implement 2a):
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXyF0XQAKCRDj7w1vZxhR
+xcSsAQDGVYSaoo497gJJf5z3XW53xRF45upx+3bu6u6vl7GEwgD+Myht5GLp2AUQ
+huihjM9siGj14MTdGBFQLXp/C+seegE=
+=6RKx
+-----END PGP SIGNATURE-----
 
-   i1i2i3i4i5 ... iN
-    _ _ _ _ _ ___ _
-   |_|_|_|_|_|...|_| - GPIOs
-
-In that case
-gc->irq.num_parents = ngpio;
-gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
-gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
-*gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
-
-The complication starts when we get to implementing 2b):
-
-   i1 xi3i4 x ... iN
-    _ _ _ _ _ ___ _
-   |_|_|_|_|_|...|_| - GPIOs
-
-In order to cover this case we need to answer on two question.
-Firstly how to get such platform config? I am not sure about ACPI, but
-aside from straightforward platform_data-based setup such configuration
-can be reached by setting up the "interrupts-extended" DT-property with
-zeroed phandle.
-
-Ok, since it's possible to meet such platform config, we need to think
-how to handle it and here is the second question. How to describe such
-case in the framework of GPIOlib-IRQchip?
-
-So from my side it was wrong to set the sparse IRQs array to
-gc->irq.parents. Instead I should have scanned the sparse IRQs array,
-calculated the number of non-empty parental IRQs, created an array of linear
-(non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
-sparse parental IRQs array. In other words it was wrong to assume, that
-each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
-array just describes the parental IRQs and nothing else.
-
-Shortly speaking here is how the GPIOlib IRQchip parameters should be
-initialized in this case:
-gc->irq.num_parents - number of valid parental IRQs.
-gc->irq.parents - non-sparse, linear array of valid IRQs.
-*gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
-callback, which indicates valid IRQ/GPIO IDs.
-*gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
-pass through the gc->irq.parents pointer).
-
-After that GPIOlib IRQchip should work just fine without need to be patched 
-in order to check whether the passed parental IRQs are valid or not.
-
-Please correct me if I am wrong in some aspects of the solution described above.
-I'll send a fix of the problem shortly.
-
--Sergey
-
-> 
-> Yours,
-> Linus Walleij
+--5to65lel25fuxowa--
