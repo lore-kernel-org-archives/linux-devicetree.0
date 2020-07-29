@@ -2,193 +2,106 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E74CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D98C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27AA82083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:10:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4YYgVGE"
+	by mail.kernel.org (Postfix) with ESMTP id 1388D2083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596035768;
+	bh=yDdQDhe0aUkPneMHf4V7CtUIlgiQ6JNskljZx+0L3lY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RwHZOtDYvyXjoV1BzuHg7ec18SGm5B907lDdj/SpEVMwhmTxYB9zYWMnyqzjH2fq2
+	 5y6gZkmZgEnFlGuyuOESofCeP+7PiP+qndN64Ba9q24aiPuDVnCchAfuxvZ8jIyVRg
+	 DForI9HSrQnQcBMxFCvwVb4VUI0m4k2SdpBUw/po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgG2PKm (ORCPT
+        id S1726449AbgG2PQH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2PKm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 11:10:42 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C339C061794;
-        Wed, 29 Jul 2020 08:10:42 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k4so11906444pld.12;
-        Wed, 29 Jul 2020 08:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QOtZ7EqjDCXsIq7hoMDqDlNiXk9wOFEEwluDG54GFaU=;
-        b=T4YYgVGE8s9en8SUnnk2Ec6jLd9R6hndr87rhw5uCVARunyaEwiAaLWgCcXvzmKYpj
-         GMgwe68UGm/ylwPl+pbPg6m9PTv7Fq+wflCiQ0BqjnzljmAGkn5m6Duo7XlVBZqzlfbO
-         DtOm2qpu0DPUsjvgBQ7Xlloej+VpYZd4hi/dYrnTL/CVd1MKW9R//lYIy1CjlZL03n4F
-         8gywEoMXKhro3seRxx2mWGlL/rinca34S6aqFtl37xPjuqV6N/AurOMINO4x8ytVRuB6
-         IO0Alq5GG0bvxeJo4gfOLmR5e9dMj38nzSNQ9bMMZoszQp7jjffshHspvH7uyMkI5CQ/
-         lM1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QOtZ7EqjDCXsIq7hoMDqDlNiXk9wOFEEwluDG54GFaU=;
-        b=MgNyD9ZdByRkQshz5ggOc0c9/QFaof6Vze71+cz4EbI+CJ9re/VhJLs3PHiK3223KO
-         IQJCo/KTJrErqJ6cvuJZikCsziRUXRaUn8V7OpwWmR7IY8ygk1zbOaXjM4s9IINCwZzj
-         /kcZ7Fr8+YOJ+LfzRAqxZ5bXhFbXhOf8ArouWf1kWkFXDGdDrMMUawdpS9Pz49ARdk2z
-         F96MAD109kEVF9DjLGmVObCQ79tKVwhopGIVps+LEqrGApuqu8pCndLrkjq6tRv8dr6/
-         sJKCdrtRZkPKroG7axw1kV2T2NCnQfyvHabYkS7UqdFN6jBW2ycI8HiVFeHwbffr82xq
-         m9WQ==
-X-Gm-Message-State: AOAM532DUxPdOXrL0PRMyd4t8uyCnArU/vpHIVybA00kK6985Le2EzNT
-        dGuX4uQ7KeC2WH3dcotX+j07FvpeXFdFOdCAoTI1wCFPzuY=
-X-Google-Smtp-Source: ABdhPJxTRrOX6fcgELQcqEzCUB3WuHTlcisuPDgGxh2QlnetAenE1lnRK3pXzKMrUEfjrONaKC6Qi+qQ4j/qWHEpXl8=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr10487618pjp.228.1596035441419;
- Wed, 29 Jul 2020 08:10:41 -0700 (PDT)
+        Wed, 29 Jul 2020 11:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbgG2PQH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:16:07 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BE420829;
+        Wed, 29 Jul 2020 15:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596035766;
+        bh=yDdQDhe0aUkPneMHf4V7CtUIlgiQ6JNskljZx+0L3lY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gei8T5JG9mkokmueZzsBGcLX8YlboI/FeJehVNWoEm6q8np1zBgiz2xRJCgZ50WMa
+         duK94SsDjx3dcUQZ/qxbD9kRvbRfotqQgGnuG/YP+L9oby0LuER4sQU432e+thWKZc
+         11er+SlaUzGnZyXJ12P5ZS9ynMsNXAF4xj3riDgw=
+Date:   Wed, 29 Jul 2020 16:15:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Marcus Cooper <codekipper@gmail.com>
+Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
+Message-ID: <20200729151548.GB5612@sirena.org.uk>
+References: <20200426104115.22630-4-peron.clem@gmail.com>
+ <20200428081321.ht3el26yqhsnyfm4@gilmour.lan>
+ <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
+ <20200429123529.y24dpy63wxq7uvkt@gilmour.lan>
+ <CAJiuCcfXqizcq_JuXRCsqEqM2562cr1SGJ0pmy07jcJxAXojOw@mail.gmail.com>
+ <20200430084600.samghw4zxb5zdbez@gilmour.lan>
+ <CAJiuCcf_LHrJ6QdZgH8HyN6TRiT+GiD+t4UggFCrz-VwVHXV6w@mail.gmail.com>
+ <20200504120942.lnrxnnmykqnvw3fb@gilmour.lan>
+ <CAJiuCceF340FiLvyeXNZtvqftQMAmk=MtFDLT_9696ix+eH1Yw@mail.gmail.com>
+ <20200729143927.47f5tbuaob4ph3lp@gilmour.lan>
 MIME-Version: 1.0
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
- <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com> <20200729125837.b27ncvd2eeixstba@mobilestation>
-In-Reply-To: <20200729125837.b27ncvd2eeixstba@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 29 Jul 2020 18:10:24 +0300
-Message-ID: <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Content-Disposition: inline
+In-Reply-To: <20200729143927.47f5tbuaob4ph3lp@gilmour.lan>
+X-Cookie: May all your PUSHes be POPped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 3:58 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
 
-...
+--xgyAXRrhYN0wYx8y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Sorry for a delay with a response to this issue. I had to give it a more thorough
-> thought since the problem is a bit more complex than it seemed originally. As I
-> see it now It might be wrong to implement the cases 2) and 3), but 1) is more
-> appropriate.
->
-> First of all we need to note that GPIOlib framework provides the next parameters
-> to describe the IRQ-chip:
-> gc->irq.num_parents - number of parental IRQ numbers.
-> gc->irq.parents[] - array of parental IRQ numbers.
-> *gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
-> *gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
->
-> Using that set we can handle any case of linear and sparse parental IRQs. Here
-> is how it can be implemented in the framework of DW APB GPIO controller.
->
-> DW APB GPIO can be synthesized with two configs:
-> 1) Combined IRQ line (GPIO_INTR_IO == True),
-> 2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
->
-> Obviously the former case is trivial:
->
->      IRQ_combined
->     ______^________
->    /_ _ _ _ _ ___ _\
->    |_|_|_|_|_|...|_| - GPIOs
->
-> In that case
-> gc->irq.num_parents = 1;
-> gc->irq.parents[0] = IRQ_combined;
-> *gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
->
-> The later one (when multiple interrupt signals are involved) can be a bit more
-> complicated. It can be also split up into two cases:
-> 2a) One-on-one GPIO-IRQ mapping.
-> 2b) Sparse GPIO-IRQ mapping.
->
-> It's straightforward to implement 2a):
->
->    i1i2i3i4i5 ... iN
->     _ _ _ _ _ ___ _
->    |_|_|_|_|_|...|_| - GPIOs
->
-> In that case
-> gc->irq.num_parents = ngpio;
-> gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
-> gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
-> *gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
->
+On Wed, Jul 29, 2020 at 04:39:27PM +0200, Maxime Ripard wrote:
 
-This case puzzles me. Why is it not NULL and 0 and actually you handle
-everything as a nested case?
+> It really looks like the polarity of LRCK is fine though. The first word
+> is sent with LRCK low, and then high, so we have channel 0 and then
+> channel 1 which seems to be the proper ordering?
 
-> The complication starts when we get to implementing 2b):
->
->    i1 xi3i4 x ... iN
->     _ _ _ _ _ ___ _
->    |_|_|_|_|_|...|_| - GPIOs
+Yes, that's normal.
 
-So does this.
+--xgyAXRrhYN0wYx8y
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Valid mask will define exactly GPIOs that are IRQs. So, we will handle
-only nested IRQs which are valid.
+-----BEGIN PGP SIGNATURE-----
 
-> In order to cover this case we need to answer on two question.
-> Firstly how to get such platform config? I am not sure about ACPI, but
-> aside from straightforward platform_data-based setup such configuration
-> can be reached by setting up the "interrupts-extended" DT-property with
-> zeroed phandle.
->
-> Ok, since it's possible to meet such platform config, we need to think
-> how to handle it and here is the second question. How to describe such
-> case in the framework of GPIOlib-IRQchip?
->
-> So from my side it was wrong to set the sparse IRQs array to
-> gc->irq.parents. Instead I should have scanned the sparse IRQs array,
-> calculated the number of non-empty parental IRQs, created an array of linear
-> (non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
-> sparse parental IRQs array. In other words it was wrong to assume, that
-> each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
-> array just describes the parental IRQs and nothing else.
->
-> Shortly speaking here is how the GPIOlib IRQchip parameters should be
-> initialized in this case:
-> gc->irq.num_parents - number of valid parental IRQs.
-> gc->irq.parents - non-sparse, linear array of valid IRQs.
-> *gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
-> callback, which indicates valid IRQ/GPIO IDs.
-> *gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
-> pass through the gc->irq.parents pointer).
->
-> After that GPIOlib IRQchip should work just fine without need to be patched
-> in order to check whether the passed parental IRQs are valid or not.
->
-> Please correct me if I am wrong in some aspects of the solution described above.
-> I'll send a fix of the problem shortly.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8hkqMACgkQJNaLcl1U
+h9BWOAgAgZCmz5kPu3UP5TIzHU0FAftm7xaaVdfAgv4E8uT1NNTTa8BP1dvsplb9
+Y4S5BMhGEtD8QKO8xfJOn2rmCsNNVxKbTcu17pJrU/deNmnoT5F4TnYr08pckTcp
+0lR7PGk2ue9IcXFaDjzjTEHRy6OAm607BBjXyWVAhr3eM9KxVObTR/xeYaXsW0pl
+524o3XwTcNKdjkYC+zmF/wcrJ98vThoGY3AIm/2dwJJ7/LjXGWxE0JVMMoA7o4RZ
+6DbNVGZyRaha3iLUmk75+d8yD+Bub8C+/xZUDzZX9dskbmerGio/TCFJhG24cx+w
+zXy5TYbMMqUp7E3+lRX8m6sRgBuA7Q==
+=1GYE
+-----END PGP SIGNATURE-----
 
-Maybe I'm missing something, but looks like you are solving the issue
-which is not so complex / doesn't exist.
-
--- 
-With Best Regards,
-Andy Shevchenko
+--xgyAXRrhYN0wYx8y--
