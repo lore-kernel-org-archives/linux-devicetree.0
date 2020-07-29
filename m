@@ -2,75 +2,102 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4293C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 01:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC131C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 01:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C32A720829
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 01:23:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595985823;
-	bh=ZEQ8acauTeo/vlplG6VpP6uu8XrzCrepryaFriXIl0k=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=VOX8kEICNP2YIMnNEV1qKGsHhx+6OE+HHc4VCM4uE72CppsrCT2999lLg+6Y+5IrJ
-	 iPyNhecqmORazrh7gDt0jBvCh18sOwFAbwsmjIXFm1JjJHq24K4D2MdASZCKjAqPD8
-	 LVCIPTWHzI7jgA1bJaCYytoifBf74NimM+C6fHTs=
+	by mail.kernel.org (Postfix) with ESMTP id BC7F2208A9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 01:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dx5aLlvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgG2BXn (ORCPT
+        id S1730151AbgG2BbW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 21:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728364AbgG2BXn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 21:23:43 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4B632076E;
-        Wed, 29 Jul 2020 01:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595985822;
-        bh=ZEQ8acauTeo/vlplG6VpP6uu8XrzCrepryaFriXIl0k=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=aTca3T4g86Fi3svMdHBkdbhLG31p0iZ2AFbMr4vpOCWD+bkgMPXF+bLxj7mk6jFTx
-         RMYlBPiQihob+CN4wF3jlLfcmHdD8Oy5gnv7zelMHgZJf7Jp+X/o+ep8UYWDuXyhLe
-         Zn2+daSsB8GNtc3pgCkZEvk88IE4ELvibBIxptnI=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200728120049.90632-7-konradybcio@gmail.com>
-References: <20200728120049.90632-1-konradybcio@gmail.com> <20200728120049.90632-7-konradybcio@gmail.com>
-Subject: Re: [PATCH 6/9] clk: qcom: gcc-msm8994: Add missing clocks, resets and GDSCs
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Tue, 28 Jul 2020 21:31:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54258 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729918AbgG2BbV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 21:31:21 -0400
+X-UUID: c79d844e8a934fc197d75254acafe880-20200729
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=/9UU7kgDikfzGReMi+cNjBDucNreiMt14wXF0POFEPc=;
+        b=dx5aLlvVKSR4U6Vitr9BRul4UseAsLFfRDrayvo6SlAvJqZXA9k7C1tVETYky1NfDBPWuYGYXTAH2yjEba4PaMJbbDGOJ0uBV1ANRlc6s/6IOwfDU3HYes2MQVO30SCGyh48UT6oL6LiQ2k+wU4NW6IejQ7iNwXk9k4sgrWSP3g=;
+X-UUID: c79d844e8a934fc197d75254acafe880-20200729
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <seiya.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 997106648; Wed, 29 Jul 2020 09:31:19 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Jul 2020 09:31:17 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Jul 2020 09:31:17 +0800
+From:   Seiya Wang <seiya.wang@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-To:     konradybcio@gmail.com
-Date:   Tue, 28 Jul 2020 18:23:41 -0700
-Message-ID: <159598582154.1360974.14382448860412146673@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v3 0/3] Add basic node support for Mediatek MT8192 SoC 
+Date:   Wed, 29 Jul 2020 09:30:57 +0800
+Message-ID: <20200729013100.19539-1-seiya.wang@mediatek.com>
+X-Mailer: git-send-email 2.14.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Konrad Dybcio (2020-07-28 05:00:45)
-> This change adds GDSCs, resets and most of the missing
-> clocks to the msm8994 GCC driver. The remaining ones
-> are of local_vote_clk and gate_clk type, which are not
-> yet supported upstream. Also reorder them to match the
-> original downstream driver.
->=20
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
-> I plan on converting this to use parent_data later on,
-> but I think we could merge it as-is for now..?
+TVQ4MTkyIGlzIGEgU29DIGJhc2VkIG9uIDY0Yml0IEFSTXY4IGFyY2hpdGVjdHVyZS4NCkl0IGNv
+bnRhaW5zIDQgQ0E1NSBhbmQgNCBDQTc2IGNvcmVzLg0KTVQ4MTkyIHNoYXJlIG1hbnkgSFcgSVAg
+d2l0aCBNVDY1eHggc2VyaWVzLg0KVGhpcyBwYXRjaHNldCB3YXMgdGVzdGVkIG9uIE1UODE5MiBl
+dmFsdWF0aW9uIGJvYXJkIGFuZCB1c2UgY29ycmVjdCBjbG9jayB0byBzaGUNCmxsLg0KDQpCYXNl
+ZCBvbiB2NS44LXJjMQ0KDQpDaGFuZ2UgaW4gdjM6DQpGaXggdHlwbyBpbiBiaW5kaW5nIGRvY3Vt
+ZW50IG9mIHRpbWVyDQoNCkNoYW5nZSBpbiB2MjoNCjEuIFJlbW92ZSBtdDgxOTItcG93ZXIuaCBm
+cm9tIG10ODE5Mi5kdHNpIHdoaWNoIGlzIG5vdCB1c2VkIHlldA0KMi4gQWRkIHRpbWVyIGJpbmRp
+bmcgZG9jdW1lbnQgYW5kIGRldmljZSB0cmVlIG5vZGUgaW4gbXQ4MTkyLmR0c2kNCjMuIFJlbW92
+ZSB3YXRjaGRvZyBkcml2ZXIgbW9kaWZpY2F0aW9uDQoNClNlaXlhIFdhbmcgKDMpOg0KICBhcm02
+NDogZHRzOiBBZGQgTWVkaWF0ZWsgU29DIE1UODE5MiBhbmQgZXZhbHVhdGlvbiBib2FyZCBkdHMg
+YW5kDQogICAgTWFrZWZpbGUNCiAgZHQtYmluZGluZ3M6IHNlcmlhbDogQWRkIGNvbXBhdGlibGUg
+Zm9yIE1lZGlhdGVrIE1UODE5Mg0KICBkdC1iaW5kaW5nczogdGltZXI6IEFkZCBjb21wYXRpYmxl
+IGZvciBNZWRpYXRlayBNVDgxOTINCi0tLQ0KVGhpcyBwYXRjaCBkZXBlbmRzIG9uDQpbUEFUQ0gg
+MS8zXSBkdC1iaW5kaW5nczogcGluY3RybDogbXQ4MTkyOiBhZGQgcGluY3RybCBmaWxlDQpbUEFU
+Q0ggMi8zXSBkdC1iaW5kaW5nczogcGluY3RybDogbXQ4MTkyOiBhZGQgYmluZGluZyBkb2N1bWVu
+dA0KW1BBVENIIHYyIDMvNF0gZHQtYmluZGluZ3M6IG1lZGlhdGVrOiBhZGQgY29tcGF0aWJsZSBm
+b3IgTVQ2ODczLzgxOTIgcHdyYXANCltQQVRDSCB2MiAxLzJdIGR0LWJpbmRpbmdzOiBzcGk6IHVw
+ZGF0ZSBiaW5kaW5ncyBmb3IgTVQ4MTkyIFNvQw0KW1BBVENIIDIvNF0gY2xrOiBtZWRpYXRlazog
+QWRkIGR0LWJpbmRpbmdzIGZvciBNVDgxOTIgY2xvY2tzDQpbUEFUQ0ggMS80XSBkdC1iaW5kaW5n
+czogQVJNOiBNZWRpYXRlazogRG9jdW1lbnQgYmluZGluZ3MgZm9yIE1UODE5Mg0KDQpQbGVhc2Ug
+YWxzbyBhY2NlcHQgdGhpcyBwYXRjaCB0b2dldGhlciB3aXRoIFsxXVsyXVszXVs0XVs1XVs2XQ0K
+dG8gYXZvaWQgYnVpbGQgYW5kIGR0IGJpbmRpbmcgY2hlY2sgZXJyb3IuDQoNClsxXSBodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbWVkaWF0ZWsvMjAyMC1KdWx5LzAx
+NDA0Mi5odG1sDQpbMl0gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4
+LW1lZGlhdGVrLzIwMjAtSnVseS8wMTQwNDMuaHRtbA0KWzNdIGh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL3BpcGVybWFpbC9saW51eC1tZWRpYXRlay8yMDIwLUp1bHkvMDE0NTQ2Lmh0bWwNCls0
+XSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbWVkaWF0ZWsvMjAy
+MC1KdWx5LzAxNDQwNi5odG1sDQpbNV0gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJt
+YWlsL2xpbnV4LW1lZGlhdGVrLzIwMjAtSnVseS8wMTQ0NTAuaHRtbA0KWzZdIGh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1tZWRpYXRlay8yMDIwLUp1bHkvMDE0NDUx
+Lmh0bWwNCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NlcmlhbC9tdGstdWFydC50eHQg
+ICAgICAgIHwgICAxICsNCiAuLi4vYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4
+dCAgICAgICAgICB8ICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9NYWtlZmls
+ZSAgICAgICAgICAgICAgfCAgIDEgKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4
+MTkyLWV2Yi5kdHMgICAgICAgIHwgIDI5ICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
+L210ODE5Mi5kdHNpICAgICAgICAgICB8IDY3MSArKysrKysrKysrKysrKysrKysrKysNCiA1IGZp
+bGVzIGNoYW5nZWQsIDcwMyBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
+YXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTkyLWV2Yi5kdHMNCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRzaQ0KDQotLQ0KMi4xNC4x
+DQo=
 
-Why not convert to parent_data now? Otherwise we can wait given that the
-merge window is near anyway.
