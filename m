@@ -2,135 +2,99 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E19C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97972C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81C2A2076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7746520829
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xHJHTx9H"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dt830+nX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbgG2AsN (ORCPT
+        id S1730507AbgG2Aui (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 20:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
+        Tue, 28 Jul 2020 20:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730668AbgG2AsL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 20:48:11 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCAC0C061794
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:48:11 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so13300531pgc.5
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:48:11 -0700 (PDT)
+        with ESMTP id S1730766AbgG2Aui (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 20:50:38 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB72C0619D2
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:50:38 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id z5so13322545pgb.6
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:50:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EfvldELvo7FLErlsWiPVmAKuN5/SSFt2LmTOBkch4kw=;
-        b=xHJHTx9HefSaFKWD99K/a9Hxxsg14EZ0R7MjRerhC5HktfBA386qIt0TiPmveUYa8e
-         Xh6QKnGdUkZODk+PZYNKQJ3Wy+8aaXe3dY7LIN9E/E/n74Aj4EKuRZlZqX8vZN6ddulD
-         CjJsEJ65XjyBJK0HKWWo47QTOhKXHazH7/9M2ImseYflwXqDmFMuuzwFX7gy7mXHiADh
-         +sMzlTGEtTqMsgz+/NwVxVEFfl8BVnhTmX8XbR2/CyfDRLLFWQiPo7F6aLNZF08vIYQF
-         /KboZeV5uNNgsWP5UmnxJJaNvzeAwjjShKfH2lLlqzfFWsoQbF6xpIYUumE4rhxPQFDQ
-         61gQ==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=yP3nfVyanCA5dqt/CLixTo47F6orsxBXLYUlEUkelJA=;
+        b=dt830+nXvj5ilJbJdyQ1BTwsy9XQ+4iMd9DFoTO9QT4BQ300OFHMOFxrVxHTXZFS6V
+         S0mSc2FW4pXw+dWxaEpFS5dR6VFWEMe7lM1G5PSa0U3HjuO0G1rPqSkMHBEldIUN7wB5
+         clSdKm70RHABLzyFL1EkdHvMTgFx6LY9vvz7E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EfvldELvo7FLErlsWiPVmAKuN5/SSFt2LmTOBkch4kw=;
-        b=BJgV97X6TGCkIQMA8LzO/Op6HlVDn9vDau3DzrOLPN3k7nRfFnNfIyxbArgOVwdlv6
-         yVnf/B4Co4I2nC5q+snAS+FLfBLEaCeLRayaoNXDewSvDUxPuvfCBOIjG3p/w6vi4a1L
-         nBjd1Zqv5t/XTLF2jicmW0u04q7D/8MSJZCDEOPaohcL1teGEae6lTAvCafg5C4KdJIm
-         vnghelTzYvqKyrKJQUmtTlJvi8h3ay/d+fYnIoiFBIEeGBKy01Ir6pbzWZxpjFNPDPBv
-         CNBW9jCINfChstI+pgEAQbAs2JlHnx+TdBZzblOzB+kL8YV5mSVhTepK6xbaH22yH7Y3
-         Antg==
-X-Gm-Message-State: AOAM531G2/yC1pQsDzIj0T9FjSzdF32hXdCmP1PuM1JoZ1uIzZBcGbEs
-        2v8j+dxEbUXwQbH1j7j4WXehsg==
-X-Google-Smtp-Source: ABdhPJytjlRHqA72yY0KPiWKOWc6Pn9lDKQnBeGMXjcmSmSP/8NoYvt4Jb6mHcI1wDmaqYEGo6JvaA==
-X-Received: by 2002:aa7:9422:: with SMTP id y2mr27652112pfo.211.1595983691313;
-        Tue, 28 Jul 2020 17:48:11 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q12sm239414pfg.135.2020.07.28.17.48.10
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=yP3nfVyanCA5dqt/CLixTo47F6orsxBXLYUlEUkelJA=;
+        b=JbLrftLi2Qoj3u9TUWiEQZ9V380LWsv2RVjyD45YMZzV0riymBeuLoNKHeywAj01ES
+         /YhflaB0TJypcEeziAH31xDSFdXVUwqfl94+isw2SrDiJzU9K6Fzrq3vs4zWEpES+63b
+         sziAiu0tSTQbqUGs457s9xiLySsU3ghZZ5CsFcW4rCOwy94SRtja5wD2K/p+RVsPJgI4
+         CSQaoEV3hPznsIuYCkd761niJp49w4j/Stn+wpmdj794GKu7XkCtldQ3va8ZfiN6OBMV
+         54hk0AAjWRY93/jyoW06x5xS7Sb7rQh/XDx+vyt57OaiK/NpXCtyAsHhZd1TXrAgdUF5
+         6jXQ==
+X-Gm-Message-State: AOAM530gaL3TmFTqx7HXHaNXqAf9NS1g+DDZD3g5NF7uwgAmxyZfEw8k
+        M0nb9JZf0zNPo8uMf7c12bGbxA==
+X-Google-Smtp-Source: ABdhPJyjNWFaLKqd0efnvtrCmn2FXiK4y+ugceLM2g1jBpdq3X2Mqltt9G/Pr9PBDjNqT3gGtF+1Lw==
+X-Received: by 2002:a63:308:: with SMTP id 8mr28317182pgd.112.1595983837445;
+        Tue, 28 Jul 2020 17:50:37 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id x23sm230701pfi.60.2020.07.28.17.50.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 17:48:10 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: hwlock: qcom: Remove invalid binding
-Date:   Tue, 28 Jul 2020 17:47:57 -0700
-Message-Id: <20200729004757.1901107-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 28 Jul 2020 17:50:36 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
+References: <20200728151258.1222876-1-campello@chromium.org> <20200728230520.2011240-1-campello@chromium.org>
+Subject: Re: [PATCH v2 00/14] sx9310 iio driver updates
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 28 Jul 2020 17:50:34 -0700
+Message-ID: <159598383474.1360974.2464583320357224145@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Qualcomm hwlock is described in DeviceTree either directly on the
-mmio bus or split between a syscon and a mutex node, but as noted in
-[1] the latter is not valid DT, so remove any traces of this from the
-binding.
+Quoting Daniel Campello (2020-07-28 16:05:06)
+> The first patch resends the DT binding for the driver that was merged in
+> v5.8-rc1 with a small change to update for proper regulators. The second
+> through the eleventh patch fixes several issues dropped from v8 to v9
+> when the initial patch was merged. The twelveth patch fixes a few
+> printks that are missing newlines and should be totally non-trivial to
+> apply. The thirteenth patch drops channel_users because it's unused. The
+> final patch adds support to enable the svdd and vdd supplies so that
+> this driver can work on a board where the svdd supply isn't enabled at
+> boot and needs to be turned on before this driver starts to communicate
+> with the chip.
 
-[1] https://lore.kernel.org/r/CAL_JsqLa9GBtbgN6aL7AQ=A6V-YRtPgYqh6XgM2kpx532+r4Gg@mail.gmail.com/
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../bindings/hwlock/qcom-hwspinlock.yaml      | 25 +------------------
- 1 file changed, 1 insertion(+), 24 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-index 88f975837588..1c7149f7d171 100644
---- a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-+++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-@@ -25,37 +25,14 @@ properties:
-   '#hwlock-cells':
-     const: 1
- 
--  syscon:
--    $ref: "/schemas/types.yaml#/definitions/phandle-array"
--    description:
--      Should be a triple of phandle referencing the TCSR mutex syscon, offset
--      of first mutex within the syscon and stride between each mutex.
--
- required:
-   - compatible
-+  - reg
-   - '#hwlock-cells'
- 
--oneOf:
--  - required:
--    - reg
--  - required:
--    - syscon
--
- additionalProperties: false
- 
- examples:
--  - |
--        tcsr_mutex_block: syscon@fd484000 {
--                compatible = "syscon";
--                reg = <0xfd484000 0x2000>;
--        };
--
--        hwlock {
--                compatible = "qcom,tcsr-mutex";
--                syscon = <&tcsr_mutex_block 0 0x80>;
--
--                #hwlock-cells = <1>;
--        };
-   - |
-         tcsr_mutex: hwlock@1f40000 {
-                 compatible = "qcom,tcsr-mutex";
--- 
-2.26.2
-
+Can you please send this as not an in-reply-to the previous series? My
+inbox has a hard time realizing that this is a new patch series.
