@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4235C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AECC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D40442083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A6820829
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CD0/QxB9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADs2k5e2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgG2MBN (ORCPT
+        id S1727007AbgG2MBa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
+        Wed, 29 Jul 2020 08:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgG2MBK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 08:01:10 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D342C061794;
-        Wed, 29 Jul 2020 05:01:10 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r4so18412873wrx.9;
-        Wed, 29 Jul 2020 05:01:10 -0700 (PDT)
+        with ESMTP id S1727001AbgG2MB2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 08:01:28 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3799AC0619D4;
+        Wed, 29 Jul 2020 05:01:28 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r4so18413911wrx.9;
+        Wed, 29 Jul 2020 05:01:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IyAadO7Kj4svE/f2q3Z4e23jYOH8YNibv5HEpOFyPnU=;
-        b=CD0/QxB9mBf+NTzosNohe42lcZIfXDYQY2Rd8Px+Oer6gRe1nHnWYhJb9NEhK7YMes
-         I+ts1dXG8hBbHfd9mnO/E7XwONZAKW8IVDiz4w04gKmxWhAIGQJBqdGDDUu4i3ztH9NY
-         hjJyxdSrlIsgs28uOrkub8lkRfmh30CS1LVvWGIrCESwsyZym0p8ePMnvYUTft70fLh8
-         8iU1nQSTdzFGRZJfxJPQNftIbaVIAePMWZCZhUk4NsRwmfFABrJbNyc/xXHHEFLft5B5
-         /V6DiQj/fz7LyiAjbYxE2wo6hNYYWimJez8Lz45iWADPT9qviqJgxCZyCxPFlnZ3PlAE
-         VIKQ==
+        bh=4dsJZR6exGc1T0EmcyZPyr2Gz6t1X0UGcbSNE1N0tEw=;
+        b=ADs2k5e2my6lFev6YnfqvFfjLdyhHpzb8DpB135rHP3kU6gOwZ+iluDWPd6l7tCfGi
+         oxuyaRWQiopVN47KdcnrysD6oJmlpW04SZ6Fwy8FhvVrJ9EODJ3fV3RyY8uMHp1vhnx9
+         clcQsFTkbJ61vHPD3v/b70slyYdf+iwyGJh4f2z4RAAqbq1rixlu5pobAr5ygToIdieO
+         NiyJPwW4FomSzEIu8zo+W+liGElj55sPlZ95CCBxdjxaDQvwuj/QnymydTaQkN5DPoOJ
+         wPm+OaoWoZUTjjm09ClbeaHvm+D7IVmICJkSyiNYKqcgp/95pOr2CEgIlP5PrXKwdkBM
+         Oq7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IyAadO7Kj4svE/f2q3Z4e23jYOH8YNibv5HEpOFyPnU=;
-        b=tY0UVXcOOqSbHATeTcetOMUeRjY2UKrFEsa8h0mwmhkg5W5e3YhefAiGC35CZuFmGo
-         rALC7n4xxvB8G+nZJsYQ352nIQHjoBEzjU+mhDg5zo0kGnakbyXD/o3SolMiJoxYJwB+
-         6sB9AUYZnsu5tAvSSQMKQoKqzIGBiPAviA9OIs2sHZrr6BtFb1fNsmZjUY47IjszTPj/
-         BNyCr7TFmSixXaa4HOWzu0L2lue3/jVWIrilWAyC/QERt//t3iX9B3lVaHHiAi1vTZm7
-         +dBlFWbyWoK89EhVhQx/Upn+R2iX+2zsPY29F3yVdKOTmxpgEqOVsMz3E5vhJptTKR0b
-         8tag==
-X-Gm-Message-State: AOAM533iExWNhKO46f36I0dkq3ALbmZqWderUhWuamdpjlFaqncL6X8g
-        4utcVb6QMwyUh4FzXIlrUnw=
-X-Google-Smtp-Source: ABdhPJzVKTxrC7sh1y9rKVLz/vxh3ZwFojV3ITq1aNkQcsq7vM+n2G7ZMwHh29wRW0wbDw2mF6tDuQ==
-X-Received: by 2002:adf:9c8c:: with SMTP id d12mr28786755wre.369.1596024069040;
-        Wed, 29 Jul 2020 05:01:09 -0700 (PDT)
+        bh=4dsJZR6exGc1T0EmcyZPyr2Gz6t1X0UGcbSNE1N0tEw=;
+        b=BoHVExQO22+9LkmYwuUdviW+YESQzSnXc6PdZSxxz6pv2FSEJqkbGDCNEmxlK5w/Q/
+         gbk+vqWOlXs5OzBqpIV+upS0YwdUdCMLx7ELdm83Hb7XE8pPFmUpekRoMzVjuvm8uGSP
+         tqxeFpdq8JlgmKAfc6CHFt8UB9ES0azBP0WKbPUA8c/vAB1V2WdrIba6WRsa/qfm1bJH
+         3LuqY5qjEy/ypKmOjqfMYQI6q9R35IgQ5/4mUBk54kGSvba+8rDRyL0ES67pk4YIlZWD
+         IoKRxSw+OlY3fZf+i4AWWRN8eoBtwIqY2pLOk3JyXHozBzhi/aPe3ctBlHX6mTfoxeJE
+         iLfA==
+X-Gm-Message-State: AOAM533vJz2aa6sByLzyVhdUnOTOr7fY13uSI0Z/8WU9ykuBZ/7ROaXx
+        XMA6/W/bV0jkTbLZoxA61sI=
+X-Google-Smtp-Source: ABdhPJxtcOeNQtXzRyQOL5po8il8vZUESKCp/zwvGTPjQqWywMRZdXBlPmeeICZ4mjN8KIKEAdILSw==
+X-Received: by 2002:adf:cf10:: with SMTP id o16mr27064006wrj.380.1596024086992;
+        Wed, 29 Jul 2020 05:01:26 -0700 (PDT)
 Received: from localhost.localdomain (abad207.neoplus.adsl.tpnet.pl. [83.6.167.207])
-        by smtp.googlemail.com with ESMTPSA id l67sm5426000wml.13.2020.07.29.05.01.07
+        by smtp.googlemail.com with ESMTPSA id l67sm5426000wml.13.2020.07.29.05.01.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 05:01:08 -0700 (PDT)
+        Wed, 29 Jul 2020 05:01:26 -0700 (PDT)
 From:   Konrad Dybcio <konradybcio@gmail.com>
 To:     konradybcio@gmail.com
 Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     lauren.kelly@msn.com, Andy Gross <agross@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org
-Subject: [PATCH v2 03/10] arm64: dts: qcom: talkman: Add Synaptics RMI4 touchscreen
-Date:   Wed, 29 Jul 2020 14:00:49 +0200
-Message-Id: <20200729120057.35079-4-konradybcio@gmail.com>
+Subject: [PATCH v2 10/10] arm64: dts: qcom: msm8992/4: Add clocks property to gcc node
+Date:   Wed, 29 Jul 2020 14:00:56 +0200
+Message-Id: <20200729120057.35079-11-konradybcio@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200729120057.35079-1-konradybcio@gmail.com>
 References: <20200729120057.35079-1-konradybcio@gmail.com>
@@ -81,52 +81,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds touchscreen capabilities to the Lumia 950.
+This is required for the platforms to function after the recent
+driver cleanup and also is the current coding style.
 
 Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../dts/qcom/msm8992-msft-lumia-talkman.dts   | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts b/arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts
-index 3cc01f02219d..c337a86a5c77 100644
---- a/arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8992-msft-lumia-talkman.dts
-@@ -32,6 +32,34 @@ chosen {
- 	};
- };
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index c9502fcf5d70..008206251f49 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -457,6 +457,8 @@ gcc: clock-controller@fc400000 {
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+ 			reg = <0xfc400000 0x2000>;
++			clock-names = "xo", "sleep_clk";
++			clocks = <&xo_board>, <&sleep_clk>;
+ 		};
  
-+&blsp_i2c1 {
-+	status = "okay";
-+
-+	rmi4-i2c-dev@4b {
-+		compatible = "syna,rmi4-i2c";
-+		reg = <0x4b>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <77 IRQ_TYPE_EDGE_FALLING>;
-+
-+		rmi4-f01@1 {
-+			reg = <0x01>;
-+			syna,nosleep-mode = <1>;
-+		};
-+
-+		rmi4-f12@12 {
-+			reg = <0x12>;
-+			syna,sensor-type = <1>;
-+			syna,clip-x-low = <0>;
-+			syna,clip-x-high = <1440>;
-+			syna,clip-y-low = <0>;
-+			syna,clip-y-high = <2560>;
-+		};
-+	};
-+};
-+
- &sdhc_1 {
- 	status = "okay";
+ 		rpm_msg_ram: memory@fc428000 {
+diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+index 58fc8b0321c3..f2f850ebd3c8 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+@@ -528,6 +528,8 @@ gcc: clock-controller@fc400000 {
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+ 			reg = <0xfc400000 0x2000>;
++			clock-names = "xo", "sleep_clk";
++			clocks = <&xo_board>, <&sleep_clk>;
+ 		};
  
+ 		rpm_msg_ram: memory@fc428000 {
 -- 
 2.27.0
 
