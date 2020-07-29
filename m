@@ -2,130 +2,133 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE21C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 10:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D3EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCB022B42
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 10:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E4D2074B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="clzv82HV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J4JNa4qv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgG2Kxr (ORCPT
+        id S1726385AbgG2LCh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 06:53:47 -0400
-Received: from www.zeus03.de ([194.117.254.33]:35814 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726353AbgG2Kxq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 06:53:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=2x2QfEfBC4l443FmjTL98MfufmM7
-        oJEQtQHZVT5tIeU=; b=clzv82HV9z8lTH9DetDYed3c/nycp3qCd4Wa2ZuySQgU
-        9dpO4ubWCo0meb3GzxE+DiBzWOLkUPWJl/OclXeVzKAmxKGM5fXRzW3HUZ0DUoIH
-        JCJP2+g1mej07kRe1ATqWRvpUEbZnl06XS0fhDU9wJV2hI7RQPIcO5xgRxkq/4c=
-Received: (qmail 944506 invoked from network); 29 Jul 2020 12:53:44 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 Jul 2020 12:53:44 +0200
-X-UD-Smtp-Session: l3s3148p1@ovGjXpKr9qogAwDPXwaWALqNWIsV+hH3
-Date:   Wed, 29 Jul 2020 12:53:44 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, Alain Volmat <alain.volmat@st.com>
-Subject: Re: [PATCH] i2c: add binding to mark a bus as SMBus
-Message-ID: <20200729105344.GB1015@ninjato>
-References: <20200701214830.3174-1-wsa+renesas@sang-engineering.com>
- <20200715203843.GA776042@bogus>
- <20200724193635.GC1227@ninjato>
- <20200725120700.GA1734@kunai>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
-Content-Disposition: inline
-In-Reply-To: <20200725120700.GA1734@kunai>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 29 Jul 2020 07:02:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2LCg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 07:02:36 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38554C0619D2
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:36 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id g6so11932076ljn.11
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1p/nSgtdkS6RT0uc1pBBiZ0bICji/pIROwSE8og0ow8=;
+        b=J4JNa4qv37g5NWhBZaCQ6BSM4/d/4LhSFiar9U4kEG1i2rKPSVsEm+Fi8hKHagbjfY
+         FMmRzv4n5fI1oiRuRrqBAigKBEDKfDpQkmdU1hF5Hb2wrPd0RYLtwZfZcNUDrgR00N28
+         P0ni9WYCj3H0SkyvzjgPmQ2ZHPfwcdPB/tTwVzD6hjQixcu3B9VhV8Lez5vvBOfV+r17
+         WADwPsa4XwUOp582XaBFDPXdzqjiES56KhLM0bigcp1sUM2nFMa1Jyf/fWQZvqNoLQMt
+         iA7FBArFOPGLNwrJcCviaqhgISDg+DLIyCKQbZe9IIw+cjncMD0tpFx3WEOnd+tfCV8f
+         Tx/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1p/nSgtdkS6RT0uc1pBBiZ0bICji/pIROwSE8og0ow8=;
+        b=Q42WxUArs3GHzc/5rphDM4n61Xnijl5cI2N9Ot6XHTx5Q3k4hPONsIFPbuN2l2QaUI
+         Vwx2VU2nKm3/s2M9xN5N1xFi6U3zpQUmL3XYBqp8VQmok9i3iYLe1u5DgkqCdqlgv3wJ
+         hDvGvymy2INXODRD8WUAqNh5/Yi8CITxQSwwb4VN0LU5kL8Q1/Lk1OWD6A5JlQOllk8k
+         msFZ3mkwbMX3vvlB5saqEBIwoTVqf2IZB3hXHP3A9wItVqebONOd4BxBJb9XEMLNnvpT
+         tcW1jDHxp7wyJFZM+HfZcoQDAwxllEVMfg0MUdBjUlm0dO20oE8iCjH9mdHvHmwzYYqG
+         6OVw==
+X-Gm-Message-State: AOAM533FDvB2T3/PXKdnSvEBC2GF5MxMiq800QAlnS1vWnfA0VnQgfRw
+        /KJSdPPQTIvva4DITYMXyX/vXQ==
+X-Google-Smtp-Source: ABdhPJwS6idbGKr5FM/mOnpu6U7dl2edJHUeJHk5Ns8Mz2Wno5b3USCog8R6LSKoFnKylkncCVQUEw==
+X-Received: by 2002:a2e:8799:: with SMTP id n25mr14700332lji.416.1596020553627;
+        Wed, 29 Jul 2020 04:02:33 -0700 (PDT)
+Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
+        by smtp.gmail.com with ESMTPSA id e12sm329283ljk.74.2020.07.29.04.02.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 29 Jul 2020 04:02:33 -0700 (PDT)
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+To:     ssantosh@kernel.org, s-anna@ti.com
+Cc:     grzegorz.jaszczyk@linaro.org, santosh.shilimkar@oracle.com,
+        robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wmills@ti.com, praneeth@ti.com
+Subject: [PATCH 0/6] Add TI PRUSS platform driver
+Date:   Wed, 29 Jul 2020 13:02:02 +0200
+Message-Id: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---rS8CxjVDS/+yyDmU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The Programmable Real-Time Unit and Industrial Communication Subsystem
+(PRU-ICSS) is present on various TI SoCs. The IP is present on multiple TI SoC
+architecture families including the OMAP architecture SoCs such as AM33xx,
+AM437x and AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is also
+present on the Davinci based OMAPL138 SoCs and K3 architecture based AM65x and
+J721E SoCs as well.
 
+A PRUSS consists of dual 32-bit RISC cores (Programmable Real-Time Units, or
+PRUs), shared RAM, data and instruction RAMs, some internal peripheral modules
+to facilitate industrial communication, and an interrupt controller.
 
-> > > > SMBus is largely compatible with I2C but there are some specifics. =
-In
-> > > > case we need them on a bus, we can now use this new binding.
-> > > >=20
-> > > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/i2c/i2c.txt | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Docume=
-ntation/devicetree/bindings/i2c/i2c.txt
-> > > > index 438ae123107e..d1f8cf3bd236 100644
-> > > > --- a/Documentation/devicetree/bindings/i2c/i2c.txt
-> > > > +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-> > > > @@ -77,6 +77,11 @@ wants to support one of the below features, it s=
-hould adapt these bindings.
-> > > >  	this information to detect a stalled bus more reliably, for examp=
-le.
-> > > >  	Can not be combined with 'multi-master'.
-> > > > =20
-> > > > +- smbus
-> > >=20
-> > > This is a boolean?
-> >=20
-> > Yes.
-> >=20
-> > >=20
-> > > > +	states that additional SMBus restrictions and features apply to t=
-his bus.
-> > > > +	Examples of features are SMBusHostNotify and SMBusAlert. Examples=
- of
-> > >=20
-> > > Do features need to be enumerated separately?
-> >=20
-> > They could be, do you think this is of advantage? For now, we would then
-> > need "host-notify" and "smbus-alert". Maybe later things like "timeout"
-> > could show up.
->=20
-> I also recall now that I thought that "smbus" fits better the
-> "describing hardware" aspect, i.e. "this bus is an SMBus and not I2C".
-> Enumerating features felt more like configuration to me.
-
-Rob, if you have a minute to comment on it, I would much appreciate it.
-I'd love to get this into 5.9.
-
-Thanks and all the best!
+The programmable nature of the PRUs provide flexibility to implement custom
+peripheral interfaces, fast real-time responses, or specialized data handling.
+The common peripheral modules include the following,
+  - an Ethernet MII_RT module with two MII ports
+  - an MDIO port to control external Ethernet PHYs
+  - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+    Ethernet functions
+  - an Enhanced Capture Module (eCAP)
+  - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
+  - a 16550-compatible UART to support PROFIBUS
+  - Enhanced GPIO with async capture and serial support
 
 
---rS8CxjVDS/+yyDmU
-Content-Type: application/pgp-signature; name="signature.asc"
+A typical usage scenario would be to load the application firmware into one or
+more of the PRU cores, initialize one or more of the peripherals and perform I/O
+through shared RAM from either a kernel driver or directly from userspace.
 
------BEGIN PGP SIGNATURE-----
+This series contains the PRUSS platform driver. This is the parent driver for
+the entire PRUSS and is used for managing the subsystem level resources like
+various memories and the CFG module.  It is responsible for the creation and
+deletion of the platform devices for the child PRU devices and other child
+devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
+they can be managed by specific platform drivers.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8hVTgACgkQFA3kzBSg
-KbZf4Q//YpI7C6M7BhCIOjq6cUGrnn3TfAConMoT/bZKmdiMa6fCVirZuym4fFJy
-j37oeQkypBDQDdH/UMthLeaNRS2nkP9znzFxDWJqxvESdbsZpzgt21RzkFGvd5yK
-+LXpLhn3e3XjgEwj+LnYF31Oetq7MkSfQCViR9KpNBMOvT7NgnSxvWf5DaEQpLRc
-S+WlLxBRKuT7Ws0Eyp4a9LxQ6ov6eEW3XGzgwVhNam55yf0gbJrY52PO20Jztymj
-4qhNNMuxF1wbThx42FqpNRnahxtWwVTOV51nQANX2DAxrMFWTVKNf4T6wvTcX9Ua
-B4y7bg32ySq9aYfNPIKrIXkZqLPhQ/JIGvhCxs18F1AzlvJakVsJ3jOCL2sTLMLZ
-IoH7QK07YqaAGd0LjhTgzuvUuF3VRtsLEGXha07Esu7nhAQEj1tmmlTSG5m5Mcd1
-oZzIJk3QOD+ttdhfk9vjXREMwLYtDTsD9IgsXQ07NQkdRbbk01A5exjOry96Mr3K
-D0cZnWovP5i+HskesH3XXxfH84wtNs0nbVXdzX/onoldk34fZR5fzcO4hjGN8pwq
-RLK0/ZWLPgHsgR9o+L/WiFGNDzjtIfXYi+Ux1sRvUStCTRF/1obqI2CRJTP5C/6B
-CYzIo6ukuTS6czZmppiLhiStExX2ahWcubADVB2QfbiNXF12fWE=
-=d8/d
------END PGP SIGNATURE-----
+Grzegorz Jaszczyk (1):
+  dt-bindings: soc: ti: Add TI PRUSS bindings
 
---rS8CxjVDS/+yyDmU--
+Suman Anna (5):
+  soc: ti: pruss: Add a platform driver for PRUSS in TI SoCs
+  soc: ti: pruss: Add support for PRU-ICSSs on AM437x SoCs
+  soc: ti: pruss: Add support for PRU-ICSS subsystems on AM57xx SoCs
+  soc: ti: pruss: Add support for PRU-ICSS subsystems on 66AK2G SoC
+  soc: ti: pruss: enable support for ICSSG subsystems on K3 AM65x SoCs
+
+ .../devicetree/bindings/soc/ti/ti,pruss.yaml       | 383 +++++++++++++++++++++
+ drivers/soc/ti/Kconfig                             |  11 +
+ drivers/soc/ti/Makefile                            |   1 +
+ drivers/soc/ti/pruss.c                             | 183 ++++++++++
+ include/linux/pruss_driver.h                       |  48 +++
+ 5 files changed, 626 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+ create mode 100644 drivers/soc/ti/pruss.c
+ create mode 100644 include/linux/pruss_driver.h
+
+-- 
+2.7.4
+
