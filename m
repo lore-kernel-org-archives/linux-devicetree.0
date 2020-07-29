@@ -2,493 +2,137 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD210C433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032FEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F422074B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D2E20829
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 11:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FuJjq36y"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Onozl2Pv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgG2LCn (ORCPT
+        id S1726710AbgG2L7W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 07:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56064 "EHLO
+        Wed, 29 Jul 2020 07:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgG2LCm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 07:02:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D0BC0619D2
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id s16so9329004ljc.8
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:02:41 -0700 (PDT)
+        with ESMTP id S1726353AbgG2L7W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 07:59:22 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45278C0619D2
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:59:20 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id di22so10010603edb.12
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 04:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ANv1JlMOK80+V0Rt6F4gDz6qxhkknUk14e6g7PmkUYE=;
-        b=FuJjq36yWQFuqC5DHZYlmuf4VQ62aVhdBle7PqzQfpknrDIHexQfnFnnAeSMLOsGHD
-         BeU08zZYJjFK/qhR1VwUrghj2U3smWgkjXjN8FpXecB9Bagqv1uiSmSTfzFpdTjzuD34
-         tg9ilKF/41GHsz9SLDsMzj2+dgjfYYOGwFEdotpr3a/zz2BJdFhSXovwtNTcm98HgYV5
-         cqrNsm5mHptVVB6jApbbe/4S23vN8O9qdJFQ78TpPAwolAs7fNGirZKM/qNYwg7ASKwh
-         iPaRnogg8nelMysuxYtmXV5aUcLtwi8DFXKdlY4cDcmjbDO42wLOQfQzmXgHBeoN1pMw
-         9CGg==
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5QRWy1YBlieNCizCX79fYi5/kvniVQ9BIqFKoJ+v6lY=;
+        b=Onozl2PvdryGi9YD+CsC7unot6+rdgNl73NAR/I++XEkM/ICfb2X5HUb9upkVoQ5lR
+         LWcTDVhZzlficsyzPt23J8l8HKMfciLClrRJ+X8j5F+jNX7PG89SmCaJQcmujDl47pw5
+         hALGlMtR8EwQKPcr6wEtumEdIBpNGCaL8QebI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ANv1JlMOK80+V0Rt6F4gDz6qxhkknUk14e6g7PmkUYE=;
-        b=FQSlAIkcm0pz2Owc/KyfgrtZ86KceBnCew0xQMFc1UGbuuXqkXYH1VPx28Ui3T4DEc
-         qN6ex5UwL/Bn6lq75V2wz8UxVdNipVfbG09KN9abzyww/1QPykdUK2BaRjTa4MoiPrj8
-         eR7hQIS2gS5ErUPoS97jy5ik/TjAucicBgoNgJS6xmzA8+brs6bnnFCAJc8sD3fEMfzx
-         MZTZqydoLpv7+ytwf6y/fJj9LilhilqhnRFnqfb4Avc4GQ4IonMKa9rn40q6+Ga/qwfM
-         ex2q78Usx2FG8FsbE3pN+F0AVleneFbonnw2X7xHSZCUEuuWO8q2svMoKACkKFKoTFZd
-         2DyQ==
-X-Gm-Message-State: AOAM533CyWgKdNVQCSvbn96lK8Su9Fv1rj/pwGLfgEXGXONzOKJIDJqZ
-        YStFoiSkMN2YxlybNeS+mZaYkQ==
-X-Google-Smtp-Source: ABdhPJxSGglSIyWUj/aqueyr+NcpI7ehdKGtk+orsMxpF9myO57dqJJ+xkPoRP2N7RKfDOOpb3S+Iw==
-X-Received: by 2002:a2e:9c0b:: with SMTP id s11mr1584611lji.117.1596020560217;
-        Wed, 29 Jul 2020 04:02:40 -0700 (PDT)
-Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id e12sm329283ljk.74.2020.07.29.04.02.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jul 2020 04:02:39 -0700 (PDT)
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-To:     ssantosh@kernel.org, s-anna@ti.com
-Cc:     grzegorz.jaszczyk@linaro.org, santosh.shilimkar@oracle.com,
-        robh+dt@kernel.org, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wmills@ti.com, praneeth@ti.com, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 1/6] dt-bindings: soc: ti: Add TI PRUSS bindings
-Date:   Wed, 29 Jul 2020 13:02:03 +0200
-Message-Id: <1596020528-19510-2-git-send-email-grzegorz.jaszczyk@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5QRWy1YBlieNCizCX79fYi5/kvniVQ9BIqFKoJ+v6lY=;
+        b=r8/5T6try21xwfK2EwIy0bWqGM1xzHk3samwGo9HY4VglmZl17hBakT7E221sWxCkx
+         i2zwZPnoCIQJ0oNcqwAqioSvYL8C6KDE4ZByCp8PtJHTm57B/vVLnDup+AqeGsh278v9
+         EhzqyLpLuIuq5tWpifwKo3cdTCbzIdWeJabz5gxBMQ7th2aDnwEh726WhRvWLiOJ3C+a
+         4EdiQUs/U3KhPsZfYIyZYzrBE37e1hyapx/NR7HFq4fmVKxOnTVtCYlewIzfiN/sXXAr
+         y/4SqKQTjzRGAcYWLNDAAeGGIlKZViAJrt8nOvU6O79eM6g8A9uSN3DyLU1F0uIWCV1/
+         m6Rg==
+X-Gm-Message-State: AOAM5317aMf8GEB09QkHqluF5tP3HVMGj2AbYngTifqrjTqX//+rciSU
+        sCwtqRq6m9auPsxqAYLMAFC8rsLuruZL4/ymKtpNFQ==
+X-Google-Smtp-Source: ABdhPJxJTqL+yv4XQZ+e0Yu1p1dYX4jQwhJQ/xCQBLuR5o92WBnb1MdF57usX1MRal33FHuF6Ysjh0ffW2dn1NvjC0w=
+X-Received: by 2002:a05:6402:c86:: with SMTP id cm6mr12777305edb.205.1596023958843;
+ Wed, 29 Jul 2020 04:59:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200723090210.41201-1-jagan@amarulasolutions.com> <20200723155028.GA427258@bogus>
+In-Reply-To: <20200723155028.GA427258@bogus>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Wed, 29 Jul 2020 17:29:07 +0530
+Message-ID: <CAMty3ZDgrxeLxshKMMjXgg6wgDsan8mJeLr9d+YC9F=5uLPMqw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: arm: rockchip: Update ROCKPi 4 binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the bindings for the Programmable Real-Time Unit
-and Industrial Communication Subsystem (PRU-ICSS) present on various
-TI SoCs. The IP is present on multiple TI SoC architecture families
-including the OMAP architecture SoCs such as AM33xx, AM437x and
-AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
-also present on the Davinci based OMAPL138 SoCs and K3 architecture
-based AM65x and J721E SoCs as well.
+On Thu, Jul 23, 2020 at 9:20 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Jul 23, 2020 at 02:32:07PM +0530, Jagan Teki wrote:
+> > ROCKPi 4 has 3 variants of hardware platforms called
+> > ROCKPi 4A, 4B, and 4C.
+> >
+> > - ROCKPi 4A has no Wif/BT.
+> > - ROCKPi 4B has AP6256 Wifi/BT, PoE.
+> > - ROCKPi 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enabled
+> >   GPIO pin change compared to 4B, 4C
+> >
+> > So, update the existing ROCKPi 4 binding to support
+> > ROCKPi 4A/B/C hardware platforms.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v3:
+> > - new patch
+> >
+> >  Documentation/devicetree/bindings/arm/rockchip.yaml | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > index db2e35796795..e6f656b0bd56 100644
+> > --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+> > @@ -430,8 +430,12 @@ properties:
+> >            - const: radxa,rock
+> >            - const: rockchip,rk3188
+> >
+> > -      - description: Radxa ROCK Pi 4
+> > +      - description: Radxa ROCK Pi 4A/B/C
+> >          items:
+> > +          - enum:
+> > +              - const: radxa,rockpi4a
+> > +              - const: radxa,rockpi4b
+> > +              - const: radxa,rockpi4c
+> >            - const: radxa,rockpi4
+>
+> radxa,rockpi4 already meant 'ROCKPi 4A' and should continue to do so.
+> Just add 4B and 4C strings. It's up to you if they should be backwards
+> compatible with 'radxa,rockpi4' (meaning 4A), but I'd guess not unless
+> it's just a board pop option.
 
-The IP has a number of sub-modules some of which are represented as
-their own devices. This binding covers only the top-level sub-system
-devices, and some sub-modules like MDIO, MII_RT (Ethernet MII_RT module
-with MII ports) and IEP (Industrial Ethernet Peripheral). The remaining
-sub-modules bindings shall be defined in the respective driver
-subsystem bindings folders. Couple of full examples have also been
-added demonstrating the devices on AM335x and AM437x SoCs.
+At-least from dts nodes enablement point of view the existing dts
+(with radxa,rockpi4) is 4B since it has wifi/bt enabled. 4A is the
+real name of the board so having a compatible with radxa,rockpi4a is
+meaningful as I understood.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Reviewed-by: Lee Jones <lee.jones@linaro.org>
----
- .../devicetree/bindings/soc/ti/ti,pruss.yaml       | 383 +++++++++++++++++++++
- 1 file changed, 383 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+So, based on the above statements the respective binding look like
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-new file mode 100644
-index 0000000..4b7a098
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-@@ -0,0 +1,383 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/ti/ti,pruss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: |+
-+  TI Programmable Real-Time Unit and Industrial Communication Subsystem
-+
-+maintainers:
-+  - Suman Anna <s-anna@ti.com>
-+
-+description: |+
-+
-+  The Programmable Real-Time Unit and Industrial Communication Subsystem
-+  (PRU-ICSS a.k.a. PRUSS) is present on various TI SoCs such as AM335x, AM437x,
-+  Keystone 66AK2G, OMAP-L138/DA850 etc. A PRUSS consists of dual 32-bit RISC
-+  cores (Programmable Real-Time Units, or PRUs), shared RAM, data and
-+  instruction RAMs, some internal peripheral modules to facilitate industrial
-+  communication, and an interrupt controller.
-+
-+  The programmable nature of the PRUs provide flexibility to implement custom
-+  peripheral interfaces, fast real-time responses, or specialized data handling.
-+  The common peripheral modules include the following,
-+    - an Ethernet MII_RT module with two MII ports
-+    - an MDIO port to control external Ethernet PHYs
-+    - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
-+      Ethernet functions
-+    - an Enhanced Capture Module (eCAP)
-+    - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
-+    - a 16550-compatible UART to support PROFIBUS
-+    - Enhanced GPIO with async capture and serial support
-+
-+  A PRU-ICSS subsystem can have up to three shared data memories. A PRU core
-+  acts on a primary Data RAM (there are usually 2 Data RAMs) at its address
-+  0x0, but also has access to a secondary Data RAM (primary to the other PRU
-+  core) at its address 0x2000. A shared Data RAM, if present, can be accessed
-+  by both the PRU cores. The Interrupt Controller (INTC) and a CFG module are
-+  common to both the PRU cores. Each PRU core also has a private instruction
-+  RAM, and specific register spaces for Control and Debug functionalities.
-+
-+  Various sub-modules within a PRU-ICSS subsystem are represented as individual
-+  nodes and are defined using a parent-child hierarchy depending on their
-+  integration within the IP and the SoC. These nodes are described in the
-+  following sections.
-+
-+
-+  PRU-ICSS Node
-+  ==============
-+  Each PRU-ICSS instance is represented as its own node with the individual PRU
-+  processor cores, the memories node, an INTC node and an MDIO node represented
-+  as child nodes within this PRUSS node. This node shall be a child of the
-+  corresponding interconnect bus nodes or target-module nodes.
-+
-+  See ../../mfd/syscon.yaml for generic SysCon binding details.
-+
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,am3356-pruss  # for AM335x SoC family
-+      - ti,am4376-pruss0 # for AM437x SoC family and PRUSS unit 0
-+      - ti,am4376-pruss1 # for AM437x SoC family and PRUSS unit 1
-+      - ti,am5728-pruss  # for AM57xx SoC family
-+      - ti,k2g-pruss     # for 66AK2G SoC family
-+      - ti,am654-icssg   # for K3 AM65x SoC family
-+      - ti,j721e-icssg   # for K3 J721E SoC family
-+
-+  reg:
-+    maxItems: 1
-+
-+  ranges:
-+    maxItems: 1
-+    description: |
-+      Standard ranges definition using addresses from 0 for child nodes.
-+
-+  power-domains:
-+    description: |
-+      This property is as per sci-pm-domain.txt.
-+
-+  memories:
-+    description: |
-+      The various Data RAMs within a single PRU-ICSS unit are represented as a
-+      single node with the name 'memories'.
-+
-+    type: object
-+
-+    properties:
-+      reg:
-+        minItems: 2 # On AM437x one of two PRUSS units don't contain Shared RAM.
-+        maxItems: 3
-+        items:
-+          - description: Address and size of the Data RAM0.
-+          - description: Address and size of the Data RAM1.
-+          - description: |
-+              Address and size of the Shared Data RAM. Note that on AM437x one
-+              of two PRUSS units don't contain Shared RAM, while the second one
-+              has it.
-+
-+      reg-names:
-+        minItems: 2
-+        maxItems: 3
-+        items:
-+          - const: dram0
-+          - const: dram1
-+          - const: shrdram2
-+
-+    required:
-+      - reg
-+      - reg-names
-+
-+  cfg:
-+    description: |
-+      PRU-ICSS configuration space. CFG sub-module represented as a SysCon.
-+
-+    type: object
-+
-+    properties:
-+      compatible:
-+        items:
-+          - const: ti,pruss-cfg
-+          - const: syscon
-+
-+      reg:
-+        maxItems: 1
-+
-+  iep:
-+    description: |
-+      Industrial Ethernet Peripheral to manage/generate Industrial Ethernet
-+      functions such as time stamping. Each PRUSS has either 1 IEP (on AM335x,
-+      AM437x, AM57xx & 66AK2G SoCs) or 2 IEPs (on K3 AM65x & J721E SoCs ). IEP
-+      is used for creating PTP clocks and generating PPS signals. The bindings
-+      for this shall be defined in ../../net/ti,icss-iep.yaml.
-+
-+    type: object
-+
-+  mii-rt:
-+    description: |
-+      Real-Time Ethernet to support multiple industrial communication protocols.
-+      MII-RT sub-module represented as a SysCon.
-+
-+    type: object
-+
-+    properties:
-+      compatible:
-+        items:
-+          - const: ti,pruss-mii
-+          - const: syscon
-+
-+      reg:
-+        maxItems: 1
-+
-+  mii-g-rt:
-+    description: |
-+      The Real-time Media Independent Interface to support multiple industrial
-+      communication protocols (G stands for Gigabit). MII-G-RT sub-module
-+      represented as a SysCon.
-+
-+    type: object
-+
-+    properties:
-+      compatible:
-+        items:
-+          - const: ti,pruss-mii-g
-+          - const: syscon
-+
-+      reg:
-+        maxItems: 1
-+
-+  interrupt-controller:
-+    description: |
-+      PRUSS INTC Node. Each PRUSS has a single interrupt controller instance
-+      that is common to all the PRU cores. This should be represented as an
-+      interrupt-controller node. The bindings for this shall be defined in
-+      ../../interrupt-controller/ti,pruss-intc.yaml.
-+
-+    type: object
-+
-+  mdio:
-+    description: |
-+      MDIO Node. Each PRUSS has an MDIO module that can be used to control
-+      external PHYs. The MDIO module used within the PRU-ICSS is an instance of
-+      the MDIO Controller used in TI Davinci SoCs.
-+
-+    allOf:
-+      - $ref: /schemas/net/ti,davinci-mdio.yaml#
-+
-+    type: object
-+
-+patternProperties:
-+  "^(pru|rtu|txpru)@[0-9a-f]+$":
-+    description: |
-+      PRU Node. Each PRUSS has dual PRU cores, each represented as a RemoteProc
-+      device through a PRU child node each. Each node can optionally be rendered
-+      inactive by using the standard DT string property, "status". The ICSSG IP
-+      present on K3 SoCs have additional auxiliary PRU cores with slightly
-+      different IP integration. The bindings for this shall be defined in
-+      ../../remoteproc/ti,pru-rproc.yaml
-+
-+    type: object
-+
-+required:
-+  - compatible
-+  - reg
-+  - ranges
-+
-+# Due to inability of correctly verifying sub-nodes with an @address through
-+# the "required" list, the required sub-nodes below are commented out for now.
-+
-+#required:
-+# - memories
-+# - interrupt-controller
-+# - pru
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - ti,k2g-pruss
-+          - ti,am654-icssg
-+          - ti,j721e-icssg
-+then:
-+  required:
-+    - power-domains
-+
-+examples:
-+  - |
-+
-+    /* Example 1 AM33xx PRU-ICSS */
-+    pruss: pruss@0 {
-+        compatible = "ti,am3356-pruss";
-+        reg = <0x0 0x80000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        pruss_mem: memories@0 {
-+            reg = <0x0 0x2000>,
-+                  <0x2000 0x2000>,
-+                  <0x10000 0x3000>;
-+            reg-names = "dram0", "dram1", "shrdram2";
-+        };
-+
-+        pruss_cfg: cfg@26000 {
-+            compatible = "ti,pruss-cfg", "syscon";
-+            reg = <0x26000 0x2000>;
-+        };
-+
-+        pruss_iep: iep@2e000 {
-+            compatible = "ti,am3356-icss-iep";
-+            reg = <0x2e000 0x31c>;
-+            clocks = <&pruss_iepclk_mux>;
-+        };
-+
-+        pruss_mii_rt: mii-rt@32000 {
-+            compatible = "ti,pruss-mii", "syscon";
-+            reg = <0x32000 0x58>;
-+        };
-+
-+        pruss_intc: interrupt-controller@20000 {
-+            compatible = "ti,pruss-intc";
-+            reg = <0x20000 0x2000>;
-+            interrupts = <20 21 22 23 24 25 26 27>;
-+            interrupt-names = "host_intr0", "host_intr1",
-+                              "host_intr2", "host_intr3",
-+                              "host_intr4", "host_intr5",
-+                              "host_intr6", "host_intr7";
-+            interrupt-controller;
-+            #interrupt-cells = <3>;
-+        };
-+
-+        pru0: pru@34000 {
-+            compatible = "ti,am3356-pru";
-+            reg = <0x34000 0x2000>,
-+                  <0x22000 0x400>,
-+                  <0x22400 0x100>;
-+            reg-names = "iram", "control", "debug";
-+            firmware-name = "am335x-pru0-fw";
-+        };
-+
-+        pru1: pru@38000 {
-+            compatible = "ti,am3356-pru";
-+            reg = <0x38000 0x2000>,
-+                  <0x24000 0x400>,
-+                  <0x24400 0x100>;
-+            reg-names = "iram", "control", "debug";
-+            firmware-name = "am335x-pru1-fw";
-+        };
-+
-+        pruss_mdio: mdio@32400 {
-+            compatible = "ti,davinci_mdio";
-+            reg = <0x32400 0x90>;
-+            clocks = <&dpll_core_m4_ck>;
-+            clock-names = "fck";
-+            bus_freq = <1000000>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+        };
-+    };
-+
-+  - |
-+
-+    /* Example 2 AM43xx PRU-ICSS with PRUSS1 node */
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    pruss1: pruss@0 {
-+        compatible = "ti,am4376-pruss";
-+        reg = <0x0 0x40000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        pruss1_mem: memories@0 {
-+            reg = <0x0 0x2000>,
-+                  <0x2000 0x2000>,
-+                  <0x10000 0x8000>;
-+            reg-names = "dram0", "dram1", "shrdram2";
-+        };
-+
-+        pruss1_cfg: cfg@26000 {
-+            compatible = "ti,pruss-cfg", "syscon";
-+            reg = <0x26000 0x2000>;
-+        };
-+
-+        pruss1_iep: iep@2e000 {
-+            compatible = "ti,am3356-icss-iep";
-+            reg = <0x2e000 0x31c>;
-+            clocks = <&pruss_iepclk_mux>;
-+        };
-+
-+        pruss1_mii_rt: mii-rt@32000 {
-+            compatible = "ti,pruss-mii", "syscon";
-+            reg = <0x32000 0x58>;
-+        };
-+
-+        pruss1_intc: interrupt-controller@20000 {
-+            compatible = "ti,pruss-intc";
-+            reg = <0x20000 0x2000>;
-+            interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "host_intr0", "host_intr1",
-+                              "host_intr2", "host_intr3",
-+                              "host_intr4", "host_intr6",
-+                              "host_intr7";
-+            interrupt-controller;
-+            #interrupt-cells = <3>;
-+        };
-+
-+        pru1_0: pru@34000 {
-+            compatible = "ti,am4376-pru";
-+            reg = <0x34000 0x3000>,
-+                  <0x22000 0x400>,
-+                  <0x22400 0x100>;
-+            reg-names = "iram", "control", "debug";
-+            firmware-name = "am437x-pru1_0-fw";
-+        };
-+
-+        pru1_1: pru@38000 {
-+            compatible = "ti,am4376-pru";
-+            reg = <0x38000 0x3000>,
-+                  <0x24000 0x400>,
-+                  <0x24400 0x100>;
-+            reg-names = "iram", "control", "debug";
-+            firmware-name = "am437x-pru1_1-fw";
-+        };
-+
-+        pruss1_mdio: mdio@32400 {
-+            compatible = "ti,davinci_mdio";
-+            reg = <0x32400 0x90>;
-+            clocks = <&dpll_core_m4_ck>;
-+            clock-names = "fck";
-+            bus_freq = <1000000>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+        };
-+    };
-+
-+...
--- 
-2.7.4
+      - description: Radxa ROCK Pi 4A/B/C
+        items:
+          - enum:
+              - radxa,rockpi4a
+              - radxa,rockpi4b
+              - radxa,rockpi4c
+          - const: radxa,rockpi4
+          - const: rockchip,rk3399
 
+Comments, please?
+
+Jagan.
