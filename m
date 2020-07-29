@@ -2,103 +2,192 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05293C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6DAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC49206D4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dAg2f074"
+	by mail.kernel.org (Postfix) with ESMTP id A5D6020FC3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgG2P4C (ORCPT
+        id S1726581AbgG2QHH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:56:02 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60826 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2P4C (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 11:56:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06TFu00U004597;
-        Wed, 29 Jul 2020 10:56:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596038160;
-        bh=dErOzIho34fxvJcb68vhO2ZIVDb37+iIzl5rCrT1rGU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dAg2f074lHJEzqnf7SuTzPpJnsRcs1+O9lTJgE88Wp/dKdfxLv8sZOQCHD3CRtbp+
-         sKJOfC5RVJfCgg2XBspNiTRn1N7sMebq8Zgm5LDtpZ6DLe/sDQ8ezgGyIiiFrxkUFI
-         rAGkTJoBx7cp/KsOcO7/XVpB22HIVND6y/aLEzX0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06TFu03E058504;
-        Wed, 29 Jul 2020 10:56:00 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 29
- Jul 2020 10:56:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 29 Jul 2020 10:56:00 -0500
-Received: from [10.250.35.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06TFtxOX006537;
-        Wed, 29 Jul 2020 10:55:59 -0500
-Subject: Re: [PATCH v5 2/4] power: supply: bq27xxx_battery: Add the BQ27z561
- Battery monitor
-To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh@kernel.org>
-References: <20200729120609.22427-1-dmurphy@ti.com>
- <20200729120609.22427-2-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a757fcf1-0215-3926-f74c-22183457be3e@ti.com>
-Date:   Wed, 29 Jul 2020 10:55:54 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 12:07:07 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:53362 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgG2QHH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 12:07:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9EA898030866;
+        Wed, 29 Jul 2020 16:07:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vcQPxmkk7SoN; Wed, 29 Jul 2020 19:07:00 +0300 (MSK)
+Date:   Wed, 29 Jul 2020 19:06:59 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200729160659.jcz7nl6qvd7lami2@mobilestation>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com>
+ <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+ <20200729125837.b27ncvd2eeixstba@mobilestation>
+ <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200729120609.22427-2-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfekW-aQhyCQJhzqJ+jSvmzJ-Otdh0jwoLt662CopwyTQ@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello
+On Wed, Jul 29, 2020 at 06:10:24PM +0300, Andy Shevchenko wrote:
+> On Wed, Jul 29, 2020 at 3:58 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
+> 
+> ...
+> 
+> > Sorry for a delay with a response to this issue. I had to give it a more thorough
+> > thought since the problem is a bit more complex than it seemed originally. As I
+> > see it now It might be wrong to implement the cases 2) and 3), but 1) is more
+> > appropriate.
+> >
+> > First of all we need to note that GPIOlib framework provides the next parameters
+> > to describe the IRQ-chip:
+> > gc->irq.num_parents - number of parental IRQ numbers.
+> > gc->irq.parents[] - array of parental IRQ numbers.
+> > *gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
+> > *gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
+> >
+> > Using that set we can handle any case of linear and sparse parental IRQs. Here
+> > is how it can be implemented in the framework of DW APB GPIO controller.
+> >
+> > DW APB GPIO can be synthesized with two configs:
+> > 1) Combined IRQ line (GPIO_INTR_IO == True),
+> > 2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
+> >
+> > Obviously the former case is trivial:
+> >
+> >      IRQ_combined
+> >     ______^________
+> >    /_ _ _ _ _ ___ _\
+> >    |_|_|_|_|_|...|_| - GPIOs
+> >
+> > In that case
+> > gc->irq.num_parents = 1;
+> > gc->irq.parents[0] = IRQ_combined;
+> > *gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
+> >
+> > The later one (when multiple interrupt signals are involved) can be a bit more
+> > complicated. It can be also split up into two cases:
+> > 2a) One-on-one GPIO-IRQ mapping.
+> > 2b) Sparse GPIO-IRQ mapping.
+> >
+> > It's straightforward to implement 2a):
+> >
+> >    i1i2i3i4i5 ... iN
+> >     _ _ _ _ _ ___ _
+> >    |_|_|_|_|_|...|_| - GPIOs
+> >
 
-On 7/29/20 7:06 AM, Dan Murphy wrote:
-> Add the Texas Instruments BQ27z561 battery monitor.  The register address
-> map is laid out the same as compared to other devices within the file.
-> The battery status register has differing bits to determine if the
-> battery is full, discharging or dead.
->
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   drivers/power/supply/bq27xxx_battery.c     | 69 +++++++++++++++++++++-
->   drivers/power/supply/bq27xxx_battery_i2c.c |  2 +
->   include/linux/power/bq27xxx_battery.h      |  1 +
->   3 files changed, 71 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-> index acaafed037be..a858e3b2a0ee 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -18,6 +18,7 @@
->    * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
->    *
->    * Datasheets:
-> +<<<<<<< HEAD
+> > In that case
+> > gc->irq.num_parents = ngpio;
+> > gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
+> > gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
+> > *gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
+> >
+> 
+> This case puzzles me. Why is it not NULL and 0 and actually you handle
+> everything as a nested case?
 
-Need to remove this artifact from a rebase.
+The code provided above is a sketch. Don't consider it literally. In reality
+of course valid_mask will be not NULL, memory for which will be allocated by
+the GPIOlib itself. The mask will be initialized by means of the
+gc->irq.init_valid_mask() callback.
 
-Not sure how this got here as it does not appear in my source.
+> 
+> > The complication starts when we get to implementing 2b):
+> >
+> >    i1 xi3i4 x ... iN
+> >     _ _ _ _ _ ___ _
+> >    |_|_|_|_|_|...|_| - GPIOs
+> 
+> So does this.
+> 
+> Valid mask will define exactly GPIOs that are IRQs. So, we will handle
+> only nested IRQs which are valid.
 
-Dan
+Right.
 
+> 
+> > In order to cover this case we need to answer on two question.
+> > Firstly how to get such platform config? I am not sure about ACPI, but
+> > aside from straightforward platform_data-based setup such configuration
+> > can be reached by setting up the "interrupts-extended" DT-property with
+> > zeroed phandle.
+> >
+> > Ok, since it's possible to meet such platform config, we need to think
+> > how to handle it and here is the second question. How to describe such
+> > case in the framework of GPIOlib-IRQchip?
+> >
+> > So from my side it was wrong to set the sparse IRQs array to
+> > gc->irq.parents. Instead I should have scanned the sparse IRQs array,
+> > calculated the number of non-empty parental IRQs, created an array of linear
+> > (non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
+> > sparse parental IRQs array. In other words it was wrong to assume, that
+> > each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
+> > array just describes the parental IRQs and nothing else.
+> >
+> > Shortly speaking here is how the GPIOlib IRQchip parameters should be
+> > initialized in this case:
+> > gc->irq.num_parents - number of valid parental IRQs.
+> > gc->irq.parents - non-sparse, linear array of valid IRQs.
+> > *gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
+> > callback, which indicates valid IRQ/GPIO IDs.
+> > *gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
+> > pass through the gc->irq.parents pointer).
+> >
+> > After that GPIOlib IRQchip should work just fine without need to be patched
+> > in order to check whether the passed parental IRQs are valid or not.
+> >
+> > Please correct me if I am wrong in some aspects of the solution described above.
+> > I'll send a fix of the problem shortly.
+> 
 
+> Maybe I'm missing something, but looks like you are solving the issue
+> which is not so complex / doesn't exist.
+
+As I see it now the problem was to provide a suitable config for GPIO-lib IRQ-chip
+so one would correctly perceive our DW APB GPIO-IRQ setup with single/sparse/linear
+IRQs. My point in the message before was to explain how that problem could be solved
+without patching GPIO-lib or IRQ-chip implementations. I shared my thoughts to make
+sure the suggested solution is correct, to make sure I didn't miss something in
+my considerations.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
