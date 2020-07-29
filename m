@@ -2,199 +2,75 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C23C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9318C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB71208A9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F23D22D0B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgG2N1h (ORCPT
+        id S1726365AbgG2Nrw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:27:37 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:43788 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2N1h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:27:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id E767AFB05;
-        Wed, 29 Jul 2020 15:27:33 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3xIffyALAbLL; Wed, 29 Jul 2020 15:27:30 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 346BB45341; Wed, 29 Jul 2020 15:27:30 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 15:27:30 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, lukas@mntmn.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 5/5] dt-bindings: display: imx: add bindings for DCSS
-Message-ID: <20200729132730.GA266947@bogon.m.sigxcpu.org>
-References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
- <20200724090736.12228-6-laurentiu.palcu@oss.nxp.com>
+        Wed, 29 Jul 2020 09:47:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39634 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2Nrv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 09:47:51 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 6F6B6283C05
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     kernel@collabora.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] ARM: exynos: clear L220_AUX_CTRL_NS_LOCKDOWN in default l2c_aux_val
+Date:   Wed, 29 Jul 2020 14:47:31 +0100
+Message-Id: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724090736.12228-6-laurentiu.palcu@oss.nxp.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On Fri, Jul 24, 2020 at 12:07:34PM +0300, Laurentiu Palcu wrote:
-> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> 
-> Add bindings for iMX8MQ Display Controller Subsystem.
-> 
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
->  1 file changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> new file mode 100644
-> index 000000000000..68e4635e4874
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> @@ -0,0 +1,104 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 NXP
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: iMX8MQ Display Controller Subsystem (DCSS)
-> +
-> +maintainers:
-> +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> +
-> +description:
-> +
-> +  The DCSS (display controller sub system) is used to source up to three
-> +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
-> +  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
-> +  image processing capabilities are included to provide a solution capable of
-> +  driving next generation high dynamic range displays.
-> +
-> +properties:
-> +  compatible:
-> +    const: nxp,imx8mq-dcss
-> +
-> +  reg:
-> +    items:
-> +      - description: DCSS base address and size, up to IRQ steer start
-> +      - description: DCSS BLKCTL base address and size
-> +
-> +  interrupts:
-> +    items:
-> +      - description: Context loader completion and error interrupt
-> +      - description: DTG interrupt used to signal context loader trigger time
-> +      - description: DTG interrupt for Vblank
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: ctxld
-> +      - const: ctxld_kick
-> +      - const: vblank
-> +
-> +  clocks:
-> +    items:
-> +      - description: Display APB clock for all peripheral PIO access interfaces
-> +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
-> +      - description: RTRAM clock
-> +      - description: Pixel clock, can be driven either by HDMI phy clock or MIPI
-> +      - description: DTRC clock, needed by video decompressor
-> +
-> +  clock-names:
-> +    items:
-> +      - const: apb
-> +      - const: axi
-> +      - const: rtrm
-> +      - const: pix
-> +      - const: dtrc
-> +
-> +  assigned-clocks:
-> +    items:
-> +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_AXI_ROOT
-> +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_RTRM
-> +      - description: Phandle and clock specifier of either IMX8MQ_VIDEO2_PLL1_REF_SEL or
-> +                     IMX8MQ_VIDEO_PLL1_REF_SEL
-> +
-> +  assigned-clock-parents:
-> +    items:
-> +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
-> +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
-> +      - description: Phandle and clock specifier of IMX8MQ_CLK_27M
-> +
-> +  assigned-clock-rates:
-> +    items:
-> +      - description: Must be 800 MHz
-> +      - description: Must be 400 MHz
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      A port node pointing to the input port of a HDMI/DP or MIPI display bridge.
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
+The L220_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
+sequence.  There is no need to set it in the default register value,
+this was done before support for it was implemented in the code.  It
+is not set in the hardware initial value either.
 
-it would be nice to
+Clean this up by removing this flag from the default l2c_aux_val, and
+add it to the l2c_aux_mask to print an alert message if it was already
+set before the kernel initialisation.
 
-    #include <dt-bindings/clock/imx8mq-clock.h>
+Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+---
+ arch/arm/mach-exynos/exynos.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-here...
+diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+index 36c37444485a..a96f3353a0c1 100644
+--- a/arch/arm/mach-exynos/exynos.c
++++ b/arch/arm/mach-exynos/exynos.c
+@@ -193,8 +193,8 @@ static void __init exynos_dt_fixup(void)
+ }
+ 
+ DT_MACHINE_START(EXYNOS_DT, "Samsung Exynos (Flattened Device Tree)")
+-	.l2c_aux_val	= 0x3c400000,
+-	.l2c_aux_mask	= 0xc20fffff,
++	.l2c_aux_val	= 0x38400000,
++	.l2c_aux_mask	= 0xc60fffff,
+ 	.smp		= smp_ops(exynos_smp_ops),
+ 	.map_io		= exynos_init_io,
+ 	.init_early	= exynos_firmware_init,
+-- 
+2.20.1
 
-> +    dcss: display-controller@32e00000 {
-> +        compatible = "nxp,imx8mq-dcss";
-> +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
-> +        interrupts = <6>, <8>, <9>;
-> +        interrupt-names = "ctxld", "ctxld_kick", "vblank";
-> +        interrupt-parent = <&irqsteer>;
-> +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
-> +                 <&clk 254>,<&clk 122>;
-> +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
-> +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
-> +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
-
-so that clock names like IMX8MQ_CLK_DISP_AXI could be used to make this
-even more useful.
-
-Cheers,
- -- Guido
-
-> +        assigned-clock-rates = <800000000>,
-> +                               <400000000>;
-> +        port {
-> +            dcss_out: endpoint {
-> +                remote-endpoint = <&hdmi_in>;
-> +            };
-> +        };
-> +    };
-> +
-> -- 
-> 2.23.0
-> 
