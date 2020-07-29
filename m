@@ -2,46 +2,67 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A6CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 02:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E17BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 02:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 694152076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 02:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OVVg6B8e"
+	by mail.kernel.org (Postfix) with ESMTP id 0DCF62070B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 02:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595989343;
+	bh=k5qS863fFeAFImz8qQ72STBgwqwjrT2VdEQppPTBzkU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Wv4/U4NYuHxIo9af56Qi34TR5HR0OpFPv51SP62h30VL9G/fwJqcpiz4+58adXHSr
+	 4wQOBVd9bQ/1UBHVkBvIpwTfLq3f5CqjUXi69+fcnlA0eZs9qNnl8RGLaGMTFse5OE
+	 4cO2k57CWFE6hXfT1tQBHKvDD1EhPXPd3qLezUT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbgG2CLG (ORCPT
+        id S1730913AbgG2CWW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 22:11:06 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:11515 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728401AbgG2CLG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 22:11:06 -0400
-X-UUID: e417cfc4773949b99a4b2c62414f6cda-20200729
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=QgCv17VOsXWmYtflyC/NeH13zIi3hsJBBdDqKU+e3jU=;
-        b=OVVg6B8eCniJYaQ2Qeunp+FgUV0LTSjLwT/lgLtzmY+In5FhDp0s3CarPC40hxpUOqmDIEhoRX/TDmg2aosOHvfENTdmcHlXKNSfKWFLH5vFWHRv5bfezmMFQ8fEP/s8MA2oSJWjqQgjQ2wAwI0DIsqYAJAwF/GQJIbmfoDu4K4=;
-X-UUID: e417cfc4773949b99a4b2c62414f6cda-20200729
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2010206415; Wed, 29 Jul 2020 10:10:54 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 29 Jul 2020 10:10:52 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 29 Jul 2020 10:10:53 +0800
-Message-ID: <1595988652.9265.8.camel@mtkswgap22>
+        Tue, 28 Jul 2020 22:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730901AbgG2CWW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Jul 2020 22:22:22 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CC52070B;
+        Wed, 29 Jul 2020 02:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595989340;
+        bh=k5qS863fFeAFImz8qQ72STBgwqwjrT2VdEQppPTBzkU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UD2/SrXnSaE/nhR8QzLzln/M1nBs3BDKwAM2N1IFATWjIZxRnjcMdLqtNvkQlCTZS
+         OpydQCu0X+xprkrVevu6lL5QpcKnCTCEdNu2rnqrOAfQBAeHnVH78g4LouybBmztXT
+         wyapIPA8QyLf3cXBqKsKQZ5NzNHK93PhcTbNgDKM=
+Received: by mail-ed1-f53.google.com with SMTP id m20so6774722eds.2;
+        Tue, 28 Jul 2020 19:22:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532TgPSo80PBX8j0YyyBld2SnOR5BwjQeRWyJu8ilqXVBGyPDuEs
+        Q8LnFey8/DVz2U4Y3NQeFA9FIYBL1fGM8RwO2w==
+X-Google-Smtp-Source: ABdhPJydhzr6C/k9YnK7AjZNwvP8zWehqaiYPIACf3wyURav0IRtuOo10iWWbsTTEwW5OauoJYKz5teZYxl1XRqcP/k=
+X-Received: by 2002:a50:e617:: with SMTP id y23mr28961939edm.47.1595989338240;
+ Tue, 28 Jul 2020 19:22:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
+ <1595303971-8793-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
+ <1595389756.20193.12.camel@mtkswgap22> <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
+ <1595484707.26237.12.camel@mtkswgap22> <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
+ <1595573719.24412.9.camel@mtkswgap22> <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
+ <1595819152.7630.13.camel@mtkswgap22> <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
+ <1595908325.1388.8.camel@mtkswgap22> <CAAOTY_-POOCU0mG3qcV8=3UF4Qr5rq1RVAeFtnRvLgAxaof32g@mail.gmail.com>
+ <1595988652.9265.8.camel@mtkswgap22>
+In-Reply-To: <1595988652.9265.8.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 29 Jul 2020 10:22:06 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_82nN8U34-LW8RTqTLEH2MwTg+B5KMHjha3=sbOXPdWSw@mail.gmail.com>
+Message-ID: <CAAOTY_82nN8U34-LW8RTqTLEH2MwTg+B5KMHjha3=sbOXPdWSw@mail.gmail.com>
 Subject: Re: [PATCH v3 2/2] soc: mediatek: add mtk-devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         wsd_upstream <wsd_upstream@mediatek.com>,
@@ -49,260 +70,390 @@ CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
         "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 29 Jul 2020 10:10:52 +0800
-In-Reply-To: <CAAOTY_-POOCU0mG3qcV8=3UF4Qr5rq1RVAeFtnRvLgAxaof32g@mail.gmail.com>
-References: <1595303971-8793-1-git-send-email-neal.liu@mediatek.com>
-         <1595303971-8793-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_8T=DCntU8x5YEo+Pcs2J0Y4YvDaHUBdGiqEFRxghOd_Q@mail.gmail.com>
-         <1595389756.20193.12.camel@mtkswgap22>
-         <CAAOTY_9k7rM=Pf43DwJR_bkQvxVtpWYTjVoNSZLVE2N0Y_DBmA@mail.gmail.com>
-         <1595484707.26237.12.camel@mtkswgap22>
-         <CAAOTY__V3zwux7UP7p4SUbreGrPBbwRqi=E1WVsA58tYNmri1A@mail.gmail.com>
-         <1595573719.24412.9.camel@mtkswgap22>
-         <CAAOTY__KYH4G3E+c=zoOk==hPJHsAd5u4Q0oj4adKstaoOciMg@mail.gmail.com>
-         <1595819152.7630.13.camel@mtkswgap22>
-         <CAAOTY_8j4rxxqOD0-gf-=sJPhiLu9KE4zF467v7g2EBrTFJUeQ@mail.gmail.com>
-         <1595908325.1388.8.camel@mtkswgap22>
-         <CAAOTY_-POOCU0mG3qcV8=3UF4Qr5rq1RVAeFtnRvLgAxaof32g@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gVHVlLCAyMDIwLTA3LTI4IGF0IDIzOjM1ICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDI45pelIOmAseS6jCDkuIrljYgxMTo1MuWvq+mB
-k++8mg0KPiA+DQo+ID4gSGkgQ2h1bi1LdWFuZywNCj4gPg0KPiA+IE9uIE1vbiwgMjAyMC0wNy0y
-NyBhdCAyMjo0NyArMDgwMCwgQ2h1bi1LdWFuZyBIdSB3cm90ZToNCj4gPiA+IEhpLCBOZWFsOg0K
-PiA+ID4NCj4gPiA+IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0
-N+aciDI35pelIOmAseS4gCDkuIrljYgxMTowNuWvq+mBk++8mg0KPiA+ID4gPg0KPiA+ID4gPiBI
-aSBDaHVuLUt1YW5nLA0KPiA+ID4gPg0KPiA+ID4gPiBPbiBGcmksIDIwMjAtMDctMjQgYXQgMjM6
-NTUgKzA4MDAsIENodW4tS3VhbmcgSHUgd3JvdGU6DQo+ID4gPiA+ID4gSGksIE5lYWw6DQo+ID4g
-PiA+ID4NCj4gPiA+ID4gPiBOZWFsIExpdSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPiDmlrwgMjAy
-MOW5tDfmnIgyNOaXpSDpgLHkupQg5LiL5Y2IMjo1NeWvq+mBk++8mg0KPiA+ID4gPiA+ID4NCj4g
-PiA+ID4gPiA+IEhpIENodW4tS3VhbmcsDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gT24gRnJp
-LCAyMDIwLTA3LTI0IGF0IDAwOjMyICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0KPiA+ID4g
-PiA+ID4gPiBIaSwgTmVhbDoNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gTmVhbCBMaXUg
-PG5lYWwubGl1QG1lZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ35pyIMjPml6Ug6YCx5ZubIOS4i+WN
-iDI6MTHlr6vpgZPvvJoNCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IEhpIENodW4t
-S3VhbmcsDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBPbiBXZWQsIDIwMjAtMDct
-MjIgYXQgMjI6MjUgKzA4MDAsIENodW4tS3VhbmcgSHUgd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4g
-PiBIaSwgTmVhbDoNCj4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiBOZWFsIExp
-dSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPiDmlrwgMjAyMOW5tDfmnIgyMuaXpSDpgLHkuIkg5LiK
-5Y2IMTE6NDnlr6vpgZPvvJoNCj4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gSGkgQ2h1bi1LdWFuZywNCj4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gT24gV2VkLCAyMDIwLTA3LTIyIGF0IDA3OjIxICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3Rl
-Og0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+IEhpLCBOZWFsOg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4g
-5pa8IDIwMjDlubQ35pyIMjHml6Ug6YCx5LqMIOS4i+WNiDEyOjAw5a+r6YGT77yaDQo+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ICsgKiBtdGtfZGV2YXBjX2R1bXBfdmlvX2RiZyAtIGdldCB0aGUgdmlvbGF0aW9uIGlu
-ZGV4IGFuZCBkdW1wIHRoZSBmdWxsIHZpb2xhdGlvbg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-KyAqICAgICAgICAgICAgICAgICAgICAgICAgICAgZGVidWcgaW5mb3JtYXRpb24uDQo+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiArICovDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArc3RhdGljIGJv
-b2wgbXRrX2RldmFwY19kdW1wX3Zpb19kYmcoc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4
-LCB1MzIgdmlvX2lkeCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiArICAgICAgIHUzMiBzaGlmdF9iaXQ7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-PiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgIGlmIChjaGVja192aW9fbWFzayhj
-dHgsIHZpb19pZHgpKQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHJl
-dHVybiBmYWxzZTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ICsgICAgICAgaWYgKCFjaGVja192aW9fc3RhdHVzKGN0eCwgdmlvX2lkeCkpDQo+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KPiA+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICBzaGlm
-dF9iaXQgPSBnZXRfc2hpZnRfZ3JvdXAoY3R4LCB2aW9faWR4KTsNCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgaWYgKHN5bmNfdmlvX2Ri
-ZyhjdHgsIHNoaWZ0X2JpdCkpDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAg
-ICAgcmV0dXJuIGZhbHNlOw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4g
-PiA+ID4gPiA+ID4gKyAgICAgICBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKGN0eCk7DQo+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBJIHRoaW5rIGdldF9zaGlmdF9n
-cm91cCgpLCBzeW5jX3Zpb19kYmcoKSwgYW5kDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gZGV2YXBj
-X2V4dHJhY3RfdmlvX2RiZygpIHNob3VsZCBiZSBtb3ZlZCBvdXQgb2YgdmlvX2lkeCBmb3ItbG9v
-cCAodGhlDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gbG9vcCBpbiBkZXZhcGNfdmlvbGF0aW9uX2ly
-cSgpKSBiZWNhdXNlIHRoZXNlIHRocmVlIGZ1bmN0aW9uIGlzIG5vdA0KPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+IHJlbGF0ZWQgdG8gdmlvX2lkeC4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiBBbm90aGVy
-IHF1ZXN0aW9uOiB3aGVuIG11bHRpcGxlIHZpb19pZHggdmlvbGF0aW9uIG9jY3VyLCB2aW9fYWRk
-ciBpcw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+IHJlbGF0ZWQgdG8gd2hpY2ggb25lIHZpb19pZHg/
-IFRoZSBsYXRlc3QgaGFwcGVuZWQgb25lPw0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+IEFjdHVhbGx5LCBpdCdzIHJlbGF0ZWQg
-dG8gdmlvX2lkeC4gQnV0IHdlIGRvbid0IHVzZSBpdCBkaXJlY3RseSBvbiB0aGVzZQ0KPiA+ID4g
-PiA+ID4gPiA+ID4gPiBmdW5jdGlvbi4gSSB0aGluayBiZWxvdyBzbmlwIGNvZGUgbWlnaHQgYmUg
-YmV0dGVyIHdheSB0byB1bmRlcnN0YW5kIGl0Lg0KPiA+ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiA+ID4gPiBmb3IgKC4uLikNCj4gPiA+ID4gPiA+ID4gPiA+ID4gew0KPiA+ID4gPiA+
-ID4gPiA+ID4gPiAgICAgICAgIGNoZWNrX3Zpb19tYXNrKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4g
-ICAgICAgICBjaGVja192aW9fc3RhdHVzKCkNCj4gPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4g
-PiA+ID4gPiA+ID4gICAgICAgICAvLyBpZiBnZXQgdmlvX2lkeCwgbWFzayBpdCB0ZW1wb3Jhcmls
-eQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiAgICAgICAgIG1hc2tfbW9kdWxlX2lycSh0cnVlKQ0KPiA+
-ID4gPiA+ID4gPiA+ID4gPiAgICAgICAgIGNsZWFyX3Zpb19zdGF0dXMoKQ0KPiA+ID4gPiA+ID4g
-PiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gPiAgICAgICAgIC8vIGR1bXAgdmlvbGF0aW9uIGlu
-Zm8NCj4gPiA+ID4gPiA+ID4gPiA+ID4gICAgICAgICBnZXRfc2hpZnRfZ3JvdXAoKQ0KPiA+ID4g
-PiA+ID4gPiA+ID4gPiAgICAgICAgIHN5bmNfdmlvX2RiZygpDQo+ID4gPiA+ID4gPiA+ID4gPiA+
-ICAgICAgICAgZGV2YXBjX2V4dHJhY3RfdmlvX2RiZygpDQo+ID4gPiA+ID4gPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiA+ID4gPiA+ICAgICAgICAgLy8gdW5tYXNrDQo+ID4gPiA+ID4gPiA+ID4gPiA+
-ICAgICAgICAgbWFza19tb2R1bGVfaXJxKGZhbHNlKQ0KPiA+ID4gPiA+ID4gPiA+ID4gPiB9DQo+
-ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gVGhpcyBzbmlwIGNvZGUgZG9lcyBu
-b3QgZXhwbGFpbiBhbnkgdGhpbmcuIEkgY291bGQgcmV3cml0ZSB0aGlzIGNvZGUgYXM6DQo+ID4g
-PiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gZm9yICguLi4pDQo+ID4gPiA+ID4gPiA+
-ID4gPiB7DQo+ID4gPiA+ID4gPiA+ID4gPiAgICAgY2hlY2tfdmlvX21hc2soKQ0KPiA+ID4gPiA+
-ID4gPiA+ID4gICAgIGNoZWNrX3Zpb19zdGF0dXMoKQ0KPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+ID4gPiA+ICAgICAvLyBpZiBnZXQgdmlvX2lkeCwgbWFzayBpdCB0ZW1wb3JhcmlseQ0K
-PiA+ID4gPiA+ID4gPiA+ID4gICAgIG1hc2tfbW9kdWxlX2lycSh0cnVlKQ0KPiA+ID4gPiA+ID4g
-PiA+ID4gICAgIGNsZWFyX3Zpb19zdGF0dXMoKQ0KPiA+ID4gPiA+ID4gPiA+ID4gICAgIC8vIHVu
-bWFzaw0KPiA+ID4gPiA+ID4gPiA+ID4gICAgIG1hc2tfbW9kdWxlX2lycShmYWxzZSkNCj4gPiA+
-ID4gPiA+ID4gPiA+IH0NCj4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiAvLyBk
-dW1wIHZpb2xhdGlvbiBpbmZvDQo+ID4gPiA+ID4gPiA+ID4gPiBnZXRfc2hpZnRfZ3JvdXAoKQ0K
-PiA+ID4gPiA+ID4gPiA+ID4gc3luY192aW9fZGJnKCkNCj4gPiA+ID4gPiA+ID4gPiA+IGRldmFw
-Y19leHRyYWN0X3Zpb19kYmcoKQ0KPiA+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+
-IEFuZCBteSB2ZXJzaW9uIGlzIGlkZW50aWNhbCB3aXRoIHlvdXIgdmVyc2lvbiwgaXNuJ3QgaXQ/
-DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBTb3JyeSwgSSBkaWQgbm90IGV4cGxh
-aW4gaXQgY2xlYXJseS4gTGV0J3MgbWUgdHJ5IGFnYWluLg0KPiA+ID4gPiA+ID4gPiA+IFRoZSBy
-ZWFzb24gd2h5IEkgcHV0ICJkdW1wIHZpb2xhdGlvbiBpbmZvIiBiZXR3ZWVuIG1hc2sgJiB1bm1h
-c2sgY29udGV4dA0KPiA+ID4gPiA+ID4gPiA+IGlzIGJlY2F1c2UgaXQgaGFzIHRvIHN0b3AgaW50
-ZXJydXB0IGZpcnN0IGJlZm9yZSBkdW1wIHZpb2xhdGlvbiBpbmZvLA0KPiA+ID4gPiA+ID4gPiA+
-IGFuZCB0aGVuIHVubWFzayBpdCB0byBwcmVwYXJlIG5leHQgdmlvbGF0aW9uLg0KPiA+ID4gPiA+
-ID4gPiA+IFRoZXNlIHNlcXVlbmNlIGd1YXJhbnRlZSB0aGF0IGlmIG11bHRpcGxlIHZpb2xhdGlv
-biBpcyB0cmlnZ2VyZWQsIHdlDQo+ID4gPiA+ID4gPiA+ID4gc3RpbGwgaGF2ZSBpbmZvcm1hdGlv
-biB0byBkZWJ1Zy4NCj4gPiA+ID4gPiA+ID4gPiBJZiB0aGUgY29kZSBzZXF1ZW5jZSBpbiB5b3Vy
-IHZlcnNpb24gYW5kIG11bHRpcGxlIHZpb2xhdGlvbiBpcw0KPiA+ID4gPiA+ID4gPiA+IHRyaWdn
-ZXJlZCwgdGhlcmUgbWlnaHQgYmUgbm8gYW55IGluZm9ybWF0aW9uIGJ1dCBrZWVwcyBlbnRlcmlu
-ZyBJU1IuDQo+ID4gPiA+ID4gPiA+ID4gRmluYWxseSwgc3lzdGVtIG1pZ2h0IGJlIGFibm9ybWFs
-IGFuZCB3YXRjaGRvZyB0aW1lb3V0Lg0KPiA+ID4gPiA+ID4gPiA+IEluIHRoaXMgY2FzZSwgd2Ug
-c3RpbGwgZG9uJ3QgaGF2ZSBhbnkgaW5mb3JtYXRpb24gdG8gZGVidWcuDQo+ID4gPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gPiA+IEkgc3RpbGwgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgbm8gaW5mb3JtYXRp
-b24gdG8gZGVidWcuIEZvciBleGFtcGxlIHdoZW4NCj4gPiA+ID4gPiA+ID4gdmlvX2lkeCA1LCAx
-MCwgMTUgaGFzIHZpb2xhdGlvbiwNCj4gPiA+ID4gPiA+ID4gWW91IHdvdWxkIG1hc2sgdmlvX2lk
-eCA1IHRvIGdldCBpbmZvcm1hdGlvbiwgYnV0IHZpb19pZHggMTAsIDE1IGRvZXMNCj4gPiA+ID4g
-PiA+ID4gbm90IG1hc2sgeWV0Lg0KPiA+ID4gPiA+ID4gPiBJbiB5b3VyIHdvcmRzLCB3aGVuIHZp
-b19pZHggMTAsIDE1IG5vdCBtYXNrLCB5b3Ugd291bGQgbm90IGdldCBhbnkNCj4gPiA+ID4gPiA+
-ID4gZGVidWcgaW5mb3JtYXRpb24gd2hlbiB5b3UgcHJvY2VzcyB2aW9faWR4IDUuDQo+ID4gPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gPiA+IEluIG15IHZlcnNpb24sIEkgd291bGQgY2xlYXIgYWxsIHN0
-YXR1cywgd2h5IGtlZXBzIGVudGVyaW5nIElTUj8NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBU
-aGluayBhYm91dCB0aGlzIGNhc2UsIGlmIHNvbWVvbmUgdHJpZXMgdG8gZHVtcCAiQUFBIiBtb2R1
-bGUncyByZWdpc3Rlci4NCj4gPiA+ID4gPiA+IEl0IHdvdWxkIGtlZXAgcmVhZCByZWcgYmFzZSwg
-YmFzZSsweDQsIGJhc2UrMHg4LCAuLi4NCj4gPiA+ID4gPiA+IEFsbCB0aGVzZSByZWdpc3RlcnMg
-YXJlIGluIHRoZSBzYW1lIHNsYXZlLCB3aGljaCB3b3VsZCBiZSBzYW1lIHZpb19pZHguDQo+ID4g
-PiA+ID4gPiAoVGFrZSB2aW9faWR4IDUgYXMgZXhhbXBsZSkNCj4gPiA+ID4gPiA+IEluIHRoaXMg
-Y2FzZSwgdmlvX2lkeCA1IHdpbGwga2VlcCB0cmlnZ2VyaW5nIGludGVycnVwdC4gSWYgeW91IGRp
-ZCBub3QNCj4gPiA+ID4gPiA+IGRvICJkdW1wIHZpb2xhdGlvbiBpbmZvIiBiZXR3ZWVuIG1hc2sg
-JiB1bm1hc2ssIHlvdSBjYW5ub3QgZ2V0IGFueQ0KPiA+ID4gPiA+ID4gdmlvbGF0aW9uIGluZm8g
-dW50aWwgdGhlIGxhc3QgaW50ZXJydXB0IGJlaW5nIGhhbmRsZWQuDQo+ID4gPiA+ID4gPiBOb3Jt
-YWxseSwgc3lzdGVtIHdpbGwgY3Jhc2ggYmVmb3JlIGxhc3QgaW50ZXJydXB0IGNvbWluZy4NCj4g
-PiA+ID4gPg0KPiA+ID4gPiA+IFlvdSBoYXZlIHNhaWQgdGhhdCBmaXJzdCB2aW9fYWRkciB3b3Vs
-ZCBiZSBrZXB0IHVudGlsIGl0J3MgJ2hhbmRsZWQnLg0KPiA+ID4gPiA+IFNvIHRoZSBmaXJzdCB2
-aW9fYWRkciByZWdfYmFzZSB3b3VsZCBiZSBrZXB0IGV2ZW4gdGhvdWdoIG90aGVyDQo+ID4gPiA+
-ID4gdmlvbGF0aW9uIGhhcHBlbi4gQW5kIEkgY291bGQgaGFuZGxlIChjbGVhciBzdGF0dXMgYW5k
-IGR1bXAgaW5mbykgaXQNCj4gPiA+ID4gPiB0aGVuIHZpb19hZGRyIHdvdWxkIG5leHQgdmlvbGF0
-aW9uJ3MgYWRkcmVzcy4gSSdtIGNvbmZ1c2VkIHdpdGggeW91cg0KPiA+ID4gPiA+IHN0YXRlbWVu
-dC4gSWYgQUFBIGlzIGR1bXBpbmcgcmVnaXN0ZXIgb2YgdmlvX2lkeCA1LCBCQkIgaXMgZHVtcGlu
-Zw0KPiA+ID4gPiA+IHJlZ2lzdGVyIG9mIHZpb19pZHggMTAsIENDQyBpcyBkdW1waW5nIHJlZ2lz
-dGVyIG9mIHZpb19pZHggMTUsIEkgdGhpbmsNCj4gPiA+ID4gPiB5b3Ugc2hvdWxkIG1hc2sgYWxs
-IHZpb19pZHggbm90IG9ubHkgb25lLiBTbyB0aGUgY29kZSB3b3VsZCBiZQ0KPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gZm9yIGFsbCB2aW9faWR4IHsNCj4gPiA+ID4gPiAgICAgbWFza19tb2R1bGVfaXJx
-KHRydWUpDQo+ID4gPiA+ID4gfQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gZGV2YXBjX2V4dHJhY3Rf
-dmlvX2RiZygpDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBmb3IgYWxsIHZpb19pZHggew0KPiA+ID4g
-PiA+ICAgICBjbGVhcl92aW9fc3RhdHVzKCkNCj4gPiA+ID4gPiAgICAgbWFza19tb2R1bGVfaXJx
-KGZhbHNlKQ0KPiA+ID4gPiA+IH0NCj4gPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBJJ20gYWxz
-byBjb25zaWRlciB0aGlzIHNvbHV0aW9uIGFuZCBJIHRoaW5rIGl0J3MgbXVjaCBiZXR0ZXIgdG8N
-Cj4gPiA+ID4gdW5kZXJzdGFuZCBoYXJkd2FyZSBiZWhhdmlvci4NCj4gPiA+ID4NCj4gPiA+ID4g
-ZGV2YXBjX2R1bXBfdmlvX2RiZygpDQo+ID4gPiA+IHsNCj4gPiA+ID4gICAgICAgICB3aGlsZSgx
-KSB7DQo+ID4gPiA+ICAgICAgICAgICAgICAgICAvLyBtaWdodCBoYXZlIG11bHRpcGxlIHNoaWZ0
-X2JpdCByYWlzZWQNCj4gPiA+ID4gICAgICAgICAgICAgICAgIHNoaWZ0X2JpdCA9IGdldF9zaGlm
-dF9ncm91cCgpDQo+ID4gPiA+ICAgICAgICAgICAgICAgICBpZiAoc2hpZnRfYml0ID49IDAgJiYg
-c2hpZnQgYml0IDw9IDMxKQ0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBzeW5jX3Zp
-b19kYmcoc2hpZnRfYml0KQ0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBleHRyYWN0
-X3Zpb19kYmcoKQ0KPiA+ID4NCj4gPiA+IEFjY29yZGluZyB0byB5b3VyIHN0YXRlbWVudCwgd2hl
-biBtdWx0aXBsZSB2aW9sYXRpb24gb2NjdXIsIG9ubHkgdGhlDQo+ID4gPiBmaXJzdCBvbmUgaXMg
-a2VwdCwgb3RoZXJzIGFyZSBkcm9wcGVkLiBJIHRoaW5rIHdlIGp1c3QgbmVlZCB0byBkdW1wDQo+
-ID4gPiBkZWJ1ZyBpbmZvIG9uY2UuDQo+ID4gPg0KPiA+ID4gQmVjYXVzZSBvbmx5IG9uZSB2aW9s
-YXRpb24gaW5mb3JtYXRpb24gd291bGQgYmUga2VwdCwgd2h5IG5vdCBvbmx5IG9uZQ0KPiA+ID4g
-Z3JvdXAgKGVxdWFsIHRvIG5vIGdyb3VwKT8NCj4gPiA+DQo+ID4gPiBSZWdhcmRzLA0KPiA+ID4g
-Q2h1bi1LdWFuZy4NCj4gPg0KPiA+IExldCdzIG1lIGdpdmUgeW91IGFuIGV4YW1wbGUgb2YgZGV2
-YXBjIGRlc2lnbi4NCj4gPiB2aW9faWR4OiAwLCAxLCAyIC0+IGdyb3VwIDAgKHNoaWZ0X2JpdDog
-MCkNCj4gPiB2aW9faWR4OiAzLCA0LCA1IC0+IGdyb3VwIDEgKHNoaWZ0X2JpdDogMSkNCj4gPiAu
-Li4NCj4gPg0KPiA+IEVhY2ggZ3JvdXAgdmlvbGF0aW9uIHdpbGwga2VlcCBvbmUgdmlvbGF0aW9u
-ICh0aGUgZmlyc3Qgb25lKS4gSWYgdmlvX2lkeA0KPiA+IDAgaXMgdHJpZ2dlcmVkIGZpcnN0LCB2
-aW9faWR4IDEgaXMgdHJpZ2dlcmVkIG5leHQsIHRoZW4gZ3JvdXAgMCB3aWxsDQo+ID4ganVzdCBr
-ZWVwIHZpb19pZHggMCB2aW9sYXRpb24gaW5mby4NCj4gPiBJZiB2aW9faWR4IDIgaXMgdHJpZ2dl
-cmVkIGZpcnN0LCB2aW9faWR4IDMgaXMgdHJpZ2dlcmVkIG5leHQsIHRoZW4gZ3JvdXANCj4gPiAw
-IHdpbGwga2VlcCB2aW9faWR4IDIgdmlvbGF0aW9uIGluZm8sIGdyb3VwIDEgd2lsbCBrZWVwIHZp
-b19pZHggMydzLg0KPiA+DQo+ID4gV2UgaGF2ZSB0byBzY2FuIGFsbCBncm91cHMgYW5kIGR1bXAg
-ZXZlcnl0aGluZyB3ZSBoYXZlLg0KPiA+IFRoYW5rcyAhDQo+ID4NCj4gDQo+IENvdWxkIHdlIGxl
-dCBhbGwgdmlvX2lkeCBiZSBncm91cCAwIHNvIHRoYXQgd2UgY291bGQganVzdCBzeW5jIG9uZQ0K
-PiBncm91cD8gSXQncyBiYWQgdG8gc3BlbmQgdG9vIG11Y2ggdGltZSBpbiBpcnEgaGFuZGxlci4N
-Cj4gV2hlbiB3ZSBzZXQgcGRfdmlvX3NoaWZ0X3NlbF9yZWcsIGl0IHNlZW1zIHdlIGNvdWxkIHNl
-dCBtdWx0aXBsZSBncm91cA0KPiB0b2dldGhlciwgY291bGRuJ3QgaXQ/DQo+IA0KPiBSZWdhcmRz
-LA0KPiBDaHVuLUt1YW5nLg0KPiANCg0KTm8sIFdoaWNoIGdyb3VwIHZpb19pZHggYmVsb25ncyB0
-byBpcyBkZXRlcm1pbmVkIGJ5IGhhcmR3YXJlLiBTb2Z0d2FyZQ0KY2Fubm90IGNoYW5nZSBpdHMg
-Z3JvdXAuDQpUaGVyZSBpcyB2ZXJ5IGxvdyBwb3NzaWJpbGl0eSB0aGF0IG11bHRpcGxlIGdyb3Vw
-cyBoYXMgdmlvbGF0aW9uIGF0IHRoZQ0Kc2FtZSB0aW1lLCBzbyBpdCB3b3VsZCBub3Qgc3BlbmQg
-bXVjaCB0aW1lIHRvIGhhbmRsZSBpdC4NCkl0IGFsc28gY2Fubm90IHNoaWZ0IG11bHRpcGxlIGdy
-b3VwcyBhdCB0aGUgc2FtZSB0aW1lIHNpbmNlIHRoZXJlIGlzDQpvbmx5IG9uZSB2aW9faW5mbyhy
-dywgdmlvX2FkZHIsIG1hc3Rlcl9pZCwgLi4uKSBleGlzdCBhdCBhIHRpbWUuDQpkZXZhcGNfZXh0
-cmFjdF92aW9fZGJnKCkgZnVuY3Rpb24gaXMgZG9pbmcgdGhpcyBzdGVwLg0KDQpUaGFua3MgIQ0K
-DQo+ID4gPg0KPiA+ID4gPiAgICAgICAgICAgICAgICAgZWxzZQ0KPiA+ID4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICBicmVhaw0KPiA+ID4gPiAgICAgICAgIH0NCj4gPiA+ID4gfQ0KPiA+ID4g
-Pg0KPiA+ID4gPiBkZXZhcGNfdmlvbGF0aW9uX2lycSgpDQo+ID4gPiA+IHsNCj4gPiA+ID4gICAg
-ICAgICBmb3IgYWxsIHZpb19pZHggew0KPiA+ID4gPiAgICAgICAgICAgICAgICAgbWFza19tb2R1
-bGVfaXJxKHRydWUpDQo+ID4gPiA+ICAgICAgICAgfQ0KPiA+ID4gPg0KPiA+ID4gPiAgICAgICAg
-IGRldmFwY19kdW1wX3Zpb19kYmcoKQ0KPiA+ID4gPg0KPiA+ID4gPiAgICAgICAgIGZvciBhbGwg
-dmlvX2lkeCB7DQo+ID4gPiA+ICAgICAgICAgICAgICAgICBjbGVhcl92aW9fc3RhdHVzKCkNCj4g
-PiA+ID4gICAgICAgICAgICAgICAgIG1hc2tfbW9kdWxlX2lycShmYWxzZSkNCj4gPiA+ID4gICAg
-ICAgICB9DQo+ID4gPiA+IH0NCj4gPiA+ID4NCj4gPiA+ID4gSXMgaXQgbW9yZSBjbGVhciBmb3Ig
-dGhpcyBjb250cm9sIGZsb3c/DQo+ID4gPiA+IFRoYW5rcyAhDQo+ID4gPiA+DQo+ID4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPg0KPiA+
-ID4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ID4gPiBBYm91dCB5b3VyIHF1ZXN0aW9u
-LCB2aW9fYWRkciB3b3VsZCBiZSB0aGUgZmlyc3Qgb25lLg0KPiA+ID4gPiA+ID4gPiA+ID4NCj4g
-PiA+ID4gPiA+ID4gPiA+IFNvIG90aGVyIHZpb19hZGRyIHdvdWxkIGJlIGRyb3BwZWQ/IE9yIGhh
-cmR3YXJlIHdvdWxkIGtlZXAgYWxsDQo+ID4gPiA+ID4gPiA+ID4gPiB2aW9fYWRkciBhbmQgeW91
-IGhhdmUgc29tZSB3YXkgdG8gZ2V0IGFsbCB2aW9fYWRkcj8NCj4gPiA+ID4gPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBJbiB0aGlzIGNhc2UsIGhhcmR3YXJlIHdp
-bGwgZHJvcCBvdGhlciB2aW9sYXRpb24gaW5mbyBhbmQga2VlcCB0aGUgZmlyc3QNCj4gPiA+ID4g
-PiA+ID4gPiBvbmUgdW50aWwgaXQgYmVlbiBoYW5kbGVkLg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiBEb2VzICdoYW5kbGVkJyBtZWFuIHN0YXR1cyBpcyBjbGVhcmVkPw0KPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+ICJoYW5kbGVkIiBtZWFucyBjbGVhciBzdGF0dXMgYW5kIGR1bXAgdmlv
-bGF0aW9uIGluZm8uDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBS
-ZWdhcmRzLA0KPiA+ID4gPiA+ID4gPiBDaHVuLUt1YW5nLg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiAr
-DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgIHJldHVybiB0cnVlOw0KPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gK30NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ICsvKg0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAqIGRldmFwY192aW9s
-YXRpb25faXJxIC0gdGhlIGRldmFwYyBJbnRlcnJ1cHQgU2VydmljZSBSb3V0aW5lIChJU1IpIHdp
-bGwgZHVtcA0KPiA+ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAqICAgICAgICAgICAgICAgICAgICAg
-ICAgdmlvbGF0aW9uIGluZm9ybWF0aW9uIGluY2x1ZGluZyB3aGljaCBtYXN0ZXIgdmlvbGF0ZXMN
-Cj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgIGFjY2Vz
-cyBzbGF2ZS4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgKi8NCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgZGV2YXBjX3Zpb2xhdGlvbl9pcnEoaW50IGlycV9u
-dW1iZXIsDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgc3RydWN0IG10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgdTMyIHZp
-b19pZHg7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4g
-PiArICAgICAgIGZvciAodmlvX2lkeCA9IDA7IHZpb19pZHggPCBjdHgtPnZpb19pZHhfbnVtOyB2
-aW9faWR4KyspIHsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBpZiAo
-IW10a19kZXZhcGNfZHVtcF92aW9fZGJnKGN0eCwgdmlvX2lkeCkpDQo+ID4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsNCj4gPiA+ID4gPiA+ID4g
-PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAvKiBF
-bnN1cmUgdGhhdCB2aW9sYXRpb24gaW5mbyBhcmUgd3JpdHRlbiBiZWZvcmUNCj4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgKiBmdXJ0aGVyIG9wZXJhdGlvbnMNCj4gPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgKi8NCj4gPiA+ID4gPiA+ID4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICBzbXBfbWIoKTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+
-ICsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAvKg0KPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAqIE1hc2sgc2xhdmUncyBpcnEgYmVmb3Jl
-IGNsZWFyaW5nIHZpbyBzdGF0dXMuDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAg
-ICAgICAgICogTXVzdCBkbyBpdCB0byBhdm9pZCBuZXN0ZWQgaW50ZXJydXB0IGFuZCBwcmV2ZW50
-DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICogdW5leHBlY3RlZCBi
-ZWhhdmlvci4NCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgKi8NCj4g
-PiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBtYXNrX21vZHVsZV9pcnEoY3R4
-LCB2aW9faWR4LCB0cnVlKTsNCj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+
-ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBjbGVhcl92aW9fc3RhdHVzKGN0eCwgdmlvX2lk
-eCk7DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgbWFza19tb2R1bGVfaXJxKGN0eCwgdmlvX2lkeCwgZmFsc2UpOw0KPiA+
-ID4gPiA+ID4gPiA+ID4gPiA+ID4gKyAgICAgICB9DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiAr
-DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArICAgICAgIHJldHVybiBJUlFfSEFORExFRDsNCj4g
-PiA+ID4gPiA+ID4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiA+ID4gPiA+ID4gPiArDQo+ID4g
-PiA+ID4gPiA+ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+DQo+ID4gPiA+DQo+ID4NCg0K
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8810:10=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Tue, 2020-07-28 at 23:35 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8828=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8811:52=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Hi Chun-Kuang,
+> > >
+> > > On Mon, 2020-07-27 at 22:47 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=882=
+7=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:06=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > > On Fri, 2020-07-24 at 23:55 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8824=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:55=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > Hi Chun-Kuang,
+> > > > > > >
+> > > > > > > On Fri, 2020-07-24 at 00:32 +0800, Chun-Kuang Hu wrote:
+> > > > > > > > Hi, Neal:
+> > > > > > > >
+> > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=
+=E6=9C=8823=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+> > > > > > > > >
+> > > > > > > > > Hi Chun-Kuang,
+> > > > > > > > >
+> > > > > > > > > On Wed, 2020-07-22 at 22:25 +0800, Chun-Kuang Hu wrote:
+> > > > > > > > > > Hi, Neal:
+> > > > > > > > > >
+> > > > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=
+=B47=E6=9C=8822=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:49=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+> > > > > > > > > > >
+> > > > > > > > > > > Hi Chun-Kuang,
+> > > > > > > > > > >
+> > > > > > > > > > > On Wed, 2020-07-22 at 07:21 +0800, Chun-Kuang Hu wrot=
+e:
+> > > > > > > > > > > > Hi, Neal:
+> > > > > > > > > > > >
+> > > > > > > > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=
+=B9=B47=E6=9C=8821=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8812:00=E5=
+=AF=AB=E9=81=93=EF=BC=9A
+> > > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +/*
+> > > > > > > > > > > > > + * mtk_devapc_dump_vio_dbg - get the violation i=
+ndex and dump the full violation
+> > > > > > > > > > > > > + *                           debug information.
+> > > > > > > > > > > > > + */
+> > > > > > > > > > > > > +static bool mtk_devapc_dump_vio_dbg(struct mtk_d=
+evapc_context *ctx, u32 vio_idx)
+> > > > > > > > > > > > > +{
+> > > > > > > > > > > > > +       u32 shift_bit;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       if (check_vio_mask(ctx, vio_idx))
+> > > > > > > > > > > > > +               return false;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       if (!check_vio_status(ctx, vio_idx))
+> > > > > > > > > > > > > +               return false;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       shift_bit =3D get_shift_group(ctx, vio_id=
+x);
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       if (sync_vio_dbg(ctx, shift_bit))
+> > > > > > > > > > > > > +               return false;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       devapc_extract_vio_dbg(ctx);
+> > > > > > > > > > > >
+> > > > > > > > > > > > I think get_shift_group(), sync_vio_dbg(), and
+> > > > > > > > > > > > devapc_extract_vio_dbg() should be moved out of vio=
+_idx for-loop (the
+> > > > > > > > > > > > loop in devapc_violation_irq()) because these three=
+ function is not
+> > > > > > > > > > > > related to vio_idx.
+> > > > > > > > > > > > Another question: when multiple vio_idx violation o=
+ccur, vio_addr is
+> > > > > > > > > > > > related to which one vio_idx? The latest happened o=
+ne?
+> > > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > Actually, it's related to vio_idx. But we don't use i=
+t directly on these
+> > > > > > > > > > > function. I think below snip code might be better way=
+ to understand it.
+> > > > > > > > > > >
+> > > > > > > > > > > for (...)
+> > > > > > > > > > > {
+> > > > > > > > > > >         check_vio_mask()
+> > > > > > > > > > >         check_vio_status()
+> > > > > > > > > > >
+> > > > > > > > > > >         // if get vio_idx, mask it temporarily
+> > > > > > > > > > >         mask_module_irq(true)
+> > > > > > > > > > >         clear_vio_status()
+> > > > > > > > > > >
+> > > > > > > > > > >         // dump violation info
+> > > > > > > > > > >         get_shift_group()
+> > > > > > > > > > >         sync_vio_dbg()
+> > > > > > > > > > >         devapc_extract_vio_dbg()
+> > > > > > > > > > >
+> > > > > > > > > > >         // unmask
+> > > > > > > > > > >         mask_module_irq(false)
+> > > > > > > > > > > }
+> > > > > > > > > >
+> > > > > > > > > > This snip code does not explain any thing. I could rewr=
+ite this code as:
+> > > > > > > > > >
+> > > > > > > > > > for (...)
+> > > > > > > > > > {
+> > > > > > > > > >     check_vio_mask()
+> > > > > > > > > >     check_vio_status()
+> > > > > > > > > >
+> > > > > > > > > >     // if get vio_idx, mask it temporarily
+> > > > > > > > > >     mask_module_irq(true)
+> > > > > > > > > >     clear_vio_status()
+> > > > > > > > > >     // unmask
+> > > > > > > > > >     mask_module_irq(false)
+> > > > > > > > > > }
+> > > > > > > > > >
+> > > > > > > > > > // dump violation info
+> > > > > > > > > > get_shift_group()
+> > > > > > > > > > sync_vio_dbg()
+> > > > > > > > > > devapc_extract_vio_dbg()
+> > > > > > > > > >
+> > > > > > > > > > And my version is identical with your version, isn't it=
+?
+> > > > > > > > >
+> > > > > > > > > Sorry, I did not explain it clearly. Let's me try again.
+> > > > > > > > > The reason why I put "dump violation info" between mask &=
+ unmask context
+> > > > > > > > > is because it has to stop interrupt first before dump vio=
+lation info,
+> > > > > > > > > and then unmask it to prepare next violation.
+> > > > > > > > > These sequence guarantee that if multiple violation is tr=
+iggered, we
+> > > > > > > > > still have information to debug.
+> > > > > > > > > If the code sequence in your version and multiple violati=
+on is
+> > > > > > > > > triggered, there might be no any information but keeps en=
+tering ISR.
+> > > > > > > > > Finally, system might be abnormal and watchdog timeout.
+> > > > > > > > > In this case, we still don't have any information to debu=
+g.
+> > > > > > > >
+> > > > > > > > I still don't understand why no information to debug. For e=
+xample when
+> > > > > > > > vio_idx 5, 10, 15 has violation,
+> > > > > > > > You would mask vio_idx 5 to get information, but vio_idx 10=
+, 15 does
+> > > > > > > > not mask yet.
+> > > > > > > > In your words, when vio_idx 10, 15 not mask, you would not =
+get any
+> > > > > > > > debug information when you process vio_idx 5.
+> > > > > > > >
+> > > > > > > > In my version, I would clear all status, why keeps entering=
+ ISR?
+> > > > > > >
+> > > > > > > Think about this case, if someone tries to dump "AAA" module'=
+s register.
+> > > > > > > It would keep read reg base, base+0x4, base+0x8, ...
+> > > > > > > All these registers are in the same slave, which would be sam=
+e vio_idx.
+> > > > > > > (Take vio_idx 5 as example)
+> > > > > > > In this case, vio_idx 5 will keep triggering interrupt. If yo=
+u did not
+> > > > > > > do "dump violation info" between mask & unmask, you cannot ge=
+t any
+> > > > > > > violation info until the last interrupt being handled.
+> > > > > > > Normally, system will crash before last interrupt coming.
+> > > > > >
+> > > > > > You have said that first vio_addr would be kept until it's 'han=
+dled'.
+> > > > > > So the first vio_addr reg_base would be kept even though other
+> > > > > > violation happen. And I could handle (clear status and dump inf=
+o) it
+> > > > > > then vio_addr would next violation's address. I'm confused with=
+ your
+> > > > > > statement. If AAA is dumping register of vio_idx 5, BBB is dump=
+ing
+> > > > > > register of vio_idx 10, CCC is dumping register of vio_idx 15, =
+I think
+> > > > > > you should mask all vio_idx not only one. So the code would be
+> > > > > >
+> > > > > > for all vio_idx {
+> > > > > >     mask_module_irq(true)
+> > > > > > }
+> > > > > >
+> > > > > > devapc_extract_vio_dbg()
+> > > > > >
+> > > > > > for all vio_idx {
+> > > > > >     clear_vio_status()
+> > > > > >     mask_module_irq(false)
+> > > > > > }
+> > > > > >
+> > > > >
+> > > > > I'm also consider this solution and I think it's much better to
+> > > > > understand hardware behavior.
+> > > > >
+> > > > > devapc_dump_vio_dbg()
+> > > > > {
+> > > > >         while(1) {
+> > > > >                 // might have multiple shift_bit raised
+> > > > >                 shift_bit =3D get_shift_group()
+> > > > >                 if (shift_bit >=3D 0 && shift bit <=3D 31)
+> > > > >                         sync_vio_dbg(shift_bit)
+> > > > >                         extract_vio_dbg()
+> > > >
+> > > > According to your statement, when multiple violation occur, only th=
+e
+> > > > first one is kept, others are dropped. I think we just need to dump
+> > > > debug info once.
+> > > >
+> > > > Because only one violation information would be kept, why not only =
+one
+> > > > group (equal to no group)?
+> > > >
+> > > > Regards,
+> > > > Chun-Kuang.
+> > >
+> > > Let's me give you an example of devapc design.
+> > > vio_idx: 0, 1, 2 -> group 0 (shift_bit: 0)
+> > > vio_idx: 3, 4, 5 -> group 1 (shift_bit: 1)
+> > > ...
+> > >
+> > > Each group violation will keep one violation (the first one). If vio_=
+idx
+> > > 0 is triggered first, vio_idx 1 is triggered next, then group 0 will
+> > > just keep vio_idx 0 violation info.
+> > > If vio_idx 2 is triggered first, vio_idx 3 is triggered next, then gr=
+oup
+> > > 0 will keep vio_idx 2 violation info, group 1 will keep vio_idx 3's.
+> > >
+> > > We have to scan all groups and dump everything we have.
+> > > Thanks !
+> > >
+> >
+> > Could we let all vio_idx be group 0 so that we could just sync one
+> > group? It's bad to spend too much time in irq handler.
+> > When we set pd_vio_shift_sel_reg, it seems we could set multiple group
+> > together, couldn't it?
+> >
+> > Regards,
+> > Chun-Kuang.
+> >
+>
+> No, Which group vio_idx belongs to is determined by hardware. Software
+> cannot change its group.
+> There is very low possibility that multiple groups has violation at the
+> same time, so it would not spend much time to handle it.
+> It also cannot shift multiple groups at the same time since there is
+> only one vio_info(rw, vio_addr, master_id, ...) exist at a time.
+> devapc_extract_vio_dbg() function is doing this step.
+>
 
+So this flow is OK for me. Would you please add comment for this
+information so that we could understand how hardware work.
+
+Regards,
+Chun-Kuang.
+
+> Thanks !
+>
+> > > >
+> > > > >                 else
+> > > > >                         break
+> > > > >         }
+> > > > > }
+> > > > >
+> > > > > devapc_violation_irq()
+> > > > > {
+> > > > >         for all vio_idx {
+> > > > >                 mask_module_irq(true)
+> > > > >         }
+> > > > >
+> > > > >         devapc_dump_vio_dbg()
+> > > > >
+> > > > >         for all vio_idx {
+> > > > >                 clear_vio_status()
+> > > > >                 mask_module_irq(false)
+> > > > >         }
+> > > > > }
+> > > > >
+> > > > > Is it more clear for this control flow?
+> > > > > Thanks !
+> > > > >
+> > > > > > >
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > About your question, vio_addr would be the first one.
+> > > > > > > > > >
+> > > > > > > > > > So other vio_addr would be dropped? Or hardware would k=
+eep all
+> > > > > > > > > > vio_addr and you have some way to get all vio_addr?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > In this case, hardware will drop other violation info and=
+ keep the first
+> > > > > > > > > one until it been handled.
+> > > > > > > >
+> > > > > > > > Does 'handled' mean status is cleared?
+> > > > > > >
+> > > > > > > "handled" means clear status and dump violation info.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Regards,
+> > > > > > > > Chun-Kuang.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       return true;
+> > > > > > > > > > > > > +}
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +/*
+> > > > > > > > > > > > > + * devapc_violation_irq - the devapc Interrupt S=
+ervice Routine (ISR) will dump
+> > > > > > > > > > > > > + *                        violation information =
+including which master violates
+> > > > > > > > > > > > > + *                        access slave.
+> > > > > > > > > > > > > + */
+> > > > > > > > > > > > > +static irqreturn_t devapc_violation_irq(int irq_=
+number,
+> > > > > > > > > > > > > +                                       struct mt=
+k_devapc_context *ctx)
+> > > > > > > > > > > > > +{
+> > > > > > > > > > > > > +       u32 vio_idx;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       for (vio_idx =3D 0; vio_idx < ctx->vio_id=
+x_num; vio_idx++) {
+> > > > > > > > > > > > > +               if (!mtk_devapc_dump_vio_dbg(ctx,=
+ vio_idx))
+> > > > > > > > > > > > > +                       continue;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               /* Ensure that violation info are=
+ written before
+> > > > > > > > > > > > > +                * further operations
+> > > > > > > > > > > > > +                */
+> > > > > > > > > > > > > +               smp_mb();
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               /*
+> > > > > > > > > > > > > +                * Mask slave's irq before cleari=
+ng vio status.
+> > > > > > > > > > > > > +                * Must do it to avoid nested int=
+errupt and prevent
+> > > > > > > > > > > > > +                * unexpected behavior.
+> > > > > > > > > > > > > +                */
+> > > > > > > > > > > > > +               mask_module_irq(ctx, vio_idx, tru=
+e);
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               clear_vio_status(ctx, vio_idx);
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +               mask_module_irq(ctx, vio_idx, fal=
+se);
+> > > > > > > > > > > > > +       }
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +       return IRQ_HANDLED;
+> > > > > > > > > > > > > +}
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +/*
+> > > > > > >
+> > > > >
+> > >
+>
