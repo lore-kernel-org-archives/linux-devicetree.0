@@ -2,193 +2,199 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371FFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C23C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E99B20809
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:06:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="j1LzN7/s";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fOth9n7v"
+	by mail.kernel.org (Postfix) with ESMTP id ADB71208A9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 13:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgG2NGm (ORCPT
+        id S1727022AbgG2N1h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 09:06:42 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:42405 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726449AbgG2NGm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 09:06:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 289D95C00E5;
-        Wed, 29 Jul 2020 09:06:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 29 Jul 2020 09:06:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=J0gkjEVatecFtNdADLnL+o/V0J0
-        cfjnclX8z6uKd3cE=; b=j1LzN7/saHum3d5UzbV3Pe772Zau/6Ca/hrHqHXnnro
-        /Y4Qlz6eYLjfzdR/NQ6/N9ArliQyTuRCYFZ9H07X/X8vyLq3yZT4U12JdUFEfQKd
-        uN8hFVPWlgWoLQ2He5W/Ay/yCJNa6OQtrpvDYYv+yBzPafJkEF/C4k+FJqZ7GS9M
-        Pfmes6SSRXXE10D8vihARbsmPZOD24yQ3D3fVvpetRs5Wvas40oUrT+rFq8I8ZBo
-        j+Cf/mZ9lv3I2LU2tRmj9XLA4eICWd3unJKLDJ9wIb2jA2I8XOoxaAMewZSxGftq
-        6WbL3/9VdpEqKXiAwRURyVA4r9I9O6bD0KUz+LNXW4g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=J0gkjE
-        VatecFtNdADLnL+o/V0J0cfjnclX8z6uKd3cE=; b=fOth9n7v8I0wpr7gQbnNiC
-        A6XIlQzqjW6PMfbjFQuDWhK85aWtwQtJIi/tGRtCa17Ige0Q2RBgJn4zdym/K54y
-        OLdDg3gq8dhWmE2WFw0MxpB9l3x1fVS390rY10TQsqxxv8hwXZRKp7iYWsNSpzNu
-        FsyxXxLUV+GZGaQwYB7RXk+xVAZIzI7e2HZ5C5tRYlbyPUOK5OPf7agEYtnerRXW
-        bwqPOmupc/3p2o5y0WuLQowkWmBRdAOu+kxaLkSoDBvzyjtACBCRWAA72lczkBn2
-        KJETtTgjmmKhcvazE15c/Ry3OMNMP97bY+2y6x9lkMwdjeYQdM0lRgnyj5G4L1ww
-        ==
-X-ME-Sender: <xms:X3QhXyzO6kdDNevDJ3r77MkUbKK9NdFtXLErP1AiihmJ0O7bz7-S4g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrieeggdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:X3QhX-RsuxTIFpLe08SocNfb8802LfOveZD799966dBizHpMCnmyww>
-    <xmx:X3QhX0WNMkmIN60Q3wF8iCZTebxzNiYhZARlv6i086X9CvO8hrUeow>
-    <xmx:X3QhX4iQ8esGsI6exJWlCsmXGZD0PF9VEtu3iVaQDrFJN6l4GDjL6Q>
-    <xmx:YXQhX3-Jj-zE0f-dUtgltmEUYC9qKRnKRYnRucKjOfFaGRdRfd_7mg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0612E3280065;
-        Wed, 29 Jul 2020 09:06:38 -0400 (EDT)
-Date:   Wed, 29 Jul 2020 15:06:37 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
-        wens@csie.org, tiny.windzz@gmail.com, linux-kernel@vger.kernel.org,
+        Wed, 29 Jul 2020 09:27:37 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:43788 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726476AbgG2N1h (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:27:37 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id E767AFB05;
+        Wed, 29 Jul 2020 15:27:33 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3xIffyALAbLL; Wed, 29 Jul 2020 15:27:30 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 346BB45341; Wed, 29 Jul 2020 15:27:30 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 15:27:30 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, lukas@mntmn.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: =?utf-8?Q?sunxi=EF=BC=9Acreat?=
- =?utf-8?Q?e?= a DT header for Allwinner pin controller
-Message-ID: <20200729130637.5md3tr6zg7s4wrmh@gilmour.lan>
-References: <20200715115412.2544-1-frank@allwinnertech.com>
- <20200717160727.e6y5htg4sjd7bezi@gilmour.lan>
- <db1908ae-817c-f30d-7b88-f4afa593b258@sholland.org>
+Subject: Re: [PATCH v8 5/5] dt-bindings: display: imx: add bindings for DCSS
+Message-ID: <20200729132730.GA266947@bogon.m.sigxcpu.org>
+References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
+ <20200724090736.12228-6-laurentiu.palcu@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5to65lel25fuxowa"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <db1908ae-817c-f30d-7b88-f4afa593b258@sholland.org>
+In-Reply-To: <20200724090736.12228-6-laurentiu.palcu@oss.nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---5to65lel25fuxowa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
+On Fri, Jul 24, 2020 at 12:07:34PM +0300, Laurentiu Palcu wrote:
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> 
+> Add bindings for iMX8MQ Display Controller Subsystem.
+> 
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 104 ++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> new file mode 100644
+> index 000000000000..68e4635e4874
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 NXP
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: iMX8MQ Display Controller Subsystem (DCSS)
+> +
+> +maintainers:
+> +  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> +
+> +description:
+> +
+> +  The DCSS (display controller sub system) is used to source up to three
+> +  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
+> +  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
+> +  image processing capabilities are included to provide a solution capable of
+> +  driving next generation high dynamic range displays.
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx8mq-dcss
+> +
+> +  reg:
+> +    items:
+> +      - description: DCSS base address and size, up to IRQ steer start
+> +      - description: DCSS BLKCTL base address and size
+> +
+> +  interrupts:
+> +    items:
+> +      - description: Context loader completion and error interrupt
+> +      - description: DTG interrupt used to signal context loader trigger time
+> +      - description: DTG interrupt for Vblank
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: ctxld
+> +      - const: ctxld_kick
+> +      - const: vblank
+> +
+> +  clocks:
+> +    items:
+> +      - description: Display APB clock for all peripheral PIO access interfaces
+> +      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
+> +      - description: RTRAM clock
+> +      - description: Pixel clock, can be driven either by HDMI phy clock or MIPI
+> +      - description: DTRC clock, needed by video decompressor
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: axi
+> +      - const: rtrm
+> +      - const: pix
+> +      - const: dtrc
+> +
+> +  assigned-clocks:
+> +    items:
+> +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_AXI_ROOT
+> +      - description: Phandle and clock specifier of IMX8MQ_CLK_DISP_RTRM
+> +      - description: Phandle and clock specifier of either IMX8MQ_VIDEO2_PLL1_REF_SEL or
+> +                     IMX8MQ_VIDEO_PLL1_REF_SEL
+> +
+> +  assigned-clock-parents:
+> +    items:
+> +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
+> +      - description: Phandle and clock specifier of IMX8MQ_SYS1_PLL_800M
+> +      - description: Phandle and clock specifier of IMX8MQ_CLK_27M
+> +
+> +  assigned-clock-rates:
+> +    items:
+> +      - description: Must be 800 MHz
+> +      - description: Must be 400 MHz
+> +
+> +  port:
+> +    type: object
+> +    description:
+> +      A port node pointing to the input port of a HDMI/DP or MIPI display bridge.
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
 
-On Sat, Jul 25, 2020 at 02:18:39PM -0500, Samuel Holland wrote:
-> On 7/17/20 11:07 AM, Maxime Ripard wrote:
-> > Hi!
-> >=20
-> > On Wed, Jul 15, 2020 at 07:54:12PM +0800, Frank Lee wrote:
-> >> From: Yangtao Li <frank@allwinnertech.com>
-> >>
-> >> The sunxi gpio binding defines a few custom cells for its gpio specifi=
-er.
-> >> Provide bank name for those.
-> >>
-> >> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> >=20
-> > Thanks for working on this, I wanted to do it at some point but it kept
-> > getting pushed further into my todo list.
-> >=20
-> >> ---
-> >>  include/dt-bindings/gpio/sunxi-gpio.h | 29 +++++++++++++++++++++++++++
-> >>  1 file changed, 29 insertions(+)
-> >>  create mode 100644 include/dt-bindings/gpio/sunxi-gpio.h
-> >>
-> >> diff --git a/include/dt-bindings/gpio/sunxi-gpio.h b/include/dt-bindin=
-gs/gpio/sunxi-gpio.h
-> >> new file mode 100644
-> >> index 000000000000..c692b4360da6
-> >> --- /dev/null
-> >> +++ b/include/dt-bindings/gpio/sunxi-gpio.h
-> >=20
-> > So generally we've been using the compatible name as the file name. You
-> > should follow that convention too, and since it was added with the A10,
-> > using the A10 compatible.
-> >=20
-> >> @@ -0,0 +1,29 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * GPIO definitions for Allwinner SoCs
-> >> + *
-> >> + * Copyright (C) 2020 Yangtao Li <frank@allwinnertech.com>
-> >> + */
-> >> +
-> >> +#ifndef _DT_BINDINGS_SUNXI_GPIO_H
-> >> +#define _DT_BINDINGS_SUNXI_GPIO_H
-> >> +
-> >> +#include <dt-bindings/gpio/gpio.h>
-> >> +
-> >> +/* pio */
-> >> +#define PA	0
-> >> +#define PB	1
-> >> +#define PC	2
-> >> +#define PD	3
-> >> +#define PE	4
-> >> +#define PF	5
-> >> +#define PG	6
-> >> +#define PH	7
-> >> +#define PI	8
-> >> +
-> >> +/* r-pio */
-> >> +#define PL	0
-> >> +#define PM	1
-> >> +#define PN	2
-> >> +
-> >> +#endif /* _DT_BINDINGS_SUNXI_GPIO_H */
-> >=20
-> > Maybe we can go one step further and use a macro to have something like
-> > PIN(A, 12) ?
->=20
-> Since we have separate cells for the bank and pin, I don't think it would=
- be
-> appropriate to have a single macro generating both.
+it would be nice to
 
-Yeah, but it's "just" an encoding issue though, it's not a major concern
-if it makes our life easier.
+    #include <dt-bindings/clock/imx8mq-clock.h>
 
-> And I'm not sure what the benefit of the macro would be, if all it
-> does is forward its arguments. Are you concerned that P[A-M] could
-> conflict with something else in the device tree?
+here...
 
-There's indeed a bunch of names that are fairly generic and could be
-conflicting with others (PD for power domain is the first one that comes
-to my mind). Using a prefix would make the GPIO descriptors pretty long,
-so it wasn't ideal either. A macro makes it readable without increasing
-too much the risks of conflicts
+> +    dcss: display-controller@32e00000 {
+> +        compatible = "nxp,imx8mq-dcss";
+> +        reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
+> +        interrupts = <6>, <8>, <9>;
+> +        interrupt-names = "ctxld", "ctxld_kick", "vblank";
+> +        interrupt-parent = <&irqsteer>;
+> +        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
+> +                 <&clk 254>,<&clk 122>;
+> +        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
+> +        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
+> +        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
 
-Maxime
+so that clock names like IMX8MQ_CLK_DISP_AXI could be used to make this
+even more useful.
 
---5to65lel25fuxowa
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
+ -- Guido
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXyF0XQAKCRDj7w1vZxhR
-xcSsAQDGVYSaoo497gJJf5z3XW53xRF45upx+3bu6u6vl7GEwgD+Myht5GLp2AUQ
-huihjM9siGj14MTdGBFQLXp/C+seegE=
-=6RKx
------END PGP SIGNATURE-----
-
---5to65lel25fuxowa--
+> +        assigned-clock-rates = <800000000>,
+> +                               <400000000>;
+> +        port {
+> +            dcss_out: endpoint {
+> +                remote-endpoint = <&hdmi_in>;
+> +            };
+> +        };
+> +    };
+> +
+> -- 
+> 2.23.0
+> 
