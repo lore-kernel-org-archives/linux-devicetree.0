@@ -2,103 +2,89 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A948C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3589FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D54C2075D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3pBUmaq"
+	by mail.kernel.org (Postfix) with ESMTP id 1102420809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 17:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgG2RIK (ORCPT
+        id S1726365AbgG2RJK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 13:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2RIJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 13:08:09 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D188C061794;
-        Wed, 29 Jul 2020 10:08:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f5so25852477ljj.10;
-        Wed, 29 Jul 2020 10:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kdm+mgqvwV7CVf+Pvs1UK+aKOAgvVAj+fT+AGl9gU/o=;
-        b=R3pBUmaqToAvUXZH5tAeJ79vR2bK59XOrW1Pa/E6R1a4Wh7fwhrJ5ZwNnG4J4svnaO
-         o5o/tb/6pZ+H8jUY3rLNE/hGK2hKFu4P282EQGgk0U0UuUyIZSxdijncXnxgRx+J28hM
-         JWiUL6fnheSuk/8ZLzTDgui69PyMDaVxQM31gxngUPALVcpGxWMbstWCVulOhLOnPPa+
-         EiiL9At+Pe6MtwLIyGrs6zPBG61Pq6keRFTjUmnXMwMwceNoQKfTdqYZT7IeuXvixuVo
-         qqGZ/w6aPuOhE3R+bjeIP1fD2tYao3K8Lw9S786/4pytTN1bGM+2XYY1EKJudfhZWVVc
-         i8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kdm+mgqvwV7CVf+Pvs1UK+aKOAgvVAj+fT+AGl9gU/o=;
-        b=JHYtaU617K4oJHN37V79e6m+BQZu7A84cGXxrVQ23GsPidHsXSplFazq/fR7YGi4K0
-         C2cBZwvcfsqBj6ET2gTzXHLQezuq4MLP+rQ5WED/Wqk748D8/2+jF2hEEItPNdHquxHM
-         Pbh62vJPpuMMhRKLQGKAsDnDfhN2MAf5wnXvTsdVicr8PnYnBSUDDoO9VBsbFunXebzF
-         TLNaZIyWhA9gr63XMYHxIxjaOsqjD5vgzeC15XFPCu78Pi8iyfunnxlhvHcorl2VPWAo
-         5hrvXByNxuCXWXdIjLb/qYchw6IgGP7ULF8DBhjdaFxZlDgOsNLiKoE5TqExjIcNPwpm
-         O6HQ==
-X-Gm-Message-State: AOAM532nJtZbU06wbnvOJM3tvO/jsq+sSdbTvDbFf3Nia8EnlD8QBWhX
-        ud5gQGKOCw6Er1Fdx2tF1pxefKlS
-X-Google-Smtp-Source: ABdhPJxZZPDDdtZSLDx1sPcvKxSlR6GIhIb8gtqrr7AXluJlgMFp6LEauw/Lo1ppkp1hv0BmrPW3Cw==
-X-Received: by 2002:a2e:9a91:: with SMTP id p17mr1664078lji.378.1596042487460;
-        Wed, 29 Jul 2020 10:08:07 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id z25sm498374lji.33.2020.07.29.10.08.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 10:08:06 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled
- till calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
- <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
- <b21e3227-d0d8-5b4a-ae69-aa29551a22c3@gmail.com>
- <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d291d306-55d4-2264-dc05-0e47f0dfef20@gmail.com>
-Date:   Wed, 29 Jul 2020 20:08:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 13:09:10 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:48514 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgG2RJK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 13:09:10 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C27EC20045;
+        Wed, 29 Jul 2020 19:09:08 +0200 (CEST)
+Date:   Wed, 29 Jul 2020 19:09:07 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Marek Vasut <marex@denx.de>
+Cc:     dri-devel@lists.freedesktop.org, Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 2/2] drm/bridge: tc358762: Add basic driver for
+ Toshiba TC358762 DSI-to-DPI bridge
+Message-ID: <20200729170907.GA1375231@ravnborg.org>
+References: <20200729164554.114735-1-marex@denx.de>
+ <20200729164554.114735-2-marex@denx.de>
+ <20200729165604.GA1372716@ravnborg.org>
+ <3f9702f1-062e-a43c-3297-eb5baacaa81c@denx.de>
 MIME-Version: 1.0
-In-Reply-To: <69903c67-8e5f-11c2-45ec-c76b97634aba@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f9702f1-062e-a43c-3297-eb5baacaa81c@denx.de>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=nZwYH4Z7KE73ytJNG8gA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-28.07.2020 19:04, Sowjanya Komatineni пишет:
-...
->>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
->>> +{
->> Doesn't MIPI_CAL need to be reset here?
-> No need to reset MIPI CAL
+Hi Marek.
 
-Could you please explain why. There is a calibration state-machine that
-apparently needs to be returned into initial state, does it return by
-itself?
+On Wed, Jul 29, 2020 at 07:02:51PM +0200, Marek Vasut wrote:
+> On 7/29/20 6:56 PM, Sam Ravnborg wrote:
+> [...]
+> >> +static int tc358762_probe(struct mipi_dsi_device *dsi)
+> >> +{
+> >> +	struct device *dev = &dsi->dev;
+> >> +	struct tc358762 *ctx;
+> >> +	int ret;
+> >> +
+> >> +	ctx = devm_kzalloc(dev, sizeof(struct tc358762), GFP_KERNEL);
+> >> +	if (!ctx)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	mipi_dsi_set_drvdata(dsi, ctx);
+> > I cannot see why this is needed. If not used then delete it.
+> > With the above addressed:
+> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > 
+> > Let me know if I shall apply - but we have to wait until binding is
+> > reviewed. And preferably one extra set of eyes on this driver.
+> 
+> [...]
+> 
+> >> +static int tc358762_remove(struct mipi_dsi_device *dsi)
+> >> +{
+> >> +	struct tc358762 *ctx = mipi_dsi_get_drvdata(dsi);
+> >> +
+> >> +	mipi_dsi_detach(dsi);
+> >> +	drm_bridge_remove(&ctx->bridge);
+> 
+> Because it's used here in the remove callback.
 
-TRM says that MIPI block needs to be reset before of starting
-calibration process. The reset is completely missing in the driver, I
-assume it needs to be corrected with another patch.
+Thanks - missed that.
+So consider the point addressed by enlightning me.
+
+	Sam
