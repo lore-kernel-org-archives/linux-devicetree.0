@@ -2,99 +2,105 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97972C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EB8C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7746520829
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A9F2083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 00:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dt830+nX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MMe+jKln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgG2Aui (ORCPT
+        id S1730884AbgG2AwD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 20:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47176 "EHLO
+        Tue, 28 Jul 2020 20:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730766AbgG2Aui (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 20:50:38 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB72C0619D2
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:50:38 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id z5so13322545pgb.6
-        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:50:38 -0700 (PDT)
+        with ESMTP id S1730871AbgG2AwC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Jul 2020 20:52:02 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E40C0619D4
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:52:02 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t15so1149398pjq.5
+        for <devicetree@vger.kernel.org>; Tue, 28 Jul 2020 17:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=yP3nfVyanCA5dqt/CLixTo47F6orsxBXLYUlEUkelJA=;
-        b=dt830+nXvj5ilJbJdyQ1BTwsy9XQ+4iMd9DFoTO9QT4BQ300OFHMOFxrVxHTXZFS6V
-         S0mSc2FW4pXw+dWxaEpFS5dR6VFWEMe7lM1G5PSa0U3HjuO0G1rPqSkMHBEldIUN7wB5
-         clSdKm70RHABLzyFL1EkdHvMTgFx6LY9vvz7E=
+        bh=QDhTYDygqkx2ntO2vI3Axdh1bIOd/5JCuYmPgDBl4yk=;
+        b=MMe+jKlnCKMx2FZO2VsiHo6y4GEpAHlUeDHRMx1F/oUmucRd/y+r9xzP9h6Vq0eamu
+         CfSVX2GRjk4mf64O4JVyRwznmz/0c9k2ZakIFljBpRsL8/GbIsBi+5Loow1P05U4PVec
+         /Fmf8SjsfMUpx8mwOZiiu9Pffhfyw+V0rF6v0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=yP3nfVyanCA5dqt/CLixTo47F6orsxBXLYUlEUkelJA=;
-        b=JbLrftLi2Qoj3u9TUWiEQZ9V380LWsv2RVjyD45YMZzV0riymBeuLoNKHeywAj01ES
-         /YhflaB0TJypcEeziAH31xDSFdXVUwqfl94+isw2SrDiJzU9K6Fzrq3vs4zWEpES+63b
-         sziAiu0tSTQbqUGs457s9xiLySsU3ghZZ5CsFcW4rCOwy94SRtja5wD2K/p+RVsPJgI4
-         CSQaoEV3hPznsIuYCkd761niJp49w4j/Stn+wpmdj794GKu7XkCtldQ3va8ZfiN6OBMV
-         54hk0AAjWRY93/jyoW06x5xS7Sb7rQh/XDx+vyt57OaiK/NpXCtyAsHhZd1TXrAgdUF5
-         6jXQ==
-X-Gm-Message-State: AOAM530gaL3TmFTqx7HXHaNXqAf9NS1g+DDZD3g5NF7uwgAmxyZfEw8k
-        M0nb9JZf0zNPo8uMf7c12bGbxA==
-X-Google-Smtp-Source: ABdhPJyjNWFaLKqd0efnvtrCmn2FXiK4y+ugceLM2g1jBpdq3X2Mqltt9G/Pr9PBDjNqT3gGtF+1Lw==
-X-Received: by 2002:a63:308:: with SMTP id 8mr28317182pgd.112.1595983837445;
-        Tue, 28 Jul 2020 17:50:37 -0700 (PDT)
+        bh=QDhTYDygqkx2ntO2vI3Axdh1bIOd/5JCuYmPgDBl4yk=;
+        b=iB3ioJL2bSA/KG2Odhw4gL8f8wwmhwdVBF2HO4qPrzE80IvvmecZfa2hVn4YQuG+9G
+         MsxexPTwKce8HJuhp0/GfmgmGsulBCSlKrlaGjj1Zpp2XadqoT1rlg7iddhEHT44gy4V
+         nClSTbFl5X1YChWGA3Qt3HKJt32OPjnCzFUF74B57Bg7EsdmFdVd58GpS97HYRl6w2f+
+         kks2kXdSk/kaookgSPxV+oDEa2ANYTDWwWIXvt9HtKKyMW5v/7V9rBtVqu+DnobJrACP
+         FTHHApWj3C/Zu2XteEKhYS7aWHX5JjklGs7Ai6Jh6HMUlhbxAyLq0azK+gPO1XBfh5nt
+         LrIw==
+X-Gm-Message-State: AOAM530O2BIpIpSej0Zi2uCqdOTXqPObFxONg3buSRdFIU3/t2yrk8Hb
+        NTfL620cjzhc414btvj7S+Rp/bjj1Oo=
+X-Google-Smtp-Source: ABdhPJwFIViyzzaw1zwGz4VKn+OZfiPXzZ8B1s7e1/ksJAwnJak+2VeK+SEraxPEVFQ/T7f0GoEf+A==
+X-Received: by 2002:a17:90a:8918:: with SMTP id u24mr6547623pjn.7.1595983922147;
+        Tue, 28 Jul 2020 17:52:02 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id x23sm230701pfi.60.2020.07.28.17.50.36
+        by smtp.gmail.com with ESMTPSA id b12sm222345pga.87.2020.07.28.17.52.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 17:50:36 -0700 (PDT)
+        Tue, 28 Jul 2020 17:52:01 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200728230520.2011240-1-campello@chromium.org>
-References: <20200728151258.1222876-1-campello@chromium.org> <20200728230520.2011240-1-campello@chromium.org>
-Subject: Re: [PATCH v2 00/14] sx9310 iio driver updates
+In-Reply-To: <20200728170317.v2.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
+References: <20200728151258.1222876-1-campello@chromium.org> <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
+Subject: Re: [PATCH v2 01/14] dt-bindings: iio: Add bindings for sx9310 sensor
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Daniel Campello <campello@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org
+        Rob Herring <robh+dt@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-iio@vger.kernel.org
 To:     Daniel Campello <campello@chromium.org>,
         LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 28 Jul 2020 17:50:34 -0700
-Message-ID: <159598383474.1360974.2464583320357224145@swboyd.mtv.corp.google.com>
+Date:   Tue, 28 Jul 2020 17:52:00 -0700
+Message-ID: <159598392022.1360974.10427547361260648765@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Daniel Campello (2020-07-28 16:05:06)
-> The first patch resends the DT binding for the driver that was merged in
-> v5.8-rc1 with a small change to update for proper regulators. The second
-> through the eleventh patch fixes several issues dropped from v8 to v9
-> when the initial patch was merged. The twelveth patch fixes a few
-> printks that are missing newlines and should be totally non-trivial to
-> apply. The thirteenth patch drops channel_users because it's unused. The
-> final patch adds support to enable the svdd and vdd supplies so that
-> this driver can work on a board where the svdd supply isn't enabled at
-> boot and needs to be turned on before this driver starts to communicate
-> with the chip.
+Quoting Daniel Campello (2020-07-28 16:05:07)
+> Adds device tree bandings for sx9310 sensor.
 
-Can you please send this as not an in-reply-to the previous series? My
-inbox has a hard time realizing that this is a new patch series.
+s/bandings/bindings/
+
+Not sure why I didn't notice this before.
+
+>=20
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> [swboyd@chromium.org: Add both regulators and make them optional]
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>=20
+> Changes in v2:
+>  - Added #io-channel-cells as a required property
+
+Thanks!
