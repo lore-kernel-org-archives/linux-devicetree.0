@@ -2,94 +2,351 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0172C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71269C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F7B2082E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1F3207F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 16:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596039850;
-	bh=bb4zuQGhtPo9xAh3UaRQ5Q1apxoMxdA4XPIwcRvHT/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rR+eNL/uNcO4inP23NUJpKhSHaOQBCn9Ju6GLxLX8MG7Qf5D5BTLloI0+LalUdzhx
-	 m5KgHfOxPHm/0W7CrHx0uyz0CzFgI0NbyNVFOLVS/Ha/EcznnROn+RVmzJiA5GE7Ku
-	 RnSAW1loIDKVzVdHQWWuAT9sER3Qwd+tpseardSo=
+	s=default; t=1596040730;
+	bh=8oNvq8B3SV3A3JFjqt0Y5/7PhcaYiiGl5V2LNOy8tIM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mssKKpnt2kEBpbpWrx1JNeLEoijK+Mh5r6HJ5L+BXkLxk1B8ZUUb6muPQg8e38dF1
+	 B9G/WB+H6odbiHdVwsY7x4XOteu9EHPw6ba+ztEEah8X+UsSOEnAw4OKV1TVW/KSN1
+	 7Bwfztpl1mhUwDtDnRBB/fJtzQry4fuGulZ2pU0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgG2QYK (ORCPT
+        id S1726644AbgG2Qit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 12:24:10 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36781 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2QYK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 12:24:10 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c15so8199908edj.3;
-        Wed, 29 Jul 2020 09:24:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cS3+221AHZYDhz8vJwUJuKP1AL5RGbuh31j+wmF7oUU=;
-        b=HaXsLnWCRyw1DnOyqxxvE74vXS5+sxNfgVysLy5RfmVYX5vrkyvzLAAjFN/eFgmDKV
-         d+VWg+cliMSixH3yIctXTL2ZtX8CFIJzghI9vI1d7Ka2eMmHFWcjvzR+qFOnFZ5XHPc+
-         J0Oqfuit+3itRUB1PBGaQT/1HscSU/AJxPoviUCxNzlpYPiSQD+MbrBlZ73oy2Th53VQ
-         ipQG4keYGJkuNQdzoD91sRz2izJCRM8q7GB0sgjEEQ9CF3fXVTCWe3iTC0/CYm/NITS3
-         te4xRBIZyCq4b32bx1mxC9gmjwGa0hl3bShVhg/h3aKnGvDq/Zb862XHqyOKCfyIpEL3
-         Z6NA==
-X-Gm-Message-State: AOAM5326zs3sE2HCjlp95MXbxHIw/DLZvpq237XJ/gJ6ZghpaQ2Z7Gw0
-        mfMVvYkFwZ7UvXI/eO9J5Is=
-X-Google-Smtp-Source: ABdhPJzrXVWpA0e/54O+SdDq9PueVFgMc6upBS6jL4XfQLfXkn58bf/2j89VIVWgToUmT/t20TgnfQ==
-X-Received: by 2002:aa7:d58c:: with SMTP id r12mr33304657edq.160.1596039847872;
-        Wed, 29 Jul 2020 09:24:07 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id dh16sm2193450edb.3.2020.07.29.09.24.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Jul 2020 09:24:07 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 18:24:05 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     broonie@kernel.org, simon@lineageos.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] ASoC: samsung: Document DT bindings for Midas
- sound subsystem
-Message-ID: <20200729162405.GA5302@kozik-lap>
-References: <CGME20200728131126eucas1p16365622c52f91104373a2cd3e0ebb619@eucas1p1.samsung.com>
- <20200728131111.14334-1-s.nawrocki@samsung.com>
+        Wed, 29 Jul 2020 12:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbgG2Qit (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 12:38:49 -0400
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ACC62082E;
+        Wed, 29 Jul 2020 16:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596040727;
+        bh=8oNvq8B3SV3A3JFjqt0Y5/7PhcaYiiGl5V2LNOy8tIM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Cu/0rdka2lGfSrU7gukTXUZnpgaLWsSWlqWDp3qIVvFvJeP/IiHJHLhz1a2mCAoig
+         JFS6f46dE13il445jB006N/KDm6lEvZrbOlPYwueKLAPcXjR2fp8Jol12LijkR8XOo
+         65qiEP5G47eTgEcAdCA/6w43ZADkdxQ3M/tmMbPM=
+Received: by mail-ed1-f46.google.com with SMTP id o18so3461408eds.10;
+        Wed, 29 Jul 2020 09:38:47 -0700 (PDT)
+X-Gm-Message-State: AOAM533DB/gmixizIdPE4SfvmQsdrfp29mgS4ZKnVjhhcfOB4kIufxo5
+        NgjszFsob6SjgjyPHjHcYnZjn+14uyhtEZGQ8w==
+X-Google-Smtp-Source: ABdhPJxkSFThDgGSV2/ZhZg3JnPMa8grf6H5kaG+74I6FiJViMGqy+UloZpqzSpAUGKT+mzbLJ+N3YjfuJ08V9uTtqI=
+X-Received: by 2002:aa7:c31a:: with SMTP id l26mr30665374edq.61.1596040725806;
+ Wed, 29 Jul 2020 09:38:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200728131111.14334-1-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com> <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 30 Jul 2020 00:38:34 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8bE8Qo5-0MA9J1gcEbN4DP=Wf2O6vOUVos=VkoODeayA@mail.gmail.com>
+Message-ID: <CAAOTY_8bE8Qo5-0MA9J1gcEbN4DP=Wf2O6vOUVos=VkoODeayA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 03:11:09PM +0200, Sylwester Nawrocki wrote:
-> This patch adds documentation of DT biding for the Midas sound complex.
-> Partially based on the *txt version by Simon Shields <simon@lineageos.org>.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes for v3:
->  - change the sound-dai property type in cpu, codec nodes from
->    phandle-array to phandle
-> 
-> Changes for v2:
->  - fix wrong *-gpios entries in the example,
->  - mark sound-dai properties as required.
-> ---
->  .../bindings/sound/samsung,midas-audio.yaml        | 108 +++++++++++++++++++++
->  1 file changed, 108 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+Hi, Neal:
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MediaTek bus fabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violation is logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by mtk-devapc driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
 
-Best regards,
-Krzysztof
+[snip]
+
+> +
+> +static int get_shift_group(struct mtk_devapc_context *ctx)
+> +{
+> +       u32 vio_shift_sta;
+> +       void __iomem *reg;
+> +
+> +       reg =3D ctx->devapc_pd_base + ctx->offset->vio_shift_sta;
+> +       vio_shift_sta =3D readl(reg);
+> +
+> +       if (vio_shift_sta)
+> +               return __ffs(vio_shift_sta);
+> +
+> +       return -EIO;
+> +}
+
+get_shift_group() is a small function, I would like to merge this
+function into sync_vio_dbg() to make code more simple.
+
+> +
+
+[snip]
+
+> +
+> +#define PHY_DEVAPC_TIMEOUT     0x10000
+> +
+> +/*
+> + * sync_vio_dbg - do "shift" mechansim" to get full violation informatio=
+n.
+> + *                shift mechanism is depends on devapc hardware design.
+> + *                Mediatek devapc set multiple slaves as a group. When v=
+iolation
+> + *                is triggered, violation info is kept inside devapc har=
+dware.
+> + *                Driver should do shift mechansim to "shift" full viola=
+tion
+> + *                info to VIO_DBGs registers.
+> + *
+> + */
+> +static int sync_vio_dbg(struct mtk_devapc_context *ctx, u32 shift_bit)
+> +{
+> +       void __iomem *pd_vio_shift_sta_reg;
+> +       void __iomem *pd_vio_shift_sel_reg;
+> +       void __iomem *pd_vio_shift_con_reg;
+> +       int ret;
+> +       u32 val;
+> +
+> +       pd_vio_shift_sta_reg =3D ctx->devapc_pd_base + ctx->offset->vio_s=
+hift_sta;
+> +       pd_vio_shift_sel_reg =3D ctx->devapc_pd_base + ctx->offset->vio_s=
+hift_sel;
+> +       pd_vio_shift_con_reg =3D ctx->devapc_pd_base + ctx->offset->vio_s=
+hift_con;
+> +
+> +       /* Enable shift mechansim */
+> +       writel(0x1 << shift_bit, pd_vio_shift_sel_reg);
+> +       writel(0x1, pd_vio_shift_con_reg);
+> +
+> +       ret =3D readl_poll_timeout(pd_vio_shift_con_reg, val, val =3D=3D =
+0x3, 0,
+> +                                PHY_DEVAPC_TIMEOUT);
+> +       if (ret)
+> +               dev_err(ctx->dev, "%s: Shift violation info failed\n", __=
+func__);
+> +
+> +       /* Disable shift mechanism */
+> +       writel(0x0, pd_vio_shift_con_reg);
+> +       writel(0x0, pd_vio_shift_sel_reg);
+> +       writel(0x1 << shift_bit, pd_vio_shift_sta_reg);
+> +
+> +       return ret;
+> +}
+> +
+
+[snip]
+
+> +
+> +/*
+> + * devapc_extract_vio_dbg - extract full violation information after doi=
+ng
+> + *                          shift mechanism.
+> + */
+> +static void devapc_extract_vio_dbg(struct mtk_devapc_context *ctx)
+> +{
+> +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       void __iomem *vio_dbg0_reg;
+> +       void __iomem *vio_dbg1_reg;
+> +       u32 dbg0;
+> +
+> +       vio_dbg0_reg =3D ctx->devapc_pd_base + ctx->offset->vio_dbg0;
+> +       vio_dbg1_reg =3D ctx->devapc_pd_base + ctx->offset->vio_dbg1;
+> +
+> +       vio_dbgs =3D ctx->vio_dbgs;
+> +       vio_info =3D ctx->vio_info;
+> +
+> +       /* Starts to extract violation information */
+> +       dbg0 =3D readl(vio_dbg0_reg);
+> +       vio_info->vio_addr =3D readl(vio_dbg1_reg);
+> +
+> +       vio_info->master_id =3D (dbg0 & vio_dbgs->mstid.mask) >>
+> +                             vio_dbgs->mstid.start;
+
+What is master_id? How could we use it to debug? For example, if we
+get a master_id =3D 1, what should we do for this?
+
+> +       vio_info->domain_id =3D (dbg0 & vio_dbgs->dmnid.mask) >>
+> +                             vio_dbgs->dmnid.start;
+
+What is domain_id? How could we use it to debug? For example, if we
+get a domain_id =3D 2, what should we do for this?
+
+> +       vio_info->write =3D ((dbg0 & vio_dbgs->vio_w.mask) >>
+> +                           vio_dbgs->vio_w.start) =3D=3D 1;
+> +       vio_info->read =3D ((dbg0 & vio_dbgs->vio_r.mask) >>
+> +                         vio_dbgs->vio_r.start) =3D=3D 1;
+> +       vio_info->vio_addr_high =3D (dbg0 & vio_dbgs->addr_h.mask) >>
+> +                                 vio_dbgs->addr_h.start;
+
+What is vio_addr_high? As I know all register address are 32 bits, is
+vio_addr_high the address above 32 bits?
+
+> +
+> +       devapc_vio_info_print(ctx);
+> +}
+> +
+
+[snip]
+
+> +
+> +/*
+> + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR) wil=
+l dump
+> + *                        violation information including which master v=
+iolates
+> + *                        access slave.
+> + */
+> +static irqreturn_t devapc_violation_irq(int irq_number,
+> +                                       struct mtk_devapc_context *ctx)
+> +{
+> +       u32 vio_idx;
+> +
+> +       /*
+> +        * Mask slave's irq before clearing vio status.
+> +        * Must do it to avoid nested interrupt and prevent
+> +        * unexpected behavior.
+> +        */
+> +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++)
+> +               mask_module_irq(ctx, vio_idx, true);
+
+I would like to rewrite this for-loop as below to prevent too many
+function call in irq handler.
+
+for (i =3D 0; i < VIO_MOD_TO_REG_IND(ctx->vio_idx_num); i++)
+    writel(0xffffffff, ctx->devapc_pd_base + ctx->offset->vio_mask + 4 * i)=
+;
+
+reg  =3D readl(ctx->devapc_pd_base + ctx->offset->vio_mask + 4 * i);
+reg |=3D 1 << (ctx->vio_idx_num - 32 * i + 1) - 1;
+writel(reg, ctx->devapc_pd_base + ctx->offset->vio_mask + 4 * i);
+
+> +
+> +       devapc_dump_vio_dbg(ctx);
+> +
+> +       /*
+> +        * Ensure that violation info are written
+> +        * before further operations
+> +        */
+> +       smp_mb();
+> +
+> +       for (vio_idx =3D 0; vio_idx < ctx->vio_idx_num; vio_idx++) {
+> +               clear_vio_status(ctx, vio_idx);
+> +               mask_module_irq(ctx, vio_idx, false);
+> +       }
+
+Ditto for this for-loop.
+
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+
+[snip]
+
+> +
+> +static int mtk_devapc_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *node =3D pdev->dev.of_node;
+> +       struct mtk_devapc_context *ctx;
+> +       struct clk *devapc_infra_clk;
+> +       u32 devapc_irq;
+> +       int ret;
+> +
+> +       if (IS_ERR(node))
+> +               return -ENODEV;
+> +
+> +       ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> +       if (!ctx)
+> +               return -ENOMEM;
+> +
+> +       ctx =3D (struct mtk_devapc_context *)of_device_get_match_data(&pd=
+ev->dev);
+> +       ctx->dev =3D &pdev->dev;
+> +
+> +       ctx->vio_info =3D devm_kzalloc(&pdev->dev,
+> +                                    sizeof(struct mtk_devapc_vio_info),
+> +                                    GFP_KERNEL);
+> +       if (!ctx->vio_info)
+> +               return -ENOMEM;
+> +
+> +       ctx->devapc_pd_base =3D of_iomap(node, 0);
+> +       if (!ctx->devapc_pd_base)
+> +               return -EINVAL;
+> +
+> +       devapc_irq =3D irq_of_parse_and_map(node, 0);
+> +       if (!devapc_irq)
+> +               return -EINVAL;
+> +
+> +       devapc_infra_clk =3D devm_clk_get(&pdev->dev, "devapc-infra-clock=
+");
+> +       if (IS_ERR(devapc_infra_clk))
+> +               return -EINVAL;
+> +
+> +       if (clk_prepare_enable(devapc_infra_clk))
+> +               return -EINVAL;
+> +
+> +       ret =3D devm_request_irq(&pdev->dev, devapc_irq,
+> +                              (irq_handler_t)devapc_violation_irq,
+> +                              IRQF_TRIGGER_NONE, "devapc", ctx);
+> +       if (ret)
+
+You should clk_disable_unprepare(devapc_infra_clk);
+
+> +               return ret;
+> +
+> +       start_devapc(ctx);
+> +
+> +       return 0;
+> +}
+> +
+> +static int mtk_devapc_remove(struct platform_device *dev)
+> +{
+
+Ditto.
+
+Regards,
+Chun-Kuang.
+
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver mtk_devapc_driver =3D {
+> +       .probe =3D mtk_devapc_probe,
+> +       .remove =3D mtk_devapc_remove,
+> +       .driver =3D {
+> +               .name =3D KBUILD_MODNAME,
+> +               .of_match_table =3D mtk_devapc_dt_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(mtk_devapc_driver);
+> +
