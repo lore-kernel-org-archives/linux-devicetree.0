@@ -2,103 +2,108 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B138C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 06:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B117C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 06:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED9EB20786
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 06:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DC7206D4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 06:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ubn/W4qS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H556AlVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgG2Gp1 (ORCPT
+        id S1726367AbgG2Gws (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 02:45:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:10769 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbgG2Gp0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 02:45:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596005126; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=F8Dx2k2QTTUlJ3PVcw289iUoRDVJ4gqpdkDJN4dKpe8=; b=ubn/W4qSOoZRRteYWukQtEwAfTssbHgYgRt0KsEiGUdJ861GpZzIKPpoMTIMOxANBw9QuyJR
- ca0WbgMGZesA7jI6LVpCqHL3zboJAD+IXspMdDeIgQs9+9HHEzxhq/C5X40odYhWAXXxrjhO
- P295fWPYzGuX1cRBQ76z9sbMNH0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f211b0570ff737ddbb67b20 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 06:45:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6D9EDC4339C; Wed, 29 Jul 2020 06:45:24 +0000 (UTC)
-Received: from [192.168.0.101] (unknown [49.204.127.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 232CEC433C9;
-        Wed, 29 Jul 2020 06:45:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 232CEC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH 5/9] phy: qcom-qmp: use correct values for ipq8074 gen2
- pcie phy init
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, kishon@ti.com, mturquette@baylibre.com,
-        sboyd@kernel.org, svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
-        p.zabel@pengutronix.de, mgautam@codeaurora.org,
-        smuthayy@codeaurora.org, varada@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, stable@vger.kernel.org,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
- <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
- <20200713055558.GB34333@vkoul-mobl>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <9988249f-53aa-e615-f64b-28c0c0641ab4@codeaurora.org>
-Date:   Wed, 29 Jul 2020 12:15:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 29 Jul 2020 02:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgG2Gws (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 02:52:48 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A900C061794;
+        Tue, 28 Jul 2020 23:52:48 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i92so1128942pje.0;
+        Tue, 28 Jul 2020 23:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Am/TtCrrFfKaXzlFwmxItzz2ITP6WZphTK/VPluVd2M=;
+        b=H556AlVJ3PQbgvszJ3rDpBSedjj6NHM8AiBtkDSGSk3h+9vrKtaqRzDb7pu5tr4X8L
+         VkAIhR6IJO7JCR5QwjBlhhBmDpXSVhDOlmgoZfDzNJFXWSUObQ8b5FG4fnDEiviay7mf
+         JYHWprbM3olkcW3XBdztpfRIAtzyDxy3lwdVj5dOIM1N3llDSu+2UmG2XojD/XYU1hX5
+         H0YvOk9+mNvPIOA3Djw5/t8OJpDgYzMG2IQ8iuILcjsDv9+KHkroszFIaSS5rfvh0OjN
+         wXhUmFjH5pabpyIRR3/tx5rIpbTQ0ZoGLGUejWZ395oWOk7FJEkEToy4cplCeaB+jjpl
+         LN9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Am/TtCrrFfKaXzlFwmxItzz2ITP6WZphTK/VPluVd2M=;
+        b=P8McIeSQVCTxB9MBDneZBUtQa9djaxLwRhZJtdlcMtakJ+Q+dkruch6W5YOkFRuMw+
+         UR9X+NiWSftW2P2ZMnvZGzeezDkQaXDt9iSy0d843pKOSRPR6E+2TxD8GyUZtlbmmNB5
+         YSyFqq1cS0PqY+9TRG6VfmJefgVlpRMpAoZUpJriP1WUw3sImTrcUTXakJAQ/KROoNgw
+         6ryftmaZOjB15pnbqMa1lJtD17FI6xldOz7Iyw2Shq6oHWcl9xj9998yijBxfPkiGr0R
+         zEUmzluXOIF+njfprN4MFutLiwhIbMvtU+sUGNyUVTsJ5HkCAhMX+AKhUOEfwM8YJHCp
+         jpdw==
+X-Gm-Message-State: AOAM532aRivAKYQ82xF2hAb1NICariEvT+S79yVGd9VtnIALX5ffvA+O
+        ecdHt9END1ELwsLRADkQTWfm0MWcjk0mMY7yKfs=
+X-Google-Smtp-Source: ABdhPJwF4/zcqOFXvt7wM9A0X11E9f0a+SFZxtElBWQOlf1Ie76TxW7/SBaEQzrkzP1MKJBI1UukqNBoS5bUnf5iIvE=
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr10863883pla.18.1596005567346;
+ Tue, 28 Jul 2020 23:52:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200713055558.GB34333@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+ <20200728151258.1222876-1-campello@chromium.org> <20200728091057.6.I27a5605d9cb3ff643ef040c4ef932a30df9a8fac@changeid>
+ <CAHp75VfLYqPpO5M6GaHfSBBkQoZpnVTHFKVX5k9Pu_RjMO-whw@mail.gmail.com> <CAHcu+VbxtAz-2y9FLdraqhYjzHKmi-5O=MioSU1caupT_y6PrQ@mail.gmail.com>
+In-Reply-To: <CAHcu+VbxtAz-2y9FLdraqhYjzHKmi-5O=MioSU1caupT_y6PrQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 29 Jul 2020 09:52:30 +0300
+Message-ID: <CAHp75VejNVhRhVEPimbj3S4zMPTsiBgk3qmMAX+jfYN2_i2G0A@mail.gmail.com>
+Subject: Re: [PATCH 06/15] iio: sx9310: Align memory
+To:     Daniel Campello <campello@google.com>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Jul 29, 2020 at 12:26 AM Daniel Campello <campello@google.com> wrote:
+> On Tue, Jul 28, 2020 at 12:11 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Tue, Jul 28, 2020 at 6:15 PM Daniel Campello <campello@chromium.org> wrote:
 
-On 7/13/2020 11:25 AM, Vinod Koul wrote:
-> On 05-07-20, 14:47, Sivaprakash Murugesan wrote:
->> There were some problem in ipq8074 gen2 pcie phy init sequence, fix
-> Can you please describe these problems, it would help review to
-> understand the issues and also for future reference to you
+...
 
-Hi Vinod,
+> > > -       __be16 buffer[SX9310_NUM_CHANNELS +
+> > > -                     4]; /* 64-bit data + 64-bit timestamp */
+> > > +       /* 64-bit data + 64-bit timestamp buffer */
+> > > +       __be16 buffer[SX9310_NUM_CHANNELS + 4] __aligned(8);
+> >
+> > If the data amount (channels) is always the same, please, use struct approach.
+> > Otherwise put a comment explaining dynamic data.
+> I'm not sure what you mean here. I have a comment above for the size
+> of the array.
 
-As you mentioned we are updating few register values
+Here [1] was a discussion about commenting on the dynamic amount of
+data [see the cover letter and replies to it] in the buffer and the
+struct approach [e.g. very first patch in the series].
 
-and also adding clocks and resets.
+[1]: https://lore.kernel.org/linux-iio/MN2PR12MB43905A2256F98BB5EFCE7DD3C4770@MN2PR12MB4390.namprd12.prod.outlook.com/T/
 
-the register values are given by the Hardware team and there
-
-is some fine tuning values are provided by Hardware team for the
-
-issues we faced downstream.
-
-Also, few register values are typos for example QSERDES_RX_SIGDET_CNTRL
-
-is a rx register it was wrongly in serdes table.
-
-I will try to mention these details in next patch.
-
+-- 
+With Best Regards,
+Andy Shevchenko
