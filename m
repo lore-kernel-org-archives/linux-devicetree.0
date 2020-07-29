@@ -2,852 +2,166 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88326C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 03:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D938C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 04:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F87206D7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 03:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0B020809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 04:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="tz0HO/Ks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgG2DdL (ORCPT
+        id S1726203AbgG2E4P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 28 Jul 2020 23:33:11 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:62528 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726245AbgG2DdK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Jul 2020 23:33:10 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 28 Jul 2020 20:33:08 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 28 Jul 2020 20:33:04 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 15E662182C; Wed, 29 Jul 2020 09:03:02 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, ansuelsmth@gmail.com,
-        bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, sivaprak@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3] dt-bindings: pci: convert QCOM pci bindings to YAML
-Date:   Wed, 29 Jul 2020 09:02:55 +0530
-Message-Id: <1595993575-24761-1-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 29 Jul 2020 00:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbgG2E4P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 00:56:15 -0400
+Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 99689C061794;
+        Tue, 28 Jul 2020 21:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mail.ustc.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+        Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=ttg92uVxgoQx/AYcNi/PXgIVq6G62scVk177LNjUw2o=; b=tz0HO/Ks4LDom
+        rSMivIq8HYktceERH3/DXDeBHhtGmVgRL+A64b+Kqs5onyluJtAzmLgmb9EQx0P3
+        vGXm87hpPAO3uFta8B3/bDmhCXDXA90aVr2+/kXs/18ITtk6WJJy8zQUcFjv3W/4
+        4/2nDkTDVd8f+CPeMc/9sA8vtfVYJA=
+Received: from xhacker (unknown [101.86.17.135])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygDn71NnASFfE749AA--.30383S2;
+        Wed, 29 Jul 2020 12:56:08 +0800 (CST)
+Date:   Wed, 29 Jul 2020 12:53:20 +0800
+From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: regulator: Convert sy8824x to json-schema
+Message-ID: <20200729125320.5521ed23@xhacker>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LkAmygDn71NnASFfE749AA--.30383S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZw15tFyDJr1UAF1DGFW7Jwb_yoW5XrWfpr
+        Z5CFnrWF40kF97Wa1fG3WfJa15Zr1kAa40yr1kGw1SkFyDJF95trWYkr15Z3W8JFWxuFWI
+        vFWDuryfta48X3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+        1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+        JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
+        W3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8
+        JbIYCTnIWIevJa73UjIFyTuYvjxUc_-PUUUUU
+X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert QCOM pci bindings to YAML schema
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Convert the sy8824x binding to DT schema format using json-schema.
+
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
-[V3]
- * Rebased V2 including recent patches from Ansuel
- * Addressed Review comments from Rob
- * Apart from properties commented by Rob interrupt-map is also
-   removed as it is documented in pci-bus.yaml and throwing error when
-   included
- * check patch warning 
-   "Use of 'slave' is deprecated, please '(secondary|target|...)', instead."
-   is not addressed in this patch as it requires changes in code and dts
- .../devicetree/bindings/pci/qcom,pcie.txt          | 337 ----------------
- .../devicetree/bindings/pci/qcom,pcie.yaml         | 437 +++++++++++++++++++++
- 2 files changed, 437 insertions(+), 337 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
- create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-deleted file mode 100644
-index 02bc81b..0000000
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ /dev/null
-@@ -1,337 +0,0 @@
--* Qualcomm PCI express root complex
--
--- compatible:
--	Usage: required
--	Value type: <stringlist>
--	Definition: Value should contain
--			- "qcom,pcie-ipq8064" for ipq8064
--			- "qcom,pcie-ipq8064-v2" for ipq8064 rev 2 or ipq8065
--			- "qcom,pcie-apq8064" for apq8064
--			- "qcom,pcie-apq8084" for apq8084
--			- "qcom,pcie-msm8996" for msm8996 or apq8096
--			- "qcom,pcie-ipq4019" for ipq4019
--			- "qcom,pcie-ipq8074" for ipq8074
--			- "qcom,pcie-qcs404" for qcs404
--			- "qcom,pcie-sdm845" for sdm845
--
--- reg:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: Register ranges as listed in the reg-names property
--
--- reg-names:
--	Usage: required
--	Value type: <stringlist>
--	Definition: Must include the following entries
--			- "parf"   Qualcomm specific registers
--			- "dbi"	   DesignWare PCIe registers
--			- "elbi"   External local bus interface registers
--			- "config" PCIe configuration space
--
--- device_type:
--	Usage: required
--	Value type: <string>
--	Definition: Should be "pci". As specified in designware-pcie.txt
--
--- #address-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: Should be 3. As specified in designware-pcie.txt
--
--- #size-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: Should be 2. As specified in designware-pcie.txt
--
--- ranges:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: As specified in designware-pcie.txt
--
--- interrupts:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: MSI interrupt
--
--- interrupt-names:
--	Usage: required
--	Value type: <stringlist>
--	Definition: Should contain "msi"
--
--- #interrupt-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: Should be 1. As specified in designware-pcie.txt
--
--- interrupt-map-mask:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: As specified in designware-pcie.txt
--
--- interrupt-map:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: As specified in designware-pcie.txt
--
--- clocks:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: List of phandle and clock specifier pairs as listed
--		    in clock-names property
--
--- clock-names:
--	Usage: required
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "iface"	Configuration AHB clock
--
--- clock-names:
--	Usage: required for ipq/apq8064
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "core"	Clocks the pcie hw block
--			- "phy"		Clocks the pcie PHY block
--			- "aux" 	Clocks the pcie AUX block
--			- "ref" 	Clocks the pcie ref block
--- clock-names:
--	Usage: required for apq8084/ipq4019
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "aux"		Auxiliary (AUX) clock
--			- "bus_master"	Master AXI clock
--			- "bus_slave"	Slave AXI clock
--
--- clock-names:
--	Usage: required for msm8996/apq8096
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "pipe"	Pipe Clock driving internal logic
--			- "aux"		Auxiliary (AUX) clock
--			- "cfg"		Configuration clock
--			- "bus_master"	Master AXI clock
--			- "bus_slave"	Slave AXI clock
--
--- clock-names:
--	Usage: required for ipq8074
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "iface"	PCIe to SysNOC BIU clock
--			- "axi_m"	AXI Master clock
--			- "axi_s"	AXI Slave clock
--			- "ahb"		AHB clock
--			- "aux"		Auxiliary clock
--
--- clock-names:
--	Usage: required for qcs404
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "iface"	AHB clock
--			- "aux"		Auxiliary clock
--			- "master_bus"	AXI Master clock
--			- "slave_bus"	AXI Slave clock
--
---clock-names:
--	Usage: required for sdm845
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "aux"		Auxiliary clock
--			- "cfg"		Configuration clock
--			- "bus_master"	Master AXI clock
--			- "bus_slave"	Slave AXI clock
--			- "slave_q2a"	Slave Q2A clock
--			- "tbu"		PCIe TBU clock
--			- "pipe"	PIPE clock
--
--- resets:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: List of phandle and reset specifier pairs as listed
--		    in reset-names property
--
--- reset-names:
--	Usage: required for ipq/apq8064
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "axi"  AXI reset
--			- "ahb"  AHB reset
--			- "por"  POR reset
--			- "pci"  PCI reset
--			- "phy"  PHY reset
--
--- reset-names:
--	Usage: required for apq8084
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "core" Core reset
--
--- reset-names:
--	Usage: required for ipq/apq8064
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "axi_m"		AXI master reset
--			- "axi_s"		AXI slave reset
--			- "pipe"		PIPE reset
--			- "axi_m_vmid"		VMID reset
--			- "axi_s_xpu"		XPU reset
--			- "parf"		PARF reset
--			- "phy"			PHY reset
--			- "axi_m_sticky"	AXI sticky reset
--			- "pipe_sticky"		PIPE sticky reset
--			- "pwr"			PWR reset
--			- "ahb"			AHB reset
--			- "phy_ahb"		PHY AHB reset
--			- "ext"			EXT reset
--
--- reset-names:
--	Usage: required for ipq8074
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "pipe"		PIPE reset
--			- "sleep"		Sleep reset
--			- "sticky"		Core Sticky reset
--			- "axi_m"		AXI Master reset
--			- "axi_s"		AXI Slave reset
--			- "ahb"			AHB Reset
--			- "axi_m_sticky"	AXI Master Sticky reset
--
--- reset-names:
--	Usage: required for qcs404
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "axi_m"		AXI Master reset
--			- "axi_s"		AXI Slave reset
--			- "axi_m_sticky"	AXI Master Sticky reset
--			- "pipe_sticky"		PIPE sticky reset
--			- "pwr"			PWR reset
--			- "ahb"			AHB reset
--
--- reset-names:
--	Usage: required for sdm845
--	Value type: <stringlist>
--	Definition: Should contain the following entries
--			- "pci"			PCIe core reset
--
--- power-domains:
--	Usage: required for apq8084 and msm8996/apq8096
--	Value type: <prop-encoded-array>
--	Definition: A phandle and power domain specifier pair to the
--		    power domain which is responsible for collapsing
--		    and restoring power to the peripheral
--
--- vdda-supply:
--	Usage: required
--	Value type: <phandle>
--	Definition: A phandle to the core analog power supply
--
--- vdda_phy-supply:
--	Usage: required for ipq/apq8064
--	Value type: <phandle>
--	Definition: A phandle to the analog power supply for PHY
--
--- vdda_refclk-supply:
--	Usage: required for ipq/apq8064
--	Value type: <phandle>
--	Definition: A phandle to the analog power supply for IC which generates
--		    reference clock
--- vddpe-3v3-supply:
--	Usage: optional
--	Value type: <phandle>
--	Definition: A phandle to the PCIe endpoint power supply
--
--- phys:
--	Usage: required for apq8084 and qcs404
--	Value type: <phandle>
--	Definition: List of phandle(s) as listed in phy-names property
--
--- phy-names:
--	Usage: required for apq8084 and qcs404
--	Value type: <stringlist>
--	Definition: Should contain "pciephy"
--
--- <name>-gpios:
--	Usage: optional
--	Value type: <prop-encoded-array>
--	Definition: List of phandle and GPIO specifier pairs. Should contain
--			- "perst-gpios"	PCIe endpoint reset signal line
--			- "wake-gpios"	PCIe endpoint wake signal line
--
--* Example for ipq/apq8064
--	pcie@1b500000 {
--		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
--		reg = <0x1b500000 0x1000
--		       0x1b502000 0x80
--		       0x1b600000 0x100
--		       0x0ff00000 0x100000>;
--		reg-names = "dbi", "elbi", "parf", "config";
--		device_type = "pci";
--		linux,pci-domain = <0>;
--		bus-range = <0x00 0xff>;
--		num-lanes = <1>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--		ranges = <0x81000000 0 0 0x0fe00000 0 0x00100000   /* I/O */
--			  0x82000000 0 0 0x08000000 0 0x07e00000>; /* memory */
--		interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
--		interrupt-names = "msi";
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0x7>;
--		interrupt-map = <0 0 0 1 &intc 0 36 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--				<0 0 0 2 &intc 0 37 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--				<0 0 0 3 &intc 0 38 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
--		clocks = <&gcc PCIE_A_CLK>,
--			 <&gcc PCIE_H_CLK>,
--			 <&gcc PCIE_PHY_CLK>,
--			 <&gcc PCIE_AUX_CLK>,
--			 <&gcc PCIE_ALT_REF_CLK>;
--		clock-names = "core", "iface", "phy", "aux", "ref";
--		resets = <&gcc PCIE_ACLK_RESET>,
--			 <&gcc PCIE_HCLK_RESET>,
--			 <&gcc PCIE_POR_RESET>,
--			 <&gcc PCIE_PCI_RESET>,
--			 <&gcc PCIE_PHY_RESET>,
--			 <&gcc PCIE_EXT_RESET>;
--		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
--		pinctrl-0 = <&pcie_pins_default>;
--		pinctrl-names = "default";
--	};
--
--* Example for apq8084
--	pcie0@fc520000 {
--		compatible = "qcom,pcie-apq8084", "snps,dw-pcie";
--		reg = <0xfc520000 0x2000>,
--		      <0xff000000 0x1000>,
--		      <0xff001000 0x1000>,
--		      <0xff002000 0x2000>;
--		reg-names = "parf", "dbi", "elbi", "config";
--		device_type = "pci";
--		linux,pci-domain = <0>;
--		bus-range = <0x00 0xff>;
--		num-lanes = <1>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--		ranges = <0x81000000 0 0          0xff200000 0 0x00100000   /* I/O */
--			  0x82000000 0 0x00300000 0xff300000 0 0x00d00000>; /* memory */
--		interrupts = <GIC_SPI 243 IRQ_TYPE_NONE>;
--		interrupt-names = "msi";
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0 0 0 0x7>;
--		interrupt-map = <0 0 0 1 &intc 0 244 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
--				<0 0 0 2 &intc 0 245 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
--				<0 0 0 3 &intc 0 247 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
--				<0 0 0 4 &intc 0 248 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
--		clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
--			 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
--			 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
--			 <&gcc GCC_PCIE_0_AUX_CLK>;
--		clock-names = "iface", "master_bus", "slave_bus", "aux";
--		resets = <&gcc GCC_PCIE_0_BCR>;
--		reset-names = "core";
--		power-domains = <&gcc PCIE0_GDSC>;
--		vdda-supply = <&pma8084_l3>;
--		phys = <&pciephy0>;
--		phy-names = "pciephy";
--		perst-gpio = <&tlmm 70 GPIO_ACTIVE_LOW>;
--		pinctrl-0 = <&pcie0_pins_default>;
--		pinctrl-names = "default";
--	};
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+Since v1
+  -It seems there's something wrong with my last email, so send out a v2 with
+   another email account
+
+ .../bindings/regulator/silergy,sy8824x.yaml   | 40 +++++++++++++++++++
+ .../devicetree/bindings/regulator/sy8824x.txt | 24 -----------
+ 2 files changed, 40 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/sy8824x.txt
+
+diff --git a/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml b/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
 new file mode 100644
-index 0000000..2eef6d5
+index 000000000000..62a476c94111
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -0,0 +1,437 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
++++ b/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/pci/qcom,pcie.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/regulator/silergy,sy8824x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Qualcomm PCI express root complex
++title: silergy sy8824c,sy8824e,sy20276 and sy20278 PMIC
 +
 +maintainers:
-+  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
-+
-+description:
-+  QCOM PCIe controller uses Designware IP with Qualcomm specific hardware
-+  wrappers.
++  - Jisheng Zhang <jszhang@kernel.org>
 +
 +properties:
 +  compatible:
 +    enum:
-+      - qcom,pcie-apq8064
-+      - qcom,pcie-apq8084
-+      - qcom,pcie-ipq4019
-+      - qcom,pcie-ipq8064
-+      - qcom,pcie-ipq8064-v2
-+      - qcom,pcie-ipq8074
-+      - qcom,pcie-msm8996
-+      - qcom,pcie-qcs404
-+      - qcom,pcie-sdm845
++      - silergy,sy8824c
++      - silergy,sy8824e
++      - silergy,sy20276
++      - silergy,sy20278
 +
 +  reg:
-+    maxItems: 4
-+
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: elbi
-+      - const: parf
-+      - const: config
-+
-+  ranges:
-+    maxItems: 2
-+
-+  interrupts:
-+    items:
-+      - description: MSI interrupts
-+
-+  interrupt-names:
-+    const: msi
-+
-+  interrupt-map-mask: true
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 7
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 7
-+
-+  resets:
-+    minItems: 1
-+    maxItems: 12
-+
-+  reset-names:
-+    minItems: 1
-+    maxItems: 12
-+
-+  power-domains:
 +    maxItems: 1
-+
-+  vdda-supply:
-+    description: phandle to power supply
-+
-+  vdda_phy-supply:
-+    description: phandle to the power supply to PHY
-+
-+  vdda_refclk-supply:
-+    description: phandle to power supply for ref clock generator
-+
-+  vddpe-3v3-supply:
-+    description: PCIe endpoint power supply
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: pciephy
-+
-+  perst-gpios:
-+    description: Endpoint reset signal line
-+    maxItems: 1
-+
-+  num-lanes:
-+    const: 1
 +
 +required:
 +  - compatible
 +  - reg
-+  - reg-names
-+  - interrupts
-+  - interrupt-names
-+  - "#interrupt-cells"
-+  - interrupt-map-mask
-+  - interrupt-map
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - phys
-+  - phy-names
-+
-+allOf:
-+ - $ref: /schemas/pci/pci-bus.yaml#
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-apq8064
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: clock for pcie hw block
-+           - description: clock for pcie phy block
-+       clock-names:
-+         items:
-+           - const: core
-+           - const: phy
-+       resets:
-+         items:
-+           - description: AXI reset
-+           - description: AHB reset
-+           - description: POR reset
-+           - description: PCI reset
-+           - description: PHY reset
-+       reset-names:
-+         items:
-+           - const: axi
-+           - const: ahb
-+           - const: por
-+           - const: pci
-+           - const: phy
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-apq8084
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: AUX clock
-+           - description: Master AXI clock
-+           - description: Slave AXI clock
-+       clock-names:
-+         items:
-+           - const: aux
-+           - const: bus_master
-+           - const: bus_slave
-+       resets:
-+         items:
-+           - description: core reset
-+       reset-names:
-+         items:
-+           - const: core
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-ipq4019
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: AUX clock
-+           - description: Master AXI clock
-+           - description: Slave AXI clock
-+       clock-names:
-+         items:
-+           - const: aux
-+           - const: master_bus
-+           - const: master_slave
-+       resets:
-+         items:
-+           - description: AXI master reset
-+           - description: AXI slave reset
-+           - description: PCIE pipe reset
-+           - description: AXI vmid reset
-+           - description: AXI XPU reset
-+           - description: parf reset
-+           - description: PHY reset
-+           - description: AXI master sticky reset
-+           - description: PCIE pipe sticky reset
-+           - description: pwr reset
-+           - description: AHB reset
-+           - description: PHY AHB reset
-+       reset-names:
-+         items:
-+           - const: axi_m
-+           - const: axi_s
-+           - const: pipe
-+           - const: axi_m_vmid
-+           - const: axi_s_xpu
-+           - const: parf
-+           - const: phy
-+           - const: axi_m_sticky
-+           - const: pipe_sticky
-+           - const: pwr
-+           - const: ahb
-+           - const: phy_ahb
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-ipq8064
-+             - qcom,pcie-ipq8064-v2
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: core clock
-+           - description: interface clock
-+           - description: phy clock
-+           - description: Auxilary clock
-+           - description: reference clock
-+       clock-names:
-+         items:
-+           - const: core
-+           - const: iface
-+           - const: phy
-+           - const: aux
-+           - const: ref
-+       resets:
-+         items:
-+           - description: AXI reset
-+           - description: AHB reset
-+           - description: POR reset
-+           - description: PCI reset
-+           - description: PHY reset
-+           - description: External reset
-+       reset-names:
-+         items:
-+           - const: axi
-+           - const: ahb
-+           - const: por
-+           - const: pci
-+           - const: phy
-+           - const: ext
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-ipq8074
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: sys noc interface clock
-+           - description: AXI master clock
-+           - description: AXI slave clock
-+           - description: AHB clock
-+           - description: Auxilary clock
-+       clock-names:
-+         items:
-+           - const: iface
-+           - const: axi_m
-+           - const: axi_s
-+           - const: ahb
-+           - const: aux
-+       resets:
-+         items:
-+           - description: PIPE reset
-+           - description: PCIe sleep reset
-+           - description: PCIe sticky reset
-+           - description: AXI master reset
-+           - description: AXI slave reset
-+           - description: AHB reset
-+           - description: AXI master sticky reset
-+       reset-names:
-+         items:
-+           - const: pipe
-+           - const: sleep
-+           - const: sticky
-+           - const: axi_m
-+           - const: axi_s
-+           - const: ahb
-+           - const: axi_m_sticky
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-msm8996
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: PCIe pipe clock
-+           - description: Auxilary clock
-+           - description: AHB config clock
-+           - description: AXI master clock
-+           - description: AXI slave clock
-+       clock-names:
-+         items:
-+           - const: pipe
-+           - const: aux
-+           - const: cfg
-+           - const: bus_master
-+           - const: bus_slave
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-qcs404
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: interface clock
-+           - description: Auxilary clock
-+           - description: AXI master clock
-+           - description: AXI slave clock
-+       clock-names:
-+         items:
-+           - const: iface
-+           - const: aux
-+           - const: master_bus
-+           - const: slave_bus
-+       resets:
-+         items:
-+           - description: AXI master reset
-+           - description: AXI slave reset
-+           - description: AXI master sticky reset
-+           - description: PCIe pipe sticky reset
-+           - description: power reset
-+           - description: AHB reset
-+       reset-names:
-+         items:
-+           - const: axi_m
-+           - const: axi_s
-+           - const: axi_m_sticky
-+           - const: pipe_sticky
-+           - const: pwr
-+           - const: ahb
-+ - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - qcom,pcie-sdm845
-+   then:
-+     properties:
-+       clocks:
-+         items:
-+           - description: PCIE pipe clock
-+           - description: Auxilary clock
-+           - description: AHB config clock
-+           - description: AXI Master clock
-+           - description: AXI Slave clock
-+           - description: AXI Slave Q2A clock
-+           - description: NOC TBU clock
-+       clock-names:
-+         items:
-+           - const: pipe
-+           - const: aux
-+           - const: cfg
-+           - const: bus_master
-+           - const: bus_slave
-+           - const: slave_q2a
-+           - const: tbu
-+       resets:
-+         items:
-+           - description: PCI reset
-+       reset-names:
-+         items:
-+           - const: pci
-+
-+unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    pcie: pci@10000000 {
-+        compatible = "qcom,pcie-qcs404";
-+        reg =  <0x10000000 0xf1d>,
-+               <0x10000f20 0xa8>,
-+               <0x07780000 0x2000>,
-+               <0x10001000 0x2000>;
-+        reg-names = "dbi", "elbi", "parf", "config";
-+        device_type = "pci";
-+        linux,pci-domain = <0>;
-+        bus-range = <0x00 0xff>;
-+        num-lanes = <1>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+
-+        ranges = <0x01000000 0 0          0x10003000 0 0x00010000>, /* I/O */
-+                 <0x02000000 0 0x10013000 0x10013000 0 0x007ed000>; /* memory */
-+
-+        interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "msi";
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0 0 0 0x7>;
-+        interrupt-map = <0 0 0 1 &intc GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+                        <0 0 0 2 &intc GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+                        <0 0 0 3 &intc GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+                        <0 0 0 4 &intc GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+        clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+                 <&gcc GCC_PCIE_0_AUX_CLK>,
-+                 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+                 <&gcc GCC_PCIE_0_SLV_AXI_CLK>;
-+        clock-names = "iface", "aux", "master_bus", "slave_bus";
-+
-+        resets = <&gcc 18>,
-+                 <&gcc 17>,
-+                 <&gcc 15>,
-+                 <&gcc 19>,
-+                 <&gcc GCC_PCIE_0_BCR>,
-+                 <&gcc 16>;
-+        reset-names = "axi_m",
-+                      "axi_s",
-+                      "axi_m_sticky",
-+                      "pipe_sticky",
-+                      "pwr",
-+                      "ahb";
-+
-+        phys = <&pcie_phy>;
-+        phy-names = "pciephy";
-+
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        regulator@60 {
++          compatible = "silergy,sy8824c";
++          regulator-min-microvolt = <800000>;
++          regulator-max-microvolt = <1150000>;
++          reg = <0x60>;
++        };
 +    };
++
++...
+diff --git a/Documentation/devicetree/bindings/regulator/sy8824x.txt b/Documentation/devicetree/bindings/regulator/sy8824x.txt
+deleted file mode 100644
+index c5e95850c427..000000000000
+--- a/Documentation/devicetree/bindings/regulator/sy8824x.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-SY8824C/SY8824E/SY20276 Voltage regulator
+-
+-Required properties:
+-- compatible: Must be one of the following.
+-	"silergy,sy8824c"
+-	"silergy,sy8824e"
+-	"silergy,sy20276"
+-	"silergy,sy20278"
+-- reg: I2C slave address
+-
+-Any property defined as part of the core regulator binding, defined in
+-./regulator.txt, can also be used.
+-
+-Example:
+-
+-	vcore: regulator@00 {
+-		compatible = "silergy,sy8824c";
+-		reg = <0x66>;
+-		regulator-name = "vcore";
+-		regulator-min-microvolt = <800000>;
+-		regulator-max-microvolt = <1150000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-	};
 -- 
-2.7.4
+2.28.0.rc0
+
 
