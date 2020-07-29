@@ -2,266 +2,193 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367C7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87EAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFF120829
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97BA2083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG2Mqo convert rfc822-to-8bit (ORCPT
+        id S1726800AbgG2M6s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgG2Mqn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 08:46:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1B9C061794
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 05:46:43 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0lTa-0006UE-CT; Wed, 29 Jul 2020 14:46:30 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k0lTY-0007Ak-58; Wed, 29 Jul 2020 14:46:28 +0200
-Message-ID: <d44e88a1408add6491897a8793b57ee0090fa4c6.camel@pengutronix.de>
-Subject: Re: [PATCH 11/17] clk: imx: Add blk_ctrl combo driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Abel Vesa <abel.vesa@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Date:   Wed, 29 Jul 2020 14:46:28 +0200
-In-Reply-To: <1596024483-21482-12-git-send-email-abel.vesa@nxp.com>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
-         <1596024483-21482-12-git-send-email-abel.vesa@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 29 Jul 2020 08:58:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:52606 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgG2M6r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 08:58:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DFBAF8030866;
+        Wed, 29 Jul 2020 12:58:38 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id F5-UpB_0Hej0; Wed, 29 Jul 2020 15:58:38 +0300 (MSK)
+Date:   Wed, 29 Jul 2020 15:58:37 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200729125837.b27ncvd2eeixstba@mobilestation>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com>
+ <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Abel,
-
-On Wed, 2020-07-29 at 15:07 +0300, Abel Vesa wrote:
-> On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
-> RM and usually is comprised of some GPRs that are considered too
-> generic to be part of any dedicated IP from that specific subsystem.
+On Mon, Jul 27, 2020 at 12:22:28AM +0200, Linus Walleij wrote:
+> On Sat, Jul 25, 2020 at 1:03 AM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
 > 
-> In general, some of the GPRs have some clock bits, some have reset bits,
-> so in order to be able to use the imx clock API, this needs to be
-> in a clock driver. From there it can use the reset controller API and
-> leave the rest to the syscon.
+> > According to the DW APB GPIO databook it can be configured to provide either a
+> > combined IRQ line or multiple interrupt signals for each GPIO. It's up to
+> > the platform which of those signals are connected to an embedded IRQ
+> > controller. So I guess theoretically the array values can be sparse.
+> >
+> > Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
+> > array case. I just thought it would work out-of-box. Before getting your comment
+> > and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
+> > passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
+> > seeing zero IRQ number was supposed to be considered as invalid. That method shall
+> > just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
+> > will fail to find a descriptor with invalid IRQ value and return NULL. So after
+> > getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
+> > have stopped setting the handler. But turns out it may work only for
+> > CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
+> > descriptor will be returned for zero IRQ number. That descriptor will be
+> > initialized with the passed parent_handler callback, which isn't what we want.
 > 
-> This driver is intended to work with the following BLK_CTRL IPs found in
-> i.MX8MP (but it might be reused by the future i.MX platforms that
-> have this kind of IP in their design):
->  - Audio
->  - Media
->  - HDMI
+> Ouch but different beahviour on the outside of the irqchip API depending
+> on whether IRQs are sparse or not on some particular system seems to
+> be a problem with irqchip reallty, if we wanna get to the bottom of things.
+> (paging Marc)
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  drivers/clk/imx/Makefile       |   2 +-
->  drivers/clk/imx/clk-blk-ctrl.c | 318 +++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/imx/clk-blk-ctrl.h |  81 +++++++++++
->  3 files changed, 400 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/imx/clk-blk-ctrl.c
->  create mode 100644 drivers/clk/imx/clk-blk-ctrl.h
+> > So in order to fix the problem we could follow either of the next paths:
+> > 1) Just make sure the passed IRQs array is not sparse for instance by remapping
+> >    it to be linear.
+> > 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
+> >    gpiochip_add_irqchip() method.
+> >
+> > What to you think? Linus?
 > 
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index 928f874c..7afe1df 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -27,7 +27,7 @@ obj-$(CONFIG_MXC_CLK_SCU) += \
->  
->  obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
->  obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
-> -obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
-> +obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o clk-blk-ctrl.o
->  obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
->  obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
->  
-> diff --git a/drivers/clk/imx/clk-blk-ctrl.c b/drivers/clk/imx/clk-blk-ctrl.c
-> new file mode 100644
-> index 00000000..a46e674
-> --- /dev/null
-> +++ b/drivers/clk/imx/clk-blk-ctrl.c
-> @@ -0,0 +1,318 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2020 NXP.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +
-> +#include "clk.h"
-> +#include "clk-blk-ctrl.h"
-> +
-> +struct reset_hw {
-> +	u32 offset;
-> +	u32 shift;
-> +	u32 mask;
-> +};
-> +
-> +struct pm_safekeep_info {
-> +	uint32_t *regs_values;
-> +	uint32_t *regs_offsets;
-> +	uint32_t regs_num;
-> +};
-> +
-> +struct imx_blk_ctrl_drvdata {
-> +	void __iomem *base;
-> +	struct reset_controller_dev rcdev;
-> +	struct reset_hw *rst_hws;
-> +	struct pm_safekeep_info pm_info;
-> +
-> +	spinlock_t lock;
-> +};
-> +
-> +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
-> +				  unsigned long id, bool assert)
-> +{
-> +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
-> +			struct imx_blk_ctrl_drvdata, rcdev);
-> +	unsigned int offset = drvdata->rst_hws[id].offset;
-> +	unsigned int shift = drvdata->rst_hws[id].shift;
-> +	unsigned int mask = drvdata->rst_hws[id].mask;
-> +	void __iomem *reg_addr = drvdata->base + offset;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	if (assert) {
-> +		pm_runtime_get_sync(rcdev->dev);
-> +		spin_lock_irqsave(&drvdata->lock, flags);
-> +		reg = readl(reg_addr);
-> +		writel(reg & ~(mask << shift), reg_addr);
-> +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> +	} else {
-> +		spin_lock_irqsave(&drvdata->lock, flags);
-> +		reg = readl(reg_addr);
-> +		writel(reg | (mask << shift), reg_addr);
-> +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> +		pm_runtime_put(rcdev->dev);
 
-This still has the issue of potentially letting exclusive reset control
-users break the device usage counter.
+> What about (3) fixing irqchip?
+> 
+> Else (2), making the code inside gpiolib be careful and skip over
+> invalid IRQs.
 
-Also shared reset control users start with deassert(), and you end probe
-with pm_runtime_put(), so the first shared reset control user that
-deasserts its reset will decrement the dev->power.usage_count to -1 ?
-For multiple resets being initially deasserted this would decrement
-multiple times.
+Sorry for a delay with a response to this issue. I had to give it a more thorough
+thought since the problem is a bit more complex than it seemed originally. As I
+see it now It might be wrong to implement the cases 2) and 3), but 1) is more
+appropriate.
 
-I think you'll have to track the (number of) asserted reset bits in this
-reset controller and limit when to call pm_runtime_get/put_sync().
+First of all we need to note that GPIOlib framework provides the next parameters
+to describe the IRQ-chip:
+gc->irq.num_parents - number of parental IRQ numbers.
+gc->irq.parents[] - array of parental IRQ numbers.
+*gc->irq.valid_mask - a mask of IRQ/GPIO lines describing a valid IRQ.
+*gc->irq.map - mapping of hw IRQ/GPIO ID -> parental IRQ numbers.
 
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_blk_ctrl_reset_reset(struct reset_controller_dev *rcdev,
-> +					   unsigned long id)
-> +{
-> +	imx_blk_ctrl_reset_set(rcdev, id, true);
-> +	return imx_blk_ctrl_reset_set(rcdev, id, false);
+Using that set we can handle any case of linear and sparse parental IRQs. Here
+is how it can be implemented in the framework of DW APB GPIO controller.
 
-Does this work for all peripherals? Are there none that require the
-reset line to be asserted for a certain number of bus clocks or similar?
+DW APB GPIO can be synthesized with two configs:
+1) Combined IRQ line (GPIO_INTR_IO == True),
+2) Multiple interrupt signals for each GPIO (GPIO_INTR_IO == False).
 
-> +}
-> +
-> +static int imx_blk_ctrl_reset_assert(struct reset_controller_dev *rcdev,
-> +					   unsigned long id)
-> +{
-> +	return imx_blk_ctrl_reset_set(rcdev, id, true);
-> +}
-> +
-> +static int imx_blk_ctrl_reset_deassert(struct reset_controller_dev *rcdev,
-> +					     unsigned long id)
-> +{
-> +	return imx_blk_ctrl_reset_set(rcdev, id, false);
-> +}
-> +
-> +static const struct reset_control_ops imx_blk_ctrl_reset_ops = {
-> +	.reset		= imx_blk_ctrl_reset_reset,
-> +	.assert		= imx_blk_ctrl_reset_assert,
-> +	.deassert	= imx_blk_ctrl_reset_deassert,
-> +};
-> +
-> +static int imx_blk_ctrl_register_reset_controller(struct device *dev)
-> +{
-> +	struct imx_blk_ctrl_drvdata *drvdata = dev_get_drvdata(dev);
-> +	const struct imx_blk_ctrl_dev_data *dev_data = of_device_get_match_data(dev);
-> +	struct reset_hw *hws;
-> +	int max = dev_data->resets_max;
-> +	int i;
-> +
-> +	spin_lock_init(&drvdata->lock);
-> +
-> +	drvdata->rcdev.owner     = THIS_MODULE;
-> +	drvdata->rcdev.nr_resets = max;
-> +	drvdata->rcdev.ops       = &imx_blk_ctrl_reset_ops;
-> +	drvdata->rcdev.of_node   = dev->of_node;
-> +	drvdata->rcdev.dev	 = dev;
-> +
-> +	drvdata->rst_hws = devm_kzalloc(dev, sizeof(struct reset_hw) * max,
-> +					GFP_KERNEL);
+Obviously the former case is trivial:
 
-I'd use devm_kcalloc() here.
+     IRQ_combined
+    ______^________
+   /_ _ _ _ _ ___ _\
+   |_|_|_|_|_|...|_| - GPIOs
 
-> +	hws = drvdata->rst_hws;
-> +
-> +	for (i = 0; i < dev_data->hws_num; i++) {
-> +		struct imx_blk_ctrl_hw *hw = &dev_data->hws[i];
-> +
-> +		if (hw->type != BLK_CTRL_RESET)
-> +			continue;
-> +
-> +		hws[hw->id].offset = hw->offset;
-> +		hws[hw->id].shift = hw->shift;
-> +		hws[hw->id].mask = hw->mask;
-> +	}
-> +
-> +	return devm_reset_controller_register(dev, &drvdata->rcdev);
-> +}
-[...]
+In that case
+gc->irq.num_parents = 1;
+gc->irq.parents[0] = IRQ_combined;
+*gc->irq.valid_mask = GENMASK(ngpio - 1, 0); // This is done by the GPIOlib core itself.
 
-regards
-Philipp
+The later one (when multiple interrupt signals are involved) can be a bit more
+complicated. It can be also split up into two cases:
+2a) One-on-one GPIO-IRQ mapping.
+2b) Sparse GPIO-IRQ mapping.
+
+It's straightforward to implement 2a):
+
+   i1i2i3i4i5 ... iN
+    _ _ _ _ _ ___ _
+   |_|_|_|_|_|...|_| - GPIOs
+
+In that case
+gc->irq.num_parents = ngpio;
+gc->irq.parents[] = {i1, i2, i3, i4, i5, ... iN};
+gc->irq.map = {i1, i2, i3, i4, i5, ... iN};
+*gc->irq.valid_mask = GENMASK(ngpio - 1, 0);
+
+The complication starts when we get to implementing 2b):
+
+   i1 xi3i4 x ... iN
+    _ _ _ _ _ ___ _
+   |_|_|_|_|_|...|_| - GPIOs
+
+In order to cover this case we need to answer on two question.
+Firstly how to get such platform config? I am not sure about ACPI, but
+aside from straightforward platform_data-based setup such configuration
+can be reached by setting up the "interrupts-extended" DT-property with
+zeroed phandle.
+
+Ok, since it's possible to meet such platform config, we need to think
+how to handle it and here is the second question. How to describe such
+case in the framework of GPIOlib-IRQchip?
+
+So from my side it was wrong to set the sparse IRQs array to
+gc->irq.parents. Instead I should have scanned the sparse IRQs array,
+calculated the number of non-empty parental IRQs, created an array of linear
+(non-sparse) IRQs, initialized *gc->irq.valid_mask in accordance with the
+sparse parental IRQs array. In other words it was wrong to assume, that
+each gc->irq.parents entry corresponds to the IRQ/GPIO line. The gc->irq.parents
+array just describes the parental IRQs and nothing else.
+
+Shortly speaking here is how the GPIOlib IRQchip parameters should be
+initialized in this case:
+gc->irq.num_parents - number of valid parental IRQs.
+gc->irq.parents - non-sparse, linear array of valid IRQs.
+*gc->irq.valid_mask - mask initialized by means of the gc->irq.init_valid_mask()
+callback, which indicates valid IRQ/GPIO IDs.
+*gc->irq.map - sparse array of parental IRQ numbers (which I mistakenly tried to
+pass through the gc->irq.parents pointer).
+
+After that GPIOlib IRQchip should work just fine without need to be patched 
+in order to check whether the passed parental IRQs are valid or not.
+
+Please correct me if I am wrong in some aspects of the solution described above.
+I'll send a fix of the problem shortly.
+
+-Sergey
+
+> 
+> Yours,
+> Linus Walleij
