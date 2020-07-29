@@ -2,99 +2,84 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D01C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8832CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2612A205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CDF205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgG2MRl (ORCPT
+        id S1726391AbgG2MTx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:17:41 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56038 "EHLO inva020.nxp.com"
+        Wed, 29 Jul 2020 08:19:53 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:42604 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgG2MRl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:17:41 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EBC0D1A112B;
-        Wed, 29 Jul 2020 14:17:38 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DF5681A112A;
-        Wed, 29 Jul 2020 14:17:38 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CA5732032B;
-        Wed, 29 Jul 2020 14:17:38 +0200 (CEST)
-Date:   Wed, 29 Jul 2020 15:17:38 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
+        id S1726054AbgG2MTx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:19:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id B62B9FB06;
+        Wed, 29 Jul 2020 14:19:48 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rh6uG0TfbtNc; Wed, 29 Jul 2020 14:19:46 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 635A045341; Wed, 29 Jul 2020 14:19:45 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
         Dong Aisheng <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 17/17] arm64: dts: imx8mp: Add hdmi_blk_ctrl node
-Message-ID: <20200729121738.rzhtjjyej3nfu3vh@fsr-ub1664-175>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
- <1596024483-21482-18-git-send-email-abel.vesa@nxp.com>
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Li Jun <jun.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Walle <michael@walle.cc>,
+        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] arm64: dts: imx8mq: Add NWL DSI host controller to Librem 5 Devkit
+Date:   Wed, 29 Jul 2020 14:19:42 +0200
+Message-Id: <cover.1596025057.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596024483-21482-18-git-send-email-abel.vesa@nxp.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-29 15:08:03, Abel Vesa wrote:
-> Some of the features of the hdmi_ctrl will be used by some
-> different drivers in a way those drivers will know best, so adding the
-> syscon compatible we allow those to do just that. Only the resets
-> and the clocks are registered bit the clk-blk-ctrl driver.
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index 172c548..5a76c4d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -751,6 +751,15 @@
->  				#clock-cells = <1>;
->  				#reset-cells = <1>;
->  			};
-> +
-> +			hdmi_blk_ctrl: hdmi-blk-ctrl@32fc0000 {
-> +				compatible = "fsl,imx8mp-hdmi-blk-ctrl", "syscon";
-> +				reg = <0x32fc0000 0x1000>;
-> +				power-domains = <&hdmimix_pd>;
+These patches add the NWL host controller to the imx8mq and make use of it on
+the Librem 5 Devkit enabling the built in MIPI DSI LCD panel.
 
-I forget to remove the power-domains property.
+I opted to add imx8mq internal ports and endpoints between nwl and lcdif to the
+generic dtsi since those are SOC rather than board specific properties.
 
-Will remove in the next version.
+Guido Günther (3):
+  arm64: dts: imx8mq: Add NWL MIPI DSI controller
+  arm64: dts: imx8mq-librem5-devkit: Enable the LCD panel
+  arm64: defconfig: Enable imx8mq-librem5-devkit display stack
 
-> +
-> +				#clock-cells = <1>;
-> +				#reset-cells = <1>;
-> +			};
->  		};
->  
->  		aips5: bus@30c00000 {
-> -- 
-> 2.7.4
-> 
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 33 +++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 49 +++++++++++++++++++
+ arch/arm64/configs/defconfig                  |  6 ++-
+ 3 files changed, 87 insertions(+), 1 deletion(-)
+
+-- 
+2.26.2
+
