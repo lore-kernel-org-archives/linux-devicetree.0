@@ -2,94 +2,185 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91FDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33641C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8366B20809
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0831720809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="PlHqBHQ7"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="rCOLBMOK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m44MQnC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgG2MeY (ORCPT
+        id S1726956AbgG2Meu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgG2MeX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 08:34:23 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4605C0619D2
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 05:34:21 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l2so10926771wrc.7
-        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 05:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YIO25dsj9y1sacwjOVQU2qxiT1NxKYb20Ra0eQDCssQ=;
-        b=PlHqBHQ7oPTLAJXglbhBvrn0PuYZROIprcr6B/QbHZeFjyu7qu6UMil8qyc9i1KFRX
-         4Sn9y/qO05dOHTSuiEl4Kng8D/B7ichVSg+xyl9FvseMe6+FOeD+am00t9LREIG8DJZ4
-         g6rXerPW2bSYqNJdz/IRkaFLmlYQlJOZ+MjIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YIO25dsj9y1sacwjOVQU2qxiT1NxKYb20Ra0eQDCssQ=;
-        b=QZwWGyU8pqTA/b45hG8f3kttz8kX0FIA1czEqBn/48vqINxAy5c1oFDezkE4MrhptF
-         lCtNC8eZU1ijBoL+khLc/bPK/ImDq85uXfZq7FmF/UEfh+0Uh52EB08BOyfTHK61Kr+1
-         XiCa/TtHibTG3o97UVJVH0cnCY3GYOhGqXBYFlpMMWp8gglEIao9wkmL7f4ukNIKy3BS
-         DMeCJsE4N1x4dlDkJEkEL+UzJzXC7mAQuKMPtzTLOFz046DD/QwEJ0cvmpsFRoUowiSQ
-         0WxWlh1WfkzyhSLFMnHkm+Qa02uk3kq8+pQukw3jmx8HLqPzzShonXZlbnDBUe90XTaa
-         L/uQ==
-X-Gm-Message-State: AOAM530TUsaTywXPl5isvLoSVnueu6HcUbyfzen4wTABLEZR6Zdq9YEa
-        ZAD0SpBEievWYeQ2NJTxnmI48rWDvypvXo4cnvH6yw==
-X-Google-Smtp-Source: ABdhPJyQMzNtPjGIIXmXxDEeBBrskdO6q0ASFwn9TWVeoCeE/LyRiv4udOWG4lbzVXrsNEOujM1yAvCF/TlRit9CwN4=
-X-Received: by 2002:adf:f186:: with SMTP id h6mr30102581wro.144.1596026060446;
- Wed, 29 Jul 2020 05:34:20 -0700 (PDT)
+        Wed, 29 Jul 2020 08:34:50 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:43683 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726950AbgG2Met (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 08:34:49 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 44F6A5C0156;
+        Wed, 29 Jul 2020 08:34:47 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 29 Jul 2020 08:34:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=2W2Yj2pam7ZJP/prlQsRPaGYtKd
+        XT6hqJ6A5Z7BBCKE=; b=rCOLBMOKNT1xXuHcBUQSWiiWQSurfYd/eOpbXR5xWLE
+        2DjBVyf77Xwxgz460VLz5CggzrtlewHoTD952x5ASHGcDJH79KsQVeZo+Hwb33PR
+        M/SDbpDED7wexjwHlXVcZ8z6f2tTlb71DddCVfElMlmP8EfQEs5Z1IWe4a5A4xEI
+        ncMLkOwAH2ujw44HCGPPPNxpwAsRk0ctY7fXJSLdXWL6RjcI6DV538ZcqH2g6NQ0
+        U6A7i9t+eLfqNOLD87Ab/cvgS/OmJGtHopPQeuwybPLnRtqUG/eIzxd7Z5UvNPGk
+        m+3khXggAr7oEYO4uoYCJIMHx15fpxxHd8uudXeM7BA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=2W2Yj2
+        pam7ZJP/prlQsRPaGYtKdXT6hqJ6A5Z7BBCKE=; b=m44MQnC4dEg3aNrVV65Nz2
+        9/DIi6yeAoHk9C2R/mIC+ybJH9UrwwtqDo7wVLFn4hwEEr1cRJw0YnKokd93tNxJ
+        025qRa3gCwlUbL1TSRqWlyTyiCTqVMM3fDr7z227U00OXKmDKXN7IH/VUCd27DRZ
+        R0+WurpDYdkgMHTsZ1ruMPIJ21zW1i0myHC+19WMz83bExN6SNbASSPm4QpC5yGU
+        0QvMPlsRijAnuJ+0mvLiYEuBIuHIbRI9aNMVjrbrs8vWoa3knvNvzikMSqm6y1ut
+        BSqZCSkmrmFxfUzuSDIRAGVQo2K5/AWLDGGyhdTKBtFZFDIyI6r21KbdjE8+UnbA
+        ==
+X-ME-Sender: <xms:5mwhX5HdxDGcXzbEFDp7ii-KKKq4ob46shK4eC6senXPh33ou98VsQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrieeggdehgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculddvfedmnecujfgurhepfffhvffukfhfgggtuggjsehgtderredttddv
+    necuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhord
+    htvggthheqnecuggftrfgrthhtvghrnhepleekgeehhfdutdeljefgleejffehfffgieej
+    hffgueefhfdtveetgeehieehgedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
+    vghrnhhordhtvggthh
+X-ME-Proxy: <xmx:5mwhX-W4hFeFn4AFM93v6CYZzNx-4PBDMAYjbeAg-cLRcn6UsHd0xA>
+    <xmx:5mwhX7LPHIKns_4c4KRtdDGVPQ8VdRs9TxO7FyIDAwoNB7d0QmfJEQ>
+    <xmx:5mwhX_HG2WFyY46UYaR3gojNMRlirZJUbEYUPtL9wlIVstvRDijmKw>
+    <xmx:52whX6T_HRdj2ZwQjAvhY1oMD3ia6kRk4RkHNiWWn3kGacfZfiYBow>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5445E3280063;
+        Wed, 29 Jul 2020 08:34:46 -0400 (EDT)
+Date:   Wed, 29 Jul 2020 14:34:44 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: sun50i-pinephone: add led flash
+Message-ID: <20200729123444.5t5cv47umhwu7jnd@gilmour.lan>
+References: <20200725110812.199529-1-luca@z3ntu.xyz>
 MIME-Version: 1.0
-References: <20200728100321.1691745-1-daniel@0x0f.com> <20200728100321.1691745-2-daniel@0x0f.com>
- <20200728191842.GB2778962@bogus> <CAFr9PXkwpNAhQvOJFqLUm-uWoaH=nsNiq_y+OgTf8Z60i4RhRw@mail.gmail.com>
- <CAK8P3a0-rZq_aJxWY2+009C91igzC4nHG7XJFwXkbB8bJBertA@mail.gmail.com>
-In-Reply-To: <CAK8P3a0-rZq_aJxWY2+009C91igzC4nHG7XJFwXkbB8bJBertA@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Wed, 29 Jul 2020 21:34:24 +0900
-Message-ID: <CAFr9PXnuMCjhzYQWGBiw3ayDD36qrUc433DsSphyF5+tqetnNg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: arm: mstar: Add binding details for mstar,pmsleep
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, SoC Team <soc@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zk6atuhnwc7zlxxx"
+Content-Disposition: inline
+In-Reply-To: <20200725110812.199529-1-luca@z3ntu.xyz>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On Wed, 29 Jul 2020 at 21:14, Arnd Bergmann <arnd@arndb.de> wrote:
-> > Does calling it "mstar,pmsleepv7" make more sense? I'm not sure what
-> > to call it really.
->
-> Use the name of the oldest chip you know that supports it in there,
-> such as "mstar,msc313-pmsleep" if this one is specific to msc313.
+--zk6atuhnwc7zlxxx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That makes sense. I think the original patch got merged to soc/arm/newsoc.
-Should I recreate the series or create a new patch to do the corrections?
+Hi!
 
-Slightly off topic but I'm working on the series for the interrupt controller
-and I've just renamed it from mstar,msc313e-intc to mstar,v7intc.
-I originally called it msc313e because I only knew of that chip but the
-same controller is present at the same place in all of the chips so far.
-I guess I should probably rename it to mstar,msc313-intc to keep with
-the first chip it appeared in pattern?
+On Sat, Jul 25, 2020 at 01:08:12PM +0200, Luca Weiss wrote:
+> All revisions of the PinePhone have an SGM3140 LED flash. The gpios were
+> swapped on v1.0 of the board but this was fixed in later revisions.
+>=20
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+>  .../boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts   |  5 +++++
+>  .../boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts   |  5 +++++
+>  .../boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts   |  5 +++++
+>  .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi      | 11 +++++++++++
+>  4 files changed, 26 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts b=
+/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
+> index 0c42272106afa..b579b03d4e026 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
+> @@ -9,3 +9,8 @@ / {
+>  	model =3D "Pine64 PinePhone Developer Batch (1.0)";
+>  	compatible =3D "pine64,pinephone-1.0", "allwinner,sun50i-a64";
+>  };
+> +
+> +&sgm3140 {
+> +	flash-gpios =3D <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> +	enable-gpios =3D <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
+> +};
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b=
+/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+> index 3e99a87e9ce52..8552587aac248 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+> @@ -28,3 +28,8 @@ &backlight {
+>  	num-interpolated-steps =3D <50>;
+>  	default-brightness-level =3D <400>;
+>  };
+> +
+> +&sgm3140 {
+> +	flash-gpios =3D <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
+> +	enable-gpios =3D <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> +};
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts b=
+/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
+> index a9f5b670c9b82..ec77715ba4a2a 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
+> @@ -38,3 +38,8 @@ &lis3mdl {
+>  	interrupt-parent =3D <&pio>;
+>  	interrupts =3D <1 1 IRQ_TYPE_EDGE_RISING>; /* PB1 */
+>  };
+> +
+> +&sgm3140 {
+> +	flash-gpios =3D <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
+> +	enable-gpios =3D <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+> +};
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/ar=
+ch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> index 25150aba749dc..e0bc1bcc1c1f3 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> @@ -60,6 +60,17 @@ vibrator {
+>  		enable-gpios =3D <&pio 3 2 GPIO_ACTIVE_HIGH>; /* PD2 */
+>  		vcc-supply =3D <&reg_dcdc1>;
+>  	};
+> +
+> +	sgm3140: led-controller {
 
-Thanks,
+The nodes should be ordered by node-name here
 
-Daniel
+> +		compatible =3D "sgmicro,sgm3140";
+> +		vin-supply =3D <&reg_dcdc1>;
+> +
+> +		sgm3140_flash: led {
+
+What do you need the label for?
+
+Thanks!
+Maxime
+
+--zk6atuhnwc7zlxxx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXyFs5AAKCRDj7w1vZxhR
+xSdYAP9w/fsQfQ4tNqf7h0+C92tE5O5wQryb8LSwfwlx9qYE6QEAn0bOJ4CbYCX0
+zjz8lGW/kDfed/4sE69A6yTq7Qcq8go=
+=Ue3s
+-----END PGP SIGNATURE-----
+
+--zk6atuhnwc7zlxxx--
