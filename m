@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039E3C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C071C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6EAC206D8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEC18206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CTF7i6KM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pRXyVwJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgG2HRI (ORCPT
+        id S1727930AbgG2HRX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:17:08 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:38118 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgG2HRH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 03:17:07 -0400
+        Wed, 29 Jul 2020 03:17:23 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:31375 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727904AbgG2HRW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 03:17:22 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596007027; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1596007042; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=1QskdFP4W6x+hwpTdEXfC/CTavYI5NuVpnPmETvIL2o=; b=CTF7i6KMYsLh0IkH7iFM8/srC7jGhpO/8Vdtww48VjyhD8HiryhGwIo1Q+zxB44okXLgGnFx
- PTb77kDmdF3LKB0T1SXXn6Kudhe63qg7IUAjNRSFTY94EfbLWH0QSc3A0du0OdpUZYWvpo/t
- TjLaj1bY0QnvcovJjl40+vGH/ow=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ bh=otK2gCbNbBWNuV2g1vsHwi3M2TBFPgauHjO3vYchIVU=; b=pRXyVwJO8wsjnPxH5lmDPwShfzFPGYx9E8FY6ncbbRIRAejf57osCIfmrbzeHnu/M3usDrbv
+ cV7TvAEYHPfxOoxUcWI9SPqJ1nbfAyUeNylANOJ6bGaUpaUlm3lrEB5aQBqRcf77YwxZpA2U
+ oKjLePrdL8oHR+obPkeoXjdyiPc=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
- 5f212273bd0c3f02969149cb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 07:17:07
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5f2122768db7256a953976b3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 29 Jul 2020 07:17:10
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5976FC433CB; Wed, 29 Jul 2020 07:17:06 +0000 (UTC)
+        id 0069DC433C9; Wed, 29 Jul 2020 07:17:09 +0000 (UTC)
 Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 244FFC433CA;
-        Wed, 29 Jul 2020 07:17:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 244FFC433CA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 91EBCC433C6;
+        Wed, 29 Jul 2020 07:17:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 91EBCC433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
 From:   Rajendra Nayak <rnayak@codeaurora.org>
@@ -53,9 +54,9 @@ To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
 Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v5 1/5] dt-bindings: media: venus: Add an optional power domain for perf voting
-Date:   Wed, 29 Jul 2020 12:46:41 +0530
-Message-Id: <1596007005-30425-2-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v5 2/5] media: venus: core: Fix error handling in probe
+Date:   Wed, 29 Jul 2020 12:46:42 +0530
+Message-Id: <1596007005-30425-3-git-send-email-rnayak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
 References: <1596007005-30425-1-git-send-email-rnayak@codeaurora.org>
@@ -64,65 +65,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Venus needs to vote for the performance state of a power domain (cx)
-to be able to support DVFS. This 'cx' power domain is controlled by
-rpmh and is a common power domain (scalable) not specific to
-venus alone. This is optional in the sense that, leaving this power
-domain out does not really impact the functionality but just makes
-the platform a little less power efficient.
+Post a successful pm_ops->core_get, an error in probe
+should exit by doing a pm_ops->core_put which seems
+to be missing. So fix it.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
- Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/venus/core.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-index 55f2d67..04e303b 100644
---- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-+++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-@@ -25,12 +25,16 @@ properties:
-     maxItems: 1
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 203c653..bfcaba3 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -224,13 +224,15 @@ static int venus_probe(struct platform_device *pdev)
  
-   power-domains:
--    maxItems: 2
-+    minItems: 2
-+    maxItems: 3
+ 	ret = dma_set_mask_and_coherent(dev, core->res->dma_mask);
+ 	if (ret)
+-		return ret;
++		goto err_core_put;
  
-   power-domain-names:
-+    minItems: 2
-+    maxItems: 3
-     items:
-       - const: venus
-       - const: vcodec0
-+      - const: cx
+ 	if (!dev->dma_parms) {
+ 		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
+ 					      GFP_KERNEL);
+-		if (!dev->dma_parms)
+-			return -ENOMEM;
++		if (!dev->dma_parms) {
++			ret = -ENOMEM;
++			goto err_core_put;
++		}
+ 	}
+ 	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
  
-   clocks:
-     maxItems: 5
-diff --git a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-index 157dff8..90013d4 100644
---- a/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-+++ b/Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
-@@ -25,13 +25,17 @@ properties:
-     maxItems: 1
+@@ -242,11 +244,11 @@ static int venus_probe(struct platform_device *pdev)
+ 					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+ 					"venus", core);
+ 	if (ret)
+-		return ret;
++		goto err_core_put;
  
-   power-domains:
--    maxItems: 3
-+    minItems: 3
-+    maxItems: 4
+ 	ret = hfi_create(core, &venus_core_ops);
+ 	if (ret)
+-		return ret;
++		goto err_core_put;
  
-   power-domain-names:
-+    minItems: 3
-+    maxItems: 4
-     items:
-       - const: venus
-       - const: vcodec0
-       - const: vcodec1
-+      - const: cx
+ 	pm_runtime_enable(dev);
  
-   clocks:
-     maxItems: 7
+@@ -302,6 +304,9 @@ static int venus_probe(struct platform_device *pdev)
+ 	pm_runtime_set_suspended(dev);
+ 	pm_runtime_disable(dev);
+ 	hfi_destroy(core);
++err_core_put:
++	if (core->pm_ops->core_put)
++		core->pm_ops->core_put(dev);
+ 	return ret;
+ }
+ 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
