@@ -2,66 +2,67 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D938C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 04:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D27AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 05:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE0B020809
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 04:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA542074B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 05:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="tz0HO/Ks"
+	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="k7PDIjfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgG2E4P (ORCPT
+        id S1726548AbgG2FNp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 00:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
+        Wed, 29 Jul 2020 01:13:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725986AbgG2E4P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 00:56:15 -0400
+        with ESMTP id S1726497AbgG2FNo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 01:13:44 -0400
 Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 99689C061794;
-        Tue, 28 Jul 2020 21:56:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 000F6C061794;
+        Tue, 28 Jul 2020 22:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=mail.ustc.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
         Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=ttg92uVxgoQx/AYcNi/PXgIVq6G62scVk177LNjUw2o=; b=tz0HO/Ks4LDom
-        rSMivIq8HYktceERH3/DXDeBHhtGmVgRL+A64b+Kqs5onyluJtAzmLgmb9EQx0P3
-        vGXm87hpPAO3uFta8B3/bDmhCXDXA90aVr2+/kXs/18ITtk6WJJy8zQUcFjv3W/4
-        4/2nDkTDVd8f+CPeMc/9sA8vtfVYJA=
+        bh=gyAFFTHooPV1cN1UkwS8W36v0aFTve9g94HoZtdi3lI=; b=k7PDIjfZSm4sg
+        o7grEP8rlg4ZxHPPG7a7P+6ljmG4hRzWpqEY453mZU8RI1IPUImdsC6jFv9QGE5U
+        ugNiPqwv7zNXyVJ75qHAX2/RU0I61Vv4WRcslFPfKfnV9UbzMZ51yhfEV5Un0p+y
+        3XhLaCdvYlm2ZopF8gZV3ThTUX1mP8=
 Received: from xhacker (unknown [101.86.17.135])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygDn71NnASFfE749AA--.30383S2;
-        Wed, 29 Jul 2020 12:56:08 +0800 (CST)
-Date:   Wed, 29 Jul 2020 12:53:20 +0800
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygCXjUCFBSFfwOg9AA--.30602S2;
+        Wed, 29 Jul 2020 13:13:42 +0800 (CST)
+Date:   Wed, 29 Jul 2020 13:08:39 +0800
 From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: regulator: Convert sy8824x to json-schema
-Message-ID: <20200729125320.5521ed23@xhacker>
+Subject: [PATCH v2 0/4] regulator: mp886x: two features and dt json convert
+Message-ID: <20200729130839.10a9bf88@xhacker>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygDn71NnASFfE749AA--.30383S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw15tFyDJr1UAF1DGFW7Jwb_yoW5XrWfpr
-        Z5CFnrWF40kF97Wa1fG3WfJa15Zr1kAa40yr1kGw1SkFyDJF95trWYkr15Z3W8JFWxuFWI
-        vFWDuryfta48X3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyYb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-        1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-        JVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r
-        W3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8
-        JbIYCTnIWIevJa73UjIFyTuYvjxUc_-PUUUUU
+X-CM-TRANSID: LkAmygCXjUCFBSFfwOg9AA--.30602S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xryktw17CF47Zr1xGF1xZrb_yoWDXrgE9r
+        yxAa47Gw4UZF1rCayIyFsrt34YyF4Iga48JFy7KrZ0vry7ZayUWrZxXr9Fyr4xWayUAFnr
+        Wwn7JrWSyry3WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbF8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z2
+        80aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
+        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx
+        8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCa
+        FVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+        Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+        6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr
+        1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
+        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8pnQUUUUUU==
 X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -70,98 +71,29 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-Convert the sy8824x binding to DT schema format using json-schema.
+This is to improve the mp886x regulator driver support.
+patch1 implments .set_ramp_delay
+patch2 and patch3 support the switch freq setting
+patch4 converts dt binding to json-schema
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
+Since v2:
+  - put any schema conversions at the end of the series as Mark
+    suggested.
 
-Since v1
-  -It seems there's something wrong with my last email, so send out a v2 with
-   another email account
+Jisheng Zhang (4):
+  regulator: mp886x: implement set_ramp_delay
+  dt-bindings: regulator: mp886x: support mps,switch-frequency
+  regulator: mp886x: support setting switch freq
+  dt-bindings: regulator: Convert mp886x to json-schema
 
- .../bindings/regulator/silergy,sy8824x.yaml   | 40 +++++++++++++++++++
- .../devicetree/bindings/regulator/sy8824x.txt | 24 -----------
- 2 files changed, 40 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
- delete mode 100644 Documentation/devicetree/bindings/regulator/sy8824x.txt
+ .../devicetree/bindings/regulator/mp886x.txt  |  27 -----
+ .../bindings/regulator/mps,mp886x.yaml        |  58 ++++++++++
+ drivers/regulator/mp886x.c                    | 109 +++++++++++++++++-
+ 3 files changed, 164 insertions(+), 30 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/mp886x.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp886x.yaml
 
-diff --git a/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml b/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
-new file mode 100644
-index 000000000000..62a476c94111
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/silergy,sy8824x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: silergy sy8824c,sy8824e,sy20276 and sy20278 PMIC
-+
-+maintainers:
-+  - Jisheng Zhang <jszhang@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - silergy,sy8824c
-+      - silergy,sy8824e
-+      - silergy,sy20276
-+      - silergy,sy20278
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        regulator@60 {
-+          compatible = "silergy,sy8824c";
-+          regulator-min-microvolt = <800000>;
-+          regulator-max-microvolt = <1150000>;
-+          reg = <0x60>;
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/regulator/sy8824x.txt b/Documentation/devicetree/bindings/regulator/sy8824x.txt
-deleted file mode 100644
-index c5e95850c427..000000000000
---- a/Documentation/devicetree/bindings/regulator/sy8824x.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--SY8824C/SY8824E/SY20276 Voltage regulator
--
--Required properties:
--- compatible: Must be one of the following.
--	"silergy,sy8824c"
--	"silergy,sy8824e"
--	"silergy,sy20276"
--	"silergy,sy20278"
--- reg: I2C slave address
--
--Any property defined as part of the core regulator binding, defined in
--./regulator.txt, can also be used.
--
--Example:
--
--	vcore: regulator@00 {
--		compatible = "silergy,sy8824c";
--		reg = <0x66>;
--		regulator-name = "vcore";
--		regulator-min-microvolt = <800000>;
--		regulator-max-microvolt = <1150000>;
--		regulator-boot-on;
--		regulator-always-on;
--	};
 -- 
-2.28.0.rc0
+2.28.0.rc1
 
 
