@@ -2,153 +2,94 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ADFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43E3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12CAD20809
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:48:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCFrhuo7"
+	by mail.kernel.org (Postfix) with ESMTP id C5ADB2076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgG2Hsq (ORCPT
+        id S1727033AbgG2HzZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54586 "EHLO
+        Wed, 29 Jul 2020 03:55:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgG2Hsp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 03:48:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB60C061794;
-        Wed, 29 Jul 2020 00:48:45 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g8so1806814wmk.3;
-        Wed, 29 Jul 2020 00:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wWA3cfypyLmf7qdbYPEp9Obskc/EXQ9KkvF/jWM+ZEI=;
-        b=gCFrhuo7zYWBXf2i8cx0tOErYZ0Pmiuh2uXm0va/SQt0m42M9hhwAk8iDFOxRzSmz/
-         7YZ+EGjSJBE9EHJDG8AhAOt5sOPumX6vDoSSvOD4swOTxjibEeLBP0PjQ9bFsO1oaKtH
-         IQMTUYnH5Ytg8ONzqJo4ZTP/06cuBJx3hdkqDGYgm8rXjehHtPBM8uD5vzrCL3Dt1XBw
-         XpzaVOCCWfFO3jrCyeIO7QPFvtgYTlpVGPvoCKNS5Whb4Zb1iz8DiskdKmoAH9TtB4H1
-         O9oBxd/DJTehKCKhaalzFoeRsPcVOK2U3l6bQ3ls65MfeSZjaC8/8MMPOABf7vaNNB5k
-         X7iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wWA3cfypyLmf7qdbYPEp9Obskc/EXQ9KkvF/jWM+ZEI=;
-        b=IBOLD129jhsJJTzK/8LupbzhPlAiV3ywhlbil0JTeAdV8tWKoGeVRPLSdLm11DQbTA
-         pupw/qSt00xk3HG2jI8dDtjPeSof0C5j80hl/iAuQLU1gPL+TWi6sGPD4Juius/+a+4e
-         ohrD8Y/iQhTBOlgbxQdfn1XIo5otg/Zfb+r5ltjn9Zpo2xnKiel8dU7F75gOaRnXx7jk
-         /f6BR0K1Dm0PkE+T6ZdhsCZY1OSE2xMlKxDVAMPMfhOLYiLMGXemCVSHxyuJNqhmWpBe
-         yavuez0Pr1ItdyhS+JxsrgnAHCF/gkzyi1jecIjh9b71cHctS6tkQ6zEw9u8E+t6rMzM
-         Xeeg==
-X-Gm-Message-State: AOAM5320fAwTuP73rpv2uwXakgd0naovH2nMFnXKxD20ydDjOCGW8ZoX
-        BILYSLlp2HparUQikGN9wnc=
-X-Google-Smtp-Source: ABdhPJw18Au7sbqmb2ly8qEkFwpnF373GPLonF39c3FLWDODiw+v1gYTJWkig9ko8XkbuWkbIICozQ==
-X-Received: by 2002:a1c:660a:: with SMTP id a10mr7018743wmc.115.1596008924274;
-        Wed, 29 Jul 2020 00:48:44 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id 68sm3632756wra.39.2020.07.29.00.48.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 00:48:43 -0700 (PDT)
-Subject: Re: [PATCH 1/2] reset-controller: ti: adjust the reset assert and
- deassert interface
-To:     Crystal Guo <crystal.guo@mediatek.com>, p.zabel@pengutronix.de,
-        robh+dt@kernel.org
-Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, seiya.wang@mediatek.com
-References: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
- <1596008357-11213-2-git-send-email-crystal.guo@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
-Date:   Wed, 29 Jul 2020 09:48:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        with ESMTP id S1726290AbgG2HzZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 03:55:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66D6C061794
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 00:55:24 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0gvj-0007OG-1C; Wed, 29 Jul 2020 09:55:15 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k0gvh-00055i-Ur; Wed, 29 Jul 2020 09:55:13 +0200
+Date:   Wed, 29 Jul 2020 09:55:13 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH v3 3/3] Input: snvs_pwrkey - only IRQ_HANDLED for our own
+ events
+Message-ID: <20200729075513.ckjnhfv3dxuesvsi@pengutronix.de>
+References: <20200723074314.3304-1-horia.geanta@nxp.com>
+ <20200723074314.3304-4-horia.geanta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <1596008357-11213-2-git-send-email-crystal.guo@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723074314.3304-4-horia.geanta@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:41:32 up 256 days, 23:00, 248 users,  load average: 0.19, 0.11,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
+On 20-07-23 10:43, Horia Geantă wrote:
+> From: André Draszik <git@andred.net>
+> 
+> The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
+> 
+> This driver here should only return IRQ_HANDLED if the status register
+> indicates that the event we're handling in the irq handler was genuinely
+> intended for this driver. Otheriwse the interrupt subsystem will
+> assume the interrupt was handled successfully even though it wasn't
+> at all.
 
-On 29/07/2020 09:39, Crystal Guo wrote:
-> Add ti_syscon_reset() to integrate assert and deassert together,
-> and change return value of the reset assert and deassert interface
-> from regmap_update_bits to regmap_write_bits.
-> 
-> when clear bit is already 1, regmap_update_bits can not write 1 to it again.
-> Some IC has the feature that, when set bit is 1, the clear bit change
-> to 1 together. It will truly clear bit to 0 by write 1 to the clear bit
-> 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> ---
->   drivers/reset/reset-ti-syscon.c | 13 +++++++++++--
->   1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
-> index a2635c2..5a8ec8f 100644
-> --- a/drivers/reset/reset-ti-syscon.c
-> +++ b/drivers/reset/reset-ti-syscon.c
-> @@ -89,7 +89,7 @@ static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
->   	mask = BIT(control->assert_bit);
->   	value = (control->flags & ASSERT_SET) ? mask : 0x0;
->   
-> -	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
-> +	return regmap_write_bits(data->regmap, control->assert_offset, mask, value);
-
-Nack, this will break the driver for the other devices.
-The kernel has to work not just for your SoC but for all devices of all 
-architectures. You can't just hack something up, that will work on your specific 
-SoC.
+After checking the RM and the imx6qdl.dtsi I'm not very sure that this
+is right since the snvs-powerkey has a seperate irq-line. So we can be
+sure that this irq is for us. If this is the case we don't need to check
+the SNVS_LPSR_REG instead we only need to clear it.
 
 Regards,
-Matthias
-
->   }
->   
->   /**
-> @@ -120,7 +120,7 @@ static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
->   	mask = BIT(control->deassert_bit);
->   	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
->   
-> -	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
-> +	return regmap_write_bits(data->regmap, control->deassert_offset, mask, value);
->   }
->   
->   /**
-> @@ -158,10 +158,19 @@ static int ti_syscon_reset_status(struct reset_controller_dev *rcdev,
->   		!(control->flags & STATUS_SET);
->   }
->   
-> +static int ti_syscon_reset(struct reset_controller_dev *rcdev,
-> +			   unsigned long id)
-> +{
-> +	ti_syscon_reset_assert(rcdev, id);
-> +
-> +	return ti_syscon_reset_deassert(rcdev, id);
-> +}
-> +
->   static const struct reset_control_ops ti_syscon_reset_ops = {
->   	.assert		= ti_syscon_reset_assert,
->   	.deassert	= ti_syscon_reset_deassert,
->   	.status		= ti_syscon_reset_status,
-> +	.reset		= ti_syscon_reset,
->   };
->   
->   static int ti_syscon_reset_probe(struct platform_device *pdev)
-> 
+  Marco
