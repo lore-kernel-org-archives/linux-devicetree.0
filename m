@@ -2,220 +2,94 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08FCC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91FDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA862070B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8366B20809
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 12:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="PlHqBHQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgG2M0K (ORCPT
+        id S1726054AbgG2MeY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 08:26:10 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:43345 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726054AbgG2M0K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:26:10 -0400
-X-IronPort-AV: E=Sophos;i="5.75,410,1589209200"; 
-   d="scan'208";a="53141138"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 29 Jul 2020 21:26:08 +0900
-Received: from localhost.localdomain (unknown [172.29.53.182])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 392F84004BDA;
-        Wed, 29 Jul 2020 21:26:06 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] ARM: dts: iwg22d-sodimm: Fix dt nodes sorting
-Date:   Wed, 29 Jul 2020 13:26:02 +0100
-Message-Id: <20200729122602.9561-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 29 Jul 2020 08:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgG2MeX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 08:34:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4605C0619D2
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 05:34:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l2so10926771wrc.7
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 05:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YIO25dsj9y1sacwjOVQU2qxiT1NxKYb20Ra0eQDCssQ=;
+        b=PlHqBHQ7oPTLAJXglbhBvrn0PuYZROIprcr6B/QbHZeFjyu7qu6UMil8qyc9i1KFRX
+         4Sn9y/qO05dOHTSuiEl4Kng8D/B7ichVSg+xyl9FvseMe6+FOeD+am00t9LREIG8DJZ4
+         g6rXerPW2bSYqNJdz/IRkaFLmlYQlJOZ+MjIA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YIO25dsj9y1sacwjOVQU2qxiT1NxKYb20Ra0eQDCssQ=;
+        b=QZwWGyU8pqTA/b45hG8f3kttz8kX0FIA1czEqBn/48vqINxAy5c1oFDezkE4MrhptF
+         lCtNC8eZU1ijBoL+khLc/bPK/ImDq85uXfZq7FmF/UEfh+0Uh52EB08BOyfTHK61Kr+1
+         XiCa/TtHibTG3o97UVJVH0cnCY3GYOhGqXBYFlpMMWp8gglEIao9wkmL7f4ukNIKy3BS
+         DMeCJsE4N1x4dlDkJEkEL+UzJzXC7mAQuKMPtzTLOFz046DD/QwEJ0cvmpsFRoUowiSQ
+         0WxWlh1WfkzyhSLFMnHkm+Qa02uk3kq8+pQukw3jmx8HLqPzzShonXZlbnDBUe90XTaa
+         L/uQ==
+X-Gm-Message-State: AOAM530TUsaTywXPl5isvLoSVnueu6HcUbyfzen4wTABLEZR6Zdq9YEa
+        ZAD0SpBEievWYeQ2NJTxnmI48rWDvypvXo4cnvH6yw==
+X-Google-Smtp-Source: ABdhPJyQMzNtPjGIIXmXxDEeBBrskdO6q0ASFwn9TWVeoCeE/LyRiv4udOWG4lbzVXrsNEOujM1yAvCF/TlRit9CwN4=
+X-Received: by 2002:adf:f186:: with SMTP id h6mr30102581wro.144.1596026060446;
+ Wed, 29 Jul 2020 05:34:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200728100321.1691745-1-daniel@0x0f.com> <20200728100321.1691745-2-daniel@0x0f.com>
+ <20200728191842.GB2778962@bogus> <CAFr9PXkwpNAhQvOJFqLUm-uWoaH=nsNiq_y+OgTf8Z60i4RhRw@mail.gmail.com>
+ <CAK8P3a0-rZq_aJxWY2+009C91igzC4nHG7XJFwXkbB8bJBertA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0-rZq_aJxWY2+009C91igzC4nHG7XJFwXkbB8bJBertA@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Wed, 29 Jul 2020 21:34:24 +0900
+Message-ID: <CAFr9PXnuMCjhzYQWGBiw3ayDD36qrUc433DsSphyF5+tqetnNg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: arm: mstar: Add binding details for mstar,pmsleep
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, SoC Team <soc@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some device nodes in the r8a7745-iwg22d-sodimm.dts are not sorted
-alphabetically. This patch fixes the sorting of nodes and also fixes a
-typo in the stmpe node.
+Hi Arnd,
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-This patch is tested against renesas-devel
----
- arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 104 ++++++++++----------
- 1 file changed, 52 insertions(+), 52 deletions(-)
+On Wed, 29 Jul 2020 at 21:14, Arnd Bergmann <arnd@arndb.de> wrote:
+> > Does calling it "mstar,pmsleepv7" make more sense? I'm not sure what
+> > to call it really.
+>
+> Use the name of the oldest chip you know that supports it in there,
+> such as "mstar,msc313-pmsleep" if this one is specific to msc313.
 
-diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-index b15b1b088a32..5f7f230de529 100644
---- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-+++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-@@ -53,6 +53,25 @@
- 		clock-frequency = <26000000>;
- 	};
- 
-+	backlight_lcd: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&tpu 3 5000000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <7>;
-+	};
-+
-+	lcd_panel: lcd {
-+		compatible = "edt,etm043080dh6gp";
-+		power-supply = <&vccq_panel>;
-+		backlight = <&backlight_lcd>;
-+
-+		port {
-+			lcd_in: endpoint {
-+				remote-endpoint = <&du_out_rgb0>;
-+			};
-+		};
-+	};
-+
- 	rsnd_sgtl5000: sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,format = "i2s";
-@@ -68,18 +87,6 @@
- 		};
- 	};
- 
--	vccq_sdhi0: regulator-vccq-sdhi0 {
--		compatible = "regulator-gpio";
--
--		regulator-name = "SDHI0 VccQ";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
--		gpios-states = <1>;
--		states = <3300000 1>, <1800000 0>;
--	};
--
- 	vccq_panel: regulator-vccq-panel {
- 		compatible = "regulator-fixed";
- 		regulator-name = "Panel VccQ";
-@@ -89,38 +96,16 @@
- 		enable-active-high;
- 	};
- 
--	backlight_lcd: backlight {
--		compatible = "pwm-backlight";
--		pwms = <&tpu 3 5000000 PWM_POLARITY_INVERTED>;
--		brightness-levels = <0 4 8 16 32 64 128 255>;
--		default-brightness-level = <7>;
--	};
--
--	lcd_panel: lcd {
--		compatible = "edt,etm043080dh6gp";
--		power-supply = <&vccq_panel>;
--		backlight = <&backlight_lcd>;
--
--		port {
--			lcd_in: endpoint {
--				remote-endpoint = <&du_out_rgb0>;
--			};
--		};
--	};
--};
--
--&du {
--	pinctrl-0 = <&du0_pins>;
--	pinctrl-names = "default";
-+	vccq_sdhi0: regulator-vccq-sdhi0 {
-+		compatible = "regulator-gpio";
- 
--	status = "okay";
-+		regulator-name = "SDHI0 VccQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
- 
--	ports {
--		port@0 {
--			endpoint {
--				remote-endpoint = <&lcd_in>;
--			};
--		};
-+		gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
-+		gpios-states = <1>;
-+		states = <3300000 1>, <1800000 0>;
- 	};
- };
- 
-@@ -150,6 +135,21 @@
- 	status = "okay";
- };
- 
-+&du {
-+	pinctrl-0 = <&du0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			endpoint {
-+				remote-endpoint = <&lcd_in>;
-+			};
-+		};
-+	};
-+};
-+
- &hscif1 {
- 	pinctrl-0 = <&hscif1_pins>;
- 	pinctrl-names = "default";
-@@ -171,6 +171,15 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
- 
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		#sound-dai-cells = <0>;
-+		reg = <0x0a>;
-+		clocks = <&audio_clock>;
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+	};
-+
- 	stmpe811@44 {
- 		compatible = "st,stmpe811";
- 		reg = <0x44>;
-@@ -179,7 +188,7 @@
- 
- 		/* 3.25 MHz ADC clock speed */
- 		st,adc-freq = <1>;
--		/* ADC converstion time: 80 clocks */
-+		/* ADC conversion time: 80 clocks */
- 		st,sample-time = <4>;
- 		/* 12-bit ADC */
- 		st,mod-12b = <1>;
-@@ -203,15 +212,6 @@
- 			st,touch-det-delay = <5>;
- 		};
- 	};
--
--	sgtl5000: codec@a {
--		compatible = "fsl,sgtl5000";
--		#sound-dai-cells = <0>;
--		reg = <0x0a>;
--		clocks = <&audio_clock>;
--		VDDA-supply = <&reg_3p3v>;
--		VDDIO-supply = <&reg_3p3v>;
--	};
- };
- 
- &pci1 {
--- 
-2.17.1
+That makes sense. I think the original patch got merged to soc/arm/newsoc.
+Should I recreate the series or create a new patch to do the corrections?
 
+Slightly off topic but I'm working on the series for the interrupt controller
+and I've just renamed it from mstar,msc313e-intc to mstar,v7intc.
+I originally called it msc313e because I only knew of that chip but the
+same controller is present at the same place in all of the chips so far.
+I guess I should probably rename it to mstar,msc313-intc to keep with
+the first chip it appeared in pattern?
+
+Thanks,
+
+Daniel
