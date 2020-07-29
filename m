@@ -2,106 +2,109 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D98C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31A7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1388D2083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596035768;
-	bh=yDdQDhe0aUkPneMHf4V7CtUIlgiQ6JNskljZx+0L3lY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RwHZOtDYvyXjoV1BzuHg7ec18SGm5B907lDdj/SpEVMwhmTxYB9zYWMnyqzjH2fq2
-	 5y6gZkmZgEnFlGuyuOESofCeP+7PiP+qndN64Ba9q24aiPuDVnCchAfuxvZ8jIyVRg
-	 DForI9HSrQnQcBMxFCvwVb4VUI0m4k2SdpBUw/po=
+	by mail.kernel.org (Postfix) with ESMTP id B4F1422C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgG2PQH (ORCPT
+        id S1726873AbgG2PbJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgG2PQH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:16:07 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5BE420829;
-        Wed, 29 Jul 2020 15:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596035766;
-        bh=yDdQDhe0aUkPneMHf4V7CtUIlgiQ6JNskljZx+0L3lY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gei8T5JG9mkokmueZzsBGcLX8YlboI/FeJehVNWoEm6q8np1zBgiz2xRJCgZ50WMa
-         duK94SsDjx3dcUQZ/qxbD9kRvbRfotqQgGnuG/YP+L9oby0LuER4sQU432e+thWKZc
-         11er+SlaUzGnZyXJ12P5ZS9ynMsNXAF4xj3riDgw=
-Date:   Wed, 29 Jul 2020 16:15:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Marcus Cooper <codekipper@gmail.com>
-Subject: Re: [PATCH v3 3/7] ASoC: sun4i-i2s: Add support for H6 I2S
-Message-ID: <20200729151548.GB5612@sirena.org.uk>
-References: <20200426104115.22630-4-peron.clem@gmail.com>
- <20200428081321.ht3el26yqhsnyfm4@gilmour.lan>
- <CAJiuCcdVs_drs40Q6537BYfz24F7NmC6B8S5-Lt4V4ggs-FXWA@mail.gmail.com>
- <20200429123529.y24dpy63wxq7uvkt@gilmour.lan>
- <CAJiuCcfXqizcq_JuXRCsqEqM2562cr1SGJ0pmy07jcJxAXojOw@mail.gmail.com>
- <20200430084600.samghw4zxb5zdbez@gilmour.lan>
- <CAJiuCcf_LHrJ6QdZgH8HyN6TRiT+GiD+t4UggFCrz-VwVHXV6w@mail.gmail.com>
- <20200504120942.lnrxnnmykqnvw3fb@gilmour.lan>
- <CAJiuCceF340FiLvyeXNZtvqftQMAmk=MtFDLT_9696ix+eH1Yw@mail.gmail.com>
- <20200729143927.47f5tbuaob4ph3lp@gilmour.lan>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
-Content-Disposition: inline
-In-Reply-To: <20200729143927.47f5tbuaob4ph3lp@gilmour.lan>
-X-Cookie: May all your PUSHes be POPped.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 29 Jul 2020 11:31:09 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:10005 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726757AbgG2PbI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:31:08 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 29 Jul 2020 08:31:07 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 29 Jul 2020 08:31:02 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 37ABF21A05; Wed, 29 Jul 2020 21:00:55 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
+        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
+        svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
+        p.zabel@pengutronix.de, sivaprak@codeaurora.org,
+        mgautam@codeaurora.org, smuthayy@codeaurora.org,
+        varada@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: [PATCH V2 5/7] PCI: qcom: Do PHY power on before PCIe init
+Date:   Wed, 29 Jul 2020 21:00:05 +0530
+Message-Id: <1596036607-11877-6-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596036607-11877-1-git-send-email-sivaprak@codeaurora.org>
+References: <1596036607-11877-1-git-send-email-sivaprak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
+changed phy ops from init/deinit to power on/off, due to this phy enable
+is getting called after PCIe init.
 
---xgyAXRrhYN0wYx8y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On some platforms like ipq8074 phy should be inited before accessing the
+PCIe register space, otherwise the system would hang.
 
-On Wed, Jul 29, 2020 at 04:39:27PM +0200, Maxime Ripard wrote:
+So move phy_power_on API before PCIe init.
 
-> It really looks like the polarity of LRCK is fine though. The first word
-> is sent with LRCK low, and then high, so we have channel 0 and then
-> channel 1 which seems to be the proper ordering?
+Fixes: commit cc1e06f033af ("phy: qcom: qmp: Use power_on/off ops for PCIe")
+Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Yes, that's normal.
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 3aac77a..e1b5651 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1265,18 +1265,18 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+ 
+ 	qcom_ep_reset_assert(pcie);
+ 
+-	ret = pcie->ops->init(pcie);
++	ret = phy_power_on(pcie->phy);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = phy_power_on(pcie->phy);
++	ret = pcie->ops->init(pcie);
+ 	if (ret)
+-		goto err_deinit;
++		goto err_disable_phy;
+ 
+ 	if (pcie->ops->post_init) {
+ 		ret = pcie->ops->post_init(pcie);
+ 		if (ret)
+-			goto err_disable_phy;
++			goto err_deinit;
+ 	}
+ 
+ 	dw_pcie_setup_rc(pp);
+@@ -1295,10 +1295,10 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
+ 	qcom_ep_reset_assert(pcie);
+ 	if (pcie->ops->post_deinit)
+ 		pcie->ops->post_deinit(pcie);
+-err_disable_phy:
+-	phy_power_off(pcie->phy);
+ err_deinit:
+ 	pcie->ops->deinit(pcie);
++err_disable_phy:
++	phy_power_off(pcie->phy);
+ 
+ 	return ret;
+ }
+-- 
+2.7.4
 
---xgyAXRrhYN0wYx8y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8hkqMACgkQJNaLcl1U
-h9BWOAgAgZCmz5kPu3UP5TIzHU0FAftm7xaaVdfAgv4E8uT1NNTTa8BP1dvsplb9
-Y4S5BMhGEtD8QKO8xfJOn2rmCsNNVxKbTcu17pJrU/deNmnoT5F4TnYr08pckTcp
-0lR7PGk2ue9IcXFaDjzjTEHRy6OAm607BBjXyWVAhr3eM9KxVObTR/xeYaXsW0pl
-524o3XwTcNKdjkYC+zmF/wcrJ98vThoGY3AIm/2dwJJ7/LjXGWxE0JVMMoA7o4RZ
-6DbNVGZyRaha3iLUmk75+d8yD+Bub8C+/xZUDzZX9dskbmerGio/TCFJhG24cx+w
-zXy5TYbMMqUp7E3+lRX8m6sRgBuA7Q==
-=1GYE
------END PGP SIGNATURE-----
-
---xgyAXRrhYN0wYx8y--
