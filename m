@@ -2,261 +2,132 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2496CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE6AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 08:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE0A920838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 07:59:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NfyQpnB9"
+	by mail.kernel.org (Postfix) with ESMTP id 7AD64207F5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 08:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgG2H7t (ORCPT
+        id S1726536AbgG2ICY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 03:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56266 "EHLO
+        Wed, 29 Jul 2020 04:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgG2H7s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 03:59:48 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9A0C061794;
-        Wed, 29 Jul 2020 00:59:48 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z18so17113999wrm.12;
-        Wed, 29 Jul 2020 00:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z5da3dx2SAn+bVOvyHxQOVatBrN8Ykye0kzHE6DAqV0=;
-        b=NfyQpnB9G7M/mRumGDa4PyxncFONzIQPe4J7blxFyH+Ryj3ihh197KaeLo2Y13CHai
-         II013x6AH4Qcod8ylw9wYU3Ni/7ZX1nLS9McnJX5VSkDwait471nEyHD0MmjTw7XM57/
-         pgPzc6Ir7A/rYPtPEkJANVVCB2hxCVX6fU9GpaRGuTU0ycD+9iO6ufFJ7JBSU0iJH5ip
-         en4ZpzG5Pt5bRmW95dZklfUg4vQpjHPnrIWVT1vebuCcYv7+l6WkWbL/sBH+GZH7X+7C
-         WujIRwi1JrAyz4IpHL5SP56lNX9sZDzuQgS/hAlaYmUACjMrguj/HOy+3SxMUdDZfwY4
-         sl/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z5da3dx2SAn+bVOvyHxQOVatBrN8Ykye0kzHE6DAqV0=;
-        b=nn8aMwy8YLAoMywsAC6Gs5Je7vxlH87cK2X22QUVNsYizpXryen/RW5ekh8mXe1Ih0
-         8fAbYym6AbQExEhBPIvgJFt3bgCTgYi5veUyLNlG0MewwcITyl4Nli5ILJXVdArZvFwH
-         ixNCIto3LWPAwYrQDq9w7PIrC4JuXnsY06yQ7Mxv8gJXv6oA9cENVdTXPPmQvBMewowr
-         Ab48dmceCpoNKABYbulavCyPp2avz7fTehws5YdyUSrJ2pYDOQA8GezLqDVxHQW07Ce1
-         LJtBlxU1PIMKlKb0uOSIY7m71beT/S1DYQuaAj1wA7ZQXuBzFnacKV+iHX/qhqT48Ixi
-         craQ==
-X-Gm-Message-State: AOAM532QdiEL0YtD3jZdZvAxNkaYxGFn8F5X4FcComC90PpQbmYBFfy2
-        37onyoAq18tPLe1fDtuQL/M=
-X-Google-Smtp-Source: ABdhPJwGStf0UKkkT0IHuZkO3DIghNUfUWpgTVBI4oN+HOrXJy1ffPv96tWb7B+ddXIu3I6Ov4OccQ==
-X-Received: by 2002:a5d:526d:: with SMTP id l13mr26968687wrc.279.1596009587006;
-        Wed, 29 Jul 2020 00:59:47 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.122.158])
-        by smtp.gmail.com with ESMTPSA id w14sm3418220wrt.55.2020.07.29.00.59.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2020 00:59:46 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] i2c: mediatek: Add access to more than 8GB dram in
- i2c driver
-To:     Qii Wang <qii.wang@mediatek.com>, wsa@the-dreams.de
-Cc:     qiangming.xia@mediatek.com, devicetree@vger.kernel.org,
-        srv_heupstream@mediatek.com, leilk.liu@mediatek.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1595939446-5484-1-git-send-email-qii.wang@mediatek.com>
- <1595939446-5484-3-git-send-email-qii.wang@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <25ff4899-5e7d-f6e5-599c-4bf368a731e1@gmail.com>
-Date:   Wed, 29 Jul 2020 09:59:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        with ESMTP id S1726336AbgG2ICX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 04:02:23 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF90C0619D2
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 01:02:22 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0h2X-00086y-8P; Wed, 29 Jul 2020 10:02:17 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k0h2W-0001cy-D3; Wed, 29 Jul 2020 10:02:16 +0200
+Message-ID: <d259a74ca9e425f9b39ebbf47b0decb6be0beed5.camel@pengutronix.de>
+Subject: Re: [PATCH 1/2] reset-controller: ti: adjust the reset assert and
+ deassert interface
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Crystal Guo <crystal.guo@mediatek.com>, robh+dt@kernel.org
+Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, seiya.wang@mediatek.com
+Date:   Wed, 29 Jul 2020 10:02:16 +0200
+In-Reply-To: <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
+References: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
+         <1596008357-11213-2-git-send-email-crystal.guo@mediatek.com>
+         <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <1595939446-5484-3-git-send-email-qii.wang@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Crystal, Matthias,
 
-
-On 28/07/2020 14:30, Qii Wang wrote:
-> Newer MTK chip support more than 8GB of dram. Replace support_33bits
-> with more general dma_max_support and remove mtk_i2c_set_4g_mode.
+On Wed, 2020-07-29 at 09:48 +0200, Matthias Brugger wrote:
 > 
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-> ---
->   drivers/i2c/busses/i2c-mt65xx.c | 38 +++++++++++++++++---------------------
->   1 file changed, 17 insertions(+), 21 deletions(-)
+> On 29/07/2020 09:39, Crystal Guo wrote:
+> > Add ti_syscon_reset() to integrate assert and deassert together,
+> > and change return value of the reset assert and deassert interface
+> > from regmap_update_bits to regmap_write_bits.
+> > 
+> > when clear bit is already 1, regmap_update_bits can not write 1 to it again.
+> > Some IC has the feature that, when set bit is 1, the clear bit change
+> > to 1 together. It will truly clear bit to 0 by write 1 to the clear bit
+> > 
+> > Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> > ---
+> >   drivers/reset/reset-ti-syscon.c | 13 +++++++++++--
+> >   1 file changed, 11 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
+> > index a2635c2..5a8ec8f 100644
+> > --- a/drivers/reset/reset-ti-syscon.c
+> > +++ b/drivers/reset/reset-ti-syscon.c
+> > @@ -89,7 +89,7 @@ static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
+> >   	mask = BIT(control->assert_bit);
+> >   	value = (control->flags & ASSERT_SET) ? mask : 0x0;
+> >   
+> > -	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
+> > +	return regmap_write_bits(data->regmap, control->assert_offset, mask, value);
 > 
-> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index e6b984a..49777a6 100644
-> --- a/drivers/i2c/busses/i2c-mt65xx.c
-> +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -204,11 +204,11 @@ struct mtk_i2c_compatible {
->   	unsigned char dcm: 1;
->   	unsigned char auto_restart: 1;
->   	unsigned char aux_len_reg: 1;
-> -	unsigned char support_33bits: 1;
->   	unsigned char timing_adjust: 1;
->   	unsigned char dma_sync: 1;
->   	unsigned char ltiming_adjust: 1;
->   	unsigned char apdma_sync: 1;
-> +	unsigned char max_dma_support;
->   };
->   
->   struct mtk_i2c_ac_timing {
-> @@ -311,11 +311,11 @@ struct i2c_spec_values {
->   	.dcm = 1,
->   	.auto_restart = 1,
->   	.aux_len_reg = 1,
-> -	.support_33bits = 1,
->   	.timing_adjust = 1,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
->   	.apdma_sync = 0,
-> +	.max_dma_support = 33,
->   };
->   
->   static const struct mtk_i2c_compatible mt6577_compat = {
-> @@ -325,11 +325,11 @@ struct i2c_spec_values {
->   	.dcm = 1,
->   	.auto_restart = 0,
->   	.aux_len_reg = 0,
-> -	.support_33bits = 0,
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
->   	.apdma_sync = 0,
-> +	.max_dma_support = 32,
->   };
->   
->   static const struct mtk_i2c_compatible mt6589_compat = {
-> @@ -339,11 +339,11 @@ struct i2c_spec_values {
->   	.dcm = 0,
->   	.auto_restart = 0,
->   	.aux_len_reg = 0,
-> -	.support_33bits = 0,
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
->   	.apdma_sync = 0,
-> +	.max_dma_support = 32,
->   };
->   
->   static const struct mtk_i2c_compatible mt7622_compat = {
-> @@ -353,11 +353,11 @@ struct i2c_spec_values {
->   	.dcm = 1,
->   	.auto_restart = 1,
->   	.aux_len_reg = 1,
-> -	.support_33bits = 0,
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
->   	.apdma_sync = 0,
-> +	.max_dma_support = 32,
->   };
->   
->   static const struct mtk_i2c_compatible mt8173_compat = {
-> @@ -366,11 +366,11 @@ struct i2c_spec_values {
->   	.dcm = 1,
->   	.auto_restart = 1,
->   	.aux_len_reg = 1,
-> -	.support_33bits = 1,
->   	.timing_adjust = 0,
->   	.dma_sync = 0,
->   	.ltiming_adjust = 0,
->   	.apdma_sync = 0,
-> +	.max_dma_support = 33,
->   };
->   
->   static const struct mtk_i2c_compatible mt8183_compat = {
-> @@ -380,11 +380,11 @@ struct i2c_spec_values {
->   	.dcm = 0,
->   	.auto_restart = 1,
->   	.aux_len_reg = 1,
-> -	.support_33bits = 1,
->   	.timing_adjust = 1,
->   	.dma_sync = 1,
->   	.ltiming_adjust = 1,
->   	.apdma_sync = 0,
-> +	.max_dma_support = 33,
->   };
->   
->   static const struct of_device_id mtk_i2c_of_match[] = {
-> @@ -796,11 +796,6 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
->   	return 0;
->   }
->   
-> -static inline u32 mtk_i2c_set_4g_mode(dma_addr_t addr)
-> -{
-> -	return (addr & BIT_ULL(32)) ? I2C_DMA_4G_MODE : I2C_DMA_CLR_FLAG;
+> Nack, this will break the driver for the other devices.
 
-I think you missed my comment in the last version:
-I2C_DMA_4G_MODE is no longer needed, you can delete it.
+I don't think this will break the driver for existing hardware.
+regmap_write_bits() is the same as regmap_update_bits(), it just forces
+the write in case the read already happens to return the correct value.
+Of course it would be good to check that this actually works.
 
-Regards,
-Matthias
-
-> -}
-> -
->   static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   			       int num, int left_num)
->   {
-> @@ -885,8 +880,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   			return -ENOMEM;
->   		}
->   
-> -		if (i2c->dev_comp->support_33bits) {
-> -			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
-> +		if (i2c->dev_comp->max_dma_support > 32) {
-> +			reg_4g_mode = upper_32_bits(rpaddr);
->   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_RX_4G_MODE);
->   		}
->   
-> @@ -908,8 +903,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   			return -ENOMEM;
->   		}
->   
-> -		if (i2c->dev_comp->support_33bits) {
-> -			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
-> +		if (i2c->dev_comp->max_dma_support > 32) {
-> +			reg_4g_mode = upper_32_bits(wpaddr);
->   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_TX_4G_MODE);
->   		}
->   
-> @@ -954,11 +949,11 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->   			return -ENOMEM;
->   		}
->   
-> -		if (i2c->dev_comp->support_33bits) {
-> -			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
-> +		if (i2c->dev_comp->max_dma_support > 32) {
-> +			reg_4g_mode = upper_32_bits(wpaddr);
->   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_TX_4G_MODE);
->   
-> -			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
-> +			reg_4g_mode = upper_32_bits(rpaddr);
->   			writel(reg_4g_mode, i2c->pdmabase + OFFSET_RX_4G_MODE);
->   		}
->   
-> @@ -1232,8 +1227,9 @@ static int mtk_i2c_probe(struct platform_device *pdev)
->   		return -EINVAL;
->   	}
->   
-> -	if (i2c->dev_comp->support_33bits) {
-> -		ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(33));
-> +	if (i2c->dev_comp->max_dma_support > 32) {
-> +		ret = dma_set_mask(&pdev->dev,
-> +				DMA_BIT_MASK(i2c->dev_comp->max_dma_support));
->   		if (ret) {
->   			dev_err(&pdev->dev, "dma_set_mask return error.\n");
->   			return ret;
+> The kernel has to work not just for your SoC but for all devices of all 
+> architectures. You can't just hack something up, that will work on your specific 
+> SoC.
 > 
+> Regards,
+> Matthias
+> 
+> >   }
+> >   
+> >   /**
+> > @@ -120,7 +120,7 @@ static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
+> >   	mask = BIT(control->deassert_bit);
+> >   	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
+> >   
+> > -	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
+> > +	return regmap_write_bits(data->regmap, control->deassert_offset, mask, value);
+> >   }
+> >   
+> >   /**
+> > @@ -158,10 +158,19 @@ static int ti_syscon_reset_status(struct reset_controller_dev *rcdev,
+> >   		!(control->flags & STATUS_SET);
+> >   }
+> >   
+> > +static int ti_syscon_reset(struct reset_controller_dev *rcdev,
+> > +			   unsigned long id)
+> > +{
+> > +	ti_syscon_reset_assert(rcdev, id);
+> > +
+> > +	return ti_syscon_reset_deassert(rcdev, id);
+> > +}
+> > +
+
+I'm unsure about this one, though. This is an incompatible change. At
+the very least this would have to be optional depending on compatible.
+
+regards
+Philipp
