@@ -2,91 +2,99 @@ Return-Path: <SRS0=UHbD=BI=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2045BC433EC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01DA920809
-	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7A3207E8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 29 Jul 2020 15:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FS6h71u5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgG2Pbe (ORCPT
+        id S1726858AbgG2PoI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 29 Jul 2020 11:31:34 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:10005 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726365AbgG2PbG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 29 Jul 2020 11:31:06 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 29 Jul 2020 08:31:04 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 29 Jul 2020 08:30:56 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id A89C42114B; Wed, 29 Jul 2020 21:00:54 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, kishon@ti.com, vkoul@kernel.org,
-        svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
-        p.zabel@pengutronix.de, sivaprak@codeaurora.org,
-        mgautam@codeaurora.org, smuthayy@codeaurora.org,
-        varada@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        Wed, 29 Jul 2020 11:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgG2PoI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 29 Jul 2020 11:44:08 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2344EC061794
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 08:44:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r2so17010728wrs.8
+        for <devicetree@vger.kernel.org>; Wed, 29 Jul 2020 08:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tuiwq6PL49LgBLJB2iEw3NbuM/jiIuCvykCzTBqHaAA=;
+        b=FS6h71u5nG4XhXmL0xBxzPU4diQE9Q2Zpew4j4jjY4WuGIDjtKoxp0YtFc9dj8HhrN
+         QoIgPpKfjk6Soe8qvPm3YZMHmP0SRtiDVUBnoEPPmjbqkI9eaiPuNt/hjt6di05vUfOj
+         sCR1Q+Lrnz+hYJ+ACuqXBgwWdmTWTgDb8jShGJDuuAF6oWFDJBEwaPu3N+lSLavKpMJI
+         29f8AjvI6+LmYSO7I4uhSysBwYF1Nk/2NZxQBDu1FlJks0amxkSRjc7F3JevXv/D5pXZ
+         s4l4bvNHDcNxZI+w6gMwVDs97ktovsnGTXTJNs3L8UEMeLVlKNSVmZrpDZdxnQqHDG74
+         pmEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tuiwq6PL49LgBLJB2iEw3NbuM/jiIuCvykCzTBqHaAA=;
+        b=JQN3pzb16LZegbC5TJtLSt35hRS8JBUTaL+B0aQxYqDhRcqUmY6WuRvAYDEzsaMZA6
+         wNajBfLeil2nWiM6inJt4AO6YViI8/Jb5uFnzBCNTaHdkfLjHKxUFN49U6Et0GYsejF9
+         MOJDSsEpdWVDw+pYqBvGCWpdagrbvU0Mub7bt6nkNOXD9UIWvLWUlI4OU0rrxLAlr2v5
+         /vHdyWOJRN7fSJvVRGKltLRiy+IAASxkcxe54YH55EkorXd9UX6oz9yd6/qiOL9ARR+w
+         rKaeQwV+2lRMT8VjfDpqvojn0zMbkJysLERTJzU0kOb39DanaPqxEBaaJjgl6Ete9ATV
+         qTLg==
+X-Gm-Message-State: AOAM530rsEaEXqpB1cq1AjUgEsE4VMKnxva0+gihoVG7fE0Fx8JmUpUq
+        b24nbzW8Z4bud43BStxlXm5i9Q==
+X-Google-Smtp-Source: ABdhPJyTMeEr287ehDzeTN6mcV+wNZneeb9TvFO04zB+QZ6QobJZHTZKK3fS+lbNnvjc9AqXgsXxZw==
+X-Received: by 2002:adf:ea4f:: with SMTP id j15mr30067384wrn.253.1596037446658;
+        Wed, 29 Jul 2020 08:44:06 -0700 (PDT)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id a134sm6526030wmd.17.2020.07.29.08.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 08:44:06 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V2 0/7] Add PCIe support for IPQ8074
-Date:   Wed, 29 Jul 2020 21:00:00 +0530
-Message-Id: <1596036607-11877-1-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+Subject: [PATCH 0/3] clk: meson: axg-audio: fix tdmout sclk inverter
+Date:   Wed, 29 Jul 2020 17:43:56 +0200
+Message-Id: <20200729154359.1983085-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IPQ8074 has two PCIe ports both are based on synopsis designware PCIe
-controller. while it was assumed that PCIe support for IPQ8074 was already
-available, it was not functional until now.
+The patchset fixes a problem with TDMOUT sclk inverter found on the
+g12a and following SoCs.
 
-This patch series adds support for PCIe ports on IPQ8074.
+On the the axg, a single bit was enough to drive the inverter. On
+the g12a a bit was added to, somehow, change how the clock is sampled.
+For the inverter to behave as intended, the new bit should be the
+inverse of the inverter bit at all time.
 
-First PCIe port is of Gen2 synposis version is 2_3_2 which has already been
-enabled. But it had some problems on phy init and needed dt updates.
+Quite a lot of lines for a single bit ...
 
-Second PCIe port is Gen3 synopsis version is 2_9_0. This series adds
-support for this PCIe port while fixing dt nodes.
+Jerome Brunet (3):
+  clk: meson: add sclk-ws driver
+  clk: meson: axg-audio: separate axg and g12a regmap tables
+  clk: meson: axg-audio: fix g12a tdmout sclk inverter
 
-Patch 1 on this series depends on qcom PCIe bindings patch
-https://lkml.org/lkml/2020/6/24/162
-
-[V2]
- * Fixed commit headers and messages to have PCIe and Gen[2-3]
- * Addressed Vinod's review comments on phy init
- * Patches are rebased on linux-next to resolve dependencies with recent
-   PCI patches
- * Patch 1 depends on https://lkml.org/lkml/2020/7/28/1462
- * Dropped clock patches as it has picked up by Stephen
-
-Sivaprakash Murugesan (7):
-  dt-bindings: PCI: qcom: Add ipq8074 Gen3 PCIe compatible
-  dt-bindings: phy: qcom,qmp: Add ipq8074 PCIe Gen3 phy
-  phy: qcom-qmp: Use correct values for ipq8074 PCIe Gen2 PHY init
-  phy: qcom-qmp: Add compatible for ipq8074 PCIe Gen3 qmp phy
-  PCI: qcom: Do PHY power on before PCIe init
-  PCI: qcom: Add ipq8074 PCIe controller support
-  arm64: dts: ipq8074: Fixup PCIe dts nodes
-
- .../devicetree/bindings/pci/qcom,pcie.yaml         |  47 +++++
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   1 +
- arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   8 +-
- arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 109 ++++++++----
- drivers/pci/controller/dwc/pcie-qcom.c             | 189 ++++++++++++++++++++-
- drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h          | 139 +++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.c                | 187 +++++++++++++++++++-
- drivers/phy/qualcomm/phy-qcom-qmp.h                |   2 +
- 8 files changed, 627 insertions(+), 55 deletions(-)
- create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie3-qmp.h
+ drivers/clk/meson/axg-audio.c | 214 +++++++++++++++++++++++++++++-----
+ drivers/clk/meson/clk-phase.c |  56 +++++++++
+ drivers/clk/meson/clk-phase.h |   6 +
+ 3 files changed, 246 insertions(+), 30 deletions(-)
 
 -- 
-2.7.4
+2.25.4
 
