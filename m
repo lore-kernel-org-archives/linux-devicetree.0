@@ -2,144 +2,171 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FEFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 14:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC853C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 14:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C022521744
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 14:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842A32070B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 14:58:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uNHGqGNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbgG3OiZ (ORCPT
+        id S1727072AbgG3O6m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 10:38:25 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:56878 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgG3OiZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 10:38:25 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DBADF80045E5;
-        Thu, 30 Jul 2020 14:38:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KpegvUn9Uau9; Thu, 30 Jul 2020 17:38:21 +0300 (MSK)
-Date:   Thu, 30 Jul 2020 17:38:20 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 05/10] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200730143820.suneapi2ilp34nat@mobilestation>
-References: <20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru>
- <20200730135536.19747-6-Sergey.Semin@baikalelectronics.ru>
- <20200730142618.GM3703480@smile.fi.intel.com>
+        Thu, 30 Jul 2020 10:58:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45166 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3O6m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 10:58:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UEwexe055492;
+        Thu, 30 Jul 2020 09:58:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596121120;
+        bh=sBlylftWCXxQKT/KZPRF3PfU/JvWz7JLIy5pu6TfDUo=;
+        h=From:To:CC:Subject:Date;
+        b=uNHGqGNKFUsOmxCg/WxzcqdLiKUYVPNa1J6y9zS8IE+YWiTkJoAm1bXoXjC/5Ska0
+         uy1FumaMN4CsKydS2mIar/TTwmDgxJuQ/MbRjadEI8UIABeDsjO5XZAfry1Xqb8jD4
+         5/PgD62MTSnCo0GB1C4+VoJlKE88z1EC5RdPZPsU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06UEweFF130039
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jul 2020 09:58:40 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Jul 2020 09:58:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Jul 2020 09:58:40 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UEweTp103620;
+        Thu, 30 Jul 2020 09:58:40 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <r-rivera-matos@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 1/2] dt-bindings: power: Add the bq25790 dt bindings
+Date:   Thu, 30 Jul 2020 09:58:33 -0500
+Message-ID: <20200730145834.29227-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200730142618.GM3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 05:26:18PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 30, 2020 at 04:55:31PM +0300, Serge Semin wrote:
-> > GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
-> > top of a GPIO chip. It's better from maintainability and readability
-> > point of view to use one instead of supporting a hand-written Generic
-> > IRQ-chip-based implementation. Moreover the new implementation won't
-> > cause much functional overhead but will provide a cleaner driver code.
-> > All of that makes the DW APB GPIO driver conversion pretty much justified
-> > especially seeing a tendency of the other GPIO drivers getting converted
-> > too.
-> > 
-> > Here is what we do in the framework of this commit to convert the driver
-> > to using the GPIO-lib-based IRQ-chip interface:
-> > 1) IRQ ack, mask and unmask callbacks are locally defined instead of
-> > using the Generic IRQ-chip ones.
-> 
+Add the bindings for the bq25790.
 
-> Easy to read if you put blank lines in between of items.
+Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/power/supply/bq25790.yaml        | 87 +++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq25790.yaml
 
-Ok.
+diff --git a/Documentation/devicetree/bindings/power/supply/bq25790.yaml b/Documentation/devicetree/bindings/power/supply/bq25790.yaml
+new file mode 100644
+index 000000000000..97dd539c1625
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/bq25790.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2020 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/supply/bq25790.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: TI BQ25790 Switch Mode Buck-Boost Charger
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  BQ25790 is a highly integrated switch-mode buck-boost charger for 1-4 cell
++  Li-ion batteries and Li-polymer batteries. The device charges a battery from a
++  wide range of input sources including legacy USB adapters to high voltage USB
++  PD adapters and traditional barrel adapters.
++
++allOf:
++  - $ref: power-supply.yaml#
++
++properties:
++  compatible:
++    enum:
++      - ti,bq25790
++      - ti,bq25792
++
++  reg:
++    maxItems: 1
++
++  ti,watchdog-timer:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Watchdog timer in milli seconds. 0 (default) disables the watchdog.
++    minimum: 0
++    maximum: 160000
++    enum: [ 0, 500, 1000, 2000, 20000, 40000, 80000, 160000]
++
++  input-voltage-limit-microvolt:
++    description: |
++      Minimum input voltage limit in micro volts with a 100000 micro volt step.
++    minimum: 3600000
++    maximum: 22000000
++
++  input-current-limit-microamp:
++    description: |
++      Maximum input current limit in micro amps with a 100000 micro amp step.
++    minimum: 100000
++    maximum: 3300000
++
++  monitored-battery:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle to the battery node being monitored
++
++required:
++  - compatible
++  - reg
++  - monitored-battery
++
++examples:
++  - |
++    bat: battery {
++      compatible = "simple-battery";
++      constant-charge-current-max-microamp = <2000000>;
++      constant-charge-voltage-max-microvolt = <4200000>;
++      precharge-current-microamp = <160000>;
++      charge-term-current-microamp = <160000>;
++    };
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      bq25790: charger@6b {
++          compatible = "ti,bq25790";
++          reg = <0x6b>;
++          interrupt-parent = <&gpio1>;
++          interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
++          ti,watchdog-timer = <2000>;
++          input-current-limit = <3000000>;
++          input-voltage-limit = <4500000>;
++          monitored-battery = <&bat>;
++      };
++    };
++
++...
+-- 
+2.28.0
 
-> 
-> > 2) An irq_chip structure instance is embedded into the dwapb_gpio
-> > private data. Note we can't have a static instance of that structure since
-> > GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
-> > A warning about that would have been printed by the GPIO-lib code if we
-> > used a single irq_chip structure instance for multiple DW APB GPIO
-> > controllers.
-> > 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
-> > descriptor. By default there is no IRQ enabled so any event raised will be
-> > handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
-> > is synthesized to have non-shared reference IRQ-lines, then as before the
-> > hierarchical and cascaded cases are distinguished by checking how many
-> > parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
-> > initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
-> > is used on a platform with shared IRQ line, then we simply won't let the
-> > GPIO-lib to initialize the parental IRQs, but will handle them locally in
-> > the driver.
-> > 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
-> > GPIO-lib IRQ-chip interface will create a new domain and accept a standard
-> > IRQ-chip structure pointer based on the setting we provided in the
-> > gpio_irq_chip structure.
-> > 5) Manually select a proper IRQ flow handler directly in the
-> > irq_set_type() callback by calling irq_set_handler_locked() method, since
-> > an ordinary (not Generic) irq_chip descriptor is now utilized. Note this
-> > shalln't give any regression
-> > 6) Alter CONFIG_GPIO_DWAPB kernel config to select
-> > CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
-> > 
-> > Note neither 4) nor 5) shall cause a regression of commit 6a2f4b7dadd5
-> > ("gpio: dwapb: use a second irq chip"), since the later isn't properly
-> > used here anyway.
-> 
-> ...
-> 
-> >  struct dwapb_gpio_port {
-> >  	struct gpio_chip	gc;
-> > +	unsigned int		nr_irqs;
-> > +	unsigned int		irq[DWAPB_MAX_GPIOS];
-> > +	struct irq_chip		irqchip;
-> >  	bool			is_registered;
-> >  	struct dwapb_gpio	*gpio;
-> 
-
-> Isn't it too much wasted memory (imagine 4 port controller)?
-> 
-> What if we have it in another structure and allocate dynamically?
-> 
-> struct dwapb_gpio_port_irqchip {
-> 	struct irq_chip		irqchip;
-> 	unsigned int		nr_irqs;
-> 	unsigned int		irq[DWAPB_MAX_GPIOS];
-> };
-
-Agree. I have to send a new revision of the series anyway. I'll do that shortly.
-
--Sergey
-
-> 
-> 	...
-> 	struct dwapb_gpio_port_irqchip *pirq;
-> 	...
-> 
-> (I agree that IRQ chip is rather property of a port than controller)
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
