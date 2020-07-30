@@ -2,167 +2,141 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7168DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 16:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5211C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 16:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5477A2082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 16:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE65E21744
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 16:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgG3QXU (ORCPT
+        id S1728443AbgG3QYd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 12:23:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbgG3QXU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 12:23:20 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110BDC061574;
-        Thu, 30 Jul 2020 09:23:20 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 94F0D634C87;
-        Thu, 30 Jul 2020 19:22:19 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1k1BJz-0001W0-FY; Thu, 30 Jul 2020 19:22:19 +0300
-Date:   Thu, 30 Jul 2020 19:22:19 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, slongerbeam@gmail.com,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 08/13] dt-bindings: media: ov5640: Remove data-shift
-Message-ID: <20200730162219.GA5201@valkosipuli.retiisi.org.uk>
-References: <20200717132859.237120-1-jacopo+renesas@jmondi.org>
- <20200717132859.237120-9-jacopo+renesas@jmondi.org>
- <20200717205722.GJ5961@pendragon.ideasonboard.com>
- <20200723222259.GB829@valkosipuli.retiisi.org.uk>
- <20200723231549.GE21353@pendragon.ideasonboard.com>
- <20200725211833.GE829@valkosipuli.retiisi.org.uk>
- <20200725213125.GE6253@pendragon.ideasonboard.com>
- <20200729142936.GF829@valkosipuli.retiisi.org.uk>
- <20200729144608.GF6183@pendragon.ideasonboard.com>
+        Thu, 30 Jul 2020 12:24:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:58165 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbgG3QYd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:24:33 -0400
+IronPort-SDR: U319jWku/ps5PMCHhdL6istjmYt1dnTVMYxoZkzF+xxEb3I5RURyYinDP7iIw+IerrwIvHFjLl
+ AhR1en2rjhOg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9698"; a="213167902"
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="213167902"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2020 09:24:31 -0700
+IronPort-SDR: MrwQ0eg/Hshj310EMy889lLnLgtpyUUa2R79J391oiiwE3bgZXHDiDPqzaaEgcpaHpDHCO9OIY
+ Akujdv4qhWSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,415,1589266800"; 
+   d="scan'208";a="272968805"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jul 2020 09:24:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k1BM4-004zEe-GV; Thu, 30 Jul 2020 19:24:28 +0300
+Date:   Thu, 30 Jul 2020 19:24:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] dmaengine: dw: Activate FIFO-mode for memory
+ peripherals only
+Message-ID: <20200730162428.GU3703480@smile.fi.intel.com>
+References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+ <20200730154545.3965-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200729144608.GF6183@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200730154545.3965-3-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Thu, Jul 30, 2020 at 06:45:42PM +0300, Serge Semin wrote:
+> CFGx.FIFO_MODE field controls a DMA-controller "FIFO readiness" criterion.
+> In other words it determines when to start pushing data out of a DW
+> DMAC channel FIFO to a destination peripheral or from a source
+> peripheral to the DW DMAC channel FIFO. Currently FIFO-mode is set to one
+> for all DW DMAC channels. It means they are tuned to flush data out of
+> FIFO (to a memory peripheral or by accepting the burst transaction
+> requests) when FIFO is at least half-full (except at the end of the block
+> transfer, when FIFO-flush mode is activated) and are configured to get
+> data to the FIFO when it's at least half-empty.
+> 
+> Such configuration is a good choice when there is no slave device involved
+> in the DMA transfers. In that case the number of bursts per block is less
+> than when CFGx.FIFO_MODE = 0 and, hence, the bus utilization will improve.
+> But the latency of DMA transfers may increase when CFGx.FIFO_MODE = 1,
+> since DW DMAC will wait for the channel FIFO contents to be either
+> half-full or half-empty depending on having the destination or the source
+> transfers. Such latencies might be dangerous in case if the DMA transfers
+> are expected to be performed from/to a slave device. Since normally
+> peripheral devices keep data in internal FIFOs, any latency at some
+> critical moment may cause one being overflown and consequently losing
+> data. This especially concerns a case when either a peripheral device is
+> relatively fast or the DW DMAC engine is relatively slow with respect to
+> the incoming data pace.
+> 
+> In order to solve problems, which might be caused by the latencies
+> described above, let's enable the FIFO half-full/half-empty "FIFO
+> readiness" criterion only for DMA transfers with no slave device involved.
 
-On Wed, Jul 29, 2020 at 05:46:08PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Wed, Jul 29, 2020 at 05:29:36PM +0300, Sakari Ailus wrote:
-> > On Sun, Jul 26, 2020 at 12:31:25AM +0300, Laurent Pinchart wrote:
-> > > On Sun, Jul 26, 2020 at 12:18:33AM +0300, Sakari Ailus wrote:
-> > > > On Fri, Jul 24, 2020 at 02:15:49AM +0300, Laurent Pinchart wrote:
-> > > > > On Fri, Jul 24, 2020 at 01:22:59AM +0300, Sakari Ailus wrote:
-> > > > > > On Fri, Jul 17, 2020 at 11:57:22PM +0300, Laurent Pinchart wrote:
-> > > > > > > Hi Jacopo,
-> > > > > > > 
-> > > > > > > (CC'ing Sakari)
-> > > > > > > 
-> > > > > > > Thank you for the patch.
-> > > > > > > 
-> > > > > > > On Fri, Jul 17, 2020 at 03:28:54PM +0200, Jacopo Mondi wrote:
-> > > > > > > > The value of the data-shift property solely depend on the selected
-> > > > > > > > bus width and it's not freely configurable.
-> > > > > > > > 
-> > > > > > > > Remove it from the bindings document and update its users accordingly.
-> > > > > > > 
-> > > > > > > Hmmmm that's an interesting one. Sakari, what do you think ?
-> > > > > > > 
-> > > > > > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > > > > > ---
-> > > > > > > >  Documentation/devicetree/bindings/media/i2c/ov5640.yaml | 9 ---------
-> > > > > > > >  arch/arm/boot/dts/stm32mp157c-ev1.dts                   | 1 -
-> > > > > > > >  2 files changed, 10 deletions(-)
-> > > > > > > > 
-> > > > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> > > > > > > > index 5e1662e848bd..ab700a1830aa 100644
-> > > > > > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> > > > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.yaml
-> > > > > > > > @@ -92,12 +92,6 @@ properties:
-> > > > > > > >                parallel bus.
-> > > > > > > >              enum: [8, 10]
-> > > > > > > > 
-> > > > > > > > -          data-shift:
-> > > > > > > > -            description: |
-> > > > > > > > -              Shall be set to <2> for 8 bits parallel bus (lines 9:2 are used) or
-> > > > > > > > -              <0> for 10 bits parallel bus.
-> > > > > > > > -            enum: [0, 2]
-> > > > > > > 
-> > > > > > > Should you document in the description of bus-width that data-shift is
-> > > > > > > implied ?
-> > > > > > 
-> > > > > > The purpose of the datas-shift property is to convey how the parallel bus
-> > > > > > lines are connected for a given bus width for devices where it is
-> > > > > > configurable. As this device does not not support that, then indeed this
-> > > > > > property is not relevant for the device IMO.
-> > > > > 
-> > > > > Could you elaborate on this ? I believe the case that Jacopo is
-> > > > > describing connects D[9:2] from the sensor to D[7:0] of the receiver
-> > > > > (Jacopo, could you confirm ?). Isn't that what data-shift is for ?
-> > > > 
-> > > > Yes, it is. But in this case what data-shift configures is not configurable
-> > > > as such but defined by another configuration, making the data-shift
-> > > > property redundant. We generally haven't documented redundant things in DT
-> > > > bindings --- for instance data-lanes is documented in bindings only if it
-> > > > is configurable.
-> > > 
-> > > Then I think we share the same understanding. I believe the
-> > > documentation in video-interfaces.txt needs to be expanded, as it's
-> > > quite terse and not very clear.
-> > 
-> > The DT spec states that:
-> > 
-> > 	A DTSpec-compliant devicetree describes device information in a
-> > 	system that cannot necessarily be dynamically detected by a client
-> > 	program. For example, the architecture of PCI enables a client to
-> > 	probe and detect attached devices, and thus devicetree nodes
-> > 	describing PCI devices might not be required. However, a device
-> > 	node is required to describe a PCI host bridge device in the system
-> > 	if it cannot be detected by probing.
-> > 
-> > I'd read that as there's no need to specify properties that do not provide
-> > additional information to software.
-> 
-> That's a bit of a stretch interpretation :-)
-> 
-> > As some properties are dependent on
-> > others and and this depends on hardware features, I don't think we can in
-> > general case take this account in generic binding documentation, but device
-> > specific ones.
-> > 
-> > Of course we could add this to data-shift documentation, but then I wonder
-> > how many other similar cases there are where in hardware the configuration
-> > defined by one property determines the value of another?
-> 
-> I was mostly thinking about documenting *how* data-shift interacts with
-> bus-width. I think that specifying the default data-shift value based on
-> the bus-width value, for the case where data-shift is not specified,
-> would also make sense.
+> Thanks to the commit ???????????? ("dmaengine: dw: Initialize channel
 
-Do you mean in device binding documentation or in generic documentation?
-Device bindings should have this information, yes.
+See below.
+
+> before each transfer") we can freely do that in the generic
+> dw_dma_initialize_chan() method.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks!
+
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> ---
+> 
+> Note the DMA-engine repository git.infradead.org/users/vkoul/slave-dma.git
+> isn't accessible. So I couldn't find out the Andy' commit hash to use it in
+> the log.
+
+It's dmaengine.git on git.kernel.org.
+
+> ---
+>  drivers/dma/dw/dw.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
+> index 7a085b3c1854..d9810980920a 100644
+> --- a/drivers/dma/dw/dw.c
+> +++ b/drivers/dma/dw/dw.c
+> @@ -14,7 +14,7 @@
+>  static void dw_dma_initialize_chan(struct dw_dma_chan *dwc)
+>  {
+>  	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+> -	u32 cfghi = DWC_CFGH_FIFO_MODE;
+> +	u32 cfghi = is_slave_direction(dwc->direction) ? 0 : DWC_CFGH_FIFO_MODE;
+>  	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
+>  	bool hs_polarity = dwc->dws.hs_polarity;
+>  
+> -- 
+> 2.27.0
+> 
 
 -- 
-Regards,
+With Best Regards,
+Andy Shevchenko
 
-Sakari Ailus
+
