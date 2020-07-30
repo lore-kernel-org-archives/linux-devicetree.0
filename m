@@ -8,56 +8,55 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40CBC433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82FFC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCBB020829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986C62083B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730854AbgG3XC0 (ORCPT
+        id S1730771AbgG3XCD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:02:26 -0400
-Received: from mail-co1nam11olkn2089.outbound.protection.outlook.com ([40.92.18.89]:48096
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Thu, 30 Jul 2020 19:02:03 -0400
+Received: from mail-bn8nam11olkn2038.outbound.protection.outlook.com ([40.92.20.38]:30688
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730770AbgG3XCE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:02:04 -0400
+        id S1730730AbgG3XB4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:01:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b6t+tJROmpXol7kejzNBPpdvwjjoxV6yA/Kla5FMK2FB9/8W3xXXxkJafVoAi2r6hh4aT5ELtD5NYjWYR/d+kNb0CjDPSkJ9Mtx/7qY2Kqr+GIl1kL4DFbA0LGiX5F6yzptPW3ze23SKj/zzPQt0kvFg5e2r40h9KQtNgzuGvT4V+RJu92ATs+k6N270bQYNrAGvaCBv5W79UNJAF0/FdB58u2yvi6bEyJ3fJ/a/YYVTAqfB+RckKW7vqz0pRUPG4u0E/RqyDKQZjl8YRUGbDBNiFolwjm4BsinzdyU4+YCearEoxYTfe3AizDR3xB1qa9wGZvfut+V3uFfhFaRpaQ==
+ b=SowYpgBUnOP3L4PIpIW+QttKzdmDgVZF/U+5ulDJOjpjTKEqQ9i0X5x8kt59HpSK19Z0MAP1Hgji40xfS/UvVo+EVXy0x4J7DCy+FretDk1dND2y+CjbRbrHhucrbEjJoe31gCnxxGVYalLjuC1GJBHRWqUFW3l7G7c/pWeC3e2HJkfp5/S99kGbClxvhvtfdq4L9OnSWYtofXA5EqtWqCPbW41GWRj63WLKChXkq0SrhOMJpEmS9pCJcsTdBVgHfzAptSduocoY8eUyHmFGnr38rVKd08X0TbGhfdqP5y0+7YKf5593W61euVJmnQdZQ4AJXXRgycacMoEHG5/eAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2pJ6xJQhePW4eETLLlJKJGjutRhO0/Rc8Esmkoshk5s=;
- b=S+2UQJba76GrvFrt3FLlgCMjK84lfPK+IIkDhmQQTXLZJM+0Qjvn5HU7M3z3jlhVMoy7uLKBsjWmc9/v2E5B+I4J1CzqyXPUwKiKJG2KKwylkZ7L6VWxUAlQW+37rzDvmImDB6V9Vo0foHIkYg6urQzytPM0OVzf6lGLzk/D7bPT1GkEHtHnSCmK6FKUeNHSUzkA2nIdOCXzD5SK5bBdYUnMzLPxT+V1OfvIRr9zZn3l5cXrfPvmTwliOFguik9drhBDGXD6A3rKpjTIo+selT7h63CdjEtP5QKqKetw5nadg9yivdzG2oI4Wes1GtLSnnvXSI/Zvskj7R3i7UYqhA==
+ bh=oPOU3Pqy+7AMsEp+2f1FLlsm3Y/VJ9J0mITZ3S4WYqk=;
+ b=A3/E0uwU6CYNR1CGm7Idh118u/Mwg9rCO5X6D685guuaRw7NAID5ZgE/9Wqgir2vITB1xbD0Rj7ldzypEesE4VoBpJPnKFHnhWBPOZ8VfsP+/Y11qMR6BRjtQSQzehGnBKHkMFUv4pyELb9aaHCRlhqAmr+2BKnktON3V5YfY7k1zpO1PmFnZI5a7JumH4PyPCkkuNj7XIdP3M2Kww6mg3M52U6AslAgqGyrH2WLRNaOtaSVhfl01dvXmTo9eDadaqfzk38MAgPl4Sm9sb007iGE1D+Fh+PQa/R00o7LtDq8DFRiFXgcHz5oeLV/aLoWy4qEy79roQH0OzClc77PlA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::45) by
- CO1NAM11HT133.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::72)
+ (2a01:111:e400:3861::49) by
+ CO1NAM11HT024.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::90)
  with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 30 Jul
- 2020 23:02:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.34; Thu, 30 Jul
+ 2020 23:01:53 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:3861::4a) by CO1NAM11FT027.mail.protection.outlook.com
  (2a01:111:e400:3861::224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20 via Frontend
- Transport; Thu, 30 Jul 2020 23:02:02 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:22984D4AC8BD4FCEA25A7B65AFA40CA7A2EBD9C78C1223786523D479F330E945;UpperCasedChecksum:134294722C09C000F6ACEE3BBB1E529F04DE0C8A6F6FF0B70C9A587EC48BD131;SizeAsReceived:7912;Count:49
+ Transport; Thu, 30 Jul 2020 23:01:53 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:34E6A582C7CEEB1B120FF0426C8CBF7DEF9FC53914CDE0FA451380ACF3445E0E;UpperCasedChecksum:C3D149B0385F3212795C78D4112D990E1EEFF348F159996243496527CF57A9FA;SizeAsReceived:7897;Count:49
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3239.020; Thu, 30 Jul 2020
- 23:02:02 +0000
+ 23:01:53 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
         mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
         linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v2 08/11] media: exynos4-is: Remove inh_sensor_ctrls
-Date:   Thu, 30 Jul 2020 16:01:11 -0700
-Message-ID: <BN6PR04MB0660A067E00EEC583E9C718FA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH v2 05/11] media: exynos4-is: Properly set JPEG options for parallel ports
+Date:   Thu, 30 Jul 2020 16:01:08 -0700
+Message-ID: <BN6PR04MB06606078C5234BE00FDDA682A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200730230114.8572-1-xc-racer2@live.ca>
 References: <20200730230114.8572-1-xc-racer2@live.ca>
@@ -66,25 +65,25 @@ Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MWHPR07CA0002.namprd07.prod.outlook.com
  (2603:10b6:300:116::12) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200730230114.8572-9-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200730230114.8572-6-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:59 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:50 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200730230114.8572-9-xc-racer2@live.ca>
-X-TMN:  [Mg/ZFCpLrxkWYy9upa9oNV+bBeZCE0wJaDtq08CU5OCCzmMNLfCN+/Y5Z2zfV++L]
+X-Microsoft-Original-Message-ID: <20200730230114.8572-6-xc-racer2@live.ca>
+X-TMN:  [XUMFdNQ3ktpLQlcl5YT/V9IQPutN4lV7yIQkFVF3IaPuV09RcCDOFjpFqnWZoTKn]
 X-MS-PublicTrafficType: Email
 X-IncomingHeaderCount: 49
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 4fdd141b-1242-4ba5-efa9-08d834dc91d7
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT133:
+X-MS-Office365-Filtering-Correlation-Id: adab711a-4a43-4b02-6848-08d834dc8c89
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT024:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eFR2PgS6y7n4HfgDdMmfK7mI7/FlEr3WNaVOXft2metJt0ZsOGpIOXzOjvLbOve2jMI8/fYnnuADJ02eVSzL7FWwx2HV6JIc2AzvAreQyM9PdhPkRjznifvRH6CZh/wa9OHGyLBLOoOr3zguxNXk9hjys+bJ3W74B9SqupaoZ4NRdUMQ92sZY2YEWWB2ESxACQtjrQ32LKyg0k/plGUALg==
+X-Microsoft-Antispam-Message-Info: Gdx0wHdFujlRIr6s0+ggopvAInFF9UjuCMXE5tBhRU+3Ijz1iFvkA6JCHXDAkTa+vHNu812XUNLGClueEZ4wrpbycuTM4om/WEzuLd096Th6CxLdeYm4VfwL5Hb/WJ1hLlDcpqEXgv2AhF+eNCO9JD419g4XmDtXNZA4KbyfEZalDDSgd+holGN6BeFDx6sy8kuJCepPBpV5VjvrU3Cytg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: zIEFU3O3E1HYVHYqxzmkakHQ473vtdu5dRE80GDyPCGliiYvBof7vkfaqHKZviFEi0HChGZ/dCsW7+QQSkeiLuWk9ZJJGx52JboM586b2g3uvXeyHN0WRK8B5qDpTQchvyftM90eEuDX/81ECJ3tuAkRpWmifxlvLWkkyV96DePAjtaTvVrS8+2D6m8nYBzCHASjJHhW2wQi66crMn2Twg==
+X-MS-Exchange-AntiSpam-MessageData: 37GHycH95X64Zwn0w26gyL48Z2Vj++IPng6Wa6sKLg6wI0bEQPSyGyQYw1qDksLi9lulBdzKzWCfGbTcfH/w49Z8AM+6ti5B/TpSDEIZJevLCPV5S24TToKhRvjjCR2zqsQAnljOwHikyC7EWYxYv7rG0y1RtvtYgaKPomvJeyVuRlbiAQVTIXUmPbnxHJ6O8ubYeEuInJYH5iYzSbwcAQ==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fdd141b-1242-4ba5-efa9-08d834dc91d7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:02:02.1020
+X-MS-Exchange-CrossTenant-Network-Message-Id: adab711a-4a43-4b02-6848-08d834dc8c89
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:53.2248
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -92,78 +91,51 @@ X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.ou
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT133
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT024
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is a no-op as it is never set and is a remnant from non-DT days
-that can be safely removed.
+Commit ee7160e57c98 ("[media] s5p-fimc: Add support for JPEG capture")
+added support for JPEG capture, but missed setting a register when the
+parallel port was used rather than the CSIS device.
 
 Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
 Changes from v1:
-- Added R-b tags
+- Re-wording commit message
+- Add R-b tag
 ---
- drivers/media/platform/exynos4-is/fimc-capture.c | 13 +------------
- drivers/media/platform/exynos4-is/fimc-core.h    |  3 ---
- 2 files changed, 1 insertion(+), 15 deletions(-)
+ drivers/media/platform/exynos4-is/fimc-reg.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-capture.c b/drivers/media/platform/exynos4-is/fimc-capture.c
-index 82f051f6b816..e70785d8a809 100644
---- a/drivers/media/platform/exynos4-is/fimc-capture.c
-+++ b/drivers/media/platform/exynos4-is/fimc-capture.c
-@@ -492,17 +492,6 @@ static int fimc_capture_open(struct file *file)
- 
- 		ret = fimc_pipeline_call(ve, open, &ve->vdev.entity, true);
- 
--		if (ret == 0 && vc->user_subdev_api && vc->inh_sensor_ctrls) {
--			/*
--			 * Recreate controls of the the video node to drop
--			 * any controls inherited from the sensor subdev.
--			 */
--			fimc_ctrls_delete(vc->ctx);
--
--			ret = fimc_ctrls_create(vc->ctx);
--			if (ret == 0)
--				vc->inh_sensor_ctrls = false;
--		}
- 		if (ret == 0)
- 			ve->vdev.entity.use_count++;
- 
-@@ -1408,7 +1397,7 @@ static int fimc_link_setup(struct media_entity *entity,
- 
- 	vc->input = sd->grp_id;
- 
--	if (vc->user_subdev_api || vc->inh_sensor_ctrls)
-+	if (vc->user_subdev_api)
- 		return 0;
- 
- 	/* Inherit V4L2 controls from the image sensor subdev. */
-diff --git a/drivers/media/platform/exynos4-is/fimc-core.h b/drivers/media/platform/exynos4-is/fimc-core.h
-index d130f664a60b..31f81bcb8483 100644
---- a/drivers/media/platform/exynos4-is/fimc-core.h
-+++ b/drivers/media/platform/exynos4-is/fimc-core.h
-@@ -299,8 +299,6 @@ struct fimc_m2m_device {
-  * @input_index: input (camera sensor) index
-  * @input: capture input type, grp_id of the attached subdev
-  * @user_subdev_api: true if subdevs are not configured by the host driver
-- * @inh_sensor_ctrls: a flag indicating v4l2 controls are inherited from
-- *		      an image sensor subdev
-  */
- struct fimc_vid_cap {
- 	struct fimc_ctx			*ctx;
-@@ -322,7 +320,6 @@ struct fimc_vid_cap {
- 	int				input_index;
- 	u32				input;
- 	bool				user_subdev_api;
--	bool				inh_sensor_ctrls;
- };
- 
- /**
+diff --git a/drivers/media/platform/exynos4-is/fimc-reg.c b/drivers/media/platform/exynos4-is/fimc-reg.c
+index 5ce2bdebd424..269a98fca1e8 100644
+--- a/drivers/media/platform/exynos4-is/fimc-reg.c
++++ b/drivers/media/platform/exynos4-is/fimc-reg.c
+@@ -606,6 +606,11 @@ int fimc_hw_set_camera_source(struct fimc_dev *fimc,
+ 	switch (source->fimc_bus_type) {
+ 	case FIMC_BUS_TYPE_ITU_601:
+ 	case FIMC_BUS_TYPE_ITU_656:
++		if (fimc_fmt_is_user_defined(f->fmt->color)) {
++			cfg |= FIMC_REG_CISRCFMT_ITU601_8BIT;
++			break;
++		}
++
+ 		for (i = 0; i < ARRAY_SIZE(pix_desc); i++) {
+ 			if (vc->ci_fmt.code == pix_desc[i].pixelcode) {
+ 				cfg = pix_desc[i].cisrcfmt;
+@@ -707,6 +712,8 @@ int fimc_hw_set_camera_type(struct fimc_dev *fimc,
+ 	case FIMC_BUS_TYPE_ITU_601...FIMC_BUS_TYPE_ITU_656:
+ 		if (source->mux_id == 0) /* ITU-A, ITU-B: 0, 1 */
+ 			cfg |= FIMC_REG_CIGCTRL_SELCAM_ITU_A;
++		if (vid_cap->ci_fmt.code == MEDIA_BUS_FMT_JPEG_1X8)
++			cfg |= FIMC_REG_CIGCTRL_CAM_JPEG;
+ 		break;
+ 	case FIMC_BUS_TYPE_LCD_WRITEBACK_A:
+ 		cfg |= FIMC_REG_CIGCTRL_CAMIF_SELWB;
 -- 
 2.20.1
 
