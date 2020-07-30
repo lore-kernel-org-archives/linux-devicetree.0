@@ -5,59 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50510C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834ECC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3425920829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A91A20829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730689AbgG3XBr (ORCPT
+        id S1730746AbgG3XB4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:01:47 -0400
-Received: from mail-dm6nam11olkn2063.outbound.protection.outlook.com ([40.92.19.63]:31832
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        Thu, 30 Jul 2020 19:01:56 -0400
+Received: from mail-bn8nam11olkn2070.outbound.protection.outlook.com ([40.92.20.70]:51041
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730610AbgG3XBq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:01:46 -0400
+        id S1730722AbgG3XBv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:01:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NFE4JwmXrKpqZlEjAgtb2Ma7cqazdSlzvje0jPzjnwN+FbmpFtf6ZB7JpsHScxe3twUx13+E/2w39sKmJrMuHhY4Kdy7HuwJrzcDQPZFxDuFSaee51XidEk8+egNrNipRWhpQ4u0QpcViGo46npM5uq6h1PsBJqAOG+ZFli3EQimqnVndfUCC9vh5SrCusSrkGrXdnZuyuQcF7Qvk5uTsZ9TrKVlg9b1Y4EhpHTD34P3q7jB1QaqaRsxwBTM3crx0GHWwCMC+k7ZFxed+Qxym6LMCRc23Yy54WhG3nd1YMxcGvQE3SMUSpleJZqDstNAFk6qP/uNNA8xDInVLC/WUA==
+ b=As57PK+A8bWbRZXOVwsn83Y7Va1yGuJqJUyySQBUma2iU+qPKTje0YFAQZMdLnvVv7h1rCtKDhvGGiNEoK4cy0pOFMdNW8a89uxUgnhes5wQcQ6J6VcLUNwAjC4dnpUA2nGkVxgPbroMcl0iKZk+nbjuIkULnrtnnqJFhvquqBHRbaYfMIenK5doG3Sw9Lj3qZu0SpY/TOSAGEfiW28JJ7bmYvCgwunc1gseuSeeAeXwWohzTpBXqVvSvC1J544wJmAQlBd9VakEkR85zLYUqzLZKFcsknLs9Z0S2mzWsmt9QQyKrm7CqtIXPu/tk2/RzYV6tYuey2ppkU0n0Fahow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aQOKs4z3oyCqFH1/N6DNbATpf65afldethlybdfmeCI=;
- b=PY2IRARRNwenlnIRefPUmV7gKwD8gsE4MOAOcKQBAdsaU44RvDS1998udGy3+Hm+Gnc3AR7XNLGHA0hxRcEvq+5dzSMYgoOJenIMmbBNOle6py3werkKNv2d09OmXtT0X+UaWO1hJEZmwlDRIPj/xrtkdbveTnxiXY9e7ryt6cCKYAiPXXDBSXKCTYdtyNIFAbTuMeNncAOrLbuXILw3gyqJoSUDwXiU1s3vIx61UD8w/uuJN9KxMuxh9pLYhb+3n98JbJXUV+1MmTG0iL2BPakuC8R1IrC/nUlnILH4bVQ4d7JG3nror+vq4ZmNNsc0nveygqnxoK7/t6KNSOxYKw==
+ bh=IFwcI1sfhl05Cfxb1Di5AA+LY2hFfLfRai16fbWZX58=;
+ b=WnhXwiCxloxr3Sj6eAzsffkVXT6fa7EYNio1ep+p5i2Js0WwPcMnwDg1y5vAN7+uHJDbfSwya2XHxrH3CECiOjKWhVR7GS++2eLPpDKWgmsI3/M/i/Tjj57V7JXbVKUIRgr5MSTxFSbkPE2lZNyhTFqF6hAeDBNfoza90T6xYQXSBsjQE6t7IOy92Zdd9koozWrAFfopg52Ly6mjeSUWtnPZbG4dZT3tKcgfmAq2gm4wX0BoUN9gjvkMedIk8ECTh++LkUjZMHfE+eD8Zf7buGDusFkeV3PKtC+idfQ/JswJwSGD4VwP4WH4U5mTgW7oFKehleLTKiF4qqFDiaxwcg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::44) by
- CO1NAM11HT129.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::341)
+ (2a01:111:e400:3861::50) by
+ CO1NAM11HT035.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::331)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 30 Jul
- 2020 23:01:42 +0000
+ 2020 23:01:48 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:3861::4a) by CO1NAM11FT027.mail.protection.outlook.com
  (2a01:111:e400:3861::224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20 via Frontend
- Transport; Thu, 30 Jul 2020 23:01:42 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:3538F3A21A8EC971FD774DB37A6B524600BE435616978A34993947AB90E2A987;UpperCasedChecksum:1540BB733E1A7B0CF19245EB20CF9206838AAF2F39ADD65EFCCEA00AE2272D7D;SizeAsReceived:7948;Count:49
+ Transport; Thu, 30 Jul 2020 23:01:48 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:33A44F6322D0AD2B83F43F8689C76C45CD5E42EA47158C51C25A6059191EF691;UpperCasedChecksum:D0CF47B78F902E1C38966E4DC74BFE8F4A91DB0BB8BB7896936D899EE9099558;SizeAsReceived:7878;Count:49
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3239.020; Thu, 30 Jul 2020
- 23:01:42 +0000
+ 23:01:48 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
         mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
         linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v2 01/11] media: exynos4-is: Remove static driver data for S5PV210 FIMC variants
-Date:   Thu, 30 Jul 2020 16:01:04 -0700
-Message-ID: <BN6PR04MB0660CB5DB6A7AFC610C6B185A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH v2 03/11] media: exynos4-is: Fix nullptr when no CSIS device present
+Date:   Thu, 30 Jul 2020 16:01:06 -0700
+Message-ID: <BN6PR04MB0660EEE45C82219F3E002013A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200730230114.8572-1-xc-racer2@live.ca>
 References: <20200730230114.8572-1-xc-racer2@live.ca>
@@ -66,25 +65,25 @@ Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MWHPR07CA0002.namprd07.prod.outlook.com
  (2603:10b6:300:116::12) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200730230114.8572-2-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200730230114.8572-4-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:40 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:45 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200730230114.8572-2-xc-racer2@live.ca>
-X-TMN:  [xdlFrvN1cYpSRSw+BcwBYjrEe7q0kaD1TG4nQMfqTFz2K62bmR8bfVKVc3qTVvvu]
+X-Microsoft-Original-Message-ID: <20200730230114.8572-4-xc-racer2@live.ca>
+X-TMN:  [5pTyvKD3uOwSfRd6igeVOCvD7KYa5IT+CI7MuP/mmKyP7C5Yjr67Dtg+vwaUTVjB]
 X-MS-PublicTrafficType: Email
 X-IncomingHeaderCount: 49
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: ba3cca91-8404-4a19-faa8-08d834dc862d
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT129:
+X-MS-Office365-Filtering-Correlation-Id: 215fd480-fb37-472c-7bd8-08d834dc898e
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT035:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IcXyHSoQr4sRVRPflvQudeLmz5m7ans69h9rAbqRGjceJ9aY7c32mT6f2xhhKjYVkXrV2sHMSwW+aNR/jpF9nJh4Jcs/HjSYR4D/NmkH5e9BRWfnbp4Hb6Sn6ord8MUhnCKS5kORAGJptCu7UM3dQFSxOECSKeePEAgLT/aP4lU1HrDjvscUgFTS0e1L41sHJokqJZG5f5+GFjjQo0Pf5g==
+X-Microsoft-Antispam-Message-Info: 4AI5RBbwESGuvJDWsrExH7cLCrJWaMivl2C9UZXfNfaN8ltOkAqJSjU0TE7GMz50PfyFHa9DA8cS4bKgC3dkTQZGeDoFMzF9T0kYLZjcvsoyY2Ch8uEEFRwmZEUqXGpHJaGhx+f3RwPPT+oQDDxZD1LGZaCMjekYa1WMwi/isq8crxLwY2MFKdB8WM5prWY0GMtoXmmf3w192JqkUwDixw==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: OLAtvydECkalkU8kDyWvussQnLybahOhZHBaMA+3rXmGZwytP94FCOFoqBawqrNBHcmTn/nnUNVxALvoN+IB6+AnYuVFDTDVZ5jze597tqWGkg3mi14TWGtsZJQ2hvkh1dAr+hIbnLSbwGXqE2cpOD5YMbvSlbGnekqjzlzrhK2XpZfCS4Pr3OsriMR37dO57D78v/n0kJDz5U98p2lCCA==
+X-MS-Exchange-AntiSpam-MessageData: 7kb0G2eI5B0JU/fAKFN4PAkfPk25wCftyzpqMxxu01/T/E7LXipeJfk83og3zQqfpz6bYST/9YmdXqlYfTG7AWGqTOWuY2Y//worAX3W83B5TdYrlGQgLaT6KrQor2iSN79wXi55q/hw9dXx6DQS9buYXBENzAJn80roruFYurWkANi/wOsHYzHPEW60ok9ZBUiCAAETc5r2Yw/jU8ot0A==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba3cca91-8404-4a19-faa8-08d834dc862d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:42.6182
+X-MS-Exchange-CrossTenant-Network-Message-Id: 215fd480-fb37-472c-7bd8-08d834dc898e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:48.2189
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -92,98 +91,59 @@ X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.ou
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT129
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT035
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The S5PV210 platform only supports device tree based booting
-where the FIMC variant data is parsed directly from
-the device tree, hence the now unused static data can be removed.
+Not all devices use the CSIS device, some may use the FIMC directly in
+which case the CSIS device isn't registered.  This leads to a nullptr
+exception when starting the stream as the CSIS device is always
+referenced.  Instead, if getting the CSIS device fails, try getting the
+FIMC directly to check if we are using the subdev API
 
 Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
 Changes from v1:
-- Added R-b tags
+- Added R-b tag
 ---
- drivers/media/platform/exynos4-is/fimc-core.c | 59 -------------------
- 1 file changed, 59 deletions(-)
+ drivers/media/platform/exynos4-is/media-dev.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-core.c b/drivers/media/platform/exynos4-is/fimc-core.c
-index cde60fbb23a8..2258f3bfc929 100644
---- a/drivers/media/platform/exynos4-is/fimc-core.c
-+++ b/drivers/media/platform/exynos4-is/fimc-core.c
-@@ -1110,67 +1110,8 @@ static int fimc_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 9aaf3b8060d5..5c32abc7251b 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -289,11 +289,26 @@ static int __fimc_pipeline_s_stream(struct exynos_media_pipeline *ep, bool on)
+ 		{ IDX_CSIS, IDX_FLITE, IDX_FIMC, IDX_SENSOR, IDX_IS_ISP },
+ 	};
+ 	struct fimc_pipeline *p = to_fimc_pipeline(ep);
+-	struct fimc_md *fmd = entity_to_fimc_mdev(&p->subdevs[IDX_CSIS]->entity);
+ 	enum fimc_subdev_index sd_id;
+ 	int i, ret = 0;
  
--/* Image pixel limits, similar across several FIMC HW revisions. */
--static const struct fimc_pix_limit s5p_pix_limit[4] = {
--	[0] = {
--		.scaler_en_w	= 3264,
--		.scaler_dis_w	= 8192,
--		.out_rot_en_w	= 1920,
--		.out_rot_dis_w	= 4224,
--	},
--	[1] = {
--		.scaler_en_w	= 4224,
--		.scaler_dis_w	= 8192,
--		.out_rot_en_w	= 1920,
--		.out_rot_dis_w	= 4224,
--	},
--	[2] = {
--		.scaler_en_w	= 1920,
--		.scaler_dis_w	= 8192,
--		.out_rot_en_w	= 1280,
--		.out_rot_dis_w	= 1920,
--	},
--};
--
--static const struct fimc_variant fimc0_variant_s5pv210 = {
--	.has_inp_rot	 = 1,
--	.has_out_rot	 = 1,
--	.has_cam_if	 = 1,
--	.min_inp_pixsize = 16,
--	.min_out_pixsize = 16,
--	.hor_offs_align	 = 8,
--	.min_vsize_align = 16,
--	.pix_limit	 = &s5p_pix_limit[1],
--};
--
--static const struct fimc_variant fimc1_variant_s5pv210 = {
--	.has_inp_rot	 = 1,
--	.has_out_rot	 = 1,
--	.has_cam_if	 = 1,
--	.has_mainscaler_ext = 1,
--	.min_inp_pixsize = 16,
--	.min_out_pixsize = 16,
--	.hor_offs_align	 = 1,
--	.min_vsize_align = 1,
--	.pix_limit	 = &s5p_pix_limit[2],
--};
--
--static const struct fimc_variant fimc2_variant_s5pv210 = {
--	.has_cam_if	 = 1,
--	.min_inp_pixsize = 16,
--	.min_out_pixsize = 16,
--	.hor_offs_align	 = 8,
--	.min_vsize_align = 16,
--	.pix_limit	 = &s5p_pix_limit[2],
--};
--
- /* S5PV210, S5PC110 */
- static const struct fimc_drvdata fimc_drvdata_s5pv210 = {
--	.variant = {
--		[0] = &fimc0_variant_s5pv210,
--		[1] = &fimc1_variant_s5pv210,
--		[2] = &fimc2_variant_s5pv210,
--	},
- 	.num_entities	= 3,
- 	.lclk_frequency	= 166000000UL,
- 	.out_buf_count	= 4,
+ 	if (p->subdevs[IDX_SENSOR] == NULL) {
++		struct fimc_md *fmd;
++		struct v4l2_subdev *sd = p->subdevs[IDX_CSIS];
++
++		if (!sd)
++			sd = p->subdevs[IDX_FIMC];
++
++		if (!sd) {
++			/*
++			 * If neither CSIS nor FIMC was set up,
++			 * it's impossible to have any sensors
++			 */
++			return -ENODEV;
++		}
++
++		fmd = entity_to_fimc_mdev(&sd->entity);
++
+ 		if (!fmd->user_subdev_api) {
+ 			/*
+ 			 * Sensor must be already discovered if we
 -- 
 2.20.1
 
