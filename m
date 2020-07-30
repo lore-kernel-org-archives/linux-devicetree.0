@@ -2,85 +2,90 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF69DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5F2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9080220829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4142083B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 23:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgG3XBn (ORCPT
+        id S1730708AbgG3XBs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 19:01:43 -0400
-Received: from mail-co1nam11olkn2083.outbound.protection.outlook.com ([40.92.18.83]:35942
+        Thu, 30 Jul 2020 19:01:48 -0400
+Received: from mail-co1nam11olkn2101.outbound.protection.outlook.com ([40.92.18.101]:33504
         "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730610AbgG3XBm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:01:42 -0400
+        id S1730679AbgG3XBr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:01:47 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dD+0iIbgh1eYQpHJX3mzdzvZAx7DwArgubVwZFRJHLSoFZ4cKJR0lVaya+47VuaonsEsbonq8E22EFozDnifDbQMW/dlg58/Zk15zGRE/zgJYOkzbQlzdv26d+Padk4iHbqysGsmecw7VBG4RJGwi2rQ8ck6aEHEkWcHiZp57S/mk8BOle1vc/FpyHZDAVw5vGaJKoaER9etuhEBqLMu3IigdsdW9BnTg+yZekfrxvQ6vfx25UVRw9iblFaqIA3zFgfmTkNGr6TOPRs27jP4PEJw3ml1FOOv36Ord8U6aVaayKXhsaXYp5ekWemrpTiajNt5UEKnxt5LxWMs0uoIYA==
+ b=S6AVtEu9gcNNKwiijxVCjVoZlfFrWdaqLiS0MbeY1SZSqryPjACSzwybDzfdMkdg1TuF2cKUHoRIJyE4CaAxG6gZC1m0+XfK7QEjH1aJRbgJevicmHkb9csPT8YiSsMPsvaS41JVB8iVDTvuYl/7gDW2et+usxgDnWlLKe0HBK+1W8y6I0S582yDyNUXcSk3Z4/K6Z5jc4V5YiK2Pw5J2JO5sU5f2rhFuMjARvRFe3sIOcz10zMm0M5L3dcm2i5lXB6tK5UdeaQXqQ+e/usJ8Eh6baVPmQCKbOFxHDOwHSFVCRG1m2mATUrDv0n93DFyEW4AOT8nnGess1ooqDcseA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CYmyJfbB4VF03PXNJyvPQAahA08y1lJrt+63k1cFpHs=;
- b=k26D0l/32cPepE5AZJGY09b+yBbZucseylGeLBfCAJlRWSqCJ6iahkLT4uKiAw2wK1AkpkMk/8e8gUW4/eT9z98xmCOZTNZxoBfwHRyHJf9hHrFcEj+BjrBPXZcZfb+re2gQiKQzUtCGAOLCKirC5s4EUG/RPTqM54gwocF4jVdfch3bgkHnxe3G2iL5JKgKLF9i4Si0OP1O+X0AUcUjdF9WraojWmqB1ZT7O+qCqoVnecNQDQiDXwP/BnhhF95MwFxCfVWgYgfES6A+/tRV4tSzLIt9WibesfpZvmX/Zq7IREbNRe0w5okhyRQ0puraVrSoBSF2pgveW2eIYqf5FA==
+ bh=LrWi4i7InKArJxirSj8URElHcdG+2YoYiJ74Ri0R1b4=;
+ b=IIiCUYOFcDMeN6/Osom2C/Oo3C8YG4IWXII6f2PykHkUb0GNTRLMhDzeK1Dm36ezwggzHeaPeTS5O1I3q+mtsEV0N8iLXmvvydGcnYb/MQI2dfTFwkGXfsmY/khOmFOLWD6g2cba43GauYuA2BrREQNMIGktbL4IXzafGBzecy9yHpwbwBvzBtrV1PiO9m+vRhVSxc3+ydpFTq00/kt+mxIi22FY57LKh3wn5AXDa56/44RW+qSgh62ag2lcwm/ISXzeIB1HY+PSxq439/I2pxxpzGG5LX9tUuaaPgfjPQz9Q2vcu2UiopNIEpnnV/E072QMdQ+iFZCNl7CBwtk/SA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:3861::45) by
- CO1NAM11HT062.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::166)
+ (2a01:111:e400:3861::4d) by
+ CO1NAM11HT244.eop-nam11.prod.protection.outlook.com (2a01:111:e400:3861::213)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Thu, 30 Jul
- 2020 23:01:40 +0000
+ 2020 23:01:45 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  (2a01:111:e400:3861::4a) by CO1NAM11FT027.mail.protection.outlook.com
  (2a01:111:e400:3861::224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20 via Frontend
- Transport; Thu, 30 Jul 2020 23:01:40 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:171F1716801CAD2D10A28976D4A85B9EC71DD0B5F9A54245637D9526E1032E47;UpperCasedChecksum:3D125C7109105836F605C852441C33ED7782E6CAB6AAABA84BDB5F66E3B7072D;SizeAsReceived:7773;Count:47
+ Transport; Thu, 30 Jul 2020 23:01:45 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:69B6BC31054B3CD364E3DC61692BC3297A1AA36D662363AC7B8E6237F428C89C;UpperCasedChecksum:E3D2D5140C2722910C698BA52F0C2D1702EE18D9F843DD650C65B5145869F4EF;SizeAsReceived:7993;Count:49
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::b9c3:9bff:541d:f383%9]) with mapi id 15.20.3239.020; Thu, 30 Jul 2020
- 23:01:40 +0000
+ 23:01:45 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
 To:     kyungmin.park@samsung.com, s.nawrocki@samsung.com,
         mchehab@kernel.org, kgene@kernel.org, krzk@kernel.org,
         linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH v2 00/11] media: exynos4-is: Improve support for s5pv210 and parallel ports
-Date:   Thu, 30 Jul 2020 16:01:03 -0700
-Message-ID: <BN6PR04MB06603B2CD7F2C56B322AF882A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH v2 02/11] media: exynos4-is: Request syscon only if ISP writeback is present
+Date:   Thu, 30 Jul 2020 16:01:05 -0700
+Message-ID: <BN6PR04MB0660E8E21919AFA3D41C39CFA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200730230114.8572-1-xc-racer2@live.ca>
+References: <20200730230114.8572-1-xc-racer2@live.ca>
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MWHPR07CA0002.namprd07.prod.outlook.com
  (2603:10b6:300:116::12) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200730230114.8572-1-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200730230114.8572-3-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:37 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR07CA0002.namprd07.prod.outlook.com (2603:10b6:300:116::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 23:01:42 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200730230114.8572-1-xc-racer2@live.ca>
-X-TMN:  [pailsOlHjt+Hg0FBEYXdHMlKY58wxOVDSA0IDVEN5Pz5r4PiRio0uMr/hS/GLZuR]
+X-Microsoft-Original-Message-ID: <20200730230114.8572-3-xc-racer2@live.ca>
+X-TMN:  [4B10MzEU3GoY2mHOist1sMIusdWFvf5V5FIZG3IrSJvcrHBuSGn7xs8x4cIYj/M1]
 X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 47
+X-IncomingHeaderCount: 49
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 025a4cd9-072d-4f5a-92bf-08d834dc8486
-X-MS-TrafficTypeDiagnostic: CO1NAM11HT062:
+X-MS-Office365-Filtering-Correlation-Id: 03c5415f-122c-499c-59c4-08d834dc87d9
+X-MS-TrafficTypeDiagnostic: CO1NAM11HT244:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UBs2JE/DEStf6gE5/lPYdIZI4S15Y/9tnvtdotskIN8ijbsgEV2na5cNeIOap08qnmfo+UiO+TOsaQL+cT5/0sMs1wHih1jpP9DcIm3s0laEyyXudF8DAYKwHCc6zZiU9C655d0YC2nfQkGYG5jBoE0sn3OkD+qhS+NKqjaIhSwRaWdHrsT70BV5QI58+4DQkSKjGBwhAJ+euOjRHigyAA==
+X-Microsoft-Antispam-Message-Info: QhW/jxyhrz8WYyBK8NyRiEpHt2YjCN2UxOmPXPKzsjVHOUXvSZv7OnSoatnVGmLpVAcrzIPVH+sk4mSnAaJ9IHmZcZKaNgzaCkKd1OZhZX9HE7NJiB117e2332wrlrdqXoP/ItYAlycSKCCTJhskMSWawUo49mBL2qT1kiu1N3iZDhQ8unEu6iiA+jlQRMjzU02ca72MilNL3n7DlJOqvQ==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: N/Kmrb0PLdShRTv8w9JoluVgMeCP67+41T/Ys1aTiIzjWBQ5o6Ca10SJpCpjMsfMKBLob5wVwRrCBaE122vhpAxNYpg1k6uMKHjpYA2pVCLf2neqm+EcE0k7I69WGuVfqTxirc8Uzo/koTvUFl2NKzhfeusmldyCyb0eJ9fD+WMuU61lsKru8tLuVbN2qb0OuFQkCVgNOy2wm/hV35EZBw==
+X-MS-Exchange-AntiSpam-MessageData: Kv4z+nPUZLHtRTYb+++L4FBNiqCN19YkRItGXWp02nfN8dpWczY08ELx/TYNyHywyE2WGgAUR7iu64Jwdru4U0mqv2pMNh061U/ymsnxNZwaIQYutZARlcEX4CQ5SIfUGjksbZZyoocEcmB5Mwq4RVvA6qc1dQYWeET7+92slkC28h2FXrjBQdYtl5tF0+DqdRBw7P2Pr7afUg0tqD9j5g==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 025a4cd9-072d-4f5a-92bf-08d834dc8486
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:39.9654
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03c5415f-122c-499c-59c4-08d834dc87d9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 23:01:45.3531
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -88,57 +93,48 @@ X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.ou
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT062
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1NAM11HT244
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset improves support in the exynos4-is driver for s5pv210
-platforms as well as for sensors connected to the parallel ports
-and not using the CSIS device.
+From: Tomasz Figa <tomasz.figa@gmail.com>
 
-Fixes range from nullptr exceptions to probe fixes to JPEG fixes.  The
-binding doc is changed to match what is implemented in the driver and
-in the Goni DTS (the only in-tree user).
+On FIMC variants which don't have writeback channel, there is no need to
+access system registers. This patch makes the driver request sysreg
+regmap conditionally depending on whether writeback is supported.
 
-Some patches cleaning up non-DT support are also included.
-
-The patches have been tested on a first-gen Galaxy S GT-i900M device based
-on S5PV210.  Two sensors (CE147 and S5KA3DFX, both with non-mainline
-drivers), both attached to port A, were succesfully used.
-
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
 Changes from v1:
 - Added R-b tags
-- Changed entity function initialization to not remove any
-- Cleaned up some commit messages
-- Added patch cleaning up the counting of sensors
-- Separated parsing of multiple sensors into a separate func
-- Match DT documentation to driver rather than modifying driver
+---
+ drivers/media/platform/exynos4-is/fimc-core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Jonathan Bakker (10):
-  media: exynos4-is: Remove static driver data for S5PV210 FIMC variants
-  media: exynos4-is: Fix nullptr when no CSIS device present
-  media: exynos4-is: Correct missing entity function initialization
-  media: exynos4-is: Properly set JPEG options for parallel ports
-  media: exynos4-is: Use global num_sensors rather than local index
-  media: exynos4-is: Add support for multiple sensors on one port
-  media: exynos4-is: Remove inh_sensor_ctrls
-  media: exynos4-is: Remove unused struct member input_index
-  media: exynos4-is: Handle duplicate calls to vidioc_streamoff
-  dt-bindings: media: Correct samsung-fimc parallel port numbering
-
-Tomasz Figa (1):
-  media: exynos4-is: Request syscon only if ISP writeback is present
-
- .../bindings/media/samsung-fimc.txt           |  6 +-
- .../media/platform/exynos4-is/fimc-capture.c  | 21 ++----
- drivers/media/platform/exynos4-is/fimc-core.c | 67 ++-----------------
- drivers/media/platform/exynos4-is/fimc-core.h |  5 --
- drivers/media/platform/exynos4-is/fimc-reg.c  |  7 ++
- drivers/media/platform/exynos4-is/media-dev.c | 54 ++++++++++-----
- 6 files changed, 60 insertions(+), 100 deletions(-)
-
+diff --git a/drivers/media/platform/exynos4-is/fimc-core.c b/drivers/media/platform/exynos4-is/fimc-core.c
+index 2258f3bfc929..08d1f39a914c 100644
+--- a/drivers/media/platform/exynos4-is/fimc-core.c
++++ b/drivers/media/platform/exynos4-is/fimc-core.c
+@@ -954,9 +954,11 @@ static int fimc_probe(struct platform_device *pdev)
+ 	spin_lock_init(&fimc->slock);
+ 	mutex_init(&fimc->lock);
+ 
+-	fimc->sysreg = fimc_get_sysreg_regmap(dev->of_node);
+-	if (IS_ERR(fimc->sysreg))
+-		return PTR_ERR(fimc->sysreg);
++	if (fimc->variant->has_isp_wb) {
++		fimc->sysreg = fimc_get_sysreg_regmap(dev->of_node);
++		if (IS_ERR(fimc->sysreg))
++			return PTR_ERR(fimc->sysreg);
++	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	fimc->regs = devm_ioremap_resource(dev, res);
 -- 
 2.20.1
 
