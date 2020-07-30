@@ -2,110 +2,83 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300BEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 21:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A406BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 22:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE9620838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 21:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBuP8Sph"
+	by mail.kernel.org (Postfix) with ESMTP id 6D6AA20829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 22:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596148110;
+	bh=GvpWxvd9qk2+XrI06V1aIgtnRaagWK5auktIrnkn96g=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=UNUIF8/dAxJq4oSbUZk9+odlkgpgUWkC8rJEs2op21GuzXFHL74DqJ3d/SQ6RnrmB
+	 G9vpM0plbq/WlNubbKYiAOlNhWFpOduCNorkTwQgnuQ1yDfaKQX6fM+RveoCbPj1y1
+	 8CPqiLVEAPCd1D0kJqNyd6e9jVHmZitW6m1NxRjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbgG3VZb (ORCPT
+        id S1730592AbgG3W2a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 17:25:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730711AbgG3VZ2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 17:25:28 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D80C061574;
-        Thu, 30 Jul 2020 14:25:28 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id di22so13822020edb.12;
-        Thu, 30 Jul 2020 14:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wawmnCkVtSyffuOwOyR8jlmGJuUCenrTBxUUEtQt514=;
-        b=EBuP8Sph1VcJ11/DEK8U8Vw5lkys5pkoPHdRkZ4qSn04EMNMYTDwn/188gwovds3b0
-         OxdeWFiNycKygBIF6EbR439Ba0O/evJ4dO/OFAOCDCXGWdnWyuTEaEQ8pxWkgDQsDT49
-         ixEd1m7vu0YdVDd23vJduP196itvUII6BXff9dn2zs9UWBlMCs1DExy4Lg6ONdto1EAN
-         xJAHxGd85yfCUYW4BRAtUxIHQjFb/fYkR1sMz+pqTluqvHpLxXQjuP6uqQWzj/TQv2iK
-         TWOlPm33HCVveFBueimXJMG8cza2wAsC2GHxv1npabeVJskgo2cNIa+B/RqtY2jKX2l+
-         ZY5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wawmnCkVtSyffuOwOyR8jlmGJuUCenrTBxUUEtQt514=;
-        b=j1yam8CvRgypQq7LgrOZ5mCuIp14uHLRBA+fC5lZjQI2UDBib/AuITE72wVs1EXSar
-         UEAwNhUge7q+BsgZyjo0ifXs4nOIdFtiyIBzrqoxcbdC9r3kp+nygx/nlB4dhi22t9hM
-         i4mkXBdaYP+AMoyjw3u/bADzW1IwBROu3nt59eHk/a5jshKbOkec8fJJkwDEiCm9QGel
-         MA7gxctDTSUUf/q8ZPfTFcVQlMSSfTLz99mRe5Qd2RrRHSpwSc7MjuLE75FzUXimqCXM
-         3aa8+OapYhVs8QA8A86NIDG5yMQSnFegA6TmNfYv7E0VrekPQ36Q+l0Ruf6h3hmoP4u6
-         YBhg==
-X-Gm-Message-State: AOAM5327asKtEiVE6aQjAEEhn37QxnkSH33FCzaQYGycgUla46SQzpud
-        NhuIaVMNOx76kFGYdeBxri34WBKg/Ufe3sOT9qs=
-X-Google-Smtp-Source: ABdhPJy1pelESLieAiXYCo+JBitUpkLV1nPOYhvQ2AwIzIy7aygRU3kvbY5RKU7cSN8I5DNmYQdtC1A9nfBZJYuxf0o=
-X-Received: by 2002:a50:fd19:: with SMTP id i25mr976597eds.101.1596144326878;
- Thu, 30 Jul 2020 14:25:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
- <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu> <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
- <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu> <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
- <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu> <20200730051045.jejrtkor3b32l2qe@vireshk-mac-ubuntu>
- <CAF6AEGuzff9+Wy4EHx0aDx1gBzSEGh--yqT5rnwLHp=U6amnyA@mail.gmail.com> <20200730153722.cnpg6n6tnmvjtuso@vireshk-mac-ubuntu>
-In-Reply-To: <20200730153722.cnpg6n6tnmvjtuso@vireshk-mac-ubuntu>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 30 Jul 2020 14:26:08 -0700
-Message-ID: <CAF6AEGv-e5KdbcDcst=y+h-uhDa4sKKEMoGuA88bvZ_1i46RLQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Dave Airlie <airlied@gmail.com>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Jul 2020 18:28:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730478AbgG3W23 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:28:29 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC1B42083B;
+        Thu, 30 Jul 2020 22:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596148108;
+        bh=GvpWxvd9qk2+XrI06V1aIgtnRaagWK5auktIrnkn96g=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=1/hQuHyl+Eu09HNOCnRkosMVMzTwmBsTYm3GcX5DIgKQehYEBLbB0x7BmpUYYnyZA
+         fBIgHmXx7zsZ3uRLzJ4m2DUPg66lNm5pXo6NBCG2Ho5z1IV+wNYw3r2wuvYO77p5J6
+         w30aeGCoOlrV4E4khuXpJlF+z23wN+kWgg+ttxeo=
+Date:   Thu, 30 Jul 2020 23:28:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <873659bpbk.wl-kuninori.morimoto.gx@renesas.com>
+References: <873659bpbk.wl-kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH v4] ASoC: dt-bindings: ak4613: switch to yaml base Documentation
+Message-Id: <159614804535.1473.7153174858928627488.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 30-07-20, 08:27, Rob Clark wrote:
-> > Hmm, I've already sent my pull request to Dave, dropping the patch
-> > would require force-push and sending a new PR.  Which I can do if Dave
-> > prefers.  OTOH I guess it isn't the end of the world if the patch is
-> > merged via two different trees.
->
-> I don't think a patch can go via two trees, as that would have two sha
-> keys for the same code.
->
-> Though it is fine for a patch to go via two different trees if we make
-> sure the same sha key is used for both.
->
-> Will it be possible for you to provide a branch/tag of your branch
-> that I can base stuff of ?
->
+On 30 Jul 2020 13:28:37 +0900, Kuninori Morimoto wrote:
+> This patch switches from .txt base to .yaml base Document.
 
-Ok, I sent a v2 pull req that dropped the OPP patch.  Both are tagged
-so Dave can use either version, so I guess you two can coordinate this
+Applied to
 
-BR,
--R
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: dt-bindings: ak4613: switch to yaml base Documentation
+      commit: 4d1976c79946cdf6ba3b53e26992ea0c0abf03da
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
