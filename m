@@ -2,242 +2,138 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508EFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 08:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9AEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 08:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECDB207F5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 08:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P/BJHcqj"
+	by mail.kernel.org (Postfix) with ESMTP id A551D2075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 08:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgG3It6 (ORCPT
+        id S1729201AbgG3IzN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 04:49:58 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:10307 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729138AbgG3Itw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 04:49:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596098991; h=References: In-Reply-To: Message-Id: Date:
- Subject: To: From: Sender;
- bh=T6J1BLrMRe5XgTTOrvOmU4kPBJ/Amc6FHePTJxi9s0Q=; b=P/BJHcqj32JeV0AM0rgzpifknc7UGgcLA6Wc7ZV9BNYS7nwv4kZRYzp3tH9p/sDd9beQW3ws
- 9oXCRRbodXNSH3oQJ0q5+mnGKFmYVgGMamCJGcJAuhI+4bOv0jGkwo9buSEfNf/T+i3KfZd8
- wsC4tqkUiDatSWs6+iXP27WYOVE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f2289aca19b5f4b11592f8f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 30 Jul 2020 08:49:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5BA94C433CA; Thu, 30 Jul 2020 08:49:48 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8FD93C433A0;
-        Thu, 30 Jul 2020 08:49:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FD93C433A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org, sivaprak@codeaurora.org,
-        kathirav@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: ipq6018: enable DVFS support
-Date:   Thu, 30 Jul 2020 14:19:24 +0530
-Message-Id: <1596098964-19878-4-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
-References: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
+        Thu, 30 Jul 2020 04:55:13 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54232 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728693AbgG3IzK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:55:10 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F5ED2011FB;
+        Thu, 30 Jul 2020 10:55:08 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 91B3B200263;
+        Thu, 30 Jul 2020 10:55:08 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7932920340;
+        Thu, 30 Jul 2020 10:55:08 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 11:55:08 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 11/17] clk: imx: Add blk_ctrl combo driver
+Message-ID: <20200730085508.ddxhb4rjnzwooh2z@fsr-ub1664-175>
+References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
+ <1596024483-21482-12-git-send-email-abel.vesa@nxp.com>
+ <d44e88a1408add6491897a8793b57ee0090fa4c6.camel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d44e88a1408add6491897a8793b57ee0090fa4c6.camel@pengutronix.de>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add A53 PLL, APCS clock, RPM Glink, RPM message RAM, cpu-opp-table,
-SMPA2 regulator to enable the cpu frequency on IPQ6018.
+On 20-07-29 14:46:28, Philipp Zabel wrote:
+> Hi Abel,
+> 
+> On Wed, 2020-07-29 at 15:07 +0300, Abel Vesa wrote:
+> > On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
 
-Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 96 +++++++++++++++++++++++++++++++++--
- 1 file changed, 93 insertions(+), 3 deletions(-)
+[...]
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 1aa8d8579463..a94dac76bf3f 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
- #include <dt-bindings/reset/qcom,gcc-ipq6018.h>
-+#include <dt-bindings/clock/qcom,apss-ipq.h>
- 
- / {
- 	#address-cells = <2>;
-@@ -38,6 +39,10 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		CPU1: cpu@1 {
-@@ -46,6 +51,10 @@
- 			enable-method = "psci";
- 			reg = <0x1>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		CPU2: cpu@2 {
-@@ -54,6 +63,10 @@
- 			enable-method = "psci";
- 			reg = <0x2>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		CPU3: cpu@3 {
-@@ -62,6 +75,10 @@
- 			enable-method = "psci";
- 			reg = <0x3>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&apcs_glb APCS_ALIAS0_CORE_CLK>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cpu-supply = <&ipq6018_s2>;
- 		};
- 
- 		L2_0: l2-cache {
-@@ -70,6 +87,42 @@
- 		};
- 	};
- 
-+	cpu_opp_table: cpu_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-864000000 {
-+			opp-hz = /bits/ 64 <864000000>;
-+			opp-microvolt = <725000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1056000000 {
-+			opp-hz = /bits/ 64 <1056000000>;
-+			opp-microvolt = <787500>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1320000000 {
-+			opp-hz = /bits/ 64 <1320000000>;
-+			opp-microvolt = <862500>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1440000000 {
-+			opp-hz = /bits/ 64 <1440000000>;
-+			opp-microvolt = <925000>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <987500>;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1062500>;
-+			clock-latency-ns = <200000>;
-+		};
-+	};
-+
- 	firmware {
- 		scm {
- 			compatible = "qcom,scm";
-@@ -98,6 +151,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		rpm_msg_ram: memory@0x60000 {
-+			reg = <0x0 0x60000 0x0 0x6000>;
-+			no-map;
-+		};
-+
- 		tz: tz@48500000 {
- 			reg = <0x0 0x48500000 0x0 0x00200000>;
- 			no-map;
-@@ -294,12 +352,22 @@
- 		};
- 
- 		apcs_glb: mailbox@b111000 {
--			compatible = "qcom,ipq8074-apcs-apps-global";
--			reg = <0x0b111000 0xc>;
--
-+			compatible = "qcom,ipq6018-apcs-apps-global";
-+			reg = <0x0b111000 0x1000>;
-+			#clock-cells = <1>;
-+			clocks = <&a53pll>, <&xo>;
-+			clock-names = "pll", "xo";
- 			#mbox-cells = <1>;
- 		};
- 
-+		a53pll: clock@b116000 {
-+			compatible = "qcom,ipq6018-a53pll";
-+			reg = <0x0b116000 0x40>;
-+			#clock-cells = <0>;
-+			clocks = <&xo>;
-+			clock-names = "xo";
-+		};
-+
- 		timer {
- 			compatible = "arm,armv8-timer";
- 			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -440,4 +508,26 @@
- 			#interrupt-cells = <2>;
- 		};
- 	};
-+
-+	rpm-glink {
-+		compatible = "qcom,glink-rpm";
-+		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-+		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-+		mboxes = <&apcs_glb 0>;
-+
-+		rpm_requests: glink-channel {
-+			compatible = "qcom,rpm-ipq6018";
-+			qcom,glink-channels = "rpm_requests";
-+
-+			regulators {
-+				compatible = "qcom,rpm-mp5496-regulators";
-+
-+				ipq6018_s2: s2 {
-+					regulator-min-microvolt = <725000>;
-+					regulator-max-microvolt = <1062500>;
-+					regulator-always-on;
-+				};
-+			};
-+		};
-+	};
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> > +
+> > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
+> > +				  unsigned long id, bool assert)
+> > +{
+> > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
+> > +			struct imx_blk_ctrl_drvdata, rcdev);
+> > +	unsigned int offset = drvdata->rst_hws[id].offset;
+> > +	unsigned int shift = drvdata->rst_hws[id].shift;
+> > +	unsigned int mask = drvdata->rst_hws[id].mask;
+> > +	void __iomem *reg_addr = drvdata->base + offset;
+> > +	unsigned long flags;
+> > +	u32 reg;
+> > +
+> > +	if (assert) {
+> > +		pm_runtime_get_sync(rcdev->dev);
+> > +		spin_lock_irqsave(&drvdata->lock, flags);
+> > +		reg = readl(reg_addr);
+> > +		writel(reg & ~(mask << shift), reg_addr);
+> > +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> > +	} else {
+> > +		spin_lock_irqsave(&drvdata->lock, flags);
+> > +		reg = readl(reg_addr);
+> > +		writel(reg | (mask << shift), reg_addr);
+> > +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> > +		pm_runtime_put(rcdev->dev);
+> 
+> This still has the issue of potentially letting exclusive reset control
+> users break the device usage counter.
+> 
+> Also shared reset control users start with deassert(), and you end probe
+> with pm_runtime_put(), so the first shared reset control user that
+> deasserts its reset will decrement the dev->power.usage_count to -1 ?
+> For multiple resets being initially deasserted this would decrement
+> multiple times.
+> 
+> I think you'll have to track the (number of) asserted reset bits in this
+> reset controller and limit when to call pm_runtime_get/put_sync().
+> 
+
+Yes, you're right.
+
+I'll add a mask, and for each assert, the according bit will get set, and 
+for each deasssert the same bit will get cleared. And when the mask has at least
+one bit set, the pm_runtime_get gets called and when the mask is 0, the 
+pm_runtime_put_sync will be called.
+
+Does that sound OK ?
+
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int imx_blk_ctrl_reset_reset(struct reset_controller_dev *rcdev,
+> > +					   unsigned long id)
+> > +{
+> > +	imx_blk_ctrl_reset_set(rcdev, id, true);
+> > +	return imx_blk_ctrl_reset_set(rcdev, id, false);
+> 
+> Does this work for all peripherals? Are there none that require the
+> reset line to be asserted for a certain number of bus clocks or similar?
+
+As of now, there is no user that calls reset. All the users call the assert
+and then deassert. As for the number of clocks for reset, I'll try to have a
+chat to the HW design team and then come back with the information.
+
+> 
+> > +}
+> > +
 
