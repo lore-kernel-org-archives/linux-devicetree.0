@@ -2,144 +2,481 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82452C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 19:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558C1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 19:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC662072A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 19:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qHQr7fFy"
+	by mail.kernel.org (Postfix) with ESMTP id 278B22070B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 19:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgG3T0c (ORCPT
+        id S1727972AbgG3Tuh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 15:26:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48070 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgG3T00 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 15:26:26 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UJQLRa049282;
-        Thu, 30 Jul 2020 14:26:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596137181;
-        bh=pV/O/7EYeKOGxldTZ5Phs8g+kRpF8oz8AVrC/oGZJ6A=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qHQr7fFyof1bvab6VZ4FD2LwSbPdmYfd3YCJUaST0xKC9vcNvBDN+hxuYCwuHoDOm
-         L9TdcyptM3EfnNEHaYzJB8NcnYnqmeJ/uiSCEpIKUXo38K0MP0VfLjQB3LbvxthbW9
-         7CxXGSACGvvP8k2NKwmnvY7OD9ez969hFAiTk75E=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UJQL1D112387;
-        Thu, 30 Jul 2020 14:26:21 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
- Jul 2020 14:26:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 30 Jul 2020 14:26:21 -0500
-Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UJQCpB052740;
-        Thu, 30 Jul 2020 14:26:19 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-j7200-common-proc-board: Add I2C IO expanders
-Date:   Fri, 31 Jul 2020 00:56:00 +0530
-Message-ID: <20200730192600.1872-3-vigneshr@ti.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200730192600.1872-1-vigneshr@ti.com>
-References: <20200730192600.1872-1-vigneshr@ti.com>
+        Thu, 30 Jul 2020 15:50:37 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:56122 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgG3Tuh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 15:50:37 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 982122001E;
+        Thu, 30 Jul 2020 21:50:28 +0200 (CEST)
+Date:   Thu, 30 Jul 2020 21:50:27 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] drm/panel: Add panel driver for NewVision NV3052C
+ based LCDs
+Message-ID: <20200730195027.GA1498774@ravnborg.org>
+References: <20200727164613.19744-1-paul@crapouillou.net>
+ <20200727164613.19744-5-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727164613.19744-5-paul@crapouillou.net>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=8nb-H-kVqRZ6DcGSkuoA:9
+        a=ntjCIQRDkOCl1atW:21 a=AweX8SZEGQVig1a6:21 a=CjuIK1q_8ugA:10
+        a=9LHmKk7ezEChjTCyhBa9:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT nodes for I2C GPIO expanders on main_i2c0 and main_i2c1 and
-also add the pinmux corresponding to these I2C instances.
+Hi Paul.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- .../dts/ti/k3-j7200-common-proc-board.dts     | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
+While I continue to try to wrap my head around how I think we should
+support DBI here are some panel specific comments.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index e27069317c4e5..26ad2e46009e3 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -14,6 +14,22 @@ chosen {
- 	};
- };
- 
-+&main_pmx0 {
-+	main_i2c0_pins_default: main-i2c0-pins-default {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0xd4, PIN_INPUT_PULLUP, 0) /* (V3) I2C0_SCL */
-+			J721E_IOPAD(0xd8, PIN_INPUT_PULLUP, 0) /* (W2) I2C0_SDA */
-+		>;
-+	};
-+
-+	main_i2c1_pins_default: main-i2c1-pins-default {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0xdc, PIN_INPUT_PULLUP, 3) /* (U3) ECAP0_IN_APWM_OUT.I2C1_SCL */
-+			J721E_IOPAD(0xe0, PIN_INPUT_PULLUP, 3) /* (T3) EXT_REFCLK1.I2C1_SDA */
-+		>;
-+	};
-+};
-+
- &wkup_uart0 {
- 	/* Wakeup UART is used by System firmware */
- 	status = "disabled";
-@@ -62,3 +78,36 @@ &main_uart9 {
- 	/* UART not brought out */
- 	status = "disabled";
- };
-+
-+&main_i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_i2c0_pins_default>;
-+	clock-frequency = <400000>;
-+
-+	exp1: gpio@20 {
-+		compatible = "ti,tca6416";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	exp2: gpio@22 {
-+		compatible = "ti,tca6424";
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
-+
-+&main_i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_i2c1_pins_default>;
-+	clock-frequency = <400000>;
-+
-+	exp4: gpio@20 {
-+		compatible = "ti,tca6408";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
--- 
-2.28.0
+	Sam
 
+On Mon, Jul 27, 2020 at 06:46:11PM +0200, Paul Cercueil wrote:
+> This driver supports the NewVision NV3052C based LCDs. Right now, it
+> only supports the LeadTek LTK035C5444T 2.4" 640x480 TFT LCD panel, which
+> can be found in the Anbernic RG-350M handheld console.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |   9 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../gpu/drm/panel/panel-newvision-nv3052c.c   | 523 ++++++++++++++++++
+>  3 files changed, 533 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-newvision-nv3052c.c
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index de2f2a452be5..6a8a51a702d8 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -198,6 +198,15 @@ config DRM_PANEL_NEC_NL8048HL11
+>  	  panel (found on the Zoom2/3/3630 SDP boards). To compile this driver
+>  	  as a module, choose M here.
+>  
+> +config DRM_PANEL_NEWVISION_NV3052C
+> +	tristate "NewVision NV3052C DSI/SPI RGB panel"
+> +	depends on OF
+> +	depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Say Y here if you want to enable support for the panels built
+> +	  around the NewVision NV3052C display controller.
+> +
+>  config DRM_PANEL_NOVATEK_NT35510
+>  	tristate "Novatek NT35510 RGB panel driver"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index e45ceac6286f..a0516ced87db 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_DRM_PANEL_LEADTEK_LTK500HD1829) += panel-leadtek-ltk500hd1829.o
+>  obj-$(CONFIG_DRM_PANEL_LG_LB035Q02) += panel-lg-lb035q02.o
+>  obj-$(CONFIG_DRM_PANEL_LG_LG4573) += panel-lg-lg4573.o
+>  obj-$(CONFIG_DRM_PANEL_NEC_NL8048HL11) += panel-nec-nl8048hl11.o
+> +obj-$(CONFIG_DRM_PANEL_NEWVISION_NV3052C) += panel-newvision-nv3052c.o
+>  obj-$(CONFIG_DRM_PANEL_NOVATEK_NT35510) += panel-novatek-nt35510.o
+>  obj-$(CONFIG_DRM_PANEL_NOVATEK_NT39016) += panel-novatek-nt39016.o
+>  obj-$(CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO) += panel-olimex-lcd-olinuxino.o
+> diff --git a/drivers/gpu/drm/panel/panel-newvision-nv3052c.c b/drivers/gpu/drm/panel/panel-newvision-nv3052c.c
+> new file mode 100644
+> index 000000000000..2feabef6dc3c
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-newvision-nv3052c.c
+> @@ -0,0 +1,523 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * NevVision NV3052C IPS LCD panel driver
+> + *
+> + * Copyright (C) 2020, Paul Cercueil <paul@crapouillou.net>
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/media-bus-format.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +
+> +#include <video/mipi_display.h>
+> +
+> +struct nv3052c_panel_info {
+> +	const struct drm_display_mode *display_modes;
+> +	unsigned int num_modes;
+> +	unsigned int bus_type;
+> +	u16 width_mm, height_mm;
+> +	u32 bus_format, bus_flags;
+> +};
+> +
+> +struct nv3052c_reg {
+> +	u8 cmd;
+> +	u8 value;
+> +};
+> +
+> +struct nv3052c {
+> +	struct drm_panel drm_panel;
+> +	struct mipi_dsi_device *dsi;
+> +	struct device *dev;
+> +
+> +	struct regulator *supply;
+> +	const struct nv3052c_panel_info *panel_info;
+> +
+> +	struct gpio_desc *reset_gpio;
+> +
+> +	struct backlight_device *backlight;
+
+drm_panel has backlight support.
+
+Just calling drm_panel_of_backlight() after init should do the trick.
+All other references to backlight can be dropped, including this
+variable in struct nv3052c.
+
+There is one delay loop you may need to keep.
+Will comment on it below.
+
+
+
+> +};
+> +
+> +static const struct nv3052c_reg nv3052c_regs[] = {
+...
+> +	{ 0x36, 0x0a },
+> +};
+> +
+> +static inline struct nv3052c *to_nv3052c(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct nv3052c, drm_panel);
+> +}
+> +
+> +static int nv3052c_prepare(struct drm_panel *drm_panel)
+> +{
+> +	struct nv3052c *priv = to_nv3052c(drm_panel);
+> +	unsigned int i;
+> +	int err;
+> +
+> +	err = regulator_enable(priv->supply);
+> +	if (err) {
+> +		dev_err(priv->dev, "Failed to enable power supply: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	/* Reset the chip */
+> +	gpiod_set_value_cansleep(priv->reset_gpio, 1);
+> +	usleep_range(10, 1000);
+> +	gpiod_set_value_cansleep(priv->reset_gpio, 0);
+> +	usleep_range(5000, 20000);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(nv3052c_regs); i++) {
+> +		err = mipi_dsi_dcs_write(priv->dsi, nv3052c_regs[i].cmd,
+> +					 &nv3052c_regs[i].value, 1);
+> +		if (err) {
+> +			dev_err(priv->dev, "Unable to set register: %d\n", err);
+> +			goto err_disable_regulator;
+> +		}
+> +	}
+> +
+> +	err = mipi_dsi_dcs_exit_sleep_mode(priv->dsi);
+> +	if (err) {
+> +		dev_err(priv->dev, "Unable to exit sleep mode: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	msleep(100);
+> +
+> +	return 0;
+> +
+> +err_disable_regulator:
+> +	regulator_disable(priv->supply);
+> +	return err;
+> +}
+> +
+> +static int nv3052c_unprepare(struct drm_panel *drm_panel)
+> +{
+> +	struct nv3052c *priv = to_nv3052c(drm_panel);
+> +	int err;
+> +
+> +	err = mipi_dsi_dcs_enter_sleep_mode(priv->dsi);
+> +	if (err) {
+> +		dev_err(priv->dev, "Unable to enter sleep mode: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(priv->reset_gpio, 1);
+> +
+> +	regulator_disable(priv->supply);
+> +
+> +	return 0;
+> +}
+> +
+> +static int nv3052c_enable(struct drm_panel *drm_panel)
+> +{
+> +	struct nv3052c *priv = to_nv3052c(drm_panel);
+> +	int err;
+> +
+> +	err = mipi_dsi_dcs_set_display_on(priv->dsi);
+> +	if (err) {
+> +		dev_err(priv->dev, "Unable to enable display: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	if (priv->backlight) {
+> +		/* Wait for the picture to be ready before enabling backlight */
+> +		usleep_range(10000, 20000);
+This delay would likely still be relevant.
+Just check priv->panel->backlight.
+
+> +
+> +		err = backlight_enable(priv->backlight);
+Drop this.
+
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static int nv3052c_disable(struct drm_panel *drm_panel)
+> +{
+> +	struct nv3052c *priv = to_nv3052c(drm_panel);
+> +	int err;
+> +
+> +	backlight_disable(priv->backlight);
+Drop this.
+
+> +
+> +	err = mipi_dsi_dcs_set_display_off(priv->dsi);
+> +	if (err) {
+> +		dev_err(priv->dev, "Unable to disable display: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int nv3052c_get_modes(struct drm_panel *drm_panel,
+> +			     struct drm_connector *connector)
+> +{
+> +	struct nv3052c *priv = to_nv3052c(drm_panel);
+> +	const struct nv3052c_panel_info *panel_info = priv->panel_info;
+> +	struct drm_display_mode *mode;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < panel_info->num_modes; i++) {
+> +		mode = drm_mode_duplicate(connector->dev,
+> +					  &panel_info->display_modes[i]);
+> +		if (!mode)
+> +			return -ENOMEM;
+> +
+> +		drm_mode_set_name(mode);
+> +
+> +		mode->type = DRM_MODE_TYPE_DRIVER;
+> +		if (panel_info->num_modes == 1)
+> +			mode->type |= DRM_MODE_TYPE_PREFERRED;
+> +
+> +		drm_mode_probed_add(connector, mode);
+> +	}
+> +
+> +	connector->display_info.bpc = 8;
+> +	connector->display_info.width_mm = panel_info->width_mm;
+> +	connector->display_info.height_mm = panel_info->height_mm;
+> +
+> +	drm_display_info_set_bus_formats(&connector->display_info,
+> +					 &panel_info->bus_format, 1);
+> +	connector->display_info.bus_flags = panel_info->bus_flags;
+> +
+> +	return panel_info->num_modes;
+> +}
+> +
+> +static const struct drm_panel_funcs nv3052c_funcs = {
+> +	.prepare	= nv3052c_prepare,
+> +	.unprepare	= nv3052c_unprepare,
+> +	.enable		= nv3052c_enable,
+> +	.disable	= nv3052c_disable,
+> +	.get_modes	= nv3052c_get_modes,
+> +};
+> +
+> +static int nv3052c_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	struct nv3052c *priv;
+> +	int err;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->dev = dev;
+> +	priv->dsi = dsi;
+> +	mipi_dsi_set_drvdata(dsi, priv);
+> +
+> +	priv->panel_info = of_device_get_match_data(dev);
+> +	if (!priv->panel_info)
+> +		return -EINVAL;
+> +
+> +	dsi->bus_type = priv->panel_info->bus_type;
+> +
+> +	priv->supply = devm_regulator_get(dev, "power");
+> +	if (IS_ERR(priv->supply)) {
+> +		dev_err(dev, "Failed to get power supply\n");
+> +		return PTR_ERR(priv->supply);
+> +	}
+> +
+> +	priv->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(priv->reset_gpio)) {
+> +		dev_err(dev, "Failed to get reset GPIO\n");
+> +		return PTR_ERR(priv->reset_gpio);
+> +	}
+> +
+> +	priv->backlight = devm_of_find_backlight(dev);
+> +	if (IS_ERR(priv->backlight)) {
+> +		err = PTR_ERR(priv->backlight);
+> +		if (err != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get backlight handle\n");
+> +		return err;
+> +	}
+Drop this part, use drm_panel_of_backlight() later.
+See other drivers for where it is called.
+
+> +
+> +	drm_panel_init(&priv->drm_panel, dev, &nv3052c_funcs,
+> +		       DRM_MODE_CONNECTOR_DPI);
+> +
+> +	err = drm_panel_add(&priv->drm_panel);
+> +	if (err < 0) {
+> +		dev_err(dev, "Failed to register priv\n");
+> +		return err;
+> +	}
+> +
+> +	err = mipi_dsi_attach(dsi);
+> +	if (err) {
+> +		dev_err(dev, "Failed to attach panel\n");
+> +		drm_panel_remove(&priv->drm_panel);
+> +		return err;
+> +	}
+> +
+> +	/*
+> +	 * We can't call mipi_dsi_maybe_register_tiny_driver(), since the
+> +	 * NV3052C does not support MIPI_DCS_WRITE_MEMORY_START.
+> +	 */
+> +
+> +	return 0;
+> +}
+> +
+> +static int nv3052c_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct nv3052c *priv = mipi_dsi_get_drvdata(dsi);
+> +
+> +	mipi_dsi_detach(dsi);
+> +	drm_panel_remove(&priv->drm_panel);
+> +
+> +	nv3052c_disable(&priv->drm_panel);
+Call drm_panel_disable()
+
+> +	nv3052c_unprepare(&priv->drm_panel);
+Call drm_panel_unprepare()
+
+With the above two we keep maintaining the backlight properly.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_display_mode ltk035c5444t_modes[] = {
+> +	{ /* 60 Hz */
+> +		.clock = 24000,
+> +		.hdisplay = 640,
+> +		.hsync_start = 640 + 96,
+> +		.hsync_end = 640 + 96 + 16,
+> +		.htotal = 640 + 96 + 16 + 48,
+> +		.vdisplay = 480,
+> +		.vsync_start = 480 + 5,
+> +		.vsync_end = 480 + 5 + 2,
+> +		.vtotal = 480 + 5 + 2 + 13,
+> +		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +	},
+> +	{ /* 50 Hz */
+> +		.clock = 18000,
+> +		.hdisplay = 640,
+> +		.hsync_start = 640 + 39,
+> +		.hsync_end = 640 + 39 + 2,
+> +		.htotal = 640 + 39 + 2 + 39,
+> +		.vdisplay = 480,
+> +		.vsync_start = 480 + 5,
+> +		.vsync_end = 480 + 5 + 2,
+> +		.vtotal = 480 + 5 + 2 + 13,
+> +		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +	},
+> +};
+> +
+> +static const struct nv3052c_panel_info ltk035c5444t_spi_panel_info = {
+> +	.display_modes = ltk035c5444t_modes,
+> +	.num_modes = ARRAY_SIZE(ltk035c5444t_modes),
+> +	.bus_type = MIPI_DEVICE_TYPE_DBI_SPI_MODE1,
+> +	.width_mm = 77,
+> +	.height_mm = 64,
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE,
+> +};
+> +
+> +static const struct of_device_id nv3052c_of_match[] = {
+> +	{ .compatible = "leadtek,ltk035c5444t-spi", .data = &ltk035c5444t_spi_panel_info },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, nv3052c_of_match);
+> +
+> +static struct mipi_dsi_driver nv3052c_driver = {
+> +	.driver = {
+> +		.name = "nv3052c",
+> +		.of_match_table = nv3052c_of_match,
+> +	},
+> +	.probe = nv3052c_probe,
+> +	.remove = nv3052c_remove,
+> +};
+> +module_mipi_dsi_driver(nv3052c_driver);
+> +
+> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.27.0
