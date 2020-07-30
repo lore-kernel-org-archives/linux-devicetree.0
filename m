@@ -2,71 +2,84 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5BAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495C3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A952D20809
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2672620809
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dy30OPps"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="DQ1hbYVe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fBRVXkDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgG3JX6 (ORCPT
+        id S1727023AbgG3Jf0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgG3JX5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 05:23:57 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5836CC061794;
-        Thu, 30 Jul 2020 02:23:57 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id r4so2879319pls.2;
-        Thu, 30 Jul 2020 02:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qEcfQyKopahyJ7cyN5C7qc3ogAAlzbIDe3eGdCZLDlg=;
-        b=Dy30OPpsunVqPQHRc8zKA0CNz1xj5tnGaAKB3bfCSkaCdEh/XzdiXvfg7q1kwQqaKr
-         P5DnoB9OnJyOILV4j6GHpZRuvoIFchtzfcoGRMr/jOiumprmJXYO4xk/lF0Yvl5xqx0Z
-         58tErr5r92NrX4WtqTq4Z9e3KLBFKI0hoQ0vD2chzDheOcO7rgq9vCKUORpnaNgVawo/
-         iPDCZ++2p+jbM58i54zHtdoaLT5oybQwz4LUwN5NpcrlHEzn9/1YG4sOHDukYbJ/opOY
-         xjphFAJlRere1Rj2hX3B7WfDcga/TZnmt40SBEeIbtVcEzqeVYdPXSRdsJT7d6V081pr
-         u7fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qEcfQyKopahyJ7cyN5C7qc3ogAAlzbIDe3eGdCZLDlg=;
-        b=AoCamPqn6KUGQ5cNUJMMsy4wKkSBSWoYV9JQr3vgv80lDeag/zYejAlT2BE2+nPyEm
-         dkuepQvbi+Sss6FvIeFoQSX8lkOMywz59p4Hh6eEc5F6Ri+B/csUyrDWVvElWa/oicNq
-         4tQ4jYQUh4131JqR7+rPAAKW0oya6NmH5VUrt7YzQ2M0BltKCtezJ/6jxP9/tAA6txz8
-         mfZY/vJYbIAJnFf6Qtl84W+cj5k6Ua5Samxl+3O8W62pbzUbAe5NOV6UOl4EBbNn/J1y
-         LWbD+Zllt3In/+D6K/XqCXBR95pDeahHA68O9bUmeSWe8bu2JW/QTZjSDP55jk5cK+OZ
-         srlQ==
-X-Gm-Message-State: AOAM5314BZGvy7V1Ez2adOcdeWrRAYt8ERVyBsxt6qy8Xg7wXqFaWxAF
-        fxYTKAla5RsCDt3MGQUU7gk=
-X-Google-Smtp-Source: ABdhPJx3WDwF3oqL6peA+8A4RFcrk+CQEEDrK8qZi7yLmtrQIv/rqJP1yDMF6/GNeb65q3Z8TOFNzw==
-X-Received: by 2002:a17:90a:1d46:: with SMTP id u6mr2182031pju.220.1596101036913;
-        Thu, 30 Jul 2020 02:23:56 -0700 (PDT)
-Received: from huyue2.ccdomain.com ([103.29.143.67])
-        by smtp.gmail.com with ESMTPSA id s8sm5183803pfc.122.2020.07.30.02.23.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Jul 2020 02:23:56 -0700 (PDT)
-From:   Yue Hu <zbestahu@gmail.com>
-To:     robh+dt@kernel.org, frowand.list@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        huyue2@yulong.com, zbestahu@163.com
-Subject: [PATCH] of: reserved-memory: remove duplicated call to of_get_flat_dt_prop() for no-map node
-Date:   Thu, 30 Jul 2020 17:23:53 +0800
-Message-Id: <20200730092353.15644-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.19.1.windows.1
+        Thu, 30 Jul 2020 05:35:26 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:39539 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726615AbgG3Jf0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 05:35:26 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 8E2845803D1;
+        Thu, 30 Jul 2020 05:35:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 30 Jul 2020 05:35:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=JhmDU/H53yjm/GLpBmlQQFXIqh
+        S4PzEIc+njySpKR2M=; b=DQ1hbYVep/s2sBYcbcNr35ycMeb40Oi4niM1Aih3vv
+        Z5CdzN05Zd6xT0UOFL4bEGDrTpht25WoXX6Bsq7QNw4KyIwRFY2yoMnt7ALsUeA6
+        LpUNQBY7HFoFV3NDF/Y00MlARftwf26Gds8nBwxVWiscmMQ3hqc1d6x2dvZt6TbW
+        XT6VfdQ1dSpVH9X2sCXWg3u5PyFvNyUWd9QV1oXgv5LU+WsVlACKMG/fU8GTEG7q
+        /VRCzjWaxFwZQBVeU+SEvWU8Mt6ABg2+LV3usNOUXjnDDKK2XBwpBw8AA8RCVvGn
+        tbdCFLwQHxBWbDo8ZNSEpULs5s53+IK24mtc6Y01WMvQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=JhmDU/H53yjm/GLpB
+        mlQQFXIqhS4PzEIc+njySpKR2M=; b=fBRVXkDeOVu2FeIDe4JgEBJ87V8T3ZdmE
+        GFBHB70IHYu7D6T4aTtdQXHohNb8cAI6XaoEK4495NPWUcYR5/669/LyAMtkioqC
+        mmldtTvV9RutAHiG21BMkbJFxDVkStDSRI2gn7xEp4iLd6kkVDh/oGeaP0d1sdAf
+        Sngj0/tAoh9msiQDdUFaeBSI3wBBydpiMmTuKwO7em1Ll8HbyQHgTT+iZtRYq1d5
+        24WMSnF1DDHGSUWRLOMkXxrk6vKGg/SPe/APD+qStSDeWvJqD7eBcZYBwfNQDpiU
+        Ydno7XH/VbLCLzRthWRJQqQIy+CH4dpIM0RvuQ0h3/xLnwJHMo2HQ==
+X-ME-Sender: <xms:W5QiX4NRs2eRVWq5FgWMjZJd1SzQ1EkTePFLfUTxwUB1hZrNq5lTrg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrieeigddukecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucft
+    ihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtthgvrh
+    hnpeejffehuddvvddvlefhgeelleffgfeijedvhefgieejtdeiueetjeetfeeukeejgeen
+    ucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:W5QiX--CT0lohwpjLcZt8Z6QPf2oDZA3SUnInO-2efdD8U6j9po_Vg>
+    <xmx:W5QiX_TRMZSxXszij0XFDD1mEPB9KJM4VXc2SVgtYZvQ1NeD6rq5Eg>
+    <xmx:W5QiXwsJq0Ws8uXcNfNVVQrutXQbG5PoO-vla-r6hs0OGbFN3cZRiw>
+    <xmx:XJQiX46CkFwZ9M3wJhaHWuIJT7Dy5ZBPTvtkizT9YT7c2idk77usGQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ED99B3280059;
+        Thu, 30 Jul 2020 05:35:22 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
+        dri-devel@lists.freedesktop.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/4] drm/sun4i: Add support for dual-link LVDS on the A20
+Date:   Thu, 30 Jul 2020 11:35:00 +0200
+Message-Id: <cover.7029eefe5c5350920f91d4cd4cbc061466752f3c.1596101672.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -74,72 +87,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+Hi,
 
-Just use nomap instead of the second call to of_get_flat_dt_prop(). And
-change nomap as a bool type due to != NULL operator. Also, correct comment
-about node of 'align' -> 'alignment'.
+This is a second attempt at supporting the LVDS dual-link output on the
+Allwinner A20.
 
-Signed-off-by: Yue Hu <huyue2@yulong.com>
----
- drivers/of/of_reserved_mem.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Let me know what you think,
+Maxime
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 6877080..c255c7e 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -69,7 +69,7 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
- 
- /**
-  * __reserved_mem_alloc_size() - allocate reserved memory described by
-- *	'size', 'align'  and 'alloc-ranges' properties.
-+ *	'size', 'alignment'  and 'alloc-ranges' properties.
-  */
- static int __init __reserved_mem_alloc_size(unsigned long node,
- 	const char *uname, phys_addr_t *res_base, phys_addr_t *res_size)
-@@ -79,7 +79,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 	phys_addr_t base = 0, align = 0, size;
- 	int len;
- 	const __be32 *prop;
--	int nomap;
-+	bool nomap;
- 	int ret;
- 
- 	prop = of_get_flat_dt_prop(node, "size", &len);
-@@ -92,8 +92,6 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 	}
- 	size = dt_mem_next_cell(dt_root_size_cells, &prop);
- 
--	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
--
- 	prop = of_get_flat_dt_prop(node, "alignment", &len);
- 	if (prop) {
- 		if (len != dt_root_addr_cells * sizeof(__be32)) {
-@@ -104,11 +102,13 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 		align = dt_mem_next_cell(dt_root_addr_cells, &prop);
- 	}
- 
-+	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
-+
- 	/* Need adjust the alignment to satisfy the CMA requirement */
- 	if (IS_ENABLED(CONFIG_CMA)
- 	    && of_flat_dt_is_compatible(node, "shared-dma-pool")
- 	    && of_get_flat_dt_prop(node, "reusable", NULL)
--	    && !of_get_flat_dt_prop(node, "no-map", NULL)) {
-+	    && !nomap) {
- 		unsigned long order =
- 			max_t(unsigned long, MAX_ORDER - 1, pageblock_order);
- 
-@@ -247,7 +247,7 @@ void __init fdt_init_reserved_mem(void)
- 		int len;
- 		const __be32 *prop;
- 		int err = 0;
--		int nomap;
-+		bool nomap;
- 
- 		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
- 		prop = of_get_flat_dt_prop(node, "phandle", &len);
+Changes from v1:
+  - Reworked the DT bindings
+  - Refactored a bit the panel registration in the tcon code.
+
+Maxime Ripard (4):
+  drm/of: Change the prototype of drm_of_lvds_get_dual_link_pixel_order
+  drm/sun4i: tcon: Refactor the LVDS and panel probing
+  drm/sun4i: tcon: Support the LVDS Dual-Link on the A20
+  [DO NOT MERGE] ARM: dts: sun7i: Enable LVDS Dual-Link on the Cubieboard
+
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts |  69 ++++++++-
+ drivers/gpu/drm/drm_of.c                    |  98 ++++++------
+ drivers/gpu/drm/rcar-du/rcar_lvds.c         |   8 +-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c          | 175 ++++++++++++---------
+ drivers/gpu/drm/sun4i/sun4i_tcon.h          |   4 +-
+ include/drm/drm_of.h                        |  16 +-
+ 6 files changed, 242 insertions(+), 128 deletions(-)
+
+base-commit: d113dbba9a18f9ac71edb1a66ae552c9407355f4
 -- 
-1.9.1
-
+git-series 0.9.1
