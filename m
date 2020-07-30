@@ -6,68 +6,73 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C2DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 22:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA02C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 854F72083E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 22:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7247D20838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 22:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596148125;
-	bh=mm8J/i6ZSAlgRjsL3uPXnNjYT5qwNb3j2lHa5rHt1qw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=CL39830x6O+wOo2Nk8gCoEXUiCUzSBN61WJVAq7wf0acyPBAUOMtmqjGXvTBYciyL
-	 C5Ldjrr5pdoNViVyUfAN1OFLKs32gd6fDCytAHyaFYGQ4WM/S11F1ejmZqdMFEgxTF
-	 ksBJZhQYsd1gNBWBIYBTGuMmlNJ20vZpuIxbHLFc=
+	s=default; t=1596148149;
+	bh=3E2zv9US9vLZ0at3kxD0+KN3nNVdL4vqBHT/gU3kpKg=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=Y7DRgiZ8OraaIoRwbm2Oe6lPy9NVioboTqsJUxba6eMTPps+yECXf+2qBTCP3ZkKq
+	 KeOq6uMk7InDbv/VdLkGdBOTpvL/JRSSS8ZDf7c73ebAZtgHBfPceBEaQazeZnQs+H
+	 6OLKXzo97A8v228/9wWE/DcJraW15NY3HNSLUsVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgG3W2n (ORCPT
+        id S1730688AbgG3W3F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 18:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40908 "EHLO mail.kernel.org"
+        Thu, 30 Jul 2020 18:29:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728731AbgG3W2n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 18:28:43 -0400
+        id S1730024AbgG3W3E (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 18:29:04 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 037F320829;
-        Thu, 30 Jul 2020 22:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA27320838;
+        Thu, 30 Jul 2020 22:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596148122;
-        bh=mm8J/i6ZSAlgRjsL3uPXnNjYT5qwNb3j2lHa5rHt1qw=;
+        s=default; t=1596148144;
+        bh=3E2zv9US9vLZ0at3kxD0+KN3nNVdL4vqBHT/gU3kpKg=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Uweg23OatF1tL9LWUhp6srSCrbhLnO5s3KtqUHVPPR4yX39LrtXPmeC5wemWS/eKP
-         HFGASlrbrs3jgFcIbcHDxmagFih0ANByQ5bbE8QjZhIDC8APJiV0h8ZWaMpKKC6CSa
-         VlKeBzw9u94Yoc1b4eq59TimGrUP9JOumINjoa9E=
-Date:   Thu, 30 Jul 2020 23:28:22 +0100
+        b=TCa1Fr1V54rnXcOaXy7ogD1GOXg392RrdbZxgon1IDI3C5rvcPSqCBlOQrzxnkWiZ
+         HeubyUagR8xBdeL87DACfSBiFFP9fWqlhMDuJhXgqnFqZ1an6TtMoAw1/p/3pVwLqt
+         /4RugqH3IL+I7EmI2w0jU2ooRr0IMW0qCsjzIkCQ=
+Date:   Thu, 30 Jul 2020 23:28:44 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     krzk@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     b.zolnierkie@samsung.com, devicetree@vger.kernel.org,
-        simon@lineageos.org, alsa-devel@alsa-project.org,
-        linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org,
-        m.szyprowski@samsung.com
-In-Reply-To: <20200728131111.14334-1-s.nawrocki@samsung.com>
-References: <CGME20200728131126eucas1p16365622c52f91104373a2cd3e0ebb619@eucas1p1.samsung.com> <20200728131111.14334-1-s.nawrocki@samsung.com>
-Subject: Re: [PATCH v3 1/3] ASoC: samsung: Document DT bindings for Midas sound subsystem
-Message-Id: <159614804534.1473.10836514117836508755.b4-ty@kernel.org>
+To:     Kathiravan T <kathirav@codeaurora.org>,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, lgirdwood@gmail.com,
+        devicetree@vger.kernel.org, sivaprak@codeaurora.org
+In-Reply-To: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
+References: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
+Subject: Re: [PATCH 0/3] Enable DVFS support for IPQ6018
+Message-Id: <159614812412.1677.11866049151869161352.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Jul 2020 15:11:09 +0200, Sylwester Nawrocki wrote:
-> This patch adds documentation of DT biding for the Midas sound complex.
-> Partially based on the *txt version by Simon Shields <simon@lineageos.org>.
+On Thu, 30 Jul 2020 14:19:21 +0530, Kathiravan T wrote:
+> Add A53 PLL, APCS clock, RPM Glink, RPM message RAM, cpu-opp-table,
+> SMPA2 regulator to enable the cpu frequency on IPQ6018.
+> 
+> Kathiravan T (3):
+>   dt-bindings: mailbox: add compatible for the IPQ6018 SoC
+>   dt-bindings: regulator: add the sub node names for the MP5496 PMIC
+>   arm64: dts: ipq6018: enable DVFS support
+> 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/2] ASoC: samsung: Document DT bindings for Midas sound subsystem
-      commit: f61d06ae99468e3f02b8af4b464945290c0cf2cc
-[2/2] ASoC: samsung: Add sound support for Midas boards
-      commit: fd0ea9cd9698edd8e9dab7dfe86163d00897b000
+[1/1] regulator: add the sub node names for the MP5496 PMIC
+      commit: bcb3b2a7639db2412875520cddc3abd179068793
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
