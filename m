@@ -2,115 +2,75 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA785C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 10:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BF7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 10:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB572075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 10:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="jvFCiK6R"
+	by mail.kernel.org (Postfix) with ESMTP id 9462A207F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 10:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbgG3KXJ (ORCPT
+        id S1726287AbgG3Kun (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 06:23:09 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:60268 "EHLO uho.ysoft.cz"
+        Thu, 30 Jul 2020 06:50:43 -0400
+Received: from mailout10.rmx.de ([94.199.88.75]:48685 "EHLO mailout10.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729139AbgG3KXI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 06:23:08 -0400
-X-Greylist: delayed 555 seconds by postgrey-1.27 at vger.kernel.org; Thu, 30 Jul 2020 06:23:07 EDT
-Received: from iota-build.ysoft.local (unknown [10.1.5.151])
-        by uho.ysoft.cz (Postfix) with ESMTP id 5CE4BA0828;
-        Thu, 30 Jul 2020 12:13:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1596104030;
-        bh=zRbadOeZ+63tn6S8alO37yU2ZdtL1Il1uzwgccWCVMM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jvFCiK6RExGzZxG/NIMSTloiTeKF0BdkrvgzWwKqNZshZEDxIMy3g6IaD7Q2ZQOlD
-         OmIwaI9kwG5JbHCM2iIWny04zvSau3DiF24LAUJ6apDiVefefKe6uDVMWRUK4q6YMI
-         jvURNHhg/dI42T9EALGbkdF6GjQkdFIDuIJSS55E=
-From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH] ARM: dts: imx6dl-yapp4: Add ethernet aliases
-Date:   Thu, 30 Jul 2020 12:13:46 +0200
-Message-Id: <1596104026-21091-1-git-send-email-michal.vokac@ysoft.com>
-X-Mailer: git-send-email 2.1.4
+        id S1725892AbgG3Kun (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 06:50:43 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout10.rmx.de (Postfix) with ESMTPS id 4BHRyl6Ql4z37P6;
+        Thu, 30 Jul 2020 12:50:39 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BHRyM1c0Gz2TS5B;
+        Thu, 30 Jul 2020 12:50:19 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.117) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 30 Jul
+ 2020 12:49:56 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>
+Subject: [PATCH v3 0/2] iio: light: Support AMS AS73211 digital XYZ sensor
+Date:   Thu, 30 Jul 2020 12:49:44 +0200
+Message-ID: <20200730104946.39148-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.117]
+X-RMX-ID: 20200730-125021-4BHRyM1c0Gz2TS5B-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add aliases for ethernet switch ports to allow bootloader to fix
-MAC addresses to the ones stored in onboard configuration EEPROM.
+This series adds support for the AMS AS73211 digital XYZ sensor.
 
-Ursa has only one ethernet port populated (eth2) so alias for
-the first port has to be removed on this board.
+Changes in v3:
+--------------
+- Integrated comments from Andy Shevchenko 
+- Integrated comments from Jonathan Cameron 
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 9 +++++++--
- arch/arm/boot/dts/imx6dl-yapp4-ursa.dts    | 4 ++++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+Changes in v2:
+---------------
+- Fix $id in dt binding
+- Document full I2C address range in "reg" property
+- Move "buffer" member out of "struct as73211_data"
+- Fix sparse warnings by using correct data types
 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index 999be02d1c03..508ee6adaff8 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -8,6 +8,11 @@
- #include <dt-bindings/pwm/pwm.h>
- 
- / {
-+	aliases: aliases {
-+		ethernet1 = &eth1;
-+		ethernet2 = &eth2;
-+	};
-+
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm1 0 500000 PWM_POLARITY_INVERTED>;
-@@ -151,13 +156,13 @@
- 					};
- 				};
- 
--				port@2 {
-+				eth2: port@2 {
- 					reg = <2>;
- 					label = "eth2";
- 					phy-handle = <&phy_port2>;
- 				};
- 
--				port@3 {
-+				eth1: port@3 {
- 					reg = <3>;
- 					label = "eth1";
- 					phy-handle = <&phy_port3>;
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-index a1173bf5bff5..f6ae24efd4aa 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
-@@ -17,6 +17,10 @@
- 	};
- };
- 
-+&aliases {
-+	/delete-property/ ethernet1;
-+};
-+
- &backlight {
- 	status = "okay";
- };
--- 
-2.1.4
+
 
