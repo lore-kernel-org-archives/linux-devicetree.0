@@ -2,117 +2,165 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00004C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3384C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D479620842
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB3F20656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PN/WQ+nn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxENsRRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgG3GGG (ORCPT
+        id S1726287AbgG3GTo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:06:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34144 "EHLO
+        Thu, 30 Jul 2020 02:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgG3GGG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 02:06:06 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0203DC061794;
-        Wed, 29 Jul 2020 23:06:06 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d188so8368775pfd.2;
-        Wed, 29 Jul 2020 23:06:05 -0700 (PDT)
+        with ESMTP id S1726261AbgG3GTn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 02:19:43 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDF2C061794;
+        Wed, 29 Jul 2020 23:19:43 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id e4so113518pjd.0;
+        Wed, 29 Jul 2020 23:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=FaJEFEelYrJSReV7cGpaC8DcaS6bvQpHJ9kF+pWSQi0=;
-        b=PN/WQ+nnGUctp0OFQylI5UunOgmc+MkXU8PIheUfmAg4EqLc9dl95Aab+Wjvr+TS8/
-         ZDENTHneGbDBaO+VBRrGcUzXI52O+zdVBquAlMyC6ASkvX4jRMGS5xosOknX/jz9Jqx9
-         3WTeAUBRnBrbFAOZPUvFDEDlsxWAMoO8EfopzEzJe2ZyBaF6XR4ThxXgYHG81oRCkPk0
-         2xDxr7O9T7Cid8pcCLq/uen+v8kr7PQjayeexUp8z1zoYC7q2RLV9zuEFCa30EEMK+iu
-         UpI+DfbBYsEpWnqhxc/auost160A+G4VVWXPJg9lMoxsGmWnU9RnT3LpbvPW1vHTF9sh
-         FeUQ==
+         :content-disposition:in-reply-to;
+        bh=7sLH0f+gva54AANCFXOi4hfUciaEwWDTPWFMS6fyuNQ=;
+        b=gxENsRRjmRt4hYykIkMYfhy7oEjiNxJMHjQJ2hpjtanoK/gTdGAYgVMW9/pfAGsXIm
+         7ywfiC4aIQA9HS6p+4y1zst7Gcp6rC7bufK0aNja47Gbk2yO9iSxn0WdaumvbDJYeeKW
+         m764Hmz3bwEdrXUXk7ZmbWH2CcoF4zlCeAWvt+mk0DEnz67AXBHAFkEojdvOriBnXzZH
+         oB93FEKJ2dzP+9WTPHnl6H/mrvH2KgSjLWAvFFaJaKAzk1e/y1BEsgeDiOb7UkbV1OBD
+         U1YRCKP1byhPkOruzCTBSo7EK75Mfa0atDXjOiJ5LAt652wOGgGZAUp+lg0ux2DCCNMH
+         Rz8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=FaJEFEelYrJSReV7cGpaC8DcaS6bvQpHJ9kF+pWSQi0=;
-        b=cxyo6gnSflIVn21FbTHAK3Ks6Aoa41PS86AgPwil0tHURaNI/0j123hBiFkpLfqsGz
-         JpcxVRP8mSegRE8D4xa2Q1WmEw0duhAgyYczsT+cVQT5B2hTwKjX6BkY+ZKBGMEoDs5x
-         9dhKXLZB1QEJlNLY5aWLUFRyrGoCBsHcwkHi3QlOnJUgiBHFaCiE4CHda1/Gf5Ifdox2
-         T14WSpsNs31mfwTyTHBmzhXBTughup1QWaWH8ra4cKUpo3JKDxmfpqmtXkA0tOmAmnf3
-         phP3t+KPnfkCh2Oz6r4Y3aUhuOhNFDseB8/2s6Jx+ih3yNhv1OzxMZfwqID9tt3jF6pu
-         Nt+g==
-X-Gm-Message-State: AOAM5317nnDHTHZ1wDysrIu13XQ92H/gYMhjn5Hn64UJp5/AQ5SBQPf+
-        9/M6vUb7Ju5XqpLy0oJTd3w=
-X-Google-Smtp-Source: ABdhPJy9L+ZvNhtXvmpzaiU3k7r+UDFDMJguFZV3kAjHpgbPyHHyw5I//L2uzuxJu7pDQ9APA8BYIA==
-X-Received: by 2002:a63:69ca:: with SMTP id e193mr32541471pgc.148.1596089165250;
-        Wed, 29 Jul 2020 23:06:05 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=7sLH0f+gva54AANCFXOi4hfUciaEwWDTPWFMS6fyuNQ=;
+        b=K7OGbFhCGppkcKhHD5rM7f6a++lQvn0JcXYE/ytJt4OSXMYpNrTYTlV87DLFgP2xcF
+         S3a6GVvqDhYvDUct1y2/8R4mxo4QmNg7r9ATFC6VIs6OIY+hoDRDnqxBHkwwIJSJ3rn2
+         9sg6Wogciqc370499ojnBHdE4x70czUi3FIxd0ATO77ue866WbqRdhdr1pPjQdoq/JNJ
+         tmA925sMGZqFdF79tvFD/tLOUa8qf1I77wk61Rz/TUvyCIjsuBH9d96kHReqMN8f/z4B
+         guBgdTjkETvE7qgbqXgLVEsIJ58WP106vpUERyf9XLWZHTJrdBeCwcKEqEbaxizqqf9X
+         AgqQ==
+X-Gm-Message-State: AOAM530FoJ1nFJ3D/8OmlMjq11JT4fZjFqL2vv7JWH67yXIwHXph/6r5
+        /wztuDcsIPUvMF6TcShafws=
+X-Google-Smtp-Source: ABdhPJwGcoK2hmjgbxI7ge21+8vA+2hytsqnAprehXpM2qsg8Hsp+TRZ7lIZ9ggp8fv0ddu5Fv2XWg==
+X-Received: by 2002:a17:90a:bc45:: with SMTP id t5mr4706364pjv.139.1596089983001;
+        Wed, 29 Jul 2020 23:19:43 -0700 (PDT)
 Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id q13sm4775816pjc.21.2020.07.29.23.06.03
+        by smtp.gmail.com with ESMTPSA id q6sm4540275pfg.76.2020.07.29.23.19.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 23:06:04 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 23:06:01 -0700
+        Wed, 29 Jul 2020 23:19:42 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 23:19:39 -0700
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Adam Ford <aford173@gmail.com>, linux-input@vger.kernel.org,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v3 3/3] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-Message-ID: <20200730060601.GE1665100@dtor-ws>
-References: <20200723074314.3304-1-horia.geanta@nxp.com>
- <20200723074314.3304-4-horia.geanta@nxp.com>
- <20200729075513.ckjnhfv3dxuesvsi@pengutronix.de>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 2/4] input: gpio-vibra: Allow to use vcc-supply alone
+ to control the vibrator
+Message-ID: <20200730061939.GF1665100@dtor-ws>
+References: <20200714102303.3007896-1-megous@megous.com>
+ <20200714102303.3007896-3-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200729075513.ckjnhfv3dxuesvsi@pengutronix.de>
+In-Reply-To: <20200714102303.3007896-3-megous@megous.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marco,
+Hi Ondrej,
 
-On Wed, Jul 29, 2020 at 09:55:13AM +0200, Marco Felsch wrote:
-> Hi,
+On Tue, Jul 14, 2020 at 12:23:01PM +0200, Ondrej Jirman wrote:
+> Make enable-gpio optional to allow using this driver with boards that
+> have vibrator connected to a power supply without intermediate gpio
+> based enable circuitry.
 > 
-> On 20-07-23 10:43, Horia Geantă wrote:
-> > From: André Draszik <git@andred.net>
-> > 
-> > The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
-> > 
-> > This driver here should only return IRQ_HANDLED if the status register
-> > indicates that the event we're handling in the irq handler was genuinely
-> > intended for this driver. Otheriwse the interrupt subsystem will
-> > assume the interrupt was handled successfully even though it wasn't
-> > at all.
+> Also avoid a case where neither regulator nor enable gpio is specified,
+> and bail out in probe in such a case.
 > 
-> After checking the RM and the imx6qdl.dtsi I'm not very sure that this
-> is right since the snvs-powerkey has a seperate irq-line. So we can be
-> sure that this irq is for us. If this is the case we don't need to check
-> the SNVS_LPSR_REG instead we only need to clear it.
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  drivers/input/misc/gpio-vibra.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+> index f79f75595dd7..b3bb7e61ed1d 100644
+> --- a/drivers/input/misc/gpio-vibra.c
+> +++ b/drivers/input/misc/gpio-vibra.c
+> @@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+>  	struct device *pdev = vibrator->input->dev.parent;
+>  	int err;
+>  
+> -	if (!vibrator->vcc_on) {
+> +	if (vibrator->vcc && !vibrator->vcc_on) {
+>  		err = regulator_enable(vibrator->vcc);
+>  		if (err) {
+>  			dev_err(pdev, "failed to enable regulator: %d\n", err);
+> @@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+>  {
+>  	gpiod_set_value_cansleep(vibrator->gpio, 0);
+>  
+> -	if (vibrator->vcc_on) {
+> +	if (vibrator->vcc && vibrator->vcc_on) {
+>  		regulator_disable(vibrator->vcc);
+>  		vibrator->vcc_on = false;
+>  	}
+> @@ -112,7 +112,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+>  	if (!vibrator->input)
+>  		return -ENOMEM;
+>  
+> -	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> +	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
 
-Wouldn't we want to know if for some reason we get spurious interrupts?
+I know it is very surprising, but regulator_get_optional does not return
+NULL when regulator is not present, but rather ERR_PTR(-ENODEV). You
+need to replace it with NULL in the branch below, or change conditions
+to !IS_ERR(virbrator->vcc) (and still handle -ENODEV in the branch
+below).
+
+>  	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+>  	if (err) {
+>  		if (err != -EPROBE_DEFER)
+> @@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> -	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
+> +	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
+> +						 GPIOD_OUT_LOW);
+>  	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+>  	if (err) {
+>  		if (err != -EPROBE_DEFER)
+> @@ -130,6 +131,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> +	if (!vibrator->vcc && !vibrator->gpio) {
+> +		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+>  
+>  	vibrator->input->name = "gpio-vibrator";
+> -- 
+> 2.27.0
+> 
 
 Thanks.
 
