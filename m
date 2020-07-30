@@ -2,48 +2,45 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527BEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D55DC433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4B620838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7864E20838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbgG3P2v (ORCPT
+        id S1729803AbgG3P2P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:28:51 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57122 "EHLO
+        Thu, 30 Jul 2020 11:28:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57092 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729796AbgG3P2P (ORCPT
+        with ESMTP id S1726353AbgG3P2P (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:28:15 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id EBAFA8040A69;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1950180045E5;
         Thu, 30 Jul 2020 15:28:13 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TyDLcoUfh4Qp; Thu, 30 Jul 2020 18:28:13 +0300 (MSK)
+        with ESMTP id 6wK_MbMx2Zd5; Thu, 30 Jul 2020 18:28:11 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 03/10] gpio: dwapb: Move MFD-specific IRQ handler
-Date:   Thu, 30 Jul 2020 18:28:00 +0300
-Message-ID: <20200730152808.2955-4-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 00/10] gpio: dwapb: Refactor GPIO resources initialization
+Date:   Thu, 30 Jul 2020 18:27:57 +0300
+Message-ID: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -53,43 +50,77 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For better readability let's group all the IRQ handlers in a single place
-of the driver instead of having them scatter around all over the file.
+This series is about the DW APB GPIO device initialization procedure
+cleaning up. First of all it has been discovered that having a
+vendor-specific "snps,nr-gpios" property isn't only redundant but also
+might be dangerous (see the commit log for details). Instead we suggest to
+use the generic "ngpios" property to define a number of GPIOs each DW APB
+GPIO controller port supports. Secondly seeing a tendency of the other
+GPIO drivers getting converted to using the GPIO-lib-based IRQ-chip
+interface this series provides a patch, which replaces the DW APB GPIO
+driver Generic IRQ-chip implementation with the GPIO-lib IRQ-chip one.
+Finally the DW APB GPIO device probe procedure is simplified by
+converting the code to be using the device managed resources for the
+reference clocks initialization, reset control assertion/de-assertion
+and GPIO-chip registration.
+
+Some additional cleanups like replacing a number of GPIOs literal with a
+corresponding macro and grouping the IRQ handlers up in a single place of
+the driver are also introduced in this patchset.
+
+Link: https://lore.kernel.org/linux-gpio/20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Replace gc->to_irq() with irq_find_mapping() method.
+- Refactor dwapb_irq_set_type() method to directly set IRQ flow handler
+  instead of using a temporary variable.
+- Initialize GPIOlib IRQ-chip settings before calling request_irq()
+  method.
+- Add a notice regarding regression of commit 6a2f4b7dadd5 ("gpio:
+  dwapb: use a second irq chip").
+- Move the acpi_gpiochip_{request,free}_interrupts() methods invocation
+  removal to a dedicated patch.
+- Move GPIO-chip to_irq callback removal to a dedicated patch.
+- Add a patch which replaces a max number of GPIO literals with a macro.
+- Introduce dwapb_convert_irqs() method to convert the sparse parental
+  IRQs array into an array of linearly distributed IRQs correctly
+  perceived by GPIO-lib.
+
+Link: https://lore.kernel.org/linux-gpio/20200730135536.19747-1-Sergey.Semin@baikalelectronics.ru
+Changelog v3:
+- Fix patches SoB's.
+- Add Andy' Suggested-by to the patch: "gpio: dwapb: Add max GPIOs macro"
+- Add blank lines to the IRQ-chip conversion commit message to make it
+  more readable.
+- Dynamically allocate memory for the IRQ-chip-related data.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/gpio/gpio-dwapb.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index ccd80df16062..3081213247d8 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -220,6 +220,11 @@ static void dwapb_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
-+static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
-+{
-+	return IRQ_RETVAL(dwapb_do_irq(dev_id));
-+}
-+
- static void dwapb_irq_enable(struct irq_data *d)
- {
- 	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
-@@ -349,11 +354,6 @@ static int dwapb_gpio_set_config(struct gpio_chip *gc, unsigned offset,
- 	return dwapb_gpio_set_debounce(gc, offset, debounce);
- }
- 
--static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
--{
--	return IRQ_RETVAL(dwapb_do_irq(dev_id));
--}
--
- static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
- 				 struct dwapb_gpio_port *port,
- 				 struct dwapb_port_property *pp)
+Serge Semin (10):
+  dt-bindings: gpio: dwapb: Add ngpios property support
+  gpio: dwapb: Add ngpios DT-property support
+  gpio: dwapb: Move MFD-specific IRQ handler
+  gpio: dwapb: Add max GPIOs macro
+  gpio: dwapb: Convert driver to using the GPIO-lib-based IRQ-chip
+  gpio: dwapb: Discard GPIO-to-IRQ mapping function
+  gpio: dwapb: Discard ACPI GPIO-chip IRQs request
+  gpio: dwapb: Get reset control by means of resource managed interface
+  gpio: dwapb: Get clocks by means of resource managed interface
+  gpio: dwapb: Use resource managed GPIO-chip add data method
+
+ .../bindings/gpio/snps,dw-apb-gpio.yaml       |   6 +
+ drivers/gpio/Kconfig                          |   2 +-
+ drivers/gpio/gpio-dwapb.c                     | 352 +++++++++---------
+ include/linux/platform_data/gpio-dwapb.h      |   4 +-
+ 4 files changed, 191 insertions(+), 173 deletions(-)
+
 -- 
 2.27.0
 
