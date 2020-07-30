@@ -2,155 +2,99 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46F6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF53BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 10:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D003820809
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0E1206F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 10:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpIGXuWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgG3Jjf convert rfc822-to-8bit (ORCPT
+        id S1727838AbgG3KCT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
+        Thu, 30 Jul 2020 06:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgG3Jjf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 05:39:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06AFC0619D2
-        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 02:39:34 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k1523-0007Np-Ud; Thu, 30 Jul 2020 11:39:23 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k1522-0005le-Vb; Thu, 30 Jul 2020 11:39:22 +0200
-Message-ID: <3f4fd963bdf58e61715524fdb246481fb2b2d137.camel@pengutronix.de>
-Subject: Re: [PATCH 11/17] clk: imx: Add blk_ctrl combo driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Date:   Thu, 30 Jul 2020 11:39:22 +0200
-In-Reply-To: <20200730085508.ddxhb4rjnzwooh2z@fsr-ub1664-175>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
-         <1596024483-21482-12-git-send-email-abel.vesa@nxp.com>
-         <d44e88a1408add6491897a8793b57ee0090fa4c6.camel@pengutronix.de>
-         <20200730085508.ddxhb4rjnzwooh2z@fsr-ub1664-175>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        with ESMTP id S1727041AbgG3KCS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 06:02:18 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE7BC061794
+        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 03:02:18 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id m16so13608341pls.5
+        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 03:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H2QHOBQ+Sp4WVdx5kDP6cQT1aif1NuTz4ehhBg76Yns=;
+        b=rpIGXuWWVCpza2uX83lNvd9h+p8s1821V71cVPkAvbb/U12Vk6OmW5PG8dsvg8YdwH
+         C8/bazyQ1odWp7hE01uIXVP/WcDCbepEU09GrNT51toU9mLPPikgsCKPhyqwDrs2WlwJ
+         gcr+BFVEluBiYQV0mRKJLuG6jBuxBptpp+FKfay5wpx2J5BqBf6rUK0MTw0YhNKMBs+G
+         T1P+1zHiGV/HbXoR0uL4JSfcIpMBVpFgj8Ycm+1EKKKuZnsPBGmKFy+cfT+RNMKip8U8
+         x5tKOx87FA6/rorQfEG3Gn5IqtE7kDpiftTh1u+CDu8u1dPpK64sBW7hXivK3brszqVE
+         CuAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=H2QHOBQ+Sp4WVdx5kDP6cQT1aif1NuTz4ehhBg76Yns=;
+        b=YnMe1+D5yu2Hq2otGeb0VicxCvTJUGPhmm1dVE6zIX+mVzfS8JeLuqRT2ojjNawJyx
+         OH+EoOd8OHX7YOKPEauZkQUMRRb1ATBsIV8dmbE7fpnFWvPpihw5jqONYHAJOgALQyVo
+         JW/M41Bpd1uL7c90Xocf0LDo8xGazZyNserIovczPpoQba22CC5pR9TNi7ggA2WUHubu
+         g0jNNiFpxup0EG8nMI4Q8j1nX2tKQiSveMJRuytMRRdjvFUkGzJFn5KE9ElGxlFNqWiO
+         miH/fl61uUstIgxQvIySoysbDzGOcbyG/pXQRkEMGgTfQHtZABpP36t3wTKdqk/KaE84
+         kEog==
+X-Gm-Message-State: AOAM5302JQj4RumpNFYoz0KVqQr9ekdnR9ZdGEgwtKHsCASiNE44j52M
+        EuOu02qZewsbwS2EFRHfYcw4swQv
+X-Google-Smtp-Source: ABdhPJyWIMef5yoBlir+5MtCbK4myBg0gv6rlN4l9L6TDtTsYxLbY5efopw8ZHogIalG+mCAHm357g==
+X-Received: by 2002:a17:902:c40d:: with SMTP id k13mr13901771plk.220.1596103336599;
+        Thu, 30 Jul 2020 03:02:16 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.62.37])
+        by smtp.gmail.com with ESMTPSA id d12sm5476640pfh.196.2020.07.30.03.02.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 03:02:16 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH v1 0/3] Add missing ethernet reset ID for Amlogic SoC
+Date:   Thu, 30 Jul 2020 10:02:06 +0000
+Message-Id: <20200730100209.793-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2020-07-30 at 11:55 +0300, Abel Vesa wrote:
-> On 20-07-29 14:46:28, Philipp Zabel wrote:
-> > Hi Abel,
-> > 
-> > On Wed, 2020-07-29 at 15:07 +0300, Abel Vesa wrote:
-> > > On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
-> 
-> [...]
-> 
-> > > +
-> > > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
-> > > +				  unsigned long id, bool assert)
-> > > +{
-> > > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
-> > > +			struct imx_blk_ctrl_drvdata, rcdev);
-> > > +	unsigned int offset = drvdata->rst_hws[id].offset;
-> > > +	unsigned int shift = drvdata->rst_hws[id].shift;
-> > > +	unsigned int mask = drvdata->rst_hws[id].mask;
-> > > +	void __iomem *reg_addr = drvdata->base + offset;
-> > > +	unsigned long flags;
-> > > +	u32 reg;
-> > > +
-> > > +	if (assert) {
-> > > +		pm_runtime_get_sync(rcdev->dev);
-> > > +		spin_lock_irqsave(&drvdata->lock, flags);
-> > > +		reg = readl(reg_addr);
-> > > +		writel(reg & ~(mask << shift), reg_addr);
-> > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> > > +	} else {
-> > > +		spin_lock_irqsave(&drvdata->lock, flags);
-> > > +		reg = readl(reg_addr);
-> > > +		writel(reg | (mask << shift), reg_addr);
-> > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> > > +		pm_runtime_put(rcdev->dev);
-> > 
-> > This still has the issue of potentially letting exclusive reset control
-> > users break the device usage counter.
-> > 
-> > Also shared reset control users start with deassert(), and you end probe
-> > with pm_runtime_put(), so the first shared reset control user that
-> > deasserts its reset will decrement the dev->power.usage_count to -1 ?
-> > For multiple resets being initially deasserted this would decrement
-> > multiple times.
-> > 
-> > I think you'll have to track the (number of) asserted reset bits in this
-> > reset controller and limit when to call pm_runtime_get/put_sync().
-> > 
-> 
-> Yes, you're right.
-> 
-> I'll add a mask, and for each assert, the according bit will get set, and 
-> for each deasssert the same bit will get cleared.
+These patch fix the Ethernet issue on Odroid C2 & Odroid N2 
+Some time Ethernet interface come up but no DHCP request
+is forwaded to the Router, this happens quite offern on
+my side. Adding Reset controller to ethernet node FIx the
+inilization issue.
 
-> And when the mask has at least one bit set, the pm_runtime_get gets called
+-Anand
 
-^ When the mask was 0 before but now has a bit set.
+Anand Moon (3):
+  arm64: dts: amlogic: meson-gx: add missing ethernet reset ID
+  arm64: dts: amlogic: meson-axg: add missing ethernet reset ID
+  arm64: dts: amlogic: meson-g12: add missing ethernet reset ID
 
-> and when the mask is 0, the pm_runtime_put_sync will be called.
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi         | 3 +++
+ 3 files changed, 7 insertions(+)
 
-^ When the mask had a bit set but now is 0.
+-- 
+2.28.0
 
-> Does that sound OK ?
-
-And the mask starts out as 0, as after the pm_runtime_put() in probe all
-reset lines are deasserted?
-
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int imx_blk_ctrl_reset_reset(struct reset_controller_dev *rcdev,
-> > > +					   unsigned long id)
-> > > +{
-> > > +	imx_blk_ctrl_reset_set(rcdev, id, true);
-> > > +	return imx_blk_ctrl_reset_set(rcdev, id, false);
-> > 
-> > Does this work for all peripherals? Are there none that require the
-> > reset line to be asserted for a certain number of bus clocks or similar?
-> 
-> As of now, there is no user that calls reset. All the users call the assert
-> and then deassert. As for the number of clocks for reset, I'll try to have a
-> chat to the HW design team and then come back with the information.
-
-Ok. If this is not required or can't be guaranteed to work, it may be
-better to just leave it out.
-
-regards
-Philipp
