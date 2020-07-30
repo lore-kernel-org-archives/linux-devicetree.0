@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFF5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 13:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC31EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 13:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89CB920829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 13:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9261C21744
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 13:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="j3fW8rnN"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="t06Dc9u5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgG3NYx (ORCPT
+        id S1729011AbgG3NYv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 09:24:53 -0400
-Received: from vps.xff.cz ([195.181.215.36]:55014 "EHLO vps.xff.cz"
+        Thu, 30 Jul 2020 09:24:51 -0400
+Received: from vps.xff.cz ([195.181.215.36]:54988 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgG3NYw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 09:24:52 -0400
+        id S1728760AbgG3NYv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 09:24:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1596115490; bh=kwgWUPQHVNL5P7EKwsJlCg0NIkarJ3r+wsUpQ/WUKtQ=;
+        t=1596115489; bh=z0TyS2KjMxaB3mAxoJny4kSRkgxtN+e0hcvKu1IAJzY=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=j3fW8rnNRgLJBrdU8YKFuPb0BDRXF6DZp+BBw0feOkeXDPCGSOBjlvnDU/IUNTkWa
-         a55S2ChfFInDfsHqCHz6zQ2kT/TgyEM1o1LXk4H1UGGf9QSZQ9wZlWHqZHSVmlLdpw
-         x3eWK/2LbPy3vgL8/eZLO67UwmVpGD7OknqyubAE=
+        b=t06Dc9u58MmLXeHH549DDineJPBx7yQrsTBnjwrgH1NrCO1cbOcFa2KMlCQOmHo1/
+         lu3bYlfcdsHWeSiqgfnU41T9sD117Ai3zVOf+7HSmtjIT1lw0zadas0mAYVlcbCbTY
+         pRjwkwy3ohud/9+d8SYZZWlQLycDMzCcRp5rofzw=
 From:   Ondrej Jirman <megous@megous.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -38,9 +38,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
         Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 4/4] ARM: dts: sun8i-a83t-tbs-a711: Increase voltage on the vibrator
-Date:   Thu, 30 Jul 2020 15:24:46 +0200
-Message-Id: <20200730132446.3139980-5-megous@megous.com>
+Subject: [PATCH v5 2/4] input: gpio-vibra: Allow to use vcc-supply alone to control the vibrator
+Date:   Thu, 30 Jul 2020 15:24:44 +0200
+Message-Id: <20200730132446.3139980-3-megous@megous.com>
 In-Reply-To: <20200730132446.3139980-1-megous@megous.com>
 References: <20200730132446.3139980-1-megous@megous.com>
 MIME-Version: 1.0
@@ -50,28 +50,75 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Vibrator motor is weak at the current voltage. Increase the voltage.
+Make enable-gpio optional to allow using this driver with boards that
+have vibrator connected to a power supply without intermediate gpio
+based enable circuitry.
+
+Also avoid a case where neither regulator nor enable gpio is specified,
+and bail out in probe in such a case.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/misc/gpio-vibra.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index a278a1e33930..1e086e979348 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -434,8 +434,8 @@ &reg_ldo_io0 {
- };
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+index f79f75595dd7..87508c3939e9 100644
+--- a/drivers/input/misc/gpio-vibra.c
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
+ 	struct device *pdev = vibrator->input->dev.parent;
+ 	int err;
  
- &reg_ldo_io1 {
--	regulator-min-microvolt = <3100000>;
--	regulator-max-microvolt = <3100000>;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
- 	regulator-name = "vcc-vb";
- 	status = "okay";
- };
+-	if (!vibrator->vcc_on) {
++	if (vibrator->vcc && !vibrator->vcc_on) {
+ 		err = regulator_enable(vibrator->vcc);
+ 		if (err) {
+ 			dev_err(pdev, "failed to enable regulator: %d\n", err);
+@@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
+ {
+ 	gpiod_set_value_cansleep(vibrator->gpio, 0);
+ 
+-	if (vibrator->vcc_on) {
++	if (vibrator->vcc && vibrator->vcc_on) {
+ 		regulator_disable(vibrator->vcc);
+ 		vibrator->vcc_on = false;
+ 	}
+@@ -112,16 +112,19 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 	if (!vibrator->input)
+ 		return -ENOMEM;
+ 
+-	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
++	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
+ 	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+-	if (err) {
++	if (err == -ENODEV) {
++		vibrator->vcc = NULL;
++	} else if (err) {
+ 		if (err != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev, "Failed to request regulator: %d\n",
+ 				err);
+ 		return err;
+ 	}
+ 
+-	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
++	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
++						 GPIOD_OUT_LOW);
+ 	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+ 	if (err) {
+ 		if (err != -EPROBE_DEFER)
+@@ -130,6 +133,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
++	if (!vibrator->vcc && !vibrator->gpio) {
++		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
++		return -EINVAL;
++	}
++
+ 	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+ 
+ 	vibrator->input->name = "gpio-vibrator";
 -- 
 2.27.0
 
