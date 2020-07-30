@@ -2,167 +2,135 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3384C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114F7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB3F20656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17232075F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 06:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxENsRRj"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qfsWkCdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgG3GTo (ORCPT
+        id S1726287AbgG3G1z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 02:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgG3GTn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 02:19:43 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDF2C061794;
-        Wed, 29 Jul 2020 23:19:43 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id e4so113518pjd.0;
-        Wed, 29 Jul 2020 23:19:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7sLH0f+gva54AANCFXOi4hfUciaEwWDTPWFMS6fyuNQ=;
-        b=gxENsRRjmRt4hYykIkMYfhy7oEjiNxJMHjQJ2hpjtanoK/gTdGAYgVMW9/pfAGsXIm
-         7ywfiC4aIQA9HS6p+4y1zst7Gcp6rC7bufK0aNja47Gbk2yO9iSxn0WdaumvbDJYeeKW
-         m764Hmz3bwEdrXUXk7ZmbWH2CcoF4zlCeAWvt+mk0DEnz67AXBHAFkEojdvOriBnXzZH
-         oB93FEKJ2dzP+9WTPHnl6H/mrvH2KgSjLWAvFFaJaKAzk1e/y1BEsgeDiOb7UkbV1OBD
-         U1YRCKP1byhPkOruzCTBSo7EK75Mfa0atDXjOiJ5LAt652wOGgGZAUp+lg0ux2DCCNMH
-         Rz8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7sLH0f+gva54AANCFXOi4hfUciaEwWDTPWFMS6fyuNQ=;
-        b=K7OGbFhCGppkcKhHD5rM7f6a++lQvn0JcXYE/ytJt4OSXMYpNrTYTlV87DLFgP2xcF
-         S3a6GVvqDhYvDUct1y2/8R4mxo4QmNg7r9ATFC6VIs6OIY+hoDRDnqxBHkwwIJSJ3rn2
-         9sg6Wogciqc370499ojnBHdE4x70czUi3FIxd0ATO77ue866WbqRdhdr1pPjQdoq/JNJ
-         tmA925sMGZqFdF79tvFD/tLOUa8qf1I77wk61Rz/TUvyCIjsuBH9d96kHReqMN8f/z4B
-         guBgdTjkETvE7qgbqXgLVEsIJ58WP106vpUERyf9XLWZHTJrdBeCwcKEqEbaxizqqf9X
-         AgqQ==
-X-Gm-Message-State: AOAM530FoJ1nFJ3D/8OmlMjq11JT4fZjFqL2vv7JWH67yXIwHXph/6r5
-        /wztuDcsIPUvMF6TcShafws=
-X-Google-Smtp-Source: ABdhPJwGcoK2hmjgbxI7ge21+8vA+2hytsqnAprehXpM2qsg8Hsp+TRZ7lIZ9ggp8fv0ddu5Fv2XWg==
-X-Received: by 2002:a17:90a:bc45:: with SMTP id t5mr4706364pjv.139.1596089983001;
-        Wed, 29 Jul 2020 23:19:43 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id q6sm4540275pfg.76.2020.07.29.23.19.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 23:19:42 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 23:19:39 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/4] input: gpio-vibra: Allow to use vcc-supply alone
- to control the vibrator
-Message-ID: <20200730061939.GF1665100@dtor-ws>
-References: <20200714102303.3007896-1-megous@megous.com>
- <20200714102303.3007896-3-megous@megous.com>
+        Thu, 30 Jul 2020 02:27:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:42758 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726261AbgG3G1z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 02:27:55 -0400
+X-UUID: a1c4c86c61144b45a08f7bc811d658c0-20200730
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=8lty/uyzCDwACFd7jNKNUuVqC+GMWXy2t8oEvgAMM2Q=;
+        b=qfsWkCdWlfL0cl4OTeF8Cz8oj5cetDwwD1bIqxQrWEWGKwI3CxNw5KXV00UT2cVSNFSCljEzCzF7cYIdDePPJIxyFeJsNh8TizXx9roZ4zSzPcjFdqV2tfhA/rMgBnCK7DbubVDn6AvypnvoCZ1XtcQQ1uu+Nlglbho09RCIqdQ=;
+X-UUID: a1c4c86c61144b45a08f7bc811d658c0-20200730
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1567981899; Thu, 30 Jul 2020 14:27:50 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs05n1.mediatek.inc
+ (172.21.101.15) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 30 Jul
+ 2020 14:27:46 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 30 Jul 2020 14:27:45 +0800
+Message-ID: <1596090441.11360.27.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/2] reset-controller: ti: adjust the reset assert and
+ deassert interface
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
+        <seiya.wang@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <fan.chen@mediatek.com>, <stanley.chu@mediatek.com>
+Date:   Thu, 30 Jul 2020 14:27:21 +0800
+In-Reply-To: <d259a74ca9e425f9b39ebbf47b0decb6be0beed5.camel@pengutronix.de>
+References: <1596008357-11213-1-git-send-email-crystal.guo@mediatek.com>
+         <1596008357-11213-2-git-send-email-crystal.guo@mediatek.com>
+         <ba0d1e29-3ba3-5379-d03e-1ccec21c2ffa@gmail.com>
+         <d259a74ca9e425f9b39ebbf47b0decb6be0beed5.camel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714102303.3007896-3-megous@megous.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ondrej,
+T24gV2VkLCAyMDIwLTA3LTI5IGF0IDE2OjAyICswODAwLCBQaGlsaXBwIFphYmVsIHdyb3RlOg0K
+PiBIaSBDcnlzdGFsLCBNYXR0aGlhcywNCj4gDQo+IE9uIFdlZCwgMjAyMC0wNy0yOSBhdCAwOTo0
+OCArMDIwMCwgTWF0dGhpYXMgQnJ1Z2dlciB3cm90ZToNCj4gPiANCj4gPiBPbiAyOS8wNy8yMDIw
+IDA5OjM5LCBDcnlzdGFsIEd1byB3cm90ZToNCj4gPiA+IEFkZCB0aV9zeXNjb25fcmVzZXQoKSB0
+byBpbnRlZ3JhdGUgYXNzZXJ0IGFuZCBkZWFzc2VydCB0b2dldGhlciwNCj4gPiA+IGFuZCBjaGFu
+Z2UgcmV0dXJuIHZhbHVlIG9mIHRoZSByZXNldCBhc3NlcnQgYW5kIGRlYXNzZXJ0IGludGVyZmFj
+ZQ0KPiA+ID4gZnJvbSByZWdtYXBfdXBkYXRlX2JpdHMgdG8gcmVnbWFwX3dyaXRlX2JpdHMuDQo+
+ID4gPiANCj4gPiA+IHdoZW4gY2xlYXIgYml0IGlzIGFscmVhZHkgMSwgcmVnbWFwX3VwZGF0ZV9i
+aXRzIGNhbiBub3Qgd3JpdGUgMSB0byBpdCBhZ2Fpbi4NCj4gPiA+IFNvbWUgSUMgaGFzIHRoZSBm
+ZWF0dXJlIHRoYXQsIHdoZW4gc2V0IGJpdCBpcyAxLCB0aGUgY2xlYXIgYml0IGNoYW5nZQ0KPiA+
+ID4gdG8gMSB0b2dldGhlci4gSXQgd2lsbCB0cnVseSBjbGVhciBiaXQgdG8gMCBieSB3cml0ZSAx
+IHRvIHRoZSBjbGVhciBiaXQNCj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQ3J5c3RhbCBH
+dW8gPGNyeXN0YWwuZ3VvQG1lZGlhdGVrLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gICBkcml2ZXJz
+L3Jlc2V0L3Jlc2V0LXRpLXN5c2Nvbi5jIHwgMTMgKysrKysrKysrKystLQ0KPiA+ID4gICAxIGZp
+bGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiA+IA0KPiA+
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcmVzZXQvcmVzZXQtdGktc3lzY29uLmMgYi9kcml2ZXJz
+L3Jlc2V0L3Jlc2V0LXRpLXN5c2Nvbi5jDQo+ID4gPiBpbmRleCBhMjYzNWMyLi41YThlYzhmIDEw
+MDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9yZXNldC9yZXNldC10aS1zeXNjb24uYw0KPiA+ID4g
+KysrIGIvZHJpdmVycy9yZXNldC9yZXNldC10aS1zeXNjb24uYw0KPiA+ID4gQEAgLTg5LDcgKzg5
+LDcgQEAgc3RhdGljIGludCB0aV9zeXNjb25fcmVzZXRfYXNzZXJ0KHN0cnVjdCByZXNldF9jb250
+cm9sbGVyX2RldiAqcmNkZXYsDQo+ID4gPiAgIAltYXNrID0gQklUKGNvbnRyb2wtPmFzc2VydF9i
+aXQpOw0KPiA+ID4gICAJdmFsdWUgPSAoY29udHJvbC0+ZmxhZ3MgJiBBU1NFUlRfU0VUKSA/IG1h
+c2sgOiAweDA7DQo+ID4gPiAgIA0KPiA+ID4gLQlyZXR1cm4gcmVnbWFwX3VwZGF0ZV9iaXRzKGRh
+dGEtPnJlZ21hcCwgY29udHJvbC0+YXNzZXJ0X29mZnNldCwgbWFzaywgdmFsdWUpOw0KPiA+ID4g
+KwlyZXR1cm4gcmVnbWFwX3dyaXRlX2JpdHMoZGF0YS0+cmVnbWFwLCBjb250cm9sLT5hc3NlcnRf
+b2Zmc2V0LCBtYXNrLCB2YWx1ZSk7DQo+ID4gDQo+ID4gTmFjaywgdGhpcyB3aWxsIGJyZWFrIHRo
+ZSBkcml2ZXIgZm9yIHRoZSBvdGhlciBkZXZpY2VzLg0KPiANCj4gSSBkb24ndCB0aGluayB0aGlz
+IHdpbGwgYnJlYWsgdGhlIGRyaXZlciBmb3IgZXhpc3RpbmcgaGFyZHdhcmUuDQo+IHJlZ21hcF93
+cml0ZV9iaXRzKCkgaXMgdGhlIHNhbWUgYXMgcmVnbWFwX3VwZGF0ZV9iaXRzKCksIGl0IGp1c3Qg
+Zm9yY2VzDQo+IHRoZSB3cml0ZSBpbiBjYXNlIHRoZSByZWFkIGFscmVhZHkgaGFwcGVucyB0byBy
+ZXR1cm4gdGhlIGNvcnJlY3QgdmFsdWUuDQo+IE9mIGNvdXJzZSBpdCB3b3VsZCBiZSBnb29kIHRv
+IGNoZWNrIHRoYXQgdGhpcyBhY3R1YWxseSB3b3Jrcy4NCg0KWWVzLCByZWdtYXBfd3JpdGVfYml0
+cygpIGlzIHRoZSBzYW1lIGFzIHJlZ21hcF91cGRhdGVfYml0cygpLCBpdCB3b3VsZA0Kbm90IGFm
+ZmVjdCBleGlzdGVkIHVzZXJzLiBPciBzaG91bGQgSSB1c2UgYSBwcm9wZXJ0eSB0byBzZXBhcmF0
+ZQ0KcmVnbWFwX3dyaXRlX2JpdHMoKSBhbmQgcmVnbWFwX3VwZGF0ZV9iaXRzKCkgPw0KDQo+IA0K
+PiA+IFRoZSBrZXJuZWwgaGFzIHRvIHdvcmsgbm90IGp1c3QgZm9yIHlvdXIgU29DIGJ1dCBmb3Ig
+YWxsIGRldmljZXMgb2YgYWxsIA0KPiA+IGFyY2hpdGVjdHVyZXMuIFlvdSBjYW4ndCBqdXN0IGhh
+Y2sgc29tZXRoaW5nIHVwLCB0aGF0IHdpbGwgd29yayBvbiB5b3VyIHNwZWNpZmljIA0KPiA+IFNv
+Qy4NCj4gPiANCj4gPiBSZWdhcmRzLA0KPiA+IE1hdHRoaWFzIA0KPiA+IA0KDQpUaGlzIFRJIGRy
+aXZlciB3YXMgaW50ZW5kIHRvIGJlIGEgZ2VuZXJpYyByZXNldCBjb250cm9sbGVyDQooaHR0cHM6
+Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL2NvdmVyLzY4MzU4NS8pLCBzbyB0aGlzIHBhdGNo
+IG1heQ0Kbm90IGp1c3Qgd29yayBvbiBhIHNwZWNpZmljIFNvQy4NCg0KVGhhbmtzLA0KQ3J5c3Rh
+bA0KDQo+ID4gPiAgIH0NCj4gPiA+ICAgDQo+ID4gPiAgIC8qKg0KPiA+ID4gQEAgLTEyMCw3ICsx
+MjAsNyBAQCBzdGF0aWMgaW50IHRpX3N5c2Nvbl9yZXNldF9kZWFzc2VydChzdHJ1Y3QgcmVzZXRf
+Y29udHJvbGxlcl9kZXYgKnJjZGV2LA0KPiA+ID4gICAJbWFzayA9IEJJVChjb250cm9sLT5kZWFz
+c2VydF9iaXQpOw0KPiA+ID4gICAJdmFsdWUgPSAoY29udHJvbC0+ZmxhZ3MgJiBERUFTU0VSVF9T
+RVQpID8gbWFzayA6IDB4MDsNCj4gPiA+ICAgDQo+ID4gPiAtCXJldHVybiByZWdtYXBfdXBkYXRl
+X2JpdHMoZGF0YS0+cmVnbWFwLCBjb250cm9sLT5kZWFzc2VydF9vZmZzZXQsIG1hc2ssIHZhbHVl
+KTsNCj4gPiA+ICsJcmV0dXJuIHJlZ21hcF93cml0ZV9iaXRzKGRhdGEtPnJlZ21hcCwgY29udHJv
+bC0+ZGVhc3NlcnRfb2Zmc2V0LCBtYXNrLCB2YWx1ZSk7DQo+ID4gPiAgIH0NCj4gPiA+ICAgDQo+
+ID4gPiAgIC8qKg0KPiA+ID4gQEAgLTE1OCwxMCArMTU4LDE5IEBAIHN0YXRpYyBpbnQgdGlfc3lz
+Y29uX3Jlc2V0X3N0YXR1cyhzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LA0KPiA+
+ID4gICAJCSEoY29udHJvbC0+ZmxhZ3MgJiBTVEFUVVNfU0VUKTsNCj4gPiA+ICAgfQ0KPiA+ID4g
+ICANCj4gPiA+ICtzdGF0aWMgaW50IHRpX3N5c2Nvbl9yZXNldChzdHJ1Y3QgcmVzZXRfY29udHJv
+bGxlcl9kZXYgKnJjZGV2LA0KPiA+ID4gKwkJCSAgIHVuc2lnbmVkIGxvbmcgaWQpDQo+ID4gPiAr
+ew0KPiA+ID4gKwl0aV9zeXNjb25fcmVzZXRfYXNzZXJ0KHJjZGV2LCBpZCk7DQo+ID4gPiArDQo+
+ID4gPiArCXJldHVybiB0aV9zeXNjb25fcmVzZXRfZGVhc3NlcnQocmNkZXYsIGlkKTsNCj4gPiA+
+ICt9DQo+ID4gPiArDQo+IA0KPiBJJ20gdW5zdXJlIGFib3V0IHRoaXMgb25lLCB0aG91Z2guIFRo
+aXMgaXMgYW4gaW5jb21wYXRpYmxlIGNoYW5nZS4gQXQNCj4gdGhlIHZlcnkgbGVhc3QgdGhpcyB3
+b3VsZCBoYXZlIHRvIGJlIG9wdGlvbmFsIGRlcGVuZGluZyBvbiBjb21wYXRpYmxlLg0KPiANCj4g
+cmVnYXJkcw0KPiBQaGlsaXBwDQoNCkkgd2lsbCBhZGQgYSBwcm9wZXJ0eSB0byBtYWtlIHRoaXMg
+Y2hhbmdlIGJlIG9wdGlvbmFsLCB0aGFua3MgZm9yIHlvdQ0KYWR2aWNlLg0KDQpUaGFua3MsDQpD
+cnlzdGFsDQoNCg0K
 
-On Tue, Jul 14, 2020 at 12:23:01PM +0200, Ondrej Jirman wrote:
-> Make enable-gpio optional to allow using this driver with boards that
-> have vibrator connected to a power supply without intermediate gpio
-> based enable circuitry.
-> 
-> Also avoid a case where neither regulator nor enable gpio is specified,
-> and bail out in probe in such a case.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/input/misc/gpio-vibra.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-> index f79f75595dd7..b3bb7e61ed1d 100644
-> --- a/drivers/input/misc/gpio-vibra.c
-> +++ b/drivers/input/misc/gpio-vibra.c
-> @@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
->  	struct device *pdev = vibrator->input->dev.parent;
->  	int err;
->  
-> -	if (!vibrator->vcc_on) {
-> +	if (vibrator->vcc && !vibrator->vcc_on) {
->  		err = regulator_enable(vibrator->vcc);
->  		if (err) {
->  			dev_err(pdev, "failed to enable regulator: %d\n", err);
-> @@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
->  {
->  	gpiod_set_value_cansleep(vibrator->gpio, 0);
->  
-> -	if (vibrator->vcc_on) {
-> +	if (vibrator->vcc && vibrator->vcc_on) {
->  		regulator_disable(vibrator->vcc);
->  		vibrator->vcc_on = false;
->  	}
-> @@ -112,7 +112,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
->  	if (!vibrator->input)
->  		return -ENOMEM;
->  
-> -	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> +	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
-
-I know it is very surprising, but regulator_get_optional does not return
-NULL when regulator is not present, but rather ERR_PTR(-ENODEV). You
-need to replace it with NULL in the branch below, or change conditions
-to !IS_ERR(virbrator->vcc) (and still handle -ENODEV in the branch
-below).
-
->  	err = PTR_ERR_OR_ZERO(vibrator->vcc);
->  	if (err) {
->  		if (err != -EPROBE_DEFER)
-> @@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
->  		return err;
->  	}
->  
-> -	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-> +	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
-> +						 GPIOD_OUT_LOW);
->  	err = PTR_ERR_OR_ZERO(vibrator->gpio);
->  	if (err) {
->  		if (err != -EPROBE_DEFER)
-> @@ -130,6 +131,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
->  		return err;
->  	}
->  
-> +	if (!vibrator->vcc && !vibrator->gpio) {
-> +		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
->  
->  	vibrator->input->name = "gpio-vibrator";
-> -- 
-> 2.27.0
-> 
-
-Thanks.
-
--- 
-Dmitry
