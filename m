@@ -2,114 +2,101 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32FBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525F8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB6A2074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:45:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYI2K30r"
+	by mail.kernel.org (Postfix) with ESMTP id 3241222B3F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgG3Ppi (ORCPT
+        id S1729955AbgG3Pp4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728452AbgG3Pph (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:45:37 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1194AC061574;
-        Thu, 30 Jul 2020 08:45:37 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id n2so20294894edr.5;
-        Thu, 30 Jul 2020 08:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e1J01Oczhd220RAym1LfngVA7OUijoix/GTLOnOq0wQ=;
-        b=mYI2K30rokgxWE0w7UBhOkOYryaDcfDKVw60BHk8x3vYQ//HRCVaVYL2FU1hFijMfT
-         8rwLHSUgRg6/W4AvbrMRanJPGCBILdYCXc9SWKUFPRFJy2DEbfn3agkQJvTbPEzwd5hq
-         Z7xb4bbxbDLahiPDYZ4URSuz3MQj++4zVmHqM/tXhleHuX4XwfDzWsqa7a3ASLmbqdNw
-         PQtvqxQ6Qv1RyiW63qtuPBNmZF21uFplD/0Yigy4RjgHLEr3/XZIdkL6GA62Vw7iCzbH
-         ocQCE4wQEl0soppOd8kGhR6nr5YcIrnu8VKQ6oc7usO2cTRWz0ICuZi+gHH8fMD59RgR
-         HGRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e1J01Oczhd220RAym1LfngVA7OUijoix/GTLOnOq0wQ=;
-        b=sXlybJHqzcOrGf0G1i8J882oE/PXqPuQGnJ0kxpsvyZA1gJcZX/25K8gNEN7hfjkZt
-         oiQa55JDQfxg+qZHwD9vYLtx/CfdSYpysTTBWOeTtfXyf+QBHkjAA1tOSegoclfMM1pU
-         KJF2TMrC5JkGvwZ2tJmSJqsTivzhLvszKjFWU3OTzxycd5hftKnX5X3/VXT3/4PT7w6n
-         +NWog3J0NLrLo0OYhrwaur5ImoIwBg6NL427uX0WDFyjNmWZaz4t3Up2rxgD9Zms7ud4
-         8qi2oBJD6guqPX4mbwwqyqMa3N7nuo40zFqKmLMhGrpJ+q7Zb9RrL6+ijzwl/5zo4W7w
-         GFGQ==
-X-Gm-Message-State: AOAM533w3hX8+0Gt5hFlrZ2jNicNPnyOrrdfW9c3Pqvf8O40Fq+tuZcT
-        83o5tEcGcbGn0mM/noWnqvGA7Hk0XeQA6qcz2Ww=
-X-Google-Smtp-Source: ABdhPJxJBzb6IrbCKjuOC0BujTWS0dRylwUyeXRe0DDUCUbkZVlP/EuIVuplkgjxRZfoLFnUlWJiDAFypFhpWjX6r1E=
-X-Received: by 2002:a05:6402:1c10:: with SMTP id ck16mr3213692edb.151.1596123935735;
- Thu, 30 Jul 2020 08:45:35 -0700 (PDT)
+        Thu, 30 Jul 2020 11:45:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57322 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3Ppz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:45:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DB0A1803202F;
+        Thu, 30 Jul 2020 15:45:52 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CFlFm4HzIXgH; Thu, 30 Jul 2020 18:45:52 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/5] dt-bindings: dma: dw: Add optional DMA-channels mask cell support
+Date:   Thu, 30 Jul 2020 18:45:41 +0300
+Message-ID: <20200730154545.3965-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
- <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu> <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
- <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu> <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
- <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu> <20200730051045.jejrtkor3b32l2qe@vireshk-mac-ubuntu>
- <CAF6AEGuzff9+Wy4EHx0aDx1gBzSEGh--yqT5rnwLHp=U6amnyA@mail.gmail.com> <20200730153722.cnpg6n6tnmvjtuso@vireshk-mac-ubuntu>
-In-Reply-To: <20200730153722.cnpg6n6tnmvjtuso@vireshk-mac-ubuntu>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 30 Jul 2020 08:46:16 -0700
-Message-ID: <CAF6AEGs9=-0YBJpONaXf1wavU5ZpxhAQ19vfOn4JHby1zgPwpg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dave Airlie <airlied@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 30-07-20, 08:27, Rob Clark wrote:
-> > Hmm, I've already sent my pull request to Dave, dropping the patch
-> > would require force-push and sending a new PR.  Which I can do if Dave
-> > prefers.  OTOH I guess it isn't the end of the world if the patch is
-> > merged via two different trees.
->
-> I don't think a patch can go via two trees, as that would have two sha
-> keys for the same code.
+Each DW DMA controller channel can be synthesized with different
+parameters like maximum burst-length, multi-block support, maximum data
+width, etc. Most of these parameters determine the DW DMAC channels
+performance in its own aspect. On the other hand these parameters can
+be implicitly responsible for the channels performance degradation
+(for instance multi-block support is a very useful feature, but having
+it disabled during the DW DMAC synthesize will provide a more optimized
+core). Since DMA slave devices may have critical dependency on the DMA
+engine performance, let's provide a way for the slave devices to have
+the DMA-channels allocated from a pool of the channels, which according
+to the system engineer fulfill their performance requirements.
 
-it looks weird in the history, but other than that I think it is
-fine.. at least I see it happen somewhat regularly with fixes in drm
+The pool is determined by a mask optionally specified in the fifth
+DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+phandle arguments or the mask is zero, then the allocation will be
+performed from a set of all channels provided by the DMA controller.
 
-> Though it is fine for a patch to go via two different trees if we make
-> sure the same sha key is used for both.
->
-> Will it be possible for you to provide a branch/tag of your branch
-> that I can base stuff of ?
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+---
+ .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-You could use https://gitlab.freedesktop.org/drm/msm/-/commits/msm-next/
-(or the tag drm-msm-next-2020-07-29), which already has the OPP patch.
-I've been trying to avoid force-pushing that because downstream trees
-are already pulling from that.
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+index 20870f5c14dd..ef1d6879c158 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -18,12 +18,15 @@ properties:
+     const: snps,dma-spear1340
+ 
+   "#dma-cells":
+-    const: 3
++    minimum: 3
++    maximum: 4
+     description: |
+       First cell is a phandle pointing to the DMA controller. Second one is
+       the DMA request line number. Third cell is the memory master identifier
+       for transfers on dynamically allocated channel. Fourth cell is the
+-      peripheral master identifier for transfers on an allocated channel.
++      peripheral master identifier for transfers on an allocated channel. Fifth
++      cell is an optional mask of the DMA channels permitted to be allocated
++      for the corresponding client device.
+ 
+   reg:
+     maxItems: 1
+-- 
+2.27.0
 
-BR,
--R
