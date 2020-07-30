@@ -2,95 +2,87 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3626EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF4BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 08:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 119D4206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 07:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CBD207F5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 08:49:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P9OXEhGr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgG3HaH (ORCPT
+        id S1729010AbgG3Itn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 03:30:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37426 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgG3HaH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:30:07 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3885D2011E0;
-        Thu, 30 Jul 2020 09:30:05 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BA3420021B;
-        Thu, 30 Jul 2020 09:30:05 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0A41D20341;
-        Thu, 30 Jul 2020 09:30:04 +0200 (CEST)
-Date:   Thu, 30 Jul 2020 10:30:04 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 10/17] Documentation: bindings: clk: Add bindings for
- i.MX BLK_CTRL
-Message-ID: <20200730073004.r2d2prwlocqclpz3@fsr-ub1664-175>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
- <1596024483-21482-11-git-send-email-abel.vesa@nxp.com>
- <159605218106.1360974.17212937588367161697@swboyd.mtv.corp.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159605218106.1360974.17212937588367161697@swboyd.mtv.corp.google.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 30 Jul 2020 04:49:43 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:10307 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729002AbgG3Itm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 04:49:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596098981; h=References: In-Reply-To: Message-Id: Date:
+ Subject: To: From: Sender;
+ bh=NkHZL2NCYPbtWhg9N4NaJaJH7df2RKkoj1Y9zmMOjv8=; b=P9OXEhGrZKdL1iREOzYx2kkkVGyXPBDcSPk2lNCExlcaMFJc/n7kDI/HMlqwMu4BQ8A9iFlf
+ THvGSYzwGLHLULaVaz+Dal0g2/q073/SKQs1AlWuMOjKltIt/KzDdi4aNezlnpf0k9bTF7gv
+ Fu5RJpwEcLMIkof8gvIdWiLK/Wk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f2289a598acebb4e989ef6f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 30 Jul 2020 08:49:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 152E7C433CA; Thu, 30 Jul 2020 08:49:41 +0000 (UTC)
+Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kathirav)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9407C43395;
+        Thu, 30 Jul 2020 08:49:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9407C43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
+From:   Kathiravan T <kathirav@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org, sivaprak@codeaurora.org,
+        kathirav@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: mailbox: add compatible for the IPQ6018 SoC
+Date:   Thu, 30 Jul 2020 14:19:22 +0530
+Message-Id: <1596098964-19878-2-git-send-email-kathirav@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
+References: <1596098964-19878-1-git-send-email-kathirav@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-29 12:49:41, Stephen Boyd wrote:
-> Quoting Abel Vesa (2020-07-29 05:07:56)
-> > diff --git a/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml b/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml
-> > new file mode 100644
-> > index 00000000..036d3d3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/fsl,imx-blk-ctrl.yaml
-> > @@ -0,0 +1,55 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only)
-> > +%YAML 1.2
-> > +---
-> > +$id: https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fclock%2Ffsl%2Cimx-blk-ctrl.yaml%23&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C30d7fec624c44b4f85e108d833f88a5e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637316489861505079&amp;sdata=63jhxp1rw%2BMYPlc%2BhwSjOwBvN%2Fikf5PXUKGjEXD5agM%3D&amp;reserved=0
-> > +$schema: https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=02%7C01%7Cabel.vesa%40nxp.com%7C30d7fec624c44b4f85e108d833f88a5e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637316489861505079&amp;sdata=9%2FLcFRkMHXx1%2FHsEfFyhNmI73hDC2GUu2s%2BE9EQTUSE%3D&amp;reserved=0
-> [...]
-> > +
-> > +examples:
-> > +  - |
-> > +    audio-blk-ctrl: blk-ctrl@30e20000 {
-> 
-> clock-controller@30e20000 {
+Add the mailbox compatible for the IPQ6018 SoC.
 
-Will change in the new version.
+Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> > +       compatible = "fsl,imx8mp-blk-ctrl", "syscon";
-> > +       reg = <0x30e20000 0x10000>;
-> > +       power-domains = <&audiomix_pd>;
-> > +
-> > +       #clock-cells = <1>;
-> > +       #reset-cells = <1>;
-> > +    };
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+index 12eff942708d..60e9532fcd29 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+@@ -16,6 +16,7 @@ maintainers:
+ properties:
+   compatible:
+     enum:
++      - qcom,ipq6018-apcs-apps-global
+       - qcom,ipq8074-apcs-apps-global
+       - qcom,msm8916-apcs-kpss-global
+       - qcom,msm8996-apcs-hmss-global
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
