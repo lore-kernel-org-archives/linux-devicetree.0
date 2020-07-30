@@ -2,115 +2,88 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB142C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24752C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976F922B49
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:27:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxpwHgVN"
+	by mail.kernel.org (Postfix) with ESMTP id 05283208A9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgG3P1A (ORCPT
+        id S1729799AbgG3P2P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:27:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgG3P1A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:27:00 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00980C061574;
-        Thu, 30 Jul 2020 08:26:59 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id jp10so1812127ejb.0;
-        Thu, 30 Jul 2020 08:26:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sRBXteCx3iMxzf+5YFGiaHOZbhEeLZMnPLZMpPhN9j0=;
-        b=mxpwHgVNXl7Gw3UA+uuDLTz10xKua5fw6rE++7C7vRni0IIjZ6gS+ZeYIhLWXHy3y/
-         vPMbGrVFEnb64IJ7Ca3gFuoT/t+e55dj9KYyxPjvaL0dq/2g+9XJh2GnXlC0ov5WrW4r
-         Rvqv8Y35vB6EitcbM5ZUZxtNCnPnSsi+YFVcw1HHySKymFPJWeEa6sPbPdpt7WQI5ntw
-         79LeYQnXgJfuNWyhCcD0m8x5aI8aNo5PdMzhFVVC72vY5I6n+escxqqLBEbmJDJjhOQO
-         3MkVcanyh+4vYCe59GpVScPWSVS9yuFf0SgzR6ow2vry8MEcMN6ZbpjL2kclDSMFNJnZ
-         Is8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sRBXteCx3iMxzf+5YFGiaHOZbhEeLZMnPLZMpPhN9j0=;
-        b=AYYsYbelojyUQDED24MDNwkXIN4YnMHTTvHCGvYsHMekhgzoqT0PqPi24whMce8oNq
-         vnN4OpWriADP/l6USfCQpXuXra7Nc+3GjNFPc2Ja3WM8BdzDXWWc0tpBE/MkZZ1dTBxm
-         WNoUprDq2f5tHzk4msrpeE/t9BtlqiJMP7X2FrgDMb4O1oiv3wH1iOJ5IU6hbVLFAhG/
-         hnB9zP0WyJoHNjYOjBacq1fc17QnhrARjSCt9GF5f7D1I4D9zr8ERDKjStQdzSyGQoSk
-         pv1qkG+NsSQY+j1RrNpvpZoPZuBvkY6Ec6PWnNx40z9tKMb7w3M2+1yPRuYNjLFR8R0e
-         K9EA==
-X-Gm-Message-State: AOAM530wMvYd0rKRstQutmn40ZbsjlTz5jpYZPYuE3SMihPOhSTQwDP9
-        kTgnPbD5Rgyi5VVDwW9X6Jj8v7snL002dFiYaQc=
-X-Google-Smtp-Source: ABdhPJyj/3mUFNZJ5e36idWlRRi684to1k7BBbmv7VGuv0mgty12MhPpHISg9EXy+G3LWVfB29zmAAC02OJYJvXOXxw=
-X-Received: by 2002:a17:906:328d:: with SMTP id 13mr3192634ejw.71.1596122818624;
- Thu, 30 Jul 2020 08:26:58 -0700 (PDT)
+        Thu, 30 Jul 2020 11:28:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57060 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728412AbgG3P2P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:28:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A083D8030866;
+        Thu, 30 Jul 2020 15:28:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xq1zIwFDAxoC; Thu, 30 Jul 2020 18:28:12 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 01/10] dt-bindings: gpio: dwapb: Add ngpios property support
+Date:   Thu, 30 Jul 2020 18:27:58 +0300
+Message-ID: <20200730152808.2955-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <1594644106-22449-1-git-send-email-akhilpo@codeaurora.org>
- <CAF6AEGtAEwZbWxLb4MxaWNswvtrFbLK+N0Fez2XYr7odKZffWA@mail.gmail.com>
- <20200720100131.6ux4zumbwqpa42ye@vireshk-mac-ubuntu> <CAF6AEGurrsd3nrbB=ktZjWfKTNbKwPHYwTFiZdD-NOW1T7gePQ@mail.gmail.com>
- <20200721032442.hv7l4q6633vnmnfe@vireshk-mac-ubuntu> <CAF6AEGuhQcRskGhrFvmCf5T3EcZ9S+3LRdZBiaDYqF34yZjd+A@mail.gmail.com>
- <20200722053023.vwaoj5oqh4cazzzz@vireshk-mac-ubuntu> <20200730051045.jejrtkor3b32l2qe@vireshk-mac-ubuntu>
-In-Reply-To: <20200730051045.jejrtkor3b32l2qe@vireshk-mac-ubuntu>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 30 Jul 2020 08:27:39 -0700
-Message-ID: <CAF6AEGuzff9+Wy4EHx0aDx1gBzSEGh--yqT5rnwLHp=U6amnyA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Add support for GPU DDR BW scaling
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>,
-        Jonathan <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dave Airlie <airlied@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 10:10 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 22-07-20, 11:00, Viresh Kumar wrote:
-> > On 21-07-20, 07:28, Rob Clark wrote:
-> > > With your ack, I can add the patch the dev_pm_opp_set_bw patch to my
-> > > tree and merge it via msm-next -> drm-next -> linus
-> >
-> > I wanted to send it via my tree, but its okay. Pick this patch from
-> > linux-next and add my Ack, I will drop it after that.
-> >
-> > a8351c12c6c7 OPP: Add and export helper to set bandwidth
->
-> Oops, sorry for the trouble but this needs to go via my tree only :(
->
-> I maintain two different branches, one for OPP and another one for
-> cpufreq. There was no dependency within the OPP branch and so I
-> dropped it that day and asked you to take it.
->
-> But when I tried to send a pull request today I realised that one of
-> the qcom patches in the cpufreq branch is dependent on it and I need
-> to keep this patch in my tree.
+It's redundant to have a vendor-specific property describing a number of
+GPIOS while there is a generic one. Let's mark the former one as
+deprecated and define the "ngpios" property supported with constraints
+of being within [1; 32] range.
 
-Hmm, I've already sent my pull request to Dave, dropping the patch
-would require force-push and sending a new PR.  Which I can do if Dave
-prefers.  OTOH I guess it isn't the end of the world if the patch is
-merged via two different trees.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-BR,
--R
+diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+index 1240f6289249..b391cc1b4590 100644
+--- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+@@ -61,8 +61,14 @@ patternProperties:
+       '#gpio-cells':
+         const: 2
+ 
++      ngpios:
++        default: 32
++        minimum: 1
++        maximum: 32
++
+       snps,nr-gpios:
+         description: The number of GPIO pins exported by the port.
++        deprecated: true
+         $ref: /schemas/types.yaml#/definitions/uint32
+         default: 32
+         minimum: 1
+-- 
+2.27.0
+
