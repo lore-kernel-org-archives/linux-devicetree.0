@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D00DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 12:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C964C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 12:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7588F2074B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 12:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125FB20842
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 12:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgG3M3B (ORCPT
+        id S1728832AbgG3M3H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 08:29:01 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:43483 "EHLO
+        Thu, 30 Jul 2020 08:29:07 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:23866 "EHLO
         alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728430AbgG3M2t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 08:28:49 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+        with ESMTP id S1728363AbgG3M2s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 08:28:48 -0400
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
   by alexa-out.qualcomm.com with ESMTP; 30 Jul 2020 05:28:48 -0700
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 30 Jul 2020 05:28:46 -0700
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 30 Jul 2020 05:28:46 -0700
 Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 30 Jul 2020 17:58:11 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 30 Jul 2020 17:58:15 +0530
 Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id F3197218A1; Thu, 30 Jul 2020 17:58:09 +0530 (IST)
+        id CF531218A6; Thu, 30 Jul 2020 17:58:12 +0530 (IST)
 From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 To:     gokulsri@codeaurora.org, agross@kernel.org,
         bjorn.andersson@linaro.org, david.brown@linaro.org,
@@ -37,9 +37,9 @@ To:     gokulsri@codeaurora.org, agross@kernel.org,
         mark.rutland@arm.com, mturquette@baylibre.com,
         nprakash@codeaurora.org, ohad@wizery.com, robh+dt@kernel.org,
         sboyd@kernel.org, sricharan@codeaurora.org
-Subject: [PATCH v7 1/9] remoteproc: qcom: Add PRNG proxy clock
-Date:   Thu, 30 Jul 2020 17:56:35 +0530
-Message-Id: <1596112003-31663-2-git-send-email-gokulsri@codeaurora.org>
+Subject: [PATCH v7 9/9] arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+Date:   Thu, 30 Jul 2020 17:56:43 +0530
+Message-Id: <1596112003-31663-10-git-send-email-gokulsri@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596112003-31663-1-git-send-email-gokulsri@codeaurora.org>
 References: <1596112003-31663-1-git-send-email-gokulsri@codeaurora.org>
@@ -48,158 +48,161 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PRNG clock is needed by the secure PIL, support for the same
-is added in subsequent patches.
+Enable remoteproc WCSS PIL driver with glink
+and ssr subdevices. Also configures shared memory
+and enables smp2p and mailboxes required for IPC.
 
 Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_wcss.c | 65 +++++++++++++++++++++++++++----------
- 1 file changed, 47 insertions(+), 18 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 121 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index efb16a4..e13d1c6 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -91,19 +91,6 @@ enum {
- 	WCSS_QCS404,
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 8a64e60..08ec6cf 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -76,12 +76,66 @@
+ 		method = "smc";
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		smem_region: memory@4ab00000 {
++			no-map;
++			reg = <0x0 0x4ab00000 0x0 0x00100000>;
++		};
++
++		q6_region: memory@4b000000 {
++			no-map;
++			reg = <0x0 0x4b000000 0x0 0x05f00000>;
++		};
++	};
++
+ 	firmware {
+ 		scm {
+ 			compatible = "qcom,scm-ipq8074", "qcom,scm";
+ 		};
+ 	};
+ 
++	tcsr_mutex: hwlock@193d000 {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x80>;
++		#hwlock-cells = <1>;
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_region>;
++		hwlocks = <&tcsr_mutex 0>;
++	};
++
++	wcss: smp2p-wcss {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <0 322 1>;
++
++		mboxes = <&apcs_glb 9>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		wcss_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			qcom,smp2p-feature-ssr-ack;
++			#qcom,smem-state-cells = <1>;
++		};
++
++		wcss_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
+ 	soc: soc {
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x1>;
+@@ -687,5 +741,72 @@
+ 				      "axi_m_sticky";
+ 			status = "disabled";
+ 		};
++
++		tcsr_q6: syscon@1945000 {
++			compatible = "syscon";
++			reg = <0x01945000 0xe000>;
++		};
++
++		tcsr_mutex_regs: syscon@193d000 {
++			compatible = "syscon";
++			reg = <0x01905000 0x8000>;
++		};
++
++		apcs_glb: mailbox@b111000 {
++			compatible = "qcom,ipq8074-apcs-apps-global";
++			reg = <0x0b111000 0x1000>;
++
++			#mbox-cells = <1>;
++		};
++
++		q6v5_wcss: q6v5_wcss@cd00000 {
++			compatible = "qcom,ipq8074-wcss-pil";
++			reg = <0x0cd00000 0x4040>,
++			      <0x004ab000 0x20>;
++			reg-names = "qdsp6",
++				    "rmb";
++			qca,auto-restart;
++			qca,extended-intc;
++			interrupts-extended = <&intc 0 325 1>,
++					      <&wcss_smp2p_in 0 0>,
++					      <&wcss_smp2p_in 1 0>,
++					      <&wcss_smp2p_in 2 0>,
++					      <&wcss_smp2p_in 3 0>;
++			interrupt-names = "wdog",
++					  "fatal",
++					  "ready",
++					  "handover",
++					  "stop-ack";
++
++			resets = <&gcc GCC_WCSSAON_RESET>,
++				 <&gcc GCC_WCSS_BCR>,
++				 <&gcc GCC_WCSS_Q6_BCR>;
++
++			reset-names = "wcss_aon_reset",
++				      "wcss_reset",
++				      "wcss_q6_reset";
++
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "prng";
++
++			qcom,halt-regs = <&tcsr_q6 0xa000 0xd000 0x0>;
++
++			qcom,smem-states = <&wcss_smp2p_out 0>,
++					   <&wcss_smp2p_out 1>;
++			qcom,smem-state-names = "shutdown",
++						"stop";
++
++			memory-region = <&q6_region>;
++
++			glink-edge {
++				interrupts = <GIC_SPI 321 IRQ_TYPE_EDGE_RISING>;
++				qcom,remote-pid = <1>;
++				mboxes = <&apcs_glb 8>;
++
++				rpm_requests {
++					qcom,glink-channels = "IPCRTR";
++				};
++			};
++		};
+ 	};
  };
- 
--struct wcss_data {
--	const char *firmware_name;
--	unsigned int crash_reason_smem;
--	u32 version;
--	bool aon_reset_required;
--	bool wcss_q6_reset_required;
--	const char *ssr_name;
--	const char *sysmon_name;
--	int ssctl_id;
--	const struct rproc_ops *ops;
--	bool requires_force_stop;
--};
--
- struct q6v5_wcss {
- 	struct device *dev;
- 
-@@ -128,6 +115,7 @@ struct q6v5_wcss {
- 	struct clk *qdsp6ss_xo_cbcr;
- 	struct clk *qdsp6ss_core_gfmux;
- 	struct clk *lcc_bcr_sleep;
-+	struct clk *prng_clk;
- 	struct regulator *cx_supply;
- 	struct qcom_sysmon *sysmon;
- 
-@@ -151,6 +139,21 @@ struct q6v5_wcss {
- 	struct qcom_rproc_ssr ssr_subdev;
- };
- 
-+struct wcss_data {
-+	int (*init_clock)(struct q6v5_wcss *wcss);
-+	int (*init_regulator)(struct q6v5_wcss *wcss);
-+	const char *firmware_name;
-+	unsigned int crash_reason_smem;
-+	u32 version;
-+	bool aon_reset_required;
-+	bool wcss_q6_reset_required;
-+	const char *ssr_name;
-+	const char *sysmon_name;
-+	int ssctl_id;
-+	const struct rproc_ops *ops;
-+	bool requires_force_stop;
-+};
-+
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
- {
- 	int ret;
-@@ -240,6 +243,12 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 	struct q6v5_wcss *wcss = rproc->priv;
- 	int ret;
- 
-+	ret = clk_prepare_enable(wcss->prng_clk);
-+	if (ret) {
-+		dev_err(wcss->dev, "prng clock enable failed\n");
-+		return ret;
-+	}
-+
- 	qcom_q6v5_prepare(&wcss->q6v5);
- 
- 	/* Release Q6 and WCSS reset */
-@@ -732,6 +741,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 			return ret;
- 	}
- 
-+	clk_disable_unprepare(wcss->prng_clk);
- 	qcom_q6v5_unprepare(&wcss->q6v5);
- 
- 	return 0;
-@@ -896,7 +906,21 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
- 	return 0;
- }
- 
--static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
-+static int ipq8074_init_clock(struct q6v5_wcss *wcss)
-+{
-+	int ret;
-+
-+	wcss->prng_clk = devm_clk_get(wcss->dev, "prng");
-+	if (IS_ERR(wcss->prng_clk)) {
-+		ret = PTR_ERR(wcss->prng_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "Failed to get prng clock\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int qcs404_init_clock(struct q6v5_wcss *wcss)
- {
- 	int ret;
- 
-@@ -986,7 +1010,7 @@ static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
- 	return 0;
- }
- 
--static int q6v5_wcss_init_regulator(struct q6v5_wcss *wcss)
-+static int qcs404_init_regulator(struct q6v5_wcss *wcss)
- {
- 	wcss->cx_supply = devm_regulator_get(wcss->dev, "cx");
- 	if (IS_ERR(wcss->cx_supply))
-@@ -1030,12 +1054,14 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	if (wcss->version == WCSS_QCS404) {
--		ret = q6v5_wcss_init_clock(wcss);
-+	if (desc->init_clock) {
-+		ret = desc->init_clock(wcss);
- 		if (ret)
- 			goto free_rproc;
-+	}
- 
--		ret = q6v5_wcss_init_regulator(wcss);
-+	if (desc->init_regulator) {
-+		ret = desc->init_regulator(wcss);
- 		if (ret)
- 			goto free_rproc;
- 	}
-@@ -1080,6 +1106,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- }
- 
- static const struct wcss_data wcss_ipq8074_res_init = {
-+	.init_clock = ipq8074_init_clock,
- 	.firmware_name = "IPQ8074/q6_fw.mdt",
- 	.crash_reason_smem = WCSS_CRASH_REASON,
- 	.aon_reset_required = true,
-@@ -1089,6 +1116,8 @@ static const struct wcss_data wcss_ipq8074_res_init = {
- };
- 
- static const struct wcss_data wcss_qcs404_res_init = {
-+	.init_clock = qcs404_init_clock,
-+	.init_regulator = qcs404_init_regulator,
- 	.crash_reason_smem = WCSS_CRASH_REASON,
- 	.firmware_name = "wcnss.mdt",
- 	.version = WCSS_QCS404,
 -- 
 2.7.4
 
