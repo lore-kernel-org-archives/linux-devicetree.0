@@ -2,188 +2,155 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0C2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46F6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6722075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:35:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="KFlJEgPG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fjTot1oz"
+	by mail.kernel.org (Postfix) with ESMTP id D003820809
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgG3Jfb (ORCPT
+        id S1727044AbgG3Jjf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:35:31 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:34915 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727044AbgG3Jfa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:35:30 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4009E5803E1;
-        Thu, 30 Jul 2020 05:35:29 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 30 Jul 2020 05:35:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=Ut3ZT+W4+yvZB
-        ml4M9YqRFh4J0n6Jv0UFC/16UuzKdY=; b=KFlJEgPGwRR2vjF0Q+fs8WD5ootQt
-        hfzR4ffcWWrBRiergQgLJrKzOI3qxt/Em54M68T9w1cWD4J43FRyaIeq+ZY+f7l6
-        +jjtodTVelkQhYaUilqC8wSTz5Xlo0dCaQVXsGm/BHtx/ga+JSy7isz52KWljpG8
-        oc/S88ZziRnfdk+0GE6mVcwZCYLqoXRn5Y0+Tn7uexo59+B/xQdO9a/4Z3Tcc2Ze
-        z5z8fJvBdEjrgunBTHB0JckOy/riYMn62GH2ErbjivTxtCEkrGSc+/PXgUzClpm7
-        6Uu/w9hNdv+2yx16rPQobuXYFGHWhWbZl4UIBw5AwH0p+OEpkTPztvO2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=Ut3ZT+W4+yvZBml4M9YqRFh4J0n6Jv0UFC/16UuzKdY=; b=fjTot1oz
-        CZm/loUuLwTOf0Xfikhwh/ZO2+/IQs51WirESIfZjNE2IuGUQVZJfcYkD3VNpU65
-        4RCy85uxDVmGsRfJsLwvlzajTYSO5kMBgbF6iT1ulDBbEQaLWGWRbDwe3VOGgMJO
-        mMc/ZluGrOVyHrcMXCwHTVGXdUvRXyLP5BSI2XTquaxmHTfuFnFaTB88QHHn7Ako
-        v2T3aiDc76uVtEaRiEcUFL001gG+MsvBGYg25jfkDpJ8h5N24s6mG0ExrSgbn0zZ
-        i58hFmU5BNNEiCo3smOwzFqCnsOvAWE+TcRGtJnM/7tyrsOj3wQYv+aAw8vgSPNz
-        pa85ZsHRaditRQ==
-X-ME-Sender: <xms:YZQiX0o5WY-1gULOk4Mlb87TvnfdSTSr_c5G-BLg_5YYjzCGWKZEOw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrieeigddukecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpedvkeelveefffekjefhffeuleetleefudeifeehuddugffghffhffehveevheeh
-    vdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:YZQiX6r8o3ZdGDBFBQKvl2YbKTvNt2WmoXjiSg0RqKdR6MojgZMV6Q>
-    <xmx:YZQiX5Oo6yjuL4Ilb6Zc7sRrqGz6jAJXnZviA01pRzVen4lfPCoKoA>
-    <xmx:YZQiX75EMkxVaIOokm1p-WJ06rHAlc0tH_2s7SmruAOjF7Sp7m0jtQ>
-    <xmx:YZQiXwERekDBNxOMoFeA2m6g5Wd5RNnyn2ns5kQ4vNE1UVExhebczQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CD5843280065;
-        Thu, 30 Jul 2020 05:35:28 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
-        dri-devel@lists.freedesktop.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 4/4] [DO NOT MERGE] ARM: dts: sun7i: Enable LVDS Dual-Link on the Cubieboard
-Date:   Thu, 30 Jul 2020 11:35:04 +0200
-Message-Id: <da488b254cfed95796561873f9b400c40f290796.1596101672.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.7029eefe5c5350920f91d4cd4cbc061466752f3c.1596101672.git-series.maxime@cerno.tech>
-References: <cover.7029eefe5c5350920f91d4cd4cbc061466752f3c.1596101672.git-series.maxime@cerno.tech>
+        Thu, 30 Jul 2020 05:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbgG3Jjf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 05:39:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06AFC0619D2
+        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 02:39:34 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k1523-0007Np-Ud; Thu, 30 Jul 2020 11:39:23 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1k1522-0005le-Vb; Thu, 30 Jul 2020 11:39:22 +0200
+Message-ID: <3f4fd963bdf58e61715524fdb246481fb2b2d137.camel@pengutronix.de>
+Subject: Re: [PATCH 11/17] clk: imx: Add blk_ctrl combo driver
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Date:   Thu, 30 Jul 2020 11:39:22 +0200
+In-Reply-To: <20200730085508.ddxhb4rjnzwooh2z@fsr-ub1664-175>
+References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
+         <1596024483-21482-12-git-send-email-abel.vesa@nxp.com>
+         <d44e88a1408add6491897a8793b57ee0090fa4c6.camel@pengutronix.de>
+         <20200730085508.ddxhb4rjnzwooh2z@fsr-ub1664-175>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For the sake of the example, let's enable an LVDS Dual-Link display on a
-Cubieboard.
+On Thu, 2020-07-30 at 11:55 +0300, Abel Vesa wrote:
+> On 20-07-29 14:46:28, Philipp Zabel wrote:
+> > Hi Abel,
+> > 
+> > On Wed, 2020-07-29 at 15:07 +0300, Abel Vesa wrote:
+> > > On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
+> 
+> [...]
+> 
+> > > +
+> > > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
+> > > +				  unsigned long id, bool assert)
+> > > +{
+> > > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
+> > > +			struct imx_blk_ctrl_drvdata, rcdev);
+> > > +	unsigned int offset = drvdata->rst_hws[id].offset;
+> > > +	unsigned int shift = drvdata->rst_hws[id].shift;
+> > > +	unsigned int mask = drvdata->rst_hws[id].mask;
+> > > +	void __iomem *reg_addr = drvdata->base + offset;
+> > > +	unsigned long flags;
+> > > +	u32 reg;
+> > > +
+> > > +	if (assert) {
+> > > +		pm_runtime_get_sync(rcdev->dev);
+> > > +		spin_lock_irqsave(&drvdata->lock, flags);
+> > > +		reg = readl(reg_addr);
+> > > +		writel(reg & ~(mask << shift), reg_addr);
+> > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> > > +	} else {
+> > > +		spin_lock_irqsave(&drvdata->lock, flags);
+> > > +		reg = readl(reg_addr);
+> > > +		writel(reg | (mask << shift), reg_addr);
+> > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> > > +		pm_runtime_put(rcdev->dev);
+> > 
+> > This still has the issue of potentially letting exclusive reset control
+> > users break the device usage counter.
+> > 
+> > Also shared reset control users start with deassert(), and you end probe
+> > with pm_runtime_put(), so the first shared reset control user that
+> > deasserts its reset will decrement the dev->power.usage_count to -1 ?
+> > For multiple resets being initially deasserted this would decrement
+> > multiple times.
+> > 
+> > I think you'll have to track the (number of) asserted reset bits in this
+> > reset controller and limit when to call pm_runtime_get/put_sync().
+> > 
+> 
+> Yes, you're right.
+> 
+> I'll add a mask, and for each assert, the according bit will get set, and 
+> for each deasssert the same bit will get cleared.
 
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 69 ++++++++++++++++++++++-
- 1 file changed, 69 insertions(+)
+> And when the mask has at least one bit set, the pm_runtime_get gets called
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index b8203e4ef21c..20278a27ec16 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -85,6 +85,49 @@
- 			gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>;
- 		};
- 	};
-+
-+	panel: panel {
-+		compatible = "panel-lvds";
-+		width-mm = <153>;
-+		height-mm = <90>;
-+		data-mapping = "vesa-24";
-+
-+		panel-timing {
-+			clock-frequency = <148500000>;
-+			hfront-porch = <88>;
-+			hactive = <1920>;
-+			hback-porch = <148>;
-+			hsync-len = <44>;
-+
-+			vfront-porch = <4>;
-+			vactive = <1080>;
-+			vback-porch = <36>;
-+			vsync-len = <5>;
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				dual-lvds-even-pixels;
-+
-+				panel_input_0: endpoint {
-+					remote-endpoint = <&tcon0_out_panel>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				dual-lvds-odd-pixels;
-+
-+				panel_input_1: endpoint {
-+					remote-endpoint = <&tcon1_out_panel>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &ahci {
-@@ -218,6 +261,32 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_lvds0_pins>;
-+	allwinner,lvds-companion = <&tcon1>;
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_panel: endpoint@0 {
-+		remote-endpoint = <&panel_input_0>;
-+	};
-+};
-+
-+&tcon1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_lvds1_pins>;
-+	allwinner,lvds-companion = <&tcon0>;
-+	status = "okay";
-+};
-+
-+&tcon1_out {
-+	tcon1_out_panel: endpoint@0 {
-+		remote-endpoint = <&panel_input_1>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
--- 
-git-series 0.9.1
+^ When the mask was 0 before but now has a bit set.
+
+> and when the mask is 0, the pm_runtime_put_sync will be called.
+
+^ When the mask had a bit set but now is 0.
+
+> Does that sound OK ?
+
+And the mask starts out as 0, as after the pm_runtime_put() in probe all
+reset lines are deasserted?
+
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int imx_blk_ctrl_reset_reset(struct reset_controller_dev *rcdev,
+> > > +					   unsigned long id)
+> > > +{
+> > > +	imx_blk_ctrl_reset_set(rcdev, id, true);
+> > > +	return imx_blk_ctrl_reset_set(rcdev, id, false);
+> > 
+> > Does this work for all peripherals? Are there none that require the
+> > reset line to be asserted for a certain number of bus clocks or similar?
+> 
+> As of now, there is no user that calls reset. All the users call the assert
+> and then deassert. As for the number of clocks for reset, I'll try to have a
+> chat to the HW design team and then come back with the information.
+
+Ok. If this is not required or can't be guaranteed to work, it may be
+better to just leave it out.
+
+regards
+Philipp
