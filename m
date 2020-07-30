@@ -2,157 +2,144 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77994C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5BAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5835D2075F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A952D20809
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 09:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="AL5BskQR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dy30OPps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgG3JSQ (ORCPT
+        id S1726819AbgG3JX6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 05:18:16 -0400
-Received: from vps.xff.cz ([195.181.215.36]:51866 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbgG3JSQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 30 Jul 2020 05:18:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1596100692; bh=HOOQYK09295xgAy28jQQY6G9ActTahF44D4teInPcZc=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=AL5BskQRTKQ2jtUjuXN5AlYRTEEoD9Yu79BpEqCpouulQKMRA9mLiMf2M11wyBQHx
-         VO2AnkKvpaCVGtLMT5+sLy0cxbcQPLXiMwuT00skkrIJ8UGZ9Ig02gK+stqpF4/ZYK
-         fxWKL7fR7MlXKcjEwTLEFa155Ph5W4PSBUtOQQDE=
-Date:   Thu, 30 Jul 2020 11:18:12 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/4] input: gpio-vibra: Allow to use vcc-supply alone
- to control the vibrator
-Message-ID: <20200730091812.7sia7w3waz2jj62a@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200714102303.3007896-1-megous@megous.com>
- <20200714102303.3007896-3-megous@megous.com>
- <20200730061939.GF1665100@dtor-ws>
+        Thu, 30 Jul 2020 05:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgG3JX5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 05:23:57 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5836CC061794;
+        Thu, 30 Jul 2020 02:23:57 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id r4so2879319pls.2;
+        Thu, 30 Jul 2020 02:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qEcfQyKopahyJ7cyN5C7qc3ogAAlzbIDe3eGdCZLDlg=;
+        b=Dy30OPpsunVqPQHRc8zKA0CNz1xj5tnGaAKB3bfCSkaCdEh/XzdiXvfg7q1kwQqaKr
+         P5DnoB9OnJyOILV4j6GHpZRuvoIFchtzfcoGRMr/jOiumprmJXYO4xk/lF0Yvl5xqx0Z
+         58tErr5r92NrX4WtqTq4Z9e3KLBFKI0hoQ0vD2chzDheOcO7rgq9vCKUORpnaNgVawo/
+         iPDCZ++2p+jbM58i54zHtdoaLT5oybQwz4LUwN5NpcrlHEzn9/1YG4sOHDukYbJ/opOY
+         xjphFAJlRere1Rj2hX3B7WfDcga/TZnmt40SBEeIbtVcEzqeVYdPXSRdsJT7d6V081pr
+         u7fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qEcfQyKopahyJ7cyN5C7qc3ogAAlzbIDe3eGdCZLDlg=;
+        b=AoCamPqn6KUGQ5cNUJMMsy4wKkSBSWoYV9JQr3vgv80lDeag/zYejAlT2BE2+nPyEm
+         dkuepQvbi+Sss6FvIeFoQSX8lkOMywz59p4Hh6eEc5F6Ri+B/csUyrDWVvElWa/oicNq
+         4tQ4jYQUh4131JqR7+rPAAKW0oya6NmH5VUrt7YzQ2M0BltKCtezJ/6jxP9/tAA6txz8
+         mfZY/vJYbIAJnFf6Qtl84W+cj5k6Ua5Samxl+3O8W62pbzUbAe5NOV6UOl4EBbNn/J1y
+         LWbD+Zllt3In/+D6K/XqCXBR95pDeahHA68O9bUmeSWe8bu2JW/QTZjSDP55jk5cK+OZ
+         srlQ==
+X-Gm-Message-State: AOAM5314BZGvy7V1Ez2adOcdeWrRAYt8ERVyBsxt6qy8Xg7wXqFaWxAF
+        fxYTKAla5RsCDt3MGQUU7gk=
+X-Google-Smtp-Source: ABdhPJx3WDwF3oqL6peA+8A4RFcrk+CQEEDrK8qZi7yLmtrQIv/rqJP1yDMF6/GNeb65q3Z8TOFNzw==
+X-Received: by 2002:a17:90a:1d46:: with SMTP id u6mr2182031pju.220.1596101036913;
+        Thu, 30 Jul 2020 02:23:56 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([103.29.143.67])
+        by smtp.gmail.com with ESMTPSA id s8sm5183803pfc.122.2020.07.30.02.23.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 Jul 2020 02:23:56 -0700 (PDT)
+From:   Yue Hu <zbestahu@gmail.com>
+To:     robh+dt@kernel.org, frowand.list@gmail.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        huyue2@yulong.com, zbestahu@163.com
+Subject: [PATCH] of: reserved-memory: remove duplicated call to of_get_flat_dt_prop() for no-map node
+Date:   Thu, 30 Jul 2020 17:23:53 +0800
+Message-Id: <20200730092353.15644-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.19.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730061939.GF1665100@dtor-ws>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Dmitry,
+From: Yue Hu <huyue2@yulong.com>
 
-thanks for looking into the patch. :)
+Just use nomap instead of the second call to of_get_flat_dt_prop(). And
+change nomap as a bool type due to != NULL operator. Also, correct comment
+about node of 'align' -> 'alignment'.
 
-On Wed, Jul 29, 2020 at 11:19:39PM -0700, Dmitry Torokhov wrote:
-> Hi Ondrej,
-> 
-> On Tue, Jul 14, 2020 at 12:23:01PM +0200, Ondrej Jirman wrote:
-> > Make enable-gpio optional to allow using this driver with boards that
-> > have vibrator connected to a power supply without intermediate gpio
-> > based enable circuitry.
-> > 
-> > Also avoid a case where neither regulator nor enable gpio is specified,
-> > and bail out in probe in such a case.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/input/misc/gpio-vibra.c | 14 ++++++++++----
-> >  1 file changed, 10 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-> > index f79f75595dd7..b3bb7e61ed1d 100644
-> > --- a/drivers/input/misc/gpio-vibra.c
-> > +++ b/drivers/input/misc/gpio-vibra.c
-> > @@ -39,7 +39,7 @@ static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
-> >  	struct device *pdev = vibrator->input->dev.parent;
-> >  	int err;
-> >  
-> > -	if (!vibrator->vcc_on) {
-> > +	if (vibrator->vcc && !vibrator->vcc_on) {
-> >  		err = regulator_enable(vibrator->vcc);
-> >  		if (err) {
-> >  			dev_err(pdev, "failed to enable regulator: %d\n", err);
-> > @@ -57,7 +57,7 @@ static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
-> >  {
-> >  	gpiod_set_value_cansleep(vibrator->gpio, 0);
-> >  
-> > -	if (vibrator->vcc_on) {
-> > +	if (vibrator->vcc && vibrator->vcc_on) {
-> >  		regulator_disable(vibrator->vcc);
-> >  		vibrator->vcc_on = false;
-> >  	}
-> > @@ -112,7 +112,7 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
-> >  	if (!vibrator->input)
-> >  		return -ENOMEM;
-> >  
-> > -	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> > +	vibrator->vcc = devm_regulator_get_optional(&pdev->dev, "vcc");
-> 
-> I know it is very surprising, but regulator_get_optional does not return
-> NULL when regulator is not present, but rather ERR_PTR(-ENODEV). You
-> need to replace it with NULL in the branch below, or change conditions
-> to !IS_ERR(virbrator->vcc) (and still handle -ENODEV in the branch
-> below).
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+---
+ drivers/of/of_reserved_mem.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Oops, I'll fix that in the next revision.
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 6877080..c255c7e 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -69,7 +69,7 @@ void __init fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+ 
+ /**
+  * __reserved_mem_alloc_size() - allocate reserved memory described by
+- *	'size', 'align'  and 'alloc-ranges' properties.
++ *	'size', 'alignment'  and 'alloc-ranges' properties.
+  */
+ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 	const char *uname, phys_addr_t *res_base, phys_addr_t *res_size)
+@@ -79,7 +79,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 	phys_addr_t base = 0, align = 0, size;
+ 	int len;
+ 	const __be32 *prop;
+-	int nomap;
++	bool nomap;
+ 	int ret;
+ 
+ 	prop = of_get_flat_dt_prop(node, "size", &len);
+@@ -92,8 +92,6 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 	}
+ 	size = dt_mem_next_cell(dt_root_size_cells, &prop);
+ 
+-	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+-
+ 	prop = of_get_flat_dt_prop(node, "alignment", &len);
+ 	if (prop) {
+ 		if (len != dt_root_addr_cells * sizeof(__be32)) {
+@@ -104,11 +102,13 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 		align = dt_mem_next_cell(dt_root_addr_cells, &prop);
+ 	}
+ 
++	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
++
+ 	/* Need adjust the alignment to satisfy the CMA requirement */
+ 	if (IS_ENABLED(CONFIG_CMA)
+ 	    && of_flat_dt_is_compatible(node, "shared-dma-pool")
+ 	    && of_get_flat_dt_prop(node, "reusable", NULL)
+-	    && !of_get_flat_dt_prop(node, "no-map", NULL)) {
++	    && !nomap) {
+ 		unsigned long order =
+ 			max_t(unsigned long, MAX_ORDER - 1, pageblock_order);
+ 
+@@ -247,7 +247,7 @@ void __init fdt_init_reserved_mem(void)
+ 		int len;
+ 		const __be32 *prop;
+ 		int err = 0;
+-		int nomap;
++		bool nomap;
+ 
+ 		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+ 		prop = of_get_flat_dt_prop(node, "phandle", &len);
+-- 
+1.9.1
 
-regards,
-	o.
-
-> >  	err = PTR_ERR_OR_ZERO(vibrator->vcc);
-> >  	if (err) {
-> >  		if (err != -EPROBE_DEFER)
-> > @@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
-> >  		return err;
-> >  	}
-> >  
-> > -	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-> > +	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
-> > +						 GPIOD_OUT_LOW);
-> >  	err = PTR_ERR_OR_ZERO(vibrator->gpio);
-> >  	if (err) {
-> >  		if (err != -EPROBE_DEFER)
-> > @@ -130,6 +131,11 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
-> >  		return err;
-> >  	}
-> >  
-> > +	if (!vibrator->vcc && !vibrator->gpio) {
-> > +		dev_err(&pdev->dev, "Neither gpio nor regulator provided\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> >  	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
-> >  
-> >  	vibrator->input->name = "gpio-vibrator";
-> > -- 
-> > 2.27.0
-> > 
-> 
-> Thanks.
-> 
-> -- 
-> Dmitry
