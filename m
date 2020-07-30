@@ -4,29 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F153FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1E9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB05B2082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF2E2082E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgG3P2g (ORCPT
+        id S1729938AbgG3P2v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:28:36 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57214 "EHLO
+        Thu, 30 Jul 2020 11:28:51 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57108 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729829AbgG3P2S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:28:18 -0400
+        with ESMTP id S1729745AbgG3P2P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:28:15 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1F36F8030866;
-        Thu, 30 Jul 2020 15:28:17 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 55E588040A68;
+        Thu, 30 Jul 2020 15:28:13 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c5PLTp3Bwkav; Thu, 30 Jul 2020 18:28:16 +0300 (MSK)
+        with ESMTP id bqbDTTc9Ijom; Thu, 30 Jul 2020 18:28:12 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Hoan Tran <hoan@os.amperecomputing.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -39,9 +38,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 08/10] gpio: dwapb: Get reset control by means of resource managed interface
-Date:   Thu, 30 Jul 2020 18:28:05 +0300
-Message-ID: <20200730152808.2955-9-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 02/10] gpio: dwapb: Add ngpios DT-property support
+Date:   Thu, 30 Jul 2020 18:27:59 +0300
+Message-ID: <20200730152808.2955-3-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200730152808.2955-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,78 +52,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The reset control interface provides the resource managed version of
-the reset_control_get() method. The only thing which needs to be also
-automated is the reset lane assertion on the device removal. It can be
-implemented by means of the custom action definition. After that the reset
-control will be purely managed by the device resources interface.
+Indeed generic GPIO DT-schema implies that number of GPIOs should be
+described by the "ngpios" property located under a GPIO-provider DT node.
+In that case it's redundant to have a vendor-specific "snps,nr-gpios"
+property describing the same setting. Moreover it might be errors prone.
+
+Since commit 93d2e4322aa7 ("of: platform: Batch fwnode parsing when adding
+all top level devices") the fwnode parsing is resumed after the vast
+majority of the platform devices are added. Implicitly that commit
+activates re-parsing of the whole device tree GPIOs-phandle properties
+detected having "-gpio/-gpios" suffixes. Since the vendor-specific number
+of GPIOs property is defined with "-gpios" suffix, then of_link_property()
+will consider it as a suffix-property with "#gpio-cells" structure, which
+obviously it doesn't have. As a result for two DW APB GPIO controllers
+we'll have the next errors printed.
+
+OF: /bus@1f059000/gpio@1f044000/gpio-port@0: could not find phandle
+OF: /bus@1f059000/gpio@1f045000/gpio-port@0: could not get #gpio-cells for /opp-table
+OF: /bus@1f059000/gpio@1f044000/gpio-port@0: could not find phandle
+OF: /bus@1f059000/gpio@1f045000/gpio-port@0: could not get #gpio-cells for /opp-table
+
+See, the kernel fwnode parsing procedure even tried to resolve the phandle
+ID, which it thought was the opp-table DT-node, while in fact it was just
+a number "32". What would happen if that magic number actually referred to
+a GPIO DT-node with "#gpio-cells" property defined?..
+
+In order to fix the problem let's mark the "snps,nr-gpios" property as
+deprecated and add the generic "ngpios" property support with the same
+purpose as the deprecated one. That and the errors log above shall
+motivate the platform developer to convert the DW APB GPIO DT-nodes to
+using the standard number of GPIOs property.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/gpio/gpio-dwapb.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 707e9087ca59..faac594287b3 100644
+index 1d8d55bd63aa..ccd80df16062 100644
 --- a/drivers/gpio/gpio-dwapb.c
 +++ b/drivers/gpio/gpio-dwapb.c
-@@ -621,6 +621,32 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
- 	return pdata;
- }
+@@ -594,7 +594,8 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
+ 			return ERR_PTR(-EINVAL);
+ 		}
  
-+static void dwapb_assert_reset(void *data)
-+{
-+	struct dwapb_gpio *gpio = data;
-+
-+	reset_control_assert(gpio->rst);
-+}
-+
-+static int dwapb_get_reset(struct dwapb_gpio *gpio)
-+{
-+	int err;
-+
-+	gpio->rst = devm_reset_control_get_optional_shared(gpio->dev, NULL);
-+	if (IS_ERR(gpio->rst)) {
-+		dev_err(gpio->dev, "Cannot get reset descriptor\n");
-+		return PTR_ERR(gpio->rst);
-+	}
-+
-+	err = reset_control_deassert(gpio->rst);
-+	if (err) {
-+		dev_err(gpio->dev, "Cannot deassert reset lane\n");
-+		return err;
-+	}
-+
-+	return devm_add_action_or_reset(gpio->dev, dwapb_assert_reset, gpio);
-+}
-+
- static const struct of_device_id dwapb_of_match[] = {
- 	{ .compatible = "snps,dw-apb-gpio", .data = (void *)0},
- 	{ .compatible = "apm,xgene-gpio-v2", .data = (void *)GPIO_REG_OFFSET_V2},
-@@ -660,11 +686,9 @@ static int dwapb_gpio_probe(struct platform_device *pdev)
- 	gpio->dev = &pdev->dev;
- 	gpio->nr_ports = pdata->nports;
- 
--	gpio->rst = devm_reset_control_get_optional_shared(dev, NULL);
--	if (IS_ERR(gpio->rst))
--		return PTR_ERR(gpio->rst);
--
--	reset_control_deassert(gpio->rst);
-+	err = dwapb_get_reset(gpio);
-+	if (err)
-+		return err;
- 
- 	gpio->ports = devm_kcalloc(&pdev->dev, gpio->nr_ports,
- 				   sizeof(*gpio->ports), GFP_KERNEL);
-@@ -714,7 +738,6 @@ static int dwapb_gpio_remove(struct platform_device *pdev)
- 	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
- 
- 	dwapb_gpio_unregister(gpio);
--	reset_control_assert(gpio->rst);
- 	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
- 
- 	return 0;
+-		if (fwnode_property_read_u32(fwnode, "snps,nr-gpios", &pp->ngpio)) {
++		if (fwnode_property_read_u32(fwnode, "ngpios", &pp->ngpio) &&
++		    fwnode_property_read_u32(fwnode, "snps,nr-gpios", &pp->ngpio)) {
+ 			dev_info(dev,
+ 				 "failed to get number of gpios for port%d\n",
+ 				 i);
 -- 
 2.27.0
 
