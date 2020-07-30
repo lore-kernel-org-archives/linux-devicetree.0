@@ -2,74 +2,82 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7DEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 18:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E6EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 19:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0622A22B40
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 18:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157412072A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 19:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaVnyEB4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T71glaAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgG3Sim (ORCPT
+        id S1730511AbgG3T0W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 14:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgG3Sim (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 14:38:42 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E40C061574;
-        Thu, 30 Jul 2020 11:38:41 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id l4so28899570ejd.13;
-        Thu, 30 Jul 2020 11:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=k300jlz7TJKTIPgAN5WfLt8mQVo5Ag09AL0277oqBzA=;
-        b=aaVnyEB4pqa62TrDBNnN9yAl3DHVKTn1xeTbCpKo/nmJO+kfgdLJahUpQmRCDe7Dm6
-         QkS5kSn0cqjO/G5Ovps50NYNR6CT8U53T/VeklDDdtTQqxMyd4sYRv/54zVZZNBHBeau
-         hXkyz944BsVAg3UaWds9eL5aqZVeWOPxyvE/5RPXvGlSEtvmMWDdxrrV82rl1nRJzkv1
-         vub3/gHugoPJ58JY0OIQKiIQc/Nzv6thxMQCBQ4RA3mP8CyI7F6w/LoFOq8hEG02JXB8
-         W2y7tRCfCNAiZT79FG+XLdtztqYmsS9AT8iEZ/vrOGaT7Ue/L5PjomFVnlGc9oPVfO/r
-         l2Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=k300jlz7TJKTIPgAN5WfLt8mQVo5Ag09AL0277oqBzA=;
-        b=F94w+PSGoThWR8Ma729pnKpkXKH8w1sJzjXFHJ0oh69Xr9O6kyyKQwcgPwaP3r1AOB
-         ZU5LCHUPd/z9H0aHxbtWs/KYzr3Whhg3Tc+h0Hkx83Sp2GucQPTMJQq8MEojFstybl8c
-         WsQWSxAb3KKVuzd8JS/p49UpiXQ3sa89a/Y9mOL4fdCn5Y4Y6+CKUYL3+MvtQh0BzXok
-         RNSQZCK00bS1je6gyLyHrUAA1tUwCu6rqeSLkzraMTjM4w4TukKSM+3XK7AQ1Wh73c9U
-         OeX2IovPYMFJxaLbkPX0oa6Duhen6jXJDuFt4yDsNlM//LG/FBvZij/Jyw6cIHnrJoKB
-         J3jQ==
-X-Gm-Message-State: AOAM531/ULTm0JeTYmw+/pVyMIPk3d4JzAzbKVUH8IeeDnMR/Tf9HUms
-        BjuzEw/Iil03F8O0MzJSM8SFTRF0Qv9/oLU9JpM=
-X-Google-Smtp-Source: ABdhPJy7AEQe1n+FA0S0bWIEfvPkeP85KFWnVYqUpehnBDqrXpJzxQ3ecbfhWawaCp9/siW/leV4dISdkd6DgnTqLoM=
-X-Received: by 2002:a17:906:c143:: with SMTP id dp3mr422623ejc.504.1596134320289;
- Thu, 30 Jul 2020 11:38:40 -0700 (PDT)
+        Thu, 30 Jul 2020 15:26:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44750 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbgG3T0V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 15:26:21 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06UJQFKu057848;
+        Thu, 30 Jul 2020 14:26:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596137175;
+        bh=sCkppKn5L7SzVpqcIP0Z28bMAlVEY8CVrkvmfxBVjx0=;
+        h=From:To:CC:Subject:Date;
+        b=T71glaAZfK/wvfLqPZZGNUexdtqWOQV+fBRzQYxRXiPO2PI8Qc+fvJTR0BS8gEEt3
+         yu2kx66atM9uClFRb5+2VOLYdk54uVohISDew4YMuq+qj3sDAKHwje44Njcq16RV2Z
+         p6k7AM/H0v7DyC0nY8T+/8w0OswxLNzLSeQ1qUbw=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UJQFbA112262;
+        Thu, 30 Jul 2020 14:26:15 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 30
+ Jul 2020 14:26:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 30 Jul 2020 14:26:15 -0500
+Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06UJQCp9052740;
+        Thu, 30 Jul 2020 14:26:13 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH 0/2] J7200: Add I2C support
+Date:   Fri, 31 Jul 2020 00:55:58 +0530
+Message-ID: <20200730192600.1872-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Thu, 30 Jul 2020 20:38:04 +0200
-Message-ID: <CAMS8qEXFXxt61bhHa_d+Mf9dJ0qqvkWnrq+8w13dVAuK6Q84Cg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: pm660: Fix missing pound sign in interrupt-cells
-To:     =?UTF-8?Q?=C5=81ukasz_Patron?= <priv.luk@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tested-by: Konrad Dybcio <konradybcio@gmail.com>
+Add I2C and I2C IO expanders nodes for J7200
 
-Konrad
+Based on top of https://lore.kernel.org/linux-arm-kernel/20200723084628.19241-1-lokeshvutla@ti.com/
+
+Vignesh Raghavendra (2):
+  arm64: dts: ti: j7200: Add I2C nodes
+  arm64: dts: ti: k3-j7200-common-proc-board: Add I2C IO expanders
+
+ .../dts/ti/k3-j7200-common-proc-board.dts     | 49 ++++++++++++
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 77 +++++++++++++++++++
+ .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      | 33 ++++++++
+ 3 files changed, 159 insertions(+)
+
+-- 
+2.28.0
+
