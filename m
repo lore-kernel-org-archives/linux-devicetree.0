@@ -2,100 +2,74 @@ Return-Path: <SRS0=Tykm=BJ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B4BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C03C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 16:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1F22082E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 15:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A0620838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 30 Jul 2020 16:12:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SFqwTAVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgG3PqR (ORCPT
+        id S1727072AbgG3QMo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 11:46:17 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57382 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729777AbgG3Pp5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 11:45:57 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F22EE8040A6A;
-        Thu, 30 Jul 2020 15:45:54 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 79Cw5IwDZWQc; Thu, 30 Jul 2020 18:45:54 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/5] dmaengine: dw: Discard dlen from the dev-to-mem xfer width calculation
-Date:   Thu, 30 Jul 2020 18:45:43 +0300
-Message-ID: <20200730154545.3965-4-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 30 Jul 2020 12:12:44 -0400
+Received: from crapouillou.net ([89.234.176.41]:46982 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgG3QMn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 12:12:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1596125561; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=4UC5bN4C11HykhL6jcWAyq2cNXGmAe0l6v/GKa5hpCM=;
+        b=SFqwTAVXyt5/QqdVrTJJqTsoraPX+mj2SLqfbWIh9748jBha+th241DbIgs37ngAPh6W6x
+        Eov0wNaCpN6UGlztkNMSt6q8xky2mTwpo82jhTM+DMII5ttFKAQKpLyJcgo3rDWwCVzEJR
+        QdvCWO1Vkls7RRlJp/4MS9tQmAlExXE=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/4] MIPS: head.S: Init fw_passed_dtb to builtin DTB
+Date:   Thu, 30 Jul 2020 18:12:30 +0200
+Message-Id: <20200730161233.61876-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Indeed in case of the DMA_DEV_TO_MEM DMA transfers it's enough to take the
-destination memory address and the destination master data width into
-account to calculate the CTLx.DST_TR_WIDTH setting of the memory
-peripheral. According to the DW DMAC IP-core Databook (page 66, Example 5)
-at the and of a DMA transfer when the DMA-channel internal FIFO is left
-with data less than for a single destination burst transaction, the
-destination peripheral will enter the Single Transaction Region where the
-DW DMA controller can complete a block transfer to the destination using
-single transactions (non-burst transaction of CTLx.DST_TR_WIDTH bytes). If
-there is no enough data in the DMA-channel internal FIFO for even a single
-non-burst transaction of CTLx.DST_TR_WIDTH bytes, then the channel enters
-"FIFO flush mode". That mode is activated to empty the FIFO and flush the
-leftovers out to the memory peripheral. The flushing procedure is simple.
-The data is sent to the memory by means of a set of single transaction of
-CTLx.SRC_TR_WIDTH bytes. To sum up it's redundant to use the LLPs length
-to find out the CTLx.DST_TR_WIDTH parameter value, since each DMA transfer
-will be completed with the CTLx.SRC_TR_WIDTH bytes transaction if it is
-required.
+Init the 'fw_passed_dtb' pointer to the buit-in Device Tree blob when it
+has been compiled in with CONFIG_BUILTIN_DTB.
 
-In this commit we remove the LLP entry length from the statement which
-calculates the memory peripheral DMA transaction width since it's
-redundant due to the feature described above. By doing so we'll improve
-the memory bus utilization and speed up the DMA-channel performance for
-DMA_DEV_TO_MEM DMA-transfers.
-
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/dma/dw/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/kernel/head.S | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 4700f2e87a62..3da0aea9fe25 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -723,7 +723,7 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 			lli_write(desc, sar, reg);
- 			lli_write(desc, dar, mem);
- 			lli_write(desc, ctlhi, ctlhi);
--			mem_width = __ffs(data_width | mem | dlen);
-+			mem_width = __ffs(data_width | mem);
- 			lli_write(desc, ctllo, ctllo | DWC_CTLL_DST_WIDTH(mem_width));
- 			desc->len = dlen;
+diff --git a/arch/mips/kernel/head.S b/arch/mips/kernel/head.S
+index 3b02ffe46304..7dd234e788e6 100644
+--- a/arch/mips/kernel/head.S
++++ b/arch/mips/kernel/head.S
+@@ -111,6 +111,12 @@ NESTED(kernel_entry, 16, sp)			# kernel entry point
+ 	move		t2, a1
+ 	beq		a0, t1, dtb_found
  
++#ifdef CONFIG_BUILTIN_DTB
++	PTR_LA	t2, __dtb_start
++	PTR_LA	t1, __dtb_end
++	bne		t1, t2, dtb_found
++#endif /* CONFIG_BUILTIN_DTB */
++
+ 	li		t2, 0
+ dtb_found:
+ #endif /* CONFIG_USE_OF */
 -- 
 2.27.0
 
