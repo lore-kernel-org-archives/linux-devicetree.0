@@ -2,101 +2,84 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52511C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ADCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A2E22B40
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U3E1dHh4"
+	by mail.kernel.org (Postfix) with ESMTP id F034E22B43
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596218028;
+	bh=YYLcZCHdY4A4VUdOJs2UDmzQcnxwkeaqns0wcevhtAM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D5FdeuNoEpGszmX85bHjarogX83zF6dgYfeOprGntgiYSxizJKV/fqxMXysUAVI5l
+	 fIoThJCjA6WCnQh78L8Msq1f/vEHlvSVzd1GciCpzUlxerlw+WVltr94HmmF9sU86/
+	 Ex8GL9lVh22rLaLNVBTeTJ+X/hcvkCnLyshEq8vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgGaRwC (ORCPT
+        id S2387529AbgGaRxr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:52:02 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43082 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729595AbgGaRwC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 13:52:02 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06VHps8D021098;
-        Fri, 31 Jul 2020 12:51:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596217914;
-        bh=u6Crb4yfZhq7ntoHoh8rws+4hwYhhRM8x9dTgzvcrmU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=U3E1dHh4Xf5hI9+ROErEYYey2yaF7zeNYXvpAIEtBe2iTSwjgD61qwl76nkbceoEj
-         IdzxYM3VZpogxnf7bc90h5c+DZ7szYpp6Jb86eTinMkimdG3HY5SackxmBNz+nzMGp
-         x+rKS+cGabplITs14kb04lfAlyYuSTlQnA5eKSKg=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06VHpsle019414
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 12:51:54 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 31
- Jul 2020 12:51:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 31 Jul 2020 12:51:53 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06VHpnD1019210;
-        Fri, 31 Jul 2020 12:51:50 -0500
-Subject: Re: [PATCH v5 00/10] irqchip: ti, sci-intr/inta: Update the dt
- bindings to accept different interrupt parents
-To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>
-References: <20200728051735.6187-1-lokeshvutla@ti.com>
- <d017863c0da4950016f6d4e7fb34d7c7@kernel.org>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <380e0f07-9e36-3413-1016-4cde6a22e26f@ti.com>
-Date:   Fri, 31 Jul 2020 23:21:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 31 Jul 2020 13:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730069AbgGaRxr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:53:47 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28D722B43;
+        Fri, 31 Jul 2020 17:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596218026;
+        bh=YYLcZCHdY4A4VUdOJs2UDmzQcnxwkeaqns0wcevhtAM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C4KlEpSgXN7Aaj5tK5AZK6HQgoKDrS1Y5tm93AImK925+eQz4jLa8x1freHiv91iy
+         trNbZb0ODUR0u3Ys2IIHU5SsTJ3li9svr87VFNlz00CqttOXC5wo9p1agzLKrJEoY1
+         gDZgK56jQ26VX0e0sURXYKuezY90OPwUEQzOcufQ=
+Received: by mail-oi1-f170.google.com with SMTP id v13so10804587oiv.13;
+        Fri, 31 Jul 2020 10:53:46 -0700 (PDT)
+X-Gm-Message-State: AOAM53074Ku4jzcI6M1QdgwTzYz5S7CbVqNLo98xGNWs6fSIsXUZ+BeN
+        APndfD/Ihl0CM6cib7nDULt0py3AQ0Y1wux/Ug==
+X-Google-Smtp-Source: ABdhPJyak9HSVsNL8SbsIPvigrG7TnsIRtLgH+VAaGhZvk5l27JI1wNfmLdXy63nRSFcEJbEIC19SD99QW9FiZu87tw=
+X-Received: by 2002:aca:190c:: with SMTP id l12mr3893214oii.147.1596218026159;
+ Fri, 31 Jul 2020 10:53:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d017863c0da4950016f6d4e7fb34d7c7@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200729004757.1901107-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200729004757.1901107-1-bjorn.andersson@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 31 Jul 2020 11:53:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKKQmLNwQDVJDOQdVZ9iYb4DXDCnfzsBE9q32jaRcefCg@mail.gmail.com>
+Message-ID: <CAL_JsqKKQmLNwQDVJDOQdVZ9iYb4DXDCnfzsBE9q32jaRcefCg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: hwlock: qcom: Remove invalid binding
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 6:48 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The Qualcomm hwlock is described in DeviceTree either directly on the
+> mmio bus or split between a syscon and a mutex node, but as noted in
+> [1] the latter is not valid DT, so remove any traces of this from the
+> binding.
+>
+> [1] https://lore.kernel.org/r/CAL_JsqLa9GBtbgN6aL7AQ=A6V-YRtPgYqh6XgM2kpx532+r4Gg@mail.gmail.com/
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../bindings/hwlock/qcom-hwspinlock.yaml      | 25 +------------------
+>  1 file changed, 1 insertion(+), 24 deletions(-)
 
-
-On 31/07/20 10:31 pm, Marc Zyngier wrote:
-> On 2020-07-28 06:17, Lokesh Vutla wrote:
->> Hi Marc,
->>     This is continuation of the RFC patches[0] regarding the driver
->> updates to support for following interrupt parent connection:
->> - INTR -> INTR
->> - INTA -> GICv3
->> The current existing driver assumes that INTR is always connected to
->> GICv3 and INTA is always connected to INTR.
-> 
-> I'm OK to take this if I can get an Ack from RobH on the three
-> DT patches that still need it.
-
-Thanks Marc.
-
-Rob,
-	If you don't have any further comments on DT bindings, can you please ack the
-patches?
-
-Thanks and regards,
-Lokesh
+Reviewed-by: Rob Herring <robh@kernel.org>
