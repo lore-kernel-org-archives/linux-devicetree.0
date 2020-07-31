@@ -2,143 +2,107 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8EAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C042C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCAEF2087C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A38122D01
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgGaTr1 (ORCPT
+        id S1726927AbgGaUIm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgGaTr0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 15:47:26 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EEAC061574
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 12:47:26 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k1azu-0001Q4-JC; Fri, 31 Jul 2020 21:47:18 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k1azs-00073r-Kt; Fri, 31 Jul 2020 21:47:16 +0200
-Date:   Fri, 31 Jul 2020 21:47:16 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, lee.jones@linaro.org,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v6 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200731194716.xxin4cl672tk2bkc@pengutronix.de>
-References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
- <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
+        Fri, 31 Jul 2020 16:08:42 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33436 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgGaUIm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:08:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 153928030808;
+        Fri, 31 Jul 2020 20:08:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id fMG0FJN5piFD; Fri, 31 Jul 2020 23:08:40 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/5] dmaengine: dw: Activate FIFO-mode for memory peripherals only
+Date:   Fri, 31 Jul 2020 23:08:23 +0300
+Message-ID: <20200731200826.9292-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rqwv5fncrzwpgutc"
-Content-Disposition: inline
-In-Reply-To: <63e44ece4c0da860963d0ff09dd52912d557c7e0.1595926036.git.rahul.tanwar@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+CFGx.FIFO_MODE field controls a DMA-controller "FIFO readiness" criterion.
+In other words it determines when to start pushing data out of a DW
+DMAC channel FIFO to a destination peripheral or from a source
+peripheral to the DW DMAC channel FIFO. Currently FIFO-mode is set to one
+for all DW DMAC channels. It means they are tuned to flush data out of
+FIFO (to a memory peripheral or by accepting the burst transaction
+requests) when FIFO is at least half-full (except at the end of the block
+transfer, when FIFO-flush mode is activated) and are configured to get
+data to the FIFO when it's at least half-empty.
 
---rqwv5fncrzwpgutc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Such configuration is a good choice when there is no slave device involved
+in the DMA transfers. In that case the number of bursts per block is less
+than when CFGx.FIFO_MODE = 0 and, hence, the bus utilization will improve.
+But the latency of DMA transfers may increase when CFGx.FIFO_MODE = 1,
+since DW DMAC will wait for the channel FIFO contents to be either
+half-full or half-empty depending on having the destination or the source
+transfers. Such latencies might be dangerous in case if the DMA transfers
+are expected to be performed from/to a slave device. Since normally
+peripheral devices keep data in internal FIFOs, any latency at some
+critical moment may cause one being overflown and consequently losing
+data. This especially concerns a case when either a peripheral device is
+relatively fast or the DW DMAC engine is relatively slow with respect to
+the incoming data pace.
 
-Hello,
+In order to solve problems, which might be caused by the latencies
+described above, let's enable the FIFO half-full/half-empty "FIFO
+readiness" criterion only for DMA transfers with no slave device involved.
+Thanks to the commit 99ba8b9b0d97 ("dmaengine: dw: Initialize channel
+before each transfer") we can freely do that in the generic
+dw_dma_initialize_chan() method.
 
-I only found a two minor issues this round, see below.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/dw/dw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, Jul 28, 2020 at 04:52:13PM +0800, Rahul Tanwar wrote:
-> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			 const struct pwm_state *state)
-> +{
-> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
-> +	u32 duty_cycle, val;
-> +	int ret;
-> +
-> +	/*
-> +	 * HW only supports only NORMAL polarity
-> +	 * HW supports fixed period
+diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
+index 7a085b3c1854..d9810980920a 100644
+--- a/drivers/dma/dw/dw.c
++++ b/drivers/dma/dw/dw.c
+@@ -14,7 +14,7 @@
+ static void dw_dma_initialize_chan(struct dw_dma_chan *dwc)
+ {
+ 	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+-	u32 cfghi = DWC_CFGH_FIFO_MODE;
++	u32 cfghi = is_slave_direction(dwc->direction) ? 0 : DWC_CFGH_FIFO_MODE;
+ 	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
+ 	bool hs_polarity = dwc->dws.hs_polarity;
+ 
+-- 
+2.27.0
 
-there are too many "only"s here. What about:
-
-	/*
-	 * The hardware only supports
-	 * normal polarity and fixed period.
-	 */
-
-?
-
-> +	 */
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
-> +	    state->period < pc->period)
-> +		return -EINVAL;
-> +
-> +	if (!state->enabled) {
-> +		ret =3D lgm_pwm_enable(chip, 0);
-> +		return ret;
-> +	}
-> +
-> +	duty_cycle =3D min_t(u64, state->duty_cycle, pc->period);
-> +	val =3D duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
-> +
-> +	ret =3D regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC=
-_MSK,
-> +				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (state->enabled)
-> +		ret =3D lgm_pwm_enable(chip, 1);
-
-You can do this unconditionally, if state->enabled is false the function
-returns a few lines above already.
-
-> +
-> +	return ret;
-> +}
-
-The rest looks fine.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---rqwv5fncrzwpgutc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8kdUEACgkQwfwUeK3K
-7AlDuAf+OUQhgl11k0kBK4onw9aPuszKQmlS6tkxYg4C+HMThoc1U6OiLARNbsYp
-CU8S45+GGemAHqf40rAPUW1uX9SRBv4nRuge3p7Rm8XZwyJIIVfpW1agD+Efgv7n
-AXUnLh3vBEpMMsdGhfpqCn0138mddsyAjzxgB4+cYgJJd3kB5d0LiIz2X8dhJ0bK
-LKGNNo6UzlYsvGOgzNkjNbdWJS+T1tKvAsiLtPCNS7s5DjCJ2YRm1AisZMXzoU6I
-tnhRwTKXG+wMFTfrRyqPpj97RSL66uJr4JU6nemrRcmMchTCT7BsZvsX7b94Ej2q
-R6q/XH/q+/G3+jV8bzgZAa1ffflMGQ==
-=QVLW
------END PGP SIGNATURE-----
-
---rqwv5fncrzwpgutc--
