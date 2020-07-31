@@ -2,115 +2,282 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46719C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF363C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 06:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 221282084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:52:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T+HPx65f"
+	by mail.kernel.org (Postfix) with ESMTP id CF30C206DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 06:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgGaFwj (ORCPT
+        id S1731490AbgGaGzp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 01:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730160AbgGaFwi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 01:52:38 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAADC061574
-        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 22:52:38 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id c6so6354548pje.1
-        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 22:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Is9oz0WcdC4oayT0KXurF1vgNIwYI6FKERnV58px2yQ=;
-        b=T+HPx65fgNudEBURjrQX4qo0u8tnu0dj3iDP1cV+BTCL8y/j4LUor93lChMKi1Jsk+
-         vdg9mhmNbqrhL9/udDjUihbN5Bolx1RV8wDqTi5lomByyhQ8dJ4yBgxcielqGHS62Ea7
-         rx9xxs5NmTukhbJaOzLTmx/OknOZlhE1tHBWwB0Bi45k68GIGqA7DH65mPwxMsc4OJIe
-         GvZvqU28Mnpfeynbn4fyApxImnpsNCDKfN78nVugs8mWGW0rEHNnd0a/vN0NvkpDtyU4
-         nrKtl3z8E6o8rnS8LVFBrZh2yKKD006qOH/vwY4THo3iltRqVVrYWuUafHyOnmLnzuIE
-         xRyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Is9oz0WcdC4oayT0KXurF1vgNIwYI6FKERnV58px2yQ=;
-        b=QHrcTLI2dKqXyyZGqjQlRukKn4pK2JsDG3h3uV9obX9Co7rCasc3Ep+us1A8kTAGjg
-         1JG82v9WHveELXMCqMs8/IbL7avDlUpU37vdOwl4VvOVTe2G+j619BCpqy4UlnzC+Uj8
-         ct2+FfdGiL5Yt4SjKoVPB67zgrNLfYxgx9FuczZFrQ0C3oAKjyPz5ql7XpGTK/jC+BiB
-         zr/lzpbXuZeuQldsy/Lnfg38V/eYyzjXjwcwSGW57e2luM1RkaFI9YgsEK4Eauam1eVp
-         o0ynpWSHAQIRbhSsmMfzTx3yZs3UPwdeCrQ3t037XNxxcnDUQYLl4Tk8FjY3DmEzgGH+
-         cP0g==
-X-Gm-Message-State: AOAM533eq0TOSEmROFKTYY43FWSnhc+GRyeV2Gh34lNAYE/UTWkrPN1D
-        +gmMugBhPNbiWO0DKCpJsZ9fmA==
-X-Google-Smtp-Source: ABdhPJwx3vBThEbfSeGBoL9hNvNZyU1Q4RNIGLqBu9j0WBIoW6X1bMtfz0R1dAPxFdWb26AAhctwbQ==
-X-Received: by 2002:a17:90a:fd82:: with SMTP id cx2mr2664842pjb.67.1596174757993;
-        Thu, 30 Jul 2020 22:52:37 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k6sm4360389pfp.87.2020.07.30.22.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 22:52:37 -0700 (PDT)
-Date:   Thu, 30 Jul 2020 22:48:50 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
-Message-ID: <20200731054850.GA20825@builder.lan>
-References: <20200704122809.73794-1-konradybcio@gmail.com>
- <20200704130922.GB21333@willie-the-truck>
- <20200705033511.GR388985@builder.lan>
- <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
- <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
- <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
- <20200721235650.GN388985@builder.lan>
- <CAMS8qEVXGddTdbrPwK3NJMx71HH0hoVyqiJG6-g9tiBRMRYZ8w@mail.gmail.com>
+        Fri, 31 Jul 2020 02:55:45 -0400
+Received: from mailout08.rmx.de ([94.199.90.85]:41351 "EHLO mailout08.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731224AbgGaGzp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 02:55:45 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout08.rmx.de (Postfix) with ESMTPS id 4BHyj80mYTzMt5g;
+        Fri, 31 Jul 2020 08:55:40 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BHyhl34Xtz2TTJr;
+        Fri, 31 Jul 2020 08:55:19 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.61) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 31 Jul
+ 2020 08:54:56 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] iio: light: as73211: New driver
+Date:   Fri, 31 Jul 2020 08:54:54 +0200
+Message-ID: <6453117.yIeBT9JUrU@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <CAHp75VeXqFgqiGUkS71B1xCD-60iQFS4EKJwVFX-L_dTUFMc6A@mail.gmail.com>
+References: <20200730104946.39148-1-ceggers@arri.de> <20200730104946.39148-3-ceggers@arri.de> <CAHp75VeXqFgqiGUkS71B1xCD-60iQFS4EKJwVFX-L_dTUFMc6A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMS8qEVXGddTdbrPwK3NJMx71HH0hoVyqiJG6-g9tiBRMRYZ8w@mail.gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.61]
+X-RMX-ID: 20200731-085521-4BHyhl34Xtz2TTJr-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 22 Jul 13:11 PDT 2020, Konrad Dybcio wrote:
+Good morning Andy,
 
-> >Is the problem on SDM630 that when you write to SMR/S2CR the device
-> >reboots? Or that when you start writing out the context bank
-> >configuration that trips the display and the device reboots?
+thank you again for the comprehensive feedback! Below I removed
+everything but possible open points. I'll send v4 soon.
+
+Best regards
+Christian
+
+On Thursday, 30 July 2020, 13:31:31 CEST, Andy Shevchenko wrote:
+> On Thu, Jul 30, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
+> > +/**
+> > + * struct as73211_data - Instance data for one AS73211
+> > + * @client: I2C client.
+> > + * @osr:    Cached Operational State Register.
+> > + * @creg1:  Cached Configuration Register 1.
+> > + * @creg2:  Cached Configuration Register 2.
+> > + * @creg3:  Cached Configuration Register 3.
+> > + * @buffer: Buffer for triggered measurements.
+> > + * @mutex:  Keeps cached registers in synch with the device.
+> > + * @completion: Completion to wait for interrupt.
+> > + */
+> > +struct as73211_data {
+> > +       struct i2c_client *client;
+> > +       u8 osr;
+> > +       u8 creg1;
+> > +       u8 creg2;
+> > +       u8 creg3;
+> > +       struct mutex mutex;
+> > +       struct completion completion;
+> > +};
 > 
-> I added some debug prints and the phone hangs after reaching the
-> seventh CB (with i=6) at
+> Actually Jonathan is correct -- the above has kernel doc issues.
+That's correct (the description for @buffer has to be removed). I didn't figure
+out how to automatically check for this. When building with V=1 C=1, I only get
+the message "as73211.c:76: info: Scanning doc for struct as73211_data".
+
+> > +static unsigned int as73211_integration_time_us(struct as73211_data
+> > *data)
+> > +{
+> > +       /* Integration time has 15 steps, the step size depends on the
+> > clock. */ +       unsigned int mul = BIT(3 - (data->creg3 & GENMASK(1,
+> > 0)));
+> Shouldn't be rather
 > 
-> arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
+> #define FOO  GENMASK(1, 0)
+> mul = BIT(FOO - (creg & FOO));
 > 
-> line in arm_smmu_device_reset.
+> with a descriptive name of FOO?
 > 
+> Or if both 3:s have different meaning, two definitions?
+In my opinion, both 3:s have different meaning. The first is from an arbitrary
+choosen mathematic transformation (like the 125). I've added appropriate
+documentation for this.
 
-Sounds like things are progressing nicely for a while there, presumably
-until the next time the display is being refreshed.
+> > +static unsigned int as73211_gain(struct as73211_data *data)
+> > +{
+> > 
+> > +       return BIT(0xb - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
+> 
+> Magic!
+Similarly it's difficult to find an eligible alias for the 0xb as the
+whole expression is constructed from viewing tables on the data sheet. I added
+some comment.
 
-Would you be willing to try out the following work in progress:
-https://lore.kernel.org/linux-arm-msm/20200717001619.325317-1-bjorn.andersson@linaro.org/
+> > +       if (data->client->irq) {
+> > +               dev_dbg(dev, "Waiting for completion...\n");
+> > +               ret = wait_for_completion_timeout(&data->completion,
+> > 
+> > +                                       2 + usecs_to_jiffies(time_us));
+> 
+> Magic!
+It turned out the the "2" can be removed, as the timeout is already rounded up.
 
-You need to adjust drivers/iommu/arm-smmu-impl.c so that
-arm_smmu_impl_init() will invoke qcom_smmu_impl_init() as it spots your
-apps smmu.
+> > +               usleep_range(time_us, time_us + 100000);
+> If time_us appears to be, let's say, 100. The above margin is way too high.
+range changed to (time_us, 2 * time_us).
 
-Regards,
-Bjorn
+> > +               if (osr_status & AS73211_OSR_SS) {
+> > +                       dev_warn(dev, "%s() Measurement has not
+> > stopped\n", __func__); +                       return -ETIME;
+> > +               }
+> > +               if (osr_status & AS73211_OSR_STATUS_NOTREADY) {
+> > +                       dev_warn(dev, "%s() Data is not ready\n",
+> > __func__); +                       return -ENODATA;
+> > +               }
+> > +               if (!(osr_status & AS73211_OSR_STATUS_NDATA)) {
+> > +                       dev_warn(dev, "%s() New new data available\n",
+> > __func__); +                       return -ENODATA;
+> > +               }
+> > +               if (osr_status & AS73211_OSR_STATUS_LDATA) {
+> > +                       dev_warn(dev, "%s() Result buffer overrun\n",
+> > __func__); +                       return -ENOBUFS;
+> > +               }
+> > +               if (osr_status & AS73211_OSR_STATUS_ADCOF) {
+> > +                       dev_warn(dev, "%s() ADC overflow\n", __func__);
+> > +                       return -EOVERFLOW;
+> > +               }
+> > +               if (osr_status & AS73211_OSR_STATUS_MRESOF) {
+> > +                       dev_warn(dev, "%s() Measurement result
+> > overflow\n", __func__); +                       return -EOVERFLOW;
+> > +               }
+> > +               if (osr_status & AS73211_OSR_STATUS_OUTCONVOF) {
+> > +                       dev_warn(dev, "%s() Timer overflow\n", __func__);
+> > +                       return -EOVERFLOW;
+> > +               }
+> > +               dev_warn(dev, "%s() Unexpected status value\n", __func__);
+> > +               return -EIO;
+> > +       }
+> 
+> All above dev_warn() are wrong. Should be dev_err(). Otherwise all
+> return -ERRNO are wrong.
+I have changed everything to "dev_err".
+
+> > +               *val = BIT(data->creg3 & GENMASK(1, 0)) * 1024 * 1000;
+> 
+> 1000 is magic and 1024 either.
+Changed to 1024000 and added a comment.
+
+> 1000 is frequency multiplier? If it's not defined do it like
+>   #define HZ_PER_KHZ
+>   #define KHZ_PER_MHZ
+> or what is that?
+> 
+> ...
+> 
+> > +               *val = time_us / 1000000;
+> > +               *val2 = time_us % 1000000;
+> 
+> Ditto.
+> 
+> NSEC_PER_SEC or what?
+> 
+> ...
+> 
+> > +               int reg_bits, freq_kHz = val / 1000;  /* 1024, 2048, ...
+> > */
+> 
+> HZ_PER_KHZ?
+> 
+> ...
+> 
+> > +               if (val < 0 || (freq_kHz * 1000) != val || val2)
+> 
+> Ditto.
+I switched to existing defined where possible. But I wouldn't like to introduce
+this for every possible physical unit. Please check again in v4.
+
+> > +               return i2c_smbus_write_byte_data(data->client,
+> > AS73211_REG_CREG3, data->creg3);
+> Can it suddenly return positive number?
+The i2c_smbus_write_xxx() return 0 on success, but i2c_smbus_read_xxx return
+the value read from the register...
+
+> > +       struct iio_dev *indio_dev = pf->indio_dev;
+> 
+> Ditto. Do you use indio_dev below (except one case)? I haven't noticed.
+indio_dev is used multiple times
+
+> > +       }
+> > +       /* Optimization for reading only color channels */
+> > +       else {
+> 
+> Should be one line. Had you run checkpatch?
+checkpatch didn't complain here (probably due to the comment). Changed anyway.
+
+> > +static ssize_t as73211_show_samp_freq_available(struct device *dev
+> > __always_unused, +                                                struct
+> > device_attribute *attr __always_unused, +                                
+> >                char *buf)
+> > +{
+> > +}
+> > +
+> > +static ssize_t as73211_show_int_time_available(struct device *dev,
+> > +                                               struct device_attribute
+> > *attr __always_unused, +                                              
+> > char *buf)
+> > +{
+> > +}
+> > +
+> > +static ssize_t as73211_show_hardwaregain_available(struct device *dev
+> > __always_unused, +                                                  
+> > struct device_attribute *attr __always_unused, +                         
+> >                          char *buf)
+> > +{
+> > +}
+> 
+> I guess above is an overkill. See example here
+> 
+> commit 6085102c494b8afc62bc093f8f32d6248f6d33e5
+> Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Date:   Mon Mar 23 12:41:26 2020 +0200
+> 
+>    iio: pressure: bmp280: Convert to use ->read_avail()
+> 
+> ...
+> 
+Converted to read_avail(). Please also review read_raw() for
+IIO_CHAN_INFO_OFFSET and IIO_CHAN_INFO_SCALE.
+
+> > +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_OSR);
+> > +       if (ret < 0)
+> > +               return ret;
+> 
+> Yeah, be consistent. Either all such call should be checked against
+> negative error code, or drop ' < 0' everywhere it applies.
+I decided to check for < 0 everywhere.
+
+> > +       if (client->irq) {
+> > +               ret = request_threaded_irq(client->irq,
+> > +                               NULL,
+> > +                               as73211_ready_handler,
+> > +                               IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+> 
+> Should not be IRQ trigger type here. (Do you have broken firmware table?)
+Of course you are right! This is already in the device tree:
+
+interrupts = <19 IRQ_TYPE_EDGE_RISING>;
+
+
+
+
