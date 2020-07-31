@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650DBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE64AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F59320838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF2520838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urMlrhKZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OK7jE8jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbgGaIUz (ORCPT
+        id S1731897AbgGaIU7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:20:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50464 "EHLO
+        Fri, 31 Jul 2020 04:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731510AbgGaIUz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 04:20:55 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49886C061574
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:20:55 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k13so8903613plk.13
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:20:55 -0700 (PDT)
+        with ESMTP id S1731510AbgGaIU6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 04:20:58 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC079C061574
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:20:58 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id w19so3735786plq.3
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:20:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EAeGAtIVrSVa+XtAyFFPGmEyfij/VDCDtDCWaTPKURs=;
-        b=urMlrhKZUiBFWXmWI2T2HlAKyOKQCOLXcjZUgEzXECrKoneutcgTx2MR8u5cvdRx2b
-         5w5a5KId5l5AXfxtmFe1tyUiwWnpqflR0bXUM00zlcHznPdoMt6GovBRhWBz4eUcShsR
-         xJFJxyb+fLQ905DEgZmhjUv2xnffLg+JDEk9I8CZ20x2/sw1IVLQjJ7laOvYw+zO9CBl
-         17N0ykXKwg2UixfAKN8iF+ICpK1j0S86JA7XWN5erclB8zcoa2eLQpxrZjOTLyHKDpqg
-         y2j5z/7EUJM9XuK66+M0Yf7XK6otjAllnJPSU4pLUDmtlz3omTB2Wgh53UbUbNdzCCDJ
-         Asiw==
+        bh=YTWKAn3+2FJLU6pvEHBBRL1vMfMKNpM5AF+rpxplthM=;
+        b=OK7jE8jhsDzB3Zk+Dhp1+73UDIg/RQ9fSdRENbMxrXIS1jPzaEVwrpnVpUvnFFNRiM
+         aHTesh1aohQoNJMxesBTd4eBo0aKJQmIHCP42HCPWRX2wGmlNhqiA2zRrxJHDF0KKomJ
+         zdAoK+rx/dSMfjeD9O8r7XnwLf2WUOg5q9DJPS+38rHC5ObaBm9HUL3xvY0xNhaRCAOQ
+         8SZ3OkvzPQ7Dv6CJX6hnZPJwG36u4eEw7tMzOugR1Lf7+BcX3fxRJ+b71X4qQj2lV/LK
+         wPadv9PN8Fmrp4wz4ewyzR+NTFKl0DfsCxJ5nEJVx+zvQbBaNcLsQHnaffVqweiqPdqU
+         P6HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EAeGAtIVrSVa+XtAyFFPGmEyfij/VDCDtDCWaTPKURs=;
-        b=f4BpJaREuD4TVHRBA/GQhTo7VefFGpVQfq0a38RdwdjbAl6Vf5ELtdOUZZ3qoqYxMF
-         aqXAtQED5h/8o4Sz8r37YliqZfmoY4E9dqGWoGpn1NUf3EvEMOyHB0nZcdL1Ag11YAVw
-         bPILZ0RDg4RB/wCe3x6tEslbCnq/C6dpsaZmjvAB7zLwkFW7c2MA6/UpHcaC0IfqU51H
-         Ujtecm5EEwQctZa/2SmnHt0yTu+auJWn9n4hVMycY2XMsln2jHrrZh4dkxOEbgc4Evnb
-         FQ8XS3xVvzDnSN0YBNgYqdGetJNbHiAsY71IDA2UBvunjXeF9051fo/y7bYFxlLu5lBt
-         /Y8g==
-X-Gm-Message-State: AOAM533QAvnFYg1sx1piXEPWU/iM1LZwd//rJ22EEKCyur+UjuffNgiv
-        8rUCo7hMUYDzNs/3ErSGpnX6athJ
-X-Google-Smtp-Source: ABdhPJxgL0lhx3Q80JazIJvxeeNOZVy7i1JZ3IU+YYaa6/GwlMKp/GJSxz3GT1+wEgUPcZAd1BogsA==
-X-Received: by 2002:a17:902:b902:: with SMTP id bf2mr2805513plb.100.1596183654722;
-        Fri, 31 Jul 2020 01:20:54 -0700 (PDT)
+        bh=YTWKAn3+2FJLU6pvEHBBRL1vMfMKNpM5AF+rpxplthM=;
+        b=Z1bC6ljPw6PMsViOfdEMKIeG0MNb2eG9/x8qmqBQSjNATPSvHA891Lp+i30v9G89KH
+         xfCvnAI7QIi3QwvEQOe4LnKXBlz0lLxCzApoVkLJVgtM6dhf1VXS3JxT4Trq3mqUBBR+
+         +XSWf0IWDrpPKeFoMRJbiUfja4LjhbqgBi4Oz2j/zoYLAEXoHe2/OcPGsmaNLmUk1tBL
+         ihz0yb+5SkApA7R7Fk9qEjzTo4nL/n05wAAQ2vcboYlt3tjz5wEGshgJFqTf/atAXeSi
+         Zx216LGCqAL6nDWxUZmylGX0d57rZnPi7d5B/1L/EMlfqAvm0e8OvWCFDRXu/x76/Ouo
+         w6PQ==
+X-Gm-Message-State: AOAM531X2sm+riBNp9feaMhRr80mHQ2EuyrOQwJp0MbjTnvpQOtF47LD
+        1YGxgqB86pc2cW1rXZzeNqkzyBQK
+X-Google-Smtp-Source: ABdhPJznzaliEY53DnCVMcPVQnzQIh7a4ERWAc2r8pTCt1Kl7Fsz0IHLW3+EVOVE+3u+E15t5KG7Eg==
+X-Received: by 2002:aa7:9357:: with SMTP id 23mr2683678pfn.278.1596183658173;
+        Fri, 31 Jul 2020 01:20:58 -0700 (PDT)
 Received: from localhost.localdomain ([45.114.62.37])
-        by smtp.gmail.com with ESMTPSA id 202sm5892917pfy.6.2020.07.31.01.20.51
+        by smtp.gmail.com with ESMTPSA id 202sm5892917pfy.6.2020.07.31.01.20.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 01:20:54 -0700 (PDT)
+        Fri, 31 Jul 2020 01:20:57 -0700 (PDT)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
@@ -68,9 +68,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v2 1/3] arm64: dts: amlogic: meson-gx: add missing ethernet reset ID
-Date:   Fri, 31 Jul 2020 08:20:41 +0000
-Message-Id: <20200731082043.1682-2-linux.amoon@gmail.com>
+Subject: [PATCH v2 2/3] arm64: dts: amlogic: meson-axg: add missing ethernet reset ID
+Date:   Fri, 31 Jul 2020 08:20:42 +0000
+Message-Id: <20200731082043.1682-3-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200731082043.1682-1-linux.amoon@gmail.com>
 References: <20200731082043.1682-1-linux.amoon@gmail.com>
@@ -89,30 +89,22 @@ Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 Changes V2
 -Rebased on linux-next-20200730
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 0edd137151f8..726b91d3a905 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -13,6 +13,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/meson-gxbb-power.h>
-+#include <dt-bindings/reset/amlogic,meson-gxbb-reset.h>
- #include <dt-bindings/thermal/thermal.h>
- 
- / {
-@@ -575,6 +576,8 @@ ethmac: ethernet@c9410000 {
- 			interrupt-names = "macirq";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index b9efc8469265..8e134cb470d3 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -187,6 +187,8 @@ ethmac: ethernet@ff3f0000 {
+ 				      "timing-adjustment";
  			rx-fifo-depth = <4096>;
  			tx-fifo-depth = <2048>;
 +			resets = <&reset RESET_ETHERNET>;
 +			reset-names = "stmmaceth";
- 			power-domains = <&pwrc PWRC_GXBB_ETHERNET_MEM_ID>;
  			status = "disabled";
  		};
+ 
 -- 
 2.28.0
 
