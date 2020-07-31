@@ -6,96 +6,98 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB28C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A482C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5DC4208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8A422CB2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596226907;
-	bh=Redl61uZRuNF2+MYC0S6ZKG2g3Xg7R48v0ErMyM9D5g=;
+	s=default; t=1596227171;
+	bh=woY9YAVeZk94w/3tGUKkwzh3PdYEn/nEWYV+gRo4ylQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jtmJjwUQaK4lHd35F9VM24HuM6NhSlCpNDYgEaHvkbPJ4/N/AzznfGygOMcUiEXkP
-	 eAbZ34ukXIW3bCH5EdrXzm59phX8g2ApsNMQN6xUZNJfRXN/zW0BDcV8cneYqCruOt
-	 blMXsJI8XagEIMnwqO3J96OAXd/xGl5wQSNZSL0Q=
+	b=L08/cIFP9jPQRtKDjgha7f1E1biD8/4bXXL29BdqxaEcuLfBhBewsfKHwYY0YK68F
+	 LLFgh/yv3SENThAOIlICzX92jr42ad/rwnOneQfIqrYb3PeffYjh46Zn/Y55LLx4BV
+	 6CA9vsDzoa10XJO/mLpO2L24mDPQtTpJ+V3VvVSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgGaUVr (ORCPT
+        id S1727033AbgGaU0H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:21:47 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42562 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgGaUVq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:21:46 -0400
-Received: by mail-il1-f196.google.com with SMTP id i138so20450284ild.9;
-        Fri, 31 Jul 2020 13:21:46 -0700 (PDT)
+        Fri, 31 Jul 2020 16:26:07 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39964 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgGaU0G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:26:06 -0400
+Received: by mail-io1-f67.google.com with SMTP id l17so32888619iok.7;
+        Fri, 31 Jul 2020 13:26:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wPKQMrSu6SrwiTmJxF1yx529zC5bYwghqKth9/BpG0I=;
-        b=a4BgOEhYm/bn96E8hwWjCLXFTTyOXMVYWqVkmRTwGk38MvkFw440IPPauujN349wKU
-         Ns+p4F2i8VMZlKgx8u2N3VMIQC+dgeeGLMon3mzT4WcoFCeSTgVHO4ruOgqJURnsIitm
-         rymlcM0XB/ZhF4xKASoXzdznOqeamgH2X+jap5k2adRpTPXpRztlWBrWM+DuZWDwfaY9
-         7gIZ9AI1MU8O+TNnVdYnZ4+XXLNBslVQu8A1Tz018XRO08h4QoUBHi28DVT+owtKiXLY
-         KQbO9Tf3jDiu55KMhBHQVXR1daXkiJebKx6LOw1nGyL/A3CNlBci35dKosesRcGF4AFY
-         8Waw==
-X-Gm-Message-State: AOAM533zNY17ziUOwZhYJ1s6nlhrPuDZlXjhVLG9F4t7dBouuBeyabDx
-        yUpTTzZPSZh8vWuT1iAW0w==
-X-Google-Smtp-Source: ABdhPJzHXTn2ynX0uQxl+XB6A62isIcXXwVAM5y4pzlwGIE6kDD6K5VgZ+LIcMnnPq4UW1ncdGzsCA==
-X-Received: by 2002:a92:8453:: with SMTP id l80mr5714564ild.83.1596226905749;
-        Fri, 31 Jul 2020 13:21:45 -0700 (PDT)
+        bh=BGJ0cV6tlcyXT1xqGGOkGIW3JZcU+nzmQwF+b4XNxkk=;
+        b=Bx14m6H/LPyFSWX2VzgS4o4q1xTt0gNUTAEVBO4k1t60Bm+MT7osUy+TVAaneP7u31
+         QhXugoz5j+VWNQu3OzzePCRiGb3Fay3rW1GkgDo2zSzZL/QOOUEu46A3HhcKvIGiNlNn
+         lj8Fe5zv32lph9VPg+wsY5zGPE++x9fITIDs92WVbuckucVEqVt6yGTN45bwDpbn1DUt
+         ENyoM3JZ60/EmI/VHMaTn/2jguhx4JLPs1ndmadKn05OokM+QmkKNBIv3XfxIjfnltsQ
+         QNnM60CJgpamWMMD6cBY/ddYCyIJ3BaeF5IlcA6xIB8Za61wog6lQOyYfw5CilAFmItj
+         3KJA==
+X-Gm-Message-State: AOAM5324akj5nMQDo+LDKy9ywDnigm6jdWgVAy/mYWE3ERKa3z22oXHN
+        dVbF1mzWFCYVK1di3ekRCQ==
+X-Google-Smtp-Source: ABdhPJwE1oeviUbVjkAV9WCXrw2poWOORAGd9woxfUZAaudtQVnqWHqszu63PdcS8I49J5RJfronOg==
+X-Received: by 2002:a02:6009:: with SMTP id i9mr6756397jac.78.1596227165611;
+        Fri, 31 Jul 2020 13:26:05 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id m184sm5018983ioa.12.2020.07.31.13.21.44
+        by smtp.gmail.com with ESMTPSA id n1sm5322084ilo.68.2020.07.31.13.26.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 13:21:45 -0700 (PDT)
-Received: (nullmailer pid 716083 invoked by uid 1000);
-        Fri, 31 Jul 2020 20:21:43 -0000
-Date:   Fri, 31 Jul 2020 14:21:43 -0600
+        Fri, 31 Jul 2020 13:26:04 -0700 (PDT)
+Received: (nullmailer pid 722926 invoked by uid 1000);
+        Fri, 31 Jul 2020 20:26:00 -0000
+Date:   Fri, 31 Jul 2020 14:26:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     John Youn <John.Youn@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     freedreno@lists.freedesktop.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-clk@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        dri-devel@lists.freedesktop.org, zhengbin <zhengbin13@huawei.com>,
+        Sean Paul <sean@poorly.run>, Felipe Balbi <balbi@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-usb@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
+        martin.botka1@gmail.com, Brian Masney <masneyb@onstation.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 06/12] usb: devicetree: Include USB SSP Gen X x Y
-Message-ID: <20200731202143.GA715967@bogus>
-References: <cover.1595727196.git.thinhn@synopsys.com>
- <3cf8c20044d15dfa5e5113b3a532054b4f96c13f.1595727196.git.thinhn@synopsys.com>
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 2/9] phy: qcom-qusb2: Add support for SDM630/660
+Message-ID: <20200731202600.GA722818@bogus>
+References: <20200726111215.22361-1-konradybcio@gmail.com>
+ <20200726111215.22361-3-konradybcio@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3cf8c20044d15dfa5e5113b3a532054b4f96c13f.1595727196.git.thinhn@synopsys.com>
+In-Reply-To: <20200726111215.22361-3-konradybcio@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 25 Jul 2020 18:36:32 -0700, Thinh Nguyen wrote:
-> According to the USB 3.2 spec, a super-speed-plus device can operate at
-> gen2x2, gen2x1, or gen1x2. If the USB controller device supports
-> multiple lanes at different transfer rates, the user can specify the HW
-> capability via these new speed strings:
+On Sun, 26 Jul 2020 13:11:59 +0200, Konrad Dybcio wrote:
+> QUSB on these SoCs actually uses *almost* the same
+> configuration that msm8996 does, so we can reuse
+> the phy_cfg from there with just a single change
+> (se clock scheme).
 > 
-> "super-speed-plus-gen2x2"
-> "super-speed-plus-gen2x1"
-> "super-speed-plus-gen1x2"
-> 
-> If the argument is simply "super-speed-plus", USB controllers should
-> default to their maximum transfer rate and number of lanes.
-> 
-> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 > ---
-> Changes in v4:
-> - None
-> Changes in v3:
-> - Use "maximum-speed" to include both the num-lane and transfer rate for SSP
-> - Remove "num-lanes" and "lane-speed-mantissa-gbps" properties
-> Changes in v2:
-> - Make "num-lanes" and "lane-speed-mantissa-gbps" common USB properties
-> 
->  Documentation/devicetree/bindings/usb/generic.txt | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 1 +
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c                     | 7 ++++++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
