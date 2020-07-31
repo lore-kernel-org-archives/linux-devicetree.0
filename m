@@ -2,86 +2,194 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5492FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C922C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2275D21744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA50B208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596234640;
-	bh=sj1svGbLu4VLsjbLx0f2aUa4YTdFDLTxum8j43Otwzw=;
+	s=default; t=1596235234;
+	bh=mRsDkvKKu62Z1BCY0fD3PXr87Jikl9HYK4xq5PgIOas=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bYUQLCm99wFQ7Lsax0z3mQu55TXhZZbd7xuZAT6eW75IhdKwnmvXEuyVvYZfpzxNA
-	 xC9aka0agWhRzXbDdX0YeqNYzSBPq8TRyxceBBZdeDPShmhDWvQAVh3PfFiHiXnmec
-	 R6lnVJLAus4rPjz2GmvH21m/F2qOWrGLrjEQFs0s=
+	b=oZt8D3QsPzcJ/eQyzzKLsOUei0vCzuhj5g7K6QLEI0rW7xADG/NY4e+W8rJycn57M
+	 Aac9IPlTYWmJlMTeH3svSdyh/J26Qm/Z/xx95b4sya3gCRmzNqI2ji9bGERJhee82j
+	 per95B3s204DycwixXOXmyaC4p7SzX0oXVJoparE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgGaWaj (ORCPT
+        id S1726835AbgGaWkb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:30:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35114 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgGaWaj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:30:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id s189so25940404iod.2;
-        Fri, 31 Jul 2020 15:30:38 -0700 (PDT)
+        Fri, 31 Jul 2020 18:40:31 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43376 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaWka (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:40:30 -0400
+Received: by mail-il1-f196.google.com with SMTP id y18so18188358ilp.10;
+        Fri, 31 Jul 2020 15:40:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=45H1JgCHHdhQApbjvQq9Pb4Y3l2t3RueYD94Macm5D8=;
-        b=PfmdjgzIQr1Z1JXO3DdSLNrshnDhac2bqHxk0tAW+rybFQxvCXxN1k1gA3o2huU+eq
-         wfBBNaUscmmrcNKgNIb21JgNxmWP7Lb1y4SYYZdg/MUKGBvhY1ppttO67XhR45q2iptu
-         lm7Egh0jaFebdw1oV3x45+YbRCTqqEuZ5yak7+iimlpPnVnfhjnZV/SSefFB+sl8+N0j
-         PwuhsMYZfRabAXnuloh0DknMmkDAyT3msC0Mizdfj+obyOfh22RRZO4hEf4IT7tlsTw/
-         y1zn8M8CUdQkoxieFlYMs9lb9loDSdlPVXM2j/ti4nqToGF/qJNHgltTOw5VJoFbcDc8
-         z/ag==
-X-Gm-Message-State: AOAM531Vr2Q+luieS1PGL5gUrSk2uKPremFkESIl7UJZAu2nF6VdLboP
-        gDPHpIyk5VP51XsBypbjnw==
-X-Google-Smtp-Source: ABdhPJzZAaX6MlFfNyrl50UMUoKtOe2pALDSo+xUOpiSIJ57RHBGhOQHylD+u3088MEWzsbuB1YUyQ==
-X-Received: by 2002:a5e:d80e:: with SMTP id l14mr5802006iok.65.1596234638546;
-        Fri, 31 Jul 2020 15:30:38 -0700 (PDT)
+        bh=HfW9s2DGUedr2mUFf7i55ndR1OuYzXAhoJ0w+EZ2kis=;
+        b=im4nv6tYwP1mMyXBPqVrs1BBmlWOYzz+RRVg1AkoNNyEQ0XrnPa2cOwjSaRT728IgL
+         Eq4RCGAtZtWB39s4L22rM24sXssBBqMM0xdxRwGvStUyQI8i2sDMyQsdusmxPfT3PJh8
+         azlQ2z1KRCfMX+UuV6nJjNgGLlu0BXXtrNTzwLETVyKsIP/Nk4UboMuWRn+8eMulDcQH
+         gE+8On0L0tJubKNlpIG5104y2CAEzJRsZF6o/VJd5Wr+uPpHu3qECk/i4ar0xlZUVVwR
+         s/Tj2aDA2UAse6aJI2xLHUAAYwh0sc9A0SPfJo0MTAcM4ZRj3ais6JwKYOK1kueFydQV
+         sENA==
+X-Gm-Message-State: AOAM533Eitjmdzc3vRdIbq40m2CP6qZbDKCOwnNDuLe4Y/p95RP0UU8J
+        +Uz5RgkKjLWXZjBak9Le9w==
+X-Google-Smtp-Source: ABdhPJz6JvYVALKdg2VfBfWJh0CybxGekwW/qKcCum31wkZgSbPinffbdp+6olAeka8X9SswHlgntw==
+X-Received: by 2002:a92:150d:: with SMTP id v13mr5738888ilk.93.1596235229311;
+        Fri, 31 Jul 2020 15:40:29 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f132sm5171450ioa.45.2020.07.31.15.30.36
+        by smtp.gmail.com with ESMTPSA id b2sm5569581ilf.0.2020.07.31.15.40.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 15:30:38 -0700 (PDT)
-Received: (nullmailer pid 923415 invoked by uid 1000);
-        Fri, 31 Jul 2020 22:30:35 -0000
-Date:   Fri, 31 Jul 2020 16:30:35 -0600
+        Fri, 31 Jul 2020 15:40:28 -0700 (PDT)
+Received: (nullmailer pid 938876 invoked by uid 1000);
+        Fri, 31 Jul 2020 22:40:27 -0000
+Date:   Fri, 31 Jul 2020 16:40:27 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux-mtd@lists.infradead.org, Linux-imx@nxp.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org, han.xu@nxp.com,
-        richard@nod.at, vigneshr@ti.com, linux-kernel@vger.kernel.org,
-        miquel.raynal@bootlin.com, u.kleine-koenig@pengutronix.de
-Subject: Re: [PATCH 2/2] dt-bindings: mtd: Convert imx nand to json-schema
-Message-ID: <20200731223035.GA923337@bogus>
-References: <1596113004-15548-1-git-send-email-Anson.Huang@nxp.com>
- <1596113004-15548-2-git-send-email-Anson.Huang@nxp.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     sre@kernel.org, devicetree@vger.kernel.org, r-rivera-matos@ti.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: power: Add the bq25790 dt bindings
+Message-ID: <20200731224027.GA923778@bogus>
+References: <20200730145834.29227-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596113004-15548-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200730145834.29227-1-dmurphy@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Jul 2020 20:43:24 +0800, Anson Huang wrote:
-> Convert the i.MX nand controller binding to DT schema format
-> using json-schema.
+On Thu, Jul 30, 2020 at 09:58:33AM -0500, Dan Murphy wrote:
+> Add the bindings for the bq25790.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
->  Documentation/devicetree/bindings/mtd/mxc-nand.txt | 19 ----------
->  .../devicetree/bindings/mtd/mxc-nand.yaml          | 42 ++++++++++++++++++++++
->  2 files changed, 42 insertions(+), 19 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mtd/mxc-nand.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/mxc-nand.yaml
+>  .../bindings/power/supply/bq25790.yaml        | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq25790.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq25790.yaml b/Documentation/devicetree/bindings/power/supply/bq25790.yaml
+> new file mode 100644
+> index 000000000000..97dd539c1625
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/bq25790.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/bq25790.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI BQ25790 Switch Mode Buck-Boost Charger
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  BQ25790 is a highly integrated switch-mode buck-boost charger for 1-4 cell
+> +  Li-ion batteries and Li-polymer batteries. The device charges a battery from a
+> +  wide range of input sources including legacy USB adapters to high voltage USB
+> +  PD adapters and traditional barrel adapters.
+> +
+> +allOf:
+> +  - $ref: power-supply.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,bq25790
+> +      - ti,bq25792
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,watchdog-timer:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Watchdog timer in milli seconds. 0 (default) disables the watchdog.
 
-Applied, thanks!
+Add a standard unit suffix and you can drop the type. And maybe 
+s/timer/timeout/ would be a bit clearer.
+
+Also:
+
+default: 0
+
+> +    minimum: 0
+> +    maximum: 160000
+> +    enum: [ 0, 500, 1000, 2000, 20000, 40000, 80000, 160000]
+> +
+> +  input-voltage-limit-microvolt:
+> +    description: |
+> +      Minimum input voltage limit in micro volts with a 100000 micro volt step.
+> +    minimum: 3600000
+> +    maximum: 22000000
+> +
+> +  input-current-limit-microamp:
+> +    description: |
+> +      Maximum input current limit in micro amps with a 100000 micro amp step.
+> +    minimum: 100000
+> +    maximum: 3300000
+> +
+> +  monitored-battery:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle to the battery node being monitored
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - monitored-battery
+
+Add:
+
+unevaluatedProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    bat: battery {
+> +      compatible = "simple-battery";
+> +      constant-charge-current-max-microamp = <2000000>;
+> +      constant-charge-voltage-max-microvolt = <4200000>;
+> +      precharge-current-microamp = <160000>;
+> +      charge-term-current-microamp = <160000>;
+> +    };
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bq25790: charger@6b {
+> +          compatible = "ti,bq25790";
+> +          reg = <0x6b>;
+> +          interrupt-parent = <&gpio1>;
+> +          interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+
+Not documented.
+
+> +          ti,watchdog-timer = <2000>;
+> +          input-current-limit = <3000000>;
+> +          input-voltage-limit = <4500000>;
+
+Doesn't match the schema.
+
+> +          monitored-battery = <&bat>;
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.28.0
+> 
