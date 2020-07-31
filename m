@@ -2,146 +2,97 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145BAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB877C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60B6208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:25:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBd+OOex"
+	by mail.kernel.org (Postfix) with ESMTP id AC682208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596224094;
+	bh=m+JnSD6UxYGIM1KtfQPLz7NxtA1CV0Xi4yzn8SY89n0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X8mP5xHpDPheRnpiJ+3R7nZS8HWJOKT2hQoWx+OndFl6HW5ifGApoQMRiM+a+viHz
+	 8WTZXX9Vj54Ye1BB3wq7GWvoFemL9jWfvwAwfB1ZBSHh16qJ7FzoK2Rg87LW/EgSnm
+	 7KXXGw2kzRWMDNW1ePT3w2GKFzExyTDWy+OZwurw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgGaTZF (ORCPT
+        id S1726757AbgGaTey (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgGaTZF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 15:25:05 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBA3C061574;
-        Fri, 31 Jul 2020 12:25:05 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh1so4781684plb.12;
-        Fri, 31 Jul 2020 12:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9pK9YxNDC0/VTWpHCG22pJNOCDuzWfEcGOr/zEEo8BE=;
-        b=XBd+OOexs2Z8ND+gERscZBxLz213YJLlec75OS6XoV9oYuBZyefnW4FsZ7oSkTNqsC
-         Njzmi5cfhT14ZSJu22lnFcmQcewBjythBILINDLxtKku50PqDk+sgOu94WtvAIefZYVh
-         jaPeXjDWlgpvzWjY32EEq+D0GYJyUdmiaUZBZDgtpiFQ4CdFis2GYNdBR+O7f3DMUUwh
-         IjMNjSOHx3otvZScyWLhPKQTIdLSfPWgIWzxLIdV7EYY8UJFZQMpM68bWPyZqxj1LdQn
-         5yCIVj74Rxant6fyq25OlY8mhmPfU/qndyvUYUSpG5wPHDWITvEVwKbaTViSKlGzYY/4
-         ie6g==
+        Fri, 31 Jul 2020 15:34:54 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38011 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgGaTex (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 15:34:53 -0400
+Received: by mail-io1-f68.google.com with SMTP id l1so32739308ioh.5;
+        Fri, 31 Jul 2020 12:34:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9pK9YxNDC0/VTWpHCG22pJNOCDuzWfEcGOr/zEEo8BE=;
-        b=N92oHOe8RZsDFs7paXCWGb7jn2BskZzP5Nyrt0B5Y0a3svTKxpdKNKLOD78Zqe7xuB
-         3hrb3INprlcCKF2uDWpomo90bMCv8uPeYb9LqxyWrz6YT5G2SJmm5+VWXyMF1ueYHSzY
-         Tz+EkCMprr8Hz9Eto7709W+UBrSnd2Dp0BBmPlgPFmV3HabXguijjSJuWyyAXU7iNOT/
-         I7xH1DvkkWFeeeeQQwsFi1UJ4PtUOK620r8wNHrmDPL0bcAfXU83b4mmifkX/hNtJFmp
-         LXYvDQ05nK+tdHZcscv1hVEnMtRMSTgYmmegs5aGz5p9HwnVtTO783PK+T6xIQuQGA2O
-         QhZQ==
-X-Gm-Message-State: AOAM532Y2yCMjUZL9iJna2zWOpX6EK10ucqu+f8I6FhoQF/y6X4rY5J7
-        08yM76WeNAW597bjC+2t/Qf8oF1mxC90hwDTecU=
-X-Google-Smtp-Source: ABdhPJzldNWSlk3wi4UR9LswD7any2VUHzu8VTDpg8lxslzUz6fFySQbukK9E9DDQ6KhSM7g6PtQXVMiwnwUWWDBXmI=
-X-Received: by 2002:a17:902:4b:: with SMTP id 69mr5018619pla.18.1596223504622;
- Fri, 31 Jul 2020 12:25:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pVSgcL7GtE1GSUUFa5tR37IcCV79BC/hP7BlkQgtdcw=;
+        b=cwPucYUy7M83Dt+qQsEtKw5euzd/5G3r7QxLY5AGdZikj3/Q0caytm03aw08Fw/U8d
+         UFEuQq7TycPrRbK9YNVMbuOkQjy0w4iAJIil8cHz8BbGI4l/HbkqRhbHRnBLYJECHNOy
+         H0GcCkgzNmzZqvIXhj3yhz1dLF0pi9Qj7b3c1u1qakjsgrH/ycyPTHGHVaai9C1QruH2
+         vGB/632Iesyf2GsY2Y650obKvIcsYGv+eMYg1TAaSJRpFKwSglo2U+5MmOEFM7pe8yr0
+         bE2ViKXXHRjGe64zx9CTizWmc7yl3P5iNn/CEQFYxDIquR0aXpUgHsrGE6D+t0otdaZ4
+         mZiw==
+X-Gm-Message-State: AOAM532uzdfHYi6Px6ZaAiv+iR4kXtNHykdDMWMQtr+jgQ9bwjgG00gi
+        uOfNghXIuNVxgA/QvpE7Aw==
+X-Google-Smtp-Source: ABdhPJzTwWzSWdu5Ht4AzCpdTYI+subwwHxjfOOZ5tXzv7Rcj1YJ3aVynSdu5Wr6nxEEdbMr4g7nbQ==
+X-Received: by 2002:a05:6602:2fcf:: with SMTP id v15mr5083954iow.78.1596224092882;
+        Fri, 31 Jul 2020 12:34:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id f20sm5172514ilj.62.2020.07.31.12.34.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 12:34:51 -0700 (PDT)
+Received: (nullmailer pid 641081 invoked by uid 1000);
+        Fri, 31 Jul 2020 19:34:48 -0000
+Date:   Fri, 31 Jul 2020 13:34:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Shawn Guo <shawnguo@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        NXP Linux Team <linux-imx@nxp.com>, agx@sigxcpu.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, lukas@mntmn.com,
+        Lucas Stach <l.stach@pengutronix.de>,
+        devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v9 5/5] dt-bindings: display: imx: add bindings for DCSS
+Message-ID: <20200731193448.GA640642@bogus>
+References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+ <20200731081836.3048-6-laurentiu.palcu@oss.nxp.com>
 MIME-Version: 1.0
-References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
-In-Reply-To: <20200731104555.v3.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 22:24:47 +0300
-Message-ID: <CAHp75VeMGtnhCEuMODNO3K6JfFTbm=gLr4yZdZHV-JsBW0eS_A@mail.gmail.com>
-Subject: Re: [PATCH v3 06/15] iio: sx9310: Fixes various memory handling
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731081836.3048-6-laurentiu.palcu@oss.nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
->
-> Makes use __aligned(8) to ensure that the timestamp is correctly aligned
-> when we call io_push_to_buffers_with_timestamp().
-> Also makes use of sizeof() for regmap_bulk_read instead of static value.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Daniel Campello <campello@chromium.org>
+On Fri, 31 Jul 2020 11:18:33 +0300, Laurentiu Palcu wrote:
+> From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> 
+> Add bindings for iMX8MQ Display Controller Subsystem.
+> 
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 > ---
->
-> Changes in v3:
->  - Changed buffer to struct type to align timestamp memory properly.
->
-> Changes in v2:
->  - Fixed commit message from "iio: sx9310: Align memory"
->
->  drivers/iio/proximity/sx9310.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index 2ed062d01634bc..c46584b4817b4a 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -132,8 +132,11 @@ struct sx9310_data {
->          */
->         bool prox_stat[SX9310_NUM_CHANNELS];
->         bool trigger_enabled;
-> -       __be16 buffer[SX9310_NUM_CHANNELS +
-> -                     4]; /* 64-bit data + 64-bit timestamp */
-> +       /* Ensure correct alignment of timestamp when present. */
-> +       struct {
-> +               __be16 channels[SX9310_NUM_CHANNELS];
-> +               s64 ts __aligned(8);
-> +       } buffer;
->         /* Remember enabled channels and sample rate during suspend. */
->         unsigned int suspend_ctrl0;
->         struct completion completion;
-> @@ -346,7 +349,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
->         if (ret < 0)
->                 return ret;
->
-> -       return regmap_bulk_read(data->regmap, chan->address, val, 2);
-> +       return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
->  }
->
->  /*
-> @@ -697,10 +700,10 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
->                 if (ret < 0)
->                         goto out;
->
-> -               data->buffer[i++] = val;
-> +               data->buffer.channels[i++] = val;
->         }
->
-> -       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-> +       iio_push_to_buffers_with_timestamp(indio_dev, data->buffer.channels,
->                                            pf->timestamp);
->
->  out:
-> --
-> 2.28.0.163.g6104cc2f0b6-goog
->
+> Changes in v9:
+>  * Include imx8mq-clock.h in the example so we can use clock names
+>    instead of their values;
+> 
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 ++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> 
 
-
---
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Rob Herring <robh@kernel.org>
