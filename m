@@ -2,96 +2,95 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABDDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 13:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817A0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 14:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E99921744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 13:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596202854;
-	bh=riof81UgLdZ5axTp6J4xR8oi2LabGN/mqTM5OX3Fh/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=koXa4kBHJ+nok8bTEAey5IYae9t1kQTEalApORj2RIXtx0BUFf3dTqKJHoGYcsUPa
-	 wj13xhfz5u6fmF7P1AoVxzIK70ozwtvmx5e61hh1jIMifn2G+o04Dv10+LwBc9X4bE
-	 NFO56bgqvEhqKz4jkRxlPtBGsqFH7rN0NgJNlAfI=
+	by mail.kernel.org (Postfix) with ESMTP id 5E23B206DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 14:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="GtFv6CAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbgGaNkv (ORCPT
+        id S2387431AbgGaOJ4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 09:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42690 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 10:09:56 -0400
+Received: from vern.gendns.com ([98.142.107.122]:59974 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgGaNkv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 09:40:51 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06C37208E4;
-        Fri, 31 Jul 2020 13:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596202850;
-        bh=riof81UgLdZ5axTp6J4xR8oi2LabGN/mqTM5OX3Fh/M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g8ysFyQqaVcSpSIdvRUMr5R3BABkOWypD4M46SccCky92oCrgUL0d8ko3C7hJ3suQ
-         jQg+Si2gK2vktoLknjAhepLhg/bCwOmE/GaVetbU6fUJXMtwh9S/lsr3PtHTX596AE
-         uH4Cf7z+G9TI3XrCziJuOC1ryxB1Pz/IlourZU20=
-Date:   Fri, 31 Jul 2020 15:40:45 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v6 00/10] Support for Tegra video capture from
- external sensor
-Message-ID: <20200731134045.GA1679@kunai>
-References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+        id S1728206AbgGaOJ4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 10:09:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=uhr1FkrbzJP+ktsQ0F06FBzGwyo/2pwFjqU1eObbgKI=; b=GtFv6CAZhVAD4dCEZa/ZzJslzX
+        8oNvux7EQ3kc3SNhHO44VYEXi7IRKrmGVpTp+W6n8Ut8UfiYSZFoW07RAW5SdX479Azrr0y6dI/Ey
+        cTzq10mnJFT1EIFzp3fQkdG3YvZOyfzpCZeNs8X5kNZu0TdEhRwArBNawKO9zMll4maVQZpVgffKq
+        xwwmKvKn03W/9V1+jO1oKjBUeY04EzT8rdR1P8U0GkDPI0lwZCDhAEPl2uo2Xb2BixU5Os9CZj6gF
+        L6TZmnp+stBbthHGBcMw3fDfdaWuwP1l7JITHTKFDyz9yryk5F87sKmDTJ/1dm2l8yIg0wNaPQlm6
+        l5UI3I+g==;
+Received: from [2600:1700:4830:165f::19e] (port=57672)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k1VjK-0003Z3-S1; Fri, 31 Jul 2020 10:09:51 -0400
+Subject: Re: [PATCH v4 1/5] dt-bindings: irqchip: Add PRU-ICSS interrupt
+ controller bindings
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>, "Anna, Suman" <s-anna@ti.com>,
+        robh+dt@kernel.org, Lee Jones <lee.jones@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Mills, William" <wmills@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-2-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <01bac597-c1a0-1851-b630-a79929777a16@lechnology.com>
+ <CAMxfBF6Ru1Fm1oWDyrSM=kBdCUe+eUDChqDgoYo4ziVr-8c50Q@mail.gmail.com>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <19fbf4f6-ea75-3eb7-7e95-c7c9ce987996@lechnology.com>
+Date:   Fri, 31 Jul 2020 09:09:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
-Content-Disposition: inline
-In-Reply-To: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <CAMxfBF6Ru1Fm1oWDyrSM=kBdCUe+eUDChqDgoYo4ziVr-8c50Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 7/31/20 6:48 AM, Grzegorz Jaszczyk wrote:
+> On Wed, 29 Jul 2020 at 19:34, David Lechner <david@lechnology.com> wrote:
+>> It is not clear what the meaning of each cell is. Looking at later patches, it
+>> looks like the first cell is the PRU system event number, the second cell is the
+>> channel and the third cell is the host event number.
+> 
+> Ok, how about updating above description like this:
+> Client users shall use the PRU System event number (the interrupt source
+> that the client is interested in) [cell 1], PRU channel [cell 2] and PRU
+> host_intr (target) [cell 3] as the value of the interrupts property in their
+> node.  The system events can be mapped to some output host interrupts through 2
+> levels of many-to-one mapping i.e. events to channel mapping and channels to
+> host interrupts so through this property entire mapping is provided.
 
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jul 31, 2020 at 02:02:39AM -0700, Sowjanya Komatineni wrote:
-> This series adds support for video capture from external camera sensor to
-> Tegra video driver.
-
-No need anymore to CC me or the i2c-list, I think? Also, is this series
-really still RFC?
-
-
---17pEHd4RhPHOinZp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8kH1kACgkQFA3kzBSg
-Kbb2/A/9FLStog9+LDCFSypkjVVSofsann8AzQpWSWrl/rE78UpM4cNWs1erhcYM
-1UicYFZvmc6AGZHH6hFWx5prq+gyZzAhu26zNbRzscwtiOraCYE/6PvIvMKoqGVE
-HVwqQEQ6692jRLl8xvGqUfYmk7LfW7hpyAjK7CzHcrm3OIat6VBKmpoKX+K9J/ZV
-n9OH/eQW73rguUmq7R4NppeZzPXiDET8J22gqI9i3Pd0JEzFZs/5H7D/+B1UwaSU
-Nbb+BPGd0sXcp1Zhk93lNfFAPrkEv+GbMGtKgucqNoD5qYe7A7IvYxkM9e2+Zv61
-L+eM0pP/LM9esWIRxiFYVEQKw70X0ADQYICFgbgttn8gWnNoD6E74ZxhCopO1xM+
-LFHacxKl6kqy1pgQqRwh7Q8w9PbsdIQJf8gD2g8GvQpSjtKKa/yj+p26waMZSjQy
-513ETISiNAOh1Cz0fRgKr9NpmU/PuF1U7JH8tsqdjHl17A/v/q7+aElf5f55Me67
-wzwG/wXdTJXBycxXlrXxzP++NcFMKkhZ1tdFYuwxk4gdSLM+OSu9cIqsc6zXfNx6
-ZurpLW9TwAi8HoYu7A3k9ECcj2k5Xt/V4PrsCfnkFRxxr78dv70HYUclowzrOuPM
-k2q1a4dISCqVsHPATs6hdmiDGnvJVFWxKxD8jnVVhlIOgfdt+X0=
-=y7Wv
------END PGP SIGNATURE-----
-
---17pEHd4RhPHOinZp--
+Cell 3 is host_intr0-7? How would we map to other host events?
