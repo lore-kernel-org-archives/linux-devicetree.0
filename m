@@ -2,226 +2,134 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C93BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F519C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 670A220838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F339920838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fLOANyb1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kLtktgDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgGaIiW (ORCPT
+        id S1731736AbgGaIkg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:38:22 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:48365 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728412AbgGaIiW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 04:38:22 -0400
-X-Greylist: delayed 1767 seconds by postgrey-1.27 at vger.kernel.org; Fri, 31 Jul 2020 04:38:20 EDT
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06V82cGL009807;
-        Fri, 31 Jul 2020 10:08:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=duijA74hn6cm6wjqcWG4BwM4Dv82QSirbDAGiYHEvbM=;
- b=fLOANyb1hL4UcnLzmtSnyAC+bCnklq28UwMCQw8LGYbSEWnrtUkfqzOPhaN8eZkthTWb
- IdIi7n8B3stKbTXiKUcL8O0Z3PxVPeojF0kYa83H21mzMk9XArRCq3FcfOavqFSYCi6d
- 1UpqDWbopf03RKVYE90xjiVmM2Z6Y8xScv1v4552RAOH/tcw/4ahs92nBYqClxdvX15d
- hI4edFbJSPeTjfhHfrQc2j5n0VUs3iKkM/HxyyS8Z1xKNMMgDDTQY1NOHFdMQTxir9UW
- dW8prnb+XWqykVIJQb7kpgQG5QEhJxhGRJuLfcrZ9+VV99ffw9gCd5gu2MCU+HWJxHuw Sg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32ga72cdk3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 10:08:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 67CFB10002A;
-        Fri, 31 Jul 2020 10:08:14 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 30CAB21EB47;
-        Fri, 31 Jul 2020 10:08:14 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 10:08:13 +0200
-Subject: Re: [PATCH v5 3/3] ARM: dts: stm32: add initial support for
- stm32mp157-odyssey board
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Marcin Sloniewski <marcin.sloniewski@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mani@kernel.org>, <sam@ravnborg.org>, <linus.walleij@linaro.org>,
-        <heiko.stuebner@theobroma-systems.com>, <stephan@gerhold.net>,
-        <lkundrak@v3.sk>, <broonie@kernel.org>, <allen.chen@ite.com.tw>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20200724145107.35772-1-marcin.sloniewski@gmail.com>
- <20200724145107.35772-3-marcin.sloniewski@gmail.com>
- <4a160bb6-bc73-0a18-86c4-decd985104ad@pengutronix.de>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <9ab39ee2-d6db-73f5-5914-befd22a9bcfb@st.com>
-Date:   Fri, 31 Jul 2020 10:08:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 04:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730268AbgGaIkf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 04:40:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D802FC061575
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:40:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t6so3355476pjr.0
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hLoyOTSzLDQ51ZbDgjh9dBtvJJhP5tr3Wm8F7z1KJp4=;
+        b=kLtktgDT7wK6kb+GRIVgYIgjMj1Q9zyL3263W8/hcM8IocBdBKdKdeUWIuG2YcWJuw
+         owIX3/G2px/aecdN3/RT5vBPi5W7AXvDXV4aF4lOivG0ZpLsy2bLJW6qhwXCELjewcVU
+         76iWJ4aNwDz09t9sM9bHrlyBWuEtn1gagW/Vg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hLoyOTSzLDQ51ZbDgjh9dBtvJJhP5tr3Wm8F7z1KJp4=;
+        b=DSlU6vxxoj+OxdALbaoM4qRZNTiLGgEj02Y/Jza4oxYB2N/M4S2iuySzKLnnwPT7V1
+         c3Qirwk/Pbbn5Do2TesA1z1Ra0qzMIds+A4MW23nin+HVUzRfK7QW/jcDj+waPKp9o2d
+         HbBqfvymxXP8PsTndh9GkP8GUle7QIh2aEJeWJEjozxH84rmofImRYR37qDYkKBNMaAf
+         AlYNcdAsw2wAC3Yb/xeXqpLO6V8FcDTafV0KySPRsDVYwVeyNOw2GV5yTCiqYjtB2d4B
+         gX6ZAmS9JsUVsha1TogL7b/1m+lnD9o9TeQudWFkO7HpOlDhtek2cpAaEkqYEtA48zrp
+         kZjw==
+X-Gm-Message-State: AOAM532zTsM/yAci3IPZYtfrHJnkJuOgyiUA4sdEFsJczAMepPtKzUQk
+        pu+Izr/HhgvJbjl9hbdSs13+GA==
+X-Google-Smtp-Source: ABdhPJxis69iyu05nHzc4VnRq1YCk+CFnP8XU11HDYI1OHzqsIuE+QhGaGTRXtID4jo9NYYZYlLyAw==
+X-Received: by 2002:a17:90a:a60a:: with SMTP id c10mr3247968pjq.117.1596184835298;
+        Fri, 31 Jul 2020 01:40:35 -0700 (PDT)
+Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
+        by smtp.gmail.com with ESMTPSA id x10sm8856411pgp.47.2020.07.31.01.40.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 01:40:34 -0700 (PDT)
+From:   Cheng-Yi Chiang <cychiang@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Subject: [PATCH v3 0/2] Add documentation and machine driver for SC7180 sound card
+Date:   Fri, 31 Jul 2020 16:40:21 +0800
+Message-Id: <20200731084023.2678931-1-cychiang@chromium.org>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 MIME-Version: 1.0
-In-Reply-To: <4a160bb6-bc73-0a18-86c4-decd985104ad@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_02:2020-07-31,2020-07-31 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Note:
+- The machine driver patch depends on LPASS patch series so it is not ready to be merged now.
+  ASoC: qcom: Add support for SC7180 lpass variant https://patchwork.kernel.org/cover/11678133/
+- The machine driver patch is made by the collaboration of
+  Cheng-Yi Chiang <cychiang@chromium.org>
+  Rohit kumar <rohitkr@codeaurora.org>
+  Ajit Pandey <ajitp@codeaurora.org>
+  But Ajit has left codeaurora.
 
-...
+Changes from v1 to v2:
+- Ducumentation: Addressed all suggestions from Doug.
+- Machine driver:
+  - Fix comment style for license.
+  - Sort includes.
+  - Remove sc7180_snd_hw_params.
+  - Remove sc7180_dai_init and use aux device instead for headset jack registration.
+  - Statically define format for Primary MI2S.
+  - Atomic is not a concern because there is mutex in card to make sure
+    startup and shutdown happen sequentially.
+  - Fix missing return -EINVAL in startup.
+  - Use static sound card.
+  - Use devm_kzalloc to avoid kfree.
 
->> +
->> +&sdmmc2_d47_pins_a {
->> +	pins {
->> +		pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
->> +			 <STM32_PINMUX('A', 9, AF10)>, /* SDMMC2_D5 */
->> +			 <STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
->> +			 <STM32_PINMUX('C', 7, AF10)>; /* SDMMC2_D7 */
->> +	};
->> +};
->> +
->> +&sdmmc2_d47_sleep_pins_a {
->> +	pins {
->> +		pinmux = <STM32_PINMUX('A', 8, ANALOG)>, /* SDMMC2_D4 */
->> +			 <STM32_PINMUX('A', 9, ANALOG)>, /* SDMMC2_D5 */
->> +			 <STM32_PINMUX('E', 5, ANALOG)>, /* SDMMC2_D6 */
->> +			 <STM32_PINMUX('C', 7, ANALOG)>; /* SDMMC2_D7 */
->> +	};
->> +};
-> 
-> When I sent out the device trees for the lxa-mc1, Alex wanted
-> all pinctrl nodes to be collected in stm32mp15-pinctrl.dtsi.
-> 
-> @Alex, should this be done here as well?
+Changes from v2 to v3:
+- Ducumentation: Addressed suggestions from Srini.
+- Machine driver:
+  - Reuse qcom_snd_parse_of to parse properties.
+  - Remove playback-only and capture-only.
+  - Misc fixes to address comments.
 
-Hi,
+Thanks for the review!
+Ajit Pandey (1):
+  ASoC: qcom: sc7180: Add machine driver for sound card registration
 
-Sorry for the late answer. Yes it has to be defined in 
-stm32mp15-pinctrl.dtsi. If at the end there are too much definitions for 
-the same pins or group of pins, I'll find a smarter way for pin 
-definition, but currently all pin definitions have to be done in 
-stm32mp15-pinctrl.dtsi.
+Cheng-Yi Chiang (1):
+  ASoC: qcom: dt-bindings: Add sc7180 machine bindings
 
-cheers
-Alex
+ .../bindings/sound/qcom,sc7180.yaml           | 113 ++++++++
+ sound/soc/qcom/Kconfig                        |  12 +
+ sound/soc/qcom/Makefile                       |   2 +
+ sound/soc/qcom/sc7180.c                       | 244 ++++++++++++++++++
+ 4 files changed, 371 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+ create mode 100644 sound/soc/qcom/sc7180.c
 
-> 
->> +
->> +&sdmmc2 {
->> +	pinctrl-names = "default", "opendrain", "sleep";
->> +	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_a>;
->> +	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_a>;
->> +	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_a>;
->> +	non-removable;
->> +	no-sd;
->> +	no-sdio;
->> +	st,neg-edge;
->> +	bus-width = <8>;
->> +	vmmc-supply = <&v3v3>;
->> +	vqmmc-supply = <&v3v3>;
->> +	mmc-ddr-3_3v;
->> +	status = "okay";
->> +};
->> +
->> diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
->> new file mode 100644
->> index 000000000000..619243807842
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
->> @@ -0,0 +1,73 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->> +/*
->> + * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "stm32mp157c-odyssey-som.dtsi"
->> +
->> +/ {
->> +	model = "Seeed Studio Odyssey-STM32MP157C Board";
->> +	compatible = "seeed,stm32mp157c-odyssey",
->> +		     "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
->> +
->> +	aliases {
->> +		ethernet0 = &ethernet0;
->> +		serial0 = &uart4;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +};
->> +
->> +&ethernet0 {
->> +	status = "okay";
->> +	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
->> +	pinctrl-1 = <&ethernet0_rgmii_sleep_pins_a>;
->> +	pinctrl-names = "default", "sleep";
->> +	phy-mode = "rgmii-id";
->> +	max-speed = <1000>;
->> +	phy-handle = <&phy0>;
->> +
->> +	mdio0 {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		compatible = "snps,dwmac-mdio";
->> +		phy0: ethernet-phy@7 { /* KSZ9031RN */
->> +			reg = <7>;
-> 
-> reset-gpios is missing. I see that the vendor u-boot does it
-> in board code, but you don't want Linux to depend on this.
-> 
->> +		};
->> +	};
->> +};
->> +
->> +&i2c1 {
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&i2c1_pins_a>;
->> +	pinctrl-1 = <&i2c1_sleep_pins_a>;
->> +	i2c-scl-rising-time-ns = <100>;
->> +	i2c-scl-falling-time-ns = <7>;
->> +	status = "okay";
->> +	/delete-property/dmas;
->> +	/delete-property/dma-names;
->> +};
->> +
->> +&sdmmc1 {
->> +	pinctrl-names = "default", "opendrain", "sleep";
->> +	pinctrl-0 = <&sdmmc1_b4_pins_a>;
->> +	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
->> +	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
->> +	cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
->> +	disable-wp;
->> +	st,neg-edge;
->> +	bus-width = <4>;
->> +	vmmc-supply = <&v3v3>;
->> +	status = "okay";
->> +};
->> +
->> +&uart4 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart4_pins_a>;
->> +	status = "okay";
->> +};
->> +
->>
-> 
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
