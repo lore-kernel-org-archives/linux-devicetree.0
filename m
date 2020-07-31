@@ -2,191 +2,111 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C11BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CD721744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596219799;
-	bh=VilWmQr2X1SanUoBwQNINfW0/u66qIbc1N367v/dd9E=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=dSKzCj1fFUv6RiX7wqyv7jWoMfbjlELoPJNN7HuRwGYlrWT6AcrY2Ha2N4aRCgdfA
-	 bXe+TaQOf3D3fjj/Mbv91jz5yx935zoVQpNUWmiHsvvBzBMqoFmTiEtd8n56L8obpi
-	 4OnsFdY5oHqj9BeJSqFVIXVqMdwQOUM5laNVbyi0=
+	by mail.kernel.org (Postfix) with ESMTP id 0832822B42
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:24:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GxaFQAVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387513AbgGaSXT (ORCPT
+        id S2387760AbgGaSYZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:23:19 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33695 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730040AbgGaSXT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:23:19 -0400
-Received: by mail-io1-f68.google.com with SMTP id d18so32581674ion.0;
-        Fri, 31 Jul 2020 11:23:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CGQZVvC23cLLHBAeXjXhXvK/cZaKYxFm+51RJfCopiY=;
-        b=VqM981brEZeVC8IC8dwOc7i7CZ+vDyMIX6M2jDx8gOHERNUy61tqRhbtKrAVKELzj1
-         Wqqy53QOHyjndZ5NKMzls9YEnWtEJcniKlepBUwtomMXzRKKTKJ1KY2RbvlJwEvLjtz4
-         3iKvYJnUMUv9NfitJ5Mj3gI3jkoJkgOqWP+iPVHGdcQipfpGqYhT/56DT0DxAkvIxbaq
-         jqquGOQrGeo83Kes/bOoOnftA3ssnZL4DjDJEl0mISqD59meVj4iHIMUF/kyxlm2TQR2
-         fLc/YTkVrqnp5m2wADK/lV3XMEsTVUN2Tenycev5x+OlK6/9KoM8KhU4whVIli8SN1yS
-         3jBQ==
-X-Gm-Message-State: AOAM530RERUVVbuZQ4KbeCalaGLXlktWDGOQ6Uw++SpoYHU70SxNawMK
-        B3QvoFQJDI372+H34disjw==
-X-Google-Smtp-Source: ABdhPJyB17kdNJCzKqL7LcUJRwq/TbwNChek1YnLnnrYRCa2lwkMkKZ9/m5XIVReH7azH6UeAQdNOg==
-X-Received: by 2002:a5e:c316:: with SMTP id a22mr4763149iok.57.1596219797902;
-        Fri, 31 Jul 2020 11:23:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u3sm5145028ilq.37.2020.07.31.11.23.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 11:23:17 -0700 (PDT)
-Received: (nullmailer pid 525392 invoked by uid 1000);
-        Fri, 31 Jul 2020 18:23:16 -0000
-Date:   Fri, 31 Jul 2020 12:23:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Palmer <daniel@0x0f.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     soc@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux@armlinux.org.uk, w@1wt.eu
-Subject: Re: [RFC PATCH 1/3] dt: bindings: interrupt-controller: Add binding
- description for msc313-intc
-Message-ID: <20200731182316.GB520811@bogus>
-References: <20200730130044.2037509-1-daniel@0x0f.com>
- <20200730130044.2037509-2-daniel@0x0f.com>
+        Fri, 31 Jul 2020 14:24:25 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51236 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387716AbgGaSYZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:24:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06VIOIDp042321;
+        Fri, 31 Jul 2020 13:24:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596219858;
+        bh=Q4sB5JsOZu0IoX+j8z1C39WAET3Gz/Fy0CLyBNmJLO0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GxaFQAVRltzw/tSGUmtUfuIyFXLpcvO/eAjnY023j9t5otTnDx0aBNdIf/F2iVW97
+         grpIgprSjkifeX6DzMOzL/hOEWXZeCSnx9G8Bgn3QZlQIL2cZ788gLoVfevbM0E7/E
+         +u+9lRnPQ0iSE5bgyR3nM/S3Rv3ZJXTh0rk/FZ7o=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06VIOI89065067
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jul 2020 13:24:18 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 31
+ Jul 2020 13:24:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 31 Jul 2020 13:24:17 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06VIOHag073540;
+        Fri, 31 Jul 2020 13:24:17 -0500
+Subject: Re: [PATCH v5 00/10] irqchip: ti, sci-intr/inta: Update the dt
+ bindings to accept different interrupt parents
+To:     Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20200728051735.6187-1-lokeshvutla@ti.com>
+ <d017863c0da4950016f6d4e7fb34d7c7@kernel.org> <20200731181658.GA500828@bogus>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <733bbcdc-8d29-51cc-f16e-7f95abb56ff2@ti.com>
+Date:   Fri, 31 Jul 2020 13:24:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730130044.2037509-2-daniel@0x0f.com>
+In-Reply-To: <20200731181658.GA500828@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:00:42PM +0900, Daniel Palmer wrote:
-> Adds a YAML description of the binding for the msc313-intc.
+On 7/31/20 1:16 PM, Rob Herring wrote:
+> On Fri, Jul 31, 2020 at 06:01:50PM +0100, Marc Zyngier wrote:
+>> On 2020-07-28 06:17, Lokesh Vutla wrote:
+>>> Hi Marc,
+>>> 	This is continuation of the RFC patches[0] regarding the driver
+>>> updates to support for following interrupt parent connection:
+>>> - INTR -> INTR
+>>> - INTA -> GICv3
+>>> The current existing driver assumes that INTR is always connected to
+>>> GICv3 and INTA is always connected to INTR.
+>>
+>> I'm OK to take this if I can get an Ack from RobH on the three
+>> DT patches that still need it.
 > 
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> Tested-by: Willy Tarreau <w@1wt.eu>
-> ---
->  .../mstar,msc313-intc.yaml                    | 79 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
-> new file mode 100644
-> index 000000000000..e87c72d452c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
-> @@ -0,0 +1,79 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2020 thingy.jp.
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/interrupt-controller/mstar,msc313-intc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: MStar/SigmaStar ARMv7 SoC Interrupt Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Daniel Palmer <daniel@thingy.jp>
-> +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
-> +
-> +properties:
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  compatible:
-> +    enum:
-> +      - mstar,msc313-intc-irq
-> +      - mstar,msc313-intc-fiq
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  mstar,gic-offset:
-> +    description:
-> +      Offset added to the intc irq number to get the parent GIC irq.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 255
-> +
-> +  mstar,nr-interrupts:
-> +    description:
-> +      Number of interrupt lines this intc has.
-
-Generally, no other interrupt controller needs this type of property, 
-why do you?
-
-Can't this be implied by the compatible string? Same question for 
-mstar,gic-offset.
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 255
-> +
-> +required:
-> +  - "#interrupt-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupt-controller
-> +  - mstar,gic-offset
-> +  - mstar,nr-interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    intc_fiq: intc@201310 {
-> +        compatible = "mstar,msc313-intc-fiq";
-> +        interrupt-controller;
-> +        reg = <0x201310 0x40>;
-> +        #interrupt-cells = <2>;
-> +        interrupt-parent = <&gic>;
-> +        mstar,gic-offset = <96>;
-> +        mstar,nr-interrupts = <32>;
-> +    };
-> +
-> +  - |
-> +    intc_irq: intc@201350 {
-> +        compatible = "mstar,msc313-intc-irq";
-> +        interrupt-controller;
-> +        reg = <0x201350 0x40>;
-> +        #interrupt-cells = <2>;
-> +        interrupt-parent = <&gic>;
-> +        mstar,gic-offset = <32>;
-> +        mstar,nr-interrupts = <64>;
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9b35edac7ef7..cf64b4b90222 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2140,6 +2140,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  S:	Maintained
->  W:	http://linux-chenxing.org/
->  F:	Documentation/devicetree/bindings/arm/mstar/*
-> +F:	Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
->  F:	arch/arm/boot/dts/infinity*.dtsi
->  F:	arch/arm/boot/dts/mercury*.dtsi
->  F:	arch/arm/boot/dts/mstar-v7.dtsi
-> -- 
-> 2.27.0
+> However, there's a dependency on
+> bindings/arm/keystone/ti,k3-sci-common.yaml.
 > 
+> That's a dependency on this being merged. I don't care if it breaks in
+> your tree, but I care for -next and Linus' tree. There could also be
+> other 'make dt_bindings_check' failures/warnings with this as the above
+> dependency prevents further testing.
+> 
+
+Bjorn did pick up the above common binding file through the remoteproc 
+tree, and it is available in -next. That said, I donno the merge order 
+between remoteproc and irq subsystem trees into -next, and if that is a 
+concern.
+
+regards
+Suman
