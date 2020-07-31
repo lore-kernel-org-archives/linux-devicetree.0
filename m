@@ -2,257 +2,110 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CE9C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 04:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A0AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19AF621D95
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 04:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AURaN9KI"
+	by mail.kernel.org (Postfix) with ESMTP id 330BB2074B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbgGaE5z (ORCPT
+        id S1730644AbgGaFmC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 00:57:55 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:45707 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731002AbgGaE5x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 00:57:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596171473; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=g13fmLH5MWoCaZ2CBH1tKm0KPDV4tSk0QYM43fNfZuY=; b=AURaN9KIDmlIbJ2XcSWInqTLeGSbGEkU/Q/euVlEZDvpdrK2h0X/rl9PbCMHpRxqnHtA3kD0
- pcm8LzPYn3Yy5mEV7s7yLYxda5Cd4inQzMk3qbsqx7XoQ2DibdRXLIaeD4PLfVuqOKsRN0l4
- 5Lbevwu+y/UWXIHrefvKMKYQDMc=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f23a4af90893260ddaac3a7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 04:57:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 44EEFC433C9; Fri, 31 Jul 2020 04:57:18 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26E51C433CB;
-        Fri, 31 Jul 2020 04:57:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26E51C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     bjorn.andersson@linaro.org, kishon@ti.com, vkoul@kernel.org,
-        agross@kernel.org, balbi@kernel.org, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH 2/3] phy: qcom-qmp: Register as a typec switch for orientation detection
-Date:   Thu, 30 Jul 2020 21:57:11 -0700
-Message-Id: <20200731045712.28495-3-wcheng@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200731045712.28495-1-wcheng@codeaurora.org>
-References: <20200731045712.28495-1-wcheng@codeaurora.org>
+        Fri, 31 Jul 2020 01:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730170AbgGaFmC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 01:42:02 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C964C061574
+        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 22:42:02 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k1Nnj-0005xl-HN; Fri, 31 Jul 2020 07:41:51 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k1Nne-0002Rb-PM; Fri, 31 Jul 2020 07:41:46 +0200
+Date:   Fri, 31 Jul 2020 07:41:46 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for
+ the vibrator motor
+Message-ID: <20200731054146.3d64tchfvbb6gfwj@pengutronix.de>
+References: <20200730132446.3139980-1-megous@megous.com>
+ <20200730132446.3139980-4-megous@megous.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730132446.3139980-4-megous@megous.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:40:39 up 258 days, 20:59, 248 users,  load average: 0.14, 0.11,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The lane select switch for USB typec orientation is within the USB QMP PHY.
-the current device.  It could be connected through an endpoint, to an
-independent device handling the typec detection, ie the QCOM SPMI typec
-driver.
+Hi Ondrej,
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
----
- drivers/phy/qualcomm/Kconfig        | 11 +++++
- drivers/phy/qualcomm/phy-qcom-qmp.c | 70 +++++++++++++++++++++++++++--
- 2 files changed, 78 insertions(+), 3 deletions(-)
+On 20-07-30 15:24, Ondrej Jirman wrote:
+> The board has a vibrator motor. Hook it to the input subsystem.
+> 
+> According to the PMIC specification, LDO needs to be enabled (value 0b11)
+> to achieve the specified max driving current of 150mA. We can't drive
+> the motor with just GPIO mode.
+> 
+> In GPIO mode the chip is probably just using the regular CMOS logic
+> output circuitry (typically limited to around 20-35mA, but not specified
+> in this datasheet).
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> index bfc9bb277a49..a278a1e33930 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> @@ -99,6 +99,11 @@ panel_input: endpoint {
+>  		};
+>  	};
+>  
+> +	vibrator {
+> +		compatible = "gpio-vibrator";
+> +		vcc-supply = <&reg_ldo_io1>;
+> +	};
 
-diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-index 928db510b86c..43f46a1b3db1 100644
---- a/drivers/phy/qualcomm/Kconfig
-+++ b/drivers/phy/qualcomm/Kconfig
-@@ -48,6 +48,17 @@ config PHY_QCOM_QMP
- 	  Enable this to support the QMP PHY transceiver that is used
- 	  with controllers such as PCIe, UFS, and USB on Qualcomm chips.
- 
-+if PHY_QCOM_QMP
-+config PHY_QCOM_QMP_TYPEC
-+	bool "Enable QCOM QMP PHY Type C Switch Support"
-+	depends on PHY_QCOM_QMP=y && TYPEC=y || PHY_QCOM_QMP=m && TYPEC
-+	help
-+	  Register a type C switch from the QMP PHY driver for type C
-+	  orientation support.  This has dependencies with if the type C kernel
-+	  configuration is enabled or not.  This support will not be present if
-+	  USB type C is disabled.
-+endif
-+
- config PHY_QCOM_QUSB2
- 	tristate "Qualcomm QUSB2 PHY Driver"
- 	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 562053ce9455..29d8a3570328 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -19,6 +19,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
-+#include <linux/usb/typec_mux.h>
- 
- #include <dt-bindings/phy/phy.h>
- 
-@@ -66,6 +67,9 @@
- /* QPHY_V3_PCS_MISC_CLAMP_ENABLE register bits */
- #define CLAMP_EN				BIT(0) /* enables i/o clamp_n */
- 
-+#define SW_PORTSELECT_VAL			BIT(0)
-+#define SW_PORTSELECT_MUX			BIT(1)
-+
- #define PHY_INIT_COMPLETE_TIMEOUT		10000
- #define POWER_DOWN_DELAY_US_MIN			10
- #define POWER_DOWN_DELAY_US_MAX			11
-@@ -1845,6 +1849,8 @@ struct qmp_phy {
-  * @phy_initialized: indicate if PHY has been initialized
-  * @mode: current PHY mode
-  * @ufs_reset: optional UFS PHY reset handle
-+ * @sw: typec switch for receiving orientation changes
-+ * @orientation: carries current CC orientation
-  */
- struct qcom_qmp {
- 	struct device *dev;
-@@ -1864,6 +1870,8 @@ struct qcom_qmp {
- 	enum phy_mode mode;
- 
- 	struct reset_control *ufs_reset;
-+	struct typec_switch *sw;
-+	enum typec_orientation orientation;
- };
- 
- static inline void qphy_setbits(void __iomem *base, u32 offset, u32 val)
-@@ -2485,6 +2493,7 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 	void __iomem *pcs = qphy->pcs;
- 	void __iomem *dp_com = qmp->dp_com;
- 	int ret, i;
-+	unsigned int val;
- 
- 	mutex_lock(&qmp->phy_mutex);
- 	if (qmp->init_count++) {
-@@ -2534,6 +2543,13 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 		qphy_setbits(dp_com, QPHY_V3_DP_COM_PHY_MODE_CTRL,
- 			     USB3_MODE | DP_MODE);
- 
-+		if (cfg->is_dual_lane_phy) {
-+			val = SW_PORTSELECT_MUX;
-+			if (qmp->orientation == TYPEC_ORIENTATION_REVERSE)
-+				val |= SW_PORTSELECT_VAL;
-+			qphy_setbits(dp_com, QPHY_V3_DP_COM_TYPEC_CTRL, val);
-+		}
-+
- 		/* bring both QMP USB and QMP DP PHYs PCS block out of reset */
- 		qphy_clrbits(dp_com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
- 			     SW_DPPHY_RESET_MUX | SW_DPPHY_RESET |
-@@ -2559,7 +2575,7 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 
- 	if (cfg->has_phy_com_ctrl) {
- 		void __iomem *status;
--		unsigned int mask, val;
-+		unsigned int mask;
- 
- 		qphy_clrbits(serdes, cfg->regs[QPHY_COM_SW_RESET], SW_RESET);
- 		qphy_setbits(serdes, cfg->regs[QPHY_COM_START_CONTROL],
-@@ -3242,6 +3258,47 @@ static const struct dev_pm_ops qcom_qmp_phy_pm_ops = {
- 			   qcom_qmp_phy_runtime_resume, NULL)
- };
- 
-+#if IS_ENABLED(CONFIG_PHY_QCOM_QMP_TYPEC)
-+static int qcom_qmp_phy_typec_switch_set(struct typec_switch *sw,
-+					 enum typec_orientation orientation)
-+{
-+	struct qcom_qmp *qmp = typec_switch_get_drvdata(sw);
-+	struct qmp_phy *qphy = qmp->phys[0];
-+
-+	qmp->orientation = orientation;
-+	if (qmp->phy_initialized) {
-+		qcom_qmp_phy_disable(qphy->phy);
-+		qcom_qmp_phy_enable(qphy->phy);
-+	}
-+
-+	return 0;
-+}
-+
-+static int qcom_qmp_phy_typec_switch_register(struct qcom_qmp *qmp)
-+{
-+	struct typec_switch_desc sw_desc;
-+	struct device *dev = qmp->dev;
-+
-+	if (qmp->cfg->is_dual_lane_phy) {
-+		sw_desc.drvdata = qmp;
-+		sw_desc.fwnode = dev->fwnode;
-+		sw_desc.set = qcom_qmp_phy_typec_switch_set;
-+		qmp->sw = typec_switch_register(dev, &sw_desc);
-+		if (IS_ERR(qmp->sw)) {
-+			dev_err(dev, "Error registering typec switch: %ld\n",
-+				PTR_ERR(qmp->sw));
-+		}
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int qcom_qmp_phy_typec_switch_register(struct qcom_qmp *qmp)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int qcom_qmp_phy_probe(struct platform_device *pdev)
- {
- 	struct qcom_qmp *qmp;
-@@ -3250,7 +3307,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 	struct device_node *child;
- 	struct phy_provider *phy_provider;
- 	void __iomem *base;
--	int num, id;
-+	int num = 0, id;
- 	int ret;
- 
- 	qmp = devm_kzalloc(dev, sizeof(*qmp), GFP_KERNEL);
-@@ -3302,7 +3359,11 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	num = of_get_available_child_count(dev->of_node);
-+	qcom_qmp_phy_typec_switch_register(qmp);
-+	for_each_available_child_of_node(dev->of_node, child) {
-+		if (!strncmp("lanes", child->name, 5))
-+			num++;
-+	}
- 	/* do we have a rogue child node ? */
- 	if (num > qmp->cfg->nlanes)
- 		return -EINVAL;
-@@ -3322,6 +3383,9 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		/* Create per-lane phy */
-+		if (strncmp("lanes", child->name, 5))
-+			continue;
-+
- 		ret = qcom_qmp_phy_create(dev, child, id);
- 		if (ret) {
- 			dev_err(dev, "failed to create lane%d phy, %d\n",
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Please keep the alphabetical order. I also would merge patch 3 and 4
+into one since they are realted changes.
 
+Regards,
+  Marco
+
+> +
+>  	reg_gps: reg-gps {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "gps";
