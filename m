@@ -2,111 +2,96 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F139C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0832822B42
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:24:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GxaFQAVR"
+	by mail.kernel.org (Postfix) with ESMTP id F283D22B43
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596220014;
+	bh=aF/K7GiblNRv2qyADnt0bFTFutu2SpB2MhNNgPXSX2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yJFD/zxNershLs3EzAnAYvG0sX7evRHBcUHQbnajnDYeEH/cp9bYGckqb5ofoK4bQ
+	 0H5BjnVu+gNk2gnPvTPieyD6NJqcD3L8n3ndM7SYYFNYDIc/1+gp706GnOPwH+mH0F
+	 PBi9+AQNpZQmREjLv2XKb2ghG4Jehqwv3J7mDtVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387760AbgGaSYZ (ORCPT
+        id S2387716AbgGaS0x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:24:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51236 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387716AbgGaSYZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:24:25 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06VIOIDp042321;
-        Fri, 31 Jul 2020 13:24:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596219858;
-        bh=Q4sB5JsOZu0IoX+j8z1C39WAET3Gz/Fy0CLyBNmJLO0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GxaFQAVRltzw/tSGUmtUfuIyFXLpcvO/eAjnY023j9t5otTnDx0aBNdIf/F2iVW97
-         grpIgprSjkifeX6DzMOzL/hOEWXZeCSnx9G8Bgn3QZlQIL2cZ788gLoVfevbM0E7/E
-         +u+9lRnPQ0iSE5bgyR3nM/S3Rv3ZJXTh0rk/FZ7o=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06VIOI89065067
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 Jul 2020 13:24:18 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 31
- Jul 2020 13:24:17 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 31 Jul 2020 13:24:17 -0500
-Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06VIOHag073540;
-        Fri, 31 Jul 2020 13:24:17 -0500
-Subject: Re: [PATCH v5 00/10] irqchip: ti, sci-intr/inta: Update the dt
- bindings to accept different interrupt parents
-To:     Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <20200728051735.6187-1-lokeshvutla@ti.com>
- <d017863c0da4950016f6d4e7fb34d7c7@kernel.org> <20200731181658.GA500828@bogus>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <733bbcdc-8d29-51cc-f16e-7f95abb56ff2@ti.com>
-Date:   Fri, 31 Jul 2020 13:24:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 14:26:53 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44487 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387652AbgGaS0x (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:26:53 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so17324394iow.11;
+        Fri, 31 Jul 2020 11:26:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KuRbjLAdk2qF/sclDpIueUjPnM2F0YR1YcWElNzgbpU=;
+        b=t6cwFtKE6N8y6jrpzbOq+VAzwZht9JT2wKANhmal7xL7kl8InN3Nhe6EXTvVPCKdLW
+         /LYXLUWu1rAKhhCeNiU2Vm+4019ELQP8BcAF+ogu3wHqzuMyUzxqIfzksT/+Gl4NWGNg
+         6XGR6k/AxeZMhup8AnT07P9zHxcS1d6+9Oxd2Rss+dxK68eqxmUwTzHCFreqI+SqygqV
+         BniSVwtdXhiHq1SzUKqvwlJL0FfjTXnaCRkenLqjfJLRjb33Gz+mtU1iqXta771EaRDA
+         oI30RWQv0X/VSkXqVSiGM/FSumX/1wkMKnZ6NRvyVumBkh1fO8dx9Yq8us/3HhbZhV0p
+         7LHQ==
+X-Gm-Message-State: AOAM531C8iV0SZiIrs0nqHOO0f0ydCnDhw7m7v/OAQo2fsGVGXetDts7
+        L53CTEcaPgteB7ayzYUO3A==
+X-Google-Smtp-Source: ABdhPJyQ+8uvOFgjmwMbjdzK/nhCeKXR4ECMzLtnQXdzQAe67dqY7s5ndxY9dXDf+RshQZN4g44q9A==
+X-Received: by 2002:a05:6602:150:: with SMTP id v16mr4742498iot.80.1596220012124;
+        Fri, 31 Jul 2020 11:26:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t17sm2378512ilq.69.2020.07.31.11.26.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 11:26:51 -0700 (PDT)
+Received: (nullmailer pid 531147 invoked by uid 1000);
+        Fri, 31 Jul 2020 18:26:50 -0000
+Date:   Fri, 31 Jul 2020 12:26:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        CC Hwang <cc.hwang@mediatek.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        Andy Teng <andy.teng@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v10 1/3] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+Message-ID: <20200731182650.GA531094@bogus>
+References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com>
+ <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200731181658.GA500828@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 7/31/20 1:16 PM, Rob Herring wrote:
-> On Fri, Jul 31, 2020 at 06:01:50PM +0100, Marc Zyngier wrote:
->> On 2020-07-28 06:17, Lokesh Vutla wrote:
->>> Hi Marc,
->>> 	This is continuation of the RFC patches[0] regarding the driver
->>> updates to support for following interrupt parent connection:
->>> - INTR -> INTR
->>> - INTA -> GICv3
->>> The current existing driver assumes that INTR is always connected to
->>> GICv3 and INTA is always connected to INTR.
->>
->> I'm OK to take this if I can get an Ack from RobH on the three
->> DT patches that still need it.
+On Thu, 30 Jul 2020 21:30:14 +0800, Hanks Chen wrote:
+> From: Andy Teng <andy.teng@mediatek.com>
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
 > 
-> However, there's a dependency on
-> bindings/arm/keystone/ti,k3-sci-common.yaml.
-> 
-> That's a dependency on this being merged. I don't care if it breaks in
-> your tree, but I care for -next and Linus' tree. There could also be
-> other 'make dt_bindings_check' failures/warnings with this as the above
-> dependency prevents further testing.
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> ---
+>  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 202 ++++++++++++++++++
+>  1 file changed, 202 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
 > 
 
-Bjorn did pick up the above common binding file through the remoteproc 
-tree, and it is available in -next. That said, I donno the merge order 
-between remoteproc and irq subsystem trees into -next, and if that is a 
-concern.
-
-regards
-Suman
+Reviewed-by: Rob Herring <robh@kernel.org>
