@@ -8,36 +8,36 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AECDC433EA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80353C433EB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC5A32087C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8EF21744
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XHAljNAi"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JJeGopF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgGaVdB (ORCPT
+        id S1728521AbgGaVdI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:33:01 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3020 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729516AbgGaVcb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:32:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f248dc00002>; Fri, 31 Jul 2020 14:31:44 -0700
+        Fri, 31 Jul 2020 17:33:08 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18242 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729085AbgGaVca (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:32:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f248de00000>; Fri, 31 Jul 2020 14:32:16 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 14:32:31 -0700
+  Fri, 31 Jul 2020 14:32:30 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:31 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 21:32:31 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 31 Jul 2020 21:32:31 +0000
+        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:30 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
+ 2020 21:32:29 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 31 Jul 2020 21:32:29 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f248dee0002>; Fri, 31 Jul 2020 14:32:30 -0700
+        id <B5f248ded0000>; Fri, 31 Jul 2020 14:32:29 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -46,9 +46,9 @@ To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
 CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 05/10] media: tegra-video: Separate CSI stream enable and disable implementations
-Date:   Fri, 31 Jul 2020 14:32:19 -0700
-Message-ID: <1596231144-12554-6-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 03/10] media: tegra-video: Update format lookup to offset based
+Date:   Fri, 31 Jul 2020 14:32:17 -0700
+Message-ID: <1596231144-12554-4-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
 References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
@@ -56,102 +56,69 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596231104; bh=uZgxrGDkUOMRSXaG0qPPXkX0uRgXXAAvq4AEaGdQuMg=;
+        t=1596231136; bh=5U56MbpoGgbizDY87xBQZF5BWeIIcAyUuev+l62V8Co=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=XHAljNAiqxIa4HfxGzbdF4sRHO72qzitdHaa5d9uEJGQebNONDE6mPCd8MTOvCiUo
-         b9kDiSp35MmW6e8vIKw3RfeTmiDoV6am8JJYtn3nkxtXh4JJ6u6FUwN0Rp+uVQae/w
-         q2z4bjjSnCh4y/TkAZUQpIpFhQ+Qv3VTcpI7+aUmUQtvX6NEw118tkqbs4STtPZZqJ
-         9pVfBYs/sPA84DqqQgPPB81WK+SFvff3RY0OyO/L6aHVdhgpLFMNGSDl0/Cm0Ox5YT
-         7sO9xtIzAoJA4bw1mqaw0hBYihefV/qahtgl/dd4cvoFdIl4zo138k2XscwCLT93r/
-         PCo4tIInePyaQ==
+        b=JJeGopF049eZTUnv0zWOF7Zme+1GELMwKVGM2TBdKPwNXcBZik9977k5TN9NskB5c
+         4Vw4p2WtkWnPq7GP4VuNBJ01ZVSXrLpVSxrFqxYwH9bUGgNQ7oVj1v5+6ygJo0Gvq2
+         fM4xLmOvbY+PcGdgWLGIso7r0DHvjuw/otwJ42ETsKh0G6l0yrgLXWhzqUTmw3XkVN
+         bDoAJbLrZ5omssUc4wQEm3zJjTg8jZd5l37MuQxa6umdvIWgO9/peZI6rrmT3LUpxZ
+         0ErsVe+6sJeU7XhGhLTn7jeCfBngsrqgDQHmY6sGWupZ86WxLAMcy8Vn3sBB+cnJm8
+         jghSxN3twbSbg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch separates implementation of CSI stream enable and disable
-into separate functions for readability.
+Tegra VI supported video formats are more for non TPG and there
+can be multiple pixel formats for the same media bus format.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+This patch updates the helper function for format lookup based on
+mbus code from pre-defined Tegra supported format list to look from
+the specified list index offset.
+
+Offset based look up is used with sensor device graph (non TPG)
+where format enumeration can list all supported formats for the
+specific sensor mbus codes.
+
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/csi.c | 51 ++++++++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 16 deletions(-)
+ drivers/staging/media/tegra-video/vi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-index fb667df..cfe6187 100644
---- a/drivers/staging/media/tegra-video/csi.c
-+++ b/drivers/staging/media/tegra-video/csi.c
-@@ -232,34 +232,53 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
- 	return 0;
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index 0197f4e..52d751f 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -53,11 +53,12 @@ to_tegra_channel_buffer(struct vb2_v4l2_buffer *vb)
  }
  
--static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
-+static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
+ static int tegra_get_format_idx_by_code(struct tegra_vi *vi,
+-					unsigned int code)
++					unsigned int code,
++					unsigned int offset)
  {
- 	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
- 	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
- 	struct tegra_csi *csi = csi_chan->csi;
--	int ret = 0;
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(csi->dev);
-+	if (ret < 0) {
-+		dev_err(csi->dev, "failed to get runtime PM: %d\n", ret);
-+		pm_runtime_put_noidle(csi->dev);
-+		return ret;
-+	}
+ 	unsigned int i;
  
- 	csi_chan->pg_mode = chan->pg_mode;
--	if (enable) {
--		ret = pm_runtime_get_sync(csi->dev);
--		if (ret < 0) {
--			dev_err(csi->dev,
--				"failed to get runtime PM: %d\n", ret);
--			pm_runtime_put_noidle(csi->dev);
--			return ret;
--		}
-+	ret = csi->ops->csi_start_streaming(csi_chan);
-+	if (ret < 0)
-+		goto rpm_put;
+-	for (i = 0; i < vi->soc->nformats; ++i) {
++	for (i = offset; i < vi->soc->nformats; ++i) {
+ 		if (vi->soc->video_formats[i].code == code)
+ 			return i;
+ 	}
+@@ -598,11 +599,12 @@ static void vi_tpg_fmts_bitmap_init(struct tegra_vi_channel *chan)
+ 	bitmap_zero(chan->tpg_fmts_bitmap, MAX_FORMAT_NUM);
  
--		ret = csi->ops->csi_start_streaming(csi_chan);
--		if (ret < 0)
--			goto rpm_put;
-+	return 0;
+ 	index = tegra_get_format_idx_by_code(chan->vi,
+-					     MEDIA_BUS_FMT_SRGGB10_1X10);
++					     MEDIA_BUS_FMT_SRGGB10_1X10, 0);
+ 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
  
--		return 0;
--	}
-+rpm_put:
-+	pm_runtime_put(csi->dev);
-+	return ret;
-+}
-+
-+static int tegra_csi_disable_stream(struct v4l2_subdev *subdev)
-+{
-+	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
-+	struct tegra_csi *csi = csi_chan->csi;
- 
- 	csi->ops->csi_stop_streaming(csi_chan);
- 
--rpm_put:
- 	pm_runtime_put(csi->dev);
-+
-+	return 0;
-+}
-+
-+static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
-+{
-+	int ret;
-+
-+	if (enable)
-+		ret = tegra_csi_enable_stream(subdev);
-+	else
-+		ret = tegra_csi_disable_stream(subdev);
-+
- 	return ret;
+ 	index = tegra_get_format_idx_by_code(chan->vi,
+-					     MEDIA_BUS_FMT_RGB888_1X32_PADHI);
++					     MEDIA_BUS_FMT_RGB888_1X32_PADHI,
++					     0);
+ 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
  }
  
 -- 
