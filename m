@@ -8,36 +8,36 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E80C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47830C433E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540142087C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257DB2087C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FN+HPJG4"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WP5guGvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgGaVcr (ORCPT
+        id S1728000AbgGaVcd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:32:47 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3028 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728695AbgGaVcd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:32:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f248dc20000>; Fri, 31 Jul 2020 14:31:46 -0700
+        Fri, 31 Jul 2020 17:32:33 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14836 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbgGaVcb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:32:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f248d900000>; Fri, 31 Jul 2020 14:30:56 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 14:32:33 -0700
+  Fri, 31 Jul 2020 14:32:30 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:33 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 21:32:33 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 31 Jul 2020 21:32:33 +0000
+        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:30 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
+ 2020 21:32:30 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 31 Jul 2020 21:32:30 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f248df00000>; Fri, 31 Jul 2020 14:32:32 -0700
+        id <B5f248ded0001>; Fri, 31 Jul 2020 14:32:30 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -46,9 +46,9 @@ To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
 CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till calibration is done
-Date:   Fri, 31 Jul 2020 14:32:22 -0700
-Message-ID: <1596231144-12554-9-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 04/10] dt-bindings: tegra: Update VI and CSI bindings with port info
+Date:   Fri, 31 Jul 2020 14:32:18 -0700
+Message-ID: <1596231144-12554-5-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
 References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
@@ -56,133 +56,154 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596231106; bh=wDgMkeYCZVezNoEVbmypSzb8rMjS8a+LjilsX0gytzo=;
+        t=1596231056; bh=BnlKr3cpHbqR2/ypGaWrf+nRHayXIJrs4Q9+28+PHhQ=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=FN+HPJG4dpx1kXzkpwBt0vMRC7Hf3VZJNnEhE7MqtRWxI3px0rAuR1XvzVvEVcw+B
-         gT9S+lAaW/dhZ4KjrC6ck52vheOufoWz5gzX/sEZlEptAF8yX8DkdPBxGfFBVDTAHD
-         SQDwyRW483F0xdZjsuuqj3BwOvahxM6mMfBMzDj/Sl8x1l8gAwVX7Cn9Cnr2LU6tJY
-         yqxi+Z29hyLN71knVsxrB/9rAwaEITqUmerNRnhf3UxlOTS4oa/3PZJ6bcc7/tIOdq
-         g601FtUTnZicE1pDOfCE1pFVBE6b6QJG93tgWSeLjDvO8S7InrfdEMiPNzXtSNqguG
-         Y5l51UYAqorQA==
+        b=WP5guGvlm0DJ4COIn/0NZxV/06p/3DiyOHHwMBMXfrRBaTndUF3uAX0lk+F4O1n5x
+         1KHNRfqLRyUX4/AtWz2T62HWvD6Alh/GXKi13y+P/1SqTXAsx88ZI5VUYCCjP1NX6V
+         N4+yDidzdBL+JYAUezuwOiXCrSGzymX2KcbFYn/Wv/D2Wc0xg+yvGA3o+i27Uwgqzt
+         R1jVGNrr3z8DW+z2chrZvoXXe8zZvYA+HDdkbCE1pJ6cRfjXtMr7wZthDh4H04dGTR
+         7MxIX3N/w3g3KFu2OJUIxUiBKTk8hnSAXZCZ+HTqUjIUvddLEL+D/g8iBngKP0t62j
+         0svkE9hL+csBA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With the split of MIPI calibration into tegra_mipi_calibrate() and
-tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
-is done.
+Update VI and CSI bindings to add port and endpoint nodes as per
+media video-interfaces DT binding document.
 
-So, this patch skips disabling MIPI clock after triggering start of
-calibration and disables it only after waiting for done status from
-the calibration logic.
-
-This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
-and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
-with their usage.
-
-As MIPI clock is left enabled and in case of any failures with CSI input
-streaming tegra_mipi_finish_calibration() will not get invoked.
-So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
-and consumer drivers can call this in such cases.
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/gpu/drm/tegra/dsi.c |  4 ++--
- drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
- include/linux/host1x.h      |  5 +++--
- 3 files changed, 15 insertions(+), 13 deletions(-)
+ .../display/tegra/nvidia,tegra20-host1x.txt        | 92 +++++++++++++++++++++-
+ 1 file changed, 90 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 3820e8d..a7864e9 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
- 		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
- 	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
- 
--	err = tegra_mipi_calibrate(dsi->mipi);
-+	err = tegra_mipi_start_calibration(dsi->mipi);
- 	if (err < 0)
- 		return err;
- 
--	return tegra_mipi_wait(dsi->mipi);
-+	return tegra_mipi_finish_calibration(dsi->mipi);
- }
- 
- static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
-diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
-index e606464..b15ab6e 100644
---- a/drivers/gpu/host1x/mipi.c
-+++ b/drivers/gpu/host1x/mipi.c
-@@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
- }
- EXPORT_SYMBOL(tegra_mipi_disable);
- 
--int tegra_mipi_wait(struct tegra_mipi_device *device)
-+void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
-+{
-+	clk_disable(device->mipi->clk);
-+}
-+EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
+diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+index 4731921..ac63ae4a 100644
+--- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
++++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+@@ -51,8 +51,16 @@ of the following host1x client modules:
+       - vi
+   - Tegra210:
+     - power-domains: Must include venc powergate node as vi is in VE partition.
+-  - Tegra210 has CSI part of VI sharing same host interface and register space.
+-    So, VI device node should have CSI child node.
 +
-+int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
- {
- 	struct tegra_mipi *mipi = device->mipi;
- 	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
- 	u32 value;
- 	int err;
++  ports (optional node)
++  vi can have optional ports node and max 6 ports are supported. Each port
++  should have single 'endpoint' child node. All port nodes are grouped under
++  ports node. Please refer to the bindings defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt
++
++  csi (required node)
++  Tegra210 has CSI part of VI sharing same host interface and register space.
++  So, VI device node should have CSI child node.
  
--	err = clk_enable(device->mipi->clk);
--	if (err < 0)
--		return err;
--
- 	mutex_lock(&device->mipi->lock);
+     - csi: mipi csi interface to vi
  
- 	err = readl_relaxed_poll_timeout(status_reg, value,
-@@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
+@@ -65,6 +73,46 @@ of the following host1x client modules:
+       - power-domains: Must include sor powergate node as csicil is in
+         SOR partition.
  
- 	return err;
- }
--EXPORT_SYMBOL(tegra_mipi_wait);
-+EXPORT_SYMBOL(tegra_mipi_finish_calibration);
++      channel (optional nodes)
++      Maximum 6 channels are supported with each csi brick as either x4 or x2
++      based on hw connectivity to sensor.
++
++      Required properties:
++      - reg: csi port number. Valid port numbers are 0 through 5.
++      - nvidia,mipi-calibrate: Should contain a phandle and a specifier
++        specifying which pads are used by this CSI port and need to be
++	calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
++
++      Each channel node must contain 2 port nodes which can be grouped
++      under 'ports' node and each port should have a single child 'endpoint'
++      node.
++
++        ports node
++        Please refer to the bindings defined in
++        Documentation/devicetree/bindings/media/video-interfaces.txt
++
++        ports node must contain below 2 port nodes.
++        port@0 with single child 'endpoint' node always a sink.
++        port@1 with single child 'endpoint' node always a source.
++
++        port@0 (required node)
++        Required properties:
++        - reg: 0
++
++	  endpoint (required node)
++	  Required properties:
++	  - data-lanes: an array of data lane from 1 to 4. Valid array
++	    lengths are 1/2/4.
++	  - remote-endpoint: phandle to sensor 'endpoint' node.
++
++        port@1 (required node)
++        Required properties:
++        - reg: 1
++
++	  endpoint (required node)
++	  Required properties:
++	  - remote-endpoint: phandle to vi port 'endpoint' node.
++
+ - epp: encoder pre-processor
  
--int tegra_mipi_calibrate(struct tegra_mipi_device *device)
-+int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
- {
- 	const struct tegra_mipi_soc *soc = device->mipi->soc;
- 	unsigned int i;
-@@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
- 	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+   Required properties:
+@@ -340,6 +388,18 @@ Example:
  
- 	mutex_unlock(&device->mipi->lock);
--	clk_disable(device->mipi->clk);
+ 			ranges = <0x0 0x0 0x54080000 0x2000>;
  
- 	return 0;
- }
--EXPORT_SYMBOL(tegra_mipi_calibrate);
-+EXPORT_SYMBOL(tegra_mipi_start_calibration);
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					imx219_vi_in0: endpoint {
++						remote-endpoint = <&imx219_csi_out0>;
++					};
++				};
++			};
++
+ 			csi@838 {
+ 				compatible = "nvidia,tegra210-csi";
+ 				reg = <0x838 0x1300>;
+@@ -362,6 +422,34 @@ Example:
+ 					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
+ 				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
+ 				power-domains = <&pd_sor>;
++
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				channel@0 {
++					reg = <0>;
++					nvidia,mipi-calibrate = <&mipi 0x001>;
++
++					ports {
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						port@0 {
++							reg = <0>;
++							imx219_csi_in0: endpoint {
++								data-lanes = <1 2>;
++								remote-endpoint = <&imx219_out0>;
++							};
++						};
++
++						port@1 {
++							reg = <1>;
++							imx219_csi_out0: endpoint {
++								remote-endpoint = <&imx219_vi_in0>;
++							};
++						};
++					};
++				};
+ 			};
+ 		};
  
- static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
- 	{ .data = MIPI_CAL_CONFIG_CSIA },
-diff --git a/include/linux/host1x.h b/include/linux/host1x.h
-index 20c885d..b490dda 100644
---- a/include/linux/host1x.h
-+++ b/include/linux/host1x.h
-@@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
- void tegra_mipi_free(struct tegra_mipi_device *device);
- int tegra_mipi_enable(struct tegra_mipi_device *device);
- int tegra_mipi_disable(struct tegra_mipi_device *device);
--int tegra_mipi_calibrate(struct tegra_mipi_device *device);
--int tegra_mipi_wait(struct tegra_mipi_device *device);
-+int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
-+int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
-+void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
- 
- #endif
 -- 
 2.7.4
 
