@@ -2,90 +2,176 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A08C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7293AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C67B120838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575ED2177B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbgGaQUN (ORCPT
+        id S1732368AbgGaQVW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:20:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgGaQUM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 12:20:12 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C4AC061574;
-        Fri, 31 Jul 2020 09:20:12 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id C6B8F634C87;
-        Fri, 31 Jul 2020 19:19:08 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1k1XkS-0001fg-Lt; Fri, 31 Jul 2020 19:19:08 +0300
-Date:   Fri, 31 Jul 2020 19:19:08 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, luca@lucaceresoli.net,
-        leonl@leopardimaging.com, robh+dt@kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: media: imx274: Add optional input
- clock and supplies
-Message-ID: <20200731161908.GA6401@valkosipuli.retiisi.org.uk>
-References: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
- <1595264494-2400-2-git-send-email-skomatineni@nvidia.com>
+        Fri, 31 Jul 2020 12:21:22 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2552 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727997AbgGaQVW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 12:21:22 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 04B5D8FFCBA9E1A5A831;
+        Fri, 31 Jul 2020 17:21:20 +0100 (IST)
+Received: from localhost (10.52.124.83) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 31 Jul
+ 2020 17:21:19 +0100
+Date:   Fri, 31 Jul 2020 17:19:55 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Christian Eggers <ceggers@arri.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] iio: light: as73211: New driver
+Message-ID: <20200731171955.00000942@Huawei.com>
+In-Reply-To: <CAHp75VdSNXWCVVgX+8BCC5iWjO14KMUCNrYvZyFfez-fFerQsA@mail.gmail.com>
+References: <20200731070114.40471-1-ceggers@arri.de>
+        <20200731070114.40471-3-ceggers@arri.de>
+        <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
+        <2706267.JtmGt7LAV2@n95hx1g2>
+        <CAHp75VdSNXWCVVgX+8BCC5iWjO14KMUCNrYvZyFfez-fFerQsA@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595264494-2400-2-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.124.83]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sowjanya,
+On Fri, 31 Jul 2020 18:41:47 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On Mon, Jul 20, 2020 at 10:01:33AM -0700, Sowjanya Komatineni wrote:
-> This patch adds IMX274 optional external clock input and voltage
-> supplies to device tree bindings.
+> On Fri, Jul 31, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
 > 
-> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/imx274.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> > > W=1 (not V=1) runs kernel doc validation script.  
+> > without V=1, I get nothing. Neither excess nor missing members
+> > are reported on my system.  
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
-> index 80f2e89..0727079 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
-> @@ -13,6 +13,11 @@ Required Properties:
->  
->  Optional Properties:
->  - reset-gpios: Sensor reset GPIO
-> +- clocks: Reference to the input clock.
-> +- clock-names: Should be "inck".
-> +- VANA-supply: Sensor 2.8v analog supply.
-> +- VDIG-supply: Sensor 1.8v digital core supply.
-> +- VDDL-supply: Sensor digital IO 1.2v supply.
+> It's strange.
+> 
+> ...
+> 
+> > > Perhaps add a definition above and comment here?
+> > >
+> > > #define AS73211_BASE_FREQ_1024KHZ   1024000  
+> > added similar define in v5. The array looks like the following now
+> >
+> > static const int as73211_samp_freq_avail[] = {  
+> 
+> >         AS73211_SAMPLE_FREQ_BASE,  
+> 
+> ' * 1'
+> 
+> >         AS73211_SAMPLE_FREQ_BASE * 2,
+> >         AS73211_SAMPLE_FREQ_BASE * 4,
+> >         AS73211_SAMPLE_FREQ_BASE * 8
+> > };  
+> 
+> ...
+> 
+> > > > +/* integration time in units of 1024 clock cycles */  
+> > >
+> > > Unify this with below one. Or the other way around, i.o.w. join one of
+> > > them into the other.
+> > >  
+> > > > +static unsigned int as73211_integration_time_1024cyc(struct as73211_data
+> > > > *data) +{
+> > > > +       /* integration time in CREG1 is in powers of 2 (x 1024 cycles) */
+> > > > +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
+> > > > +}  
+> > I'm not sure, whether this is possible. as73211_integration_time_1024cyc()
+> > returns the current setting from hardware. as73211_integration_time_us()
+> > calculates the resulting time. But as73211_integration_time_us() is also
+> > called in as73211_integration_time_calc_avail() inside the loop.  
+> 
+> What I meant is solely comments to be joined, not the code.
+> 
+> ...
+> 
+       unsigned int time_us = as73211_integration_time_us(data, as73211_integration_time_1024cyc(data));  
+> > > One line?  
+> 
+> > checkpatch complains... ignore?  
+> 
+> Hmm... is it over 100? Or you are using some old tools to work with
+> the kernel...
 
-I believe lower case is preferred.
+It's over a 100... (about 103 by the handy scale at the top of my email client :)
 
->  
->  The imx274 device node should contain one 'port' child node with
->  an 'endpoint' subnode. For further reading on port node refer to
+> 
+> ...
+> 
+> > > > +               /* gain can be calculated from CREG1 as 2^(13 -
+> > > > CREG1_GAIN) */ +               reg_bits = 13 - ilog2(val);  
+> > >
+> > > 13 is the second time in the code. Deserves a descriptive definition.  
+> 
+> > I'm unsure how to solve this. Possible values for gain:
+> >
+> > CREG1[7:4]  | gain
+> > -----------------------------
+> > 0           | 2048x
+> > 1           | 1024x
+> > 2           |  512x
+> > ...         |  ...
+> > 13          |    1x
+> >
+> > #define AS73211_CREG1_GAIN_1_NON_SHIFTED 13  // this define is CREG1 related, but not shifted to the right position
+> >
+> > static unsigned int as73211_gain(struct as73211_data *data)
+> > {
+> >         /* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
+> >         return BIT(AS73211_CREG1_GAIN_1_NON_SHIFTED - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
+> > }  
+> 
+> This way (w/o _NON_SHIFTED suffix) if both 13:s in the code are of the
+> same meaning.
+> 
+> ...
+> 
+> > > > +       indio_dev->dev.parent = dev;  
+> > >
+> > > Doesn't IIO core do this for you?  
+> > devm_iio_device_alloc() doesn't pass 'dev' to iio_device_alloc().
+> > I already looked around, but I didn't find. And after debugging
+> > v5.4, devm_iio_device_alloc() definitely doesn't do it.  
+> 
+> Why are you talking about v5.4? We are in v5.8 cycle contributing to v5.9.
 
--- 
-Sakari Ailus
+This will be 5.10 now.  5.9 cycle for new stuff via IIO effectively closed
+last week. 
+
+> 
+> Recently IIO gained some features among which I think the one that
+> assigns parent devices.
+> 
+yup. This should be in linux-next now for the coming merge window (which probably opens on Sunday).
+
+Note that we have lots of time to tidy up loose ends for this one as it will only sit
+in my tree for next few weeks if I do pick it up.
+
+Jonathan
+
+
