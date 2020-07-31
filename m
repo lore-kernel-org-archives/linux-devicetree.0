@@ -2,136 +2,154 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E057FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 00:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF12C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 02:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7F74207F5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 00:10:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="MuQkom8S"
+	by mail.kernel.org (Postfix) with ESMTP id CC53320829
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 02:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbgGaAKz (ORCPT
+        id S1731076AbgGaCKr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 30 Jul 2020 20:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728086AbgGaAKy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Jul 2020 20:10:54 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2296C061574
-        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 17:10:53 -0700 (PDT)
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5E5298066C;
-        Fri, 31 Jul 2020 12:10:48 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1596154248;
-        bh=SILlLM1AJBBx6qQtguNlv0JBTFdKxuApzErOnxfphPI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=MuQkom8SRfLg2qpex9zZDuejfMizujcn/KLBg7PONnn6YVCTRz7kbY/NgB63AiHtp
-         k6UPy1p9H+bEe1M1NtaZlc26gLBQF26dd9g+BrVxtDcj4YrD4aD9ipB1jIK7NfI6SU
-         etyL+e6wk9sAw0RDrJJZIHe+qhwaLjRdVrnSTcw8u3GZYsg7+KDicfAHQD0qykksO4
-         Njd3eTY8vq746Kt+m39Y5W6zT+soI+yQZ/zGhqOnEywrb2pRbYxLZIqQpBPwnTbK9Z
-         Uo/gHBQbHrLCfW49wtN/ZIE78GcFlgRO4J9o3O6daT71jdU0Cp6cFoEcC5khicra+u
-         MDLDg+XBFjm2g==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f2361860001>; Fri, 31 Jul 2020 12:10:46 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 31 Jul 2020 12:10:47 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Fri, 31 Jul 2020 12:10:47 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "frowand.list@gmail.com" <frowand.list@gmail.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: OF: Can't handle multiple dma-ranges with different offsets
-Thread-Topic: OF: Can't handle multiple dma-ranges with different offsets
-Thread-Index: AQHWX99COSKGYTheAUmvWcrnzVaQa6kTYRWAgAy0FoA=
-Date:   Fri, 31 Jul 2020 00:10:47 +0000
-Message-ID: <0fc927d8-2610-3948-fe15-7a7a38be2ccf@alliedtelesis.co.nz>
-References: <5cb3aaa7-e05e-5fbc-db42-60e07acdaf05@alliedtelesis.co.nz>
- <961bc990-c815-1a19-c349-8b03065d5aab@alliedtelesis.co.nz>
-In-Reply-To: <961bc990-c815-1a19-c349-8b03065d5aab@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <23755236B4410A4A8453EBD9327E9135@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Thu, 30 Jul 2020 22:10:47 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51292 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731057AbgGaCKr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 30 Jul 2020 22:10:47 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D3C4A2013B1;
+        Fri, 31 Jul 2020 04:10:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7103120034F;
+        Fri, 31 Jul 2020 04:10:41 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 20AAF402C1;
+        Fri, 31 Jul 2020 04:10:38 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     krzk@kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: memory-controllers: Convert mmdc to json-schema
+Date:   Fri, 31 Jul 2020 10:06:24 +0800
+Message-Id: <1596161184-24266-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiAyMy8wNy8yMCAxMDoxMSBhbSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4NCj4gT24gMjIv
-MDcvMjAgNDoxOSBwbSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4+IEhpLA0KPj4NCj4+IEkndmUg
-anVzdCBmaXJlZCB1cCBsaW51eCBrZXJuZWwgdjUuNyBvbiBhIHAyMDQwIGJhc2VkIHN5c3RlbSBh
-bmQgSSdtIA0KPj4gZ2V0dGluZyB0aGUgZm9sbG93aW5nIG5ldyB3YXJuaW5nDQo+Pg0KPj4gT0Y6
-IENhbid0IGhhbmRsZSBtdWx0aXBsZSBkbWEtcmFuZ2VzIHdpdGggZGlmZmVyZW50IG9mZnNldHMg
-b24gDQo+PiBub2RlKC9wY2llQGZmZTIwMjAwMCkNCj4+IE9GOiBDYW4ndCBoYW5kbGUgbXVsdGlw
-bGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVudCBvZmZzZXRzIG9uIA0KPj4gbm9kZSgvcGNpZUBm
-ZmUyMDIwMDApDQo+Pg0KPj4gVGhlIHdhcm5pbmcgaXRzZWxmIHdhcyBhZGRlZCBpbiBjb21taXQg
-OWQ1NWJlYmQ5ODE2ICgib2YvYWRkcmVzczogDQo+PiBTdXBwb3J0IG11bHRpcGxlICdkbWEtcmFu
-Z2VzJyBlbnRyaWVzIikgYnV0IEkgZ2F0aGVyIGl0J3MgcG9pbnRpbmcgDQo+PiBvdXQgc29tZXRo
-aW5nIGFib3V0IHRoZSBkdHMuIE15IGJvYXJkcyBkdHMgaXMgYmFzZWQgaGVhdmlseSBvbiANCj4+
-IHAyMDQxcmRiLmR0cyBhbmQgdGhlIHJlbGV2YW50IHBjaTIgc2VjdGlvbiBpcyBpZGVudGljYWwg
-KHJlcHJvZHVjZWQgDQo+PiBiZWxvdyBmb3IgcmVmZXJlbmNlKS4NCj4+DQo+PiDCoMKgwqAgcGNp
-MjogcGNpZUBmZmUyMDIwMDAgew0KPj4gwqDCoMKgIMKgwqDCoCByZWcgPSA8MHhmIDB4ZmUyMDIw
-MDAgMCAweDEwMDA+Ow0KPj4gwqDCoMKgIMKgwqDCoCByYW5nZXMgPSA8MHgwMjAwMDAwMCAwIDB4
-ZTAwMDAwMDAgMHhjIDB4NDAwMDAwMDAgMCAweDIwMDAwMDAwDQo+PiDCoMKgwqAgwqDCoMKgIMKg
-wqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMCAweGYgMHhmODAyMDAwMCAwIDB4MDAwMTAw
-MDA+Ow0KPj4gwqDCoMKgIMKgwqDCoCBwY2llQDAgew0KPj4gwqDCoMKgIMKgwqDCoCDCoMKgwqAg
-cmFuZ2VzID0gPDB4MDIwMDAwMDAgMCAweGUwMDAwMDAwDQo+PiDCoMKgwqAgwqDCoMKgIMKgwqDC
-oCDCoMKgwqAgwqAgMHgwMjAwMDAwMCAwIDB4ZTAwMDAwMDANCj4+IMKgwqDCoCDCoMKgwqAgwqDC
-oMKgIMKgwqDCoCDCoCAwIDB4MjAwMDAwMDANCj4+DQo+PiDCoMKgwqAgwqDCoMKgIMKgwqDCoCDC
-oMKgwqAgwqAgMHgwMTAwMDAwMCAwIDB4MDAwMDAwMDANCj4+IMKgwqDCoCDCoMKgwqAgwqDCoMKg
-IMKgwqDCoCDCoCAweDAxMDAwMDAwIDAgMHgwMDAwMDAwMA0KPj4gwqDCoMKgIMKgwqDCoCDCoMKg
-wqAgwqDCoMKgIMKgIDAgMHgwMDAxMDAwMD47DQo+PiDCoMKgwqAgwqDCoMKgIH07DQo+PiDCoMKg
-wqAgfTsNCj4+DQo+PiBJIGhhdmVuJ3Qgbm90aWNlZCBhbnkgaWxsIGVmZmVjdCAoYXNpZGUgZnJv
-bSB0aGUgc2NhcnkgbWVzc2FnZSkuIEknbSANCj4+IG5vdCBzdXJlIGlmIHRoZXJlJ3Mgc29tZXRo
-aW5nIG1pc3NpbmcgaW4gdGhlIGR0cyBvciBpbiB0aGUgY29kZSB0aGF0IA0KPj4gY2hlY2tzIHRo
-ZSByYW5nZXMuIEFueSBndWlkYW5jZSB3b3VsZCBiZSBhcHByZWNpYXRlZC4NCj4NCj4gSSd2ZSBh
-bHNvIGp1c3QgY2hlY2tlZCB0aGUgVDIwODBSREIgb24gdjUuNy45IHdoaWNoIHNob3dzIGEgc2lt
-aWxhciBpc3N1ZQ0KPg0KPiBPRjogQ2FuJ3QgaGFuZGxlIG11bHRpcGxlIGRtYS1yYW5nZXMgd2l0
-aCBkaWZmZXJlbnQgb2Zmc2V0cyBvbiANCj4gbm9kZSgvcGNpZUBmZmUyNTAwMDApDQo+IE9GOiBD
-YW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVudCBvZmZzZXRzIG9u
-IA0KPiBub2RlKC9wY2llQGZmZTI1MDAwMCkNCj4gcGNpZXBvcnQgMDAwMDowMDowMC4wOiBJbnZh
-bGlkIHNpemUgMHhmZmZmZjkgZm9yIGRtYS1yYW5nZQ0KPiBwY2llcG9ydCAwMDAwOjAwOjAwLjA6
-IEFFUjogZW5hYmxlZCB3aXRoIElSUSAyMQ0KPiBPRjogQ2FuJ3QgaGFuZGxlIG11bHRpcGxlIGRt
-YS1yYW5nZXMgd2l0aCBkaWZmZXJlbnQgb2Zmc2V0cyBvbiANCj4gbm9kZSgvcGNpZUBmZmUyNzAw
-MDApDQo+IE9GOiBDYW4ndCBoYW5kbGUgbXVsdGlwbGUgZG1hLXJhbmdlcyB3aXRoIGRpZmZlcmVu
-dCBvZmZzZXRzIG9uIA0KPiBub2RlKC9wY2llQGZmZTI3MDAwMCkNCj4gcGNpZXBvcnQgMDAwMTow
-MDowMC4wOiBJbnZhbGlkIHNpemUgMHhmZmZmZjkgZm9yIGRtYS1yYW5nZQ0KPiBwY2llcG9ydCAw
-MDAxOjAwOjAwLjA6IEFFUjogZW5hYmxlZCB3aXRoIElSUSAyMw0KDQpJJ3ZlIGJlZW4gZG9pbmcg
-YSBiaXQgbW9yZSBkaWdnaW5nLiBUaGUgZG1hLXJhbmdlcyBwcm9wZXJ0eSBpcyBub3QgaW4gDQp0
-aGUgZHRzL2R0Yi4gSXQncyBhY3R1YWxseSBpbnNlcnRlZCBieSB1LWJvb3QgdmlhIGZ0X2ZzbF9w
-Y2lfc2V0dXAoKS4NCg0KSGVyZSdzIHNvbWUgb3V0cHV0IGZyb20gbXkgVDIwODBSREINCg0Kcm9v
-dEBsaW51eGJveCB+XSMgeHhkIC1nNCANCi9zeXMvZmlybXdhcmUvZGV2aWNldHJlZS9iYXNlL3Bj
-aWVAZmZlMjQwMDAwL2RtYS1yYW5nZXMNCjAwMDAwMDA6IDAyMDAwMDAwIDAwMDAwMDAwIGRmMDAw
-MDA3IDAwMDAwMDBmwqAgLi4uLi4uLi4uLi4uLi4uLg0KMDAwMDAxMDogZmUwMDAwMDAgMDAwMDAw
-MDAgMDBmZmZmZjkgNDIwMDAwMDDCoCAuLi4uLi4uLi4uLi5CLi4uDQowMDAwMDIwOiAwMDAwMDAw
-MCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMMKgIC4uLi4uLi4uLi4uLi4uLi4NCjAwMDAwMzA6
-IDAwMDAwMDAwIGRmMDAwMDA3IDQzMDAwMDAwIDAwMDAwMDEwwqAgLi4uLi4uLi5DLi4uLi4uLg0K
-MDAwMDA0MDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDHCoCAuLi4uLi4uLi4u
-Li4uLi4uDQowMDAwMDUwOiAwMDAwMDAwMMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC4uLi4NCg0KSSdtIHN0aWxsIHdvbmRlcmluZyBob3cg
-YmVzdCB0byBkZWFsIHdpdGggdGhpcy4gSG9wZWZ1bGx5IHdpdGhvdXQgDQpuZWVkaW5nIHRvIGRl
-cGxveSBhIHUtYm9vdCB1cGRhdGUuDQo=
+Convert the MMDC memory controller binding to DT schema format using
+json-schema.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../bindings/memory-controllers/fsl/mmdc.txt       | 35 ----------------
+ .../bindings/memory-controllers/fsl/mmdc.yaml      | 49 ++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml
+
+diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
+deleted file mode 100644
+index bcc36c5..0000000
+--- a/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
++++ /dev/null
+@@ -1,35 +0,0 @@
+-Freescale Multi Mode DDR controller (MMDC)
+-
+-Required properties :
+-- compatible : should be one of following:
+-	for i.MX6Q/i.MX6DL:
+-	- "fsl,imx6q-mmdc";
+-	for i.MX6QP:
+-	- "fsl,imx6qp-mmdc", "fsl,imx6q-mmdc";
+-	for i.MX6SL:
+-	- "fsl,imx6sl-mmdc", "fsl,imx6q-mmdc";
+-	for i.MX6SLL:
+-	- "fsl,imx6sll-mmdc", "fsl,imx6q-mmdc";
+-	for i.MX6SX:
+-	- "fsl,imx6sx-mmdc", "fsl,imx6q-mmdc";
+-	for i.MX6UL/i.MX6ULL/i.MX6ULZ:
+-	- "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
+-	for i.MX7ULP:
+-	- "fsl,imx7ulp-mmdc", "fsl,imx6q-mmdc";
+-- reg : address and size of MMDC DDR controller registers
+-
+-Optional properties :
+-- clocks : the clock provided by the SoC to access the MMDC registers
+-
+-Example :
+-	mmdc0: memory-controller@21b0000 { /* MMDC0 */
+-		compatible = "fsl,imx6q-mmdc";
+-		reg = <0x021b0000 0x4000>;
+-		clocks = <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
+-	};
+-
+-	mmdc1: memory-controller@21b4000 { /* MMDC1 */
+-		compatible = "fsl,imx6q-mmdc";
+-		reg = <0x021b4000 0x4000>;
+-		status = "disabled";
+-	};
+diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml
+new file mode 100644
+index 0000000..dee5131
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/memory-controllers/fsl/mmdc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Multi Mode DDR controller (MMDC)
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: fsl,imx6q-mmdc
++      - items:
++          - enum:
++            - fsl,imx6qp-mmdc
++            - fsl,imx6sl-mmdc
++            - fsl,imx6sll-mmdc
++            - fsl,imx6sx-mmdc
++            - fsl,imx6ul-mmdc
++            - fsl,imx7ulp-mmdc
++          - const: fsl,imx6q-mmdc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx6qdl-clock.h>
++
++    memory-controller@21b0000 {
++        compatible = "fsl,imx6q-mmdc";
++        reg = <0x021b0000 0x4000>;
++        clocks = <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
++    };
++
++    memory-controller@21b4000 {
++        compatible = "fsl,imx6q-mmdc";
++        reg = <0x021b4000 0x4000>;
++    };
+-- 
+2.7.4
+
