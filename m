@@ -2,154 +2,102 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCEEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6261AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12C92208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B152087C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596226748;
-	bh=kpVPEQX6YrK9Vye8C7JmeSwtUAJDmnsHTgXW59My/Mo=;
+	s=default; t=1596226831;
+	bh=b6Kd7W7qIcd9HCB+grl80x+iMKiqdTkxM3biZ3nm8mA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w9IMg26qTR8oHYMUrSWoJfV7sgbhspMZEnY+bijZRNaw2SB4xr6rCJS2k3ka8NQSj
-	 SOoJVmZDLeo/0ZMIl5t2Guc4mz/PKSLw281HALdX6W9/4lyqgLPdpXqtRwUcI0ZXQR
-	 NTWiv1s4rux2A3Wi0vs3K3+U9Yu7sdXcpzchudag=
+	b=h7U7IOuYBotY+HPAzG0ky9BRicxxVhAewCzgSRb9UemwQHa72LLBMPrGn7CkcfQRr
+	 c3pIKIeqH1GX8K7wLMGCBMKADFAInyUbBUxuHAKtErUrSzZ1Rj5JZlaFHtGsLlxVs/
+	 qgcBoKeB0KmeIT7bdpaqcCWnkW+iaeNcEKpc+v4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgGaUTE (ORCPT
+        id S1726643AbgGaUUa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:19:04 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43354 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgGaUTD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:19:03 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so32826095iom.10;
-        Fri, 31 Jul 2020 13:19:02 -0700 (PDT)
+        Fri, 31 Jul 2020 16:20:30 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35196 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgGaUUa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:20:30 -0400
+Received: by mail-il1-f194.google.com with SMTP id t18so26403656ilh.2;
+        Fri, 31 Jul 2020 13:20:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=kRn98kmX+GxBTOj20IyuIt5F7vNs5kI3rOwmf5gJlXo=;
-        b=my4tHzba/cskiaKYtb865T94mHGBQ2/523OPxs2+vhF3jmlJB+k+94AO8K289BNqOT
-         gl4cRQvHLXFlHs5JUu6AFLHcZ2qrJrCIlcl9UNj+q22D9cdvOYBGoyvVaA2zBgi3dHGA
-         izQXcczynRA8wLbUBoQjsvmLQu4u5q2Rnw/zPScxAeCXktiVVP/Z/pJwl1Fw2KSDCTi+
-         EEiKHrISTnE/YIJSeqKaKkUCR/gtHAYCg3SfeCAaH8R4+Z2fP7kStq8/1q1wDbjZ37v9
-         vS4o/JWzcV2ufEunGyhjM5k/gqQ1MW19QmltH2LPtBo3VXEeyn6xu/I8RocimgLXxhd7
-         hw1w==
-X-Gm-Message-State: AOAM530eC1AMkuzAWJWtC9EWvgh2huXQxKn1C/2jmTIMN5AgL9N9LjZy
-        NPgEWjJpbrZK7Oz12EvgmBLY6dVvEQ==
-X-Google-Smtp-Source: ABdhPJzr8uZ3Qr6GyTYZhEhFqGlrmvl/TYAVEn9xE4hVBsU1/rNOHODs4KB2luEuWtnujV/FBhN5hw==
-X-Received: by 2002:a05:6602:2409:: with SMTP id s9mr4870384ioa.98.1596226742314;
-        Fri, 31 Jul 2020 13:19:02 -0700 (PDT)
+        bh=14cFHIH+5pcNnYf7nGiGjtZ3STT/BgFgufhbpVb8w2E=;
+        b=p87KS+8lFIt7T+ZIFHj99eSaAWB5V/nI+3S3xMfRDoieiiStW+mM12zG3CR8X2BuCa
+         ZILx7qR7DmVSKXm7u1C9BmYk1U3rcQcB8ULrGDMI0wxdHNHbofq6JMlCCkz6dGMwds9e
+         ++lhqVjLxSNfeMt4MoBncwDOGjy7nHS2xZPpI+NOVs3CTmBvvny30vabgAwJym6FXeyJ
+         4aaBS5G6rwnqMPQLz84gpdQfY94OvpuHmjdAZyViIiXTjg9A2qjVkZBYo9H4UxAYjanB
+         UgfwY6gjLplP3fSQvxlM509V4ProIyLeWSgUECJqkHBlqWBacyB1ErahpdaLlSOPT/Qa
+         q5mg==
+X-Gm-Message-State: AOAM532J7C9nOnhuy34bLq3WYusyeaK4VJoxba9xozS/8Hsg15pPKnPR
+        qBt1AqgBf9/FidrnP9zhrg==
+X-Google-Smtp-Source: ABdhPJwH+8TRsy44CdLoDhMeudbSS0ZxxndP4/x3ZTsHVWfrjyI+20UP81e+sp4iuHC9D9Xz17JjSw==
+X-Received: by 2002:a05:6e02:134e:: with SMTP id k14mr2532291ilr.152.1596226829165;
+        Fri, 31 Jul 2020 13:20:29 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g1sm5489132iov.38.2020.07.31.13.19.01
+        by smtp.gmail.com with ESMTPSA id a18sm4415112ilp.52.2020.07.31.13.20.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 13:19:01 -0700 (PDT)
-Received: (nullmailer pid 711472 invoked by uid 1000);
-        Fri, 31 Jul 2020 20:19:00 -0000
-Date:   Fri, 31 Jul 2020 14:19:00 -0600
+        Fri, 31 Jul 2020 13:20:28 -0700 (PDT)
+Received: (nullmailer pid 713904 invoked by uid 1000);
+        Fri, 31 Jul 2020 20:20:25 -0000
+Date:   Fri, 31 Jul 2020 14:20:25 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Niklas <niklas.soderlund@ragnatech.se>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH 1/2] dt-bindings: media: renesas,vin: Document
- renesas-vin-ycbcr-8b-g property
-Message-ID: <20200731201900.GA704336@bogus>
-References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200724193752.GE2729799@oden.dyn.berto.se>
- <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
- <20200725081146.GF2729799@oden.dyn.berto.se>
- <CA+V-a8sNxUaj88DDcWyc4zrmsAAGndjoQX=OmJ3u1GRJCT6TBQ@mail.gmail.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     devicetree@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/7] ASoC: dt-bindings: Add a new compatible for the A64
+ codec
+Message-ID: <20200731202025.GA713768@bogus>
+References: <20200726012557.38282-1-samuel@sholland.org>
+ <20200726012557.38282-2-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8sNxUaj88DDcWyc4zrmsAAGndjoQX=OmJ3u1GRJCT6TBQ@mail.gmail.com>
+In-Reply-To: <20200726012557.38282-2-samuel@sholland.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 11:23:13PM +0100, Lad, Prabhakar wrote:
-> Hi Niklas,
+On Sat, 25 Jul 2020 20:25:51 -0500, Samuel Holland wrote:
+> The audio codecs in the A33 and A64 are both integrated variants of the
+> X-Powers AC100 codec. However, there are some differences between them
+> that merit having a separate compatible:
+>  - The A64 has a second DRC block, not present in the AC100 or A33.
+>  - The A33 has some extra muxing options for AIF1/2/3 in the
+>    AIF3_SGP_CTRL register, which are not present in the AC100 or A64.
+>  - The A33 is missing registers providing jack detection functionality.
+>  - The A33 is claimed to invert LRCK, but this is not seen on A64.
 > 
-> On Sat, Jul 25, 2020 at 9:11 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> >
-> > Hi Lad,
-> >
-> > On 2020-07-24 22:11:31 +0100, Lad, Prabhakar wrote:
-> > > Hi Niklas,
-> > >
-> > > Thank you for the review.
-> > >
-> > > On Fri, Jul 24, 2020 at 8:37 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> > > >
-> > > > Hi Lad,
-> > > >
-> > > > Thanks for your patch.
-> > > >
-> > > > On 2020-07-24 15:58:51 +0100, Lad Prabhakar wrote:
-> > > > > Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit data
-> > > > > input pins.
-> > > > >
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/media/renesas,vin.yaml | 13 +++++++++++++
-> > > > >  1 file changed, 13 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > > > index 53c0a72..7dfb781 100644
-> > > > > --- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > > > @@ -106,6 +106,12 @@ properties:
-> > > > >
-> > > > >            remote-endpoint: true
-> > > > >
-> > > > > +          renesas-vin-ycbcr-8b-g:
-> > > >
-> > > > I think the preferred format for vendor specific properties are
-> > > > "<vendor>,<property>".
-> > > >
-> > > Indeed and I had it as renesas,vin-ycbcr-8b-g but dt_bindings_check
-> > > complained about it.
-> >
-> > I see, what was the error?
-> >
->   CHKDT   Documentation/devicetree/bindings/media/renesas,vin.yaml
-> /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:port:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> {'type': 'boolean', 'description': 'If present this property specifies
-> to selects VIN_G[7:0] as data pins for YCbCr422 8-bit data.',
-> 'default': False} is not valid under any of the given schemas
-> (Possible causes of the failure):
->     /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:port:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> 'not' is a required property
+> Since the driver will continue to work on the A64 using the A33
+> compatible, albeit without jack detection functionality and with
+> possibly inverted channels, as it does now, allow the A33 compatible
+> to be used as a fallback.
 > 
-> /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:ports:properties:port@0:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> {'type': 'boolean', 'description': 'If present this property specifies
-> to selects VIN_G[7:0] as data pins for YCbCr422 8-bit data.',
-> 'default': False} is not valid under any of the given schemas
-> (Possible causes of the failure):
->     /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:ports:properties:port@0:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> 'not' is a required property
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../bindings/sound/allwinner,sun8i-a33-codec.yaml           | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
 
-The errors here aren't that helpful. The problem is 'default: false' 
-doesn't make sense for a boolean type as false is always not present for 
-DT.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
