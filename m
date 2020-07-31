@@ -2,225 +2,117 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FF0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59870C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A1221744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596220373;
-	bh=V94zdN5H+e3SBeRoUvNUIb+YtxH496y/vXGq3vfRfWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iVJDYqzbKHxgIG9CJya62fuUqhrJ0v72grP5qt9WXjpFjyO3Pd7HU4Ct4StuIbm6G
-	 FKM1wYF1OeKKQ8gXAFtB2pp46iLwDcYdyOwxML0+BOhwcWATgCYlWaGSdGl1OBi59n
-	 Bjuv7nBQ3/ZX2pymvIzR3OUtdPPF0JTykaHt5Z8w=
+	by mail.kernel.org (Postfix) with ESMTP id 412042087C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:35:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJjCRbjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387757AbgGaScw (ORCPT
+        id S2387758AbgGaSfa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:32:52 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42999 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730040AbgGaScw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:32:52 -0400
-Received: by mail-il1-f194.google.com with SMTP id i138so20207057ild.9;
-        Fri, 31 Jul 2020 11:32:51 -0700 (PDT)
+        Fri, 31 Jul 2020 14:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730040AbgGaSfa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:35:30 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25CDC061574;
+        Fri, 31 Jul 2020 11:35:29 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w2so16459441pgg.10;
+        Fri, 31 Jul 2020 11:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9uPbLYEc3IE3xvGVWE7eVveI/WSw9PvenumczRVCi68=;
+        b=EJjCRbjgAzAp7WoiBsch0EchH5/33DCllbcP1OKa3mz0aFYizO8yiFYmiMGqevRSFw
+         di49dpI3OfdTe8cCvbBJz5DI5IhU71Og8X6/1UsJM2b9+qZ1XOkO1uIzxU9cWSv1QenN
+         BqzA2IYjwJvIoNaBARlRr1HtTxFkLfx3GmclbnTLQjoVlBJy4hFRIxR7yg4RtF00CCyw
+         LtOx4R5Rv49Q+/1gVc9kk4mv+mhVMX3N/l6jK4m8MEQsa9+6IDTSOWjdhNeCvh/q9fvM
+         G3Cgz/Bxbj757gysNZMXrpQ16zbt8fh/Imx7h1TK7RGMzepyEeykpezXSYwI8jTLl4RP
+         M60w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EowHBI4dMeGjG0e5BJ+8WQXeSAJSfhXVUUltMQUkAHk=;
-        b=BeCj8lP5ss1j7OCimCq7XgBPaNitajuugE63xDMXHJq2tdUBMbVs0ABM/w9atGqfkW
-         hUhVNCj25D9iT58Dygzu+o0HzJmgpm2P3wHOaPbS2EzdxqLvWFrL4CdUy4HiJeR4fyuX
-         zso5Yga4bspXmdveiYHHKhcnPjmrwvGwFZTOeIHn9gpeOv+lK2wk0iBh2VC6GOuKTnJ8
-         qd9STP4MFYD9YM0Gc+3x9nLRUYH1TZLCeb0KNT+fo9qV/tt19Ne2M+rVvVDrLs4DmkZz
-         w3Fr2zRItV5Bdi5gX74wCPjh9md+xwDlUZPq4tlSddEKX2wUYYD7a7jhgwK+kPyEP2lm
-         sFug==
-X-Gm-Message-State: AOAM531QcqbXsvUrzAqV5ky7HNI7alU7eU3brfU6dIsZJsxv9zfjEkES
-        HogumDVgT6P4TFMYtfuLsxHlFx3udg==
-X-Google-Smtp-Source: ABdhPJyRXrrrBCybFoJ4FQVs6g+pcQdN2eOBcJP56L5uwDXTsMph9xwyQUcqO122bYXED9rj7MLeUg==
-X-Received: by 2002:a92:9687:: with SMTP id g129mr4824817ilh.219.1596220371327;
-        Fri, 31 Jul 2020 11:32:51 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y8sm5097640ilq.21.2020.07.31.11.32.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 11:32:50 -0700 (PDT)
-Received: (nullmailer pid 540647 invoked by uid 1000);
-        Fri, 31 Jul 2020 18:32:48 -0000
-Date:   Fri, 31 Jul 2020 12:32:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine
- bindings
-Message-ID: <20200731183248.GB531472@bogus>
-References: <20200731084023.2678931-1-cychiang@chromium.org>
- <20200731084023.2678931-2-cychiang@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9uPbLYEc3IE3xvGVWE7eVveI/WSw9PvenumczRVCi68=;
+        b=TBn2KetnWrRM4sdrNMzmMDWtyHKW6Ux0L09LlUMfCDDgcGE87loOuhqDVTEMpJWACh
+         6lIuUCcPJGMYfFaBTVKD+zbRV1sbYkw6UkRE4NMS3w609r5/dvh5suY97F3dzMUIrH42
+         5d7hDIO/mZWqCNqXFomrw4JeWcj5HO5oHSpq8M6xCW3HGGCt71Zm9ClRpldActMTs3aE
+         W0qq0yrz51+lQIWSNDWTaCyAegnQPu0Z8PF5qjyeopFPjOtax8EnXiTLwo0CGCwdQoKn
+         EC8kYm3rJT+C18uJIGBnXvxD+harD5sFdQipk41rbs/Q6lxbzVOGFtps89/c/seL1S/j
+         AnkA==
+X-Gm-Message-State: AOAM532/1SZSzOgYKaq+EfhIIBdaS+E0JOATac4qbS0kHVTxLxh2f1sL
+        BNBmNRHcCQC6RJOUOmuJBLrn5uMyHvuwEfr2xZ0=
+X-Google-Smtp-Source: ABdhPJzyUPSRBxW207ilij7va2l3+pEgmV0Eo+vJRDpZefHXSYnAxLeyl5A9w/nUfeo4J3X/2drjcQ4habfC0HyaPgE=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr4876597pgn.4.1596220529070;
+ Fri, 31 Jul 2020 11:35:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731084023.2678931-2-cychiang@chromium.org>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+In-Reply-To: <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jul 2020 21:35:12 +0300
+Message-ID: <CAHp75Vd=fU9O19DGjBGOcf3im_MVz4rAasTB87KgAfkRA-uMgA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/15] iio: sx9310: Fix irq handling
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 04:40:22PM +0800, Cheng-Yi Chiang wrote:
-> Add devicetree bindings documentation file for sc7180 sound card.
-> 
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> ---
->  .../bindings/sound/qcom,sc7180.yaml           | 113 ++++++++++++++++++
->  1 file changed, 113 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> new file mode 100644
-> index 000000000000..ce8a5a2d9df9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> @@ -0,0 +1,113 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
-> +
-> +maintainers:
-> +  - Rohit kumar <rohitkr@codeaurora.org>
-> +  - Cheng-Yi Chiang <cychiang@chromium.org>
-> +
-> +description:
-> +  This binding describes the SC7180 sound card which uses LPASS for audio.
-> +
-> +definitions:
+On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> Fixes enable/disable irq handling at various points. The driver needs to
+> only enable/disable irqs if there is an actual irq handler installed.
 
-Please don't use 'definitions'. Either just duplicate it or you can do 
-'patternProperties'.
+...
 
-> +
-> +  dai:
-> +    type: object
-> +    properties:
-> +      sound-dai:
-> +        maxItems: 1
-> +        $ref: /schemas/types.yaml#/definitions/phandle-array
-> +        description: phandle array of the codec or CPU DAI
+>  static int sx9310_enable_irq(struct sx9310_data *data, unsigned int irq)
+>  {
+> -       return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, irq);
+> +       if (data->client->irq)
+> +               return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq,
+> +                                         irq);
+> +       return 0;
 
-This is a common property. You can assume we have a common schema 
-definition for it. IOW, 'sound-dai: true' is enough as it's always a 
-single phandle+args.
+Wouldn't it be better to insert rather
+if (!irq)
+  return 0;
+than disrupting the entire function?
 
-> +
-> +    required:
-> +      - sound-dai
-> +
-> +properties:
-> +  compatible:
-> +    contains:
-> +      const: qcom,sc7180-sndcard
-> +
-> +  audio-routing:
-> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +    description:
-> +      A list of the connections between audio components. Each entry is a
-> +      pair of strings, the first being the connection's sink, the second
-> +      being the connection's source.
-> +
-> +  model:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description: User specified audio sound card name
-> +
-> +  aux-dev:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle of the codec for headset detection
-> +
-> +patternProperties:
-> +  "^dai-link(@[0-9]+)?$":
-> +    description:
-> +      Each subnode represents a dai link. Subnodes of each dai links would be
-> +      cpu/codec dais.
-> +
-> +    type: object
-> +
-> +    properties:
-> +      link-name:
-> +        description: Indicates dai-link name and PCM stream name.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        maxItems: 1
-> +
-> +      cpu:
-> +        $ref: "#/definitions/dai"
-> +
-> +      codec:
-> +        $ref: "#/definitions/dai"
-> +
-> +    required:
-> +      - link-name
-> +      - cpu
-> +      - codec
-> +
-> +    additionalProperties: false
-> +
-> +examples:
-> +
-> +  - |
-> +    sound {
-> +        compatible = "qcom,sc7180-sndcard";
-> +        model = "sc7180-snd-card";
-> +
-> +        audio-routing =
-> +                    "Headphone Jack", "HPOL",
-> +                    "Headphone Jack", "HPOR";
-> +
-> +        aux-dev = <&alc5682>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        dai-link@0 {
-> +            link-name = "MultiMedia0";
-> +            cpu {
-> +                sound-dai = <&lpass_cpu 0>;
-> +            };
-> +
-> +            codec {
-> +                sound-dai = <&alc5682 0>;
-> +            };
-> +        };
-> +
-> +        dai-link@1 {
-> +            link-name = "MultiMedia1";
-> +            cpu {
-> +                sound-dai = <&lpass_cpu 1>;
-> +            };
-> +
-> +            codec {
-> +                sound-dai = <&max98357a>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.28.0.163.g6104cc2f0b6-goog
-> 
+>  }
+>
+>  static int sx9310_disable_irq(struct sx9310_data *data, unsigned int irq)
+>  {
+> -       return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, 0);
+> +       if (data->client->irq)
+> +               return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq,
+> +                                         0);
+> +       return 0;
+
+Ditto.
+
+>  }
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
