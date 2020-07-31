@@ -2,388 +2,207 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F137CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8434C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBCEF21744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B581522B40
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JvsYnhep"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="Cbap8GNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733262AbgGaQuD (ORCPT
+        id S1732550AbgGaQvZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733021AbgGaQtA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 12:49:00 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47422C06174A
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:00 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k23so32238639iom.10
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LKIkrCHSlHiP9mdXJyXq26+gaHuBbJcyBgDB2tSCq48=;
-        b=JvsYnhepMo8clUVA18lJhr4hTYhJfVTICy3x7LxeeGnQ828Q2DcAqv112c6WGC2SZH
-         Nv9YFqJzltINaUfe0BO/sI5IIZauyEbwW3coWSBth12Ly/MEO43K6WVi4sVJUb7H1EKP
-         vInp6ezs7BVriRaGjStqg0gotWNOJboRVF9dM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LKIkrCHSlHiP9mdXJyXq26+gaHuBbJcyBgDB2tSCq48=;
-        b=I2T4xDS09hc1cahDF8fXJCBcaPjBbJK+EQnAjCKtsVu93XIBxzntaNlURhGFbxEPV/
-         4D1aZHecvVKrb7y2VZcCb8sZ9QvmU+OtM8yTR9/gY8YcrttXouz19JXeNVfnvtSq0My9
-         eNVJWCX3rYnKFnqhNRKdBlOU9V+vBoWeACqSleNrr2Dt80d10cXKl3QcLfM2c/Jvucpk
-         wzAvy+dXaxITSCe8ecvUPxU/jeg3bg7ldrHGMOnlprBWnrvDDMndHMtOeiOmihBUOHlt
-         9cF6cgRzmC4ex1Qw4CvyIjhKopeQIV3MYCeIA7BW580/djOdaUIRdSK52LLZV9fwD6Wf
-         IVcg==
-X-Gm-Message-State: AOAM5301KbIj58XX1HW6mx8mlrpZ5QH23oHjRaLXGEDpPD41R8/2zgFv
-        Kz+GqnZZRdoh8LzxLWbdqtOod5PXaMP6XA==
-X-Google-Smtp-Source: ABdhPJzILU8L74+W7y1aIxlUn8Dgjx9+X4goYczjgnYtLKaQ+OCJJQIsdi3exXg9AMMT8emrFOs9LA==
-X-Received: by 2002:a6b:b555:: with SMTP id e82mr4383529iof.56.1596214139299;
-        Fri, 31 Jul 2020 09:48:59 -0700 (PDT)
-Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 09:48:58 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH v3 02/15] iio: sx9310: Update macros declarations
-Date:   Fri, 31 Jul 2020 10:48:39 -0600
-Message-Id: <20200731104555.v3.2.I30721195b2f20ec785715f7a2757930302a2a7e8@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-In-Reply-To: <20200731164853.3020946-1-campello@chromium.org>
-References: <20200731164853.3020946-1-campello@chromium.org>
+        Fri, 31 Jul 2020 12:51:25 -0400
+Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:9804 "EHLO
+        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729889AbgGaQvY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 12:51:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1596214283; x=1627750283;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=PnG/70h3N6CUU/w/e7k1IYI8X1CoGva2b7M2lG2roMI=;
+  b=Cbap8GNSb0qAX/vXWJN6SEzJ9ArnMgXOpowlhR4nKzuzCJypl1iTInDq
+   LkBVh7XIr8FtYqDsC+JYx0QYkj8+12fDSapqipCFrLeEHilYmbyQvFBsF
+   q8rj19jhdW4Odjb7FVNoJPfKDglNZr9oTU/33VvbhOHufzFSDtnQ/1B98
+   dkogQbnNsRc3YPbLNps1LEya93+c4Q62NZNBH2P3qPQcxoF59n5PnQHDA
+   t+Mfy1XMcuD5HRJAaM1oVe0sz5dQxqyO5CgWx/Qx7gHiWoJMzTUNqLMpg
+   8e7ouepean8bI+en2Td1y/wXqqrUIigVJ5MQf/pXWvDjQd70u2N6g7QW/
+   A==;
+IronPort-SDR: c++el8NUJrlHUh1xhQe/nCUJSEVUfk2gmcldw0I8fQeS5K3gwdhXLr930psWvWkQkIeqj7bJz+
+ wWFE0wxgHSig==
+X-IronPort-AV: E=Sophos;i="5.75,418,1589234400"; 
+   d="scan'208";a="65153517"
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: [PATCH v7 2/3] leds: pwm: add support for default-state device
+ property
+Thread-Topic: [PATCH v7 2/3] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHWZ1rQnUk9+R6ZtE2N61cPqWWIHQ==
+Date:   Fri, 31 Jul 2020 16:51:19 +0000
+Message-ID: <20200731164945.19515-3-Denis.Osterland@diehl.com>
+References: <20200731164945.19515-1-Denis.Osterland@diehl.com>
+In-Reply-To: <20200731164945.19515-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TrailerSkip: 1
+X-GBS-PROC: PkB65aL1SqtESF35r/jQnxtgDjFz6f85lRVDwolbbm+Kx4tdAa60veLkqW/uXjTm
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Follows spec sheet for macro declarations.
+This patch adds support for =22default-state=22 devicetree property, whic=
+h
+allows to defer pwm init to first use of led.
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+This allows to configure the PWM early in bootloader to let the LED
+blink until an application in Linux userspace sets something different.
+
+Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 ---
+ drivers/leds/leds-pwm.c | 49 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 43 insertions(+), 6 deletions(-)
 
-Changes in v3: None
-Changes in v2: None
-
- drivers/iio/proximity/sx9310.c | 143 +++++++++++++++------------------
- 1 file changed, 67 insertions(+), 76 deletions(-)
-
-diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index d161f3061e353d..07895d4b935d12 100644
---- a/drivers/iio/proximity/sx9310.c
-+++ b/drivers/iio/proximity/sx9310.c
-@@ -33,45 +33,45 @@
- #define SX9310_REG_IRQ_SRC				0x00
- #define SX9310_REG_STAT0				0x01
- #define SX9310_REG_STAT1				0x02
-+#define SX9310_REG_STAT1_COMPSTAT_MASK			GENMASK(3, 0)
- #define SX9310_REG_IRQ_MSK				0x03
- #define   SX9310_CONVDONE_IRQ				BIT(3)
- #define   SX9310_FAR_IRQ				BIT(5)
- #define   SX9310_CLOSE_IRQ				BIT(6)
--#define   SX9310_EVENT_IRQ				(SX9310_FAR_IRQ | \
--							 SX9310_CLOSE_IRQ)
- #define SX9310_REG_IRQ_FUNC				0x04
- 
- #define SX9310_REG_PROX_CTRL0				0x10
--#define   SX9310_REG_PROX_CTRL0_PROXSTAT2		0x10
--#define   SX9310_REG_PROX_CTRL0_EN_MASK			0x0F
-+#define   SX9310_REG_PROX_CTRL0_SENSOREN_MASK		GENMASK(3, 0)
-+#define   SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK		GENMASK(7, 4)
-+#define   SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT	4
-+#define   SX9310_REG_PROX_CTRL0_SCANPERIOD_15MS		0x01
- #define SX9310_REG_PROX_CTRL1				0x11
- #define SX9310_REG_PROX_CTRL2				0x12
--#define   SX9310_REG_PROX_CTRL2_COMBMODE_ALL		0x80
--#define   SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC	0x04
-+#define   SX9310_REG_PROX_CTRL2_COMBMODE_CS1_CS2	(0x02 << 6)
-+#define   SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC	(0x01 << 2)
- #define SX9310_REG_PROX_CTRL3				0x13
--#define   SX9310_REG_PROX_CTRL3_GAIN0_X8		0x0c
-+#define   SX9310_REG_PROX_CTRL3_GAIN0_X8		(0x03 << 2)
- #define   SX9310_REG_PROX_CTRL3_GAIN12_X4		0x02
- #define SX9310_REG_PROX_CTRL4				0x14
- #define   SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST	0x07
- #define SX9310_REG_PROX_CTRL5				0x15
--#define   SX9310_REG_PROX_CTRL5_RANGE_SMALL		0xc0
--#define   SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1		0x04
-+#define   SX9310_REG_PROX_CTRL5_RANGE_SMALL		(0x03 << 6)
-+#define   SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1		(0x01 << 2)
- #define   SX9310_REG_PROX_CTRL5_RAWFILT_1P25		0x02
- #define SX9310_REG_PROX_CTRL6				0x16
--#define   SX9310_REG_PROX_CTRL6_COMP_COMMON		0x20
-+#define   SX9310_REG_PROX_CTRL6_AVGTHRESH_DEFAULT	0x20
- #define SX9310_REG_PROX_CTRL7				0x17
--#define   SX9310_REG_PROX_CTRL7_AVGNEGFILT_2		0x08
-+#define   SX9310_REG_PROX_CTRL7_AVGNEGFILT_2		(0x01 << 3)
- #define   SX9310_REG_PROX_CTRL7_AVGPOSFILT_512		0x05
- #define SX9310_REG_PROX_CTRL8				0x18
- #define SX9310_REG_PROX_CTRL9				0x19
--#define   SX9310_REG_PROX_CTRL8_9_PTHRESH12_28		0x40
--#define   SX9310_REG_PROX_CTRL8_9_PTHRESH_96		0x88
-+#define   SX9310_REG_PROX_CTRL8_9_PTHRESH_28		(0x08 << 3)
-+#define   SX9310_REG_PROX_CTRL8_9_PTHRESH_96		(0x11 << 3)
- #define   SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900	0x03
- #define   SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500	0x05
- #define SX9310_REG_PROX_CTRL10				0x1a
--#define   SX9310_REG_PROX_CTRL10_HYST_6PCT		0x10
--#define   SX9310_REG_PROX_CTRL10_CLOSE_DEBOUNCE_8	0x12
--#define   SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_8		0x03
-+#define   SX9310_REG_PROX_CTRL10_HYST_6PCT		(0x01 << 4)
-+#define   SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_2		0x01
- #define SX9310_REG_PROX_CTRL11				0x1b
- #define SX9310_REG_PROX_CTRL12				0x1c
- #define SX9310_REG_PROX_CTRL13				0x1d
-@@ -82,8 +82,8 @@
- #define SX9310_REG_PROX_CTRL18				0x22
- #define SX9310_REG_PROX_CTRL19				0x23
- #define SX9310_REG_SAR_CTRL0				0x2a
--#define   SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES		0x40
--#define   SX9310_REG_SAR_CTRL0_SARHYST_8		0x10
-+#define   SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES		(0x02 << 5)
-+#define   SX9310_REG_SAR_CTRL0_SARHYST_8		(0x02 << 3)
- #define SX9310_REG_SAR_CTRL1				0x2b
- /* Each increment of the slope register is 0.0078125. */
- #define   SX9310_REG_SAR_CTRL1_SLOPE(_hnslope)		(_hnslope / 78125)
-@@ -107,7 +107,7 @@
- #define SX9310_REG_SAR_MSB				0x39
- #define SX9310_REG_SAR_LSB				0x3a
- 
--#define SX9310_REG_I2CADDR				0x40
-+#define SX9310_REG_I2C_ADDR				0x40
- #define SX9310_REG_PAUSE				0x41
- #define SX9310_REG_WHOAMI				0x42
- #define   SX9310_WHOAMI_VALUE				0x01
-@@ -116,14 +116,9 @@
- #define SX9310_REG_RESET				0x7f
- #define   SX9310_SOFT_RESET				0xde
- 
--#define SX9310_SCAN_PERIOD_MASK				GENMASK(7, 4)
--#define SX9310_SCAN_PERIOD_SHIFT			4
--
--#define SX9310_COMPSTAT_MASK				GENMASK(3, 0)
- 
- /* 4 hardware channels, as defined in STAT0: COMB, CS2, CS1 and CS0. */
- #define SX9310_NUM_CHANNELS				4
--#define SX9310_CHAN_ENABLED_MASK			GENMASK(3, 0)
- 
- struct sx9310_data {
- 	/* Serialize access to registers and channel configuration */
-@@ -251,7 +246,7 @@ static const struct regmap_range sx9310_readable_reg_ranges[] = {
- 	regmap_reg_range(SX9310_REG_PROX_CTRL0, SX9310_REG_PROX_CTRL19),
- 	regmap_reg_range(SX9310_REG_SAR_CTRL0, SX9310_REG_SAR_CTRL2),
- 	regmap_reg_range(SX9310_REG_SENSOR_SEL, SX9310_REG_SAR_LSB),
--	regmap_reg_range(SX9310_REG_I2CADDR, SX9310_REG_WHOAMI),
-+	regmap_reg_range(SX9310_REG_I2C_ADDR, SX9310_REG_WHOAMI),
- 	regmap_reg_range(SX9310_REG_RESET, SX9310_REG_RESET),
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index ef7b91bd2064..0c0470c90d5d 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -17,11 +17,13 @@
+ #include <linux/err.h>
+ #include <linux/pwm.h>
+ #include <linux/slab.h>
++#include =22leds.h=22
+=20
+ struct led_pwm {
+ 	const char	*name;
+ 	const char	*default_trigger;
+ 	u8		active_low;
++	u8		default_state;
+ 	unsigned int	max_brightness;
  };
- 
-@@ -292,7 +287,7 @@ static int sx9310_update_chan_en(struct sx9310_data *data,
- 
- 	if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
- 		ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
--					 SX9310_CHAN_ENABLED_MASK,
-+					 SX9310_REG_PROX_CTRL0_SENSOREN_MASK,
- 					 chan_read | chan_event);
- 		if (ret)
- 			return ret;
-@@ -361,7 +356,8 @@ static int sx9310_wait_for_sample(struct sx9310_data *data)
- 	if (ret < 0)
+=20
+@@ -88,7 +90,38 @@ static int led_pwm_add(struct device *dev, struct led_=
+pwm_priv *priv,
+=20
+ 	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
+=20
+-	pwm_init_state(led_data->pwm, &led_data->pwmstate);
++	/* init PWM state */
++	switch (led->default_state) {
++	case LEDS_DEFSTATE_KEEP:
++		pwm_get_state(led_data->pwm, &led_data->pwmstate);
++		if (led_data->pwmstate.period)
++			break;
++		led->default_state =3D LEDS_DEFSTATE_OFF;
++		dev_warn(dev,
++			=22failed to read period for %s, default to off=22,
++			led->name);
++		fallthrough;
++	default:
++		pwm_init_state(led_data->pwm, &led_data->pwmstate);
++		break;
++	}
++
++	/* set brightness */
++	switch (led->default_state) {
++	case LEDS_DEFSTATE_ON:
++		led_data->cdev.brightness =3D led->max_brightness;
++		break;
++	case LEDS_DEFSTATE_KEEP:
++		{
++		uint64_t brightness;
++
++		brightness =3D led->max_brightness;
++		brightness *=3D led_data->pwmstate.duty_cycle;
++		do_div(brightness, led_data->pwmstate.period);
++		led_data->cdev.brightness =3D brightness;
++		}
++		break;
++	}
+=20
+ 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
+ 	if (ret) {
+@@ -97,11 +130,13 @@ static int led_pwm_add(struct device *dev, struct le=
+d_pwm_priv *priv,
  		return ret;
- 
--	val = (val & SX9310_SCAN_PERIOD_MASK) >> SX9310_SCAN_PERIOD_SHIFT;
-+	val = (val & SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK) >>
-+	      SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT;
- 
- 	msleep(sx9310_scan_period_table[val]);
- 
-@@ -435,7 +431,8 @@ static int sx9310_read_samp_freq(struct sx9310_data *data, int *val, int *val2)
- 	if (ret < 0)
- 		return ret;
- 
--	regval = (regval & SX9310_SCAN_PERIOD_MASK) >> SX9310_SCAN_PERIOD_SHIFT;
-+	regval = (regval & SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK) >>
-+		 SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT;
- 	*val = sx9310_samp_freq_table[regval].val;
- 	*val2 = sx9310_samp_freq_table[regval].val2;
- 
-@@ -483,8 +480,8 @@ static int sx9310_set_samp_freq(struct sx9310_data *data, int val, int val2)
- 	mutex_lock(&data->mutex);
- 
- 	ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
--				 SX9310_SCAN_PERIOD_MASK,
--				 i << SX9310_SCAN_PERIOD_SHIFT);
-+				 SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK,
-+				 i << SX9310_REG_PROX_CTRL0_SCANPERIOD_SHIFT);
- 
- 	mutex_unlock(&data->mutex);
- 
-@@ -572,7 +569,7 @@ static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
- 		goto out;
  	}
- 
--	if (val & SX9310_EVENT_IRQ)
-+	if (val & (SX9310_FAR_IRQ | SX9310_CLOSE_IRQ))
- 		sx9310_push_events(indio_dev);
- 
- 	if (val & SX9310_CONVDONE_IRQ)
-@@ -600,6 +597,7 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
- 				     enum iio_event_direction dir, int state)
- {
- 	struct sx9310_data *data = iio_priv(indio_dev);
-+	unsigned int eventirq = SX9310_FAR_IRQ | SX9310_CLOSE_IRQ;
- 	int ret;
- 
- 	/* If the state hasn't changed, there's nothing to do. */
-@@ -612,7 +610,7 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
- 		if (ret < 0)
- 			goto out_unlock;
- 		if (!(data->chan_event & ~BIT(chan->channel))) {
--			ret = sx9310_enable_irq(data, SX9310_EVENT_IRQ);
-+			ret = sx9310_enable_irq(data, eventirq);
- 			if (ret < 0)
- 				sx9310_put_event_channel(data, chan->channel);
- 		}
-@@ -621,7 +619,7 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
- 		if (ret < 0)
- 			goto out_unlock;
- 		if (!data->chan_event) {
--			ret = sx9310_disable_irq(data, SX9310_EVENT_IRQ);
-+			ret = sx9310_disable_irq(data, eventirq);
- 			if (ret < 0)
- 				sx9310_get_event_channel(data, chan->channel);
- 		}
-@@ -746,53 +744,46 @@ struct sx9310_reg_default {
- 	u8 def;
- };
- 
--#define SX_INIT(_reg, _def)			\
--	{					\
--		.reg = SX9310_REG_##_reg,	\
--		.def = _def,			\
--	}
--
- static const struct sx9310_reg_default sx9310_default_regs[] = {
--	SX_INIT(IRQ_MSK, 0x00),
--	SX_INIT(IRQ_FUNC, 0x00),
-+	{ SX9310_REG_IRQ_MSK, 0x00 },
-+	{ SX9310_REG_IRQ_FUNC, 0x00 },
- 	/*
- 	 * The lower 4 bits should not be set as it enable sensors measurements.
- 	 * Turning the detection on before the configuration values are set to
- 	 * good values can cause the device to return erroneous readings.
- 	 */
--	SX_INIT(PROX_CTRL0, SX9310_REG_PROX_CTRL0_PROXSTAT2),
--	SX_INIT(PROX_CTRL1, 0x00),
--	SX_INIT(PROX_CTRL2, SX9310_REG_PROX_CTRL2_COMBMODE_ALL |
--			    SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC),
--	SX_INIT(PROX_CTRL3, SX9310_REG_PROX_CTRL3_GAIN0_X8 |
--			    SX9310_REG_PROX_CTRL3_GAIN12_X4),
--	SX_INIT(PROX_CTRL4, SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST),
--	SX_INIT(PROX_CTRL5, SX9310_REG_PROX_CTRL5_RANGE_SMALL |
--			    SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1 |
--			    SX9310_REG_PROX_CTRL5_RAWFILT_1P25),
--	SX_INIT(PROX_CTRL6, SX9310_REG_PROX_CTRL6_COMP_COMMON),
--	SX_INIT(PROX_CTRL7, SX9310_REG_PROX_CTRL7_AVGNEGFILT_2 |
--			    SX9310_REG_PROX_CTRL7_AVGPOSFILT_512),
--	SX_INIT(PROX_CTRL8, SX9310_REG_PROX_CTRL8_9_PTHRESH_96 |
--			    SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500),
--	SX_INIT(PROX_CTRL9, SX9310_REG_PROX_CTRL8_9_PTHRESH12_28 |
--			    SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900),
--	SX_INIT(PROX_CTRL10, SX9310_REG_PROX_CTRL10_HYST_6PCT |
--			     SX9310_REG_PROX_CTRL10_CLOSE_DEBOUNCE_8 |
--			     SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_8),
--	SX_INIT(PROX_CTRL11, 0x00),
--	SX_INIT(PROX_CTRL12, 0x00),
--	SX_INIT(PROX_CTRL13, 0x00),
--	SX_INIT(PROX_CTRL14, 0x00),
--	SX_INIT(PROX_CTRL15, 0x00),
--	SX_INIT(PROX_CTRL16, 0x00),
--	SX_INIT(PROX_CTRL17, 0x00),
--	SX_INIT(PROX_CTRL18, 0x00),
--	SX_INIT(PROX_CTRL19, 0x00),
--	SX_INIT(SAR_CTRL0, SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES |
--			   SX9310_REG_SAR_CTRL0_SARHYST_8),
--	SX_INIT(SAR_CTRL1, SX9310_REG_SAR_CTRL1_SLOPE(10781250)),
--	SX_INIT(SAR_CTRL2, SX9310_REG_SAR_CTRL2_SAROFFSET_DEFAULT),
-+	{ SX9310_REG_PROX_CTRL0, SX9310_REG_PROX_CTRL0_SCANPERIOD_15MS },
-+	{ SX9310_REG_PROX_CTRL1, 0x00 },
-+	{ SX9310_REG_PROX_CTRL2, SX9310_REG_PROX_CTRL2_COMBMODE_CS1_CS2 |
-+				 SX9310_REG_PROX_CTRL2_SHIELDEN_DYNAMIC },
-+	{ SX9310_REG_PROX_CTRL3, SX9310_REG_PROX_CTRL3_GAIN0_X8 |
-+				 SX9310_REG_PROX_CTRL3_GAIN12_X4 },
-+	{ SX9310_REG_PROX_CTRL4, SX9310_REG_PROX_CTRL4_RESOLUTION_FINEST },
-+	{ SX9310_REG_PROX_CTRL5, SX9310_REG_PROX_CTRL5_RANGE_SMALL |
-+				 SX9310_REG_PROX_CTRL5_STARTUPSENS_CS1 |
-+				 SX9310_REG_PROX_CTRL5_RAWFILT_1P25 },
-+	{ SX9310_REG_PROX_CTRL6, SX9310_REG_PROX_CTRL6_AVGTHRESH_DEFAULT },
-+	{ SX9310_REG_PROX_CTRL7, SX9310_REG_PROX_CTRL7_AVGNEGFILT_2 |
-+				 SX9310_REG_PROX_CTRL7_AVGPOSFILT_512 },
-+	{ SX9310_REG_PROX_CTRL8, SX9310_REG_PROX_CTRL8_9_PTHRESH_96 |
-+				 SX9310_REG_PROX_CTRL8_9_BODYTHRESH_1500 },
-+	{ SX9310_REG_PROX_CTRL9, SX9310_REG_PROX_CTRL8_9_PTHRESH_28 |
-+				 SX9310_REG_PROX_CTRL8_9_BODYTHRESH_900 },
-+	{ SX9310_REG_PROX_CTRL10, SX9310_REG_PROX_CTRL10_HYST_6PCT |
-+				  SX9310_REG_PROX_CTRL10_FAR_DEBOUNCE_2 },
-+	{ SX9310_REG_PROX_CTRL11, 0x00 },
-+	{ SX9310_REG_PROX_CTRL12, 0x00 },
-+	{ SX9310_REG_PROX_CTRL13, 0x00 },
-+	{ SX9310_REG_PROX_CTRL14, 0x00 },
-+	{ SX9310_REG_PROX_CTRL15, 0x00 },
-+	{ SX9310_REG_PROX_CTRL16, 0x00 },
-+	{ SX9310_REG_PROX_CTRL17, 0x00 },
-+	{ SX9310_REG_PROX_CTRL18, 0x00 },
-+	{ SX9310_REG_PROX_CTRL19, 0x00 },
-+	{ SX9310_REG_SAR_CTRL0, SX9310_REG_SAR_CTRL0_SARDEB_4_SAMPLES |
-+				SX9310_REG_SAR_CTRL0_SARHYST_8 },
-+	{ SX9310_REG_SAR_CTRL1, SX9310_REG_SAR_CTRL1_SLOPE(10781250) },
-+	{ SX9310_REG_SAR_CTRL2, SX9310_REG_SAR_CTRL2_SAROFFSET_DEFAULT },
- };
- 
- /* Activate all channels and perform an initial compensation. */
-@@ -809,7 +800,7 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
- 
- 	/* run the compensation phase on all channels */
- 	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0,
--			   ctrl0 | SX9310_REG_PROX_CTRL0_EN_MASK);
-+			   ctrl0 | SX9310_REG_PROX_CTRL0_SENSOREN_MASK);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -992,7 +983,7 @@ static int __maybe_unused sx9310_suspend(struct device *dev)
- 	if (ret)
- 		goto out;
- 
--	ctrl0 = data->suspend_ctrl0 & ~SX9310_REG_PROX_CTRL0_EN_MASK;
-+	ctrl0 = data->suspend_ctrl0 & ~SX9310_REG_PROX_CTRL0_SENSOREN_MASK;
- 	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0, ctrl0);
- 	if (ret)
- 		goto out;
--- 
-2.28.0.163.g6104cc2f0b6-goog
+=20
+-	ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
+-	if (ret) {
+-		dev_err(dev, =22failed to set led PWM value for %s: %d=22,
+-			led->name, ret);
+-		return ret;
++	if (led->default_state !=3D LEDS_DEFSTATE_KEEP) {
++		ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
++		if (ret) {
++			dev_err(dev, =22failed to set led PWM value for %s: %d=22,
++				led->name, ret);
++			return ret;
++		}
+ 	}
+=20
+ 	priv->num_leds++;
+@@ -134,6 +169,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
+struct led_pwm_priv *priv)
+ 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
+ 					 &led.max_brightness);
+=20
++		led.default_state =3D led_init_default_state_get(fwnode);
++
+ 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
+ 		if (ret) {
+ 			fwnode_handle_put(fwnode);
+--=20
+2.28.0
 
+
+
+Diehl Connectivity Solutions GmbH
+Gesch=E4ftsf=FChrung: Horst Leonberger
+Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
+N=FCrnberg: HRB 32315
+_________________________________________________________________________=
+__________________________
+
+Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
+ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
+ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
+ und/oder Publikation dieser E-Mail ist strengstens untersagt.
+- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
+Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
+chten/
+
+The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please =
+inform us if you have received this e-mail by
+mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is st=
+rictly prohibited.=20
+- For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-o=
+bligations/
