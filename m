@@ -2,105 +2,107 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D210C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 14:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35ECC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 14:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B23F21744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 14:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE78206FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 14:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKjQcDrG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rooF5Y/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgGaOQk (ORCPT
+        id S1728830AbgGaObK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 10:16:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48734 "EHLO
+        Fri, 31 Jul 2020 10:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728838AbgGaOQj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 10:16:39 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37055C061756
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 07:16:39 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id x12so14505124qtp.1
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 07:16:39 -0700 (PDT)
+        with ESMTP id S1728697AbgGaObJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 10:31:09 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573D4C061574;
+        Fri, 31 Jul 2020 07:31:09 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id jp10so5066002ejb.0;
+        Fri, 31 Jul 2020 07:31:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ghusglmB0el24Vhn8WtszcgSvBkG8uGRUxxlzLuuep0=;
-        b=GKjQcDrGctfJSP0MxKFQt7g9h74EGF0pJtWuAyksJXuJqiRblwSk7MDDFONbAqOwlZ
-         DtHi1ftC7PHqIbFiOYLLvZkgwhAip/iXhI7ME0/IpOP3hmP/W8umypjmsF7HJRt7vEJm
-         9c5ECjVPGhefCP/cQgx8u+ANBTh9rkUPc86UuA/GyPhbNywsciPPUrjT8hPL0H4aZeLY
-         hFkGGOP3cc+rNjFBNUuKl6ijMr8wzY4Q7aopKUA3YL7qNnUohmkJKJdkO5Hhq+UOT5sA
-         gQc/FzCjAHGqnqAXKDz+SFeIvIem9t1UtPRVpmIyBlYyB9UHJStUWhOYvFsgaYbf3At/
-         paTg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnSVvBPLgxOr7Okxa4+yFdbMwIKkVndKbRuepRfY/Zs=;
+        b=rooF5Y/LejVp6e+lkheBsBcOKwrWhHZzYXHf1m9XAOFNv87fHiPOh8t6nVxb4zVyuN
+         QDpyFEFyiTwlk8xKArO+TX4KUIY++pi8GQ2aMGQeJFu49tn7aim8G/kueOGS8tfEIrpQ
+         m8Eb/crBpL+aHjgty9b9jP36O8almuZhO0THmWfwhZOGRGmaQuoebyiVPkJPoZnWfb12
+         IcMNREwMZeqv+FGO3XG63F7LBQcdiGEnQayFjSUl4e7jJzqbqQliGxVniSm03H8C3sTg
+         +qszh99IXLCLTlEOsKO0vTmCHnKjuYFc0sYdgnG4a917/G1WL5EJUUsElxaTKZz5mVRc
+         1i7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ghusglmB0el24Vhn8WtszcgSvBkG8uGRUxxlzLuuep0=;
-        b=PEhA9Q7J3XUFVadNAxkxfMfmqxNV0KzrmkEuc4iYTnUuM4DgaX3mGG6YSCq1j+a4Z0
-         GdjV0PMAuzNWXPJxDpEAAd7pQ7KWyxq0vLMOobUnv42Q0XwzFIMlTF/qdO3yUT8GhkfC
-         6afdjjKpeNhojmFTHPbNeAwgC1Ey6IouqulNLaPyY6bRJC0bg0ctGX4lNQR/qLYzTPvF
-         e9FvM/bK5NC4BBrYsDZtSywbhu8ylO2AtNhLadBqPuwCtin/2ggJGq6lBnL1J66Meo/G
-         BGKRbt+YAti5p73+u/pLjv3XulEubgtqSEFgTO1vEgaRoEWmMOcPZX4O08tD+jZyf5Cz
-         u2Mg==
-X-Gm-Message-State: AOAM531mE7LfTL7pZStbsISktNz2taLji/gRrRm8rkACYDmpPKcoCmli
-        haCPOf44EU+emlnUBwXX7DmJrnRBFTjebptTJdDbJQ==
-X-Google-Smtp-Source: ABdhPJxBCJqCBGgyBFCMXjcC3LyLHOUNRibNVNQ966bV6UxDsl4M2CekvEMJxZx1HEcMnDbKyFJ0YnkBduJNah6kqV0=
-X-Received: by 2002:ac8:42c8:: with SMTP id g8mr3664569qtm.97.1596204998340;
- Fri, 31 Jul 2020 07:16:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TnSVvBPLgxOr7Okxa4+yFdbMwIKkVndKbRuepRfY/Zs=;
+        b=VBv/0f5mnx7z0A2vvyd5tb7ZlO462rHq4C1Qiy9COlQMF+QOIydLw3KPrib47wO0B1
+         Wb7FwDVFmmSSkwU5M0eR3tz8kKYWRdwsEKoNEYIAhY2+rylzoAyDgrDhxPe425ZFa9y0
+         oU6A3BV99XxHkG3Pe57Xsv9KHOZmSVp4Xv+Jx1Und6mz35DwSnDW72foai4soLW9BtV+
+         3fD4wJL4E1zOYnry1JrmaVJQPRMT8Z7xGhfc6vn9O0fH2pw42ZHfylmhEPwvxLmM6R3P
+         7Rn21q6VN09hIYNJGfFAKt0ED0nw37eZk2e65P+kfz76009E4e8QVkxxQB1aY4XIAJ4p
+         GU9A==
+X-Gm-Message-State: AOAM530n7v+wrLhXrp2hWYV0dhZ6hFHAgTXMSGdMQXhUVbd3c6ihPju5
+        luUpW3iAY5lJhQMJyjt0EDVHMPgIbWE=
+X-Google-Smtp-Source: ABdhPJybf/XZgZB/Q/5YD/PtnotUkX1ldsL6Uu0I4qModtm+zX/Ggq7KmPlZXxlfNH2FA8a1tV0ngA==
+X-Received: by 2002:a17:906:269a:: with SMTP id t26mr4331783ejc.286.1596205867955;
+        Fri, 31 Jul 2020 07:31:07 -0700 (PDT)
+Received: from blackhead.home ([2a01:112f:a1c:7900:7316:ce1e:7b0b:6bd7])
+        by smtp.gmail.com with ESMTPSA id t19sm9749213edw.63.2020.07.31.07.31.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2020 07:31:06 -0700 (PDT)
+From:   Marcin Sloniewski <marcin.sloniewski@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, mani@kernel.org, a.fatoum@pengutronix.de,
+        marcin.sloniewski@gmail.com, sam@ravnborg.org,
+        linus.walleij@linaro.org, stephan@gerhold.net,
+        heiko.stuebner@theobroma-systems.com, lkundrak@v3.sk,
+        broonie@kernel.org, allen.chen@ite.com.tw, robh@kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/3] dt-bindings: vendor-prefixes: add Seeed Studio
+Date:   Fri, 31 Jul 2020 16:30:51 +0200
+Message-Id: <20200731143053.44866-1-marcin.sloniewski@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1595927918-19845-2-git-send-email-grzegorz.jaszczyk@linaro.org>
- <01bac597-c1a0-1851-b630-a79929777a16@lechnology.com> <CAMxfBF6Ru1Fm1oWDyrSM=kBdCUe+eUDChqDgoYo4ziVr-8c50Q@mail.gmail.com>
- <19fbf4f6-ea75-3eb7-7e95-c7c9ce987996@lechnology.com>
-In-Reply-To: <19fbf4f6-ea75-3eb7-7e95-c7c9ce987996@lechnology.com>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Fri, 31 Jul 2020 16:16:27 +0200
-Message-ID: <CAMxfBF4jvWiT8CH+--OBxLiptiN42-WOMHAZhP7VM51GzgHWnA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: irqchip: Add PRU-ICSS interrupt
- controller bindings
-To:     David Lechner <david@lechnology.com>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        Marc Zyngier <maz@kernel.org>, "Anna, Suman" <s-anna@ti.com>,
-        robh+dt@kernel.org, Lee Jones <lee.jones@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Mills, William" <wmills@ti.com>,
-        "Bajjuri, Praneeth" <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 31 Jul 2020 at 16:09, David Lechner <david@lechnology.com> wrote:
->
-> On 7/31/20 6:48 AM, Grzegorz Jaszczyk wrote:
-> > On Wed, 29 Jul 2020 at 19:34, David Lechner <david@lechnology.com> wrote:
-> >> It is not clear what the meaning of each cell is. Looking at later patches, it
-> >> looks like the first cell is the PRU system event number, the second cell is the
-> >> channel and the third cell is the host event number.
-> >
-> > Ok, how about updating above description like this:
-> > Client users shall use the PRU System event number (the interrupt source
-> > that the client is interested in) [cell 1], PRU channel [cell 2] and PRU
-> > host_intr (target) [cell 3] as the value of the interrupts property in their
-> > node.  The system events can be mapped to some output host interrupts through 2
-> > levels of many-to-one mapping i.e. events to channel mapping and channels to
-> > host interrupts so through this property entire mapping is provided.
->
-> Cell 3 is host_intr0-7? How would we map to other host events?
+Add the "seeed" vendor prefix for Seeed Technology Co., Ltd
+Website: https://www.seeedstudio.com/
 
-Again this is due to misleading TRM nomenclature: host_intr vs host
-interrupts (one that we discuss in patch #2). I will use "and PRU host
-event (target) [cell 3]...". Sorry for my mistake.
+Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thank you,
-Grzegorz
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9aeab66be85f..7dd03b3e9d3c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -902,6 +902,8 @@ patternProperties:
+     description: Schindler
+   "^seagate,.*":
+     description: Seagate Technology PLC
++  "^seeed,.*":
++    description: Seeed Technology Co., Ltd
+   "^seirobotics,.*":
+     description: Shenzhen SEI Robotics Co., Ltd
+   "^semtech,.*":
+-- 
+2.27.0
+
