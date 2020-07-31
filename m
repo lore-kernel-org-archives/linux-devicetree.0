@@ -4,85 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12D4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42585C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A83EF22BF5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D3922B43
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596229994;
-	bh=orAb+fifuI5JtYwIab/mYjtgyFC7d7nQv6gu4f5NO+A=;
+	s=default; t=1596230033;
+	bh=hMIRdwmttvYnG6R2d8TU5SjlTpwQmxcQIYzbWnRPxws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NFLcgNVr+On5MBnXuqqzz0L4FB2pLo1Ln9lALIGZhI6UVWwfhnQtMXlIVwLP2JoGr
-	 1lwbjiFPMIkJrJdTZip0rBeOkrX4hay/w3lHaCrT7nPiUEspmJZaEXq2KH2y5Mn5TO
-	 m3wTcNKceC+zJFwFS8JkDeaLudb77VipUFtyKoA8=
+	b=xBUz9ZKg7L0FzMhst+vlrCB2pRGLTL9P2cfK3jOAxfzLGNLB/4K+hYz6OMtuGEr8l
+	 y5qTO4o9dnpl3701cjETb5S/yZKZncRwLWh8WY1fXaVAUcOGg/+v5CmSm9anhYkATQ
+	 FWNWZty6ICmrqRJirYM5312tMNKM8OdrbTWdwkNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgGaVNO (ORCPT
+        id S1727811AbgGaVNw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:13:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:32801 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgGaVNM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:13:12 -0400
-Received: by mail-io1-f66.google.com with SMTP id d18so33026914ion.0
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 14:13:12 -0700 (PDT)
+        Fri, 31 Jul 2020 17:13:52 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46638 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgGaVNw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:13:52 -0400
+Received: by mail-io1-f67.google.com with SMTP id a5so17762287ioa.13;
+        Fri, 31 Jul 2020 14:13:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=BC4DgRY9TG1oWX1U1WKTSv2Wn5LtvSbokQfUo59gzXU=;
-        b=PNIxC99kdb/2/4ZT9m00pfvEshdbkgOp39ZJal/CE9ZbwfcYjks6YgE2DBB7gNXFzK
-         P3bcz0oqB36eo1XlnCZ5TlcFuiBdAILmy8Wn46X44scwTqiE60/sfKZftIqknx48KP4M
-         2b5EHQBd5Fq69QFn4K7qOqc9EURsGG1TfvjQMyFLldkpc9lmnHri4Do1IVWeHRnU9axB
-         LCfSyioBF4zDJwZtCbuL4ci+A5yDfJx3ks1IvnTHmHYCYO58Mi65dzUctiC52PIZa5Ge
-         lsJsz+AxBG7mRqAT0eZxNoZ35G4ToFfRfLTE7Z92MLdurQl2FuJwnI6KstbHbpwsl3ix
-         fiIQ==
-X-Gm-Message-State: AOAM53256ye8sqVlVlw50kpACtMDshXXbmXa0sQ4UOgfWzlMIvAYXhhW
-        63XAHYc4Xtnd60mh7tUbOw==
-X-Google-Smtp-Source: ABdhPJwVUm05hxCDesrq8eoGLM93f3+fIyi6L+QzneYi8BpnHy405llmvB5hxnYF+vqcdh7VYyNiMg==
-X-Received: by 2002:a05:6638:2164:: with SMTP id p4mr6989520jak.57.1596229992022;
-        Fri, 31 Jul 2020 14:13:12 -0700 (PDT)
+        bh=0kUiZodQVGoScmGeQBAxfGuNNmJgniCksGkhC2caiFo=;
+        b=iTNNulpZ0ubAvngsZf4lqCo7QjBOD8lJt6fkQqRf1qgoYiU0KerajYMIZqGEDesI44
+         z4grd22LUCOEObrBWVLErSu0XeA5UFTRHYGdYlCrZUneZB7+Cia9P5KWEyxcaEV977Z5
+         I8340FHuodMyHkoSksQ8HtyyC7e5kR3LbK5OIeLtmo4Bd8hMjKP/UAG/LVzH3gLszOCO
+         RRaba8/qpy2mBgEdp17Z/eBxWqxsij8GrIFnoDGX7rKrAjlXBrKXW/f1+za7hut7k2Iu
+         VYWdv1PFd+u+tFxBoViMM6cquPwq5WDFK7MDm4vz8HT8MQTsY4VqijhGbPGee+x+/Wmf
+         Czzg==
+X-Gm-Message-State: AOAM5337vY+/L9qttv9eHLP2uX4YoDi84VYgo6068+IIYw2IVMMdjwPM
+        a4d2UN2PR2zXNMe+GlVM84ujnzr+JA==
+X-Google-Smtp-Source: ABdhPJxkduuS7JPJS9dhqjYDKOUcWmOcyCaz1IWXXBMarQCX27BuT7ZuW1Xheh1N6rFpWa7XPS02Qw==
+X-Received: by 2002:a05:6638:2653:: with SMTP id n19mr7238909jat.34.1596230031583;
+        Fri, 31 Jul 2020 14:13:51 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f27sm5715789ill.75.2020.07.31.14.13.10
+        by smtp.gmail.com with ESMTPSA id s10sm5360289ilh.4.2020.07.31.14.13.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 14:13:11 -0700 (PDT)
-Received: (nullmailer pid 799601 invoked by uid 1000);
-        Fri, 31 Jul 2020 21:13:10 -0000
-Date:   Fri, 31 Jul 2020 15:13:10 -0600
+        Fri, 31 Jul 2020 14:13:51 -0700 (PDT)
+Received: (nullmailer pid 800839 invoked by uid 1000);
+        Fri, 31 Jul 2020 21:13:49 -0000
+Date:   Fri, 31 Jul 2020 15:13:49 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 2/3] dt-bindings: Add DT bindings for Chefree
- CH101OLHLWH-002
-Message-ID: <20200731211310.GA799522@bogus>
-References: <20200728201242.4336-1-marex@denx.de>
- <20200728201242.4336-2-marex@denx.de>
+To:     Seiya Wang <seiya.wang@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        srv_heupstream@mediatek.com, Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 3/3] dt-bindings: timer: Add compatible for Mediatek
+ MT8192
+Message-ID: <20200731211349.GA800755@bogus>
+References: <20200729013100.19539-1-seiya.wang@mediatek.com>
+ <20200729013100.19539-4-seiya.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728201242.4336-2-marex@denx.de>
+In-Reply-To: <20200729013100.19539-4-seiya.wang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Jul 2020 22:12:41 +0200, Marek Vasut wrote:
-> Add DT bindings for Chefree CH101OLHLWH-002 10.1" 1280x800 LCD.
-> This panel is connected via LVDS.
+On Wed, 29 Jul 2020 09:31:00 +0800, Seiya Wang wrote:
+> This commit adds dt-binding documentation of timer for Mediatek MT8192 SoC
+> Platform.
 > 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> To: dri-devel@lists.freedesktop.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
 > ---
->  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
