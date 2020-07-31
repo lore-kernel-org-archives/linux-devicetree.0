@@ -2,113 +2,121 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA72DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C86C433E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 09:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C94AE2084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E132020829
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 09:02:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aE1OHoox"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r37jliP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731975AbgGaI4S (ORCPT
+        id S1732052AbgGaJC5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 04:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731929AbgGaI4R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 04:56:17 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555BBC061575
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:56:17 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so27279790wrs.0
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 01:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uKHultmexfuWBdCK9WRDRk/vbhZ+37y2O3wAMlcu988=;
-        b=aE1OHooxwN4CtoTfKoukXZmAijnt7lUt7g2YEmORS3cT7AcMzMNPBMqe8jdLYclZBm
-         eOHaWEarxXuFCjto12aNCFolbMakz+DiEVyPF5mrDDnb4gRfoCRQPp7jBy5l2R7n/un1
-         nBoT11Vhvh4xhvgqwcqKCnGpBSQmKQyJHI6yE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uKHultmexfuWBdCK9WRDRk/vbhZ+37y2O3wAMlcu988=;
-        b=p58oAZf0+qQAGPkhlkH2D3EdRpjuJ7tHLJL6u0UJtVoc9v6YVrvEEtYd/vHHxHnZVW
-         lBy904FpXRjfk4s4YVm6N06FTH6pBH7TPzQqFNoBGh8o9prt9ajpgEB8fc9NaskOC8iS
-         wb3I/IpHP5eGgTo18eKnhn6z5Ac+okVupF2UpKugNK1fLuMi5ymqHJo0MhFZFD78SUta
-         pWUjHtMeuwCiXc+XXQXF/K+Ucam3KzvlBS0Wv+32T2/Cm4WNuPvRiPqFgumgwhky1PrG
-         lRG+i5CwYF0NilQe6Ymgr5aHNQjqIUUbJIkAt43FKjuiGCz06SKjCEXziM8zmBmV6JU3
-         H3lQ==
-X-Gm-Message-State: AOAM533ITlst7+3VsKLdEqGEHauXJSQ1RnI0KZqVbwnoDmNW1WJlDi0D
-        Lsgv9Xx9DBJPPPSd7RpC5nJaXSpGEI04et6o7b4flw==
-X-Google-Smtp-Source: ABdhPJzWn3jZhPtcamUMQKgiq4Q2WoIJL296BZio2qPps8qapt7QAgo3rn4E433qso7peWw9XBVW+myXjp0sLi36trw=
-X-Received: by 2002:adf:e486:: with SMTP id i6mr2505317wrm.258.1596185775852;
- Fri, 31 Jul 2020 01:56:15 -0700 (PDT)
+        Fri, 31 Jul 2020 05:02:57 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16312 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731989AbgGaJC4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 05:02:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f23de320000>; Fri, 31 Jul 2020 02:02:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 31 Jul 2020 02:02:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 02:02:55 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
+ 2020 09:02:55 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 31 Jul 2020 09:02:55 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f23de3e0000>; Fri, 31 Jul 2020 02:02:54 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v6 01/10] media: tegra-video: Fix channel format alignment
+Date:   Fri, 31 Jul 2020 02:02:40 -0700
+Message-ID: <1596186169-18729-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20200721104422.369368-1-cychiang@chromium.org>
- <20200721104422.369368-3-cychiang@chromium.org> <ce029818-5082-643b-ff63-25aafea3de6c@linaro.org>
- <20200723184432.GA321518@gerhold.net>
-In-Reply-To: <20200723184432.GA321518@gerhold.net>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Fri, 31 Jul 2020 16:55:49 +0800
-Message-ID: <CAFv8Nw+Y7S2EWZMUYEeFeTmt+TdzBQUTBzgHDa7reWT9CiOA1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Ajit Pandey <ajitp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596186162; bh=8GJbUvoTqNXQhoilqMQO06MgCPv5IgO6eahUeR7/0ig=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=r37jliP3vXsz1elhbfJE7cg7Lj36Q6LYjLTWYHa4T/bXGfVrZUyNRVuBrCCAwBy+H
+         bkgyUY1w1ene7McgEmTlgsc5pew7hyecVgTXQ0MaBdx0Yc/PRs/GiqpN2RS5pMaKfF
+         RFGxa+WtaoBCDcQb8arOrR9QZvhcnFO3jxxDUlWlX62z6kkDHyfJbewV/g1Q7JW//7
+         7ho+H+gPjQAmwi4Oy6L7fhO8lifsVZAHGE/wu5OyPGYROa9cjGAhULwhUibyUeoWRS
+         NacWrddys0lnt4k7zwh5eut0kuqwz/lesORaYC8LkmOyqFT8jny+GByc87ZIiyjHlg
+         P3cIlo/xXrdPA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 2:45 AM Stephan Gerhold <stephan@gerhold.net> wrote:
->
-> On Wed, Jul 22, 2020 at 10:25:14AM +0100, Srinivas Kandagatla wrote:
-> > > +static int sc7180_parse_of(struct snd_soc_card *card)
-> > > +{
-> >
-> > This code is getting duplicated in various places like apq8016_sbc_parse_of,
-> > it will be nice to common this up, if possible!
-> >
->
-> FYI, I started work on making apq8016_sbc use qcom_snd_parse_of()
-> a while ago already, but didn't find the time to finish it up.
-> I have now sent it, this should make it possible to use the common
-> qcom_snd_parse_of() function in this driver as well.
->
-> See: https://lore.kernel.org/alsa-devel/20200723183904.321040-1-stephan@gerhold.net/
->
-> Stephan
->
-Hi Stephan, thanks a lot for jumping on this to help.
-It indeed makes this new driver much cleaner.
-I have tested with your patches and it works great.
+Pixel format width is mistakenly aligned to surface align bytes
+and altering width to aligned value may force sensor mode change
+other than the requested one and also cause mismatch in width
+programmed between sensor and vi which can lead to capture errors.
+
+This patch removes width alignment and clamps width as per Tegra
+minimum and maximum limits.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/staging/media/tegra-video/vi.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index 1b5e660..d621ebc 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -359,25 +359,15 @@ static void tegra_channel_fmt_align(struct tegra_vi_channel *chan,
+ 				    struct v4l2_pix_format *pix,
+ 				    unsigned int bpp)
+ {
+-	unsigned int align;
+-	unsigned int min_width;
+-	unsigned int max_width;
+-	unsigned int width;
+ 	unsigned int min_bpl;
+ 	unsigned int max_bpl;
+ 	unsigned int bpl;
+ 
+ 	/*
+-	 * The transfer alignment requirements are expressed in bytes. Compute
+-	 * minimum and maximum values, clamp the requested width and convert
+-	 * it back to pixels. Use bytesperline to adjust the width.
++	 * The transfer alignment requirements are expressed in bytes.
++	 * Clamp the requested width and height to the limits.
+ 	 */
+-	align = lcm(SURFACE_ALIGN_BYTES, bpp);
+-	min_width = roundup(TEGRA_MIN_WIDTH, align);
+-	max_width = rounddown(TEGRA_MAX_WIDTH, align);
+-	width = roundup(pix->width * bpp, align);
+-
+-	pix->width = clamp(width, min_width, max_width) / bpp;
++	pix->width = clamp(pix->width, TEGRA_MIN_WIDTH, TEGRA_MAX_WIDTH);
+ 	pix->height = clamp(pix->height, TEGRA_MIN_HEIGHT, TEGRA_MAX_HEIGHT);
+ 
+ 	/* Clamp the requested bytes per line value. If the maximum bytes per
+-- 
+2.7.4
+
