@@ -7,85 +7,74 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6198DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042D0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345D5208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCAA208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596235399;
-	bh=0y23+vE9QAKzSnR4XGWpKkc73V+yOnv6hVz4jnHTD88=;
+	s=default; t=1596235436;
+	bh=a6NSRymKrP98eII5hYRe9kHDkzEN6a3vE3DdRWRQ8jY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q8ODydg+ZROH5asny32JvlZUjiWzAy4CkIrwv3Em7Ce6iHygI6TKNkx0fC90oLOPc
-	 Ei28jUN/dTdXkLcWGNPT3FIFZFoa/ouiDJDGkZKcY100LfV+YBQbWgT6IRWpBAiVUB
-	 3iu2Kv7gbeXK4Las4uobuRjOmZblGa1w7TjnkNcc=
+	b=UePRdXSqSgjfTac87u/HtmIDAjNUUj5fZ1u5B59MvnkhAyoc//4QE74+4BGR18iav
+	 7DC/H0o16GvKleQ+xbgGfmAe4qI4wKlUqpxLP1gBlaoamKIDUvtPVUb/O0uVZ7pjD4
+	 HobPwgWzP+TBtKRIE1uFyv9WL3166jubrdl0u+30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgGaWnP (ORCPT
+        id S1726666AbgGaWn4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:43:15 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40332 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgGaWnO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:43:14 -0400
-Received: by mail-io1-f67.google.com with SMTP id l17so33186304iok.7;
-        Fri, 31 Jul 2020 15:43:14 -0700 (PDT)
+        Fri, 31 Jul 2020 18:43:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37742 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaWn4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:43:56 -0400
+Received: by mail-io1-f65.google.com with SMTP id w12so19583696iom.4
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 15:43:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1B+vyO+R8quuszNhtOVeeWCkKlu3aOesury3x/oHRpU=;
-        b=EcReuUdawrJllYwPSiyEFtFRPY/9Jg55O0PTxsB1KD6Uhp+rXnNXTY5iCZzF+fH87C
-         nkx8FGBbfdmt6aNlaPLROn1aXq0vAu0nOdjOl2/d3CtYPF6mSLN9BUqIKTcsfaLez9AL
-         0dPp3h4yZHVwuk9I5W3axbTKFvRvQJoO97rAeTlCKwq3Fd7JpJB91TBiG7U2S7uZcewr
-         UhsRppJi5nDXUAqTteVezInLiPTpM4+Qj6E5gVISVotPsf0TRw/Lm+V2wWG4Wtobf9vl
-         i7nU5osUcc3W2Vi8swR3LFfnZzey44/KwHz3r2wfTH0XZOzbStBy9lO58e/fu20q5prg
-         RoXQ==
-X-Gm-Message-State: AOAM533ZiTVqq/X0HaDNfMbWwd2nVkDsRBXZKxYpAFQCdj9e4LMOZcvL
-        w9+tEMgg0Re51gLuydAwsw==
-X-Google-Smtp-Source: ABdhPJz2Svj2E53KRDqoGx4JA4V4fWumeWvZbSTFi+n69Ey9ghRgN1SmkWE3+pqiF//EmqPn6wrunw==
-X-Received: by 2002:a05:6638:1649:: with SMTP id a9mr7746090jat.115.1596235393792;
-        Fri, 31 Jul 2020 15:43:13 -0700 (PDT)
+        bh=6IztlK+IAJuBlWDQIoX1NU4H9u7fpmfUjFlqqFnOXko=;
+        b=ih0uXLjlbf2tGiGkD9qqBZ0mfso7/JSHPinm1kqXFc2jUFy9ftTDR/q9wY88rEAAL8
+         jAgL0fPl+mF/m+CeA9RSeh+cpcl/XGGhxtxkStcQHM99VtoTzVUJmlRPx5F+wL6hiSGx
+         k3ZtjyKmmxdSzcb6SHfDI7cxWSkjaXKuUwtbn7S5+zcBUIKei07TDaXqFo913SOPBFK7
+         wKp3yndOFLHOWyXjUMaZAU94I9Ons76fWQcDEBBfzeyy+NG3svQbuWgL4wd/hxMSx17s
+         Y0e6fyjS0E/1Ynsz8jmqLYcCKGao4kD5qTF6YDUDIqUoZ7S8oV3l/Tcn22kldAUdMqGu
+         LzEQ==
+X-Gm-Message-State: AOAM530kGwpiBCS+sxKXtidU1D6GgVFze+SO/pkQ8UPcN7b1t39l6kWS
+        9TTmddWhEPb7j0QQXbIiWg==
+X-Google-Smtp-Source: ABdhPJwQNO01LtfYoGxADUwkP3tZ0r70bvsQoe+C0eNzGaurZvgWCRKP/JqBBPRWk606qMtwk1uZTw==
+X-Received: by 2002:a5e:c703:: with SMTP id f3mr5619608iop.185.1596235435466;
+        Fri, 31 Jul 2020 15:43:55 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y8sm5242818iom.26.2020.07.31.15.43.11
+        by smtp.gmail.com with ESMTPSA id u12sm5548268ilj.17.2020.07.31.15.43.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 15:43:13 -0700 (PDT)
-Received: (nullmailer pid 943315 invoked by uid 1000);
-        Fri, 31 Jul 2020 22:43:10 -0000
-Date:   Fri, 31 Jul 2020 16:43:10 -0600
+        Fri, 31 Jul 2020 15:43:55 -0700 (PDT)
+Received: (nullmailer pid 944544 invoked by uid 1000);
+        Fri, 31 Jul 2020 22:43:53 -0000
+Date:   Fri, 31 Jul 2020 16:43:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     robh+dt@kernel.org, mchehab@kernel.org, s.nawrocki@samsung.com,
-        kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org,
-        kgene@kernel.org, krzk@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v2 11/11] dt-bindings: media: Correct samsung-fimc
- parallel port numbering
-Message-ID: <20200731224310.GA943204@bogus>
-References: <20200730230114.8572-1-xc-racer2@live.ca>
- <BN6PR04MB0660B938349CA15DE7BCC5BBA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+To:     David Bauer <mail@david-bauer.net>
+Cc:     devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add doc for FriendlyARM NanoPi R2S
+Message-ID: <20200731224353.GA944440@bogus>
+References: <20200730232054.286381-1-mail@david-bauer.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660B938349CA15DE7BCC5BBA3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <20200730232054.286381-1-mail@david-bauer.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Jul 2020 16:01:14 -0700, Jonathan Bakker wrote:
-> The parallel port nodes should be numbered 1 and 2, not 0 and 1
-> for A and B respectively.  The driver has always implemented 1
-> and 2 and the in-tree Goni DTS uses 1 as port A as well.  Update
-> the documentation to match this behaviour.
+On Fri, 31 Jul 2020 01:20:53 +0200, David Bauer wrote:
+> Add devicetree binding documentation for the FriendlyARM NanoPi R2S.
 > 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Signed-off-by: David Bauer <mail@david-bauer.net>
 > ---
-> Changes from v1:
-> - New patch replacing patch modifying driver to match documentation
-> ---
->  Documentation/devicetree/bindings/media/samsung-fimc.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
