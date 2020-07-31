@@ -2,186 +2,307 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7840C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605CDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810EE2087C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596231032;
-	bh=NHsr3aFIVXcbgVNcABj+122r90mMVIkb6+W2zQXbddw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gGtBJ1UgivLLtXjKLfZYFjWMtQmjOPJKal5h5cKw8vbK6yOGFx9T/vw08ERoklohi
-	 XcOxCTWr1GBfOpVgiTmtf/4zfhNxVyalUpN6DGg83QoxNhyAfNj5GSTE368D6M+xbE
-	 KAHgNxkc3dyX+OU/olOtmBdFB/r8WjAIEtDt/JH8=
+	by mail.kernel.org (Postfix) with ESMTP id 392C522B3F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OPxItuff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgGaVac (ORCPT
+        id S1729146AbgGaVca (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:30:32 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45066 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgGaVab (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:30:31 -0400
-Received: by mail-io1-f68.google.com with SMTP id e64so33030323iof.12;
-        Fri, 31 Jul 2020 14:30:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+1TGdSM7ebRYhzsfJccNqgk5kV9sG3dUDdM4DYu83Fw=;
-        b=lsed4E8QbpJ03lvZjtNhqd5CJOiGre4CupwB1JlneF1/lcQcSXWktjaN3kWrZb+/OP
-         79gp8QSW0irq1Xukqug4O9KndQKSVYTaetvHBaraNxMf5fQfctCM9z8XBE5sqklZh1Bm
-         aUCj9GUBgChXoCf0v0n7rbbKBHW4X4GrKXxC69GlSk8kv09nIRo5qzXxH8c9RIEJXy0s
-         hO8D7VtB7Y0cKGbyFmz+b3OgYRAJy8hPjyQMbS37ghx8lY8wRz6W26ZVp/1qFsUz7s36
-         R7vzegyWiW3tIBOF4jIhYmPVAjL8K6ravpF/zUX7K23P12BNwgyY+rKtIumbXahoCgxb
-         hf2w==
-X-Gm-Message-State: AOAM530gqYkufbDbT24WD1x91hYpAWTuTihr/3ACx+/iYtL8IvbUXZ4+
-        vKO1GlOqbpBS3WheREMDiQ==
-X-Google-Smtp-Source: ABdhPJxXeVS0jZueBStQpy+cdWH/c/tpvRGzhw0OjxjNfquqY5ZbETuEj8pXTjXPXY5xHhqTIYPArg==
-X-Received: by 2002:a02:84ac:: with SMTP id f41mr2890486jai.56.1596231030696;
-        Fri, 31 Jul 2020 14:30:30 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i9sm5682020ile.48.2020.07.31.14.30.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 14:30:30 -0700 (PDT)
-Received: (nullmailer pid 827984 invoked by uid 1000);
-        Fri, 31 Jul 2020 21:30:28 -0000
-Date:   Fri, 31 Jul 2020 15:30:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: add DT bindings for Microchip
- S/PDIF TX Controller
-Message-ID: <20200731213028.GA824739@bogus>
-References: <20200729101922.3033616-1-codrin.ciubotariu@microchip.com>
+        Fri, 31 Jul 2020 17:32:30 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14830 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728695AbgGaVca (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:32:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f248d8f0000>; Fri, 31 Jul 2020 14:30:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 31 Jul 2020 14:32:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 31 Jul 2020 14:32:29 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
+ 2020 21:32:29 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 31 Jul 2020 21:32:29 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f248dec0000>; Fri, 31 Jul 2020 14:32:28 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 02/10] media: tegra-video: Enable TPG based on kernel config
+Date:   Fri, 31 Jul 2020 14:32:16 -0700
+Message-ID: <1596231144-12554-3-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
+References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200729101922.3033616-1-codrin.ciubotariu@microchip.com>
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596231055; bh=ds7oxXGxAuyDw53E4hJLEBinWlNAsgh9dJ6sWX9tefI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=OPxItuffO4HRYRuqwmEv1/+LR7ezoyF3WK/9l4Q0oefw9Gntfi2Bfwn6e6Jy+xm0X
+         tFHI+krg8Zw/p2Nz/PXz97RLv9QqY440ntT6n9p3WSQGWuyGxLICWCq9dPN71Uh00t
+         xsfOQIQhw7P+Bkwbant5R7CMNpFIeOnkZtJzNbwY3ykXcX2PTHCfRpKP8PHYhRyX3f
+         U0oqEM1ac+btt6bDPhP8zi56j/+54SUzAox91CKkI9vQjAbOTmkU9jERxQveCIRUl1
+         1x+AF8KtUnbzHMfSbzHWoF034XZjdiMeGumrDjkSgCAXgHZN+jVk/5d/aMA8UsSvjJ
+         y2UfzAQ5VUu1w==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 01:19:21PM +0300, Codrin Ciubotariu wrote:
-> This patch adds DT bindings for the new Microchip S/PDIF TX Controller
-> embedded inside sama7g5 SoCs.
-> 
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
-> 
-> Changes in v2:
->  - replaced https with http
->  - reworked example, included bindings;
-> 
->  .../bindings/sound/mchp,spdiftx.yaml          | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml b/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
-> new file mode 100644
-> index 000000000000..2b7c27391f0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/mchp,spdiftx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip S/PDIF Tx Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> +
-> +description:
-> +        The Microchip Sony/Philips Digital Interface Transmitter is a
-> +        serial port compliant with the IEC-60958 standard.
-> +
-> +properties:
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: microchip,sama7g5-spdiftx
+Tegra internal TPG mode is only for Tegra vi and csi testing
+without a real sensor and driver should default support real
+sensor.
 
-No need for 'oneOf' when only 1 entry.
+So, This patch adds CONFIG_VIDEO_TEGRA_TPG and enables Tegra
+internal TPG mode only when this config is selected.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Peripheral Bus Clock
-> +      - description: Generic Clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: gclk
-> +
-> +  dmas:
-> +    description: TX DMA Channel
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/staging/media/tegra-video/Kconfig    |  6 +++++
+ drivers/staging/media/tegra-video/csi.c      | 38 +++++++++++++++++++++++-----
+ drivers/staging/media/tegra-video/tegra210.c |  6 +++++
+ drivers/staging/media/tegra-video/vi.c       | 13 +++++++---
+ drivers/staging/media/tegra-video/video.c    | 23 +++++++++--------
+ 5 files changed, 65 insertions(+), 21 deletions(-)
 
-How many? (maxItems: 1)
+diff --git a/drivers/staging/media/tegra-video/Kconfig b/drivers/staging/media/tegra-video/Kconfig
+index f6c61ec..566da62 100644
+--- a/drivers/staging/media/tegra-video/Kconfig
++++ b/drivers/staging/media/tegra-video/Kconfig
+@@ -10,3 +10,9 @@ config VIDEO_TEGRA
+ 
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called tegra-video.
++
++config VIDEO_TEGRA_TPG
++	bool "NVIDIA Tegra VI driver TPG mode"
++	depends on VIDEO_TEGRA
++	help
++	  Say yes here to enable Tegra internal TPG mode
+diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
+index 40ea195..fb667df 100644
+--- a/drivers/staging/media/tegra-video/csi.c
++++ b/drivers/staging/media/tegra-video/csi.c
+@@ -62,6 +62,9 @@ static int csi_enum_bus_code(struct v4l2_subdev *subdev,
+ 			     struct v4l2_subdev_pad_config *cfg,
+ 			     struct v4l2_subdev_mbus_code_enum *code)
+ {
++	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		return -ENOIOCTLCMD;
++
+ 	if (code->index >= ARRAY_SIZE(tegra_csi_tpg_fmts))
+ 		return -EINVAL;
+ 
+@@ -76,6 +79,9 @@ static int csi_get_format(struct v4l2_subdev *subdev,
+ {
+ 	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
+ 
++	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		return -ENOIOCTLCMD;
++
+ 	fmt->format = csi_chan->format;
+ 
+ 	return 0;
+@@ -121,6 +127,9 @@ static int csi_enum_framesizes(struct v4l2_subdev *subdev,
+ {
+ 	unsigned int i;
+ 
++	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		return -ENOIOCTLCMD;
++
+ 	if (fse->index >= ARRAY_SIZE(tegra_csi_tpg_sizes))
+ 		return -EINVAL;
+ 
+@@ -148,6 +157,9 @@ static int csi_enum_frameintervals(struct v4l2_subdev *subdev,
+ 	const struct tpg_framerate *frmrate = csi->soc->tpg_frmrate_table;
+ 	int index;
+ 
++	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		return -ENOIOCTLCMD;
++
+ 	/* one framerate per format and resolution */
+ 	if (fie->index > 0)
+ 		return -EINVAL;
+@@ -172,6 +184,9 @@ static int csi_set_format(struct v4l2_subdev *subdev,
+ 	const struct v4l2_frmsize_discrete *sizes;
+ 	unsigned int i;
+ 
++	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		return -ENOIOCTLCMD;
++
+ 	sizes = v4l2_find_nearest_size(tegra_csi_tpg_sizes,
+ 				       ARRAY_SIZE(tegra_csi_tpg_sizes),
+ 				       width, height,
+@@ -208,6 +223,9 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
+ {
+ 	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
+ 
++	if (!IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		return -ENOIOCTLCMD;
++
+ 	vfi->interval.numerator = 1;
+ 	vfi->interval.denominator = csi_chan->framerate;
+ 
+@@ -311,8 +329,12 @@ static int tegra_csi_channel_init(struct tegra_csi_channel *chan)
+ 	subdev = &chan->subdev;
+ 	v4l2_subdev_init(subdev, &tegra_csi_ops);
+ 	subdev->dev = csi->dev;
+-	snprintf(subdev->name, V4L2_SUBDEV_NAME_SIZE, "%s-%d", "tpg",
+-		 chan->csi_port_num);
++	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		snprintf(subdev->name, V4L2_SUBDEV_NAME_SIZE, "%s-%d", "tpg",
++			 chan->csi_port_num);
++	else
++		snprintf(subdev->name, V4L2_SUBDEV_NAME_SIZE, "%s",
++			 kbasename(chan->of_node->full_name));
+ 
+ 	v4l2_set_subdevdata(subdev, chan);
+ 	subdev->fwnode = of_fwnode_handle(chan->of_node);
+@@ -405,11 +427,13 @@ static int tegra_csi_init(struct host1x_client *client)
+ 
+ 	INIT_LIST_HEAD(&csi->csi_chans);
+ 
+-	ret = tegra_csi_tpg_channels_alloc(csi);
+-	if (ret < 0) {
+-		dev_err(csi->dev,
+-			"failed to allocate tpg channels: %d\n", ret);
+-		goto cleanup;
++	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)) {
++		ret = tegra_csi_tpg_channels_alloc(csi);
++		if (ret < 0) {
++			dev_err(csi->dev,
++				"failed to allocate tpg channels: %d\n", ret);
++			goto cleanup;
++		}
+ 	}
+ 
+ 	ret = tegra_csi_channels_init(csi);
+diff --git a/drivers/staging/media/tegra-video/tegra210.c b/drivers/staging/media/tegra-video/tegra210.c
+index 3baa4e3..3492a8a 100644
+--- a/drivers/staging/media/tegra-video/tegra210.c
++++ b/drivers/staging/media/tegra-video/tegra210.c
+@@ -631,7 +631,11 @@ const struct tegra_vi_soc tegra210_vi_soc = {
+ 	.ops = &tegra210_vi_ops,
+ 	.hw_revision = 3,
+ 	.vi_max_channels = 6,
++#if IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)
+ 	.vi_max_clk_hz = 499200000,
++#else
++	.vi_max_clk_hz = 998400000,
++#endif
+ };
+ 
+ /* Tegra210 CSI PHY registers accessors */
+@@ -957,7 +961,9 @@ static const char * const tegra210_csi_cil_clks[] = {
+ 	"cilab",
+ 	"cilcd",
+ 	"cile",
++#if IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)
+ 	"csi_tpg",
++#endif
+ };
+ 
+ /* Tegra210 CSI operations */
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index d621ebc..0197f4e 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -565,6 +565,7 @@ static int tegra_channel_setup_ctrl_handler(struct tegra_vi_channel *chan)
+ {
+ 	int ret;
+ 
++#if IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)
+ 	/* add test pattern control handler to v4l2 device */
+ 	v4l2_ctrl_new_std_menu_items(&chan->ctrl_handler, &vi_ctrl_ops,
+ 				     V4L2_CID_TEST_PATTERN,
+@@ -576,6 +577,7 @@ static int tegra_channel_setup_ctrl_handler(struct tegra_vi_channel *chan)
+ 		v4l2_ctrl_handler_free(&chan->ctrl_handler);
+ 		return chan->ctrl_handler.error;
+ 	}
++#endif
+ 
+ 	/* setup the controls */
+ 	ret = v4l2_ctrl_handler_setup(&chan->ctrl_handler);
+@@ -918,10 +920,13 @@ static int tegra_vi_init(struct host1x_client *client)
+ 
+ 	INIT_LIST_HEAD(&vi->vi_chans);
+ 
+-	ret = tegra_vi_tpg_channels_alloc(vi);
+-	if (ret < 0) {
+-		dev_err(vi->dev, "failed to allocate tpg channels: %d\n", ret);
+-		goto free_chans;
++	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)) {
++		ret = tegra_vi_tpg_channels_alloc(vi);
++		if (ret < 0) {
++			dev_err(vi->dev,
++				"failed to allocate tpg channels: %d\n", ret);
++			goto free_chans;
++		}
+ 	}
+ 
+ 	ret = tegra_vi_channels_init(vi);
+diff --git a/drivers/staging/media/tegra-video/video.c b/drivers/staging/media/tegra-video/video.c
+index 30816aa..e50bd70 100644
+--- a/drivers/staging/media/tegra-video/video.c
++++ b/drivers/staging/media/tegra-video/video.c
+@@ -60,15 +60,17 @@ static int host1x_video_probe(struct host1x_device *dev)
+ 	if (ret < 0)
+ 		goto unregister_v4l2;
+ 
+-	/*
+-	 * Both vi and csi channels are available now.
+-	 * Register v4l2 nodes and create media links for TPG.
+-	 */
+-	ret = tegra_v4l2_nodes_setup_tpg(vid);
+-	if (ret < 0) {
+-		dev_err(&dev->dev,
+-			"failed to setup tpg graph: %d\n", ret);
+-		goto device_exit;
++	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG)) {
++		/*
++		 * Both vi and csi channels are available now.
++		 * Register v4l2 nodes and create media links for TPG.
++		 */
++		ret = tegra_v4l2_nodes_setup_tpg(vid);
++		if (ret < 0) {
++			dev_err(&dev->dev,
++				"failed to setup tpg graph: %d\n", ret);
++			goto device_exit;
++		}
+ 	}
+ 
+ 	return 0;
+@@ -91,7 +93,8 @@ static int host1x_video_remove(struct host1x_device *dev)
+ {
+ 	struct tegra_video_device *vid = dev_get_drvdata(&dev->dev);
+ 
+-	tegra_v4l2_nodes_cleanup_tpg(vid);
++	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
++		tegra_v4l2_nodes_cleanup_tpg(vid);
+ 
+ 	host1x_device_exit(dev);
+ 
+-- 
+2.7.4
 
-> +
-> +  dma-names:
-> +    const: tx
-> +
-> +  pinctrl-0: true
-> +
-> +  pinctrl-names:
-> +    const: default
-
-You can drop pinctrl props. They are always allowed.
-
-> +
-> +required:
-> +  - "#sound-dai-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - dmas
-> +  - dma-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/at91.h>
-> +    #include <dt-bindings/dma/at91.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    spdiftx@e1618000 {
-> +        #sound-dai-cells = <0>;
-> +        compatible = "microchip,sama7g5-spdiftx";
-> +        reg = <0xe1618000 0x4000>;
-> +        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> +        dmas = <&dma0 AT91_XDMAC_DT_PERID(50)>;
-> +        dma-names = "tx";
-> +        clocks = <&pmc PMC_TYPE_PERIPHERAL 85>, <&pmc PMC_TYPE_GCK 85>;
-> +        clock-names = "pclk", "gclk";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_spdiftx_default>;
-> +    };
-> -- 
-> 2.25.1
-> 
