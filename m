@@ -2,164 +2,341 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D55C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 11:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD389C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 11:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4974820838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 11:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88FEC2245C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 11:49:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9V6zA56"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S9tVUhcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732638AbgGaLjF (ORCPT
+        id S1732914AbgGaLtK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 07:39:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
+        Fri, 31 Jul 2020 07:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732297AbgGaLjF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 07:39:05 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272D4C061574;
-        Fri, 31 Jul 2020 04:39:05 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x9so32131332ljc.5;
-        Fri, 31 Jul 2020 04:39:05 -0700 (PDT)
+        with ESMTP id S1732817AbgGaLtJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 07:49:09 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C89C06174A
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 04:49:09 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 2so24333275qkf.10
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 04:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e83eJTcVv/UaeyPlCsr6UUJefX33U2iVn2MgdxsKQTQ=;
-        b=X9V6zA56PqyXwOT0CNOco7VPG50Pkbt7KmbI/ojIgjq+CFYp9qHMCY6bdOTnK3x3QR
-         OE+41YFe8nwh73tpj+YDYVwNBrRap4JePkrUOhKd4jaWk7wSnBWCl7732Jd7H6DaGbnw
-         zYZznHVkJ+wzuPxNavlP1QnUHUl4L/5CnblTm0LKK4baDeLDU7iO0MvH1d5WF49frrNV
-         4s4Z7gSD9t/AK5UjBUcXCUQgwkHXsFpS5YxHjXRkueVpGgFZ19L24ENrdnL2MpZ35z0i
-         bEruw/yDZ7CttkXNOu5ZFif5fmKXTFCMfyO8/YF8ZucVV6ESxnHc5KUMmUtQPSQdUUY2
-         v06A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CuIdXtx7e4fSbuE9HECHWehSLQrsOJCaWGB4UimYksg=;
+        b=S9tVUhcginRwxwIhissv2rBirmltdED+fTpfgJdsNqJu2RpOmwEQDPcCqI7R2qK4pC
+         +G6yqiOL3j7VTv5zMTNfKgIHJfFokUkVO1NBHTFJWcHaid7pQoRNEYd3RRdILHbnMtHd
+         PSJfTrJFts1UlYUq8FYg1y12w8r65kCFEjNEBsRQV9DB37thWBBvohyRVE/udmKM2hm+
+         h6LdRetoz6ttxjvXmNNW9hqDrkJr58bMW0qiBIZ0/1IDyZq5Kc4wZvwmvXNMk5KHFQf7
+         jJu1qvEDGMZca00ZW4211JHmyEd2Ac9Ei4yyBp9/njjOqVVc+6p/KJjCg9QpS4FV5LGY
+         yoCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e83eJTcVv/UaeyPlCsr6UUJefX33U2iVn2MgdxsKQTQ=;
-        b=ej8bhhUdAkEttZUthgtmpb7y7Ex3JCulFPgGQkAJ8paI9kH47mZJIhl0AwJiyOEeuc
-         1HhhJSRxoKT78T6IgcTop0IQeXeJ2+4fu1KihOh9+GxFxnSVW5bRLAfXFVrcLzFurR68
-         AesxLWVL1aMSREzbRMfRaux4SKlulISWSntT4UqIu+ueuT4VXMGuRxpqdMH1ktSmIjfF
-         IC9EF/bh2VvyklGE5kTEmK7CqpNMVy9aBIS41FuB3fnTXLtqyLca+4rWq+xZJYddGdQT
-         NLyXzUqO9jFuTFUL52fqzrhcbWfMrYBf2ag5lJrI8l6VlmmiLwM5GWAtPjbiGXy/KChi
-         S/aA==
-X-Gm-Message-State: AOAM5337xIupLhJ+CJNo/dnKdOtmHk2O+bsHOERXXJQOLbuZrdNsdEwT
-        lswJLbhag41NN5CDcIBqVxAWFztQ
-X-Google-Smtp-Source: ABdhPJyGjMx9FtTEpEohXiAFoq57WavNYhs3eJc0pNbnjhC7LxeGw815xYO7ZEtnLAVlZoq41lXvWQ==
-X-Received: by 2002:a2e:991:: with SMTP id 139mr1647045ljj.314.1596195543293;
-        Fri, 31 Jul 2020 04:39:03 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id k12sm1870240lfe.68.2020.07.31.04.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 04:39:02 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 09/10] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
- <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3ac158c4-7df7-e3c1-f0e1-33e7ef017762@gmail.com>
-Date:   Fri, 31 Jul 2020 14:39:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CuIdXtx7e4fSbuE9HECHWehSLQrsOJCaWGB4UimYksg=;
+        b=CrcEx4noHcDpscfqRmJN1uLr6ezy07KkXx48VlMIVYS3WYqWWifsHmVkJCEo4iKqSW
+         ZUJZVhAPDbopzWi8z2MUea66Ak3FwtFHELIYHoG5U+qmzEAnc+5XzabZXI0cQP7orSyF
+         0iP6xc2ip+MYfq6q/sLQ1xaXv/DCPxZ0PzhSAO7Oqrg1nN4+3gqNnQ3SaFSNTmCG+qaK
+         dJCyi/gv/0x4NGfuwIlFeCswHt9a7zbGlvN7heRquajbZMxUcrE8Gfuot7EWDyFg/D/K
+         H3CsxwgQBZv9ggYr6Vkzk1YHgEpMLyuifPTZ4i8L4NKqFUg/ghwLTgChDukMMIUgY5jC
+         cppQ==
+X-Gm-Message-State: AOAM533qMakgx6zkUQY0LERmmXvH1NQq8ucZu9jaF6mj3tgB//CWl06t
+        xzWt1zH2dW4uJeftVz0E12NwV6haYFaNmuhmmrwJoA==
+X-Google-Smtp-Source: ABdhPJy9/mMR5IcmFhxbx/A5+0iaoAxZBte9RhBfKoLXf1fenYSpel3e7j0DX4VV2qI5BhbTus0aDReIRiRo33d5KEQ=
+X-Received: by 2002:a37:6193:: with SMTP id v141mr3614765qkb.94.1596196148619;
+ Fri, 31 Jul 2020 04:49:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1596186169-18729-10-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-2-git-send-email-grzegorz.jaszczyk@linaro.org> <01bac597-c1a0-1851-b630-a79929777a16@lechnology.com>
+In-Reply-To: <01bac597-c1a0-1851-b630-a79929777a16@lechnology.com>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Fri, 31 Jul 2020 13:48:57 +0200
+Message-ID: <CAMxfBF6Ru1Fm1oWDyrSM=kBdCUe+eUDChqDgoYo4ziVr-8c50Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] dt-bindings: irqchip: Add PRU-ICSS interrupt
+ controller bindings
+To:     David Lechner <david@lechnology.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>, "Anna, Suman" <s-anna@ti.com>,
+        robh+dt@kernel.org, Lee Jones <lee.jones@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Mills, William" <wmills@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-31.07.2020 12:02, Sowjanya Komatineni пишет:
-...
-> @@ -249,13 +249,47 @@ static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
->  		return ret;
->  	}
->  
-> +	if (csi_chan->mipi) {
-> +		ret = tegra_mipi_enable(csi_chan->mipi);
-> +		if (ret < 0) {
-> +			dev_err(csi->dev,
-> +				"failed to enable MIPI pads: %d\n", ret);
-> +			goto rpm_put;
-> +		}
-> +
-> +		/*
-> +		 * CSI MIPI pads PULLUP, PULLDN and TERM impedances need to
-> +		 * be calibrated after power on.
-> +		 * So, trigger the calibration start here and results will
-> +		 * be latched and applied to the pads when link is in LP11
-> +		 * state during start of sensor streaming.
-> +		 */
-> +		ret = tegra_mipi_start_calibration(csi_chan->mipi);
-> +		if (ret < 0) {
-> +			dev_err(csi->dev,
-> +				"failed to start MIPI calibration: %d\n", ret);
-> +			goto disable_mipi;
-> +		}
+On Wed, 29 Jul 2020 at 19:34, David Lechner <david@lechnology.com> wrote:
+>
+> On 7/28/20 4:18 AM, Grzegorz Jaszczyk wrote:
+> > From: Suman Anna <s-anna@ti.com>
+> >
+> > The Programmable Real-Time Unit and Industrial Communication Subsystem
+> > (PRU-ICSS or simply PRUSS) contains an interrupt controller (INTC) that
+> > can handle various system input events and post interrupts back to the
+> > device-level initiators. The INTC can support upto 64 input events on
+>
+> nit: "up to" is two separate words
 
-What would happen if CSI stream is enabled and then immediately disabled
-without enabling camera sensor?
+Ok.
 
-> +	}
-> +
-...
->  static int tegra_channel_enable_stream(struct tegra_vi_channel *chan)
->  {
->  	struct v4l2_subdev *csi_subdev, *src_subdev;
-> +	struct tegra_csi_channel *csi_chan;
->  	int ret;
->  
->  	/*
-> @@ -206,13 +207,30 @@ static int tegra_channel_enable_stream(struct tegra_vi_channel *chan)
->  	if (IS_ENABLED(CONFIG_VIDEO_TEGRA_TPG))
->  		return 0;
->  
-> +	csi_chan = v4l2_get_subdevdata(csi_subdev);
-> +	/*
-> +	 * TRM has incorrectly documented to wait for done status from
-> +	 * calibration logic after CSI interface power on.
-> +	 * As per the design, calibration results are latched and applied
-> +	 * to the pads only when the link is in LP11 state which will happen
-> +	 * during the sensor stream-on.
-> +	 * CSI subdev stream-on triggers start of MIPI pads calibration.
-> +	 * Wait for calibration to finish here after sensor subdev stream-on
-> +	 * and in case of sensor stream-on failure, cancel the calibration.
-> +	 */
->  	src_subdev = tegra_channel_get_remote_source_subdev(chan);
+>
+> > most SoCs with individual control configuration and h/w prioritization.
+> > These events are mapped onto 10 output interrupt lines through two levels
+> > of many-to-one mapping support. Different interrupt lines are routed to
+> > the individual PRU cores or to the host CPU or to other PRUSS instances.
+> >
+> > The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
+> > commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
+> > a higher number of host interrupts (20 vs 10) and can handle an increased
+> > number of input events (160 vs 64) from various SoC interrupt sources.
+> >
+> > Add the bindings document for these interrupt controllers on all the
+> > applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
+> > and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
+> > architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
+> > and J721E SoCs.
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Andrew F. Davis <afd@ti.com>
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
+> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> > ---
+> > v3->v4:
+> > - Drop allOf references to interrupt-controller.yaml and
+> >    interrupts.yaml.
+> > - Drop items descriptions and use only maxItems: 1 as suggested by Rob.
+> > - Convert irqs-reserved property from uint8-array to bitmask.
+> > - Minor descriptions updates.
+> > - Change interrupt-cells to 3 in order to provide 2-level mapping
+> >    description for interrupts routed to the main CPU (as Marc requested).
+> > - Merge the irqs-reserved and irqs-shared to one property since they
+> >    can be handled by one logic.
+> > - Drop reviewed-by due to introduced changes.
+> > - Add another example illustrating irqs-reserved property usage.
+> > v2->v3:
+> > - Convert dt-binding to YAML
+> > v1->v2:
+> > - https://patchwork.kernel.org/patch/11069767/
+> > ---
+> >   .../interrupt-controller/ti,pruss-intc.yaml        | 157 +++++++++++++++++++++
+> >   1 file changed, 157 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
+> > new file mode 100644
+> > index 0000000..7336b11
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
+> > @@ -0,0 +1,157 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/interrupt-controller/ti,pruss-intc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: TI PRU-ICSS Local Interrupt Controller
+> > +
+> > +maintainers:
+> > +  - Suman Anna <s-anna@ti.com>
+> > +
+> > +description: |
+> > +  Each PRU-ICSS has a single interrupt controller instance that is common
+> > +  to all the PRU cores. Most interrupt controllers can route 64 input events
+> > +  which are then mapped to 10 possible output interrupts through two levels
+> > +  of mapping. The input events can be triggered by either the PRUs and/or
+> > +  various other PRUSS internal and external peripherals. The first 2 output
+> > +  interrupts (0, 1) are fed exclusively to the internal PRU cores, with the
+> > +  remaining 8 (2 through 9) connected to external interrupt controllers
+> > +  including the MPU and/or other PRUSS instances, DSPs or devices.
+> > +
+> > +  The property "ti,irqs-reserved" is used for denoting the connection
+> > +  differences on the output interrupts 2 through 9. If this property is not
+> > +  defined, it implies that all the PRUSS INTC output interrupts 2 through 9
+> > +  (host_intr0 through host_intr7) are connected exclusively to the Arm interrupt
+> > +  controller.
+> > +
+> > +  The K3 family of SoCs can handle 160 input events that can be mapped to 20
+> > +  different possible output interrupts. The additional output interrupts (10
+> > +  through 19) are connected to new sub-modules within the ICSSG instances.
+> > +
+> > +  This interrupt-controller node should be defined as a child node of the
+> > +  corresponding PRUSS node. The node should be named "interrupt-controller".
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ti,pruss-intc
+> > +      - ti,icssg-intc
+> > +    description: |
+> > +      Use "ti,pruss-intc" for OMAP-L13x/AM18x/DA850 SoCs,
+> > +                              AM335x family of SoCs,
+> > +                              AM437x family of SoCs,
+> > +                              AM57xx family of SoCs
+> > +                              66AK2G family of SoCs
+> > +      Use "ti,icssg-intc" for K3 AM65x & J721E family of SoCs
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 8
+> > +    description: |
+> > +      All the interrupts generated towards the main host processor in the SoC.
+> > +      A shared interrupt can be skipped if the desired destination and usage is
+> > +      by a different processor/device.
+>
+> This sounds like using device tree for configuration. Also, isn't this what the
+> ti,irqs-reserved property is for?
 
-Is it possible to move the start_calibration() here?
+Yes this is what ti,irqs-reserved is also used for. The intention was
+to keep both in sync, so it would be less confusing: if some
+interrupts are on irqs-reserved list, they shouldn't be present here.
+In terms of shared interrupt usage I will not call it configuration
+via device-tree, rather design description (for single device tree
+description given shared interrupt is used or as MCPU one or as
+different processor/device one).
 
->  	ret = v4l2_subdev_call(src_subdev, video, s_stream, true);
->  	if (ret < 0 && ret != -ENOIOCTLCMD) {
-> +		tegra_mipi_cancel_calibration(csi_chan->mipi);
->  		v4l2_subdev_call(csi_subdev, video, s_stream, false);
->  		return ret;
->  	}
->  
-> +	ret = tegra_mipi_finish_calibration(csi_chan->mipi);
-> +	if (ret < 0)
-> +		dev_warn(csi_chan->csi->dev,
-> +			 "MIPI calibration failed: %d\n", ret);
-> +
->  	return 0;
->  }
->  
-> 
+>
+> > +
+> > +  interrupt-names:
+> > +    minItems: 1
+> > +    maxItems: 8
+> > +    items:
+> > +      pattern: host_intr[0-7]
+> > +    description: |
+> > +      Should use one of the above names for each valid host event interrupt
+> > +      connected to Arm interrupt controller, the name should match the
+> > +      corresponding host event interrupt number.
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 3
+> > +    description: |
+> > +      Client users shall use the PRU System event number (the interrupt source
+> > +      that the client is interested in), PRU channel and PRU host_intr (target)
+> > +      as the value of the interrupts property in their node.  The system events
+> > +      can be mapped to some output host interrupts through 2 levels of
+> > +      many-to-one mapping i.e. events to channel mapping and channels to host
+> > +      interrupts so through this property entire mapping is provided.
+>
+> It is not clear what the meaning of each cell is. Looking at later patches, it
+> looks like the first cell is the PRU system event number, the second cell is the
+> channel and the third cell is the host event number.
 
+Ok, how about updating above description like this:
+Client users shall use the PRU System event number (the interrupt source
+that the client is interested in) [cell 1], PRU channel [cell 2] and PRU
+host_intr (target) [cell 3] as the value of the interrupts property in their
+node.  The system events can be mapped to some output host interrupts through 2
+levels of many-to-one mapping i.e. events to channel mapping and channels to
+host interrupts so through this property entire mapping is provided.
+
+>
+> > +
+> > +  ti,irqs-reserved:
+> > +    $ref: /schemas/types.yaml#definitions/uint8
+>
+> Is 8 bits enough for any possible future devices? It is written above that there are
+> already up to 20 host events on some devices even if only 8 are connected to the MCU.
+
+We've already discussed this with Suman: it is unlikely that HW with
+more than 8 host interrupts connected to the MCU will arrive.
+
+>
+> > +    description: |
+> > +      Bitmask of host interrupts between 0 and 7 (corresponding to PRUSS INTC
+> > +      output interrupts 2 through 9) that are not connected to the Arm interrupt
+> > +      controller or are shared and used by other devices or processors in the
+> > +      SoC. Define this property when any of 8 interrupts should not be handled
+> > +      by Arm interrupt controller.
+> > +        Eg: - AM437x and 66AK2G SoCs do not have "host_intr5" interrupt
+> > +              connected to MPU
+> > +            - AM65x and J721E SoCs have "host_intr5", "host_intr6" and
+> > +              "host_intr7" interrupts connected to MPU, and other ICSSG
+> > +              instances.
+> > +
+> > +required:
+> > + - compatible
+> > + - reg
+> > + - interrupts
+> > + - interrupt-names
+> > + - interrupt-controller
+> > + - "#interrupt-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    /* AM33xx PRU-ICSS */
+> > +    pruss: pruss@0 {
+> > +        compatible = "ti,am3356-pruss";
+> > +        reg = <0x0 0x80000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        ranges;
+> > +
+> > +        pruss_intc: interrupt-controller@20000 {
+> > +            compatible = "ti,pruss-intc";
+> > +            reg = <0x20000 0x2000>;
+> > +            interrupts = <20 21 22 23 24 25 26 27>;
+> > +            interrupt-names = "host_intr0", "host_intr1",
+> > +                              "host_intr2", "host_intr3",
+> > +                              "host_intr4", "host_intr5",
+> > +                              "host_intr6", "host_intr7";
+> > +            interrupt-controller;
+> > +            #interrupt-cells = <3>;
+> > +        };
+> > +    };
+> > +
+> > +  - |
+> > +
+> > +    /* AM4376 PRU-ICSS */
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    pruss@0 {
+> > +        compatible = "ti,am4376-pruss";
+> > +        reg = <0x0 0x40000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        ranges;
+> > +
+> > +        interrupt-controller@20000 {
+> > +            compatible = "ti,pruss-intc";
+> > +            reg = <0x20000 0x2000>;
+> > +            interrupt-controller;
+> > +            #interrupt-cells = <3>;
+> > +            interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> > +                   <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> > +                   <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> > +                   <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+> > +                   <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+> > +                   <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> > +                   <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+> > +            interrupt-names = "host_intr0", "host_intr1",
+> > +                              "host_intr2", "host_intr3",
+> > +                              "host_intr4",
+> > +                              "host_intr6", "host_intr7";
+> > +            ti,irqs-reserved = /bits/ 8 <0x20>; /* BIT(5) */
+>
+> Is 0b00100000 valid syntax in device tree (instead of 0x20 + comment)?
+
+Actually I think more readable will be to define and use BIT()
+directly. Similar to what is done for one of the omap dtsi:
+https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/omap3-gta04.dtsi#L648
+
+Thank you for your review,
+Grzegorz
