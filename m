@@ -2,273 +2,256 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFE5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 07:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E08EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90D5208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 07:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3999120838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 08:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eICLEEfu"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="CZD+CA2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731620AbgGaHeV (ORCPT
+        id S1731852AbgGaITR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 03:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731560AbgGaHeV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 03:34:21 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BE4C061574;
-        Fri, 31 Jul 2020 00:34:21 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d1so16614320plr.8;
-        Fri, 31 Jul 2020 00:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xb0omRdLCCOfPt+/txYpi30U3/iAQj16OMiIXME8RHE=;
-        b=eICLEEfuqsvaqONwxsXU0zTjVt7XwYqtzlEdhkJWOrcd5QWruln7gDnvuaxTwcWNl/
-         7R5TSmM1aTljm0DOvpe/wMK7PpbNevNiRQZDmJMJe1Tm9SlKcnhUMQOKbzelrB2kUglb
-         AJ6QmNyv3F/07+qeauXqxWZShr1LnfxF6dTD/wB3fOpyiA66NzlJ2h7iS05ii0Fe9SEk
-         fMaj7NW3lSJmq2eHNwRAHUsXGXzfgzXF6D8ZX/pxoPrHaHV1b49tCAh8y+c+nJeVMsHi
-         wbZpfn8jfwHdaEwrGTmjix2XJXj8Y7uCvQ9qoyqgM9NA/w0XOdN24AveYQm1fx7OZF//
-         +UNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xb0omRdLCCOfPt+/txYpi30U3/iAQj16OMiIXME8RHE=;
-        b=l0AeicTyaEAyM/+nZDfD8hJ4RX+mjnZ/L7fsIl0op1cTX/P5RRI/KUpGWwjLG05CgH
-         H3rwOB24V2M/gLJZHN/eQE16/lUt58Yrt8XBiB7DlaAmFocPL+yTtzALt99A50aguzWw
-         xIASMx6UH1xzO4eIMFtVyAOguwhebPk+1cd7jOQANvPNi+cl7Q/2V7jm4930NGGTneBm
-         e4V4zjwDRtjuos/sfLrKWzOJaR0fP7HRCuR2aYBy3q/ReZUa1dsOwgJ5VtXCC+dnCf8a
-         m/urnIAqXMlqKT6QEDBjYehzCVjai1Bzp5xPxAx5UTLzxjmgAUXT6jRKKzpcCR2TqnvA
-         X+fQ==
-X-Gm-Message-State: AOAM532vPAw1aDSVua4gfN07NYmPb7RtU8CvYWQbwRNLmJZA8tyCFVyp
-        3eCwSRws1DMIKJSUsBLuHh4sw9okGbM56thu2yo=
-X-Google-Smtp-Source: ABdhPJyZHQKcB2t4Z1ootQs26PfgvB/0wuwI05c4XIXu3y8NhHk95Iu3B+XejQESRdlccgeDi6ARnjBWoWChet6hX/Y=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr2576822pgi.203.1596180860350;
- Fri, 31 Jul 2020 00:34:20 -0700 (PDT)
+        Fri, 31 Jul 2020 04:19:17 -0400
+Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:57824
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731587AbgGaITR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 04:19:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nUkOg1P027TrbakEzRIQGmVXk/8uSlGygaoIfHBxExh3gYM1RQnxuEM0/2vVBtFuGIybfq4NVX5Xp8Xscat/tHxDZTqWnRidyUndIEB6AFeDQE1hXW0rkJuUSWdUwjDlzNmxVy3azMIPdEqebM8ZOeq9dVQE7EGOXmFu8ygRgcqqq0xf2H5FoaMH93gOKxJJuzi/1/AGCaQl3o84WeXNclODSHYQaEIYnarVxF0aXRWcCk+oac5GqhxzAo1zSCdbLsh6aQJqsaOLz7dKSNuOAi1/8Cn/ht1VdIZ1MFRBysF0rW+vxI9JyCvRLusYvlx58EgKzVS0tLSWDb1SSL/9Cg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PKdTcHHV2KkMbBYwbQ35pW8T/7tThEKy9TAMTMqYsDI=;
+ b=RoRDc9LmM5b6w4APVUt1hq6iMdsryGrctK6Q744u9Vf1P14ZTrqn6+iPeYVpq/dJhhfVnrLCILXsb/58rCrdhrK9sugYOgQc7gcs2EsqXVcLmsCIx96e6qiE7YB1EH+hwK2FgkRgFklux3rty9XETStcAfO0rYD+bHgjLJV5sqN5IQIZQTSCStPmE3O7TVobYx7G0RySuEdpHFi54fVG/fJ3x069qhyHk1u1icv9ktnd9xKvDZJfERDk3WYJqbyphExF5NBMEl5nZk9lzaNfl6MrxC2gT6wHFQPO535woO+pG5qF9onn3ST8d1/0rUOVwpnaxE/HLNYmKxcowmpaHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PKdTcHHV2KkMbBYwbQ35pW8T/7tThEKy9TAMTMqYsDI=;
+ b=CZD+CA2crHWJDueeWw9QhVcwQ/OkSFCZzkt4P5IWDG2dC0cR1egguwAGGbITMQ3kQgjZ4iMRYvzETYF9OZZyTvXKbEUw5n8XvcEZtBu1sMBvoRJeWL9+W2xE081i3vWCj3w7PcCa+vpwEhMyEg6XbYKj/owLHm0flFx0coj68sQ=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27) by VI1PR04MB3024.eurprd04.prod.outlook.com
+ (2603:10a6:802:d::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Fri, 31 Jul
+ 2020 08:19:10 +0000
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5c87:6dce:840d:d4c8]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5c87:6dce:840d:d4c8%7]) with mapi id 15.20.3216.034; Fri, 31 Jul 2020
+ 08:19:10 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     lukas@mntmn.com, agx@sigxcpu.org, laurentiu.palcu@oss.nxp.com
+Subject: [PATCH v9 0/5] Add support for iMX8MQ Display Controller Subsystem
+Date:   Fri, 31 Jul 2020 11:18:28 +0300
+Message-Id: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset="us-ascii"
+X-ClientProxiedBy: AM0PR06CA0141.eurprd06.prod.outlook.com
+ (2603:10a6:208:ab::46) To VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27)
 MIME-Version: 1.0
-References: <20200731070114.40471-1-ceggers@arri.de> <20200731070114.40471-3-ceggers@arri.de>
-In-Reply-To: <20200731070114.40471-3-ceggers@arri.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 31 Jul 2020 10:34:02 +0300
-Message-ID: <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] iio: light: as73211: New driver
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR06CA0141.eurprd06.prod.outlook.com (2603:10a6:208:ab::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18 via Frontend Transport; Fri, 31 Jul 2020 08:19:08 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7e0d8b07-132f-41aa-a7d6-08d8352a6661
+X-MS-TrafficTypeDiagnostic: VI1PR04MB3024:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB30244E13346E3BFFFA613121BE4E0@VI1PR04MB3024.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fToKtT3bDOfhZP3yss3cg+rm2LRSnGO17gMHyCp5pX4AzIF+iQXmQMQ4cbz+CYk7ZkQFww3d9HmlO24EJ0PMnWRWyqeMsultURkYW8JQmlLY9Z7CRJJ2Y0hL/ossG9muwglkfRLgMs8rhgChHvHBYNaLoA6wnkFZNUTParjy1J+ZFO4ZhIsNDPKfkPeXYajoOOlMg+yUGd6qf4tmEU3WzKUAkRyqwQXBdsxzev9jA/gp4ssD9vFeeET0NXxFrpx6m3aR3NP4Lzsn5SR8vgUFN1kCbx7kgC7cz98i39/hMqc54aM5U58NYsARnmKyeel+hHUd8StZ5btYZlzg4fTxiwM5Eji5VQSW1VCrc4qLXNWLdGWVXqsHCnfdm0395yn6wPCFAdSVgrxdG041B4VA4FcVVBcMib06aZUmUqXonWI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(366004)(396003)(346002)(44832011)(956004)(2616005)(5660300002)(66476007)(6666004)(1076003)(66946007)(66556008)(316002)(110136005)(2906002)(186003)(26005)(16526019)(6506007)(52116002)(83380400001)(4326008)(8676002)(6512007)(966005)(86362001)(6486002)(478600001)(8936002)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Ijr9Q52+9Et2doMaS2Tp7PkIF4jRciPifI1QlLoUqg2Ps2/WfbY/EK6xq1n96j04U8aM364zfHj107yoAHdSirH8AyagxtuDfwqf03SmBP6VB2vo8BND65+kvezYNJrlaZpC7JdQ7nCGD3WyjSvq7AEHzVUciUyDJtRfuBhzeRpTAA2AXasGH2jlTNozQY03e2j+OoXp49A8Jw08tVOsrQq3deelffia41tttofppkjNHyydClv8+pyLn+aFD/C1NumPeUayuk8tjIvSY/qFWTG3tsBMAgjEzrsIdxkLrvxYOHaF3rvpUq3m85LbP9n3p8xrxnfPlKEulQNi4eQb266dAW74svYWpGsKTOiwwLUAVzDoCK0bfeiiFE8QKRnAbXLDgDNDLmwAVDORojTruvfHZtKG0IgH3Cl1p+duI7Au1QnJNdUfy6EqQdOZpOSLzhqaKqcLRTArGW1lydXuIQZAHSxomuRte5AUHixX4CpP6QJAa0OM/0gckRcWxt3gt4Yqlq7Ofz6jWOHfCiasuGpXMfYxGrCaVnTVRKDIn+Rp/4ghghVkfPc1gEMt25T9bo5dWTXBS+TUWHJhCK7CTuJ2VDKQadLTrg7VXZd9+ly18kmoei01Z/ccfhbPE2MuEzEFAPwYTXu5P3p59WT++A==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e0d8b07-132f-41aa-a7d6-08d8352a6661
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 08:19:09.9607
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8bkroiMT4eBAVFSDMC8JYp48WDYPpfNMLKVD+i3WZZBPOZ+ns77rjkOtVjPbUupFgAWLGmkYkQNtCFvvc4UArA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3024
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 10:03 AM Christian Eggers <ceggers@arri.de> wrote:
->
-> Support for AMS AS73211 JENCOLOR(R) Digital XYZ Sensor.
->
-> This driver has no built-in trigger. In order for making triggered
-> measurements, an external (software) trigger driver like
-> iio-trig-hrtimer or iio-trig-sysfs is required.
->
-> The sensor supports single and continuous measurement modes. The latter
-> is not used by design as this would require tight timing synchronization
-> between hardware and driver without much benefit.
+From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 
-Thanks for an update. My comments below.
+Hi,
 
-...
+This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+includes only graphics plane support (no video planes), no HDR10 capabilities,
+no graphics decompression (only linear, tiled and super-tiled buffers allowed).
 
-> +static const int as73211_samp_freq_avail[] = { 1024000, 2048000, 4096000, 8192000 };
+Support for the rest of the features will be added incrementally, in subsequent
+patches.
 
-This looks related to the below mentioned 1.024MHz.
+The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
 
-Perhaps add a definition above and comment here?
+Thanks,
+Laurentiu
 
-#define AS73211_BASE_FREQ_1024KHZ   1024000
+Changes in v9:
+ * Fixed a compilation issue found by Guido in his setup: 'select
+   VIDEOMODE_HELPERS' was missing from Kconfig;
+ * Use imx8mq-clock.h in the bindings file so one can understand what
+   those clock values mean;
+ * no other changes done. Couldn't address the hang Guido reported as
+   it's not happening in my setup. However, in my tree, there are some
+   extra NWL and ADV patches applied on top of upstream ones... Also,
+   removing them and testing only with upstream, even if there's no
+   image out, does not produce a hang... :/
 
-/* Available sample frequencies are power of two multiplier by 1.024MHz */
-(Rephrase it better)
+Changes in v8:
+ * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
+   out. SRC is not used in DCSS driver;
+ * Nothing else changed;
 
-> +static const int as73211_hardwaregain_avail[] = { 1, 2, 4, 8, 16, 32, 64, 128,
-> +                                                  256, 512, 1024, 2048 };
+Changes in v7:
+ * Added a patch to initialize the connector using the drm_bridge_connector
+   API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
+   Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
+   patches for ADV and NWL were needed, from our downstream tree, which
+   will be upstreamed soon by their author;
+ * Rest of the patches are untouched;
 
-Indentation. Better is
-... foo = {
-  bar, baz,
-};
+[1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
+[2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
 
-And in both cases leave comma at the last value.
+Changes in v6:
+ * Addressed Rob's comment and added "additionalProperties: false" at
+   the end of the bindings' properties. However, this change surfaced
+   an issue with the assigned-clock* properties not being documented in
+   the properties section. Added the descriptions and the bindings patch
+   will need another review;
+ * Added an entry for DCSS driver in the MAINTAINERS file;
+ * Removed the component framework patch altogether;
 
-...
+Changes in v5:
+ * Rebased to latest;
+ * Took out component framework support and made it a separate patch so
+   that people can still test with HDP driver, which makes use of it.
+   But the idea is to get rid of it once HDP driver's next versions
+   will remove component framework as well;
+ * Slight improvement to modesetting: avoid cutting off the pixel clock
+   if the new mode and the old one are equal. Also, in this case, is
+   not necessary to wait for DTG to shut off. This would allow to switch
+   from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+   from DCSS point of view);
+ * Do not fire off CTXLD when going to suspend, unless it still has
+   entries that need to be committed to DCSS;
+ * Addressed Rob's comments on bindings;
 
-> +/**
-> + * struct as73211_data - Instance data for one AS73211
-> + * @client: I2C client.
-> + * @osr:    Cached Operational State Register.
-> + * @creg1:  Cached Configuration Register 1.
-> + * @creg2:  Cached Configuration Register 2.
-> + * @creg3:  Cached Configuration Register 3.
+Changes in v4:
+ * Addressed Lucas and Philipp's comments:
+   * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+   * Removed usage of devm_ functions since I'm already doing all the
+     clean-up in the submodules_deinit();
+   * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+   * Removed en_completion variable from dcss_crtc since this was
+     introduced mainly to avoid vblank timeout warnings which were fixed
+     by arming the vblank event in flush() instead of begin();
+   * Removed clks_on and irq_enabled flags since all the calls to
+     enabling/disabling clocks and interrupts were balanced;
+   * Removed the custom atomic_commit callback and used the DRM core
+     helper and, in the process, got rid of a workqueue that wasn't
+     necessary anymore;
+   * Fixed some minor DT binding issues flagged by Philipp;
+   * Some other minor changes suggested by Lucas;
+ * Removed YUV formats from the supported formats as these cannot work
+   without the HDR10 module CSCs and LUTs. Will add them back when I
+   will add support for video planes;
 
-> + * @mutex:  Keeps cached registers in synch with the device.
+Changes in v3:
+ * rebased to latest linux-next and made it compile as drmP.h was
+   removed;
+ * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+ * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+ * fixed a a spurious hang reported by Lukas Hartmann and encountered
+   by me several times;
+ * mask DPR and DTG interrupts by default, as they may come enabled from
+   U-boot;
 
-sync
-
-> + * @completion: Completion to wait for interrupt.
-> + * @int_time_avail: Available integration times (depend on sampling frequency).
-> + */
-
-...
-
-> +/* integration time in units of 1024 clock cycles */
-Unify this with below one. Or the other way around, i.o.w. join one of
-them into the other.
-
-> +static unsigned int as73211_integration_time_1024cyc(struct as73211_data *data)
-> +{
-> +       /* integration time in CREG1 is in powers of 2 (x 1024 cycles) */
-> +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
-> +}
-
-...
-
-> +static unsigned int as73211_integration_time_us(struct as73211_data *data,
-> +                                                unsigned int integration_time_1024cyc)
-> +{
-> +       /*
-> +        * f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz)
-> +        * t_cycl is configured in CREG1 in powers of 2 (x 1024 cycles)
-> +        * t_int_us = 1 / (f_samp) * t_cycl * US_PER_SEC
-> +        *          = 1 / (2^CREG3_CCLK * 1,024,000) * 2^CREG1_CYCLES * 1,024 * US_PER_SEC
-> +        *          = 2^(-CREG3_CCLK) * 2^CREG1_CYCLES * 1,000
-
-> +        *            in order to get rid of negative exponents, we extend the
-> +        *            "fraction" by 2^3 (3 == CREG3_CCLK,max)
-
-In the parentheses swap left and right parts for better reading.
-
-Perhaps shift left to have formulas separated from text visually.
-
-> +        *          = 2^(3-CREG3_CCLK) * 2^CREG1_CYCLES * 125
-
-Okay, 125 = 1000/2^3.
-
-> +        */
-> +       return BIT(3 - FIELD_GET(AS73211_CREG3_CCLK_MASK, data->creg3)) *
-> +               integration_time_1024cyc * 125;
-> +}
-
-...
-
-> +               data->int_time_avail[i * 2] = time_us / USEC_PER_SEC;
-
-I would do + 0, but it's up to you (complete style preference).
-
-> +               data->int_time_avail[i * 2 + 1] = time_us % USEC_PER_SEC;
-
-...
-
-> +       unsigned int time_us = as73211_integration_time_us(data,
-> +                                                           as73211_integration_time_1024cyc(data));
-
-One line?
-
-...
-
-> +               /* f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz) */
-> +               *val = BIT(FIELD_GET(AS73211_CREG3_CCLK_MASK, data->creg3)) * 1024000;
-
-As above mentioned, definition can be used.
-
-...
+Changes in v2:
+ * Removed '0x' in node's unit-address both in DT and yaml;
+ * Made the address region size lowercase, to be consistent;
+ * Removed some left-over references to P010;
+ * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+   issues reported by kbuild for other architectures;
 
 
-> +               int reg_bits, freq_kHz = val / 1000 /* HZ_PER_KHZ */;  /* 1024, 2048, ... */
-> +
-> +               /* val must be 1024 * 2^x */
-> +               if (val < 0 || (freq_kHz * 1000 /* HZ_PER_KHZ */) != val ||
-> +                               !is_power_of_2(freq_kHz) || val2)
-> +                       return -EINVAL;
+Laurentiu Palcu (5):
+  drm/imx: compile imx directory by default
+  drm/imx: Add initial support for DCSS on iMX8MQ
+  drm/imx/dcss: use drm_bridge_connector API
+  MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
+  dt-bindings: display: imx: add bindings for DCSS
 
-Please, define HZ_PER_KHZ locally. It will really help when we move
-these definitions to a global level.
-
-...
-
-> +               /* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
-> +               reg_bits = 13 - ilog2(val);
-
-13 is the second time in the code. Deserves a descriptive definition.
-
-...
-
-> +       indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +       if (indio_dev == NULL)
-
-if (!indio_dev)
-
-> +               return -ENOMEM;
-
-...
-
-> +       indio_dev->dev.parent = dev;
-
-Doesn't IIO core do this for you?
-
-...
-
-> +       /* At the time of writing this driver, only DEVID 2 and MUT 1 is known. */
-
-are known
-
-...
-
-> +       /* enable device */
-
-This is confusing and by the fact useless.
-
-...
-
-> +       ret = devm_iio_device_register(dev, indio_dev);
-> +       if (ret < 0)
-> +               goto powerdown;
-> +
-> +       return 0;
-
-> +powerdown:
-> +       as73211_power(indio_dev, false);
-> +       return ret;
-
-devm_*() is tricky. Here you broke ordering heavily. So, consider to
-add this under devm_add_action_or_reset().
-
-...
-
-> +static int as73211_remove(struct i2c_client *client)
-> +{
-> +       struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +
-> +       as73211_power(indio_dev, false);
-> +
-> +       return 0;
-> +}
-
-And as a result of the above this will be gone.
+ .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 +++
+ MAINTAINERS                                   |   8 +
+ drivers/gpu/drm/Makefile                      |   2 +-
+ drivers/gpu/drm/imx/Kconfig                   |   2 +
+ drivers/gpu/drm/imx/Makefile                  |   1 +
+ drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+ drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+ drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+ drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+ drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
+ drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+ drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
+ drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
+ drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
+ drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+ drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+ drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+ 20 files changed, 4112 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+ create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+ create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+ create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.23.0
+
