@@ -7,86 +7,79 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E647C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE18C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F2122B3F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA38121744
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596234260;
-	bh=CFCLX/xODFrhtkzvYcYSNO27dODJFFuiaQpl62SKKfQ=;
+	s=default; t=1596234434;
+	bh=3YhvKjIV6C+qYLoHaxSkzpDLt2dC2qA34wXz+PESBV8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tNs6H43ESoSi9qVRDTgJV8zuwbNsv7FP9oWsUMS7gmQHdrYOnGRZmVVJH3ir32EbL
-	 u31+Xx8ZimAkncfrmMijVONBhzJWbaOBUT3bbq2XY7ZXINUdK9tHtk7YeitPFC3Ih1
-	 HlG6ycOBsrv0Ve9VRmPE1XczVHs2Sl5uNHaqKMxw=
+	b=L1n1oYmg5WFxdUhoMS5NbqKtvX3T7WfjGZZtV1XPoKjUylxrwB9/F66KJPe6ZFsrA
+	 wChMCem+AiuaaSLsTZHOINmQzpyWnnpcg9i0XqpAOl85PKqAyLKZwS+COvM6g0oPrN
+	 XkofACUXz2zjCoB5VBH8jvboWbiz77xCaD1yGexg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbgGaWYU (ORCPT
+        id S1726536AbgGaW1O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:24:20 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40395 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgGaWYT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:24:19 -0400
-Received: by mail-il1-f195.google.com with SMTP id x1so6281763ilp.7;
-        Fri, 31 Jul 2020 15:24:18 -0700 (PDT)
+        Fri, 31 Jul 2020 18:27:14 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46803 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgGaW1N (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:27:13 -0400
+Received: by mail-il1-f196.google.com with SMTP id l17so16392915ilq.13;
+        Fri, 31 Jul 2020 15:27:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=VAnICWWmHSZyQ/n2FRhx+9FJGWpFXq+PYL2a2PlHGUI=;
-        b=jycLPAkCDbNJ4nUkNKxW89bYzPa06CamYvOZ9+V/xqgesPMVkAYnWnyV4H123CAk7L
-         hSidyLLM911Kj2WDj12tHtdvID9GcL+rN2tfUrw2yjgLcwfyxQ5eownYTU2Y3VGwNeBD
-         z65EvnMeJUxGJ5yExaPKUdN2tFqQ4byF8Env0vwZi48ewtCWl+aKo5lgJBAVKouiz8Fw
-         Se2TfFf4u/o/rUFB1/q9BycKnHAp/G/aZcIHDAUiGwhSZaN0UT9gdxlP+rFgczVdGoqL
-         gEVummtsoyioOIxhcxQh2qbmWAN3gksi9rkiFbc70l8iNc70npVm3vF0REZW7RqFLKEN
-         KMRg==
-X-Gm-Message-State: AOAM532rImezdVZdYVoxDkaNwH8qwz+eg5nHJct+Q5U1XUDxkIAm0sG7
-        GtyhbZbjLvD1Xf+CYKUzDhjjPPFInQ==
-X-Google-Smtp-Source: ABdhPJzNNKwOyFQ6RSiwe5OSJfrjJmwW/9c5cKyL5rJw4Hyu75ZQcI5qmCEHkE7DS7cCCOIQtFoRgQ==
-X-Received: by 2002:a92:c9ca:: with SMTP id k10mr5914173ilq.41.1596234258633;
-        Fri, 31 Jul 2020 15:24:18 -0700 (PDT)
+        bh=0VUfDkvVHH4W6XLORiRyqtNq2plcQ7wzsPH44IkkNSc=;
+        b=jM22gGIvdY5LBoAbwaz/Jq05KIq657pQHeVOjt3ZFtgeDfEilrU3gCalTwAzcw4ql8
+         BWecKTtni5gsPPQj7GzhYTOp7EzBxpUks/V2ki85Zw4S0/qaDqvwbl5r5orXzuqcfnzn
+         8SN4RXj/5v0XoKkl7VgCfIV8jEJrgdDcWVkHBfbZgpwyLpK10jbM/TYzrA0ucMTSAYrJ
+         trKCgnbshCuMqgnO4+v7lxonTackvfma4bHoM+pAY4k6gTnMCcAwUfFySUdt0SKHIcPb
+         pTD5k5mghDN8uaxQwtsqCw2qoCZthPhhjyO5/KCqE2Ysy2OtsMK7ZTENsRdxib2q05he
+         VPog==
+X-Gm-Message-State: AOAM533S52VpHGduMdgPVFv1B4U5gjAeKH9rp+rlUFM55trbbcoBrkF/
+        YUk/HQop6mUhPVPbZe38BA==
+X-Google-Smtp-Source: ABdhPJz7Vco6kuErpdnt+GHHFaDlfvdp8NRkNceWXBuJgygMGIdQkhox9ceVN6YtpoAW8FKkTue4zA==
+X-Received: by 2002:a92:da51:: with SMTP id p17mr5907157ilq.44.1596234432878;
+        Fri, 31 Jul 2020 15:27:12 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f19sm5813243ilf.15.2020.07.31.15.24.17
+        by smtp.gmail.com with ESMTPSA id f19sm5818459ilf.15.2020.07.31.15.27.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 15:24:18 -0700 (PDT)
-Received: (nullmailer pid 912829 invoked by uid 1000);
-        Fri, 31 Jul 2020 22:24:16 -0000
-Date:   Fri, 31 Jul 2020 16:24:16 -0600
+        Fri, 31 Jul 2020 15:27:11 -0700 (PDT)
+Received: (nullmailer pid 917522 invoked by uid 1000);
+        Fri, 31 Jul 2020 22:27:10 -0000
+Date:   Fri, 31 Jul 2020 16:27:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Shawn Guo <shawnguo@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 07/17] dt-bindings: reset: imx8mp: Add hdmi blk_ctrl
- reset IDs
-Message-ID: <20200731222416.GA912729@bogus>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
- <1596024483-21482-8-git-send-email-abel.vesa@nxp.com>
+To:     peng.fan@nxp.com
+Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, shawnguo@kernel.org, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] dt-bindings: reset: imx8mq: add m4 reset
+Message-ID: <20200731222710.GA917469@bogus>
+References: <1596091569-10013-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596024483-21482-8-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1596091569-10013-1-git-send-email-peng.fan@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Jul 2020 15:07:53 +0300, Abel Vesa wrote:
-> These will be used imx8mp for blk-ctrl driver.
+On Thu, 30 Jul 2020 14:46:08 +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Add the m4 reset used by the remoteproc driver
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  include/dt-bindings/reset/imx8mp-reset.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  include/dt-bindings/reset/imx8mq-reset.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
