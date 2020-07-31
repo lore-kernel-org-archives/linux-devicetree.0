@@ -2,176 +2,122 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE85FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81418C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B52F320663
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D6B21744
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eu6LagJE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cXZ/Eyzf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732904AbgGaMGq (ORCPT
+        id S1732980AbgGaM2Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56882 "EHLO
+        Fri, 31 Jul 2020 08:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732734AbgGaMGp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 08:06:45 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B523C061574;
-        Fri, 31 Jul 2020 05:06:45 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id t6so19247609ljk.9;
-        Fri, 31 Jul 2020 05:06:45 -0700 (PDT)
+        with ESMTP id S1732902AbgGaM2Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 08:28:16 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B7EC061574
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 05:28:16 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id s16so22738171qtn.7
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 05:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wGIEotVJMeoJNihU6O/r/OV8ckdtdoLNEofry0Bb5ZI=;
-        b=Eu6LagJEiGtloI+tapn2ZSSDVFePwtRLBjkeKZCRDmhT8YehnOqPsbRtseSEUw+m0J
-         7BqIQnayf8uOibZ4NIlX7MtgdppwdrRnaH8j/rPnCmykRBBS/r0ii16CW0F5PK/PjD3L
-         A4RxmOxw9kT2ffT9oqYBt7bR9A0FdhPJ6DzRS12vQ7yZnXTqhU/Axf3RFyAFVCqQOcrR
-         zshy6WcV4WwOQ7YmqlTz3OUYfp6u8OVM57o4OKyzl7XxyOSyzg9uHtZUXexDGNWUX4W1
-         2xUICVbQSp+roZsjC1g2TQzuN/NI3HJHYc+++0kQWbiVrodYfUQv1BRaCU7XL4mjn8m0
-         FhHA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GpNuJXQqlOCS5GDhX83vpT+wKOWnehhWp+8dfJ9ixf8=;
+        b=cXZ/EyzfeupDWbipTBUjVJZ+y8cP5jdycblY7Z44CJzHSeRA1+/URHNLmNEBG6BcOM
+         stbguOeWoSqquxN/JWuE1EJG24866Y9gW6yGcPv1DjBmzHnHPnYiGSPTgEi2gsemJ0J4
+         NwSvx+gXc0G4R2oNG5ktox1/YbsRpUYDKMtgMbLW6ktjs6pgCzdFaNHmT5i8GLfar8rX
+         LmIX/euaj/XZnevGsKwtZrOLf3ZUdikX/ARBBD8q1Bcn9QSW91AywUdm3OVBnsaMsjoS
+         cdR0EiIR/Oq/XzEOgxoNyYat+O/9QHuikFCr7b7kYlRE9bfJ5uupbOprsNTY2RGNNx2d
+         ++1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wGIEotVJMeoJNihU6O/r/OV8ckdtdoLNEofry0Bb5ZI=;
-        b=oPOQtUXtKPusTXIAskJgx8wgJYCvq5fw3fRZxa2ccSE0+cOkl1QpU2eY+/x5DSaqjD
-         6FU/jwj3PGTNwrLFCx4/LUfqrCznnm8JLGBK+etXC4Jv4lA21yGBn4VQVjoedK1bQAJ0
-         aZSWUXNlnVk8QVhRXtHV033OtLtJrPl/DnPK/cGVYyDNndty4dAIanjibL7fYCcgvgPd
-         84ZLVBwiJxzIK5lXixEJLbAudJHQCFxtKXOe8WElvGd8Dfs0oBQGt6ziOGzXBfoMc1iy
-         b3xZu/5D7MAEDd7rPcEuCHttGE2+aRyb0FEM888WN4k98+WGyYT0a+N1NrAoj6zPkusB
-         3VoQ==
-X-Gm-Message-State: AOAM5332w9rijTIZIFq1HrQ0KKZkmkOsGcC21lBuDjiggAJBQq+6b1FJ
-        H24RQAAxcwZp2kOyVFdYRLe59CCK
-X-Google-Smtp-Source: ABdhPJxk0BTj8qxc+FqtzWhzEa6QTQpNzeE5UIlC5aV2Fwy1reVwOKg+TWzTfJDz0BXs77vl+vw5bA==
-X-Received: by 2002:a2e:2ac5:: with SMTP id q188mr1824671ljq.179.1596197203320;
-        Fri, 31 Jul 2020 05:06:43 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id p9sm1629043ljg.76.2020.07.31.05.06.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2020 05:06:42 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 05/10] media: tegra-video: Separate CSI stream
- enable and disable implementations
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
- <1596186169-18729-6-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <cdc22071-9e61-1098-803a-d7c674972b6f@gmail.com>
-Date:   Fri, 31 Jul 2020 15:06:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GpNuJXQqlOCS5GDhX83vpT+wKOWnehhWp+8dfJ9ixf8=;
+        b=VlZWBcCt5a3UAOGQpymgSFzgRZfK5Wq+mvioW/qE8h/oB8WwZlJKBK5EdGMxpUwudC
+         uZ9EVaT8zKK8l/Xbm7sh7bREJ03/iTSjn6Y+hUEVP0sqDghtNHLuxm26QbUrLp34DrEf
+         ONmr84BUk0zc4hOWCI8uADiJFU913ufsp1gXz2pV0VFrdemRI9ELbqNpvP82pUM+uYE/
+         r3eb2EzceJSUDmo+bUz5+YO8NZ+H4D+xD3eDzG5b2D0g/DUcT3nG8zGMttvddHmGnkf0
+         sVwqWurx71FWl8joJPogu9PcnKCNhxvzX8aIta1LYfIv2vN+XSPdoh2zColc/EFeEzup
+         QGdg==
+X-Gm-Message-State: AOAM533jbkIQEq6ZQLjoRllgiknfriydHQA4FpBcpTOl75Q9a7YqPkdK
+        NAgPqrCh7nYvEejqgw8tus1Dd8xEgYY42b1gvGcn3g==
+X-Google-Smtp-Source: ABdhPJyC4PI0MMIp9wDUvN+USBI9m1uGvSm0aAlyJ4syTr+1+ju/bY8i/k2DL7z40LWm81Mb4WmTN/wEXFNd6QSuv7g=
+X-Received: by 2002:aed:22cb:: with SMTP id q11mr1035394qtc.200.1596198495028;
+ Fri, 31 Jul 2020 05:28:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1596186169-18729-6-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1595927918-19845-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1595927918-19845-5-git-send-email-grzegorz.jaszczyk@linaro.org> <f65c6b32-7754-9880-1912-3b0b30a3d6d4@lechnology.com>
+In-Reply-To: <f65c6b32-7754-9880-1912-3b0b30a3d6d4@lechnology.com>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Fri, 31 Jul 2020 14:28:04 +0200
+Message-ID: <CAMxfBF4--kP=tt-1LqMB=W8B6gHYu1vFFMtnLPgc-akeLiK-Yw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] irqchip/irq-pruss-intc: Implement
+ irq_{get,set}_irqchip_state ops
+To:     David Lechner <david@lechnology.com>, Marc Zyngier <maz@kernel.org>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net,
+        "Anna, Suman" <s-anna@ti.com>, robh+dt@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Mills, William" <wmills@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-31.07.2020 12:02, Sowjanya Komatineni пишет:
-> This patch separates implementation of CSI stream enable and disable
-> into separate functions for readability.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/staging/media/tegra-video/csi.c | 51 ++++++++++++++++++++++-----------
->  1 file changed, 35 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-> index fb667df..cfe6187 100644
-> --- a/drivers/staging/media/tegra-video/csi.c
-> +++ b/drivers/staging/media/tegra-video/csi.c
-> @@ -232,34 +232,53 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
->  	return 0;
->  }
->  
-> -static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
-> +static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
->  {
->  	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
->  	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
->  	struct tegra_csi *csi = csi_chan->csi;
-> -	int ret = 0;
-> +	int ret;
-> +
-> +	ret = pm_runtime_get_sync(csi->dev);
-> +	if (ret < 0) {
-> +		dev_err(csi->dev, "failed to get runtime PM: %d\n", ret);
-> +		pm_runtime_put_noidle(csi->dev);
-> +		return ret;
-> +	}
->  
->  	csi_chan->pg_mode = chan->pg_mode;
-> -	if (enable) {
-> -		ret = pm_runtime_get_sync(csi->dev);
-> -		if (ret < 0) {
-> -			dev_err(csi->dev,
-> -				"failed to get runtime PM: %d\n", ret);
-> -			pm_runtime_put_noidle(csi->dev);
-> -			return ret;
-> -		}
-> +	ret = csi->ops->csi_start_streaming(csi_chan);
-> +	if (ret < 0)
-> +		goto rpm_put;
->  
-> -		ret = csi->ops->csi_start_streaming(csi_chan);
-> -		if (ret < 0)
-> -			goto rpm_put;
-> +	return 0;
->  
-> -		return 0;
-> -	}
-> +rpm_put:
-> +	pm_runtime_put(csi->dev);
-> +	return ret;
-> +}
-> +
-> +static int tegra_csi_disable_stream(struct v4l2_subdev *subdev)
-> +{
-> +	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
-> +	struct tegra_csi *csi = csi_chan->csi;
->  
->  	csi->ops->csi_stop_streaming(csi_chan);
->  
-> -rpm_put:
->  	pm_runtime_put(csi->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
-> +{
-> +	int ret;
-> +
-> +	if (enable)
-> +		ret = tegra_csi_enable_stream(subdev);
-> +	else
-> +		ret = tegra_csi_disable_stream(subdev);
-> +
->  	return ret;
->  }
->  
-> 
+On Wed, 29 Jul 2020 at 21:23, David Lechner <david@lechnology.com> wrote:
+>
+> On 7/28/20 4:18 AM, Grzegorz Jaszczyk wrote:
+> > From: David Lechner <david@lechnology.com>
+> >
+> > This implements the irq_get_irqchip_state and irq_set_irqchip_state
+> > callbacks for the TI PRUSS INTC driver. The set callback can be used
+> > by drivers to "kick" a PRU by injecting a PRU system event.
+> >
+> > Example:
+>
+> We could improve this example by showing a device tree node of a
+> firmware-defined device implemented in the PRU:
+>
+>         /* Software-defined UART in PRU */
+>         pru_uart: serial@XXXX {
+>                 compatible = "ti,pru-uart";
+>                 ...
+>                 interrupt-parent = <&pruss_intc>;
+>                 /* PRU system event 31, channel 0, host event 0 */
+>                 interrupts = <31 0 0>, ...;
+>                 interrupt-names = "kick", ...;
+>                 ...
+>         },
+>
+> Then driver would request the IRQ during probe:
+>
+>         data->kick_irq = of_irq_get_byname(dev, "kick");
+>         if (data->kick_irq < 0)
+>                 ...
+>
+>
+> And later the driver would use the IRQ to kick the PRU:
+>
+>         irq_set_irqchip_state(data->kick_irq, IRQCHIP_STATE_PENDING, true);
+>
+>
 
-Thanks!
+We could but I am not sure if this kind of complex example should land
+in the commit log.
+Marc could you please comment how you want to see this?
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Thank you,
+Grzegorz
