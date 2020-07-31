@@ -2,103 +2,129 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA99DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 09:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D529C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8988421883
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 09:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9D020829
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 09:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q4dxRilW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l3PHEQd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbgGaJSE (ORCPT
+        id S1732275AbgGaJlh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 05:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732016AbgGaJSD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 05:18:03 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80892C061575
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 02:18:03 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id l17so31018086iok.7
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 02:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MBYKW+6zfDB2a54T6hWqLG1CXD8Xv9gEE8YRBupknoc=;
-        b=Q4dxRilWRBgR7d7mMciRIspoaJm1fKMtrrxqGop4MRWMLfDc2D9yEkmq7lanCl9IDe
-         r7Ipz4IWXCJMfmE8gERtTCXqU0PCd2yaU25HbqQAmtQQfmbt9kxpDNN2AVYcf2lFK1pC
-         cwqvXq69UceGzBHTSrTnvMYRIvHZl+qJ4u17vqcges3uTIgsNJpdkSZKEYBAdS6e1jjj
-         qwjFZv61E1DWla4RqmgLOTPcf169N+7qeHI86xyeTQ+kuv1LDlJTZGttIqTSER1GnIn6
-         R01XGra1AUEkoKQGTvP1e29NBtDPetvcV9hgYInxlth9Nfx8/iX5yND0vqQLmGYSWbhj
-         /bCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MBYKW+6zfDB2a54T6hWqLG1CXD8Xv9gEE8YRBupknoc=;
-        b=h51czFR3br00WIac+uTpJw+JGnQO01QC93qbKXrS8k7gJB3kVse9ikMMVa0GaL8R2/
-         QYIbReon3XV1CPlEfHSWKmO8LheVO5yiHQM3MvJ9dWdM13eOOaOeV9IJvO8YRweEGYYy
-         TgDdr0DXVzpGbYEHy9OcobU9Zg7AWmTMPp4uhzttGecq8cgEAfh5CXjfcNjm3oOZwat7
-         XotRWfPPze73qAkrNeN6UawAd0WvlGUEMJeeMMQbnzaeJHUpdqiUgSBdd7j1/4RIrVXF
-         D24uHqXfaafSLvwBGZyS0cAFPoibVnSV2NzaMzQTY02j1TOygBouvHYcnovYxdK78t83
-         SNjQ==
-X-Gm-Message-State: AOAM5315Oir7/cRzk7C6ovnFBu8PB2z01gqNettI+u+8Wp8cAwwXn6sE
-        k7jWXr38+KSykbyP73LbO3+UluaEcH3I7RTcKAl79A==
-X-Google-Smtp-Source: ABdhPJx+ufc4R00ufDto7B+hLq2EDngnNSkTrnF9favAezBqDM2gxaTBrSA3LHvhe9NZwN3t9yBnkD6e7zjqycRcULE=
-X-Received: by 2002:a5d:9b05:: with SMTP id y5mr2682909ion.59.1596187081282;
- Fri, 31 Jul 2020 02:18:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200731084023.2678931-1-cychiang@chromium.org> <20200731084023.2678931-3-cychiang@chromium.org>
-In-Reply-To: <20200731084023.2678931-3-cychiang@chromium.org>
-From:   Tzung-Bi Shih <tzungbi@google.com>
-Date:   Fri, 31 Jul 2020 17:17:50 +0800
-Message-ID: <CA+Px+wXL6-zM6vBZj9_6MhxQz7Dy_Z4J7+RUYEViVkWYv2zX=g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Douglas Anderson <dianders@chromium.org>, dgreid@chromium.org,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Fri, 31 Jul 2020 05:41:37 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:34930 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732080AbgGaJlh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 05:41:37 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200731094134euoutp011b44a3e5211f6245bf43749f057a1a6a~mzPqdWsLQ0481404814euoutp01d
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200731094134euoutp011b44a3e5211f6245bf43749f057a1a6a~mzPqdWsLQ0481404814euoutp01d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596188494;
+        bh=GbJBbeJR03bXyFa1MMhre4R+cY8zmKVFAv+IxUgW3lY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=l3PHEQd9eAGlq79XPadT89u/Vlbzzk/feLp5HJ7p6Zoct5DKsYUmNObm8DuztaG1C
+         vjw3eSlVxe4vF4vJkYUnLks5bwo/8JbHYyrfPQqT4FLDWjYFg1WF2zli8XCa+SCWLE
+         9P8yYqlNVWgSyh42LDHSpwj1vgF9p1dk9bBE9rZw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200731094134eucas1p2cc877d2721c083b35afcf08b0326491e~mzPqOultR2742427424eucas1p2h;
+        Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 47.8F.06456.E47E32F5; Fri, 31
+        Jul 2020 10:41:34 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200731094134eucas1p2901617e5a4bc391cde77db276f0e7e93~mzPp6TTi91805118051eucas1p24;
+        Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200731094134eusmtrp207c3fddb994001b6a01207e3f65e0546~mzPp5o89e0594305943eusmtrp2k;
+        Fri, 31 Jul 2020 09:41:34 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-9d-5f23e74e7089
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 15.36.06314.D47E32F5; Fri, 31
+        Jul 2020 10:41:34 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200731094133eusmtip26b9016d1143d62093808ba7eaa560dc5~mzPpK4WEH2703327033eusmtip2P;
+        Fri, 31 Jul 2020 09:41:33 +0000 (GMT)
+Subject: Re: [PATCH v2 04/11] media: exynos4-is: Correct missing entity
+ function initialization
+To:     Jonathan Bakker <xc-racer2@live.ca>, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Ajit Pandey <ajitp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kyungmin.park@samsung.com, mchehab@kernel.org, kgene@kernel.org,
+        krzk@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <c1b7b54c-6c97-e430-daec-f7815b54a33e@samsung.com>
+Date:   Fri, 31 Jul 2020 11:41:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <BN6PR04MB066098E34801126939AB0EF6A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2znbOa5m36bhq0nBsqAgzezHgUQsDPZDQoKCBC+nPKi0Tdu8
+        9qehZt7TbuoUZ1oWa3lZTvNShqhDvJWWZF6iFDTNbtrFNM3tJPnveZ73eb73eeGjCdkzoRsd
+        rY7jNGpWKReJyYaupf4DJ6Z3hx2sL3RlDB39Qubq5BzBDAzUUkxfykeKMU8OC5mh5lIRk1Nr
+        ETJFA08FTJV5RcBcftJBMS8Kxkn/LQqzMVOkeHTnkqJi5BepyKs3IsWCeWeQMFjsG8EpoxM4
+        jZdfuDjKUNlIxU4QSSuWJaEOZRJZyIEGfBhWxqtFWUhMy/B9BPkPqwU8WURg7X5A8GQBQWnr
+        knAjont3k+QH9xB0FbcgnnxFcKvjisDmcsIsVI8t2ePOuAZB1fUv9ocJnI6g7I+OsrlE2Bty
+        O/PW4zQtwX5w1xRkk0m8B5pGDaQNb8ehYLG+sj8qwVLoLp6y6w44BBqHFu2VCOwCb6YMAh7v
+        gsb5UvtiwMMUtH7OF/C9A2ChcJzksRPMWuspHrvDWpNBwAdSEeS0jFI8yUfw1lqOeNcRGOv/
+        LbI1JfA+qGn24uWj0LtYR9pkwI7wel7Kl3CEaw2FBC9LICNdxrs9YNlY+K+OG2RPrZH5SK7f
+        dJp+0zn6Tefo/+8tR6QRuXDxWlUkp/VWc4meWlaljVdHep6LUZnR+r/qWbV+e4y+D55tR5hG
+        8q2S8EF5mEzIJmiTVe0IaELuLDnW1xMqk0SwyRc5TUyYJl7JadvRDpqUu0h8Kj6EyHAkG8ed
+        57hYTrMxFdAObjrkujx7OiUjLTDJXVzUM2NJmVBLR1yCVaYqY05e5d7ArEiTrCphzten7Xjm
+        tln/luARU91t3Y9e73ZpebZbrvTkyvsSiyV9CBJXEwp8jJ9C2k4ta0rq6BnfrDKL+/TPQ2fm
+        X95IXu5sTnMwKtmS5IALz1NlSo/dlN4vcJ52FQ/LSW0U672f0GjZv+Ozv2tTAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xe7p+z5XjDXrvMFrMP3KO1aL/8Wtm
+        i/PnN7BbnG16w26x6fE1VovLu+awWfRs2MpqMeP8PiaLZZv+MFm07j3CbnFx4l0WB26PTas6
+        2Tw2L6n3WHTzB4tH35ZVjB6fN8kFsEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvH
+        WhmZKunb2aSk5mSWpRbp2yXoZcxfvJ294B5zxZ+tP1kbGDuZuxg5OSQETCQaHk5l6WLk4hAS
+        WMoocefaG6AEB1BCSmJ+ixJEjbDEn2tdbBA17xklPrafYQVJCAskSqy78xNskIjAekaJAyfE
+        QIqYBdoYJSZvnsQE0XEHqOPIbyaQKjYBQ4neo32MIBt4Bewklq4JAAmzCKhK7Lw9nwXEFhWI
+        k3jc+x9sKK+AoMTJmU/A4pwCsRLbL38BW8wsoC7xZ94lZghbXOLWk/lMELa8xPa3c5gnMArN
+        QtI+C0nLLCQts5C0LGBkWcUoklpanJueW2yoV5yYW1yal66XnJ+7iREYm9uO/dy8g/HSxuBD
+        jAIcjEo8vAmXlOKFWBPLiitzDzFKcDArifA6nT0dJ8SbklhZlVqUH19UmpNafIjRFOi5icxS
+        osn5wLSRVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7NbUgtQimj4mDU6qB0YDZbn3a
+        zDkLJ2/4NTV1ff7a4mnLyidqn18Z5V6w6//BWxG8T8+m3Jj3o2WPon+8XM+0q8qc5rteKl5S
+        2ZbRedh3Nee14IvRXpbm66NPbxCva/Q+rTfXZPHEqzM2uoUae1Zz3PXaPK9rzxGJt0r3v36e
+        eG4Xp155sm/0Y3cX0dkWyco39MyiJyuxFGckGmoxFxUnAgAD3M8h4wIAAA==
+X-CMS-MailID: 20200731094134eucas1p2901617e5a4bc391cde77db276f0e7e93
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200730230243eucas1p210d67c908a76e5fdfbb159e3179a7cec
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200730230243eucas1p210d67c908a76e5fdfbb159e3179a7cec
+References: <20200730230114.8572-1-xc-racer2@live.ca>
+        <CGME20200730230243eucas1p210d67c908a76e5fdfbb159e3179a7cec@eucas1p2.samsung.com>
+        <BN6PR04MB066098E34801126939AB0EF6A3710@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 4:41 PM Cheng-Yi Chiang <cychiang@chromium.org> wrote:
->
-> From: Ajit Pandey <ajitp@codeaurora.org>
->
-> Add new driver to register sound card on sc7180 trogdor board and
-> do the required configuration for lpass cpu dai and external codecs
-> connected over MI2S interfaces.
->
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
+On 31.07.2020 01:01, Jonathan Bakker wrote:
+> Commit bae4500399c4 ("[media] exynos4-is: Add missing entity function
+> initialization") tried to suppress the warnings such as
+> 
+> s5p-fimc-md camera: Entity type for entity FIMC.0 was not initialized!
+> 
+> However, this missed setting for the subdev.  Set it now to avoid the
+> ugly warnings on boot.
+> 
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-LGTM.
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
