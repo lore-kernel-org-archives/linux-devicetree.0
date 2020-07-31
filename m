@@ -2,110 +2,115 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A0AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46719C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 330BB2074B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221282084D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 05:52:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T+HPx65f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgGaFmC (ORCPT
+        id S1730905AbgGaFwj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 01:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54304 "EHLO
+        Fri, 31 Jul 2020 01:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730170AbgGaFmC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 01:42:02 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C964C061574
-        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 22:42:02 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k1Nnj-0005xl-HN; Fri, 31 Jul 2020 07:41:51 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k1Nne-0002Rb-PM; Fri, 31 Jul 2020 07:41:46 +0200
-Date:   Fri, 31 Jul 2020 07:41:46 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        with ESMTP id S1730160AbgGaFwi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 01:52:38 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAADC061574
+        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 22:52:38 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id c6so6354548pje.1
+        for <devicetree@vger.kernel.org>; Thu, 30 Jul 2020 22:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Is9oz0WcdC4oayT0KXurF1vgNIwYI6FKERnV58px2yQ=;
+        b=T+HPx65fgNudEBURjrQX4qo0u8tnu0dj3iDP1cV+BTCL8y/j4LUor93lChMKi1Jsk+
+         vdg9mhmNbqrhL9/udDjUihbN5Bolx1RV8wDqTi5lomByyhQ8dJ4yBgxcielqGHS62Ea7
+         rx9xxs5NmTukhbJaOzLTmx/OknOZlhE1tHBWwB0Bi45k68GIGqA7DH65mPwxMsc4OJIe
+         GvZvqU28Mnpfeynbn4fyApxImnpsNCDKfN78nVugs8mWGW0rEHNnd0a/vN0NvkpDtyU4
+         nrKtl3z8E6o8rnS8LVFBrZh2yKKD006qOH/vwY4THo3iltRqVVrYWuUafHyOnmLnzuIE
+         xRyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Is9oz0WcdC4oayT0KXurF1vgNIwYI6FKERnV58px2yQ=;
+        b=QHrcTLI2dKqXyyZGqjQlRukKn4pK2JsDG3h3uV9obX9Co7rCasc3Ep+us1A8kTAGjg
+         1JG82v9WHveELXMCqMs8/IbL7avDlUpU37vdOwl4VvOVTe2G+j619BCpqy4UlnzC+Uj8
+         ct2+FfdGiL5Yt4SjKoVPB67zgrNLfYxgx9FuczZFrQ0C3oAKjyPz5ql7XpGTK/jC+BiB
+         zr/lzpbXuZeuQldsy/Lnfg38V/eYyzjXjwcwSGW57e2luM1RkaFI9YgsEK4Eauam1eVp
+         o0ynpWSHAQIRbhSsmMfzTx3yZs3UPwdeCrQ3t037XNxxcnDUQYLl4Tk8FjY3DmEzgGH+
+         cP0g==
+X-Gm-Message-State: AOAM533eq0TOSEmROFKTYY43FWSnhc+GRyeV2Gh34lNAYE/UTWkrPN1D
+        +gmMugBhPNbiWO0DKCpJsZ9fmA==
+X-Google-Smtp-Source: ABdhPJwx3vBThEbfSeGBoL9hNvNZyU1Q4RNIGLqBu9j0WBIoW6X1bMtfz0R1dAPxFdWb26AAhctwbQ==
+X-Received: by 2002:a17:90a:fd82:: with SMTP id cx2mr2664842pjb.67.1596174757993;
+        Thu, 30 Jul 2020 22:52:37 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id k6sm4360389pfp.87.2020.07.30.22.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 22:52:37 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 22:48:50 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for
- the vibrator motor
-Message-ID: <20200731054146.3d64tchfvbb6gfwj@pengutronix.de>
-References: <20200730132446.3139980-1-megous@megous.com>
- <20200730132446.3139980-4-megous@megous.com>
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+Message-ID: <20200731054850.GA20825@builder.lan>
+References: <20200704122809.73794-1-konradybcio@gmail.com>
+ <20200704130922.GB21333@willie-the-truck>
+ <20200705033511.GR388985@builder.lan>
+ <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
+ <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com>
+ <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
+ <20200721235650.GN388985@builder.lan>
+ <CAMS8qEVXGddTdbrPwK3NJMx71HH0hoVyqiJG6-g9tiBRMRYZ8w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200730132446.3139980-4-megous@megous.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:40:39 up 258 days, 20:59, 248 users,  load average: 0.14, 0.11,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <CAMS8qEVXGddTdbrPwK3NJMx71HH0hoVyqiJG6-g9tiBRMRYZ8w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ondrej,
+On Wed 22 Jul 13:11 PDT 2020, Konrad Dybcio wrote:
 
-On 20-07-30 15:24, Ondrej Jirman wrote:
-> The board has a vibrator motor. Hook it to the input subsystem.
+> >Is the problem on SDM630 that when you write to SMR/S2CR the device
+> >reboots? Or that when you start writing out the context bank
+> >configuration that trips the display and the device reboots?
 > 
-> According to the PMIC specification, LDO needs to be enabled (value 0b11)
-> to achieve the specified max driving current of 150mA. We can't drive
-> the motor with just GPIO mode.
+> I added some debug prints and the phone hangs after reaching the
+> seventh CB (with i=6) at
 > 
-> In GPIO mode the chip is probably just using the regular CMOS logic
-> output circuitry (typically limited to around 20-35mA, but not specified
-> in this datasheet).
+> arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_FSR, ARM_SMMU_FSR_FAULT);
 > 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
->  1 file changed, 5 insertions(+)
+> line in arm_smmu_device_reset.
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> index bfc9bb277a49..a278a1e33930 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-> @@ -99,6 +99,11 @@ panel_input: endpoint {
->  		};
->  	};
->  
-> +	vibrator {
-> +		compatible = "gpio-vibrator";
-> +		vcc-supply = <&reg_ldo_io1>;
-> +	};
 
-Please keep the alphabetical order. I also would merge patch 3 and 4
-into one since they are realted changes.
+Sounds like things are progressing nicely for a while there, presumably
+until the next time the display is being refreshed.
+
+Would you be willing to try out the following work in progress:
+https://lore.kernel.org/linux-arm-msm/20200717001619.325317-1-bjorn.andersson@linaro.org/
+
+You need to adjust drivers/iommu/arm-smmu-impl.c so that
+arm_smmu_impl_init() will invoke qcom_smmu_impl_init() as it spots your
+apps smmu.
 
 Regards,
-  Marco
-
-> +
->  	reg_gps: reg-gps {
->  		compatible = "regulator-fixed";
->  		regulator-name = "gps";
+Bjorn
