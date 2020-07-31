@@ -2,85 +2,113 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160C5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 15:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8573AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 15:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E325D2083B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 15:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655F92177B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 15:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aPSWauCy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1WM7Swv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387577AbgGaPtU (ORCPT
+        id S2387514AbgGaPwT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 11:49:20 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1219 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387555AbgGaPtU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 11:49:20 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f243d510000>; Fri, 31 Jul 2020 08:48:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 31 Jul 2020 08:49:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 31 Jul 2020 08:49:19 -0700
-Received: from [10.2.167.221] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jul
- 2020 15:49:18 +0000
-Subject: Re: [RFC PATCH v6 00/10] Support for Tegra video capture from
- external sensor
-To:     Wolfram Sang <wsa@kernel.org>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <sakari.ailus@iki.fi>,
-        <robh+dt@kernel.org>, <helen.koike@collabora.com>,
-        <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
- <20200731134045.GA1679@kunai>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <0ed73611-563c-b2b9-5437-2a848a47a1e2@nvidia.com>
-Date:   Fri, 31 Jul 2020 08:49:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 31 Jul 2020 11:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgGaPwS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 11:52:18 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5C9C061574;
+        Fri, 31 Jul 2020 08:52:18 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t10so12317542plz.10;
+        Fri, 31 Jul 2020 08:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jppr8gO+oYSsBQjmvASbgGn6v8zjouS1E/rNTCOyFfU=;
+        b=W1WM7SwvjDrTYShvzz81Bf1zNEhW/XcxE3lW52TQ3XB+SjzY1TXZj86UsmeDGcoHj+
+         JS5RZSLo1ZK85ko+5Wes3WjkCMw421mlswP8Y7n1axo/HTBZph4fukJm0xeIEa6s0IsN
+         AedyEJBnHmB1k6Agjp/8PKuRZGHxGAOtrGLHV0MGp6lWvcLrrmECdnX/R/vt7gliZLFd
+         RpFiC0k/Jj9wn4mWXtpD9XaGOgwluplijTLv8RWmn1ACf2jmlb+hPOj4p8WRNyQEIPQE
+         XGm1dmFqZ1IfVG6hVjCVWtkevDZm+FXSBJq58k2cyLOFwD+IDMfxProXY+z3Q6w7UP/T
+         RzVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jppr8gO+oYSsBQjmvASbgGn6v8zjouS1E/rNTCOyFfU=;
+        b=LlvxCiLaLGHI52Md1gV6JVt1u/CVGCcL/2DaMQ0dVz9+fdvGyfUjECTTytWJlmT/F9
+         cIWhIc7lF7GfI3JnVP/6yr+Oo+SZlLPYFJZupeKKRqbtD+Chy1BJu3Ni2MtdJYjNaGwO
+         9Z5tjs0sF8rWNnUCYRzkJQpspxK4UEKyDeYv/h7jLooKL9ef5Iqvgyh+wF34MkZm0K4J
+         53UV605nMpYIxLEIiQXJlkEjm56IKPh7HCoREuK2FK4fMJlJvFcEQIuxqGWVVNds7YzS
+         Qsjdy/CcF3z1fNU3Hx9mPP3RPtfNO5nA4BCheu2+QjAKu6u3YGrbE7Ni2IjM9ry1Tu6E
+         BAPA==
+X-Gm-Message-State: AOAM530stjdU+WmO52u4eQSvhnqX+xNF2ELyLV0CWSPbA+xC6pJuR1p8
+        /0kFuZAuzZwrkvyK0T0ZdmS36eUBC0wG7BDam1U=
+X-Google-Smtp-Source: ABdhPJyuHLtjMmPKrplNVTpqkQVVio6fhm7SPCLrgUtF3PiOALVRV7K1x/iTGB5+BtooFM3RqUcK7ALncdj3FtxiZVc=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr4849916pjb.129.1596210737952;
+ Fri, 31 Jul 2020 08:52:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200731134045.GA1679@kunai>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596210513; bh=c1gKy5mGElfQPb+jLgjvLHeQ+t/NpZKMy7vihPsApnU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=aPSWauCy3NyVAFBHgaeq57/D7EBQJCVbCDriTOM9PQTZ3UBeU6nbP/M7g8x9nIfhs
-         73AvEK77OW9LMlfjNvvUgkDR3DrZW/a/GrDWEZBZZrE/Zi9b60YkKo/nRGe1kUOr5y
-         FI7O705yLijMsMtZ4K6biiH1V8MnEJxdWhzgx1ruS2aihEEmpurXsS3HoeNbSJ7YyL
-         wJnT9O7QKVXqgX4SMjBzBlvxi7TgvmNmIf/MhiT4hERwGFC/xTEw6KvPZ0eAkw/TJ/
-         BAMd+R5TaKCJS62J0cElOKJFK9sz+YKOFO6wQw5ca3iyjSEjhXdx4kYFWFstWxCYLM
-         wIzCQlWPfW7PA==
+References: <20200728151258.1222876-1-campello@chromium.org>
+ <20200728230520.2011240-1-campello@chromium.org> <20200728170317.v2.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+ <159598461271.1360974.15436404116157938506@swboyd.mtv.corp.google.com>
+ <CAHp75Vc_3VYAkVcTCAXzqxqFnpQ4Qi=iPSFW_sUjYGO=o6YMtA@mail.gmail.com> <CAHcu+VaKGNxAY_OQ4oS5NtkoDLGkv2x_VrQhZ7OvEFAnNbYZeg@mail.gmail.com>
+In-Reply-To: <CAHcu+VaKGNxAY_OQ4oS5NtkoDLGkv2x_VrQhZ7OvEFAnNbYZeg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jul 2020 18:52:00 +0300
+Message-ID: <CAHp75VeoS-K7v=iJLuFqXQJpqUjmdopJraUGOiOURekCh0=QTA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/14] iio: sx9310: Use long instead of int for channel bitmaps
+To:     Daniel Campello <campello@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sorry Wolfram.
+On Fri, Jul 31, 2020 at 6:45 PM Daniel Campello <campello@chromium.org> wrote:
+> On Wed, Jul 29, 2020 at 1:00 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Wed, Jul 29, 2020 at 4:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > Quoting Daniel Campello (2020-07-28 16:05:13)
+> > > > Uses for_each_set_bit() macro to loop over channel bitmaps.
+> >
+> > ...
+> >
+> > > > +       unsigned long chan_prox_stat;
+> > >
+> > > This can be DECLARE_BITMAP(chan_prox_stat, SX9310_NUM_CHANNELS)
+> >
+> > > > +       unsigned long chan_read;
+> > > > +       unsigned long chan_event;
+> > >
+> > > Same for these?
+> All of these are eventually used by regmap_update_bits() which expects
+> unsigned int. I believe the extra complexity is not worth it given the
+> number of channels.
 
-Will remove from CC list on my next replies..
+Okay then. Good to have some build check for the limitation, so, what
+about adding
 
-On 7/31/20 6:40 AM, Wolfram Sang wrote:
-> On Fri, Jul 31, 2020 at 02:02:39AM -0700, Sowjanya Komatineni wrote:
->> This series adds support for video capture from external camera sensor to
->> Tegra video driver.
-> No need anymore to CC me or the i2c-list, I think? Also, is this series
-> really still RFC?
+static_assert(..._NUM_CHANNELS < BITS_PER_LONG);
+after the _NUM_CHANNELS definition?
+
+-- 
+With Best Regards,
+Andy Shevchenko
