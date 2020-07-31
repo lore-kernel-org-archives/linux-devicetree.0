@@ -2,457 +2,196 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DACC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 10:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DC2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C887120838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 10:40:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9hz1SHL"
+	by mail.kernel.org (Postfix) with ESMTP id 5190520838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbgGaKkw (ORCPT
+        id S1732485AbgGaKxM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732397AbgGaKkv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 06:40:51 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55522C061574
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 03:40:51 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id u10so7527668plr.7
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 03:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Q/BYkHhkI0myoPFmGmvb8OjoGkTwZH6gWekV7iPJq9I=;
-        b=X9hz1SHL6jJBOzumqUf+dz1RwuDVp4r0V8fsOioSNuf6y0TaHmNuo4QKnwKvBRkj3p
-         bD2f9SEbo8pjRlkGPv3dMafYK4MmQa3/9lW6zw23+2pQzpROBwoAj/TeQdi4xNAacNqW
-         EPVK00VxHVU/yBnFJmwIUq1DqjPN1ICFXz1o/mzNCZsCRSRog0v8ntKMbxqmp/NX+B9e
-         b0UfIbVYbkCrNThvTBHHMcSUgkQOEII2wi98NuchJ1uAupUZY5agVX/AtQhBEBj36epR
-         6OMcWh2SfC2qbkXcuw/t31M8P4cGyvkli420P9apFrABR2lJkiq1LVZ0CxfRsT1Csd2C
-         sYEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Q/BYkHhkI0myoPFmGmvb8OjoGkTwZH6gWekV7iPJq9I=;
-        b=FF+oURLu6flBJyCQAkX925zj+ACK9GkYlG099YQkkEyTZHE2Iaw7ZnbAMlR/CwAUhf
-         uJZkv7OhU6KvCjeRRs/bDMnxu+/xmSPG1zL5g2kGUef9fKPT5Y3SDdg1A8m/J80zufSa
-         sCK7c+BPZC+J4QjE0rnCbREQKYLZD/Hoj78HCAZwKegpvQze7CmXzQV6hANZOH3zAsCn
-         KXYm+XvtRzqZH7HdfpVuNa+Q9OmD9nSMg9aj01Em7fBxG0oFXc/kFPp/BwqKXanoOcYH
-         KOWE4by2m4ZiNy2uNLXacrrAtvDODeM1NnYAmo5bKRTGbYC1dXqTL5yo84Hr9SVVHX1J
-         zw8A==
-X-Gm-Message-State: AOAM531UGqlwRAKqWa5l6BzQ4E4NXHcaVC/7vF3f/hQiwai85eF2ZKo7
-        RZhiCEfVd9Wszo9ucW0H+MzMuQ==
-X-Google-Smtp-Source: ABdhPJz1haCWZ+VL/uD4a3kFU6XXL4+YY4lot++ca3qlus8XckNt4xjt8eIuOp2o/zm2X9zwyevoqA==
-X-Received: by 2002:a63:1a0c:: with SMTP id a12mr3102313pga.24.1596192050716;
-        Fri, 31 Jul 2020 03:40:50 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:6803:60a7:796a:53a4:d98b:a871])
-        by smtp.gmail.com with ESMTPSA id t10sm7428576pga.73.2020.07.31.03.40.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 Jul 2020 03:40:50 -0700 (PDT)
-From:   Amit Pundir <amit.pundir@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-Date:   Fri, 31 Jul 2020 16:10:44 +0530
-Message-Id: <1596192044-18725-1-git-send-email-amit.pundir@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Fri, 31 Jul 2020 06:53:12 -0400
+Received: from mailout07.rmx.de ([94.199.90.95]:55415 "EHLO mailout07.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729141AbgGaKxM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 06:53:12 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout07.rmx.de (Postfix) with ESMTPS id 4BJ3z72b6fzBwbd;
+        Fri, 31 Jul 2020 12:53:07 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BJ3yk4dddz2xFV;
+        Fri, 31 Jul 2020 12:52:46 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.39) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 31 Jul
+ 2020 12:52:23 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] iio: light: as73211: New driver
+Date:   Fri, 31 Jul 2020 12:52:22 +0200
+Message-ID: <2706267.JtmGt7LAV2@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
+References: <20200731070114.40471-1-ceggers@arri.de> <20200731070114.40471-3-ceggers@arri.de> <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.39]
+X-RMX-ID: 20200731-125248-4BJ3yk4dddz2xFV-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial dts support for Xiaomi Poco F1 (Beryllium).
+Hi Andy,
 
-This initial support is based on upstream Dragonboard 845c
-(sdm845) device. With this dts, Beryllium boots AOSP up to
-ADB shell over USB-C.
+thanks for further review. If nobody else sends comments, I'll
+publish the next version tonight. Maybe we could clarify the questions
+below in time.
 
-Supported functionality includes UFS, USB-C (peripheral),
-microSD card and Vol+/Vol-/power keys. Bluetooth should work
-too but couldn't be verified from adb command line, it is
-verified when enabled from UI with few WIP display patches.
+Best regards
+Christian
 
-Just like initial db845c support, initializing the SMMU is
-clearing the mapping used for the splash screen framebuffer,
-which causes the device to hang during boot and recovery
-needs a hard power reset. This can be worked around using:
 
-    fastboot oem select-display-panel none
+> W=1 (not V=1) runs kernel doc validation script.
+without V=1, I get nothing. Neither excess nor missing members
+are reported on my system.
 
-To switch ON the display back run:
 
-    fastboot oem select-display-panel
+On Friday, 31 July 2020, 09:34:02 CEST, Andy Shevchenko wrote:
+> On Fri, Jul 31, 2020 at 10:03 AM Christian Eggers <ceggers@arri.de> wrote:
+> > +static const int as73211_samp_freq_avail[] = { 1024000, 2048000, 4096000,
+> > 8192000 };
+> This looks related to the below mentioned 1.024MHz.
+> 
+> Perhaps add a definition above and comment here?
+> 
+> #define AS73211_BASE_FREQ_1024KHZ   1024000
+added similar define in v5. The array looks like the following now
 
-But this only works on Beryllium devices running bootloader
-version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
-Android-9 based release. Newer bootloader version do not
-support switching OFF the display panel at all. So we need
-a few additional smmu patches (under review) from here to
-boot to shell:
-https://github.com/pundiramit/linux/commits/beryllium-mainline
+static const int as73211_samp_freq_avail[] = {
+	AS73211_SAMPLE_FREQ_BASE,
+	AS73211_SAMPLE_FREQ_BASE * 2,
+	AS73211_SAMPLE_FREQ_BASE * 4,
+	AS73211_SAMPLE_FREQ_BASE * 8
+};
 
-Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
----
-v2: Updated machine compatible string for seemingly inevitable
-    future quirks.
 
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- arch/arm64/boot/dts/qcom/sdm845-beryllium.dts | 321 ++++++++++++++++++++++++++
- 2 files changed, 322 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
+> > +/* integration time in units of 1024 clock cycles */
+> 
+> Unify this with below one. Or the other way around, i.o.w. join one of
+> them into the other.
+> 
+> > +static unsigned int as73211_integration_time_1024cyc(struct as73211_data
+> > *data) +{
+> > +       /* integration time in CREG1 is in powers of 2 (x 1024 cycles) */
+> > +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
+> > +}
+I'm not sure, whether this is possible. as73211_integration_time_1024cyc()
+returns the current setting from hardware. as73211_integration_time_us()
+calculates the resulting time. But as73211_integration_time_us() is also
+called in as73211_integration_time_calc_avail() inside the loop.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 0f2c33d611df..3ef1b48bc0cb 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-new file mode 100644
-index 000000000000..714c5157d9f8
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include "sdm845.dtsi"
-+#include "pm8998.dtsi"
-+#include "pmi8998.dtsi"
-+
-+/ {
-+	model = "Xiaomi Technologies Inc. Beryllium";
-+	compatible = "xiaomi,beryllium", "qcom,sdm845";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,board-id = <69 0>;
-+	qcom,msm-id = <321 0x20001>;
-+
-+	aliases {
-+		hsuart0 = &uart6;
-+	};
-+
-+	dc12v: dc12v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DC12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vol_up_pin_a>;
-+
-+		vol-up {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	vbat: vbat-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBAT";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <4200000>;
-+		regulator-max-microvolt = <4200000>;
-+		regulator-always-on;
-+	};
-+
-+	vbat_som: vbat-som-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBAT_SOM";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <4200000>;
-+		regulator-max-microvolt = <4200000>;
-+		regulator-always-on;
-+	};
-+
-+	vdc_3v3: vdc-3v3-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDC_3V3";
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	vdc_5v: vdc-5v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDC_5V";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <500000>;
-+		regulator-max-microvolt = <500000>;
-+		regulator-always-on;
-+	};
-+
-+	vreg_s4a_1p8: vreg-s4a-1p8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_s4a_1p8";
-+
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&apps_rsc {
-+	pm8998-rpmh-regulators {
-+		compatible = "qcom,pm8998-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_l1a_0p875: ldo1 {
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a_1p8: ldo7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l13a_2p95: ldo13 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l17a_1p3: ldo17 {
-+			regulator-min-microvolt = <1304000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l20a_2p95: ldo20 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l21a_2p95: ldo21 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l24a_3p075: ldo24 {
-+			regulator-min-microvolt = <3088000>;
-+			regulator-max-microvolt = <3088000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l25a_3p3: ldo25 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3312000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l26a_1p2: ldo26 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&gcc {
-+	protected-clocks = <GCC_QSPI_CORE_CLK>,
-+			   <GCC_QSPI_CORE_CLK_SRC>,
-+			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
-+};
-+
-+&pm8998_gpio {
-+	vol_up_pin_a: vol-up-active {
-+		pins = "gpio6";
-+		function = "normal";
-+		input-enable;
-+		bias-pull-up;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+	};
-+};
-+
-+&pm8998_pon {
-+	resin {
-+		compatible = "qcom,pm8941-resin";
-+		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+		debounce = <15625>;
-+		bias-pull-up;
-+		linux,code = <KEY_VOLUMEDOWN>;
-+	};
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
-+
-+	bus-width = <4>;
-+	cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+
-+	sdc2_default_state: sdc2-default {
-+		clk {
-+			pins = "sdc2_clk";
-+			bias-disable;
-+
-+			/*
-+			 * It seems that mmc_test reports errors if drive
-+			 * strength is not 16 on clk, cmd, and data pins.
-+			 */
-+			drive-strength = <16>;
-+		};
-+
-+		cmd {
-+			pins = "sdc2_cmd";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+
-+		data {
-+			pins = "sdc2_data";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+	};
-+
-+	sdc2_card_det_n: sd-card-det-n {
-+		pins = "gpio126";
-+		function = "gpio";
-+		bias-pull-up;
-+	};
-+};
-+
-+&uart6 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+
-+	vdd-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-+	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-+	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l26a_1p2>;
-+	vdda-pll-supply = <&vreg_l1a_0p875>;
-+};
-+
-+&ufs_mem_hc {
-+	status = "okay";
-+
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
-+	vcc-supply = <&vreg_l20a_2p95>;
-+	vcc-max-microamp = <800000>;
-+};
-+
-+&ufs_mem_phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l26a_1p2>;
-+};
-+
-+/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-+
-+&qup_uart6_default {
-+	pinmux {
-+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+		function = "qup6";
-+	};
-+
-+	cts {
-+		pins = "gpio45";
-+		bias-disable;
-+	};
-+
-+	rts-tx {
-+		pins = "gpio46", "gpio47";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	rx {
-+		pins = "gpio48";
-+		bias-pull-up;
-+	};
-+};
--- 
-2.7.4
+> > +       unsigned int time_us = as73211_integration_time_us(data,
+> > +                                                          as73211_integration_time_1024cyc(data));
+> One line?
+checkpatch complains... ignore?
+
+
+> > +               int reg_bits, freq_kHz = val / 1000 /* HZ_PER_KHZ */;  /*
+> > 1024, 2048, ... */ +
+> > +               /* val must be 1024 * 2^x */
+> > +               if (val < 0 || (freq_kHz * 1000 /* HZ_PER_KHZ */) != val
+> > ||
+> > +                               !is_power_of_2(freq_kHz) || val2)
+> > +                       return -EINVAL;
+> 
+> Please, define HZ_PER_KHZ locally. It will really help when we move
+> these definitions to a global level.
+ok
+
+> 
+> ...
+> 
+> > +               /* gain can be calculated from CREG1 as 2^(13 -
+> > CREG1_GAIN) */ +               reg_bits = 13 - ilog2(val);
+> 
+> 13 is the second time in the code. Deserves a descriptive definition.
+I'm unsure how to solve this. Possible values for gain:
+
+CREG1[7:4]  | gain
+-----------------------------
+0           | 2048x
+1           | 1024x
+2           |  512x
+...         |  ...
+13          |    1x
+
+#define AS73211_CREG1_GAIN_1_NON_SHIFTED 13  // this define is CREG1 related, but not shifted to the right position
+
+static unsigned int as73211_gain(struct as73211_data *data)
+{
+	/* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
+	return BIT(AS73211_CREG1_GAIN_1_NON_SHIFTED - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
+}
+
+---- or ----
+
+#define AS73211_CREG1_GAIN_1 FIELD_PREP(AS73211_CREG1_GAIN_MASK, 13)
+
+static unsigned int as73211_gain(struct as73211_data *data)
+{
+	/* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
+	return BIT(FIELD_GET(AS73211_CREG1_GAIN_MASK, AS73211_CREG1_GAIN_1) - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
+}
+
+
+> > +       indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> > +       if (indio_dev == NULL)
+> 
+> if (!indio_dev)
+> 
+> > +               return -ENOMEM;
+> 
+> ...
+> 
+> > +       indio_dev->dev.parent = dev;
+> 
+> Doesn't IIO core do this for you?
+devm_iio_device_alloc() doesn't pass 'dev' to iio_device_alloc().
+I already looked around, but I didn't find. And after debugging
+v5.4, devm_iio_device_alloc() definitely doesn't do it.
+
+> > +       ret = devm_iio_device_register(dev, indio_dev);
+> > +       if (ret < 0)
+> > +               goto powerdown;
+> > +
+> > +       return 0;
+> > 
+> > +powerdown:
+> > +       as73211_power(indio_dev, false);
+> > +       return ret;
+> 
+> devm_*() is tricky. Here you broke ordering heavily. So, consider to
+> add this under devm_add_action_or_reset().
+Sorry, my mistake! I already felt that something may be wrong here...
+
+
 
