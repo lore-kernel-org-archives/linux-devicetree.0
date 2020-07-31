@@ -8,68 +8,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA11C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29322C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC91D21744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033FD21744
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GdIxWKBq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QE1/qz/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733149AbgGaQt6 (ORCPT
+        id S1733068AbgGaQtB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
+        Fri, 31 Jul 2020 12:49:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733055AbgGaQtB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 12:49:01 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F408C061757
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:01 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so19933127ioe.9
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:01 -0700 (PDT)
+        with ESMTP id S1729902AbgGaQs7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 12:48:59 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B086C061756
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:48:59 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id k23so32238553iom.10
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fYfRtRWNJl9Yn2hyI+uBsjOjqoFWT79cyClOPwpH2dg=;
-        b=GdIxWKBq8Nx+RFYfACUl5CdLRHgJ6yNDGaMOR99XLu1RRGcn+vTrIQHXoXHfT+jB4M
-         LKMiZicp1+wFftkxIX7jZ7mmdXgJS/u0/P9hH4kdlLf3bPzyjSdttsBlwv5U1gphcgEm
-         ydtGzFYm7eWucSJ12u01u+mFTDkKbrkwA+cL8=
+        bh=GsrH317o9ZXCzgzy3uVli3vBl/8VqU/V+NLgYgRn16Y=;
+        b=QE1/qz/YlrUfA1R7HhCBY9mGH1JfX7uFKfSueFy09R1h0SAlO/7Ex7dmLiMeD1+U1G
+         8UTq/wnJwQ8moxqOLjOY9JlfLOUx3lU/TyxNp312R8ddsUq4n4kySIOngY7Z1N8n6O3y
+         wgdJt5FzMtUAWYKzT35a+ImqlNM5SwiVsHK+I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fYfRtRWNJl9Yn2hyI+uBsjOjqoFWT79cyClOPwpH2dg=;
-        b=eV1k7QfD14OcoFmuUDQrtSjQaX2O15B8ie3CR9adliL0X048paDvl5VVBB8rAKRmM5
-         G0EiZcMVJUaAadkS/aR2B+jnpx61HqWZFkTJhKoVtgar7q+cBr4x7DN30gbwE/2XYr6/
-         Pfe8DiFu/D0TM+GsTZIaEFtfBUoUJBv5vYEcovfXiqYqPJt+0IMb8bt9rgsMWT5We3Oy
-         OtuJi0P4XBqDT2ma7TKlgs19S4U5toGkMzpWKL8DNliTi9POdysgxz3eolHcu+Qv7XlV
-         O09Kjsje3oYo9RF+BzDs41HMhztuVRHI184b48OsBXeBtsS8ZHFvew1UAqLCDZkC5YhV
-         bUzg==
-X-Gm-Message-State: AOAM531DwHg5Guun+vqd/rGkY3t+tqgGh3P75EVIMuUqTEEEl/yJZrB0
-        H0Q0zMz5f/ev564v+ungrpqDI+0n2JgsXQ==
-X-Google-Smtp-Source: ABdhPJzwwlzQZYE4CzsXOSXHfiJmZOY3GnLWv89mBk6yUE97mxpy9XhELrZ/P6leUhKFdeIKJCsR3w==
-X-Received: by 2002:a6b:f911:: with SMTP id j17mr4297683iog.96.1596214140314;
-        Fri, 31 Jul 2020 09:49:00 -0700 (PDT)
+        bh=GsrH317o9ZXCzgzy3uVli3vBl/8VqU/V+NLgYgRn16Y=;
+        b=Ou0RidrVlS8v8CyJoHUaQK23rWSDqq7O138LhcjMnzo+E0+AkemF6BNx0WBqiUgTms
+         POhSvjCn1wxWUNeOXht974AcKaCEOc2VuHm1eznYG7TckG3mzc4G5AavXUQMd/XwIAgn
+         4J89dhQN+Lb4nFcLyk8xwmtjzjgITzEyBIlP6AWODLagxK8MYlybQEGgd8rL5PdnoyDW
+         VMIMliP8L7m1mr2cR/2SXIUyzTkoS0oTsOr7BgkPki8AxFn0KpRH5XtCho6VHkuYcE5r
+         GI5FGfTvU0h+Oi5c79b1rIugAMqhUd28D1GQGO7RWMTPfvH64RRr8+agHHjPIPK0MgWc
+         d5oQ==
+X-Gm-Message-State: AOAM531uck4BWO1viMvhXk1FEn8GtLJz8XdkJ2L7dqGvufDKsqcNVZ/b
+        27JzCyYGk0sr4MaUfP0WTgWzM2rK1xsl5g==
+X-Google-Smtp-Source: ABdhPJwCOKctFj27OG+BseqGcoNN+41qJ80MB7hgJ79QNm6A4cruPdZcGfMZd4MUPL5TpNJrdcEqOA==
+X-Received: by 2002:a6b:bb43:: with SMTP id l64mr4404849iof.191.1596214138272;
+        Fri, 31 Jul 2020 09:48:58 -0700 (PDT)
 Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.48.59
+        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 09:48:59 -0700 (PDT)
+        Fri, 31 Jul 2020 09:48:57 -0700 (PDT)
 From:   Daniel Campello <campello@chromium.org>
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Daniel Campello <campello@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v3 03/15] iio: sx9310: Fix irq handling
-Date:   Fri, 31 Jul 2020 10:48:40 -0600
-Message-Id: <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+Subject: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+Date:   Fri, 31 Jul 2020 10:48:38 -0600
+Message-Id: <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 In-Reply-To: <20200731164853.3020946-1-campello@chromium.org>
 References: <20200731164853.3020946-1-campello@chromium.org>
@@ -80,69 +80,97 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fixes enable/disable irq handling at various points. The driver needs to
-only enable/disable irqs if there is an actual irq handler installed.
+Adds device tree bandings for sx9310 sensor.
 
 Signed-off-by: Daniel Campello <campello@chromium.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+[swboyd@chromium.org: Add both regulators and make them optional]
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
 
-Changes in v3:
- - Moved irq presence check down to lower methods
-
+Changes in v3: None
 Changes in v2:
- - Reordered error handling on sx9310_resume()
+ - Added #io-channel-cells as a required property
 
- drivers/iio/proximity/sx9310.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ .../iio/proximity/semtech,sx9310.yaml         | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
 
-diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 07895d4b935d12..c7a27c21c20cd1 100644
---- a/drivers/iio/proximity/sx9310.c
-+++ b/drivers/iio/proximity/sx9310.c
-@@ -323,12 +323,18 @@ static int sx9310_put_event_channel(struct sx9310_data *data, int channel)
- 
- static int sx9310_enable_irq(struct sx9310_data *data, unsigned int irq)
- {
--	return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, irq);
-+	if (data->client->irq)
-+		return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq,
-+					  irq);
-+	return 0;
- }
- 
- static int sx9310_disable_irq(struct sx9310_data *data, unsigned int irq)
- {
--	return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, 0);
-+	if (data->client->irq)
-+		return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq,
-+					  0);
-+	return 0;
- }
- 
- static int sx9310_read_prox_data(struct sx9310_data *data,
-@@ -382,7 +388,7 @@ static int sx9310_read_proximity(struct sx9310_data *data,
- 
- 	mutex_unlock(&data->mutex);
- 
--	if (data->client->irq > 0) {
-+	if (data->client->irq) {
- 		ret = wait_for_completion_interruptible(&data->completion);
- 		reinit_completion(&data->completion);
- 	} else {
-@@ -1011,10 +1017,11 @@ static int __maybe_unused sx9310_resume(struct device *dev)
- 
- out:
- 	mutex_unlock(&data->mutex);
-+	if (ret)
-+		return ret;
- 
- 	enable_irq(data->client->irq);
--
--	return ret;
-+	return 0;
- }
- 
- static const struct dev_pm_ops sx9310_pm_ops = {
+diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+new file mode 100644
+index 00000000000000..5739074d3592fe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Semtech's SX9310 capacitive proximity sensor
++
++maintainers:
++  - Daniel Campello <campello@chromium.org>
++
++description: |
++  Semtech's SX9310/SX9311 capacitive proximity/button solution.
++
++  Specifications about the devices can be found at:
++  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
++
++properties:
++  compatible:
++    enum:
++      - semtech,sx9310
++      - semtech,sx9311
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      The sole interrupt generated by the device used to announce the
++      preceding reading request has finished and that data is
++      available or that a close/far proximity event has happened.
++    maxItems: 1
++
++  vdd-supply:
++    description: Main power supply
++
++  svdd-supply:
++    description: Host interface power supply
++
++  "#io-channel-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - "#io-channel-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      proximity@28 {
++        compatible = "semtech,sx9310";
++        reg = <0x28>;
++        interrupt-parent = <&pio>;
++        interrupts = <5 IRQ_TYPE_LEVEL_LOW 5>;
++        vdd-supply = <&pp3300_a>;
++        svdd-supply = <&pp1800_prox>;
++        #io-channel-cells = <1>;
++      };
++    };
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
