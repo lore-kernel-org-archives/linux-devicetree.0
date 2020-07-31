@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8E5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687ECC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88D6322B42
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479A022B40
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 16:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dElXqIE1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YhRnLi0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733226AbgGaQtJ (ORCPT
+        id S1733299AbgGaQtQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 12:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43956 "EHLO
+        Fri, 31 Jul 2020 12:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733155AbgGaQtH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 12:49:07 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C6CEC0617B1
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:05 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id y18so17431297ilp.10
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:05 -0700 (PDT)
+        with ESMTP id S1733184AbgGaQtI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 12:49:08 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E879C061756
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:07 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id a5so17040652ioa.13
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 09:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6WJOpih10G5LrQiOZLhDb5AlSl69gNb0B6aytvleDjw=;
-        b=dElXqIE1198tbm2UIWdhAIl/ERxxwPIyJ7q5XwpfIpZhs2AEfBIy8WVfSyzcBfZ9kT
-         e1ToeJHPAI1L5NPtszeDLtix5iJtBVWvjb+vszBohkfZc22qkSppM61JM6iAVof+KCeX
-         HQ8nBfSPJ0LFwevvBLTnaLPIBQIcaTVEsQUBk=
+        bh=kJxFQ5dicx/XdfMjNZsxOmoMpHKnwMI2oZ1xqNHvk7E=;
+        b=YhRnLi0kUNL57DqqpZqj7QSpzSWeeRK75/1uhIBZH91Ny2l1EJFxkbrqSLgfXnFW5C
+         VmN2t+phogi/sdui2npf1W399a2tUvJNs/d/E63wIMD8LJIY30S14yJBGcvkj1XR8Kyd
+         JOUA6dec9CQhMz17YnM2kRyMlmb5uCCQard9w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6WJOpih10G5LrQiOZLhDb5AlSl69gNb0B6aytvleDjw=;
-        b=FDKjVt8UMydoPo9w+WkJRfvXvrNxW8HKp9NvNxl9lS8Qiaa4b+x7Ws6AJ5Y39iXsJl
-         v7i7OPbDObAAg9ehARlXZfsNt2/kQy3mVFYhPjDGGKoF8pgncCi9lgpK4O0pPxJJdc2x
-         LXzrtz/cJk8q7OI1AY3xM1L2HS+zNnsyW7Xyd3d/EuySuKzR0jASohQ+FzHvk9JdCt19
-         xS7E30VLe8tOUav7P6kfuSM9BSHhgPZRtCpWDgyv7p05d/JoLLTrYXQrqWPbNE+LWU4s
-         6Si6Cv4Lhne21CO1pghCDn0FeYNABRB4dHrkBQbGo5W8c0ykSgUyMoWcJR/dNlheRwnS
-         v3xQ==
-X-Gm-Message-State: AOAM530zURbfuuYjHeMDRBZ3zlvwljtxGtiV2j/Q8zkCk59BOU0vXSgd
-        2WlBw2NqPMgN+o9Fc90t+0YwYYERNnNHIw==
-X-Google-Smtp-Source: ABdhPJwHvu5de9YhcaASuVrSsByGsU4noAiiti5+DOgk/iNUZwZf4MC4Cuc/93Nh8PAr1hSfEm3aCQ==
-X-Received: by 2002:a92:d24a:: with SMTP id v10mr4743833ilg.224.1596214144611;
-        Fri, 31 Jul 2020 09:49:04 -0700 (PDT)
+        bh=kJxFQ5dicx/XdfMjNZsxOmoMpHKnwMI2oZ1xqNHvk7E=;
+        b=CewnLqD5HG+eDgoSeO7EoWSRmDHK0jRVHBUy6GjLayLE8gsEjjC+zrsOn2iAPhDakw
+         Llv9cxjdB52oeSvW+o8olhWruKp2OyEVEmGj1S+G5jYL49iv+39erpdALYNGB0qYYG7Q
+         9lqSSBU7rHFrBdNjbKNZEM3M9SjqHlEZqhXPI5YT+SJOrr0PbZq3kQirjDd06CuDdDWX
+         LmlWfzzERogAh9GfRNC16JlL6an6sI8iz400R525wV7o5eeigaMNvQAI/p8+eJRZn2PA
+         QKAT5mdeeCAep+TNa1jRzr4gSiNXJfvzpFIROmS5FHjVIgkJKOnw2xT9O398dl/52rOw
+         pkeg==
+X-Gm-Message-State: AOAM530Hv48kJHEKiJSHmD+txi0SYIpp14K2nnaXv49B8wAuPGbwmmvN
+        M0asv0UZ4Y+v5WGbUi2ClbxoC6LibEFVJQ==
+X-Google-Smtp-Source: ABdhPJxphulmJ4n52qeAfu6XFsVF+xiIHnLgNMg7tfM3ebQTH0fDaz1WZm5ZuRohQLMVb4GpcVK00g==
+X-Received: by 2002:a6b:b215:: with SMTP id b21mr4371808iof.43.1596214146567;
+        Fri, 31 Jul 2020 09:49:06 -0700 (PDT)
 Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.49.03
+        by smtp.gmail.com with ESMTPSA id e84sm5122083ill.60.2020.07.31.09.49.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 09:49:04 -0700 (PDT)
+        Fri, 31 Jul 2020 09:49:06 -0700 (PDT)
 From:   Daniel Campello <campello@chromium.org>
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
@@ -62,14 +62,14 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         Daniel Campello <campello@chromium.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v3 07/15] iio: sx9310: Use long instead of int for channel bitmaps
-Date:   Fri, 31 Jul 2020 10:48:44 -0600
-Message-Id: <20200731104555.v3.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+Subject: [PATCH v3 09/15] iio: sx9310: Update copyright
+Date:   Fri, 31 Jul 2020 10:48:46 -0600
+Message-Id: <20200731104555.v3.9.If88afce92bbc1e97a532874cca35e642a9566172@changeid>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 In-Reply-To: <20200731164853.3020946-1-campello@chromium.org>
 References: <20200731164853.3020946-1-campello@chromium.org>
@@ -80,131 +80,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Uses for_each_set_bit() macro to loop over channel bitmaps.
+Fixes wrong copyright year.
 
 Signed-off-by: Daniel Campello <campello@chromium.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
 
-Changes in v3:
- - Added static assert for number of channels.
+Changes in v3: None
+Changes in v2: None
 
-Changes in v2:
- - Changed prox_stat to chan_prox_stat bitmap.
-
- drivers/iio/proximity/sx9310.c | 39 ++++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
+ drivers/iio/proximity/sx9310.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index c46584b4817b4a..8f80a4c20ac05e 100644
+index 9f6292cc86146d..19253bf335437f 100644
 --- a/drivers/iio/proximity/sx9310.c
 +++ b/drivers/iio/proximity/sx9310.c
-@@ -119,6 +119,7 @@
+@@ -1,13 +1,13 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Copyright 2018 Google LLC.
++ * Copyright 2020 Google LLC.
+  *
+  * Driver for Semtech's SX9310/SX9311 capacitive proximity/button solution.
+  * Based on SX9500 driver and Semtech driver using the input framework
+  * <https://my.syncplicity.com/share/teouwsim8niiaud/
+  *          linux-driver-SX9310_NoSmartHSensing>.
+- * Reworked April 2019 by Evan Green <evgreen@chromium.org>
+- * and January 2020 by Daniel Campello <campello@chromium.org>
++ * Reworked in April 2019 by Evan Green <evgreen@chromium.org>
++ * and in January 2020 by Daniel Campello <campello@chromium.org>.
+  */
  
- /* 4 hardware channels, as defined in STAT0: COMB, CS2, CS1 and CS0. */
- #define SX9310_NUM_CHANNELS				4
-+static_assert(SX9310_NUM_CHANNELS < BITS_PER_LONG);
- 
- struct sx9310_data {
- 	/* Serialize access to registers and channel configuration */
-@@ -130,7 +131,7 @@ struct sx9310_data {
- 	 * Last reading of the proximity status for each channel.
- 	 * We only send an event to user space when this changes.
- 	 */
--	bool prox_stat[SX9310_NUM_CHANNELS];
-+	unsigned long chan_prox_stat;
- 	bool trigger_enabled;
- 	/* Ensure correct alignment of timestamp when present. */
- 	struct {
-@@ -140,7 +141,8 @@ struct sx9310_data {
- 	/* Remember enabled channels and sample rate during suspend. */
- 	unsigned int suspend_ctrl0;
- 	struct completion completion;
--	unsigned int chan_read, chan_event;
-+	unsigned long chan_read;
-+	unsigned long chan_event;
- 	int channel_users[SX9310_NUM_CHANNELS];
- 	unsigned int whoami;
- };
-@@ -283,15 +285,16 @@ static const struct regmap_config sx9310_regmap_config = {
- };
- 
- static int sx9310_update_chan_en(struct sx9310_data *data,
--				 unsigned int chan_read,
--				 unsigned int chan_event)
-+				 unsigned long chan_read,
-+				 unsigned long chan_event)
- {
- 	int ret;
-+	unsigned long channels = chan_read | chan_event;
- 
--	if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
-+	if ((data->chan_read | data->chan_event) != channels) {
- 		ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
- 					 SX9310_REG_PROX_CTRL0_SENSOREN_MASK,
--					 chan_read | chan_event);
-+					 channels);
- 		if (ret)
- 			return ret;
- 	}
-@@ -535,6 +538,7 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
- 	unsigned int val, chan;
- 	struct sx9310_data *data = iio_priv(indio_dev);
- 	s64 timestamp = iio_get_time_ns(indio_dev);
-+	unsigned long prox_changed;
- 
- 	/* Read proximity state on all channels */
- 	ret = regmap_read(data->regmap, SX9310_REG_STAT0, &val);
-@@ -543,24 +547,23 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
- 		return;
- 	}
- 
--	for (chan = 0; chan < SX9310_NUM_CHANNELS; chan++) {
-+	/*
-+	 * Only iterate over channels with changes on proximity status that have
-+	 * events enabled.
-+	 */
-+	prox_changed = (data->chan_prox_stat ^ val) & data->chan_event;
-+
-+	for_each_set_bit(chan, &prox_changed, SX9310_NUM_CHANNELS) {
- 		int dir;
- 		u64 ev;
--		bool new_prox = val & BIT(chan);
--
--		if (!(data->chan_event & BIT(chan)))
--			continue;
--		if (new_prox == data->prox_stat[chan])
--			/* No change on this channel. */
--			continue;
- 
--		dir = new_prox ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
-+		dir = val & BIT(chan) ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
- 		ev = IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, chan,
- 					  IIO_EV_TYPE_THRESH, dir);
- 
- 		iio_push_event(indio_dev, ev, timestamp);
--		data->prox_stat[chan] = new_prox;
- 	}
-+	data->chan_prox_stat = val;
- }
- 
- static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
-@@ -717,13 +720,13 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
- static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
- {
- 	struct sx9310_data *data = iio_priv(indio_dev);
--	unsigned int channels = 0;
-+	unsigned long channels = 0;
- 	int bit, ret;
- 
- 	mutex_lock(&data->mutex);
- 	for_each_set_bit(bit, indio_dev->active_scan_mask,
- 			 indio_dev->masklength)
--		channels |= BIT(indio_dev->channels[bit].channel);
-+		__set_bit(indio_dev->channels[bit].channel, &channels);
- 
- 	ret = sx9310_update_chan_en(data, channels, data->chan_event);
- 	mutex_unlock(&data->mutex);
+ #include <linux/acpi.h>
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
