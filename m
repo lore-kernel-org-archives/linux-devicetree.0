@@ -2,338 +2,118 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D0DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDD3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D545921744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA78D22B3F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596227936;
-	bh=MpqSfbO1kBWzvAqv+qsoKnGDz0Q+PQwa++RlBZ3bA8s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ecnwzo604yxqQBkmAMOvyNKgHxlHydy78gn2RgA3sgzu4uRRPjKXgvWW332pqrA+F
-	 vYx3zL6tWPwKhW394lsMeZ5bOGajEbBiC5qIwu6IqjAXhPuSyEWYmfHL/uvjlVns/p
-	 /IBkGHAKlwaI8KelbZ/vKoAzrzXUoOcAefJ4gApA=
+	s=default; t=1596228044;
+	bh=RTy+2XZwxBBtR6OpdgP4IQ1CoZjL6q+d4+kQbUsnFGE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N+PwHYXtpByd2fVc+hoB5WH/0am+di1yviZjjmYNIjHfVFVwVHWB2ygUUasKAYLyL
+	 GHdPgnDQjS0hp/WZuXzGh6IXATyuwWDLsdF8jQsg6OhUpcyqjSu15NqhxmTAhI40sS
+	 xipnviZ8Za/evafKCIrAZ37vfXMOGiNZoUSwuKlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgGaUiz (ORCPT
+        id S1728883AbgGaUko (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:38:55 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36252 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgGaUiy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:38:54 -0400
-Received: by mail-io1-f67.google.com with SMTP id t15so24005732iob.3;
-        Fri, 31 Jul 2020 13:38:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7XPWUIkqRlODZ7YR+Y+TIh8Lqv7i7GjZ1aMgIq7xzSU=;
-        b=dOgcQtKWFRAO/FkcaAyn8rW5CyK2pLIKg9s/t2aBB21+3x/rur9CfEap8ZQaJMrDa6
-         iWoCoA01QRj1+NFu00iJbJqoAm3rimxDOVp92Zp0ZRVlTdJQqMfX2U8Stok2JWnsPwfw
-         xDUBZqaFVkQkj7oL5fUOfRy5y+sLHhlrvdk6oaerJSe4UerEPMWh52IREumQAsy9ZyRm
-         IX3Yl0RRG3vxaYRGz83N+qOQEIigofh/hMXB70605U6dW+6TpDoBVn9NGqMJUTxElm23
-         10XC4yAuIpzH7SJcwkwOaHR5gqDPiW9/pEnwfot2ieDLJnGXobduLnKpv87XGueR4O/M
-         AzyQ==
-X-Gm-Message-State: AOAM532aJhnggjE1OVUhASxAchO41HdX7f54nVIACJf86ewj+2Jj4xXU
-        dzWHLlE+PaQecUyYN9Suvg==
-X-Google-Smtp-Source: ABdhPJyCUTSCKDGyMHS9ZCxdxw2vpQJn23D2nUjQ/zmvdCRCUX1d4UFtwQEwXdEXhA2LGb7zFaKuGg==
-X-Received: by 2002:a6b:9242:: with SMTP id u63mr5060547iod.92.1596227932607;
-        Fri, 31 Jul 2020 13:38:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c67sm5031153iof.16.2020.07.31.13.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 13:38:52 -0700 (PDT)
-Received: (nullmailer pid 743459 invoked by uid 1000);
-        Fri, 31 Jul 2020 20:38:50 -0000
-Date:   Fri, 31 Jul 2020 14:38:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Leitner <richard.leitner@skidata.com>,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: usb: Add Microchip
- USB253x/USB3x13/USB46x4 support
-Message-ID: <20200731203850.GA725935@bogus>
-References: <20200726084116.GD448215@kroah.com>
- <20200727083333.19623-1-ceggers@arri.de>
- <20200727083333.19623-2-ceggers@arri.de>
+        Fri, 31 Jul 2020 16:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728305AbgGaUko (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 16:40:44 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8537C22B3F
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 20:40:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596228043;
+        bh=RTy+2XZwxBBtR6OpdgP4IQ1CoZjL6q+d4+kQbUsnFGE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VdaT9RtRdWwdgEFbvQoQNKk14fAokpsR1XCdAoiuDmD2hhHqMbFfLutIWyZFKEUFB
+         K7KMksc/hmk3xdAY9f8HjZgF8No4e394fWAZPZpJYdDs6NildlYad1XxuZ5TM6p9P/
+         hRomH/zmA0ZO16okR6O8mDJZUYSK+gyMokxvOoNc=
+Received: by mail-ot1-f46.google.com with SMTP id t7so9817341otp.0
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 13:40:43 -0700 (PDT)
+X-Gm-Message-State: AOAM530Ra7amXlGRs79VbBlrReu93zUCqclb36mn9hCjS8QpLhhscVRZ
+        md+3OznudyX/fmQAV5XaNhVLyj/xygQXY6wv5w==
+X-Google-Smtp-Source: ABdhPJw61vc9S0HXOWZY0VWOji6q8LSkuI6DAAQtR5sMccDxQDAtCepQV77emC6qXZ5H918o/5bicfepAXV9oH9o8aw=
+X-Received: by 2002:a9d:3425:: with SMTP id v34mr522423otb.129.1596228042856;
+ Fri, 31 Jul 2020 13:40:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727083333.19623-2-ceggers@arri.de>
+References: <20200727100505.23908-1-ceggers@arri.de> <CAL_Jsq+jJFNQmxnXeA1HmBhM4aUH-qspdTCSRVvEfh0OVDF+DQ@mail.gmail.com>
+ <797979108.27KzEp727H@n95hx1g2>
+In-Reply-To: <797979108.27KzEp727H@n95hx1g2>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 31 Jul 2020 14:40:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK+Oj5AMDv5uvtQZZ6YMBzVKBPqvTfAsXEbjWvxqubQnQ@mail.gmail.com>
+Message-ID: <CAL_JsqK+Oj5AMDv5uvtQZZ6YMBzVKBPqvTfAsXEbjWvxqubQnQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: at25: fix syntax error in example code
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:33:30AM +0200, Christian Eggers wrote:
-> Add DT bindings for Microchip USB253x/USB3x13/USB46x4 driver.
+On Tue, Jul 28, 2020 at 1:34 AM Christian Eggers <ceggers@arri.de> wrote:
+>
+> On Monday, 27 July 2020, 19:56:59 CEST, Rob Herring wrote:
+> > On Mon, Jul 27, 2020 at 4:05 AM Christian Eggers <ceggers@arri.de> wrote:
+> > > Add missing semicolon.
+> > >
+> > > Signed-off-by: Christian Eggers <ceggers@arri.de>
+> > > ---
+> > >
+> > >  Documentation/devicetree/bindings/eeprom/at25.txt | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > At this point, I'd prefer to see this converted to schema instead of
+> > trivial fixes. Then the tooling will catch these syntax errors.
+> >
+> While trying to convert the at25 binding to yaml, I ran into the following problem:
+>
+> > Required properties:
+> > - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
+> >
+> >   Example "<vendor>,<type>" values:
+> >     "anvo,anv32e61w"
+> >     "microchip,25lc040"
+> >     "st,m95m02"
+> >     "st,m95256"
+>
+> The current binding uses arbitrary values for the compatible string,
+> only "atmel,at25" is really known by the driver. All other hardware related
+> settings are provided as separate properties.
+>
+> When I specify
+>
+>   compatible:
+>     enum:
+>       - atmel,at25
+>
+> I get an error in dt_binding_check:
+>
+> Documentation/devicetree/bindings/eeprom/at25.example.dt.yaml: eeprom@0: compatible: Additional items are not allowed ('atmel,at25' was unexpected)
+> Documentation/devicetree/bindings/eeprom/at25.example.dt.yaml: eeprom@0: compatible:0: 'st,m95256' is not one of ['atmel,at25']
+> Documentation/devicetree/bindings/eeprom/at25.example.dt.yaml: eeprom@0: compatible: ['st,m95256', 'atmel,at25'] is too long
+>
+> How to handle this correctly?
 
-Looks like a lot copied from usb251xb.txt. Many of these properties need 
-to be defined in a common schema. That could be either common to USB 
-devices, hubs, or Microchip hubs or some combination of those. 
+You can do:
 
-> 
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
-> ---
->  .../devicetree/bindings/usb/usb253x.yaml      | 234 ++++++++++++++++++
->  1 file changed, 234 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb253x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb253x.yaml b/Documentation/devicetree/bindings/usb/usb253x.yaml
-> new file mode 100644
-> index 000000000000..88ea744147b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/usb253x.yaml
-> @@ -0,0 +1,234 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/usb/usb253x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip USB253x/USB3x13/USB46x4 USB 2.0 Hi-Speed Hub Controller
-> +
-> +maintainers:
-> +  - Christian Eggers <ceggers@arri.de>
-> +
-> +description: |
-> +  http://ww1.microchip.com/downloads/en/AppNotes/00001801C.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,usb2532
-> +      - microchip,usb2532i
-> +      - microchip,usb2533
-> +      - microchip,usb2533i
-> +      - microchip,usb2534
-> +      - microchip,usb2534i
-> +      - microchip,usb3613
-> +      - microchip,usb3613i
-> +      - microchip,usb3813
-> +      - microchip,usb3813i
-> +      - microchip,usb4604
-> +      - microchip,usb4604i
-> +      - microchip,usb4624
-> +      - microchip,usb4624i
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      I2C address on the selected bus (usually <0x2D>).
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      Specify the gpio for hub reset.
-> +
-> +  vdd-supply:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      Specify the regulator supplying vdd.
-> +
-> +  skip-config:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Skip Hub configuration, but only send the USB-Attach command.
-> +
-> +  vendor-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 65535
-> +    description:
-> +      Set USB Vendor ID of the hub.
-> +
-> +  product-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 65535
-> +    description:
-> +      Set USB Product ID of the hub.
-> +
-> +  device-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 65535
-> +    description:
-> +      Set USB Device ID of the hub.
-> +
-> +  language-id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 65535
-> +    description:
-> +      Set USB Language ID.
-> +
-> +  manufacturer:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description:
-> +      Set USB Manufacturer string (max. a total of 93 characters for
-> +      manufacturer, product and serial).
-> +
-> +  product:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description:
-> +      Set USB Product string (max. a total of 93 characters for
-> +      manufacturer, product and serial).
-> +
-> +  serial:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description:
-> +      Set USB Serial string (max. a total of 93 characters for
-> +      manufacturer, product and serial).
-> +
-> +  bus-powered:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Selects bus powered operation.
-> +
-> +  self-powered:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Selects self powered operation (default).
-> +
-> +  disable-hi-speed:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Disable USB Hi-Speed support.
-> +
-> +  multi-tt:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Selects multi-transaction-translator (default).
-> +
-> +  single-tt:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Selects single-transaction-translator.
-> +
-> +  disable-eop:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Disable End of Packet generation in full-speed mode.
-> +
-> +  ganged-sensing:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Select ganged over-current sense type in self-powered mode.
-> +
-> +  individual-sensing:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Select individual over-current sense type in self-powered mode (default).
-> +
-> +  ganged-port-switching:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Select ganged port power switching mode.
-> +
-> +  individual-port-switching:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Select individual port power switching mode (default).
-> +
-> +  dynamic-power-switching:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Enable auto-switching from self- to bus-powered operation if the local
-> +      power source is removed or unavailable.
-> +
-> +  oc-delay-us:
-> +    enum:
-> +      - 100
-> +      - 4000
-> +      - 8000
-> +      - 16000
-> +    default: 8000
-> +    description:
-> +      Delay time (in microseconds) for filtering the over-current sense inputs.
-> +      If an invalid value is given, the default is used instead.
-> +
-> +  compound-device:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Indicate the hub is part of a compound device.
-> +
-> +  port-mapping-mode:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Enable port mapping mode.
-> +
-> +  non-removable-ports:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Should specify the ports which have a non-removable device connected.
-> +
-> +  sp-disabled-ports:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Specifies the ports which will be self-power disabled.
-> +
-> +  bp-disabled-ports:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Specifies the ports which will be bus-power disabled.
-> +
-> +  power-on-time-ms:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 100
-> +    minimum: 0
-> +    maximum: 510
-> +    description:
-> +      Specifies the time (in milliseconds) it takes from the time the host
-> +      initiates the power-on sequence to a port until the port has adequate
-> +      power.
-> +
-> +  hub-controller-port:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Hub port where the internal hub controller shall be connected. Usually
-> +      <number of ports>+1.
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      usb2534i@2d {
-> +        compatible = "microchip,usb2534i";
-> +        reg = <0x2d>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_usb_hub>;
-> +        /* usb253x.c already assumes low-active, don't negate twice */
-> +        reset-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
-> +        /*skip-config;*/
-> +        /* T_ON,max = 4 ms for NCP380 */
-> +        power-on-time-ms = <4>;
-> +        manufacturer = "Foo";
-> +        product = "Foo-Bar";
-> +        /* port 2 is connected to an internal SD-Card reader */
-> +        non-removable-ports = <2>;
-> +        /* hub controller mapped to logical port 5 */
-> +        hub-controller-port = <5>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> Christian Eggers
-> Embedded software developer
-> 
-> Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-> Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-> Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-> Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-> Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
-> 
+items:
+  - {}
+  - const: atmel,at25
+
+But really, the possible compatible strings need to be listed out. See
+at24.yaml as it had similar issues IIRC.
+
+Rob
