@@ -4,87 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD4AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6819C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB52321744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D22A21744
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 20:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596228426;
-	bh=U3+YdKd/o0xKGnVnd+lhGv3R2WD20Bn1oF44G9YKiI0=;
+	s=default; t=1596228465;
+	bh=PvrDlYyb5j3UkMmoNhIfYpNkQR/nYPyIRKWmzHq2WH8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zPpJwa5Mwg1apdqY+I+raUcUZHvdxpG7cEOFw8utikN4nioG5GTL8e3KFQQT/b1Bn
-	 Kc1FqIccMkB70DEM0e6YTEGS7LVhpbWU0Np0PHUbq086O/f+jLuSLXQ7WqMWa7suSd
-	 NEL+/QIY6Gf3TSs5aM8qbMpYKoS+0jEyBqAOJXg0=
+	b=iCcYI6KL33pziEUtEZMeSXmpnXn8wj8POiPizi32u6aEDsrXd9Pd6uDCcKmP35PVB
+	 O/hR0bnPokbodw4Qhf7j91dG2e1gRiBXj95UfHWM+OdDSIZeQLg0kN0V9PMcfLmMBd
+	 tXUxVN3Vuu8Use2D0DKK9dRhcvt/8jarMt0Jiaso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgGaUrG (ORCPT
+        id S1727948AbgGaUrp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 16:47:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34544 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgGaUrG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:47:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id q75so24792693iod.1;
-        Fri, 31 Jul 2020 13:47:05 -0700 (PDT)
+        Fri, 31 Jul 2020 16:47:45 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45895 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbgGaUro (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 16:47:44 -0400
+Received: by mail-il1-f194.google.com with SMTP id f68so4547268ilh.12;
+        Fri, 31 Jul 2020 13:47:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RB00g1jQXZ6Bb9+PZy/KFtGEl3EC1jQ5rDd2W8wczN0=;
-        b=uVsHWJYOs/XPmltwCT2EhzVxEdxPJLPvP0R4WxxFOiwRv0hiJIlp05YTyb8/2e+9qe
-         N5XPf8ccUc5FpTy9CE3c9H/U51b8mH6lFBS/ftLnauuz+ZlEYd3dGwohHgTd+bsG42HR
-         uzUtOhjpnWYIsyaXZCO+SjfWLVILPgTT4A/Z68Ojh7f5a8egH9QWnvS0ECZa8zHXWMyv
-         43phgDkNoiLkd60Mb89yKGM5XttemvkZFrp4JuDfp8ssMco1PFiTr6jHC5zMkOvpHcxF
-         gjSUBoi/o83QCAaygfmWWuzVaGEvu+Eg8QxtCZub6KjJZQSzGCtQ7EkX3drqLrvngNnt
-         cJFg==
-X-Gm-Message-State: AOAM530V2qdhETGw2M70ttXIGhRlh13tRW8AKPIAaTfGWFhFF3SHRakF
-        LAYbVo/7Plpb1TpYVxWrWQ==
-X-Google-Smtp-Source: ABdhPJwEcVesRAv6xuF9lKc82DjJG0leBtkckB+qcJCfeV9wmVrA4IGlp/jkc/uo9o5uUf2NwHzVXQ==
-X-Received: by 2002:a5e:c703:: with SMTP id f3mr5245265iop.185.1596228424954;
-        Fri, 31 Jul 2020 13:47:04 -0700 (PDT)
+        bh=MO2GV7Q7hJc5Zuy2tX2Bw37DgW3Q604di6mfkd5jHpo=;
+        b=Ksx0z7ZmBm7jUz7PZFfO59M+K2Z1oaAoCP2ct6KQ5Lt6RIczS3C5/IIevhpqQhGcWa
+         jkyAjVxLHm8pr2jQjbeLeYyLrYGgcYXZilZqMl+xZfv9mePzefoNqMTjxkicS1Ew1X4t
+         e76m0VocLQYRc8QsAjWOjRQlDh4P/ngv5t0TROwYXf0aSrPT95alsvowhDQVBz6oNj+j
+         SPx/Dk1FGxtmNXCN92qG67xcoTCDtBiku5x6oVKVtN8s1iW3yJWl6rsB2f5ETu3CiDYk
+         6BQ5LeL1FHbucaHnmRKuJh81p0HThYqDXF+H9+32LWwxqYw1r5RlfeqlWbXvAOmvfJHa
+         jH0w==
+X-Gm-Message-State: AOAM533B2os8QvMZ84DLeZRv+IgzduhaN7LWAL0ZbmBy+jmuLuFMrrG5
+        qHITBfKHRygaailE2RgNiA==
+X-Google-Smtp-Source: ABdhPJxvJk5Gfz+s8v5Gkz1xsf+wqIVtzcYiRafEuoMdOS5wIy1uW0boqjp6Ljc92wFmT+CR6tdUOA==
+X-Received: by 2002:a92:9fcb:: with SMTP id z72mr5562602ilk.195.1596228463994;
+        Fri, 31 Jul 2020 13:47:43 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e84sm5550872ill.60.2020.07.31.13.47.01
+        by smtp.gmail.com with ESMTPSA id 142sm5498355ilc.40.2020.07.31.13.47.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 13:47:04 -0700 (PDT)
-Received: (nullmailer pid 756710 invoked by uid 1000);
-        Fri, 31 Jul 2020 20:47:00 -0000
-Date:   Fri, 31 Jul 2020 14:47:00 -0600
+        Fri, 31 Jul 2020 13:47:43 -0700 (PDT)
+Received: (nullmailer pid 757897 invoked by uid 1000);
+        Fri, 31 Jul 2020 20:47:42 -0000
+Date:   Fri, 31 Jul 2020 14:47:42 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     Odelu Kukatla <okukatla@codeaurora.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>, devicetree@vger.kernel.org,
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        linux-iio@vger.kernel.org, Peter Rosin <peda@axentia.se>,
         Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] dt-bindings: interconnect: single yaml file for
- RPMh interconnect drivers
-Message-ID: <20200731204700.GA756344@bogus>
-References: <20200728023811.5607-1-jonathan@marek.ca>
- <20200728023811.5607-2-jonathan@marek.ca>
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jiri Kosina <trivial@kernel.org>
+Subject: Re: [PATCH] dt-bindings: iio: io-channel-mux: Fix compatible string
+ in example code
+Message-ID: <20200731204742.GA756942@bogus>
+References: <20200727101605.24384-1-ceggers@arri.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728023811.5607-2-jonathan@marek.ca>
+In-Reply-To: <20200727101605.24384-1-ceggers@arri.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 27 Jul 2020 22:38:00 -0400, Jonathan Marek wrote:
-> These two bindings are almost identical, so combine them into one. This
-> will make it easier to add the sm8150 and sm8250 interconnect bindings.
+On Mon, 27 Jul 2020 12:16:05 +0200, Christian Eggers wrote:
+> The correct compatible string is "gpio-mux" (see
+> bindings/mux/gpio-mux.txt).
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
+> Cc: stable@vger.kernel.org
 > ---
->  .../{qcom,sdm845.yaml => qcom,rpmh.yaml}      | 20 ++++-
->  .../bindings/interconnect/qcom,sc7180.yaml    | 85 -------------------
->  2 files changed, 17 insertions(+), 88 deletions(-)
->  rename Documentation/devicetree/bindings/interconnect/{qcom,sdm845.yaml => qcom,rpmh.yaml} (76%)
->  delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+>  .../devicetree/bindings/iio/multiplexer/io-channel-mux.txt      | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Added 'v4.13+' to stable tag and applied, thanks!
