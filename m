@@ -2,92 +2,121 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D938C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E74DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A382076B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596224174;
-	bh=B65sW0H+uUHkgyDhUiECp6DwAZm3btlQpGTlkYkao8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V5DbJCV8RFBmjl2EqY4LGdpHXq97LPTg/1n8Cm6opzDwClLcMQjQwPkr6XnD9tcx9
-	 5RjF8sJy/xmVYfcJd5Zlv1xsrks4rnQmC2BNy2bEYPWod6P6j7J4uyTQ55+XrzkFx3
-	 nvMWgdfCJpwOEKqD9c+uhFiQHsakajpkuucJpG/o=
+	by mail.kernel.org (Postfix) with ESMTP id 148CB2087C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 19:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZgyyXZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbgGaTgN (ORCPT
+        id S1725826AbgGaTrN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 15:36:13 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40656 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729209AbgGaTgN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 15:36:13 -0400
-Received: by mail-il1-f195.google.com with SMTP id x1so5953133ilp.7;
-        Fri, 31 Jul 2020 12:36:12 -0700 (PDT)
+        Fri, 31 Jul 2020 15:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgGaTrN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 15:47:13 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1CBC061574;
+        Fri, 31 Jul 2020 12:47:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t10so12570453plz.10;
+        Fri, 31 Jul 2020 12:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CCtzz/ikDkJ40Y/Or+xxVZzqpUQAfxOSoGmmOXHGcF0=;
+        b=kZgyyXZzlTSotlgAD3426upKCbCWC8tIK3CDvULUFCFRt2C5J8Y60BGLkoyLmbrwDB
+         1bKOcMzeCkT7P71wRZMeodZQbczAFXiTr5o4wVPCeHqoZ35KjV9xsG/WBA1ikQfZQnjR
+         yQBqIfYq4jE9tm1TG0vQpVa5qKTSSDO2PQgqPl5IF6yopJLXKk+ncUkx9VdXHw4ULV/C
+         +tvmnTVjCnbSpDB2vcHkSIIk+V52ulaIis8UqN6K2a/TE96jg5dOLnnI5R+fwC1dJkmy
+         Ubh4Ym97N9r3mk+lctxG2p2gY0Pdpn5LcG8gwSn0LRF+JAw/3/YpCMr4lo3mKS8ezwH6
+         T68Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wab/tJu5E5sJ5/QDRPXn9ffk/Ado7aM/lOvbhkRuf2o=;
-        b=nVAVmDfnvg0/AqPSLc177jsJwK0fQSZbyLz2RxEUOhGNMMIbB/U8gFoDfwU1GokKkM
-         S2UytBhPmbjbpwKS7VxOMr2mhSp+4cQpWaBBLjMMiMpzDwvGm38tZQAvh0mbQTD+CADp
-         sEgRR7FXOsTC16xBk+uwUQl19PbymHD1K4RnY5d1vlbKTE5z3FYmmSewr1RasgOWShtY
-         2OFOiTUocFsFwkK5HvvuPlb3s0rC0XRg4BJMbvLUJ+GYwMCvKC7wtyP/8GJcE2zHqjGj
-         Dw1bvi9fX7AHY9UkfLYp/MffX57ihPYylfENbWYrFlBcGq6aERoBJH9crve8p1bC9EQd
-         Qhrg==
-X-Gm-Message-State: AOAM532ebL9LvORM6iQCQD1D3pAvnoChFA5+fIo0bvJDb6pvLP0t0nzK
-        52XVr7s7KTV2odkP2TYl4A==
-X-Google-Smtp-Source: ABdhPJxd3lQOTaVRgxLwJUQxUo45C+8bAgkoIH99FoVPc4CMnGqeFkTWOBiQJFT3e7AswKOHVk7nWQ==
-X-Received: by 2002:a05:6e02:dd1:: with SMTP id l17mr5194141ilj.136.1596224172324;
-        Fri, 31 Jul 2020 12:36:12 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h1sm5079948iob.8.2020.07.31.12.36.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 12:36:11 -0700 (PDT)
-Received: (nullmailer pid 643496 invoked by uid 1000);
-        Fri, 31 Jul 2020 19:36:09 -0000
-Date:   Fri, 31 Jul 2020 13:36:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>
-Cc:     heiko.stuebner@theobroma-systems.com, mcoquelin.stm32@gmail.com,
-        lkundrak@v3.sk, linux-stm32@st-md-mailman.stormreply.com,
-        alexandre.torgue@st.com, a.fatoum@pengutronix.de,
-        linus.walleij@linaro.org, allen.chen@ite.com.tw,
-        linux-arm-kernel@lists.infradead.org, stephan@gerhold.net,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, mani@kernel.org, sam@ravnborg.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] dt-bindings: arm: stm32: document Odyssey
- compatible
-Message-ID: <20200731193609.GA643298@bogus>
-References: <20200731143053.44866-1-marcin.sloniewski@gmail.com>
- <20200731143053.44866-2-marcin.sloniewski@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CCtzz/ikDkJ40Y/Or+xxVZzqpUQAfxOSoGmmOXHGcF0=;
+        b=AXPTRC6ktOvjf/WHvEtq7zBSzR5vXixaufCBAVhB3s8eRznyeVxd++0KPC8gFdBvnZ
+         4FRw45B/WVWphlkHARfVmee99DVbzDvXNzSFr/hLUCu+R/tiuHhzzIVXXO91uDdyCB/y
+         az35DVMBwBQcEzaT3eYd+FCWXT/Uj5ELLPMO/rofjx/Ir3q55fzfHw5gp1Qa2af1iz6j
+         Om5pFKINEEK6OABf+xLomD/N38IzVoRgGexY8jiCouYykbaSualxhfci+bf9HuODl5Bz
+         p8d4xNnz9fNF4Yo7w8OLEKO31O6eHXTTxDRBGyoRgkUw9hoXR23NkU87NCSdONxd9ui6
+         GDhg==
+X-Gm-Message-State: AOAM530Lhf8WGEVa0cRdqinTNbo/Lstn12qRREpr9bQrjy75ifLJtN41
+        Z2hKxfhpzzy2FATqNNZJHsJ8WOmHV44IY6QWSrA=
+X-Google-Smtp-Source: ABdhPJyDJn9A53QZee7pWSd5gmobL0PoAUBAt3fINUbvQ28dAdLqpDrPWrPnlfdzaRiwkcEDasBWqEIKqNkA4AZ84m0=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr5729991pjb.129.1596224832360;
+ Fri, 31 Jul 2020 12:47:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731143053.44866-2-marcin.sloniewski@gmail.com>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
+In-Reply-To: <20200731104555.v3.15.I4c344a6793007001bbb3c1c08e96d3acf893b36b@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 31 Jul 2020 22:46:55 +0300
+Message-ID: <CAHp75Vcyv_sbgEWEzFeSnmoMzQqrS+obogKJhjPajX1FDutF4w@mail.gmail.com>
+Subject: Re: [PATCH v3 15/15] iio: sx9310: Use irq trigger flags from firmware
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 31 Jul 2020 16:30:52 +0200, Marcin Sloniewski wrote:
-> Document device tree bindings of Seeed SoM and carrier board.
-> 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+On Fri, Jul 31, 2020 at 7:49 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> From: Stephen Boyd <swboyd@chromium.org>
+>
+> We shouldn't need to set default irq trigger flags here as the firmware
+> should have properly indicated the trigger type, i.e. level low, in the
+> DT or ACPI tables.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
 > ---
->  Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+>
+> Changes in v3:
+>  - Added irq trigger flags commit to the series.
+>
+> Changes in v2: None
+>
+>  drivers/iio/proximity/sx9310.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index a20cd6a4dad729..c41fa7f6558e3f 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -951,7 +951,7 @@ static int sx9310_probe(struct i2c_client *client)
+>                 ret = devm_request_threaded_irq(dev, client->irq,
+>                                                 sx9310_irq_handler,
+>                                                 sx9310_irq_thread_handler,
+> -                                               IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> +                                               IRQF_ONESHOT,
+>                                                 "sx9310_event", indio_dev);
+>                 if (ret)
+>                         return ret;
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
+-- 
+With Best Regards,
+Andy Shevchenko
