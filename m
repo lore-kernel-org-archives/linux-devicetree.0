@@ -2,196 +2,84 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DC2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B35C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 11:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5190520838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 10:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9060B208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 11:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732485AbgGaKxM (ORCPT
+        id S1732137AbgGaLVB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 06:53:12 -0400
-Received: from mailout07.rmx.de ([94.199.90.95]:55415 "EHLO mailout07.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbgGaKxM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 06:53:12 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout07.rmx.de (Postfix) with ESMTPS id 4BJ3z72b6fzBwbd;
-        Fri, 31 Jul 2020 12:53:07 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BJ3yk4dddz2xFV;
-        Fri, 31 Jul 2020 12:52:46 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.39) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 31 Jul
- 2020 12:52:23 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "Hartmut Knaack" <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] iio: light: as73211: New driver
-Date:   Fri, 31 Jul 2020 12:52:22 +0200
-Message-ID: <2706267.JtmGt7LAV2@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
-References: <20200731070114.40471-1-ceggers@arri.de> <20200731070114.40471-3-ceggers@arri.de> <CAHp75VdDCnQLh0Qts8hsgLBy5TqibOKAYSeFxuV69XLroRBOEg@mail.gmail.com>
+        Fri, 31 Jul 2020 07:21:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37458 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732104AbgGaLVA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 07:21:00 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 6CC63299217
+Subject: Re: [PATCH] arm64: dts: mt8173: elm: Fix nor_flash node property
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200727074124.3779237-1-hsinyi@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <8aedcc7e-fea5-367c-e3a8-8a013cf629c1@collabora.com>
+Date:   Fri, 31 Jul 2020 13:20:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.39]
-X-RMX-ID: 20200731-125248-4BJ3yk4dddz2xFV-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+In-Reply-To: <20200727074124.3779237-1-hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Hsin-Yi,
 
-thanks for further review. If nobody else sends comments, I'll
-publish the next version tonight. Maybe we could clarify the questions
-below in time.
+Thank you for your patch.
 
-Best regards
-Christian
-
-
-> W=1 (not V=1) runs kernel doc validation script.
-without V=1, I get nothing. Neither excess nor missing members
-are reported on my system.
-
-
-On Friday, 31 July 2020, 09:34:02 CEST, Andy Shevchenko wrote:
-> On Fri, Jul 31, 2020 at 10:03 AM Christian Eggers <ceggers@arri.de> wrote:
-> > +static const int as73211_samp_freq_avail[] = { 1024000, 2048000, 4096000,
-> > 8192000 };
-> This looks related to the below mentioned 1.024MHz.
+On 27/7/20 9:41, Hsin-Yi Wang wrote:
+> bus-width and non-removable is not used by the driver.
+> max-frequency should be spi-max-frequency for flash node.
 > 
-> Perhaps add a definition above and comment here?
+> Fixes: 689b937bedde ("arm64: dts: mediatek: add mt8173 elm and hana board")
+> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> #define AS73211_BASE_FREQ_1024KHZ   1024000
-added similar define in v5. The array looks like the following now
-
-static const int as73211_samp_freq_avail[] = {
-	AS73211_SAMPLE_FREQ_BASE,
-	AS73211_SAMPLE_FREQ_BASE * 2,
-	AS73211_SAMPLE_FREQ_BASE * 4,
-	AS73211_SAMPLE_FREQ_BASE * 8
-};
-
-
-> > +/* integration time in units of 1024 clock cycles */
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> index a5a12b2599a4..01522dd10603 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> @@ -431,12 +431,11 @@ &nor_flash {
+>  	status = "okay";
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&nor_gpio1_pins>;
+> -	bus-width = <8>;
+> -	max-frequency = <50000000>;
+> -	non-removable;
+> +
+>  	flash@0 {
+>  		compatible = "jedec,spi-nor";
+>  		reg = <0>;
+> +		spi-max-frequency = <50000000>;
+>  	};
+>  };
+>  
 > 
-> Unify this with below one. Or the other way around, i.o.w. join one of
-> them into the other.
-> 
-> > +static unsigned int as73211_integration_time_1024cyc(struct as73211_data
-> > *data) +{
-> > +       /* integration time in CREG1 is in powers of 2 (x 1024 cycles) */
-> > +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
-> > +}
-I'm not sure, whether this is possible. as73211_integration_time_1024cyc()
-returns the current setting from hardware. as73211_integration_time_us()
-calculates the resulting time. But as73211_integration_time_us() is also
-called in as73211_integration_time_calc_avail() inside the loop.
-
-> > +       unsigned int time_us = as73211_integration_time_us(data,
-> > +                                                          as73211_integration_time_1024cyc(data));
-> One line?
-checkpatch complains... ignore?
-
-
-> > +               int reg_bits, freq_kHz = val / 1000 /* HZ_PER_KHZ */;  /*
-> > 1024, 2048, ... */ +
-> > +               /* val must be 1024 * 2^x */
-> > +               if (val < 0 || (freq_kHz * 1000 /* HZ_PER_KHZ */) != val
-> > ||
-> > +                               !is_power_of_2(freq_kHz) || val2)
-> > +                       return -EINVAL;
-> 
-> Please, define HZ_PER_KHZ locally. It will really help when we move
-> these definitions to a global level.
-ok
-
-> 
-> ...
-> 
-> > +               /* gain can be calculated from CREG1 as 2^(13 -
-> > CREG1_GAIN) */ +               reg_bits = 13 - ilog2(val);
-> 
-> 13 is the second time in the code. Deserves a descriptive definition.
-I'm unsure how to solve this. Possible values for gain:
-
-CREG1[7:4]  | gain
------------------------------
-0           | 2048x
-1           | 1024x
-2           |  512x
-...         |  ...
-13          |    1x
-
-#define AS73211_CREG1_GAIN_1_NON_SHIFTED 13  // this define is CREG1 related, but not shifted to the right position
-
-static unsigned int as73211_gain(struct as73211_data *data)
-{
-	/* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
-	return BIT(AS73211_CREG1_GAIN_1_NON_SHIFTED - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
-}
-
----- or ----
-
-#define AS73211_CREG1_GAIN_1 FIELD_PREP(AS73211_CREG1_GAIN_MASK, 13)
-
-static unsigned int as73211_gain(struct as73211_data *data)
-{
-	/* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
-	return BIT(FIELD_GET(AS73211_CREG1_GAIN_MASK, AS73211_CREG1_GAIN_1) - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
-}
-
-
-> > +       indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> > +       if (indio_dev == NULL)
-> 
-> if (!indio_dev)
-> 
-> > +               return -ENOMEM;
-> 
-> ...
-> 
-> > +       indio_dev->dev.parent = dev;
-> 
-> Doesn't IIO core do this for you?
-devm_iio_device_alloc() doesn't pass 'dev' to iio_device_alloc().
-I already looked around, but I didn't find. And after debugging
-v5.4, devm_iio_device_alloc() definitely doesn't do it.
-
-> > +       ret = devm_iio_device_register(dev, indio_dev);
-> > +       if (ret < 0)
-> > +               goto powerdown;
-> > +
-> > +       return 0;
-> > 
-> > +powerdown:
-> > +       as73211_power(indio_dev, false);
-> > +       return ret;
-> 
-> devm_*() is tricky. Here you broke ordering heavily. So, consider to
-> add this under devm_add_action_or_reset().
-Sorry, my mistake! I already felt that something may be wrong here...
-
-
-
