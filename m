@@ -2,134 +2,176 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5D7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE85FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEAAA22B40
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52F320663
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 12:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="OvOJK3nM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eu6LagJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732669AbgGaMAk (ORCPT
+        id S1732904AbgGaMGq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 08:00:40 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:47922 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732771AbgGaMAf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 08:00:35 -0400
-Received: from iota-build.ysoft.local (unknown [10.1.5.151])
-        by uho.ysoft.cz (Postfix) with ESMTP id B87AAA3721;
-        Fri, 31 Jul 2020 14:00:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1596196832;
-        bh=C3An1wwqG0nWOOSDbQp59NJiranQJz7PFMVstRqtbGE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OvOJK3nMlvhylcphoj8ekMTMUACveJCOSH3mOEmJEu5S1AhPkXeBpz320EmnNRZHI
-         Mmq2jzLeZa1cvMAA+qZ9Ts0KbaJJF47oBMj11RcuVgwt+WnLeIp/pCfX4P84dpGDqs
-         tw31KaGY7qZuLSjpHy/8JSCpMBZyr8B2zDb360xs=
-From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH 3/3] ARM: dts: imx6dl-yapp4: Add support for OLED based on different controller
-Date:   Fri, 31 Jul 2020 14:00:08 +0200
-Message-Id: <1596196808-5067-3-git-send-email-michal.vokac@ysoft.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1596196808-5067-1-git-send-email-michal.vokac@ysoft.com>
-References: <1596196808-5067-1-git-send-email-michal.vokac@ysoft.com>
+        Fri, 31 Jul 2020 08:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732734AbgGaMGp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 08:06:45 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B523C061574;
+        Fri, 31 Jul 2020 05:06:45 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t6so19247609ljk.9;
+        Fri, 31 Jul 2020 05:06:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wGIEotVJMeoJNihU6O/r/OV8ckdtdoLNEofry0Bb5ZI=;
+        b=Eu6LagJEiGtloI+tapn2ZSSDVFePwtRLBjkeKZCRDmhT8YehnOqPsbRtseSEUw+m0J
+         7BqIQnayf8uOibZ4NIlX7MtgdppwdrRnaH8j/rPnCmykRBBS/r0ii16CW0F5PK/PjD3L
+         A4RxmOxw9kT2ffT9oqYBt7bR9A0FdhPJ6DzRS12vQ7yZnXTqhU/Axf3RFyAFVCqQOcrR
+         zshy6WcV4WwOQ7YmqlTz3OUYfp6u8OVM57o4OKyzl7XxyOSyzg9uHtZUXexDGNWUX4W1
+         2xUICVbQSp+roZsjC1g2TQzuN/NI3HJHYc+++0kQWbiVrodYfUQv1BRaCU7XL4mjn8m0
+         FhHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wGIEotVJMeoJNihU6O/r/OV8ckdtdoLNEofry0Bb5ZI=;
+        b=oPOQtUXtKPusTXIAskJgx8wgJYCvq5fw3fRZxa2ccSE0+cOkl1QpU2eY+/x5DSaqjD
+         6FU/jwj3PGTNwrLFCx4/LUfqrCznnm8JLGBK+etXC4Jv4lA21yGBn4VQVjoedK1bQAJ0
+         aZSWUXNlnVk8QVhRXtHV033OtLtJrPl/DnPK/cGVYyDNndty4dAIanjibL7fYCcgvgPd
+         84ZLVBwiJxzIK5lXixEJLbAudJHQCFxtKXOe8WElvGd8Dfs0oBQGt6ziOGzXBfoMc1iy
+         b3xZu/5D7MAEDd7rPcEuCHttGE2+aRyb0FEM888WN4k98+WGyYT0a+N1NrAoj6zPkusB
+         3VoQ==
+X-Gm-Message-State: AOAM5332w9rijTIZIFq1HrQ0KKZkmkOsGcC21lBuDjiggAJBQq+6b1FJ
+        H24RQAAxcwZp2kOyVFdYRLe59CCK
+X-Google-Smtp-Source: ABdhPJxk0BTj8qxc+FqtzWhzEa6QTQpNzeE5UIlC5aV2Fwy1reVwOKg+TWzTfJDz0BXs77vl+vw5bA==
+X-Received: by 2002:a2e:2ac5:: with SMTP id q188mr1824671ljq.179.1596197203320;
+        Fri, 31 Jul 2020 05:06:43 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id p9sm1629043ljg.76.2020.07.31.05.06.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 05:06:42 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 05/10] media: tegra-video: Separate CSI stream
+ enable and disable implementations
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1596186169-18729-1-git-send-email-skomatineni@nvidia.com>
+ <1596186169-18729-6-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <cdc22071-9e61-1098-803a-d7c674972b6f@gmail.com>
+Date:   Fri, 31 Jul 2020 15:06:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <1596186169-18729-6-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-OLED display consist of an OLED panel and a display controller.
-The displays that were used on yapp4 platform were based on a SSD1305
-controller. These displays are now discontinued and we need to add
-support for a replacement.
+31.07.2020 12:02, Sowjanya Komatineni пишет:
+> This patch separates implementation of CSI stream enable and disable
+> into separate functions for readability.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/staging/media/tegra-video/csi.c | 51 ++++++++++++++++++++++-----------
+>  1 file changed, 35 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
+> index fb667df..cfe6187 100644
+> --- a/drivers/staging/media/tegra-video/csi.c
+> +++ b/drivers/staging/media/tegra-video/csi.c
+> @@ -232,34 +232,53 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
+>  	return 0;
+>  }
+>  
+> -static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
+> +static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
+>  {
+>  	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
+>  	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
+>  	struct tegra_csi *csi = csi_chan->csi;
+> -	int ret = 0;
+> +	int ret;
+> +
+> +	ret = pm_runtime_get_sync(csi->dev);
+> +	if (ret < 0) {
+> +		dev_err(csi->dev, "failed to get runtime PM: %d\n", ret);
+> +		pm_runtime_put_noidle(csi->dev);
+> +		return ret;
+> +	}
+>  
+>  	csi_chan->pg_mode = chan->pg_mode;
+> -	if (enable) {
+> -		ret = pm_runtime_get_sync(csi->dev);
+> -		if (ret < 0) {
+> -			dev_err(csi->dev,
+> -				"failed to get runtime PM: %d\n", ret);
+> -			pm_runtime_put_noidle(csi->dev);
+> -			return ret;
+> -		}
+> +	ret = csi->ops->csi_start_streaming(csi_chan);
+> +	if (ret < 0)
+> +		goto rpm_put;
+>  
+> -		ret = csi->ops->csi_start_streaming(csi_chan);
+> -		if (ret < 0)
+> -			goto rpm_put;
+> +	return 0;
+>  
+> -		return 0;
+> -	}
+> +rpm_put:
+> +	pm_runtime_put(csi->dev);
+> +	return ret;
+> +}
+> +
+> +static int tegra_csi_disable_stream(struct v4l2_subdev *subdev)
+> +{
+> +	struct tegra_csi_channel *csi_chan = to_csi_chan(subdev);
+> +	struct tegra_csi *csi = csi_chan->csi;
+>  
+>  	csi->ops->csi_stop_streaming(csi_chan);
+>  
+> -rpm_put:
+>  	pm_runtime_put(csi->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
+> +{
+> +	int ret;
+> +
+> +	if (enable)
+> +		ret = tegra_csi_enable_stream(subdev);
+> +	else
+> +		ret = tegra_csi_disable_stream(subdev);
+> +
+>  	return ret;
+>  }
+>  
+> 
 
-The new display is based on SSD1309 controller and requires slightly
-different configuration (mirror + segment offset).  We want to support
-both display types so it does no matter which one was used on the assembly
-line. Hence the displays are placed at different I2C addresses.
+Thanks!
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 15 ++++++++++++++-
- arch/arm/boot/dts/imx6dl-yapp4-hydra.dts   |  6 +++++-
- arch/arm/boot/dts/imx6dl-yapp4-orion.dts   |  6 +++++-
- 3 files changed, 24 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index c4a235d212b6..e626bef768bf 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -311,7 +311,20 @@
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
- 
--	oled: oled@3d {
-+	oled_1309: oled@3c {
-+		compatible = "solomon,ssd1309fb-i2c";
-+		reg = <0x3c>;
-+		solomon,height = <64>;
-+		solomon,width = <128>;
-+		solomon,page-offset = <0>;
-+		solomon,segment-no-remap;
-+		solomon,prechargep2 = <15>;
-+		reset-gpios = <&gpio_oled 1 GPIO_ACTIVE_LOW>;
-+		vbat-supply = <&sw2_reg>;
-+		status = "disabled";
-+	};
-+
-+	oled_1305: oled@3d {
- 		compatible = "solomon,ssd1305fb-i2c";
- 		reg = <0x3d>;
- 		solomon,height = <64>;
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts b/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
-index 6010d3d872ab..a19609c7c7c0 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
-@@ -29,7 +29,11 @@
- 	status = "okay";
- };
- 
--&oled {
-+&oled_1305 {
-+	status = "okay";
-+};
-+
-+&oled_1309 {
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-orion.dts b/arch/arm/boot/dts/imx6dl-yapp4-orion.dts
-index 0428720417ef..884b236746bb 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-orion.dts
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-orion.dts
-@@ -25,7 +25,11 @@
- 	status = "okay";
- };
- 
--&oled {
-+&oled_1305 {
-+	status = "okay";
-+};
-+
-+&oled_1309 {
- 	status = "okay";
- };
- 
--- 
-2.1.4
-
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
