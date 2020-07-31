@@ -2,112 +2,88 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE8DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7546BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEF22083B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CDE22B40
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 17:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596217124;
-	bh=ThVcK9Hvk7m9SF2um16GNyMOPFFlXYWERxYa9S07VUg=;
+	s=default; t=1596217841;
+	bh=xIA7hRiGI8hcIKt24KewaMAWkWoF/yDX6COzosKFz0U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=px++EERMrPflIAi2UCZzU7PCDG+ITc8GsfvikUi2CD0UazvbEkEltO+3zO3dU3Lw2
-	 jxjgrmghlpKZxUlaBCbYpRp0LK7I0Opo0/VuHgtSIc8zR0tKIppmMdgUA5YuimbT9M
-	 uFWZiCYXckWW6aE9rkNroBj1uYurRglwAzV9ZhhE=
+	b=dMJ0BOfIM53X5uTmJAj7Yuu4kENvzSBSYy4gbTsPTBQxayP1D7TXzM4WU2K+WmonZ
+	 nI+aCxLUJp8a0dou2xmg+yxZGActj4pWoWhYqBF90jomvNVsaMwlYA26Uipv7KrYFK
+	 UkVbc2f5qiq6Zytd6En8BRBaDHwiruPgWEpDX+y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbgGaRii (ORCPT
+        id S1730020AbgGaRuk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 13:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        Fri, 31 Jul 2020 13:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733236AbgGaRih (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 13:38:37 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        id S1729595AbgGaRuk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 13:50:40 -0400
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FF432083B;
-        Fri, 31 Jul 2020 17:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D9F822B43;
+        Fri, 31 Jul 2020 17:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596217117;
-        bh=ThVcK9Hvk7m9SF2um16GNyMOPFFlXYWERxYa9S07VUg=;
+        s=default; t=1596217840;
+        bh=xIA7hRiGI8hcIKt24KewaMAWkWoF/yDX6COzosKFz0U=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IhnygZYjOuB4e8fBhH11m1q+TmFS2ZWUv8vOBc4uVHIHAvi287Ay/CKLxsFFcZ8gn
-         dN5LsV3Wzf16tQXmdLDJd7zpNyKEAD8wM/eVEu+bR3aRt/bVCDuV24pG/ouu5z0HXJ
-         1hj8WiNwwWEOaqsAtIwELhY+t/dAMR+YN88Sgf9k=
-Received: by mail-oi1-f171.google.com with SMTP id s144so17455720oie.3;
-        Fri, 31 Jul 2020 10:38:37 -0700 (PDT)
-X-Gm-Message-State: AOAM533Q6Ur7PZvk3Mh0FVY3gnU/959dBVzSrEIIr/XGaxZm0HUvQQ6Q
-        nrTHFxA/YAJktbzLTlWeAyubd84nLAZk9xF9WA==
-X-Google-Smtp-Source: ABdhPJyGE9R4ouWUf/7eAFYfwi5aW8aeIQseFytCl+rC5dI2vrcQrsvoB5m3JRF0dMRdAmvJ49Y6r7hnrSEVwQmilqY=
-X-Received: by 2002:aca:190c:: with SMTP id l12mr3850529oii.147.1596217116807;
- Fri, 31 Jul 2020 10:38:36 -0700 (PDT)
+        b=2cAp12zBS5xCLw85wjvdjdkrrYdGenmddqas/YJEZAPOvYSUiVcQNwHf1z3FDbPuw
+         cCHIZsg7FocV3nJ4qpnkIuFA1YuIb0cwL4oeVRXgvzuUmA+LA/qE07FoatkDIKFqYY
+         T758LDjUVTI0sWA0R8iNFwd4qZl/8UA6UprEjHVs=
+Received: by mail-oo1-f45.google.com with SMTP id x1so3871880oox.6;
+        Fri, 31 Jul 2020 10:50:40 -0700 (PDT)
+X-Gm-Message-State: AOAM530eNeW/qtFyhb69bip8WdFdkXWP8NUNHlWBRTsyXVazTzTwT6UG
+        jS3fVjt5ABDFc9YrsuwdvS6MG9KwhnUL7FvpTQ==
+X-Google-Smtp-Source: ABdhPJw/OSexwE0OrWpOTs5zx2c0CPD/ZcImiHA06bu/BmJSIz2sUGn0TTjq1kVG2vBqMM8m5HsBIkCPn13mRXjt5Ms=
+X-Received: by 2002:a4a:9c0f:: with SMTP id y15mr4046986ooj.81.1596217839437;
+ Fri, 31 Jul 2020 10:50:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727031513.31774-1-xiaoning.wang@nxp.com>
-In-Reply-To: <20200727031513.31774-1-xiaoning.wang@nxp.com>
+References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com> <CACRpkdYpMWHKNe_jOHJxLvLC=H_yVSJfhNp09ahy-dh9qJC+gg@mail.gmail.com>
+In-Reply-To: <CACRpkdYpMWHKNe_jOHJxLvLC=H_yVSJfhNp09ahy-dh9qJC+gg@mail.gmail.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 31 Jul 2020 11:38:25 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+M0bjH6KnrT4ob6YF7VZxUtgUeAJOE84Omp4PNH2hSZQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+M0bjH6KnrT4ob6YF7VZxUtgUeAJOE84Omp4PNH2hSZQ@mail.gmail.com>
-Subject: Re: [PATCH V2 4/4] dt-bindings: lpspi: New property in document DT
- bindings for LPSPI
-To:     Clark Wang <xiaoning.wang@nxp.com>
-Cc:     Mark Brown <broonie@kernel.org>, Anson Huang <Anson.Huang@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 31 Jul 2020 11:50:28 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKEPhRtf8zabUB6UKkOf=J4m+3P3cSvSXFSVp9UKd1auQ@mail.gmail.com>
+Message-ID: <CAL_JsqKEPhRtf8zabUB6UKkOf=J4m+3P3cSvSXFSVp9UKd1auQ@mail.gmail.com>
+Subject: Re: [PATCH v9 0/7] Add basic SoC Support for Mediatek MT6779 SoC
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hanks Chen <hanks.chen@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 9:15 PM Clark Wang <xiaoning.wang@nxp.com> wrote:
+On Thu, Jul 23, 2020 at 7:25 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> Add "fsl,spi-only-use-cs1-sel" to fit i.MX8DXL-EVK.
-> Spi common code does not support use of CS signals discontinuously.
-> It only uses CS1 without using CS0. So, add this property to re-config
-> chipselect value.
+> Hi Hanks,
 >
-> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> ---
-> Changes:
-> V2:
->  - New patch added in the v2 patchset.
-> ---
->  Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-> index 143b94a1883a..22882e769e26 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-> @@ -34,6 +34,12 @@ properties:
->        - const: per
->        - const: ipg
->
-> +  fsl,spi-only-use-cs1-sel:
-> +    description:
-> +      spi common code does not support use of CS signals discontinuously.
-> +      i.MX8DXL-EVK board only uses CS1 without using CS0. Therefore, add
-> +      this property to re-config the chipselect value in the LPSPI driver.
+> I applied patched from v9 1-5 to the pinctrl tree again for test!
 
-This breaks linux-next and you didn't test with 'make dt_binding_check':
-
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml:
-properties:fsl,spi-only-use-cs1-sel: {'description': 'spi common code
-does not support use of CS signals discontinuously. i.MX8DXL-EVK board
-only uses CS1 without using CS0. Therefore, add this property to
-re-config the chipselect value in the LPSPI driver.'} is not valid
-under any of the given schemas (Possible causes of the failure):
- /builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml:
-properties:fsl,spi-only-use-cs1-sel: 'not' is a required property
-
-The problem is you need a type definition for a vendor specific
-property. In this case 'type: boolean'.
+Patch 2 has warnings as I reported. Can you pick-up v10 or an
+incremental patch is needed.
 
 Rob
