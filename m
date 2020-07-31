@@ -4,84 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714A6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC90FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E65F208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C19208E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 22:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596235594;
-	bh=MiJo8lVCBRjIRC2rEcUqK6EZjh8iAVzWdXTCjXUHpdo=;
+	s=default; t=1596235682;
+	bh=7zoatPktEeFd4a01HdiZ4u3EZK/Rx8lm3/qIT39XfTk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LKHOzUYm6iRMExU6kGv4oM01Ggf6vo7uCFRQcq6vmGwppHr+td/e5/3CI6WJDx+Mf
-	 hJDhohWPhNy022QeC/0cYWQEIs1ZqCltZGA8XDn6Cl+lrGWspo0AMjBq+L2/2FjaSz
-	 h6n6JI+/1+yyuKe3QNYrl2hcQBxd1jtAaOzr8poA=
+	b=ry3jm5A06/LW+HsYZxFop0ih9dAMXRL5IdxyNK9fhehh0M/M9tLInTI/wmg/+MYOh
+	 Ag397umMM4FNSgWEvLUuNz8rRLiWx3uWR6BrvW4v4NmbTEmzfDDJPyDBf6OD6iAxmL
+	 7BuOinlkSk++cOQkXQPq3b8yi2KglQYFg13gdhts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgGaWqd (ORCPT
+        id S1727085AbgGaWsC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 18:46:33 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37068 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgGaWqd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:46:33 -0400
-Received: by mail-il1-f193.google.com with SMTP id r12so26617967ilh.4;
-        Fri, 31 Jul 2020 15:46:33 -0700 (PDT)
+        Fri, 31 Jul 2020 18:48:02 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37062 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgGaWsB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 18:48:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id w12so19590354iom.4;
+        Fri, 31 Jul 2020 15:48:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=gKmj/Dylt/Qrj7FttBiwBWLpRVij7YLXxeiS0YCtcnk=;
-        b=aElFXcyAGHOxm9/VWoqw7di9XDyMAOcScogOF+Y2HtP/4U82Dj9PCc8FTVeZ6zEWZ/
-         XF/FptKqOS1Iso0oTafM//adUO9Rr2sZQpwHtzNuDCgU5TltVvoyC+q/5wPHZWPJ2OWU
-         qyJSyYqZJhLpZZxJ4wpiMmX33aPKiGkCqTOJm36DTzuciOiObmcKeLtSW8pzwVEHakIc
-         GVT1VnRnwhkPqOfjaiH6xlk2hLh/Qhus4Sr9pTTz8oFHVrSkZem+ZHEO4kTbNsecAaFu
-         BBKmlS3mWcI+a7uQzv5jy7/RoMvAc8Ht4EemqNK4Ah+S+HYMcK73n1MH0OlIbDi0n1fX
-         1W5g==
-X-Gm-Message-State: AOAM532llkMHO4lEBi+B5YLlog1HXVQ+2saDlruvLWkNGxd2xXahdDa6
-        7UCQayh5DVA5OLHLhx+NVQ==
-X-Google-Smtp-Source: ABdhPJxRcmXuwCCcaUz8xrbyVfE81NK4pII4CM989m5WpnwD5XSiFYqp3tOpnbPDr859vyrua6EJDQ==
-X-Received: by 2002:a92:5f4c:: with SMTP id t73mr5972306ilb.118.1596235592713;
-        Fri, 31 Jul 2020 15:46:32 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=/d64ZvxnYLAa4ivT6GpHFLsQPwpa3um8E44Lb+XHnVM=;
+        b=WnWfwIp6To646z8ZYHnJGO6dQerk9DrXRfx8fb8kWdkPimrbnL6c/igoDsYoRsTPdL
+         yFnwTrTv7RfqJ2WycsipAVA191gftyWcbr3KouhOdtUGPzsB7UtSVRDybQ9lTfelkwRp
+         Wp3LHNvL3ZpKInqLJmdm2BFQFYLKeBsKiaNtjyVadpFtKW4grwVbka1QB3TaMj/Ohmwe
+         A6Q5QQml4vc/Xzc0EdO/NKdGpY3yTznB8i6HSNXz5mD5U0qF/KjtRVgrl0ncKCy3ZQMv
+         8tf5CBspfBM4zwoeV+G4HI7PWZ3wm+PgdszjJj7CJYFjkGAaBC3SPwqGAJ59HAmwzxJL
+         XMIw==
+X-Gm-Message-State: AOAM532nI4PQYwJAAal/AdsMBKXYhNahRyM0qnRp1oV+K1d2PesPs1Fe
+        Uxbtu7xpxZV6wH2MhJ7MKw==
+X-Google-Smtp-Source: ABdhPJzEyDvTpEnTuMpltjNhY3vCPr2jJn8FZNM5dRXRCf0C3CB3SCaZx1OhN3DDkgnP1FTWuFefXg==
+X-Received: by 2002:a6b:700d:: with SMTP id l13mr5685565ioc.135.1596235680423;
+        Fri, 31 Jul 2020 15:48:00 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c14sm5663521ild.41.2020.07.31.15.46.31
+        by smtp.gmail.com with ESMTPSA id h9sm5465140ilc.59.2020.07.31.15.47.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 15:46:32 -0700 (PDT)
-Received: (nullmailer pid 949012 invoked by uid 1000);
-        Fri, 31 Jul 2020 22:46:30 -0000
-Date:   Fri, 31 Jul 2020 16:46:30 -0600
+        Fri, 31 Jul 2020 15:47:59 -0700 (PDT)
+Received: (nullmailer pid 951611 invoked by uid 1000);
+        Fri, 31 Jul 2020 22:47:58 -0000
+Date:   Fri, 31 Jul 2020 16:47:58 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] =?iso-8859-1?Q?dt-bindings?=
- =?iso-8859-1?Q?=3A_arm=3A_fsl=3A_Add_Y_Soft_IOTA=A0Orion?= board
-Message-ID: <20200731224630.GA948782@bogus>
-References: <1596196808-5067-1-git-send-email-michal.vokac@ysoft.com>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+Message-ID: <20200731224758.GA951535@bogus>
+References: <20200731164853.3020946-1-campello@chromium.org>
+ <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1596196808-5067-1-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 31 Jul 2020 14:00:06 +0200, Michal Vokáč wrote:
-> Add devicetree binding for Orion - new board variant in the Y Soft
-> IOTA family.
+On Fri, 31 Jul 2020 10:48:38 -0600, Daniel Campello wrote:
+> Adds device tree bandings for sx9310 sensor.
 > 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> [swboyd@chromium.org: Add both regulators and make them optional]
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> Changes in v3: None
+> Changes in v2:
+>  - Added #io-channel-cells as a required property
+> 
+>  .../iio/proximity/semtech,sx9310.yaml         | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
