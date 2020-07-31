@@ -2,91 +2,102 @@ Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFA5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C3AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267F32087C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JV5DQKXh"
+	by mail.kernel.org (Postfix) with ESMTP id 1D44E2177B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 18:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596219424;
+	bh=yMIMRhby0ENYjblozqJ8zQ1MVvNiMLtNnA0wdEXSdWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tGJqiWXbB0NQdkViBfHu15vHGxAQ6y2WfTOchkXjsU3MvuBnVIUEwzedi54gaQMis
+	 DsStTvSWmUsWCBqUPFJTVjdMaSFBwtGivxrdaIKnsQumroMtZqu0jBJ6iiS4iUA91e
+	 BlQxgm8L8jWkxnzPWQZzx2QohM7YRDkElqpHAqqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387429AbgGaSDM (ORCPT
+        id S2387664AbgGaSRD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 14:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729969AbgGaSDM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:03:12 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1FBC06174A
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 11:03:11 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id e22so8220384pjt.3
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 11:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=ZjrJAzYswZqCVSVIaoyYZxr9XduXpUTxG9r/FHGE6cQ=;
-        b=JV5DQKXhPEbZKTdY/8xEmnRUaJnFZ7LpRkFNdVg882PxA6eUu7EJ+xs95vbhlWnBAy
-         zhZODJsM0wtKe982BnYqX16laW9iIQpvT2uxERVmPiP8PSa7mob3ZaZJs5f5PAsxMQ2u
-         /B+DYSkBO5j/d8fsT1tndObpzg3oXpgAa6UVk=
+        Fri, 31 Jul 2020 14:17:03 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46201 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387651AbgGaSRD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 14:17:03 -0400
+Received: by mail-il1-f196.google.com with SMTP id l17so15880057ilq.13
+        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 11:17:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=ZjrJAzYswZqCVSVIaoyYZxr9XduXpUTxG9r/FHGE6cQ=;
-        b=RDkmjIMUoxkobPFo/d+t5TOKCAHy1mqdRpWcWOWc0IlxjKx4ldi+50U2bX2WZhZ/Ic
-         TQrklPaDQr6CXpXSclFqzuIfDSv/QBAPP+4x5Dm1LiNSojuze9fnZHPPSTgG/JkDHYGy
-         ITeCNeugrI6JF9Ape74pHBELNf9WICzMjWEy2hpZslnhDDGZjexNBD++R1bOIeTt3bs3
-         3VrFs3IQseSrKXYNDNliY+hS0C7DvssDdfAp5fCex6pnYJysFd7DWgDBHjdBMaoQJ8q4
-         dtDGnRe/xSWHDDu8D4i1V0TT8LnH5EItgMsaP1isbheFCZ2XfhnAvcvjhYOfZxQRHRti
-         eRkA==
-X-Gm-Message-State: AOAM5301Fjoz+UwO1F37hK/BIiLQneQmqMfqB8e2LSdD9JybJ+VA7b6I
-        KEOwKXz1ZB2JwvdyF4PTXqpojA==
-X-Google-Smtp-Source: ABdhPJymp5GnPhZUtJTMWMSmAeJ7UyHP5HdsLB4so0CKriPHdFZEzBcgwvs9bW2i0cZF8tcS94m/hQ==
-X-Received: by 2002:a17:90a:8a87:: with SMTP id x7mr4536026pjn.81.1596218591350;
-        Fri, 31 Jul 2020 11:03:11 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id e65sm10140754pfe.91.2020.07.31.11.03.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=77WlZQqU3ImQO+xRqrFTFI2yhnAs7gza/QOZvYv5/XI=;
+        b=uFcKiYkFkYB36SLg4l2upp3XpHeffbLMvZztDtgU180p171/3onsqxwwk6P0stp1Fv
+         7IL1qqFnhfiLLrKgAzmBhh3DboNqUVOXKpCHLUq7j6uHZVb5jDRItORejmeFKtWC9oT1
+         eidSn9zTvhLSbBP1VcA2xqGfglquEuGBPyfSw19iJSKX2s7eLmkTHdZmyd9ikeuNg4J+
+         9p1pwAZpyFiOjZeraN3OHBMgLPUSfDiEyG51gVHgVJDZw7/loVePpP0bBfwszJ6OnQyZ
+         ANg4Uvs7p84QD6ISIhzl2nsJG17FJOo2qY+8FZZ4XquVrHOl9erS3e7/1bfMNVy0bxYq
+         C8AA==
+X-Gm-Message-State: AOAM5315888nH4GcHlZG1/WXH/d4BrXioTNz4BiKQpOb1Cegj8CoUlNf
+        f8tj0R4ECD8LGv70COFwtQ==
+X-Google-Smtp-Source: ABdhPJweTNxgrhfP20fbpdroohdhYW6e9WsoyMEXNSw6w5WsFdpUOqN9yTbxOy258PtpAA5t7hgMjA==
+X-Received: by 2002:a92:79c4:: with SMTP id u187mr4991075ilc.194.1596219422434;
+        Fri, 31 Jul 2020 11:17:02 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id q23sm3575769ior.47.2020.07.31.11.16.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 11:03:10 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 31 Jul 2020 11:17:01 -0700 (PDT)
+Received: (nullmailer pid 515123 invoked by uid 1000);
+        Fri, 31 Jul 2020 18:16:58 -0000
+Date:   Fri, 31 Jul 2020 12:16:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v5 00/10] irqchip: ti, sci-intr/inta: Update the dt
+ bindings to accept different interrupt parents
+Message-ID: <20200731181658.GA500828@bogus>
+References: <20200728051735.6187-1-lokeshvutla@ti.com>
+ <d017863c0da4950016f6d4e7fb34d7c7@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
-References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
-Subject: Re: [PATCH v3 03/15] iio: sx9310: Fix irq handling
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-To:     Daniel Campello <campello@chromium.org>,
-        LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 31 Jul 2020 11:03:09 -0700
-Message-ID: <159621858968.1360974.3370824821343276249@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d017863c0da4950016f6d4e7fb34d7c7@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Daniel Campello (2020-07-31 09:48:40)
-> Fixes enable/disable irq handling at various points. The driver needs to
-> only enable/disable irqs if there is an actual irq handler installed.
->=20
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> ---
+On Fri, Jul 31, 2020 at 06:01:50PM +0100, Marc Zyngier wrote:
+> On 2020-07-28 06:17, Lokesh Vutla wrote:
+> > Hi Marc,
+> > 	This is continuation of the RFC patches[0] regarding the driver
+> > updates to support for following interrupt parent connection:
+> > - INTR -> INTR
+> > - INTA -> GICv3
+> > The current existing driver assumes that INTR is always connected to
+> > GICv3 and INTA is always connected to INTR.
+> 
+> I'm OK to take this if I can get an Ack from RobH on the three
+> DT patches that still need it.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+However, there's a dependency on 
+bindings/arm/keystone/ti,k3-sci-common.yaml.
+
+That's a dependency on this being merged. I don't care if it breaks in 
+your tree, but I care for -next and Linus' tree. There could also be 
+other 'make dt_bindings_check' failures/warnings with this as the above 
+dependency prevents further testing.
+
+Rob
