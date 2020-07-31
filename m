@@ -7,168 +7,100 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993DCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0798FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9DE22CA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73EC22B43
+	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 21:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596230193;
-	bh=cKFjaW06OuMzdfbriJFyPbGD4y3uj8s+6v5Yet5QtTE=;
+	s=default; t=1596230287;
+	bh=yO2aq83Ay8qjDrLoaG8lpE5C81kE8QUbpm/Ey7TkHkU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hb9mfc9JbOjd7gN4meVlPlaeSfMmm0UF5d96wgUFVZ7K+b5K1/F5tB/LlyaIwTLUb
-	 b6F4mnXi/gE356I+vtHunujoR/t+UIGt0016VLA+cJsCmbewt+K5cd/zqbR4pzoEaE
-	 bq4e2bXEn2oC+DKsw6dfGvxFwMwFwJ0hODp79FuE=
+	b=g0BgVuSpi/sp6kD1HhFYfDmS/AF6mIND65ccqoqRQK0czuvTc9gFfl1NbtS0B2D9G
+	 AQO5vzT2Ng40DcYV7l96QtXAypMsjTJsV8/J79LCw3Kd5OKXoMLQReF5JMUyuQFTxq
+	 RgXmuBEtM8fC68KRdWScdfLaBxj8eQDuDjern9cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgGaVQc (ORCPT
+        id S1725968AbgGaVSH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 17:16:32 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42483 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgGaVQc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:16:32 -0400
-Received: by mail-il1-f193.google.com with SMTP id i138so20561041ild.9;
-        Fri, 31 Jul 2020 14:16:31 -0700 (PDT)
+        Fri, 31 Jul 2020 17:18:07 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46371 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbgGaVSG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 17:18:06 -0400
+Received: by mail-il1-f196.google.com with SMTP id l17so16274609ilq.13;
+        Fri, 31 Jul 2020 14:18:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=iQO0uI+psydb/Ibemy47TzaYMTINL62/vJsws3Wfm3k=;
-        b=sStFY759+Dpl9lBhUOkVl0UJcC/OFLZvJpRqViYMvsttbu9MbEEzObas5n6JWjGN5g
-         ds0vikr9P8tlbSgFRgju6kF7m2eSp2JDtIS/TZkK9zVn5hzkCxmRxgZt9CEHtNEwM8Gf
-         VTlNOs9tr2Qr+5PfHmh/BSxJVR9C9OBsbEIYFMXV4gT2CzAjiIyF827pbXZ9gBgWDrBe
-         NMtwlm9/kD7WAOiTabRLogAP4Z17bXoZGxYBeKhiwZWPR3oSOU7vc+26J0G5rDt3BrUG
-         66j3WMgeD28qESSpLxOTcnnVutCBDnyVZq1dCqqUnJE6VAzc1QpCtOWtRk8vXDUaaOF5
-         SVVg==
-X-Gm-Message-State: AOAM5331rsf4hZHUJwpDpQbYh03mo3XtIGMizl4Qv4eI5QGXm8GIqOX1
-        JnW28soBSLZi4PxbGIU4Kw==
-X-Google-Smtp-Source: ABdhPJxie779Cg4xpVQe/gw4yjHCxh1Hv06GT4YBFq8ZP9oLnLDKMLwpGbABhip+UNHh5bwYY7WZvg==
-X-Received: by 2002:a92:b60a:: with SMTP id s10mr5527524ili.119.1596230191084;
-        Fri, 31 Jul 2020 14:16:31 -0700 (PDT)
+        bh=9zt1WWOJv6KHzl6qN7CaUN/fc2umfOL3d6uDteZs6jA=;
+        b=BnH3RciWDbbtw3XbD449fBTOsKXi12HK3YKsMa8RMuhbdfL32hGJ2CRreJ9J+qA+ID
+         Dqqp1pxAN2OCAJbNe2jjRQ3VeEo8Zt6Ucysn8P26vzuhOg8WfIs6UkdHpfTxkYhMblej
+         uAFFmi6MAr286oD9DRkoR24GZgLLh0BDxskWIVIGKY16Ii6t+SdEyY3/wQDP/PlRWOaM
+         dQyHni+wMuBRWjLZNz5x2uNuIM+dwIhw2MYOZzJPo39TVnUYUiVbWVYxfls+YArtG8AB
+         +3S13kqtzlInxXyBPv/4MJ977w3gscOdMqOwjKHqmqM7o68ONJa0+KdC+gdaM1B3zaqf
+         isHQ==
+X-Gm-Message-State: AOAM532ZRGqkTTAbOqXtcZST1gqBkY6vRkMKMym4O97cGxnCh4MnkgRm
+        33UTILBVduKNBAGMsIId8g==
+X-Google-Smtp-Source: ABdhPJynQI9WqRNzaRsItOcQhHNxDoIigLcg9RLOG/NXO4xp7VTDdej2dtZw0aY7JbU0EVCQWYuM2g==
+X-Received: by 2002:a92:494e:: with SMTP id w75mr5744907ila.115.1596230286048;
+        Fri, 31 Jul 2020 14:18:06 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x88sm5824648ilk.81.2020.07.31.14.16.29
+        by smtp.gmail.com with ESMTPSA id c15sm5617312ill.19.2020.07.31.14.18.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 14:16:30 -0700 (PDT)
-Received: (nullmailer pid 805806 invoked by uid 1000);
-        Fri, 31 Jul 2020 21:16:29 -0000
-Date:   Fri, 31 Jul 2020 15:16:29 -0600
+        Fri, 31 Jul 2020 14:18:05 -0700 (PDT)
+Received: (nullmailer pid 808330 invoked by uid 1000);
+        Fri, 31 Jul 2020 21:18:03 -0000
+Date:   Fri, 31 Jul 2020 15:18:03 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: regulator: Convert sy8824x to json-schema
-Message-ID: <20200731211629.GA801219@bogus>
-References: <20200729125320.5521ed23@xhacker>
+        Mark Brown <broonie@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: regulator: mp886x: support
+ mps,switch-frequency
+Message-ID: <20200731211803.GA806331@bogus>
+References: <20200729130839.10a9bf88@xhacker>
+ <20200729130952.260671f1@xhacker>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200729125320.5521ed23@xhacker>
+In-Reply-To: <20200729130952.260671f1@xhacker>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 12:53:20PM +0800, Jisheng Zhang wrote:
+On Wed, Jul 29, 2020 at 01:09:52PM +0800, Jisheng Zhang wrote:
 > From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 > 
-> Convert the sy8824x binding to DT schema format using json-schema.
+> Both MP8867 and MP8869 support different switch frequency.
 > 
 > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 > ---
+>  Documentation/devicetree/bindings/regulator/mp886x.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Since v1
->   -It seems there's something wrong with my last email, so send out a v2 with
->    another email account
-> 
->  .../bindings/regulator/silergy,sy8824x.yaml   | 40 +++++++++++++++++++
->  .../devicetree/bindings/regulator/sy8824x.txt | 24 -----------
->  2 files changed, 40 insertions(+), 24 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/sy8824x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml b/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
-> new file mode 100644
-> index 000000000000..62a476c94111
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/silergy,sy8824x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: silergy sy8824c,sy8824e,sy20276 and sy20278 PMIC
-> +
-> +maintainers:
-> +  - Jisheng Zhang <jszhang@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - silergy,sy8824c
-> +      - silergy,sy8824e
-> +      - silergy,sy20276
-> +      - silergy,sy20278
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
+> diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
+> index 551867829459..e747000cebba 100644
+> --- a/Documentation/devicetree/bindings/regulator/mp886x.txt
+> +++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
+> @@ -9,6 +9,10 @@ Required properties:
+>  - mps,fb-voltage-divider: An array of two integers containing the resistor
+>    values R1 and R2 of the feedback voltage divider in kilo ohms.
+>  
+> +Optional properties:
+> +- mps,switch-frequency: The valid switch frequency in Hertz. Available values
 
-Needs a $ref to regulator.yaml and then:
+mps,switch-frequency-hz
 
-unevaluatedProperties: false
-
+> +  are: 500000, 750000, 1000000, 1250000, 1500000
 > +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        regulator@60 {
-> +          compatible = "silergy,sy8824c";
-> +          regulator-min-microvolt = <800000>;
-> +          regulator-max-microvolt = <1150000>;
-> +          reg = <0x60>;
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/regulator/sy8824x.txt b/Documentation/devicetree/bindings/regulator/sy8824x.txt
-> deleted file mode 100644
-> index c5e95850c427..000000000000
-> --- a/Documentation/devicetree/bindings/regulator/sy8824x.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -SY8824C/SY8824E/SY20276 Voltage regulator
-> -
-> -Required properties:
-> -- compatible: Must be one of the following.
-> -	"silergy,sy8824c"
-> -	"silergy,sy8824e"
-> -	"silergy,sy20276"
-> -	"silergy,sy20278"
-> -- reg: I2C slave address
-> -
-> -Any property defined as part of the core regulator binding, defined in
-> -./regulator.txt, can also be used.
-> -
-> -Example:
-> -
-> -	vcore: regulator@00 {
-> -		compatible = "silergy,sy8824c";
-> -		reg = <0x66>;
-> -		regulator-name = "vcore";
-> -		regulator-min-microvolt = <800000>;
-> -		regulator-max-microvolt = <1150000>;
-> -		regulator-boot-on;
-> -		regulator-always-on;
-> -	};
+>  Any property defined as part of the core regulator binding, defined in
+>  ./regulator.txt, can also be used.
+>  
 > -- 
-> 2.28.0.rc0
+> 2.28.0.rc1
 > 
 > 
