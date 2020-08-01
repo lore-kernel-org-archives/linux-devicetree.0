@@ -2,47 +2,49 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEA2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 18:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5B9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 18:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 534C22072A
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 18:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED0F2071E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 18:14:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J2rLvbM1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JDE0j0Um"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgHASNv (ORCPT
+        id S1726795AbgHASOX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Aug 2020 14:13:51 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:62733 "EHLO m43-7.mailgun.net"
+        Sat, 1 Aug 2020 14:14:23 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:30303 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgHASNv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 1 Aug 2020 14:13:51 -0400
+        id S1727113AbgHASOX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 1 Aug 2020 14:14:23 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596305630; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=cJyeRZPN9m3WfcT3UaEZE4Gf1yPYYNx/SsDF1xhJnSc=; b=J2rLvbM1AS4nPsQY2mKc7QTic2BBEvqHh32abwiggWJRx9KgjrEM5qemEQUZJ4dPd4KBNDJ3
- 7QSuNEPJ66p9dodI5COWDQSUiJfX8MBVxZYANwJVVvv/BbSlARE7g5MScSl/740TCcLnv+uN
- GyhkANjuB/tjz6U+QDD4iYrrjDM=
+ s=smtp; t=1596305662; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=4G27Zl1+E0JAY/pLZNnLlP6h3k5h3oQBdUrO9rd3Gi4=; b=JDE0j0Um8jLVnLYEHUIphpZlXT6EQHy7gr2QvZ34P+FxtPqk4FZxyXwe64G/Nh8+0etg5JKS
+ yNwH/kx7UiyMJ1Lnua05bK3QgODmvnpetSclYCab0feRXPB0OM2u8K/pi3/2XLGNGYBtzHEZ
+ Hrvxs0kQ7lfcJ7IyX3bsHTzwB+o=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-east-1.postgun.com with SMTP id
- 5f25b0debcdc2fe47193e77c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 18:13:50
+ smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
+ 5f25b0e59403087e10de4305 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 18:13:57
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DEC6BC43391; Sat,  1 Aug 2020 18:13:49 +0000 (UTC)
+        id F2F6EC433CA; Sat,  1 Aug 2020 18:13:56 +0000 (UTC)
 Received: from tdas-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C85ECC433C6;
-        Sat,  1 Aug 2020 18:13:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C85ECC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3303BC433C6;
+        Sat,  1 Aug 2020 18:13:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3303BC433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
 From:   Taniya Das <tdas@codeaurora.org>
@@ -57,29 +59,68 @@ Cc:     David Brown <david.brown@linaro.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Doug Anderson <dianders@chromium.org>,
         Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v2] Add LPASS clock controller Node for SC7180
-Date:   Sat,  1 Aug 2020 23:43:34 +0530
-Message-Id: <1596305615-5894-1-git-send-email-tdas@codeaurora.org>
+Subject: [PATCH v2] arm64: dts: qcom: sc7180: Add LPASS clock controller nodes
+Date:   Sat,  1 Aug 2020 23:43:35 +0530
+Message-Id: <1596305615-5894-2-git-send-email-tdas@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596305615-5894-1-git-send-email-tdas@codeaurora.org>
+References: <1596305615-5894-1-git-send-email-tdas@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[v2]
- - Update the node in sorted order.
- - Depends on the patch
-  https://lore.kernel.org/r/20200731133006.1.Iee81b115f5be50d6d69500fe1bda11bba6e16143@changeid
+Update the clock controller nodes for Low power audio subsystem
+functionality.
 
-[v1]
- - Clock controller LPASS device Node.
-
-Taniya Das (1):
-  arm64: dts: qcom: sc7180: Add LPASS clock controller nodes
-
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
  arch/arm64/boot/dts/qcom/sc7180.dtsi | 25 +++++++++++++++++++++++++
  1 file changed, 25 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b383..7cf8bfe 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
+ #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+ #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
++#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,videocc-sc7180.h>
+ #include <dt-bindings/interconnect/qcom,osm-l3.h>
+@@ -3312,6 +3313,30 @@
+ 			qcom,msa-fixed-perm;
+ 			status = "disabled";
+ 		};
++
++		lpasscc: clock-controller@62d00000 {
++			compatible = "qcom,sc7180-lpasscorecc";
++			reg = <0 0x62d00000 0 0x50000>,
++			    <0 0x62780000 0 0x30000>;
++			reg-names = "lpass_core_cc", "lpass_audio_cc";
++			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "iface", "bi_tcxo";
++			power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
++			#clock-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
++		lpass_hm: clock-controller@63000000 {
++			compatible = "qcom,sc7180-lpasshm";
++			reg = <0 0x63000000 0 0x28>;
++			clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "iface", "bi_tcxo";
++			#clock-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
+ 	};
+
+ 	thermal-zones {
 --
 Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
 of the Code Aurora Forum, hosted by the  Linux Foundation.
