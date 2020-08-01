@@ -2,81 +2,136 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B2FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 02:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19469C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 03:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 897A420838
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 02:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E783A2076A
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 03:32:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="fvD9Vkcp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jh0Waq5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgHACxK (ORCPT
+        id S1728377AbgHADc3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 22:53:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgHACxJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 22:53:09 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4B7C06174A
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 19:53:07 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l2so18972766wrc.7
-        for <devicetree@vger.kernel.org>; Fri, 31 Jul 2020 19:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xQw/GDvZAdqgK8PngDZUR70WBhENQwa4VO5dO5VMRYQ=;
-        b=fvD9VkcpIpmLGOc0RN16Q3g+MDuB1wAVsNPB1I3qdv6BXascnBQB4/jFZkdPGFNPlb
-         Ic2arZ3utbXNqLm5oNcWE388GCL0ou46KCU6Du0kkjr+1cndmEfqqXaeY24F59LG42u3
-         IgGAnx1zhThprobHe2gfEmlVlaxeA0GpoVsVI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xQw/GDvZAdqgK8PngDZUR70WBhENQwa4VO5dO5VMRYQ=;
-        b=WLiQrQmSiaYlz7aA4DnUCfk7KXfTGqCq2nnyhVB3AxQUt/5sjjs0h966Zd4MzlvqjX
-         VuiUoBk8ZG0kzl9gx98zHi6KUJ5omhU3b9awxqVrsTE5fLZ/ZsRv3ge7xmkjymlIDfIl
-         BM/BNyGz5krZWV+WqgTJ76jpkxHOlPk38g1Ca4f9BwRQ720puK2kBw7QOt3uFy9Z14jr
-         8z/F2KahYKiSvXwhj66GvzDd9WpDeDVMV/MrTfCiFHHbnOhLqJbUl+FYdDZ1vi7hs0nz
-         BzG8UnxhClu7lF0GnSeGzXZGI+bsf4Ous2+KjELWwZWVxe8qIfwgFxObdjTBWmtjaKOx
-         SWIA==
-X-Gm-Message-State: AOAM5331eY2l4O4nyOSJq1Cb7WTzLfxMUIF7M1q+hPn4wLmtSGuJvN0e
-        h3ZBNvVAEy13kL/Cf7SJ7bLUAwXDxQDepAjyF17KlfVf
-X-Google-Smtp-Source: ABdhPJzYPKm/erB6sVI52cjRD9FHiQr2nWVZVyOZjhc+4s1LOvf5ZcI3PFb7AEEsBm6nMUykRgV5fktNAgsesrmbuZs=
-X-Received: by 2002:a5d:6641:: with SMTP id f1mr5731384wrw.307.1596250386460;
- Fri, 31 Jul 2020 19:53:06 -0700 (PDT)
+        Fri, 31 Jul 2020 23:32:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:58288 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728335AbgHADc2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 23:32:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596252748; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=4F33MECp3PLMA5dVQe508bFwLJi13Gd+zPp0VmPVuUU=; b=jh0Waq5Qok2ckWrPDPmfaFomad5prMTft0qODwEEqbifq+f8q7WfBT+EAxGYHBJ3XuX5Cbsi
+ VWv2TzA2xuFPZUkqw3PuJG39L4bRMWO7QyhJRnEcskA5HMvGoL3OFBtlvaT+ohvsObL+csIx
+ PMNQu6EIGAi+NZxsWg4Wctx6fAw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f24e24cba6d142d1cdfc71b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 03:32:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0F653C43391; Sat,  1 Aug 2020 03:32:28 +0000 (UTC)
+Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdtipton)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4BAF0C433CB;
+        Sat,  1 Aug 2020 03:32:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4BAF0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
+From:   Mike Tipton <mdtipton@codeaurora.org>
+To:     georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Tipton <mdtipton@codeaurora.org>
+Subject: [PATCH v3 6/6] interconnect: qcom: Fix small BW votes being truncated to zero
+Date:   Fri, 31 Jul 2020 20:32:15 -0700
+Message-Id: <20200801033215.1440-7-mdtipton@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200801033215.1440-1-mdtipton@codeaurora.org>
+References: <20200801033215.1440-1-mdtipton@codeaurora.org>
 MIME-Version: 1.0
-References: <20200729150748.1945589-1-daniel@0x0f.com> <20200729150748.1945589-3-daniel@0x0f.com>
- <CAK8P3a2DY8kNMzZs6vpcsvpU1CaEQy6yCiHq40txEgUBn8d=wA@mail.gmail.com>
-In-Reply-To: <CAK8P3a2DY8kNMzZs6vpcsvpU1CaEQy6yCiHq40txEgUBn8d=wA@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Sat, 1 Aug 2020 11:53:10 +0900
-Message-ID: <CAFr9PXmNLMXDXGOF+XDK1dPVY5OO6PfSvy54tLw-Wj-gdb8wBA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: mstar: remove the binding
- description for mstar,pmsleep
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 1 Aug 2020 at 04:22, Arnd Bergmann <arnd@arndb.de> wrote:
+Small BW votes that translate to less than a single BCM unit are
+currently truncated to zero. Ensure that non-zero BW requests always
+result in at least a vote of 1 to BCM.
 
-> This patch for some reason did not apply, so I ended up removing the
-> file manually and using your changelog.
->
->       Arnd
+Fixes: 976daac4a1c5 ("interconnect: qcom: Consolidate interconnect RPMh support")
+Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
+---
+ drivers/interconnect/qcom/bcm-voter.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-Thanks Arnd.
+diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+index be7660b95ccc..887d13721e52 100644
+--- a/drivers/interconnect/qcom/bcm-voter.c
++++ b/drivers/interconnect/qcom/bcm-voter.c
+@@ -54,8 +54,20 @@ static int cmp_vcd(void *priv, struct list_head *a, struct list_head *b)
+ 		return 1;
+ }
+ 
++static u64 bcm_div(u64 num, u32 base)
++{
++	/* Ensure that small votes aren't lost. */
++	if (num && num < base)
++		return 1;
++
++	do_div(num, base);
++
++	return num;
++}
++
+ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+ {
++	struct qcom_icc_node *node;
+ 	size_t i, bucket;
+ 	u64 agg_avg[QCOM_ICC_NUM_BUCKETS] = {0};
+ 	u64 agg_peak[QCOM_ICC_NUM_BUCKETS] = {0};
+@@ -63,22 +75,21 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
+ 
+ 	for (bucket = 0; bucket < QCOM_ICC_NUM_BUCKETS; bucket++) {
+ 		for (i = 0; i < bcm->num_nodes; i++) {
+-			temp = bcm->nodes[i]->sum_avg[bucket] * bcm->aux_data.width;
+-			do_div(temp, bcm->nodes[i]->buswidth * bcm->nodes[i]->channels);
++			node = bcm->nodes[i];
++			temp = bcm_div(node->sum_avg[bucket] * bcm->aux_data.width,
++				       node->buswidth * node->channels);
+ 			agg_avg[bucket] = max(agg_avg[bucket], temp);
+ 
+-			temp = bcm->nodes[i]->max_peak[bucket] * bcm->aux_data.width;
+-			do_div(temp, bcm->nodes[i]->buswidth);
++			temp = bcm_div(node->max_peak[bucket] * bcm->aux_data.width,
++				       node->buswidth);
+ 			agg_peak[bucket] = max(agg_peak[bucket], temp);
+ 		}
+ 
+ 		temp = agg_avg[bucket] * bcm->vote_scale;
+-		do_div(temp, bcm->aux_data.unit);
+-		bcm->vote_x[bucket] = temp;
++		bcm->vote_x[bucket] = bcm_div(temp, bcm->aux_data.unit);
+ 
+ 		temp = agg_peak[bucket] * bcm->vote_scale;
+-		do_div(temp, bcm->aux_data.unit);
+-		bcm->vote_y[bucket] = temp;
++		bcm->vote_y[bucket] = bcm_div(temp, bcm->aux_data.unit);
+ 	}
+ 
+ 	if (bcm->keepalive && bcm->vote_x[QCOM_ICC_BUCKET_AMC] == 0 &&
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
