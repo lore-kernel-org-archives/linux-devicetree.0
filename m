@@ -2,89 +2,172 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE59C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 18:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5827207BC
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F21D2080C
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 18:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596300126;
-	bh=VPnKDKBM2c9X0gK5H6tFP49Oguva7jYJ0CVWJsY2AXE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BkQLyKsR47zlANnSVtGCbnsxvQ7A4sfzEW/h/dlkkHhK/+7pLUkClqCT9GKwjj6sQ
-	 SdUtrpiBlQ4mAzqR86bJDylEQ8KqT17fJUk4c1TwP/XISaUFPA5po+ONQDApjMY9+H
-	 vyE8hOp8TPr6PxTUWT+8gKqNX3lwLqSrbi56Wx6c=
+	s=default; t=1596304866;
+	bh=tT/luxSQGi0reuYFUc+RvZ6WJAsuKcxPjk/nasshXdk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=c52pof8/Oy9eQGA2nQ7lCVzZxyVN1CkQr4vBH4nGvRGBEo2yBDqlGwZlKb4jOsE5m
+	 Dwa+DwCvHftRE8TLLs4ApKpFEx7yOBcEi5qk54Vr39Q/qHg+2L1EEAHbnwWA/9DsLP
+	 +v8eNf7vCW6ZHmcvMnRSWh0Kygt5eLW5e3jhPNAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgHAQmG (ORCPT
+        id S1726222AbgHASBF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Aug 2020 12:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55112 "EHLO mail.kernel.org"
+        Sat, 1 Aug 2020 14:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgHAQmG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 1 Aug 2020 12:42:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725803AbgHASBF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 1 Aug 2020 14:01:05 -0400
+Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 776572076B;
-        Sat,  1 Aug 2020 16:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A16A2206E9;
+        Sat,  1 Aug 2020 18:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596300125;
-        bh=VPnKDKBM2c9X0gK5H6tFP49Oguva7jYJ0CVWJsY2AXE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pLbZCThqWBonlmEyu0WQ43puo66r4RArabiHZutQVWuSZBPFVFpjlgnPbLGGTKCIh
-         q6Gx0GLb60XHnTTP8cC8lP8CMNRmZ70OWD0ZHAQs11IfYSST4pCk6oKrDqiddZP5ci
-         XjMTpAKaKqlM6masTCBq0V+kvx5ADK58snOqSxTw=
-Date:   Sat, 1 Aug 2020 17:42:01 +0100
+        s=default; t=1596304864;
+        bh=tT/luxSQGi0reuYFUc+RvZ6WJAsuKcxPjk/nasshXdk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=usavGl+H6gUdnUUNT03XbpGRWHsG1IlpfZgnhrzKN5T381M+aXFpoKuaJyeAcVLBB
+         vlpVDvVhu+B86rjbdXijhdu+wo6Kb+LQzKGWzTt7gCHaXDj4BwzSW9P3qG2Nmp/EML
+         3n6tK7sdUtDYLsFC3lxSmT5DEMXh7/izRf9vYdms=
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
+To:     linux-iio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: iio: adc: maxim,max9611 yaml
- conversions
-Message-ID: <20200801174201.5e499044@archlinux>
-In-Reply-To: <20200723212231.GA881485@bogus>
-References: <20200722171224.989138-1-jic23@kernel.org>
-        <20200722171224.989138-4-jic23@kernel.org>
-        <20200723212231.GA881485@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH V2] dt-bindings: iio: adc: maxim,max1118 yaml conversion
+Date:   Sat,  1 Aug 2020 18:58:50 +0100
+Message-Id: <20200801175850.1140006-1-jic23@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 23 Jul 2020 15:22:31 -0600
-Rob Herring <robh@kernel.org> wrote:
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> On Wed, 22 Jul 2020 18:12:24 +0100, Jonathan Cameron wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > Straight forward conversion of this binding for this
-> > current sense amplifier and ADC.
-> > 
-> > Cc: Jacopo Mondi <jacopo@jmondi.org>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> >  .../devicetree/bindings/iio/adc/max9611.txt   | 27 ----------
-> >  .../bindings/iio/adc/maxim,max9611.yaml       | 49 +++++++++++++++++++
-> >  2 files changed, 49 insertions(+), 27 deletions(-)
-> >   
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Thanks
+Simple device with a simple conversion.  Special handling needed
+for the max1118 which is the only supported part that has an external
+reference voltage.
 
-Applied with additionalProperties line added.
+Cc: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+v2:
+* Added additionalProperties: false. Other changes are to make this work.
+* Move the vref-supply definition up
+* Add an else clause
 
-Jonathan
+.../devicetree/bindings/iio/adc/max1118.txt   | 21 -------
+ .../bindings/iio/adc/maxim,max1118.yaml       | 62 +++++++++++++++++++
+ 2 files changed, 62 insertions(+), 21 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/max1118.txt b/Documentation/devicetree/bindings/iio/adc/max1118.txt
+deleted file mode 100644
+index cf33d0b15a6d..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/max1118.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-* MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs
+-
+-Required properties:
+- - compatible: Should be one of
+-	* "maxim,max1117"
+-	* "maxim,max1118"
+-	* "maxim,max1119"
+- - reg: spi chip select number for the device
+- - (max1118 only) vref-supply: The regulator supply for ADC reference voltage
+-
+-Recommended properties:
+- - spi-max-frequency: Definition as per
+-		Documentation/devicetree/bindings/spi/spi-bus.txt
+-
+-Example:
+-adc@0 {
+-	compatible = "maxim,max1118";
+-	reg = <0>;
+-	vref-supply = <&vdd_supply>;
+-	spi-max-frequency = <1000000>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1118.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1118.yaml
+new file mode 100644
+index 000000000000..e948b3e37b0c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1118.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/maxim,max1118.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim MAX1118 and similar ADCs
++
++maintainers:
++  - Akinobu Mita <akinobu.mita@gmail.com>
++
++description: |
++    Dual channel 8bit ADCs.
++
++properties:
++  compatible:
++    enum:
++      - maxim,max1117
++      - maxim,max1118
++      - maxim,max1119
++
++  reg:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 5000000
++
++  vref-supply:
++    description: External reference, needed to establish input scaling
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: maxim,max1118
++then:
++  required:
++    - vref-supply
++else:
++  properties:
++    vref-supply: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "maxim,max1118";
++            reg = <0>;
++            vref-supply = <&adc_vref>;
++            spi-max-frequency = <1000000>;
++        };
++    };
++...
+-- 
+2.27.0
 
