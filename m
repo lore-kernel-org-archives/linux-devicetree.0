@@ -2,96 +2,108 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6613BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 22:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 23:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE96207BB
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 22:30:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="o5sihKwV"
+	by mail.kernel.org (Postfix) with ESMTP id 6D44820691
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 23:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596325856;
+	bh=/RTX0rVm2iLBMlRdDM24nNOFTPRHcYFdhTxisdSjWDM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2gmHTI6TPgFI0PlXJIO6iIzp1SZj5+ZSfiQV/EsH1/jUj/FcQ/AiadTSIQ4fxEwFo
+	 IOR5WKLeL7IdugyBVrwvotMAh2g8SU0W4f6FTZAQyQGh4IuThACMULqsHqbPGWcL1m
+	 1t5irzuXguuBj53GKvDKqNNMbVKLRmujpZWTEts4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgHAWa3 (ORCPT
+        id S1726744AbgHAXuz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Aug 2020 18:30:29 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:17057 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgHAWa3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Aug 2020 18:30:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596321044; x=1627857044;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=L14aWr0zcB4saLYNZ4ZyhS1dUVmXAlE8OaF6Iq0FgdA=;
-  b=o5sihKwVGvfsakR5GCJLroC+IhZeIQbZT3hDTV5wLQfJGbCQXIhNqAr3
-   6KHRWTDTPB0MvpaHe1v+jUlpnLkDaVrIitc7l70YnUTqshiAOO3saognT
-   GOGJojN8qKujs2RIwvwtdVVsA6+MKEL3exvGqeuP82OIMQQ/J2NeQoqH2
-   jUs/K/Z5PNRv+ZT+Wt2QJsmKld50wuGf1IBnpegzG54GRBYi98Vg0zJ7n
-   R9dibNggf/m5rxUHpOuw8gDIJnQjDqvTzbxfO8Tq5X1K0ospQKcpy+StG
-   Znpl3tUfWy2ZkzZxjO3m6xkQkBPDgwfbWR2HiC3bJ7qmh/S4bCVNBToGi
-   w==;
-IronPort-SDR: s9DMmPyl5q549spB2XgcQDblLGo255R46mWGcJzP2Mer+G1YYgEM7twMEcOgucq+3bsQr8SYny
- Wmc4/dGVay1bhYfU26SGd58p+TVXFhJP66IwRL5DwbF4ZYFP4R9DyX8+hRvDk169EUsjlXDXGh
- SEWfsd+Lkd6exqZSme16CgP9X0Y9RAPvjhjfzQU4+kkMnLhpGL9xtSdCCr2Ej1BOgt/ZGr2SJ5
- kvkQ+sYNewc6SnuPVlUUNM2zd772b6AxF2k41DA14af9L20cn7Tn0kqdSHCksaDND9WgmnaqC7
- bZ0=
-X-IronPort-AV: E=Sophos;i="5.75,424,1589212800"; 
-   d="scan'208";a="247017592"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Aug 2020 06:30:44 +0800
-IronPort-SDR: 93fkEqGZxT2xPehFCJsKsJMfblXtymZ21W3tURa5K+mjrPrKuzetIYbuL181BXUpQCsg4Pbx9r
- dYIlgnftCIWN1Bur90on9k+AiThn5aH64=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 15:18:32 -0700
-IronPort-SDR: DtHLDmnKmhjkVWU6YOYbQYaCkmTi6ZXAsPpW+RRW1gI23437Sz3nkHj+2AgpMGjga3ggzSov1+
- 3G96KZX3Uj5w==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2020 15:30:27 -0700
-Date:   Sat, 1 Aug 2020 23:30:23 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-cc:     Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH v2 1/2] MAINTAINERS: Remove JZ4780 DMA driver entry
-In-Reply-To: <20200726155559.4650-1-krzk@kernel.org>
-Message-ID: <alpine.LFD.2.21.2008012327070.24175@redsun52.ssa.fujisawa.hgst.com>
-References: <20200726155559.4650-1-krzk@kernel.org>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Sat, 1 Aug 2020 19:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgHAXuz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 1 Aug 2020 19:50:55 -0400
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D47C420789;
+        Sat,  1 Aug 2020 23:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596325855;
+        bh=/RTX0rVm2iLBMlRdDM24nNOFTPRHcYFdhTxisdSjWDM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GKa0b1n++JBbGlBkW2Q8zcKWc/8G5g2kRJ1hJfSjcl0x25nRnPleix94G6SZQBMQf
+         CQBVbFMYm+Bwo6LXpkuUFdKiPhsXf5MRx+q682XvJ9JLGD6PVliYxMZVYv37rXZsGT
+         SRG9c33TAZhWB2sOk3/rPYxvyyMkSdpNP5xIvKPQ=
+Received: by mail-ed1-f52.google.com with SMTP id i26so21476911edv.4;
+        Sat, 01 Aug 2020 16:50:54 -0700 (PDT)
+X-Gm-Message-State: AOAM533cETGWa34GDD1RTJGvLLnrmUYg7KS0o7sn7TrFzvqkG20r7JTU
+        bCsruVDPh0ln68A13AoUYmCv4f2K1qJYOsCskg==
+X-Google-Smtp-Source: ABdhPJzQmcCCQwR67S6JChR4X8UlBaNrr/6FEYSwtL2uZyPlHYYi1Y8yC31MEt19hcsQnLvDj3qLleKurtzHXUqlyw8=
+X-Received: by 2002:a50:d2c7:: with SMTP id q7mr5358828edg.61.1596325853405;
+ Sat, 01 Aug 2020 16:50:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com> <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 2 Aug 2020 07:50:41 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-RMT-1+-5aPxqhgLbk74j0MH8U78mibBZppt_OPPQrJA@mail.gmail.com>
+Message-ID: <CAAOTY_-RMT-1+-5aPxqhgLbk74j0MH8U78mibBZppt_OPPQrJA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 26 Jul 2020, Krzysztof Kozlowski wrote:
+Hi, Neal:
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cba0ed77775b..362863cae239 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8541,11 +8541,6 @@ F:	include/uapi/rdma/
->  F:	samples/bpf/ibumad_kern.c
->  F:	samples/bpf/ibumad_user.c
->  
-> -INGENIC JZ4780 DMA Driver
-> -M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> -S:	Maintained
-> -F:	drivers/dma/dma-jz4780.c
-> -
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MediaTek bus fabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violation is logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by mtk-devapc driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
 
- FYI, the usual approach would be marking the entry "Orphan" rather than 
-removing it entirely, so that the mapping remains and makes it easy for 
-someone to pick it up.
+[snip]
 
-  Maciej
+> +
+> +struct mtk_devapc_context {
+> +       struct device *dev;
+> +       u32 vio_idx_num;
+> +       void __iomem *devapc_pd_base;
+
+This is devapc context, so prefix 'devapc' is redundant.
+And, what does 'pd' mean?
+
+Regards,
+Chun-Kuang.
+
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       const struct mtk_devapc_pd_offset *offset;
+> +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
+> +};
+> +
