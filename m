@@ -2,469 +2,182 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EE6C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB097C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CC9207FB
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 15:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SAcuan/g"
+	by mail.kernel.org (Postfix) with ESMTP id 8874D20829
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596297935;
+	bh=vW/nC/AAxomOowUDa99B5YwQCZRyKOXDNcqrGOfEerE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CCe0G3CR+ax+htEvIgbg7mJwFHrKu4tUFpGGkwumKu9SMCRjb8Z9up4+4Irdsdfw8
+	 +pV2pFcrjj7oGM3WjJcPAsAsVhMK8BkudmWBv8HVwgmzfK9PnGzOuO8kdxzChiXl2l
+	 /L7EySgl1MAoNG5Wy6Vdcr3/rZ1o7W2mL+B1QVIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgHAPzs (ORCPT
+        id S1726891AbgHAQFf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Aug 2020 11:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725841AbgHAPzs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Aug 2020 11:55:48 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E5FC06174A
-        for <devicetree@vger.kernel.org>; Sat,  1 Aug 2020 08:55:48 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id z188so8093114pfc.6
-        for <devicetree@vger.kernel.org>; Sat, 01 Aug 2020 08:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0Wn78/296Qy1st3iknU+pUA9jwJA0s8u3uTb8Py5Nes=;
-        b=SAcuan/gmMsOgDsEIp52jsbTxE7MosBclJGep0D4ltA1w4VymmjoKjvBObK1hmjDcK
-         aHwYC2NGbHQ/yvPXpNGxXWxcE/dezKns2DWd/pY+aRSvksjqThSMBF2B12RoLzI56R0n
-         6o7TECI4W1lvt8D+XgAcgvyPp9TG9x6Vza4FSkcI/UAhedbvLLYA+Cw3WuYT1D21uw10
-         +8nkAxoH6Ck+jmIADZ2h4YlVEP3uTP17JnAIYSeCtPMsUNK/OKTlHK2WMKsn+nb89kOA
-         nIVOaQbe41mX/8ftNlK4J1GM9ZVKzmjglA38a2g3AZwwIvoLLzxgRrD0kxz9WGyKKZyk
-         bVxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0Wn78/296Qy1st3iknU+pUA9jwJA0s8u3uTb8Py5Nes=;
-        b=Wc15vVzyCPZsmwUOF29SDiB4CJgbbV7MI70gcHN+3l+P/ikzZWEGkk5fPmDUNFVsiN
-         ugVQWGOaaOA5n6TsVwDosxrVyrF76FpuTwg8HVdlIThGHQZjrlC9Zwyp3szXTebTcDxN
-         NMCfip8eDTVgCPfn6DQ9HKLXL94b6d4pd5sTES9DLI2U0CHUoSzkD+YJyzw5qgKuNABx
-         Jmc8JhM84RXw1SvdcR0MVIYx9Neat2ApkZ0oq1j9TFsBpksBOw2mM3HHRZW74uCBFgL2
-         H2MNLYs8QrJNy0NxdeiJ/dOCu+ULsnOn+cMXjDSWWMxxo/dL3hdAFTjrVT8uOiLGgFae
-         3nqg==
-X-Gm-Message-State: AOAM530m7zTXL96kgMFer+XPs2EWVjsJCP7MnVCTRhivaLiyRWSpfeet
-        mZCOnZyYtqfyXrNcfDYxGK13jw==
-X-Google-Smtp-Source: ABdhPJx6IzoI6dimScoHAofUj1L5DxSy5BEGij39n/MtnZJYZ8yqPWToroiddoVEWXOkbYtXVE/thg==
-X-Received: by 2002:a63:3fc2:: with SMTP id m185mr8486191pga.426.1596297347706;
-        Sat, 01 Aug 2020 08:55:47 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:6803:6805:2abe:7330:1229:6bc])
-        by smtp.gmail.com with ESMTPSA id 21sm13828213pfa.4.2020.08.01.08.55.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 01 Aug 2020 08:55:46 -0700 (PDT)
-From:   Amit Pundir <amit.pundir@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-Date:   Sat,  1 Aug 2020 21:25:41 +0530
-Message-Id: <1596297341-13549-1-git-send-email-amit.pundir@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Sat, 1 Aug 2020 12:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbgHAQFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 1 Aug 2020 12:05:34 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AD8B206D4;
+        Sat,  1 Aug 2020 16:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596297934;
+        bh=vW/nC/AAxomOowUDa99B5YwQCZRyKOXDNcqrGOfEerE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dRrny1QBOWumlSaZFW/QpXkHCuKbeCKgA790j+ENfR6T0H3lw2vDeGsk5DWsNGA3e
+         uzJ618W2eAunokNml9NwqhoCj/kpHzjg2HKqp8Lis+WjgRZ6+S/K+x91vFBERtn9IE
+         P4onTSxpa6O1nS6zc3hvX2Ru/XzfPTU65M44vM6s=
+Date:   Sat, 1 Aug 2020 17:05:29 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Berghe, Darius" <Darius.Berghe@analog.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] ltc2471: ltc2461/ltc2463 compatible strings
+Message-ID: <20200801170529.29caf1c3@archlinux>
+In-Reply-To: <MWHPR03MB319956D095B2715835D0BF1A96730@MWHPR03MB3199.namprd03.prod.outlook.com>
+References: <20200727135834.84093-1-darius.berghe@analog.com>
+        <20200727135834.84093-3-darius.berghe@analog.com>
+        <20200727182647.00002e3c@huawei.com>
+        <MWHPR03MB319956D095B2715835D0BF1A96730@MWHPR03MB3199.namprd03.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial dts support for Xiaomi Poco F1 (Beryllium).
+On Tue, 28 Jul 2020 06:24:03 +0000
+"Berghe, Darius" <Darius.Berghe@analog.com> wrote:
 
-This initial support is based on upstream Dragonboard 845c
-(sdm845) device. With this dts, Beryllium boots AOSP up to
-ADB shell over USB-C.
+> Hi Jonathan,
+> 
+> Thanks for review, comments inline.
+> 
+> > -----Original Message-----
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Sent: Monday, July 27, 2020 8:27 PM
+> > To: Berghe, Darius <Darius.Berghe@analog.com>
+> > Cc: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > devicetree@vger.kernel.org; jic23@kernel.org; robh@kernel.org
+> > Subject: Re: [PATCH v3 2/3] ltc2471: ltc2461/ltc2463 compatible strings
+> > 
+> > [External]
+> > 
+> > On Mon, 27 Jul 2020 16:58:33 +0300
+> > Darius Berghe <darius.berghe@analog.com> wrote:
+> >   
+> > > Add compatible strings for these devices in the existing ltc2471
+> > > driver.
+> > >
+> > > Signed-off-by: Darius Berghe <darius.berghe@analog.com>  
+> > 
+> > Hi Darius,
+> > 
+> > A few additional minor comments from me.
+> >   
+> > > ---
+> > >  drivers/iio/adc/ltc2471.c | 16 ++++++++++++----
+> > >  1 file changed, 12 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/iio/adc/ltc2471.c b/drivers/iio/adc/ltc2471.c
+> > > index e1c4e966524d..8c57203b1fe4 100644
+> > > --- a/drivers/iio/adc/ltc2471.c
+> > > +++ b/drivers/iio/adc/ltc2471.c
+> > > @@ -1,5 +1,7 @@
+> > >  /*
+> > > - * Driver for Linear Technology LTC2471 and LTC2473 voltage monitors
+> > > + * Driver for Linear Technology LTC2461, LTC2463, LTC2471 and LTC2473
+> > > + voltage
+> > > + * monitors.
+> > > + * The LTC2463 is identical to the 2461, but reports a differential signal.
+> > >   * The LTC2473 is identical to the 2471, but reports a differential signal.
+> > >   *
+> > >   * Copyright (C) 2017 Topic Embedded Products @@ -17,8 +19,10 @@
+> > > #include <linux/mod_devicetable.h>
+> > >
+> > >  enum ltc2471_chips {
+> > > +	ltc2461,
+> > > +	ltc2463,
+> > >  	ltc2471,
+> > > -	ltc2473,
+> > > +	ltc2473  
+> > 
+> > Why drop the comma?  We've just added two new devices. Seems possible
+> > there may be more in the future!
+> >   
+> 
+> Ok, will leave it there in v4.
+> 
+> > >  };
+> > >
+> > >  struct ltc2471_data {
+> > > @@ -122,7 +126,7 @@ static int ltc2471_i2c_probe(struct i2c_client  
+> > *client,  
+> > >  	indio_dev->name = id->name;
+> > >  	indio_dev->info = &ltc2471_info;
+> > >  	indio_dev->modes = INDIO_DIRECT_MODE;
+> > > -	if (id->driver_data == ltc2473)
+> > > +	if (id->driver_data == ltc2473 || id->driver_data == ltc2463)  
+> > If the only use of driver_data is going to be this check, then just set it to 2473
+> > for the 2463 and 2473.  It's not uncommon to do this when we have a bunch
+> > of devices that look the same to software.  
+> 
+> Yes the chips are similar but there is at least one feature which requires this level 
+> of distinguishing them: the sampling rate (60sps for ltc2461/3 and selectable 208/833sps 
+> for ltc2471/3). It's not used anywhere for now but I can see it being implemented
+> as standard IIO dev attribute sampling frequency.
 
-Supported functionality includes UFS, USB-C (peripheral),
-microSD card and Vol+/Vol-/power keys. Bluetooth should work
-too but couldn't be verified from adb command line, it is
-verified when enabled from UI with few WIP display patches.
+Fair enough.  Perhaps a note in the patch description so no one asks the question
+on the next version?
 
-Just like initial db845c support, initializing the SMMU is
-clearing the mapping used for the splash screen framebuffer,
-which causes the device to hang during boot and recovery
-needs a hard power reset. This can be worked around using:
-
-    fastboot oem select-display-panel none
-
-To switch ON the display back run:
-
-    fastboot oem select-display-panel
-
-But this only works on Beryllium devices running bootloader
-version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
-Android-9 based release. Newer bootloader version do not
-support switching OFF the display panel at all. So we need
-a few additional smmu patches (under review) from here to
-boot to shell:
-https://github.com/pundiramit/linux/commits/beryllium-mainline
-
-Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
----
-v3: Added a reserved-memory region from downstream kernel to fix
-    a boot regression with recent dma-pool changes in v5.8-rc6.
-v2: Updated machine compatible string for seemingly inevitable
-    future quirks.
-
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- arch/arm64/boot/dts/qcom/sdm845-beryllium.dts | 331 ++++++++++++++++++++++++++
- 2 files changed, 332 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 0f2c33d611df..3ef1b48bc0cb 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-new file mode 100644
-index 000000000000..af66459712fe
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-@@ -0,0 +1,331 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include "sdm845.dtsi"
-+#include "pm8998.dtsi"
-+#include "pmi8998.dtsi"
-+
-+/ {
-+	model = "Xiaomi Technologies Inc. Beryllium";
-+	compatible = "xiaomi,beryllium", "qcom,sdm845";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,board-id = <69 0>;
-+	qcom,msm-id = <321 0x20001>;
-+
-+	aliases {
-+		hsuart0 = &uart6;
-+	};
-+
-+	dc12v: dc12v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DC12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vol_up_pin_a>;
-+
-+		vol-up {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	vbat: vbat-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBAT";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <4200000>;
-+		regulator-max-microvolt = <4200000>;
-+		regulator-always-on;
-+	};
-+
-+	vbat_som: vbat-som-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBAT_SOM";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <4200000>;
-+		regulator-max-microvolt = <4200000>;
-+		regulator-always-on;
-+	};
-+
-+	vdc_3v3: vdc-3v3-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDC_3V3";
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	vdc_5v: vdc-5v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDC_5V";
-+
-+		vin-supply = <&dc12v>;
-+		regulator-min-microvolt = <500000>;
-+		regulator-max-microvolt = <500000>;
-+		regulator-always-on;
-+	};
-+
-+	vreg_s4a_1p8: vreg-s4a-1p8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_s4a_1p8";
-+
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&apps_rsc {
-+	pm8998-rpmh-regulators {
-+		compatible = "qcom,pm8998-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_l1a_0p875: ldo1 {
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a_1p8: ldo7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l13a_2p95: ldo13 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l17a_1p3: ldo17 {
-+			regulator-min-microvolt = <1304000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l20a_2p95: ldo20 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l21a_2p95: ldo21 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l24a_3p075: ldo24 {
-+			regulator-min-microvolt = <3088000>;
-+			regulator-max-microvolt = <3088000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l25a_3p3: ldo25 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3312000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l26a_1p2: ldo26 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&gcc {
-+	protected-clocks = <GCC_QSPI_CORE_CLK>,
-+			   <GCC_QSPI_CORE_CLK_SRC>,
-+			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
-+};
-+
-+/* Reserved memory changes from downstream */
-+/ {
-+	reserved-memory {
-+		removed_region: memory@88f00000 {
-+			no-map;
-+			reg = <0 0x88f00000 0 0x1A00000>;
-+		};
-+	};
-+};
-+
-+&pm8998_gpio {
-+	vol_up_pin_a: vol-up-active {
-+		pins = "gpio6";
-+		function = "normal";
-+		input-enable;
-+		bias-pull-up;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+	};
-+};
-+
-+&pm8998_pon {
-+	resin {
-+		compatible = "qcom,pm8941-resin";
-+		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+		debounce = <15625>;
-+		bias-pull-up;
-+		linux,code = <KEY_VOLUMEDOWN>;
-+	};
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
-+
-+	bus-width = <4>;
-+	cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+
-+	sdc2_default_state: sdc2-default {
-+		clk {
-+			pins = "sdc2_clk";
-+			bias-disable;
-+
-+			/*
-+			 * It seems that mmc_test reports errors if drive
-+			 * strength is not 16 on clk, cmd, and data pins.
-+			 */
-+			drive-strength = <16>;
-+		};
-+
-+		cmd {
-+			pins = "sdc2_cmd";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+
-+		data {
-+			pins = "sdc2_data";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+	};
-+
-+	sdc2_card_det_n: sd-card-det-n {
-+		pins = "gpio126";
-+		function = "gpio";
-+		bias-pull-up;
-+	};
-+};
-+
-+&uart6 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+
-+	vdd-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-+	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-+	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l26a_1p2>;
-+	vdda-pll-supply = <&vreg_l1a_0p875>;
-+};
-+
-+&ufs_mem_hc {
-+	status = "okay";
-+
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
-+	vcc-supply = <&vreg_l20a_2p95>;
-+	vcc-max-microamp = <800000>;
-+};
-+
-+&ufs_mem_phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l26a_1p2>;
-+};
-+
-+/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-+
-+&qup_uart6_default {
-+	pinmux {
-+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+		function = "qup6";
-+	};
-+
-+	cts {
-+		pins = "gpio45";
-+		bias-disable;
-+	};
-+
-+	rts-tx {
-+		pins = "gpio46", "gpio47";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	rx {
-+		pins = "gpio48";
-+		bias-pull-up;
-+	};
-+};
--- 
-2.7.4
+> 
+> >   
+> > >  		indio_dev->channels = ltc2473_channel;
+> > >  	else
+> > >  		indio_dev->channels = ltc2471_channel; @@ -139,6 +143,8  
+> > @@ static  
+> > > int ltc2471_i2c_probe(struct i2c_client *client,  }
+> > >
+> > >  static const struct i2c_device_id ltc2471_i2c_id[] = {
+> > > +	{ "ltc2461", ltc2461 },
+> > > +	{ "ltc2463", ltc2463 },
+> > >  	{ "ltc2471", ltc2471 },
+> > >  	{ "ltc2473", ltc2473 },
+> > >  	{}
+> > > @@ -146,6 +152,8 @@ static const struct i2c_device_id ltc2471_i2c_id[]
+> > > = {  MODULE_DEVICE_TABLE(i2c, ltc2471_i2c_id);
+> > >
+> > >  static const struct of_device_id ltc2471_of_match[] = {
+> > > +	{ .compatible = "adi,ltc2461" },
+> > > +	{ .compatible = "adi,ltc2463" },
+> > >  	{ .compatible = "adi,ltc2471" },
+> > >  	{ .compatible = "adi,ltc2473" },
+> > >  	{}
+> > > @@ -163,6 +171,6 @@ static struct i2c_driver ltc2471_i2c_driver = {
+> > >
+> > >  module_i2c_driver(ltc2471_i2c_driver);
+> > >
+> > > -MODULE_DESCRIPTION("LTC2471/LTC2473 ADC driver");
+> > > +MODULE_DESCRIPTION("LTC2461/LTC2463/LTC2471/LTC2473 ADC  
+> > driver");  
+> > >  MODULE_AUTHOR("Topic Embedded Products");  MODULE_LICENSE("GPL  
+> > v2");  
+> 
 
