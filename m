@@ -2,187 +2,430 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EACC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 12:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D06C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 14:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04DF62080C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 12:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972C5207FB
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 14:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bdwznQt/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ozsab+oM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgHAMcK (ORCPT
+        id S1725951AbgHAOqS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Aug 2020 08:32:10 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:59426 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729135AbgHAMcK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Aug 2020 08:32:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596285129; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=vOImtBgeqdRnUROqMwdyXuAZ1BNGZF6kDhd29hTqD0E=; b=bdwznQt/T1eswkLYP2Yzn0naxOwTOzOoW6FwFHvG35lZK45p5CTQWgptdFWi0mbsmxgR2KjQ
- k2yxB0+yP/b8cgLx9apn4Zg0n3UpooeZ2VTnHOH6gpVzr8jF08uHNhpjKzIXklI5c03x9b0+
- snJ7NyELrqiRnA/rJgCf+st+SyA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f25608f2c24b37bbe5ba021 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 01 Aug 2020 12:31:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3812CC433CB; Sat,  1 Aug 2020 12:31:11 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7FF0C43391;
-        Sat,  1 Aug 2020 12:31:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7FF0C43391
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, jonathan@marek.ca,
-        linux-pm@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 3/7] interconnect: qcom: Lay the groundwork for adding EPSS support
-Date:   Sat,  1 Aug 2020 18:00:45 +0530
-Message-Id: <20200801123049.32398-4-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200801123049.32398-1-sibis@codeaurora.org>
-References: <20200801123049.32398-1-sibis@codeaurora.org>
+        Sat, 1 Aug 2020 10:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725841AbgHAOqR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Aug 2020 10:46:17 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA795C061757
+        for <devicetree@vger.kernel.org>; Sat,  1 Aug 2020 07:46:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z188so8034958pfc.6
+        for <devicetree@vger.kernel.org>; Sat, 01 Aug 2020 07:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YNZdogWNHMFlanhhxelHezDj/qACSrsdODf21xb/oMs=;
+        b=ozsab+oMiH4hfo3/MSxmhc9D6ktNiVFvEWSqTI7f/Q0cr1ME/fwXq7XhiwoxKlGzRx
+         1c+s+Zaybgdpqvox3RPo0dIYyhrEVo4P6vVgafSsQn6bmDyii0OXe91hk9WqR1Ve62YJ
+         VAW6XPs4MQaHS0o4/EhOYZVPD35GY+FvIO1P/eMY0QNUbeJXhZJMg4vvvkBJ40fWCOlZ
+         4L8FPzbhypTMoEAUzofq4rtmAixm/GeMoibfH19R8xbXuLvqOhohftE1nM6I1hXNhcBh
+         cl20ax6i9nMmNcNd8ozOOz/Dr1SrDGt5VDEHQ6z5owuocI89UxhaI+j/LO1UIHJY5mNC
+         dWUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YNZdogWNHMFlanhhxelHezDj/qACSrsdODf21xb/oMs=;
+        b=f4Lnu3wLsR0jCQ+pc3x0JAkTy+kJauScFR7TxqNAY6EZwWk6JT6UrCs9JARKKfUwis
+         /7uq1hUQdU/qNtI0MQ45NY2LXX5At2vkuOm6oHoWZHIccjqlag8+6HwGvTvtx8B0nzAY
+         vRot7Di2dSxK0UzUMeSvM9e6nOeJQk0WRS63KAoCNpFTIyrfE+WugZXXi/cCa0WiHeLu
+         L3l3FLwv6RGLgh1YMbFfHdsSEKa8LFxxOJBQamJwFFEtWxJibOsNfrGDywn3mcTU12rd
+         3ptjdGtRFzmzDnJC9UEapyRtXJV3dziaZnIdu+Q8JF41GMXVudUSPABX6nu24APDo6Er
+         v7Hg==
+X-Gm-Message-State: AOAM533WUp9U8mPIEIJHWT55qF8KLiV7+SJ/rRJvUenkaOPlyRMveHxk
+        IroWZ08Cn0WcP5l7Xsm700Ji
+X-Google-Smtp-Source: ABdhPJzNwJo0nbRjLr7dHcN/4F2Q0oiyovLYWWuV7usiYUoljXGFInisRynYPOwuHtiSXuX7IRZVtw==
+X-Received: by 2002:a63:ac53:: with SMTP id z19mr7911537pgn.181.1596293175927;
+        Sat, 01 Aug 2020 07:46:15 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e95:ffd1:f06a:645f:768f:f3c5])
+        by smtp.gmail.com with ESMTPSA id k23sm13493925pgb.92.2020.08.01.07.46.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 01 Aug 2020 07:46:15 -0700 (PDT)
+Date:   Sat, 1 Aug 2020 20:16:06 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500
+ SoC
+Message-ID: <20200801144606.GA20252@Mani-XPS-13-9360>
+References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
+ <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
+ <B6ED9520-2945-4181-8C3D-A1AA519248D9@linaro.org>
+ <20200626130641.GA21994@BV030612LT>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626130641.GA21994@BV030612LT>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Lay the groundwork for adding Epoch Subsystem (EPSS) L3 support on
-SM8250.
+Hi,
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/interconnect/qcom/osm-l3.c | 37 +++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+On Fri, Jun 26, 2020 at 04:06:41PM +0300, Cristian Ciocaltea wrote:
+> On Fri, Jun 26, 2020 at 12:50:46PM +0530, Manivannan Sadhasivam wrote:
+> > 
+> > 
+> > On 26 June 2020 1:46:18 AM IST, Cristian Ciocaltea <cristian.ciocaltea@gmail.com> wrote:
+> > >Add pinctrl and gpio bindings for Actions Semi S500 SoC.
+> > >
+> > >Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > >---
+> > > .../pinctrl/actions,s500-pinctrl.yaml         | 228 ++++++++++++++++++
+> > > 1 file changed, 228 insertions(+)
+> > >create mode 100644
+> > >Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > >
+> > >diff --git
+> > >a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > >b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > >new file mode 100644
+> > >index 000000000000..856947c70844
+> > >--- /dev/null
+> > >+++
+> > >b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > >@@ -0,0 +1,228 @@
+> > >+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > >+%YAML 1.2
+> > >+---
+> > >+$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
+> > >+$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > >+
+> > >+title: Actions Semi S500 SoC pinmux & GPIO controller
+> > >+
+> > >+maintainers:
+> > >+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Feel free to add yourself as co-maintainer since you are the one contributing S500 support. 
+> 
+> Ok, thanks!
+> 
+> > 
+> > >+
+> > >+description: |
+> > >+  Pinmux & GPIO controller manages pin multiplexing & configuration
+> > >including
+> > >+  GPIO function selection & GPIO attributes configuration. Please
+> > >refer to
+> > >+  pinctrl-bindings.txt in this directory for common binding part and
+> > >usage.
+> > >+
+> > >+properties:
+> > >+  compatible:
+> > >+    const: actions,s500-pinctrl
+> > >+
+> > >+  reg:
+> > >+    minItems: 1
+> > >+    maxItems: 4
+> > 
+> > 4?
+> > 
+> > Thanks, 
+> > Mani
+> 
+> The pinctrl node in the owl-s500 DTS has a more granular specification
+> for the reg property, in order to exclude the unused ranges (i.e. PWM):
+> 
+>   reg = <0xb01b0000 0x40>, /* GPIO */
+>         <0xb01b0040 0x10>, <0xb01b0060 0x18>, <0xb01b0080 0xc>;
+> 
+> The complete node description is available in the related patch:
+> https://lore.kernel.org/lkml/b43c9d1a1ef689403bc17b2474aff20629b58263.1593124368.git.cristian.ciocaltea@gmail.com/
+> 
+> For the sake of simplicity, in the example below I used the contiguous
+> range. However, I've just noticed a copy/paste issue there, the correct
+> range should be <0xb01b0000 0x8c> - will be fixed in the next revision.
+> 
 
-diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-index 00831c33e0fe5..27c9ece52efda 100644
---- a/drivers/interconnect/qcom/osm-l3.c
-+++ b/drivers/interconnect/qcom/osm-l3.c
-@@ -21,13 +21,13 @@
- #define LUT_MAX_ENTRIES			40U
- #define LUT_SRC				GENMASK(31, 30)
- #define LUT_L_VAL			GENMASK(7, 0)
--#define LUT_ROW_SIZE			32
- #define CLK_HW_DIV			2
- 
--/* Register offsets */
-+/* OSM Register offsets */
- #define REG_ENABLE			0x0
--#define REG_FREQ_LUT			0x110
--#define REG_PERF_STATE			0x920
-+#define OSM_LUT_ROW_SIZE		32
-+#define OSM_REG_FREQ_LUT		0x110
-+#define OSM_REG_PERF_STATE		0x920
- 
- #define OSM_L3_MAX_LINKS		1
- 
-@@ -37,6 +37,7 @@
- struct qcom_osm_l3_icc_provider {
- 	void __iomem *base;
- 	unsigned int max_state;
-+	unsigned int reg_perf_state;
- 	unsigned long lut_tables[LUT_MAX_ENTRIES];
- 	struct icc_provider provider;
- };
-@@ -60,6 +61,9 @@ struct qcom_icc_node {
- struct qcom_icc_desc {
- 	struct qcom_icc_node **nodes;
- 	size_t num_nodes;
-+	unsigned int lut_row_size;
-+	unsigned int reg_freq_lut;
-+	unsigned int reg_perf_state;
- };
- 
- #define DEFINE_QNODE(_name, _id, _buswidth, ...)			\
-@@ -82,6 +86,9 @@ static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
- static const struct qcom_icc_desc sdm845_icc_osm_l3 = {
- 	.nodes = sdm845_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-+	.lut_row_size = OSM_LUT_ROW_SIZE,
-+	.reg_freq_lut = OSM_REG_FREQ_LUT,
-+	.reg_perf_state = OSM_REG_PERF_STATE,
- };
- 
- DEFINE_QNODE(sc7180_osm_apps_l3, SC7180_MASTER_OSM_L3_APPS, 16, SC7180_SLAVE_OSM_L3);
-@@ -95,6 +102,9 @@ static struct qcom_icc_node *sc7180_osm_l3_nodes[] = {
- static const struct qcom_icc_desc sc7180_icc_osm_l3 = {
- 	.nodes = sc7180_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sc7180_osm_l3_nodes),
-+	.lut_row_size = OSM_LUT_ROW_SIZE,
-+	.reg_freq_lut = OSM_REG_FREQ_LUT,
-+	.reg_perf_state = OSM_REG_PERF_STATE,
- };
- 
- DEFINE_QNODE(sm8150_osm_apps_l3, SM8150_MASTER_OSM_L3_APPS, 32, SM8150_SLAVE_OSM_L3);
-@@ -108,6 +118,9 @@ static struct qcom_icc_node *sm8150_osm_l3_nodes[] = {
- static const struct qcom_icc_desc sm8150_icc_osm_l3 = {
- 	.nodes = sm8150_osm_l3_nodes,
- 	.num_nodes = ARRAY_SIZE(sm8150_osm_l3_nodes),
-+	.lut_row_size = OSM_LUT_ROW_SIZE,
-+	.reg_freq_lut = OSM_REG_FREQ_LUT,
-+	.reg_perf_state = OSM_REG_PERF_STATE,
- };
- 
- static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-@@ -138,7 +151,7 @@ static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
- 			break;
- 	}
- 
--	writel_relaxed(index, qp->base + REG_PERF_STATE);
-+	writel_relaxed(index, qp->base + qp->reg_perf_state);
- 
- 	return 0;
- }
-@@ -193,9 +206,15 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	desc = device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	qp->reg_perf_state = desc->reg_perf_state;
-+
- 	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
--		info = readl_relaxed(qp->base + REG_FREQ_LUT +
--				     i * LUT_ROW_SIZE);
-+		info = readl_relaxed(qp->base + desc->reg_freq_lut +
-+				     i * desc->lut_row_size);
- 		src = FIELD_GET(LUT_SRC, info);
- 		lval = FIELD_GET(LUT_L_VAL, info);
- 		if (src)
-@@ -214,10 +233,6 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
- 	}
- 	qp->max_state = i;
- 
--	desc = device_get_match_data(&pdev->dev);
--	if (!desc)
--		return -EINVAL;
--
- 	qnodes = desc->nodes;
- 	num_nodes = desc->num_nodes;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Hmm, okay. We don't have a better solution _yet_ for this issue and I'm okay
+with specifying split ranges in the meantime.
 
+Thanks,
+Mani
+
+> Thanks for reviewing,
+> Cristi
+> 
+> > 
+> > >+
+> > >+  clocks:
+> > >+    maxItems: 1
+> > >+
+> > >+  gpio-controller: true
+> > >+
+> > >+  gpio-ranges:
+> > >+    maxItems: 1
+> > >+
+> > >+  '#gpio-cells':
+> > >+    description:
+> > >+      Specifies the pin number and flags, as defined in
+> > >+      include/dt-bindings/gpio/gpio.h
+> > >+    const: 2
+> > >+
+> > >+  interrupt-controller: true
+> > >+
+> > >+  '#interrupt-cells':
+> > >+    description:
+> > >+      Specifies the pin number and flags, as defined in
+> > >+      include/dt-bindings/interrupt-controller/irq.h
+> > >+    const: 2
+> > >+
+> > >+  interrupts:
+> > >+    description:
+> > >+      One interrupt per each of the 5 GPIO ports supported by the
+> > >controller,
+> > >+      sorted by port number ascending order.
+> > >+    minItems: 5
+> > >+    maxItems: 5
+> > >+
+> > >+patternProperties:
+> > >+  '^.*$':
+> > >+    if:
+> > >+      type: object
+> > >+    then:
+> > >+      patternProperties:
+> > >+        'pinmux$':
+> > >+          type: object
+> > >+          description:
+> > >+            Pinctrl node's client devices specify pin muxes using
+> > >subnodes,
+> > >+            which in turn use the standard properties below.
+> > >+          $ref: pinmux-node.yaml#
+> > >+
+> > >+          properties:
+> > >+            groups:
+> > >+              description:
+> > >+                List of gpio pin groups affected by the functions
+> > >specified in
+> > >+                this subnode.
+> > >+              items:
+> > >+                oneOf:
+> > >+                  - enum: [lcd0_d18_mfp, rmii_crs_dv_mfp,
+> > >rmii_txd0_mfp,
+> > >+                      rmii_txd1_mfp, rmii_txen_mfp, rmii_rxen_mfp,
+> > >+                      rmii_rxd1_mfp, rmii_rxd0_mfp, rmii_ref_clk_mfp,
+> > >+                      i2s_d0_mfp, i2s_pcm1_mfp, i2s0_pcm0_mfp,
+> > >i2s1_pcm0_mfp,
+> > >+                      i2s_d1_mfp, ks_in2_mfp, ks_in1_mfp, ks_in0_mfp,
+> > >+                      ks_in3_mfp, ks_out0_mfp, ks_out1_mfp,
+> > >ks_out2_mfp,
+> > >+                      lvds_o_pn_mfp, dsi_dn0_mfp, dsi_dp2_mfp,
+> > >lcd0_d17_mfp,
+> > >+                      dsi_dp3_mfp, dsi_dn3_mfp, dsi_dp0_mfp,
+> > >lvds_ee_pn_mfp,
+> > >+                      spi0_i2c_pcm_mfp, spi0_i2s_pcm_mfp,
+> > >dsi_dnp1_cp_mfp,
+> > >+                      lvds_e_pn_mfp, dsi_dn2_mfp, uart2_rtsb_mfp,
+> > >+                      uart2_ctsb_mfp, uart3_rtsb_mfp, uart3_ctsb_mfp,
+> > >+                      sd0_d0_mfp, sd0_d1_mfp, sd0_d2_d3_mfp,
+> > >sd1_d0_d3_mfp,
+> > >+                      sd0_cmd_mfp, sd0_clk_mfp, sd1_cmd_mfp,
+> > >uart0_rx_mfp,
+> > >+                      clko_25m_mfp, csi_cn_cp_mfp, sens0_ckout_mfp,
+> > >+                      uart0_tx_mfp, i2c0_mfp, csi_dn_dp_mfp,
+> > >sen0_pclk_mfp,
+> > >+                      pcm1_in_mfp, pcm1_clk_mfp, pcm1_sync_mfp,
+> > >pcm1_out_mfp,
+> > >+                      dnand_data_wr_mfp, dnand_acle_ce0_mfp,
+> > >nand_ceb2_mfp,
+> > >+                      nand_ceb3_mfp]
+> > >+              minItems: 1
+> > >+              maxItems: 32
+> > >+
+> > >+            function:
+> > >+              description:
+> > >+                Specify the alternative function to be configured for
+> > >the
+> > >+                given gpio pin groups.
+> > >+              enum: [nor, eth_rmii, eth_smii, spi0, spi1, spi2, spi3,
+> > >sens0,
+> > >+                sens1, uart0, uart1, uart2, uart3, uart4, uart5,
+> > >uart6, i2s0,
+> > >+                i2s1, pcm1, pcm0, ks, jtag, pwm0, pwm1, pwm2, pwm3,
+> > >pwm4, pwm5,
+> > >+                p0, sd0, sd1, sd2, i2c0, i2c1, i2c3, dsi, lvds, usb30,
+> > >clko_25m,
+> > >+                mipi_csi, nand, spdif, ts, lcd0]
+> > >+
+> > >+          required:
+> > >+            - groups
+> > >+            - function
+> > >+
+> > >+          additionalProperties: false
+> > >+
+> > >+        'pinconf$':
+> > >+          type: object
+> > >+          description:
+> > >+            Pinctrl node's client devices specify pin configurations
+> > >using
+> > >+            subnodes, which in turn use the standard properties below.
+> > >+          $ref: pincfg-node.yaml#
+> > >+
+> > >+          properties:
+> > >+            groups:
+> > >+              description:
+> > >+                List of gpio pin groups affected by the drive-strength
+> > >property
+> > >+                specified in this subnode.
+> > >+              items:
+> > >+                oneOf:
+> > >+                  - enum: [sirq_drv, rmii_txd01_txen_drv,
+> > >rmii_rxer_drv,
+> > >+                      rmii_crs_drv, rmii_rxd10_drv, rmii_ref_clk_drv,
+> > >+                      smi_mdc_mdio_drv, i2s_d0_drv, i2s_bclk0_drv,
+> > >i2s3_drv,
+> > >+                      i2s13_drv, pcm1_drv, ks_in_drv, ks_out_drv,
+> > >lvds_all_drv,
+> > >+                      lcd_dsi_drv, dsi_drv, sd0_d0_d3_drv,
+> > >sd1_d0_d3_drv,
+> > >+                      sd0_cmd_drv, sd0_clk_drv, sd1_cmd_drv,
+> > >sd1_clk_drv,
+> > >+                      spi0_all_drv, uart0_rx_drv, uart0_tx_drv,
+> > >uart2_all_drv,
+> > >+                      i2c0_all_drv, i2c12_all_drv, sens0_pclk_drv,
+> > >+                      sens0_ckout_drv, uart3_all_drv]
+> > >+              minItems: 1
+> > >+              maxItems: 32
+> > >+
+> > >+            pins:
+> > >+              description:
+> > >+                List of gpio pins affected by the bias-pull-* and
+> > >+                input-schmitt-* properties specified in this subnode.
+> > >+              items:
+> > >+                oneOf:
+> > >+                  - enum: [dnand_dqs, dnand_dqsn, eth_txd0, eth_txd1,
+> > >eth_txen,
+> > >+                      eth_rxer, eth_crs_dv, eth_rxd1, eth_rxd0,
+> > >eth_ref_clk,
+> > >+                      eth_mdc, eth_mdio, sirq0, sirq1, sirq2, i2s_d0,
+> > >i2s_bclk0,
+> > >+                      i2s_lrclk0, i2s_mclk0, i2s_d1, i2s_bclk1,
+> > >i2s_lrclk1,
+> > >+                      i2s_mclk1, ks_in0, ks_in1, ks_in2, ks_in3,
+> > >ks_out0,
+> > >+                      ks_out1, ks_out2, lvds_oep, lvds_oen, lvds_odp,
+> > >lvds_odn,
+> > >+                      lvds_ocp, lvds_ocn, lvds_obp, lvds_obn,
+> > >lvds_oap,
+> > >+                      lvds_oan, lvds_eep, lvds_een, lvds_edp,
+> > >lvds_edn,
+> > >+                      lvds_ecp, lvds_ecn, lvds_ebp, lvds_ebn,
+> > >lvds_eap,
+> > >+                      lvds_ean, lcd0_d18, lcd0_d17, dsi_dp3, dsi_dn3,
+> > >dsi_dp1,
+> > >+                      dsi_dn1, dsi_cp, dsi_cn, dsi_dp0, dsi_dn0,
+> > >dsi_dp2,
+> > >+                      dsi_dn2, sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0,
+> > >sd1_d1,
+> > >+                      sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd,
+> > >sd1_clk,
+> > >+                      spi0_sclk, spi0_ss, spi0_miso, spi0_mosi,
+> > >uart0_rx,
+> > >+                      uart0_tx, i2c0_sclk, i2c0_sdata, sensor0_pclk,
+> > >+                      sensor0_ckout, dnand_ale, dnand_cle, dnand_ceb0,
+> > >+                      dnand_ceb1, dnand_ceb2, dnand_ceb3, uart2_rx,
+> > >uart2_tx,
+> > >+                      uart2_rtsb, uart2_ctsb, uart3_rx, uart3_tx,
+> > >uart3_rtsb,
+> > >+                      uart3_ctsb, pcm1_in, pcm1_clk, pcm1_sync,
+> > >pcm1_out,
+> > >+                      i2c1_sclk, i2c1_sdata, i2c2_sclk, i2c2_sdata,
+> > >csi_dn0,
+> > >+                      csi_dp0, csi_dn1, csi_dp1, csi_dn2, csi_dp2,
+> > >csi_dn3,
+> > >+                      csi_dp3, csi_cn, csi_cp, dnand_d0, dnand_d1,
+> > >dnand_d2,
+> > >+                      dnand_d3, dnand_d4, dnand_d5, dnand_d6,
+> > >dnand_d7,
+> > >+                      dnand_rb, dnand_rdb, dnand_rdbn, dnand_wrb,
+> > >porb,
+> > >+                      clko_25m, bsel, pkg0, pkg1, pkg2, pkg3]
+> > >+              minItems: 1
+> > >+              maxItems: 64
+> > >+
+> > >+            bias-pull-up: true
+> > >+            bias-pull-down: true
+> > >+
+> > >+            drive-strength:
+> > >+              description:
+> > >+                Selects the drive strength for the specified pins, in
+> > >mA.
+> > >+              enum: [2, 4, 8, 12]
+> > >+
+> > >+            input-schmitt-enable: true
+> > >+            input-schmitt-disable: true
+> > >+
+> > >+          additionalProperties: false
+> > >+
+> > >+required:
+> > >+  - compatible
+> > >+  - reg
+> > >+  - clocks
+> > >+  - gpio-controller
+> > >+  - gpio-ranges
+> > >+  - '#gpio-cells'
+> > >+  - interrupt-controller
+> > >+  - '#interrupt-cells'
+> > >+  - interrupts
+> > >+
+> > >+additionalProperties: false
+> > >+
+> > >+examples:
+> > >+  - |
+> > >+    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > >+    pinctrl: pinctrl@b01b0000 {
+> > >+        compatible = "actions,s500-pinctrl";
+> > >+        reg = <0xe01b0000 0x1000>;
+> > >+        clocks = <&cmu 20>;
+> > >+        gpio-controller;
+> > >+        gpio-ranges = <&pinctrl 0 0 132>;
+> > >+        #gpio-cells = <2>;
+> > >+        interrupt-controller;
+> > >+        #interrupt-cells = <2>;
+> > >+        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> > >+                     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> > >+                     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> > >+                     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> > >+                     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> > >+
+> > >+        i2c0_default: i2c0_default {
+> > >+            pinmux {
+> > >+                groups = "i2c0_mfp";
+> > >+                function = "i2c0";
+> > >+            };
+> > >+
+> > >+            pinconf {
+> > >+                pins = "i2c0_sclk", "i2c0_sdata";
+> > >+                bias-pull-up;
+> > >+            };
+> > >+        };
+> > >+    };
+> > >+
+> > >+...
+> > 
+> > -- 
+> > Sent from my Android device with K-9 Mail. Please excuse my brevity.
