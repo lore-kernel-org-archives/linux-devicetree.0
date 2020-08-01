@@ -1,181 +1,144 @@
-Return-Path: <SRS0=uLJJ=BK=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F63BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55592C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 00:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65D4A207EA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 31 Jul 2020 23:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OExoHCHH"
+	by mail.kernel.org (Postfix) with ESMTP id 2E8432083B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 00:13:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596240790;
+	bh=n7WNIjd113yI4hTkSUhS0MieCDn0mYiulcZegXarHiQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BRBr5aO+lc8jXqn8Fi9fveYnYLWI2FbpFGiDasBFsJR/GfS8W0LBYh0fxX6my2xRL
+	 YsQbQiVMDnHLUGdFtdpWs4vZZVS1pXEmhBq74auVCKyD22mVEnZJB0O+iuVkJllgIH
+	 eNvPJBzW9bnpWu573T23j7akvhnSEqo3kmvpuqHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgGaXdJ (ORCPT
+        id S1726806AbgHAANJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 19:33:09 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:19003 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726806AbgGaXdJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 19:33:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596238388; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=vF/ZfSy0GW8C+ioPXlIi2t6ZaQN9VfKaJ+Oof9fc1KQ=; b=OExoHCHHHHxR2X/0JFb6j5ECp/TLWXWdWO2ao1c3hxlP4wMHhCCCXoEp47dN3NCZkKqHuQkD
- cpTXqt5VqG8YmoA/+9toZcZrwzeLGvVd7WglywvFqm9WiOcsY/AM+HJoU44SRnDBz/tRhFej
- yVCuhTxtYCEdyFBMaHkQQheMTcI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f24a9d990893260dd39d2ed (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 31 Jul 2020 23:31:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7DBDAC43395; Fri, 31 Jul 2020 23:31:36 +0000 (UTC)
-Received: from [10.110.121.73] (i-global254.qualcomm.com [199.106.103.254])
+        Fri, 31 Jul 2020 20:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbgHAANJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 31 Jul 2020 20:13:09 -0400
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C569EC433C9;
-        Fri, 31 Jul 2020 23:31:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C569EC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v6 1/4] usb: typec: Add QCOM PMIC typec detection driver
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
-        heikki.krogerus@linux.intel.com, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        jackp@codeaurora.org
-References: <20200729071340.7673-1-wcheng@codeaurora.org>
- <20200729071340.7673-2-wcheng@codeaurora.org>
- <159601160976.1360974.10172804658083744292@swboyd.mtv.corp.google.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <e11fc325-7f82-b13f-3e8a-f444ddc50257@codeaurora.org>
-Date:   Fri, 31 Jul 2020 16:31:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.kernel.org (Postfix) with ESMTPSA id DD07320838;
+        Sat,  1 Aug 2020 00:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596240789;
+        bh=n7WNIjd113yI4hTkSUhS0MieCDn0mYiulcZegXarHiQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cwTK4nTdLjiSBKaFyrshHnlaq/mhK5249QxAYMkm0Wg4Lora9fjbCpn/V3wEf8MRk
+         Q1alTIeZXZNLduDsnZT+c0hZDBCsfgI0o5HH9F9ZSa2o4NduJIN5mtpHKGZRuptS6k
+         fCYMzf7cgUiskfH/b6FgOwLahq+30cwi7SiITHus=
+Received: by mail-ed1-f46.google.com with SMTP id c15so13813478edj.3;
+        Fri, 31 Jul 2020 17:13:08 -0700 (PDT)
+X-Gm-Message-State: AOAM531fL8KSSEvQ1xg0HK9ehWV/3UYx2oghVewFonSCUBiGsXjY9wnl
+        hAvBPc/Dap7Y44IN1YajwMzTKDdKzyt3SztoHg==
+X-Google-Smtp-Source: ABdhPJwefFzeSQPuG9/zk5h5dJ0CnlevRnNRHabHnVcRCbp4uOMwHYFc8O2rJIMyRTAv+YG2GQmp5ufza+VEsIYo0t4=
+X-Received: by 2002:a50:ccd0:: with SMTP id b16mr6220123edj.148.1596240787508;
+ Fri, 31 Jul 2020 17:13:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159601160976.1360974.10172804658083744292@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com> <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 1 Aug 2020 08:12:56 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8aw=6E7bMJwz5jDLXUxYHpy9_Avbwc90osQGckzANNcg@mail.gmail.com>
+Message-ID: <CAAOTY_8aw=6E7bMJwz5jDLXUxYHpy9_Avbwc90osQGckzANNcg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi, Neal:
 
+This patch is for "mediatek,mt6779-devapc", so I think commit title
+should show the SoC ID.
 
-On 7/29/2020 1:33 AM, Stephen Boyd wrote:
-> Quoting Wesley Cheng (2020-07-29 00:13:37)
->> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
->> index 559dd06117e7..3e375f82849d 100644
->> --- a/drivers/usb/typec/Kconfig
->> +++ b/drivers/usb/typec/Kconfig
->> @@ -73,6 +73,18 @@ config TYPEC_TPS6598X
->>           If you choose to build this driver as a dynamically linked module, the
->>           module will be called tps6598x.ko.
->>  
->> +config TYPEC_QCOM_PMIC
->> +       tristate "Qualcomm PMIC USB Type-C driver"
->> +       depends on ARCH_QCOM
-> 
-> Can you add || COMPILE_TEST here?
-> 
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MediaTek bus fabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violation is logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by mtk-devapc driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
 
-Sure, will do.
+[snip]
 
->> +#include <linux/err.h>
->> +#include <linux/regmap.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/of_irq.h>
-> 
-> Is this include used?
-> 
->> +#include <linux/platform_device.h>
->> +#include <linux/of_device.h>
-> 
-> Is this include used?
-> 
+> +
+> +struct mtk_devapc_context {
+> +       struct device *dev;
+> +       u32 vio_idx_num;
+> +       void __iomem *devapc_pd_base;
+> +       struct mtk_devapc_vio_info *vio_info;
+> +       const struct mtk_devapc_pd_offset *offset;
+> +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
+> +};
 
-Reviewed which includes I used, and removed the ones that were not needed.
+I think this structure should separate the constant part. The constant part=
+ is:
 
->> +static void qcom_pmic_typec_enable_vbus_regulator(struct qcom_pmic_typec
->> +                                                       *qcom_usb, bool enable)
->> +{
->> +       int ret = 0;
-> 
-> Please don't assign and then reassign before testing this variable.
-> 
+struct mtk_devapc_data {
+    const u32 vio_idx_num;
+    const struct mtk_devapc_pd_offset *offset; /* I would like to
+remove struct mtk_devapc_pd_offset and directly put its member into
+this structure */
+    const struct mtk_devapc_vio_dbgs *vio_dbgs; /* This may disappear */
+};
 
-I will just remove the assignment here.
+And the context is:
 
->> +       if (stat & CC_ATTACHED) {
->> +               orientation = ((stat & CC_ORIENTATION) >> 1) ?
-> 
-> Do we really need to shift >> by 1? Seems useless for a test.
-> 
+struct mtk_devapc_context {
+    struct device *dev;
+    void __iomem *devapc_pd_base;
+    const struct mtk_devapc_data *data;
+};
 
-Agreed, we can remove the shift.
+So when you define this, you would not waste memory to store non-constant d=
+ata.
 
->> +       ret = of_property_read_u32(dev->of_node, "reg", &reg);
->> +       if (ret < 0) {
->> +               dev_err(dev, "missing base address");
-> 
-> Please add newlines at the end of printk messages.
-> 
+static const struct mtk_devapc_data devapc_mt6779 =3D {
+ .vio_idx_num =3D 510,
+ .offset =3D &mt6779_pd_offset,
+ .vio_dbgs =3D &mt6779_vio_dbgs,
+};
 
-Done.
+Regards,
+Chun-Kuang.
 
->> +       irq = platform_get_irq(pdev, 0);
->> +       if (irq < 0) {
->> +               dev_err(dev, "Failed to get CC irq\n");
-> 
-> platform_get_irq() already prints an error message. Please remove this.
-> 
-
-Got it.
-
->> +static const struct of_device_id qcom_pmic_typec_table[] = {
->> +       { .compatible = "qcom,pm8150b-usb-typec" },
->> +       { },
-> 
-> Nitpick: Drop the comma here so nothing can come after without causing a
-> compile error.
-> 
-
-Sure.
-
->> +static struct platform_driver qcom_pmic_typec = {
->> +       .driver = {
->> +               .name = "qcom,pmic-typec",
->> +               .of_match_table = qcom_pmic_typec_table,
->> +       },
->> +       .probe = qcom_pmic_typec_probe,
->> +       .remove = qcom_pmic_typec_remove,
->> +};
->> +
-> 
-> Another nitpick: Drop the newline and make module_platform_driver()
-> follow directly after the driver.
-> 
-
-Ok, will do.
-
-Thanks for the review/feedback, Stephen.
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +
+> +#endif /* __MTK_DEVAPC_H__ */
+> --
+> 1.7.9.5
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
