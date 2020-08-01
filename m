@@ -2,40 +2,44 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C702EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2379DC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADCF42080C
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1DD22B4E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 16:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgHAQSu (ORCPT
+        id S1727845AbgHAQSu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Sat, 1 Aug 2020 12:18:50 -0400
-Received: from bin-mail-out-06.binero.net ([195.74.38.229]:41871 "EHLO
-        bin-mail-out-06.binero.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727845AbgHAQSu (ORCPT
+Received: from bin-mail-out-05.binero.net ([195.74.38.228]:11512 "EHLO
+        bin-mail-out-05.binero.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727846AbgHAQSu (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sat, 1 Aug 2020 12:18:50 -0400
-X-Halon-ID: ab0d13bd-d412-11ea-933e-005056917a89
+X-Halon-ID: add390c9-d412-11ea-933e-005056917a89
 Authorized-sender: niklas@soderlund.pp.se
 Received: from bismarck.berto.se (p4fca2eca.dip0.t-ipconnect.de [79.202.46.202])
         by bin-vsp-out-01.atm.binero.net (Halon) with ESMTPA
-        id ab0d13bd-d412-11ea-933e-005056917a89;
-        Sat, 01 Aug 2020 18:18:47 +0200 (CEST)
+        id add390c9-d412-11ea-933e-005056917a89;
+        Sat, 01 Aug 2020 18:18:48 +0200 (CEST)
 From:   =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
         <niklas.soderlund+renesas@ragnatech.se>
 To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v3 0/3] dt-bindings: adv7604: Convert bindings to json-schema
-Date:   Sat,  1 Aug 2020 18:18:22 +0200
-Message-Id: <20200801161825.96837-1-niklas.soderlund+renesas@ragnatech.se>
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/3] dt-bindings: adv7604: Fix documentation for hpd-gpios
+Date:   Sat,  1 Aug 2020 18:18:23 +0200
+Message-Id: <20200801161825.96837-2-niklas.soderlund+renesas@ragnatech.se>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200801161825.96837-1-niklas.soderlund+renesas@ragnatech.se>
+References: <20200801161825.96837-1-niklas.soderlund+renesas@ragnatech.se>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -44,26 +48,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hans,
+As of [1] the hpd-gpios property is optional, document it as such.
 
-This series converts the ADV7604 bindings to YAML and lists the new file
-under MAINTAINERS. I have used the schema to validate the usage of the
-bindings and only found one issue that is fixed in [1].
+1. commit 269bd1324fbfaa52 ("[media] media: adv7604: improve usage of gpiod API")
 
-1. [PATCH] ARM: dts: gose: Fix ports node name for adv7612
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/media/i2c/adv7604.txt | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Niklas Söderlund (3):
-  dt-bindings: adv7604: Fix documentation for hpd-gpios
-  dt-bindings: adv7604: Convert bindings to json-schema
-  MAINTAINERS: Add ADV7604 bindings documentation
-
- .../devicetree/bindings/media/i2c/adv7604.txt |  88 ---------
- .../bindings/media/i2c/adv7604.yaml           | 178 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 3 files changed, 179 insertions(+), 88 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.yaml
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+index b3e688b77a38cb6d..8c7cdc7cd7aaebc8 100644
+--- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
++++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+@@ -19,10 +19,6 @@ Required Properties:
+     slave device on the I2C bus. The main address is mandatory, others are
+     optional and revert to defaults if not specified.
+ 
+-  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
+-    detection pins, one per HDMI input. The active flag indicates the GPIO
+-    level that enables hot-plug detection.
+-
+ The device node must contain one 'port' child node per device input and output
+ port, in accordance with the video interface bindings defined in
+ Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
+@@ -37,6 +33,9 @@ The digital output port node must contain at least one endpoint.
+ 
+ Optional Properties:
+ 
++  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
++    detection pins, one per HDMI input. The active flag indicates the GPIO
++    level that enables hot-plug detection.
+   - reset-gpios: Reference to the GPIO connected to the device's reset pin.
+   - default-input: Select which input is selected after reset.
+   - reg-names : Names of maps with programmable addresses.
 -- 
 2.28.0
 
