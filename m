@@ -2,296 +2,159 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EB1C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 09:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFF8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 10:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26BE020789
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 09:18:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="h7C9tavf"
+	by mail.kernel.org (Postfix) with ESMTP id B7EA52080C
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 10:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgHAJSD (ORCPT
+        id S1728207AbgHAK5G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 1 Aug 2020 05:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgHAJSD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 1 Aug 2020 05:18:03 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE07FC061757
-        for <devicetree@vger.kernel.org>; Sat,  1 Aug 2020 02:18:02 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g6so22153881ljn.11
-        for <devicetree@vger.kernel.org>; Sat, 01 Aug 2020 02:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=juUuQ7M3S/35ajQnAoRJaogau1CgGc53/hKnK5UbCxQ=;
-        b=h7C9tavfnUU6IHBu7CiD8DSDfxyQ8isDKIiOx2X74bX/jIg+M30bmR26fnC/ZeVbcC
-         Q2P6CdVlX8YjW0QzDldb/Xz2504UMH/FH4ppHr5jmUJUW5tTOsF4gu6cek3NHATlTIP5
-         +Gbzi6IJDCoIktiMOnkUM0OPyc4jYEZXmb/L0MC+yI5GRrdF5W4MDSTaAyXGyIZQZ5Dx
-         SlnDyFuLEgguYxQH5HFYYUxqIgsQe19mSwKy0nAErAWc0uZBTumekk+fUa92qs5mwgwE
-         iAcGzsqQoEdMy9Ct2De0uqpbAT2sVmQYYNmEKJZ2mefRAdDeu6Y3M6jeVnvmV49Ff6be
-         UmXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=juUuQ7M3S/35ajQnAoRJaogau1CgGc53/hKnK5UbCxQ=;
-        b=UrLOTIEZTBXcreg3iQa6lOmY90Gloli+qbPuFmwYT4qWUza66VQMpGJytkk8f0YtfF
-         wFIMEvp5a70nIgw760YiN+lxUurwhYkrNcxLGg5iVAVHuD90XzHOLPlqvw9KRrGD8rPC
-         jkgrTn5XZ8xUZheTist9lFdAXLIMw2d+Y8J8F7FDjVC8GndSzsY3arOsXFTu5NGi4npS
-         +JFv8Oz0jMFebJzJN6Z3LCmlhdeYH+0BzOplJITcQckQTw0vW52R+b2+wvuTEfhzqJxf
-         fPNQStkwNb6Ywhx0GmRmOJJd9v8oO4wQhxnQ3L0WMQJLiKD7Xoeb6R7teSY6ZFMHNP/e
-         Wx6Q==
-X-Gm-Message-State: AOAM530QGOzrDwHMAKsim6KpN7GmUBmUs9F0jLn+kGt9flQGCmK3HD4G
-        BfzwIVbau9TpIxiVJl6m/pbafA==
-X-Google-Smtp-Source: ABdhPJwKAdC9qxsmrgOmBOUPaoMBp/Kxq8FwNCK2GJuHLQnLFVywwAEZeSTDHkZGKzfPDaw67erOSA==
-X-Received: by 2002:a2e:98d0:: with SMTP id s16mr3337344ljj.457.1596273481068;
-        Sat, 01 Aug 2020 02:18:01 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id e12sm2227533ljk.74.2020.08.01.02.18.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2020 02:18:00 -0700 (PDT)
-Date:   Sat, 1 Aug 2020 11:17:59 +0200
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH 1/2] dt-bindings: media: renesas,vin: Document
- renesas-vin-ycbcr-8b-g property
-Message-ID: <20200801091759.GC1379367@oden.dyn.berto.se>
-References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200724193752.GE2729799@oden.dyn.berto.se>
- <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
- <20200725081146.GF2729799@oden.dyn.berto.se>
- <CA+V-a8sNxUaj88DDcWyc4zrmsAAGndjoQX=OmJ3u1GRJCT6TBQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+V-a8sNxUaj88DDcWyc4zrmsAAGndjoQX=OmJ3u1GRJCT6TBQ@mail.gmail.com>
+        Sat, 1 Aug 2020 06:57:06 -0400
+Received: from comms.puri.sm ([159.203.221.185]:39370 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725931AbgHAK5F (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 1 Aug 2020 06:57:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id D05C0E0334;
+        Sat,  1 Aug 2020 03:57:04 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Um1oPM5zChNS; Sat,  1 Aug 2020 03:57:03 -0700 (PDT)
+Subject: Re: [PATCH v5 3/3] dt-bindings: arm: fsl: Add the librem 5 phone
+To:     Rob Herring <robh@kernel.org>
+Cc:     agx@sigxcpu.org, kernel@puri.sm, Anson.Huang@nxp.com,
+        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, kernel@pengutronix.de, angus@akkea.ca,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, s.hauer@pengutronix.de, festevam@gmail.com,
+        mchehab@kernel.org
+References: <20200731082725.21878-1-martin.kepplinger@puri.sm>
+ <20200731082725.21878-3-martin.kepplinger@puri.sm>
+ <20200731193523.GA642071@bogus>
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
+ 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
+ ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
+Message-ID: <a5670756-ee3a-bde0-e3cb-553c38429268@puri.sm>
+Date:   Sat, 1 Aug 2020 12:56:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200731193523.GA642071@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lad,
+On 31.07.20 21:35, Rob Herring wrote:
+> On Fri, 31 Jul 2020 10:27:25 +0200, Martin Kepplinger wrote:
+>> Add entries for the imx8mq based Librem 5 phone. The "Birch" and
+>> "Chestnut" hardware revisions are supported by r2. The "Dogwood"
+>> revision by r3.
+>> See https://puri.sm/products/librem-5/ and https://developer.puri.sm/Librem5/
+>> for the schematics and more information.
+>>
+>> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+>> ---
+>>  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+> 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
+> 
 
-On 2020-07-25 23:23:13 +0100, Lad, Prabhakar wrote:
-> Hi Niklas,
-> 
-> On Sat, Jul 25, 2020 at 9:11 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> >
-> > Hi Lad,
-> >
-> > On 2020-07-24 22:11:31 +0100, Lad, Prabhakar wrote:
-> > > Hi Niklas,
-> > >
-> > > Thank you for the review.
-> > >
-> > > On Fri, Jul 24, 2020 at 8:37 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> > > >
-> > > > Hi Lad,
-> > > >
-> > > > Thanks for your patch.
-> > > >
-> > > > On 2020-07-24 15:58:51 +0100, Lad Prabhakar wrote:
-> > > > > Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit data
-> > > > > input pins.
-> > > > >
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/media/renesas,vin.yaml | 13 +++++++++++++
-> > > > >  1 file changed, 13 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > > > index 53c0a72..7dfb781 100644
-> > > > > --- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
-> > > > > @@ -106,6 +106,12 @@ properties:
-> > > > >
-> > > > >            remote-endpoint: true
-> > > > >
-> > > > > +          renesas-vin-ycbcr-8b-g:
-> > > >
-> > > > I think the preferred format for vendor specific properties are
-> > > > "<vendor>,<property>".
-> > > >
-> > > Indeed and I had it as renesas,vin-ycbcr-8b-g but dt_bindings_check
-> > > complained about it.
-> >
-> > I see, what was the error?
-> >
->   CHKDT   Documentation/devicetree/bindings/media/renesas,vin.yaml
-> /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:port:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> {'type': 'boolean', 'description': 'If present this property specifies
-> to selects VIN_G[7:0] as data pins for YCbCr422 8-bit data.',
-> 'default': False} is not valid under any of the given schemas
-> (Possible causes of the failure):
->     /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:port:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> 'not' is a required property
-> 
-> /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:ports:properties:port@0:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> {'type': 'boolean', 'description': 'If present this property specifies
-> to selects VIN_G[7:0] as data pins for YCbCr422 8-bit data.',
-> 'default': False} is not valid under any of the given schemas
-> (Possible causes of the failure):
->     /home/prasmi/work/renasas/g2n/renesas-devel/Documentation/devicetree/bindings/media/renesas,vin.yaml:
-> properties:ports:properties:port@0:properties:endpoint:properties:renesas,vin-ycbcr-8b-g:
-> 'not' is a required property
-> 
-> Documentation/devicetree/bindings/Makefile:20: recipe for target
-> 'Documentation/devicetree/bindings/media/renesas,vin.example.dts'
-> failed
-> make[1]: *** [Documentation/devicetree/bindings/media/renesas,vin.example.dts]
-> Error 1
-> Makefile:1334: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> 
-> > >
-> > > > This nit apart I'm not sure a property is the right way here. Could it
-> > > > not be possible on some designs to have two different sensors one wired
-> > > > to DATA[7:0] and the other to DATA[15:8] and by controlling the
-> > > > VNDRM2_YDS register at runtime switch between the two? If so adding a DT
-> > > > property to hard-code one of the two options would prevent this. I fear
-> > > > we need to think of a runtime way to deal with this.
-> > > >
-> > > Aha Gen2 and Gen3 hardware manuals have a bit different description
-> > > about the YDS field. (I was working R8a7742 SoC so I referred Gen2
-> > > manual)
-> >
-> > Ahh, I think we should use the Gen3 names as I find them overall an
-> > improvement over the Gen2 ones.
-> >
-> Agreed.
-> 
-> > >
-> > > > The best way to do that I think is to extend the port@0 node to allow
-> > > > for two endpoints, one for each of the two possible parallel sensors.
-> > > > This would then have to be expressed in the media graph and selection if
-> > > > YDS should be set or not depend on which media links are enabled.
-> > > >
-> > > In that case how do we handle endpoint matching each would have two
-> > > subdevs to be matched.
-> >
-> > It would be handle in the same was as the multiple endpoints in port@1.
-> >
-> > > And in case non media-ctl cases we cannot
-> > > switch between subdevs.
-> >
-> > For the Gen2 none media graph enabled mode this could be handled with
-> > the S_INPUT ioctl. For this feature to be merged however I it needs to
-> > be possible to select input both in Gen2 and Gen3 I'm afraid.
-> Ohh yes S_INPUT could be used to switch inputs. But  how do we decide
-> YDS needs to be enabled, for example with the below dts say vin3 is
-> parallel bus split into 2x 8-bit bus one connected to a ov5640 sensor
-> and other connected to ov7725 sensor. Should we use data-shift
-> property for the second vin endpoint (vin3ep1) to enable YDS ?
+I'm very sorry. I forgot to add to this patch:
 
-Using data-shift is a great idea! If I understand your use-case you 
-currently only have one sensor attached on the parallel bus right? If so 
-we can postpone the multi sensor part until it's needed and just learn 
-the VIN driver about data-shift. From the documentation,
+Acked-by: Rob Herring <robh@kernel.org>
 
-  - data-shift: on the parallel data busses, if bus-width is used to 
-    specify the number of data lines, data-shift can be used to specify 
-    which data lines are used, e.g. "bus-width=<8>; data-shift=<2>;" 
-    means, that lines 9:2 are used.
+It was not done on purposes and I'll add it to a next series and equally
+hope that this note would make a maintainer add it in case this series
+turns out to be ready.
 
-So in this case would not specifying data-shift=<8> solve the DT 
-description problem? The VIN driver still needs to learn about this tho.
+thanks for the explanation and again, sorry.
 
-> 
-> &i2c3 {
->     pinctrl-0 = <&i2c3_pins>;
->     pinctrl-names = "default";
-> 
->     status = "okay";
->     clock-frequency = <400000>;
-> 
->     ov7725@21 {
->         status = "disabled";
->         compatible = "ovti,ov7725";
->         reg = <0x21>;
->         clocks = <&mclk_cam4>;
-> 
->         port {
->             ov7725_3: endpoint {
->                 bus-width = <8>;
->                 bus-type = <6>;
->                 remote-endpoint = <&vin3ep0>;
->             };
->         };
->     };
-> 
->     ov5640@3c {
->         status = "okay";
->         compatible = "ovti,ov5640";
->         reg = <0x3c>;
->         clocks = <&mclk_cam4>;
->         clock-names = "xclk";
-> 
->         port {
->             ov5640_3: endpoint {
->                 bus-width = <8>;
->                 bus-type = <6>;
->                 remote-endpoint = <&vin3ep1>;
->             };
->         };
->     };
-> };
-> 
-> &vin3 {
->     status = "okay";
->     pinctrl-0 = <&vin3_pins>;
->     pinctrl-names = "default";
-> 
->     port {
->         #address-cells = <1>;
->         #size-cells = <0>;
-> 
->         vin3ep0: endpoint {
->             remote-endpoint = <&ov7725_3>;
->             bus-width = <8>;
->         };
-> 
->         vin3ep1: endpoint {
->             remote-endpoint = <&ov5640_3>;
->             bus-width = <8>;
->         };
-> 
->     };
-> };
-> 
-> 
-> >I'm hoping to one day breakout the non MC part of this driver into a new one and
-> > mark it as deprecated and switch to the MC code paths for Gen2.
-> >
-> That sounds like a good idea.
-> 
-> Cheers,
-> --Prabhakar
-
--- 
-Regards,
-Niklas Söderlund
+                           martin
