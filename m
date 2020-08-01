@@ -2,143 +2,187 @@ Return-Path: <SRS0=sfbb=BL=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55592C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 00:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBE2C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 00:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8432083B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 00:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596240790;
-	bh=n7WNIjd113yI4hTkSUhS0MieCDn0mYiulcZegXarHiQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BRBr5aO+lc8jXqn8Fi9fveYnYLWI2FbpFGiDasBFsJR/GfS8W0LBYh0fxX6my2xRL
-	 YsQbQiVMDnHLUGdFtdpWs4vZZVS1pXEmhBq74auVCKyD22mVEnZJB0O+iuVkJllgIH
-	 eNvPJBzW9bnpWu573T23j7akvhnSEqo3kmvpuqHU=
+	by mail.kernel.org (Postfix) with ESMTP id 5831020829
+	for <linux-devicetree@archiver.kernel.org>; Sat,  1 Aug 2020 00:59:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IU9Eezqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHAANJ (ORCPT
+        id S1726707AbgHAA7O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 31 Jul 2020 20:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbgHAANJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Jul 2020 20:13:09 -0400
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD07320838;
-        Sat,  1 Aug 2020 00:13:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596240789;
-        bh=n7WNIjd113yI4hTkSUhS0MieCDn0mYiulcZegXarHiQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cwTK4nTdLjiSBKaFyrshHnlaq/mhK5249QxAYMkm0Wg4Lora9fjbCpn/V3wEf8MRk
-         Q1alTIeZXZNLduDsnZT+c0hZDBCsfgI0o5HH9F9ZSa2o4NduJIN5mtpHKGZRuptS6k
-         fCYMzf7cgUiskfH/b6FgOwLahq+30cwi7SiITHus=
-Received: by mail-ed1-f46.google.com with SMTP id c15so13813478edj.3;
-        Fri, 31 Jul 2020 17:13:08 -0700 (PDT)
-X-Gm-Message-State: AOAM531fL8KSSEvQ1xg0HK9ehWV/3UYx2oghVewFonSCUBiGsXjY9wnl
-        hAvBPc/Dap7Y44IN1YajwMzTKDdKzyt3SztoHg==
-X-Google-Smtp-Source: ABdhPJwefFzeSQPuG9/zk5h5dJ0CnlevRnNRHabHnVcRCbp4uOMwHYFc8O2rJIMyRTAv+YG2GQmp5ufza+VEsIYo0t4=
-X-Received: by 2002:a50:ccd0:: with SMTP id b16mr6220123edj.148.1596240787508;
- Fri, 31 Jul 2020 17:13:07 -0700 (PDT)
+        Fri, 31 Jul 2020 20:59:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgHAA7O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Jul 2020 20:59:14 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C25C06174A;
+        Fri, 31 Jul 2020 17:59:14 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id i19so17744014lfj.8;
+        Fri, 31 Jul 2020 17:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bXmSNfhnUE6It9Edp0ZyP+wGCkB4UT/nvR9Ph2JS/Ss=;
+        b=IU9EezqiR5eaoJD3QE36dqnFospnSumWjxAhGptuYpv3iLJ83vT/+QaH3FwEmnp2FS
+         mD1bHFalPMSJoLJn9RvPxCYAo1NU7pVHH7Gv6THakhGUWwBBsTj11EBve/ElxxW/mqf9
+         Plj94CA1ENI0x45PttsiLkJ/VNByggqlb2HwXchYMzOYEZLEhyk3JCCTv++P+RoJnaVT
+         Q+MegNBzkBWWR15IEC7sOqf9ul5ZESMvDR/CetjdATvHWQsUhZRl0t9BEzyVxLzAQ3oW
+         KcePparNQR3LKKPyOWuKIj4P7NuoCrxWeml4Ux3dNmniKrh8iRPmAZ/BHX33a5iIElFq
+         8ddQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bXmSNfhnUE6It9Edp0ZyP+wGCkB4UT/nvR9Ph2JS/Ss=;
+        b=IFZEqGg6Ih7p2x2Ue+Co+36ZAVGzdbj5GpHDjF+oWGWmIF4v4XbdSijYe/bgOJ5sCp
+         f8bvXJ/lHVff6QXGj6MrfisKHMQCW3cbV1dU9v0K4VPO+xkC93tOaIayio7fdfNlSFZf
+         Mpolcll7ZOmld2FsWp/gE8t+JfWMPEAm7WmGJ5N78DIn4UPdmg/jBLwvegikkTJwQlxC
+         BpDqryWPIRW57RNZem8hy1RKujQtJGJNxaKbB9F/k7h+RRinKthXcmcwZT1enPL2prmI
+         tU9SVNBZ+EXCtwVjDIub6C8rEfV6sIu4XdLZlmIblmkLX1fU95PbJYW/RxaoJwo2uP7u
+         0I8A==
+X-Gm-Message-State: AOAM532qxbDcAeKyMQKwMT79I5hCT8DDT4bG3YUNBBc1xK92H9MpK9GB
+        HD8It5yp/ppQ0NdIS1b8l/TFpZ+G
+X-Google-Smtp-Source: ABdhPJzmRXyyWKi4kMaOeTi/VyIw4KgMWy1+QnaRg/0Llj1HgBtJTn+SjVtc4dx1ZeZ24Wg6WZGk7Q==
+X-Received: by 2002:a19:c197:: with SMTP id r145mr3168476lff.41.1596243552191;
+        Fri, 31 Jul 2020 17:59:12 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id v10sm2314953lfo.11.2020.07.31.17.59.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2020 17:59:11 -0700 (PDT)
+Subject: Re: [PATCH v7 06/10] media: tegra-video: Add support for external
+ sensor capture
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596231144-12554-1-git-send-email-skomatineni@nvidia.com>
+ <1596231144-12554-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <08acaeff-7819-07a3-69ca-adfbdb872ee3@gmail.com>
+Date:   Sat, 1 Aug 2020 03:59:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com> <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 1 Aug 2020 08:12:56 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8aw=6E7bMJwz5jDLXUxYHpy9_Avbwc90osQGckzANNcg@mail.gmail.com>
-Message-ID: <CAAOTY_8aw=6E7bMJwz5jDLXUxYHpy9_Avbwc90osQGckzANNcg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1596231144-12554-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Neal:
-
-This patch is for "mediatek,mt6779-devapc", so I think commit title
-should show the SoC ID.
-
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> MediaTek bus fabric provides TrustZone security support and data
-> protection to prevent slaves from being accessed by unexpected
-> masters.
-> The security violation is logged and sent to the processor for
-> further analysis or countermeasures.
->
-> Any occurrence of security violation would raise an interrupt, and
-> it will be handled by mtk-devapc driver. The violation
-> information is printed in order to find the murderer.
->
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> ---
-
-[snip]
-
+01.08.2020 00:32, Sowjanya Komatineni пишет:
+...
+> +static int tegra_csi_channels_alloc(struct tegra_csi *csi)
+> +{
+> +	struct device_node *node = csi->dev->of_node;
+> +	struct v4l2_fwnode_endpoint v4l2_ep = {
+> +		.bus_type = V4L2_MBUS_CSI2_DPHY
+> +	};
+> +	struct fwnode_handle *fwh;
+> +	struct device_node *channel;
+> +	struct device_node *ep;
+> +	unsigned int lanes, portno, num_pads;
+> +	int ret;
 > +
-> +struct mtk_devapc_context {
-> +       struct device *dev;
-> +       u32 vio_idx_num;
-> +       void __iomem *devapc_pd_base;
-> +       struct mtk_devapc_vio_info *vio_info;
-> +       const struct mtk_devapc_pd_offset *offset;
-> +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
-> +};
-
-I think this structure should separate the constant part. The constant part=
- is:
-
-struct mtk_devapc_data {
-    const u32 vio_idx_num;
-    const struct mtk_devapc_pd_offset *offset; /* I would like to
-remove struct mtk_devapc_pd_offset and directly put its member into
-this structure */
-    const struct mtk_devapc_vio_dbgs *vio_dbgs; /* This may disappear */
-};
-
-And the context is:
-
-struct mtk_devapc_context {
-    struct device *dev;
-    void __iomem *devapc_pd_base;
-    const struct mtk_devapc_data *data;
-};
-
-So when you define this, you would not waste memory to store non-constant d=
-ata.
-
-static const struct mtk_devapc_data devapc_mt6779 =3D {
- .vio_idx_num =3D 510,
- .offset =3D &mt6779_pd_offset,
- .vio_dbgs =3D &mt6779_vio_dbgs,
-};
-
-Regards,
-Chun-Kuang.
-
+> +	for_each_child_of_node(node, channel) {
+> +		if (!of_node_name_eq(channel, "channel"))
+> +			continue;
 > +
-> +#endif /* __MTK_DEVAPC_H__ */
-> --
-> 1.7.9.5
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> +		ret = of_property_read_u32(channel, "reg", &portno);
+> +		if (ret < 0)
+> +			continue;
+> +
+> +		if (portno >= csi->soc->csi_max_channels) {
+> +			dev_err(csi->dev, "invalid port num %d\n", portno);
+
+The "channel" node should be put on error.
+
+> +			return -EINVAL;
+> +		}
+> +
+> +		ep = of_graph_get_endpoint_by_regs(channel, 0, 0);
+> +		if (!ep)
+> +			continue;
+> +
+> +		fwh = of_fwnode_handle(ep);
+> +		ret = v4l2_fwnode_endpoint_parse(fwh, &v4l2_ep);
+> +		of_node_put(ep);
+> +		if (ret) {
+> +			dev_err(csi->dev,
+> +				"failed to parse v4l2 endpoint: %d\n", ret);
+> +			return ret;
+> +		}
+> +
+> +		lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
+> +		if (!lanes || ((lanes & (lanes - 1)) != 0)) {
+> +			dev_err(csi->dev, "invalid data-lanes %d\n", lanes);
+> +			return -EINVAL;
+> +		}
+> +
+> +		num_pads = of_graph_get_endpoint_count(channel);
+> +		if (num_pads == TEGRA_CSI_PADS_NUM) {
+> +			ret = tegra_csi_channel_alloc(csi, channel, portno,
+> +						      lanes, num_pads);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+>  	}
+...
+> +static int tegra_vi_channels_alloc(struct tegra_vi *vi)
+> +{
+> +	struct device_node *node = vi->dev->of_node;
+> +	struct device_node *ep = NULL;
+> +	struct device_node *ports;
+> +	struct device_node *port;
+> +	unsigned int port_num;
+> +	int ret;
+> +
+> +	ports = of_get_child_by_name(node, "ports");
+> +	if (!ports)
+> +		return -ENODEV;
+> +
+> +	for_each_child_of_node(ports, port) {
+> +		if (!of_node_name_eq(port, "port"))
+> +			continue;
+> +
+> +		ret = of_property_read_u32(port, "reg", &port_num);
+> +		if (ret < 0)
+> +			continue;
+> +
+> +		if (port_num > vi->soc->vi_max_channels) {
+> +			of_node_put(ports);
+
+s/ports/port/
+
+> +			dev_err(vi->dev, "invalid port num %d\n", port_num);
+> +			return -EINVAL;
+> +		}
+> +
+> +		ep = of_get_child_by_name(port, "endpoint");
+> +		if (!ep)
+> +			continue;
+> +
+> +		of_node_put(ep);
+> +		ret = tegra_vi_channel_alloc(vi, port_num, port);
+> +		if (ret < 0) {
+> +			of_node_put(ports);
+s/ports/port/
+
+> +			return ret;
+> +		}
+>  	}
