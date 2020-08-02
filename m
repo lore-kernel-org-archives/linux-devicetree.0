@@ -2,126 +2,86 @@ Return-Path: <SRS0=9TIE=BM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A278C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 07:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92257C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 07:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD762076B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 07:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628B0207DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 07:58:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vO2casJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHBHLs (ORCPT
+        id S1725880AbgHBH6C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Aug 2020 03:11:48 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:55644 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgHBHLs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 2 Aug 2020 03:11:48 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id E5E1120020;
-        Sun,  2 Aug 2020 09:11:45 +0200 (CEST)
-Date:   Sun, 2 Aug 2020 09:11:44 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/panel: simple: Add Chefree CH101OLHLWH-002 panel
-Message-ID: <20200802071144.GB822300@ravnborg.org>
-References: <20200728201242.4336-1-marex@denx.de>
- <20200728201242.4336-3-marex@denx.de>
+        Sun, 2 Aug 2020 03:58:02 -0400
+Received: from crapouillou.net ([89.234.176.41]:54644 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgHBH6C (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Aug 2020 03:58:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1596355079; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LlM/FDSTdbnkN4Hg3fJADY2E37puQzth4o+mF6JcZBI=;
+        b=vO2casJmtUJRuUn4Jm6MSyp4/FO3SNGqgRTZOAH9KJDTdBLQFcBr2glnHB+xEcd+7LArwV
+        osZBfPGQU3KAMKzZ7qItBJkM+nmTeo2vGTL9HluG58jmnX7ml08REP/w5khiXY9UURjJmZ
+        8TZ+bRXwz6HCZ7HQly9exQv+FrqPTms=
+Date:   Sun, 02 Aug 2020 09:57:49 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/2] MAINTAINERS: Remove JZ4780 DMA driver entry
+To:     "Maciej W. Rozycki" <macro@wdc.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Message-Id: <DGFFEQ.RMDW72DK0U5B1@crapouillou.net>
+In-Reply-To: <alpine.LFD.2.21.2008012327070.24175@redsun52.ssa.fujisawa.hgst.com>
+References: <20200726155559.4650-1-krzk@kernel.org>
+        <alpine.LFD.2.21.2008012327070.24175@redsun52.ssa.fujisawa.hgst.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728201242.4336-3-marex@denx.de>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8
-        a=k28S8m6lIBomCeKSdDwA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marek.
+Hi Maciej,
 
-On Tue, Jul 28, 2020 at 10:12:42PM +0200, Marek Vasut wrote:
-> Add support for the Chefree CH101OLHLWH-002 10.1" (1280x800)
-> color TFT LCD panel, connected over LVDS.
-> 
-> Timings are taken from the datasheet version P0.5.
-> 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> To: dri-devel@lists.freedesktop.org
-I do not think "To:" is a valid syntax here.
-So I changed to "Cc:" in all patches while applying.
+Le sam. 1 ao=FBt 2020 =E0 23:30, Maciej W. Rozycki <macro@wdc.com> a=20
+=E9crit :
+> On Sun, 26 Jul 2020, Krzysztof Kozlowski wrote:
+>=20
+>>  diff --git a/MAINTAINERS b/MAINTAINERS
+>>  index cba0ed77775b..362863cae239 100644
+>>  --- a/MAINTAINERS
+>>  +++ b/MAINTAINERS
+>>  @@ -8541,11 +8541,6 @@ F:	include/uapi/rdma/
+>>   F:	samples/bpf/ibumad_kern.c
+>>   F:	samples/bpf/ibumad_user.c
+>>=20
+>>  -INGENIC JZ4780 DMA Driver
+>>  -M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+>>  -S:	Maintained
+>>  -F:	drivers/dma/dma-jz4780.c
+>>  -
+>=20
+>  FYI, the usual approach would be marking the entry "Orphan" rather=20
+> than
+> removing it entirely, so that the mapping remains and makes it easy=20
+> for
+> someone to pick it up.
 
-Will be pushed out as soon as my builds pass.
+This is OK in this case, as the driver is also listed as part of the=20
+"INGENIC JZ47xx SoCs".
 
-	Sam
+-Paul
 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 33 ++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 298e3a26d9ee..a8e1f6306923 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1414,6 +1414,36 @@ static const struct panel_desc cdtech_s070wv95_ct16 = {
->  	},
->  };
->  
-> +static const struct display_timing chefree_ch101olhlwh_002_timing = {
-> +	.pixelclock = { 68900000, 71100000, 73400000 },
-> +	.hactive = { 1280, 1280, 1280 },
-> +	.hfront_porch = { 65, 80, 95 },
-> +	.hback_porch = { 64, 79, 94 },
-> +	.hsync_len = { 1, 1, 1 },
-> +	.vactive = { 800, 800, 800 },
-> +	.vfront_porch = { 7, 11, 14 },
-> +	.vback_porch = { 7, 11, 14 },
-> +	.vsync_len = { 1, 1, 1 },
-> +	.flags = DISPLAY_FLAGS_DE_HIGH,
-> +};
-> +
-> +static const struct panel_desc chefree_ch101olhlwh_002 = {
-> +	.timings = &chefree_ch101olhlwh_002_timing,
-> +	.num_timings = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 217,
-> +		.height = 135,
-> +	},
-> +	.delay = {
-> +		.enable = 200,
-> +		.disable = 200,
-> +	},
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-> +};
-> +
->  static const struct drm_display_mode chunghwa_claa070wp03xg_mode = {
->  	.clock = 66770,
->  	.hdisplay = 800,
-> @@ -3845,6 +3875,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "cdtech,s070wv95-ct16",
->  		.data = &cdtech_s070wv95_ct16,
-> +	}, {
-> +		.compatible = "chefree,ch101olhlwh-002",
-> +		.data = &chefree_ch101olhlwh_002,
->  	}, {
->  		.compatible = "chunghwa,claa070wp03xg",
->  		.data = &chunghwa_claa070wp03xg,
-> -- 
-> 2.27.0
+
