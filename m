@@ -2,101 +2,293 @@ Return-Path: <SRS0=9TIE=BM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B47C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 17:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6E3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 17:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C691206E7
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 17:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596388109;
-	bh=Ueg/E/nPfiWqU92s3F8StP7QZAqD5EKpNriEqglQy6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T+PZfdq4TGMnbduHS2554bxbo6hwE7W/ynPPMGAoSxNyUnKbjNAsa/L0dOlrkrJ9A
-	 ehea5Ici71GZxHamxGjLTszH33Q5kvr4lU8C5ygxnwQmZuwaVT5zV8FFhtafibdkEj
-	 DuE1rLfvRom1o7Hq/ILtTO5lNIeDzARYpsAMmOVY=
+	by mail.kernel.org (Postfix) with ESMTP id 1E50420759
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 17:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgHBRIX (ORCPT
+        id S1726797AbgHBR4D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Aug 2020 13:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54066 "EHLO mail.kernel.org"
+        Sun, 2 Aug 2020 13:56:03 -0400
+Received: from mailout09.rmx.de ([94.199.88.74]:38385 "EHLO mailout09.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbgHBRIX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Aug 2020 13:08:23 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725906AbgHBR4D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Aug 2020 13:56:03 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37992206E7;
-        Sun,  2 Aug 2020 17:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596388102;
-        bh=Ueg/E/nPfiWqU92s3F8StP7QZAqD5EKpNriEqglQy6s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BcQu0fr14IdODrK0TSyznfrrcB1GtI3t4oB7WXb7dfNkXvCMLxpJ8zNFbwjvf1ggj
-         AhkainBW2YSxFEafQQc7YdFVpswtj0JkCHbeRLN47LkG+AvSl988WGdM9NpI6cK1qn
-         GzajU2vnYRcZMSK/NfwpRYjmsha82QzN6HJT66sM=
-Date:   Sun, 2 Aug 2020 19:08:20 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, ludovic.desroches@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
-Subject: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Message-ID: <20200802170820.GC10193@kunai>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
+        by mailout09.rmx.de (Postfix) with ESMTPS id 4BKTG439Nszbjjp;
+        Sun,  2 Aug 2020 19:55:56 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BKTFg5DStz2TRjk;
+        Sun,  2 Aug 2020 19:55:35 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.16) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Sun, 2 Aug
+ 2020 19:55:35 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Christian Eggers <ceggers@arri.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: at25: convert the binding document to yaml
+Date:   Sun, 2 Aug 2020 19:46:26 +0200
+Message-ID: <20200802174625.91809-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <CAL_JsqK+Oj5AMDv5uvtQZZ6YMBzVKBPqvTfAsXEbjWvxqubQnQ@mail.gmail.com>
+References: <CAL_JsqK+Oj5AMDv5uvtQZZ6YMBzVKBPqvTfAsXEbjWvxqubQnQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DIOMP1UsTsWJauNi"
-Content-Disposition: inline
-In-Reply-To: <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.16]
+X-RMX-ID: 20200802-195535-4BKTFg5DStz2TRjk-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the binding document for at25 EEPROMs from txt to yaml. The
+compatible property doesn't use a regex pattern (as in at24), because
+the 'vendor' and the 'model' are an "infinite" list (even if only 5
+combinations are found in the current dts files). The settings required
+by a driver are given as separate properties.
 
---DIOMP1UsTsWJauNi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
+On Friday, Jul 31 2020, Rob Herring wrote:
+>> On Tue, Jul 28, 2020 at 1:34 AM Christian Eggers <ceggers@arri.de> wrote:
+>> When I specify
+>>
+>>   compatible:
+>>     enum:
+>>       - atmel,at25
+>>
+>> I get an error in dt_binding_check:
+>> ...
+>
+> You can do:
+>
+> items:
+>   - {}
+>   - const: atmel,at25
+>
+> But really, the possible compatible strings need to be listed out. See
+> at24.yaml as it had similar issues IIRC.
 
-On Fri, Jun 19, 2020 at 05:19:04PM +0300, Codrin Ciubotariu wrote:
-> Make the Microchip at91 driver the first to use the generic GPIO bus
-> recovery support from the I2C core and discard the driver implementation.
->=20
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
->  drivers/i2c/busses/i2c-at91-master.c | 69 ++--------------------------
->  drivers/i2c/busses/i2c-at91.h        |  3 --
+I think that at24 is very diffrent from at25 here (at least the linux
+driver). Whilst the at24 driver extracts parameters of the chip from the
+'model' part, at25 gets this information from separate properties.
 
-Nice diffstat! I will try using this new functionality with another
-controller next week.
+As there is virtually an infinite list of possible vendors and products
+for such type of hardware, is there any value to use expressions like in
+the at24 binding?
+
+Other question: What is the meaning of the maintainers field in the
+binding? Is it related to the binding itself or the linux driver? I am
+not the maintainer of the driver...
 
 
---DIOMP1UsTsWJauNi
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../devicetree/bindings/eeprom/at25.txt       |  46 +------
+ .../devicetree/bindings/eeprom/at25.yaml      | 122 ++++++++++++++++++
+ 2 files changed, 123 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
 
------BEGIN PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
+index fe91ecf1f61b..9b1096fb3826 100644
+--- a/Documentation/devicetree/bindings/eeprom/at25.txt
++++ b/Documentation/devicetree/bindings/eeprom/at25.txt
+@@ -1,45 +1 @@
+-EEPROMs (SPI) compatible with Atmel at25.
+-
+-Required properties:
+-- compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
+-  Example "<vendor>,<type>" values:
+-    "anvo,anv32e61w"
+-    "microchip,25lc040"
+-    "st,m95m02"
+-    "st,m95256"
+-
+-- reg : chip select number
+-- spi-max-frequency : max spi frequency to use
+-- pagesize : size of the eeprom page
+-- size : total eeprom size in bytes
+-- address-width : number of address bits (one of 8, 9, 16, or 24).
+-  For 9 bits, the MSB of the address is sent as bit 3 of the instruction
+-  byte, before the address byte.
+-
+-Optional properties:
+-- spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
+-- spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
+-- read-only : this parameter-less property disables writes to the eeprom
+-- wp-gpios : GPIO to which the write-protect pin of the chip is connected
+-
+-Obsolete legacy properties can be used in place of "size", "pagesize",
+-"address-width", and "read-only":
+-- at25,byte-len : total eeprom size in bytes
+-- at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
+-- at25,page-size : size of the eeprom page
+-
+-Additional compatible properties are also allowed.
+-
+-Example:
+-	eeprom@0 {
+-		compatible = "st,m95256", "atmel,at25";
+-		reg = <0>;
+-		spi-max-frequency = <5000000>;
+-		spi-cpha;
+-		spi-cpol;
+-		wp-gpios = <&gpio1 3 0>;
+-
+-		pagesize = <64>;
+-		size = <32768>;
+-		address-width = <16>;
+-	};
++This file has been moved to at25.yaml.
+\ No newline at end of file
+diff --git a/Documentation/devicetree/bindings/eeprom/at25.yaml b/Documentation/devicetree/bindings/eeprom/at25.yaml
+new file mode 100644
+index 000000000000..437a28dab6fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/eeprom/at25.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/eeprom/at25.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: SPI EEPROMs compatible with Atmel's AT25
++
++maintainers:
++  - Christian Eggers <ceggers@arri.de>
++
++properties:
++  $nodename:
++    pattern: "^eeprom@[0-9a-f]{1,2}$"
++
++  # There are multiple known vendors who manufacture EEPROM chips compatible
++  # with Atmel's AT25. The compatible string requires two items where the
++  # 'vendor' and 'model' parts of the first are the actual chip and the second
++  # item is fixed to "atmel,at25".
++  compatible:
++    items:
++      - {}
++      - const: atmel,at25
++    description:
++      'Should be "<vendor>,<chip>", and generic value "atmel,at25".
++      Example "<vendor>,<chip>" values:
++        "anvo,anv32e61w"
++        "microchip,25lc040"
++        "st,m95m02"
++        "st,m95256"'
++
++  reg:
++    description:
++      Chip select number.
++
++  spi-max-frequency:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Maximum SPI frequency to use.
++
++  pagesize:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Size of the eeprom page.
++
++  size:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Total eeprom size in bytes.
++
++  address-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 8, 9, 16, 24 ]
++    description:
++      Number of address bits.
++      For 9 bits, the MSB of the address is sent as bit 3 of the instruction
++      byte, before the address byte.
++
++  spi-cpha: true
++
++  spi-cpol: true
++
++  read-only:
++    description:
++      Disable writes to the eeprom.
++    type: boolean
++
++  wp-gpios:
++    maxItems: 1
++    description:
++      GPIO to which the write-protect pin of the chip is connected.
++
++  # Deprecated: at25,byte-len, at25,addr-mode, at25,page-size
++  at25,byte-len:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++       Total eeprom size in bytes. Deprecated, use "size" property instead.
++    deprecated: true
++
++  at25,addr-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++       Addr-mode flags, as defined in include/linux/spi/eeprom.h.
++       Deprecated, use "address-width" property instead.
++    deprecated: true
++
++  at25,page-size:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Size of the eeprom page. Deprecated, use "pagesize" property instead.
++    deprecated: true
++
++required:
++  - compatible
++  - reg
++  - spi-max-frequency
++  - pagesize
++  - size
++  - address-width
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    spi0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        eeprom@0 {
++            compatible = "st,m95256", "atmel,at25";
++            reg = <0>;
++            spi-max-frequency = <5000000>;
++            spi-cpha;
++            spi-cpol;
++            wp-gpios = <&gpio1 3 0>;
++
++            pagesize = <64>;
++            size = <32768>;
++            address-width = <16>;
++        };
++    };
+-- 
+Christian Eggers
+Embedded software developer
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8m8wQACgkQFA3kzBSg
-KbaBmw//QdK4p7QCdFMhEXMOhurIjSRsRgKD9/Lzj4Sz25CH8dfzr+r8irJ2xDO3
-5GGH4kWTNKO/+6BFDRroooDsvwqC/seiu2kF0f+pWh7m8fIzTWM/NetRTJuAJ+Cq
-tczzLPFFILaUDrw1IoeglkA8dUqLOGatc+gdKIHHI04uakoE+rrcq8AJbkoBHKif
-/NAePpfsVXYdhKIBPY/NCZtNrSBhOfSvUZ3jmA8X/1IyWXoBRb79TwsMHsvmiAJ9
-W/mnxWPvUKyATnxa6/jHpfaQyuCzJSZDtHoHRwMxPLpFMZrkiAIjY55DhCaoF+AK
-7fDzS/dHPf9Isu7UBldxtH4myA5YZJ3OaQ5mWEOafHcGBK3k0r4N0oZBDobowHGQ
-h1GLAtwoC8scqIx1KSYH4WsYphA/zVMR0vgPUw4k35fgptz0cGVOPaBVZVUM8AWa
-Q3FZujEHtTfuDOksNqjOouFFkmvOUd7Aa+OCeL3W2ybHOMJ/O39DcmqdvL3CiJRL
-Bf7aL1LE3yBhYhJ7dRMrKpUVoSbMKMHm9PV65zwfB+4R8sRDGwmeShPUTOXRklqG
-+bTkrSYIRwGhdeYJJ2WzTziFzizMw3lomU00rWyLXlarUwr053flbv65XxNgfAhq
-NDKvO6H2IOqhZzZglqXB5hWQ3vA6OJlomTuG46wY7FojKuCLr+w=
-=ae5q
------END PGP SIGNATURE-----
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
 
---DIOMP1UsTsWJauNi--
