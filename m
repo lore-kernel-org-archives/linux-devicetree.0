@@ -2,293 +2,171 @@ Return-Path: <SRS0=9TIE=BM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6E3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 17:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F54AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 18:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E50420759
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 17:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF2720738
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 18:02:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWsnVevz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgHBR4D (ORCPT
+        id S1725925AbgHBSCy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Aug 2020 13:56:03 -0400
-Received: from mailout09.rmx.de ([94.199.88.74]:38385 "EHLO mailout09.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgHBR4D (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Aug 2020 13:56:03 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout09.rmx.de (Postfix) with ESMTPS id 4BKTG439Nszbjjp;
-        Sun,  2 Aug 2020 19:55:56 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BKTFg5DStz2TRjk;
-        Sun,  2 Aug 2020 19:55:35 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.16) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Sun, 2 Aug
- 2020 19:55:35 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Christian Eggers <ceggers@arri.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: at25: convert the binding document to yaml
-Date:   Sun, 2 Aug 2020 19:46:26 +0200
-Message-ID: <20200802174625.91809-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CAL_JsqK+Oj5AMDv5uvtQZZ6YMBzVKBPqvTfAsXEbjWvxqubQnQ@mail.gmail.com>
-References: <CAL_JsqK+Oj5AMDv5uvtQZZ6YMBzVKBPqvTfAsXEbjWvxqubQnQ@mail.gmail.com>
+        Sun, 2 Aug 2020 14:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgHBSCx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 2 Aug 2020 14:02:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D7AC06174A;
+        Sun,  2 Aug 2020 11:02:53 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p8so2558789pgn.13;
+        Sun, 02 Aug 2020 11:02:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y4HiYNt38nc70/fF7gpPYeiC1nVRazwaZXZ0UbUAj+g=;
+        b=cWsnVevzoK5pBbgZECT6VJ89nBen1DFqMuLo8VaTzwqLpb2XsSQGqpei3I86NShXFw
+         JtbeddrTC4NlAue+Io6adpxLpWb9+R/md/h97DVE3lAS4V/yC457dFLJ96G5omZXLMXs
+         MYwvkucIVEJaPbs17A6MR23oOWW86agyI7+rW69Gl3ClDUIFnCSHP62Dp6ahcMFXhr8q
+         aM2IxSlqubNixcNRoACXBm8l5/H2cSZMWQN71SOXwG77oIzU4x/5WudHc3aTRgXj0Wtx
+         WpuLezEr4qY+i2pK+d5v1AVwJFD3vxZxTm80lZS67yRyH2DW/mdeKuszPKAPX8fqaAP+
+         f4qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y4HiYNt38nc70/fF7gpPYeiC1nVRazwaZXZ0UbUAj+g=;
+        b=YNNHsW/neBgAHDiyGzyIdNSRDFmkpwL4FVICy2Hhr2irHvdwf+n+dLtU1SlD4RN7PH
+         Mdu63OuorVyKym5eDeNDALi1qxSqoEhl8Pwfsa2+E8IdJir0YZnqvKZ6fjmtEVSpG7AS
+         2ERrxcgjK1ReRrIgonJat2WpVQWwFk/g9t8YswlEJelohr7dq0YT4jRHMjcWlscPVCbj
+         C+yVZsLQkuRcn75y02aslwU4+51D2ePrnEH5DpB4GrYiu6gUi6AriN3B+rcYrrmPwVnr
+         p85aJeGUWTmGHx0u2ldFL1Z+FObmgl1zhJMDAiujou3zDq7Wh+SBVae3NeRDA2+CE2VS
+         kJgA==
+X-Gm-Message-State: AOAM532LWDtLXKG7AzxUs9lDWuassMKtroBxdAThmhDdWKplrRCRJ35z
+        BulqazewQF1tES6i4sqqch5t1bMmFMdIo4GAlrFaf/VihFg=
+X-Google-Smtp-Source: ABdhPJw5JOMxGms/mWTQqZxa8LeV3Xy1njo/BoKFfVVk31VdvI94KbxgRI4a6cy4H6Gw1rPS78YQGlLWXJF9sVHo0yM=
+X-Received: by 2002:a62:158e:: with SMTP id 136mr12689670pfv.36.1596391372482;
+ Sun, 02 Aug 2020 11:02:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.16]
-X-RMX-ID: 20200802-195535-4BKTFg5DStz2TRjk-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+References: <20200802163735.76617-1-ceggers@arri.de> <20200802163735.76617-3-ceggers@arri.de>
+In-Reply-To: <20200802163735.76617-3-ceggers@arri.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 2 Aug 2020 21:02:35 +0300
+Message-ID: <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: light: as73211: New driver
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the binding document for at25 EEPROMs from txt to yaml. The
-compatible property doesn't use a regex pattern (as in at24), because
-the 'vendor' and the 'model' are an "infinite" list (even if only 5
-combinations are found in the current dts files). The settings required
-by a driver are given as separate properties.
-
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
-On Friday, Jul 31 2020, Rob Herring wrote:
->> On Tue, Jul 28, 2020 at 1:34 AM Christian Eggers <ceggers@arri.de> wrote:
->> When I specify
->>
->>   compatible:
->>     enum:
->>       - atmel,at25
->>
->> I get an error in dt_binding_check:
->> ...
+On Sun, Aug 2, 2020 at 7:40 PM Christian Eggers <ceggers@arri.de> wrote:
 >
-> You can do:
+> Support for AMS AS73211 JENCOLOR(R) Digital XYZ Sensor.
 >
-> items:
->   - {}
->   - const: atmel,at25
+> This driver has no built-in trigger. In order for making triggered
+> measurements, an external (software) trigger driver like
+> iio-trig-hrtimer or iio-trig-sysfs is required.
 >
-> But really, the possible compatible strings need to be listed out. See
-> at24.yaml as it had similar issues IIRC.
+> The sensor supports single and continuous measurement modes. The latter
+> is not used by design as this would require tight timing synchronization
+> between hardware and driver without much benefit.
 
-I think that at24 is very diffrent from at25 here (at least the linux
-driver). Whilst the at24 driver extracts parameters of the chip from the
-'model' part, at25 gets this information from separate properties.
+Thanks for an update, my comments below.
 
-As there is virtually an infinite list of possible vendors and products
-for such type of hardware, is there any value to use expressions like in
-the at24 binding?
+> Datasheet: https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-b302-c2fd-e30a-c98df87616df
 
-Other question: What is the meaning of the maintainers field in the
-binding? Is it related to the binding itself or the linux driver? I am
-not the maintainer of the driver...
+Do we need the UUID after the document file name?
 
+...
 
- .../devicetree/bindings/eeprom/at25.txt       |  46 +------
- .../devicetree/bindings/eeprom/at25.yaml      | 122 ++++++++++++++++++
- 2 files changed, 123 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
+> +/* Available sample frequencies are 1.024MHz multiplied by powers of two. */
+> +static const int as73211_samp_freq_avail[] = {
+> +       AS73211_SAMPLE_FREQ_BASE * 1,
+> +       AS73211_SAMPLE_FREQ_BASE * 2,
+> +       AS73211_SAMPLE_FREQ_BASE * 4,
+> +       AS73211_SAMPLE_FREQ_BASE * 8
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
-index fe91ecf1f61b..9b1096fb3826 100644
---- a/Documentation/devicetree/bindings/eeprom/at25.txt
-+++ b/Documentation/devicetree/bindings/eeprom/at25.txt
-@@ -1,45 +1 @@
--EEPROMs (SPI) compatible with Atmel at25.
--
--Required properties:
--- compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
--  Example "<vendor>,<type>" values:
--    "anvo,anv32e61w"
--    "microchip,25lc040"
--    "st,m95m02"
--    "st,m95256"
--
--- reg : chip select number
--- spi-max-frequency : max spi frequency to use
--- pagesize : size of the eeprom page
--- size : total eeprom size in bytes
--- address-width : number of address bits (one of 8, 9, 16, or 24).
--  For 9 bits, the MSB of the address is sent as bit 3 of the instruction
--  byte, before the address byte.
--
--Optional properties:
--- spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
--- spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
--- read-only : this parameter-less property disables writes to the eeprom
--- wp-gpios : GPIO to which the write-protect pin of the chip is connected
--
--Obsolete legacy properties can be used in place of "size", "pagesize",
--"address-width", and "read-only":
--- at25,byte-len : total eeprom size in bytes
--- at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
--- at25,page-size : size of the eeprom page
--
--Additional compatible properties are also allowed.
--
--Example:
--	eeprom@0 {
--		compatible = "st,m95256", "atmel,at25";
--		reg = <0>;
--		spi-max-frequency = <5000000>;
--		spi-cpha;
--		spi-cpol;
--		wp-gpios = <&gpio1 3 0>;
--
--		pagesize = <64>;
--		size = <32768>;
--		address-width = <16>;
--	};
-+This file has been moved to at25.yaml.
-\ No newline at end of file
-diff --git a/Documentation/devicetree/bindings/eeprom/at25.yaml b/Documentation/devicetree/bindings/eeprom/at25.yaml
-new file mode 100644
-index 000000000000..437a28dab6fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/eeprom/at25.yaml
-@@ -0,0 +1,122 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/eeprom/at25.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: SPI EEPROMs compatible with Atmel's AT25
-+
-+maintainers:
-+  - Christian Eggers <ceggers@arri.de>
-+
-+properties:
-+  $nodename:
-+    pattern: "^eeprom@[0-9a-f]{1,2}$"
-+
-+  # There are multiple known vendors who manufacture EEPROM chips compatible
-+  # with Atmel's AT25. The compatible string requires two items where the
-+  # 'vendor' and 'model' parts of the first are the actual chip and the second
-+  # item is fixed to "atmel,at25".
-+  compatible:
-+    items:
-+      - {}
-+      - const: atmel,at25
-+    description:
-+      'Should be "<vendor>,<chip>", and generic value "atmel,at25".
-+      Example "<vendor>,<chip>" values:
-+        "anvo,anv32e61w"
-+        "microchip,25lc040"
-+        "st,m95m02"
-+        "st,m95256"'
-+
-+  reg:
-+    description:
-+      Chip select number.
-+
-+  spi-max-frequency:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Maximum SPI frequency to use.
-+
-+  pagesize:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Size of the eeprom page.
-+
-+  size:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Total eeprom size in bytes.
-+
-+  address-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 8, 9, 16, 24 ]
-+    description:
-+      Number of address bits.
-+      For 9 bits, the MSB of the address is sent as bit 3 of the instruction
-+      byte, before the address byte.
-+
-+  spi-cpha: true
-+
-+  spi-cpol: true
-+
-+  read-only:
-+    description:
-+      Disable writes to the eeprom.
-+    type: boolean
-+
-+  wp-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO to which the write-protect pin of the chip is connected.
-+
-+  # Deprecated: at25,byte-len, at25,addr-mode, at25,page-size
-+  at25,byte-len:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+       Total eeprom size in bytes. Deprecated, use "size" property instead.
-+    deprecated: true
-+
-+  at25,addr-mode:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+       Addr-mode flags, as defined in include/linux/spi/eeprom.h.
-+       Deprecated, use "address-width" property instead.
-+    deprecated: true
-+
-+  at25,page-size:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Size of the eeprom page. Deprecated, use "pagesize" property instead.
-+    deprecated: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - spi-max-frequency
-+  - pagesize
-+  - size
-+  - address-width
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        eeprom@0 {
-+            compatible = "st,m95256", "atmel,at25";
-+            reg = <0>;
-+            spi-max-frequency = <5000000>;
-+            spi-cpha;
-+            spi-cpol;
-+            wp-gpios = <&gpio1 3 0>;
-+
-+            pagesize = <64>;
-+            size = <32768>;
-+            address-width = <16>;
-+        };
-+    };
++ Comma.
+
+> +};
+
+...
+
+> +#define AS73211_OFFSET_TEMP (-66.9)
+> +#define AS73211_SCALE_TEMP  0.05
+
+In the kernel we don't do float arithmetic. How these are being used?
+
+...
+
+> +               *val2 = (AS73211_OFFSET_TEMP - (int)AS73211_OFFSET_TEMP) * 1000000;
+
+> +                       *val2 = (AS73211_SCALE_TEMP - (int)AS73211_SCALE_TEMP) * 1000000;
+
+Magic 1000000 multiplier.
+
+I think here you got them always 0. And to fix that you need to
+redefine (with also units included in the name) above constants like
+#define ..._OFFSET_TEMP_mC 66500
+... _SCALE_TEMP_?? 50
+
+Consider to use definitions from
+https://elixir.bootlin.com/linux/latest/source/include/linux/units.h
+
+...
+
+> +       }}
+> +
+> +       return -EINVAL;
+
+Make it default case.
+
+> +       }
+> +
+> +       return -EINVAL;
+
+Ditto.
+
+...
+
+> +       }}
+> +
+> +       return -EINVAL;
+
+Ditto.
+
+...
+
+> +       ret = devm_iio_device_register(dev, indio_dev);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return 0;
+
+  return devm_iio_device_register();
+
+And consider to drop ' < 0' for devm_*() calls. As far as I understood
+your intention to explicitly leave them because of i2c_*() calls,
+though devm_*() and such are different.
+
 -- 
-Christian Eggers
-Embedded software developer
-
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
-
+With Best Regards,
+Andy Shevchenko
