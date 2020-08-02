@@ -2,483 +2,138 @@ Return-Path: <SRS0=9TIE=BM=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631DAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 15:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB008C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 16:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43BC5207BB
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 15:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SwHJdVdA"
+	by mail.kernel.org (Postfix) with ESMTP id D0DE420885
+	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 16:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgHBPS0 (ORCPT
+        id S1727814AbgHBQjM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Aug 2020 11:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgHBPSX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 2 Aug 2020 11:18:23 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FAD5C061756
-        for <devicetree@vger.kernel.org>; Sun,  2 Aug 2020 08:18:23 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s15so6985656pgc.8
-        for <devicetree@vger.kernel.org>; Sun, 02 Aug 2020 08:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gvr1e9N8TfoMygsUUhEZBnvTsBTOXxOyWQOt3C1D8+8=;
-        b=SwHJdVdAbBWM2v25IkuEi/2qblJn+klhe3ZATfSto0kD3FB4eWSTX7UoB1dDNso7ZI
-         nr1fNqcc3xz7mu/gOMQazOOZUZFhX6acKAHik89dfO3PJ9G/vceHV56nLV7AaXJnDOqR
-         Nx2h2s7+CyXpYSy78tZcKWKPhTtXbDEaE+3pfxmaCP2O8hJ4Is50hBQG6gIr56RtBGqr
-         KR1qhiDFvNci3mG8ikYlnAjWU88V/u48kdTpJWek0kGHBs4sY+SK3FHhKlyGs1Tm1d/4
-         gDJaxzLWZn9jiyQs1GoXegWQ47H8XuUMUepInIkEKZzVFmnK/NK8Nj0rwzo3KNWwAGJl
-         VzLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gvr1e9N8TfoMygsUUhEZBnvTsBTOXxOyWQOt3C1D8+8=;
-        b=Hgj5PfsC+fPxNbMu7Uk+KLSMOapPtzrCpLjd9JecOGjIZdUnF4kKz254Aoc5HigM0G
-         r2PIEWTlf3Tahc013zIfT22jE+TOouJKHif7OXJJlClfgComdXmK5zcAFoviJQOAkjWY
-         lSeD2xBopIYxLUaVMUpR/fpQN3JtHapiAIfx6HYMig4o/FlmfZZVsUDU+p0A6hxwsuu5
-         00lwCQyWyBvxLevD/s7Tg26c+cpe1QseHCJM9CbEqn/Mw2TeaTSwSlC1mE8+w+fqHulE
-         hZr1b0r7JTYU5hKZqlkUuhpVEfKZAi0IE4LNianNohyyRbDK6H7wqGfTqD+3bKIk6Vak
-         +NiA==
-X-Gm-Message-State: AOAM532LyI+Sv02eix9mgruZpNgwQ8JehK2U3T0h53z9r8h3EBz3rFIz
-        +igdd7cb5XrAf0qAfBta45Xq
-X-Google-Smtp-Source: ABdhPJycD/iSNJyaA8+LkJS9OBTByULbevY86imkp1s038y9w5JfofoKus7E+JPwRTTlGPJPLzgqyQ==
-X-Received: by 2002:aa7:99cc:: with SMTP id v12mr6408825pfi.255.1596381502795;
-        Sun, 02 Aug 2020 08:18:22 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e07:71af:89e2:30ac:28ac:db17])
-        by smtp.gmail.com with ESMTPSA id q24sm16683855pgg.3.2020.08.02.08.18.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 02 Aug 2020 08:18:21 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 20:48:13 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 2/3] pinctrl: actions: Add Actions S500 pinctrl driver
-Message-ID: <20200802151813.GA6486@Mani-XPS-13-9360>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
- <20200626142941.GE8333@Mani-XPS-13-9360>
- <20200626171148.GD6611@BV030612LT>
+        Sun, 2 Aug 2020 12:39:12 -0400
+Received: from mailout07.rmx.de ([94.199.90.95]:58461 "EHLO mailout07.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgHBQjM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Aug 2020 12:39:12 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout07.rmx.de (Postfix) with ESMTPS id 4BKRYS3r3jzBvn3;
+        Sun,  2 Aug 2020 18:39:08 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BKRY36QJrz2TS6Z;
+        Sun,  2 Aug 2020 18:38:47 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.16) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Sun, 2 Aug
+ 2020 18:38:24 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>
+Subject: [PATCH v5 0/2] iio: light: Support AMS AS73211 digital XYZ sensor
+Date:   Sun, 2 Aug 2020 18:37:33 +0200
+Message-ID: <20200802163735.76617-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626171148.GD6611@BV030612LT>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.16]
+X-RMX-ID: 20200802-183849-4BKRY36QJrz2TS6Z-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+This series adds support for the AMS AS73211 digital XYZ sensor. Some
+comments to the review emails below...
 
-Sorry for the delay. This has fallen through the cracks...
+Again, many thanks for the comprehensive reviews.
 
-On Fri, Jun 26, 2020 at 08:11:48PM +0300, Cristian Ciocaltea wrote:
-> On Fri, Jun 26, 2020 at 07:59:41PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Jun 25, 2020 at 11:16:19PM +0300, Cristian Ciocaltea wrote:
-> > > Add pinctrl and gpio driver for Actions Semi S500 SoC.
-> > > 
-> > > The driver supports pinctrl, pinmux, pinconf, gpio and interrupt
-> > > functions using a set of registers shared between gpio and pinctrl.
-> > > 
-> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > ---
-> > >  drivers/pinctrl/actions/Kconfig        |    6 +
-> > >  drivers/pinctrl/actions/Makefile       |    1 +
-> > >  drivers/pinctrl/actions/pinctrl-s500.c | 1727 ++++++++++++++++++++++++
-> > >  3 files changed, 1734 insertions(+)
-> > >  create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
-> > > 
-> > > diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-> > > index 966f1c2c89d6..a1d16e8280e5 100644
-> > > --- a/drivers/pinctrl/actions/Kconfig
-> > > +++ b/drivers/pinctrl/actions/Kconfig
-> > > @@ -10,6 +10,12 @@ config PINCTRL_OWL
-> > >  	help
-> > >  	  Say Y here to enable Actions Semi OWL pinctrl driver
-> > >  
-> > > +config PINCTRL_S500
-> > > +	bool "Actions Semi S500 pinctrl driver"
-> > > +	depends on PINCTRL_OWL
-> > > +	help
-> > > +	  Say Y here to enable Actions Semi S500 pinctrl driver
-> > > +
-> > >  config PINCTRL_S700
-> > >  	bool "Actions Semi S700 pinctrl driver"
-> > >  	depends on PINCTRL_OWL
-> > > diff --git a/drivers/pinctrl/actions/Makefile b/drivers/pinctrl/actions/Makefile
-> > > index 61aa9107a43a..b9e2c527c9d3 100644
-> > > --- a/drivers/pinctrl/actions/Makefile
-> > > +++ b/drivers/pinctrl/actions/Makefile
-> > > @@ -1,4 +1,5 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > >  obj-$(CONFIG_PINCTRL_OWL)	+= pinctrl-owl.o
-> > > +obj-$(CONFIG_PINCTRL_S500) 	+= pinctrl-s500.o
-> > >  obj-$(CONFIG_PINCTRL_S700) 	+= pinctrl-s700.o
-> > >  obj-$(CONFIG_PINCTRL_S900) 	+= pinctrl-s900.o
-> > > diff --git a/drivers/pinctrl/actions/pinctrl-s500.c b/drivers/pinctrl/actions/pinctrl-s500.c
-> > > new file mode 100644
-> > > index 000000000000..38e30914af6e
-> > > --- /dev/null
-> > > +++ b/drivers/pinctrl/actions/pinctrl-s500.c
-> > > @@ -0,0 +1,1727 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Actions Semi S500 SoC Pinctrl driver
-> > > + *
-> > > + * Copyright (c) 2014 Actions Semi Inc.
-> > > + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > + */
-> > > +
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/pinctrl/pinconf-generic.h>
-> > > +#include <linux/pinctrl/pinctrl.h>
-> > > +#include "pinctrl-owl.h"
-> > > +
-> > > +/* Pinctrl registers offset */
-> > > +#define MFCTL0			(0x0040)
-> > > +#define MFCTL1			(0x0044)
-> > > +#define MFCTL2			(0x0048)
-> > > +#define MFCTL3			(0x004C)
-> > > +#define PAD_PULLCTL0		(0x0060)
-> > > +#define PAD_PULLCTL1		(0x0064)
-> > > +#define PAD_PULLCTL2		(0x0068)
-> > > +#define PAD_ST0			(0x006C)
-> > > +#define PAD_ST1			(0x0070)
-> > > +#define PAD_CTL			(0x0074)
-> > > +#define PAD_DRV0		(0x0080)
-> > > +#define PAD_DRV1		(0x0084)
-> > > +#define PAD_DRV2		(0x0088)
-> > > +
-> > > +#define _GPIOA(offset)		(offset)
-> > > +#define _GPIOB(offset)		(32 + (offset))
-> > > +#define _GPIOC(offset)		(64 + (offset))
-> > > +#define _GPIOD(offset)		(96 + (offset))
-> > > +#define _GPIOE(offset)		(128 + (offset))
-> > > +
-> > > +#define NUM_GPIOS		(_GPIOE(3) + 1)
-> > > +#define _PIN(offset)		(NUM_GPIOS + (offset))
-> > > +
-> > > +#define DNAND_DQS		_GPIOA(12)
-> > > +#define DNAND_DQSN		_GPIOA(13)
-> > > +#define ETH_TXD0		_GPIOA(14)
-> > > +#define ETH_TXD1		_GPIOA(15)
-> > > +#define ETH_TXEN		_GPIOA(16)
-> > > +#define ETH_RXER		_GPIOA(17)
-> > > +#define ETH_CRS_DV		_GPIOA(18)
-> > > +#define ETH_RXD1		_GPIOA(19)
-> > > +#define ETH_RXD0		_GPIOA(20)
-> > > +#define ETH_REF_CLK		_GPIOA(21)
-> > > +#define ETH_MDC			_GPIOA(22)
-> > > +#define ETH_MDIO		_GPIOA(23)
-> > > +#define SIRQ0			_GPIOA(24)
-> > > +#define SIRQ1			_GPIOA(25)
-> > > +#define SIRQ2			_GPIOA(26)
-> > > +#define I2S_D0			_GPIOA(27)
-> > > +#define I2S_BCLK0		_GPIOA(28)
-> > > +#define I2S_LRCLK0		_GPIOA(29)
-> > > +#define I2S_MCLK0		_GPIOA(30)
-> > > +#define I2S_D1			_GPIOA(31)
-> > > +
-> > > +#define I2S_BCLK1		_GPIOB(0)
-> > > +#define I2S_LRCLK1		_GPIOB(1)
-> > > +#define I2S_MCLK1		_GPIOB(2)
-> > > +#define KS_IN0			_GPIOB(3)
-> > > +#define KS_IN1			_GPIOB(4)
-> > > +#define KS_IN2			_GPIOB(5)
-> > > +#define KS_IN3			_GPIOB(6)
-> > > +#define KS_OUT0			_GPIOB(7)
-> > > +#define KS_OUT1			_GPIOB(8)
-> > > +#define KS_OUT2			_GPIOB(9)
-> > > +#define LVDS_OEP		_GPIOB(10)
-> > > +#define LVDS_OEN		_GPIOB(11)
-> > > +#define LVDS_ODP		_GPIOB(12)
-> > > +#define LVDS_ODN		_GPIOB(13)
-> > > +#define LVDS_OCP		_GPIOB(14)
-> > > +#define LVDS_OCN		_GPIOB(15)
-> > > +#define LVDS_OBP		_GPIOB(16)
-> > > +#define LVDS_OBN		_GPIOB(17)
-> > > +#define LVDS_OAP		_GPIOB(18)
-> > > +#define LVDS_OAN		_GPIOB(19)
-> > > +#define LVDS_EEP		_GPIOB(20)
-> > > +#define LVDS_EEN		_GPIOB(21)
-> > > +#define LVDS_EDP		_GPIOB(22)
-> > > +#define LVDS_EDN		_GPIOB(23)
-> > > +#define LVDS_ECP		_GPIOB(24)
-> > > +#define LVDS_ECN		_GPIOB(25)
-> > > +#define LVDS_EBP		_GPIOB(26)
-> > > +#define LVDS_EBN		_GPIOB(27)
-> > > +#define LVDS_EAP		_GPIOB(28)
-> > > +#define LVDS_EAN		_GPIOB(29)
-> > > +#define LCD0_D18		_GPIOB(30)
-> > > +#define LCD0_D17		_GPIOB(31)
-> > > +
-> > > +#define DSI_DP3			_GPIOC(0)
-> > > +#define DSI_DN3			_GPIOC(1)
-> > > +#define DSI_DP1			_GPIOC(2)
-> > > +#define DSI_DN1			_GPIOC(3)
-> > > +#define DSI_CP			_GPIOC(4)
-> > > +#define DSI_CN			_GPIOC(5)
-> > > +#define DSI_DP0			_GPIOC(6)
-> > > +#define DSI_DN0			_GPIOC(7)
-> > > +#define DSI_DP2			_GPIOC(8)
-> > > +#define DSI_DN2			_GPIOC(9)
-> > > +#define SD0_D0			_GPIOC(10)
-> > > +#define SD0_D1			_GPIOC(11)
-> > > +#define SD0_D2			_GPIOC(12)
-> > > +#define SD0_D3			_GPIOC(13)
-> > > +#define SD1_D0			_GPIOC(14) /* SD0_D4 */
-> > > +#define SD1_D1			_GPIOC(15) /* SD0_D5 */
-> > > +#define SD1_D2			_GPIOC(16) /* SD0_D6 */
-> > > +#define SD1_D3			_GPIOC(17) /* SD0_D7 */
-> > > +#define SD0_CMD			_GPIOC(18)
-> > > +#define SD0_CLK			_GPIOC(19)
-> > > +#define SD1_CMD			_GPIOC(20)
-> > > +#define SD1_CLK			_GPIOC(21)
-> > > +#define SPI0_SCLK		_GPIOC(22)
-> > > +#define SPI0_SS			_GPIOC(23)
-> > > +#define SPI0_MISO		_GPIOC(24)
-> > > +#define SPI0_MOSI		_GPIOC(25)
-> > > +#define UART0_RX		_GPIOC(26)
-> > > +#define UART0_TX		_GPIOC(27)
-> > > +#define I2C0_SCLK		_GPIOC(28)
-> > > +#define I2C0_SDATA		_GPIOC(29)
-> > > +#define SENSOR0_PCLK		_GPIOC(31)
-> > > +
-> > > +#define SENSOR0_CKOUT		_GPIOD(10)
-> > > +#define DNAND_ALE		_GPIOD(12)
-> > > +#define DNAND_CLE		_GPIOD(13)
-> > > +#define DNAND_CEB0		_GPIOD(14)
-> > > +#define DNAND_CEB1		_GPIOD(15)
-> > > +#define DNAND_CEB2		_GPIOD(16)
-> > > +#define DNAND_CEB3		_GPIOD(17)
-> > > +#define UART2_RX		_GPIOD(18)
-> > > +#define UART2_TX		_GPIOD(19)
-> > > +#define UART2_RTSB		_GPIOD(20)
-> > > +#define UART2_CTSB		_GPIOD(21)
-> > > +#define UART3_RX		_GPIOD(22)
-> > > +#define UART3_TX		_GPIOD(23)
-> > > +#define UART3_RTSB		_GPIOD(24)
-> > > +#define UART3_CTSB		_GPIOD(25)
-> > > +#define PCM1_IN			_GPIOD(28)
-> > > +#define PCM1_CLK		_GPIOD(29)
-> > > +#define PCM1_SYNC		_GPIOD(30)
-> > > +#define PCM1_OUT		_GPIOD(31)
-> > > +
-> > > +#define I2C1_SCLK		_GPIOE(0)
-> > > +#define I2C1_SDATA		_GPIOE(1)
-> > > +#define I2C2_SCLK		_GPIOE(2)
-> > > +#define I2C2_SDATA		_GPIOE(3)
-> > > +
-> > > +#define CSI_DN0			_PIN(0)
-> > > +#define CSI_DP0			_PIN(1)
-> > > +#define CSI_DN1			_PIN(2)
-> > > +#define CSI_DP1			_PIN(3)
-> > > +#define CSI_CN			_PIN(4)
-> > > +#define CSI_CP			_PIN(5)
-> > > +#define CSI_DN2			_PIN(6)
-> > > +#define CSI_DP2			_PIN(7)
-> > > +#define CSI_DN3			_PIN(8)
-> > > +#define CSI_DP3			_PIN(9)
-> > > +
-> > > +#define DNAND_D0		_PIN(10)
-> > > +#define DNAND_D1		_PIN(11)
-> > > +#define DNAND_D2		_PIN(12)
-> > > +#define DNAND_D3		_PIN(13)
-> > > +#define DNAND_D4		_PIN(14)
-> > > +#define DNAND_D5		_PIN(15)
-> > > +#define DNAND_D6		_PIN(16)
-> > > +#define DNAND_D7		_PIN(17)
-> > > +#define DNAND_WRB		_PIN(18)
-> > > +#define DNAND_RDB		_PIN(19)
-> > > +#define DNAND_RDBN		_PIN(20)
-> > > +#define DNAND_RB		_PIN(21)
-> > > +
-> > > +#define PORB			_PIN(22)
-> > > +#define CLKO_25M		_PIN(23)
-> > > +#define BSEL			_PIN(24)
-> > > +#define PKG0			_PIN(25)
-> > > +#define PKG1			_PIN(26)
-> > > +#define PKG2			_PIN(27)
-> > > +#define PKG3			_PIN(28)
-> > > +
-> > > +#define _FIRSTPAD		_GPIOA(0)
-> > > +#define _LASTPAD		PKG3
-> > > +#define NUM_PADS		(_PIN(28) + 1)
-> > > +
-> > 
-> > [...]
-> > 
-> > > +static const struct owl_gpio_port s500_gpio_ports[] = {
-> > > +	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x230, 0),
-> > > +	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x1F8, 0x204, 0x208, 0x22C, 1),
-> > > +	OWL_GPIO_PORT(C, 0x0018, 32, 0x0, 0x4, 0x8, 0x1EC, 0x200, 0x204, 0x228, 2),
-> > > +	OWL_GPIO_PORT(D, 0x0024, 32, 0x0, 0x4, 0x8, 0x1E0, 0x1FC, 0x200, 0x224, 3),
-> > > +	OWL_GPIO_PORT(E, 0x0030,  4, 0x0, 0x4, 0x8, 0x1D4, 0x1F8, 0x1FC, 0x220, 4),
-> > 
-> > Except PORT-A, rest of the offsets for ports seems to be wrong. From where did
-> > you get these?
-> > 
-> > Thanks,
-> > Mani
-> 
-> I computed the offsets using the S500 Datasheet, v1.6 (2016-03-07).
-> 
-> Below is an excerpt from chapter '30.4 Register List':
-> 
-> -------+--------------
-> Offset | Register Name
-> -------+--------------
-> 0x000C | GPIO_BOUTEN
-> 0x0010 | GPIO_BINEN
-> 0x0014 | GPIO_BDAT
-> ...
-> 0x0204 | INTC_GPIOCTL
-> 0x0210 | INTC_GPIOB_PD
-> 0x0214 | INTC_GPIOB_MSK
-> ...
-> 0x0238 | INTC_GPIOB_TYPE0
-> -------+--------------
-> 
-> Hence, for PORT-B, I got the following values:
-> 
-> OWL_GPIO_PORT(B,
->   0x000C, /* base = GPIO_BOUTEN = 0x000C */
->   32,
->   0x0,    /* GPIO_BOUTEN - base */
->   0x4,    /* GPIO_BINEN - base */
->   0x8,    /* GPIO_BDAT - base */
->   0x1F8,  /* INTC_GPIOCTL - base */
->   0x204,  /* INTC_GPIOB_PD - base */
->   0x208,  /* INTC_GPIOB_MSK - base */
->   0x22C,  /* INTC_GPIOB_TYPE0 - base */
->   1),
-> 
-> Did I miss something?
-> 
+Changes in v5:
+---------------
+- [1/2] Reviewed by Rob Herring
+- [2/2] Added KHZ_PER_HR define
+- [2/2] Added AS73211_SAMPLE_FREQ_BASE define
+- [2/2] Slight changes in comments
+- [2/2] Claim direct mode in write_raw()
+- [2/2] Saturate only in case of overflow
+- [2/2] Don't set indio_dev->dev.parent
+- [2/2] Fix error path (order) in probe()
 
-No, I missed the fact that the pinctrl-owl.c takes the per port offset into
-account for calculating the offsets... Sorry for the noise, please go ahead!
+Changes in v4:
+---------------
+- Integrated 2nd review from Andy Shevchenko
+- Use more devm_ functions in as73211_probe()
 
-Thanks,
-Mani
+Changes in v3:
+---------------
+- Integrated comments from Andy Shevchenko
+- Integrated comments from Jonathan Cameron
 
-> Thanks,
-> Cristi
+Changes in v2:
+---------------
+- Fix $id in dt binding
+- Document full I2C address range in "reg" property
+- Move "buffer" member out of "struct as73211_data"
+- Fix sparse warnings by using correct data types
+
+
+On Friday, 31 July 2020, 17:41:47 CEST, Andy Shevchenko wrote:
+> On Fri, Jul 31, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
+> > devm_iio_device_alloc() doesn't pass 'dev' to iio_device_alloc().
+> > I already looked around, but I didn't find. And after debugging
+> > v5.4, devm_iio_device_alloc() definitely doesn't do it.
 > 
-> > 
-> > > +};
-> > > +
-> > > +enum s500_pinconf_pull {
-> > > +	OWL_PINCONF_PULL_DOWN,
-> > > +	OWL_PINCONF_PULL_UP,
-> > > +};
-> > > +
-> > > +static int s500_pad_pinconf_arg2val(const struct owl_padinfo *info,
-> > > +				    unsigned int param, u32 *arg)
-> > > +{
-> > > +	switch (param) {
-> > > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > > +		*arg = OWL_PINCONF_PULL_DOWN;
-> > > +		break;
-> > > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > > +		*arg = OWL_PINCONF_PULL_UP;
-> > > +		break;
-> > > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> > > +		*arg = (*arg >= 1 ? 1 : 0);
-> > > +		break;
-> > > +	default:
-> > > +		return -EOPNOTSUPP;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int s500_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
-> > > +				    unsigned int param, u32 *arg)
-> > > +{
-> > > +	switch (param) {
-> > > +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> > > +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
-> > > +		break;
-> > > +	case PIN_CONFIG_BIAS_PULL_UP:
-> > > +		*arg = *arg == OWL_PINCONF_PULL_UP;
-> > > +		break;
-> > > +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> > > +		*arg = *arg == 1;
-> > > +		break;
-> > > +	default:
-> > > +		return -EOPNOTSUPP;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static struct owl_pinctrl_soc_data s500_pinctrl_data = {
-> > > +	.padinfo = s500_padinfo,
-> > > +	.pins = (const struct pinctrl_pin_desc *)s500_pads,
-> > > +	.npins = ARRAY_SIZE(s500_pads),
-> > > +	.functions = s500_functions,
-> > > +	.nfunctions = ARRAY_SIZE(s500_functions),
-> > > +	.groups = s500_groups,
-> > > +	.ngroups = ARRAY_SIZE(s500_groups),
-> > > +	.ngpios = NUM_GPIOS,
-> > > +	.ports = s500_gpio_ports,
-> > > +	.nports = ARRAY_SIZE(s500_gpio_ports),
-> > > +	.padctl_arg2val = s500_pad_pinconf_arg2val,
-> > > +	.padctl_val2arg = s500_pad_pinconf_val2arg,
-> > > +};
-> > > +
-> > > +static int s500_pinctrl_probe(struct platform_device *pdev)
-> > > +{
-> > > +	return owl_pinctrl_probe(pdev, &s500_pinctrl_data);
-> > > +}
-> > > +
-> > > +static const struct of_device_id s500_pinctrl_of_match[] = {
-> > > +	{ .compatible = "actions,s500-pinctrl", },
-> > > +	{ }
-> > > +};
-> > > +
-> > > +static struct platform_driver s500_pinctrl_driver = {
-> > > +	.driver = {
-> > > +		.name = "pinctrl-s500",
-> > > +		.of_match_table = of_match_ptr(s500_pinctrl_of_match),
-> > > +	},
-> > > +	.probe = s500_pinctrl_probe,
-> > > +};
-> > > +
-> > > +static int __init s500_pinctrl_init(void)
-> > > +{
-> > > +	return platform_driver_register(&s500_pinctrl_driver);
-> > > +}
-> > > +arch_initcall(s500_pinctrl_init);
-> > > +
-> > > +static void __exit s500_pinctrl_exit(void)
-> > > +{
-> > > +	platform_driver_unregister(&s500_pinctrl_driver);
-> > > +}
-> > > +module_exit(s500_pinctrl_exit);
-> > > +
-> > > +MODULE_AUTHOR("Actions Semi Inc.");
-> > > +MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
-> > > +MODULE_DESCRIPTION("Actions Semi S500 SoC Pinctrl Driver");
-> > > +MODULE_LICENSE("GPL");
-> > > -- 
-> > > 2.27.0
-> > > 
+> Why are you talking about v5.4? We are in v5.8 cycle contributing to v5.9.
+v5.4-rt is the version for my product release. Current base for these
+patches is 5.8-rc6
+
+
+On Friday, 31 July 2020, 18:19:55 CEST, Jonathan Cameron wrote:
+> > On Fri, Jul 31, 2020 at 1:52 PM Christian Eggers <ceggers@arri.de> wrote:
+> > Recently IIO gained some features among which I think the one that
+> > assigns parent devices.
+> 
+> yup. This should be in linux-next now for the coming merge window (which
+> probably opens on Sunday).
+Thanks for the hint. Is there a particular tree which is preferred for
+IIO development?
+
+
+On Saturday, 1 August 2020, 17:29:58 CEST, Jonathan Cameron wrote:
+> On Fri, 31 Jul 2020 09:01:14 +0200 Christian Eggers <ceggers@arri.de> wrote:
+> > +static int as73211_write_raw(struct iio_dev *indio_dev, struct
+> > iio_chan_spec const *chan, +			      int val, int val2, long mask)
+> > +{
+> > +	...
+> > +	/* Need to switch to config mode ... */
+> 
+> Is this safe whilst we are doing a capture?
+> You may want to claim_direct_mode for write_raw to ensure we don't get such
+> a race.
+> 
+That's an important point! As I use iio-trig-sysfs, I never had any
+problems with this. But if for instance iio-trig-hrtimer is active, this
+could become a problem.
+
+In v5, I have claimed direct mode. For the application this means, that
+buffer/enable has to be set to '0' before any settings can be
+changed. As libiio doesn't support enabling/disabling a buffer directly,
+the buffer needs to be destroyed and newly constructed.
+
+
+
