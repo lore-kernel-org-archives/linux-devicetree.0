@@ -6,63 +6,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5711C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4F7C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9196920825
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F238207DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596469993;
-	bh=OWnDWHU1nzLolfdwMe0Fa5jUjJmt5+xy6CpjufWsnfQ=;
+	s=default; t=1596470005;
+	bh=MIgoWkiYyIGRvQI5hrwUdGUdvru2hp0i0DHArLtQKD0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=cDFTGqFmDtADRVyUZyOOG0gwDOBakILpMl1Q8lwi6fHgAPnQOUSLrmTVbUiuz7B/T
-	 fQG002D86kotyMFH3hZ/4j8WI/yRGtxZD8l4dn1jYi43Xd6AyXplXCg7JbDrG5ZM4P
-	 8pMOYF28MefE5AUUOmQJEcHt0licIft30HdpqbZ4=
+	b=xw1rLGS1CZBB6jw4xvugDLxVjAstn/in9otbGiIVRir/XLjXaYZNXnJ2UlQo/Rjrh
+	 mR225gu/d4lnvhDn9w9zum456K8BI2DKOVulBiqhpK9/gex4PrRCqspL8vrVY/FOUE
+	 CJ2ut8qW7ayQNGSOyPAjUbZEyikGuv9ht/x7KFxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgHCPxO (ORCPT
+        id S1728127AbgHCPxZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:53:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43488 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 11:53:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727085AbgHCPxN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:53:13 -0400
+        id S1728090AbgHCPxY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:53:24 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1FD207DF;
-        Mon,  3 Aug 2020 15:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 051C2207DF;
+        Mon,  3 Aug 2020 15:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596469992;
-        bh=OWnDWHU1nzLolfdwMe0Fa5jUjJmt5+xy6CpjufWsnfQ=;
+        s=default; t=1596470002;
+        bh=MIgoWkiYyIGRvQI5hrwUdGUdvru2hp0i0DHArLtQKD0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Po5A1vzq3VziCr7L2CLivyi0NO2JNMPTLL80UxtgiFfLqJbHTsxPiS4qy8DsGlugP
-         uxvVM+85z9YZOpuMYQ2qF1FS/mnpmDsOqdlxIr4c3hpxJV587Nr4VhZWmk+tnQTRW5
-         4zs19PW1tQT9lYBUXRi+ojUKqpiletGC7xDiZKAU=
-Date:   Mon, 03 Aug 2020 16:52:52 +0100
+        b=ArRpa4eHxQPbzgZ3CM6gul71f2xv2n+MIlHo24clzxh/vrp+Ng38h6fKAQTAnuK62
+         DdKu0dGv310P+tQYTeTQoVOBOR2uVPdkSJmivjZUeaONvkGBbHOzZ4FmlUr3JqcIaF
+         p02k9U4cfbFr5f0lg8NCHU1MFAeMh5KbZaH/Qziw=
+Date:   Mon, 03 Aug 2020 16:53:02 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Saravanan Sekar <sravanhome@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20200729130839.10a9bf88@xhacker>
-References: <20200729130839.10a9bf88@xhacker>
-Subject: Re: [PATCH v2 0/4] regulator: mp886x: two features and dt json convert
-Message-Id: <159646997224.2690.15922098911001927310.b4-ty@kernel.org>
+In-Reply-To: <20200728232327.71ab3729@xhacker>
+References: <20200728232327.71ab3729@xhacker>
+Subject: Re: [PATCH 0/4] regulator: mp886x: two features and dt json convert
+Message-Id: <159646997224.2690.15283965107669623316.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 29 Jul 2020 13:08:39 +0800, Jisheng Zhang wrote:
+On Tue, 28 Jul 2020 23:23:27 +0800, Jisheng Zhang wrote:
 > This is to improve the mp886x regulator driver support.
-> patch1 implments .set_ramp_delay
-> patch2 and patch3 support the switch freq setting
-> patch4 converts dt binding to json-schema
+> patch1 converts dt binding to json-schema
+> patch2 implments .set_ramp_delay
+> patch3 and patch3 support the switch freq setting
 > 
-> Since v2:
->   - put any schema conversions at the end of the series as Mark
->     suggested.
+> Jisheng Zhang (4):
+>   dt-bindings: regulator: Convert mp886x to json-schema
+>   regulator: mp886x: implement set_ramp_delay
+>   dt-bindings: regulator: mp886x: support mps,switch-frequency
+>   regulator: mp886x: support setting switch freq
 > 
 > [...]
 
@@ -72,11 +74,13 @@ Applied to
 
 Thanks!
 
-[1/3] regulator: mp886x: implement set_ramp_delay
+[1/4] dt-bindings: regulator: Convert mp886x to json-schema
+      (no commit info)
+[2/4] regulator: mp886x: implement set_ramp_delay
       commit: 0eddcf0267f913cb6336af64cadaf5acf6b19b7b
-[2/3] regulator: mp886x: support mps,switch-frequency
-      commit: b4b85af052f434bc3be5ee18462164986618feb1
-[3/3] regulator: mp886x: support setting switch freq
+[3/4] dt-bindings: regulator: mp886x: support mps,switch-frequency
+      (no commit info)
+[4/4] regulator: mp886x: support setting switch freq
       commit: ee6ad5a24575071b66bd37ffb2d8747a64fcb45f
 
 All being well this means that it will be integrated into the linux-next
