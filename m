@@ -2,97 +2,147 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB27C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 17:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8DAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 18:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E89322C9F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 17:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA69822BF3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 18:09:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJmlgUcj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="coDDm+vP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgHCRlo (ORCPT
+        id S1727880AbgHCSJg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34588 "EHLO
+        Mon, 3 Aug 2020 14:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgHCRln (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 13:41:43 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACE87C06174A;
-        Mon,  3 Aug 2020 10:41:43 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id e4so344119pjd.0;
-        Mon, 03 Aug 2020 10:41:43 -0700 (PDT)
+        with ESMTP id S1726130AbgHCSJf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 14:09:35 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C4BFC06174A
+        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 11:09:35 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id d20so1658084ual.13
+        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 11:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ITdLnDICTMXLD69TXhj+jeJHGfxEvBcozE7CtADBcX8=;
-        b=NJmlgUcjeZU/TIrRhV03rLWSzzOEII/yKkk7LwDEjrDhOsSwTXZpt5Ojr/tkHFx1hD
-         THxLDbP9F10pwKIckCtMVZJfEq5W/cK7FWz3L+5FNzmIPANbCGsmrsihOU2n18ULaePM
-         yPgv8hfazlsyPByNtBwLEYxzZevCT9pr5X1GFtvrjDHJjiR7f+IpQ4FuX2MEVsOWD+gY
-         QY4Fc6mbV7ldbwMuqpCo/ioUor+IBSNnyn53xfM/kum3tmC1v5ANjpsstarXkXpWv/z2
-         VYPXHFhsWgLMqikJzi/Pnorc6ku4V4Qf/HFJDa5vfhQhfd8E7ebWrNGrtJFW+eOhSd9a
-         qZXw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jVtWQUGpmw8jhNyuuKCyNkZI5368yArYPxJOwi5ESm4=;
+        b=coDDm+vPAuh6Fuh2z/owncaMvXWcMJtlRYB7hg03SaGSChcDWim/iI7wQu6Gtru4LI
+         LNNy/0P59m7hXu3w8xvG2OpKtNRj3lQLUBTX0H4+160GNmcD4+O94D6G26WpSJdbxPGx
+         S9b8lEbGDCKUi6B37X/bH0jLuj/oO8PhAeAds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ITdLnDICTMXLD69TXhj+jeJHGfxEvBcozE7CtADBcX8=;
-        b=kZBH7UBlbzScwjNiQnchf2jc0iHRir4tGVoK6NDOgRUmHwTJxxzSzDPkka5YlJVdI/
-         wS0sDTUDurGEyRDFD/hbrTFY7BdB11he/bHtmvxuXFUFWhhZ2434GWhaKznB7pcsU0hi
-         +0VS1AJK2pbKWqPOzPbuCMywwY2N/F8n29G1avRdgLEhvooLOcYlkMek7lbO0hAVRfNH
-         dzXMHscsFTv0C3nL1ZWZKVNBXpeNeA2nMv+HaQFRd5Eo+UK8T5zbf6atYCmMyz7tWCcI
-         7BVDkWH5dmNJ6z1yFtHLPxDTGSPmJRwtLR1Y0CeXAYZBOFW3Iz1yVTzWw0n8Yle5MbOm
-         dfPQ==
-X-Gm-Message-State: AOAM530NKlNBsXZ32hisjUzDG571TnkhE35qH+xD0AJlY9mRvRiWqOkY
-        mQLEnW9YF1IZrx34etYQkGgIXE9K
-X-Google-Smtp-Source: ABdhPJy1hSl+0vhbsItK151t+5JgI4JzUeDP0ECJib1D1rIFVoFLTr4/ThRt76C7BcrA7rc9NkUDoA==
-X-Received: by 2002:a17:902:ff13:: with SMTP id f19mr16067564plj.326.1596476503272;
-        Mon, 03 Aug 2020 10:41:43 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w16sm130929pjd.50.2020.08.03.10.41.39
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jVtWQUGpmw8jhNyuuKCyNkZI5368yArYPxJOwi5ESm4=;
+        b=WWc8XrC8c1tC1FEoXt2TLfjs4dsLhjW0LT/+wwhcZmeBCNof3qO2Xl0WCnIVg4KiRS
+         K5/L8wCY3XhZlZEV5kH3IKXX8cXqTbsssRO/cfBhElcMy1ANUQzQenE3qDYuC/ZXPK8R
+         gjYW8MKz/2W6F3JDCMhIojPfMb030J8q0mOI4sJQdyioFp89R8TdImoZqHix0xQWO+Dk
+         Sqlh6q0Wt6SWM4UJxe9zSKgLDvv9dyWQwQ2ctZGhrn1Td8qjaoBvkWAtMFB9myOGloxi
+         H9vq2usRxBngbNQpKQnUWQ1EhcqnyjyrceAQDjVTUArc/nei0KlfVQW3VRSCA33z/EgZ
+         vzow==
+X-Gm-Message-State: AOAM530t87NPrYhekr2/pyZgBmaqzFRG29FsEi+++bfFMUFrbWYJkOU1
+        YQunf+IT6xk3zOoSLqryASZA1+hfoDo=
+X-Google-Smtp-Source: ABdhPJxK5hTYLpjuSkngwNPdHbhI64z8hJ2R6TuBUki2RHEL2f9+tBPOnwOSNtKnej+03/z8Scj8SQ==
+X-Received: by 2002:ab0:b09:: with SMTP id b9mr11078323uak.33.1596478174402;
+        Mon, 03 Aug 2020 11:09:34 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id j20sm2187476uan.13.2020.08.03.11.09.30
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 10:41:42 -0700 (PDT)
-Subject: Re: [PATCH v4 11/11] dt-bindings: net: dsa: document additional
- Microchip KSZ8863/8873 switch
-To:     Michael Grzeschik <m.grzeschik@pengutronix.de>, andrew@lunn.ch
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, kernel@pengutronix.de,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-References: <20200803054442.20089-1-m.grzeschik@pengutronix.de>
- <20200803054442.20089-12-m.grzeschik@pengutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d35c9a72-035d-fcc2-b0ce-a986ce55b78f@gmail.com>
-Date:   Mon, 3 Aug 2020 10:41:36 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Mon, 03 Aug 2020 11:09:31 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id z26so5932611uaa.4
+        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 11:09:30 -0700 (PDT)
+X-Received: by 2002:ab0:44e5:: with SMTP id n92mr12122918uan.121.1596478170242;
+ Mon, 03 Aug 2020 11:09:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200803054442.20089-12-m.grzeschik@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1596305615-5894-1-git-send-email-tdas@codeaurora.org> <1596305615-5894-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1596305615-5894-2-git-send-email-tdas@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 3 Aug 2020 11:09:18 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vm4bF07OFQv85kmOyzK9=TcC0gJuuxcJwUxGNed06QTw@mail.gmail.com>
+Message-ID: <CAD=FV=Vm4bF07OFQv85kmOyzK9=TcC0gJuuxcJwUxGNed06QTw@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add LPASS clock controller nodes
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
+On Sat, Aug 1, 2020 at 11:14 AM Taniya Das <tdas@codeaurora.org> wrote:
+>
+> Update the clock controller nodes for Low power audio subsystem
+> functionality.
+>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index d46b383..7cf8bfe 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -8,6 +8,7 @@
+>  #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+> +#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,videocc-sc7180.h>
+>  #include <dt-bindings/interconnect/qcom,osm-l3.h>
+> @@ -3312,6 +3313,30 @@
+>                         qcom,msa-fixed-perm;
+>                         status = "disabled";
+>                 };
+> +
+> +               lpasscc: clock-controller@62d00000 {
+> +                       compatible = "qcom,sc7180-lpasscorecc";
+> +                       reg = <0 0x62d00000 0 0x50000>,
+> +                           <0 0x62780000 0 0x30000>;
+> +                       reg-names = "lpass_core_cc", "lpass_audio_cc";
+> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
+> +                                <&rpmhcc RPMH_CXO_CLK>;
+> +                       clock-names = "iface", "bi_tcxo";
+> +                       power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> +                       #clock-cells = <1>;
+> +                       #power-domain-cells = <1>;
+> +               };
+> +
+> +               lpass_hm: clock-controller@63000000 {
+> +                       compatible = "qcom,sc7180-lpasshm";
+> +                       reg = <0 0x63000000 0 0x28>;
+> +                       clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
+> +                                <&rpmhcc RPMH_CXO_CLK>;
+> +                       clock-names = "iface", "bi_tcxo";
+> +                       #clock-cells = <1>;
+> +                       #power-domain-cells = <1>;
+> +               };
+> +
+>         };
 
-On 8/2/2020 10:44 PM, Michael Grzeschik wrote:
-> It is a 3-Port 10/100 Ethernet Switch. One CPU-Port and two
-> Switch-Ports.
-> 
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+You end up adding a blank line at the end that Bjron can probably fix
+when applying, but other than that this looks good to me.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
