@@ -2,121 +2,258 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D10C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A08C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA2320719
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9CCB20672
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JEo04xjD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bw8H8gOu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbgHCI3o (ORCPT
+        id S1726222AbgHCIka (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:29:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:44166 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725884AbgHCI3n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 04:29:43 -0400
-X-UUID: 05924b868abd422788d1adf1fe4eaeab-20200803
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=EuuyH2OVGmIhL/U3X6SY1BLzxNovAUS15W1lABzBFs0=;
-        b=JEo04xjD0JDyd4pfKxqCnA10Gh276qX9+c+0J29zY6ug5ZRwjeOGJPdq8rnw45o3qGSG7o9cnA6mi2T+T+K1IXGtgQW79E63Q26z4voGvtd/RASfsdg/jBhMrqKZUVpxqY6Cje02zeZPo92TgekHdQe8dy9DVPZYYpyKeI7pHsE=;
-X-UUID: 05924b868abd422788d1adf1fe4eaeab-20200803
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1692457246; Mon, 03 Aug 2020 16:29:40 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 3 Aug 2020 16:29:37 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 3 Aug 2020 16:29:37 +0800
-Message-ID: <1596443379.31084.3.camel@mtksdaap41>
-Subject: Re: [PATCH 1/8] mfd: mt6358: refine interrupt code
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        "Josef Friedl" <josef.friedl@speed.at>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        <hsin-hsiung.wang@mediatek.com>
-Date:   Mon, 3 Aug 2020 16:29:39 +0800
-In-Reply-To: <20200727154840.GY1850026@dell>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20200727154840.GY1850026@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 3 Aug 2020 04:40:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgHCIk3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 04:40:29 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9ECC06174A
+        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 01:40:29 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id c80so13553489wme.0
+        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 01:40:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cq5+lj+HxdPKUksR7gRNmns7ju/WhDWUsP3NFKOReq8=;
+        b=Bw8H8gOuWbx14/g/EG6O1Y8+gAH1srU5wsQImYaHnDeDvfgbsnQKLIlyY2i6Yk44la
+         kqnaNemfWLvh+APs8IfLgZPvzxWXxtXUuHX7Ic8rW+ccSp6HA2zUh8KrW1aoQICqaqJq
+         DX4cOJ6oyKiLOXjJwV24MKgUSxxNtoZN9DJvk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cq5+lj+HxdPKUksR7gRNmns7ju/WhDWUsP3NFKOReq8=;
+        b=hy9CtrfTcVSpveCnfHh6lIIEHnIbzZRcOok95qukjjnYiFeOTBphSr/FMEaLkkPLTW
+         mSAqf/i4xIbLcNRZnYShftllHxiiksSdfg3ECTjMKkZYj7q7l+/Lor0jdJpOGRNV4hYv
+         TUwHru63CrcLyXC89wvBYe3REIjx2t0pDaevMqvT/e8ullMmYo/8bvtJDciSTdCKHrO5
+         bfXSLA3hkkFl4ZwUoNBe1wjJ+sJCZiFehgAmKoz/6+LiAiHsjZy8rSV5t966tgRyM0Xq
+         FLmByHQfjqDGNF8959fw5SjzTYdt2zFfc3ZBedo60Ki+FmcZX/UxwFWp4QhKXuPO/IgN
+         79CA==
+X-Gm-Message-State: AOAM531e4L3bUx71F7N5j0xp0dKrsGiRvYyyQf8HvxBodUMzo176Ri3C
+        psaxuKgoIZ8rZNcOQT0GJsD5zZrPsEJWDm9Mqief2Q==
+X-Google-Smtp-Source: ABdhPJyAahynHEVEn2oNVJMFau2e96vW5t5i5ugRhfFM5wveqNbnogUdLR+Dmsz70dO7HSAwUKUwpj9F129+6y4tr7I=
+X-Received: by 2002:a1c:4e17:: with SMTP id g23mr14528398wmh.42.1596444027706;
+ Mon, 03 Aug 2020 01:40:27 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200731084023.2678931-1-cychiang@chromium.org>
+ <20200731084023.2678931-2-cychiang@chromium.org> <20200731183248.GB531472@bogus>
+In-Reply-To: <20200731183248.GB531472@bogus>
+From:   Cheng-yi Chiang <cychiang@chromium.org>
+Date:   Mon, 3 Aug 2020 16:40:00 +0800
+Message-ID: <CAFv8Nw+e=tO+720-CDXy2Fk84qxk2C2Tbrh19ngmsBRY4D1M1w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Doug Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQoNCk9uIE1vbiwgMjAyMC0wNy0yNyBhdCAxNjo0OCArMDEwMCwgTGVlIEpvbmVzIHdyb3Rl
-Og0KPiBPbiBUaHUsIDIzIEp1bCAyMDIwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3RlOg0KPiANCj4g
-PiBUaGlzIHBhdGNoIHJlZmluZXMgdGhlIGludGVycnVwdCByZWxhdGVkIGNvZGUgdG8gc3VwcG9y
-dCBuZXcgY2hpcHMuDQo+IA0KPiBSZWZpbmVzIGluIHdoYXQgd2F5Pw0KPiANCj4gV2hhdCBtYWtl
-cyB0aGlzIGJldHRlcj8NCj4gDQoNClRoYW5rcyBmb3IgdGhlIGNvbW1lbnQuIEkgd2lsbCBhZGQg
-bW9yZSBpbmZvcm1hdGlvbiBpbnRvIGNvbW1lbnQgbWVzc2FnZQ0KYmFzZWQgb24gbXkgYmVsb3cg
-ZXhwbGFuYXRpb24uDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2lu
-LWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tZmQvbXQ2
-MzU4LWlycS5jICAgICAgICB8IDY1ICsrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0t
-LS0tLS0tDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL210NjM1OC9jb3JlLmggfCAgOCArKy0tLQ0K
-PiA+ICAyIGZpbGVzIGNoYW5nZWQsIDQxIGluc2VydGlvbnMoKyksIDMyIGRlbGV0aW9ucygtKQ0K
-PiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9tdDYzNTgtaXJxLmMgYi9kcml2ZXJz
-L21mZC9tdDYzNTgtaXJxLmMNCj4gPiBpbmRleCBkYjczNGYyLi40YjA5NGU1IDEwMDY0NA0KPiA+
-IC0tLSBhL2RyaXZlcnMvbWZkL210NjM1OC1pcnEuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbWZkL210
-NjM1OC1pcnEuYw0KPiA+IEBAIC0xMyw3ICsxMyw5IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9w
-bGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KPiA+ICAN
-Cj4gPiAtc3RhdGljIHN0cnVjdCBpcnFfdG9wX3QgbXQ2MzU4X2ludHNbXSA9IHsNCj4gPiArI2Rl
-ZmluZSBNVEtfUE1JQ19SRUdfV0lEVEggMTYNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1
-Y3QgaXJxX3RvcF90IG10NjM1OF9pbnRzW10gPSB7DQo+ID4gIAlNVDYzNThfVE9QX0dFTihCVUNL
-KSwNCj4gPiAgCU1UNjM1OF9UT1BfR0VOKExETyksDQo+ID4gIAlNVDYzNThfVE9QX0dFTihQU0Mp
-LA0KPiA+IEBAIC0yNCw2ICsyNiwxMyBAQCBzdGF0aWMgc3RydWN0IGlycV90b3BfdCBtdDYzNThf
-aW50c1tdID0gew0KPiA+ICAJTVQ2MzU4X1RPUF9HRU4oTUlTQyksDQo+ID4gIH07DQo+ID4gIA0K
-PiA+ICtzdGF0aWMgc3RydWN0IHBtaWNfaXJxX2RhdGEgbXQ2MzU4X2lycWQgPSB7DQo+ID4gKwku
-bnVtX3RvcCA9IEFSUkFZX1NJWkUobXQ2MzU4X2ludHMpLA0KPiA+ICsJLm51bV9wbWljX2lycXMg
-PSBNVDYzNThfSVJRX05SLA0KPiA+ICsJLnRvcF9pbnRfc3RhdHVzX3JlZyA9IE1UNjM1OF9UT1Bf
-SU5UX1NUQVRVUzAsDQo+ID4gKwkucG1pY19pbnRzID0gbXQ2MzU4X2ludHMsDQo+ID4gK307DQo+
-IA0KPiBEeW5hbWljYWxseSBhc3NpZ25lZCBkcml2ZXIgZGF0YSBpcyB1c3VhbGx5IHByZWZlcnJl
-ZC4NCj4gDQo+IFdoeSBoYXZlIHlvdSBnb25lIHN0YXRpYz8NCj4gDQoNCkRvIHlvdSBjb25zaWRl
-ciB0aGUgbWVtb3J5IGFsbG9jYXRpb24/DQpCZWxvdyBtb2RpZmljYXRpb24gaXMgdG8gYXNzaWdu
-IG5lY2Vzc2FyeSBkYXRhIGR5bmFtaWNhbGx5IGFuZCB0aGUgY29kZQ0Kd2lsbCBiZWNvbWUgbG9u
-Z2VyIHdpdGggbW9yZSBjaGlwcyBpZiB3ZSBhc3NpZ24gZXZlcnkgbWVtYmVyIG9mIHRoZQ0Kc3Ry
-dWN0dXJlLg0KDQpAQCAtMTgwLDE3ICsxOTAsMTggQEAgIGludCBtdDYzNThfaXJxX2luaXQoc3Ry
-dWN0IG10NjM5N19jaGlwICpjaGlwKQ0KICAgICAgICAgICAgICAgaW50IGksIGosIHJldDsNCiAg
-ICAgICAgICAgICAgIHN0cnVjdCBwbWljX2lycV9kYXRhICppcnFkOw0KDQotICAgICAgICAgICAg
-ICBpcnFkID0gZGV2bV9remFsbG9jKGNoaXAtPmRldiwgc2l6ZW9mKCppcnFkKSwNCkdGUF9LRVJO
-RUwpOw0KLSAgICAgICAgICAgICAgaWYgKCFpcnFkKQ0KLSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHJldHVybiAtRU5PTUVNOw0KKyAgICAgICAgICAgICBzd2l0Y2ggKGNoaXAtPmNoaXBf
-aWQpIHsNCisgICAgICAgICAgICAgY2FzZSBNVDYzNThfQ0hJUF9JRDoNCisgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNoaXAtPmlycV9kYXRhID0gJm10NjM1OF9pcnFkOw0KKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQoNCi0gICAgICAgICAgICAgIGNoaXAtPmlycV9k
-YXRhID0gaXJxZDsNCisgICAgICAgICAgICAgZGVmYXVsdDoNCisgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGRldl9lcnIoY2hpcC0+ZGV2LCAidW5zdXBwb3J0ZWQgY2hpcDogMHgleA0KXG4i
-LCBjaGlwLT5jaGlwX2lkKTsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAt
-RU5PREVWOw0KKyAgICAgICAgICAgICB9DQoNCiAgICAgICAgICAgICAgICBtdXRleF9pbml0KCZj
-aGlwLT5pcnFsb2NrKTsNCi0gICAgICAgICAgICAgIGlycWQtPnRvcF9pbnRfc3RhdHVzX3JlZyA9
-IE1UNjM1OF9UT1BfSU5UX1NUQVRVUzA7DQotICAgICAgICAgICAgICBpcnFkLT5udW1fcG1pY19p
-cnFzID0gTVQ2MzU4X0lSUV9OUjsNCi0gICAgICAgICAgICAgIGlycWQtPm51bV90b3AgPSBBUlJB
-WV9TSVpFKG10NjM1OF9pbnRzKTsNCi0NCisgICAgICAgICAgICAgaXJxZCA9IGNoaXAtPmlycV9k
-YXRhOw0KICAgICAgICAgICAgICAgaXJxZC0+ZW5hYmxlX2h3aXJxID0gZGV2bV9rY2FsbG9jKGNo
-aXAtPmRldiwNCg0KaXJxZC0+bnVtX3BtaWNfaXJxcywNCg0Kc2l6ZW9mKCppcnFkLT5lbmFibGVf
-aHdpcnEpLA0KDQo=
+On Sat, Aug 1, 2020 at 2:32 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Jul 31, 2020 at 04:40:22PM +0800, Cheng-Yi Chiang wrote:
+> > Add devicetree bindings documentation file for sc7180 sound card.
+> >
+> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> > ---
+> >  .../bindings/sound/qcom,sc7180.yaml           | 113 ++++++++++++++++++
+> >  1 file changed, 113 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> > new file mode 100644
+> > index 000000000000..ce8a5a2d9df9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> > @@ -0,0 +1,113 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
+> > +
+> > +maintainers:
+> > +  - Rohit kumar <rohitkr@codeaurora.org>
+> > +  - Cheng-Yi Chiang <cychiang@chromium.org>
+> > +
+> > +description:
+> > +  This binding describes the SC7180 sound card which uses LPASS for audio.
+> > +
+> > +definitions:
+>
+> Please don't use 'definitions'. Either just duplicate it or you can do
+> 'patternProperties'.
+>
+Removed dai definition in v4.
+> > +
+> > +  dai:
+> > +    type: object
+> > +    properties:
+> > +      sound-dai:
+> > +        maxItems: 1
+> > +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +        description: phandle array of the codec or CPU DAI
+>
+> This is a common property. You can assume we have a common schema
+> definition for it. IOW, 'sound-dai: true' is enough as it's always a
+> single phandle+args.
+>
+In the examples I found,
+Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml,
+Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+use:
 
+      sound-dai:
+        $ref: /schemas/types.yaml#/definitions/phandle
+        description: phandle of the CPU DAI
+
+Documentation/devicetree/bindings/sound/simple-card.yaml
+just use
+
+      sound-dai:
+        maxItems: 1
+
+In v4, I used 'sound-dai: true' as suggested.
+
+But I am a bit confused about assuming there is a common schema
+definition for it.
+I checked the code at https://github.com/devicetree-org/dt-schema but
+did not found the definition for it.
+Did I miss something here ?
+
+Thanks for the help!
+
+> > +
+> > +    required:
+> > +      - sound-dai
+> > +
+> > +properties:
+> > +  compatible:
+> > +    contains:
+> > +      const: qcom,sc7180-sndcard
+> > +
+> > +  audio-routing:
+> > +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> > +    description:
+> > +      A list of the connections between audio components. Each entry is a
+> > +      pair of strings, the first being the connection's sink, the second
+> > +      being the connection's source.
+> > +
+> > +  model:
+> > +    $ref: /schemas/types.yaml#/definitions/string
+> > +    description: User specified audio sound card name
+> > +
+> > +  aux-dev:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: phandle of the codec for headset detection
+> > +
+> > +patternProperties:
+> > +  "^dai-link(@[0-9]+)?$":
+> > +    description:
+> > +      Each subnode represents a dai link. Subnodes of each dai links would be
+> > +      cpu/codec dais.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      link-name:
+> > +        description: Indicates dai-link name and PCM stream name.
+> > +        $ref: /schemas/types.yaml#/definitions/string
+> > +        maxItems: 1
+> > +
+> > +      cpu:
+> > +        $ref: "#/definitions/dai"
+> > +
+> > +      codec:
+> > +        $ref: "#/definitions/dai"
+> > +
+> > +    required:
+> > +      - link-name
+> > +      - cpu
+> > +      - codec
+> > +
+> > +    additionalProperties: false
+> > +
+> > +examples:
+> > +
+> > +  - |
+> > +    sound {
+> > +        compatible = "qcom,sc7180-sndcard";
+> > +        model = "sc7180-snd-card";
+> > +
+> > +        audio-routing =
+> > +                    "Headphone Jack", "HPOL",
+> > +                    "Headphone Jack", "HPOR";
+> > +
+> > +        aux-dev = <&alc5682>;
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        dai-link@0 {
+> > +            link-name = "MultiMedia0";
+> > +            cpu {
+> > +                sound-dai = <&lpass_cpu 0>;
+> > +            };
+> > +
+> > +            codec {
+> > +                sound-dai = <&alc5682 0>;
+> > +            };
+> > +        };
+> > +
+> > +        dai-link@1 {
+> > +            link-name = "MultiMedia1";
+> > +            cpu {
+> > +                sound-dai = <&lpass_cpu 1>;
+> > +            };
+> > +
+> > +            codec {
+> > +                sound-dai = <&max98357a>;
+> > +            };
+> > +        };
+> > +    };
+> > --
+> > 2.28.0.163.g6104cc2f0b6-goog
+> >
