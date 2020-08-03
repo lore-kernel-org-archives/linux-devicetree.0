@@ -2,334 +2,96 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FE2C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47994C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB62206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B11206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bkX5r1WK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RsMZkts9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgHCOWJ (ORCPT
+        id S1727786AbgHCOWs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
+        Mon, 3 Aug 2020 10:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbgHCOWI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:22:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5167EC06174A
-        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 07:22:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so34400217wrs.0
-        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 07:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UIgx/HWjFDj4MNVMQkg/plO9eAmsTA2XmhwNF6CYKl4=;
-        b=bkX5r1WKOmEW9wHJaRW535/oKEsaWV7/PaVslkpJu1WV2Yrp7DtlgV1Xl47hk8gwHW
-         duNlV/aC11YaooI8Uv98c4L3iC/hHs+fys4ej6Uai3YzjLmNDEU0LUsFcBRGJbjxiGke
-         BxW0L12mzayM6tdSIWfzxy7XjO/WhuAXLcG5IVNLqkjDLyw5DIpYSHeHpKCvpUlu05s0
-         LpXPoOFybR8DtxulzgcV7qP7JLxCMMhFgpE81k8QJLD6HffNhttD8PIxUUa/gz18f9JF
-         rJjPDlDbsSYXDYE3MD0nO4h9YIvxRaiD+F9PgH4ZvApRMr1K3u4B7oY8XCWn5OYQM4Ck
-         q9uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UIgx/HWjFDj4MNVMQkg/plO9eAmsTA2XmhwNF6CYKl4=;
-        b=erNmqKxyKFF7V7/Owje/oZD7FHJdZF4bW4bzB2AVscYTeCfz54ZcLAFyEXGnAIGKSb
-         fD5O0nXiBvluTz3ZVevtIuuF9ZFgq6VQmSx6IBeAAZKJKV7DfGKhJW8NQcBPLijkTRAS
-         qgqZyZKOAK13zzX3y7/bSPhzIf7qh+tKJvQHfrq/mXJovQkJaUlqZydq6CHvVm8i9sNk
-         gxtT4oTBX6o/B1ahHzXBNbdvNIjKUatIY4UPta6YkpipoP/q/71kzd561dCSCLEAq5jS
-         FTzgu/CQ1MSFLzqfXUgERE0umTZ2xnXJDWz0QxZxHQaofDaI/jdl7flpiYppNyz6H2qi
-         S7Wg==
-X-Gm-Message-State: AOAM5309xYDRuvdA0+4tG3guIZSUGBO0xBTfOIjjSbkG+5mZssVDFisS
-        rhYvEGvDUy5KeSe4xy5y2UU2uA==
-X-Google-Smtp-Source: ABdhPJxZ3QUkNQ9OtGk4mAkzLrUMsMeIgU0Kqs19up3kC3j9rS1ycAy5nzFiqDD2NgmX/x8Hy2q/gA==
-X-Received: by 2002:a5d:43ca:: with SMTP id v10mr15188109wrr.299.1596464526995;
-        Mon, 03 Aug 2020 07:22:06 -0700 (PDT)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id d14sm25309563wre.44.2020.08.03.07.22.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 07:22:06 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: meson: vim3: make sound card common to all variants
-Date:   Mon,  3 Aug 2020 16:21:58 +0200
-Message-Id: <20200803142158.173402-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.4
+        with ESMTP id S1726358AbgHCOWs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:22:48 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A555AC06174A;
+        Mon,  3 Aug 2020 07:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=j2YFIam7494qTnawoI5t1lPh5O713n3GMls1dHCPXuo=; b=RsMZkts9WY+1FGSehXFi1VUhA
+        uAHprLNgD2y2iMK2QdcWMXML3fYnbOHpXir2T8oJPcvLMMkS44Rl+9GJa+/04KVxu97aFil56BN0R
+        ey8yQBLTBlNk4xZWEWQrwcOc4cOGTVEcn8ILOHHsv2HsMwT78++K+t1kMluqwh1wUEQgZV0SLA+UD
+        wIFZafthZEFovFFkMDtHWL/8pUKkaY1ZAjJjRDY2j/dbJxVcHNguZ4JGNsRJCTq8cELNT5D9RTVSo
+        MBVK7Fq6QAZgR42Hqv0BP26U1dJCj442YakkjGsKP8L9IjaMY/emfnqxjf5CPtzQgu5BkA78faX8q
+        TMGlafSCQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47824)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k2bMS-0001bs-Mj; Mon, 03 Aug 2020 15:22:44 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k2bMS-00039a-8c; Mon, 03 Aug 2020 15:22:44 +0100
+Date:   Mon, 3 Aug 2020 15:22:44 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: exynos: clear L220_AUX_CTRL_NS_LOCKDOWN in
+ default l2c_aux_val
+Message-ID: <20200803142244.GO1551@shell.armlinux.org.uk>
+References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+ <20200803133439.GB476@kozik-lap>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803133439.GB476@kozik-lap>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The vim3 sound card definition should be same all the vim3 variants
-Move the definition to the appropriate device tree file.
+On Mon, Aug 03, 2020 at 03:34:39PM +0200, Krzysztof Kozlowski wrote:
+> On Wed, Jul 29, 2020 at 02:47:31PM +0100, Guillaume Tucker wrote:
+> > The L220_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
+> > sequence.  There is no need to set it in the default register value,
+> > this was done before support for it was implemented in the code.  It
+> > is not set in the hardware initial value either.
+> > 
+> > Clean this up by removing this flag from the default l2c_aux_val, and
+> > add it to the l2c_aux_mask to print an alert message if it was already
+> > set before the kernel initialisation.
+> > 
+> > Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> > ---
+> >  arch/arm/mach-exynos/exynos.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Makes sense. I'll take it after the merge window.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   | 88 ------------------
- .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 90 +++++++++++++++++++
- 2 files changed, 90 insertions(+), 88 deletions(-)
+Yes, because platforms actually have no control over this bit through
+these values.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-index 224c890d32d3..f42cf4b8af2d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
-@@ -5,8 +5,6 @@
-  * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
-  */
- 
--#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
--
- / {
- 	model = "Khadas VIM3";
- 
-@@ -47,69 +45,6 @@ vddcpu_b: regulator-vddcpu-b {
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
--
--	sound {
--		compatible = "amlogic,axg-sound-card";
--		model = "G12B-KHADAS-VIM3";
--		audio-aux-devs = <&tdmout_a>;
--		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
--				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
--				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
--				"TDM_A Playback", "TDMOUT_A OUT";
--
--		assigned-clocks = <&clkc CLKID_MPLL2>,
--				  <&clkc CLKID_MPLL0>,
--				  <&clkc CLKID_MPLL1>;
--		assigned-clock-parents = <0>, <0>, <0>;
--		assigned-clock-rates = <294912000>,
--				       <270950400>,
--				       <393216000>;
--		status = "okay";
--
--		dai-link-0 {
--			sound-dai = <&frddr_a>;
--		};
--
--		dai-link-1 {
--			sound-dai = <&frddr_b>;
--		};
--
--		dai-link-2 {
--			sound-dai = <&frddr_c>;
--		};
--
--		/* 8ch hdmi interface */
--		dai-link-3 {
--			sound-dai = <&tdmif_a>;
--			dai-format = "i2s";
--			dai-tdm-slot-tx-mask-0 = <1 1>;
--			dai-tdm-slot-tx-mask-1 = <1 1>;
--			dai-tdm-slot-tx-mask-2 = <1 1>;
--			dai-tdm-slot-tx-mask-3 = <1 1>;
--			mclk-fs = <256>;
--
--			codec {
--				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
--			};
--		};
--
--		/* hdmi glue */
--		dai-link-4 {
--			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
--
--			codec {
--				sound-dai = <&hdmi_tx>;
--			};
--		};
--	};
--};
--
--&arb {
--	status = "okay";
--};
--
--&clkc_audio {
--	status = "okay";
- };
- 
- &cpu0 {
-@@ -154,18 +89,6 @@ &cpu103 {
- 	clock-latency = <50000>;
- };
- 
--&frddr_a {
--	status = "okay";
--};
--
--&frddr_b {
--	status = "okay";
--};
--
--&frddr_c {
--	status = "okay";
--};
--
- &pwm_ab {
- 	pinctrl-0 = <&pwm_a_e_pins>;
- 	pinctrl-names = "default";
-@@ -182,14 +105,3 @@ &pwm_AO_cd {
- 	status = "okay";
- };
- 
--&tdmif_a {
--	status = "okay";
--};
--
--&tdmout_a {
--	status = "okay";
--};
--
--&tohdmitx {
--	status = "okay";
--};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 6b75157265e1..3738dfd9eb06 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -7,6 +7,7 @@
- 
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/meson-g12a-gpio.h>
-+#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
- 
- / {
- 	aliases {
-@@ -161,6 +162,62 @@ hdmi_connector_in: endpoint {
- 		};
- 	};
- 
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "G12B-KHADAS-VIM3";
-+		audio-aux-devs = <&tdmout_a>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDMOUT_A IN 1", "FRDDR_B OUT 0",
-+				"TDMOUT_A IN 2", "FRDDR_C OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT";
-+
-+		assigned-clocks = <&clkc CLKID_MPLL2>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <294912000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link-0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link-2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		/* 8ch hdmi interface */
-+		dai-link-3 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-tx-mask-1 = <1 1>;
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-tx-mask-3 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec {
-+				sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+			};
-+		};
-+
-+		/* hdmi glue */
-+		dai-link-4 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+			codec {
-+				sound-dai = <&hdmi_tx>;
-+			};
-+		};
-+	};
-+
- 	wifi32k: wifi32k {
- 		compatible = "pwm-clock";
- 		#clock-cells = <0>;
-@@ -169,6 +226,14 @@ wifi32k: wifi32k {
- 	};
- };
- 
-+&arb {
-+	status = "okay";
-+};
-+
-+&clkc_audio {
-+	status = "okay";
-+};
-+
- &cec_AO {
- 	pinctrl-0 = <&cec_ao_a_h_pins>;
- 	pinctrl-names = "default";
-@@ -221,6 +286,18 @@ &ethmac {
-         amlogic,tx-delay-ns = <2>;
- };
- 
-+&frddr_a {
-+	status = "okay";
-+};
-+
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
-@@ -369,6 +446,19 @@ w25q128: spi-flash@0 {
- 	};
- };
- 
-+
-+&tdmif_a {
-+	status = "okay";
-+};
-+
-+&tdmout_a {
-+	status = "okay";
-+};
-+
-+&tohdmitx {
-+	status = "okay";
-+};
-+
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+Please fix the description to use the right define, it's
+L310_AUX_CTRL_NS_LOCKDOWN not L220_AUX_CTRL_NS_LOCKDOWN.
+
 -- 
-2.25.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
