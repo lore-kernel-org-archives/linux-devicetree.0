@@ -2,62 +2,63 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B36CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857BFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1A320825
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6374A20A8B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ygz3a3qn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8qVjxST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgHCOVB (ORCPT
+        id S1727781AbgHCOVH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59956 "EHLO
+        Mon, 3 Aug 2020 10:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCOVB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:21:01 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B05CC06174A;
-        Mon,  3 Aug 2020 07:21:01 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l4so38728153ejd.13;
-        Mon, 03 Aug 2020 07:21:01 -0700 (PDT)
+        with ESMTP id S1727088AbgHCOVG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:21:06 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158A1C061756;
+        Mon,  3 Aug 2020 07:21:06 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id i26so24028275edv.4;
+        Mon, 03 Aug 2020 07:21:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l4JGanD/pW6UD3jQR56CF7ASLdVGtCCuUbSXWF5HYQw=;
-        b=Ygz3a3qnAKkYch2/zr6cBwVXYilIRFfVorb1udYyl7PL/X4xF/xeiui2wdLIVv8s5q
-         1DkNQWmFH1BKAyOdoZzVC2389PVP4BS9W2fwDH+E5NXzYkS+Y5zoe6UT6UGqQAZHmt2Z
-         zvipM6bawgFRe9vn4KCtj3YbGcR2MIqyX4JJWyQE0s8YmXZA5kJa8VBdFPR3SSUXXhuq
-         vEeMSJYB92m7NsKh2M5vmc8hYCB7qATy3DeezL6G123YIIjYSETixU1StrKofGmuHnKg
-         CjgexocKUy206wyl7i+vh11OLSEw5YNZubAEP+lC7o/9+RsC2V6ox0vkBTOj7rWLxsd+
-         cxtw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wbCyApa2X2f4UsWCh/NHyG+lVeEf7BI87hUKtzO/G4U=;
+        b=X8qVjxSTaMzWHRimr+QtI4Fpt5cEuZqCqJ7ZqBLizpfYb9O3tbpx3ML426co6jGmpv
+         CcL4RMqJcizSJFwO8OhJg1cOv2pfkUOY/vLD5NlaOg5EBIUdb1lbb/E4r3maKuiBnj9q
+         JpRJqi/LLqBToyqyPefXKjHDEPZBTNXWTZZPCHLgOY+mwwfyHxz0amxeoKt3D9cj/lNk
+         wnIcyuuDqrPQFRfG4VAvP348CA5ixQ8nNYze8whtQypmrU4ROah1LBZiPuy9GWY10a0A
+         70uEzWMBbdQukRzSKbMML08winYq0wE4DozN/1fJJTJM9avmnjnQM+CRKavMGneDI5QB
+         8dIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l4JGanD/pW6UD3jQR56CF7ASLdVGtCCuUbSXWF5HYQw=;
-        b=TACnOql0zcBQYja12hiHIHKJtwz4dR222XcA5Ur+EbsIzqMiBrKCS8Hlf4VzoLJ9pN
-         tQJXqJAVlJHDHV8C4+jZz9lvnopPPm3qufSMeo6hDoav2gGF8GGJCGvTlatRnLl0CdVR
-         Subw33r8JjQIQbFN8ku+4lUMFNwsNS9ISQ7WypgI4PeyBOLh3FaXl+kyLzPt5c8a1Um0
-         9uR4mvrSqlGDJZ8rdPjmW+fXGXZ7FjD809XQ+z/JIF6c0t9FKzbGaFxFT00wKuUO5CB2
-         mGFiPZsJi4wOWjf3spdI50nOAeEEsj3IgPLQsCARzN5mlUPHHz5OeSQ8EcafZ5wH4bxu
-         ZFkg==
-X-Gm-Message-State: AOAM533ggdAFY+IjTEaliB+/HKeZEG5NkTvMBqq2d5CDbPCJ56+HiAPk
-        nACHyoDV1ERF8K+Gf+DDAK8=
-X-Google-Smtp-Source: ABdhPJzI0nkGIfncrdAXqQp6WyKC3qlSJLVSoeH6iy2jkHamZLNShm17dVZ1nl2jvuGpmWwxeuEsQw==
-X-Received: by 2002:a17:906:1392:: with SMTP id f18mr16394990ejc.521.1596464459760;
-        Mon, 03 Aug 2020 07:20:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wbCyApa2X2f4UsWCh/NHyG+lVeEf7BI87hUKtzO/G4U=;
+        b=pHRv0v0WswaY4J9G5Zn64+BVzXEcZQcTwAl2KYf+ZW/FVXpj11O6qFla+JZwEvQVtc
+         a7GoBaD8JLDeUEz2Du5qMsQAd/ngfW8pYJs439vgBicDo+PBApDaL2EZhwR2Vd40wek4
+         O2jTGPPzRd0mkZCsT75bb7xSZkeWD+V/neKs7jJCQGU7vyGSHUt7lDZntfWhda5kAEX6
+         BzjZv1mzdMhRVDu2Yl9uB7fQFsLrFp/EZtplRqu5TQtMOnsKP7LNgNLW4RvAOq+IETH/
+         tgEfRWmzukOTlUz7fpf8aHqc/PGWe8P7CphuTACEQTLI2HERF7IjXQzsxejsXueX/QmL
+         Wt5w==
+X-Gm-Message-State: AOAM530DgLSyZl8qKcThN1mRbzONUxEPJS3aiuU5eR7UVyoSJtyjKz+G
+        JNmWH2bmxATBdeAKutTDcn/n6pZC
+X-Google-Smtp-Source: ABdhPJymutnG36f0kCPfsVbGRsOl5KZZJmH+vwZAhz5M+LfUE9UFm1kqTYoFRyoM3iEMYS62ssE/Lg==
+X-Received: by 2002:a05:6402:1c88:: with SMTP id cy8mr16273439edb.24.1596464464749;
+        Mon, 03 Aug 2020 07:21:04 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.43.21])
-        by smtp.gmail.com with ESMTPSA id p3sm15608432edx.75.2020.08.03.07.20.57
+        by smtp.gmail.com with ESMTPSA id p3sm15608432edx.75.2020.08.03.07.21.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 07:20:58 -0700 (PDT)
+        Mon, 03 Aug 2020 07:21:03 -0700 (PDT)
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
@@ -66,10 +67,12 @@ To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
 Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-actions@lists.infradead.org
-Subject: [PATCH v2 0/3] Add Actions Semi S500 pinctrl support
-Date:   Mon,  3 Aug 2020 17:20:53 +0300
-Message-Id: <cover.1596461275.git.cristian.ciocaltea@gmail.com>
+Subject: [PATCH v2 3/3] MAINTAINERS: Set pinctrl binding entry for all Actions Semi Owl SoCs
+Date:   Mon,  3 Aug 2020 17:20:56 +0300
+Message-Id: <1a9eb2b12c151d4d765d2aa74dc9cd58b3c117dc.1596461275.git.cristian.ciocaltea@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <cover.1596461275.git.cristian.ciocaltea@gmail.com>
+References: <cover.1596461275.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -77,40 +80,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset adds pinctrl support for Actions Semi S500 SoC.
+Update the pinctrl binding entry to match all members of Actions Semi
+Owl SoCs.
 
-Pinmux functions are only accessible for pin groups while pinconf
-parameters are available for both pin groups and individual pins.
-
-The pinctrl driver has been verified using RoseapplePi, the SBC for
-which an initial support has been provided via:
-https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
-
-The DTS related changes, including the required clock support, will be
-available in the upcoming patch series.
-
-Thanks,
-Cristi
-
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+---
 Changes in v2:
- - Updated the pinctrl bindings according to Rob's feedback
- - Set the pinctrl entry in MAINTAINERS according to Mani's suggestion
- - Rebased patches on v5.8
+ - Discarded the S500 specific pinctrl binding entry and instead use
+   a generic rule to match all members of Actions Semi Owl SoCs, per
+   Mani's suggestion
+ - Renamed patch to reflect the new changes, the original name was:
+   'Add pinctrl binding entry for Actions Semi'
 
-Cristian Ciocaltea (3):
-  dt-bindings: pinctrl: Add bindings for Actions S500 SoC
-  pinctrl: actions: Add Actions S500 pinctrl driver
-  MAINTAINERS: Set pinctrl binding entry for all Actions Semi Owl SoCs
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../pinctrl/actions,s500-pinctrl.yaml         |  240 +++
- MAINTAINERS                                   |    2 +-
- drivers/pinctrl/actions/Kconfig               |    6 +
- drivers/pinctrl/actions/Makefile              |    1 +
- drivers/pinctrl/actions/pinctrl-s500.c        | 1727 +++++++++++++++++
- 5 files changed, 1975 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
- create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index acfa5e85a6eb..a1e22a107a1b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1519,7 +1519,7 @@ F:	Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
+ F:	Documentation/devicetree/bindings/dma/owl-dma.txt
+ F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
+ F:	Documentation/devicetree/bindings/mmc/owl-mmc.yaml
+-F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
++F:	Documentation/devicetree/bindings/pinctrl/actions,*
+ F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
+ F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+ F:	arch/arm/boot/dts/owl-*
 -- 
 2.28.0
 
