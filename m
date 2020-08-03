@@ -2,102 +2,175 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564C4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9385C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C623206E2
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A301A2065E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 08:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VYiY6bDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbgHCIF7 (ORCPT
+        id S1725951AbgHCITL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:05:59 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49610 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgHCIF7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:05:59 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 758A11A0148;
-        Mon,  3 Aug 2020 10:05:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F7981A0181;
-        Mon,  3 Aug 2020 10:05:53 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 05E47402BE;
-        Mon,  3 Aug 2020 10:05:47 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx7ulp: Correct gpio ranges
-Date:   Mon,  3 Aug 2020 16:01:24 +0800
-Message-Id: <1596441684-30127-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 3 Aug 2020 04:19:11 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:7841 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgHCITL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 04:19:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1596442751; x=1627978751;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SGEcvZSOFRJblJ2NNtHSQW6ePv1d9zPxcHnZaXeLFiU=;
+  b=VYiY6bDTuBXp6xOxHQy2k6cGjppwxlhr2n89UkX9ExqmVB9bFr8IaoLx
+   geMYfGJFkciI1467VX+yB52Dz+r+c+UERe0v2Ww2zXpe9AqMIjvQNwMIj
+   M6QbE2oZXTv9zKmMQ/YPzIK8xn79qkcf6hthNe9d8HFPgtiut11ijjDYI
+   cZEeLwDaVpPWNpxubu1u7C57dk88Lv3yN9EEjA9ni/5qhYSI/kdC6KH6a
+   v4WBrV3Lm6FNVtyJqsBYTv1YZs3SiqIEuN7iSg+UUPVTMHT4KBhuZg8BL
+   E1maenwrs/XWkUoXuUIl6eajf73vYiveXlYEIWQlS9miONFJ9EPvJHGmf
+   Q==;
+IronPort-SDR: ArdU2Nv5C0JvSFp9vuMfJ520kxKJg7pI/l8khOhEDbMavYbsspqKkytDq+NTOYYtw2i2whfNSZ
+ OE2bVLLDkDlaYsbWDrFFOZxOnv4dae1B0PPLkEiV/A6lAIX5Lgn1UzHXHrsTUahN3xMJ8gvzvj
+ 9zOrLVAgp0o+tvPOF+tfUKL47cvFjGdTIuQUQvihuqH+xtWqk9oMcXERLsxTcsNWPxiHOuvGtv
+ izr6Na9AbMicbRJWamuv+UGlFVcut9We19gA0I2bvcwT+MStUm60Q0j8KyZWPcnQ8gA0NLGGiV
+ 6jY=
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="85586189"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 01:19:11 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 3 Aug 2020 01:19:09 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Mon, 3 Aug 2020 01:19:03 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <perex@perex.cz>, <tiwai@suse.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v3 1/2] dt-bindings: sound: add DT bindings for Microchip S/PDIF TX Controller
+Date:   Mon, 3 Aug 2020 11:18:50 +0300
+Message-ID: <20200803081851.102570-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Correct gpio ranges according to i.MX7ULP pinctrl driver:
+This patch adds DT bindings for the new Microchip S/PDIF TX Controller
+embedded inside sama7g5 SoCs.
 
-gpio_ptc: ONLY pin 0~19 are available;
-gpio_ptd: ONLY pin 0~11 are available;
-gpio_pte: ONLY pin 0~15 are available;
-gpio_ptf: ONLY pin 0~19 are available;
-
-Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 ---
- arch/arm/boot/dts/imx7ulp.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index 3674396..b7ea37a 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -394,7 +394,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLC>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 0 32>;
-+			gpio-ranges = <&iomuxc1 0 0 20>;
- 		};
- 
- 		gpio_ptd: gpio@40af0000 {
-@@ -408,7 +408,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLD>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 32 32>;
-+			gpio-ranges = <&iomuxc1 0 32 12>;
- 		};
- 
- 		gpio_pte: gpio@40b00000 {
-@@ -422,7 +422,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLE>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 64 32>;
-+			gpio-ranges = <&iomuxc1 0 64 16>;
- 		};
- 
- 		gpio_ptf: gpio@40b10000 {
-@@ -436,7 +436,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLF>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 96 32>;
-+			gpio-ranges = <&iomuxc1 0 96 20>;
- 		};
- 	};
- 
+Changes in v3:
+ - removed 'oneOf' from 'compatible' property;
+ - added 'maxItems: 1' to 'dmas' property;
+ - removed pinctrl related properties;
+
+Changes in v2:
+ - replaced https with http;
+ - reworked example, included bindings;
+
+ .../bindings/sound/mchp,spdiftx.yaml          | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml b/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
+new file mode 100644
+index 000000000000..a03b0b871fc9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/mchp,spdiftx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip S/PDIF Tx Controller Device Tree Bindings
++
++maintainers:
++  - Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
++
++description:
++        The Microchip Sony/Philips Digital Interface Transmitter is a
++        serial port compliant with the IEC-60958 standard.
++
++properties:
++  "#sound-dai-cells":
++    const: 0
++
++  compatible:
++    const: microchip,sama7g5-spdiftx
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Peripheral Bus Clock
++      - description: Generic Clock
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: gclk
++
++  dmas:
++    description: TX DMA Channel
++    maxItems: 1
++
++  dma-names:
++    const: tx
++
++required:
++  - "#sound-dai-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/at91.h>
++    #include <dt-bindings/dma/at91.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    spdiftx@e1618000 {
++        #sound-dai-cells = <0>;
++        compatible = "microchip,sama7g5-spdiftx";
++        reg = <0xe1618000 0x4000>;
++        interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dma0 AT91_XDMAC_DT_PERID(50)>;
++        dma-names = "tx";
++        clocks = <&pmc PMC_TYPE_PERIPHERAL 85>, <&pmc PMC_TYPE_GCK 85>;
++        clock-names = "pclk", "gclk";
++        pinctrl-names = "default";
++        pinctrl-0 = <&pinctrl_spdiftx_default>;
++    };
 -- 
-2.7.4
+2.25.1
 
