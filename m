@@ -2,220 +2,129 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74519C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C46DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48AAF20A8B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596471219;
-	bh=HiU07JR1A+F1+Z53kyhPMkQd/qW5e56jQ2jPVulC8+4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YhO9GzTa+2treO/1adx6fLI5Qz3J+WHKLU9wPh1TNDC1s5CcDpjzRRUnFGCbXDjuN
-	 qRBkCd1DpIt8HTfvy2BNdJoLwYs9DZeYTPdN36B6pDTwbnDGMX7OyTIT07Qp4zhszW
-	 IEZyWJyZ78B2cNL/yPcgLBqd6vFvZqqqvdujhl3w=
+	by mail.kernel.org (Postfix) with ESMTP id 1A92C22B40
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7MqE6FI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgHCQNj (ORCPT
+        id S1726579AbgHCQmd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgHCQNj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:13:39 -0400
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A9792177B;
-        Mon,  3 Aug 2020 16:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596471217;
-        bh=HiU07JR1A+F1+Z53kyhPMkQd/qW5e56jQ2jPVulC8+4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X5IxzLoGXGhZ8Bs4qDZQdy04EZQYbwGYyq5pZ6j4Y154+ryCc3QMwHdQGC5v1tq34
-         4A2h7BH/2Cmd0xibFPwmhNDUoaeGWgtGGAg/l/XlMLE6LQt0g8m2WA7gn23Ll+ewgf
-         tIcyXRtGkEbtd56lShh1UKfNr4Icfv8vx+v7EjRM=
-Received: by mail-ed1-f47.google.com with SMTP id c15so17971886edj.3;
-        Mon, 03 Aug 2020 09:13:38 -0700 (PDT)
-X-Gm-Message-State: AOAM531C3bNxd0t4jnJ3tjFqY2g8Cuo5ojtyqNC/ONzD6BxnnEgAQdhp
-        QcxVuh52zaOUAT3Xg18+xmrX/2M5UMQg2D+U6w==
-X-Google-Smtp-Source: ABdhPJxVBbThlPNq2pTchCAyLxwz7hgBlwFmi8zFSCXl7qnrzYmZzBYIfzjIAbCSg/UXEzg38x48cLfkIWq4AkAuZYg=
-X-Received: by 2002:a50:d2c7:: with SMTP id q7mr11624009edg.61.1596471216633;
- Mon, 03 Aug 2020 09:13:36 -0700 (PDT)
+        Mon, 3 Aug 2020 12:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCQmd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 12:42:33 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D1EC06174A;
+        Mon,  3 Aug 2020 09:42:33 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id z5so20192478pgb.6;
+        Mon, 03 Aug 2020 09:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xdp/fS6+v2ditkJk+cvQMgK9TUqlS62v6zpMnXOv3Ic=;
+        b=a7MqE6FIile7iIvKc0LEMZJMZ6mV1ZL3hknPiZcAHiLJZJVxqLexKXD7MUs4PplR1k
+         32tgmF4SfgrHJDOiSxssO06fHJJU2C0I3z3YIyYXntvBRx5Y/eU7XbilTMMT6KQ65rDR
+         Fa4nsG/JJ/HRkbYr8blHKxHZ2JZ4km4rb/SInDaPLRiyac0407/0kMVuErVAGusfJ7NB
+         wLIHJ7wlCx+F2Av/UvG8cloZM9VRMUr6nuPyLZ+HcNFi8D+DV5kS6kdiOXeRYO6v+xre
+         FKbJmQ7nSvTLIvBS+5Fgn2BXAZIaEq4cQVM2Y6ch8o9/gIfZR5OSv/J4WL8Hfjwmmd6x
+         Wm0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xdp/fS6+v2ditkJk+cvQMgK9TUqlS62v6zpMnXOv3Ic=;
+        b=rdG4jbsyrsLLgnMYuhYN9cQrOtEAakbG5hI8lYnFZIev20N93bHYAPOO81mJgC8gev
+         TSfZZw90hI0DsbDQTnaiC1np/Y/NAprvxJQzkWHqTOprTJzHzrtkuo4spYc37zhXoIvM
+         VDtvvMPPQqKAlncIA1fMY3MbaB9dKbRGY3z4wBh4UP8edUdha7LWTmev4IhlihAKD6JR
+         kqpETh9YYqvIH+J9P3Uw2mNvnuYguNsjN4oy9n16DCUuo+t46/lPh6ntiyD1w8n16hCT
+         fMwO/DBzvDUwbsUuXELkjQeMZ/ZMwHVjICLuNB5pHSLD871Gov1xS3jhRXVZZL1Dq7HY
+         vkyw==
+X-Gm-Message-State: AOAM5337igv9+Pre58yc8pKs5QvyPLs31CNulbBblo2qptlUsB690pC7
+        MV0vEgzIyj2ElOO+9u6paBtt1f7R6nTLTPsZa1I=
+X-Google-Smtp-Source: ABdhPJyLd0xKU1fFXwew/qnMkherfYLTaf5EOHygn2taxpTZTjjFC3duVTdf5UT0qujpqNr/70s7InpKhau8tw1JCjM=
+X-Received: by 2002:a62:758f:: with SMTP id q137mr16020137pfc.170.1596472952830;
+ Mon, 03 Aug 2020 09:42:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
- <1596010690-13178-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8bE8Qo5-0MA9J1gcEbN4DP=Wf2O6vOUVos=VkoODeayA@mail.gmail.com>
- <1596163478.3932.17.camel@mtkswgap22> <CAAOTY_9kS+jrCOpZtOs+L8gBzvkewi+cSN7XWGNxuiMQocedFA@mail.gmail.com>
- <1596425521.22971.13.camel@mtkswgap22>
-In-Reply-To: <1596425521.22971.13.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 4 Aug 2020 00:13:23 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9UcnSDTaVPDPyPLsWEYcrcq5MY=z520MWtFdeLw_FqGQ@mail.gmail.com>
-Message-ID: <CAAOTY_9UcnSDTaVPDPyPLsWEYcrcq5MY=z520MWtFdeLw_FqGQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20200803145055.5203-1-eajames@linux.ibm.com> <20200803145055.5203-3-eajames@linux.ibm.com>
+In-Reply-To: <20200803145055.5203-3-eajames@linux.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 3 Aug 2020 19:42:17 +0300
+Message-ID: <CAHp75VevG65uuE4Vv49tSdvpNnxE7AC7W_QR2s8twCPZ=4da_g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] leds: pca955x: Add an IBM software implementation
+ of the PCA9552 chip
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        vishwa@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Neal:
+On Mon, Aug 3, 2020 at 5:51 PM Eddie James <eajames@linux.ibm.com> wrote:
+>
+> IBM created an implementation of the PCA9552 on a PIC16F
+> microcontroller. The I2C device addresses are different from the
+> hardware PCA9552, so add a new compatible string and associated
+> platform data to be able to probe this device.
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:32=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> On Fri, 2020-07-31 at 23:03 +0800, Chun-Kuang Hu wrote:
-> > Hi, Neal:
-> >
-> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8831=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8810:44=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > >
-> > > Hi Chun-Kuang,
-> > >
-> > >
-> > > On Thu, 2020-07-30 at 00:38 +0800, Chun-Kuang Hu wrote:
-> > > > Hi, Neal:
-> > > >
-> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=882=
-9=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> > > > >
-> > > > > MediaTek bus fabric provides TrustZone security support and data
-> > > > > protection to prevent slaves from being accessed by unexpected
-> > > > > masters.
-> > > > > The security violation is logged and sent to the processor for
-> > > > > further analysis or countermeasures.
-> > > > >
-> > > > > Any occurrence of security violation would raise an interrupt, an=
-d
-> > > > > it will be handled by mtk-devapc driver. The violation
-> > > > > information is printed in order to find the murderer.
-> > > > >
-> > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > > > ---
-> > > >
-> > > > [snip]
-> > > >
-> > > > > +
-> > > > > +/*
-> > > > > + * devapc_extract_vio_dbg - extract full violation information a=
-fter doing
-> > > > > + *                          shift mechanism.
-> > > > > + */
-> > > > > +static void devapc_extract_vio_dbg(struct mtk_devapc_context *ct=
-x)
-> > > > > +{
-> > > > > +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
-> > > > > +       struct mtk_devapc_vio_info *vio_info;
-> > > > > +       void __iomem *vio_dbg0_reg;
-> > > > > +       void __iomem *vio_dbg1_reg;
-> > > > > +       u32 dbg0;
-> > > > > +
-> > > > > +       vio_dbg0_reg =3D ctx->devapc_pd_base + ctx->offset->vio_d=
-bg0;
-> > > > > +       vio_dbg1_reg =3D ctx->devapc_pd_base + ctx->offset->vio_d=
-bg1;
-> > > > > +
-> > > > > +       vio_dbgs =3D ctx->vio_dbgs;
-> > > > > +       vio_info =3D ctx->vio_info;
-> > > > > +
-> > > > > +       /* Starts to extract violation information */
-> > > > > +       dbg0 =3D readl(vio_dbg0_reg);
-> > > > > +       vio_info->vio_addr =3D readl(vio_dbg1_reg);
-> > > > > +
-> > > > > +       vio_info->master_id =3D (dbg0 & vio_dbgs->mstid.mask) >>
-> > > > > +                             vio_dbgs->mstid.start;
-> > > >
-> > > > What is master_id? How could we use it to debug? For example, if we
-> > > > get a master_id =3D 1, what should we do for this?
-> > > >
-> > > > > +       vio_info->domain_id =3D (dbg0 & vio_dbgs->dmnid.mask) >>
-> > > > > +                             vio_dbgs->dmnid.start;
-> > > >
-> > > > What is domain_id? How could we use it to debug? For example, if we
-> > > > get a domain_id =3D 2, what should we do for this?
-> > > >
-> > >
-> > > master_id and domain_id belongs our bus side-band signal info. It can
-> > > help us to find the violation master.
-> >
-> > Does 'violation master' means the hardware could access the protected
-> > register? (ex. CPU, GCE, ...) If so, I think it's better to add
-> > comment to explain how to map (master_id, domain_id) to a hardware
-> > (maybe the device in device tree) because every body does not know
-> > what the number means. Don't try to translate the number to a string
-> > because this would cost much time to do this. Just print a number and
-> > we could find out the master by the comment.
->
-> 'violation master' means the master which violates the permission
-> control. For example, if we set permission 'Secure R/W only' as CPU to
-> spi register. When violation is triggered, it means CPU access spi
-> register through normal world instead of secure world, which is not
-> allowed.
->
-> 'master_id' cannot use the simple comments to describe which master it
-> is. It depends on violation slaves. For example, if there are two
-> violations:
-> 1. CPU access spi reg
-> 2. CPU access timer reg
-> It might be different 'master_id' for CPU on these two cases.
-> I would prefer to remain the id number if translate to a string is a bad
-> idea.
-> Thanks !
+...
 
-It seams that master_id and domain_id does not help for debug. When we
-get master_id =3D 1 and domain_id =3D 2, we don't know what it mean. I
-think we just need violation address because we could find the driver
-that write this address and the bug would be inside this driver. So
-need not to process master_id and domain_id.
+>         pca9550,
+>         pca9551,
+>         pca9552,
+> +       ibm_pca9552,
+>         pca9553,
 
-Regards,
-Chun-Kuang.
+I would rather not mix like this, but use alpha order, for example.
+It's better to read and see which devices are supported by vendor.
 
->
-> >
-> > >
-> > > > > +       vio_info->write =3D ((dbg0 & vio_dbgs->vio_w.mask) >>
-> > > > > +                           vio_dbgs->vio_w.start) =3D=3D 1;
-> > > > > +       vio_info->read =3D ((dbg0 & vio_dbgs->vio_r.mask) >>
-> > > > > +                         vio_dbgs->vio_r.start) =3D=3D 1;
-> > > > > +       vio_info->vio_addr_high =3D (dbg0 & vio_dbgs->addr_h.mask=
-) >>
-> > > > > +                                 vio_dbgs->addr_h.start;
-> > > >
-> > > > What is vio_addr_high? As I know all register address are 32 bits, =
-is
-> > > > vio_addr_high the address above 32 bits?
-> > >
-> > > Yes, you are right. In MT6779, all register base are 32 bits. We can
-> > > ignore this info for current driver. I'll update on next patch.
-> > > Thanks !
-> >
-> > Such a strange hardware, all register is 32 bits but it has a
-> > vio_addr_high in its register. OK, just drop this.
-> >
-> > >
-> > > >
-> > > > > +
-> > > > > +       devapc_vio_info_print(ctx);
-> > > > > +}
-> > > > > +
-> > > >
+...
+
+>         },
+
+> +       [ibm_pca9552] = {
+
+> +       },
+>         [pca9553] = {
+
+Ditto.
+
+...
+
+>         { "pca9550", pca9550 },
+>         { "pca9551", pca9551 },
+>         { "pca9552", pca9552 },
+> +       { "ibm-pca9552", ibm_pca9552 },
+>         { "pca9553", pca9553 },
+
+Ditto.
+
+...
+
+>         { .compatible = "nxp,pca9550", .data = (void *)pca9550 },
+>         { .compatible = "nxp,pca9551", .data = (void *)pca9551 },
+>         { .compatible = "nxp,pca9552", .data = (void *)pca9552 },
+> +       { .compatible = "ibm,pca9552", .data = (void *)ibm_pca9552 },
+>         { .compatible = "nxp,pca9553", .data = (void *)pca9553 },
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
