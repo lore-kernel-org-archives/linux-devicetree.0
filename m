@@ -8,95 +8,179 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3AEC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017F9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDFCA22CA1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A9822CA1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:45:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qj+qjsJ3"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TLtR9QoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgHCTob (ORCPT
+        id S1728767AbgHCTpj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:44:31 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18151 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgHCToa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 15:44:30 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2868bc0000>; Mon, 03 Aug 2020 12:42:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 03 Aug 2020 12:44:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 03 Aug 2020 12:44:30 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug
- 2020 19:44:28 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 3 Aug 2020 19:44:28 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f28691b0000>; Mon, 03 Aug 2020 12:44:27 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-Subject: [PATCH v1 1/6] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
-Date:   Mon, 3 Aug 2020 12:44:18 -0700
-Message-ID: <1596483863-22153-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596483863-22153-1-git-send-email-skomatineni@nvidia.com>
-References: <1596483863-22153-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596483772; bh=GRxAVl1MNmeG00GyZSeX3lvvDJtcrM+1khuxn73XwQg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=qj+qjsJ3xexRzkWXtlFcB/oqMdnjrwYl/Ig/COwbNPce0VbKGe1IPMjPx+9p65qJ3
-         uqiaeCOcaLFv+GasKFw4CXPz5H63tJSY/ULlwmucZ20c3m9uyVT6mI1rM8gAN22+9w
-         8RiV8iiuAj/NsUa08D9SBmgXAKfp4xI7gCyLTBiTcFm4pji+iHWumya2tDjeGtNm0u
-         8vHgfVoMXpdudjFP1dmnM9irMcVMPNcVfiLJJHD8y+pkY7Zy7xgM2OvZt78+ep843G
-         3lnMgi5O1jugh5v/NhG1NgnUaCoI0TMKrixcMEHlfLUqkFhw3Ldq0hNd1t+lC64f3E
-         Zx8jmnhH+ALmg==
+        Mon, 3 Aug 2020 15:45:39 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:39716 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728753AbgHCTpj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 15:45:39 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 0B64630C146;
+        Mon,  3 Aug 2020 12:44:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 0B64630C146
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1596483851;
+        bh=GSqFzmHeOiSek+62bFpDJcfrtOQWQUrThlJG71lclKo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TLtR9QoXWDqmR6pywZiRxp4rVkRrmZ2x9FFnTHtSoZTVzQPKe1xEt3HfcpY0qmNai
+         JeRGdyxIeDogpDRzZsgBGS1Eqiap0nJ1qK7IX6gLyR9NRq7SDYDgvqTB6UbGLck8oW
+         yk/wexoWSOp9XW6D8GUG7zG0lQhYuswo5WmuQsNQ=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 59A6914008B;
+        Mon,  3 Aug 2020 12:45:36 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v10 02/11] dt-bindings: PCI: Add bindings for more Brcmstb chips
+Date:   Mon,  3 Aug 2020 15:45:07 -0400
+Message-Id: <20200803194529.32357-3-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200803194529.32357-1-james.quinlan@broadcom.com>
+References: <20200803194529.32357-1-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra210 from the
-beginning of Tegra210 support in the driver.
+- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+  7211 (STB version of RPi4).
+- Add new property 'brcm,scb-sizes'.
+- Add new property 'resets'.
+- Add new property 'reset-names' for 7216 only.
+- Allow 'ranges' and 'dma-ranges' to have more than one item and update
+  the example to show this.
 
-Tegra210 SDMMC hardware by default uses timeout clock (TMCLK)
-instead of SDCLK and this quirk should not be set.
-
-So, this patch remove this quirk for Tegra210.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/mmc/host/sdhci-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
+ .../bindings/pci/brcm,stb-pcie.yaml           | 56 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 0a3f9d0..2be3511 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1418,7 +1418,6 @@ static const struct sdhci_ops tegra210_sdhci_ops = {
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 8680a0f86c5a..807694b4f41f 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+ maintainers:
+   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
  
- static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+-allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
+-
+ properties:
+   compatible:
+-    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++    items:
++      - enum:
++          - brcm,bcm2711-pcie # The Raspberry Pi 4
++          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
++          - brcm,bcm7278-pcie # Broadcom 7278 Arm
++          - brcm,bcm7216-pcie # Broadcom 7216 Arm
++          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+ 
+   reg:
+     maxItems: 1
+@@ -34,10 +37,12 @@ properties:
+       - const: msi
+ 
+   ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+ 
+   dma-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 6
+ 
+   clocks:
+     maxItems: 1
+@@ -58,8 +63,31 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  resets:
++    description: for "brcm,bcm7216-pcie", must be a valid reset
++      phandle pointing to the RESCAL reset controller provider node.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  reset-names:
++    items:
++      - const: rescal
++
++  brcm,scb-sizes:
++    description: u64 giving the 64bit PCIe memory
++      viewport size of a memory controller.  There may be up to
++      three controllers, and each size must be a power of two
++      with a size greater or equal to the amount of memory the
++      controller supports.  Note that each memory controller
++      may have two component regions -- base and extended -- so
++      this information cannot be deduced from the dma-ranges.
++    $ref: /schemas/types.yaml#/definitions/uint64-array
++    items:
++      minItems: 1
++      maxItems: 3
++
+ required:
+   - reg
++  - ranges
+   - dma-ranges
+   - "#interrupt-cells"
+   - interrupts
+@@ -68,6 +96,18 @@ required:
+   - interrupt-map
+   - msi-controller
+ 
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm7216-pcie
++    then:
++      required:
++        - resets
++        - reset-names
++
+ unevaluatedProperties: false
+ 
+ examples:
+@@ -93,7 +133,9 @@ examples:
+                     msi-parent = <&pcie0>;
+                     msi-controller;
+                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
++                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+             };
+     };
 -- 
-2.7.4
+2.17.1
 
