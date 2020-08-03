@@ -2,31 +2,30 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57A3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AD0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899FE20775
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A18920775
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHCLkN (ORCPT
+        id S1726545AbgHCLkE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:40:13 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:27969 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726533AbgHCLj5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 07:39:57 -0400
+        Mon, 3 Aug 2020 07:40:04 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:60719 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726394AbgHCLj4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 07:39:56 -0400
 X-IronPort-AV: E=Sophos;i="5.75,429,1589209200"; 
-   d="scan'208";a="53742349"
+   d="scan'208";a="53529268"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 03 Aug 2020 20:39:37 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 03 Aug 2020 20:39:28 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8FBC142385FF;
-        Mon,  3 Aug 2020 20:39:34 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8115442389C1;
+        Mon,  3 Aug 2020 20:39:25 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Jacopo Mondi <jacopo@jmondi.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -40,113 +39,38 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         linux-renesas-soc@vger.kernel.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 2/3] media: i2c: ov772x: Add support for BT656 mode
-Date:   Mon,  3 Aug 2020 12:39:12 +0100
-Message-Id: <1596454753-13612-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/3] media: i2c: ov772x: Enable BT656 mode and test pattern support
+Date:   Mon,  3 Aug 2020 12:39:10 +0100
+Message-Id: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support to read the bus-type and enable BT656 mode if needed.
+Hi All,
 
-The driver defaults to parallel mode if bus-type is not specified in DT.
+This patch series adds support for BT656 mode in the ov772x sensor
+and also enables color bar test pattern control.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- drivers/media/i2c/ov772x.c | 40 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Cheers,
+Prabhakar
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 2cc6a678069a..2de9248e3689 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -31,6 +31,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-event.h>
-+#include <media/v4l2-fwnode.h>
- #include <media/v4l2-image-sizes.h>
- #include <media/v4l2-subdev.h>
- 
-@@ -434,6 +435,7 @@ struct ov772x_priv {
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pad;
- #endif
-+	struct v4l2_fwnode_endpoint ep;
- };
- 
- /*
-@@ -574,6 +576,7 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	struct ov772x_priv *priv = to_ov772x(sd);
-+	unsigned int val;
- 	int ret = 0;
- 
- 	mutex_lock(&priv->lock);
-@@ -581,6 +584,22 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- 	if (priv->streaming == enable)
- 		goto done;
- 
-+	if (priv->ep.bus_type == V4L2_MBUS_BT656 && enable) {
-+		ret = regmap_read(priv->regmap, COM7, &val);
-+		if (ret)
-+			goto done;
-+		val |= ITU656_ON_OFF;
-+		ret = regmap_write(priv->regmap, COM7, val);
-+	} else if (priv->ep.bus_type == V4L2_MBUS_BT656 && !enable) {
-+		ret = regmap_read(priv->regmap, COM7, &val);
-+		if (ret)
-+			goto done;
-+		val &= ~ITU656_ON_OFF;
-+		ret = regmap_write(priv->regmap, COM7, val);
-+	}
-+	if (ret)
-+		goto done;
-+
- 	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
- 				 enable ? 0 : SOFT_SLEEP_MODE);
- 	if (ret)
-@@ -1354,6 +1373,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
- 
- static int ov772x_probe(struct i2c_client *client)
- {
-+	struct fwnode_handle *endpoint;
- 	struct ov772x_priv	*priv;
- 	int			ret;
- 	static const struct regmap_config ov772x_regmap_config = {
-@@ -1415,6 +1435,26 @@ static int ov772x_probe(struct i2c_client *client)
- 		goto error_clk_put;
- 	}
- 
-+	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-+						  NULL);
-+	if (!endpoint) {
-+		dev_err(&client->dev, "endpoint node not found\n");
-+		ret = -EINVAL;
-+		goto error_clk_put;
-+	}
-+
-+	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
-+	fwnode_handle_put(endpoint);
-+	if (ret) {
-+		dev_err(&client->dev, "Could not parse endpoint\n");
-+		goto error_clk_put;
-+	}
-+
-+	/* fallback to parallel mode */
-+	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
-+	    priv->ep.bus_type != V4L2_MBUS_BT656)
-+		priv->ep.bus_type = V4L2_MBUS_PARALLEL;
-+
- 	ret = ov772x_video_probe(priv);
- 	if (ret < 0)
- 		goto error_gpio_put;
+Changes for v2:
+* Updated DT bindings
+* Driver defaults to parallel mode
+* Fixed return type when endpoint parsing fails
+
+Lad Prabhakar (3):
+  dt-bindings: media: ov772x: Document endpoint properties
+  media: i2c: ov772x: Add support for BT656 mode
+  media: i2c: ov772x: Add test pattern control
+
+ .../devicetree/bindings/media/i2c/ov772x.txt  | 16 +++++
+ drivers/media/i2c/ov772x.c                    | 65 ++++++++++++++++++-
+ include/media/i2c/ov772x.h                    |  1 +
+ 3 files changed, 81 insertions(+), 1 deletion(-)
+
 -- 
 2.17.1
 
