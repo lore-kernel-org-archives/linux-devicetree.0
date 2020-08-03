@@ -2,107 +2,89 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB477C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88527C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E1820672
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596452613;
-	bh=kdV7nHVNjty6826z22YXZvkV7yNmAWNNVkJspMjhDpQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=quuw2VarmwyZD8EYXkzN4rpWoEsz+fmZKqirt5sLeVoxeE7fidIoJLNWMfFNxfUXZ
-	 fn9V8hHckqrsFVVOe/TVJcdjKa8srgVwh+T9qHT47XbVnIU3sLTtPMJAp8VuMbIC7Y
-	 /Oc3bkiRJ/fZbMsJkhQg2fSjoyVnDqxYBON1DoGc=
+	by mail.kernel.org (Postfix) with ESMTP id 6139420738
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 11:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgHCLD1 (ORCPT
+        id S1726600AbgHCLkG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:03:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgHCLD1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:03:27 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B026320672;
-        Mon,  3 Aug 2020 11:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596452605;
-        bh=kdV7nHVNjty6826z22YXZvkV7yNmAWNNVkJspMjhDpQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I1UGew/EonPvBfcIvQSllI607JXiTFxgOpYG/ahAnfSaaX2cCBLXZutNbgBCwL/jH
-         gy/69hJtFvnx/EL/uaLe7HbUboflywrSGlsV9W/IQUhzEL8Iinvk14qDs/Ll/qfMwl
-         W+ZFdbSIaURryBit7A8k8eLZ2x4XPENz26IngUhI=
-Date:   Mon, 3 Aug 2020 16:33:22 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, bhelgaas@google.com,
-        robh+dt@kernel.org, kishon@ti.com, mturquette@baylibre.com,
-        sboyd@kernel.org, svarbanov@mm-sol.com, lorenzo.pieralisi@arm.com,
-        p.zabel@pengutronix.de, mgautam@codeaurora.org,
-        smuthayy@codeaurora.org, varada@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, stable@vger.kernel.org,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Subject: Re: [PATCH 5/9] phy: qcom-qmp: use correct values for ipq8074 gen2
- pcie phy init
-Message-ID: <20200803110322.GM12965@vkoul-mobl>
-References: <1593940680-2363-1-git-send-email-sivaprak@codeaurora.org>
- <1593940680-2363-6-git-send-email-sivaprak@codeaurora.org>
- <20200713055558.GB34333@vkoul-mobl>
- <9988249f-53aa-e615-f64b-28c0c0641ab4@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9988249f-53aa-e615-f64b-28c0c0641ab4@codeaurora.org>
+        Mon, 3 Aug 2020 07:40:06 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:25127 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726398AbgHCLj5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 07:39:57 -0400
+X-IronPort-AV: E=Sophos;i="5.75,429,1589209200"; 
+   d="scan'208";a="53742345"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 03 Aug 2020 20:39:34 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9C0B742389C3;
+        Mon,  3 Aug 2020 20:39:31 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 1/3] dt-bindings: media: ov772x: Document endpoint properties
+Date:   Mon,  3 Aug 2020 12:39:11 +0100
+Message-Id: <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sivaprakash,
+Document endpoint properties required for parallel interface
 
-On 29-07-20, 12:15, Sivaprakash Murugesan wrote:
-> 
-> On 7/13/2020 11:25 AM, Vinod Koul wrote:
-> > On 05-07-20, 14:47, Sivaprakash Murugesan wrote:
-> > > There were some problem in ipq8074 gen2 pcie phy init sequence, fix
-> > Can you please describe these problems, it would help review to
-> > understand the issues and also for future reference to you
-> 
-> Hi Vinod,
-> 
-> As you mentioned we are updating few register values
-> 
-> and also adding clocks and resets.
-> 
-> the register values are given by the Hardware team and there
-> 
-> is some fine tuning values are provided by Hardware team for the
-> 
-> issues we faced downstream.
-> 
-> Also, few register values are typos for example QSERDES_RX_SIGDET_CNTRL
-> 
-> is a rx register it was wrongly in serdes table.
-> 
-> I will try to mention these details in next patch.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ .../devicetree/bindings/media/i2c/ov772x.txt     | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-The right thing to do would be a change per patch explaining the reason.
-For example, fixing typos in QSERDES_RX_SIGDET_CNTRL, then another to
-update tuning values based on hw recommendations. Clocks and reset
-should be different patch
-
-This helps us review each change for what it does and helps you down the
-line to figure why a line of code was changed
-
-HTH
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+index 0b3ede5b8e6a..1f4153484717 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+@@ -21,6 +21,22 @@ subnode for its digital output video port, in accordance with the video
+ interface bindings defined in Documentation/devicetree/bindings/media/
+ video-interfaces.txt.
+ 
++Endpoint node required properties for parallel connection are:
++- remote-endpoint: a phandle to the bus receiver's endpoint node.
++- bus-width: shall be set to <8> for 8 bits parallel bus
++	     or <10> for 10 bits parallel bus
++- data-shift: shall be set to <2> for 8 bits parallel bus
++	      (lines 9:2 are used) or <0> for 10 bits parallel bus
++- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
++		(Not required for bus-type equal 6)
++- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
++		(Not required for bus-type equal 6)
++- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
++	       signal. (Not required for bus-type equal 6)
++- bus-type: data bus type. Possible values are:
++	    5 - Parallel
++	    6 - Bt.656
++
+ Example:
+ 
+ &i2c0 {
 -- 
-~Vinod
+2.17.1
+
