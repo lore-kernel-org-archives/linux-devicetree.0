@@ -2,203 +2,98 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91A9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 12:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12963C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 13:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93414204EC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 12:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6CE205CB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 13:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="rWDrRDt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgHCMRm (ORCPT
+        id S1726615AbgHCNAH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgHCMRl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 08:17:41 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762B4C06174A;
-        Mon,  3 Aug 2020 05:17:41 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id A4A40294816
-Message-ID: <10100d9c36cac880b846e454aa4b4df6de96ed41.camel@collabora.com>
-Subject: Re: [PATCH 0/3] KT0913 FM/AM driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
+        Mon, 3 Aug 2020 09:00:07 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:56407 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726291AbgHCNAG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 09:00:06 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 2a4Qko4eJuuXO2a4RkccFX; Mon, 03 Aug 2020 15:00:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1596459604; bh=1yqyfOlE3EzYvqZxQNITXZHea/U7xgp9NSdCTeNETiI=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=rWDrRDt2VbwgVdLVi3tMdXbNe35OWeD2SCAL6Vh0Wt4HiCjM9QlPpfwTnY4vB5rM2
+         G3La/j5P8tqeYdeZXmRE7qo+CFEnSVuMxUSgFmh9ykmVED0psf8phFU/XRPa/KnXdL
+         JxXhx7yjVQ2DxAS0gk5+CFhlqFw+6VNknoTV+zQLjZmhGwkCC++Y02NZIBjNZ0aaXs
+         w+//6mfVaS9JEqldbDnW9ItEBW0dNEK8zXxVKuxzFOc9jbRjPiZ5TgbZAt2gq0xzQ2
+         8MpzzlloGw4ckzJzdAReS+/5VE8QBkpzwbda3hS7t6ZWdBqgo+va6Go23gu29CJKQH
+         N4ginYew4yLfg==
+Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: Add KT Micro
 To:     Santiago Hormazabal <santiagohssl@gmail.com>,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-kernel@vger.kernel.org
-Date:   Mon, 03 Aug 2020 09:17:30 -0300
-In-Reply-To: <20200803020921.64151-1-santiagohssl@gmail.com>
 References: <20200803020921.64151-1-santiagohssl@gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
+ <20200803020921.64151-2-santiagohssl@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <2b629e8c-3f05-be0e-2e7d-9461924ff462@xs4all.nl>
+Date:   Mon, 3 Aug 2020 15:00:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200803020921.64151-2-santiagohssl@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJwx4h/GOcMoVFWvbH3QVkv7iGULnltU8bU1y5otAe2bRJ9GPQk5xe7XbRgH7ldZJ6dQLI6ECnWXsEOQIYXRJNvsd5+jOJgLg3dOus5vjo1njNQwuEZj
+ /2HrINAXjdUeeLqi0nTRdNmCtlccDzJdzF6kx77K3nF0GBcYkS1DcoJTBiXj9UeYxD2tWVqrUfn/2GbrAdu7eUI4NAXmQaLB1Z8uzanTp53Coo0yGOZGVc+M
+ kSMMqINA5qU2ozb9CBdecMOMo9PVaBNii5V7C8yybMu9fZXpU8+y+8KtcRoDDAB59L1yOuyCM4365qmG8evApHh1E6ML1SUoab0PHBsUpmL3NPynz4A2rDQG
+ mCXYYGx809KABVMXysRIPf1/i/dxpIfT4QdcGyPm4TIkU/zcPSWfCoTlJtSM/LdVeLZ6QmsqqAjfO251GMxk/KFzG6Ujhf+fSqq4FAMNcmgG8u/Ruch3KAXY
+ lZ3Lk2DHF0SDkiS3
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Santiago,
+On 03/08/2020 04:09, Santiago Hormazabal wrote:
+> Adds ktm as the prefix of KT Micro, Inc.
+> 
+> Signed-off-by: Santiago Hormazabal <santiagohssl@gmail.com>
 
-Nice work and welcome to the kernel community.
+Rob provided a Acked-by for v1 of this patch, so when you post a v2 you should
+add that Acked-by as well (unless you made major changes to the code).
 
-On Sun, 2020-08-02 at 23:09 -0300, Santiago Hormazabal wrote:
-> media: adds support for kt0913 FM/AM tuner chip
-> 
+Ditto for patch 2/3 for which Rob provided a Reviewed-by.
 
-I don't think this line above should be there.
+Regards,
 
-Also, this seems to be v2. You are missing a "PATCH v2" prefix
-on the patches subject, and a v2 changelog on the cover letter.
+	Hans
 
-Some examples for you to look at:
-
-https://patchwork.linuxtv.org/project/linux-media/cover/BN6PR04MB06603B2CD7F2C56B322AF882A3710@BN6PR04MB0660.namprd04.prod.outlook.com/
-
-https://patchwork.linuxtv.org/project/linux-media/cover/20200717145324.292820-1-jacopo+renesas@jmondi.org/
-
-The vN+1 subject makes it easier for reviewers to keep
-track of submissions, and the changelog makes it easier
-to track the changes.
-
-Thanks!
-Ezequiel
- 
-> Adds a driver for the KT0913 FM/AM tuner chip from KT Micro. This chip
-> can be found on many low cost FM/AM radios and DVD/Home Theaters.
-> The chip provides two ways of usage, a manual mode (requiring only a
-> few buttons) or complete control via I2C. This driver uses the latter.
-> It exposes the minimum functionality of this chip, which includes tuning
-> an AM or FM station given its frequency, reading the signal strength,
-> setting Stereo (only on FM) or Mono (available on AM/FM), Mute, Volume
-> and Audio Gain.
-> I left some TODOs on the code, like supporting the chip's hardware seek
-> feature, using a RW/RO regmaps rather than a single volatile regmap,
-> show the FM SNR as a RO control and the FM/AM AFC deviation as another
-> RO control.
-> The module I've used comes from SZZSJDZ.com, a now defunct company.
-> However, it's possible to buy this chip directly from Aliexpress or
-> similar sites.
-> I tested this on two systems, the first one being a Raspberry Pi 4 with
-> the unstable 5.x kernel, but later I moved to a Banana Pi 2 Zero where
-> I used the (current at this time, 8f2a4a9) master of this repo for testing.
-> I've also compiled the v4l-compliance from sources (c7f0328) and it passed
-> all the tests. The output of that is at the end of this note.
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Note: This is the second set of patches for the driver, where I (tried to)
-> address the comments that the reviewers added on the previous set.
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 8261ede298f8..34809300fddd 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -547,6 +547,8 @@ patternProperties:
+>      description: Kontron S&T AG
+>    "^kosagi,.*":
+>      description: Sutajio Ko-Usagi PTE Ltd.
+> +  "^ktm,.*":
+> +    description: KT Micro, Inc.
+>    "^kyo,.*":
+>      description: Kyocera Corporation
+>    "^lacie,.*":
 > 
-> v4l2-compliance SHA: c7f03287bbd64c168975e7ff3192e6fd3b507686, 32 bits, 32-bit time_t
-> 
-> Compliance test for kt0913-fm-am device /dev/radio0:
-> 
-> Driver Info:
-> 	Driver name      : kt0913-fm-am
-> 	Card type        : kt0913-fm-am
-> 	Bus info         : I2C:radio0
-> 	Driver version   : 5.8.0
-> 	Capabilities     : 0x80250000
-> 		Tuner
-> 		Radio
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x00250000
-> 		Tuner
-> 		Radio
-> 		Extended Pix Format
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/radio0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> 	test invalid ioctls: OK
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK
-> 	test VIDIOC_LOG_STATUS: OK
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK
-> 	test VIDIOC_G/S_FREQUENCY: OK
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 0 Audio Inputs: 0 Tuners: 1
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> 	test VIDIOC_QUERYCTRL: OK
-> 	test VIDIOC_G/S_CTRL: OK
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 8 Private Controls: 0
-> 
-> Format ioctls:
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK (Not Supported)
-> 	test VIDIOC_TRY_FMT: OK (Not Supported)
-> 	test VIDIOC_S_FMT: OK (Not Supported)
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK (Not Supported)
-> 
-> Codec ioctls:
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls:
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-> 	test VIDIOC_EXPBUF: OK (Not Supported)
-> 	test Requests: OK (Not Supported)
-> 
-> Total for kt0913-fm-am device /dev/radio0: 45, Succeeded: 45, Failed: 0, Warnings: 0
-> 
-> Santiago Hormazabal (3):
->   dt-bindings: vendor-prefixes: Add KT Micro
->   media: kt0913: device tree binding
->   media: Add support for the AM/FM radio chip KT0913 from KT Micro.
-> 
->  .../bindings/media/i2c/ktm,kt0913.yaml        |   56 +
->  .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
->  drivers/media/radio/Kconfig                   |   10 +
->  drivers/media/radio/Makefile                  |    1 +
->  drivers/media/radio/radio-kt0913.c            | 1196 +++++++++++++++++
->  5 files changed, 1265 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ktm,kt0913.yaml
->  create mode 100644 drivers/media/radio/radio-kt0913.c
-> 
-
 
