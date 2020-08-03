@@ -2,124 +2,87 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FB2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542F4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A39C206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cF3xQPmV"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC2F206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHCOae (ORCPT
+        id S1727849AbgHCOcF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHCOae (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:30:34 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC69C06174A;
-        Mon,  3 Aug 2020 07:30:33 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v4so30198518ljd.0;
-        Mon, 03 Aug 2020 07:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KnzW7p0iByCA8ZSYOfr1tOM7Ju6uvbTxOgMkLeLg4TE=;
-        b=cF3xQPmVRXDdHqrAwvdenMip3tPx3TWp1GiCpdq358ne/UzxoJ1GU9SsT4CpqhfzkM
-         OY5d3jqt+WHdY+8jpwU876oqGqXNXBunHreeLZyFxMMrdyjluUKa+Rpcwof3chPAXQon
-         GMfkP24z2ED+HMEZbXsI9negmZPWkpIr5gan2jCDWIlN/2Fjw7zS5UrtmwZhqQY0veVE
-         b200/dSc2fBSAP593Pq/WZikcyHm90R1EZ3DRRcaRfmsEo+4Ueyee7jz4BlAtVgghfAB
-         ARv4jn0MEoonv5cH7r5nzJNUH1Pkx2wxuwYZo5/j/mtYxe33SZHJ05ZJlfQ6o9EruoAZ
-         /gHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KnzW7p0iByCA8ZSYOfr1tOM7Ju6uvbTxOgMkLeLg4TE=;
-        b=TwAA7Jh929abulUg4iZBsdAsuzY3qa9fVBoxw9sR/DeLBAgN233croSJ+s5NkogdrZ
-         uEksd1d0V/fMJe9arS+f55ceeAmcjyZV1qjthD8JnwIx22bQpoNaqagYNnRCH2tERnK3
-         lucuciY00HYaxqqju9n9CZ2RsgXCafU6pbfcv41CMCs37tFihH4K7IHxp40QIwNhnLI2
-         z7hHk0u0+91taNE8CujIVIj8CHt3K+KJZjgr/76Kkbge+VPC+vGvUPxroZ0XSCCiXhiL
-         4niA1DdUIAfgxQUjH7q5HEVrF1rpz7yGlvAqGevztTT3JVBwlZXGiwul0BUmjuUuU39j
-         wLRA==
-X-Gm-Message-State: AOAM531kOzJye8e2WXl0x+eDg5sFzk170PcHyRC6d0wATKBmSPq/j4ZO
-        R7WKrndnrvD07wvmgYTYF7w=
-X-Google-Smtp-Source: ABdhPJyKXl1WIje3fN3UuI7wRpj8/m8XTHYYWoYCRBSyLMBIvRtHkFzXGlLXhFq48fEHe5WxIOUEDg==
-X-Received: by 2002:a05:651c:102c:: with SMTP id w12mr8574575ljm.464.1596465032301;
-        Mon, 03 Aug 2020 07:30:32 -0700 (PDT)
-Received: from localhost.localdomain ([89.22.145.64])
-        by smtp.gmail.com with ESMTPSA id c4sm2725523ljk.70.2020.08.03.07.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 07:30:31 -0700 (PDT)
-From:   Alexander Kochetkov <al.kochet@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Alexander Kochetkov <akochetkov@lintech.ru>,
-        Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH] arm64: dts: allwinner: replace numerical constant with CCU_CLKX
-Date:   Mon,  3 Aug 2020 17:30:22 +0300
-Message-Id: <20200803143022.25909-1-al.kochet@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Aug 2020 10:32:05 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:4092 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726358AbgHCOcF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:32:05 -0400
+X-IronPort-AV: E=Sophos;i="5.75,430,1589209200"; 
+   d="scan'208";a="53750340"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 03 Aug 2020 23:32:03 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D29D242ACBDC;
+        Mon,  3 Aug 2020 23:32:00 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/4] media: i2c: ov5640 feature enhancement and fixes
+Date:   Mon,  3 Aug 2020 15:31:43 +0100
+Message-Id: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexander Kochetkov <akochetkov@lintech.ru>
+Hi All,
 
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+This patch series fixes DVP support and enables BT656 mode in
+the driver.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index c26cc1fcaffd..dfeeb7350808 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -51,7 +51,7 @@
- 			reg = <0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
-@@ -62,7 +62,7 @@
- 			reg = <1>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
-@@ -73,7 +73,7 @@
- 			reg = <2>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
-@@ -84,7 +84,7 @@
- 			reg = <3>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
+@Jacopo Mondi - patch 1/4 will collide with your patch series [1],
+feel free to merge it as part of your v2.
+
+[1] https://www.spinics.net/lists/linux-renesas-soc/msg51236.html
+
+Cheers,
+Prabhakar
+
+Changes for v2:
+* Added support to fallback in parallel mode
+* Documented bus-type property
+* Added descriptive commit message for patch 2/4 as pointed
+  by Sakari
+* Fixed review comments pointed by Laurent to have separate functions
+  for mipi and dvp setup
+* Made sure the sensor is in power down mode during startup too for
+  DVP mode
+
+Lad Prabhakar (4):
+  dt-bindings: media: i2c: ov5640: Document bus-type property
+  media: i2c: ov5640: Enable data pins on poweron for DVP mode
+  media: i2c: ov5640: Add support for BT656 mode
+  media: i2c: ov5640: Fallback to parallel mode
+
+ .../devicetree/bindings/media/i2c/ov5640.txt  |   9 +-
+ drivers/media/i2c/ov5640.c                    | 333 ++++++++++--------
+ 2 files changed, 198 insertions(+), 144 deletions(-)
+
 -- 
 2.17.1
 
