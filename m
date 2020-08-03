@@ -2,84 +2,91 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A1BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 22:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0C6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 23:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E9D20781
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 22:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596495061;
-	bh=hRhzS0IcZ85osF3F5r8vW04ynVxYX/YFauy9artJ/so=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c6s1F+EiOjAabKKJGNSS5y7UoKFxBGjFh284iPoDv+t2SCPi0a+ZHvDr38UIyu4fR
-	 SI9Hgv26Ih4LVZaMn+sI9PxxbducQCPUUdooIpS12M7/IYauqlZHN59qt/F9m2obkv
-	 +qFl8c9SeEUnZS2RrWayWaMxB3Y6foNbzNbPVIKc=
+	by mail.kernel.org (Postfix) with ESMTP id 1E8E32065E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 23:14:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z3mDxFDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgHCWvB (ORCPT
+        id S1729073AbgHCXO5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:51:01 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43986 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgHCWvA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 18:51:00 -0400
-Received: by mail-il1-f193.google.com with SMTP id y18so24122511ilp.10;
-        Mon, 03 Aug 2020 15:51:00 -0700 (PDT)
+        Mon, 3 Aug 2020 19:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728891AbgHCXO4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 19:14:56 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A124BC06174A
+        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 16:14:54 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w25so6042154ljo.12
+        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 16:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6sO5NzAYzF4Z7+StBc9QAjAlFS3zl2TpvbmSdZORkr8=;
+        b=z3mDxFDCffCJcrBtd6tleopU1TkWZh7aIf5piB4S6ZbAN4vshkNGE2uM8a3EpXbNw2
+         HDWKYIpfNu08ks/wAhjJSp/LvJimjZefCuNgsgnSMeyIewJMkiVXVxlX1xNqy8nLNG5Z
+         NZmAtEMJGfoAAevVfsdO9E0grGTjgzgApZbQN/+ur1qVthzIYml5wMagKednsOFsUhq1
+         iJ0sYxcMy14YYfnn8VyWp6+fJEqD/bVjN42PLNqDOIHSF32IYu2qFDAZzxld/8gehaDt
+         Sn4/sNIROdjyaznE3SLVg3ig4zJCGvDYOp4HLpu9rrDt5UbbfP9UwP0ai6yMdSdg+VRG
+         fulQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vFjOPpSlF90T2Ir2lWmLxcZyeP2Xbk9TRXdaHOINJzY=;
-        b=i9U6hHk3llu8TibnYy11TLnEhzJic2L/8fyKDUaK+AMh0vflmNj3yXxOkrBx7j+9CJ
-         385E6sycB2CRkvAXp4X1bmtq987fcq3b65BC59b3hynb1EUDDVtZFYnk5wpSLVgwi1uY
-         7NzVcOyP0HZYLjatv0jM9IVNGXBvD9BqFbzI9hgoj3huctH6qHN6LCkOvZbRRuQC6D6l
-         kAkLQ2zRKPTFMia9jUmKCjY7I17j8RLUMi5ksA8IxPbZ34CpB5UfDk7/emx958D5YSpc
-         brW8uOaT3ldzRMpA/heoWex5HaOcXALCD8EImgpOu3dHKigVzDLmRG5+NeLAfcZ7LS27
-         F8EQ==
-X-Gm-Message-State: AOAM530bQcFS9c/HOTn4Sml/CnMIvdITHKLPNyE6e0Kc69AMQrCufw3H
-        y+YvIUvkWeg8s+/KyQLMLQ==
-X-Google-Smtp-Source: ABdhPJxyGb05fd1DxB+6uXj3V1GZAc9T6EKzCDNJB1v2YuEebatwcG2DvnOsv86rRN6bGYchyYNz/A==
-X-Received: by 2002:a92:9116:: with SMTP id t22mr1708877ild.305.1596495060014;
-        Mon, 03 Aug 2020 15:51:00 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v8sm8921510ile.74.2020.08.03.15.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 15:50:59 -0700 (PDT)
-Received: (nullmailer pid 3280412 invoked by uid 1000);
-        Mon, 03 Aug 2020 22:50:58 -0000
-Date:   Mon, 3 Aug 2020 16:50:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yue Hu <zbestahu@gmail.com>
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, huyue2@yulong.com,
-        zbestahu@163.com, frowand.list@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: reserved-memory: remove duplicated call to
- of_get_flat_dt_prop() for no-map node
-Message-ID: <20200803225058.GA3280324@bogus>
-References: <20200730092353.15644-1-zbestahu@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6sO5NzAYzF4Z7+StBc9QAjAlFS3zl2TpvbmSdZORkr8=;
+        b=Ah5KN3Y2EIlqWGR7IYj8eSShpPDFY4uPX+9nSR1Ia/jkN5H8GiVt8Wq6h0g096qraT
+         HG8w9QvwTnLDYMGLeCDLz9DqRLOp7N44Bge9WQhMTLjJC67rjmo94teZdtdIcj4Vh3iE
+         Hw7J4krvZbIjRphnWVK7nkTf5l+z6eXCqIk+CCFqbz2qoax6VuH1dLaYrpaEwW54cQPf
+         U01ikTMt7fxxTbccptLk578ZWG5ljLNCvOnThSrDgEBvo4UGXoegMhNoaysraLx/2kLj
+         BDrbWvm1g9j2bvWx3gBDmnKX1E4ip/k3dGt5R8XaPXZksG1Ge6iMK+B+afbol7p1X4c5
+         am/w==
+X-Gm-Message-State: AOAM533ygtxSVGG1ns0o/ZuCSIX6DlIcWej5SKdP1Pg2GpP6/Jddz1/L
+        F+bGfW6S73YFabCjQL8X7E513IJAFKM8u4+eORvGjQ==
+X-Google-Smtp-Source: ABdhPJyxwO/dplsY1goNzKqNCb1LxmqZzJk7lXk1oGBimGh1jlNZw3ndPPcXRNzyk/QX4Qc7VgsDZWF1sNLM37sXc88=
+X-Received: by 2002:a2e:90e:: with SMTP id 14mr9048672ljj.293.1596496492990;
+ Mon, 03 Aug 2020 16:14:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730092353.15644-1-zbestahu@gmail.com>
+References: <20200722153146.8767-1-dmurphy@ti.com> <20200722153146.8767-4-dmurphy@ti.com>
+In-Reply-To: <20200722153146.8767-4-dmurphy@ti.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 4 Aug 2020 01:14:42 +0200
+Message-ID: <CACRpkdYGvPfHoEeTPs5R1wt4SzW0KVRxmwu_QEfLD99X_6f=zA@mail.gmail.com>
+Subject: Re: [PATCH v32 3/6] ARM: defconfig: u8500: Add LP55XX_COMMON config flag
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 30 Jul 2020 17:23:53 +0800, Yue Hu wrote:
-> From: Yue Hu <huyue2@yulong.com>
-> 
-> Just use nomap instead of the second call to of_get_flat_dt_prop(). And
-> change nomap as a bool type due to != NULL operator. Also, correct comment
-> about node of 'align' -> 'alignment'.
-> 
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
-> ---
->  drivers/of/of_reserved_mem.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
+On Wed, Jul 22, 2020 at 5:32 PM Dan Murphy <dmurphy@ti.com> wrote:
 
-Applied, thanks!
+> The dependencies for the LP55XX LED drivers have been updated so that
+> the child devices (i.e. LP5521) now depends on the LP55XX_COMMON config
+> flag as opposed to the device selecting the LP55XX_COMMON flag.  The
+> LP55XX_COMMON needs to be set in the defconfig.
+>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+OK then I guess you have good reasons to have it like this.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
