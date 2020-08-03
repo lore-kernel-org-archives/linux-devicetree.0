@@ -2,134 +2,124 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70201C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FB2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55FEA206DA
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A39C206D4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cF3xQPmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgHCOZv (ORCPT
+        id S1726605AbgHCOae (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:25:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52558 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgHCOZv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:25:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4A3CEACC3;
-        Mon,  3 Aug 2020 14:26:04 +0000 (UTC)
-Message-ID: <9200970a917a9cabdc5b17483b5a8725111eb9d0.camel@suse.de>
-Subject: [PATCH] of: unittest: Use bigger address cells to catch parser
- regressions
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 03 Aug 2020 16:25:47 +0200
-In-Reply-To: <CAL_JsqKu4CB7-b_hRvu63c9jQ_S91epWMr=P__9Fu-h_WFR-_Q@mail.gmail.com>
-References: <20200731100248.26982-1-nsaenzjulienne@suse.de>
-         <CAL_JsqKu4CB7-b_hRvu63c9jQ_S91epWMr=P__9Fu-h_WFR-_Q@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ivQUVYgzUHw4VCNNTbEO"
-User-Agent: Evolution 3.36.4 
-MIME-Version: 1.0
+        Mon, 3 Aug 2020 10:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbgHCOae (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:30:34 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC69C06174A;
+        Mon,  3 Aug 2020 07:30:33 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v4so30198518ljd.0;
+        Mon, 03 Aug 2020 07:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KnzW7p0iByCA8ZSYOfr1tOM7Ju6uvbTxOgMkLeLg4TE=;
+        b=cF3xQPmVRXDdHqrAwvdenMip3tPx3TWp1GiCpdq358ne/UzxoJ1GU9SsT4CpqhfzkM
+         OY5d3jqt+WHdY+8jpwU876oqGqXNXBunHreeLZyFxMMrdyjluUKa+Rpcwof3chPAXQon
+         GMfkP24z2ED+HMEZbXsI9negmZPWkpIr5gan2jCDWIlN/2Fjw7zS5UrtmwZhqQY0veVE
+         b200/dSc2fBSAP593Pq/WZikcyHm90R1EZ3DRRcaRfmsEo+4Ueyee7jz4BlAtVgghfAB
+         ARv4jn0MEoonv5cH7r5nzJNUH1Pkx2wxuwYZo5/j/mtYxe33SZHJ05ZJlfQ6o9EruoAZ
+         /gHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KnzW7p0iByCA8ZSYOfr1tOM7Ju6uvbTxOgMkLeLg4TE=;
+        b=TwAA7Jh929abulUg4iZBsdAsuzY3qa9fVBoxw9sR/DeLBAgN233croSJ+s5NkogdrZ
+         uEksd1d0V/fMJe9arS+f55ceeAmcjyZV1qjthD8JnwIx22bQpoNaqagYNnRCH2tERnK3
+         lucuciY00HYaxqqju9n9CZ2RsgXCafU6pbfcv41CMCs37tFihH4K7IHxp40QIwNhnLI2
+         z7hHk0u0+91taNE8CujIVIj8CHt3K+KJZjgr/76Kkbge+VPC+vGvUPxroZ0XSCCiXhiL
+         4niA1DdUIAfgxQUjH7q5HEVrF1rpz7yGlvAqGevztTT3JVBwlZXGiwul0BUmjuUuU39j
+         wLRA==
+X-Gm-Message-State: AOAM531kOzJye8e2WXl0x+eDg5sFzk170PcHyRC6d0wATKBmSPq/j4ZO
+        R7WKrndnrvD07wvmgYTYF7w=
+X-Google-Smtp-Source: ABdhPJyKXl1WIje3fN3UuI7wRpj8/m8XTHYYWoYCRBSyLMBIvRtHkFzXGlLXhFq48fEHe5WxIOUEDg==
+X-Received: by 2002:a05:651c:102c:: with SMTP id w12mr8574575ljm.464.1596465032301;
+        Mon, 03 Aug 2020 07:30:32 -0700 (PDT)
+Received: from localhost.localdomain ([89.22.145.64])
+        by smtp.gmail.com with ESMTPSA id c4sm2725523ljk.70.2020.08.03.07.30.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 07:30:31 -0700 (PDT)
+From:   Alexander Kochetkov <al.kochet@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Alexander Kochetkov <akochetkov@lintech.ru>,
+        Alexander Kochetkov <al.kochet@gmail.com>
+Subject: [PATCH] arm64: dts: allwinner: replace numerical constant with CCU_CLKX
+Date:   Mon,  3 Aug 2020 17:30:22 +0300
+Message-Id: <20200803143022.25909-1-al.kochet@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Alexander Kochetkov <akochetkov@lintech.ru>
 
---=-ivQUVYgzUHw4VCNNTbEO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Getting address and size cells for dma-ranges/ranges parsing is tricky
-and shouldn't rely on the node's count_cells() method. The function
-starts looking for cells on the parent node, as its supposed to work
-with device nodes, which doesn't work when input with bus nodes, as
-generally done when parsing ranges.
-
-Add test to catch regressions on that specific quirk as developers will
-be tempted to edit it out in favor of the default method.
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
 ---
- drivers/of/unittest-data/tests-address.dtsi | 10 +++++-----
- drivers/of/unittest.c                       |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/unittest-data/tests-address.dtsi b/drivers/of/unitt=
-est-data/tests-address.dtsi
-index 3fe5d3987beb..6604a52bf6cb 100644
---- a/drivers/of/unittest-data/tests-address.dtsi
-+++ b/drivers/of/unittest-data/tests-address.dtsi
-@@ -23,13 +23,13 @@ device@70000000 {
- 			};
-=20
- 			bus@80000000 {
--				#address-cells =3D <1>;
--				#size-cells =3D <1>;
--				ranges =3D <0x0 0x80000000 0x100000>;
--				dma-ranges =3D <0x10000000 0x0 0x40000000>;
-+				#address-cells =3D <2>;
-+				#size-cells =3D <2>;
-+				ranges =3D <0x0 0x0 0x80000000 0x0 0x100000>;
-+				dma-ranges =3D <0x1 0x0 0x0 0x20 0x0>;
-=20
- 				device@1000 {
--					reg =3D <0x1000 0x1000>;
-+					reg =3D <0x0 0x1000 0x0 0x1000>;
- 				};
- 			};
-=20
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 398de04fd19c..9b7e84bdc7d4 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -900,7 +900,7 @@ static void __init of_unittest_parse_dma_ranges(void)
- 	of_unittest_dma_ranges_one("/testcase-data/address-tests/device@70000000"=
-,
- 		0x0, 0x20000000, 0x40000000);
- 	of_unittest_dma_ranges_one("/testcase-data/address-tests/bus@80000000/dev=
-ice@1000",
--		0x10000000, 0x20000000, 0x40000000);
-+		0x100000000, 0x20000000, 0x2000000000);
- 	of_unittest_dma_ranges_one("/testcase-data/address-tests/pci@90000000",
- 		0x80000000, 0x20000000, 0x10000000);
- }
---=20
-2.28.0
-
-
-
---=-ivQUVYgzUHw4VCNNTbEO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl8oHmsACgkQlfZmHno8
-x/7E7Qf+OOvK2j5/TLbzr9HCeeQU+tUJlMB/8OaT/q7Ua9Aderb9K9Y8xs7WXvdf
-FHNwMq5gdmmBSisG+3gS8Ekdp2CWZKQmg03JE8ZUhdt6Yp9D+z2tIF7jy2udZdNI
-p3lJFxA3u608htW6lXnwHwvllvQOFDEBpHngF8KwoSZMhhbxInHOKzGnggU57sAY
-FB2MtCzzzw0e85jHjoGrguKGqxPv1d4E7jyr6LgYil3zH2lYUvClZzPR89J8ZAVl
-5xc5mQpk8XB+27+lb4e+H43ufypyxAftMYrEuiRkC+Lez1CfbU/QuJtIfAw2z7dk
-rRrbduOOXb/K2mRA8f1WWgztYgWHGw==
-=1rhk
------END PGP SIGNATURE-----
-
---=-ivQUVYgzUHw4VCNNTbEO--
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index c26cc1fcaffd..dfeeb7350808 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -51,7 +51,7 @@
+ 			reg = <0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2>;
+-			clocks = <&ccu 21>;
++			clocks = <&ccu CLK_CPUX>;
+ 			clock-names = "cpu";
+ 			#cooling-cells = <2>;
+ 		};
+@@ -62,7 +62,7 @@
+ 			reg = <1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2>;
+-			clocks = <&ccu 21>;
++			clocks = <&ccu CLK_CPUX>;
+ 			clock-names = "cpu";
+ 			#cooling-cells = <2>;
+ 		};
+@@ -73,7 +73,7 @@
+ 			reg = <2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2>;
+-			clocks = <&ccu 21>;
++			clocks = <&ccu CLK_CPUX>;
+ 			clock-names = "cpu";
+ 			#cooling-cells = <2>;
+ 		};
+@@ -84,7 +84,7 @@
+ 			reg = <3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2>;
+-			clocks = <&ccu 21>;
++			clocks = <&ccu CLK_CPUX>;
+ 			clock-names = "cpu";
+ 			#cooling-cells = <2>;
+ 		};
+-- 
+2.17.1
 
