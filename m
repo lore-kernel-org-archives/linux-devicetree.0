@@ -2,180 +2,105 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4E4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30BAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36455206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G901bH1u"
+	by mail.kernel.org (Postfix) with ESMTP id CCF312076C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgHCOdT (ORCPT
+        id S1728339AbgHCOvK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHCOdS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:33:18 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D5D6C06174A
-        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 07:33:18 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b14so33566460qkn.4
-        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 07:33:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qBYoXUErLdg1XxwofpDGcU6L+k/lh9jilEvaXMRcAXc=;
-        b=G901bH1uartSYnMZf8E4nRq9+71hJJZGAK3/aI2Rg1yPpayiz5rCEYt/3cGtWR/r6v
-         asX3fM23eTN7nHbcTHCug9Y70kr7oBZi+7gsEjvZkMLZEh0wwKbP0Z7Dl7skRtGE/PT5
-         2fuf5ePHkxBk1tIAiC0Um/3dzIIFYrLJlXmjI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qBYoXUErLdg1XxwofpDGcU6L+k/lh9jilEvaXMRcAXc=;
-        b=mdPEsnbFGT58N2u9UMR9cRnVp0JQhZ69p67xQ+iYqfpHMiwOeCaRtBXz+9y1ZgoLGg
-         UizBKdTxk3qQXWh8qVzCPqcQSB/S+jTh0dcgzp2rrU9ykg47edev4vIcNBcMEYFX1sqL
-         uo61bHnNVLnz2tPh64R8PeHlc95Nz2j6CynA83xcvkouveDwuk9qOKVqI/Y+st5P02dm
-         MTysFobymy2j3zff6iBXRbQV6LLpEQW15+QA2kIXfI48MoZ8VemOKU5LSEFytG/eawBL
-         TsJpRmKVyDjx+fFBDI7/F4wSA1Vna5UT4nVHxhAgXW2mcOCjOp8RR9Bkr0UWtyJs5X+q
-         QI3Q==
-X-Gm-Message-State: AOAM532NdYoPPiqeiM1qPQO7pX1USi5bXe4qeRVnIvnBES7I9+QkXLMx
-        1iDjM7TKlcoEb84mUhYx1CdSJXDhFfY=
-X-Google-Smtp-Source: ABdhPJxoxLPjs8j2h/aBw/rScMtrWfS4dBUTNDnYvrknanNQ9MlJMPvELknKZF5e2gnJvQH7AzgHsg==
-X-Received: by 2002:a05:620a:9d0:: with SMTP id y16mr16824265qky.353.1596465197405;
-        Mon, 03 Aug 2020 07:33:17 -0700 (PDT)
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
-        by smtp.gmail.com with ESMTPSA id w32sm21472677qtw.66.2020.08.03.07.33.17
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 07:33:17 -0700 (PDT)
-Received: by mail-qk1-f181.google.com with SMTP id 77so2977185qkm.5
-        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 07:33:17 -0700 (PDT)
-X-Received: by 2002:a05:6638:305:: with SMTP id w5mr21375421jap.10.1596464812761;
- Mon, 03 Aug 2020 07:26:52 -0700 (PDT)
+        Mon, 3 Aug 2020 10:51:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40782 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728309AbgHCOvK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:51:10 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073EYKBb139790;
+        Mon, 3 Aug 2020 10:50:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pkrghyyk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 10:50:59 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 073EYwTB143770;
+        Mon, 3 Aug 2020 10:50:59 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pkrghyy6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 10:50:59 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073Eo0ID016173;
+        Mon, 3 Aug 2020 14:50:58 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04wdc.us.ibm.com with ESMTP id 32n018rrnd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 14:50:58 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073EosVh30277916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 14:50:54 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D99F136051;
+        Mon,  3 Aug 2020 14:50:57 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE4A4136055;
+        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
+Received: from ghost4.ibm.com (unknown [9.163.93.250])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Aug 2020 14:50:56 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-leds@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, dmurphy@ti.com, pavel@ucw.cz,
+        jacek.anaszewski@gmail.com, vishwa@linux.ibm.com,
+        andy.shevchenko@gmail.com, eajames@linux.ibm.com
+Subject: [PATCH v2 1/2] dt-bindings: leds: pca955x: Add IBM implementation compatible string
+Date:   Mon,  3 Aug 2020 09:50:54 -0500
+Message-Id: <20200803145055.5203-2-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200803145055.5203-1-eajames@linux.ibm.com>
+References: <20200803145055.5203-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200728050140.996974-1-tientzu@chromium.org> <20200728050140.996974-5-tientzu@chromium.org>
- <20200731205804.GB756942@bogus>
-In-Reply-To: <20200731205804.GB756942@bogus>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Mon, 3 Aug 2020 22:26:41 +0800
-X-Gmail-Original-Message-ID: <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
-Message-ID: <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
-Subject: Re: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
-To:     Rob Herring <robh@kernel.org>
-Cc:     frowand.list@gmail.com, Christoph Hellwig <hch@lst.de>,
-        m.szyprowski@samsung.com, Robin Murphy <robin.murphy@arm.com>,
-        treding@nvidia.com, Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        bgolaszewski@baylibre.com, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Nicolas Boichat <drinkcat@chromium.org>, tfiga@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_13:2020-08-03,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
+ phishscore=0 suspectscore=1 adultscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030106
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Aug 1, 2020 at 4:58 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Jul 28, 2020 at 01:01:39PM +0800, Claire Chang wrote:
-> > Introduce the new compatible string, device-swiotlb-pool, for restricted
-> > DMA. One can specify the address and length of the device swiotlb memory
-> > region by device-swiotlb-pool in the device tree.
-> >
-> > Signed-off-by: Claire Chang <tientzu@chromium.org>
-> > ---
-> >  .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > index 4dd20de6977f..78850896e1d0 100644
-> > --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > @@ -51,6 +51,24 @@ compatible (optional) - standard definition
-> >            used as a shared pool of DMA buffers for a set of devices. It can
-> >            be used by an operating system to instantiate the necessary pool
-> >            management subsystem if necessary.
-> > +        - device-swiotlb-pool: This indicates a region of memory meant to be
->
-> swiotlb is a Linux thing. The binding should be independent.
-Got it. Thanks for pointing this out.
+IBM created an implementation of the PCA9552 on a PIC16F
+microcontroller. Document the new compatible string for this device.
 
->
-> > +          used as a pool of device swiotlb buffers for a given device. When
-> > +          using this, the no-map and reusable properties must not be set, so the
-> > +          operating system can create a virtual mapping that will be used for
-> > +          synchronization. Also, there must be a restricted-dma property in the
-> > +          device node to specify the indexes of reserved-memory nodes. One can
-> > +          specify two reserved-memory nodes in the device tree. One with
-> > +          shared-dma-pool to handle the coherent DMA buffer allocation, and
-> > +          another one with device-swiotlb-pool for regular DMA to/from system
-> > +          memory, which would be subject to bouncing. The main purpose for
-> > +          restricted DMA is to mitigate the lack of DMA access control on
-> > +          systems without an IOMMU, which could result in the DMA accessing the
-> > +          system memory at unexpected times and/or unexpected addresses,
-> > +          possibly leading to data leakage or corruption. The feature on its own
-> > +          provides a basic level of protection against the DMA overwriting buffer
-> > +          contents at unexpected times. However, to protect against general data
-> > +          leakage and system memory corruption, the system needs to provide a
-> > +          way to restrict the DMA to a predefined memory region.
->
-> I'm pretty sure we already support per device carveouts and I don't
-> understand how this is different.
-We use this to bounce streaming DMA in and out of a specially allocated region.
-I'll try to merge this with the existing one (i.e., shared-dma-pool)
-to see if that
-makes things clearer.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> What is the last sentence supposed to imply? You need an IOMMU?
-The main purpose is to mitigate the lack of DMA access control on
-systems without an IOMMU.
-For example, we plan to use this plus a MPU for our PCIe WiFi which is
-not behind an IOMMU.
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+index 7a5830f8d5ab..817f460f3a72 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pca955x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 	"nxp,pca9550"
+ 	"nxp,pca9551"
+ 	"nxp,pca9552"
++	"ibm,pca9552"
+ 	"nxp,pca9553"
+ - #address-cells: must be 1
+ - #size-cells: must be 0
+-- 
+2.24.0
 
->
-> >          - vendor specific string in the form <vendor>,[<device>-]<usage>
-> >  no-map (optional) - empty property
-> >      - Indicates the operating system must not create a virtual mapping
-> > @@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> >                       compatible = "acme,multimedia-memory";
-> >                       reg = <0x77000000 0x4000000>;
-> >               };
-> > +
-> > +             wifi_coherent_mem_region: wifi_coherent_mem_region {
-> > +                     compatible = "shared-dma-pool";
-> > +                     reg = <0x50000000 0x400000>;
-> > +             };
-> > +
-> > +             wifi_device_swiotlb_region: wifi_device_swiotlb_region {
-> > +                     compatible = "device-swiotlb-pool";
-> > +                     reg = <0x50400000 0x4000000>;
-> > +             };
-> >       };
-> >
-> >       /* ... */
-> > @@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> >               memory-region = <&multimedia_reserved>;
-> >               /* ... */
-> >       };
-> > +
-> > +     pcie_wifi: pcie_wifi@0,0 {
-> > +             memory-region = <&wifi_coherent_mem_region>,
-> > +                      <&wifi_device_swiotlb_region>;
-> > +             restricted-dma = <0>, <1>;
-> > +             /* ... */
-> > +     };
-> >  };
-> > --
-> > 2.28.0.rc0.142.g3c755180ce-goog
-> >
