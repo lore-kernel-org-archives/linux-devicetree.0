@@ -2,95 +2,113 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAD4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 20:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F12BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64EE722BF3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 20:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C5B208C7
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596490860;
+	bh=4Z+MMGDMAjd2JsVZgpg33pFFiCIesV85qSUfxxX9w5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UWcc4oH4cbVrAENN0cL7XmtzPxD+sVP8XctTSfwXq64kjhiduQsyuCQFdbs/C2SMy
+	 wSKAOXKhXGWwCh9Dq8QGgBJiUNKRUr59G/Aso3VuSn1+Cqb1F80AIivIcXruHZdJdZ
+	 +hus8QIyhEx1oDNwlGbY7HXwPvZrwehOmsuVdGe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgHCUvu (ORCPT
+        id S1728419AbgHCVk7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:51:50 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:60408 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728649AbgHCUvt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 16:51:49 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F14F21C0BD7; Mon,  3 Aug 2020 22:51:46 +0200 (CEST)
-Date:   Mon, 3 Aug 2020 22:51:46 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        vishwa@linux.ibm.com
-Subject: Re: [PATCH v2 2/2] leds: pca955x: Add an IBM software implementation
- of the PCA9552 chip
-Message-ID: <20200803205146.GA16295@amd>
-References: <20200803145055.5203-1-eajames@linux.ibm.com>
- <20200803145055.5203-3-eajames@linux.ibm.com>
- <CAHp75VevG65uuE4Vv49tSdvpNnxE7AC7W_QR2s8twCPZ=4da_g@mail.gmail.com>
+        Mon, 3 Aug 2020 17:40:59 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43982 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726398AbgHCVk7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:40:59 -0400
+Received: by mail-io1-f65.google.com with SMTP id k23so40051703iom.10;
+        Mon, 03 Aug 2020 14:40:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+qbA17NBRX4DFVcCtce1OR443e452icdklfA8GxdqOQ=;
+        b=rMeUO/+LV/W5oCvFVeL2s5LEkkLx97cL8d2UlE58f+0T+1OZ+eX51s3dnez0mqDzaa
+         LPYSPzBeF+cZqSj4nfqGmEzniTsJdYulJIt3YACtYHrfmQ5LiGMB/trqFfiAA3/paiSQ
+         Wa7aGTpKXo6awCN2nYASEVMY7ji+kE/ZgSOHrhS1Gpf27dbNqi5Tc701BEZ3L2T2tOQ1
+         B6cVRFD7ne5QB342/S+d8bQtF9n3v3IMvMQxunPyulD5mPlOOIXYxBhp6ztHU05XwU7c
+         TQIanus5JRqku0F2ySlS7YtbnY0arP7Cbuwp0zBKEX1UHu3uUwhuprd1YlM9NbKB8dBi
+         14eA==
+X-Gm-Message-State: AOAM533kzYgnthxvDbMGa0RehhyLVQPRe/QF7/GsPyNTp75Sc2j5pKcD
+        DxvAOT8AW4vxjL5A0Ok90g==
+X-Google-Smtp-Source: ABdhPJzMH4Qu3dMzd0ErMEXWcCAy8F7OOarZCAV4Agm/rvfutcveskUC8SZEeVtMmVlFVM8iWoBOYw==
+X-Received: by 2002:a5d:9d58:: with SMTP id k24mr1869658iok.107.1596490858430;
+        Mon, 03 Aug 2020 14:40:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k204sm10853501iof.55.2020.08.03.14.40.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 14:40:57 -0700 (PDT)
+Received: (nullmailer pid 3185405 invoked by uid 1000);
+        Mon, 03 Aug 2020 21:40:54 -0000
+Date:   Mon, 3 Aug 2020 15:40:54 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     seiya.wang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        jg_poxu@mediatek.com, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, chuanjia.liu@mediatek.com,
+        sean.wang@kernel.org, srv_heupstream@mediatek.com,
+        biao.huang@mediatek.com, erin.lo@mediatek.com,
+        mark.rutland@arm.com, hongzhou.yang@mediatek.com,
+        matthias.bgg@gmail.com, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, hui.liu@mediatek.com, eddie.huang@mediatek.com,
+        sean.wang@mediatek.com, linux-gpio@vger.kernel.org,
+        sj.huang@mediatek.com, linus.walleij@linaro.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: mt8192: add binding document
+Message-ID: <20200803214054.GA3184946@bogus>
+References: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
+ <20200801043303.32149-3-zhiyong.tao@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VevG65uuE4Vv49tSdvpNnxE7AC7W_QR2s8twCPZ=4da_g@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200801043303.32149-3-zhiyong.tao@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, 01 Aug 2020 12:33:02 +0800, Zhiyong Tao wrote:
+> The commit adds mt8192 compatible node in binding document.
+> 
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  .../bindings/pinctrl/pinctrl-mt8192.yaml      | 175 ++++++++++++++++++
+>  1 file changed, 175 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> 
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon 2020-08-03 19:42:17, Andy Shevchenko wrote:
-> On Mon, Aug 3, 2020 at 5:51 PM Eddie James <eajames@linux.ibm.com> wrote:
-> >
-> > IBM created an implementation of the PCA9552 on a PIC16F
-> > microcontroller. The I2C device addresses are different from the
-> > hardware PCA9552, so add a new compatible string and associated
-> > platform data to be able to probe this device.
->=20
-> ...
->=20
-> >         pca9550,
-> >         pca9551,
-> >         pca9552,
-> > +       ibm_pca9552,
-> >         pca9553,
->=20
-> I would rather not mix like this, but use alpha order, for example.
-> It's better to read and see which devices are supported by vendor.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Actually I see no huge reason to change that. pca9552 and ibm_pca9552
-should be very similar, so it makes sense to keep them close together.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:0: [0, 268455936, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:1: [0, 297926656, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:2: [0, 298909696, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:3: [0, 299040768, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:4: [0, 299106304, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:5: [0, 300023808, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:6: [0, 300351488, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:7: [0, 300548096, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:8: [0, 301072384, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:9: [0, 301137920, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.example.dt.yaml: example-0: pinctrl@10005000:reg:10: [0, 268480512, 0, 4096] is too long
 
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+See https://patchwork.ozlabs.org/patch/1339661
 
-iEYEARECAAYFAl8oeOIACgkQMOfwapXb+vI1FgCdFq9zGGSyXDCSLDWE8Wu/vh7p
-0QEAnjfmugf3BC4eK0GYtbFh5hfX4OkE
-=Gzw4
------END PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
---KsGdsel6WgEHnImy--
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
