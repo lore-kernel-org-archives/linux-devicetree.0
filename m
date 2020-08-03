@@ -2,520 +2,285 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A50C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89F3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3BCA207FC
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF0320722
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596491220;
+	bh=8PrzIuacB2CF7h+hvDXiU7b2Yz6YEO2pMsOIXZ+U+Ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AJqyV9XXIH91UmAWiUPnuxtV7+l4jQkMzdr0TxFv37vHxzvYHYKfOalQT4TxB9vW4
+	 /iHQobNl5u/G6AeANc4axh00VGkOE48/ut1kexDc+zyiUUIcpke9+a5hudBq/Oo0SR
+	 T5lldVTYejhJKG+XDPnX1hrgdf5lk2oynKKf5NHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgHCVlp (ORCPT
+        id S1728439AbgHCVq7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:41:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:34728 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728038AbgHCVlo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:41:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A163D1FB;
-        Mon,  3 Aug 2020 14:41:43 -0700 (PDT)
-Received: from [10.57.35.143] (unknown [10.57.35.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BFD73F718;
-        Mon,  3 Aug 2020 14:41:42 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: add rk3318 A95X Z2 board
-To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        Mon, 3 Aug 2020 17:46:59 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:43675 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728038AbgHCVq7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:46:59 -0400
+Received: by mail-il1-f194.google.com with SMTP id y18so24004856ilp.10;
+        Mon, 03 Aug 2020 14:46:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pqP+dO+lvU2cpGzu3ZlIh3GwibVErSRm3PLKdLit8xM=;
+        b=qUfL1cnu0j/j55yZ+WxOJHB4pJLnj9mFezMeNt3TLkYQl0N6T3/AacDfX2LEogCPVp
+         VOYDSCkA7rZGgkH+CA7qXKwJh7KuTiNtWFlp/eoudQgMkvwvFKGLzbqVXBkCvCF2gVE6
+         ruGTj/JHD9DUuikSoZLhciEqC5YP2/7Tr5I0ofNZZU5dENad41JFEHGKPP+4YRW8GFDC
+         TcvHiNrZXvet7FbdXDWjtRmzR06UHtewGOv1qyqP2hhRuzsrZC2o5uadUmAk0pulIl8W
+         ua07BZ13J7SGa0blJJqwRNAf0Phf81WsrA9c1XzdXCAFhlaEIhzwlNPkOo4Yd8VZbjdv
+         tFFg==
+X-Gm-Message-State: AOAM530LC/BMkwGIt533cLscWzYJNPyhsYFoGZgSHkbvXw7dnyEjgd6T
+        NVlOAwXeplxYIB8toaAI7w==
+X-Google-Smtp-Source: ABdhPJyIFlqliaMIlzgK+a5Y0a5XoSIdsh5mf4RHk11U0+xbSeeG1cJIq99uvPwTEu3X8pYVmltwfQ==
+X-Received: by 2002:a92:6a07:: with SMTP id f7mr1525064ilc.271.1596491217938;
+        Mon, 03 Aug 2020 14:46:57 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id q1sm10823790ioh.0.2020.08.03.14.46.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 14:46:57 -0700 (PDT)
+Received: (nullmailer pid 3193370 invoked by uid 1000);
+        Mon, 03 Aug 2020 21:46:55 -0000
+Date:   Mon, 3 Aug 2020 15:46:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
+        matthias.bgg@gmail.com, sean.wang@kernel.org,
+        srv_heupstream@mediatek.com, hui.liu@mediatek.com,
+        eddie.huang@mediatek.com, chuanjia.liu@mediatek.com,
+        biao.huang@mediatek.com, hongzhou.yang@mediatek.com,
+        erin.lo@mediatek.com, sean.wang@mediatek.com,
+        sj.huang@mediatek.com, seiya.wang@mediatek.com,
+        jg_poxu@mediatek.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <20200718105343.5152-1-jbx6244@gmail.com>
- <20200718105343.5152-4-jbx6244@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6d028007-4360-e552-3707-3dd2712f2501@arm.com>
-Date:   Mon, 3 Aug 2020 22:41:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: mt8192: add binding document
+Message-ID: <20200803214655.GB3184946@bogus>
+References: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
+ <20200801043303.32149-3-zhiyong.tao@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200718105343.5152-4-jbx6244@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801043303.32149-3-zhiyong.tao@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-18 11:53, Johan Jonker wrote:
-> The rk3318 A95X Z2 boards are sold as TV box.
-> No further documentation is given, but from the dts files
-> extracted it seems that the rk3318 processor is simulair
-> to the rk3328. This dts file contains only the basic nodes
-> that have support in the mainline kernel.
+On Sat, Aug 01, 2020 at 12:33:02PM +0800, Zhiyong Tao wrote:
+> The commit adds mt8192 compatible node in binding document.
 > 
-> Features:
-> 
-> CPU: RK3318 Quad-Core Cortex-A53
-> GPU: Mali-450
-> RAM: 2/4GB DDR3
-> ROM: EMMC 16/32/64GB
-> HDMI: HDMI 2.0a for 4k@60Hz
-> Ethernet: 10/100M standard RJ-45
-> WiFi: 2.4G+5G WIFI, 802.11 b/g/n
-> Bluetooth: 4.0
-> 1 x USB 3.0
-> 1 x USB 2.0
-> 1 x Micro SD card slot
-> 1 x SPDIF
-> 1 x AV
-> 1 x DC IN
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
 > ---
->   arch/arm64/boot/dts/rockchip/Makefile           |   1 +
->   arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts | 393 ++++++++++++++++++++++++
->   2 files changed, 394 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
+>  .../bindings/pinctrl/pinctrl-mt8192.yaml      | 175 ++++++++++++++++++
+>  1 file changed, 175 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index b87b1f773..aa508bc4a 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -2,6 +2,7 @@
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3318-a95x-z2.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts b/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
-> new file mode 100644
-> index 000000000..413418ea1
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> new file mode 100755
+> index 000000000000..88e18e2e23a0
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
-> @@ -0,0 +1,393 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> @@ -0,0 +1,175 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-mt8192.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +/dts-v1/;
-> +#include <dt-bindings/input/input.h>
-> +#include "rk3328.dtsi"
+> +title: Mediatek MT8192 Pin Controller
 > +
-> +/ {
-> +	model = "A95X Z2";
-> +	compatible = "zkmagic,a95x-z2", "rockchip,rk3318";
+> +maintainers:
+> +  - Sean Wang <sean.wang@mediatek.com>
 > +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
+> +description: |
+> +  The Mediatek's Pin controller is used to control SoC pins.
 > +
-> +	adc-keys {
-> +		compatible = "adc-keys";
-> +		io-channels = <&saradc 0>;
-> +		io-channel-names = "buttons";
-> +		keyup-threshold-microvolt = <1800000>;
-> +		poll-interval = <100>;
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8192-pinctrl
 > +
-> +		vol-up-key {
-> +			label = "volume up";
-> +			linux,code = <KEY_VOLUMEUP>;
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: |
+> +      Number of cells in GPIO specifier. Since the generic GPIO binding is used,
+> +      the amount of cells must be specified as 2. See the below
+> +      mentioned gpio binding representation for description of particular cells.
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    description: gpio valid number range.
+> +    maxItems: 1
+> +
+> +  reg:
+> +    description: |
+> +      Physical address base for gpio base registers. There are 11 GPIO
+> +      physical address base in mt8192.
+> +    maxItems: 11
+> +
+> +  reg-names:
+> +    description: |
+> +      Gpio base register names.
+> +    maxItems: 11
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupts:
+> +    description: The interrupt outputs to sysirq.
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '^pins':
+> +    type: object
+> +    description: |
+> +      A pinctrl node should contain at least one subnodes representing the
+> +      pinctrl groups available on the machine. Each subnode will list the
+> +      pins it needs, and how they should be configured, with regard to muxer
+> +      configuration, pullups, drive strength, input enable/disable and
+> +      input schmitt.
+> +      An example of using macro:
+> +      node {
 
-Really? If as usual this is actually the recovery button hidden inside 
-the box, it's somewhat questionable whether it's worth describing in DT 
-at all. At the very least it should probably be presented as something 
-more realistic than half a volume control.
+'node' doesn't match '^pins' regex.
 
-> +			press-threshold-microvolt = <17000>;
-> +		};
-> +	};
-> +
-> +	ir-receiver {
-> +		compatible = "gpio-ir-receiver";
-> +		gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
-> +		pinctrl-0 = <&ir_int>;
-> +		pinctrl-names = "default";
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&cyx_led_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		cyx_led: led-0 {
+Better to put an example in the actual example so it is checked.
 
-What needs a phandle to this node to warrant a label?
+> +        pinmux = <PIN_NUMBER_PINMUX>;
+> +        GENERIC_PINCONFIG;
+> +      };
+> +    properties:
+> +      pinmux:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32-array"
 
-> +			default-state = "on";
-> +			gpios = <&gpio2 RK_PC7 GPIO_ACTIVE_LOW>;
-> +			label = "CYX_LED";
-> +		};
-> +	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		pinctrl-0 = <&wifi_enable_h>;
-> +		pinctrl-names = "default";
-> +		reset-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	spdif-sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "spdif";
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&spdif>;
-> +		};
-> +
-> +		simple-audio-card,codec {
-> +			sound-dai = <&spdif_out>;
-> +		};
-> +	};
-> +
-> +	spdif_out: spdif-out {
-> +		compatible = "linux,spdif-dit";
-> +		#sound-dai-cells = <0>;
-> +	};
-> +
-> +	/* Power tree */
-> +	regulators {
+Already a common definition in pinmux-node.yaml. Reference that file in 
+'^pins'.
 
-Don't create fake "buses" for regulators, especially if they don't even 
-contain most of the regulators anyway.
+> +        description: |
+> +          Integer array, represents gpio pin number and mux setting.
+> +          Supported pin number and mux varies for different SoCs, and are defined
+> +          as macros in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
+> +
+> +      GENERIC_PINCONFIG:
 
-> +		compatible = "simple-mfd";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		vccio_1v8_reg: regulator@0 {
-> +			compatible = "regulator-fixed";
-> +			reg = <0>;
-> +			regulator-name = "vccio_1v8";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vccio_3v3_reg: regulator@1 {
-> +			compatible = "regulator-fixed";
-> +			reg = <1>;
-> +			regulator-name = "vccio_3v3";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +
-> +	vcc_otg_vbus: otg-vbus-regulator {
-> +		compatible = "regulator-fixed";
-> +		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-0 = <&otg_vbus_drv>;
-> +		pinctrl-names = "default";
-> +		regulator-name = "vcc_otg_vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		enable-active-high;
-> +	};
-> +
-> +	vcc_phy: vcc-phy-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_phy";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
+That's not a property name.
 
-Is this actually a distinct regulator? The reference design has the 
-internal FEPHY block powered pretty much directly from the general 1V8 
-and 1V0 supplies that also power USB/HDMI/etc., so I'd rather expect 
-low-end boxes to follow suit. Either way there doesn't seem to be a 
-great deal of value in describing something with no controls, no voltage 
-information, and no connection to the power tree.
+> +        description: |
+> +          It is the generic pinconfig options to use, bias-disable,
+> +          bias-pull-down, bias-pull-up, input-enable, input-disable, output-low,
+> +          output-high, input-schmitt-enable, input-schmitt-disable
+> +          and drive-strength are valid.
+> +
+> +          Some special pins have extra pull up strength, there are R0 and R1 pull-up
+> +          resistors available, but for user, it's only need to set R1R0 as 00, 01,
+> +          10 or 11. So It needs config "mediatek,pull-up-adv" or
+> +          "mediatek,pull-down-adv" to support arguments for those special pins.
+> +          Valid arguments are from 0 to 3.
+> +
+> +          We can use "mediatek,tdsel" which is an integer describing the steps for
+> +          output level shifter duty cycle when asserted (high pulse width adjustment).
+> +          Valid arguments  are from 0 to 15.
+> +          We can use "mediatek,rdsel" which is an integer describing the steps for
+> +          input level shifter duty cycle when asserted (high pulse width adjustment).
+> +          Valid arguments are from 0 to 63.
+> +
+> +          When config drive-strength, it can support some arguments, such as
+> +          MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+> +          It can only support 2/4/6/8/10/12/14/16mA in mt8192.
+> +          For I2C pins, there are existing generic driving setup and the specific
+> +          driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA driving
+> +          adjustment in generic driving setup. But in specific driving setup,
+> +          they can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
+> +          driving setup for I2C pins, the existing generic driving setup will be
+> +          disabled. For some special features, we need the I2C pins specific
+> +          driving setup. The specific driving setup is controlled by E1E0EN.
+> +          So we need add extra vendor driving preperty instead of
+> +          the generic driving property.
+> +          We can add "mediatek,drive-strength-adv = <XXX>;" to describe the specific
+> +          driving setup property. "XXX" means the value of E1E0EN. EN is 0 or 1.
+> +          It is used to enable or disable the specific driving setup.
+> +          E1E0 is used to describe the detail strength specification of the I2C pin.
+> +          When E1=0/E0=0, the strength is 0.125mA.
+> +          When E1=0/E0=1, the strength is 0.25mA.
+> +          When E1=1/E0=0, the strength is 0.5mA.
+> +          When E1=1/E0=1, the strength is 1mA.
+> +          So the valid arguments of "mediatek,drive-strength-adv" are from 0 to 7.
+> +
+> +      bias-pull-down: true
+> +
+> +      bias-pull-up: true
+> +
+> +      bias-disable: true
+> +
+> +      output-high: true
+> +
+> +      output-low: true
+> +
+> +      input-enable: true
+> +
+> +      input-disable: true
+> +
+> +      input-schmitt-enable: true
+> +
+> +      input-schmitt-disable: true
+> +
+> +    required:
+> +      - pinmux
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+
+additionalProperties: false
 
 > +
-> +	vcc_sd: sdmmc-regulator {
-> +		compatible = "regulator-fixed";
-> +		gpio = <&gpio0 RK_PD6 GPIO_ACTIVE_LOW>;
-> +		pinctrl-0 = <&sdmmc0m1_gpio>;
-> +		pinctrl-names = "default";
-> +		regulator-name = "vcc_sd";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vccio_3v3_reg>;
-> +	};
-> +
-> +	vdd_arm: vdd-arm {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm0 0 5000 1>;
-> +		regulator-name = "vdd_arm";
-> +		regulator-min-microvolt = <950000>;
-> +		regulator-max-microvolt = <1400000>;
-> +		regulator-settling-time-up-us = <250>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vdd_log: vdd-log {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm1 0 5000 1>;
-> +		regulator-name = "vdd_log";
-> +		regulator-min-microvolt = <900000>;
-> +		regulator-max-microvolt = <1300000>;
-> +		regulator-settling-time-up-us = <250>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&analog_sound {
-> +	status = "okay";
-> +};
-> +
-> +&codec {
-> +	status = "okay";
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu1 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu2 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu3 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu0_opp_table {
-> +	opp-1200000000 {
-> +		status = "disabled";
-> +	};
-> +
-> +	opp-1296000000 {
-> +		status = "disabled";
-> +	};
-> +};
-> +
-> +&emmc {
-> +	bus-width = <8>;
-> +	cap-mmc-highspeed;
-> +	non-removable;
-> +	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&gmac2phy {
-> +	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
-> +	assigned-clock-rate = <50000000>;
-> +	assigned-clocks = <&cru SCLK_MAC2PHY>;
-> +	clock_in_out = "output";
-> +	phy-supply = <&vcc_phy>;
-> +	status = "okay";
-> +};
-> +
-> +&gpu {
-> +	mali-supply = <&vdd_log>;
-> +};
-> +
-> +&hdmi {
-> +	ddc-i2c-scl-high-time-ns = <9625>;
-> +	ddc-i2c-scl-low-time-ns = <10000>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmiphy {
-> +	status = "okay";
-> +};
-> +
-> +&hdmi_sound {
-> +	status = "okay";
-> +};
-> +
-> +&i2s0 {
-> +	status = "okay";
-> +};
-> +
-> +&i2s1 {
-> +	status = "okay";
-> +};
-> +
-> +&io_domains {
-> +	pmuio-supply = <&vccio_3v3_reg>;
-> +	vccio1-supply = <&vccio_3v3_reg>;
-> +	vccio2-supply = <&vccio_1v8_reg>;
-> +	vccio3-supply = <&vccio_3v3_reg>;
-> +	vccio4-supply = <&vccio_1v8_reg>;
-> +	vccio5-supply = <&vccio_3v3_reg>;
-> +	vccio6-supply = <&vccio_3v3_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&pinctrl {
-> +	ir {
-> +		ir_int: ir-int {
-> +			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		cyx_led_pin: cyx-led-pin {
-> +			rockchip,pins = <2 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	pwm0 {
-> +		pwm0_pin_pull_up: pwm0-pin-pull-up {
-> +			rockchip,pins = <2 RK_PA4 1 &pcfg_pull_up>;
-> +		};
-> +	};
-> +
-> +	pwm1 {
-> +		pwm1_pin_pull_up: pwm1-pin-pull-up {
-> +			rockchip,pins = <2 RK_PA5 1 &pcfg_pull_up>;
-> +		};
-> +	};
-> +
-> +	sdio-pwrseq {
-> +		wifi_enable_h: wifi-enable-h {
-> +			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	sdmmc1 {
-> +		clk_32k_out: clk-32k-out {
-> +			rockchip,pins = <1 RK_PD4 1 &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	usb {
-> +		host_vbus_drv: host-vbus-drv {
-> +			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		otg_vbus_drv: otg-vbus-drv {
-> +			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +};
-> +
-> +&pwm0 {
-> +	pinctrl-0 = <&pwm0_pin_pull_up>;
-> +	pinctrl-names = "active";
-> +	status = "okay";
-> +};
-> +
-> +&pwm1 {
-> +	pinctrl-0 = <&pwm1_pin_pull_up>;
-> +	pinctrl-names = "active";
-> +	status = "okay";
-> +};
-> +
-> +&saradc {
-> +	vref-supply = <&vccio_1v8_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&sdio {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	keep-power-in-suspend;
-> +	max-frequency = <125000000>;
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +	non-removable;
-> +	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk &clk_32k_out>;
-> +	pinctrl-names = "default";
-> +	sd-uhs-sdr104;
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	disable-wp;
-> +	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
-> +	pinctrl-names = "default";
-> +	vmmc-supply = <&vcc_sd>;
-> +	status = "okay";
-> +};
-> +
-> +&spdif {
-> +	pinctrl-0 = <&spdifm0_tx>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&soc_crit {
-> +	temperature = <115000>; /* millicelsius */
-> +};
-> +
-> +&target {
-> +	temperature = <105000>; /* millicelsius */
-> +};
-> +
-> +&threshold {
-> +	temperature = <90000>; /* millicelsius */
-> +};
-> +
-> +&tsadc {
-> +	rockchip,hw-tshut-temp = <120000>;
-> +	status = "okay";
-> +};
-> +
-> +&u2phy {
-> +	status = "okay";
-> +
-> +	u2phy_host: host-port {
-
-Just refer to the ports normally by label rather than duplicate a random 
-snippet of DTSI hierarchy - I'm not sure why this particular pattern 
-seems to get copied around so much.
-
-Robin.
-
-> +		status = "okay";
-> +	};
-> +
-> +	u2phy_otg: otg-port {
-> +		phy-supply = <&vcc_otg_vbus>;
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-0 = <&uart0_xfer &uart0_cts>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&usb20_otg {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&vop {
-> +	status = "okay";
-> +};
-> +
-> +&vop_mmu {
-> +	status = "okay";
-> +};
-> 
+> +examples:
+> +  - |
+> +            #include <dt-bindings/pinctrl/mt8192-pinfunc.h>
+> +            #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +            pio: pinctrl@10005000 {
+> +                    compatible = "mediatek,mt8192-pinctrl";
+> +                    reg = <0 0x10005000 0 0x1000>,
+> +                          <0 0x11c20000 0 0x1000>,
+> +                          <0 0x11d10000 0 0x1000>,
+> +                          <0 0x11d30000 0 0x1000>,
+> +                          <0 0x11d40000 0 0x1000>,
+> +                          <0 0x11e20000 0 0x1000>,
+> +                          <0 0x11e70000 0 0x1000>,
+> +                          <0 0x11ea0000 0 0x1000>,
+> +                          <0 0x11f20000 0 0x1000>,
+> +                          <0 0x11f30000 0 0x1000>,
+> +                          <0 0x1000b000 0 0x1000>;
+> +                    reg-names = "iocfg0", "iocfg_rm", "iocfg_bm",
+> +                          "iocfg_bl", "iocfg_br", "iocfg_lm",
+> +                          "iocfg_lb", "iocfg_rt", "iocfg_lt",
+> +                          "iocfg_tl", "eint";
+> +                    gpio-controller;
+> +                    #gpio-cells = <2>;
+> +                    gpio-ranges = <&pio 0 0 220>;
+> +                    interrupt-controller;
+> +                    interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH 0>;
+> +                    #interrupt-cells = <2>;
+> +            };
+> -- 
+> 2.18.0
