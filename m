@@ -2,85 +2,95 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5514DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 20:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAD4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 20:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA8922BF3
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 20:29:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596486597;
-	bh=VNXrJoDu2nVwvK5pv8XXLArHar+98PGv944XMa5VqRo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oWb6QSTvZEPrsy3KicJPnX2JfFz2J0LLFY76KXNgPJo3SzP1naqCrUWvU53CgYjS4
-	 ydZD/6XUAfzysBJCIZVwqQSkZ7hkYDL3R5zI4wHNpcp/ZhRM9oeEqOZc1LyGp9JwAG
-	 ZVcIuws5yrI2lSA+Cl2CC0sP13Hgq88aXCvwtREw=
+	by mail.kernel.org (Postfix) with ESMTP id 64EE722BF3
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 20:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgHCU3x (ORCPT
+        id S1728665AbgHCUvu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:29:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgHCU3w (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:29:52 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2BEC22B45;
-        Mon,  3 Aug 2020 20:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596486592;
-        bh=VNXrJoDu2nVwvK5pv8XXLArHar+98PGv944XMa5VqRo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NshCfN2Ba0b2nhmggzG3c76IhGP7zrRQp2Gn+JAqkTnw/o4d1QyNLZbSTu95u+iLa
-         h0eK2KyrS9nt5ONx4JXrbmac/+dsXhcUcyt44OfyAwIiZDl8GJ5sUoE/Lt/pN2WfuT
-         +1r+PeYuxJbTX4fECjsAasPf3/Hldbi+UGG1m75w=
-Date:   Mon, 3 Aug 2020 13:29:49 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     pisa@cmp.felk.cvut.cz
-Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        mkl@pengutronix.de, socketcan@hartkopp.net, wg@grandegger.com,
-        davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        c.emde@osadl.org, armbru@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
-        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
-        porazil@pikron.com
-Subject: Re: [PATCH v4 0/6] CTU CAN FD open-source IP core SocketCAN driver,
- PCI, platform integration and documentation
-Message-ID: <20200803132949.64884ff1@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
-References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+        Mon, 3 Aug 2020 16:51:50 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60408 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728649AbgHCUvt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 16:51:49 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id F14F21C0BD7; Mon,  3 Aug 2020 22:51:46 +0200 (CEST)
+Date:   Mon, 3 Aug 2020 22:51:46 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        vishwa@linux.ibm.com
+Subject: Re: [PATCH v2 2/2] leds: pca955x: Add an IBM software implementation
+ of the PCA9552 chip
+Message-ID: <20200803205146.GA16295@amd>
+References: <20200803145055.5203-1-eajames@linux.ibm.com>
+ <20200803145055.5203-3-eajames@linux.ibm.com>
+ <CAHp75VevG65uuE4Vv49tSdvpNnxE7AC7W_QR2s8twCPZ=4da_g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VevG65uuE4Vv49tSdvpNnxE7AC7W_QR2s8twCPZ=4da_g@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  3 Aug 2020 20:34:48 +0200 pisa@cmp.felk.cvut.cz wrote:
-> From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
-> 
-> This driver adds support for the CTU CAN FD open-source IP core.
-> More documentation and core sources at project page
-> (https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core).
-> The core integration to Xilinx Zynq system as platform driver
-> is available (https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top).
-> Implementation on Intel FPGA based PCI Express board is available
-> from project (https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd).
-> The CTU CAN FD core emulation send for review for QEMU mainline.
-> Development repository for QEMU emulation - ctu-canfd branch of
->   https://gitlab.fel.cvut.cz/canbus/qemu-canbus
-> 
-> More about CAN related projects used and developed at the Faculty
-> of the Electrical Engineering (http://www.fel.cvut.cz/en/)
-> of Czech Technical University (https://www.cvut.cz/en)
-> in Prague at http://canbus.pages.fel.cvut.cz/ .
 
-Patches 3 and 4 have warnings when built with W=1 C=1 flags.
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please also remove the uses of static inline in C sources.
-Those are rarely necessary and hide unused code warnings.
+On Mon 2020-08-03 19:42:17, Andy Shevchenko wrote:
+> On Mon, Aug 3, 2020 at 5:51 PM Eddie James <eajames@linux.ibm.com> wrote:
+> >
+> > IBM created an implementation of the PCA9552 on a PIC16F
+> > microcontroller. The I2C device addresses are different from the
+> > hardware PCA9552, so add a new compatible string and associated
+> > platform data to be able to probe this device.
+>=20
+> ...
+>=20
+> >         pca9550,
+> >         pca9551,
+> >         pca9552,
+> > +       ibm_pca9552,
+> >         pca9553,
+>=20
+> I would rather not mix like this, but use alpha order, for example.
+> It's better to read and see which devices are supported by vendor.
+
+Actually I see no huge reason to change that. pca9552 and ibm_pca9552
+should be very similar, so it makes sense to keep them close together.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8oeOIACgkQMOfwapXb+vI1FgCdFq9zGGSyXDCSLDWE8Wu/vh7p
+0QEAnjfmugf3BC4eK0GYtbFh5hfX4OkE
+=Gzw4
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
