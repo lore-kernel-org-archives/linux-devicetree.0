@@ -7,100 +7,87 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A2FC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B3AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7662076E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9677A2076E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596491513;
-	bh=NGcDR1KaNhU41LcBuXJG16Vb08XHmxYCOBXL5/HWb0s=;
+	s=default; t=1596491909;
+	bh=hwnVNvGnlHjxa3MzrkMn4tSgYkjk3xhHINWknygEIBA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r3K4h3uAeHElB+olSHCpzyVyclfz76jgqzc5mO+f5xk5EVLmW4tD/2YroL86EbmQu
-	 v98Ufu8dK6+6B3Nf3+NUnDnuv5K3UQ5ylzLRIIjjG2J/X9xSnHOLyPgNaV1G8P2f2L
-	 CpAXSd9F4mxRVUp7DlnCVK3tjMm/ok4Ng5YEAsUY=
+	b=Ib7PIXaEt9vIMnmYJe7L6fQw2U0FW5oEl0x+Fhqovyntx1zhaoB0+ZsNppPaB3RXq
+	 UFcP39iQ4vrT1lMHxnFhuDKsZws6n8suo660PYfdHzQ2lij6j9FMFQgxSaLgP5TJ71
+	 W29VUbUApA8v0mNA9l5IOzVeQ/sVIVDvqnoLdvCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgHCVvv (ORCPT
+        id S1726948AbgHCV62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:51:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43107 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgHCVvv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:51:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so40077726iom.10;
-        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
+        Mon, 3 Aug 2020 17:58:28 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44938 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbgHCV62 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:58:28 -0400
+Received: by mail-io1-f68.google.com with SMTP id v6so24895386iow.11;
+        Mon, 03 Aug 2020 14:58:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=rTTd0JLEQIircW3THThScxa603LDzD4tC7cJBVnxw/8=;
-        b=PS9Vc/RaXghQo6qgZra6AA1HZaUeqqdzy5Sh+gGZDDLwLd3xw0hXBc2A9kgZ/p+kD3
-         CxamUkzPr2Zak69584gWpoPi9bHPd6T9g72y66RME3WGe88T/Kh56wOcNmPXqT8gWhPv
-         5Im1tAD/UlEefCQKXdrge5C73h1hnM0VY3cDkQ+o9vCylwNZaGvbI5PLwz+/m451yFcf
-         oNkSvqUHFncWrRWYCmRRpW+tz9Af23KH0RlIlcbNgs+TGoAQiE3GUjAYsuIZCp+g0Qg1
-         VoyIwUKcoZ4t7wN5Bs9uFL6sJd1MDBwzDXBwAkL7Thw87/1uHBONB7VHcXfgIptX6hnD
-         QJRA==
-X-Gm-Message-State: AOAM5300fO1gBZf1ZnUCqVxG8GxXcmb2qCFUISiVFzUjAB0gUBUsN0y5
-        cl3PoegjrrHTgpDYSZst3Q==
-X-Google-Smtp-Source: ABdhPJwk9JxW57b/cc2Ai3TSARPfqnml762G9Vu/UjF/k0tep6wviRYkAv+/P4mTcChWZ7hQ2RQBRg==
-X-Received: by 2002:a6b:dd12:: with SMTP id f18mr1938079ioc.109.1596491510169;
-        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
+        bh=Tk9R+9ti9qwUNfwKpXRUC+vzSncyu3vSdfJgtp7CwUU=;
+        b=kzBOmE65ybLCj29oUwVkPnu8XZBqKjVbDyTq2U+RL06GR+egy4SycIlXnmBybO1YLk
+         NQgdKN8PEdb1bl5ViMi1efGQFWTaPr/7VQCrzPw8pmjAZ3iMbQ0951wDG4qwErfv0S7h
+         D4QEsgfuIdVAsst4qtRtQPm2ShjR7PRs8MwTgym+OVD0n7aTufg1vlc6J+0wATi3Bacp
+         yNYWGXvOsS7jSF21D/PsQz4AX1xZIRcjsMYvswHlCAz5ltkArtwfHwDEZ3uAz6VQ/IMS
+         2Tbb04yf4c8J//ULphyz0GCf7oMBerGU23hcUVkq/p1TLwWE8hQNyPEIUx3a4gA7qom7
+         7fMw==
+X-Gm-Message-State: AOAM5327+fVX9xP+bEusrhhXql26xZW2qXqiEsyrvNUqlnYW4CH3+NB/
+        aSbc0vVGt+3VDXRoGPVJVQ==
+X-Google-Smtp-Source: ABdhPJzZkYiklS4YCr+61tDmXUEFuV6zWukOJ7e4K8TI/LNRT9xwQpUwcG+0wzjSA//q2jkGmfwAQw==
+X-Received: by 2002:a02:76d0:: with SMTP id z199mr2075134jab.39.1596491907624;
+        Mon, 03 Aug 2020 14:58:27 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v63sm5891342ilk.67.2020.08.03.14.51.48
+        by smtp.gmail.com with ESMTPSA id p3sm11398308ilc.45.2020.08.03.14.58.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 14:51:49 -0700 (PDT)
-Received: (nullmailer pid 3201910 invoked by uid 1000);
-        Mon, 03 Aug 2020 21:51:47 -0000
-Date:   Mon, 3 Aug 2020 15:51:47 -0600
+        Mon, 03 Aug 2020 14:58:26 -0700 (PDT)
+Received: (nullmailer pid 3211639 invoked by uid 1000);
+        Mon, 03 Aug 2020 21:58:26 -0000
+Date:   Mon, 3 Aug 2020 15:58:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
- mask cell support
-Message-ID: <20200803215147.GA3201744@bogus>
-References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
- <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH V2] dt-bindings: iio: adc: maxim,max1118 yaml conversion
+Message-ID: <20200803215826.GA3211566@bogus>
+References: <20200801175850.1140006-1-jic23@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200801175850.1140006-1-jic23@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
-> Each DW DMA controller channel can be synthesized with different
-> parameters like maximum burst-length, multi-block support, maximum data
-> width, etc. Most of these parameters determine the DW DMAC channels
-> performance in its own aspect. On the other hand these parameters can
-> be implicitly responsible for the channels performance degradation
-> (for instance multi-block support is a very useful feature, but having
-> it disabled during the DW DMAC synthesize will provide a more optimized
-> core). Since DMA slave devices may have critical dependency on the DMA
-> engine performance, let's provide a way for the slave devices to have
-> the DMA-channels allocated from a pool of the channels, which according
-> to the system engineer fulfill their performance requirements.
+On Sat, 01 Aug 2020 18:58:50 +0100, Jonathan Cameron wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> The pool is determined by a mask optionally specified in the fifth
-> DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
-> phandle arguments or the mask is zero, then the allocation will be
-> performed from a set of all channels provided by the DMA controller.
+> Simple device with a simple conversion.  Special handling needed
+> for the max1118 which is the only supported part that has an external
+> reference voltage.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Akinobu Mita <akinobu.mita@gmail.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->  .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> v2:
+> * Added additionalProperties: false. Other changes are to make this work.
+> * Move the vref-supply definition up
+> * Add an else clause
+> 
+> .../devicetree/bindings/iio/adc/max1118.txt   | 21 -------
+>  .../bindings/iio/adc/maxim,max1118.yaml       | 62 +++++++++++++++++++
+>  2 files changed, 62 insertions(+), 21 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
