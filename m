@@ -2,178 +2,157 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C1FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 23:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0F5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 23:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E767520786
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 23:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1825420775
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 23:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DcZwLeIU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cw9FE0dB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgHCXnH (ORCPT
+        id S1726877AbgHCXvI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:43:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
+        Mon, 3 Aug 2020 19:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbgHCXmB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 19:42:01 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CECFC061757
-        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 16:42:01 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id q75so32210866iod.1
-        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 16:42:01 -0700 (PDT)
+        with ESMTP id S1726725AbgHCXvG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 19:51:06 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97988C06174A
+        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 16:51:06 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id jp10so13883116ejb.0
+        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 16:51:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ySLfczwfPCSsE/wIMdBijYsg19z6IEGg8VtkjJac6SY=;
-        b=DcZwLeIUcR1SxjgrjtGSRF0f2IaIwkE2cwYwmc4Wow/SeAyV4MiPpWcMB8TJ4eauEY
-         vECMqzmfNeED0nATqni3SI8pI3puiGdsNq1GVvTO0Bj7MHYIgfiCJ8ddluTfnIG1OdBq
-         1T+YRqoNReDpWeeUGSo52zs2v/cybiX1wnn14=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jXDDaDw8Eqt57H3f9xOmMsGMtQY7iJ1imNUg/tVT7gg=;
+        b=Cw9FE0dBbSUGSKbJHPzftiC/rFHtKDanwjgHgZmM0zw84L1NME0vqbrJbro1fec6Ds
+         GY/TX6SFh1xE57ojf+2CNYbeGcHvYWavFgJ+kWqcEVPA8tMNUqmT41r4AeNkAVs7S0Ec
+         M9lnfsErivuKDOlf/lX1wDO80YbsfIq6lqhmA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ySLfczwfPCSsE/wIMdBijYsg19z6IEGg8VtkjJac6SY=;
-        b=V+L0bz0NNDc9SOIrsER72SZXg1U9XOXyQSH8Y6Uk83xVOGMSDLPOrQCn4LlFf8Hi99
-         zsq4TsmoYcZzTUWLjV5Bpib7b1NB49CxZrDw/S3DotjaEex0/ZrkY5UBfK9wRlS8bK8L
-         4ORitGkHzRddwfoa2Nw/Gks93yLK0JLINzC2GqniQtZS88BzH0MuGJBVXD/hP98wmFFo
-         cnf+gTPUuGz1a79BUiPOlF/9gykzi14WMES2Brwy0Yi2x3ck+dqLvvomF/8EFqsjx69z
-         aikS3tb3LMWMk1IB29pMQ+kS+N9/JqhB4mYJS6Hogoxc1WLKUxRdjtQEsA1H93meRl5i
-         CImQ==
-X-Gm-Message-State: AOAM533Ces5tzuWQ5x6jpkQ1s6wUjkRBbLoT1dXlk2Xwc2/ccJSp74Sk
-        spdRMjfDqcW/SiPSP1B3tcDE5Qz4CZ0LQg==
-X-Google-Smtp-Source: ABdhPJzDGIe+hSIe7APq0Lc1WUsIPi4TvIWjSHUGZz5lkp3h7XL6rCOs1v64EAKNtBkCZCDJwqsRvA==
-X-Received: by 2002:a05:6638:2689:: with SMTP id o9mr2591145jat.37.1596498120365;
-        Mon, 03 Aug 2020 16:42:00 -0700 (PDT)
-Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id g2sm5468435ioe.4.2020.08.03.16.41.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 16:42:00 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jXDDaDw8Eqt57H3f9xOmMsGMtQY7iJ1imNUg/tVT7gg=;
+        b=fujBb0Ik+3C626i2ou+90TDTv7emuOuDHrAxZtxQ61XCndNsLfVm14L9gJohou+mRQ
+         KNtzcIjUdGvsmnxABd7kLKPL0YgmotFw8xEonCfu7tQAg4lDPO+u7m+btss+z8WeWB+r
+         KMfbKM2XtZqkFURRIuJ32okmJqb7lTNhyfHZPdazHCCG/57rT6OEVmyFjGtHk8uuIvr7
+         HhuL+jaKYhQbAPj+jKoNCA8W4UkULzYBAQe8MGJ/KRFreApL71Ph4vfl0W8OEKezXBOg
+         3M77ODc98xHtwjaQuXHMEnT5AUXthoSi+FdexB1++nPve5QLLGudsSs++oF1nD6q0ZLq
+         pz2g==
+X-Gm-Message-State: AOAM533b4bJwlvt0qEpWWQuuK+UBV7A449fvEJ+7RruQFE6SSiUuft1S
+        6mvpz/RKO7wJFYvkUgk+LGnQKQ43l+w=
+X-Google-Smtp-Source: ABdhPJy2z7aQIvE9G6a8C6PFiwQFaIlNN9H/udjTzd5csz5NSf5eYLTt1071q/BgMI4X+vR9RifADA==
+X-Received: by 2002:a17:906:e50:: with SMTP id q16mr7683328eji.155.1596498665398;
+        Mon, 03 Aug 2020 16:51:05 -0700 (PDT)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id p3sm12816543edb.92.2020.08.03.16.51.04
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 16:51:05 -0700 (PDT)
+Received: by mail-wr1-f42.google.com with SMTP id p20so804795wrf.0
+        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 16:51:04 -0700 (PDT)
+X-Received: by 2002:a5d:6641:: with SMTP id f1mr16995070wrw.307.1596498664242;
+ Mon, 03 Aug 2020 16:51:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200803234154.320400-1-campello@chromium.org>
+In-Reply-To: <20200803234154.320400-1-campello@chromium.org>
 From:   Daniel Campello <campello@chromium.org>
+Date:   Mon, 3 Aug 2020 17:50:28 -0600
+X-Gmail-Original-Message-ID: <CAHcu+VYgA2rYS_R17cnREreRSjqGQvqRDUVFGf_ttQbfQu5OOQ@mail.gmail.com>
+Message-ID: <CAHcu+VYgA2rYS_R17cnREreRSjqGQvqRDUVFGf_ttQbfQu5OOQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/15] sx9310 iio driver updates
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v4 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
-Date:   Mon,  3 Aug 2020 17:41:40 -0600
-Message-Id: <20200803131544.v4.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-In-Reply-To: <20200803234154.320400-1-campello@chromium.org>
-References: <20200803234154.320400-1-campello@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds device tree bindings for sx9310 sensor.
+Hi everyone,
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-[swboyd@chromium.org: Add both regulators and make them optional]
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+So sorry, I sent an intermediate version as v4. Please disregard since
+it has a couple bugs. I will send v5 with them fixed.
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
- - Added #io-channel-cells as a required property
+Regards,
+Daniel
 
- .../iio/proximity/semtech,sx9310.yaml         | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-new file mode 100644
-index 00000000000000..5739074d3592fe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Semtech's SX9310 capacitive proximity sensor
-+
-+maintainers:
-+  - Daniel Campello <campello@chromium.org>
-+
-+description: |
-+  Semtech's SX9310/SX9311 capacitive proximity/button solution.
-+
-+  Specifications about the devices can be found at:
-+  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
-+
-+properties:
-+  compatible:
-+    enum:
-+      - semtech,sx9310
-+      - semtech,sx9311
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      The sole interrupt generated by the device used to announce the
-+      preceding reading request has finished and that data is
-+      available or that a close/far proximity event has happened.
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Main power supply
-+
-+  svdd-supply:
-+    description: Host interface power supply
-+
-+  "#io-channel-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#io-channel-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      proximity@28 {
-+        compatible = "semtech,sx9310";
-+        reg = <0x28>;
-+        interrupt-parent = <&pio>;
-+        interrupts = <5 IRQ_TYPE_LEVEL_LOW 5>;
-+        vdd-supply = <&pp3300_a>;
-+        svdd-supply = <&pp1800_prox>;
-+        #io-channel-cells = <1>;
-+      };
-+    };
--- 
-2.28.0.163.g6104cc2f0b6-goog
-
+On Mon, Aug 3, 2020 at 5:41 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> The first patch resends the DT binding for the driver that was merged in
+> v5.8-rc1 with a small change to update for proper regulators. The second
+> through the eleventh patch fixes several issues dropped from v8 to v9
+> when the initial patch was merged.  The twelveth patch drops
+> channel_users because it's unused. The thirteenth patch adds support to
+> enable the svdd and vdd supplies so that this driver can work on a board
+> where the svdd supply isn't enabled at boot and needs to be turned on
+> before this driver starts to communicate with the chip. The final patch
+> updates irq trigger flags.
+>
+> Changes in v4:
+>  - Updated macro SX9310_REG_STAT1_COMPSTAT_MASK at call site.
+>  - Use FIELD_GET/FIELD_PREP instead of manual shift.
+>  - Reverted condition check logic on enable/disable_irq methods.
+>  - Use pointer to buffer struct on iio_push_to_buffers_with_timestamp().
+>
+> Changes in v3:
+>  - Moved irq presence check down to lower methods
+>  - Changed buffer to struct type to align timestamp memory properly.
+>  - Added static assert for number of channels.
+>  - Added irq trigger flags commit to the series.
+>
+> Changes in v2:
+>  - Added #io-channel-cells as a required property
+>  - Reordered error handling on sx9310_resume()
+>  - Added #include <linux/mod_devicetable.h>
+>  - Added '\n' to dev_err()
+>  - Fixed commit message from "iio: sx9310: Align memory"
+>  - Changed prox_stat to chan_prox_stat bitmap.
+>  - Fixed dev_err() message
+>  - Added '\n' to dev_err()
+>
+> Daniel Campello (12):
+>   dt-bindings: iio: Add bindings for sx9310 sensor
+>   iio: sx9310: Update macros declarations
+>   iio: sx9310: Fix irq handling
+>   iio: sx9310: Remove acpi and of table macros
+>   iio: sx9310: Change from .probe to .probe_new
+>   iio: sx9310: Fixes various memory handling
+>   iio: sx9310: Use long instead of int for channel bitmaps
+>   iio: sx9310: Use regmap_read_poll_timeout() for compensation
+>   iio: sx9310: Update copyright
+>   iio: sx9310: Simplify error return handling
+>   iio: sx9310: Use variable to hold &client->dev
+>   iio: sx9310: Miscellaneous format fixes
+>
+> Stephen Boyd (3):
+>   iio: sx9310: Drop channel_users[]
+>   iio: sx9310: Enable vdd and svdd regulators at probe
+>   iio: sx9310: Use irq trigger flags from firmware
+>
+>  .../iio/proximity/semtech,sx9310.yaml         |  65 +++
+>  drivers/iio/proximity/sx9310.c                | 421 +++++++++---------
+>  2 files changed, 276 insertions(+), 210 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+>
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
