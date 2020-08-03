@@ -4,104 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1EAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A87C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCFF720722
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7502F20722
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596491254;
-	bh=wVco9ENkqFNQv7EF9mPZfvFj2hf4gM8bMIF5LaiGmhc=;
+	s=default; t=1596491282;
+	bh=AUM+yvLlMS9mqRubh71+CUwV8yF8OXdcLCnLDg19Eoo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l3Rf6ToaohU+SnfiSdmfrSuSDAmgpl3ntIidUK0WJGnpn5x2GydG4qE0JnsyBFQGF
-	 24YPrWwZ77JbxTLqihBYqLaVEjdy5ZlNrIvP+Fz+z5IO0RU28b7qTREkvuSAQT3WDN
-	 KFxYlhKhE1xB6PpIOrbgiPbEZs4B3hM1e9qAfQqI=
+	b=aEWYz1Y5rqGUXGTjFf8YqQ++lq499ldR7RbmTaREl97Om9dUkBGGSM7ATCBez50/9
+	 IgPuLb2HylSxyaT1K0LsEZ4XMwmi9TK0gcEMnsl8rD/Q0MH2G029DzKmIjDu2R1R3o
+	 Iz1J9g8plF9sflwOL2C7RiwGvHhFISR+Zz9JqoEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgHCVra (ORCPT
+        id S1728439AbgHCVsB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:47:30 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35507 "EHLO
+        Mon, 3 Aug 2020 17:48:01 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35554 "EHLO
         mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgHCVra (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:47:30 -0400
-Received: by mail-il1-f194.google.com with SMTP id t18so32472535ilh.2;
-        Mon, 03 Aug 2020 14:47:29 -0700 (PDT)
+        with ESMTP id S1728038AbgHCVsB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:48:01 -0400
+Received: by mail-il1-f194.google.com with SMTP id t18so32473613ilh.2;
+        Mon, 03 Aug 2020 14:48:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=NVd/IZHDd4CFaOIYi2ephk8MvBPJAENgkCfWbWcCwNY=;
-        b=MwkoZSsbyoVjUbe4pebZfHzzyJTQK2vT0MFc00hP+jNDDk2IoJb01uvIJwjLefxSCs
-         MDvJg3qUwRuRWI5hvqr91k8SYc2pzk4MZ5GzhE7wkBkINWx0Em7wbgswOa+VomhgDGwu
-         M+lOIaVIKyMEBCo9V1vUqTw8ZYtlU5jrG6/0DRwrt3Dtw3dNo4QNHynKpZt19RIoPHM7
-         6enrR6JoKz971rPCzMIaQsJIsRN4zIJTmDCzvN1/yhJqrG1pmjN9x+m77hRv7mnt78wR
-         rX2vcpVla4W5mVQGyW+ZBRg8fH01MRadZbsNH67GZAzxozp5wJS61Q3AQUP43EKkb+sK
-         LtbA==
-X-Gm-Message-State: AOAM5311pimOBA9LtYE90kEMPvR0Cib74hDLA7tVNbJQxQsMCzRtab74
-        vDgnZzbc1JLNn3agKh+Z0Q==
-X-Google-Smtp-Source: ABdhPJxaf5xAcvcm8UQUsFNG1gCcnAGMc13tqQfHOjpjO6GwgSPQ62o9nJYnPv0wUgZQe3KRxYspeQ==
-X-Received: by 2002:a92:1f95:: with SMTP id f21mr1529238ilf.287.1596491249271;
-        Mon, 03 Aug 2020 14:47:29 -0700 (PDT)
+        bh=sHz6FTErPUV4uyPRUEgxafeUbmRMcPUvMFZhatB72Us=;
+        b=Yyk1n7dzqmC4cez/CFM6wVD38vk+u2o/NTUwcWVJPvXzY/jJ+8hyXMua+5gpgYILxO
+         19Jb6oUWQmnjLSJ16pjOurFrqR4YYv74Ve1DACmKnw+g72T13Dv/EH30bd97axdogKFf
+         O7cpO9RaZXjHYnkEPICKp/U/7/mT1vN79+VR+SuiZREdT7DosUmxQlQyZcw31tUgFEvt
+         MSgBPwCsJYjXRNQmRSdGZOz4A7bQo1TNeIomvoAoyLJW4TPRz9r6Inqi5Ab1SSO21EDu
+         ATsA2utRH9Xzp0Nn/HLgJfpMMwg52S2Tc3ENkm9e6eWHYJFYxCLgw3Ff4HOqUxrim69K
+         0+5A==
+X-Gm-Message-State: AOAM532IPF0m8QjlR2i9xhELNUqjjftvF1DliEpIaKKd+Mknfl2zEcY2
+        Ci0ESsk4FARdA8cwl+fqxw==
+X-Google-Smtp-Source: ABdhPJylcuweeEkx+1+KUovLiYX8jxNRUF3xyQNwfrqYRLu+TiNCe7seRBGrPKmFOecJ6W8M8VxmBA==
+X-Received: by 2002:a92:aa49:: with SMTP id j70mr1548669ili.107.1596491280702;
+        Mon, 03 Aug 2020 14:48:00 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j81sm11127297iof.13.2020.08.03.14.47.28
+        by smtp.gmail.com with ESMTPSA id d6sm10704358ioo.9.2020.08.03.14.47.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 14:47:28 -0700 (PDT)
-Received: (nullmailer pid 3194184 invoked by uid 1000);
-        Mon, 03 Aug 2020 21:47:28 -0000
-Date:   Mon, 3 Aug 2020 15:47:28 -0600
+        Mon, 03 Aug 2020 14:48:00 -0700 (PDT)
+Received: (nullmailer pid 3194959 invoked by uid 1000);
+        Mon, 03 Aug 2020 21:47:57 -0000
+Date:   Mon, 3 Aug 2020 15:47:57 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Santiago Hormazabal <santiagohssl@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH 2/3] media: kt0913: device tree binding
-Message-ID: <20200803214728.GA3193667@bogus>
-References: <20200803020921.64151-1-santiagohssl@gmail.com>
- <20200803020921.64151-3-santiagohssl@gmail.com>
+To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc:     devicetree@vger.kernel.org, alix.wu@mediatek.com,
+        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de,
+        robh+dt@kernel.org, yj.chiang@mediatek.com
+Subject: Re: [PATCH 2/2] dt-bindings: interrupt-controller: Add MT58XX
+ interrupt controller
+Message-ID: <20200803214757.GA3194548@bogus>
+References: <20200803062214.24076-1-mark-pk.tsai@mediatek.com>
+ <20200803062214.24076-3-mark-pk.tsai@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803020921.64151-3-santiagohssl@gmail.com>
+In-Reply-To: <20200803062214.24076-3-mark-pk.tsai@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 02 Aug 2020 23:09:20 -0300, Santiago Hormazabal wrote:
-> Document bindings for the kt0913 AM/FM radio tuner.
+On Mon, 03 Aug 2020 14:22:14 +0800, Mark-PK Tsai wrote:
+> Add binding for MT58XX interrupt controller.
 > 
-> Signed-off-by: Santiago Hormazabal <santiagohssl@gmail.com>
+> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
 > ---
->  .../bindings/media/i2c/ktm,kt0913.yaml        | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ktm,kt0913.yaml
+>  .../mediatek,mt58xx-intc.yaml                 | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/media/i2c/ktm,kt0913.yaml#
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dts:22.17-30: Warning (reg_format): /example-0/i2c/fm-am-tuner@35:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dts:19.13-26.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dts:19.13-26.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dts:20.36-25.15: Warning (avoid_default_addr_size): /example-0/i2c/fm-am-tuner@35: Relying on default #address-cells value
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dts:20.36-25.15: Warning (avoid_default_addr_size): /example-0/i2c/fm-am-tuner@35: Relying on default #size-cells value
-Documentation/devicetree/bindings/media/i2c/ktm,kt0913.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:compatible: [{'items': [{'const': 'mediatek,mt58xx-intc'}]}] is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,intc-no-eoi: {'description': 'Mark this controller has no End Of Interrupt(EOI) implementation.\nThis is a empty, boolean property.\n'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,intc-no-eoi: 'not' is a required property
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,irqs-map-range: {'description': "The range of parent interrupt controller's interrupt lines\nthat are hardwired to MT58xx interrupt controller.\n"} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,irqs-map-range: 'not' is a required property
+
+Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/interrupt-controller/mediatek,mt58xx-intc.yaml#
+Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: ignoring, error in schema: properties: compatible
+warning: no schema found in file: ./Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: ignoring, error in schema: properties: compatible
+warning: no schema found in file: ./Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1340067
+See https://patchwork.ozlabs.org/patch/1340146
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
