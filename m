@@ -2,132 +2,107 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C05C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4678B207DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7135D207FB
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 14:19:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kSGrcoMk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="albycSFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgHCOQQ (ORCPT
+        id S1727888AbgHCOTB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
+        Mon, 3 Aug 2020 10:19:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgHCOQP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:16:15 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779AAC06174A;
-        Mon,  3 Aug 2020 07:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Qag0mgZqT4bNueVSCcbNmY9WCf2Ib/QmqRu677bcwIw=; b=kSGrcoMkWr8Ja1keSlEfp60kY
-        P43VpVbqh45axG9v5UoRiB5LBDyE5T/C6vl4QTFD4c6VO8vx754cBGznLHIdd1GCKslyRoDjlVlJt
-        SlL/bGYkLIUXgJ44wYaTtn6EpEBwX9LOFXAifa3WsLsz1AAoQzmmNE88amEF80+feG+lTI6hQJiNl
-        /maSAJgNfJx2VOG9GdjVA0h4aMpbgwyT4QAm94N0KbjcFUZKd9JQ/IaK38Ti3BAbz5JkKEeJRkTU1
-        hjqNENuCeQEzZ4hYkPrV4/5dTp9Cg0QZcmo1TP7Abxypn66Vtj5dnQ23GmjgmgSLxTh06581vA4Kz
-        wy0UaH4WA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47822)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k2bGA-0001as-42; Mon, 03 Aug 2020 15:16:14 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k2bG9-00039O-M1; Mon, 03 Aug 2020 15:16:13 +0100
-Date:   Mon, 3 Aug 2020 15:16:13 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Codrin.Ciubotariu@microchip.com
-Cc:     wsa@kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
-        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com
-Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
- bus recovery
-Message-ID: <20200803141613.GN1551@shell.armlinux.org.uk>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
- <20200705211918.GB1055@kunai>
- <20200724193913.GD1227@ninjato>
- <20200724205209.GC1551@shell.armlinux.org.uk>
- <b3a04528-0053-16bf-f092-147685298ced@microchip.com>
- <20200727105029.GI1551@shell.armlinux.org.uk>
- <1e788319-c841-d1f1-b65c-d25052f7f90b@microchip.com>
+        with ESMTP id S1726847AbgHCOTA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 10:19:00 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC360C06174A
+        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 07:18:59 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id k8so15626730wma.2
+        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 07:18:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y/qA8gSb5L1aedrAB+cnwrMt5FiS/mFTvYHuJN7H++M=;
+        b=albycSFNZC8kfgH16k++F8/X0yCQh2L6nvlv0z/riHZdTBBLoXZIgUNGEJQJQXAWvP
+         tpnajBTPb2Hx4MZG3B3ErbNiHPfmd8VavN/W+lWdxErdIktJY8VNRRsCcl1xDan0/98r
+         lBLcz6Pr6HXl6waYqdbPaDrg+d64cAULpiD6puY9fAzRH1NgTNfQx/0fCYDGp/ncaEVe
+         vTl+aMq27RjcFqaC7O0WV9P2RiNQp+RQFbK+y9VDuiBRY+h+NpniwBnXMZYrdAq+6mEs
+         hDSXC1AvyoajqVcJDGSBjXwxJxLJ5F5zyyydA8w4XPdouOKsowFQMhW6SYqEqIJMfr0N
+         4MIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y/qA8gSb5L1aedrAB+cnwrMt5FiS/mFTvYHuJN7H++M=;
+        b=OcBI2/U3MrW1v5b1rxcgsk1LuCOEDmTeikT81GfHOOU0MNrj2bFLuWw8lsKTF+j0Ho
+         7c1OofcjrTEx5h1i2Dx7qiHFTcXgH0hTftGMIX4K021EVJpJm4S1d3auojrtqeChH+rU
+         aO6+y5fTFozXcvobejWIFz/OELtpHsLsFRUYM5FKaEVQZzOakvtEeJItoWI2U3UE5YAP
+         Y5rv4Doo4MsiNBFPJdsdACkfQo6XgATjedB8h8aZpRGFI90jXXjDzu/tQP6DotMOuZnQ
+         zTT0JvX6Ob1Us4g1oNswoaca7AYHHgNDSho9+D5A6MmLKuxg9W+SvTjJ0TObTaplBBRg
+         xqBA==
+X-Gm-Message-State: AOAM531ftQL7S/zN34WEN1i9yirgDLaFzbVM9NzmdWtqt0v+qrIPKqJW
+        hHFKky6KHsTfRYuGbKRNaKvTpA==
+X-Google-Smtp-Source: ABdhPJzbV6bSqxztQ0RcDqfomj9eHW6XIBQxGt/q6sEjUvi4WKNFFkRXdU/aVORDBtacwX1oL8hqYQ==
+X-Received: by 2002:a1c:e382:: with SMTP id a124mr235177wmh.11.1596464338292;
+        Mon, 03 Aug 2020 07:18:58 -0700 (PDT)
+Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id t202sm24870600wmt.20.2020.08.03.07.18.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 07:18:57 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: meson: vim3: correct led polarity
+Date:   Mon,  3 Aug 2020 16:18:50 +0200
+Message-Id: <20200803141850.172704-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e788319-c841-d1f1-b65c-d25052f7f90b@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:00:36AM +0000, Codrin.Ciubotariu@microchip.com wrote:
-> On 27.07.2020 13:50, Russell King - ARM Linux admin wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On Mon, Jul 27, 2020 at 10:44:57AM +0000, Codrin.Ciubotariu@microchip.com wrote:
-> >> On 24.07.2020 23:52, Russell King - ARM Linux admin wrote:
-> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >>>
-> >>> On Fri, Jul 24, 2020 at 09:39:13PM +0200, Wolfram Sang wrote:
-> >>>> On Sun, Jul 05, 2020 at 11:19:18PM +0200, Wolfram Sang wrote:
-> >>>>>
-> >>>>>> +- pinctrl
-> >>>>>> + add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
-> >>>>>> + recovery, call it "gpio" or "recovery" state
-> >>>>>
-> >>>>> I think we should stick with "gpio" only. That is what at91 and imx have
-> >>>>> in their bindings. pxa uses "recovery" as a pinctrl state name but I
-> >>>>> can't find any further use or documentation of that. PXA is not fully
-> >>>>> converted to the best of my knowledge, so maybe it is no problem for PXA
-> >>>>> to switch to "gpio", too? We should ask Russell King (cced).
-> >>>
-> >>> Fully converted to what?  The generic handling where the i2c core layer
-> >>> handles everything to do with recovery, including the switch between
-> >>> modes?
-> >>>
-> >>> i2c-pxa _intentionally_ carefully handles the switch between i2c mode and
-> >>> GPIO mode, and I don't see a generic driver doing that to avoid causing
-> >>> any additional glitches on the bus.  Given the use case that this recovery
-> >>> is targetted at, avoiding glitches is very important to keep.
-> >>
-> >> Why is it not possbile to handle glitches in a generic way? I guess it
-> >> depends on the pinctl, but we could treat a worst-case scenario to
-> >> assure the switch between states is done properly.
-> > 
-> > Please look at how i2c-pxa switches between the two, and decide whether
-> > the generic implementation can do the same.
-> 
-> The handling of glitches from initialization looks generic to me. I see 
-> that there are specific clear/reset routines that are in the 
-> (un)prepare_recovery() callbacks, but these callbacks are not replaced 
-> by the generic i2c recovery and will still be used if given by the 
-> driver. The only thing the generic recovery does is to switch the pinmux 
-> state. We can discuss whether we want to change the pinmux state first 
-> or call the (un)preapre_recovery().
+The LEDs on the vim3 are active when the gpio is high, not low.
 
-Right, the key point i2c-pxa does is that on prepare:
-- read the current state of the SCL and SDA lines and set the GPIO to
-  reflect those values.
-- then switch the pinmux state.
+Fixes: c6d29c66e582 ("arm64: dts: meson-g12b-khadas-vim3: add initial device-tree")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-That must be preserved, otherwise if SCL is being held low by the I2C
-master, and we switch to GPIO mode, SCL will be released.  So the
-driver needs to be involved before the pinmux state is changed.
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 4510a63b0006..9e2995dc144b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -70,13 +70,13 @@ leds {
+ 
+ 		led-white {
+ 			label = "vim3:white:sys";
+-			gpios = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_LOW>;
++			gpios = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 
+ 		led-red {
+ 			label = "vim3:red";
+-			gpios = <&gpio_expander 5 GPIO_ACTIVE_LOW>;
++			gpios = <&gpio_expander 5 GPIO_ACTIVE_HIGH>;
+ 		};
+ 	};
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.25.4
+
