@@ -2,102 +2,173 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4F7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43488C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F238207DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209F32068F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596470005;
-	bh=MIgoWkiYyIGRvQI5hrwUdGUdvru2hp0i0DHArLtQKD0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=xw1rLGS1CZBB6jw4xvugDLxVjAstn/in9otbGiIVRir/XLjXaYZNXnJ2UlQo/Rjrh
-	 mR225gu/d4lnvhDn9w9zum456K8BI2DKOVulBiqhpK9/gex4PrRCqspL8vrVY/FOUE
-	 CJ2ut8qW7ayQNGSOyPAjUbZEyikGuv9ht/x7KFxA=
+	s=default; t=1596470688;
+	bh=/UX1OU9tHTJm7VObpjM87RBY5SlTmYFqwKSYlfihuqs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nGnDlUv3J8tTiy4yyhhAbNC4TP6lfFPHsY+lShYXaSFVfxYdjiD0u0px2qweLPyoJ
+	 gpvTlHDPFj+WJiwJ+WBi+xEEJ6993VPQip6ybcMFm3F81J3qXAEQpsqhTyEvhOUsQF
+	 xhjeudaCzBTMZEj8avpTbmy7Ztc1GS1m+ufiHiKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgHCPxZ (ORCPT
+        id S1726457AbgHCQEs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43662 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 12:04:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbgHCPxY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:53:24 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727824AbgHCQEr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 3 Aug 2020 12:04:47 -0400
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 051C2207DF;
-        Mon,  3 Aug 2020 15:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DF23207FB;
+        Mon,  3 Aug 2020 16:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596470002;
-        bh=MIgoWkiYyIGRvQI5hrwUdGUdvru2hp0i0DHArLtQKD0=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ArRpa4eHxQPbzgZ3CM6gul71f2xv2n+MIlHo24clzxh/vrp+Ng38h6fKAQTAnuK62
-         DdKu0dGv310P+tQYTeTQoVOBOR2uVPdkSJmivjZUeaONvkGBbHOzZ4FmlUr3JqcIaF
-         p02k9U4cfbFr5f0lg8NCHU1MFAeMh5KbZaH/Qziw=
-Date:   Mon, 03 Aug 2020 16:53:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20200728232327.71ab3729@xhacker>
-References: <20200728232327.71ab3729@xhacker>
-Subject: Re: [PATCH 0/4] regulator: mp886x: two features and dt json convert
-Message-Id: <159646997224.2690.15283965107669623316.b4-ty@kernel.org>
+        s=default; t=1596470685;
+        bh=/UX1OU9tHTJm7VObpjM87RBY5SlTmYFqwKSYlfihuqs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Aex1PHJJaysd09vlU+np1whABVJWYO/wgGVEovV9wOg6cLl2CSU719BxSEiosliwK
+         wHInjDZVIy8Mkb2GSxlkHKBZx23l5uhEGcX56SdQsqnYYjVkxSXdgN5xk9ZV3BAO+u
+         ZiLZxLktesZol9ClUnGepKSVXZxgvYc2LulD6qic=
+Received: by mail-ej1-f53.google.com with SMTP id qc22so24397867ejb.4;
+        Mon, 03 Aug 2020 09:04:45 -0700 (PDT)
+X-Gm-Message-State: AOAM533OvhGiBbd/rAPnHnPjpIPrEL4YZTN8tlWHXI1MZ5KgbS9AmxXQ
+        zyBk+J+JsNuxgLhh11E+/neQjQyEtALsUOyNpg==
+X-Google-Smtp-Source: ABdhPJwRrgFwRW06WGSZvbtle0QlHRJDgbphx4LdcrD/9UInwK+e+ZsDqq23da9XgbPticp6xo1sUinxOUHtS7ayNBw=
+X-Received: by 2002:a17:906:7492:: with SMTP id e18mr16973100ejl.375.1596470684579;
+ Mon, 03 Aug 2020 09:04:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
+ <1596010690-13178-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8aw=6E7bMJwz5jDLXUxYHpy9_Avbwc90osQGckzANNcg@mail.gmail.com>
+ <1596427295.22971.20.camel@mtkswgap22>
+In-Reply-To: <1596427295.22971.20.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 4 Aug 2020 00:04:30 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__VPXMGcR9w8EdnGbJyVbxbLQY+SRAqLbOcTy0D_WLM0w@mail.gmail.com>
+Message-ID: <CAAOTY__VPXMGcR9w8EdnGbJyVbxbLQY+SRAqLbOcTy0D_WLM0w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 28 Jul 2020 23:23:27 +0800, Jisheng Zhang wrote:
-> This is to improve the mp886x regulator driver support.
-> patch1 converts dt binding to json-schema
-> patch2 implments .set_ramp_delay
-> patch3 and patch3 support the switch freq setting
-> 
-> Jisheng Zhang (4):
->   dt-bindings: regulator: Convert mp886x to json-schema
->   regulator: mp886x: implement set_ramp_delay
->   dt-bindings: regulator: mp886x: support mps,switch-frequency
->   regulator: mp886x: support setting switch freq
-> 
-> [...]
+Hi, Neal:
 
-Applied to
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=E6=97=
+=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8812:01=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Sat, 2020-08-01 at 08:12 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > This patch is for "mediatek,mt6779-devapc", so I think commit title
+> > should show the SoC ID.
+>
+> Okay, I'll change title to 'soc:mediatek: add mt6779 devapc driver'.
+>
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
+> > >
+> > > MediaTek bus fabric provides TrustZone security support and data
+> > > protection to prevent slaves from being accessed by unexpected
+> > > masters.
+> > > The security violation is logged and sent to the processor for
+> > > further analysis or countermeasures.
+> > >
+> > > Any occurrence of security violation would raise an interrupt, and
+> > > it will be handled by mtk-devapc driver. The violation
+> > > information is printed in order to find the murderer.
+> > >
+> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > ---
+> >
+> > [snip]
+> >
+> > > +
+> > > +struct mtk_devapc_context {
+> > > +       struct device *dev;
+> > > +       u32 vio_idx_num;
+> > > +       void __iomem *devapc_pd_base;
+> > > +       struct mtk_devapc_vio_info *vio_info;
+> > > +       const struct mtk_devapc_pd_offset *offset;
+> > > +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
+> > > +};
+> >
+> > I think this structure should separate the constant part. The constant =
+part is:
+> >
+> > struct mtk_devapc_data {
+> >     const u32 vio_idx_num;
+> >     const struct mtk_devapc_pd_offset *offset; /* I would like to
+> > remove struct mtk_devapc_pd_offset and directly put its member into
+> > this structure */
+> >     const struct mtk_devapc_vio_dbgs *vio_dbgs; /* This may disappear *=
+/
+> > };
+> >
+> > And the context is:
+> >
+> > struct mtk_devapc_context {
+> >     struct device *dev;
+> >     void __iomem *devapc_pd_base;
+> >     const struct mtk_devapc_data *data;
+> > };
+> >
+> > So when you define this, you would not waste memory to store non-consta=
+nt data.
+> >
+> > static const struct mtk_devapc_data devapc_mt6779 =3D {
+> >  .vio_idx_num =3D 510,
+> >  .offset =3D &mt6779_pd_offset,
+> >  .vio_dbgs =3D &mt6779_vio_dbgs,
+> > };
+> >
+>
+> Sorry, I still don't understand why this refactoring will not waste
+> memory to store non-constant data. Could you explain more details?
+> To my understanding, we still also have to allocate memory to store dev
+> & devapc_pd_base.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+In some situation, it is. You make the non-constant data a global
+variable. I think the context data should be dynamic allocated. If
+this driver is not probed, the non-constant data occupy the memory.
 
-Thanks!
+Regards,
+Chun-Kuang.
 
-[1/4] dt-bindings: regulator: Convert mp886x to json-schema
-      (no commit info)
-[2/4] regulator: mp886x: implement set_ramp_delay
-      commit: 0eddcf0267f913cb6336af64cadaf5acf6b19b7b
-[3/4] dt-bindings: regulator: mp886x: support mps,switch-frequency
-      (no commit info)
-[4/4] regulator: mp886x: support setting switch freq
-      commit: ee6ad5a24575071b66bd37ffb2d8747a64fcb45f
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+>
+> > Regards,
+> > Chun-Kuang.
+> >
+> > > +
+> > > +#endif /* __MTK_DEVAPC_H__ */
+> > > --
+> > > 1.7.9.5
+> > > _______________________________________________
+> > > Linux-mediatek mailing list
+> > > Linux-mediatek@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>
