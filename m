@@ -2,1339 +2,642 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627FFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 13:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C690DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 13:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB59206D4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 13:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BAE20678
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 13:07:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ppCcQ4YH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="itRx1S5c";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="QZ8hmZBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgHCNFP (ORCPT
+        id S1727972AbgHCNHD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:05:15 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:55979 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgHCNFP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 09:05:15 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 2a9Mko6WpuuXO2a9NkcdYQ; Mon, 03 Aug 2020 15:05:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1596459909; bh=7Cx+17agNCQzkhtA6BVu5ft+X+rM8D7ufKB36hwDL04=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=ppCcQ4YHLC4Yedvkfq9LWUloNKV1yzfHiRXDpebT7S9eEeOBkCCJLCFjUW29fofWc
-         +/9Hp/h+a7wa2w3GVUdXxUegbxW8OYBEjEqHwyWXjbW+bnsQf0Z5VSs0PZ5brch/1V
-         ohww67CQYul6s1bUVAEqAb6sVD4Gnteq8nhNVj1NyMAd1GnWb7PHjy8orPrdKGIqgl
-         bLP8ZqyoMUl5xY9gcGNZA7UV34F6URkYSJeo7J9+Pw8IBZahj37pI8F6/Xnqp2sOuQ
-         7mSKU0H68iaof+d2AvW8Yig7onYrekD9Qda3nCQLSPlZ7zDJleaEm1kr42E5cu1Y2l
-         In7A0JPYOrpDg==
-Subject: Re: [PATCH 3/3] media: Add support for the AM/FM radio chip KT0913
- from KT Micro.
-To:     Santiago Hormazabal <santiagohssl@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200803020921.64151-1-santiagohssl@gmail.com>
- <20200803020921.64151-4-santiagohssl@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <620e6182-b42e-d8d5-d0ee-6a73840f090f@xs4all.nl>
-Date:   Mon, 3 Aug 2020 15:05:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200803020921.64151-4-santiagohssl@gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 3 Aug 2020 09:07:03 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:44425 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbgHCNHD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 09:07:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1596460021; x=1627996021;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=lFYmmCJ+kwPwVQIfcB1u2ydoBgfra08OW8XBd6VYAMk=;
+  b=itRx1S5c/0MlNZJLNhTebr5DT7fETv+L68HlqIxa3ggYCUzfNRVogmGJ
+   6l4SHrp5uw6BY2DtKlr0NGsK4h0k61ElPOTGAAhIveJbJ5XuqOddFif2w
+   6vdwccXoLWUWS3qVZaSS8OcGu5Yr29d/a5zzjTurNROydAZ41CKA7jtbk
+   9rnx2921iBIoU7zduNPxNGnJxmHlseCHeQ2yEQkEBoQnNIO48ER++9+UW
+   T5pNyL+ldtDs0FYZvM1NyN/34OFk6khcQPXFLEHaVI+FvDlLN+zqfcO9r
+   MzI7KdRwluX5xtljtMAbdY7YnwIA/z7x/h+wEjfjPPWgzTAI0fpD/hX4m
+   A==;
+IronPort-SDR: 77EH4yeVazX8KszrURS6XcVNCKQvnodAH5f4cAcEJ7b6zCEl0oK8v4p7W/vfc6K2g4Tc3UwqYq
+ wZl3bT+U0NS4vDtQ3Izsz/noh/dztlvEwyli+9jQEEouz9R86j+eP0fSuFBeQuKNmchwhc8LoY
+ dADU8XE0U8k3E1l5YUIDC0Dg3kZKKDGpm3hXINy36jnTbQiz+9A/kCMH68uirpyRZorBFANBqy
+ DB8WEf/5A591tBjYDm9TFqteD801vELqybXW43KKLOBAgd8ywlyJMxy6KGbuYyiOTjntZRbHhC
+ xrE=
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="84235213"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 06:07:01 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 3 Aug 2020 06:07:00 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Mon, 3 Aug 2020 06:06:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KBFacZXk1H9O9mz+qT+zb/YDsXKjJORpUCndVJhmpimuOpItjVq4PqHJ+GfBJ45DiBs67I9j5/qYbE46ATz9N3tkFGZi7K/KiTuYTZImzCQh0AHV6vuBGs2+CeXFYzyLX6ybIQCflmx5P6Dq912u08SUcN1RaFf5w939psf2phn27F95xgHbFSROXENZAsRScrhjJf3W4yxOULxCwWoqSfVi4zAZhqcvQhEaEYjYJIs4Sn5eaQbaoFNKF9o6YOmeMLm+6slAaPC0E9tb3Z4nh26kQgFqBrWITZPFSUw3+LPXUuekfv2B27AbVMALHOaq0OeIMAgsMtFeS/dsS+NFbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lFYmmCJ+kwPwVQIfcB1u2ydoBgfra08OW8XBd6VYAMk=;
+ b=KTb5gqlYrsDZB+Pm6LOxsTig1G4xmNToiqUfV6C/laubwoDbgw07vgfv4UlXb3Q4nTbwG6y0DGC3oI+mQ22CN8N+Wy5heGgfQV92SEv4W7ajHeAwuLeLYeJD/9KAeNwnCECs7VnT1t/xb01eNPQoNkZVKVbnCSFXkPY3oUQ4zuf1S49715ZRw8UUVMLJ/Jn0WJqpi2chSLhPrfGsJTzr4Qe1oMkHKycT375mLs6BLJa19oLi+cXXQetv5oSa8Iu6ffiPuABmLzPROxthajjlBDqJjlhEazy1CuEUnYCh/8oT/QZRc7l9V6RSJ3fWrCt7S3i3O90X7FCjXbdZCH/mtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lFYmmCJ+kwPwVQIfcB1u2ydoBgfra08OW8XBd6VYAMk=;
+ b=QZ8hmZBKJKejKM3ln+4SAY+wDKevBfEjnIO5STaaNpknqLHpk6+r5ArnPmwa7CO5cY6Od6yiW4kwdb+u8KhxtwiIKTg7AC1MCwQ1vtccjvndv5AgtE90PxvJNFw1PtJIDbTMBgpCVqG9pGKC8pWU2O3rAMJOoulTtPvI3wugcKI=
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
+ DM5PR11MB1930.namprd11.prod.outlook.com (2603:10b6:3:106::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3239.20; Mon, 3 Aug 2020 13:06:57 +0000
+Received: from DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b]) by DM6PR11MB3420.namprd11.prod.outlook.com
+ ([fe80::e8b2:1d82:49d9:f4b%6]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 13:06:57 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <Codrin.Ciubotariu@microchip.com>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <alexandre.belloni@bootlin.com>, <lgirdwood@gmail.com>,
+        <robh+dt@kernel.org>, <tiwai@suse.com>,
+        <Ludovic.Desroches@microchip.com>, <broonie@kernel.org>,
+        <perex@perex.cz>
+Subject: Re: [PATCH v3 2/2] ASoC: mchp-spdiftx: add driver for S/PDIF TX
+ Controller
+Thread-Topic: [PATCH v3 2/2] ASoC: mchp-spdiftx: add driver for S/PDIF TX
+ Controller
+Thread-Index: AQHWaZb2Xv4RISU33E+0BkyOzrgC0g==
+Date:   Mon, 3 Aug 2020 13:06:56 +0000
+Message-ID: <4d009743-733a-9578-71b2-d320fdca9331@microchip.com>
+References: <20200803081851.102570-1-codrin.ciubotariu@microchip.com>
+ <20200803081851.102570-2-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20200803081851.102570-2-codrin.ciubotariu@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMUHvGdmbAMpLTUe2GbdQkK5/G9vmA/3uEBLx3mSweFcJ1SknsCMI8IRdUMVvlOklDOLzL8S6WkiU0LK6/fMcOPPKBuHzFaLjUw5vxllBtpwPkUIrbNx
- KNk67WJ/eJKAVZDAo1uEO/soEFPS18jgltlBVY1FYgwsARwMi7BBZ4fJrvwc0bbVsl9zddTsReTVdeL3BYmqpxKuX2De7++3yBu+ELn8k3otc5E/P1+iNdTq
- d+paQJFTatxksk5ewY/I0RCVCEzqwRRKoCTE8J+TxQsxbIAQxQc7HscfJg26mU2soYNyMEygNH/9iUqo5o8aAAx0FgIWGVGEo47s1Dkesrvel+kVPHBvmRO1
- YFJomIkCHNBiVj/JMen6eRgtumKkUkVkCcEPdKEWXrvlguFaJ20xfQS9bcX6Rg1QqjH1J2CqRcLkYycFz6Yvciqqg6VjPvydS84q2N9d+yYsG96oK/WCPHRh
- 4yTRpw9QPEBBmqzE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none
+ header.from=microchip.com;
+x-originating-ip: [86.124.22.126]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 26f72aa7-d6a3-47e0-b6c5-08d837ae19e4
+x-ms-traffictypediagnostic: DM5PR11MB1930:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB19304C6595AF4E2BF8174BB5874D0@DM5PR11MB1930.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:47;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IqhWajqZAcLAF/se6/NI8rIYlmT55uVL/le6GBuZDf3L+5T0DHgJUhEDiuZQGFHEziiX8tp9WuwbCNJhKfrgmOjnq7VEAZI1Q280eS7CcYVGJdPu6zal0r8PxPi61AD+LFVobsR5+5T+bljTF/ifEg0+GJVYFYfi8xdK6rCowfnZw5wg3y/OgRpkTg0KhNHQms12uOp7T2lG0XfPOCi0S0a3m2Zl6AiZHf3U26STKliaDeFlv7JWtgVjqA9CvYpCE9rNBVXRonnQ8AzjCzHiA3BpbGzZgoUcqLTQ4VUsYFKFXO2l01KnbOAO7sT1oP0k7BrMoFo3qelAQGrrAStp6YLZVFLjimiavcUEujNj4dSw4SStkWQfmWLKTrXqGUAN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(346002)(366004)(376002)(136003)(396003)(71200400001)(186003)(83380400001)(66946007)(2906002)(478600001)(86362001)(66446008)(64756008)(91956017)(76116006)(7416002)(31696002)(110136005)(31686004)(54906003)(53546011)(6506007)(66556008)(26005)(36756003)(66476007)(316002)(6512007)(30864003)(8676002)(6486002)(8936002)(4326008)(2616005)(5660300002)(43740500002)(579004)(559001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: yjnEvKxnfTZoydQst8YZNsAkheLwjl06evum8PdvhImoYtqY5m5/Z470cAOgOica1cj2h3rxfFBEoItJK9hPZt90rAqu28MI0Bk9Cfomm4fnAVN0E1FiWKYsxuLi2H0cEN4mjdjNbP1Hdlrv8u4BgKcAFmgr9a6p2LZ/oqLvm3OPokX59UNb/y4pucAFVK4fXLSboHIZ6uIBYfUaRjWY5dodWA/fYqoMXcbjwFXj0BvRFi4EJzDUTwwD0INsEljeS7o09TfmA1OSpK9pHTLCxiuoDlKhZC2b+QXvh+ZxPS8mC3EQkakfMkpaTe7HCOcss44MqgmZwER9eH/mXfooOsSfVvic36c2pCD59HnHnWgMI7kNnKx8MZ7HolWZsxvWt6/fHbShUp40GEkJoXy2EpMHo6ME4GvekyvVtPFXvjOAwRKEUERgDSkwaKjQY05yjlpsshGdVo6oLBjb2NsEpGGzoSBFWOEXUK+V1FL8kDUv4MnuPcN4TtTA0Y0GRh9abNTdSRjb9LtG1VnFDTI2Go++BV9L9YytFWtJi0po9EjdOi4qYNapGXd1AvqNTVoq+CIMRPBTnqaOQYj1irXYMgng8GxmVHch5zcFVFhDbQVcC6QG/AVhpU7FZRIUG4KFAAnyfrN4wWN9ccRqb11vlg==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D2CC351D8968BD4788CB7150E94D673F@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3420.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26f72aa7-d6a3-47e0-b6c5-08d837ae19e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 13:06:56.9642
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: k3afn8mp5+vevxtbh9HwxO8q4zNDj7yQHqMQO1yaxXNJMvMXipi1x8jsJiPXrpHX871k1y1YmP9vAyHaw+HwrhgObK3Xf30BCrbWBsQe1BY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1930
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03/08/2020 04:09, Santiago Hormazabal wrote:
-> This chip requires almost no support components and can used over I2C.
-> The driver uses the I2C bus and exposes the controls as a V4L2 radio.
-> Tested with a module that contains this chip (from SZZSJDZ.com,
-> part number ZJ-801B, even tho the company seems defunct now), and an H2+
-> AllWinner SoC running a kernel built off 8f2a4a9 of the media_tree.
-> 
-> Signed-off-by: Santiago Hormazabal <santiagohssl@gmail.com>
-> ---
-
-It's good practice to list the changes you made for a v2 either in the
-cover letter or here (below ---).
-
-I have a preference myself for the cover letter, but either is fine.
-
->  drivers/media/radio/Kconfig        |   10 +
->  drivers/media/radio/Makefile       |    1 +
->  drivers/media/radio/radio-kt0913.c | 1196 ++++++++++++++++++++++++++++
->  3 files changed, 1207 insertions(+)
->  create mode 100644 drivers/media/radio/radio-kt0913.c
-> 
-> diff --git a/drivers/media/radio/Kconfig b/drivers/media/radio/Kconfig
-> index d29e29645e04..ac9053a95f3a 100644
-> --- a/drivers/media/radio/Kconfig
-> +++ b/drivers/media/radio/Kconfig
-> @@ -226,6 +226,16 @@ config RADIO_WL1273
->  # TI's ST based wl128x FM radio
->  source "drivers/media/radio/wl128x/Kconfig"
->  
-> +config RADIO_KT0913
-> +	tristate "KT0913 I2C FM/AM radio support"
-> +	depends on I2C && VIDEO_V4L2
-> +	help
-> +	  Say Y here if you want to use the KT0913 FM/AM chip.
-> +	  This is a low cost chip that uses the I2C bus.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called radio-kt0913.
-> +
->  #
->  # ISA drivers configuration
->  #
-> diff --git a/drivers/media/radio/Makefile b/drivers/media/radio/Makefile
-> index 53c7ae135460..a314121f7771 100644
-> --- a/drivers/media/radio/Makefile
-> +++ b/drivers/media/radio/Makefile
-> @@ -34,5 +34,6 @@ obj-$(CONFIG_RADIO_WL1273) += radio-wl1273.o
->  obj-$(CONFIG_RADIO_WL128X) += wl128x/
->  obj-$(CONFIG_RADIO_TEA575X) += tea575x.o
->  obj-$(CONFIG_USB_RAREMONO) += radio-raremono.o
-> +obj-$(CONFIG_RADIO_KT0913) += radio-kt0913.o
->  
->  shark2-objs := radio-shark2.o radio-tea5777.o
-> diff --git a/drivers/media/radio/radio-kt0913.c b/drivers/media/radio/radio-kt0913.c
-> new file mode 100644
-> index 000000000000..e8c1ff882779
-> --- /dev/null
-> +++ b/drivers/media/radio/radio-kt0913.c
-> @@ -0,0 +1,1196 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * drivers/media/radio/radio-kt0913.c
-> + *
-> + * Driver for the KT0913 radio chip from KTMicro.
-> + * This driver provides a v4l2 interface to the tuner, using the I2C
-> + * protocol to communicate with the chip.
-> + * It exposes two bands, one for AM and another for FM. If the "campus
-> + * band" feature needs to be enabled, set the corresponding module parameter
-> + * to 1.
-> + * Reference Clock and Audio DAC anti-pop configurations should be
-> + * set via a device tree node. Defaults will be used otherwise.
-> + *
-> + * Audio output should be routed to a speaker or an audio capture
-> + * device.
-> + *
-> + * Based on radio-tea5764 by Fabio Belavenuto <belavenuto@gmail.com>
-> + *
-> + *  Copyright (c) 2020 Santiago Hormazabal <santiagohssl@gmail.com>
-> + *
-> + * TODO:
-> + *  use rd and wr support for the regmap instead of volatile regs.
-> + *  add support for the hardware-assisted frequency seek.
-> + *  export FM SNR and AM/FM AFC deviation values as RO controls.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/err.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/math64.h>
-> +#include <linux/regmap.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-ioctl.h>
-> +#include <media/v4l2-event.h>
-> +
-> + /* ************************************************************************* */
-> +
-> + /* registers of the kt0913 */
-> +#define KT0913_REG_CHIP_ID      0x01
-> +#define KT0913_REG_SEEK         0x02
-> +#define KT0913_REG_TUNE         0x03
-> +#define KT0913_REG_VOLUME       0x04
-> +#define KT0913_REG_DSPCFGA      0x05
-> +#define KT0913_REG_LOCFGA       0x0A
-> +#define KT0913_REG_LOCFGC       0x0C
-> +#define KT0913_REG_RXCFG        0x0F
-> +#define KT0913_REG_STATUSA      0x12
-> +#define KT0913_REG_STATUSB      0x13
-> +#define KT0913_REG_STATUSC      0x14
-> +#define KT0913_REG_AMSYSCFG     0x16
-> +#define KT0913_REG_AMCHAN       0x17
-> +#define KT0913_REG_AMCALI       0x18
-> +#define KT0913_REG_GPIOCFG      0x1D
-> +#define KT0913_REG_AMDSP        0x22
-> +#define KT0913_REG_AMSTATUSA    0x24
-> +#define KT0913_REG_AMSTATUSB    0x25
-> +#define KT0913_REG_SOFTMUTE     0x2E
-> +#define KT0913_REG_AMCFG        0x33
-> +#define KT0913_REG_AMCFG2       0x34
-> +#define KT0913_REG_AFC          0x3C
-
-Hmm, this is still uppercase.
-
-> +
-> +/* register symbols masks, values and shift count */
-> +#define KT0913_TUNE_FMTUNE_MASK 0x8000 /* FM Tune enable */
-> +#define KT0913_TUNE_FMTUNE_ON 0x8000 /* FM Tune enabled */
-> +#define KT0913_TUNE_FMTUNE_OFF 0x0000 /* FM Tune disabled */
-> +#define KT0913_TUNE_FMCHAN_MASK 0x0FFF /* frequency in kHz / 50kHz */
-> +
-> +#define KT0913_VOLUME_DMUTE_MASK 0x2000
-> +#define KT0913_VOLUME_DMUTE_ON 0x0000
-> +#define KT0913_VOLUME_DMUTE_OFF 0x2000
-> +#define KT0913_VOLUME_DE_MASK 0x0800 /* de-emphasis time constant */
-> +#define KT0913_VOLUME_DE_75US 0x0000 /* 75us */
-> +#define KT0913_VOLUME_DE_50US 0x0800 /* 50us */
-> +#define KT0913_VOLUME_POP_MASK 0x30 /* audio dac anti-pop config */
-> +#define KT0913_VOLUME_POP_SHIFT 4
-> +
-> +#define KT0913_DSPCFGA_MONO_MASK 0x8000 /* mono select (0=stereo, 1=mono) */
-> +#define KT0913_DSPCFGA_MONO_ON 0x8000 /* mono */
-> +#define KT0913_DSPCFGA_MONO_OFF 0x0000 /* stereo */
-> +
-> +#define KT0913_LOCFG_CAMPUSBAND_EN_MASK 0x0008 /* campus band fm enable */
-> +#define KT0913_LOCFG_CAMPUSBAND_EN_ON 0x0008 /* FM range 64-110MHz */
-> +#define KT0913_LOCFG_CAMPUSBAND_EN_OFF 0x0000 /* FM range 32-110MHz */
-> +
-> +#define KT0913_RXCFGA_STDBY_MASK 0x1000 /* standby mode enable */
-> +#define KT0913_RXCFGA_STDBY_ON 0x1000 /* standby mode enabled */
-> +#define KT0913_RXCFGA_STDBY_OFF 0x0000 /* standby mode disabled */
-> +#define KT0913_RXCFGA_VOLUME_MASK 0x001F /* volume control */
-> +
-> +#define KT0913_STATUSA_XTAL_OK 0x8000 /* crystal ready indicator */
-> +#define KT0913_STATUSA_STC 0x4000 /* seek/tune complete */
-> +
-> +#define KT0913_STATUSA_PLL_LOCK_MASK 0x800 /* system pll ready indicator */
-> +#define KT0913_STATUSA_PLL_LOCK_LOCKED 0x800 /* system pll ready */
-> +#define KT0913_STATUSA_PLL_LOCK_UNLOCKED 0x000 /* not ready */
-> +#define KT0913_STATUSA_LO_LOCK 0x400 /* LO synthesizer ready indicator */
-> +#define KT0913_STATUSA_ST_MASK 0x300 /* stereo indicator (0x300=stereo, otherwise mono) */
-> +#define KT0913_STATUSA_ST_STEREO 0x300 /* stereo */
-> +#define KT0913_STATUSA_FMRSSI_MASK 0xF8 /* FM RSSI (-100dBm + FMRSSI*3dBm) */
-> +#define KT0913_STATUSA_FMRSSI_SHIFT 3
-> +
-> +#define KT0913_STATUSC_PWSTATUS 0x8000 /* power status indicator */
-> +#define KT0913_STATUSC_CHIPRDY 0x2000 /* chip ready indicator */
-> +#define KT0913_STATUSC_FMSNR 0x1FC0 /* FM SNR (unknown units) */
-> +
-> +#define KT0913_AMCHAN_AMTUNE_MASK 0x8000 /* AM tune enable */
-> +#define KT0913_AMCHAN_AMTUNE_ON 0x8000 /* AM tune enabled */
-> +#define KT0913_AMCHAN_AMTUNE_OFF 0x0000 /* AM tune disabled */
-> +#define KT0913_AMCHAN_AMCHAN_MASK 0x7FF /* am channel in kHz */
-> +
-> +#define KT0913_AMSYSCFG_AM_FM_MASK 0x8000 /* am/fm mode control */
-> +#define KT0913_AMSYSCFG_AM_FM_AM 0x8000 /* am mode */
-> +#define KT0913_AMSYSCFG_AM_FM_FM 0x0000 /* fm mode (default) */
-> +#define KT0913_AMSYSCFG_REFCLK_MASK 0x0F00 /* reference clock selection */
-> +#define KT0913_AMSYSCFG_REFCLK_SHIFT 8
-> +#define KT0913_AMSYSCFG_AU_GAIN_MASK 0x00C0 /* audio gain selection */
-> +#define KT0913_AMSYSCFG_AU_GAIN_6DB 0x0040 /* 6dB audio gain */
-> +#define KT0913_AMSYSCFG_AU_GAIN_3DB 0x0000 /* 3dB audio gain (default) */
-> +#define KT0913_AMSYSCFG_AU_GAIN_0DB 0x00C0 /* 0dB audio gain */
-> +#define KT0913_AMSYSCFG_AU_GAIN_MIN_3DB 0x0080 /* -3dB audio gain */
-> +
-> +#define KT0913_AMSTATUSA_AMRSSI_MASK 0x1F00 /* am channel rssi */
-> +#define KT0913_AMSTATUSA_AMRSSI_SHIFT 8
-> +
-> +/* constants */
-> +#define KT0913_CHIP_ID  0x544B /* ASCII of 'KT' */
-> +
-> +#define V4L2_KHZ_FREQ_MUL 16U /* v4l2 uses 16x the kHz value as their freq */
-> +#define KT0913_FMCHAN_MUL 50U /* kt0913 uses freqs with a 50kHz multiplier */
-> +#define KT0913_FM_RANGE_LOW_NO_CAMPUS 64000U /* 64MHz lower bound for FM */
-> +#define KT0913_FM_RANGE_LOW_CAMPUS 32000U /* 32MHz lower bound for campus FM */
-> +#define KT0913_FM_RANGE_HIGH 110000U /* 110MHz upper bound for FM */
-> +#define KT0913_AM_RANGE_LOW  500U /* 500kHz lower bound for AM */
-> +#define KT0913_AM_RANGE_HIGH 1710U /* 1710kHz upper bound for AM */
-> +
-> +#define KT0913_FM_AM_DRIVER_NAME "kt0913-fm-am"
-
-Just name it "kt0913". Does it just support the 0913 or other variants as well?
-I wonder if it should perhaps be named "kt091x". Up to you.
-
-> +
-> +/* ************************************************************************* */
-> +
-> +/* v4l2 device number to use. -1 will assign the next free one */
-> +static int kt0913_v4l2_radio_nr = -1;
-> +/* use the extended range of FM down to 32MHz. disabled by default */
-> +static int kt0913_use_campus_band;
-> +
-> +/* ************************************************************************* */
-> +
-> +/* kt0913 status struct */
-> +struct kt0913_device {
-> +	struct v4l2_device v4l2_dev;		/* main v4l2 struct */
-> +	struct i2c_client *client;			/* I2C client */
-> +	struct video_device vdev;			/* vide_device struct */
-> +	struct v4l2_ctrl_handler ctrl_handler; /* ctrl_handler struct */
-> +
-> +	/* V4L2 Controls */
-> +	struct v4l2_ctrl *ctrl_pll_lock;    /* PLL lock */
-> +	struct v4l2_ctrl *ctrl_volume;      /* Overall volume */
-> +	struct v4l2_ctrl *ctrl_au_gain;     /* Audio Gain */
-> +	struct v4l2_ctrl *ctrl_mute;        /* Master mute */
-> +	struct v4l2_ctrl *ctrl_deemp;  /* Deemphasis */
-> +
-> +	/* current operation band (fm, fm_campus, am) */
-> +	unsigned int band;
-> +
-> +	/* audio dac anti-pop setting:
-> +	 *  0 -> 100uF (default)
-> +	 *  1 -> 60uF
-> +	 *  2 -> 20uF
-> +	 *  3 -> 10uF
-> +	 */
-> +	unsigned int audio_anti_pop;
-> +
-> +	/*
-> +	 * reference clock selection:
-> +	 *  0 -> 32.768kHz (default)
-> +	 *  1 -> 6.5MHz
-> +	 *  2 -> 7.6MHz
-> +	 *  3 -> 12MHz
-> +	 *  4 -> 13MHz
-> +	 *  5 -> 15.2MHz
-> +	 *  6 -> 19.2MHz
-> +	 *  7 -> 24MHz
-> +	 *  8 -> 26MHz
-> +	 *  9 -> 38kHz
-> +	 */
-> +	unsigned int refclock_val;
-> +
-> +	/* Regmap */
-> +	struct regmap *regmap;
-> +
-> +	/* For core assisted locking */
-> +	struct mutex mutex;
-> +};
-> +
-> +/* ************************************************************************* */
-> +
-> +/* Regmap settings */
-> +static const struct regmap_range kt0913_regmap_all_registers_range[] = {
-> +	regmap_reg_range(0x01, 0x05),
-> +	regmap_reg_range(0x0A, 0x0A),
-> +	regmap_reg_range(0x0C, 0x0C),
-> +	regmap_reg_range(0x0F, 0x0F),
-> +	regmap_reg_range(0x12, 0x14),
-> +	regmap_reg_range(0x16, 0x18),
-> +	regmap_reg_range(0x1D, 0x1D),
-> +	regmap_reg_range(0x22, 0x22),
-> +	regmap_reg_range(0x24, 0x25),
-> +	regmap_reg_range(0x2E, 0x2F),
-> +	regmap_reg_range(0x30, 0x34),
-> +	regmap_reg_range(0x3A, 0x3A),
-> +	regmap_reg_range(0x3C, 0x3C),
-> +};
-> +
-> +static const struct regmap_access_table kt0913_all_registers_access_table = {
-> +	.yes_ranges = kt0913_regmap_all_registers_range,
-> +	.n_yes_ranges = ARRAY_SIZE(kt0913_regmap_all_registers_range),
-> +};
-> +
-> +static const struct reg_sequence kt0913_init_regs_to_defaults[] = {
-> +	/* Standby disabled, volume 0dB */
-> +	{ KT0913_REG_RXCFG, 0x881F },
-> +	/* FM Channel spacing = 50kHz, Right & Left unmuted */
-> +	{ KT0913_REG_SEEK, 0x000B },
-> +	/* Stereo, High Stereo/Mono blend level, blend disabled */
-> +	{ KT0913_REG_DSPCFGA, 0x1000 },
-> +	/* FM AFC Enabled */
-> +	{ KT0913_REG_LOCFGA, 0x0100 },
-> +	/* Campus band disabled by default */
-> +	{ KT0913_REG_LOCFGC, 0x0024 },
-> +	/*
-> +	 * FM mode, internal defined bands, clock from XT, 32.768kHz
-> +	 * 3dB audio gain, AM AFC Enabled
-> +	 */
-> +	{ KT0913_REG_AMSYSCFG, 0x0002 },
-> +	/* Default AM freq = 504kHz */
-> +	{ KT0913_REG_AMCHAN, 0x01F8},
-> +	/* VOL and CH GPIOs set to HiZ */
-> +	{ KT0913_REG_GPIOCFG, 0x0000 },
-> +	/* AM Channel bandwidth = 6kHz, non-differential output */
-> +	{ KT0913_REG_AMDSP, 0xAFC4 },
-> +	/*
-> +	 * softmute is disabled on AM and FM, but set the defaults:
-> +	 * strong softmute attn., slow softmute attack/recover,
-> +	 * lowest AM softumte start level, almost the minimum
-> +	 * softmute target volume, RSSI mode for softmute, lowest
-> +	 * FM softmute start level
-> +	 */
-> +	{ KT0913_REG_SOFTMUTE, 0x0010 },
-> +	/* 1kHz for AM channel space, working mode A for the keys */
-> +	{ KT0913_REG_AMCFG, 0x1401 },
-> +	/* TIME1 = shortest, TIME2 = fastest */
-> +	{ KT0913_REG_AMCFG, 0x4050 },
-> +	/* set 86MHz as the default frequency, and tune it */
-> +	{ KT0913_REG_TUNE, 0x86B8 },
-> +	/*
-> +	 * FM&AM Softmute disabled, Mute disabled, 75us deemp.,
-> +	 * no bass boost, 100uF anti pop cap
-> +	 */
-> +	{ KT0913_REG_VOLUME, 0xE080 },
-> +};
-> +
-> +static const struct regmap_config kt0913_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 16,
-> +	.max_register = KT0913_REG_AFC,
-> +	.volatile_table = &kt0913_all_registers_access_table,
-> +	.cache_type = REGCACHE_RBTREE,
-> +	.val_format_endian = REGMAP_ENDIAN_BIG,
-> +};
-> +
-> +/* ************************************************************************* */
-> +
-> +/* bands where the kt0913 operates */
-> +enum { BAND_FM, BAND_FM_CAMUS, BAND_AM };
-
-This is still CAMUS. I wonder if you reposted v1 instead of v2.
-
-I stop reviewing because this doesn't seem right.
-
-Regards,
-
-	Hans
-
-> +
-> +static const struct v4l2_frequency_band kt0913_bands[] = {
-> +	{
-> +		/* BAND_FM */
-> +		.type = V4L2_TUNER_RADIO,
-> +		.index = 0, /* index provided to v4l2 */
-> +		.capability = V4L2_TUNER_CAP_LOW | V4L2_TUNER_CAP_STEREO |
-> +				V4L2_TUNER_CAP_FREQ_BANDS,
-> +		.rangelow = KT0913_FM_RANGE_LOW_NO_CAMPUS * V4L2_KHZ_FREQ_MUL,
-> +		.rangehigh = KT0913_FM_RANGE_HIGH * V4L2_KHZ_FREQ_MUL,
-> +		.modulation = V4L2_BAND_MODULATION_FM,
-> +	},
-> +	{
-> +		/* BAND_FM_CAMUS */
-> +		.type = V4L2_TUNER_RADIO,
-> +		.index = 0, /* index provided to v4l2 */
-> +		.capability = V4L2_TUNER_CAP_LOW | V4L2_TUNER_CAP_STEREO |
-> +				V4L2_TUNER_CAP_FREQ_BANDS,
-> +		.rangelow = KT0913_FM_RANGE_LOW_CAMPUS * V4L2_KHZ_FREQ_MUL,
-> +		.rangehigh = KT0913_FM_RANGE_HIGH * V4L2_KHZ_FREQ_MUL,
-> +		.modulation = V4L2_BAND_MODULATION_FM,
-> +	},
-> +	{
-> +		/* BAND_AM */
-> +		.type = V4L2_TUNER_RADIO,
-> +		.index = 1, /* index provided to v4l2 */
-> +		.capability = V4L2_TUNER_CAP_LOW | V4L2_TUNER_CAP_FREQ_BANDS,
-> +		.rangelow = KT0913_AM_RANGE_LOW * V4L2_KHZ_FREQ_MUL,
-> +		.rangehigh = KT0913_AM_RANGE_HIGH * V4L2_KHZ_FREQ_MUL,
-> +		.modulation = V4L2_BAND_MODULATION_AM,
-> +	},
-> +};
-> +
-> +/* ************************************************************************* */
-> +
-> +static inline struct kt0913_device *
-> +v4l2_device_to_device(struct v4l2_device *v4l2_dev)
-> +{
-> +	return container_of(v4l2_dev,
-> +		struct kt0913_device, v4l2_dev);
-> +}
-> +
-> +static inline struct kt0913_device *
-> +v4l2_ctrl_to_device(struct v4l2_ctrl *ctrl_handler)
-> +{
-> +	return container_of(ctrl_handler->handler,
-> +		struct kt0913_device, ctrl_handler);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static inline u32 khz_to_v4l2_freq(unsigned int freq)
-> +{
-> +	return freq * V4L2_KHZ_FREQ_MUL;
-> +}
-> +
-> +static inline unsigned int v4l2_freq_to_khz(u32 v4l2_freq)
-> +{
-> +	return v4l2_freq / V4L2_KHZ_FREQ_MUL;
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_get_fm_frequency(struct kt0913_device *radio,
-> +				     unsigned int *frequency)
-> +{
-> +	unsigned int tune_reg;
-> +	int ret = regmap_read(radio->regmap, KT0913_REG_TUNE, &tune_reg);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	*frequency = (tune_reg & KT0913_TUNE_FMCHAN_MASK) * KT0913_FMCHAN_MUL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int __kt0913_set_fm_frequency(struct kt0913_device *radio,
-> +				     unsigned int frequency)
-> +{
-> +	return regmap_write(radio->regmap, KT0913_REG_TUNE,
-> +		KT0913_TUNE_FMTUNE_ON | (frequency / KT0913_FMCHAN_MUL));
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_set_mute(struct kt0913_device *radio, int on)
-> +{
-> +	return regmap_update_bits(radio->regmap,
-> +		KT0913_REG_VOLUME, KT0913_VOLUME_DMUTE_MASK,
-> +		on ? KT0913_VOLUME_DMUTE_ON : KT0913_VOLUME_DMUTE_OFF);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_set_deemphasis(struct kt0913_device *radio, s32 deemp)
-> +{
-> +	switch (deemp) {
-> +	case V4L2_DEEMPHASIS_75_uS:
-> +		return regmap_update_bits(radio->regmap,
-> +			KT0913_REG_VOLUME, KT0913_VOLUME_DE_MASK,
-> +			KT0913_VOLUME_DE_50US);
-> +
-> +		/* 50us is used for the disabled option (which is not supported
-> +		 * on the chip) and the 50uS value
-> +		 */
-> +	default:
-> +		return regmap_update_bits(radio->regmap,
-> +			KT0913_REG_VOLUME, KT0913_VOLUME_DE_MASK,
-> +			KT0913_VOLUME_DE_75US);
-> +	}
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_set_volume(struct kt0913_device *radio, s32 volume)
-> +{
-> +	/* map [-60, 0] to [1, 31] which is what the kt0913 expects */
-> +	volume = (volume / 2) + 31;
-> +	return regmap_update_bits(radio->regmap,
-> +		KT0913_REG_RXCFG, KT0913_RXCFGA_VOLUME_MASK,
-> +		volume);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_set_standby(struct kt0913_device *radio, int standby)
-> +{
-> +	return regmap_update_bits(radio->regmap,
-> +		KT0913_REG_RXCFG, KT0913_RXCFGA_STDBY_MASK,
-> +		standby ? KT0913_RXCFGA_STDBY_ON : KT0913_RXCFGA_STDBY_OFF);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_get_pll_status(struct kt0913_device *radio, int *locked)
-> +{
-> +	unsigned int statusa_reg;
-> +	int ret = regmap_read(radio->regmap, KT0913_REG_STATUSA, &statusa_reg);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	*locked = (statusa_reg & KT0913_STATUSA_PLL_LOCK_MASK) ==
-> +		KT0913_STATUSA_PLL_LOCK_LOCKED ? 1 : 0;
-> +
-> +	return 0;
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_get_rx_stereo_or_mono(struct kt0913_device *radio,
-> +					  int *stereo)
-> +{
-> +	unsigned int statusa_reg;
-> +	int ret = regmap_read(radio->regmap, KT0913_REG_STATUSA, &statusa_reg);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	*stereo = (statusa_reg & KT0913_STATUSA_ST_MASK) ==
-> +		KT0913_STATUSA_ST_STEREO ? 1 : 0;
-> +
-> +	return 0;
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_get_fm_rssi(struct kt0913_device *radio, s32 *rssi)
-> +{
-> +	unsigned int statusa_reg;
-> +	int ret = regmap_read(radio->regmap, KT0913_REG_STATUSA, &statusa_reg);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* RSSI(dBm) = -100 + FMRSSI<4:0> * 3dBm
-> +	 * even tho we can get the value in dBm, we want a %
-> +	 */
-> +	*rssi = (statusa_reg & KT0913_STATUSA_FMRSSI_MASK) >>
-> +		KT0913_STATUSA_FMRSSI_SHIFT;
-> +	/* map range 0-31 to 0-65535 */
-> +	*rssi *= 65535;
-> +	*rssi /= KT0913_STATUSA_FMRSSI_MASK >> KT0913_STATUSA_FMRSSI_SHIFT;
-> +
-> +	return 0;
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_get_cfg_stereo_enabled(struct kt0913_device *radio,
-> +					   int *stereo)
-> +{
-> +	unsigned int dspcfga_reg;
-> +	int ret = regmap_read(radio->regmap, KT0913_REG_DSPCFGA, &dspcfga_reg);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	*stereo = (dspcfga_reg & KT0913_DSPCFGA_MONO_MASK) ==
-> +		KT0913_DSPCFGA_MONO_OFF ? 1 : 0;
-> +
-> +	return ret;
-> +}
-> +
-> +static int __kt0913_set_cfg_stereo_enabled(struct kt0913_device *radio,
-> +					   int stereo)
-> +{
-> +	return regmap_update_bits(radio->regmap,
-> +		KT0913_REG_DSPCFGA, KT0913_DSPCFGA_MONO_MASK,
-> +		stereo ? KT0913_DSPCFGA_MONO_OFF : KT0913_DSPCFGA_MONO_ON);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_set_au_gain(struct kt0913_device *radio, s32 gain)
-> +{
-> +	switch (gain) {
-> +	case 6:
-> +		return regmap_update_bits(radio->regmap,
-> +			KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
-> +			KT0913_AMSYSCFG_AU_GAIN_6DB);
-> +	case 3:
-> +		return regmap_update_bits(radio->regmap,
-> +			KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
-> +			KT0913_AMSYSCFG_AU_GAIN_3DB);
-> +	case 0:
-> +		return regmap_update_bits(radio->regmap,
-> +			KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
-> +			KT0913_AMSYSCFG_AU_GAIN_0DB);
-> +	case -3:
-> +		return regmap_update_bits(radio->regmap,
-> +			KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AU_GAIN_MASK,
-> +			KT0913_AMSYSCFG_AU_GAIN_MIN_3DB);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_set_am_fm_band(struct kt0913_device *radio,
-> +				   unsigned int band)
-> +{
-> +	return regmap_update_bits(radio->regmap,
-> +		KT0913_REG_AMSYSCFG, KT0913_AMSYSCFG_AM_FM_MASK,
-> +		band == BAND_AM ?
-> +		KT0913_AMSYSCFG_AM_FM_AM : KT0913_AMSYSCFG_AM_FM_FM);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_get_am_frequency(struct kt0913_device *radio,
-> +				     unsigned int *frequency)
-> +{
-> +	unsigned int amchan_reg;
-> +	int ret = regmap_read(radio->regmap, KT0913_REG_AMCHAN, &amchan_reg);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	*frequency = (amchan_reg & KT0913_AMCHAN_AMCHAN_MASK);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __kt0913_set_am_frequency(struct kt0913_device *radio,
-> +				     unsigned int frequency)
-> +{
-> +	return regmap_write(radio->regmap, KT0913_REG_AMCHAN,
-> +		KT0913_AMCHAN_AMTUNE_ON | frequency);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_get_am_rssi(struct kt0913_device *radio, s32 *rssi)
-> +{
-> +	unsigned int amstatusa_reg;
-> +	int ret = regmap_read(radio->regmap,
-> +		KT0913_REG_AMSTATUSA, &amstatusa_reg);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* AMRSSI(dBm) = -90 + AMRSSI<4:0> * 3dBm
-> +	 * even tho we can get the value in dBm, we want a %
-> +	 */
-> +	*rssi = (amstatusa_reg & KT0913_AMSTATUSA_AMRSSI_MASK) >>
-> +		 KT0913_AMSTATUSA_AMRSSI_SHIFT;
-> +	/* map range 0-31 to 0-65535 */
-> +	*rssi *= 65535;
-> +	*rssi /= KT0913_AMSTATUSA_AMRSSI_MASK >> KT0913_AMSTATUSA_AMRSSI_SHIFT;
-> +
-> +	return 0;
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int __kt0913_init(struct kt0913_device *radio)
-> +{
-> +	int ret = 0;
-> +
-> +	/* write the defaults */
-> +	ret = regmap_multi_reg_write(radio->regmap,
-> +				     kt0913_init_regs_to_defaults,
-> +				     ARRAY_SIZE(kt0913_init_regs_to_defaults));
-> +	if (ret) {
-> +		v4l2_err(radio->client,
-> +			 "regmap_multi_reg_write() failed! %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* set the audio dac anti-pop config */
-> +	ret = regmap_update_bits(radio->regmap,
-> +				 KT0913_REG_VOLUME, KT0913_VOLUME_POP_MASK,
-> +				 radio->audio_anti_pop <<
-> +				 KT0913_VOLUME_POP_SHIFT);
-> +	if (ret) {
-> +		v4l2_err(radio->client,
-> +			 "regmap_update_bits() err on anti-pop cfg! %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* set the reference clock config */
-> +	ret = regmap_update_bits(radio->regmap,
-> +				 KT0913_REG_AMSYSCFG,
-> +				 KT0913_AMSYSCFG_REFCLK_MASK,
-> +				 radio->refclock_val <<
-> +				 KT0913_AMSYSCFG_REFCLK_SHIFT);
-> +	if (ret) {
-> +		v4l2_err(radio->client,
-> +			 "regmap_update_bits() err on refclk cfg! %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (kt0913_use_campus_band) {
-> +		v4l2_info(radio->client,
-> +			  "campus band is enabled!");
-> +		/* set the campus band bit */
-> +		ret = regmap_update_bits(radio->regmap,
-> +					 KT0913_REG_LOCFGC,
-> +					 KT0913_LOCFG_CAMPUSBAND_EN_MASK,
-> +					 KT0913_LOCFG_CAMPUSBAND_EN_ON);
-> +		if (ret) {
-> +			v4l2_err(radio->client,
-> +				 "regmap_update_bits() err on campus band! %d",
-> +				 ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return __kt0913_set_mute(radio, true);
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int kt0913_ioctl_vidioc_g_frequency(struct file *file, void *priv,
-> +					   struct v4l2_frequency *f)
-> +{
-> +	struct kt0913_device *radio = video_drvdata(file);
-> +	int ret;
-> +
-> +	if (f->tuner != 0)
-> +		return -EINVAL;
-> +
-> +	f->type = V4L2_TUNER_RADIO;
-> +
-> +	if (radio->band == BAND_AM)
-> +		ret = __kt0913_get_am_frequency(radio, &f->frequency);
-> +	else
-> +		ret = __kt0913_get_fm_frequency(radio, &f->frequency);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* convert kHz freq into v4l2 freq */
-> +	f->frequency = khz_to_v4l2_freq(f->frequency);
-> +
-> +	return 0;
-> +}
-> +
-> +static int kt0913_ioctl_vidioc_s_frequency(struct file *file, void *priv,
-> +					   const struct v4l2_frequency *f)
-> +{
-> +	struct kt0913_device *radio = video_drvdata(file);
-> +	unsigned int freq = f->frequency;
-> +	unsigned int new_band;
-> +	unsigned int half_gap_freq;
-> +	int ret;
-> +
-> +	if (f->tuner != 0 || f->type != V4L2_TUNER_RADIO)
-> +		return -EINVAL;
-> +
-> +	if (freq == 0)
-> +		return -EINVAL;
-> +
-> +	/* calculate the middle frequency on the gap of the bands */
-> +	half_gap_freq = kt0913_bands[BAND_AM].rangehigh;
-> +
-> +	if (kt0913_use_campus_band)
-> +		/* using the AM band and the campus FM band if enabled */
-> +		half_gap_freq += kt0913_bands[BAND_FM_CAMUS].rangelow;
-> +	else
-> +		/* or using the AM band and the standard FM band */
-> +		half_gap_freq += kt0913_bands[BAND_FM].rangelow;
-> +
-> +	half_gap_freq /= 2;
-> +
-> +	if (freq <= half_gap_freq)
-> +		new_band = BAND_AM;
-> +	else if (freq <= kt0913_bands[BAND_FM].rangelow &&
-> +		 kt0913_use_campus_band)
-> +		new_band = BAND_FM_CAMUS;
-> +	else
-> +		new_band = BAND_FM;
-> +
-> +	/* is the requested band different than the one currently set? */
-> +	if (radio->band != new_band) {
-> +		/* update the band on the device */
-> +		ret = __kt0913_set_am_fm_band(radio, new_band);
-> +		if (ret)
-> +			return ret;
-> +		radio->band = new_band;
-> +	}
-> +
-> +	/* clamp the frequency to the band boundaries */
-> +	freq = clamp(freq, kt0913_bands[new_band].rangelow,
-> +		     kt0913_bands[new_band].rangehigh);
-> +
-> +	/* convert v4l2 freq to kHz */
-> +	freq = v4l2_freq_to_khz(freq);
-> +
-> +	if (radio->band == BAND_AM)
-> +		return __kt0913_set_am_frequency(radio, freq);
-> +	else
-> +		return __kt0913_set_fm_frequency(radio, freq);
-> +}
-> +
-> +static int kt0913_ioctl_vidioc_enum_freq_bands(struct file *file, void *priv,
-> +					       struct v4l2_frequency_band *band)
-> +{
-> +	if (band->tuner != 0)
-> +		return -EINVAL;
-> +
-> +	switch (band->index) {
-> +	case 0:
-> +		if (kt0913_use_campus_band)
-> +			*band = kt0913_bands[BAND_FM_CAMUS];
-> +		else
-> +			*band = kt0913_bands[BAND_FM];
-> +		return 0;
-> +	case 1:
-> +		*band = kt0913_bands[BAND_AM];
-> +		return 0;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +/* V4L2 vidioc */
-> +static int kt0913_ioctl_vidioc_querycap(struct file *file, void *priv,
-> +					struct v4l2_capability *capability)
-> +{
-> +	struct kt0913_device *radio = video_drvdata(file);
-> +	struct video_device *dev;
-> +
-> +	if (!radio)
-> +		return -ENODEV;
-> +
-> +	dev = &radio->vdev;
-> +
-> +	if (!dev)
-> +		return -ENODEV;
-> +
-> +	strscpy(capability->driver, KT0913_FM_AM_DRIVER_NAME,
-> +		sizeof(capability->driver));
-> +	strscpy(capability->card, dev->name, sizeof(capability->card));
-> +	snprintf(capability->bus_info, sizeof(capability->bus_info),
-> +		 "I2C:%s", dev_name(&dev->dev));
-> +	return 0;
-> +}
-> +
-> +static int kt0913_ioctl_vidioc_g_tuner(struct file *file, void *priv,
-> +				       struct v4l2_tuner *v)
-> +{
-> +	struct kt0913_device *radio = video_drvdata(file);
-> +	int ret;
-> +	int stereo_enabled;
-> +	int is_stereo;
-> +
-> +	if (v->index != 0)
-> +		return -EINVAL;
-> +
-> +	strscpy(v->name, "FM/AM", sizeof(v->name));
-> +	v->type = V4L2_TUNER_RADIO;
-> +
-> +	v->capability = V4L2_TUNER_CAP_LOW | V4L2_TUNER_CAP_STEREO |
-> +		V4L2_TUNER_CAP_FREQ_BANDS;
-> +
-> +	v->rangelow = kt0913_bands[BAND_AM].rangelow;
-> +	v->rangehigh = kt0913_bands[BAND_FM].rangehigh;
-> +
-> +	if (radio->band == BAND_AM) {
-> +		v->rxsubchans = V4L2_TUNER_SUB_MONO;
-> +		v->audmode = V4L2_TUNER_MODE_MONO;
-> +
-> +		ret = __kt0913_get_am_rssi(radio, &v->signal);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret = __kt0913_get_cfg_stereo_enabled(radio, &stereo_enabled);
-> +		if (ret)
-> +			return ret;
-> +
-> +		v->rxsubchans = stereo_enabled ?
-> +			V4L2_TUNER_SUB_STEREO : V4L2_TUNER_SUB_MONO;
-> +
-> +		ret = __kt0913_get_rx_stereo_or_mono(radio, &is_stereo);
-> +		if (ret)
-> +			return ret;
-> +
-> +		v->audmode = is_stereo ?
-> +			V4L2_TUNER_MODE_STEREO : V4L2_TUNER_MODE_MONO;
-> +
-> +		ret = __kt0913_get_fm_rssi(radio, &v->signal);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* AFC is enabled and active by default */
-> +	v->afc = 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int kt0913_ioctl_vidioc_s_tuner(struct file *file, void *priv,
-> +				       const struct v4l2_tuner *v)
-> +{
-> +	struct kt0913_device *radio = video_drvdata(file);
-> +
-> +	if (v->index != 0)
-> +		return -EINVAL;
-> +
-> +	/* only mono and stereo are supported */
-> +	if (v->audmode != V4L2_TUNER_MODE_MONO &&
-> +	    v->audmode != V4L2_TUNER_MODE_STEREO)
-> +		return 0;
-> +
-> +	/* AM is mono only, so don't try to set it to stereo */
-> +	if (radio->band == BAND_AM && v->audmode != V4L2_TUNER_MODE_MONO)
-> +		return 0;
-> +
-> +	/* set to stereo if specified, otherwise set to mono */
-> +	return __kt0913_set_cfg_stereo_enabled(radio,
-> +		v->audmode == V4L2_TUNER_MODE_STEREO);
-> +}
-> +
-> +static int kt0913_s_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct kt0913_device *radio = v4l2_ctrl_to_device(ctrl);
-> +
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_AUDIO_MUTE:
-> +		return __kt0913_set_mute(radio, ctrl->val);
-> +	case V4L2_CID_AUDIO_VOLUME:
-> +		return __kt0913_set_volume(radio, ctrl->val);
-> +	case V4L2_CID_GAIN:
-> +		return __kt0913_set_au_gain(radio, ctrl->val);
-> +	case V4L2_CID_TUNE_DEEMPHASIS:
-> +		return __kt0913_set_deemphasis(radio, ctrl->val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int kt0913_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct kt0913_device *radio = v4l2_ctrl_to_device(ctrl);
-> +
-> +	switch (ctrl->id) {
-> +	case V4L2_CID_RF_TUNER_PLL_LOCK:
-> +		return __kt0913_get_pll_status(radio, &ctrl->val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct v4l2_ctrl_ops kt0913_ctrl_ops = {
-> +	.s_ctrl = kt0913_s_ctrl,
-> +	.g_volatile_ctrl = kt0913_g_volatile_ctrl,
-> +};
-> +
-> +/* ************************************************************************* */
-> +
-> +/* File system interface (use the ancillary fops for v4l2) */
-> +static const struct v4l2_file_operations kt0913_radio_fops = {
-> +	.owner = THIS_MODULE,
-> +	.open = v4l2_fh_open,
-> +	.release = v4l2_fh_release,
-> +	.poll = v4l2_ctrl_poll,
-> +	.unlocked_ioctl = video_ioctl2,
-> +};
-> +
-> +/* ioctl ops */
-> +static const struct v4l2_ioctl_ops kt0913_ioctl_ops = {
-> +	.vidioc_querycap = kt0913_ioctl_vidioc_querycap,
-> +	.vidioc_g_tuner = kt0913_ioctl_vidioc_g_tuner,
-> +	.vidioc_s_tuner = kt0913_ioctl_vidioc_s_tuner,
-> +	.vidioc_g_frequency = kt0913_ioctl_vidioc_g_frequency,
-> +	.vidioc_s_frequency = kt0913_ioctl_vidioc_s_frequency,
-> +	.vidioc_enum_freq_bands = kt0913_ioctl_vidioc_enum_freq_bands,
-> +	/* use ancillary functions for these: */
-> +	.vidioc_log_status = v4l2_ctrl_log_status,
-> +	.vidioc_subscribe_event = v4l2_ctrl_subscribe_event,
-> +	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
-> +};
-> +
-> +/* V4L2 RADIO device structure */
-> +static struct video_device kt0913_radio_template = {
-> +	.name = KT0913_FM_AM_DRIVER_NAME,
-> +	.fops = &kt0913_radio_fops,
-> +	.ioctl_ops = &kt0913_ioctl_ops,
-> +	.release = video_device_release_empty,
-> +	.vfl_dir = VFL_DIR_RX,
-> +	.device_caps = V4L2_CAP_TUNER | V4L2_CAP_RADIO,
-> +};
-> +
-> +/* ************************************************************************* */
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id kt0913_of_match[] = {
-> +	{ .compatible = "ktm,kt0913" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, kt0913_of_match);
-> +#endif /* IS_ENABLED(CONFIG_OF) */
-> +
-> +static void __kt0913_parse_dt(struct kt0913_device *radio)
-> +{
-> +	const void *ptr_anti_pop = of_get_property(radio->client->dev.of_node,
-> +		"ktm,anti-pop", NULL);
-> +	const void *ptr_refclk = of_get_property(radio->client->dev.of_node,
-> +		"ktm,refclk", NULL);
-> +
-> +	if (ptr_anti_pop) {
-> +		radio->audio_anti_pop =
-> +			clamp(be32_to_cpup(ptr_anti_pop), 0U, 3U);
-> +	} else {
-> +		radio->audio_anti_pop = 0;
-> +		v4l2_warn(radio->client,
-> +			  "No ktm,anti-pop on dt node, using default");
-> +	}
-> +
-> +	if (ptr_refclk) {
-> +		radio->refclock_val =
-> +			clamp(be32_to_cpup(ptr_refclk), 0U, 9U);
-> +	} else {
-> +		radio->refclock_val = 0;
-> +		v4l2_warn(radio->client,
-> +			  "No ktm,refclk on dt node, using default");
-> +	}
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +static int kt0913_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct kt0913_device *radio;
-> +	struct v4l2_device *v4l2_dev;
-> +	struct v4l2_ctrl_handler *hdl;
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	pr_debug("%s\n", __func__);
-> +
-> +	/* this driver uses word R/W i2c operations, check if it's supported */
-> +	ret = i2c_check_functionality(client->adapter,
-> +				      I2C_FUNC_SMBUS_READ_WORD_DATA |
-> +				      I2C_FUNC_SMBUS_WRITE_WORD_DATA);
-> +	if (!ret) {
-> +		v4l2_err(client,
-> +			 "I2C adapter doesn't support word operations");
-> +		return -EIO;
-> +	}
-> +
-> +	/* check if the device exist on the bus before initializing it */
-> +	ret = i2c_smbus_read_word_data(client, KT0913_REG_CHIP_ID);
-> +	if (ret < 0) {
-> +		v4l2_err(client,
-> +			 "Error reading CHIP ID of the kt0913 (%d)", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* check if the CHIP ID register value matches the expected value */
-> +	if (ret != KT0913_CHIP_ID) {
-> +		v4l2_err(radio->client,
-> +			 "Invalid CHIP ID: 0x%x, expected 0x%x",
-> +			 ret, KT0913_CHIP_ID);
-> +		return -ENODEV;
-> +	}
-> +
-> +	v4l2_info(client,
-> +		  "kt0913 found @ 0x%x (%s)\n",
-> +		  client->addr, client->adapter->name);
-> +
-> +	/* alloc context for the kt0913 radio struct */
-> +	radio = devm_kzalloc(&client->dev, sizeof(*radio), GFP_KERNEL);
-> +	if (!radio)
-> +		return -ENOMEM;
-> +
-> +	v4l2_dev = &radio->v4l2_dev;
-> +	ret = v4l2_device_register(&client->dev, v4l2_dev);
-> +	if (ret < 0) {
-> +		v4l2_err(client,
-> +			 "could not register v4l2_dev\n");
-> +		goto errfr;
-> +	}
-> +
-> +	mutex_init(&radio->mutex);
-> +
-> +	/* register the control handler from the context struct */
-> +	hdl = &radio->ctrl_handler;
-> +	v4l2_ctrl_handler_init(hdl, 5);
-> +
-> +	/* add the control: Mute */
-> +	radio->ctrl_mute = v4l2_ctrl_new_std(hdl, &kt0913_ctrl_ops,
-> +					     V4L2_CID_AUDIO_MUTE,
-> +					     0, 1, 1, 0);
-> +	if (hdl->error) {
-> +		ret = hdl->error;
-> +		v4l2_err(v4l2_dev, "Could not register control: mute\n");
-> +		goto errunreg;
-> +	}
-> +
-> +	/* add the control: Volume */
-> +	radio->ctrl_volume = v4l2_ctrl_new_std(hdl, &kt0913_ctrl_ops,
-> +					       V4L2_CID_AUDIO_VOLUME,
-> +					       -60, 0, 2, 0);
-> +	if (hdl->error) {
-> +		ret = hdl->error;
-> +		v4l2_err(v4l2_dev, "Could not register control: Volume\n");
-> +		goto errunreg;
-> +	}
-> +
-> +	/* add the control: audio gain */
-> +	radio->ctrl_au_gain = v4l2_ctrl_new_std(hdl, &kt0913_ctrl_ops,
-> +						V4L2_CID_GAIN,
-> +						-3, 6, 3, 3);
-> +	if (hdl->error) {
-> +		ret = hdl->error;
-> +		v4l2_err(v4l2_dev, "Could not register control: audio gain\n");
-> +		goto errunreg;
-> +	}
-> +	radio->ctrl_au_gain->flags |= V4L2_CTRL_FLAG_SLIDER;
-> +
-> +	/* add the control: PLL Lock */
-> +	radio->ctrl_pll_lock = v4l2_ctrl_new_std(hdl, &kt0913_ctrl_ops,
-> +						 V4L2_CID_RF_TUNER_PLL_LOCK,
-> +						 0, 1, 1, 0);
-> +	if (hdl->error) {
-> +		ret = hdl->error;
-> +		v4l2_err(v4l2_dev, "Could not register control: pll lock\n");
-> +		goto errunreg;
-> +	}
-> +	radio->ctrl_pll_lock->flags |= (V4L2_CTRL_FLAG_VOLATILE |
-> +		V4L2_CTRL_FLAG_READ_ONLY);
-> +
-> +	/* add the control: deemphasis */
-> +	radio->ctrl_deemp = v4l2_ctrl_new_std_menu(hdl, &kt0913_ctrl_ops,
-> +						   V4L2_CID_TUNE_DEEMPHASIS,
-> +						   V4L2_DEEMPHASIS_75_uS,
-> +						   0,
-> +						   V4L2_DEEMPHASIS_75_uS);
-> +	if (hdl->error) {
-> +		ret = hdl->error;
-> +		v4l2_err(v4l2_dev, "Could not register control: deemphasis\n");
-> +		goto errunreg;
-> +	}
-> +	/* the control handler is ready to be used */
-> +	v4l2_dev->ctrl_handler = hdl;
-> +
-> +	radio->vdev = kt0913_radio_template;
-> +	radio->vdev.lock = &radio->mutex;
-> +	radio->vdev.v4l2_dev = v4l2_dev;
-> +	video_set_drvdata(&radio->vdev, radio);
-> +
-> +	radio->client = client;
-> +	i2c_set_clientdata(client, radio);
-> +
-> +	/* init the regmap of the kt0913 */
-> +	regmap = devm_regmap_init_i2c(client, &kt0913_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		ret = PTR_ERR(regmap);
-> +		v4l2_err(client,
-> +			 "devm_regmap_init_i2c() failed! %d", ret);
-> +		goto errunreg;
-> +	}
-> +	radio->regmap = regmap;
-> +
-> +	__kt0913_parse_dt(radio);
-> +
-> +	/* init the kt0913 into a known state */
-> +	ret = __kt0913_init(radio);
-> +	if (ret) {
-> +		v4l2_err(client,
-> +			 "__kt0913_init() failed! %d", ret);
-> +		goto errunreg;
-> +	}
-> +
-> +	pm_runtime_get_noresume(&client->dev);
-> +	pm_runtime_set_active(&client->dev);
-> +	pm_runtime_enable(&client->dev);
-> +	pm_runtime_dont_use_autosuspend(&client->dev);
-> +
-> +	ret = video_register_device(&radio->vdev,
-> +				    VFL_TYPE_RADIO, kt0913_v4l2_radio_nr);
-> +	if (ret < 0) {
-> +		v4l2_err(client,
-> +			 "Could not register video device!");
-> +		goto error_pm_disable;
-> +	}
-> +
-> +	v4l2_info(client, "registered.");
-> +	return 0;
-> +error_pm_disable:
-> +	pm_runtime_disable(&client->dev);
-> +	pm_runtime_set_suspended(&client->dev);
-> +errunreg:
-> +	v4l2_ctrl_handler_free(hdl);
-> +	v4l2_device_unregister(v4l2_dev);
-> +errfr:
-> +	__kt0913_set_standby(radio, true);
-> +	kfree(radio);
-> +	return ret;
-> +}
-> +
-> +static int kt0913_remove(struct i2c_client *client)
-> +{
-> +	struct kt0913_device *radio = i2c_get_clientdata(client);
-> +
-> +	pr_debug("%s\n", __func__);
-> +	if (!radio)
-> +		return -EINVAL;
-> +
-> +	__kt0913_set_standby(radio, true);
-> +
-> +	pm_runtime_get_sync(&client->dev);
-> +	pm_runtime_disable(&client->dev);
-> +	pm_runtime_set_suspended(&client->dev);
-> +	pm_runtime_put_noidle(&client->dev);
-> +
-> +	video_unregister_device(&radio->vdev);
-> +	v4l2_ctrl_handler_free(&radio->ctrl_handler);
-> +	v4l2_device_unregister(&radio->v4l2_dev);
-> +
-> +	v4l2_info(client, "removed.");
-> +	return 0;
-> +}
-> +
-> +/* ************************************************************************* */
-> +
-> +#ifdef CONFIG_PM
-> +static int kt0913_i2c_pm_runtime_suspend(struct device *dev)
-> +{
-> +	struct kt0913_device *radio = i2c_get_clientdata(to_i2c_client(dev));
-> +
-> +	pr_debug("%s\n", __func__);
-> +	if (!radio)
-> +		return 0;
-> +
-> +	return __kt0913_set_standby(radio, true);
-> +}
-> +
-> +static int kt0913_i2c_pm_runtime_resume(struct device *dev)
-> +{
-> +	struct kt0913_device *radio = i2c_get_clientdata(to_i2c_client(dev));
-> +
-> +	pr_debug("%s\n", __func__);
-> +	if (!radio)
-> +		return 0;
-> +
-> +	return __kt0913_set_standby(radio, false);
-> +}
-> +#endif /* CONFIG_PM */
-> +
-> +static const struct dev_pm_ops kt0913_i2c_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(kt0913_i2c_pm_runtime_suspend,
-> +			   kt0913_i2c_pm_runtime_resume, NULL)
-> +};
-> +
-> +static const struct i2c_device_id kt0913_idtable[] = {
-> +	{ "kt0913", 0 },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, kt0913_idtable);
-> +
-> +static struct i2c_driver kt0913_driver = {
-> +	.driver = {
-> +		.name = "kt0913",
-> +		.of_match_table = of_match_ptr(kt0913_of_match),
-> +		.pm = &kt0913_i2c_pm_ops,
-> +	},
-> +	.probe = kt0913_probe,
-> +	.remove = kt0913_remove,
-> +	.id_table = kt0913_idtable,
-> +};
-> +module_i2c_driver(kt0913_driver);
-> +
-> +MODULE_AUTHOR("Santiago Hormazabal <santiagohssl@gmail.com>");
-> +MODULE_DESCRIPTION("KTMicro KT0913 AM/FM receiver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_VERSION("0.0.2");
-> +
-> +module_param(kt0913_use_campus_band, int, 0);
-> +MODULE_PARM_DESC(kt0913_use_campus_band, "Use the Campus Band feature (FM range 32MHz-110MHz)");
-> +module_param(kt0913_v4l2_radio_nr, int, 0);
-> +MODULE_PARM_DESC(kt0913_v4l2_radio_nr, "v4l2 device number to use (i.e. /dev/radioX)");
-> 
-
+DQoNCk9uIDAzLjA4LjIwMjAgMTE6MTgsIENvZHJpbiBDaXVib3Rhcml1IHdyb3RlOg0KPiBUaGUg
+bmV3IFNQRElGIFRYIGNvbnRyb2xsZXIgaXMgYSBzZXJpYWwgcG9ydCBjb21wbGlhbnQgd2l0aCB0
+aGUgSUVDLQ0KPiA2MDk1OCBzdGFuZGFyZC4gSXQgYWxzbyBzdXBwb3J0cyBwcm9ncmFtbWFibGUg
+VXNlciBEYXRhIGFuZCBDaGFubmVsDQo+IFN0YXR1cyBmaWVsZHMuDQo+IA0KPiBUaGlzIElQIGlz
+IGVtYmVkZGVkIGluIE1pY3JvY2hpcCdzIHNhbWE3ZzUgU29DLg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogQ29kcmluIENpdWJvdGFyaXUgPGNvZHJpbi5jaXVib3Rhcml1QG1pY3JvY2hpcC5jb20+DQo+
+IC0tLQ0KPiANCj4gQ2hhbmdlcyBpbiB2MiwgdjM6DQo+ICAtIG5vbmU7DQo+IA0KPiAgc291bmQv
+c29jL2F0bWVsL0tjb25maWcgICAgICAgIHwgIDEyICsNCj4gIHNvdW5kL3NvYy9hdG1lbC9NYWtl
+ZmlsZSAgICAgICB8ICAgMiArDQo+ICBzb3VuZC9zb2MvYXRtZWwvbWNocC1zcGRpZnR4LmMgfCA4
+NjQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQs
+IDg3OCBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgc291bmQvc29jL2F0bWVs
+L21jaHAtc3BkaWZ0eC5jDQo+IA0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2F0bWVsL0tjb25m
+aWcgYi9zb3VuZC9zb2MvYXRtZWwvS2NvbmZpZw0KPiBpbmRleCA3MWYyZDQyMTg4YzQuLjkzYmVi
+N2Q2NzBhMyAxMDA2NDQNCj4gLS0tIGEvc291bmQvc29jL2F0bWVsL0tjb25maWcNCj4gKysrIGIv
+c291bmQvc29jL2F0bWVsL0tjb25maWcNCj4gQEAgLTEzMiw0ICsxMzIsMTYgQEAgY29uZmlnIFNO
+RF9NQ0hQX1NPQ19JMlNfTUNDDQo+ICAJICBhbmQgc3VwcG9ydHMgYSBUaW1lIERpdmlzaW9uIE11
+bHRpcGxleGVkIChURE0pIGludGVyZmFjZSB3aXRoDQo+ICAJICBleHRlcm5hbCBtdWx0aS1jaGFu
+bmVsIGF1ZGlvIGNvZGVjcy4NCj4gIA0KPiArY29uZmlnIFNORF9NQ0hQX1NPQ19TUERJRlRYDQo+
+ICsJdHJpc3RhdGUgIk1pY3JvY2hpcCBBU29DIGRyaXZlciBmb3IgYm9hcmRzIHVzaW5nIFMvUERJ
+RiBUWCINCj4gKwlkZXBlbmRzIG9uIE9GICYmIChBUkNIX0FUOTEgfHwgQ09NUElMRV9URVNUKQ0K
+PiArCXNlbGVjdCBTTkRfU09DX0dFTkVSSUNfRE1BRU5HSU5FX1BDTQ0KPiArCXNlbGVjdCBSRUdN
+QVBfTU1JTw0KPiArCWhlbHANCj4gKwkgIFNheSBZIG9yIE0gaWYgeW91IHdhbnQgdG8gYWRkIHN1
+cHBvcnQgZm9yIE1pY3JvY2hpcCBTL1BESUYgVFggQVNvYw0KPiArCSAgZHJpdmVyIG9uIHRoZSBm
+b2xsb3dpbmcgTWljcm9jaGlwIHBsYXRmb3JtczoNCj4gKwkgIC0gc2FtYTdnNQ0KPiArDQo+ICsJ
+ICBUaGlzIFMvUERJRiBUWCBkcml2ZXIgaXMgY29tcGxpYW50IHdpdGggSUVDLTYwOTU4IHN0YW5k
+YXJkIGFuZA0KPiArCSAgaW5jbHVkZXMgcHJvZ3JhbWFibGUgVXNlciBEYXRhIGFuZCBDaGFubmVs
+IFN0YXR1cyBmaWVsZHMuDQo+ICBlbmRpZg0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2F0bWVs
+L01ha2VmaWxlIGIvc291bmQvc29jL2F0bWVsL01ha2VmaWxlDQo+IGluZGV4IGM3ZDI5ODk3OTFi
+ZS4uM2ZkODlhMDA2M2RmIDEwMDY0NA0KPiAtLS0gYS9zb3VuZC9zb2MvYXRtZWwvTWFrZWZpbGUN
+Cj4gKysrIGIvc291bmQvc29jL2F0bWVsL01ha2VmaWxlDQo+IEBAIC01LDYgKzUsNyBAQCBzbmQt
+c29jLWF0bWVsLXBjbS1kbWEtb2JqcyA6PSBhdG1lbC1wY20tZG1hLm8NCj4gIHNuZC1zb2MtYXRt
+ZWxfc3NjX2RhaS1vYmpzIDo9IGF0bWVsX3NzY19kYWkubw0KPiAgc25kLXNvYy1hdG1lbC1pMnMt
+b2JqcyA6PSBhdG1lbC1pMnMubw0KPiAgc25kLXNvYy1tY2hwLWkycy1tY2Mtb2JqcyA6PSBtY2hw
+LWkycy1tY2Mubw0KPiArc25kLXNvYy1tY2hwLXNwZGlmdHgtb2JqcyA6PSBtY2hwLXNwZGlmdHgu
+bw0KPiAgDQo+ICAjIHBkYyBhbmQgZG1hIG5lZWQgdG8gYm90aCBiZSBidWlsdC1pbiBpZiBhbnkg
+dXNlciBvZg0KPiAgIyBzc2MgaXMgYnVpbHQtaW4uDQo+IEBAIC0xNyw2ICsxOCw3IEBAIGVuZGlm
+DQo+ICBvYmotJChDT05GSUdfU05EX0FUTUVMX1NPQ19TU0MpICs9IHNuZC1zb2MtYXRtZWxfc3Nj
+X2RhaS5vDQo+ICBvYmotJChDT05GSUdfU05EX0FUTUVMX1NPQ19JMlMpICs9IHNuZC1zb2MtYXRt
+ZWwtaTJzLm8NCj4gIG9iai0kKENPTkZJR19TTkRfTUNIUF9TT0NfSTJTX01DQykgKz0gc25kLXNv
+Yy1tY2hwLWkycy1tY2Mubw0KPiArb2JqLSQoQ09ORklHX1NORF9NQ0hQX1NPQ19TUERJRlRYKSAr
+PSBzbmQtc29jLW1jaHAtc3BkaWZ0eC5vDQo+ICANCj4gICMgQVQ5MSBNYWNoaW5lIFN1cHBvcnQN
+Cj4gIHNuZC1zb2Mtc2FtOWcyMC13bTg3MzEtb2JqcyA6PSBzYW05ZzIwX3dtODczMS5vDQo+IGRp
+ZmYgLS1naXQgYS9zb3VuZC9zb2MvYXRtZWwvbWNocC1zcGRpZnR4LmMgYi9zb3VuZC9zb2MvYXRt
+ZWwvbWNocC1zcGRpZnR4LmMNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAw
+MDAwMDAwLi43MzhmNjc4ODIxMmUNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9zb3VuZC9zb2Mv
+YXRtZWwvbWNocC1zcGRpZnR4LmMNCj4gQEAgLTAsMCArMSw4NjQgQEANCj4gKy8vIFNQRFgtTGlj
+ZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ICsvLw0KPiArLy8gRHJpdmVyIGZvciBNaWNyb2No
+aXAgUy9QRElGIFRYIENvbnRyb2xsZXINCj4gKy8vDQo+ICsvLyBDb3B5cmlnaHQgKEMpIDIwMjAg
+TWljcm9jaGlwIFRlY2hub2xvZ3kgSW5jLiBhbmQgaXRzIHN1YnNpZGlhcmllcw0KPiArLy8NCj4g
+Ky8vIEF1dGhvcjogQ29kcmluIENpdWJvdGFyaXUgPGNvZHJpbi5jaXVib3Rhcml1QG1pY3JvY2hp
+cC5jb20+DQo+ICsNCj4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gKyNpbmNsdWRlIDxsaW51
+eC9pby5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4
+L3NwaW5sb2NrLmg+DQo+ICsNCj4gKyNpbmNsdWRlIDxzb3VuZC9hc291bmRlZi5oPg0KPiArI2lu
+Y2x1ZGUgPHNvdW5kL2RtYWVuZ2luZV9wY20uaD4NCj4gKyNpbmNsdWRlIDxzb3VuZC9wY21fcGFy
+YW1zLmg+DQo+ICsjaW5jbHVkZSA8c291bmQvc29jLmg+DQo+ICsNCj4gKy8qDQo+ICsgKiAtLS0t
+IFMvUERJRiBUcmFuc21pdHRlciBDb250cm9sbGVyIFJlZ2lzdGVyIG1hcCAtLS0tDQo+ICsgKi8N
+Cj4gKyNkZWZpbmUgU1BESUZUWF9DUgkJCTB4MDAJLyogQ29udHJvbCBSZWdpc3RlciAqLw0KPiAr
+I2RlZmluZSBTUERJRlRYX01SCQkJMHgwNAkvKiBNb2RlIFJlZ2lzdGVyICovDQoNClRoaXMgcmVn
+aXN0ZXIgaXMgcmVhZC93cml0ZSBlaXRoZXIgaW4gYXRvbWljIGFuZCBub24tYXRvbWljIGNvbnRl
+eHRlcyBidXQNCm5vdCBwcm90ZWN0ZWQgZXZlcnl3aGVyZSB0aGUgc2FtZSB3YXkuDQoNCj4gKyNk
+ZWZpbmUgU1BESUZUWF9DRFIJCQkweDBDCS8qIENvbW1vbiBEYXRhIFJlZ2lzdGVyICovDQo+ICsN
+Cj4gKyNkZWZpbmUgU1BESUZUWF9JRVIJCQkweDE0CS8qIEludGVycnVwdCBFbmFibGUgUmVnaXN0
+ZXIgKi8NCj4gKyNkZWZpbmUgU1BESUZUWF9JRFIJCQkweDE4CS8qIEludGVycnVwdCBEaXNhYmxl
+IFJlZ2lzdGVyICovDQo+ICsjZGVmaW5lIFNQRElGVFhfSU1SCQkJMHgxQwkvKiBJbnRlcnJ1cHQg
+TWFzayBSZWdpc3RlciAqLw0KPiArI2RlZmluZSBTUERJRlRYX0lTUgkJCTB4MjAJLyogSW50ZXJy
+dXB0IFN0YXR1cyBSZWdpc3RlciAqLw0KPiArDQo+ICsjZGVmaW5lIFNQRElGVFhfQ0gxVUQocmVn
+KQkoMHg1MCArIChyZWcpICogNCkJLyogVXNlciBEYXRhIDEgUmVnaXN0ZXIgeCAqLw0KPiArI2Rl
+ZmluZSBTUERJRlRYX0NIMVMocmVnKQkoMHg4MCArIChyZWcpICogNCkJLyogQ2hhbm5lbCBTdGF0
+dXMgMSBSZWdpc3RlciB4ICovDQo+ICsNCj4gKyNkZWZpbmUgU1BESUZUWF9WRVJTSU9OCQkJMHhG
+MA0KPiArDQo+ICsvKg0KPiArICogLS0tLSBDb250cm9sIFJlZ2lzdGVyIChXcml0ZS1vbmx5KSAt
+LS0tDQo+ICsgKi8NCj4gKyNkZWZpbmUgU1BESUZUWF9DUl9TV1JTVAkJQklUKDApCS8qIFNvZnR3
+YXJlIFJlc2V0ICovDQo+ICsjZGVmaW5lIFNQRElGVFhfQ1JfRkNMUgkJCUJJVCgxKQkvKiBGSUZP
+IGNsZWFyICovDQo+ICsNCj4gKy8qDQo+ICsgKiAtLS0tIE1vZGUgUmVnaXN0ZXIgKFJlYWQvV3Jp
+dGUpIC0tLS0NCj4gKyAqLw0KPiArLyogVHJhbnNtaXQgRW5hYmxlICovDQo+ICsjZGVmaW5lIFNQ
+RElGVFhfTVJfVFhFTl9NQVNLCQlHRU5NQVNLKDAsIDApDQo+ICsjZGVmaW5lIFNQRElGVFhfTVJf
+VFhFTl9ESVNBQkxFCQkoMCA8PCAwKQ0KPiArI2RlZmluZSBTUERJRlRYX01SX1RYRU5fRU5BQkxF
+CQkoMSA8PCAwKQ0KPiArDQo+ICsvKiBNdWx0aWNoYW5uZWwgVHJhbnNmZXIgKi8NCj4gKyNkZWZp
+bmUgU1BESUZUWF9NUl9NVUxUSUNIX01BU0sJCUdFTkFNU0soMSwgMSkNCj4gKyNkZWZpbmUgU1BE
+SUZUWF9NUl9NVUxUSUNIX01PTk8JCSgwIDw8IDEpDQo+ICsjZGVmaW5lIFNQRElGVFhfTVJfTVVM
+VElDSF9EVUFMCQkoMSA8PCAxKQ0KPiArDQo+ICsvKiBEYXRhIFdvcmQgRW5kaWFuIE1vZGUgKi8N
+Cj4gKyNkZWZpbmUgU1BESUZUWF9NUl9FTkRJQU5fTUFTSwkJR0VOTUFTSygyLCAyKQ0KPiArI2Rl
+ZmluZSBTUERJRlRYX01SX0VORElBTl9MSVRUTEUJKDAgPDwgMikNCj4gKyNkZWZpbmUgU1BESUZU
+WF9NUl9FTkRJQU5fQklHCQkoMSA8PCAyKQ0KPiArDQo+ICsvKiBEYXRhIEp1c3RpZmljYXRpb24g
+Ki8NCj4gKyNkZWZpbmUgU1BESUZUWF9NUl9KVVNUSUZZX01BU0sJCUdFTk1BU0soMywgMykNCj4g
+KyNkZWZpbmUgU1BESUZUWF9NUl9KVVNUSUZZX0xTQgkJKDAgPDwgMykNCj4gKyNkZWZpbmUgU1BE
+SUZUWF9NUl9KVVNUSUZZX01TQgkJKDEgPDwgMykNCj4gKw0KPiArLyogQ29tbW9uIEF1ZGlvIFJl
+Z2lzdGVyIFRyYW5zZmVyIE1vZGUgKi8NCj4gKyNkZWZpbmUgU1BESUZUWF9NUl9DTU9ERV9NQVNL
+CQkJR0VOTUFTSyg1LCA0KQ0KPiArI2RlZmluZSBTUERJRlRYX01SX0NNT0RFX0lOREVYX0FDQ0VT
+UwkJKDAgPDwgNCkNCj4gKyNkZWZpbmUgU1BESUZUWF9NUl9DTU9ERV9UT0dHTEVfQUNDRVNTCQko
+MSA8PCA0KQ0KPiArI2RlZmluZSBTUERJRlRYX01SX0NNT0RFX0lOVEVSTFZEX0FDQ0VTUwkoMiA8
+PCA0KQ0KPiArDQo+ICsvKiBWYWxpZCBCaXRzIHBlciBTYW1wbGUgKi8NCj4gKyNkZWZpbmUgU1BE
+SUZUWF9NUl9WQlBTX01BU0sJCUdFTk1BU0soMTMsIDgpDQo+ICsjZGVmaW5lIFNQRElGVFhfTVJf
+VkJQUyhicHMpCQkoKChicHMpIDw8IDgpICYgU1BESUZUWF9NUl9WQlBTX01BU0spDQo+ICsNCj4g
+Ky8qIENodW5rIFNpemUgKi8NCj4gKyNkZWZpbmUgU1BESUZUWF9NUl9DSFVOS19NQVNLCQlHRU5N
+QVNLKDE5LCAxNikNCj4gKyNkZWZpbmUgU1BESUZUWF9NUl9DSFVOSyhzaXplKQkJKCgoc2l6ZSkg
+PDwgMTYpICYgU1BESUZUWF9NUl9DSFVOS19NQVNLKQ0KPiArDQo+ICsvKiBWYWxpZGl0eSBCaXRz
+IGZvciBDaGFubmVscyAxIGFuZCAyICovDQo+ICsjZGVmaW5lIFNQRElGVFhfTVJfVkFMSUQxCQkJ
+QklUKDI0KQ0KPiArI2RlZmluZSBTUERJRlRYX01SX1ZBTElEMgkJCUJJVCgyNSkNCj4gKw0KPiAr
+LyogRGlzYWJsZSBOdWxsIEZyYW1lIG9uIHVuZGVycnJ1biAqLw0KPiArI2RlZmluZSBTUERJRlRY
+X01SX0RORlJfTUFTSwkJR0VOTUFTSygyNywgMjcpDQo+ICsjZGVmaW5lIFNQRElGVFhfTVJfRE5G
+Ul9JTlZBTElECQkoMCA8PCAyNykNCj4gKyNkZWZpbmUgU1BESUZUWF9NUl9ETkZSX1ZBTElECQko
+MSA8PCAyNykNCj4gKw0KPiArLyogQnl0ZXMgcGVyIFNhbXBsZSAqLw0KPiArI2RlZmluZSBTUERJ
+RlRYX01SX0JQU19NQVNLCQlHRU5NQVNLKDI5LCAyOCkNCj4gKyNkZWZpbmUgU1BESUZUWF9NUl9C
+UFMoYnl0ZXMpIFwNCj4gKwkoKCgoYnl0ZXMpIC0gMSkgPDwgMjgpICYgU1BESUZUWF9NUl9CUFNf
+TUFTSykNCj4gKw0KPiArLyoNCj4gKyAqIC0tLS0gSW50ZXJydXB0IEVuYWJsZS9EaXNhYmxlL01h
+c2svU3RhdHVzIFJlZ2lzdGVyIChXcml0ZS9SZWFkLW9ubHkpIC0tLS0NCj4gKyAqLw0KPiArI2Rl
+ZmluZSBTUERJRlRYX0lSX1RYUkRZCQlCSVQoMCkNCj4gKyNkZWZpbmUgU1BESUZUWF9JUl9UWEVN
+UFRZCQlCSVQoMSkNCj4gKyNkZWZpbmUgU1BESUZUWF9JUl9UWEZVTEwJCUJJVCgyKQ0KPiArI2Rl
+ZmluZSBTUERJRlRYX0lSX1RYQ0hVTksJCUJJVCgzKQ0KPiArI2RlZmluZSBTUERJRlRYX0lSX1RY
+VURSCQlCSVQoNCkNCj4gKyNkZWZpbmUgU1BESUZUWF9JUl9UWE9WUgkJQklUKDUpDQo+ICsjZGVm
+aW5lIFNQRElGVFhfSVJfQ1NSRFkJCUJJVCg2KQ0KPiArI2RlZmluZSBTUERJRlRYX0lSX1VEUkRZ
+CQlCSVQoNykNCj4gKyNkZWZpbmUgU1BESUZUWF9JUl9UWFJEWUNIKGNoKQkJQklUKChjaCkgKyA4
+KQ0KPiArI2RlZmluZSBTUERJRlRYX0lSX1NFQ0UJCQlCSVQoMTApDQo+ICsjZGVmaW5lIFNQRElG
+VFhfSVJfVFhVRFJDSChjaCkJCUJJVCgoY2gpICsgMTEpDQo+ICsjZGVmaW5lIFNQRElGVFhfSVJf
+QkVORAkJCUJJVCgxMykNCj4gKw0KPiArc3RhdGljIGJvb2wgbWNocF9zcGRpZnR4X3JlYWRhYmxl
+X3JlZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCByZWcpDQo+ICt7DQo+ICsJc3dp
+dGNoIChyZWcpIHsNCj4gKwljYXNlIFNQRElGVFhfTVI6DQo+ICsJY2FzZSBTUERJRlRYX0lNUjoN
+Cj4gKwljYXNlIFNQRElGVFhfSVNSOg0KPiArCWNhc2UgU1BESUZUWF9DSDFVRCgwKToNCj4gKwlj
+YXNlIFNQRElGVFhfQ0gxVUQoMSk6DQo+ICsJY2FzZSBTUERJRlRYX0NIMVVEKDIpOg0KPiArCWNh
+c2UgU1BESUZUWF9DSDFVRCgzKToNCj4gKwljYXNlIFNQRElGVFhfQ0gxVUQoNCk6DQo+ICsJY2Fz
+ZSBTUERJRlRYX0NIMVVEKDUpOg0KPiArCWNhc2UgU1BESUZUWF9DSDFTKDApOg0KPiArCWNhc2Ug
+U1BESUZUWF9DSDFTKDEpOg0KPiArCWNhc2UgU1BESUZUWF9DSDFTKDIpOg0KPiArCWNhc2UgU1BE
+SUZUWF9DSDFTKDMpOg0KPiArCWNhc2UgU1BESUZUWF9DSDFTKDQpOg0KPiArCWNhc2UgU1BESUZU
+WF9DSDFTKDUpOg0KPiArCQlyZXR1cm4gdHJ1ZTsNCj4gKwlkZWZhdWx0Og0KPiArCQlyZXR1cm4g
+ZmFsc2U7DQo+ICsJfQ0KPiArfQ0KPiArDQo+ICtzdGF0aWMgYm9vbCBtY2hwX3NwZGlmdHhfd3Jp
+dGVhYmxlX3JlZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCByZWcpDQo+ICt7DQo+
+ICsJc3dpdGNoIChyZWcpIHsNCj4gKwljYXNlIFNQRElGVFhfQ1I6DQo+ICsJY2FzZSBTUERJRlRY
+X01SOg0KPiArCWNhc2UgU1BESUZUWF9DRFI6DQo+ICsJY2FzZSBTUERJRlRYX0lFUjoNCj4gKwlj
+YXNlIFNQRElGVFhfSURSOg0KPiArCWNhc2UgU1BESUZUWF9DSDFVRCgwKToNCj4gKwljYXNlIFNQ
+RElGVFhfQ0gxVUQoMSk6DQo+ICsJY2FzZSBTUERJRlRYX0NIMVVEKDIpOg0KPiArCWNhc2UgU1BE
+SUZUWF9DSDFVRCgzKToNCj4gKwljYXNlIFNQRElGVFhfQ0gxVUQoNCk6DQo+ICsJY2FzZSBTUERJ
+RlRYX0NIMVVEKDUpOg0KPiArCWNhc2UgU1BESUZUWF9DSDFTKDApOg0KPiArCWNhc2UgU1BESUZU
+WF9DSDFTKDEpOg0KPiArCWNhc2UgU1BESUZUWF9DSDFTKDIpOg0KPiArCWNhc2UgU1BESUZUWF9D
+SDFTKDMpOg0KPiArCWNhc2UgU1BESUZUWF9DSDFTKDQpOg0KPiArCWNhc2UgU1BESUZUWF9DSDFT
+KDUpOg0KPiArCQlyZXR1cm4gdHJ1ZTsNCj4gKwlkZWZhdWx0Og0KPiArCQlyZXR1cm4gZmFsc2U7
+DQo+ICsJfQ0KPiArfQ0KPiArDQo+ICtzdGF0aWMgYm9vbCBtY2hwX3NwZGlmdHhfcHJlY2lvdXNf
+cmVnKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHJlZykNCj4gK3sNCj4gKwlzd2l0
+Y2ggKHJlZykgew0KPiArCWNhc2UgU1BESUZUWF9DRFI6DQo+ICsJY2FzZSBTUERJRlRYX0lTUjoN
+Cj4gKwkJcmV0dXJuIHRydWU7DQo+ICsJZGVmYXVsdDoNCj4gKwkJcmV0dXJuIGZhbHNlOw0KPiAr
+CX0NCj4gK30NCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfY29uZmlnIG1jaHBf
+c3BkaWZ0eF9yZWdtYXBfY29uZmlnID0gew0KPiArCS5yZWdfYml0cyA9IDMyLA0KPiArCS5yZWdf
+c3RyaWRlID0gNCwNCj4gKwkudmFsX2JpdHMgPSAzMiwNCj4gKwkubWF4X3JlZ2lzdGVyID0gU1BE
+SUZUWF9WRVJTSU9OLA0KPiArCS5yZWFkYWJsZV9yZWcgPSBtY2hwX3NwZGlmdHhfcmVhZGFibGVf
+cmVnLA0KPiArCS53cml0ZWFibGVfcmVnID0gbWNocF9zcGRpZnR4X3dyaXRlYWJsZV9yZWcsDQo+
+ICsJLnByZWNpb3VzX3JlZyA9IG1jaHBfc3BkaWZ0eF9wcmVjaW91c19yZWcsDQo+ICt9Ow0KPiAr
+DQo+ICsjZGVmaW5lIFNQRElGVFhfR0NMS19SQVRJTwkxMjgNCj4gKw0KPiArI2RlZmluZSBTUERJ
+RlRYX0NTX0JJVFMJCTE5Mg0KPiArI2RlZmluZSBTUERJRlRYX1VEX0JJVFMJCTE5Mg0KPiArDQo+
+ICtzdHJ1Y3QgbWNocF9zcGRpZnR4X21peGVyX2NvbnRyb2wgew0KPiArCXVuc2lnbmVkIGNoYXIJ
+CQkJY2hfc3RhdFtTUERJRlRYX0NTX0JJVFMgLyA4XTsNCj4gKwl1bnNpZ25lZCBjaGFyCQkJCXVz
+ZXJfZGF0YVtTUERJRlRYX1VEX0JJVFMgLyA4XTsNCj4gKwlzcGlubG9ja190CQkJCWxvY2s7DQo+
+ICt9Ow0KPiArDQo+ICtzdHJ1Y3QgbWNocF9zcGRpZnR4X2RldiB7DQo+ICsJc3RydWN0IG1jaHBf
+c3BkaWZ0eF9taXhlcl9jb250cm9sCWNvbnRyb2w7DQo+ICsJc3RydWN0IHNuZF9kbWFlbmdpbmVf
+ZGFpX2RtYV9kYXRhCXBsYXliYWNrOw0KPiArCXN0cnVjdCBkZXZpY2UJCQkJKmRldjsNCj4gKwlz
+dHJ1Y3QgcmVnbWFwCQkJCSpyZWdtYXA7DQo+ICsJc3RydWN0IGNsawkJCQkqcGNsazsNCj4gKwlz
+dHJ1Y3QgY2xrCQkJCSpnY2xrOw0KPiArCXVuc2lnbmVkIGludAkJCQlmbXQ7DQo+ICsJY29uc3Qg
+c3RydWN0IG1jaHBfaTJzX2NhcHMJCSpjYXBzOw0KPiArCWludAkJCQkJZ2Nsa19lbmFibGVkOjE7
+DQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgaW5saW5lIGludCBtY2hwX3NwZGlmdHhfaXNfcnVubmlu
+ZyhzdHJ1Y3QgbWNocF9zcGRpZnR4X2RldiAqZGV2KQ0KPiArew0KPiArCXUzMiBtcjsNCj4gKw0K
+PiArCXJlZ21hcF9yZWFkKGRldi0+cmVnbWFwLCBTUERJRlRYX01SLCAmbXIpOw0KPiArCXJldHVy
+biAhIShtciAmIFNQRElGVFhfTVJfVFhFTl9FTkFCTEUpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMg
+dm9pZCBtY2hwX3NwZGlmdHhfY2hhbm5lbF9zdGF0dXNfd3JpdGUoc3RydWN0IG1jaHBfc3BkaWZ0
+eF9kZXYgKmRldikNCj4gK3sNCj4gKwlzdHJ1Y3QgbWNocF9zcGRpZnR4X21peGVyX2NvbnRyb2wg
+KmN0cmwgPSAmZGV2LT5jb250cm9sOw0KPiArCXUzMiB2YWw7DQo+ICsJaW50IGk7DQo+ICsNCj4g
+Kwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShjdHJsLT5jaF9zdGF0KSAvIDQ7IGkrKykgew0K
+PiArCQl2YWwgPSAoY3RybC0+Y2hfc3RhdFsoaSAqIDQpICsgMF0gPDwgMCkgfA0KPiArCQkgICAg
+ICAoY3RybC0+Y2hfc3RhdFsoaSAqIDQpICsgMV0gPDwgOCkgfA0KPiArCQkgICAgICAoY3RybC0+
+Y2hfc3RhdFsoaSAqIDQpICsgMl0gPDwgMTYpIHwNCj4gKwkJICAgICAgKGN0cmwtPmNoX3N0YXRb
+KGkgKiA0KSArIDNdIDw8IDI0KTsNCj4gKw0KPiArCQlyZWdtYXBfd3JpdGUoZGV2LT5yZWdtYXAs
+IFNQRElGVFhfQ0gxUyhpKSwgdmFsKTsNCj4gKwl9DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lk
+IG1jaHBfc3BkaWZ0eF91c2VyX2RhdGFfd3JpdGUoc3RydWN0IG1jaHBfc3BkaWZ0eF9kZXYgKmRl
+dikNCj4gK3sNCj4gKwlzdHJ1Y3QgbWNocF9zcGRpZnR4X21peGVyX2NvbnRyb2wgKmN0cmwgPSAm
+ZGV2LT5jb250cm9sOw0KPiArCXUzMiB2YWw7DQo+ICsJaW50IGk7DQo+ICsNCj4gKwlmb3IgKGkg
+PSAwOyBpIDwgQVJSQVlfU0laRShjdHJsLT51c2VyX2RhdGEpIC8gNDsgaSsrKSB7DQo+ICsJCXZh
+bCA9IChjdHJsLT51c2VyX2RhdGFbKGkgKiA0KSArIDBdIDw8IDApIHwNCj4gKwkJICAgICAgKGN0
+cmwtPnVzZXJfZGF0YVsoaSAqIDQpICsgMV0gPDwgOCkgfA0KPiArCQkgICAgICAoY3RybC0+dXNl
+cl9kYXRhWyhpICogNCkgKyAyXSA8PCAxNikgfA0KPiArCQkgICAgICAoY3RybC0+dXNlcl9kYXRh
+WyhpICogNCkgKyAzXSA8PCAyNCk7DQo+ICsNCj4gKwkJcmVnbWFwX3dyaXRlKGRldi0+cmVnbWFw
+LCBTUERJRlRYX0NIMVVEKGkpLCB2YWwpOw0KPiArCX0NCj4gK30NCj4gKw0KPiArc3RhdGljIGly
+cXJldHVybl90IG1jaHBfc3BkaWZ0eF9pbnRlcnJ1cHQoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0K
+PiArew0KPiArCXN0cnVjdCBtY2hwX3NwZGlmdHhfZGV2ICpkZXYgPSBkZXZfaWQ7DQo+ICsJc3Ry
+dWN0IG1jaHBfc3BkaWZ0eF9taXhlcl9jb250cm9sICpjdHJsID0gJmRldi0+Y29udHJvbDsNCj4g
+Kwl1MzIgc3IsIGltciwgcGVuZGluZywgaWRyID0gMDsNCj4gKw0KPiArCXJlZ21hcF9yZWFkKGRl
+di0+cmVnbWFwLCBTUERJRlRYX0lTUiwgJnNyKTsNCj4gKwlyZWdtYXBfcmVhZChkZXYtPnJlZ21h
+cCwgU1BESUZUWF9JTVIsICZpbXIpOw0KPiArCXBlbmRpbmcgPSBzciAmIGltcjsNCj4gKw0KPiAr
+CWlmICghcGVuZGluZykNCj4gKwkJcmV0dXJuIElSUV9OT05FOw0KPiArDQo+ICsJaWYgKHBlbmRp
+bmcgJiBTUERJRlRYX0lSX1RYVURSKSB7DQo+ICsJCWRldl93YXJuKGRldi0+ZGV2LCAidW5kZXJm
+bG93IGRldGVjdGVkXG4iKTsNCj4gKwkJaWRyIHw9IFNQRElGVFhfSVJfVFhVRFI7DQo+ICsJfQ0K
+PiArDQo+ICsJaWYgKHBlbmRpbmcgJiBTUERJRlRYX0lSX1RYT1ZSKSB7DQo+ICsJCWRldl93YXJu
+KGRldi0+ZGV2LCAib3ZlcmZsb3cgZGV0ZWN0ZWRcbiIpOw0KPiArCQlpZHIgfD0gU1BESUZUWF9J
+Ul9UWE9WUjsNCj4gKwl9DQo+ICsNCj4gKwlpZiAocGVuZGluZyAmIFNQRElGVFhfSVJfVURSRFkp
+IHsNCj4gKwkJc3Bpbl9sb2NrKCZjdHJsLT5sb2NrKTsNCj4gKwkJbWNocF9zcGRpZnR4X3VzZXJf
+ZGF0YV93cml0ZShkZXYpOw0KPiArCQlzcGluX3VubG9jaygmY3RybC0+bG9jayk7DQo+ICsJCWlk
+ciB8PSBTUERJRlRYX0lSX1VEUkRZOw0KPiArCX0NCj4gKw0KPiArCWlmIChwZW5kaW5nICYgU1BE
+SUZUWF9JUl9DU1JEWSkgew0KPiArCQlzcGluX2xvY2soJmN0cmwtPmxvY2spOw0KPiArCQltY2hw
+X3NwZGlmdHhfY2hhbm5lbF9zdGF0dXNfd3JpdGUoZGV2KTsNCj4gKwkJc3Bpbl91bmxvY2soJmN0
+cmwtPmxvY2spOw0KPiArCQlpZHIgfD0gU1BESUZUWF9JUl9DU1JEWTsNCj4gKwl9DQo+ICsNCj4g
+KwlyZWdtYXBfd3JpdGUoZGV2LT5yZWdtYXAsIFNQRElGVFhfSURSLCBpZHIpOw0KPiArDQo+ICsJ
+cmV0dXJuIElSUV9IQU5ETEVEOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IG1jaHBfc3BkaWZ0
+eF9kYWlfc3RhcnR1cChzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwNCj4gKwkJ
+CQkgICAgc3RydWN0IHNuZF9zb2NfZGFpICpkYWkpDQo+ICt7DQo+ICsJc3RydWN0IG1jaHBfc3Bk
+aWZ0eF9kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7DQo+ICsJaW50IGVy
+cjsNCj4gKw0KPiArCWVyciA9IGNsa19wcmVwYXJlX2VuYWJsZShkZXYtPnBjbGspOw0KPiArCWlm
+IChlcnIpIHsNCj4gKwkJZGV2X2VycihkZXYtPmRldiwNCj4gKwkJCSJmYWlsZWQgdG8gZW5hYmxl
+IHRoZSBwZXJpcGhlcmFsIGNsb2NrOiAlZFxuIiwgZXJyKTsNCj4gKwkJcmV0dXJuIGVycjsNCj4g
+Kwl9DQo+ICsNCj4gKwkvKiBTb2Z0d2FyZSByZXNldCB0aGUgSVAgKi8NCj4gKwlyZWdtYXBfd3Jp
+dGUoZGV2LT5yZWdtYXAsIFNQRElGVFhfQ1IsDQo+ICsJCSAgICAgU1BESUZUWF9DUl9TV1JTVCB8
+IFNQRElGVFhfQ1JfRkNMUik7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3Rh
+dGljIHZvaWQgbWNocF9zcGRpZnR4X2RhaV9zaHV0ZG93bihzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJl
+YW0gKnN1YnN0cmVhbSwNCj4gKwkJCQkgICAgICBzdHJ1Y3Qgc25kX3NvY19kYWkgKmRhaSkNCj4g
+K3sNCj4gKwlzdHJ1Y3QgbWNocF9zcGRpZnR4X2RldiAqZGV2ID0gc25kX3NvY19kYWlfZ2V0X2Ry
+dmRhdGEoZGFpKTsNCj4gKw0KPiArCS8qIERpc2FibGUgaW50ZXJydXB0cyAqLw0KPiArCXJlZ21h
+cF93cml0ZShkZXYtPnJlZ21hcCwgU1BESUZUWF9JRFIsIDB4ZmZmZmZmZmYpOw0KPiArDQo+ICsJ
+Y2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRldi0+cGNsayk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBp
+bnQgbWNocF9zcGRpZnR4X3RyaWdnZXIoc3RydWN0IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJl
+YW0sIGludCBjbWQsDQo+ICsJCQkJc3RydWN0IHNuZF9zb2NfZGFpICpkYWkpDQo+ICt7DQo+ICsJ
+c3RydWN0IG1jaHBfc3BkaWZ0eF9kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRh
+aSk7DQo+ICsJc3RydWN0IG1jaHBfc3BkaWZ0eF9taXhlcl9jb250cm9sICpjdHJsID0gJmRldi0+
+Y29udHJvbDsNCj4gKwl1MzIgbXI7DQo+ICsJaW50IHJ1bm5pbmc7DQo+ICsJaW50IHJldDsNCj4g
+Kw0KPiArCS8qIGRvIG5vdCBzdGFydC9zdG9wIHdoaWxlIGNoYW5uZWwgc3RhdHVzIG9yIHVzZXIg
+ZGF0YSBpcyB1cGRhdGVkICovDQo+ICsJc3Bpbl9sb2NrKCZjdHJsLT5sb2NrKTsNCj4gKwlyZWdt
+YXBfcmVhZChkZXYtPnJlZ21hcCwgU1BESUZUWF9NUiwgJm1yKTsNCg0KSGVyZSwgYXRvbWljLCBm
+b3IgaW5zdGFuY2UuDQoNCj4gKwlydW5uaW5nID0gISEobXIgJiBTUERJRlRYX01SX1RYRU5fRU5B
+QkxFKTsNCj4gKw0KPiArCXN3aXRjaCAoY21kKSB7DQo+ICsJY2FzZSBTTkRSVl9QQ01fVFJJR0dF
+Ul9TVEFSVDoNCj4gKwljYXNlIFNORFJWX1BDTV9UUklHR0VSX1JFU1VNRToNCj4gKwljYXNlIFNO
+RFJWX1BDTV9UUklHR0VSX1BBVVNFX1JFTEVBU0U6DQo+ICsJCWlmICghcnVubmluZykgew0KPiAr
+CQkJbXIgJj0gflNQRElGVFhfTVJfVFhFTl9NQVNLOw0KPiArCQkJbXIgfD0gU1BESUZUWF9NUl9U
+WEVOX0VOQUJMRTsNCj4gKwkJfQ0KPiArCQlicmVhazsNCj4gKwljYXNlIFNORFJWX1BDTV9UUklH
+R0VSX1NUT1A6DQo+ICsJY2FzZSBTTkRSVl9QQ01fVFJJR0dFUl9TVVNQRU5EOg0KPiArCWNhc2Ug
+U05EUlZfUENNX1RSSUdHRVJfUEFVU0VfUFVTSDoNCj4gKwkJaWYgKHJ1bm5pbmcpIHsNCj4gKwkJ
+CW1yICY9IH5TUERJRlRYX01SX1RYRU5fTUFTSzsNCj4gKwkJCW1yIHw9IFNQRElGVFhfTVJfVFhF
+Tl9ESVNBQkxFOw0KPiArCQl9DQo+ICsJCWJyZWFrOw0KPiArCWRlZmF1bHQ6DQo+ICsJCXNwaW5f
+dW5sb2NrKCZjdHJsLT5sb2NrKTsNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJfQ0KPiArDQo+
+ICsJcmV0ID0gcmVnbWFwX3dyaXRlKGRldi0+cmVnbWFwLCBTUERJRlRYX01SLCBtcik7DQo+ICsJ
+c3Bpbl91bmxvY2soJmN0cmwtPmxvY2spOw0KPiArCWlmIChyZXQpIHsNCj4gKwkJZGV2X2Vycihk
+ZXYtPmRldiwgInVuYWJsZSB0byBkaXNhYmxlIFRYOiAlZFxuIiwgcmV0KTsNCj4gKwkJcmV0dXJu
+IHJldDsNCj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGlu
+dCBtY2hwX3NwZGlmdHhfaHdfcGFyYW1zKHN0cnVjdCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3Ry
+ZWFtLA0KPiArCQkJCSAgc3RydWN0IHNuZF9wY21faHdfcGFyYW1zICpwYXJhbXMsDQo+ICsJCQkJ
+ICBzdHJ1Y3Qgc25kX3NvY19kYWkgKmRhaSkNCj4gK3sNCj4gKwl1bnNpZ25lZCBsb25nIGZsYWdz
+Ow0KPiArCXN0cnVjdCBtY2hwX3NwZGlmdHhfZGV2ICpkZXYgPSBzbmRfc29jX2RhaV9nZXRfZHJ2
+ZGF0YShkYWkpOw0KPiArCXN0cnVjdCBtY2hwX3NwZGlmdHhfbWl4ZXJfY29udHJvbCAqY3RybCA9
+ICZkZXYtPmNvbnRyb2w7DQo+ICsJdTMyIG1yOw0KPiArCXVuc2lnbmVkIGludCBicHMgPSBwYXJh
+bXNfcGh5c2ljYWxfd2lkdGgocGFyYW1zKSAvIDg7DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCWRl
+dl9kYmcoZGV2LT5kZXYsICIlcygpIHJhdGU9JXUgZm9ybWF0PSUjeCB3aWR0aD0ldSBjaGFubmVs
+cz0ldVxuIiwNCj4gKwkJX19mdW5jX18sIHBhcmFtc19yYXRlKHBhcmFtcyksIHBhcmFtc19mb3Jt
+YXQocGFyYW1zKSwNCj4gKwkJcGFyYW1zX3dpZHRoKHBhcmFtcyksIHBhcmFtc19jaGFubmVscyhw
+YXJhbXMpKTsNCj4gKw0KPiArCWlmIChzdWJzdHJlYW0tPnN0cmVhbSA9PSBTTkRSVl9QQ01fU1RS
+RUFNX0NBUFRVUkUpIHsNCj4gKwkJZGV2X2VycihkZXYtPmRldiwgIkNhcHR1cmUgaXMgbm90IHN1
+cHBvcnRlZFxuIik7DQo+ICsJCXJldHVybiAtRUlOVkFMOw0KPiArCX0NCj4gKw0KPiArCXJlZ21h
+cF9yZWFkKGRldi0+cmVnbWFwLCBTUERJRlRYX01SLCAmbXIpOw0KDQpIZXJlIG5vbi1hdG9taWMu
+DQoNCj4gKw0KPiArCWlmIChtciAmIFNQRElGVFhfTVJfVFhFTl9FTkFCTEUpIHsNCj4gKwkJZGV2
+X2VycihkZXYtPmRldiwgIlBDTSBhbHJlYWR5IHJ1bm5pbmdcbiIpOw0KPiArCQlyZXR1cm4gLUVC
+VVNZOw0KPiArCX0NCj4gKw0KPiArCS8qIERlZmF1bHRzOiBUb2dnbGUgbW9kZSwganVzdGlmeSB0
+byBMU0IsIGNodW5rc2l6ZSAxICovDQo+ICsJbXIgPSBTUERJRlRYX01SX0NNT0RFX1RPR0dMRV9B
+Q0NFU1MgfCBTUERJRlRYX01SX0pVU1RJRllfTFNCOw0KPiArCWRldi0+cGxheWJhY2subWF4YnVy
+c3QgPSAxOw0KPiArCXN3aXRjaCAocGFyYW1zX2NoYW5uZWxzKHBhcmFtcykpIHsNCj4gKwljYXNl
+IDE6DQo+ICsJCW1yIHw9IFNQRElGVFhfTVJfTVVMVElDSF9NT05POw0KPiArCQlicmVhazsNCj4g
+KwljYXNlIDI6DQo+ICsJCW1yIHw9IFNQRElGVFhfTVJfTVVMVElDSF9EVUFMOw0KPiArCQlpZiAo
+YnBzID4gMikNCj4gKwkJCWRldi0+cGxheWJhY2subWF4YnVyc3QgPSAyOw0KPiArCQlicmVhazsN
+Cj4gKwlkZWZhdWx0Og0KPiArCQlkZXZfZXJyKGRldi0+ZGV2LCAidW5zdXBwb3J0ZWQgbnVtYmVy
+IG9mIGNoYW5uZWxzOiAlZFxuIiwNCj4gKwkJCXBhcmFtc19jaGFubmVscyhwYXJhbXMpKTsNCj4g
+KwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJfQ0KPiArCW1yIHw9IFNQRElGVFhfTVJfQ0hVTksoZGV2
+LT5wbGF5YmFjay5tYXhidXJzdCk7DQo+ICsNCj4gKwlzd2l0Y2ggKHBhcmFtc19mb3JtYXQocGFy
+YW1zKSkgew0KPiArCWNhc2UgU05EUlZfUENNX0ZPUk1BVF9TODoNCj4gKwkJbXIgfD0gU1BESUZU
+WF9NUl9WQlBTKDgpOw0KPiArCQlicmVhazsNCj4gKwljYXNlIFNORFJWX1BDTV9GT1JNQVRfUzE2
+X0JFOg0KPiArCQltciB8PSBTUERJRlRYX01SX0VORElBTl9CSUc7DQo+ICsJCWZhbGx0aHJvdWdo
+Ow0KPiArCWNhc2UgU05EUlZfUENNX0ZPUk1BVF9TMTZfTEU6DQo+ICsJCW1yIHw9IFNQRElGVFhf
+TVJfVkJQUygxNik7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgU05EUlZfUENNX0ZPUk1BVF9TMThf
+M0JFOg0KPiArCQltciB8PSBTUERJRlRYX01SX0VORElBTl9CSUc7DQo+ICsJCWZhbGx0aHJvdWdo
+Ow0KPiArCWNhc2UgU05EUlZfUENNX0ZPUk1BVF9TMThfM0xFOg0KPiArCQltciB8PSBTUERJRlRY
+X01SX1ZCUFMoMTgpOw0KPiArCQlicmVhazsNCj4gKwljYXNlIFNORFJWX1BDTV9GT1JNQVRfUzIw
+XzNCRToNCj4gKwkJbXIgfD0gU1BESUZUWF9NUl9FTkRJQU5fQklHOw0KPiArCQlmYWxsdGhyb3Vn
+aDsNCj4gKwljYXNlIFNORFJWX1BDTV9GT1JNQVRfUzIwXzNMRToNCj4gKwkJbXIgfD0gU1BESUZU
+WF9NUl9WQlBTKDIwKTsNCj4gKwkJYnJlYWs7DQo+ICsJY2FzZSBTTkRSVl9QQ01fRk9STUFUX1My
+NF8zQkU6DQo+ICsJCW1yIHw9IFNQRElGVFhfTVJfRU5ESUFOX0JJRzsNCj4gKwkJZmFsbHRocm91
+Z2g7DQo+ICsJY2FzZSBTTkRSVl9QQ01fRk9STUFUX1MyNF8zTEU6DQo+ICsJCW1yIHw9IFNQRElG
+VFhfTVJfVkJQUygyNCk7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgU05EUlZfUENNX0ZPUk1BVF9T
+MjRfQkU6DQo+ICsJCW1yIHw9IFNQRElGVFhfTVJfRU5ESUFOX0JJRzsNCj4gKwkJZmFsbHRocm91
+Z2g7DQo+ICsJY2FzZSBTTkRSVl9QQ01fRk9STUFUX1MyNF9MRToNCj4gKwkJbXIgfD0gU1BESUZU
+WF9NUl9WQlBTKDI0KTsNCj4gKwkJYnJlYWs7DQo+ICsJY2FzZSBTTkRSVl9QQ01fRk9STUFUX1Mz
+Ml9CRToNCj4gKwkJbXIgfD0gU1BESUZUWF9NUl9FTkRJQU5fQklHOw0KPiArCQlmYWxsdGhyb3Vn
+aDsNCj4gKwljYXNlIFNORFJWX1BDTV9GT1JNQVRfUzMyX0xFOg0KPiArCQltciB8PSBTUERJRlRY
+X01SX1ZCUFMoMzIpOw0KPiArCQlicmVhazsNCj4gKwlkZWZhdWx0Og0KPiArCQlkZXZfZXJyKGRl
+di0+ZGV2LCAidW5zdXBwb3J0ZWQgUENNIGZvcm1hdDogJWRcbiIsDQo+ICsJCQlwYXJhbXNfZm9y
+bWF0KHBhcmFtcykpOw0KPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gKwl9DQo+ICsNCj4gKwltciB8
+PSBTUERJRlRYX01SX0JQUyhicHMpOw0KPiArDQo+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJmN0cmwt
+PmxvY2ssIGZsYWdzKTsNCj4gKwljdHJsLT5jaF9zdGF0WzNdICY9IH5JRUM5NThfQUVTM19DT05f
+RlM7DQo+ICsJc3dpdGNoIChwYXJhbXNfcmF0ZShwYXJhbXMpKSB7DQo+ICsJY2FzZSAyMjA1MDoN
+Cj4gKwkJY3RybC0+Y2hfc3RhdFszXSB8PSBJRUM5NThfQUVTM19DT05fRlNfMjIwNTA7DQo+ICsJ
+CWJyZWFrOw0KPiArCWNhc2UgMjQwMDA6DQo+ICsJCWN0cmwtPmNoX3N0YXRbM10gfD0gSUVDOTU4
+X0FFUzNfQ09OX0ZTXzI0MDAwOw0KPiArCQlicmVhazsNCj4gKwljYXNlIDMyMDAwOg0KPiArCQlj
+dHJsLT5jaF9zdGF0WzNdIHw9IElFQzk1OF9BRVMzX0NPTl9GU18zMjAwMDsNCj4gKwkJYnJlYWs7
+DQo+ICsJY2FzZSA0NDEwMDoNCj4gKwkJY3RybC0+Y2hfc3RhdFszXSB8PSBJRUM5NThfQUVTM19D
+T05fRlNfNDQxMDA7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgNDgwMDA6DQo+ICsJCWN0cmwtPmNo
+X3N0YXRbM10gfD0gSUVDOTU4X0FFUzNfQ09OX0ZTXzQ4MDAwOw0KPiArCQlicmVhazsNCj4gKwlj
+YXNlIDg4MjAwOg0KPiArCQljdHJsLT5jaF9zdGF0WzNdIHw9IElFQzk1OF9BRVMzX0NPTl9GU184
+ODIwMDsNCj4gKwkJYnJlYWs7DQo+ICsJY2FzZSA5NjAwMDoNCj4gKwkJY3RybC0+Y2hfc3RhdFsz
+XSB8PSBJRUM5NThfQUVTM19DT05fRlNfOTYwMDA7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgMTc2
+NDAwOg0KPiArCQljdHJsLT5jaF9zdGF0WzNdIHw9IElFQzk1OF9BRVMzX0NPTl9GU18xNzY0MDA7
+DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgMTkyMDAwOg0KPiArCQljdHJsLT5jaF9zdGF0WzNdIHw9
+IElFQzk1OF9BRVMzX0NPTl9GU18xOTIwMDA7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgODAwMDoN
+Cj4gKwljYXNlIDExMDI1Og0KPiArCWNhc2UgMTYwMDA6DQo+ICsJY2FzZSA2NDAwMDoNCj4gKwkJ
+Y3RybC0+Y2hfc3RhdFszXSB8PSBJRUM5NThfQUVTM19DT05fRlNfTk9USUQ7DQo+ICsJCWJyZWFr
+Ow0KPiArCWRlZmF1bHQ6DQo+ICsJCWRldl9lcnIoZGV2LT5kZXYsICJ1bnN1cHBvcnRlZCBzYW1w
+bGUgZnJlcXVlbmN5OiAldVxuIiwNCj4gKwkJCXBhcmFtc19yYXRlKHBhcmFtcykpOw0KPiArCQlz
+cGluX3VubG9ja19pcnFyZXN0b3JlKCZjdHJsLT5sb2NrLCBmbGFncyk7DQo+ICsJCXJldHVybiAt
+RUlOVkFMOw0KPiArCX0NCj4gKwltY2hwX3NwZGlmdHhfY2hhbm5lbF9zdGF0dXNfd3JpdGUoZGV2
+KTsNCj4gKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZjdHJsLT5sb2NrLCBmbGFncyk7DQo+ICsJ
+bXIgfD0gU1BESUZUWF9NUl9WQUxJRDEgfCBTUERJRlRYX01SX1ZBTElEMjsNCj4gKw0KPiArCWlm
+IChkZXYtPmdjbGtfZW5hYmxlZCkgew0KPiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZGV2LT5n
+Y2xrKTsNCj4gKwkJZGV2LT5nY2xrX2VuYWJsZWQgPSAwOw0KPiArCX0NCj4gKwlyZXQgPSBjbGtf
+c2V0X3JhdGUoZGV2LT5nY2xrLCBwYXJhbXNfcmF0ZShwYXJhbXMpICoNCj4gKwkJCQkgICAgICBT
+UERJRlRYX0dDTEtfUkFUSU8pOw0KPiArCWlmIChyZXQpIHsNCj4gKwkJZGV2X2VycihkZXYtPmRl
+diwNCj4gKwkJCSJ1bmFibGUgdG8gY2hhbmdlIGdjbGsgcmF0ZSB0bzogcmF0ZSAldSAqIHJhdGlv
+ICV1XG4iLA0KPiArCQkJcGFyYW1zX3JhdGUocGFyYW1zKSwgU1BESUZUWF9HQ0xLX1JBVElPKTsN
+Cj4gKwkJcmV0dXJuIHJldDsNCj4gKwl9DQo+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRl
+di0+Z2Nsayk7DQo+ICsJaWYgKHJldCkgew0KPiArCQlkZXZfZXJyKGRldi0+ZGV2LCAidW5hYmxl
+IHRvIGVuYWJsZSBnY2xrOiAlZFxuIiwgcmV0KTsNCj4gKwkJcmV0dXJuIHJldDsNCj4gKwl9DQo+
+ICsJZGV2LT5nY2xrX2VuYWJsZWQgPSAxOw0KPiArCWRldl9kYmcoZGV2LT5kZXYsICIlcygpOiBH
+Q0xLIHNldCB0byAlZFxuIiwgX19mdW5jX18sDQo+ICsJCXBhcmFtc19yYXRlKHBhcmFtcykgKiBT
+UERJRlRYX0dDTEtfUkFUSU8pOw0KPiArDQo+ICsJLyogRW5hYmxlIGludGVycnVwdHMgKi8NCj4g
+KwlyZWdtYXBfd3JpdGUoZGV2LT5yZWdtYXAsIFNQRElGVFhfSUVSLA0KPiArCQkgICAgIFNQRElG
+VFhfSVJfVFhVRFIgfCBTUERJRlRYX0lSX1RYT1ZSKTsNCj4gKw0KPiArCXJlZ21hcF93cml0ZShk
+ZXYtPnJlZ21hcCwgU1BESUZUWF9NUiwgbXIpOw0KDQpTYW1lIGhlcmUuDQoNCj4gKw0KPiArCXJl
+dHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IG1jaHBfc3BkaWZ0eF9od19mcmVlKHN0
+cnVjdCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtLA0KPiArCQkJCXN0cnVjdCBzbmRfc29j
+X2RhaSAqZGFpKQ0KPiArew0KPiArCXN0cnVjdCBtY2hwX3NwZGlmdHhfZGV2ICpkZXYgPSBzbmRf
+c29jX2RhaV9nZXRfZHJ2ZGF0YShkYWkpOw0KPiArDQo+ICsJcmVnbWFwX3dyaXRlKGRldi0+cmVn
+bWFwLCBTUERJRlRYX0lEUiwNCj4gKwkJICAgICBTUERJRlRYX0lSX1RYVURSIHwgU1BESUZUWF9J
+Ul9UWE9WUik7DQo+ICsJaWYgKGRldi0+Z2Nsa19lbmFibGVkKSB7DQo+ICsJCWNsa19kaXNhYmxl
+X3VucHJlcGFyZShkZXYtPmdjbGspOw0KPiArCQlkZXYtPmdjbGtfZW5hYmxlZCA9IDA7DQo+ICsJ
+fQ0KPiArDQo+ICsJcmV0dXJuIHJlZ21hcF93cml0ZShkZXYtPnJlZ21hcCwgU1BESUZUWF9DUiwN
+Cj4gKwkJCSAgICBTUERJRlRYX0NSX1NXUlNUIHwgU1BESUZUWF9DUl9GQ0xSKTsNCj4gK30NCj4g
+Kw0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2NfZGFpX29wcyBtY2hwX3NwZGlm
+dHhfZGFpX29wcyA9IHsNCj4gKwkuc3RhcnR1cAk9IG1jaHBfc3BkaWZ0eF9kYWlfc3RhcnR1cCwN
+Cj4gKwkuc2h1dGRvd24JPSBtY2hwX3NwZGlmdHhfZGFpX3NodXRkb3duLA0KPiArCS50cmlnZ2Vy
+CT0gbWNocF9zcGRpZnR4X3RyaWdnZXIsDQo+ICsJLmh3X3BhcmFtcwk9IG1jaHBfc3BkaWZ0eF9o
+d19wYXJhbXMsDQo+ICsJLmh3X2ZyZWUJPSBtY2hwX3NwZGlmdHhfaHdfZnJlZSwNCj4gK307DQo+
+ICsNCj4gKyNkZWZpbmUgTUNIUF9TUERJRlRYX1JBVEVTCVNORFJWX1BDTV9SQVRFXzgwMDBfMTky
+MDAwDQo+ICsNCj4gKyNkZWZpbmUgTUNIUF9TUERJRlRYX0ZPUk1BVFMJKFNORFJWX1BDTV9GTVRC
+SVRfUzggfAkJXA0KPiArCQkJCSBTTkRSVl9QQ01fRk1UQklUX1MxNl9MRSB8CVwNCj4gKwkJCQkg
+U05EUlZfUENNX0ZNVEJJVF9VMTZfQkUgfAlcDQo+ICsJCQkJIFNORFJWX1BDTV9GTVRCSVRfUzE4
+XzNMRSB8CVwNCj4gKwkJCQkgU05EUlZfUENNX0ZNVEJJVF9TMThfM0JFIHwJXA0KPiArCQkJCSBT
+TkRSVl9QQ01fRk1UQklUX1MyMF8zTEUgfAlcDQo+ICsJCQkJIFNORFJWX1BDTV9GTVRCSVRfUzIw
+XzNCRSB8CVwNCj4gKwkJCQkgU05EUlZfUENNX0ZNVEJJVF9TMjRfM0xFIHwJXA0KPiArCQkJCSBT
+TkRSVl9QQ01fRk1UQklUX1MyNF8zQkUgfAlcDQo+ICsJCQkJIFNORFJWX1BDTV9GTVRCSVRfUzI0
+X0xFIHwJXA0KPiArCQkJCSBTTkRSVl9QQ01fRk1UQklUX1MyNF9CRSB8CVwNCj4gKwkJCQkgU05E
+UlZfUENNX0ZNVEJJVF9TMzJfTEUgfAlcDQo+ICsJCQkJIFNORFJWX1BDTV9GTVRCSVRfUzMyX0JF
+CVwNCj4gKwkJCQkgKQ0KPiArDQo+ICtzdGF0aWMgaW50IG1jaHBfc3BkaWZ0eF9pbmZvKHN0cnVj
+dCBzbmRfa2NvbnRyb2wgKmtjb250cm9sLA0KPiArCQkJICAgICBzdHJ1Y3Qgc25kX2N0bF9lbGVt
+X2luZm8gKnVpbmZvKQ0KPiArew0KPiArCXVpbmZvLT50eXBlID0gU05EUlZfQ1RMX0VMRU1fVFlQ
+RV9JRUM5NTg7DQo+ICsJdWluZm8tPmNvdW50ID0gMTsNCj4gKw0KPiArCXJldHVybiAwOw0KPiAr
+fQ0KPiArDQo+ICtzdGF0aWMgaW50IG1jaHBfc3BkaWZ0eF9jc19nZXQoc3RydWN0IHNuZF9rY29u
+dHJvbCAqa2NvbnRyb2wsDQo+ICsJCQkgICAgICAgc3RydWN0IHNuZF9jdGxfZWxlbV92YWx1ZSAq
+dXZhbHVlKQ0KPiArew0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ICsJc3RydWN0IHNuZF9z
+b2NfZGFpICpkYWkgPSBzbmRfa2NvbnRyb2xfY2hpcChrY29udHJvbCk7DQo+ICsJc3RydWN0IG1j
+aHBfc3BkaWZ0eF9kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7DQo+ICsJ
+c3RydWN0IG1jaHBfc3BkaWZ0eF9taXhlcl9jb250cm9sICpjdHJsID0gJmRldi0+Y29udHJvbDsN
+Cj4gKw0KPiArCXNwaW5fbG9ja19pcnFzYXZlKCZjdHJsLT5sb2NrLCBmbGFncyk7DQo+ICsJbWVt
+Y3B5KHV2YWx1ZS0+dmFsdWUuaWVjOTU4LnN0YXR1cywgY3RybC0+Y2hfc3RhdCwNCj4gKwkgICAg
+ICAgc2l6ZW9mKGN0cmwtPmNoX3N0YXQpKTsNCj4gKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZj
+dHJsLT5sb2NrLCBmbGFncyk7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3Rh
+dGljIGludCBtY2hwX3NwZGlmdHhfY3NfcHV0KHN0cnVjdCBzbmRfa2NvbnRyb2wgKmtjb250cm9s
+LA0KPiArCQkJICAgICAgIHN0cnVjdCBzbmRfY3RsX2VsZW1fdmFsdWUgKnV2YWx1ZSkNCj4gK3sN
+Cj4gKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiArCXN0cnVjdCBzbmRfc29jX2RhaSAqZGFpID0g
+c25kX2tjb250cm9sX2NoaXAoa2NvbnRyb2wpOw0KPiArCXN0cnVjdCBtY2hwX3NwZGlmdHhfZGV2
+ICpkZXYgPSBzbmRfc29jX2RhaV9nZXRfZHJ2ZGF0YShkYWkpOw0KPiArCXN0cnVjdCBtY2hwX3Nw
+ZGlmdHhfbWl4ZXJfY29udHJvbCAqY3RybCA9ICZkZXYtPmNvbnRyb2w7DQo+ICsJaW50IGNoYW5n
+ZWQgPSAwOw0KPiArCWludCBpOw0KPiArDQo+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJmN0cmwtPmxv
+Y2ssIGZsYWdzKTsNCj4gKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShjdHJsLT5jaF9zdGF0
+KTsgaSsrKSB7DQo+ICsJCWlmIChjdHJsLT5jaF9zdGF0W2ldICE9IHV2YWx1ZS0+dmFsdWUuaWVj
+OTU4LnN0YXR1c1tpXSkNCj4gKwkJCWNoYW5nZWQgPSAxOw0KPiArCQljdHJsLT5jaF9zdGF0W2ld
+ID0gdXZhbHVlLT52YWx1ZS5pZWM5NTguc3RhdHVzW2ldOw0KPiArCX0NCj4gKw0KPiArCWlmIChj
+aGFuZ2VkKSB7DQo+ICsJCS8qIGRvbid0IGVuYWJsZSBJUCB3aGlsZSB3ZSBjb3B5IHRoZSBjaGFu
+bmVsIHN0YXR1cyAqLw0KPiArCQlpZiAobWNocF9zcGRpZnR4X2lzX3J1bm5pbmcoZGV2KSkgew0K
+PiArCQkJLyoNCj4gKwkJCSAqIGlmIFNQRElGIGlzIHJ1bm5pbmcsIHdhaXQgZm9yIGludGVycnVw
+dCB0byB3cml0ZQ0KPiArCQkJICogY2hhbm5lbCBzdGF0dXMNCj4gKwkJCSAqLw0KPiArCQkJcmVn
+bWFwX3dyaXRlKGRldi0+cmVnbWFwLCBTUERJRlRYX0lFUiwNCj4gKwkJCQkgICAgIFNQRElGVFhf
+SVJfQ1NSRFkpOw0KPiArCQl9IGVsc2Ugew0KPiArCQkJbWNocF9zcGRpZnR4X2NoYW5uZWxfc3Rh
+dHVzX3dyaXRlKGRldik7DQo+ICsJCX0NCj4gKwl9DQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9y
+ZSgmY3RybC0+bG9jaywgZmxhZ3MpOw0KPiArDQo+ICsJcmV0dXJuIGNoYW5nZWQ7DQo+ICt9DQo+
+ICsNCj4gK3N0YXRpYyBpbnQgbWNocF9zcGRpZnR4X2NzX21hc2soc3RydWN0IHNuZF9rY29udHJv
+bCAqa2NvbnRyb2wsDQo+ICsJCQkJc3RydWN0IHNuZF9jdGxfZWxlbV92YWx1ZSAqdXZhbHVlKQ0K
+PiArew0KPiArCW1lbXNldCh1dmFsdWUtPnZhbHVlLmllYzk1OC5zdGF0dXMsIDB4ZmYsDQo+ICsJ
+ICAgICAgIHNpemVvZih1dmFsdWUtPnZhbHVlLmllYzk1OC5zdGF0dXMpKTsNCj4gKw0KPiArCXJl
+dHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IG1jaHBfc3BkaWZ0eF9zdWJjb2RlX2dl
+dChzdHJ1Y3Qgc25kX2tjb250cm9sICprY29udHJvbCwNCj4gKwkJCQkgICAgc3RydWN0IHNuZF9j
+dGxfZWxlbV92YWx1ZSAqdXZhbHVlKQ0KPiArew0KPiArCXN0cnVjdCBzbmRfc29jX2RhaSAqZGFp
+ID0gc25kX2tjb250cm9sX2NoaXAoa2NvbnRyb2wpOw0KPiArCXN0cnVjdCBtY2hwX3NwZGlmdHhf
+ZGV2ICpkZXYgPSBzbmRfc29jX2RhaV9nZXRfZHJ2ZGF0YShkYWkpOw0KPiArCXN0cnVjdCBtY2hw
+X3NwZGlmdHhfbWl4ZXJfY29udHJvbCAqY3RybCA9ICZkZXYtPmNvbnRyb2w7DQo+ICsJdW5zaWdu
+ZWQgbG9uZyBmbGFnczsNCj4gKw0KPiArCXNwaW5fbG9ja19pcnFzYXZlKCZjdHJsLT5sb2NrLCBm
+bGFncyk7DQo+ICsJbWVtY3B5KHV2YWx1ZS0+dmFsdWUuaWVjOTU4LnN1YmNvZGUsIGN0cmwtPnVz
+ZXJfZGF0YSwNCj4gKwkgICAgICAgc2l6ZW9mKGN0cmwtPnVzZXJfZGF0YSkpOw0KPiArCXNwaW5f
+dW5sb2NrX2lycXJlc3RvcmUoJmN0cmwtPmxvY2ssIGZsYWdzKTsNCj4gKw0KPiArCXJldHVybiAw
+Ow0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IG1jaHBfc3BkaWZ0eF9zdWJjb2RlX3B1dChzdHJ1
+Y3Qgc25kX2tjb250cm9sICprY29udHJvbCwNCj4gKwkJCQkgICAgc3RydWN0IHNuZF9jdGxfZWxl
+bV92YWx1ZSAqdXZhbHVlKQ0KPiArew0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ICsJc3Ry
+dWN0IHNuZF9zb2NfZGFpICpkYWkgPSBzbmRfa2NvbnRyb2xfY2hpcChrY29udHJvbCk7DQo+ICsJ
+c3RydWN0IG1jaHBfc3BkaWZ0eF9kZXYgKmRldiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRh
+aSk7DQo+ICsJc3RydWN0IG1jaHBfc3BkaWZ0eF9taXhlcl9jb250cm9sICpjdHJsID0gJmRldi0+
+Y29udHJvbDsNCj4gKwlpbnQgY2hhbmdlZCA9IDA7DQo+ICsJaW50IGk7DQo+ICsNCj4gKwlzcGlu
+X2xvY2tfaXJxc2F2ZSgmY3RybC0+bG9jaywgZmxhZ3MpOw0KPiArCWZvciAoaSA9IDA7IGkgPCBB
+UlJBWV9TSVpFKGN0cmwtPnVzZXJfZGF0YSk7IGkrKykgew0KPiArCQlpZiAoY3RybC0+dXNlcl9k
+YXRhW2ldICE9IHV2YWx1ZS0+dmFsdWUuaWVjOTU4LnN1YmNvZGVbaV0pDQo+ICsJCQljaGFuZ2Vk
+ID0gMTsNCj4gKw0KPiArCQljdHJsLT51c2VyX2RhdGFbaV0gPSB1dmFsdWUtPnZhbHVlLmllYzk1
+OC5zdWJjb2RlW2ldOw0KPiArCX0NCj4gKwlpZiAoY2hhbmdlZCkgew0KPiArCQlpZiAobWNocF9z
+cGRpZnR4X2lzX3J1bm5pbmcoZGV2KSkgew0KPiArCQkJLyoNCj4gKwkJCSAqIGlmIFNQRElGIGlz
+IHJ1bm5pbmcsIHdhaXQgZm9yIGludGVycnVwdCB0byB3cml0ZQ0KPiArCQkJICogdXNlciBkYXRh
+DQo+ICsJCQkgKi8NCj4gKwkJCXJlZ21hcF93cml0ZShkZXYtPnJlZ21hcCwgU1BESUZUWF9JRVIs
+DQo+ICsJCQkJICAgICBTUERJRlRYX0lSX1VEUkRZKTsNCj4gKwkJfSBlbHNlIHsNCj4gKwkJCW1j
+aHBfc3BkaWZ0eF91c2VyX2RhdGFfd3JpdGUoZGV2KTsNCj4gKwkJfQ0KPiArCX0NCj4gKwlzcGlu
+X3VubG9ja19pcnFyZXN0b3JlKCZjdHJsLT5sb2NrLCBmbGFncyk7DQo+ICsNCj4gKwlyZXR1cm4g
+Y2hhbmdlZDsNCj4gK30NCj4gKw0KPiArc3RhdGljIHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3IG1j
+aHBfc3BkaWZ0eF9jdHJsc1tdID0gew0KPiArCS8qIENoYW5uZWwgc3RhdHVzIGNvbnRyb2xsZXIg
+Ki8NCj4gKwl7DQo+ICsJCS5pZmFjZSA9IFNORFJWX0NUTF9FTEVNX0lGQUNFX1BDTSwNCj4gKwkJ
+Lm5hbWUgPSBTTkRSVl9DVExfTkFNRV9JRUM5NTgoIiIsIFBMQVlCQUNLLCBERUZBVUxUKSwNCj4g
+KwkJLmFjY2VzcyA9IFNORFJWX0NUTF9FTEVNX0FDQ0VTU19SRUFEV1JJVEUgfA0KPiArCQkJU05E
+UlZfQ1RMX0VMRU1fQUNDRVNTX1ZPTEFUSUxFLA0KPiArCQkuaW5mbyA9IG1jaHBfc3BkaWZ0eF9p
+bmZvLA0KPiArCQkuZ2V0ID0gbWNocF9zcGRpZnR4X2NzX2dldCwNCj4gKwkJLnB1dCA9IG1jaHBf
+c3BkaWZ0eF9jc19wdXQsDQo+ICsJfSwNCj4gKwl7DQo+ICsJCS5pZmFjZSA9IFNORFJWX0NUTF9F
+TEVNX0lGQUNFX1BDTSwNCj4gKwkJLm5hbWUgPSBTTkRSVl9DVExfTkFNRV9JRUM5NTgoIiIsIFBM
+QVlCQUNLLCBNQVNLKSwNCj4gKwkJLmFjY2VzcyA9IFNORFJWX0NUTF9FTEVNX0FDQ0VTU19SRUFE
+LA0KPiArCQkJU05EUlZfQ1RMX0VMRU1fQUNDRVNTX1ZPTEFUSUxFLA0KPiArCQkuaW5mbyA9IG1j
+aHBfc3BkaWZ0eF9pbmZvLA0KPiArCQkuZ2V0ID0gbWNocF9zcGRpZnR4X2NzX21hc2ssDQo+ICsJ
+fSwNCj4gKwkvKiBVc2VyIGJpdHMgY29udHJvbGxlciAqLw0KPiArCXsNCj4gKwkJLmlmYWNlID0g
+U05EUlZfQ1RMX0VMRU1fSUZBQ0VfUENNLA0KPiArCQkubmFtZSA9ICJJRUM5NTggU3ViY29kZSBQ
+bGF5YmFjayBEZWZhdWx0IiwNCj4gKwkJLmFjY2VzcyA9IFNORFJWX0NUTF9FTEVNX0FDQ0VTU19S
+RUFEV1JJVEUsDQo+ICsJCS5pbmZvID0gbWNocF9zcGRpZnR4X2luZm8sDQo+ICsJCS5nZXQgPSBt
+Y2hwX3NwZGlmdHhfc3ViY29kZV9nZXQsDQo+ICsJCS5wdXQgPSBtY2hwX3NwZGlmdHhfc3ViY29k
+ZV9wdXQsDQo+ICsJfSwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBpbnQgbWNocF9zcGRpZnR4X2Rh
+aV9wcm9iZShzdHJ1Y3Qgc25kX3NvY19kYWkgKmRhaSkNCj4gK3sNCj4gKwlzdHJ1Y3QgbWNocF9z
+cGRpZnR4X2RldiAqZGV2ID0gc25kX3NvY19kYWlfZ2V0X2RydmRhdGEoZGFpKTsNCj4gKw0KPiAr
+CXNuZF9zb2NfZGFpX2luaXRfZG1hX2RhdGEoZGFpLCAmZGV2LT5wbGF5YmFjaywgTlVMTCk7DQo+
+ICsNCj4gKwkvKiBBZGQgY29udHJvbHMgKi8NCj4gKwlzbmRfc29jX2FkZF9kYWlfY29udHJvbHMo
+ZGFpLCBtY2hwX3NwZGlmdHhfY3RybHMsDQo+ICsJCQkJIEFSUkFZX1NJWkUobWNocF9zcGRpZnR4
+X2N0cmxzKSk7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIHN0cnVj
+dCBzbmRfc29jX2RhaV9kcml2ZXIgbWNocF9zcGRpZnR4X2RhaSA9IHsNCj4gKwkubmFtZSA9ICJt
+Y2hwLXNwZGlmdHgiLA0KPiArCS5wcm9iZQk9IG1jaHBfc3BkaWZ0eF9kYWlfcHJvYmUsDQo+ICsJ
+LnBsYXliYWNrID0gew0KPiArCQkuc3RyZWFtX25hbWUgPSAiUy9QRElGIFRYIFBsYXliYWNrIiwN
+Cj4gKwkJLmNoYW5uZWxzX21pbiA9IDEsDQo+ICsJCS5jaGFubmVsc19tYXggPSAyLA0KPiArCQku
+cmF0ZXMgPSBNQ0hQX1NQRElGVFhfUkFURVMsDQo+ICsJCS5mb3JtYXRzID0gTUNIUF9TUERJRlRY
+X0ZPUk1BVFMsDQo+ICsJfSwNCj4gKwkub3BzID0gJm1jaHBfc3BkaWZ0eF9kYWlfb3BzLA0KPiAr
+fTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2NvbXBvbmVudF9kcml2ZXIg
+bWNocF9zcGRpZnR4X2NvbXBvbmVudCA9IHsNCj4gKwkubmFtZQkJPSAibWNocC1zcGRpZnR4IiwN
+Cj4gK307DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG1jaHBfc3Bk
+aWZ0eF9kdF9pZHNbXSA9IHsNCj4gKwl7DQo+ICsJCS5jb21wYXRpYmxlID0gIm1pY3JvY2hpcCxz
+YW1hN2c1LXNwZGlmdHgiLA0KPiArCX0sDQo+ICsJeyAvKiBzZW50aW5lbCAqLyB9DQo+ICt9Ow0K
+PiArDQo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBtY2hwX3NwZGlmdHhfZHRfaWRzKTsNCj4g
+K3N0YXRpYyBpbnQgbWNocF9zcGRpZnR4X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpDQo+ICt7DQo+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2Rl
+Ow0KPiArCWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm1hdGNoOw0KPiArCXN0cnVjdCBtY2hw
+X3NwZGlmdHhfZGV2ICpkZXY7DQo+ICsJc3RydWN0IHJlc291cmNlICptZW07DQo+ICsJc3RydWN0
+IHJlZ21hcCAqcmVnbWFwOw0KPiArCXZvaWQgX19pb21lbSAqYmFzZTsNCj4gKwlzdHJ1Y3QgbWNo
+cF9zcGRpZnR4X21peGVyX2NvbnRyb2wgKmN0cmw7DQo+ICsJaW50IGlycTsNCj4gKwlpbnQgZXJy
+Ow0KPiArDQo+ICsJLyogR2V0IG1lbW9yeSBmb3IgZHJpdmVyIGRhdGEuICovDQo+ICsJZGV2ID0g
+ZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqZGV2KSwgR0ZQX0tFUk5FTCk7DQo+ICsJ
+aWYgKCFkZXYpDQo+ICsJCXJldHVybiAtRU5PTUVNOw0KPiArDQo+ICsJLyogR2V0IGhhcmR3YXJl
+IGNhcGFiaWxpdGllcy4gKi8NCj4gKwltYXRjaCA9IG9mX21hdGNoX25vZGUobWNocF9zcGRpZnR4
+X2R0X2lkcywgbnApOw0KPiArCWlmIChtYXRjaCkNCj4gKwkJZGV2LT5jYXBzID0gbWF0Y2gtPmRh
+dGE7DQo+ICsNCj4gKwkvKiBNYXAgSS9PIHJlZ2lzdGVycy4gKi8NCj4gKwliYXNlID0gZGV2bV9w
+bGF0Zm9ybV9nZXRfYW5kX2lvcmVtYXBfcmVzb3VyY2UocGRldiwgMCwgJm1lbSk7DQo+ICsJaWYg
+KElTX0VSUihiYXNlKSkNCj4gKwkJcmV0dXJuIFBUUl9FUlIoYmFzZSk7DQo+ICsNCj4gKwlyZWdt
+YXAgPSBkZXZtX3JlZ21hcF9pbml0X21taW8oJnBkZXYtPmRldiwgYmFzZSwNCj4gKwkJCQkgICAg
+ICAgJm1jaHBfc3BkaWZ0eF9yZWdtYXBfY29uZmlnKTsNCj4gKwlpZiAoSVNfRVJSKHJlZ21hcCkp
+DQo+ICsJCXJldHVybiBQVFJfRVJSKHJlZ21hcCk7DQo+ICsNCj4gKwkvKiBSZXF1ZXN0IElSUSAq
+Lw0KPiArCWlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQo+ICsJaWYgKGlycSA8IDAp
+DQo+ICsJCXJldHVybiBpcnE7DQo+ICsNCj4gKwllcnIgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2
+LT5kZXYsIGlycSwgbWNocF9zcGRpZnR4X2ludGVycnVwdCwgMCwNCj4gKwkJCSAgICAgICBkZXZf
+bmFtZSgmcGRldi0+ZGV2KSwgZGV2KTsNCj4gKwlpZiAoZXJyKQ0KPiArCQlyZXR1cm4gZXJyOw0K
+PiArDQo+ICsJLyogR2V0IHRoZSBwZXJpcGhlcmFsIGNsb2NrICovDQo+ICsJZGV2LT5wY2xrID0g
+ZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJwY2xrIik7DQo+ICsJaWYgKElTX0VSUihkZXYtPnBj
+bGspKSB7DQo+ICsJCWVyciA9IFBUUl9FUlIoZGV2LT5wY2xrKTsNCj4gKwkJZGV2X2VycigmcGRl
+di0+ZGV2LA0KPiArCQkJImZhaWxlZCB0byBnZXQgdGhlIHBlcmlwaGVyYWwgY2xvY2s6ICVkXG4i
+LCBlcnIpOw0KPiArCQlyZXR1cm4gZXJyOw0KPiArCX0NCj4gKw0KPiArCS8qIEdldCB0aGUgZ2Vu
+ZXJpYyBjbG9jayAqLw0KPiArCWRldi0+Z2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAi
+Z2NsayIpOw0KPiArCWlmIChJU19FUlIoZGV2LT5nY2xrKSkgew0KPiArCQllcnIgPSBQVFJfRVJS
+KGRldi0+Z2Nsayk7DQo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwNCj4gKwkJCSJmYWlsZWQgdG8g
+Z2V0IHRoZSBQTUMgZ2VuZXJpYyBjbG9jazogJWRcbiIsIGVycik7DQo+ICsJCXJldHVybiBlcnI7
+DQo+ICsJfQ0KPiArDQo+ICsJY3RybCA9ICZkZXYtPmNvbnRyb2w7DQo+ICsJc3Bpbl9sb2NrX2lu
+aXQoJmN0cmwtPmxvY2spOw0KPiArDQo+ICsJLyogSW5pdCBjaGFubmVsIHN0YXR1cyAqLw0KPiAr
+CWN0cmwtPmNoX3N0YXRbMF0gPSBJRUM5NThfQUVTMF9DT05fTk9UX0NPUFlSSUdIVCB8DQo+ICsJ
+CQkgICBJRUM5NThfQUVTMF9DT05fRU1QSEFTSVNfTk9ORTsNCj4gKw0KPiArCWRldi0+ZGV2ID0g
+JnBkZXYtPmRldjsNCj4gKwlkZXYtPnJlZ21hcCA9IHJlZ21hcDsNCj4gKwlwbGF0Zm9ybV9zZXRf
+ZHJ2ZGF0YShwZGV2LCBkZXYpOw0KPiArDQo+ICsJZGV2LT5wbGF5YmFjay5hZGRyID0gKGRtYV9h
+ZGRyX3QpbWVtLT5zdGFydCArIFNQRElGVFhfQ0RSOw0KPiArCWRldi0+cGxheWJhY2suYWRkcl93
+aWR0aCA9IERNQV9TTEFWRV9CVVNXSURUSF80X0JZVEVTOw0KPiArDQo+ICsJZXJyID0gZGV2bV9z
+bmRfZG1hZW5naW5lX3BjbV9yZWdpc3RlcigmcGRldi0+ZGV2LCBOVUxMLCAwKTsNCj4gKwlpZiAo
+ZXJyKSB7DQo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZWdpc3RlciBQTUM6
+ICVkXG4iLCBlcnIpOw0KPiArCQlyZXR1cm4gZXJyOw0KPiArCX0NCj4gKw0KPiArCWVyciA9IGRl
+dm1fc25kX3NvY19yZWdpc3Rlcl9jb21wb25lbnQoJnBkZXYtPmRldiwNCj4gKwkJCQkJICAgICAg
+Jm1jaHBfc3BkaWZ0eF9jb21wb25lbnQsDQo+ICsJCQkJCSAgICAgICZtY2hwX3NwZGlmdHhfZGFp
+LCAxKTsNCj4gKwlpZiAoZXJyKSB7DQo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0
+byByZWdpc3RlciBjb21wb25lbnQ6ICVkXG4iLCBlcnIpOw0KPiArCQlyZXR1cm4gZXJyOw0KPiAr
+CX0NCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgc3RydWN0IHBsYXRm
+b3JtX2RyaXZlciBtY2hwX3NwZGlmdHhfZHJpdmVyID0gew0KPiArCS5wcm9iZQk9IG1jaHBfc3Bk
+aWZ0eF9wcm9iZSwNCj4gKwkuZHJpdmVyCT0gew0KPiArCQkubmFtZQk9ICJtY2hwX3NwZGlmdHgi
+LA0KPiArCQkub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIobWNocF9zcGRpZnR4X2R0X2lk
+cyksDQo+ICsJfSwNCj4gK307DQo+ICsNCj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIobWNocF9z
+cGRpZnR4X2RyaXZlcik7DQo+ICsNCj4gK01PRFVMRV9BVVRIT1IoIkNvZHJpbiBDaXVib3Rhcml1
+IDxjb2RyaW4uY2l1Ym90YXJpdUBtaWNyb2NoaXAuY29tPiIpOw0KPiArTU9EVUxFX0RFU0NSSVBU
+SU9OKCJNaWNyb2NoaXAgUy9QRElGIFRYIENvbnRyb2xsZXIgRHJpdmVyIik7DQo+ICtNT0RVTEVf
+TElDRU5TRSgiR1BMIHYyIik7DQo+IA==
