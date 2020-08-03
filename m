@@ -2,49 +2,49 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7835C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DC6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E37A207DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338CB22CAE
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YMpOO0Yx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Tlr7DnEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgHCTgU (ORCPT
+        id S1728470AbgHCTgZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:36:20 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:63040 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728335AbgHCTgP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:36:15 -0400
+        Mon, 3 Aug 2020 15:36:25 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:21461 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728413AbgHCTgY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 15:36:24 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596483374; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=GrEw3oSw++nMPzEl+/BHJDxleP5vanw4s1YWFdwf0mU=; b=YMpOO0YxQiJ759mdp6xluCtGqKcaePS2BzvzMvBCMTJSU6nV0Y2j4FFSJoOZsqwnktraz79h
- qToeWQJAI1mE8OkJijwYom82rtNPTovh7E7E7Q8oy3bRcmuUhvDAPs4a9Cvs6U7iBhnkt7SU
- t18jyLb9kze6Yos8wnVDqeoqGfk=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1596483382; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=CPqTIaLJD2cj7Li+Lw3MSD0I69b2Gro8H/iSdOWQ0yg=; b=Tlr7DnEWq0nUvv7H9VZU63o2Yg9IwWyWMsgfPFaUEOQ7hB3SQpvAPTxY1WulqJXpY4/1FEmq
+ GCOVCx6desGaj1YH/TDXoZxNmEz911zD2PzMtxeVYnJkeALQDbttKSFXtJnG1IXO+UcZTHxN
+ dLJz1zdssRReBG6MOSVUctg2GqI=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
- 5f28672e21feae908b5d0469 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 19:36:14
+ smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
+ 5f28671e21feae908b5cdd64 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 19:35:58
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D253BC433AF; Mon,  3 Aug 2020 19:36:09 +0000 (UTC)
+        id E69E8C433A1; Mon,  3 Aug 2020 19:35:56 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1633EC433CB;
-        Mon,  3 Aug 2020 19:36:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1633EC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 340C6C433CA;
+        Mon,  3 Aug 2020 19:35:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 340C6C433CA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -54,15 +54,39 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Will Deacon <will@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Rob Herring <robh@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Eric Anholt <eric@anholt.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hanna Hawa <hannah@marvell.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 06/12] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
-Date:   Mon,  3 Aug 2020 13:35:41 -0600
-Message-Id: <20200803193547.305660-7-jcrouse@codeaurora.org>
+Subject: [PATCH v11 00/12] iommu/arm-smmu: Add Adreno SMMU specific implementation
+Date:   Mon,  3 Aug 2020 13:35:35 -0600
+Message-Id: <20200803193547.305660-1-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200803193547.305660-1-jcrouse@codeaurora.org>
-References: <20200803193547.305660-1-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -70,34 +94,86 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-devices depend on unique features such as split pagetables,
-different stall/halt requirements and other settings. Identify them
-with a compatible string so that they can be identified in the
-arm-smmu implementation specific code.
+This series adds an Adreno SMMU implementation to arm-smmu to allow GPU hardware
+pagetable switching.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+The Adreno GPU has built in capabilities to switch the TTBR0 pagetable during
+runtime to allow each individual instance or application to have its own
+pagetable.  In order to take advantage of the HW capabilities there are certain
+requirements needed of the SMMU hardware.
 
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+This series adds support for an Adreno specific arm-smmu implementation. The new
+implementation 1) ensures that the GPU domain is always assigned context bank 0,
+2) enables split pagetable support (TTBR1) so that the instance specific
+pagetable can be swapped while the global memory remains in place and 3) shares
+the current pagetable configuration with the GPU driver to allow it to create
+its own io-pgtable instances.
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index 503160a7b9a0..70996348c1d8 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -49,6 +49,10 @@ properties:
-           - enum:
-               - nvidia,tegra194-smmu
-           - const: nvidia,smmu-500
-+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-+        items:
-+          - const: qcom,adreno-smmu
-+          - const: qcom,smmu-v2
-       - items:
-           - const: arm,mmu-500
-           - const: arm,smmu-v2
+The series then adds the drm/msm code to enable these features. For targets that
+support it allocate new pagetables using the io-pgtable configuration shared by
+the arm-smmu driver and swap them in during runtime.
+
+This version of the series merges the previous patchset(s) [1] and [2]
+with the following improvements:
+
+v11:
+  - Add implementation specific get_attr/set_attr functions (per Rob Clark)
+  - Fix context bank allocation (per Bjorn Andersson)
+v10:
+  - arm-smmu: add implementation hook to allocate context banks
+  - arm-smmu: Match the GPU domain by stream ID instead of compatible string
+  - arm-smmu: Make DOMAIN_ATTR_PGTABLE_CFG bi-directional. The leaf driver
+    queries the configuration to create a pagetable and then sends the newly
+    created configuration back to the smmu-driver to enable TTBR0
+  - drm/msm: Add context reference counting for submissions
+  - drm/msm: Use dummy functions to skip TLB operations on per-instance
+    pagetables
+
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045653.html
+[2] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045659.html
+
+
+Jordan Crouse (12):
+  iommu/arm-smmu: Pass io-pgtable config to implementation specific
+    function
+  iommu/arm-smmu: Add support for split pagetables
+  iommu/arm-smmu: Prepare for the adreno-smmu implementation
+  iommu: Add a domain attribute to get/set a pagetable configuration
+  iommu/arm-smmu-qcom: Add implementation for the adreno GPU SMMU
+  dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+  drm/msm: Add a context pointer to the submitqueue
+  drm/msm: Set the global virtual address range from the IOMMU domain
+  drm/msm: Add support to create a local pagetable
+  drm/msm: Add support for private address space instances
+  drm/msm/a6xx: Add support for per-instance pagetables
+  arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |   4 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   2 +-
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c         |  12 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c         |  58 ++++-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h         |   1 +
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  18 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h       |   3 +-
+ drivers/gpu/drm/msm/msm_drv.c                 |  16 +-
+ drivers/gpu/drm/msm/msm_drv.h                 |  13 ++
+ drivers/gpu/drm/msm/msm_gem.h                 |   1 +
+ drivers/gpu/drm/msm/msm_gem_submit.c          |   8 +-
+ drivers/gpu/drm/msm/msm_gem_vma.c             |   9 +
+ drivers/gpu/drm/msm/msm_gpu.c                 |  26 ++-
+ drivers/gpu/drm/msm/msm_gpu.h                 |  12 +-
+ drivers/gpu/drm/msm/msm_gpummu.c              |   2 +-
+ drivers/gpu/drm/msm/msm_iommu.c               | 198 +++++++++++++++++-
+ drivers/gpu/drm/msm/msm_mmu.h                 |  16 +-
+ drivers/gpu/drm/msm/msm_ringbuffer.h          |   1 +
+ drivers/gpu/drm/msm/msm_submitqueue.c         |   8 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu-impl.c    |   6 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c    | 156 +++++++++++++-
+ drivers/iommu/arm/arm-smmu/arm-smmu.c         | 113 +++++-----
+ drivers/iommu/arm/arm-smmu/arm-smmu.h         |  82 +++++++-
+ include/linux/iommu.h                         |   1 +
+ 24 files changed, 653 insertions(+), 113 deletions(-)
+
 -- 
 2.25.1
 
