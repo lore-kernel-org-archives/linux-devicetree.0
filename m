@@ -3,124 +3,194 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D21C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA0BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F6420781
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596469102;
-	bh=VGGeypM3Y8d4rW8Akt3xtmhJwtC3U7dVg9Cx0Njqevg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jxuQteOKGkoFsN3UMi2JhZ0sgd6RbjgIY2u+wFqqAtOCUuZ3bhZdtJxXhIhxVwt18
-	 zpqJAjE0ZNmumKolDAUZrHsbt4XrVw80XHQq4AA5n+p1tD1nG9b4T9zB6RyglP43gc
-	 XcbED/nEfuBDPb4iNox9HIZcVA6IGUBtknFhIxt0=
+	by mail.kernel.org (Postfix) with ESMTP id 9C355207DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JSRzDnFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHCPiW (ORCPT
+        id S1726934AbgHCPmb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:38:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgHCPiW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:38:22 -0400
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D3422076C;
-        Mon,  3 Aug 2020 15:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596469100;
-        bh=VGGeypM3Y8d4rW8Akt3xtmhJwtC3U7dVg9Cx0Njqevg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pC/KVE5SCSZWrzVR8rov+RgaeDIeFWUHety8ET9Hg7JeRcy9gSf4G+AQ0onwO00Ew
-         QXaBBP0qFAKninI1M7yRvb3Og9QlNns1KhGmBNS9JE1PykiuedRdGXu1iQrDTY1r3e
-         kQAR4HGgKjBHHfLgTivocZk47DnNmusgrBgdY+/s=
-Received: by mail-ej1-f41.google.com with SMTP id o18so39081640eje.7;
-        Mon, 03 Aug 2020 08:38:21 -0700 (PDT)
-X-Gm-Message-State: AOAM531gd7hUqX/aO13XUsU8jFNkJ4zT1l82/S1CfQSiaiXHOg+sJUh+
-        RvdVpXZ+4o0WnM6Yyb9JvJoIuuaZapyYYAodIQ==
-X-Google-Smtp-Source: ABdhPJx0djev732p1WU9SALM5bkMkTGBFI5wI7IhthD/RGPTy0cqLYgXOMTgB1GPtG3Sq1pVIonzpFw17wCZyky8cuc=
-X-Received: by 2002:a17:906:f14f:: with SMTP id gw15mr16562338ejb.245.1596469100238;
- Mon, 03 Aug 2020 08:38:20 -0700 (PDT)
+        Mon, 3 Aug 2020 11:42:31 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5001 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCPma (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 11:42:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2830360000>; Mon, 03 Aug 2020 08:41:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Aug 2020 08:42:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Aug 2020 08:42:30 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug
+ 2020 15:42:30 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 3 Aug 2020 15:42:30 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f2830640002>; Mon, 03 Aug 2020 08:42:30 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 00/10] Support for Tegra video capture from external sensor
+Date:   Mon, 3 Aug 2020 08:42:16 -0700
+Message-ID: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
- <1596010690-13178-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_-RMT-1+-5aPxqhgLbk74j0MH8U78mibBZppt_OPPQrJA@mail.gmail.com>
- <1596427546.22971.23.camel@mtkswgap22>
-In-Reply-To: <1596427546.22971.23.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Mon, 3 Aug 2020 23:38:07 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__Jc2eGCA6JqYnLCZCTYz40GBmyhiZqzMxTfj9F9xTdoQ@mail.gmail.com>
-Message-ID: <CAAOTY__Jc2eGCA6JqYnLCZCTYz40GBmyhiZqzMxTfj9F9xTdoQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596469302; bh=jglfIh67PtDerQ6NqdFEm5b/PyUxY62VvKmJhWUJEoQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=JSRzDnFo1Y1u4eJgMFfGcvX201Ib7cqGkLtSKxRR5zWDKkXn+Y2MlASzMwMBtq/+T
+         7Ko9+7YVAFpmqnZMov46/1nL1BggRrl43enqWgJWUVipo3dS8A7fvacJFIL+APTt6n
+         oeaQXwL8cjytY8EzZWY2OwJgRKIcFrM7CT0STwnerfmJbZRNZaBJanKCfO21Ofnvgc
+         qxW+zMDnDNG6zB+7bBGTSCa6yduT4PvItAqUsAPiLOyQp6tzFSmCgLlkbXtIVCK982
+         zTFxovPLVvFTqlCE607e4K7idzoO+EsZWNUS/SkPsdlk56G9Cp8iS6Iy70C+8pURNJ
+         m5wukodRIYw7A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8812:05=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> On Sun, 2020-08-02 at 07:50 +0800, Chun-Kuang Hu wrote:
-> > Hi, Neal:
-> >
-> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > MediaTek bus fabric provides TrustZone security support and data
-> > > protection to prevent slaves from being accessed by unexpected
-> > > masters.
-> > > The security violation is logged and sent to the processor for
-> > > further analysis or countermeasures.
-> > >
-> > > Any occurrence of security violation would raise an interrupt, and
-> > > it will be handled by mtk-devapc driver. The violation
-> > > information is printed in order to find the murderer.
-> > >
-> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > ---
-> >
-> > [snip]
-> >
-> > > +
-> > > +struct mtk_devapc_context {
-> > > +       struct device *dev;
-> > > +       u32 vio_idx_num;
-> > > +       void __iomem *devapc_pd_base;
-> >
-> > This is devapc context, so prefix 'devapc' is redundant.
-> > And, what does 'pd' mean?
->
-> 'pd' means power down. Of course we would also remove it as well.
-> I suggest to change it as 'infra_base'.
+This series adds support for video capture from external camera sensor to
+Tegra video driver.
 
-This is OK for me.
+Jetson TX1 has camera expansion connector and supports custom camera module
+designed as per TX1 design specification.
 
->
-> >
-> > Regards,
-> > Chun-Kuang.
-> >
-> > > +       struct mtk_devapc_vio_info *vio_info;
-> > > +       const struct mtk_devapc_pd_offset *offset;
-> > > +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
-> > > +};
-> > > +
->
+This series also enables camera capture support for Jetson Nano which has
+Raspberry PI camera header.
+
+This series is tested with IMX274 and IMX219 camera sensors.
+
+This series include,
+
+Tegra video driver updates
+- TPG Vs Non-TPG based on Kconfig
+- Support for external sensor video capture based on device graph from DT
+- Support for selection ioctl operations
+- Tegra MIPI CSI pads calibration
+- CSI T-CLK and T-HS settle time computation based on clock rates
+- dt-binding doc update
+
+Host1x driver updates
+- Keep MIPI clock enabled till calibration is done
+
+Delta between patch versions:
+[v8]:	Includes below minor changes
+	- Fixed missing of_node_put and updated error message to be
+	  more informative in tegra_csi_channels_alloc() and
+	  tegra_vi_channels_alloc()
+
+	Patch-0006 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v7]:	Includes minor feedback from v6
+	- Patch-0009 has minor update
+
+	Note:
+	Patch-0006 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v6]:	Includes below changes based on v5 feedback
+	- Patches are based on latest linux-next.
+	- separated stream enable and disable implementations into
+	  separate functions for tegra_channel_set_stream() and
+	  tegra_csi_s_stream().
+	- changed dev_err to dev_warn on MIPI calibration failure after
+	  sensor streaming as its not critical error.
+
+	Note:
+	Patch-0006 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v5]:	Includes below minor change based on v4 feedback
+	Patch-0012: renames APIs to use calibration instead of calibrate.
+
+	Note:
+	Patch-0010 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v4]:	Includes below fix based on v3 feedback
+	- Patches are based on latest linux-next.
+	- With split of tegra_mipi_calibrate() and tegra_mipi_wait(), mipi
+	  clock is not left enabled till calibration done. This series adds
+	  a patch to fix this by keeping clock enabled till calibration is
+	  done.
+
+	Note:
+	Patch-0010 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+[v3]:	Includes v2 feedback
+	- Uses separate helper function for retrieving remote csi subdevice
+	  and source subdevice.
+	- Added check for presence of subdevice ops set/get_selection
+	- dropped vb2_queue_release from driver and using
+	  vb2_video_unregister_device instead of video_unregister_device.
+	- video device register should happen in the last after all video
+	  device related setup is done in the driver. This is being addressed
+	  in below RFC patch. Once proper implementation of this is available
+	  will update Tegra video driver to use split APIs and do all setup
+	  prior to device register. Added this as TODO in the driver.
+	  https://www.spinics.net/lists/linux-media/msg172761.html
+
+	Note:
+	Patch-0012 has compilation dependency on
+	https://patchwork.kernel.org/patch/11659521/
+
+
+[v2]:	Includes below changes based on v1 feedback
+	- dt-binding document and the driver update for device graph to use
+	  separate ports for sink endpoint and source endpoint for csi.
+	- Use data-lanes endpoint property for csi.
+	- Update tegra_mipi_request() to take device node pointer argument
+	  rather than adding extra API.
+	- Remove checking for clk pointer before clk_disable.
+
+
+Sowjanya Komatineni (10):
+  media: tegra-video: Fix channel format alignment
+  media: tegra-video: Enable TPG based on kernel config
+  media: tegra-video: Update format lookup to offset based
+  dt-bindings: tegra: Update VI and CSI bindings with port info
+  media: tegra-video: Separate CSI stream enable and disable
+    implementations
+  media: tegra-video: Add support for external sensor capture
+  media: tegra-video: Add support for selection ioctl ops
+  gpu: host1x: mipi: Keep MIPI clock enabled till calibration is done
+  media: tegra-video: Add CSI MIPI pads calibration
+  media: tegra-video: Compute settle times based on the clock rate
+
+ .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
+ drivers/gpu/drm/tegra/dsi.c                        |   4 +-
+ drivers/gpu/host1x/mipi.c                          |  19 +-
+ drivers/staging/media/tegra-video/Kconfig          |   7 +
+ drivers/staging/media/tegra-video/TODO             |   6 -
+ drivers/staging/media/tegra-video/csi.c            | 314 +++++++-
+ drivers/staging/media/tegra-video/csi.h            |   8 +
+ drivers/staging/media/tegra-video/tegra210.c       |  25 +-
+ drivers/staging/media/tegra-video/vi.c             | 841 +++++++++++++++++++--
+ drivers/staging/media/tegra-video/vi.h             |  25 +-
+ drivers/staging/media/tegra-video/video.c          |  23 +-
+ include/linux/host1x.h                             |   5 +-
+ 12 files changed, 1252 insertions(+), 117 deletions(-)
+
+-- 
+2.7.4
+
