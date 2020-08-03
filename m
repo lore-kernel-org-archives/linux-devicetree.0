@@ -1,505 +1,211 @@
-Return-Path: <SRS0=9TIE=BM=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DE2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 22:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ECEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 02:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2D5204EA
-	for <linux-devicetree@archiver.kernel.org>; Sun,  2 Aug 2020 22:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475AF206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 02:09:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWUyEWCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725925AbgHBWB6 (ORCPT
+        id S1725924AbgHCCJx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 2 Aug 2020 18:01:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:50640 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbgHBWB6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Aug 2020 18:01:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4E3F1FB;
-        Sun,  2 Aug 2020 15:01:56 -0700 (PDT)
-Received: from [10.57.35.143] (unknown [10.57.35.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AD883F71F;
-        Sun,  2 Aug 2020 15:01:55 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] rockchip: rk3328: Add support for FriendlyARM
- NanoPi R2S
-To:     David Bauer <mail@david-bauer.net>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-References: <20200730232054.286381-1-mail@david-bauer.net>
- <20200730232054.286381-2-mail@david-bauer.net>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d0053630-1ff3-9771-eb7d-7aaf0a27dca2@arm.com>
-Date:   Sun, 2 Aug 2020 23:01:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sun, 2 Aug 2020 22:09:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgHCCJw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 2 Aug 2020 22:09:52 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B92C06174A;
+        Sun,  2 Aug 2020 19:09:52 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id 77so1648690qkm.5;
+        Sun, 02 Aug 2020 19:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ndkPgBzuu3HavvJal2ZqB7UZeB0qupPxRyfTt2Dimg0=;
+        b=FWUyEWCjQKEHwM9GiwSviNlzcEXn3fJMnwj01f3uRh/FYTKs2u56nrPhloyL51EARl
+         SG0iyrN0KNUKrpveMFWRPAQGC0f+Ba3xv843q3J8cESWUdckzbp0Ck5OzS0joGn95gBf
+         O1cyD8il3KiJQ+s9kFUMAP6BiZNeHyKGkcd0+HtyXZ0m+Lhto39zBZGpy9z4C13D8WYZ
+         aL5qRTMyLPPejCylgjBgjLrWYjQzH5EeHLfIUDMUDJU9A4kkFbgsXQUeEblAWvlBCISF
+         wwNhgUxh/5vwd3KFphd6G6PvkAWUFOUoy8UznHUkSxX+OQqMqH9+qxtKXD4i4HW399yk
+         hgqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ndkPgBzuu3HavvJal2ZqB7UZeB0qupPxRyfTt2Dimg0=;
+        b=f/B9UurzvxIAjTQjgrfeqg7VCUs5ml1rAYqvt2TJacd8vNm5I8+TUvu2+BDPfuzE4m
+         xPSCRIAunMH3WZhHrtRPlnOL/sXo4WYxQjguEv6y+1iMGcAA//nvamYbpEPcDVQTlCqa
+         XcdQjf8vG6gvO0TujOmE1LjDE0A9B9W6TQeA/1iFyElm1sWTQmChLMQ92PZnm4wWRLtb
+         PX74b44g54NI7YSBOLlxK1zA2o2NRLMtokE0v7UN1BTztJGdsBMUNF7KFXVIdx0dAECy
+         ixNAR5Bh4/N/N8hlhH4l/RexV+y0pXUTEYhCf2KTOklTOTw6FNlpOE3RdsntoW4M5mGo
+         HzWQ==
+X-Gm-Message-State: AOAM532ME4j0v4LGudFtRi2j6Bu8+kn+ROEmhv6utbr7mFgdiT3lvrl0
+        RVn3iNFJCFcPkkdjShFAr57M0osPH6M=
+X-Google-Smtp-Source: ABdhPJxjv5KpSpY7yqnaZnmdkMxs60OPVyP14ztQV690EUnGQa9js2GzjGLQx+QV1EyBpkOjbIAphQ==
+X-Received: by 2002:a37:a0c9:: with SMTP id j192mr13962339qke.134.1596420589425;
+        Sun, 02 Aug 2020 19:09:49 -0700 (PDT)
+Received: from localhost.localdomain ([190.189.67.136])
+        by smtp.gmail.com with ESMTPSA id d124sm18458083qkg.65.2020.08.02.19.09.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 02 Aug 2020 19:09:48 -0700 (PDT)
+From:   Santiago Hormazabal <santiagohssl@gmail.com>
+To:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Santiago Hormazabal <santiagohssl@gmail.com>
+Subject: [PATCH 0/3] KT0913 FM/AM driver
+Date:   Sun,  2 Aug 2020 23:09:18 -0300
+Message-Id: <20200803020921.64151-1-santiagohssl@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200730232054.286381-2-mail@david-bauer.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-07-31 00:20, David Bauer wrote:
-> This adds support for the NanoPi R2S from FriendlyARM.
-> 
-> Rockchip RK3328 SoC
-> 1GB DDR4 RAM
-> Gigabit Ethernet (WAN)
-> Gigabit Ethernet (USB3) (LAN)
-> USB 2.0 Host Port
-> MicroSD slot
-> Reset button
-> WAN - LAN - SYS LED
+media: adds support for kt0913 FM/AM tuner chip
 
-Neat! Mine turned up last week (far earlier than expected, yay!), and I 
-was going to do some DT hacking, but here it is already :)
+Adds a driver for the KT0913 FM/AM tuner chip from KT Micro. This chip
+can be found on many low cost FM/AM radios and DVD/Home Theaters.
+The chip provides two ways of usage, a manual mode (requiring only a
+few buttons) or complete control via I2C. This driver uses the latter.
+It exposes the minimum functionality of this chip, which includes tuning
+an AM or FM station given its frequency, reading the signal strength,
+setting Stereo (only on FM) or Mono (available on AM/FM), Mute, Volume
+and Audio Gain.
+I left some TODOs on the code, like supporting the chip's hardware seek
+feature, using a RW/RO regmaps rather than a single volatile regmap,
+show the FM SNR as a RO control and the FM/AM AFC deviation as another
+RO control.
+The module I've used comes from SZZSJDZ.com, a now defunct company.
+However, it's possible to buy this chip directly from Aliexpress or
+similar sites.
+I tested this on two systems, the first one being a Raspberry Pi 4 with
+the unstable 5.x kernel, but later I moved to a Banana Pi 2 Zero where
+I used the (current at this time, 8f2a4a9) master of this repo for testing.
+I've also compiled the v4l-compliance from sources (c7f0328) and it passed
+all the tests. The output of that is at the end of this note.
 
-> Signed-off-by: David Bauer <mail@david-bauer.net>
-> ---
-> 
-> Changes in v2:
->   - Use aligned memory for ethernet
->   - Fix GPO for sdio regulator
-> 
->   arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->   .../boot/dts/rockchip/rk3328-nanopi-r2s.dts   | 334 ++++++++++++++++++
->   2 files changed, 335 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index b87b1f773083..20055c51e150 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-nanopi-r2s.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-> new file mode 100644
-> index 000000000000..9fd148423b9d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-> @@ -0,0 +1,334 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2020 David Bauer <mail@david-bauer.net>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "rk3328.dtsi"
-> +
-> +/ {
-> +	model = "FriendlyARM NanoPi R2S";
+Note: This is the second set of patches for the driver, where I (tried to)
+address the comments that the reviewers added on the previous set.
 
-Same comment as for the binding.
+v4l2-compliance SHA: c7f03287bbd64c168975e7ff3192e6fd3b507686, 32 bits, 32-bit time_t
 
-> +	compatible = "friendlyarm,nanopi-r2s", "rockchip,rk3328";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +
-> +	gmac_clkin: external-gmac-clock {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "gmac_clkin";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	vcc_sd: sdmmc-regulator {
-> +		compatible = "regulator-fixed";
-> +		gpio = <&gpio0 RK_PD6 GPIO_ACTIVE_LOW>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdmmc0m1_gpio>;
-> +		regulator-name = "vcc_sd";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vcc_io>;
-> +	};
-> +
-> +	vcc_sdio: sdmmcio-regulator {
+Compliance test for kt0913-fm-am device /dev/radio0:
 
-This is "vcc_io_sd" per the schematic.
+Driver Info:
+	Driver name      : kt0913-fm-am
+	Card type        : kt0913-fm-am
+	Bus info         : I2C:radio0
+	Driver version   : 5.8.0
+	Capabilities     : 0x80250000
+		Tuner
+		Radio
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x00250000
+		Tuner
+		Radio
+		Extended Pix Format
 
-> +		compatible = "regulator-gpio";
-> +		gpios = <&gpio1 RK_PD4 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		states = <1800000 0x1
-> +			  3300000 0x0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdio_vcc_pin>;
-> +		regulator-always-on;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-name = "vcc_sdio";
-> +		regulator-settling-time-us = <5000>;
-> +		regulator-type = "voltage";
-> +		vin-supply = <&vcc_io>;
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
 
-Strictly the supply here is vdd_5v - vcc_io is only driving the bias 
-circuitry for the regulator adjustment.
+Allow for multiple opens:
+	test second /dev/radio0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
 
-> +	};
-> +
-> +	vcc_sys: vcc-sys {
+	test invalid ioctls: OK
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK
+	test VIDIOC_LOG_STATUS: OK
 
-This is "vdd_5v".
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK
+	test VIDIOC_G/S_FREQUENCY: OK
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 1
 
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_sys";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led_pins>;
-> +
-> +		sys {
-> +			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> +			label = "nanopi-r2s:red:sys";
-> +		};
-> +
-> +		lan {
-> +			gpios = <&gpio2 RK_PB7 GPIO_ACTIVE_HIGH>;
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
 
-This seems to match the schematic, however in practice the GPIO seems to 
-have a mind of its own and not respond to the LED settings - are we 
-missing something with the pinctrl perhaps?
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
 
-> +			label = "nanopi-r2s:green:lan";
-> +		};
-> +
-> +		wan {
-> +			gpios = <&gpio2 RK_PC2 GPIO_ACTIVE_HIGH>;
-> +			label = "nanopi-r2s:green:wan";
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys-polled";
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 8 Private Controls: 0
 
-Does this need to be polled? I would have thought regular 
-interrupt-based gpio-keys should work, to avoid the overhead of polling 
-for something (relatively) incredibly rare, but perhaps I'm wrong :/
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK (Not Supported)
+	test VIDIOC_TRY_FMT: OK (Not Supported)
+	test VIDIOC_S_FMT: OK (Not Supported)
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
 
-> +		poll-interval = <100>;
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&button_pins>;
-> +
-> +		reset {
-> +			label = "Reset Button";
-> +			gpios = <&gpio0 RK_PA0 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_RESTART>;
-> +			debounce-interval = <50>;
-> +		};
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu1 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu2 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu3 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&gmac2io {
-> +	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
-> +	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
-> +	clock_in_out = "input";
-> +	phy-supply = <&vcc_io>;
-> +	phy-handle = <&rtl8211e>;
-> +	phy-mode = "rgmii";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&rgmiim1_pins>;
-> +	snps,aal;
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
 
-Is this needed over and above the txpbl fix present in the main DTSI? I 
-forget exactly where all those discussions ended up, but if it matters 
-here then it probably matters for all RK3328 boards.
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK (Not Supported)
 
-> +	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
-> +	snps,reset-active-low;
-> +	snps,reset-delays-us = <0 10000 50000>;
+Total for kt0913-fm-am device /dev/radio0: 45, Succeeded: 45, Failed: 0, Warnings: 0
 
-Since you're describing the phy already, you can convert these to 
-generic reset specifiers on the phy node itself (shame we don't have an 
-interrupt wired up, oh well...)
+Santiago Hormazabal (3):
+  dt-bindings: vendor-prefixes: Add KT Micro
+  media: kt0913: device tree binding
+  media: Add support for the AM/FM radio chip KT0913 from KT Micro.
 
-> +	tx_delay = <0x24>;
-> +	rx_delay = <0x18>;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		compatible = "snps,dwmac-mdio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		rtl8211e: ethernet-phy@0 {
-> +			reg = <0>;
+ .../bindings/media/i2c/ktm,kt0913.yaml        |   56 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/media/radio/Kconfig                   |   10 +
+ drivers/media/radio/Makefile                  |    1 +
+ drivers/media/radio/radio-kt0913.c            | 1196 +++++++++++++++++
+ 5 files changed, 1265 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ktm,kt0913.yaml
+ create mode 100644 drivers/media/radio/radio-kt0913.c
 
-Is that right? The schematic says the phy is strapped for address 1 
-(although 0 probably does manage to work since it should be interpreted 
-as a broadcast address).
+-- 
+2.24.1
 
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	status = "okay";
-> +
-> +	rk805: rk805@18 {
-> +		compatible = "rockchip,rk805";
-> +		reg = <0x18>;
-> +		interrupt-parent = <&gpio2>;
-> +		interrupts = <6 IRQ_TYPE_LEVEL_LOW>;
-
-The schematic says GPIO1_D0 for this.
-
-> +		#clock-cells = <1>;
-> +		clock-output-names = "xin32k", "rk805-clkout2";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pmic_int_l>;
-> +		rockchip,system-power-controller;
-> +		wakeup-source;
-> +
-> +		vcc1-supply = <&vcc_sys>;
-> +		vcc2-supply = <&vcc_sys>;
-> +		vcc3-supply = <&vcc_sys>;
-> +		vcc4-supply = <&vcc_sys>;
-> +		vcc5-supply = <&vcc_io>;
-> +		vcc6-supply = <&vcc_sys>;
-> +
-> +		regulators {
-> +			vdd_logic: DCDC_REG1 {
-
-This is "vdd_log".
-
-> +				regulator-name = "vdd_logic";
-> +				regulator-min-microvolt = <712500>;
-> +				regulator-max-microvolt = <1450000>;
-> +				regulator-ramp-delay = <12500>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <1000000>;
-> +				};
-> +			};
-> +
-> +			vdd_arm: DCDC_REG2 {
-> +				regulator-name = "vdd_arm";
-> +				regulator-min-microvolt = <712500>;
-> +				regulator-max-microvolt = <1450000>;
-> +				regulator-ramp-delay = <12500>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <950000>;
-> +				};
-> +			};
-> +
-> +			vcc_ddr: DCDC_REG3 {
-> +				regulator-name = "vcc_ddr";
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_io: DCDC_REG4 {
-
-This is "vcc_io_33".
-
-> +				regulator-name = "vcc_io";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <3300000>;
-> +				};
-> +			};
-> +
-> +			vcc_18: LDO_REG1 {
-> +				regulator-name = "vcc_18";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <1800000>;
-> +				};
-> +			};
-> +
-> +			vcc18_emmc: LDO_REG2 {
-> +				regulator-name = "vcc18_emmc";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <1800000>;
-> +				};
-> +			};
-> +
-> +			vdd_10: LDO_REG3 {
-> +				regulator-name = "vdd_10";
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <1000000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +					regulator-suspend-microvolt = <1000000>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&io_domains {
-> +	status = "okay";
-> +
-> +	vccio1-supply = <&vcc_io>;
-> +	vccio2-supply = <&vcc18_emmc>;
-> +	vccio3-supply = <&vcc_sdio>;
-> +	vccio4-supply = <&vcc_18>;
-> +	vccio5-supply = <&vcc_io>;
-> +	vccio6-supply = <&vcc_io>;
-> +	pmuio-supply = <&vcc_io>;
-> +};
-> +
-> +&pinctrl {
-> +	leds {
-> +		led_pins: led-pins {
-> +			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>,
-> +							<2 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>,
-> +							<2 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	button {
-> +		button_pins: button-pins {
-> +			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	pmic {
-> +		pmic_int_l: pmic-int-l {
-> +			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +	};
-> +
-> +	sd {
-> +		sdio_vcc_pin: sdio-vcc-pin {
-> +			rockchip,pins = <1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +	};
-> +};
-> +
-
-It shouldn't hurt to enable PWM2 from the outset to make mucking about 
-with the fan easier.
-
-> +&sdmmc {
-> +	bus-width = <4>;
-> +	cap-mmc-highspeed;
-> +	cap-sd-highspeed;
-
-How about UHS modes, since we have the requisite I/O voltage support?
-
-> +	disable-wp;
-
-I believe this property is only meant for full-size MMC/SD sockets where 
-write-protect functionality is expected but somehow broken. For micro-SD 
-sockets the SoC pin should be hard-wired to write-enable anyway and thus 
-it shouldn't need to be stated.
-
-> +	max-frequency = <150000000>;
-
-This is in the DTSI already.
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
-> +	vmmc-supply = <&vcc_sd>;
-> +	vqmmc-supply = <&vcc_sdio>;
-> +	status = "okay";
-> +};
-> +
-> +&tsadc {
-> +	rockchip,hw-tshut-mode = <0>;
-> +	rockchip,hw-tshut-polarity = <0>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&u2phy {
-> +	status = "okay";
-> +
-> +	u2phy_host: host-port {
-
-Just reference this by label directly, rather than as a child node here 
-(especially since redefining the existing label is a bit confusing).
-
-> +		status = "okay";
-> +	};
-> +};
-
-No reason not to enable the OTG port either - I've hacked that in with 
-g_serial for a cheeky console while powering the board from my laptop 
-and it works fine.
-
-Cheers,
-Robin.
-
-> +
-> +&usb_host0_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ohci {
-> +	status = "okay";
-> +};
-> 
