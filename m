@@ -2,173 +2,197 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43488C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148D8C433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209F32068F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596470688;
-	bh=/UX1OU9tHTJm7VObpjM87RBY5SlTmYFqwKSYlfihuqs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nGnDlUv3J8tTiy4yyhhAbNC4TP6lfFPHsY+lShYXaSFVfxYdjiD0u0px2qweLPyoJ
-	 gpvTlHDPFj+WJiwJ+WBi+xEEJ6993VPQip6ybcMFm3F81J3qXAEQpsqhTyEvhOUsQF
-	 xhjeudaCzBTMZEj8avpTbmy7Ztc1GS1m+ufiHiKY=
+	by mail.kernel.org (Postfix) with ESMTP id E498120A8B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 16:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRT3NoZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgHCQEs (ORCPT
+        id S1726889AbgHCQFk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727824AbgHCQEr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:04:47 -0400
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DF23207FB;
-        Mon,  3 Aug 2020 16:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596470685;
-        bh=/UX1OU9tHTJm7VObpjM87RBY5SlTmYFqwKSYlfihuqs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Aex1PHJJaysd09vlU+np1whABVJWYO/wgGVEovV9wOg6cLl2CSU719BxSEiosliwK
-         wHInjDZVIy8Mkb2GSxlkHKBZx23l5uhEGcX56SdQsqnYYjVkxSXdgN5xk9ZV3BAO+u
-         ZiLZxLktesZol9ClUnGepKSVXZxgvYc2LulD6qic=
-Received: by mail-ej1-f53.google.com with SMTP id qc22so24397867ejb.4;
-        Mon, 03 Aug 2020 09:04:45 -0700 (PDT)
-X-Gm-Message-State: AOAM533OvhGiBbd/rAPnHnPjpIPrEL4YZTN8tlWHXI1MZ5KgbS9AmxXQ
-        zyBk+J+JsNuxgLhh11E+/neQjQyEtALsUOyNpg==
-X-Google-Smtp-Source: ABdhPJwRrgFwRW06WGSZvbtle0QlHRJDgbphx4LdcrD/9UInwK+e+ZsDqq23da9XgbPticp6xo1sUinxOUHtS7ayNBw=
-X-Received: by 2002:a17:906:7492:: with SMTP id e18mr16973100ejl.375.1596470684579;
- Mon, 03 Aug 2020 09:04:44 -0700 (PDT)
+        Mon, 3 Aug 2020 12:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgHCQFk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 12:05:40 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF65FC06174A;
+        Mon,  3 Aug 2020 09:05:39 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id jp10so12634287ejb.0;
+        Mon, 03 Aug 2020 09:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ah4YH4xbs7o/4fq+m4lwGvpsZR2W5DSohgKfYKy8nDY=;
+        b=RRT3NoZzMjb6Id7P0RK+UDCMsf5oZdEydsvBjoMiJcskzKRpOUEsQzx6qIvuoQlmDT
+         u8vRodRqxLsPWN5Dbj2lA2PviILlK5OwWWUFTbYWQTvS9W6fhhBrOsCEbN5MkJ3IG9HW
+         eIgu3QAEawQBR3Cv2vkjl2bXrYrf8zIgZ3UWAZ6DMQY0sW+2ac/IuRcOKVyhVykmSWRX
+         Y74nTh4lPAbGDNg+C2zB/FD976THLzC5hXy9pS2ljImHkaOpf7cXMGodgJMan0Toee4N
+         qte5ce3imkSfVSwKVxqNEM4LVNSKw9WHeyqYDiqh+Vos87hWhPJkMXhyevGdBlz6A9UA
+         aKJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ah4YH4xbs7o/4fq+m4lwGvpsZR2W5DSohgKfYKy8nDY=;
+        b=mk3vXgVfkDFtTCRmBPDNVNiLZfEGaUGJuykFO0dDOtb/wQnhes7pXTy4yllx9rb3mY
+         ppfLwH+7Syc0vtF9buGZ1hQymlpI43vy1LYdKj9CHWx7gvXFs5my+l6xR8JDiqQVnOWW
+         q/SC/3lWFZN1bSTtKDUiIvVu3mTVqR1fTMUvbDCLTt1VnHJ/WwPqUGw3IWuG+sDRp/0l
+         fARV2OA2NDzmV1vMkTm9l5QIMVHLTurqZmEkUksS3onOygTiCNvPCEsnA8zhM1oZEi5T
+         WeSwQAI35gAWIlI/IilSwY5uW3AEcagfIA4QNKoMHWqbRqySyGpUO9cKzHCMYvjLSb2q
+         dS2Q==
+X-Gm-Message-State: AOAM531Nr9VV/kBwvHcrO8A8cj428Z/NVqWPMaBLwTLs4saXg5GLUC9T
+        OQpigdy3JAwB3xxD1Ox44U45rgrnr23CevrkygY=
+X-Google-Smtp-Source: ABdhPJxIp3nRKzPD7aLMKkOD0USdNBngKLF1wq5jJex6eDWi4SWxesozUtiIOxBttUwOihyMdPPdYfhg8CuqAY8V+Gs=
+X-Received: by 2002:a17:906:3449:: with SMTP id d9mr17737671ejb.460.1596470738295;
+ Mon, 03 Aug 2020 09:05:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
- <1596010690-13178-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8aw=6E7bMJwz5jDLXUxYHpy9_Avbwc90osQGckzANNcg@mail.gmail.com>
- <1596427295.22971.20.camel@mtkswgap22>
-In-Reply-To: <1596427295.22971.20.camel@mtkswgap22>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 4 Aug 2020 00:04:30 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__VPXMGcR9w8EdnGbJyVbxbLQY+SRAqLbOcTy0D_WLM0w@mail.gmail.com>
-Message-ID: <CAAOTY__VPXMGcR9w8EdnGbJyVbxbLQY+SRAqLbOcTy0D_WLM0w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+References: <20200726111215.22361-1-konradybcio@gmail.com> <20200726111215.22361-5-konradybcio@gmail.com>
+ <20200803110016.GL12965@vkoul-mobl>
+In-Reply-To: <20200803110016.GL12965@vkoul-mobl>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 3 Aug 2020 09:06:22 -0700
+Message-ID: <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
+Subject: Re: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        martin.botka1@gmail.com, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Neal:
+On Mon, Aug 3, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 26-07-20, 13:12, Konrad Dybcio wrote:
+> > These SoCs make use of the 14nm phy, but at different
+> > addresses than other 14nm units.
+> >
+> > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> > ---
+> >  .../devicetree/bindings/display/msm/dsi.txt    |  1 +
+> >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
+> >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
+> >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
+>
+> Is there a reason why dsi phy needs to be here and not in phy subsystem
+> drivers/phy/ ?
 
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8812:01=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> On Sat, 2020-08-01 at 08:12 +0800, Chun-Kuang Hu wrote:
-> > Hi, Neal:
-> >
-> > This patch is for "mediatek,mt6779-devapc", so I think commit title
-> > should show the SoC ID.
->
-> Okay, I'll change title to 'soc:mediatek: add mt6779 devapc driver'.
->
-> >
-> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=8829=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > MediaTek bus fabric provides TrustZone security support and data
-> > > protection to prevent slaves from being accessed by unexpected
-> > > masters.
-> > > The security violation is logged and sent to the processor for
-> > > further analysis or countermeasures.
-> > >
-> > > Any occurrence of security violation would raise an interrupt, and
-> > > it will be handled by mtk-devapc driver. The violation
-> > > information is printed in order to find the murderer.
-> > >
-> > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > ---
-> >
-> > [snip]
-> >
-> > > +
-> > > +struct mtk_devapc_context {
-> > > +       struct device *dev;
-> > > +       u32 vio_idx_num;
-> > > +       void __iomem *devapc_pd_base;
-> > > +       struct mtk_devapc_vio_info *vio_info;
-> > > +       const struct mtk_devapc_pd_offset *offset;
-> > > +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
-> > > +};
-> >
-> > I think this structure should separate the constant part. The constant =
-part is:
-> >
-> > struct mtk_devapc_data {
-> >     const u32 vio_idx_num;
-> >     const struct mtk_devapc_pd_offset *offset; /* I would like to
-> > remove struct mtk_devapc_pd_offset and directly put its member into
-> > this structure */
-> >     const struct mtk_devapc_vio_dbgs *vio_dbgs; /* This may disappear *=
-/
-> > };
-> >
-> > And the context is:
-> >
-> > struct mtk_devapc_context {
-> >     struct device *dev;
-> >     void __iomem *devapc_pd_base;
-> >     const struct mtk_devapc_data *data;
-> > };
-> >
-> > So when you define this, you would not waste memory to store non-consta=
-nt data.
-> >
-> > static const struct mtk_devapc_data devapc_mt6779 =3D {
-> >  .vio_idx_num =3D 510,
-> >  .offset =3D &mt6779_pd_offset,
-> >  .vio_dbgs =3D &mt6779_vio_dbgs,
-> > };
-> >
->
-> Sorry, I still don't understand why this refactoring will not waste
-> memory to store non-constant data. Could you explain more details?
-> To my understanding, we still also have to allocate memory to store dev
-> & devapc_pd_base.
+*maybe* it would be possible to split out all of the dsi (and hdmi)
+phy to drivers/phy.  But splitting out just the new ones wouldn't be
+practical (it would duplicate a lot of code, and make the rest of the
+dsi code have to deal with both cases).  And unlike dp/usb-c I'm not
+really sure I see an advantage to justify the churn.
 
-In some situation, it is. You make the non-constant data a global
-variable. I think the context data should be dynamic allocated. If
-this driver is not probed, the non-constant data occupy the memory.
-
-Regards,
-Chun-Kuang.
+BR,
+-R
 
 >
-> > Regards,
-> > Chun-Kuang.
+> >  4 files changed, 22 insertions(+)
 > >
-> > > +
-> > > +#endif /* __MTK_DEVAPC_H__ */
-> > > --
-> > > 1.7.9.5
-> > > _______________________________________________
-> > > Linux-mediatek mailing list
-> > > Linux-mediatek@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> > diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> > index af95586c898f..7884fd7a85c1 100644
+> > --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> > +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> > @@ -87,6 +87,7 @@ Required properties:
+> >    * "qcom,dsi-phy-20nm"
+> >    * "qcom,dsi-phy-28nm-8960"
+> >    * "qcom,dsi-phy-14nm"
+> > +  * "qcom,dsi-phy-14nm-660"
+> >    * "qcom,dsi-phy-10nm"
+> >    * "qcom,dsi-phy-10nm-8998"
+> >  - reg: Physical base address and length of the registers of PLL, PHY. Some
+> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+> > index f509ebd77500..009f5b843dd1 100644
+> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+> > @@ -499,6 +499,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
+> >  #ifdef CONFIG_DRM_MSM_DSI_14NM_PHY
+> >       { .compatible = "qcom,dsi-phy-14nm",
+> >         .data = &dsi_phy_14nm_cfgs },
+> > +     { .compatible = "qcom,dsi-phy-14nm-660",
+> > +       .data = &dsi_phy_14nm_660_cfgs },
+> >  #endif
+> >  #ifdef CONFIG_DRM_MSM_DSI_10NM_PHY
+> >       { .compatible = "qcom,dsi-phy-10nm",
+> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+> > index 24b294ed3059..ef8672d7b123 100644
+> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+> > @@ -45,6 +45,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_28nm_lp_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_20nm_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_28nm_8960_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs;
+> > +extern const struct msm_dsi_phy_cfg dsi_phy_14nm_660_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_10nm_cfgs;
+> >  extern const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs;
+> >
+> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
+> > index 1594f1422372..519400501bcd 100644
+> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
+> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c
+> > @@ -161,3 +161,21 @@ const struct msm_dsi_phy_cfg dsi_phy_14nm_cfgs = {
+> >       .io_start = { 0x994400, 0x996400 },
+> >       .num_dsi_phy = 2,
+> >  };
+> > +
+> > +const struct msm_dsi_phy_cfg dsi_phy_14nm_660_cfgs = {
+> > +     .type = MSM_DSI_PHY_14NM,
+> > +     .src_pll_truthtable = { {false, false}, {true, false} },
+> > +     .reg_cfg = {
+> > +             .num = 1,
+> > +             .regs = {
+> > +                     {"vcca", 17000, 32},
+> > +             },
+> > +     },
+> > +     .ops = {
+> > +             .enable = dsi_14nm_phy_enable,
+> > +             .disable = dsi_14nm_phy_disable,
+> > +             .init = dsi_14nm_phy_init,
+> > +     },
+> > +     .io_start = { 0xc994400, 0xc996000 },
+> > +     .num_dsi_phy = 2,
+> > +};
+> > --
+> > 2.27.0
 >
+> --
+> ~Vinod
