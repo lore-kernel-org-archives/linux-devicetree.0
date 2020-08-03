@@ -2,116 +2,105 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A87C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A2FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7502F20722
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7662076E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 21:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596491282;
-	bh=AUM+yvLlMS9mqRubh71+CUwV8yF8OXdcLCnLDg19Eoo=;
+	s=default; t=1596491513;
+	bh=NGcDR1KaNhU41LcBuXJG16Vb08XHmxYCOBXL5/HWb0s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aEWYz1Y5rqGUXGTjFf8YqQ++lq499ldR7RbmTaREl97Om9dUkBGGSM7ATCBez50/9
-	 IgPuLb2HylSxyaT1K0LsEZ4XMwmi9TK0gcEMnsl8rD/Q0MH2G029DzKmIjDu2R1R3o
-	 Iz1J9g8plF9sflwOL2C7RiwGvHhFISR+Zz9JqoEI=
+	b=r3K4h3uAeHElB+olSHCpzyVyclfz76jgqzc5mO+f5xk5EVLmW4tD/2YroL86EbmQu
+	 v98Ufu8dK6+6B3Nf3+NUnDnuv5K3UQ5ylzLRIIjjG2J/X9xSnHOLyPgNaV1G8P2f2L
+	 CpAXSd9F4mxRVUp7DlnCVK3tjMm/ok4Ng5YEAsUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHCVsB (ORCPT
+        id S1726239AbgHCVvv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:48:01 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35554 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgHCVsB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:48:01 -0400
-Received: by mail-il1-f194.google.com with SMTP id t18so32473613ilh.2;
-        Mon, 03 Aug 2020 14:48:01 -0700 (PDT)
+        Mon, 3 Aug 2020 17:51:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43107 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgHCVvv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 17:51:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id k23so40077726iom.10;
+        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=sHz6FTErPUV4uyPRUEgxafeUbmRMcPUvMFZhatB72Us=;
-        b=Yyk1n7dzqmC4cez/CFM6wVD38vk+u2o/NTUwcWVJPvXzY/jJ+8hyXMua+5gpgYILxO
-         19Jb6oUWQmnjLSJ16pjOurFrqR4YYv74Ve1DACmKnw+g72T13Dv/EH30bd97axdogKFf
-         O7cpO9RaZXjHYnkEPICKp/U/7/mT1vN79+VR+SuiZREdT7DosUmxQlQyZcw31tUgFEvt
-         MSgBPwCsJYjXRNQmRSdGZOz4A7bQo1TNeIomvoAoyLJW4TPRz9r6Inqi5Ab1SSO21EDu
-         ATsA2utRH9Xzp0Nn/HLgJfpMMwg52S2Tc3ENkm9e6eWHYJFYxCLgw3Ff4HOqUxrim69K
-         0+5A==
-X-Gm-Message-State: AOAM532IPF0m8QjlR2i9xhELNUqjjftvF1DliEpIaKKd+Mknfl2zEcY2
-        Ci0ESsk4FARdA8cwl+fqxw==
-X-Google-Smtp-Source: ABdhPJylcuweeEkx+1+KUovLiYX8jxNRUF3xyQNwfrqYRLu+TiNCe7seRBGrPKmFOecJ6W8M8VxmBA==
-X-Received: by 2002:a92:aa49:: with SMTP id j70mr1548669ili.107.1596491280702;
-        Mon, 03 Aug 2020 14:48:00 -0700 (PDT)
+        bh=rTTd0JLEQIircW3THThScxa603LDzD4tC7cJBVnxw/8=;
+        b=PS9Vc/RaXghQo6qgZra6AA1HZaUeqqdzy5Sh+gGZDDLwLd3xw0hXBc2A9kgZ/p+kD3
+         CxamUkzPr2Zak69584gWpoPi9bHPd6T9g72y66RME3WGe88T/Kh56wOcNmPXqT8gWhPv
+         5Im1tAD/UlEefCQKXdrge5C73h1hnM0VY3cDkQ+o9vCylwNZaGvbI5PLwz+/m451yFcf
+         oNkSvqUHFncWrRWYCmRRpW+tz9Af23KH0RlIlcbNgs+TGoAQiE3GUjAYsuIZCp+g0Qg1
+         VoyIwUKcoZ4t7wN5Bs9uFL6sJd1MDBwzDXBwAkL7Thw87/1uHBONB7VHcXfgIptX6hnD
+         QJRA==
+X-Gm-Message-State: AOAM5300fO1gBZf1ZnUCqVxG8GxXcmb2qCFUISiVFzUjAB0gUBUsN0y5
+        cl3PoegjrrHTgpDYSZst3Q==
+X-Google-Smtp-Source: ABdhPJwk9JxW57b/cc2Ai3TSARPfqnml762G9Vu/UjF/k0tep6wviRYkAv+/P4mTcChWZ7hQ2RQBRg==
+X-Received: by 2002:a6b:dd12:: with SMTP id f18mr1938079ioc.109.1596491510169;
+        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d6sm10704358ioo.9.2020.08.03.14.47.58
+        by smtp.gmail.com with ESMTPSA id v63sm5891342ilk.67.2020.08.03.14.51.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 14:48:00 -0700 (PDT)
-Received: (nullmailer pid 3194959 invoked by uid 1000);
-        Mon, 03 Aug 2020 21:47:57 -0000
-Date:   Mon, 3 Aug 2020 15:47:57 -0600
+        Mon, 03 Aug 2020 14:51:49 -0700 (PDT)
+Received: (nullmailer pid 3201910 invoked by uid 1000);
+        Mon, 03 Aug 2020 21:51:47 -0000
+Date:   Mon, 3 Aug 2020 15:51:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     devicetree@vger.kernel.org, alix.wu@mediatek.com,
-        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de,
-        robh+dt@kernel.org, yj.chiang@mediatek.com
-Subject: Re: [PATCH 2/2] dt-bindings: interrupt-controller: Add MT58XX
- interrupt controller
-Message-ID: <20200803214757.GA3194548@bogus>
-References: <20200803062214.24076-1-mark-pk.tsai@mediatek.com>
- <20200803062214.24076-3-mark-pk.tsai@mediatek.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
+ mask cell support
+Message-ID: <20200803215147.GA3201744@bogus>
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803062214.24076-3-mark-pk.tsai@mediatek.com>
+In-Reply-To: <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 03 Aug 2020 14:22:14 +0800, Mark-PK Tsai wrote:
-> Add binding for MT58XX interrupt controller.
+On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
+> Each DW DMA controller channel can be synthesized with different
+> parameters like maximum burst-length, multi-block support, maximum data
+> width, etc. Most of these parameters determine the DW DMAC channels
+> performance in its own aspect. On the other hand these parameters can
+> be implicitly responsible for the channels performance degradation
+> (for instance multi-block support is a very useful feature, but having
+> it disabled during the DW DMAC synthesize will provide a more optimized
+> core). Since DMA slave devices may have critical dependency on the DMA
+> engine performance, let's provide a way for the slave devices to have
+> the DMA-channels allocated from a pool of the channels, which according
+> to the system engineer fulfill their performance requirements.
 > 
-> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> The pool is determined by a mask optionally specified in the fifth
+> DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> phandle arguments or the mask is zero, then the allocation will be
+> performed from a set of all channels provided by the DMA controller.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > ---
->  .../mediatek,mt58xx-intc.yaml                 | 70 +++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml
+>  .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:compatible: [{'items': [{'const': 'mediatek,mt58xx-intc'}]}] is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,intc-no-eoi: {'description': 'Mark this controller has no End Of Interrupt(EOI) implementation.\nThis is a empty, boolean property.\n'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,intc-no-eoi: 'not' is a required property
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,irqs-map-range: {'description': "The range of parent interrupt controller's interrupt lines\nthat are hardwired to MT58xx interrupt controller.\n"} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: properties:mediatek,irqs-map-range: 'not' is a required property
-
-Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/interrupt-controller/mediatek,mt58xx-intc.yaml#
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: ignoring, error in schema: properties: compatible
-warning: no schema found in file: ./Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml: ignoring, error in schema: properties: compatible
-warning: no schema found in file: ./Documentation/devicetree/bindings/interrupt-controller/mediatek,mt58xx-intc.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-
-See https://patchwork.ozlabs.org/patch/1340146
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
