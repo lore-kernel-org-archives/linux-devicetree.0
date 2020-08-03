@@ -2,256 +2,266 @@ Return-Path: <SRS0=SgxY=BN=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03A3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631AAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83839206D7
-	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B84B207DF
+	for <linux-devicetree@archiver.kernel.org>; Mon,  3 Aug 2020 15:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xh6Tk89e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gxeYSalN";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="aLBdQVUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgHCPWK (ORCPT
+        id S1726130AbgHCPdp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:22:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgHCPWJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 11:22:09 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41654C06174A
-        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 08:22:09 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id l23so13802098edv.11
-        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 08:22:09 -0700 (PDT)
+        Mon, 3 Aug 2020 11:33:45 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:28253 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCPdp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 11:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1596468824; x=1628004824;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ZP9zHc+RtoW/r4LN9MNnECKyPjcD3QCtYDpMMSGohgA=;
+  b=gxeYSalNa+x1I7S+Ce8V2KIesFE3dyRsKLoOEf3QmK2Rs2cAcQ5bjxih
+   nU0uvHjItrkG4/PmXQ2+Q0tah7HIadXAVgb2LaExuybAS8W82y1fsnOvi
+   W85kYVXv1LaWpxgwPepYf76u/UBfMbEbk08bKCTkup4ipW2X6BN/IHPdC
+   3wIwl8BS6Y5V3slHzNYnJvHjZLYwyM9kyPGtNveO1uOxACZKsVD5VjMia
+   wbIjZzgj/ziZf4F/dhyueiWhCPswkC53QAiNhvxWYybIBu8B5nwXgMq5O
+   NtIr16oe7xZdGyExocr9UPG0j558BGa0bdOr2zARi5fkSEVmjGfBkHy5x
+   Q==;
+IronPort-SDR: t+86kMvNcOsyW1owOM/S5oHoVYgrbN4VF6cFc4lrjMaV+RGGLA4nRppnV6llvtad93J9e/LOKh
+ nV3fkzVjuLgF//zNQ+/ORoHE9SLdf1VruxA6eXBi2MwXchNSAgrLDbLNPh+iHLEza2kNWKDrfv
+ 0Ep7bk7oAevNYcNS9NoE3Q7NyWaJIUoJUI/nApbGdKn2ARkPA+z7/l68XjjIUaYWEEXlNwi62J
+ wFCNyJTElX04ZbfvUArebCrPSs37W05WGR00NaYjITp1zHyTqh7vtyCcdkSmWjX5+BrBCs2+Pw
+ pb8=
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="86500958"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 08:33:43 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 3 Aug 2020 08:33:39 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 3 Aug 2020 08:33:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XLU+C4pHDa4ePfhZS54jpjv2ofdPg9MmJ7cIgbkJHR/1ep+wS8ulW2TpU/P96UjFFcCtshGGp6vmIJAtJOj2+yu44m0GVAL2HPiExoJ82zlkp0d8MiMRnwb+gFdUWYeVEqvCQ/r+y+JkHQ1GqCl/WG8sl2WhQSTeIS3HLkaoq8cwb3Iud9EfxhlfhKbqc/51rjxNY+KdMBtly8oJx2ymUaO/rQWTtOrvAPRhKTw0n20iB2LUARzg77lblSTj7PqfWY3tmSnPq7Sr9MjSrCxDi7v9Ww4ZcQ+L+eEv0juQkO7OGtCz2WUkpHJ/2En1m6SveZBMh4zaXyEgFbRQ5uHqHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OFie4Z6MePp8d167KBYoHXywZHUOH+lggMzRgLCZ66A=;
+ b=NFM32w5ypgZJMHx1eoUSMXG6PlsnSVA6HOGotS24MByLVCX+CZRM5k0SkD73b/FUSyibVCOBTG4LU0vdMGO11isJeM1HMnbW4y9SWNsftzb3S4BO3X+BlYHybZP37/1lmIDW1w2kFC+mMyv+aq7WZEVWwT1BAR1PD0ug0lBwM9+NVN17rK53sfP/VZ2IKUBVHDtXsOIPw7HCypjk7atofX2rH9a66JjHkYeC9JKVFQcnSzUr3eNpshf2gXG+8o+9xUTStklow4qx6X4jkg3qfilA/J7qg+o2pGNFN6WaxrlZW9uGp9SLQIvgbHD+HLp3dBmB1lU3t0xXLs6TpMjE1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZuffSV18EU8xXSBhhfIwDGXYr/xPk0io21XcCQbtbWg=;
-        b=Xh6Tk89eXSY7i4v3XL6YA/R//V/PF6If0rB7BsjJsL1YvBB2H6U2naNnR4xQgcVtK9
-         5NMYwXK2oHiQcbumBgSP1qBIr1C6/6/JPq0EV+XOE3xiFQZn3ZnGx02QsR3aMU/cHkxg
-         ivTK+tKnbWJ+7aVF2V+YV6Qqiv2o1MQ4lbzqk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZuffSV18EU8xXSBhhfIwDGXYr/xPk0io21XcCQbtbWg=;
-        b=CZreOl/FOUp8eqQRstWlwhvvNGlyxsKgLW1e2pdI8wtxIgIZWNf4UILj8axdzhoPC7
-         FmcbLdfV/BjCJnL+glB8AOTt4Md9aVwCa+U0nrqRQX9Vm/tQv/hBq9hQcMebHwQH06Rj
-         vVh6PsCLrbfn434jV4Wi6ymakNTT1uoNuiH36IDnAJAP0y+qtrR9Eu9VPuhrAWWdeMm7
-         ujnHbkh4vI1HC3Ck9LKImyvbGYwbQAB2cBAxl2uko2Z2Vi82PI2FWn7HdUlchBKy2JB/
-         koC4MtsHOmHOZoxZVgtjAYkNgqNVWfX732zHtwflfU5n1oN9jzF0V0FD9QZ/hfeX6mo2
-         NZsQ==
-X-Gm-Message-State: AOAM531wLeWystPuagA8Vl3o9ZwuULvtjOFOYjNVV7vccubgwiamcs+U
-        /XP1td/P2Hss2OUW7+B+w1jo8akolUc=
-X-Google-Smtp-Source: ABdhPJzJf1dFBQuRhIHqE4u1RhJrgnvdjMMdJy3ECk63yuulqEePcCZ/K2wFsFcIVhzneozMikAo2A==
-X-Received: by 2002:aa7:d047:: with SMTP id n7mr16838345edo.78.1596468127490;
-        Mon, 03 Aug 2020 08:22:07 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id m13sm16197444edi.89.2020.08.03.08.22.07
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 08:22:07 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id r4so31617442wrx.9
-        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 08:22:07 -0700 (PDT)
-X-Received: by 2002:a5d:6744:: with SMTP id l4mr16794657wrw.105.1596467732538;
- Mon, 03 Aug 2020 08:15:32 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OFie4Z6MePp8d167KBYoHXywZHUOH+lggMzRgLCZ66A=;
+ b=aLBdQVUhn3gVJahROYw6h3mZjmTTs2StOmoBNbv/M0LEDEBmh6TK9GDPiJCTU+cI3OjxWuCG98B1sJFOaKPleoysSa5+KaDk3/mGJWLecC/Dy1ocl086VQpn8EEZNFhJyRsMSOC0BaprRKE5kQVZ1kYE5SfNorqcPdEYyMHuug0=
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17)
+ by SA0PR11MB4765.namprd11.prod.outlook.com (2603:10b6:806:9b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Mon, 3 Aug
+ 2020 15:33:42 +0000
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf]) by SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 15:33:42 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <wsa@kernel.org>
+CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+Subject: Re: Re: [RFC PATCH 3/4] i2c: core: treat EPROBE_DEFER when acquiring
+ SCL/SDA GPIOs
+Thread-Topic: Re: [RFC PATCH 3/4] i2c: core: treat EPROBE_DEFER when acquiring
+ SCL/SDA GPIOs
+Thread-Index: AQHWRkTnXY0butV020yTUidEL/axqqklUZIAgAF4w4A=
+Date:   Mon, 3 Aug 2020 15:33:41 +0000
+Message-ID: <15a449fa-d649-846a-e6f2-1540f9581846@microchip.com>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-4-codrin.ciubotariu@microchip.com>
+ <20200802170500.GB10193@kunai>
+In-Reply-To: <20200802170500.GB10193@kunai>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [84.232.220.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1e70a0a5-d500-4095-c229-08d837c29a0e
+x-ms-traffictypediagnostic: SA0PR11MB4765:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SA0PR11MB4765CD69C2986B03026DC574E74D0@SA0PR11MB4765.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +XQrR8ULTxhRP+0/qWNkrUAppcVLg/eJzBuX7X32d3zvEnl6Ma1poIPwgJFHURMtLm8uPmd8Rz4BAVBbNRj8k6qV//9PWkUCeTmDR7hghoi3YxR08aGEhQq1H03iOKtG+8kcdM8TZgnGWIBgELSWsKECCm+8RwQVMKnUVnOF5LhMUnfeV7ilImYUX0WIfszyBgILgn5tuNK363aFAcLLfTmCivQU54ppuQKaED6FLcFSdQKAx3A97RZEA+wv8hbXUmPZEIjeXMSAR/O/Sdl3JEHhb28Sf7yInRdhw2geGmTmmEqOP1rNqTyQBd1bQXxB7mra6TBYHRRZKCCb57KZHC0FT9aCUBR6rdhKdSJfqLmpGhSnIhRvRKMwM8ctLDSY
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3504.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(376002)(396003)(39860400002)(136003)(6512007)(91956017)(64756008)(66446008)(26005)(186003)(54906003)(76116006)(5660300002)(66946007)(66476007)(66556008)(53546011)(31686004)(6506007)(71200400001)(316002)(83380400001)(8936002)(4326008)(478600001)(86362001)(8676002)(36756003)(31696002)(2906002)(2616005)(6486002)(6916009)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: EHvCS5bATUqWJYGI+6cZJmPVnVCuk7+sV4ifZUP4FfJ4cFEt0vwZ8/vl6WlR9Y/Fq2Hi0rkTiqUrJszt9OkX4hB4D4eSpVNMxHxxhyaN6DMvCd6znv/+85yacz5NgcsbxiirSMaI2Xxa20qM9GHO/pfAz9yP5xtNdzJjntQv9BLf7f+S2k7mI5kcDnKRAmBy9CA2VQut45rDsOr5Z9CguFAk9UQtMIxUlooNLfeqUTDcCcN6lcdo0E98QonvHPfY+76vxR9FDdMRem7rWu5pb+LfsHZudePfDShfusJxXOPgrVg+mq+7XNZh8XwLhtzTfWOppJQiUHLkIbeB1codp0HpFckdlmLR13zddH1uMfPik/6Z+7Uv8C54rT+YhmjVjkYAe/JjAgcW7sC1OjtPbL9X4mwIipklLCCJK5r528/+2cjVeWsCWYze09YxIuhdc6ub1NgFoD3rlJuTXKlTnr5IbOp1aGcjPENn1k5MLbFjrdOT7GhiMLz9nD/UoBTdaN1MZrCmGydA95xK9bcQIxy/jUIZkER+Q10pplt7eaqM2nNCHmRqukKUE2j9BUwWJ5S6ezFP1SOPhlPO57SRMYRVKVY7VaPDEe1N9BEI+nFNgSQsyvrvUX3KmQ7u9w2YUt2rQmJTCFcLVEVtXF5bVA==
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <35F793B60A5DE54AB90ADAB6C9FCEB5A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200728050140.996974-1-tientzu@chromium.org> <20200728050140.996974-5-tientzu@chromium.org>
- <20200731205804.GB756942@bogus> <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
-In-Reply-To: <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 3 Aug 2020 17:15:20 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com>
-Message-ID: <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com>
-Subject: Re: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
-To:     Claire Chang <tientzu@chromium.org>, Rob Herring <robh@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3504.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e70a0a5-d500-4095-c229-08d837c29a0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 15:33:41.9394
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ior3wEQ6sR4Ssw2yVN4/v1IByjN6KiSeLILS0n5PIi4GFYIzFusjU1Ql3hMdpBIatOw8j/sr8DQ1laxHG2ZG1LWOOInUMz+mo9hvTSgDG24=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4765
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Claire and Rob,
+On 02.08.2020 20:05, Wolfram Sang wrote:
+> On Fri, Jun 19, 2020 at 05:19:03PM +0300, Codrin Ciubotariu wrote:
+>> Even if I2C bus GPIO recovery is optional, devm_gpiod_get() can return
+>> -EPROBE_DEFER, so we should at least treat that. This ends up with
+>> i2c_register_adapter() to be able to return -EPROBE_DEFER.
+>>
+>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>> ---
+>>   drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
+>>   1 file changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+>> index 4ee29fec4e93..f8d9f2048ca8 100644
+>> --- a/drivers/i2c/i2c-core-base.c
+>> +++ b/drivers/i2c/i2c-core-base.c
+>> @@ -368,15 +368,16 @@ static int i2c_gpio_init_recovery(struct i2c_adapt=
+er *adap)
+>>   	return i2c_gpio_init_generic_recovery(adap);
+>>   }
+>>  =20
+>> -static void i2c_init_recovery(struct i2c_adapter *adap)
+>> +static int i2c_init_recovery(struct i2c_adapter *adap)
+>>   {
+>>   	struct i2c_bus_recovery_info *bri =3D adap->bus_recovery_info;
+>>   	char *err_str;
+>>  =20
+>>   	if (!bri)
+>> -		return;
+>> +		return 0;
+>>  =20
+>> -	i2c_gpio_init_recovery(adap);
+>> +	if (i2c_gpio_init_recovery(adap) =3D=3D -EPROBE_DEFER)
+>> +		return -EPROBE_DEFER;
+>>  =20
+>>   	if (!bri->recover_bus) {
+>>   		err_str =3D "no recover_bus() found";
+>> @@ -392,7 +393,7 @@ static void i2c_init_recovery(struct i2c_adapter *ad=
+ap)
+>>   			if (gpiod_get_direction(bri->sda_gpiod) =3D=3D 0)
+>>   				bri->set_sda =3D set_sda_gpio_value;
+>>   		}
+>> -		return;
+>> +		return 0;
+>=20
+> This is correct but I think the code flow is/was confusing. Can you drop
+> this 'return' and use 'else if' for the next code block? I think this is
+> more readable.
 
-On Mon, Aug 3, 2020 at 4:26 PM Claire Chang <tientzu@chromium.org> wrote:
->
-> On Sat, Aug 1, 2020 at 4:58 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Jul 28, 2020 at 01:01:39PM +0800, Claire Chang wrote:
-> > > Introduce the new compatible string, device-swiotlb-pool, for restricted
-> > > DMA. One can specify the address and length of the device swiotlb memory
-> > > region by device-swiotlb-pool in the device tree.
-> > >
-> > > Signed-off-by: Claire Chang <tientzu@chromium.org>
-> > > ---
-> > >  .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
-> > >  1 file changed, 35 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > index 4dd20de6977f..78850896e1d0 100644
-> > > --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > @@ -51,6 +51,24 @@ compatible (optional) - standard definition
-> > >            used as a shared pool of DMA buffers for a set of devices. It can
-> > >            be used by an operating system to instantiate the necessary pool
-> > >            management subsystem if necessary.
-> > > +        - device-swiotlb-pool: This indicates a region of memory meant to be
-> >
-> > swiotlb is a Linux thing. The binding should be independent.
-> Got it. Thanks for pointing this out.
->
-> >
-> > > +          used as a pool of device swiotlb buffers for a given device. When
-> > > +          using this, the no-map and reusable properties must not be set, so the
-> > > +          operating system can create a virtual mapping that will be used for
-> > > +          synchronization. Also, there must be a restricted-dma property in the
-> > > +          device node to specify the indexes of reserved-memory nodes. One can
-> > > +          specify two reserved-memory nodes in the device tree. One with
-> > > +          shared-dma-pool to handle the coherent DMA buffer allocation, and
-> > > +          another one with device-swiotlb-pool for regular DMA to/from system
-> > > +          memory, which would be subject to bouncing. The main purpose for
-> > > +          restricted DMA is to mitigate the lack of DMA access control on
-> > > +          systems without an IOMMU, which could result in the DMA accessing the
-> > > +          system memory at unexpected times and/or unexpected addresses,
-> > > +          possibly leading to data leakage or corruption. The feature on its own
-> > > +          provides a basic level of protection against the DMA overwriting buffer
-> > > +          contents at unexpected times. However, to protect against general data
-> > > +          leakage and system memory corruption, the system needs to provide a
-> > > +          way to restrict the DMA to a predefined memory region.
-> >
-> > I'm pretty sure we already support per device carveouts and I don't
-> > understand how this is different.
-> We use this to bounce streaming DMA in and out of a specially allocated region.
-> I'll try to merge this with the existing one (i.e., shared-dma-pool)
-> to see if that
-> makes things clearer.
->
+Ok, it makes sense. Should I make a separate patch for this only?
+One more question, should we keep:
+if (!bri->set_sda && !bri->get_sda) {
+	err_str =3D "either get_sda() or set_sda() needed";
+	goto err;
+}
+?
+Without {get/set}_sda we won't be able to generate stop commands and=20
+possibly check if the bus is free, but we can still generate the SCL=20
+clock pulses.
 
-Indeed, from the firmware point of view, this is just a carveout, for
-which we have the "shared-dma-pool" compatible string defined already.
+>=20
+>>   	}
+>>  =20
+>>   	if (bri->recover_bus =3D=3D i2c_generic_scl_recovery) {
+>> @@ -407,10 +408,12 @@ static void i2c_init_recovery(struct i2c_adapter *=
+adap)
+>>   		}
+>>   	}
+>>  =20
+>> -	return;
+>> +	return 0;
+>>    err:
+>>   	dev_err(&adap->dev, "Not using recovery: %s\n", err_str);
+>>   	adap->bus_recovery_info =3D NULL;
+>> +
+>> +	return 0;
+>=20
+> 'return -EINVAL;' I'd suggest.
 
-However, depending on the device and firmware setup, the way the
-carevout is used may change. I can see the following scenarios:
+OK
 
-1) coherent DMA (dma_alloc_*) within a reserved pool and no
-non-coherent DMA (dma_map_*).
+>=20
+>>   }
+>>  =20
+>>   static int i2c_smbus_host_notify_to_irq(const struct i2c_client *clien=
+t)
+>> @@ -1476,7 +1479,9 @@ static int i2c_register_adapter(struct i2c_adapter=
+ *adap)
+>>   			 "Failed to create compatibility class link\n");
+>>   #endif
+>>  =20
+>> -	i2c_init_recovery(adap);
+>> +	res =3D i2c_init_recovery(adap);
+>> +	if (res =3D=3D -EPROBE_DEFER)
+>> +		goto out_link;
+>=20
+> Please move 'i2c_init_recovery' above the class-link creation. It
+> shouldn't make a difference but we can skip the extra label and the
+> ifdeffery.
 
-This is how the "memory-region" property is handled today in Linux for
-devices which can only DMA from/to the given memory region. However,
-I'm not sure if no non-coherent DMA is actually enforced in any way by
-the DMA subsystem.
+Ok. Perhaps I should also move the debug print with the registered=20
+adapter after calling i2c_init_recovery().
 
-2) coherent DMA from a reserved pool and non-coherent DMA from system memory
+>=20
+>>  =20
+>>   	/* create pre-declared device nodes */
+>>   	of_i2c_register_devices(adap);
+>> @@ -1493,6 +1498,11 @@ static int i2c_register_adapter(struct i2c_adapte=
+r *adap)
+>>  =20
+>>   	return 0;
+>>  =20
+>> +out_link:
+>> +#ifdef CONFIG_I2C_COMPAT
+>> +	class_compat_remove_link(i2c_adapter_compat_class, &adap->dev,
+>> +				 adap->dev.parent);
+>> +#endif
+>>   out_reg:
+>>   	init_completion(&adap->dev_released);
+>>   	device_unregister(&adap->dev);
+>> --=20
+>> 2.25.1
+>>
 
-This is the case for the systems which have some dedicated part of
-memory which is guaranteed to be coherent with the DMA, but still can
-do non-coherent DMA to any part of the system memory. Linux handles it
-the same way as 1), which is what made me believe that 1) might not
-actually be handled correctly.
-
-3) coherent DMA and bounced non-coherent DMA within a reserved pool
-4) coherent DMA within one pool and bounced non-coherent within another pool
-
-These are the two cases we're interested in. Basically they make it
-possible for non-coherent DMA from arbitrary system memory to be
-bounced through a reserved pool, which the device has access to. The
-current series implements 4), but I'd argue that it:
-
-- is problematic from the firmware point of view, because on most of
-the systems, both pools would be just some carveouts and the fact that
-Linux would use one for coherent and the other for non-coherent DMA
-would be an OS implementation detail,
-- suffers from the static memory split between coherent and
-non-coherent DMA, which could either result in some wasted memory or
-the DMA stopped working after a kernel update if the driver changes
-its allocation pattern,
-
-and so we should rather go with 3).
-
-Now, from the firmware point of view, it doesn't matter how the OS
-uses the carveout, but I think it's still necessary to tell the OS
-about the device DMA capability. Right now we use "memory-region" for
-any kind of reserved memory, but looking at the above scenarios, there
-are 2 cases:
-
-a) the memory region is preferred for the device, e.g. it enables
-coherency, but the device can still DMA across the rest of the system
-memory. This is the case in scenario 2) and is kind of assumed in the
-Linux DMA subsystem, although it's certainly not the case for a lot of
-hardware, even if they use the "memory-region" binding.
-
-b) the memory region is the only region that the device can access.
-This is the case in scenarios 1), 3) and 4).
-
-For this, I'd like to propose a "restricted-dma-region" (feel free to
-suggest a better name) binding, which is explicitly specified to be
-the only DMA-able memory for this device and make Linux use the given
-pool for coherent DMA allocations and bouncing non-coherent DMA.
-
-What do you think?
+Do you want me to integrate this patch in the previous one?
 
 Best regards,
-Tomasz
-
-> >
-> > What is the last sentence supposed to imply? You need an IOMMU?
-> The main purpose is to mitigate the lack of DMA access control on
-> systems without an IOMMU.
-> For example, we plan to use this plus a MPU for our PCIe WiFi which is
-> not behind an IOMMU.
->
-> >
-> > >          - vendor specific string in the form <vendor>,[<device>-]<usage>
-> > >  no-map (optional) - empty property
-> > >      - Indicates the operating system must not create a virtual mapping
-> > > @@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> > >                       compatible = "acme,multimedia-memory";
-> > >                       reg = <0x77000000 0x4000000>;
-> > >               };
-> > > +
-> > > +             wifi_coherent_mem_region: wifi_coherent_mem_region {
-> > > +                     compatible = "shared-dma-pool";
-> > > +                     reg = <0x50000000 0x400000>;
-> > > +             };
-> > > +
-> > > +             wifi_device_swiotlb_region: wifi_device_swiotlb_region {
-> > > +                     compatible = "device-swiotlb-pool";
-> > > +                     reg = <0x50400000 0x4000000>;
-> > > +             };
-> > >       };
-> > >
-> > >       /* ... */
-> > > @@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> > >               memory-region = <&multimedia_reserved>;
-> > >               /* ... */
-> > >       };
-> > > +
-> > > +     pcie_wifi: pcie_wifi@0,0 {
-> > > +             memory-region = <&wifi_coherent_mem_region>,
-> > > +                      <&wifi_device_swiotlb_region>;
-> > > +             restricted-dma = <0>, <1>;
-> > > +             /* ... */
-> > > +     };
-> > >  };
-> > > --
-> > > 2.28.0.rc0.142.g3c755180ce-goog
-> > >
+Codrin
