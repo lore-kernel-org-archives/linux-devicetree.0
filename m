@@ -2,82 +2,121 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44951C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18D7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 12:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B96C2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eQluaBsh"
+	by mail.kernel.org (Postfix) with ESMTP id A5EAC22C9F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 12:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596543746;
+	bh=gey3esvl8wxAFJQ2OBCATSygwLbCiyTXxmuo4omuQjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IAo3WecSgqZd5TiVdvPZSQlm5p3BTgm3P3TcKvAOuouxwPfsndzCF4mF7qfj3WHto
+	 2ig8GGSZJd391u73EK3jtSZtOMdcfS5gDZriH8Bclqm9mjLNK7MS8ExyTpkX+6NnlB
+	 OhZ3J1eK1UA+W1eYcIjZY9bicTeehYw4KdefsUY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbgHDLro (ORCPT
+        id S1726789AbgHDMLP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:47:44 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:52131 "EHLO m43-7.mailgun.net"
+        Tue, 4 Aug 2020 08:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730344AbgHDLrj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:47:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596541658; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=gtTTTs1E4Cy8zjVhQvmggBXMIFlxH/jwKrpw2hfMmdw=; b=eQluaBshx89Xoq7GDzuY0/GA7UCWVGVnM8PTWsPttj7h8S6HGjCeCMDbAZvD1bGG6JSZsdHx
- /17aUFhMjW9UWvEjMUpM3DjqOhvqhdJEoaLPyPYaGWpl9V7LbfuNQdgAQxLR9tiw7lDkbBi+
- ACVbKNmS0Loi7h7WYK1YfxuO+Pk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5f294abd90893260dd735d1f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 11:47:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AB064C43395; Tue,  4 Aug 2020 11:47:08 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726198AbgHDMLC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:11:02 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6AA2C433CA;
-        Tue,  4 Aug 2020 11:47:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D6AA2C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 0/3] Add support for assigned-performance-states
-Date:   Tue,  4 Aug 2020 17:16:53 +0530
-Message-Id: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.kernel.org (Postfix) with ESMTPSA id E70462177B;
+        Tue,  4 Aug 2020 12:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596542990;
+        bh=gey3esvl8wxAFJQ2OBCATSygwLbCiyTXxmuo4omuQjo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZZOJqEZ7ULpCVvpaR+mEa6S1b07HmtrWcayO6oiJVvACUiM9YU99kR+7yCx509uj+
+         PqVDfLqST8/x5f9kYzlfz0llp8qz2n58fvd10CVoYrBGEspn96gmX4MXk1wNHuwGG3
+         oWqka7+RyZxNSFDocwiL3Av/TJINQWNRcXQbUhdc=
+Date:   Tue, 4 Aug 2020 17:39:46 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        martin.botka1@gmail.com, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
+Message-ID: <20200804120946.GQ12965@vkoul-mobl>
+References: <20200726111215.22361-1-konradybcio@gmail.com>
+ <20200726111215.22361-5-konradybcio@gmail.com>
+ <20200803110016.GL12965@vkoul-mobl>
+ <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some devics within power-domains with performance states do not
-support DVFS, but still need to vote on a default/static state
-while they are active. Add support for a new device tree property
-which the clients can use to specify this and add support in
-kernel to parse this value and vote.
+On 03-08-20, 09:06, Rob Clark wrote:
+> On Mon, Aug 3, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 26-07-20, 13:12, Konrad Dybcio wrote:
+> > > These SoCs make use of the 14nm phy, but at different
+> > > addresses than other 14nm units.
+> > >
+> > > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> > > ---
+> > >  .../devicetree/bindings/display/msm/dsi.txt    |  1 +
+> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
+> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
+> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
+> >
+> > Is there a reason why dsi phy needs to be here and not in phy subsystem
+> > drivers/phy/ ?
+> 
+> *maybe* it would be possible to split out all of the dsi (and hdmi)
+> phy to drivers/phy.  But splitting out just the new ones wouldn't be
+> practical (it would duplicate a lot of code, and make the rest of the
+> dsi code have to deal with both cases).  And unlike dp/usb-c I'm not
+> really sure I see an advantage to justify the churn.
 
-Rajendra Nayak (3):
-  dt-bindings: power: Introduce 'assigned-performance-states' property
-  PM / Domains: Add support for 'assigned-performance-states'
-  arm64: dts: sc7180: Add assigned-performance-states for i2c
+So the question would be if it helps in reuse if we do that and does it
+result in a better solution than dsi code managing the phy. The
+advantage of framework (like phy) is that different subsystems can use
+a (phy) driver and common framework helps reduce duplicates.
 
- .../devicetree/bindings/power/power-domain.yaml    | 47 ++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi               | 24 +++++++++++
- drivers/base/power/domain.c                        | 27 +++++++++++++
- include/linux/pm_domain.h                          |  1 +
- 4 files changed, 99 insertions(+)
+Yes sure the question was not for a new phy but about the whole
+msm/dsi/phy code and future for it.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+~Vinod
