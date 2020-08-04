@@ -2,104 +2,94 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFF0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2765C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD9C122BED
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596575626;
-	bh=uk5OeUUr1ieBJElxnAxLjVqIv4SwKI9/mcluVt3vAlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n3rt721PgsD7GuRFwqmGpWzZ3RGu+wwyZ2rhmbH8tE1T/eDw6WDX68F+spjoeyOAf
-	 olUt3372Cl8+TQFKQA5iRvaAaRRzqsqUy6GUT2UUD49qzDfqDn6uymNbqsnX4IC5eF
-	 9762X4nhijzlfYD3Z8SeWFf002nNstW8rKAIeSHk=
+	by mail.kernel.org (Postfix) with ESMTP id 8C1B422B42
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:17:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i0q/abFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgHDVNq (ORCPT
+        id S1726489AbgHDVR4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725863AbgHDVNp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:13:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25C02075A;
-        Tue,  4 Aug 2020 21:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596575625;
-        bh=uk5OeUUr1ieBJElxnAxLjVqIv4SwKI9/mcluVt3vAlY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=obbwlw1Vo4tD8WT5CqWYTHsadkq51Kguo/EfJ45EksZfoBHS0cbeKpHSaVjwpARNU
-         tJWIlKzQCIcAuoox7dXePPGUDH3X+rXHyann1Xj43LJX5Nk4ieHMcvJpD5+QYrpyvt
-         PV7R8zsWittgGth2N7M/ES8TCcr97jDRpTXcrF6U=
-Date:   Tue, 4 Aug 2020 22:13:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Codrin.Ciubotariu@microchip.com
-Cc:     Claudiu.Beznea@microchip.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
-        lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com,
-        Ludovic.Desroches@microchip.com, perex@perex.cz
-Subject: Re: [PATCH v3 2/2] ASoC: mchp-spdiftx: add driver for S/PDIF TX
- Controller
-Message-ID: <20200804211323.GD5249@sirena.org.uk>
-References: <20200803081851.102570-1-codrin.ciubotariu@microchip.com>
- <20200803081851.102570-2-codrin.ciubotariu@microchip.com>
- <4d009743-733a-9578-71b2-d320fdca9331@microchip.com>
- <d415817f-d32c-07bb-4d9a-41649290a559@microchip.com>
- <8a0cb78d-d22d-eb29-8650-67c033b57446@microchip.com>
- <d0606eb7-e706-577d-abc4-f994c56a53e9@microchip.com>
+        Tue, 4 Aug 2020 17:17:56 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37706 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgHDVR4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 17:17:56 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 074LHijA092401;
+        Tue, 4 Aug 2020 16:17:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596575864;
+        bh=dnuKJu0JfecZdhyAST4+2sMtlGa18cLkeWz2YiyDzig=;
+        h=From:To:CC:Subject:Date;
+        b=i0q/abFpuKOV5IsD4azc5ksGsYqX3f7dyH5+8u9Uqb61EtLj7lQ5mSygjpvnyiA3M
+         B23ZLI5O1CZVcgBuJKoG9JgIn37syx5fkfeqM0x0cwCIbqaHcRaZC/rM4iA5dQey7y
+         eoeCiWMUQ3wrPxnr1wfHTT12bRC01HFpKEXNhVZg=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 074LHi8l040102
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Aug 2020 16:17:44 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 4 Aug
+ 2020 16:17:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 4 Aug 2020 16:17:43 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074LHgUF061484;
+        Tue, 4 Aug 2020 16:17:43 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <santosh.shilimkar@oracle.com>, Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH next 0/3] soc: ti: k3: add am65x sr2.0 support
+Date:   Wed, 5 Aug 2020 00:17:29 +0300
+Message-ID: <20200804211732.2861-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
-Content-Disposition: inline
-In-Reply-To: <d0606eb7-e706-577d-abc4-f994c56a53e9@microchip.com>
-X-Cookie: Every solution breeds new problems.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Santosh,
 
---XvKFcGCOAo53UbWW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series adds support for the TI AM65x SR2.0 SoC Ringacc which has fixed
+errata i2023 "RINGACC, UDMA: RINGACC and UDMA Ring State Interoperability
+Issue after Channel Teardown". This errata also fixed for J271E SoC.
+The SOC bus chipinfo data is used to identify the SoC and configure
+i2023 errata W/A.
 
-On Tue, Aug 04, 2020 at 04:37:07PM +0000, Codrin.Ciubotariu@microchip.com w=
-rote:
-> On 03.08.2020 20:11, Claudiu Beznea - M18063 wrote:
-> >=20
-> >=20
-> > On 03.08.2020 19:11, Codrin Ciubotariu - M19940 wrote:
-> >> On 03.08.2020 16:06, Claudiu Beznea - M18063 wrote:
+This changes made "ti,dma-ring-reset-quirk" DT property obsolete, so it's removed.
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+Grygorii Strashko (3):
+  soc: ti: k3: ringacc: add am65x sr2.0 support
+  bindings: soc: ti: soc: ringacc: remove ti,dma-ring-reset-quirk
+  arm64: dts: ti: k3-am65: ringacc: drop ti,dma-ring-reset-quirk
 
---XvKFcGCOAo53UbWW
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/soc/ti/k3-ringacc.yaml           |  6 ----
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  1 -
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  1 -
+ drivers/soc/ti/k3-ringacc.c                   | 33 +++++++++++++++++--
+ 4 files changed, 30 insertions(+), 11 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.17.1
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8pz3IACgkQJNaLcl1U
-h9AN3gf+Im9uNemS0G3msHEIRBtq1WKsAVCYHYB2jwTa3q69/6U09UO5z17KzUj9
-O4u1+8m8Ygx9GKcz19npSmeLqSTjwkiluiitkW4kiUxZdCXAyK1XOHeJKnGV+ejA
-YSfBcdbXNawuUQ7ndfzNnbFj6roRW2gJ9RtkapHiGJDu5BZRKDB7e+m1MVy2BWQt
-P3bsop0ig4nWtUsdv0dbFbL0PQQr10UZxtHVHoEkteA4vP94/o0avMS01aWMkQBp
-kvzL20QwB+GKcUzOyqmZtGfoKextK9Aev+bJK9kmBT2+0n34Va30iK+SKZHszZ6A
-Mu1bEHxVXF2jCBDPoXRmmRW1ZYsVnA==
-=z17q
------END PGP SIGNATURE-----
-
---XvKFcGCOAo53UbWW--
