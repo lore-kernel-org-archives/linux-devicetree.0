@@ -2,141 +2,110 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70240C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 07:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D57DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 737E722B45
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 07:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840372076C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ByLoZFy1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oiTDvhze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbgHDHp1 (ORCPT
+        id S1726201AbgHDIIE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:45:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729830AbgHDHp0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 03:45:26 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74AD9C06174A
-        for <devicetree@vger.kernel.org>; Tue,  4 Aug 2020 00:45:26 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id 4so14426554vsf.11
-        for <devicetree@vger.kernel.org>; Tue, 04 Aug 2020 00:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=feh7RxUtSqLBph4VDa4rqiDTI4QQeVOJVHBSSi+EkrM=;
-        b=ByLoZFy1lDsP2ZYMnrJyGhZ5pqOEDGHmvmVSriCKAlqXp6Me5DEHVUJreI+OvtTKiB
-         Swb0P0if20yG15zV5I1T5h04BLnFTjkcC6JfxAKKve0GyeKUzxDLFJdRZJBTIZJSNFD5
-         ng8rgKdkfntsQq6c8ustfeK4wb3yo2lR5H1Fn0YSSLA67xLctA43YsG+az62OBLD2/VB
-         tvbcP9b7AYwvIem7UjZCsIyXBgAHvidwZCdYC3h5pLwBPaJNnSEZ2diEzZfjqTJnHBJp
-         OWlD7OtsfnofEKJRl87WGHdbH4jMnGSPBBmedegEUDCnS9UyqwyM38VcdOBufYBTmy4o
-         NMOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=feh7RxUtSqLBph4VDa4rqiDTI4QQeVOJVHBSSi+EkrM=;
-        b=ZdJBr9gALndi5frARvF/WJwI/QorDLavSaS7j3Rf2Jcuhzd4IGy53vhu12DccfPAeF
-         OZ2i7959/DMVhg+AOdnFS1y70ZlomQBzWi4kJ869vFj+ceiXw0DJAPm5FBzS2fG5TaoQ
-         ji0ebjRac63UvRZFygNpiaY1mQSseV21p7n9x0ecRsmKZbmzpry1Vx69StH7C7DbIy6I
-         RWPQKj6e/wJlOefw1CluZs+uKSZNNz1nGYju4VoM/CfWNNVxHGmfRJbhUeT+EqZVS1pY
-         A80TQxOVxx4WXQsINvSOl2B3SL+gneweLr4H30Dkc98B8p8s+w8UYT90mnE8/VF6ljtn
-         p7mg==
-X-Gm-Message-State: AOAM532kVUdLR5SdD05ndZK5nZ/FX/szckozYWT9HFuW09bdGH7nQQ7a
-        BsdG2vJGG0n7AVAr+i8y8U9cRUJnsjk8isDXUmtJDA==
-X-Google-Smtp-Source: ABdhPJzYoqmCDolQz6cBgPMWbFtn29DKgO7L9ps4ITePL+WpAKuW8oBgmHNSSJftpZ4sacciBIStFpymtip1aV9f96c=
-X-Received: by 2002:a67:f70c:: with SMTP id m12mr12835009vso.238.1596527125331;
- Tue, 04 Aug 2020 00:45:25 -0700 (PDT)
-MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 4 Aug 2020 13:15:14 +0530
-Message-ID: <CA+G9fYuvWVwvauqpfcwuJK+Zg5O=BWUG2_s1ceH-kTc9COZmHA@mail.gmail.com>
-Subject: arm64: make dtbs broken - socfpga_agilex.dtsi:313.15-16 syntax error
- FATAL ERROR: Unable to parse input tree
-List-Id: <soc.lore.kernel.org>
-To:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkft-triage@lists.linaro.org, SoC Team <soc@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Cc:     dinguyen@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Aug 2020 04:08:04 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:46048 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726166AbgHDIID (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 04:08:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596528483; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=kh1oVc6YO4R1j2xoiwGx/wGlgh7RD83i0V1vly7q1ok=; b=oiTDvhzeOjW2fxdNRH6pxUnNgWplbIbqlujJa9GtpZjV2s4/4YPLObtAAs29TwIGvP1wbhWx
+ aLpfE068rQzpWUjAmbCRJPcTM0KI8Dw8wkxp9ocwX9LwcIGBqdHCfkHwjAcMLUkAAAEV52Vg
+ cwaE7ql2dyE1Di6jqwpDKGgCeaw=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
+ 5f291754e1ac2727649bff97 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 08:07:48
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2F170C433C9; Tue,  4 Aug 2020 08:07:48 +0000 (UTC)
+Received: from rohkumar-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E105C433CA;
+        Tue,  4 Aug 2020 08:07:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E105C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+From:   Rohit kumar <rohitkr@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v5 00/12] ASoC: qcom: Add support for SC7180 lpass variant
+Date:   Tue,  4 Aug 2020 13:37:21 +0530
+Message-Id: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Linux mainline master build breaks on arm64 while building dtbs.
+This patch chain add audio support for SC7180 soc by doing the required
+modification in existing common lpass-cpu/lpass-platform driver.
+This also fixes some concurrency issue.
 
-make -sk KBUILD_BUILD_USER=TuxBuild -C/linux ARCH=arm64
-CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
-aarch64-linux-gnu-gcc" O=build dtbs
-#
-../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
-Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
-property but its #address-cells (1) differs from / (2)
-../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
-Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
-property but its #size-cells (1) differs from / (2)
-../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
-Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
-property but its #address-cells (1) differs from / (2)
-../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
-Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
-property but its #size-cells (1) differs from / (2)
-../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
-Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
-property but its #address-cells (1) differs from / (2)
-../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
-Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
-property but its #size-cells (1) differs from / (2)
-Error: ../arch/arm64/boot/dts/intel/socfpga_agilex.dtsi:313.15-16 syntax error
-FATAL ERROR: Unable to parse input tree
-make[3]: *** [scripts/Makefile.lib:314:
-arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtb] Error 1
-Error: ../arch/arm64/boot/dts/intel/socfpga_agilex.dtsi:313.15-16 syntax error
-FATAL ERROR: Unable to parse input tree
-make[3]: *** [scripts/Makefile.lib:314:
-arch/arm64/boot/dts/intel/socfpga_agilex_socdk_nand.dtb] Error 1
-make[3]: Target '__build' not remade because of errors.
-make[2]: *** [../scripts/Makefile.build:497: arch/arm64/boot/dts/intel] Error 2
-../arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but
-its #address-cells (1) differs from / (2)
-../arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning
-(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but
-its #size-cells (1) differs from / (2)
-make[2]: Target '__build' not remade because of errors.
-make[1]: *** [/linux/Makefile:1307: dtbs] Error 2
-make: *** [Makefile:185: __sub-make] Error 2
+This patch series is already tested by Srinivas on Dragon Board 410c.
+Changes since v4:
+        - Updated compatible string for sc7180 lpass cpu as suggested by Rob
+        - Addressed comments by Rob in yaml Documentation.
 
-build url:
-https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/669607311
+Ajit Pandey (4):
+  ASoC: qcom: Add common array to initialize soc based core clocks
+  ASoC: qcom: lpass-platform: Replace card->dev with component->dev
+  include: dt-bindings: sound: Add sc7180-lpass bindings header
+  ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
 
-git log --oneline arch/arm64/boot/dts/intel/ | head
+Rohit kumar (8):
+  ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
+  ASoC: qcom: lpass-platform: fix memory leak
+  ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
+  ASoC: qcom: lpass-cpu: fix concurrency issue
+  dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
+  ASoC: qcom: lpass-cpu: Use platform_get_resource
+  ASoC: qcom: lpass-platform: Use platform_get_irq
+  dt-bindings: sound: lpass-cpu: Move to yaml format
 
-60176e6be0bb arm64: dts: agilex: add status to qspi dts node
-fd0d094531db arm64: dts: agilex: correct service layer driver's compatible value
-8d6b6bbe6dde arm64: dts: agilex: correct FPGA manager driver's compatible value
-854e80bcfdaf Merge tag 'arm-dt-5.7' of
-git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-80f132d73709 arm64: dts: increase the QSPI reg address for Stratix10 and Agilex
-8c867387160e arm64: dts: socfpga: agilex: Fix gmac compatible
-1afa9c3b7c9b Merge tag 'armsoc-dt' of
-git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-210de0e996ae arm64: dts: agilex/stratix10: fix pmu interrupt numbers
-2f804ba7aa9e arm64: dts: agilex: Add SysMgr to Ethernet nodes
-a6706bd60be7 arm64: dts: agilex: Add SysMgr compatible
-
+ .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 179 +++++++++++++++++
+ include/dt-bindings/sound/sc7180-lpass.h           |  10 +
+ sound/soc/qcom/Kconfig                             |   5 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
+ sound/soc/qcom/lpass-cpu.c                         | 204 ++++++++++---------
+ sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
+ sound/soc/qcom/lpass-lpaif-reg.h                   | 157 ++++++++-------
+ sound/soc/qcom/lpass-platform.c                    | 155 +++++++++++----
+ sound/soc/qcom/lpass-sc7180.c                      | 216 +++++++++++++++++++++
+ sound/soc/qcom/lpass.h                             |  63 +++++-
+ 12 files changed, 924 insertions(+), 299 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+ create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
+ create mode 100644 sound/soc/qcom/lpass-sc7180.c
 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
