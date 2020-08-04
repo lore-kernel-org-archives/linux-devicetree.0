@@ -2,154 +2,212 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2510C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0F1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D695A206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jARuo43f"
+	by mail.kernel.org (Postfix) with ESMTP id AB3EA2086A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgHDOtH (ORCPT
+        id S1729445AbgHDPGw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728478AbgHDOtC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 10:49:02 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D025C06174A;
-        Tue,  4 Aug 2020 07:49:01 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c10so367736edk.6;
-        Tue, 04 Aug 2020 07:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g4HmwOYH2FipfU55YwXNgn+/KWI9nU6qQar00eEKnTI=;
-        b=jARuo43f4imeZbHxuoML4wNyRPTOwuEdSxdGaGmmEjiQMf0k+ARZ+35S8UliQueShq
-         eP0wC8Ag/bCp+Zrr1kaAC9ZuZGyh2J/cqvk1OBx0WpDyelZgZdAiRCd0WFo8tZmYqo0Y
-         7PiuhEGNILTeXGo46kKTLVePah8v3wCgRDJum0EXMPbocMpUleVTqO0Y272GXbjUyPH5
-         lYGAdiePK9a28RHry1cVndmlMfgRO4RvoJjBqJJDQK0K4ygPlXwB8/yGPyFFCbWItV6u
-         UQ9oavX098EpyXsAOA9V3NiotNgRWXOY0NuVucJnh4q/wfX2aBpvyy4qCt4UMFYOlEUY
-         KpZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g4HmwOYH2FipfU55YwXNgn+/KWI9nU6qQar00eEKnTI=;
-        b=uR4s7fc9k2GygDjZrzGQfdgslSJPqYUsMsgudBI6P6JrHsSCjsqa3ghYclKZsbviIs
-         maHrjwbUOu+MX6+bfmZxTyCKwnUKgYrV5Q0HQUfHXm67e7VVaV9TswcPioa5SnVLzJmI
-         +Mha3XjMjfIeOcTXUs1du3EV0h10LJjy2wej36TiqFAf4wpG0ICs0ofpCE98ootnAyce
-         ZQQHB05KaLvAXixjn4RmJt2PQ2Pi7zZ7jgYv5WcjMKM0xDYkgJBNu+duwgWIDEHGuunH
-         ViEfzHSZGoPE5yOduI3fOC9g9n0q4Mixzn2/fwMG0zEx/KD3LSfW1gplJfxBsGmhQDdt
-         d9hw==
-X-Gm-Message-State: AOAM530/c0gq4NONL6YrIlnQtKdGFPv+LIHPB0KgPRrAUsjwlPWOSH8Q
-        IEjjoyONn2j0TZCGH2XC+Txd05ALmpuSVHq7BI0=
-X-Google-Smtp-Source: ABdhPJzvDZkA05JzMe/6DGwbz7nTKib7xTiBIdtvgBQrjNjFlefh8ZT9iPjGtuAI7EG71+3trm7KlYtgLwGlIRjAHP0=
-X-Received: by 2002:aa7:da46:: with SMTP id w6mr17536741eds.7.1596552540239;
- Tue, 04 Aug 2020 07:49:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200726111215.22361-1-konradybcio@gmail.com> <20200726111215.22361-5-konradybcio@gmail.com>
- <20200803110016.GL12965@vkoul-mobl> <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
- <20200804120946.GQ12965@vkoul-mobl>
-In-Reply-To: <20200804120946.GQ12965@vkoul-mobl>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 4 Aug 2020 07:49:44 -0700
-Message-ID: <CAF6AEGttPJSy+PcspPgxj2OELEyh2Xj-Gm2Uiv7Pcv6JMDE-tg@mail.gmail.com>
-Subject: Re: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        martin.botka1@gmail.com, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Aug 2020 11:06:52 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:43620 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728467AbgHDPG0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:06:26 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3A749201244;
+        Tue,  4 Aug 2020 17:06:24 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8C0CE2002D4;
+        Tue,  4 Aug 2020 17:06:20 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E688240252;
+        Tue,  4 Aug 2020 17:06:15 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, stefan@agner.ch, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
+Date:   Tue,  4 Aug 2020 23:01:48 +0800
+Message-Id: <1596553308-13190-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 5:09 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 03-08-20, 09:06, Rob Clark wrote:
-> > On Mon, Aug 3, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 26-07-20, 13:12, Konrad Dybcio wrote:
-> > > > These SoCs make use of the 14nm phy, but at different
-> > > > addresses than other 14nm units.
-> > > >
-> > > > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> > > > ---
-> > > >  .../devicetree/bindings/display/msm/dsi.txt    |  1 +
-> > > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
-> > > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
-> > > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
-> > >
-> > > Is there a reason why dsi phy needs to be here and not in phy subsystem
-> > > drivers/phy/ ?
-> >
-> > *maybe* it would be possible to split out all of the dsi (and hdmi)
-> > phy to drivers/phy.  But splitting out just the new ones wouldn't be
-> > practical (it would duplicate a lot of code, and make the rest of the
-> > dsi code have to deal with both cases).  And unlike dp/usb-c I'm not
-> > really sure I see an advantage to justify the churn.
->
-> So the question would be if it helps in reuse if we do that and does it
-> result in a better solution than dsi code managing the phy. The
-> advantage of framework (like phy) is that different subsystems can use
-> a (phy) driver and common framework helps reduce duplicates.
+Convert the vf610 gpio binding to DT schema format using json-schema.
 
-I'm not aware of any re-use that would be possible by splitting it
-out.. if there were, it would be a more compelling argument.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 -----------------
+ .../devicetree/bindings/gpio/gpio-vf610.yaml       | 79 ++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 63 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
 
-It does increase the complexity and possibilities for getting kernel
-config wrong.  There are devices like the aarch64 laptops which do not
-have a debug serial port, where debugging issues like that can be a
-pain when you get no display.  OTOH that might be balanced out a bit
-by using a common framework/api that others are familiar with.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+deleted file mode 100644
+index ae254aa..0000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
++++ /dev/null
+@@ -1,63 +0,0 @@
+-* Freescale VF610 PORT/GPIO module
+-
+-The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
+-functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
+-each, and each PORT module has its own interrupt.
+-
+-Required properties for GPIO node:
+-- compatible : Should be "fsl,<soc>-gpio", below is supported list:
+-	       "fsl,vf610-gpio"
+-	       "fsl,imx7ulp-gpio"
+-- reg : The first reg tuple represents the PORT module, the second tuple
+-  the GPIO module.
+-- interrupts : Should be the port interrupt shared by all 32 pins.
+-- gpio-controller : Marks the device node as a gpio controller.
+-- #gpio-cells : Should be two. The first cell is the pin number and
+-  the second cell is used to specify the gpio polarity:
+-      0 = active high
+-      1 = active low
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
+-  The second cell bits[3:0] is used to specify trigger type and level flags:
+-      1 = low-to-high edge triggered.
+-      2 = high-to-low edge triggered.
+-      4 = active high level-sensitive.
+-      8 = active low level-sensitive.
+-
+-Optional properties:
+--clocks:	Must contain an entry for each entry in clock-names.
+-		See common clock-bindings.txt for details.
+--clock-names:	A list of clock names. For imx7ulp, it must contain
+-		"gpio", "port".
+-
+-Note: Each GPIO port should have an alias correctly numbered in "aliases"
+-node.
+-
+-Examples:
+-
+-aliases {
+-	gpio0 = &gpio1;
+-	gpio1 = &gpio2;
+-};
+-
+-gpio1: gpio@40049000 {
+-	compatible = "fsl,vf610-gpio";
+-	reg = <0x40049000 0x1000 0x400ff000 0x40>;
+-	interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	gpio-ranges = <&iomuxc 0 0 32>;
+-};
+-
+-gpio2: gpio@4004a000 {
+-	compatible = "fsl,vf610-gpio";
+-	reg = <0x4004a000 0x1000 0x400ff040 0x40>;
+-	interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	gpio-ranges = <&iomuxc 0 32 32>;
+-};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+new file mode 100644
+index 0000000..315ffde
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale VF610 PORT/GPIO module
++
++maintainers:
++  - Stefan Agner <stefan@agner.ch>
++
++description: |
++  The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
++  functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
++  each, and each PORT module has its own interrupt.
++
++  Note: Each GPIO port should have an alias correctly numbered in "aliases"
++  node.
++
++properties:
++  compatible:
++    enum:
++      - fsl,vf610-gpio
++      - fsl,imx7ulp-gpio
++
++  reg:
++    description: The first reg tuple represents the PORT module, the second tuple
++      represents the GPIO module.
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  clocks:
++    items:
++      - description: SoC GPIO clock
++      - description: SoC PORT clock
++
++  clock-names:
++    items:
++      - const: gpio
++      - const: port
++
++  gpio-ranges:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - "#gpio-cells"
++  - gpio-controller
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    gpio1: gpio@40049000 {
++        compatible = "fsl,vf610-gpio";
++        reg = <0x40049000 0x1000 0x400ff000 0x40>;
++        interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        gpio-ranges = <&iomuxc 0 0 32>;
++    };
+-- 
+2.7.4
 
-Overall, nowhere near high enough on my priority list to spend time
-on.. there are bigger fires.  If someone was really motivated about
-this and wanted to send (tested) patches, then I'd take a look and see
-how it turned out.
-
-BR,
--R
-
-> Yes sure the question was not for a new phy but about the whole
-> msm/dsi/phy code and future for it.
->
-> --
-> ~Vinod
