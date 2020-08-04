@@ -2,144 +2,673 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906B0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA28C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71992207FC
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50944208A9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+67uSIM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n2iTtAbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgHDPnO (ORCPT
+        id S1726536AbgHDPyO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
+        Tue, 4 Aug 2020 11:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgHDPnL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 11:43:11 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEA5C06174A;
-        Tue,  4 Aug 2020 08:43:11 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id qc22so28160948ejb.4;
-        Tue, 04 Aug 2020 08:43:11 -0700 (PDT)
+        with ESMTP id S1726240AbgHDPyN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 11:54:13 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11972C06174A;
+        Tue,  4 Aug 2020 08:54:13 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c15so20587680edj.3;
+        Tue, 04 Aug 2020 08:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XvDU7ICblMvlU4iZYYabhFUIQmUPVsxNxDRb1FZXmmQ=;
-        b=e+67uSIMTJb41hxcWS6ZQmz0qzGJN+L+0LjLuEvxDP1SR0HK+KVh6uL3ACN479ohD3
-         DLaWjsW/mWVnl/3x1ojrBejYHb+DM/wjSxscTaohaLbeuJCKGccPBqiFa8g732pJRXUP
-         2KVSV9Z++b3X5HJPoDh6XVcCdEJjVDTWwCrdgDICS8KWTRU7O9tNn+K8roCzsUPmarEI
-         oVFQSHvmt4HjwSni/SMqATRSdKoCyXEEu02bXcTrRo5SuSdGil4TT4HjFFoCewftRUi4
-         8KUaA8nTjECb2DfjErOR1OjXDtcFEdROjk2TbRGxLEPAR3yWHAvbDbQDlz1dbR2WFUw1
-         sEVg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n0tUEpg69IWrRV7C9pI6zHcJ+6oEng/DEKClCAka/lM=;
+        b=n2iTtAbOJnMDjoaPE/zTquLrnSRG7DaCE4dxl2BGDEA4Z7uRqGBEjH2lOGyVUQhzBv
+         E75oYOT/fhwwYwOlKlRyiOLRLFon408Or9IVmPYQ4xvEBoXNF/eAL0W9WcxnmCvacM27
+         kvj98wpZ6cmIwt6NtzvdLdevZ8CtSQHjl2cmhHT+rFyKfzLcEcWdSGHliolIUabJHVhb
+         5fj15e22zeRaXMYumLvd7XC7nGHQAhouYLul0gTTeCiTSDNFrg6U+JgXNtzKIBlsK9dl
+         hW81kxfTcZeSzI6G6ks1pQpKYWfNcNWiPs8Scaatg5jOI3hbCO4394KmvV8S57ysryxR
+         201w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XvDU7ICblMvlU4iZYYabhFUIQmUPVsxNxDRb1FZXmmQ=;
-        b=uk2Ah0uK0DvqfqmDE8/IQb9Lk0xp3te32F6v1/t5EM6GKNBT5EpMDCHr++3WEPo6w+
-         5DnZy4ENWGLt+TTAky8L3Xg2oXJAjzSFgdhaDTq61XixtDN3QPSo44hcxKQtG8z7sHwJ
-         s0WGufGEa8D9/9aOprId/X8qF2R63IKaNXQTvoQL+DFRTUhHXY4r4CcOhyvY1zQmBVE4
-         Thf8kKPXbpoZGlWQ03knr2ZggkuGvov+UjdMw16s684Vwv7NmaQy77PggFBz26+TX89F
-         LPJiwys7sQQ6ZM4RNauxBREiZcyITq0aKsReKqUZVAF1FYda/JA/5fyh1pyfM/UaSPN8
-         h3tw==
-X-Gm-Message-State: AOAM533rhV4nQs/wCpSPqmauW+oWfXuJooPAgOlh7KrrjVJcNoy3bzVn
-        Zqwma4rIZa6eVGm9mo8C6ldj6EyvEG/WDWp9358=
-X-Google-Smtp-Source: ABdhPJyG/9OaPWsq91DUuGc0ZHEkp1Igwsy4OYzy799p9zWx9XbX3KeVYuueq33MKr+f5VDzCNWkOoFl7hDa0Dk2xRI=
-X-Received: by 2002:a17:906:f14f:: with SMTP id gw15mr21260603ejb.245.1596555789850;
- Tue, 04 Aug 2020 08:43:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n0tUEpg69IWrRV7C9pI6zHcJ+6oEng/DEKClCAka/lM=;
+        b=G5qSZgwn8wug9pQ8haRdWHuIkapbfnfdjGGOiWrsuA5F1S4KF9wkFLT17+UH/w+tZa
+         18ew+siFyZCD3Kwv21+yofF1M3vx+wdtfy/vbeltAdxkKbzxoqcnICbuGF4sSRNjGrgQ
+         Kb+ge6C51Z5WmNACT34W5ESbyuNE+7vOPgnlaGtSAjvypf02dA3KYDK8lctS8wecqvDe
+         IL08PjZgxXdStx969HLEtcp8zBE06h4lNzx3zojfh1B7T0a4OKV7h5c2704s/JodtWsB
+         QBx0fVDQxMsPBepmekRx9pvtErsUsyQkD1H63QA6Xoqp3Qz2SVOvTkWXwkog142O8ry0
+         gl4A==
+X-Gm-Message-State: AOAM531rzXju7bpigIs0/TDC2N5oYW4qCSP4JuFkWDy2EDg7MSk5LHe7
+        fIjSpftHFo+mzrnlziqy2WY=
+X-Google-Smtp-Source: ABdhPJwC6wGRwVvDcDHbIIRIhl305TYTsW2fy58JrE3ykTFvxRhHt/j/2TpRZWiWQcf1IUim2t71tg==
+X-Received: by 2002:a50:d908:: with SMTP id t8mr20604944edj.373.1596556451703;
+        Tue, 04 Aug 2020 08:54:11 -0700 (PDT)
+Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id v14sm19034180ejb.63.2020.08.04.08.54.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 08:54:11 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: add rk3318 A95X Z2 board
+To:     Robin Murphy <robin.murphy@arm.com>, heiko@sntech.de
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20200718105343.5152-1-jbx6244@gmail.com>
+ <20200718105343.5152-4-jbx6244@gmail.com>
+ <6d028007-4360-e552-3707-3dd2712f2501@arm.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <818eacc7-d783-772e-4cce-fbcf40b1df7c@gmail.com>
+Date:   Tue, 4 Aug 2020 17:54:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <1594899334-19772-1-git-send-email-kalyan_t@codeaurora.org> <1594899334-19772-2-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1594899334-19772-2-git-send-email-kalyan_t@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 4 Aug 2020 08:43:54 -0700
-Message-ID: <CAF6AEGu8GG4i1inhjQ11PDeUxEq=4E2ggVm6cL=AfNHbvNuh6w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: sc7180: add bus clock to mdp node for
- sc7180 target
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6d028007-4360-e552-3707-3dd2712f2501@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 4:36 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> From: Krishna Manikandan <mkrishn@codeaurora.org>
->
-> Move the bus clock to mdp device node,in order
-> to facilitate bus band width scaling on sc7180
-> target.
->
-> The parent device MDSS will not vote for bus bw,
-> instead the vote will be triggered by mdp device
-> node. Since a minimum vote is required to turn
-> on bus clock, move the clock node to mdp device
-> from where the votes are requested.
->
-> This patch has dependency on the below series
-> https://patchwork.kernel.org/patch/11468783/
->
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+Hi Robin,
 
-Reviewed-by: Rob Clark <robdclark@chromium.org>
+Thank you for your review.
+Added some questions in return.
 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 4f2c0d1..31fed6d 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1510,10 +1510,9 @@
->                         power-domains = <&dispcc MDSS_GDSC>;
->
->                         clocks = <&gcc GCC_DISP_AHB_CLK>,
-> -                                <&gcc GCC_DISP_HF_AXI_CLK>,
->                                  <&dispcc DISP_CC_MDSS_AHB_CLK>,
->                                  <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> -                       clock-names = "iface", "bus", "ahb", "core";
-> +                       clock-names = "iface", "ahb", "core";
->
->                         assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
->                         assigned-clock-rates = <300000000>;
-> @@ -1539,12 +1538,13 @@
->                                       <0 0x0aeb0000 0 0x2008>;
->                                 reg-names = "mdp", "vbif";
->
-> -                               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                               clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_AHB_CLK>,
->                                          <&dispcc DISP_CC_MDSS_ROT_CLK>,
->                                          <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
->                                          <&dispcc DISP_CC_MDSS_MDP_CLK>,
->                                          <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> -                               clock-names = "iface", "rot", "lut", "core",
-> +                               clock-names = "bus", "iface", "rot", "lut", "core",
->                                               "vsync";
->                                 assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
->                                                   <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> --
-> 1.9.1
->
+This dts file seems to be some sort of variation of
+rk3328-box-liantong.dtsi in the manufacturer tree. Depending on the
+design the vendor then changes the wifi chip or removes the spdif
+connector to save some cost.
+
+On 8/3/20 11:41 PM, Robin Murphy wrote:
+> On 2020-07-18 11:53, Johan Jonker wrote:
+>> The rk3318 A95X Z2 boards are sold as TV box.
+>> No further documentation is given, but from the dts files
+>> extracted it seems that the rk3318 processor is simulair
+>> to the rk3328. This dts file contains only the basic nodes
+>> that have support in the mainline kernel.
+>>
+>> Features:
+>>
+>> CPU: RK3318 Quad-Core Cortex-A53
+>> GPU: Mali-450
+>> RAM: 2/4GB DDR3
+>> ROM: EMMC 16/32/64GB
+>> HDMI: HDMI 2.0a for 4k@60Hz
+>> Ethernet: 10/100M standard RJ-45
+>> WiFi: 2.4G+5G WIFI, 802.11 b/g/n
+>> Bluetooth: 4.0
+>> 1 x USB 3.0
+>> 1 x USB 2.0
+>> 1 x Micro SD card slot
+>> 1 x SPDIF
+>> 1 x AV
+>> 1 x DC IN
+>>
+>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/Makefile           |   1 +
+>>   arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts | 393
+>> ++++++++++++++++++++++++
+>>   2 files changed, 394 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/Makefile
+>> b/arch/arm64/boot/dts/rockchip/Makefile
+>> index b87b1f773..aa508bc4a 100644
+>> --- a/arch/arm64/boot/dts/rockchip/Makefile
+>> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+>> @@ -2,6 +2,7 @@
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
+>> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3318-a95x-z2.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
+>> b/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
+>> new file mode 100644
+>> index 000000000..413418ea1
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
+>> @@ -0,0 +1,393 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +
+>> +/dts-v1/;
+>> +#include <dt-bindings/input/input.h>
+>> +#include "rk3328.dtsi"
+>> +
+>> +/ {
+>> +    model = "A95X Z2";
+>> +    compatible = "zkmagic,a95x-z2", "rockchip,rk3318";
+>> +
+>> +    chosen {
+>> +        stdout-path = "serial2:1500000n8";
+>> +    };
+>> +
+>> +    adc-keys {
+>> +        compatible = "adc-keys";
+>> +        io-channels = <&saradc 0>;
+>> +        io-channel-names = "buttons";
+>> +        keyup-threshold-microvolt = <1800000>;
+>> +        poll-interval = <100>;
+>> +
+>> +        vol-up-key {
+>> +            label = "volume up";
+>> +            linux,code = <KEY_VOLUMEUP>;
+> 
+> Really? If as usual this is actually the recovery button hidden inside
+> the box, it's somewhat questionable whether it's worth describing in DT
+> at all. At the very least it should probably be presented as something
+> more realistic than half a volume control.
+
+Dts use is not limited to a mainline kernel setting. In Android that
+<KEY_VOLUMEUP> seem to be a standard way needed to enter a menu. Then
+make it as complete as possible to make it work.
+
+What would be your realistic key proposal?
+
+> 
+>> +            press-threshold-microvolt = <17000>;
+>> +        };
+>> +    };
+>> +
+>> +    ir-receiver {
+>> +        compatible = "gpio-ir-receiver";
+>> +        gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
+>> +        pinctrl-0 = <&ir_int>;
+>> +        pinctrl-names = "default";
+>> +    };
+>> +
+>> +    leds {
+>> +        compatible = "gpio-leds";
+>> +        pinctrl-0 = <&cyx_led_pin>;
+>> +        pinctrl-names = "default";
+>> +
+>> +        cyx_led: led-0 {
+> 
+> What needs a phandle to this node to warrant a label?
+
+Without repeating previous discussions, I made a proposal that was
+approved. So we just stick to that set of rules consequently.
+
+A little explanation:
+With the conversion to yaml a preferred nodename was introduced.
+Legacy Rockchip node names were sort of free style and causing the
+dts-checker to produce a flood of warnings.
+The led properties are described in 2 places, under leds and under pinctrl.
+To improve the readability given the legacy and to prevent the
+disconnect between schematics, leds and pinctrl we add a label with a
+consistent name.
+
+Fix with help of the following rules:
+
+1: Add nodename in the preferred form.
+
+2: Always add a label that ends with '_led' to prevent conflicts
+   with other labels such as 'power' and 'mmc'
+
+3: If leds need pinctrl add a label that ends with '_led_pin'
+   also to prevent conflicts with other labels.
+
+> 
+>> +            default-state = "on";
+>> +            gpios = <&gpio2 RK_PC7 GPIO_ACTIVE_LOW>;
+
+>> +            label = "CYX_LED";
+
+This label with capital letters is used by an Android app, so keep it.
+
+>> +        };
+>> +    };
+>> +
+>> +    sdio_pwrseq: sdio-pwrseq {
+>> +        compatible = "mmc-pwrseq-simple";
+>> +        pinctrl-0 = <&wifi_enable_h>;
+>> +        pinctrl-names = "default";
+>> +        reset-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+>> +    };
+>> +
+>> +    spdif-sound {
+>> +        compatible = "simple-audio-card";
+
+>> +        simple-audio-card,name = "spdif";
+
+Some programs don't like long names here.
+Recently I see others also use "SPDIF".
+Should I change?
+Currently for rk3328 we have: "Analog" and "HDMI"
+Is there a standard?
+Please advise.
+
+>> +
+>> +        simple-audio-card,cpu {
+>> +            sound-dai = <&spdif>;
+>> +        };
+>> +
+>> +        simple-audio-card,codec {
+>> +            sound-dai = <&spdif_out>;
+>> +        };
+>> +    };
+>> +
+>> +    spdif_out: spdif-out {
+>> +        compatible = "linux,spdif-dit";
+>> +        #sound-dai-cells = <0>;
+>> +    };
+>> +
+>> +    /* Power tree */
+>> +    regulators {
+> 
+> Don't create fake "buses" for regulators, especially if they don't even
+> contain most of the regulators anyway.
+
+Agree.
+The original reason was not given.
+vccio_1v8_reg and vccio_3v3_reg are used mostly in &io_domains.
+
+Is there a dependency requirement that both must be probed/enabled
+before being used?
+
+Without these regulators in a bus should we then add a vcc-sys-regulator
+for a complete supply chain?
+
+	vcc_sys: vcc-sys-regulator {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_sys";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+> 
+>> +        compatible = "simple-mfd";
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        vccio_1v8_reg: regulator@0 {
+>> +            compatible = "regulator-fixed";
+>> +            reg = <0>;
+>> +            regulator-name = "vccio_1v8";
+>> +            regulator-min-microvolt = <1800000>;
+>> +            regulator-max-microvolt = <1800000>;
+>> +            regulator-always-on;
+Just an example:
+		vin-supply = <&vcc_sys>;
+
+>> +        };
+>> +
+>> +        vccio_3v3_reg: regulator@1 {
+>> +            compatible = "regulator-fixed";
+>> +            reg = <1>;
+>> +            regulator-name = "vccio_3v3";
+>> +            regulator-min-microvolt = <3300000>;
+>> +            regulator-max-microvolt = <3300000>;
+>> +            regulator-always-on;
+
+Just an example:
+		vin-supply = <&vcc_sys>;
+
+>> +        };
+>> +    };
+>> +
+>> +    vcc_otg_vbus: otg-vbus-regulator {
+>> +        compatible = "regulator-fixed";
+>> +        gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+>> +        pinctrl-0 = <&otg_vbus_drv>;
+>> +        pinctrl-names = "default";
+>> +        regulator-name = "vcc_otg_vbus";
+>> +        regulator-min-microvolt = <5000000>;
+>> +        regulator-max-microvolt = <5000000>;
+>> +        enable-active-high;
+>> +    };
+>> +
+>> +    vcc_phy: vcc-phy-regulator {
+>> +        compatible = "regulator-fixed";
+>> +        regulator-name = "vcc_phy";
+>> +        regulator-always-on;
+>> +        regulator-boot-on;
+>> +    };
+> 
+
+> Is this actually a distinct regulator? The reference design has the
+> internal FEPHY block powered pretty much directly from the general 1V8
+> and 1V0 supplies that also power USB/HDMI/etc., so I'd rather expect
+> low-end boxes to follow suit. Either way there doesn't seem to be a
+> great deal of value in describing something with no controls, no voltage
+> information, and no connection to the power tree.
+
+Agree.
+phy-supply appears to be an optional property, so removing it is
+possible. It shows up in rk3328-roc-cc.dts and rk3328-evb.dts.
+
+What does the maintainer prefer? Remove or not?
+
+> 
+>> +
+>> +    vcc_sd: sdmmc-regulator {
+>> +        compatible = "regulator-fixed";
+>> +        gpio = <&gpio0 RK_PD6 GPIO_ACTIVE_LOW>;
+>> +        pinctrl-0 = <&sdmmc0m1_gpio>;
+>> +        pinctrl-names = "default";
+>> +        regulator-name = "vcc_sd";
+>> +        regulator-min-microvolt = <3300000>;
+>> +        regulator-max-microvolt = <3300000>;
+>> +        vin-supply = <&vccio_3v3_reg>;
+>> +    };
+>> +
+>> +    vdd_arm: vdd-arm {
+>> +        compatible = "pwm-regulator";
+>> +        pwms = <&pwm0 0 5000 1>;
+>> +        regulator-name = "vdd_arm";
+>> +        regulator-min-microvolt = <950000>;
+>> +        regulator-max-microvolt = <1400000>;
+>> +        regulator-settling-time-up-us = <250>;
+>> +        regulator-always-on;
+>> +        regulator-boot-on;
+>> +    };
+>> +
+>> +    vdd_log: vdd-log {
+>> +        compatible = "pwm-regulator";
+>> +        pwms = <&pwm1 0 5000 1>;
+>> +        regulator-name = "vdd_log";
+>> +        regulator-min-microvolt = <900000>;
+>> +        regulator-max-microvolt = <1300000>;
+>> +        regulator-settling-time-up-us = <250>;
+>> +        regulator-always-on;
+>> +        regulator-boot-on;
+>> +    };
+>> +};
+>> +
+>> +&analog_sound {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&codec {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&cpu0 {
+>> +    cpu-supply = <&vdd_arm>;
+>> +};
+>> +
+>> +&cpu1 {
+>> +    cpu-supply = <&vdd_arm>;
+>> +};
+>> +
+>> +&cpu2 {
+>> +    cpu-supply = <&vdd_arm>;
+>> +};
+>> +
+>> +&cpu3 {
+>> +    cpu-supply = <&vdd_arm>;
+>> +};
+>> +
+>> +&cpu0_opp_table {
+>> +    opp-1200000000 {
+>> +        status = "disabled";
+>> +    };
+>> +
+>> +    opp-1296000000 {
+>> +        status = "disabled";
+>> +    };
+>> +};
+>> +
+>> +&emmc {
+>> +    bus-width = <8>;
+>> +    cap-mmc-highspeed;
+>> +    non-removable;
+>> +    pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
+>> +    pinctrl-names = "default";
+>> +    status = "okay";
+>> +};
+>> +
+>> +&gmac2phy {
+>> +    assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
+>> +    assigned-clock-rate = <50000000>;
+>> +    assigned-clocks = <&cru SCLK_MAC2PHY>;
+>> +    clock_in_out = "output";
+
+>> +    phy-supply = <&vcc_phy>;
+
+Remove or not?
+
+>> +    status = "okay";
+>> +};
+>> +
+>> +&gpu {
+>> +    mali-supply = <&vdd_log>;
+>> +};
+>> +
+>> +&hdmi {
+>> +    ddc-i2c-scl-high-time-ns = <9625>;
+>> +    ddc-i2c-scl-low-time-ns = <10000>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&hdmiphy {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&hdmi_sound {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&i2s0 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&i2s1 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&io_domains {
+>> +    pmuio-supply = <&vccio_3v3_reg>;
+>> +    vccio1-supply = <&vccio_3v3_reg>;
+>> +    vccio2-supply = <&vccio_1v8_reg>;
+>> +    vccio3-supply = <&vccio_3v3_reg>;
+>> +    vccio4-supply = <&vccio_1v8_reg>;
+>> +    vccio5-supply = <&vccio_3v3_reg>;
+>> +    vccio6-supply = <&vccio_3v3_reg>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&pinctrl {
+>> +    ir {
+>> +        ir_int: ir-int {
+>> +            rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +        };
+>> +    };
+>> +
+>> +    leds {
+>> +        cyx_led_pin: cyx-led-pin {
+>> +            rockchip,pins = <2 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +        };
+>> +    };
+>> +
+>> +    pwm0 {
+>> +        pwm0_pin_pull_up: pwm0-pin-pull-up {
+>> +            rockchip,pins = <2 RK_PA4 1 &pcfg_pull_up>;
+>> +        };
+>> +    };
+>> +
+>> +    pwm1 {
+>> +        pwm1_pin_pull_up: pwm1-pin-pull-up {
+>> +            rockchip,pins = <2 RK_PA5 1 &pcfg_pull_up>;
+>> +        };
+>> +    };
+>> +
+>> +    sdio-pwrseq {
+>> +        wifi_enable_h: wifi-enable-h {
+>> +            rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +        };
+>> +    };
+>> +
+>> +    sdmmc1 {
+>> +        clk_32k_out: clk-32k-out {
+>> +            rockchip,pins = <1 RK_PD4 1 &pcfg_pull_none>;
+>> +        };
+>> +    };
+>> +
+>> +    usb {
+>> +        host_vbus_drv: host-vbus-drv {
+>> +            rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +        };
+>> +
+>> +        otg_vbus_drv: otg-vbus-drv {
+>> +            rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +        };
+>> +    };
+>> +};
+>> +
+>> +&pwm0 {
+>> +    pinctrl-0 = <&pwm0_pin_pull_up>;
+>> +    pinctrl-names = "active";
+>> +    status = "okay";
+>> +};
+>> +
+>> +&pwm1 {
+>> +    pinctrl-0 = <&pwm1_pin_pull_up>;
+>> +    pinctrl-names = "active";
+>> +    status = "okay";
+>> +};
+>> +
+>> +&saradc {
+>> +    vref-supply = <&vccio_1v8_reg>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&sdio {
+>> +    bus-width = <4>;
+>> +    cap-sd-highspeed;
+>> +    cap-sdio-irq;
+>> +    keep-power-in-suspend;
+>> +    max-frequency = <125000000>;
+>> +    mmc-pwrseq = <&sdio_pwrseq>;
+>> +    non-removable;
+>> +    pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk &clk_32k_out>;
+>> +    pinctrl-names = "default";
+>> +    sd-uhs-sdr104;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&sdmmc {
+>> +    bus-width = <4>;
+>> +    cap-sd-highspeed;
+
+>> +    disable-wp;
+
+This is from the manufacturer tree for a micro SD card. Remove or not?
+Please advise.
+
+>> +    pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
+>> +    pinctrl-names = "default";
+>> +    vmmc-supply = <&vcc_sd>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&spdif {
+>> +    pinctrl-0 = <&spdifm0_tx>;
+
+>> +    pinctrl-names = "default";
+
+Remove.
+Already in dtsi.
+
+>> +    status = "okay";
+>> +};
+>> +
+>> +&soc_crit {
+>> +    temperature = <115000>; /* millicelsius */
+>> +};
+>> +
+>> +&target {
+>> +    temperature = <105000>; /* millicelsius */
+>> +};
+>> +
+>> +&threshold {
+>> +    temperature = <90000>; /* millicelsius */
+>> +};
+>> +
+>> +&tsadc {
+>> +    rockchip,hw-tshut-temp = <120000>;
+>> +    status = "okay";
+>> +};
+>> +
+>> +&u2phy {
+>> +    status = "okay";
+>> +
+>> +    u2phy_host: host-port {
+> 
+> Just refer to the ports normally by label rather than duplicate a random
+> snippet of DTSI hierarchy - I'm not sure why this particular pattern
+> seems to get copied around so much.
+
+Here the node labels start with the same letters and the result will
+stay together. In other cases it will scatter all over the dts file and
+affects the readability. I just followed the manufacturer's example. If
+the maintainer agrees then I'll change.
+
+> 
+> Robin.
+> 
+>> +        status = "okay";
+>> +    };
+>> +
+>> +    u2phy_otg: otg-port {
+>> +        phy-supply = <&vcc_otg_vbus>;
+>> +        status = "okay";
+>> +    };
+>> +};
+>> +
+>> +&uart0 {
+>> +    pinctrl-0 = <&uart0_xfer &uart0_cts>;
+
+>> +    pinctrl-names = "default";
+
+Remove.
+Already in dtsi.
+
+>> +    status = "okay";
+>> +};
+>> +
+>> +&uart2 {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usb20_otg {
+>> +    dr_mode = "host";
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usb_host0_ehci {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&usb_host0_ohci {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&vop {
+>> +    status = "okay";
+>> +};
+>> +
+>> +&vop_mmu {
+>> +    status = "okay";
+>> +};
+>>
+
