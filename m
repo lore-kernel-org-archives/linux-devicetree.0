@@ -2,106 +2,114 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D57C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D86C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A10822CBE
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BB220842
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 21:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xUN4x37c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LthmW3Lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgHDVSJ (ORCPT
+        id S1727124AbgHDVY1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:18:09 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42716 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbgHDVSH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 17:18:07 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 074LI0Xg079064;
-        Tue, 4 Aug 2020 16:18:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596575880;
-        bh=G7GCYMIKfue/A5ZDgs9tAJHdVeUEdZoF+fa0oTfoEn0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xUN4x37c6A/wmVZ0nUO4QNvhNyCDmZhwkA0dr0LaVSLbtfzmcAmis+62b+/5TrJfn
-         9J66tleiiYqLe9bOTuljgzWm9ck06PESvqDibiLYYadQ+rvyhniA2SJk986aN+M/OB
-         1HPyO9V4QQo4dGBGDWDN0TCv7mo92i4d7aCBct94=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074LI0ZP059403;
-        Tue, 4 Aug 2020 16:18:00 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 4 Aug
- 2020 16:18:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 4 Aug 2020 16:18:00 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074LHxA7020492;
-        Tue, 4 Aug 2020 16:17:59 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <santosh.shilimkar@oracle.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     Sekhar Nori <nsekhar@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH next 3/3] arm64: dts: ti: k3-am65: ringacc: drop ti,dma-ring-reset-quirk
-Date:   Wed, 5 Aug 2020 00:17:32 +0300
-Message-ID: <20200804211732.2861-4-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200804211732.2861-1-grygorii.strashko@ti.com>
-References: <20200804211732.2861-1-grygorii.strashko@ti.com>
+        Tue, 4 Aug 2020 17:24:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbgHDVY0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 17:24:26 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E967C06174A
+        for <devicetree@vger.kernel.org>; Tue,  4 Aug 2020 14:24:26 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id t7so17876447otp.0
+        for <devicetree@vger.kernel.org>; Tue, 04 Aug 2020 14:24:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k9/tscxhQqLXMKufpxll8+O44Aoxn3IbN6hHzmHjeyk=;
+        b=LthmW3LzzjhnSTSJ/Gk3/qE3qMtkbshJVZQ8VvPoQUD14fRb8+6ZREaa16vBXOv1B/
+         iCz3iW+Ld6mgmeMw0916UckRv6jqN1O3aiBgPtqwXE14SpVgCbHxPPjndJ5a0qf9ZuBO
+         0DMgY2VCRRgo1VuhaAsG3Pq2eLgLRLyQmtbm1paF9aVKd5GPRUp+JagTiJ0ixRjJYWtH
+         vH9TTHge8Lz6YzaqokOI9017/ZYGVovnurHehoFn81WWkRgDL898MDEvu/hvL7nKxE4P
+         ijvjQkL0+o3F4MiCZyH/zbsTqkGpi/VEbJP7wQBQwImsUtMHCzmwfIv6IIvz+tstdU3G
+         0GdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k9/tscxhQqLXMKufpxll8+O44Aoxn3IbN6hHzmHjeyk=;
+        b=fi8/vadUNJJY4jzlr/HkD0kCVvyQOnoI0WKRbpcJeaWbL+gt/ikVWE0r+TVMf6y4Ux
+         QGw3PJH4j77TaPG07qayzKQdKGMEsN7JPy+UJyqfZhsYycZCn6HrUSr+J4NasiLtBVgQ
+         AIw85aoo25rWNX4ihHCSaSM9LgaumlL9cBYF15iaV8LeuUzB9IGSQpxJdHlL6LkSk1Wa
+         xKaE4bz6oLij072vp41Ky1Hqycy5ChR7uGBlfTt/Vz3412aWYN05H3RyLl/sMkvypj4C
+         LQxj+EM0ZIMHLrMoiV5h9SUOGMGbYaneg9ncoog+Oo1J4Bsq9dOlTGD9xwir1C+++f7v
+         q7/Q==
+X-Gm-Message-State: AOAM531pmdJiWLGy3ureh9LXlDOcSwK701Z9v6o9rIp92wY+BO0lOJyU
+        /fgOSXBAyCZYYMemOWSNzM1bAsYbrZ71xRbOLZfSzg==
+X-Google-Smtp-Source: ABdhPJwrlWMjyO3HV4MDFR4gb4NaCjbwSiumlhalogqG2gqSuAloVI6+obWms7yfcFnZi+bTMkLl8+r5tY36mh/4U4o=
+X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr45696oth.352.1596576265757;
+ Tue, 04 Aug 2020 14:24:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200511110611.3142-1-ricardo.canuelo@collabora.com>
+ <20200511110611.3142-5-ricardo.canuelo@collabora.com> <CALAqxLWCCH8sDD+3-Qe=+siUAQgB2jn3349w+VTAj6uySKc8NA@mail.gmail.com>
+In-Reply-To: <CALAqxLWCCH8sDD+3-Qe=+siUAQgB2jn3349w+VTAj6uySKc8NA@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 4 Aug 2020 14:24:13 -0700
+Message-ID: <CALAqxLVgJYD_n8Y0YrkNt5TRFxWExcNqP5CW_EQiK8XghZO9Lw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] arm64: dts: hisilicon: hikey: fixes to comply with
+ adi, adv7533 DT binding
+To:     =?UTF-8?Q?Ricardo_Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove obsolete "ti,dma-ring-reset-quirk" Ringacc DT property.
+On Tue, Aug 4, 2020 at 1:57 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Mon, May 11, 2020 at 4:07 AM Ricardo Ca=C3=B1uelo
+> <ricardo.canuelo@collabora.com> wrote:
+> >
+> > hi3660-hikey960.dts:
+> >   Define a 'ports' node for 'adv7533: adv7533@39' and the
+> >   'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
+> >   binding.
+> >
+> >   This fills the requirements to meet the binding requirements,
+> >   remote endpoints are not defined.
+> >
+> > hi6220-hikey.dts:
+> >   Change property name s/pd-gpio/pd-gpios, gpio properties should be
+> >   plural. This is just a cosmetic change.
+> >
+> > Signed-off-by: Ricardo Ca=C3=B1uelo <ricardo.canuelo@collabora.com>
+>
+> As a heads up.
+> So this change sounds sane, but I just bisected it down as the cause
+> of a regression on HiKey960 where the adv7511 driver doesn't probe.
+>
+> I'll dig a bit more on what is going on (the DRM driver is still out
+> of tree, so maybe the DTS bits for that are not quite right?), but if
+> you have any suggestions, I'll give those a try.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 1 -
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi  | 1 -
- 2 files changed, 2 deletions(-)
+Yes. It ends up the DRM driver dts changes were being done in the
+wrong file so it was adding adv7511 bits in the dtsi, which were then
+being overridden by your tweak. I'll fixup the pending DRM driver dts
+bits. Apologies for the noise.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 9edfae5944f7..efbe94b6d418 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -590,7 +590,6 @@
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <818>;
- 			ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
--			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <187>;
- 			msi-parent = <&inta_main_udmass>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 8c1abcfe0860..f559bb6febdb 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -135,7 +135,6 @@
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <286>;
- 			ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
--			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <195>;
- 			msi-parent = <&inta_main_udmass>;
--- 
-2.17.1
-
+thanks
+-john
