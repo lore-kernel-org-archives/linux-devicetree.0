@@ -2,142 +2,180 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0A0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 01:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FA4C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 02:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10182177B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 01:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F8C2076C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 02:00:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aaf257HY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDm9jUv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgHDBvR (ORCPT
+        id S1726398AbgHDCAL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 21:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53678 "EHLO
+        Mon, 3 Aug 2020 22:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgHDBvQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 21:51:16 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A1FC06174A
-        for <devicetree@vger.kernel.org>; Mon,  3 Aug 2020 18:51:15 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id 4so14114285vsf.11
-        for <devicetree@vger.kernel.org>; Mon, 03 Aug 2020 18:51:15 -0700 (PDT)
+        with ESMTP id S1725840AbgHDCAL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 22:00:11 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0BCC06174A;
+        Mon,  3 Aug 2020 19:00:11 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id j7so2798461vkk.12;
+        Mon, 03 Aug 2020 19:00:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZjddNGXz3YzU7Pvdk0bKn7EGChBBYHNzVV19el9GvN4=;
-        b=aaf257HYCPeWHrjBXePaOYS8VFb1Q/czqyneX50WCTw9iwZoobQcG+o1I1MWB7iKJs
-         smazrjiW0L6F2JZ72ElWTxCb5NTLzF2eL/KqMeWC9AHOwb9tlBgjdHwOTBLnOa+PAG0y
-         GzfieF4oG1m72F66pbXCb9LhKUeoz73OImW5s=
+         :cc:content-transfer-encoding;
+        bh=zc/mDTVc/rFnmhpO6xOJDxe4g+T9tpksSNoSLdk5qXU=;
+        b=sDm9jUv4me+Jid9y9TV/h0O7dOHU3HW9DJx1YBNrF3oTm8AiEF0ODL8+DAF6wl758L
+         +w7bIHPwK4W2s0RIDFv6uuLB3/1sLWUXM/RNzIIhveY29u5PTsdLZ7YLwU6Xl86wCNQO
+         dDt7nGQaM/Kh/vRw+wUBGBIEkmTgmKzspVuO36Wo7if/AnO1RdGMd4BnTHuGHrFzdJ8h
+         kdZijy1JBJqDSwu43zMk5he4zlyQIDOdAJNxaEcMV0MKM/WewdqqcJcI+iQnS5NNglzP
+         J7rQI4wVkQPynaZuPM5ABcrhzToRWjZ7WjPNYoaBL1z0D/jOWVaTpzyFCxEoR4ClIKYM
+         qfSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZjddNGXz3YzU7Pvdk0bKn7EGChBBYHNzVV19el9GvN4=;
-        b=T81AcluLJlwh1Tm4dn9ZMHF5Lk0GEgOBECL+B1Z1iq1pEfhemZd4kIJNcHLCExhlvh
-         TeKuNIvLiPyxICOxUI7YFOYJXni3KnIN1WazSzlcKmm+LpcX2hSIezFaqBkNhKDHhset
-         QiFIVah+A9q2NP7YqzHLXniKhjYclsb4ar8sHFsQ5LEPFmO2OaBBQhuhIR+aavGqsETW
-         lOSva5DTctBOxYC20f+7G9H4Ea8TjApAuXwnHmxHV/AWEIjk4oc1i7sWlDonK7C49+SR
-         mawYUgEtB8KJeauFd3NgFzlqeKjIEIr3JOg1bln9EfLjRPFW/r6ZEq9A8uREFE9uqFz0
-         Msig==
-X-Gm-Message-State: AOAM530aqkT2B1jZdmN/3O9Wg62POD/BbYdkRwow+pZrkQZWswYyxY9c
-        qs9m4SFcHjP6f6qqx6+rp8OvTBIAIwz6WVDmvJQ8Cg==
-X-Google-Smtp-Source: ABdhPJy1lRFt2xIEK6BlHw92IYkKS9uhFUQMHmq60wCSuWixqVxrgiG9sOnX8EEpNmGgC5HX8UN7Ug7KXZjZv9nKfx8=
-X-Received: by 2002:a67:bb06:: with SMTP id m6mr13785000vsn.54.1596505874070;
- Mon, 03 Aug 2020 18:51:14 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zc/mDTVc/rFnmhpO6xOJDxe4g+T9tpksSNoSLdk5qXU=;
+        b=lMTGDTuxfebatWaEdbOnYo/xePBffj/00NK3yzpUpX006OEVo2g9HOIw8hXutVs55C
+         aUSMTpWUiGUfCHhPFrHptbq6juLdT2DplBagShawfKwM2HK8apHB9BO1H0jFmg29k1R0
+         Heb1oSYVmtFULY6SgJlPm7x7xB96Ddye4R9lz8PHNqSWmQQOhid5SHx+LMkWNKFDy94R
+         6499OoZZr8pTYC93EniMinliU7aBHVF2Oi0vejRcbBmuPaQgdAAKRCIyVPFO/BKBCyBa
+         IXt1FGsE+9kz8lMxDtSMah8Ec6UkQdCTaOcdU0b8/PrkUSsN/keH4p1Z/wAUDZ+tk5bt
+         cZvA==
+X-Gm-Message-State: AOAM530GST0zzDaNad1znN0zTfDlhwSmcmZJZoLa2j8kYVxfN2CgB/MD
+        hcbrSyWd+OccYMh6lAuTDkduIpWgZ5vWzlI8X7w=
+X-Google-Smtp-Source: ABdhPJxqSILvUbt6upgFKnK/lKdwxMBXuAZWR7u1jK9nL4WatYyKakwn3tn3ma89xTNZNfkHl/SrS1gaa5wGbAblTbA=
+X-Received: by 2002:a1f:2a48:: with SMTP id q69mr6191996vkq.69.1596506410281;
+ Mon, 03 Aug 2020 19:00:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596445047-2975-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1596445047-2975-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1596445047-2975-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 4 Aug 2020 09:51:03 +0800
-Message-ID: <CANMq1KCSiRwCvPcbdA-g4Xwm5Jwk7VLDNpsR-_zoxEOv9ZFHWQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] spmi: Add driver shutdown support
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
+References: <cover.1590415123.git.joglekar@synopsys.com> <83eba2e9f0069f20ccc94537e3b99cbaec209441.1590415123.git.joglekar@synopsys.com>
+ <5534d9d6-5452-dade-e46e-f4b0910becdb@synopsys.com> <877dvhqh2e.fsf@kernel.org>
+ <2f61133b-319d-80dc-f3f3-7e08e0228953@synopsys.com> <878sfdp5bk.fsf@kernel.org>
+ <48f1764e-4383-a149-b93b-3851095394e7@synopsys.com> <7ae08b3d-3b5e-73cf-d196-325501a44e44@synopsys.com>
+ <d4f895da-38c7-d553-cb3a-835da00ae687@synopsys.com>
+In-Reply-To: <d4f895da-38c7-d553-cb3a-835da00ae687@synopsys.com>
+From:   Jun Li <lijun.kernel@gmail.com>
+Date:   Tue, 4 Aug 2020 09:59:59 +0800
+Message-ID: <CAKgpwJVx_96zSgT+ANumOj-AymABu=aZ9KPgLt=bBVgQ5skH+A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] usb: dwc3: Add device property sgl-trb-cache-size-quirk
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        John Youn <John.Youn@synopsys.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 4:57 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
+Thinh Nguyen <Thinh.Nguyen@synopsys.com> =E4=BA=8E2020=E5=B9=B48=E6=9C=884=
+=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=888:46=E5=86=99=E9=81=93=EF=BC=
+=9A
 >
-> Add new shutdown() method.  Use it in the standard driver model style.
+> Hi Rob,
 >
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/spmi/spmi.c  | 12 ++++++++++++
->  drivers/spmi/spmi.c  | 12 ++++++++++++
->  include/linux/spmi.h |  1 +
->  2 files changed, 13 insertions(+)
+> Tejas Joglekar wrote:
+> > Hello Rob,
+> > On 7/21/2020 10:27 PM, Tejas Joglekar wrote:
+> >> Hello,
+> >>
+> >> On 7/21/2020 3:17 PM, Felipe Balbi wrote:
+> >>> Tejas Joglekar <Tejas.Joglekar@synopsys.com> writes:
+> >>>
+> >>>> Hi Rob,
+> >>>>
+> >>>> On 7/6/2020 12:13 PM, Felipe Balbi wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> Tejas Joglekar <Tejas.Joglekar@synopsys.com> writes:
+> >>>>>>> @@ -95,6 +95,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+> >>>>>>>         if (dwc->usb2_lpm_disable)
+> >>>>>>>                 props[prop_idx++] =3D PROPERTY_ENTRY_BOOL("usb2-l=
+pm-disable");
+> >>>>>>>
+> >>>>>>> +       if (dwc->sgl_trb_cache_size_quirk)
+> >>>>>>> +               props[prop_idx++] =3D
+> >>>>>>> +                       PROPERTY_ENTRY_BOOL("sgl-trb-cache-size-q=
+uirk");
+> >>>>>>> +
+> >>>>>>>         /**
+> >>>>>>>          * WORKAROUND: dwc3 revisions <=3D3.00a have a limitation
+> >>>>>>>          * where Port Disable command doesn't work.
+> >>>>>>>
+> >>>>>> Does this implementation looks good to you? Rob has some concerned=
+ over the DT entries,
+> >>>>>> you suggested using compatible string with this quirk addition.
+> >>>>>> Can you please brief about how you would like to have this quirk i=
+mplemented?
+> >>>>>> I can send the updated patch. My patch series is pending for merge=
+ just because of the
+> >>>>>> DT and quirk issue. Can you please help?
+> >>>>> Yeah, you need to get into an agreement with Rob :-) I don't mind h=
+aving
+> >>>>> extra DT flags for things which can't be detected in runtime, Rob
+> >>>>> disagrees.
+> >>>>>
+> >>>> The compatible string is not suitable option as it does not work wit=
+h platform drivers
+> >>>> with PCI based system. Also Synopsys controllers IP version register=
+ is not visible to xhci
+> >>>> driver and hence we don't have separate compatible string for each S=
+ynopsys version on the
+> >>>> xhci driver side.
+> >>>> Due to which I depend on DT flag addition for the quirk. Can we add =
+these DT flags and quirk?
+> >>> As I said, I'm well aware of the situation regarding usage of compati=
+ble
+> >>> strings and the fact that dwc3 must work on PCI and non-PCI systems (=
+I
+> >>> wrote the thing as it is after all). The person blocking new quirk fl=
+ags
+> >>> is Rob, not me. You need to convince Rob that this is the way to go.
+> >>>
+> >> @Felipe: Sorry for confusion if any, previous mail was intended for Ro=
+b asking about his approval.
+> >>
+> >>> Rob, ball's in your court. Sorry.>
+> >> @Rob: As I and Felipe have mentioned before, it is very much necessary=
+ to have quirk flags
+> >> for the current changes as compatible string would not be a solution f=
+or PCI and non-PCI
+> >> systems. Can you please approve this change ? If you have any concern =
+about naming or any
+> >> other thing, please let us know.
+> >>
+> > Can you please comment?
+> >
+> > Thanks & Regards,
+> > Tejas Joglekar
+> >
+> >
 >
-> diff --git a/drivers/spmi/spmi.c b/drivers/spmi/spmi.c
-> index c16b60f..5fde024 100644
-> --- a/drivers/spmi/spmi.c
-> +++ b/drivers/spmi/spmi.c
-> @@ -357,6 +357,17 @@ static int spmi_drv_remove(struct device *dev)
->         return 0;
->  }
->
-> +static void spmi_drv_shutdown(struct device *dev)
-> +{
-> +       const struct spmi_driver *sdrv = to_spmi_driver(dev->driver);
-> +
-> +       if (!sdrv)
-> +               return;
-> +
-> +
-> +       if (sdrv->shutdown)
-> +               sdrv->shutdown(to_spmi_device(dev));
+> Can you help provide pointers and changes that Tejas can make to help
+> bring this issue to conclusion?
 
-Slight more succinct (assuming sdrv _can_ actually be NULL, I'm not
-sure about that)
+We really need a direction to handle growing dwc3 quirks/flags as dwc3
+is widly used,
+I have a patchset also pending there after tried both property[1] and
+platform data[2].
 
-if (srdv && sdrv->shutdown)
+[1] https://www.spinics.net/lists/linux-usb/msg196055.html
+[2] https://www.spinics.net/lists/arm-kernel/msg824995.html
 
-> +}
-> +}
-> +
->  static int spmi_drv_uevent(struct device *dev, struct kobj_uevent_env *env)
->  {
->         int ret;
-> @@ -373,6 +384,7 @@ static struct bus_type spmi_bus_type = {
-> @@ -373,6 +384,7 @@ static struct bus_type spmi_bus_type = {
->         .match          = spmi_device_match,
->         .probe          = spmi_drv_probe,
->         .remove         = spmi_drv_remove,
-> +       .shutdown       = spmi_drv_shutdown,
->         .uevent         = spmi_drv_uevent,
->  };
+thanks
+Li Jun
 >
-> diff --git a/include/linux/spmi.h b/include/linux/spmi.h
-> index 394a3f6..729bcbf 100644
-> --- a/include/linux/spmi.h
-> +++ b/include/linux/spmi.h
-> @@ -138,6 +138,7 @@ struct spmi_driver {
->         struct device_driver driver;
->         int     (*probe)(struct spmi_device *sdev);
->         void    (*remove)(struct spmi_device *sdev);
-> +       void    (*shutdown)(struct spmi_device *sdev);
->  };
->
->  static inline struct spmi_driver *to_spmi_driver(struct device_driver *d)
-> --
-> 2.6.4
+> Thanks,
+> Thinh
