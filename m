@@ -7,39 +7,41 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5FBC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FB0C433E8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2AC20842
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED1422CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgHDRst (ORCPT
+        id S1730003AbgHDRsn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:48:49 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:24954 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726338AbgHDRss (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 13:48:48 -0400
+        Tue, 4 Aug 2020 13:48:43 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:1260 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729871AbgHDRsk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 13:48:40 -0400
 X-IronPort-AV: E=Sophos;i="5.75,434,1589209200"; 
-   d="scan'208";a="53649497"
+   d="scan'208";a="53862809"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 05 Aug 2020 02:48:48 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 05 Aug 2020 02:48:37 +0900
 Received: from localhost.localdomain (unknown [172.29.52.222])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2361340B92DF;
-        Wed,  5 Aug 2020 02:48:45 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9DCCF40B92DF;
+        Wed,  5 Aug 2020 02:48:34 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 5/5] arm64: dts: renesas: beacon-renesom-baseboard: Move connector node out of hd3ss3220 device
-Date:   Tue,  4 Aug 2020 18:48:28 +0100
-Message-Id: <20200804174828.8339-6-biju.das.jz@bp.renesas.com>
+        linux-renesas-soc@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: [PATCH 1/5] dt-bindings: usb: convert ti,hd3ss3220 bindings to json-schema
+Date:   Tue,  4 Aug 2020 18:48:24 +0100
+Message-Id: <20200804174828.8339-2-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200804174828.8339-1-biju.das.jz@bp.renesas.com>
 References: <20200804174828.8339-1-biju.das.jz@bp.renesas.com>
@@ -48,107 +50,154 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Move connector node out of hd3ss3220 device in order to comply with usb
-connector bindings.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Convert ti,hd3ss3220.txt to YAML. Updated the binding documentation
+as graph bindings of this device model Super Speed (SS) data bus to
+the Super Speed (SS) capable connector.
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- .../dts/renesas/beacon-renesom-baseboard.dtsi | 67 ++++++++++++++-----
- 1 file changed, 50 insertions(+), 17 deletions(-)
+Ref: https://patchwork.kernel.org/patch/11669423/
+---
+ .../devicetree/bindings/usb/ti,hd3ss3220.txt  | 38 ---------
+ .../devicetree/bindings/usb/ti,hd3ss3220.yaml | 81 +++++++++++++++++++
+ 2 files changed, 81 insertions(+), 38 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
 
-diff --git a/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
-index 66c9153b3101..e66b5b36e489 100644
---- a/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
-+++ b/arch/arm64/boot/dts/renesas/beacon-renesom-baseboard.dtsi
-@@ -223,6 +223,29 @@
- 		#clock-cells = <0>;
- 		clock-frequency = <25000000>;
- 	};
-+
-+	connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		data-role = "dual";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				hs_ep: endpoint {
-+					remote-endpoint = <&usb3_hs_ep>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				ss_ep: endpoint {
-+					remote-endpoint = <&hd3ss3220_in_ep>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &audio_clk_a {
-@@ -427,20 +450,19 @@
- 		interrupt-parent = <&gpio6>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
- 
--		connector {
--			compatible = "usb-c-connector";
--			label = "USB-C";
--			data-role = "dual";
+diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+deleted file mode 100644
+index 2bd21b22ce95..000000000000
+--- a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
++++ /dev/null
+@@ -1,38 +0,0 @@
+-TI HD3SS3220 TypeC DRP Port Controller.
 -
--			ports {
--				#address-cells = <1>;
--				#size-cells = <0>;
+-Required properties:
+- - compatible: Must be "ti,hd3ss3220".
+- - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
+- - interrupts: An interrupt specifier.
 -
--				port@1 {
--					reg = <1>;
--					hd3ss3220_ep: endpoint {
--						remote-endpoint = <&usb3_role_switch>;
--					};
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				hd3ss3220_in_ep: endpoint {
-+					remote-endpoint = <&ss_ep>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				hd3ss3220_out_ep: endpoint {
-+					remote-endpoint = <&usb3_role_switch>;
- 				};
- 			};
- 		};
-@@ -714,9 +736,20 @@
- 	status = "okay";
- 	usb-role-switch;
- 
--	port {
--		usb3_role_switch: endpoint {
--			remote-endpoint = <&hd3ss3220_ep>;
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			usb3_hs_ep: endpoint {
-+				remote-endpoint = <&hs_ep>;
-+			};
-+		};
-+		port@1 {
-+			reg = <1>;
-+			usb3_role_switch: endpoint {
-+				remote-endpoint = <&hd3ss3220_out_ep>;
-+			};
- 		};
- 	};
- };
+-Required sub-node:
+- - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
+-   bindings of the connector node are specified in:
+-
+-	Documentation/devicetree/bindings/connector/usb-connector.yaml
+-
+-Example:
+-hd3ss3220@47 {
+-	compatible = "ti,hd3ss3220";
+-	reg = <0x47>;
+-	interrupt-parent = <&gpio6>;
+-	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+-
+-	connector {
+-		compatible = "usb-c-connector";
+-		label = "USB-C";
+-		data-role = "dual";
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@1 {
+-				reg = <1>;
+-				hd3ss3220_ep: endpoint {
+-					remote-endpoint = <&usb3_role_switch>;
+-				};
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
+new file mode 100644
+index 000000000000..5c7c7d782a04
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/ti,hd3ss3220.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI HD3SS3220 TypeC DRP Port Controller
++
++maintainers:
++  - Biju Das <biju.das.jz@bp.renesas.com>
++
++description: |-
++  HD3SS3220 is a USB SuperSpeed (SS) 2:1 mux with DRP port controller. The device provides Channel
++  Configuration (CC) logic and 5V VCONN sourcing for ecosystems implementing USB Type-C. The
++  HD3SS3220 can be configured as a Downstream Facing Port (DFP), Upstream Facing Port (UFP) or a
++  Dual Role Port (DRP) making it ideal for any application.
++
++properties:
++  compatible:
++   const: ti,hd3ss3220
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  ports:
++    description: OF graph bindings (specified in bindings/graph.txt) that model
++      SS data bus to the SS capable connector.
++    type: object
++    properties:
++      port@0:
++        type: object
++        description: Super Speed (SS) capable connector.
++
++      port@1:
++        type: object
++        description: Super Speed (SS) data bus.
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++    	#address-cells = <1>;
++    	#size-cells = <0>;
++
++    	hd3ss3220@47 {
++    		compatible = "ti,hd3ss3220";
++    		reg = <0x47>;
++    		interrupt-parent = <&gpio6>;
++    		interrupts = <3>;
++
++    		ports {
++    			#address-cells = <1>;
++    			#size-cells = <0>;
++    			port@0 {
++    				reg = <0>;
++    				hd3ss3220_in_ep: endpoint {
++    					remote-endpoint = <&ss_ep>;
++    				};
++    			};
++    			port@1 {
++    				reg = <1>;
++    				hd3ss3220_out_ep: endpoint {
++    					remote-endpoint = <&usb3_role_switch>;
++    				};
++    			};
++    		};
++    	};
++    };
 -- 
 2.17.1
 
