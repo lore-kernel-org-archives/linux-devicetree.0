@@ -2,543 +2,136 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BACFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 07:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B8DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 911F722C9F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 07:36:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ohrwglKX"
+	by mail.kernel.org (Postfix) with ESMTP id 4B80F2086A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgHDHgY (ORCPT
+        id S1729803AbgHDHma (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729629AbgHDHgW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 03:36:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE24C061756
-        for <devicetree@vger.kernel.org>; Tue,  4 Aug 2020 00:36:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k8so1890677wma.2
-        for <devicetree@vger.kernel.org>; Tue, 04 Aug 2020 00:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rCVC2ZByYb/uiO2EE2pEXvhZujuKiRsfETfk9x/UtgU=;
-        b=ohrwglKXeSevPCWi9BNfZJiAPWkdwED6lPifLSuMtfIHf1qNPznwTSXFitFsOA+2BE
-         gq4B2xA6TcCK9IqA4NrNJgDbtS6Ryl2K0aQfpc8AXl4aA7IYA2KBNWhKfre39XIkMk7N
-         FM0vSl3zEfVtuaFQ6+OWSPGd9W4VJHTVWwHuOJtM6j4U1W5+/ekGsxJjXlCiHp3gm5rO
-         Y4shEF5XZW8EPlErtpYTWR5driITbDd7GatcThCix+qScKzAy1CS3zPNj5+QXTJRhxpa
-         D6+i8N4P6uO75YhCpTZARXUNrrxFZ+tvky4wE0VMxuhBiMCVpWseLgjGVyPMrI/ardwh
-         RoMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rCVC2ZByYb/uiO2EE2pEXvhZujuKiRsfETfk9x/UtgU=;
-        b=dRduwghkEZTxINUQF2MEAx4p2zbLQ9l/qtDcp5m024nKmO4sIYBpHnlj6ejXRwUUai
-         ncrbbiJ/Uk8+xzPUt2T4tr6DquA2tA71ePTmvPqGtUbeGyzLqsLQKTq9aGsmp6Iv/m6s
-         yomylGBa9LXH5TpqPUttX9VHwPSEkTnDAzW/HxHF9XpnbZ6lj8Av4FwsM9GM248wZmUp
-         fJe46tlXUsaOSkA3kdd4i8NkLR4bWFAXGuRgnVrGzJBpGooWS0Eg4G3Z6pfeJfj0uPVa
-         Q7q9yBpOTb4SNOah9Mv/EdrKFiHOUdihSNAg/BTj2Dx5M+Pp0ibZOXmeCJo7bx7URpqM
-         5CQA==
-X-Gm-Message-State: AOAM533OnrDywTbowOzUBrz9K5ry3XyelQlZ0VBeQX770AJYBjVbX3oW
-        ZjfDo79GcIImVGF1TLxh/2gShWkxKRRKGaBJNmYNKA==
-X-Google-Smtp-Source: ABdhPJxqVS67uDJbx30h/qa0b00wVMfwIF10TPfqz966/4+zvH94/cp/+jMpLOGVZvDdWnRA7EQBCRlg/mlp7RiUDLU=
-X-Received: by 2002:a05:600c:2209:: with SMTP id z9mr2720331wml.70.1596526581018;
- Tue, 04 Aug 2020 00:36:21 -0700 (PDT)
+        Tue, 4 Aug 2020 03:42:30 -0400
+Received: from mailout11.rmx.de ([94.199.88.76]:37719 "EHLO mailout11.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726808AbgHDHma (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:42:30 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout11.rmx.de (Postfix) with ESMTPS id 4BLRYF45jsz3ybM;
+        Tue,  4 Aug 2020 09:42:25 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BLRY03tZlz2xNM;
+        Tue,  4 Aug 2020 09:42:12 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.102) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 4 Aug
+ 2020 09:40:12 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] iio: light: as73211: New driver
+Date:   Tue, 4 Aug 2020 09:40:11 +0200
+Message-ID: <2356337.HYKpEJ1Wej@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
+References: <20200802163735.76617-1-ceggers@arri.de> <20200802163735.76617-3-ceggers@arri.de> <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1596297341-13549-1-git-send-email-amit.pundir@linaro.org> <20200804061652.GK61202@yoga>
-In-Reply-To: <20200804061652.GK61202@yoga>
-From:   Amit Pundir <amit.pundir@linaro.org>
-Date:   Tue, 4 Aug 2020 13:05:44 +0530
-Message-ID: <CAMi1Hd1KCmoF7D06otBcxCBYEUW3Tdn_aYQ722=yRoEeZYmTPg@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.102]
+X-RMX-ID: 20200804-094212-4BLRY03tZlz2xNM-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 4 Aug 2020 at 11:46, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
->
-> On Sat 01 Aug 08:55 PDT 2020, Amit Pundir wrote:
->
-> > Add initial dts support for Xiaomi Poco F1 (Beryllium).
-> >
-> > This initial support is based on upstream Dragonboard 845c
-> > (sdm845) device. With this dts, Beryllium boots AOSP up to
-> > ADB shell over USB-C.
-> >
-> > Supported functionality includes UFS, USB-C (peripheral),
-> > microSD card and Vol+/Vol-/power keys. Bluetooth should work
-> > too but couldn't be verified from adb command line, it is
-> > verified when enabled from UI with few WIP display patches.
-> >
-> > Just like initial db845c support, initializing the SMMU is
-> > clearing the mapping used for the splash screen framebuffer,
-> > which causes the device to hang during boot and recovery
-> > needs a hard power reset. This can be worked around using:
-> >
-> >     fastboot oem select-display-panel none
-> >
-> > To switch ON the display back run:
-> >
-> >     fastboot oem select-display-panel
-> >
-> > But this only works on Beryllium devices running bootloader
-> > version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
-> > Android-9 based release. Newer bootloader version do not
-> > support switching OFF the display panel at all. So we need
-> > a few additional smmu patches (under review) from here to
-> > boot to shell:
-> > https://github.com/pundiramit/linux/commits/beryllium-mainline
-> >
-> > Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
-> > ---
-> > v3: Added a reserved-memory region from downstream kernel to fix
-> >     a boot regression with recent dma-pool changes in v5.8-rc6.
-> > v2: Updated machine compatible string for seemingly inevitable
-> >     future quirks.
-> >
-> >  arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> >  arch/arm64/boot/dts/qcom/sdm845-beryllium.dts | 331 ++++++++++++++++++++++++++
-> >  2 files changed, 332 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> > index 0f2c33d611df..3ef1b48bc0cb 100644
-> > --- a/arch/arm64/boot/dts/qcom/Makefile
-> > +++ b/arch/arm64/boot/dts/qcom/Makefile
-> > @@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_QCOM)     += sdm845-cheza-r1.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)      += sdm845-cheza-r2.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)      += sdm845-cheza-r3.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)      += sdm845-db845c.dtb
-> > +dtb-$(CONFIG_ARCH_QCOM)      += sdm845-beryllium.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)      += sdm845-mtp.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)      += sdm850-lenovo-yoga-c630.dtb
-> >  dtb-$(CONFIG_ARCH_QCOM)      += sm8150-mtp.dtb
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-> > new file mode 100644
-> > index 000000000000..af66459712fe
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-> > @@ -0,0 +1,331 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> > +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> > +#include "sdm845.dtsi"
-> > +#include "pm8998.dtsi"
-> > +#include "pmi8998.dtsi"
-> > +
-> > +/ {
-> > +     model = "Xiaomi Technologies Inc. Beryllium";
-> > +     compatible = "xiaomi,beryllium", "qcom,sdm845";
-> > +
-> > +     /* required for bootloader to select correct board */
-> > +     qcom,board-id = <69 0>;
-> > +     qcom,msm-id = <321 0x20001>;
-> > +
-> > +     aliases {
-> > +             hsuart0 = &uart6;
-> > +     };
-> > +
-> > +     dc12v: dc12v-regulator {
->
-> This is a phone, it doesn't have a 12V DC jack. So while I don't know
-> the exact power grid for this device, this node shouldn't be here.
+On Sunday, 2 August 2020, 20:02:35 CEST, Andy Shevchenko wrote:
+> Thanks for an update, my comments below.
 
-Ack. Will remove it in next version.
+Thanks for the review. Please see below for my questions.
 
->
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "DC12V";
-> > +             regulator-min-microvolt = <12000000>;
-> > +             regulator-max-microvolt = <12000000>;
-> > +             regulator-always-on;
-> > +     };
-> > +
-> > +     gpio_keys {
->
-> y/_/-/
+Best regards
+Christian
 
-Ack.
+> On Sun, Aug 2, 2020 at 7:40 PM Christian Eggers <ceggers@arri.de> wrote:
+> > Datasheet:
+> > https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-
+> > b302-c2fd-e30a-c98df87616df
+> Do we need the UUID after the document file name?
+I have send AMS an inquiry. Not sure whether I will get an answer. I will wait
+a few days until sending v6.
 
->
-> > +             compatible = "gpio-keys";
-> > +             autorepeat;
-> > +
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&vol_up_pin_a>;
-> > +
-> > +             vol-up {
-> > +                     label = "Volume Up";
-> > +                     linux,code = <KEY_VOLUMEUP>;
-> > +                     gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-> > +             };
-> > +     };
-> > +
-> > +     vbat: vbat-regulator {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "VBAT";
-> > +
-> > +             vin-supply = <&dc12v>;
-> > +             regulator-min-microvolt = <4200000>;
-> > +             regulator-max-microvolt = <4200000>;
-> > +             regulator-always-on;
-> > +     };
-> > +
-> > +     vbat_som: vbat-som-regulator {
->
-> This is specific to db845c, with its power grid split between the main
-> board and the SOM. Please omit.
+> > +#define AS73211_OFFSET_TEMP (-66.9)
+> > +#define AS73211_SCALE_TEMP  0.05
+> 
+> In the kernel we don't do float arithmetic. How these are being used?
+Does this restriction also apply for compile time constants? I am quite 
+sure that all calculations using these defines will be evaluated at compile
+time. If found a number of other places where probably the same is done:
 
-Ack.
+find . -name '*.c' | xargs grep "#define.*[0-9]\.[0-9]" | grep -v '"' | grep -v "\/\*.*[0-9]\.[0-9]"
 
->
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "VBAT_SOM";
-> > +
-> > +             vin-supply = <&dc12v>;
-> > +             regulator-min-microvolt = <4200000>;
-> > +             regulator-max-microvolt = <4200000>;
-> > +             regulator-always-on;
-> > +     };
-> > +
-> > +     vdc_3v3: vdc-3v3-regulator {
->
-> This is probably not on the Poco and it's not referenced, please remove.
+> > +               *val2 = (AS73211_OFFSET_TEMP - (int)AS73211_OFFSET_TEMP) *
+> > 1000000;
+> > 
+> > +                       *val2 = (AS73211_SCALE_TEMP -
+> > (int)AS73211_SCALE_TEMP) * 1000000;
+> Magic 1000000 multiplier.
+I think that in the context of IIO_VAL_INT_PLUS_MICRO this isn't quite magic. Using
+1000000 directly seems quite usual:
 
-Ack.
+find drivers/iio/ -type f | xargs grep "val2 = .*1000000"
 
->
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "VDC_3V3";
-> > +             vin-supply = <&dc12v>;
-> > +             regulator-min-microvolt = <3300000>;
-> > +             regulator-max-microvolt = <3300000>;
-> > +             regulator-always-on;
-> > +     };
-> > +
-> > +     vdc_5v: vdc-5v-regulator {
->
-> Ditto.
+> I think here you got them always 0. And to fix that you need to
+> redefine (with also units included in the name) above constants like
+> #define ..._OFFSET_TEMP_mC 66500
+> ... _SCALE_TEMP_?? 50
+a scale factor has no unit
 
-Ack.
+> 
+> Consider to use definitions from
+> https://elixir.bootlin.com/linux/latest/source/include/linux/units.h
+There are only definition for milli celsius. For IIO_VAL_INT_PLUS_MICRO I would
+require micro celsius.
 
->
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "VDC_5V";
-> > +
-> > +             vin-supply = <&dc12v>;
-> > +             regulator-min-microvolt = <500000>;
-> > +             regulator-max-microvolt = <500000>;
-> > +             regulator-always-on;
-> > +     };
-> > +
-> > +     vreg_s4a_1p8: vreg-s4a-1p8 {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "vreg_s4a_1p8";
-> > +
-> > +             regulator-min-microvolt = <1800000>;
-> > +             regulator-max-microvolt = <1800000>;
-> > +             regulator-always-on;
-> > +     };
-> > +};
-> > +
-> > +&apps_rsc {
-> > +     pm8998-rpmh-regulators {
-> > +             compatible = "qcom,pm8998-rpmh-regulators";
-> > +             qcom,pmic-id = "a";
-> > +
-> > +             vreg_l1a_0p875: ldo1 {
-> > +                     regulator-min-microvolt = <880000>;
-> > +                     regulator-max-microvolt = <880000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l7a_1p8: ldo7 {
-> > +                     regulator-min-microvolt = <1800000>;
-> > +                     regulator-max-microvolt = <1800000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l12a_1p8: ldo12 {
-> > +                     regulator-min-microvolt = <1800000>;
-> > +                     regulator-max-microvolt = <1800000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l13a_2p95: ldo13 {
-> > +                     regulator-min-microvolt = <1800000>;
-> > +                     regulator-max-microvolt = <2960000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l17a_1p3: ldo17 {
-> > +                     regulator-min-microvolt = <1304000>;
-> > +                     regulator-max-microvolt = <1304000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l20a_2p95: ldo20 {
-> > +                     regulator-min-microvolt = <2960000>;
-> > +                     regulator-max-microvolt = <2968000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l21a_2p95: ldo21 {
-> > +                     regulator-min-microvolt = <2960000>;
-> > +                     regulator-max-microvolt = <2968000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l24a_3p075: ldo24 {
-> > +                     regulator-min-microvolt = <3088000>;
-> > +                     regulator-max-microvolt = <3088000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l25a_3p3: ldo25 {
-> > +                     regulator-min-microvolt = <3300000>;
-> > +                     regulator-max-microvolt = <3312000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +
-> > +             vreg_l26a_1p2: ldo26 {
-> > +                     regulator-min-microvolt = <1200000>;
-> > +                     regulator-max-microvolt = <1200000>;
-> > +                     regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&gcc {
-> > +     protected-clocks = <GCC_QSPI_CORE_CLK>,
-> > +                        <GCC_QSPI_CORE_CLK_SRC>,
-> > +                        <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
-> > +};
-> > +
-> > +/* Reserved memory changes from downstream */
-> > +/ {
-> > +     reserved-memory {
-> > +             removed_region: memory@88f00000 {
->
-> Do you know what these 26MB are used for? Do you think it's possible to
-> give it a more appropriate label? The size happens to be the same as
-> &adsp_mem from sdm845.dtsi, this is probably not a coincidence.
+If I have the freedom, I would keep it as it is. Else I would suggest the following:
+#define AS73211_OFFSET_TEMP_INT (-66)
+#define AS73211_OFFSET_TEMP_MICRO 900000
+#define AS73211_SCALE_TEMP_INT 0
+#define AS73211_SCALE_TEMP_MICRO 50000
 
-In downstream, this removed region is marked as removed-dma-pool
-compatible, https://github.com/MiCode/Xiaomi_Kernel_OpenSource/commit/b982b6dc77ac34c184abe83dd293ac08fc607ba3,
-a carved out memory region not exposed to the kernel. I honestly
-didn't know what to name this region, so I kept it as it was. I can't
-boot past the bootloader if I don't mark this region as reserved.
+> > +       }}
+> > +
+> > +       return -EINVAL;
+> 
+> Make it default case.
+changed. Is there any benefit? My IDE's syntax checker now complains
+"No return, in a function returning non-void". But gcc is happy with this.
 
->
-> That said, this overlaps at least &rmtfs_mem, &qseecom_mem and
-> &camera_mem, so I would expect that you have a few warnings about this
-> early in the log? Please shuffle things around to avoid this.
-
-Sorry, I do know that it definitely overlaps with upstream &rmtfs_mem,
-but I ignored that because plan was to just boot to shell with this
-base dts. I was planning to submit a follow-up patch with downstream
-reserved memory mappings, which do not coincide with the upstream
-sdm845.dtsi mem regions you mentioned above, along with relevant
-wifi/adsp/cdsp nodes. But let me take this opportunity to submit them
-in the next version of this base dts.
-
->
-> > +                     no-map;
-> > +                     reg = <0 0x88f00000 0 0x1A00000>;
->
-> Please lowercase the 'A'
-
-Ack.
-
-Regards,
-Amit Pundir
+> > +       ret = devm_iio_device_register(dev, indio_dev);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       return 0;
+> 
+>   return devm_iio_device_register();
+changed. I prefer the original pattern as it would produce less changed lines
+if something needs to inserted later.
 
 
->
-> Regards,
-> Bjorn
->
-> > +             };
-> > +     };
-> > +};
-> > +
-> > +&pm8998_gpio {
-> > +     vol_up_pin_a: vol-up-active {
-> > +             pins = "gpio6";
-> > +             function = "normal";
-> > +             input-enable;
-> > +             bias-pull-up;
-> > +             qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-> > +     };
-> > +};
-> > +
-> > +&pm8998_pon {
-> > +     resin {
-> > +             compatible = "qcom,pm8941-resin";
-> > +             interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-> > +             debounce = <15625>;
-> > +             bias-pull-up;
-> > +             linux,code = <KEY_VOLUMEDOWN>;
-> > +     };
-> > +};
-> > +
-> > +&qupv3_id_0 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&sdhc_2 {
-> > +     status = "okay";
-> > +
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
-> > +
-> > +     vmmc-supply = <&vreg_l21a_2p95>;
-> > +     vqmmc-supply = <&vreg_l13a_2p95>;
-> > +
-> > +     bus-width = <4>;
-> > +     cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
-> > +};
-> > +
-> > +&tlmm {
-> > +     gpio-reserved-ranges = <0 4>, <81 4>;
-> > +
-> > +     sdc2_default_state: sdc2-default {
-> > +             clk {
-> > +                     pins = "sdc2_clk";
-> > +                     bias-disable;
-> > +
-> > +                     /*
-> > +                      * It seems that mmc_test reports errors if drive
-> > +                      * strength is not 16 on clk, cmd, and data pins.
-> > +                      */
-> > +                     drive-strength = <16>;
-> > +             };
-> > +
-> > +             cmd {
-> > +                     pins = "sdc2_cmd";
-> > +                     bias-pull-up;
-> > +                     drive-strength = <10>;
-> > +             };
-> > +
-> > +             data {
-> > +                     pins = "sdc2_data";
-> > +                     bias-pull-up;
-> > +                     drive-strength = <10>;
-> > +             };
-> > +     };
-> > +
-> > +     sdc2_card_det_n: sd-card-det-n {
-> > +             pins = "gpio126";
-> > +             function = "gpio";
-> > +             bias-pull-up;
-> > +     };
-> > +};
-> > +
-> > +&uart6 {
-> > +     status = "okay";
-> > +
-> > +     bluetooth {
-> > +             compatible = "qcom,wcn3990-bt";
-> > +
-> > +             vddio-supply = <&vreg_s4a_1p8>;
-> > +             vddxo-supply = <&vreg_l7a_1p8>;
-> > +             vddrf-supply = <&vreg_l17a_1p3>;
-> > +             vddch0-supply = <&vreg_l25a_3p3>;
-> > +             max-speed = <3200000>;
-> > +     };
-> > +};
-> > +
-> > +&usb_1 {
-> > +     status = "okay";
-> > +};
-> > +
-> > +&usb_1_dwc3 {
-> > +     dr_mode = "peripheral";
-> > +};
-> > +
-> > +&usb_1_hsphy {
-> > +     status = "okay";
-> > +
-> > +     vdd-supply = <&vreg_l1a_0p875>;
-> > +     vdda-pll-supply = <&vreg_l12a_1p8>;
-> > +     vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-> > +
-> > +     qcom,imp-res-offset-value = <8>;
-> > +     qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-> > +     qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-> > +     qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-> > +};
-> > +
-> > +&usb_1_qmpphy {
-> > +     status = "okay";
-> > +
-> > +     vdda-phy-supply = <&vreg_l26a_1p2>;
-> > +     vdda-pll-supply = <&vreg_l1a_0p875>;
-> > +};
-> > +
-> > +&ufs_mem_hc {
-> > +     status = "okay";
-> > +
-> > +     reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-> > +
-> > +     vcc-supply = <&vreg_l20a_2p95>;
-> > +     vcc-max-microamp = <800000>;
-> > +};
-> > +
-> > +&ufs_mem_phy {
-> > +     status = "okay";
-> > +
-> > +     vdda-phy-supply = <&vreg_l1a_0p875>;
-> > +     vdda-pll-supply = <&vreg_l26a_1p2>;
-> > +};
-> > +
-> > +/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-> > +
-> > +&qup_uart6_default {
-> > +     pinmux {
-> > +             pins = "gpio45", "gpio46", "gpio47", "gpio48";
-> > +             function = "qup6";
-> > +     };
-> > +
-> > +     cts {
-> > +             pins = "gpio45";
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     rts-tx {
-> > +             pins = "gpio46", "gpio47";
-> > +             drive-strength = <2>;
-> > +             bias-disable;
-> > +     };
-> > +
-> > +     rx {
-> > +             pins = "gpio48";
-> > +             bias-pull-up;
-> > +     };
-> > +};
-> > --
-> > 2.7.4
-> >
+
