@@ -2,116 +2,119 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 10:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B4BC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCA02075D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 10:53:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SqQd/ZVz"
+	by mail.kernel.org (Postfix) with ESMTP id 894742086A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbgHDKxR (ORCPT
+        id S1730142AbgHDLc7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:53:17 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49354 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729385AbgHDKxR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 06:53:17 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 074AqhDO042528;
-        Tue, 4 Aug 2020 05:52:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596538363;
-        bh=uQ6uxpNiZLjJQRFzCMp3WoZnRXMhwKvSfyOXHQtKZdM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SqQd/ZVzprUjNAWwBMTgs61R8Zl7ON7vns2piEKwU5vctP/m1qVN1D+OR5m3H0+hU
-         P1jZ6qRJQceBYnoVri49CeRarEqEJnpVYdrwhJsomE/brzXvdEb/DOGtFDxGvHw6FV
-         9Iys7+6Dqb0SPrZmPsJjbQd5r9tSDUeF6imm5M5U=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 074AqhKH047438
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Aug 2020 05:52:43 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 4 Aug
- 2020 05:52:43 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 4 Aug 2020 05:52:43 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074Aqe1e080855;
-        Tue, 4 Aug 2020 05:52:40 -0500
-Subject: Re: [PATCHv2 0/4] Subject: panel-dsi-cm: update bindings
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Tony Lindgren <tony@atomide.com>
-CC:     Pavel Machek <pavel@ucw.cz>, Merlijn Wajer <merlijn@wizzup.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <kernel@collabora.com>
-References: <20200716125733.83654-1-sebastian.reichel@collabora.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <7f414246-3a7b-a6f6-fff3-7ca883d52103@ti.com>
-Date:   Tue, 4 Aug 2020 13:52:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200716125733.83654-1-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 4 Aug 2020 07:32:59 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:43527 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbgHDLc7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 07:32:59 -0400
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 04 Aug 2020 04:32:58 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Aug 2020 04:32:56 -0700
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 04 Aug 2020 17:02:29 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id F05E44BA0; Tue,  4 Aug 2020 17:02:26 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org,
+        swboyd@chromium.org, abhinavk@codeaurora.org,
+        ddavenport@chromium.org
+Subject: [v1] drm/msm/dpu: update reservations in commit path
+Date:   Tue,  4 Aug 2020 17:02:24 +0530
+Message-Id: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
+DPU resources reserved in the atomic_check path gets unwinded
+during modeset operation before commit happens in a non seamless
+transition.
 
-On 16/07/2020 15:57, Sebastian Reichel wrote:
-> The cleanup series for omapdrm's DSI code got too big. Reviewing
-> this is not fun and the same goes for keeping track of the change
-> requests. Let's do the cleanup in smaller steps instead. This is
-> the first batch, which updates the binding (txt -> yaml) and
-> modifies the DT slightly.
-> 
-> Changes since PATCHv1 [0]:
-> 
-> PATCHv1..PATCHv2:
->  * Update binding as suggested by Sam
->   * Remove 'port' from required list
->   * Drop 'lanes' and 'port' from example ('lanes' is a port property
->     used by OMAP's DSI controller)
->   * Drop the label from example
->   * Add '...' at end of file
->  * Fix , in patch description from patch 2
->  * Apply Reviewed-by tags
-> 
-> [0] https://lore.kernel.org/dri-devel/20200629223315.118256-1-sebastian.reichel@collabora.com/
-> 
-> -- Sebastian
-> 
-> Sebastian Reichel (4):
->   dt-bindings: display: panel-dsi-cm: convert to YAML
->   ARM: dts: omap: add channel to DSI panels
->   ARM: dts: omap4-droid4: add panel compatible
->   ARM: dts: omap4-droid4: add panel orientation
+Update the reservations in the commit path to avoid resource
+failures. Secondly have dummy reservations in atomic_check path
+so that we can gracefully fail the composition if resources are
+not available.
 
-For the series:
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-
- Tomi
-
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 63976dc..c6b8254 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -565,7 +565,7 @@ static int dpu_encoder_virt_atomic_check(
+ 	const struct drm_display_mode *mode;
+ 	struct drm_display_mode *adj_mode;
+ 	struct msm_display_topology topology;
+-	struct dpu_global_state *global_state;
++	struct dpu_global_state tmp_resv_state;
+ 	int i = 0;
+ 	int ret = 0;
+ 
+@@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+ 	dpu_kms = to_dpu_kms(priv->kms);
+ 	mode = &crtc_state->mode;
+ 	adj_mode = &crtc_state->adjusted_mode;
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
++	memset(&tmp_resv_state, 0, sizeof(tmp_resv_state));
+ 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
+ 
+ 	/*
+@@ -621,7 +621,7 @@ static int dpu_encoder_virt_atomic_check(
+ 		 * info may not be available to complete reservation.
+ 		 */
+ 		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+-			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
++			ret = dpu_rm_reserve(&dpu_kms->rm, &tmp_resv_state,
+ 					drm_enc, crtc_state, topology);
+ 		}
+ 	}
+@@ -966,7 +966,7 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+ 	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
+ 	struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_ENC] = { NULL };
+ 	int num_lm, num_ctl, num_pp, num_dspp;
+-	int i, j;
++	int i, j, rc;
+ 
+ 	if (!drm_enc) {
+ 		DPU_ERROR("invalid encoder\n");
+@@ -1006,6 +1006,13 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+ 
+ 	topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, adj_mode);
+ 
++	rc = dpu_rm_reserve(&dpu_kms->rm, global_state, drm_enc,
++		drm_crtc->state, topology);
++	if (rc) {
++		DPU_ERROR_ENC(dpu_enc, "Failed to reserve resources\n");
++		return;
++	}
++
+ 	/* Query resource that have been reserved in atomic check step. */
+ 	num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
+ 		drm_enc->base.id, DPU_HW_BLK_PINGPONG, hw_pp,
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+1.9.1
+
