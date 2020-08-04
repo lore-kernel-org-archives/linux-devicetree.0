@@ -2,121 +2,195 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18D7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 12:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842D6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5EAC22C9F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 12:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596543746;
-	bh=gey3esvl8wxAFJQ2OBCATSygwLbCiyTXxmuo4omuQjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IAo3WecSgqZd5TiVdvPZSQlm5p3BTgm3P3TcKvAOuouxwPfsndzCF4mF7qfj3WHto
-	 2ig8GGSZJd391u73EK3jtSZtOMdcfS5gDZriH8Bclqm9mjLNK7MS8ExyTpkX+6NnlB
-	 OhZ3J1eK1UA+W1eYcIjZY9bicTeehYw4KdefsUY0=
+	by mail.kernel.org (Postfix) with ESMTP id 6653422BED
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fJNZ+ZMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgHDMLP (ORCPT
+        id S1730331AbgHDLrX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgHDMLC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:11:02 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 4 Aug 2020 07:47:23 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:56145 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730308AbgHDLrT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 07:47:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596541638; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=9fHpmvzcjn/WksFVNHKlyTEU4Iz3HuXFQuXdLVDER64=; b=fJNZ+ZMpjnSQweQiXw4OEWmLg00Y/+HP+aXXcpAJ3sgVaeAdcxGtCcbzIBTmLdp2nr/qAUPn
+ DmkcRGUZTHjRbvNctQQ7FwpFgRl9I6iUCow0qLkequVyhzcNytc3BP8meaIq0iyL7cLHYigV
+ JBSLn6XfZnyT0qIyimovATUeAW0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
+ 5f294ac64e5050c6c5d424e6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 11:47:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 18857C433CB; Tue,  4 Aug 2020 11:47:18 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E70462177B;
-        Tue,  4 Aug 2020 12:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596542990;
-        bh=gey3esvl8wxAFJQ2OBCATSygwLbCiyTXxmuo4omuQjo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZZOJqEZ7ULpCVvpaR+mEa6S1b07HmtrWcayO6oiJVvACUiM9YU99kR+7yCx509uj+
-         PqVDfLqST8/x5f9kYzlfz0llp8qz2n58fvd10CVoYrBGEspn96gmX4MXk1wNHuwGG3
-         oWqka7+RyZxNSFDocwiL3Av/TJINQWNRcXQbUhdc=
-Date:   Tue, 4 Aug 2020 17:39:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        martin.botka1@gmail.com, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
-Message-ID: <20200804120946.GQ12965@vkoul-mobl>
-References: <20200726111215.22361-1-konradybcio@gmail.com>
- <20200726111215.22361-5-konradybcio@gmail.com>
- <20200803110016.GL12965@vkoul-mobl>
- <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D72FCC433CA;
+        Tue,  4 Aug 2020 11:47:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D72FCC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 3/3] arm64: dts: sc7180: Add assigned-performance-states for i2c
+Date:   Tue,  4 Aug 2020 17:16:56 +0530
+Message-Id: <1596541616-27688-4-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 03-08-20, 09:06, Rob Clark wrote:
-> On Mon, Aug 3, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 26-07-20, 13:12, Konrad Dybcio wrote:
-> > > These SoCs make use of the 14nm phy, but at different
-> > > addresses than other 14nm units.
-> > >
-> > > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> > > ---
-> > >  .../devicetree/bindings/display/msm/dsi.txt    |  1 +
-> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
-> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
-> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
-> >
-> > Is there a reason why dsi phy needs to be here and not in phy subsystem
-> > drivers/phy/ ?
-> 
-> *maybe* it would be possible to split out all of the dsi (and hdmi)
-> phy to drivers/phy.  But splitting out just the new ones wouldn't be
-> practical (it would duplicate a lot of code, and make the rest of the
-> dsi code have to deal with both cases).  And unlike dp/usb-c I'm not
-> really sure I see an advantage to justify the churn.
+qup-i2c devices on sc7180 are clocked with a fixed clock (19.2 Mhz)
+Though qup-i2c does not support DVFS, it still needs to vote for a
+performance state on 'cx' to satisfy the 19.2 Mhz clock frequency
+requirement.
 
-So the question would be if it helps in reuse if we do that and does it
-result in a better solution than dsi code managing the phy. The
-advantage of framework (like phy) is that different subsystems can use
-a (phy) driver and common framework helps reduce duplicates.
+Use 'assigned-performance-states' to pass this information from
+device tree, and also add the power-domains property to specify
+the cx power-domain.
 
-Yes sure the question was not for a new phy but about the whole
-msm/dsi/phy code and future for it.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b383..f96ca21 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -767,6 +767,8 @@
+ 						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -819,6 +821,8 @@
+ 						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -871,6 +875,8 @@
+ 						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -905,6 +911,8 @@
+ 						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -957,6 +965,8 @@
+ 						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -991,6 +1001,8 @@
+ 						<&aggre1_noc MASTER_QUP_0 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1058,6 +1070,8 @@
+ 						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1110,6 +1124,8 @@
+ 						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1144,6 +1160,8 @@
+ 						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1196,6 +1214,8 @@
+ 						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1230,6 +1250,8 @@
+ 						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -1282,6 +1304,8 @@
+ 						<&aggre2_noc MASTER_QUP_1 &mc_virt SLAVE_EBI1>;
+ 				interconnect-names = "qup-core", "qup-config",
+ 							"qup-memory";
++				power-domains = <&rpmhpd SC7180_CX>;
++				assigned-performance-states = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
-~Vinod
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
