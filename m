@@ -2,99 +2,183 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA93C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758BFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF732076C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716182177B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:28:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brrT1/A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgHDISH (ORCPT
+        id S1728163AbgHDI2i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:18:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20181 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgHDISH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:18:07 -0400
-IronPort-SDR: PK9eileLvzXHNVXQMTIVmNvyg7mAQ+KduJd+B03hK1GpoyUlIPCc6zXj8hc2gD132cDIhRjgFI
- wZ0aOJdpAs6Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="131840845"
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="131840845"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 01:18:06 -0700
-IronPort-SDR: lIPKwjOwt6Z/dHXBMxc2tUMS7VrggARADIVhJLj8dxURiyIUymmGIKXCbXECFxFk6hkn6KZVS2
- 6EsbiN6ViElg==
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="330528978"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 01:18:03 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id F148D20686; Tue,  4 Aug 2020 11:18:01 +0300 (EEST)
-Date:   Tue, 4 Aug 2020 11:18:01 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] media: i2c: ov5640: Fallback to parallel mode
-Message-ID: <20200804081801.GD13316@paasikivi.fi.intel.com>
-References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596465107-14251-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 4 Aug 2020 04:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgHDI2i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 04:28:38 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D510C06174A;
+        Tue,  4 Aug 2020 01:28:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so19784121pfm.4;
+        Tue, 04 Aug 2020 01:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1zLPOfCOr1RAuyDeEqSEeQYdBYJoolPkunVIn7d3sBM=;
+        b=brrT1/A9GytVeAINrXagk80nXdYC0mcoHMB2NWjdpbRcXr+4nqKCy+rwUSSHKqQPQq
+         GrByfJUk8gjZEHzF/mB88wnbel6ldak+YUrWQH4IU8Y87t1nBn0gWmsE1mvMi/y+PcGR
+         Dk19aZadR6A4KQFC3JSeUeKlX0A5EC/ZAV83y0ZYs+JHi/Uaal+VE79MsTrcxneDz3XQ
+         INo8dY71qjmnbENhAbV82LvGG7zIhl9d1nXjMY8vqGr/XaCgMGVOEc+qeUsk4rs69fxA
+         Nf4UG5FpG5ubTuavCKV5OLpDZjxyUwblxhAvExWl56zMsU/gO7diBrNEW2hjeLOJO9gX
+         st5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1zLPOfCOr1RAuyDeEqSEeQYdBYJoolPkunVIn7d3sBM=;
+        b=XNmCqCDHAlEqpqur8vPr2vJmCUpmEcEde6KbkVMvwJmeuEhxkEXmz9aTkVD0a5g55U
+         bbEOCYXuUtsrI+Kg47RFJV1k0kP8sd2ITNMjkQIykMLAoVmGUKV1PRRUoIj/Lz79JvJU
+         42C5SDOBCEYJHReRnsRc0rubO0CDjcmnjihcK99FGh8mbNcbnHkdTyou/Iz4DkIJdu9g
+         ZB2zaOaGqz2UxozsoSx6FhBTpFHMtw2aVzjLpJbpYSkWHgqUTNWIbVm3fvL6B0RAmwjt
+         1m3PnuJxZ3fn1T/6miMoPFABY1rxLkbEB4xThrfc6fJwZbfnZ07a0VxfTQYvtHjomHWc
+         +PAw==
+X-Gm-Message-State: AOAM531SHL4jXEW64Wsr0z2fJSiaFx4iQu/dMgDp+ULpuvWU3iEbDeRt
+        71eK7jtAWGaYaX+l7gFdg38LIYyCLV6Io2TzGwE=
+X-Google-Smtp-Source: ABdhPJzYa0UVDFjJMDx3gG3JiQjPhgly81KTX07Ub4i1Le+i6pmXkt0OdsNywXhG3v8TfGgZF2f4qGMXnnGHxQ1SSig=
+X-Received: by 2002:a62:758f:: with SMTP id q137mr18887403pfc.170.1596529717996;
+ Tue, 04 Aug 2020 01:28:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596465107-14251-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200802163735.76617-1-ceggers@arri.de> <20200802163735.76617-3-ceggers@arri.de>
+ <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com> <2356337.HYKpEJ1Wej@n95hx1g2>
+In-Reply-To: <2356337.HYKpEJ1Wej@n95hx1g2>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 Aug 2020 11:28:22 +0300
+Message-ID: <CAHp75VdusOQNzrY_Ken0KW06gtRW8fCOOtYXo=9nnFKc6bgWnQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: light: as73211: New driver
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+On Tue, Aug 4, 2020 at 10:42 AM Christian Eggers <ceggers@arri.de> wrote:
+> On Sunday, 2 August 2020, 20:02:35 CEST, Andy Shevchenko wrote:
+> > On Sun, Aug 2, 2020 at 7:40 PM Christian Eggers <ceggers@arri.de> wrote:
 
-On Mon, Aug 03, 2020 at 03:31:47PM +0100, Lad Prabhakar wrote:
-> Fallback to parallel mode if bus_type doesn't match the supported
-> interfaces by the driver.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/media/i2c/ov5640.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> index 08c67250042f..4e88b0540740 100644
-> --- a/drivers/media/i2c/ov5640.c
-> +++ b/drivers/media/i2c/ov5640.c
-> @@ -3074,6 +3074,12 @@ static int ov5640_probe(struct i2c_client *client)
->  		return ret;
->  	}
->  
-> +	/* fallback to parallel mode */
-> +	if (sensor->ep.bus_type != V4L2_MBUS_PARALLEL &&
-> +	    sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY &&
-> +	    sensor->ep.bus_type != V4L2_MBUS_BT656)
-> +		sensor->ep.bus_type = V4L2_MBUS_PARALLEL;
+...
 
-You basically need the type from the v4l2_fwnode_endpoint_parse(), and if
-you don't have any of the above bus types, probe should fail. The old
-bindings were documented in a way that either parallel or CSI-2 bus will be
-used, and there were no defaults. So all should be well.
+> > > Datasheet:
+> > > https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-
+> > > b302-c2fd-e30a-c98df87616df
+> > Do we need the UUID after the document file name?
+> I have send AMS an inquiry. Not sure whether I will get an answer. I will wait
+> a few days until sending v6.
+
+I have successfully opened a document w/o additional UUID at the end of URI.
+I think you may drop it.
+
+...
+
+> > > +#define AS73211_OFFSET_TEMP (-66.9)
+> > > +#define AS73211_SCALE_TEMP  0.05
+> >
+> > In the kernel we don't do float arithmetic. How these are being used?
+> Does this restriction also apply for compile time constants? I am quite
+> sure that all calculations using these defines will be evaluated at compile
+> time. If found a number of other places where probably the same is done:
+>
+> find . -name '*.c' | xargs grep "#define.*[0-9]\.[0-9]" | grep -v '"' | grep -v "\/\*.*[0-9]\.[0-9]"
+
+Side note: `git grep ...` is much faster and better.
+% git grep -n -w '#define[^"/]\+[0-9]\+\.[0-9]\+' -- drivers/ include/
+arch/ | wc -l
+47
+
++ DRM, yes.
+
+In any case...
+
+> > > +               *val2 = (AS73211_OFFSET_TEMP - (int)AS73211_OFFSET_TEMP) *
+> > > 1000000;
+> > >
+> > > +                       *val2 = (AS73211_SCALE_TEMP -
+> > > (int)AS73211_SCALE_TEMP) * 1000000;
+> > Magic 1000000 multiplier.
+> I think that in the context of IIO_VAL_INT_PLUS_MICRO this isn't quite magic. Using
+> 1000000 directly seems quite usual:
+>
+> find drivers/iio/ -type f | xargs grep "val2 = .*1000000"
+
+Hmm... Okay.
+
+> > I think here you got them always 0. And to fix that you need to
+> > redefine (with also units included in the name) above constants like
+> > #define ..._OFFSET_TEMP_mC 66500
+> > ... _SCALE_TEMP_?? 50
+> a scale factor has no unit
+>
+> >
+> > Consider to use definitions from
+> > https://elixir.bootlin.com/linux/latest/source/include/linux/units.h
+> There are only definition for milli celsius. For IIO_VAL_INT_PLUS_MICRO I would
+> require micro celsius.
+>
+> If I have the freedom, I would keep it as it is. Else I would suggest the following:
+> #define AS73211_OFFSET_TEMP_INT (-66)
+> #define AS73211_OFFSET_TEMP_MICRO 900000
+> #define AS73211_SCALE_TEMP_INT 0
+> #define AS73211_SCALE_TEMP_MICRO 50000
+
+...somewhat like above would be better. But your freedom is defined by
+maintainers (not by me), so wait for their comments.
+
+...
+
+> > > +       }}
+> > > +
+> > > +       return -EINVAL;
+> >
+> > Make it default case.
+> changed. Is there any benefit? My IDE's syntax checker now complains
+> "No return, in a function returning non-void". But gcc is happy with this.
+
+Your IDE is buggy :-)
+Yes, there is a benefit of doing this, at some point compiler
+complains about switches that don't cover all cases.
+
+...
+
+> > > +       ret = devm_iio_device_register(dev, indio_dev);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       return 0;
+> >
+> >   return devm_iio_device_register();
+> changed. I prefer the original pattern as it would produce less changed lines
+> if something needs to inserted later.
+
+But if not, it will be a bulk of several lines of code which is the
+bait for all kinds of janitors and clean up scripts (I saw that IRL,
+so it's not unrealistic). In that case it will be twice the churn.
 
 -- 
-Sakari Ailus
+With Best Regards,
+Andy Shevchenko
