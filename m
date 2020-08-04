@@ -2,202 +2,115 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FB0C433E8
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4DAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 18:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CED1422CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453AB22B42
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 18:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hg7DVeAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgHDRsn (ORCPT
+        id S1727880AbgHDSsq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:48:43 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:1260 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729871AbgHDRsk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 13:48:40 -0400
-X-IronPort-AV: E=Sophos;i="5.75,434,1589209200"; 
-   d="scan'208";a="53862809"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 05 Aug 2020 02:48:37 +0900
-Received: from localhost.localdomain (unknown [172.29.52.222])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9DCCF40B92DF;
-        Wed,  5 Aug 2020 02:48:34 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: [PATCH 1/5] dt-bindings: usb: convert ti,hd3ss3220 bindings to json-schema
-Date:   Tue,  4 Aug 2020 18:48:24 +0100
-Message-Id: <20200804174828.8339-2-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200804174828.8339-1-biju.das.jz@bp.renesas.com>
-References: <20200804174828.8339-1-biju.das.jz@bp.renesas.com>
+        Tue, 4 Aug 2020 14:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbgHDSsq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 14:48:46 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976EAC06174A
+        for <devicetree@vger.kernel.org>; Tue,  4 Aug 2020 11:48:45 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o23so16158576ejr.1
+        for <devicetree@vger.kernel.org>; Tue, 04 Aug 2020 11:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=k6n9Bx3dS7/rl5+hEQcop2J6ordeV//9xvdRouOCTy8=;
+        b=hg7DVeAuoJ8QIOV9tq9Uk8NDmJQs7QY+/+0GaEmeFug3QJKKIl9TecClodaq5ryqwX
+         bQCilQCYYffU16LTepCDIh+agVs9uQUSAQV6Zx4EpcaBJyd6yRu2vZkKqAjc+V8p6wD1
+         sVeMAe3SNpy6Kx7H/NJxH6bmXtKpYRJfAls1E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=k6n9Bx3dS7/rl5+hEQcop2J6ordeV//9xvdRouOCTy8=;
+        b=V7cA+Bpt/YjuBC9ejzN7R5bhnoRShc7tU2/o16xXVfB8TUUqKKDV6zkU2XdDA65OC6
+         AkvVkdUbBbADXq4St4zx0CnWrm5CwgSEWXslr+aCG4hcaOW0iOcfb9YmaJSVtO8z7q8B
+         Jx2PJjSnP4BkqSqJG910K1PFOPqwdKQkv66ElETpzX67u4BdP8WqGLm3hAWZ7cP1wuys
+         TDOAAXXV+jsSGgGNeLHMxVcREcwFv5/4HI8UCQyGWQIykH8dGpHDXM6AsAj1aYb3BPhw
+         G1TJzHRTuiMwErtJCRc4ysYHNZTT3Dr24sQi+gps34KEiWV1deDXZLrt/tCxuZ27os/e
+         gkkA==
+X-Gm-Message-State: AOAM533vsZAQ/j44Z5NjWpsy45BRGCofmuSxkawS29fSVPjUMjAmayBy
+        aMfeqTCLNGRVytRNfs03Yuz5HNajYmBmoIydBf8n5A==
+X-Google-Smtp-Source: ABdhPJzErpOyOvNE+rPIf2h1XLHlZ/Z9OnqOzuXaEJHun6C5kwQFsKbupJpAwtgn1WjEhgl1H9J/a3e/s+vx+8dRcCU=
+X-Received: by 2002:a17:906:d187:: with SMTP id c7mr23685263ejz.196.1596566924085;
+ Tue, 04 Aug 2020 11:48:44 -0700 (PDT)
+MIME-Version: 1.0
+From:   Markus Mayer <mmayer@broadcom.com>
+Date:   Tue, 4 Aug 2020 11:48:32 -0700
+Message-ID: <CAGt4E5tMdG9gZbx43MeXpiPnqe0sy9bYKQmZ1oJCSwTL=Xf7Dg@mail.gmail.com>
+Subject: Build error caused by "arm64: dts: agilex: add nand clocks"
+To:     Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Device Tree <devicetree@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi,
 
-Convert ti,hd3ss3220.txt to YAML. Updated the binding documentation
-as graph bindings of this device model Super Speed (SS) data bus to
-the Super Speed (SS) capable connector.
+I don't know if anybody else is seeing this, but for me the commit
+"arm64: dts: agilex: add nand clocks"[1] is causing a build error
+while generating DTS files for ARM64.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-Ref: https://patchwork.kernel.org/patch/11669423/
----
- .../devicetree/bindings/usb/ti,hd3ss3220.txt  | 38 ---------
- .../devicetree/bindings/usb/ti,hd3ss3220.yaml | 81 +++++++++++++++++++
- 2 files changed, 81 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
+The error goes away when I drop the commit.
 
-diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-deleted file mode 100644
-index 2bd21b22ce95..000000000000
---- a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--TI HD3SS3220 TypeC DRP Port Controller.
--
--Required properties:
-- - compatible: Must be "ti,hd3ss3220".
-- - reg: I2C slave address, must be 0x47 or 0x67 based on ADDR pin.
-- - interrupts: An interrupt specifier.
--
--Required sub-node:
-- - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
--   bindings of the connector node are specified in:
--
--	Documentation/devicetree/bindings/connector/usb-connector.yaml
--
--Example:
--hd3ss3220@47 {
--	compatible = "ti,hd3ss3220";
--	reg = <0x47>;
--	interrupt-parent = <&gpio6>;
--	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
--
--	connector {
--		compatible = "usb-c-connector";
--		label = "USB-C";
--		data-role = "dual";
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@1 {
--				reg = <1>;
--				hd3ss3220_ep: endpoint {
--					remote-endpoint = <&usb3_role_switch>;
--				};
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
-new file mode 100644
-index 000000000000..5c7c7d782a04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/ti,hd3ss3220.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI HD3SS3220 TypeC DRP Port Controller
-+
-+maintainers:
-+  - Biju Das <biju.das.jz@bp.renesas.com>
-+
-+description: |-
-+  HD3SS3220 is a USB SuperSpeed (SS) 2:1 mux with DRP port controller. The device provides Channel
-+  Configuration (CC) logic and 5V VCONN sourcing for ecosystems implementing USB Type-C. The
-+  HD3SS3220 can be configured as a Downstream Facing Port (DFP), Upstream Facing Port (UFP) or a
-+  Dual Role Port (DRP) making it ideal for any application.
-+
-+properties:
-+  compatible:
-+   const: ti,hd3ss3220
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  ports:
-+    description: OF graph bindings (specified in bindings/graph.txt) that model
-+      SS data bus to the SS capable connector.
-+    type: object
-+    properties:
-+      port@0:
-+        type: object
-+        description: Super Speed (SS) capable connector.
-+
-+      port@1:
-+        type: object
-+        description: Super Speed (SS) data bus.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c0 {
-+    	#address-cells = <1>;
-+    	#size-cells = <0>;
-+
-+    	hd3ss3220@47 {
-+    		compatible = "ti,hd3ss3220";
-+    		reg = <0x47>;
-+    		interrupt-parent = <&gpio6>;
-+    		interrupts = <3>;
-+
-+    		ports {
-+    			#address-cells = <1>;
-+    			#size-cells = <0>;
-+    			port@0 {
-+    				reg = <0>;
-+    				hd3ss3220_in_ep: endpoint {
-+    					remote-endpoint = <&ss_ep>;
-+    				};
-+    			};
-+    			port@1 {
-+    				reg = <1>;
-+    				hd3ss3220_out_ep: endpoint {
-+    					remote-endpoint = <&usb3_role_switch>;
-+    				};
-+    			};
-+    		};
-+    	};
-+    };
--- 
-2.17.1
+$ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make defconfig dtbs
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/conf.o
+  HOSTCC  scripts/kconfig/confdata.o
+  HOSTCC  scripts/kconfig/expr.o
+  LEX     scripts/kconfig/lexer.lex.c
+  YACC    scripts/kconfig/parser.tab.[ch]
+  HOSTCC  scripts/kconfig/lexer.lex.o
+  HOSTCC  scripts/kconfig/parser.tab.o
+  HOSTCC  scripts/kconfig/preprocess.o
+  HOSTCC  scripts/kconfig/symbol.o
+  HOSTCC  scripts/kconfig/util.o
+  HOSTLD  scripts/kconfig/conf
+*** Default configuration is based on 'defconfig'
+[...]
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-thor96.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8qxp-mek.dtb
+  DTC     arch/arm64/boot/dts/freescale/s32v234-evb.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi6220-hikey.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip05-d02.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip06-d03.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip07-d05.dtb
+  DTC     arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtb
+Error: arch/arm64/boot/dts/intel/socfpga_agilex.dtsi:313.15-16 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.lib:309:
+arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:497: arch/arm64/boot/dts/intel] Error 2
+make[1]: *** [Makefile:1306: dtbs] Error 2
+make: *** [Makefile:336: __build_one_by_one] Error 2
 
+Regards,
+-Markus
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d4ae4dd346cd49302d157b129ead2f60d3a82534
