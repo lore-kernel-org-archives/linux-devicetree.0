@@ -2,212 +2,254 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0F1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B264C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3EA2086A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04202086A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 15:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596554899;
+	bh=GrEWQJQGOl4cRu/UhU8uTIUnxBntWt33e91g5LKhI0I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iooRaf7Nr5trBLwnj/gLSiq8W+KvQYrgWBMWNa1cxZz1be0LejI2gqDufXJkUd5f8
+	 eEdJH3F3pzeICXeBh3Ky9uQoSTiN4nla1zgR/uPqjgIPX/l/q7aSAWClaiM3U0n7f2
+	 mA9viNcnmo25onHaiiGpbmH6jdrIk540+VaJaC48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgHDPGw (ORCPT
+        id S1729460AbgHDP2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:06:52 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43620 "EHLO inva021.nxp.com"
+        Tue, 4 Aug 2020 11:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728467AbgHDPG0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:06:26 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3A749201244;
-        Tue,  4 Aug 2020 17:06:24 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8C0CE2002D4;
-        Tue,  4 Aug 2020 17:06:20 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E688240252;
-        Tue,  4 Aug 2020 17:06:15 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, stefan@agner.ch, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
-Date:   Tue,  4 Aug 2020 23:01:48 +0800
-Message-Id: <1596553308-13190-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1729417AbgHDP2O (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:28:14 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A092086A;
+        Tue,  4 Aug 2020 15:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596554889;
+        bh=GrEWQJQGOl4cRu/UhU8uTIUnxBntWt33e91g5LKhI0I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nPRx8iVY++kqpG4JDyL1ugJ8/dPRM/1CePHwuMe6djgeGx/H47CQvGe8BxoDCcvTB
+         +xnKxXz0q/mQsWogVoyUU8Nh1lisdIbXVuFzZvsCKxPeZ9zgnQAokq3MDRCJvXynF8
+         EV4KlR/0/hX43DjjgGRnOv62JW6Wup4tHovWHpek=
+Received: by mail-ed1-f53.google.com with SMTP id df16so13844972edb.9;
+        Tue, 04 Aug 2020 08:28:08 -0700 (PDT)
+X-Gm-Message-State: AOAM530t0JtibuhZ1WbZ2YAlFvrIgzL8o6yFwNcT6cyhQWD2SxGep5Eg
+        Y3kGj5PpNHk75KSePsS+5VE/21DRzdFvCn1JsQ==
+X-Google-Smtp-Source: ABdhPJz4owQRFlNIZk3qrbGz+1xbIMmNTB4wOXaF6pJDPcefYmGuIWtd4ZfGJJqDp76Dh2VsG/aOI8Et1XcOKW06Fao=
+X-Received: by 2002:a50:e109:: with SMTP id h9mr7679015edl.47.1596554887579;
+ Tue, 04 Aug 2020 08:28:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
+ <1596010690-13178-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8bE8Qo5-0MA9J1gcEbN4DP=Wf2O6vOUVos=VkoODeayA@mail.gmail.com>
+ <1596163478.3932.17.camel@mtkswgap22> <CAAOTY_9kS+jrCOpZtOs+L8gBzvkewi+cSN7XWGNxuiMQocedFA@mail.gmail.com>
+ <1596425521.22971.13.camel@mtkswgap22> <CAAOTY_9UcnSDTaVPDPyPLsWEYcrcq5MY=z520MWtFdeLw_FqGQ@mail.gmail.com>
+ <1596507531.17917.10.camel@mtkswgap22>
+In-Reply-To: <1596507531.17917.10.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 4 Aug 2020 23:27:56 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-fsAXAO0rVMBdL+MLpFUx6w8EUCNoZG=qNvG+UuEDkGA@mail.gmail.com>
+Message-ID: <CAAOTY_-fsAXAO0rVMBdL+MLpFUx6w8EUCNoZG=qNvG+UuEDkGA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the vf610 gpio binding to DT schema format using json-schema.
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8810:19=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+>
+> On Tue, 2020-08-04 at 00:13 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=E6=
+=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:32=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Hi Chun-Kuang,
+> > >
+> > > On Fri, 2020-07-31 at 23:03 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=883=
+1=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8810:44=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > >
+> > > > > On Thu, 2020-07-30 at 00:38 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8829=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > MediaTek bus fabric provides TrustZone security support and d=
+ata
+> > > > > > > protection to prevent slaves from being accessed by unexpecte=
+d
+> > > > > > > masters.
+> > > > > > > The security violation is logged and sent to the processor fo=
+r
+> > > > > > > further analysis or countermeasures.
+> > > > > > >
+> > > > > > > Any occurrence of security violation would raise an interrupt=
+, and
+> > > > > > > it will be handled by mtk-devapc driver. The violation
+> > > > > > > information is printed in order to find the murderer.
+> > > > > > >
+> > > > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > > > > > ---
+> > > > > >
+> > > > > > [snip]
+> > > > > >
+> > > > > > > +
+> > > > > > > +/*
+> > > > > > > + * devapc_extract_vio_dbg - extract full violation informati=
+on after doing
+> > > > > > > + *                          shift mechanism.
+> > > > > > > + */
+> > > > > > > +static void devapc_extract_vio_dbg(struct mtk_devapc_context=
+ *ctx)
+> > > > > > > +{
+> > > > > > > +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
+> > > > > > > +       struct mtk_devapc_vio_info *vio_info;
+> > > > > > > +       void __iomem *vio_dbg0_reg;
+> > > > > > > +       void __iomem *vio_dbg1_reg;
+> > > > > > > +       u32 dbg0;
+> > > > > > > +
+> > > > > > > +       vio_dbg0_reg =3D ctx->devapc_pd_base + ctx->offset->v=
+io_dbg0;
+> > > > > > > +       vio_dbg1_reg =3D ctx->devapc_pd_base + ctx->offset->v=
+io_dbg1;
+> > > > > > > +
+> > > > > > > +       vio_dbgs =3D ctx->vio_dbgs;
+> > > > > > > +       vio_info =3D ctx->vio_info;
+> > > > > > > +
+> > > > > > > +       /* Starts to extract violation information */
+> > > > > > > +       dbg0 =3D readl(vio_dbg0_reg);
+> > > > > > > +       vio_info->vio_addr =3D readl(vio_dbg1_reg);
+> > > > > > > +
+> > > > > > > +       vio_info->master_id =3D (dbg0 & vio_dbgs->mstid.mask)=
+ >>
+> > > > > > > +                             vio_dbgs->mstid.start;
+> > > > > >
+> > > > > > What is master_id? How could we use it to debug? For example, i=
+f we
+> > > > > > get a master_id =3D 1, what should we do for this?
+> > > > > >
+> > > > > > > +       vio_info->domain_id =3D (dbg0 & vio_dbgs->dmnid.mask)=
+ >>
+> > > > > > > +                             vio_dbgs->dmnid.start;
+> > > > > >
+> > > > > > What is domain_id? How could we use it to debug? For example, i=
+f we
+> > > > > > get a domain_id =3D 2, what should we do for this?
+> > > > > >
+> > > > >
+> > > > > master_id and domain_id belongs our bus side-band signal info. It=
+ can
+> > > > > help us to find the violation master.
+> > > >
+> > > > Does 'violation master' means the hardware could access the protect=
+ed
+> > > > register? (ex. CPU, GCE, ...) If so, I think it's better to add
+> > > > comment to explain how to map (master_id, domain_id) to a hardware
+> > > > (maybe the device in device tree) because every body does not know
+> > > > what the number means. Don't try to translate the number to a strin=
+g
+> > > > because this would cost much time to do this. Just print a number a=
+nd
+> > > > we could find out the master by the comment.
+> > >
+> > > 'violation master' means the master which violates the permission
+> > > control. For example, if we set permission 'Secure R/W only' as CPU t=
+o
+> > > spi register. When violation is triggered, it means CPU access spi
+> > > register through normal world instead of secure world, which is not
+> > > allowed.
+> > >
+> > > 'master_id' cannot use the simple comments to describe which master i=
+t
+> > > is. It depends on violation slaves. For example, if there are two
+> > > violations:
+> > > 1. CPU access spi reg
+> > > 2. CPU access timer reg
+> > > It might be different 'master_id' for CPU on these two cases.
+> > > I would prefer to remain the id number if translate to a string is a =
+bad
+> > > idea.
+> > > Thanks !
+> >
+> > It seams that master_id and domain_id does not help for debug. When we
+> > get master_id =3D 1 and domain_id =3D 2, we don't know what it mean. I
+> > think we just need violation address because we could find the driver
+> > that write this address and the bug would be inside this driver. So
+> > need not to process master_id and domain_id.
+> >
+>
+> Actually, it does help us for debug. violation master is not CPU only.
+> It might be any other master in our SoC. So the bug might not be inside
+> the kernel driver.
+> I'll prefer to remain this information.
+> Thanks !
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 -----------------
- .../devicetree/bindings/gpio/gpio-vf610.yaml       | 79 ++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 63 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+Let maintainer to make decision. Maybe he like to print magic number
+and wait for someone to hack it.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-deleted file mode 100644
-index ae254aa..0000000
---- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-+++ /dev/null
-@@ -1,63 +0,0 @@
--* Freescale VF610 PORT/GPIO module
--
--The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
--functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
--each, and each PORT module has its own interrupt.
--
--Required properties for GPIO node:
--- compatible : Should be "fsl,<soc>-gpio", below is supported list:
--	       "fsl,vf610-gpio"
--	       "fsl,imx7ulp-gpio"
--- reg : The first reg tuple represents the PORT module, the second tuple
--  the GPIO module.
--- interrupts : Should be the port interrupt shared by all 32 pins.
--- gpio-controller : Marks the device node as a gpio controller.
--- #gpio-cells : Should be two. The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
--  The second cell bits[3:0] is used to specify trigger type and level flags:
--      1 = low-to-high edge triggered.
--      2 = high-to-low edge triggered.
--      4 = active high level-sensitive.
--      8 = active low level-sensitive.
--
--Optional properties:
---clocks:	Must contain an entry for each entry in clock-names.
--		See common clock-bindings.txt for details.
---clock-names:	A list of clock names. For imx7ulp, it must contain
--		"gpio", "port".
--
--Note: Each GPIO port should have an alias correctly numbered in "aliases"
--node.
--
--Examples:
--
--aliases {
--	gpio0 = &gpio1;
--	gpio1 = &gpio2;
--};
--
--gpio1: gpio@40049000 {
--	compatible = "fsl,vf610-gpio";
--	reg = <0x40049000 0x1000 0x400ff000 0x40>;
--	interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	gpio-ranges = <&iomuxc 0 0 32>;
--};
--
--gpio2: gpio@4004a000 {
--	compatible = "fsl,vf610-gpio";
--	reg = <0x4004a000 0x1000 0x400ff040 0x40>;
--	interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	gpio-ranges = <&iomuxc 0 32 32>;
--};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-new file mode 100644
-index 0000000..315ffde
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale VF610 PORT/GPIO module
-+
-+maintainers:
-+  - Stefan Agner <stefan@agner.ch>
-+
-+description: |
-+  The Freescale PORT/GPIO modules are two adjacent modules providing GPIO
-+  functionality. Each pair serves 32 GPIOs. The VF610 has 5 instances of
-+  each, and each PORT module has its own interrupt.
-+
-+  Note: Each GPIO port should have an alias correctly numbered in "aliases"
-+  node.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,vf610-gpio
-+      - fsl,imx7ulp-gpio
-+
-+  reg:
-+    description: The first reg tuple represents the PORT module, the second tuple
-+      represents the GPIO module.
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  clocks:
-+    items:
-+      - description: SoC GPIO clock
-+      - description: SoC PORT clock
-+
-+  clock-names:
-+    items:
-+      - const: gpio
-+      - const: port
-+
-+  gpio-ranges:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gpio1: gpio@40049000 {
-+        compatible = "fsl,vf610-gpio";
-+        reg = <0x40049000 0x1000 0x400ff000 0x40>;
-+        interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        gpio-ranges = <&iomuxc 0 0 32>;
-+    };
--- 
-2.7.4
-
+>
+> > Regards,
+> > Chun-Kuang.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > > +       vio_info->write =3D ((dbg0 & vio_dbgs->vio_w.mask) >>
+> > > > > > > +                           vio_dbgs->vio_w.start) =3D=3D 1;
+> > > > > > > +       vio_info->read =3D ((dbg0 & vio_dbgs->vio_r.mask) >>
+> > > > > > > +                         vio_dbgs->vio_r.start) =3D=3D 1;
+> > > > > > > +       vio_info->vio_addr_high =3D (dbg0 & vio_dbgs->addr_h.=
+mask) >>
+> > > > > > > +                                 vio_dbgs->addr_h.start;
+> > > > > >
+> > > > > > What is vio_addr_high? As I know all register address are 32 bi=
+ts, is
+> > > > > > vio_addr_high the address above 32 bits?
+> > > > >
+> > > > > Yes, you are right. In MT6779, all register base are 32 bits. We =
+can
+> > > > > ignore this info for current driver. I'll update on next patch.
+> > > > > Thanks !
+> > > >
+> > > > Such a strange hardware, all register is 32 bits but it has a
+> > > > vio_addr_high in its register. OK, just drop this.
+> > > >
+> > > > >
+> > > > > >
+> > > > > > > +
+> > > > > > > +       devapc_vio_info_print(ctx);
+> > > > > > > +}
+> > > > > > > +
+> > > > > >
+>
