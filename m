@@ -2,90 +2,129 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB61C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 03:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B50C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 04:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A852220A8B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 03:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0635B22CAE
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 04:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XetZ/VNr"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kCuj9Mhi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbgHDDnl (ORCPT
+        id S1729731AbgHDE3g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 3 Aug 2020 23:43:41 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:18139 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729692AbgHDDlw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Aug 2020 23:41:52 -0400
-X-UUID: fa35aa4fda4a4c40b4e20cc6e5696f48-20200804
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Byjc1wLNOmGkyBgzjd7FLE4kpmwc/rwCBdEF2Y14IX0=;
-        b=XetZ/VNryT0wdh36mSk9jIpp/IuFFkjLANPz92m2PZGxc7MCr+ICBOk+KFkK4V9nVUWO6hpztAmrVkkf0THOB1z++UpxdKHvdsl00Wt0GlV8nVF276QAYJ1nuU7hnsqR9xlbx323u1Q0wTxf4R66eJU3kms+6+8wBbFHpWjuYpc=;
-X-UUID: fa35aa4fda4a4c40b4e20cc6e5696f48-20200804
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1724872765; Tue, 04 Aug 2020 11:41:50 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 4 Aug 2020 11:41:49 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 4 Aug 2020 11:41:48 +0800
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH v11 06/28] media: platform: Delete the resetting hardware flow in the system PM ops
-Date:   Tue, 4 Aug 2020 11:40:40 +0800
-Message-ID: <20200804034102.22983-7-xia.jiang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200804034102.22983-1-xia.jiang@mediatek.com>
-References: <20200804034102.22983-1-xia.jiang@mediatek.com>
+        Tue, 4 Aug 2020 00:29:36 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4378 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729303AbgHDE3c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 00:29:32 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f28e3fa0002>; Mon, 03 Aug 2020 21:28:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Aug 2020 21:29:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Aug 2020 21:29:31 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Aug
+ 2020 04:29:28 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 4 Aug 2020 04:29:28 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f28e4280002>; Mon, 03 Aug 2020 21:29:28 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <robh+dt@kernel.org>
+CC:     <skomatineni@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>
+Subject: [PATCH v2 5/6] arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+Date:   Mon, 3 Aug 2020 21:29:22 -0700
+Message-ID: <1596515363-27235-6-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596515363-27235-1-git-send-email-skomatineni@nvidia.com>
+References: <1596515363-27235-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596515322; bh=VElAFcurQn7r+NDr3Ljm3ungSNLz0ATvrNSo77yxonE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=kCuj9MhihcmVkR4yUWepuZ+xCOYIivwtEPGiR4BiVGdTDv5tG7KkWV1tbknJWEBvb
+         7BrytbCCHTZACX7MEVPdYCzVnT/LCK8g7xMdtL/+Io/Lc1P7uUK09k3u1yZURlzS8C
+         wUPRc9SjTi2Jc5pgugjmvYp81dn5edUd8E+aTizldB5FaQ9UtHpFZtwpxfYAivLYrw
+         N/6ZcsJXE2i9xde47np2uJhLTMEFVujeMyGFsFNO+Oi/0U7Vxxg2GCY/MdMg7WzTFy
+         e8lhLzYVYPxfxy8Ddp5HnwNfJvXRTq2QFQh+1wCGU2Slq9/sC1hV2BTN5eccYZrFD2
+         BO3CqEWO3OiOA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RGVsZXRlIHRoZSByZXNldHRpbmcgaGFyZHdhcmUgZmxvdyBpbiBzdXNwZW5kIGFuZCByZXN1bWUg
-ZnVuY3Rpb24NCmJlY2F1c2UgdGhhdCByZXNldHRpbmcgb3BlcmF0aW9uIHdpbGwgYmUgZG9uZSBp
-biBkZXZpY2VfcnVuKCkuDQoNClJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21p
-dW0ub3JnPg0KU2lnbmVkLW9mZi1ieTogWGlhIEppYW5nIDx4aWEuamlhbmdAbWVkaWF0ZWsuY29t
-Pg0KLS0tDQp2MTE6IG5vIGNoYW5nZXMNCi0tLQ0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRr
-LWpwZWcvbXRrX2pwZWdfY29yZS5jIHwgMiAtLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGRlbGV0aW9u
-cygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtf
-anBlZ19jb3JlLmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2Nv
-cmUuYw0KaW5kZXggZmI2MjQzODU5NjllLi43Zjc0NTk3MjYyZmMgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KKysrIGIvZHJpdmVy
-cy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMNCkBAIC0xMTkxLDcgKzEx
-OTEsNiBAQCBzdGF0aWMgX19tYXliZV91bnVzZWQgaW50IG10a19qcGVnX3BtX3N1c3BlbmQoc3Ry
-dWN0IGRldmljZSAqZGV2KQ0KIHsNCiAJc3RydWN0IG10a19qcGVnX2RldiAqanBlZyA9IGRldl9n
-ZXRfZHJ2ZGF0YShkZXYpOw0KIA0KLQltdGtfanBlZ19kZWNfcmVzZXQoanBlZy0+ZGVjX3JlZ19i
-YXNlKTsNCiAJbXRrX2pwZWdfY2xrX29mZihqcGVnKTsNCiANCiAJcmV0dXJuIDA7DQpAQCAtMTIw
-Miw3ICsxMjAxLDYgQEAgc3RhdGljIF9fbWF5YmVfdW51c2VkIGludCBtdGtfanBlZ19wbV9yZXN1
-bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAlzdHJ1Y3QgbXRrX2pwZWdfZGV2ICpqcGVnID0gZGV2
-X2dldF9kcnZkYXRhKGRldik7DQogDQogCW10a19qcGVnX2Nsa19vbihqcGVnKTsNCi0JbXRrX2pw
-ZWdfZGVjX3Jlc2V0KGpwZWctPmRlY19yZWdfYmFzZSk7DQogDQogCXJldHVybiAwOw0KIH0NCi0t
-IA0KMi4xOC4wDQo=
+commit 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
+
+Tegra194 uses separate SDMMC_LEGACY_TM clock for data timeout and
+this clock is not enabled currently which is not recommended.
+
+Tegra194 SDMMC advertises 12Mhz as timeout clock frequency in host
+capability register.
+
+So, this clock should be kept enabled by SDMMC driver.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 48160f4..ca5cb6a 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -460,8 +460,9 @@
+ 			compatible = "nvidia,tegra194-sdhci";
+ 			reg = <0x03400000 0x10000>;
+ 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC1>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC1>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
+ 			reset-names = "sdhci";
+ 			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCRA &emc>,
+@@ -485,8 +486,9 @@
+ 			compatible = "nvidia,tegra194-sdhci";
+ 			reg = <0x03440000 0x10000>;
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC3>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC3>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
+ 			reset-names = "sdhci";
+ 			interconnects = <&mc TEGRA194_MEMORY_CLIENT_SDMMCR &emc>,
+@@ -511,8 +513,9 @@
+ 			compatible = "nvidia,tegra194-sdhci";
+ 			reg = <0x03460000 0x10000>;
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC4>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			assigned-clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
+ 					  <&bpmp TEGRA194_CLK_PLLC4>;
+ 			assigned-clock-parents =
+-- 
+2.7.4
 
