@@ -2,140 +2,144 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042B0C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDF7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76F822CB2
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236B12075F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="aXnylbWM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O/5/46ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbgHDLjV (ORCPT
+        id S1730277AbgHDLrO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:39:21 -0400
-Received: from mail-vi1eur05on2051.outbound.protection.outlook.com ([40.107.21.51]:45501
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730241AbgHDLjS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:39:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C8/MlGjroAvRJnVyD2umX2nVMXSKb3mouoIPRE+W8jj0MTqQGUZsgf3lub6HX+1XscHbeP4I4rRgb6JUXZhHruTQF8NPSzni9dNtB0jSiEcjGHGnBQCQZRYVcgEmWIv/vNyn9C1GNTw94t4SI7Ut6XKGAJVxQtAwOxZiBKyrVMIPoXV82nOkbb0eteeP1dBDlFl+UM0DG//XINk85hxT6XMeAlkXhgZHxtcqlU2wrgTAs2/q6WpSGg7yw8RscYgWF77ZPwV6Tbk1YYV/SKsjfiCgqgWgbups2egWTkr0skr8U1kWLkcydK7QmJuuV4wI73TR60g9iq1gYzr+hQ/E2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DmD4whx8jiOb/lqqAsWsthsqKw9n3+ivVO2mGCKdjmI=;
- b=n8v3ypHgF573ImF8jtRmbYaKhgyjxH5ajLEN5NFzyZwNBfvWc022MdK6aumEdYVvxpmHfzqUa30rbHa+G1A9OvGAplyAd3CTlWcC87Bk5pAmtmXakKN0UQ2Snl1FWTcLRuEhxbQmBXVCDG00fgBQKzEGvdn6+Yql2NTcfKN1N7nOIeGTUkjRjtgI00owAz59p6hR9/5qQzjlTWCePpKTRXv1THCI2KNexOBJm7RjIhinKiwzaPrgCK+CB0wjvtfBr7jTRvUQUcYDvwJx4i5O6EZgtcbP5gJMqCp1HiVHPBoYm9iZZjHRmunYmdqTwMDJ/E17jrm6FgqniohhogYKVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 193.240.239.45) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
- header.from=diasemi.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DmD4whx8jiOb/lqqAsWsthsqKw9n3+ivVO2mGCKdjmI=;
- b=aXnylbWMGzOuLT20Ew9GheWbfKxTrDxa5RCIr/wa5pHSa73i6lxPhBLowdcsM3wa5VY2Lg6ywjgE0L3kzGfyGcakUs52Up9Fqx5tvJey8xo8VHFWdero5fKSqtdApHfTQp5iNq96hXmXBzbzd1pwDBeaqKaWOb6joXj1C+nOrFI=
-Received: from PR3P192CA0046.EURP192.PROD.OUTLOOK.COM (2603:10a6:102:57::21)
- by DB6PR1001MB1205.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:4:63::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Tue, 4 Aug
- 2020 11:39:14 +0000
-Received: from HE1EUR02FT063.eop-EUR02.prod.protection.outlook.com
- (2603:10a6:102:57:cafe::c6) by PR3P192CA0046.outlook.office365.com
- (2603:10a6:102:57::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend
- Transport; Tue, 4 Aug 2020 11:39:14 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 193.240.239.45) smtp.mailfrom=diasemi.com; linuxfoundation.org; dkim=none
- (message not signed) header.d=none;linuxfoundation.org; dmarc=fail
- action=none header.from=diasemi.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- diasemi.com discourages use of 193.240.239.45 as permitted sender)
-Received: from mailrelay1.diasemi.com (193.240.239.45) by
- HE1EUR02FT063.mail.protection.outlook.com (10.152.11.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.3239.20 via Frontend Transport; Tue, 4 Aug 2020 11:39:13 +0000
-Received: from krsrvapps-03.diasemi.com (10.93.17.2) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Tue, 4 Aug 2020 13:39:06 +0200
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 4A30D13F671; Tue,  4 Aug 2020 20:39:04 +0900 (KST)
-Message-ID: <cover.1596522828.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Tue, 4 Aug 2020 15:33:48 +0900
-Subject: [PATCH v19 0/3]  da7280: haptic driver submission
-To:     "David S. Miller" <davem@davemloft.net>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 94c218f7-5121-4373-0f54-08d8386b0341
-X-MS-TrafficTypeDiagnostic: DB6PR1001MB1205:
-X-Microsoft-Antispam-PRVS: <DB6PR1001MB1205E9DC06A1CD8EDC1A305AA24A0@DB6PR1001MB1205.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9nsJv6QhnIaf3jNSgGGWHte1mfQvU4YGtOMHTdMWCud1fFNIyXGl5xoneBS7ErDWqhUWiz5uV6PdsArnSkXr5wpMIJaN9HQ273D1Pui2Bcj+X8gQgIpnBEqOjmEgO5KRhKkrR+aR/Ia1407SJYewoubRKtjVEGZQqUe9gpSYvmJBqFe9tfOqS7IViL7WOjnS0GcrEGW43r+LenibvWt6SUmUuLDF/Z9rk4YlWZZvONEMCZRKIWhNkZhOO3G/bsB5cqApkHaSJfROsQjCGCef2TE/Y0GQihW6b4cgFTYoRh1Pl+ecmBL7k7+dFuuDTN8zCDN3fpX21P0X95yjMuXeswvvMwJ5XlK2Ykw+rudvdFhmQNdSQKb6gHfHtbEQ0y8TCWyxL1d8Ty23Yu8xtly/wp3yee2pSEYixxYQtBA6sn3yEw+vOzNPOIKTG1M8HD5n
-X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(46966005)(426003)(86362001)(2616005)(6266002)(47076004)(54906003)(110136005)(2906002)(336012)(8676002)(6666004)(70586007)(42186006)(26005)(83380400001)(8936002)(36756003)(82310400002)(33310700002)(5660300002)(36906005)(186003)(4744005)(70206006)(498600001)(4326008)(356005)(7416002)(81166007)(921003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 11:39:13.7107
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94c218f7-5121-4373-0f54-08d8386b0341
-X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
-X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT063.eop-EUR02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR1001MB1205
+        Tue, 4 Aug 2020 07:47:14 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57473 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730230AbgHDLrN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:47:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596541632; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=MVVxVLGT/4i7t0OGDZF+z4Ih6RcEKsys29N0Lo9AUmo=; b=O/5/46ugf33SP2G1Cw5u3zlGL5LXOS0/dZharuslyxTHdEmP63hFFjOCH0MqN1QmK1XTaqYL
+ AxH1VHzGvEoXRxHzwTi3xee+ZggsnyyEFUmtzOR0Immq+yZJF4vRBEKpA5Bujavss5PRN+aW
+ /Gqv+iWiSvwepwZ3H1HrLbw0B/I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5f294ac08ecb2754f903bc28 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 11:47:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E83F9C43395; Tue,  4 Aug 2020 11:47:11 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA59EC433C9;
+        Tue,  4 Aug 2020 11:47:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA59EC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 1/3] dt-bindings: power: Introduce 'assigned-performance-states' property
+Date:   Tue,  4 Aug 2020 17:16:54 +0530
+Message-Id: <1596541616-27688-2-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Dialog DA7280 Haptic driver IC.
+While most devices within power-domains which support performance states,
+scale the performance state dynamically, some devices might want to
+set a static/default performance state while the device is active.
+These devices typically would also run of a fixed clock and not support
+dyamically scaling the device's performance, also known as DVFS techniques.
+Add a property 'assigned-performance-states' which client devices can
+use to set this default performance state on their power-domains.
 
-In this patch set the following is provided:
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ .../devicetree/bindings/power/power-domain.yaml    | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-[PATCH v19 1/3] MAINTAINERS file update for DA7280
-[PATCH v19 2/3] DA7280 DT Binding
-[PATCH v19 3/3] DA7280 Driver
-
-This patch applies against linux-next and v5.8
-
-Thank you,
-Roy Im, Dialog Semiconductor Ltd.
-
-Roy Im (3):
-  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
-  dt-bindings: input: Add document bindings for DA7280
-  Input: new da7280 haptic driver
-
- .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
- MAINTAINERS                                        |    2 +
- drivers/input/misc/Kconfig                         |   12 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/da7280.c                        | 1476 ++++++++++++++++++++
- 5 files changed, 1600 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
- create mode 100644 drivers/input/misc/da7280.c
-
+diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
+index ff5936e..48e9319 100644
+--- a/Documentation/devicetree/bindings/power/power-domain.yaml
++++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+@@ -66,6 +66,16 @@ properties:
+        by the given provider should be subdomains of the domain specified
+        by this binding.
+ 
++  assigned-performance-states:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++       Some devices might need to configure their power domains in a default
++       performance state while the device is active. These devices typcially
++       would also run of a fixed clock and not support dyamically scaling the
++       device's performance, also known as DVFS techniques. The list of performance
++       state values should correspond to the list of power domains specified as part
++       of the power-domains property.
++
+ required:
+   - "#power-domain-cells"
+ 
+@@ -129,3 +139,40 @@ examples:
+             min-residency-us = <7000>;
+         };
+     };
++
++  - |
++    parent4: power-controller@12340000 {
++        compatible = "foo,power-controller";
++        reg = <0x12340000 0x1000>;
++        #power-domain-cells = <0>;
++    };
++
++    parent5: power-controller@43210000 {
++        compatible = "foo,power-controller";
++        reg = <0x43210000 0x1000>;
++        #power-domain-cells = <0>;
++        operating-points-v2 = <&power_opp_table>;
++
++        power_opp_table: opp-table {
++            compatible = "operating-points-v2";
++
++            power_opp_low: opp1 {
++                opp-level = <16>;
++            };
++
++            rpmpd_opp_ret: opp2 {
++                opp-level = <64>;
++            };
++
++            rpmpd_opp_svs: opp3 {
++                opp-level = <256>;
++            };
++        };
++    };
++
++    child4: consumer@12341000 {
++        compatible = "foo,consumer";
++        reg = <0x12341000 0x1000>;
++        power-domains = <&parent4>, <&parent5>;
++        assigned-performance-states = <0>, <256>;
++    };
 -- 
-end-of-patch for PATCH v19
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
