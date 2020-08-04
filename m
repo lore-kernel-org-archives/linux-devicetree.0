@@ -2,97 +2,99 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696A9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA93C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75DC82076E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF732076C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 08:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729549AbgHDIPb convert rfc822-to-8bit (ORCPT
+        id S1729113AbgHDISH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgHDIPa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 04:15:30 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291BBC06174A
-        for <devicetree@vger.kernel.org>; Tue,  4 Aug 2020 01:15:30 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k2s6M-0003dI-1b; Tue, 04 Aug 2020 10:15:14 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1k2s6L-00031T-0C; Tue, 04 Aug 2020 10:15:13 +0200
-Message-ID: <053da16ed682cc016b0a66a834fb58d4d9410dc2.camel@pengutronix.de>
-Subject: Re: [v2,3/6] dt-binding: reset-controller: ti: add generic-reset to
- compatible
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Crystal Guo <crystal.guo@mediatek.com>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com
-Cc:     srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        seiya.wang@mediatek.com, stanley.chu@mediatek.com,
-        yingjoe.chen@mediatek.com, fan.chen@mediatek.com,
-        yong.liang@mediatek.com, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 04 Aug 2020 10:15:12 +0200
-In-Reply-To: <20200803061511.29555-4-crystal.guo@mediatek.com>
-References: <20200803061511.29555-1-crystal.guo@mediatek.com>
-         <20200803061511.29555-4-crystal.guo@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 4 Aug 2020 04:18:07 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20181 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbgHDISH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:18:07 -0400
+IronPort-SDR: PK9eileLvzXHNVXQMTIVmNvyg7mAQ+KduJd+B03hK1GpoyUlIPCc6zXj8hc2gD132cDIhRjgFI
+ wZ0aOJdpAs6Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="131840845"
+X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
+   d="scan'208";a="131840845"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 01:18:06 -0700
+IronPort-SDR: lIPKwjOwt6Z/dHXBMxc2tUMS7VrggARADIVhJLj8dxURiyIUymmGIKXCbXECFxFk6hkn6KZVS2
+ 6EsbiN6ViElg==
+X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
+   d="scan'208";a="330528978"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 01:18:03 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id F148D20686; Tue,  4 Aug 2020 11:18:01 +0300 (EEST)
+Date:   Tue, 4 Aug 2020 11:18:01 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] media: i2c: ov5640: Fallback to parallel mode
+Message-ID: <20200804081801.GD13316@paasikivi.fi.intel.com>
+References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596465107-14251-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596465107-14251-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-08-03 at 14:15 +0800, Crystal Guo wrote:
-> The TI syscon reset controller provides a common reset management,
-> and should be suitable for other SOCs. Add compatible "generic-reset",
-> which denotes to use a common reset-controller driver.
+Hi Prabhakar,
+
+On Mon, Aug 03, 2020 at 03:31:47PM +0100, Lad Prabhakar wrote:
+> Fallback to parallel mode if bus_type doesn't match the supported
+> interfaces by the driver.
 > 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/media/i2c/ov5640.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> index d551161ae785..e36d3631eab2 100644
-> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> @@ -25,6 +25,7 @@ Required properties:
->  			    "ti,k2l-pscrst"
->  			    "ti,k2hk-pscrst"
->  			    "ti,syscon-reset"
-> +			    "generic-reset", "ti,syscon-reset"
->   - #reset-cells		: Should be 1. Please see the reset consumer node below
->  			  for usage details
->   - ti,reset-bits	: Contains the reset control register information
-> -- 
-> 2.18.0
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index 08c67250042f..4e88b0540740 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -3074,6 +3074,12 @@ static int ov5640_probe(struct i2c_client *client)
+>  		return ret;
+>  	}
+>  
+> +	/* fallback to parallel mode */
+> +	if (sensor->ep.bus_type != V4L2_MBUS_PARALLEL &&
+> +	    sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY &&
+> +	    sensor->ep.bus_type != V4L2_MBUS_BT656)
+> +		sensor->ep.bus_type = V4L2_MBUS_PARALLEL;
 
-My understanding is that it would be better to add a mtk specific
-compatible instead of adding this "generic-reset", especially since we
-can't guarantee this binding will be considered generic in the future.
-I think there is nothing wrong with specifying
-	compatible = "mtk,your-compatible", "ti,syscon-reset";
-in your device tree if your hardware is indeed compatible with the
-specified "ti,syscon-reset" binding, but I may be wrong: Therefore,
-please add devicetree@vger.kernel.org to Cc: for binding changes.
+You basically need the type from the v4l2_fwnode_endpoint_parse(), and if
+you don't have any of the above bus types, probe should fail. The old
+bindings were documented in a way that either parallel or CSI-2 bus will be
+used, and there were no defaults. So all should be well.
 
-regards
-Philipp
+-- 
+Sakari Ailus
