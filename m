@@ -2,150 +2,160 @@ Return-Path: <SRS0=zwrU=BO=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36ABC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222DCC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C9F206C0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B328207FC
+	for <linux-devicetree@archiver.kernel.org>; Tue,  4 Aug 2020 17:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t9ierTec"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="mLUSCaU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgHDR2s (ORCPT
+        id S1729388AbgHDRfO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:28:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43868 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729388AbgHDR2r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 13:28:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 074HSfvH020282;
-        Tue, 4 Aug 2020 12:28:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596562121;
-        bh=OchtM4hMXabrchQB+CsAU+YXlIk3slpv/Gy19NRdCig=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=t9ierTecHRnH1J2s8r2c+Gm5WDg2bduNfqS+i88quz9shTz7pN7X5rjauI2TL/ez/
-         3lnpoWOUXLQKBPqvrFC53YN4CsWyt0vZxxG1vpY3Fz/ryfo4Ma6PsMmzgS1VwgHh68
-         I15DD/b6S+yV2QUwaBaxV3isxB01Z1FgAqV0301k=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074HSfK7003555;
-        Tue, 4 Aug 2020 12:28:41 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 4 Aug
- 2020 12:28:40 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 4 Aug 2020 12:28:41 -0500
-Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074HSYwJ009910;
-        Tue, 4 Aug 2020 12:28:37 -0500
-Subject: Re: [PATCH v5 00/10] irqchip: ti, sci-intr/inta: Update the dt
- bindings to accept different interrupt parents
-To:     Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh@kernel.org>,
-        Suman Anna <s-anna@ti.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <20200728051735.6187-1-lokeshvutla@ti.com>
- <d017863c0da4950016f6d4e7fb34d7c7@kernel.org> <20200731181658.GA500828@bogus>
- <733bbcdc-8d29-51cc-f16e-7f95abb56ff2@ti.com> <20200731205953.GA774358@bogus>
- <051cd3d8-a52a-bdad-c4e8-7a05251fab33@ti.com>
- <d7fed961-63ad-eacf-76ba-e8641315994a@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <74aee615-5dc4-20b2-293c-54a6b2768f73@ti.com>
-Date:   Tue, 4 Aug 2020 22:58:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 4 Aug 2020 13:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbgHDRfO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 13:35:14 -0400
+X-Greylist: delayed 566 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 04 Aug 2020 10:35:13 PDT
+Received: from mxwww.masterlogin.de (mxwww.masterlogin.de [IPv6:2a03:2900:1:1::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72DEC06174A
+        for <devicetree@vger.kernel.org>; Tue,  4 Aug 2020 10:35:13 -0700 (PDT)
+Received: from mxout3.routing.net (unknown [192.168.10.111])
+        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id 941DF960FA;
+        Tue,  4 Aug 2020 17:25:45 +0000 (UTC)
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+        by mxout3.routing.net (Postfix) with ESMTP id 6943B60476;
+        Tue,  4 Aug 2020 17:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1596561945;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=XkgThRAVpPtz1ZWnGAEsicIAfDtuzTwIFrPq7RcJCpI=;
+        b=mLUSCaU7gPOweS9dgStbxgxUFgXUH7ODucjQFoYr7L/LD4c/m8ejPmqw1gpOT4MJre639T
+        gKSMKqqrf2kIY8XWVSLOtoeK+F+NbfBnYDjkuIfAUlWtqgPDcJZp4c9Jx6HnljjSc9E80l
+        yooRII58twpHd4cqsz183Rgxog/W2PQ=
+Received: from localhost.localdomain (fttx-pool-217.61.144.119.bambit.de [217.61.144.119])
+        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id DE6293603C2;
+        Tue,  4 Aug 2020 17:25:44 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        devicetree@vger.kernel.org
+Subject: [RESEND PATCH v4 1/6] dt-bindings: mediatek: add mt7623 display-nodes
+Date:   Tue,  4 Aug 2020 19:25:35 +0200
+Message-Id: <20200804172535.75581-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <d7fed961-63ad-eacf-76ba-e8641315994a@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 8/4/20 10:46 PM, Lokesh Vutla wrote:
-> Hi All,
-> 
-> On 02/08/20 4:04 pm, Sekhar Nori wrote:
->> On 8/1/20 2:29 AM, Rob Herring wrote:
->>> On Fri, Jul 31, 2020 at 01:24:17PM -0500, Suman Anna wrote:
->>>> On 7/31/20 1:16 PM, Rob Herring wrote:
->>>>> On Fri, Jul 31, 2020 at 06:01:50PM +0100, Marc Zyngier wrote:
->>>>>> On 2020-07-28 06:17, Lokesh Vutla wrote:
->>>>>>> Hi Marc,
->>>>>>> 	This is continuation of the RFC patches[0] regarding the driver
->>>>>>> updates to support for following interrupt parent connection:
->>>>>>> - INTR -> INTR
->>>>>>> - INTA -> GICv3
->>>>>>> The current existing driver assumes that INTR is always connected to
->>>>>>> GICv3 and INTA is always connected to INTR.
->>>>>>
->>>>>> I'm OK to take this if I can get an Ack from RobH on the three
->>>>>> DT patches that still need it.
->>>>>
->>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>>
->>>>> However, there's a dependency on
->>>>> bindings/arm/keystone/ti,k3-sci-common.yaml.
->>>>>
->>>>> That's a dependency on this being merged. I don't care if it breaks in
->>>>> your tree, but I care for -next and Linus' tree. There could also be
->>>>> other 'make dt_bindings_check' failures/warnings with this as the above
->>>>> dependency prevents further testing.
->>>>>
->>>>
->>>> Bjorn did pick up the above common binding file through the remoteproc tree,
->>>> and it is available in -next. That said, I donno the merge order between
->>>> remoteproc and irq subsystem trees into -next, and if that is a concern.
->>>
->>> I'm less concerned about merge order at this point. -rc1 not being 
->>> broken is the low bar I have...
->>
->> Looking at Bjorn's remoteproc tree[0], the common bindings patch is 
->> applied on top of other (unrelated) remoteproc patches, so merging it 
->> into Marc's tree is out of question unless Bjorn is willing to re-write 
->> his tree (probably not).
->>
->> The other option would be for Marc/Thomas to add these patches into a 
->> 'late' branch, to be sent to Linus after Bjorn's tree has been merged.
->> Bjorn could help by sending his pull request early and someone from TI 
->> can keep an eye out for when its safe to merge.
-> 
-> What can we do to take this forward? Once this series is merged, DT changes
-> should also be merged. Else DMA will be broken as DT backward compatibility is
-> broken.
+From: Frank Wunderlich <frank-w@public-files.de>
 
-The DT parts should have been posted in the same series then, so as to
-not cause breakage after the series is applied, and to preserve bisect
-as much as possible.
+mt7623 uses mt2701/mt8173 for drm, but have own compatibles
 
-IMHO, the whole series needs to be merged together even if parts of it
-come from individual maintainers as immutable commits.
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
+ .../devicetree/bindings/display/mediatek/mediatek,dpi.txt     | 2 +-
+ .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++--
+ .../devicetree/bindings/display/mediatek/mediatek,hdmi.txt    | 4 ++++
+ 4 files changed, 8 insertions(+), 4 deletions(-)
 
-Do the DT portions cause merge conflicts with what is already there in
--next?
-
-I think the next step would be to post the series again, this time with
-DT changes included. Whether it goes into v5.9 or v5.10, thats probably
-needed anyway.
-
-Thanks,
-Sekhar
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+index b91e709db7a4..121220745d46 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+@@ -43,7 +43,7 @@ Required properties (all function blocks):
+ 	"mediatek,<chip>-dpi"        		- DPI controller, see mediatek,dpi.txt
+ 	"mediatek,<chip>-disp-mutex" 		- display mutex
+ 	"mediatek,<chip>-disp-od"    		- overdrive
+-  the supported chips are mt2701, mt2712 and mt8173.
++  the supported chips are mt2701, mt7623, mt2712 and mt8173.
+ - reg: Physical base address and length of the function block register space
+ - interrupts: The interrupt signal from the function block (required, except for
+   merge and split function blocks).
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+index 77def4456706..dc1ebd13cc88 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+@@ -7,7 +7,7 @@ output bus.
+ 
+ Required properties:
+ - compatible: "mediatek,<chip>-dpi"
+-  the supported chips are mt2701 , mt8173 and mt8183.
++  the supported chips are mt2701, mt7623, mt8173 and mt8183.
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+index 8e4729de8c85..f06f24d405a5 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+@@ -7,7 +7,7 @@ channel output.
+ 
+ Required properties:
+ - compatible: "mediatek,<chip>-dsi"
+-  the supported chips are mt2701, mt8173 and mt8183.
++- the supported chips are mt2701, mt7623, mt8173 and mt8183.
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+@@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PHY.
+ 
+ Required properties:
+ - compatible: "mediatek,<chip>-mipi-tx"
+-  the supported chips are mt2701, mt8173 and mt8183.
++- the supported chips are mt2701, 7623, mt8173 and mt8183.
+ - reg: Physical base address and length of the controller's registers
+ - clocks: PLL reference clock
+ - clock-output-names: name of the output clock line to the DSI encoder
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
+index 7b124242b0c5..6b1c586403e4 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
+@@ -6,6 +6,7 @@ its parallel input.
+ 
+ Required properties:
+ - compatible: Should be "mediatek,<chip>-hdmi".
++- the supported chips are mt2701, mt7623 and mt8173
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+@@ -32,6 +33,7 @@ The HDMI CEC controller handles hotplug detection and CEC communication.
+ 
+ Required properties:
+ - compatible: Should be "mediatek,<chip>-cec"
++- the supported chips are mt7623 and mt8173
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clock
+@@ -44,6 +46,7 @@ The Mediatek's I2C controller is used to interface with I2C devices.
+ 
+ Required properties:
+ - compatible: Should be "mediatek,<chip>-hdmi-ddc"
++- the supported chips are mt7623 and mt8173
+ - reg: Physical base address and length of the controller's registers
+ - clocks: device clock
+ - clock-names: Should be "ddc-i2c".
+@@ -56,6 +59,7 @@ output and drives the HDMI pads.
+ 
+ Required properties:
+ - compatible: "mediatek,<chip>-hdmi-phy"
++- the supported chips are mt2701, mt7623 and mt8173
+ - reg: Physical base address and length of the module's registers
+ - clocks: PLL reference clock
+ - clock-names: must contain "pll_ref"
+-- 
+2.25.1
 
