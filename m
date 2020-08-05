@@ -2,95 +2,184 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC80C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 09:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EC9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A3120792
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 09:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C9D2067C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="pqRKHVVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgHEJGQ (ORCPT
+        id S1728482AbgHEJh4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:06:16 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36616 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgHEJGK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 05:06:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l204so10202536oib.3;
-        Wed, 05 Aug 2020 02:06:08 -0700 (PDT)
+        Wed, 5 Aug 2020 05:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728475AbgHEJhr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 05:37:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA42FC061756
+        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 02:37:25 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so5202026wme.0
+        for <devicetree@vger.kernel.org>; Wed, 05 Aug 2020 02:37:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sa5qXdemmtPrCWAxdmJHhP03xcaLaJDyrq3fN/vAu4U=;
+        b=pqRKHVVurNL9xDGPRzkBqZKrsvlm6ebrdoTbuCmUbHaR2igYkNqOTrIraIk2xK9bfX
+         TichTCfgIeuOXRE8tgE+68RKy1i/mJ/3BMxiYvvhFbidZi3wX0AxO+u7zDclOKZHxTYQ
+         div7bohh2QkW6VYS10xA6cLHdzbthzAO2RWe8vzWPV6vhyuM7aguyEblWQwyJZKvNA86
+         fA+/ZDxNUVrQM5nPu5QLKNhhPoJV10CnEeQjrTdpyxqMswPzD6UEHEr9K6bVPBaXVaKp
+         V0VaYjFQ5LHtBdnQDQF1KGTFuOjztEngxG+sZe1Irj0/uB8n1qEfYxJ3T//RKOZXGXdi
+         y2WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=D07PzLwIuFejcUZp+bYFZxntk7CBayvGPwvJsW9xBn4=;
-        b=L7106/Lr7REd9y04sPvcAzK1RzPAbPheJTiDwpqUmZvWwNlJzblUIuHLUUbcUGknM5
-         IqefdJdZnBsWiYCfM8Pv10JnK9ZxW9NAG5kDeUYyz/dupPbQFGNZfwGur5XYBxq9gID7
-         AWBT6EwQ6ED0k4XmYtJvruq9Ye9x9n/7H+FoDGwi9vVJ2RgHhpic8UP1hwLciCQ3ls5z
-         tJGP54hySjSZn3YEpCJTI1Wv3pAtos62rb0Hpb2lD/NGKTOglS6fwUjMFep7kav0foZV
-         4NOQ9OSGUuoWtjll01X2sNy7gn+Fv1nrst3cdJaxobZ3VjtwDg4JFmkpqcpa1aJx8cUH
-         o/sQ==
-X-Gm-Message-State: AOAM532mEh058UDJYYGE8x28mbmR0sj9w3SyUSbEwNoSkW/yYcbdJzpS
-        8IMP+2MXsMChGKv0xrDkA55UBmaU3MSAuQkhpTY=
-X-Google-Smtp-Source: ABdhPJzz2NPen+t9h7xbgmWFxKtxUGXZqxyqaY54ABg+DdffRiydd+UVAEPN4Grk6agAIWY5npdm1cM/UkLjxYDZp8Q=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr1824467oie.153.1596618368307;
- Wed, 05 Aug 2020 02:06:08 -0700 (PDT)
+        bh=sa5qXdemmtPrCWAxdmJHhP03xcaLaJDyrq3fN/vAu4U=;
+        b=J6u+p5KEvPSVxV++P/rQnneELr5OPQigqkVUZDImUTq4kRCmWIVf0UTA+2GBOfE+zQ
+         Om6SeP36rzvNrtOF+D1a8543p7cxI67Q4TT6b+DuKQOFcwsmK5OhbbZ71OV5bYKbNX+4
+         bL/gWJn2dmKIq+sY0wH3RXvm4xpy2KfasvPg00EPxSFbu5YD6mqjPOXnlvXKtrvdToWe
+         YJtk+gMttjx54T1vIOyJZIiWsFpKwj0qERk9/N8qXm89WybF+ytYaE3ijWtZpZqrY4oW
+         f3j4ADKniSCApvPIPK00bPUlDIMmWl5/Lp1F1P58rs5vGkT2XYjWWoHFCO6PwMcJQN1M
+         PPyA==
+X-Gm-Message-State: AOAM530BJvazGO7ZikCphBAQx42DIeb2vK7yHrcU1P2xfG2X94/0cqze
+        QQ4fl1zwUuvM0F/D0OcReq1VWlzGdsDhEsC11joRiA==
+X-Google-Smtp-Source: ABdhPJyrfugmunkVBA6Tq7v4TZjnpR1y3YD1khUpx+jbC4LaW34FDjfZSGZdsHD8cnc/wODH4xvSTWE9kR1//gQ7KvY=
+X-Received: by 2002:a1c:6689:: with SMTP id a131mr2349662wmc.157.1596620244449;
+ Wed, 05 Aug 2020 02:37:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 11:05:57 +0200
-Message-ID: <CAMuHMdWobsLUQ_Oa7i3zOMKw8XOWeVsOTrg8GF9iFaqKZQW_nw@mail.gmail.com>
-Subject: Re: [PATCH 14/20] dt-bindings: sound: renesas,rsnd: Document r8a774e1 bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+References: <20200724071822.126758-1-anup.patel@wdc.com> <mhng-54a5823f-7fa3-42c9-ad28-ee5a4d28c726@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-54a5823f-7fa3-42c9-ad28-ee5a4d28c726@palmerdabbelt-glaptop1>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 5 Aug 2020 15:07:03 +0530
+Message-ID: <CAAhSdy1cR8aBkiyR3ErmTBECm_cgRtd9KNb=91LhPEte0QOGBA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Dedicated CLINT timer driver
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document SoC specific bindings for RZ/G2H (r8a774e1) SoC.
+On Wed, Aug 5, 2020 at 7:17 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> On Fri, 24 Jul 2020 00:18:18 PDT (-0700), Anup Patel wrote:
+> > The current RISC-V timer driver is convoluted and implements two
+> > distinct timers:
+> >  1. S-mode timer: This is for Linux RISC-V S-mode with MMU. The
+> >     clocksource is implemented using TIME CSR and clockevent device
+> >     is implemented using SBI Timer calls.
+> >  2. M-mode timer: This is for Linux RISC-V M-mode without MMU. The
+> >     clocksource is implemented using CLINT MMIO time register and
+> >     clockevent device is implemented using CLINT MMIO timecmp registers.
+> >
+> > This patchset removes clint related code from RISC-V timer driver and
+> > arch/riscv directory. Instead, the series adds a dedicated MMIO based
+> > CLINT driver under drivers/clocksource directory which can be used by
+> > Linux RISC-V M-mode (i.e NoMMU Linux RISC-V).
+> >
+> > The patchset is based up Linux-5.8-rc6 and can be found at riscv_clint_v6
+> > branch of: https://github.com/avpatel/linux.git
+> >
+> > This series is tested on:
+> >  1. QEMU RV64 virt machine using Linux RISC-V S-mode
+> >  2. QEMU RV32 virt machine using Linux RISC-V S-mode
+> >  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
+> >
+> > Changes since v5:
+> >  - Fixed order of compatible strings in PATCH4
+> >  - Added "additionalProperties: false" in PATCH4
+> >  - Fixed register space size for example DT node in PATCH4
+> >
+> > Changes since v4:
+> >  - Rebased series on Linux-5.8-rc6
+> >  - Updated Kconfig option as suggested by Daniel in PATCH2
+> >  - Removed per-CPU registered flag in PATCH2
+> >  - Addressed nit comments from Atish in PATCH2
+> >
+> > Changes since v3:
+> >  - Updated commit description of PATCH2
+> >  - Use clint_get_cycles64() in clint_rdtime() of PATCH2
+> >  - Call clockevents_config_and_register() only once for each CPU in
+> >    clint_timer_starting_cpu of PATCH2
+> >  - Select CLINT timer driver from platform Kconfig in PATCH3
+> >  - Fixed 'make dt_binding_check' for PATCH4
+> >
+> > Changes since v2:
+> >  - Rebased series on Linux-5.8-rc5
+> >  - Squashed PATCH3 onto PATCH2 to preserve GIT bisectability
+> >  - Moved PATCH4 before PATCH2 to preserve GIT bisectability
+> >  - Replaced CLINT dt-bindings text document with YAML schema
+> >  - Use SiFive CLINT compatible string as per SiFive IP block versioning
+> >
+> > Changes since v1:
+> >  - Rebased series on Linux-5.8-rc2
+> >  - Added pr_warn() for case where ipi_ops not available in PATCH1
+> >  - Updated ipi_inject() prototype to use "struct cpumask *" in PATCH1
+> >  - Updated CLINT_TIMER kconfig option to depend on RISCV_M_MODE in PATCH4
+> >  - Added riscv,clint0 compatible string in DT bindings document
+> >
+> > Anup Patel (4):
+> >   RISC-V: Add mechanism to provide custom IPI operations
+> >   clocksource/drivers: Add CLINT timer driver
+> >   RISC-V: Remove CLINT related code from timer and arch
+> >   dt-bindings: timer: Add CLINT bindings
+> >
+> >  .../bindings/timer/sifive,clint.yaml          |  60 +++++
+> >  arch/riscv/Kconfig                            |   2 +-
+> >  arch/riscv/Kconfig.socs                       |   2 +
+> >  arch/riscv/configs/nommu_virt_defconfig       |   7 +-
+> >  arch/riscv/include/asm/clint.h                |  39 ---
+> >  arch/riscv/include/asm/smp.h                  |  19 ++
+> >  arch/riscv/include/asm/timex.h                |  28 +--
+> >  arch/riscv/kernel/Makefile                    |   2 +-
+> >  arch/riscv/kernel/clint.c                     |  44 ----
+> >  arch/riscv/kernel/sbi.c                       |  14 ++
+> >  arch/riscv/kernel/setup.c                     |   2 -
+> >  arch/riscv/kernel/smp.c                       |  44 ++--
+> >  arch/riscv/kernel/smpboot.c                   |   4 +-
+> >  drivers/clocksource/Kconfig                   |  12 +-
+> >  drivers/clocksource/Makefile                  |   1 +
+> >  drivers/clocksource/timer-clint.c             | 226 ++++++++++++++++++
+> >  drivers/clocksource/timer-riscv.c             |  17 +-
+> >  include/linux/cpuhotplug.h                    |   1 +
+> >  18 files changed, 371 insertions(+), 153 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
+> >  delete mode 100644 arch/riscv/include/asm/clint.h
+> >  delete mode 100644 arch/riscv/kernel/clint.c
+> >  create mode 100644 drivers/clocksource/timer-clint.c
+>
+> Thanks, this is way cleaner.  Patchwork is still broken but IIRC we reached
+> consensus on these.  I'm not going to include these in my first 5.9 PR, as I
+> want to get that out tomorrow to avoid more merge conflicts, but assuming
+> there's reviews from the other maintainers I'd like to take this for my second
+> 5.9 merge window PR.
+>
+> Assuming you've been collecting reviews and acks, do you mind posting another
+> version with them?  If not I have some scripts to dig them out, so it's not a
+> big deal.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Most of the Reviewed-by and Ack-by are already there, except yours and
+Rob Herring's Reviewed-by. I will post v7 based on Linux-5.9-rc1
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Anup
