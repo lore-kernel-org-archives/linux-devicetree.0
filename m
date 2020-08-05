@@ -2,84 +2,131 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF34C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 18:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D456C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 18:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B0E2084D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 18:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5A92073E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 18:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fk8PImoS"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eQY7JJqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgHESFv (ORCPT
+        id S1729155AbgHESIk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:05:51 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:49589 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729166AbgHESDi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 14:03:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596650582; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=wDrn6qZ0UEY+b7/V0j8agr4SjPY1RYQe65RUiGn653k=; b=fk8PImoSiRdhxn8Ro0i//lYIv0WZ+Z0fExVfzEvOlmRdlR7hUCas6sZLHpyr8YHVNSQ8S3g6
- o1HcOFjCdXjuJ3NJMa+vhaKki3pdvsEuVbLLTwhaIe/qBjcpNQ7n7SpWqF1L6uIDXyMVNtV4
- JWUxfRIhST6hu3KbLo3pFybyktg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f2af44d5a221ff37b3f5412 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 18:02:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3297CC433CA; Wed,  5 Aug 2020 18:02:53 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 778BAC433C6;
-        Wed,  5 Aug 2020 18:02:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 778BAC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kathirav@codeaurora.org
-Subject: [PATCH] arm64: dts: ipq8074: Use the A53 PMU compatible
-Date:   Wed,  5 Aug 2020 23:32:41 +0530
-Message-Id: <1596650561-11312-1-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 5 Aug 2020 14:08:40 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15625 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728653AbgHESGN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 14:06:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2af4df0000>; Wed, 05 Aug 2020 11:05:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 05 Aug 2020 11:06:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 05 Aug 2020 11:06:08 -0700
+Received: from [10.2.172.190] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug
+ 2020 18:06:08 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+Message-ID: <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+Date:   Wed, 5 Aug 2020 11:06:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596650719; bh=ZoX9hrm5GJJtPMPXEa9EOXU4+4+PUbUewTR9eh4r2Pc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=eQY7JJqs8giWxYBLpAllGeIBO6VWSL3ZT3xzXyGpJT8s2FrbLUiQqjpPT21H+Kl4j
+         zuI45V8UHHYBeteW6geDKS7IiAT8c3eJP86HqfmLnSWnJShdaRSuynupIIJLQ0/EDV
+         dHxAQ9yxT3Na1Bg+4zvFlAtrSeupw8MK4YMIH/d7X45IlZsupS/yuCNIyO1t6mwTHR
+         /n+QCSMgZZv7E2c99sJeAtIr2QdzCnJOvxyy7paMAq1gJTq/gFVeP4kCISR1JC4p/8
+         Xe95IPEXVgp8bEcYElD8N++I9NNBc/Vq02a2+Wx/SysCT8C4dP0s04ZueWwVQLcB1W
+         IiHGMhiA8Hm0A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IPQ8074 has A53 cores, so lets use the corresponding PMU compatible.
 
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 8/5/20 10:46 AM, Sowjanya Komatineni wrote:
+>
+> On 8/5/20 10:34 AM, Dmitry Osipenko wrote:
+>> 05.08.2020 20:29, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> ...
+>>> UART_FST_MIPI_CAL is the clock used for calibration logic which is FSM
+>>> that goes thru sequence codes and when done waits for pads to be in
+>>> LP-11 to apply results.
+>>>
+>>> MIPI_CLK is controller gate clock which is also need to be kept enabled
+>>> as incase if it sees LP-11 it updates registers so its recommended to
+>>> have this clock enabled.
+>>>
+>>> We can cancel_calibration() in CSI only when csi/sensor stream on fails
+>>> and in which case there will be no LP-11 so we can unconditionally
+>>> disable MIPI_CLK.
+>>>
+>> There is no guarantee that the fail comes before the LP-11. For example,
+>> some odd camera driver may have a complicated enable sequence which may
+>> fail after enabling the hardware streaming.
+>
+> MIPI_CLK to keep enable is for calibration logic to update results,=20
+> but like I said calibration logic uses UART_FST_MIPI_CAL clock. So=20
+> even in case if fail happens from sensor after having pads in LP-11=20
+> then, calibration logic will still be running but result update will=20
+> not happen with clock disabled. But HW will not stuck as this is=20
+> confirmed from HW designer.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 96a5ec89b5f0..e4859c7f6208 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -67,7 +67,7 @@
- 	};
- 
- 	pmu {
--		compatible = "arm,armv8-pmuv3";
-+		compatible = "arm,cortex-a53-pmu";
- 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 	};
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+If LP-11 happens from sensor stream (followed by fail) and by that time=20
+if calibration FSM is done and if calibration logic sees LP-11 then=20
+results will be applied to pads.
 
+We did start of calibration before CSI stream so by the time we do=20
+sensor stream enable, calibration logic might have done with FSM and=20
+waiting for LP-11
+
+Also if we see any special case, we always can use finish_calibration()=20
+instead of cancel_calibration() as well.
+
+finish_calibration() has extra 250ms wait time polling done bit and we=20
+can ignore its return code during fail pathway.
+
+>
+>
+>
