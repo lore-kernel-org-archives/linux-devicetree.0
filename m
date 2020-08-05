@@ -2,189 +2,147 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41448C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 07:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51342C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 07:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F05D206B6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 07:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CED922B40
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 07:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="lAOSobc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgHEHU2 (ORCPT
+        id S1725930AbgHEH3E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:20:28 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59538 "EHLO inva021.nxp.com"
+        Wed, 5 Aug 2020 03:29:04 -0400
+Received: from mout.gmx.net ([212.227.17.22]:60505 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgHEHU1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:20:27 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 57F512003A1;
-        Wed,  5 Aug 2020 09:20:25 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A6A1201418;
-        Wed,  5 Aug 2020 09:20:20 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 03B5F40309;
-        Wed,  5 Aug 2020 09:20:14 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     axboe@kernel.dk, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: ata: Convert i.MX sata to json-schema
-Date:   Wed,  5 Aug 2020 15:15:46 +0800
-Message-Id: <1596611746-29155-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725904AbgHEH3E (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:29:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1596612461;
+        bh=NJ3W3FnV8FjFCOCq58j3yAlSrdAYyv5IGb5zxRxgkfo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=lAOSobc5fopmfGe+oOaxYD7Jy/WzyrAHtMMke/Dmv8efLVmgsahLM76obUI3okfDU
+         +8bMz36Qz+5+M96NIlP0RcYrMGIs0+ikGMFrQNCtqpl6VcfmQDL30SUPDdrECclCTN
+         FxULD2Gl+bgdiTP+rdozURGA8bZeCz6N01fPoH2E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [80.208.209.197] ([80.208.209.197]) by web-mail.gmx.net
+ (3c-app-gmx-bap13.server.lan [172.19.172.83]) (via HTTP); Wed, 5 Aug 2020
+ 09:27:41 +0200
+MIME-Version: 1.0
+Message-ID: <trinity-16cee263-ff59-4595-adc1-738071745162-1596612461427@3c-app-gmx-bap13>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        CK Hu <ck.hu@mediatek.com>, Frank Wunderlich <linux@fw-web.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: Aw: Re:  Re: [PATCH v4 6/6] arm: dts: mt7623: add display subsystem
+ related device nodes
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 5 Aug 2020 09:27:41 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <45d34c6cc19c2e5c13f9e88a8e04bdae9259ffdc.camel@infradead.org>
+References: <20200804165555.75159-1-linux@fw-web.de>
+ <20200804165555.75159-8-linux@fw-web.de>
+ <3966b4f687f2fabf9041059dd5f39165177a6ef6.camel@infradead.org>
+ <trinity-5335a61e-b8f0-4441-9fe9-0827cdd67ce4-1596562816887@3c-app-gmx-bap28>
+ <45d34c6cc19c2e5c13f9e88a8e04bdae9259ffdc.camel@infradead.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:SEYuaGP8Vwnd5amGqCfH/R98lwowQCF73eBx323W8BgrPpA2kZEH4ZYzVh+cqYPgXlfne
+ jmvkrfQn2+cSr6UquFT+158ips5sk6liAJNFWXpNpd03rBFrDSTkaZ5kBjDw6Vrd40zkAZIMeD51
+ FmdtAWuvoPjYHnDnMeho1Loqho42ttzdgxxW767qwHymTlJQl4ba0Br7JdclPuR+LD30YLs2kcl+
+ Cc5cwNse9u8FpaNt/FNM+Y9Rn+ptbEUTCSGCW0Lz/4ss/kjaa6VMpE84LGpe+THzqcRyiglhwUUa
+ DQ=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yakE5sTu7hc=:eKQHR+4doAROunHdQVNri5
+ bxXCgNSvyBn9pA2iUvkHpdCaLALTxZr4W7lxP7ix0LMobilUK/ha/UgdNuGXSi/aG4qVJ8omT
+ SYhZq8KoqSNBQ0kPQuF71vrLkQHkdpSBj0yfTeEZ5rnLuxU4gCGMvuepoNQrOycxl/jA/eB3h
+ Trgv9rBzDci79BRGSY36aGqoTT+T4MvdDZk4zpzGFWRACN7kljThE4EYbHxUwxMzy3rShiSpC
+ Dd+4SCcGU/WAUW+zxTe39Zl0tfQGucJHkNjwgRH3CM74Lls+Udaj2lhzr9mr7Y+cmbtWR6CzS
+ VKsQIyG5Va6Vl3nkvDL5310F284gpf5m9pOU68s071y5e2GZ1WhnepxelxOj5UKnUqSME7DB8
+ J3Iq+Yc6mHGX/EEBihZvEa30eKAynhDfxsbvnEEnO36eFAGNBpWTEViMiLChr5ZJGooB1+vxY
+ F0HZ/rl8Ots6zyQg+LIfXjMHwLg7sEIZ81ewCTrwjugdSmZrsG8qe1OcOvmQT9u2L8uYESqQX
+ xvGKNjJMfZe2UBGTYgs0tLywAsZwmZpGwPfer9nT4wfpRCMQOrVDsSEIDgRmXygYZ8J8r0Wsd
+ BvHf+fRnCOPfDqJLxIc7MEEKt3N+YKcgMLIS3GGLN7rpC2OaxFpEG98X3ePLZNfRurJdSPTqx
+ +wH64s6EooRPLCasHTDv29N3wlOVwgnzDWC5bGCGcI5l1hGSK2klP3xPbslW5imBUF+c=
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX sata binding to DT schema format using json-schema.
+CC Rob Herring + devicetree List + Sean
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/ata/imx-sata.txt | 37 ----------
- .../devicetree/bindings/ata/imx-sata.yaml          | 81 ++++++++++++++++++++++
- 2 files changed, 81 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/ata/imx-sata.txt
- create mode 100644 Documentation/devicetree/bindings/ata/imx-sata.yaml
+> Gesendet: Dienstag, 04. August 2020 um 20:02 Uhr
+> Von: "David Woodhouse" <dwmw2@infradead.org>
+> On Tue, 2020-08-04 at 19:40 +0200, Frank Wunderlich wrote:
+> > > Gesendet: Dienstag, 04. August 2020 um 19:24 Uhr
+> > > Von: "David Woodhouse" <dwmw2@infradead.org>
+> > > > +	mipi_tx0: mipi-dphy@10010000 {
+> > > > +		compatible =3D "mediatek,mt7623-mipi-tx",
+> > > > +			     "mediatek,mt2701-mipi-tx";
+> > > > +		reg =3D <0 0x10010000 0 0x90>;
+> > > > +		clocks =3D <&clk26m>;
+> > > > +		clock-output-names =3D "mipi_tx0_pll";
+> > > > +		#clock-cells =3D <0>;
+> > > > +		#phy-cells =3D <0>;
+> > > > +	};
+> > >
+> > > Doesn't this (and some others) also need status=3D"disabled" since
+> > > they're not present on MT7623A? Or maybe it's time to split
+> > > mt7623.dtsi
+> > > into a mt7623n.dtsi which includes mt7623a.dtsi and adds the extra
+> > > components?
 
-diff --git a/Documentation/devicetree/bindings/ata/imx-sata.txt b/Documentation/devicetree/bindings/ata/imx-sata.txt
-deleted file mode 100644
-index 781f887..0000000
---- a/Documentation/devicetree/bindings/ata/imx-sata.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--* Freescale i.MX AHCI SATA Controller
--
--The Freescale i.MX SATA controller mostly conforms to the AHCI interface
--with some special extensions at integration level.
--
--Required properties:
--- compatible : should be one of the following:
--   - "fsl,imx53-ahci" for i.MX53 SATA controller
--   - "fsl,imx6q-ahci" for i.MX6Q SATA controller
--   - "fsl,imx6qp-ahci" for i.MX6QP SATA controller
--- interrupts : interrupt mapping for SATA IRQ
--- reg : registers mapping
--- clocks : list of clock specifiers, must contain an entry for each
--  required entry in clock-names
--- clock-names : should include "sata", "sata_ref" and "ahb" entries
--
--Optional properties:
--- fsl,transmit-level-mV : transmit voltage level, in millivolts.
--- fsl,transmit-boost-mdB : transmit boost level, in milli-decibels
--- fsl,transmit-atten-16ths : transmit attenuation, in 16ths
--- fsl,receive-eq-mdB : receive equalisation, in milli-decibels
--  Please refer to the technical documentation or the driver source code
--  for the list of legal values for these options.
--- fsl,no-spread-spectrum : disable spread-spectrum clocking on the SATA
--  link.
--
--Examples:
--
--sata@2200000 {
--	compatible = "fsl,imx6q-ahci";
--	reg = <0x02200000 0x4000>;
--	interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&clks IMX6QDL_CLK_SATA>,
--		 <&clks IMX6QDL_CLK_SATA_REF_100M>,
--		 <&clks IMX6QDL_CLK_AHB>;
--	clock-names = "sata", "sata_ref", "ahb";
--};
-diff --git a/Documentation/devicetree/bindings/ata/imx-sata.yaml b/Documentation/devicetree/bindings/ata/imx-sata.yaml
-new file mode 100644
-index 0000000..cd94937
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/imx-sata.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ata/imx-sata.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX AHCI SATA Controller
-+
-+maintainers:
-+  - Shawn Guo <shawn.guo@linaro.org>
-+
-+description: |
-+  The Freescale i.MX SATA controller mostly conforms to the AHCI interface
-+  with some special extensions at integration level.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx53-ahci
-+      - fsl,imx6q-ahci
-+      - fsl,imx6qp-ahci
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: sata clock
-+      - description: sata reference clock
-+      - description: ahb clock
-+
-+  clock-names:
-+    items:
-+      - const: sata
-+      - const: sata_ref
-+      - const: ahb
-+
-+  fsl,transmit-level-mV:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: transmit voltage level, in millivolts.
-+
-+  fsl,transmit-boost-mdB:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: transmit boost level, in milli-decibels.
-+
-+  fsl,transmit-atten-16ths:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: transmit attenuation, in 16ths.
-+
-+  fsl,receive-eq-mdB:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: receive equalisation, in milli-decibels.
-+
-+  fsl,no-spread-spectrum:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: if present, disable spread-spectrum clocking on the SATA link.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6qdl-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    sata@2200000 {
-+        compatible = "fsl,imx6q-ahci";
-+        reg = <0x02200000 0x4000>;
-+        interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clks IMX6QDL_CLK_SATA>,
-+                 <&clks IMX6QDL_CLK_SATA_REF_100M>,
-+                 <&clks IMX6QDL_CLK_AHB>;
-+        clock-names = "sata", "sata_ref", "ahb";
-+    };
--- 
-2.7.4
+any opinions about this? should i disable all new nodes and enable them in=
+ the
+dts for specific board (bpi-r2/mt7623n-rfb)?
 
+have prepared it here [1]
+
+> > do you have a MT7623A board for testing? is there any list which
+> > components are existing on mt7623a? or should i disable all of them
+> > and re-enable them in bpi-r2 dts?
+>
+> The UniElec U7623 board (which is supported in OpenWrt) is MT7623A.
+>
+> I was told that MT7623N has GPU and HDMI, while the MT7623A has a
+> built-in mt7530 switch. Does that imply the switch on the MT7623N
+> boards is *external*?
+yes, bananapi r2 has external mt7530 switch connected to gmacs 0+1 with it=
+s ports 6+5
+
+> If so, that means that mt7623n.dtsi maybe shouldn't just include
+> mt7623a.dtsi because it's not a strict superset; maybe they should both
+> include a common mt7623.dtsi that has the parts that are truly common?
+>
+> I also suspect the switch definition from the UniElec U7623 dts should
+> probably move to this new mt7623a.dtsi? That's not upstream yet though.
+
+or should we split dtsi to have a common part (mt7623.dtsi), and one for
+soc (mt7623n.dtsi/mt7623a.dtsi)?
+
+mt7623.dtsi =3D> mt7623n.dtsi =3D> mt7623n-bananapi-bpi-r2.dts
+mt7623.dtsi =3D> mt7623a.dtsi =3D> mt7623a-unielec-u7623.dts (not existing=
+ yet,
+openwrt seems to use a board-specific dtsi)
+
+regards Frank
+
+[1] https://github.com/frank-w/BPI-R2-4.14/commits/5.8-hdmi4mainline
