@@ -2,230 +2,135 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DCEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743E0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4832177B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:24:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+vuuiZG"
+	by mail.kernel.org (Postfix) with ESMTP id 58AE322CF8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgHERYL (ORCPT
+        id S1728761AbgHERZQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
+        Wed, 5 Aug 2020 13:25:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgHERXy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:23:54 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86000C06174A;
-        Wed,  5 Aug 2020 10:23:54 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id v15so20146934lfg.6;
-        Wed, 05 Aug 2020 10:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RTUzsrfaQoHKZVy9cmLeHwNyr/nr7Ihju/lId3cbKHg=;
-        b=d+vuuiZGBac23smNQ/5Nf9Dtkcm0tB0T2ace/UJGn7IdY34laxqz0QKuy6qVcYXxTX
-         +8g+LxrozCHuwfFazJh+d4Gvx834EMtyZ02EnbqXmyZeYfbo2+glRHaEsq3vewzceL7d
-         D4Da75X3ZOYT6Og0MHRZ4/ylzjZ69jXb5Zchd7WdC9qyGi9hlFdQHA0Ix0X1mBw/Cr33
-         UWgjurxDi3NxRBYA9finrD5CMQcLN96aphBlSEOEkpQYo6NpLfFNmBl0rZP+na9DMuel
-         cUPpqtz90/ge5DVXsbx8uRqOX9U5GSJtDe4HchlLMPjAhkGrAN81LQQt4i2S1uiClG6X
-         nucQ==
+        with ESMTP id S1728103AbgHERZG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:25:06 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34BAC0086AB;
+        Wed,  5 Aug 2020 07:47:02 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id t7so19695374otp.0;
+        Wed, 05 Aug 2020 07:47:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RTUzsrfaQoHKZVy9cmLeHwNyr/nr7Ihju/lId3cbKHg=;
-        b=TRvl2Aa7cYOUcLxij2bDi5QlPupJNJNH3ox0he3pQsE4lIpF9oD3HjqbkoDE6s/+A4
-         nYhwijzW7lfa7ySQbeKQZgNMwAHlJlhcgRuWEqEftUHBpLyZP0U3Qs3O0B8ankFVpWIj
-         PlI/ocP0crr4IX01PdZrM+hNk/cMTAr5jFWwptZEi9U5L0c7dkpfKKdeoC5Xi1qTEcS1
-         0xRGAb5VuIci3ZxxCSnkFqmkJ6b9DfkivVc66P1hjUwgbA9c6AH2qxE/dfTq3IEh/rhX
-         sMLxtEZQto7VU5uXcBDidWWR/peMB8PYf6FbZIArrPaVckSED7sILVaewluIQuRT5f4s
-         hpOw==
-X-Gm-Message-State: AOAM532DdbCK7AomIncYtRdn44lTLeSn2oL41ubFVKOoAoUO+nxXQ2hk
-        D5TEEfAEocVAT50zlCNbOqKyYHE0
-X-Google-Smtp-Source: ABdhPJx974DTKzMbJvfgKqrnBwD14STcF/ve8Md3Id04y1YrjXJl8wCgVmYa/KTjw2EDqxWlfwYpAA==
-X-Received: by 2002:a19:d14:: with SMTP id 20mr2030698lfn.27.1596648232750;
-        Wed, 05 Aug 2020 10:23:52 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id a19sm1398454lff.25.2020.08.05.10.23.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 10:23:52 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <57b48a06-325c-86ba-db24-011de7ab51a3@gmail.com>
-Date:   Wed, 5 Aug 2020 20:23:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EwNbORxDFIbm44T1fVXX43x3s7U+jU8SsrHPB/cPJqU=;
+        b=WN/1bEFCBuQuFMVyLXsLFREdhs5LBhNQDp9WlpeR8TFfmrsaiar8PDzY8vtjTLeeym
+         NFBWux02Y5Pb0QK/RldxA7IjdZwx6B8QR+cV1LJyLY9slvVlcK6yzCVSWNpa9PkycwUU
+         rbUu0mrPH6iyAYUcE7pod0BoNbNhKE9WJY2tK5w8cFi5/juzE8TIWJi2HHLdc6NYWW6g
+         UDXYnU2TX5zHGAV2GOfVLWoIOxb2kn82/UVIhSxKUJynCZ5lwzd/CP1Bb78leIujhMOY
+         /iiVTsnBVWtW8QQKU8lKrt8Cy497lmMco0lTmKtakxHOFeKYMSE7w9AdvE/j32lgkJM0
+         4lUg==
+X-Gm-Message-State: AOAM530gplRzia9Htz6QHmP6qv4JA8qk2/s6ujy1nysTa5Klo2rm4D5v
+        x09bKW138Vfbmva7mMl298XRwrnpT37rnVfKNOo/7g==
+X-Google-Smtp-Source: ABdhPJzt7h8RrIxvZX2vRMm2/bzqaHnsQxVVdhFRu4B03RG5Stg3lPBllx3+yunGKjo04+1O1mlapSD/aeoZS8HU1PE=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr2165602otl.145.1596627711771;
+ Wed, 05 Aug 2020 04:41:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200729122602.9561-1-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20200729122602.9561-1-biju.das.jz@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Aug 2020 13:41:40 +0200
+Message-ID: <CAMuHMdXPRsB3N=sfL0VgvAxxHLNCHhotsc501kG9-KMDoYXRJA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: iwg22d-sodimm: Fix dt nodes sorting
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-05.08.2020 20:04, Sowjanya Komatineni пишет:
-> 
-> On 8/5/20 9:57 AM, Dmitry Osipenko wrote:
->> 05.08.2020 19:50, Sowjanya Komatineni пишет:
->>> On 8/5/20 9:47 AM, Dmitry Osipenko wrote:
->>>> 05.08.2020 19:33, Sowjanya Komatineni пишет:
->>>>> On 8/5/20 7:19 AM, Dmitry Osipenko wrote:
->>>>>> 05.08.2020 17:05, Dmitry Osipenko пишет:
->>>>>>> 05.08.2020 16:46, Thierry Reding пишет:
->>>>>>>> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni
->>>>>>>> wrote:
->>>>>>>>> With the split of MIPI calibration into tegra_mipi_calibrate() and
->>>>>>>>> tegra_mipi_wait(), MIPI clock is not kept enabled till the
->>>>>>>>> calibration
->>>>>>>>> is done.
->>>>>>>>>
->>>>>>>>> So, this patch skips disabling MIPI clock after triggering
->>>>>>>>> start of
->>>>>>>>> calibration and disables it only after waiting for done status
->>>>>>>>> from
->>>>>>>>> the calibration logic.
->>>>>>>>>
->>>>>>>>> This patch renames tegra_mipi_calibrate() as
->>>>>>>>> tegra_mipi_start_calibration()
->>>>>>>>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be
->>>>>>>>> inline
->>>>>>>>> with their usage.
->>>>>>>>>
->>>>>>>>> As MIPI clock is left enabled and in case of any failures with CSI
->>>>>>>>> input
->>>>>>>>> streaming tegra_mipi_finish_calibration() will not get invoked.
->>>>>>>>> So added new API tegra_mipi_cancel_calibration() which disables
->>>>>>>>> MIPI clock
->>>>>>>>> and consumer drivers can call this in such cases.
->>>>>>>>>
->>>>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>> ---
->>>>>>>>>     drivers/gpu/drm/tegra/dsi.c |  4 ++--
->>>>>>>>>     drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
->>>>>>>>>     include/linux/host1x.h      |  5 +++--
->>>>>>>>>     3 files changed, 15 insertions(+), 13 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c
->>>>>>>>> b/drivers/gpu/drm/tegra/dsi.c
->>>>>>>>> index 3820e8d..a7864e9 100644
->>>>>>>>> --- a/drivers/gpu/drm/tegra/dsi.c
->>>>>>>>> +++ b/drivers/gpu/drm/tegra/dsi.c
->>>>>>>>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct
->>>>>>>>> tegra_dsi *dsi)
->>>>>>>>>             DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
->>>>>>>>>         tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
->>>>>>>>>     -    err = tegra_mipi_calibrate(dsi->mipi);
->>>>>>>>> +    err = tegra_mipi_start_calibration(dsi->mipi);
->>>>>>>>>         if (err < 0)
->>>>>>>>>             return err;
->>>>>>>>>     -    return tegra_mipi_wait(dsi->mipi);
->>>>>>>>> +    return tegra_mipi_finish_calibration(dsi->mipi);
->>>>>>>>>     }
->>>>>>>>>       static void tegra_dsi_set_timeout(struct tegra_dsi *dsi,
->>>>>>>>> unsigned long bclk,
->>>>>>>>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
->>>>>>>>> index e606464..b15ab6e 100644
->>>>>>>>> --- a/drivers/gpu/host1x/mipi.c
->>>>>>>>> +++ b/drivers/gpu/host1x/mipi.c
->>>>>>>>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct
->>>>>>>>> tegra_mipi_device *dev)
->>>>>>>>>     }
->>>>>>>>>     EXPORT_SYMBOL(tegra_mipi_disable);
->>>>>>>>>     -int tegra_mipi_wait(struct tegra_mipi_device *device)
->>>>>>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device
->>>>>>>>> *device)
->>>>>>>>> +{
->>>>>>>>> +    clk_disable(device->mipi->clk);
->>>>>>>> Do we need to do anything with the MIPI_CAL_CTRL and
->>>>>>>> MIPI_CAL_STATUS
->>>>>>>> registers here? We don't clear the START bit in the former when the
->>>>>>>> calibration has successfully finished, but I suspect that's because
->>>>>>>> the bit is self-clearing. But I wonder if we still need to clear it
->>>>>>>> upon cancellation to make sure the calibration does indeed stop.
->>>>>>> Apparently there is no way to explicitly stop calibration other
->>>>>>> than to
->>>>>>> reset MIPI calibration block, but Sowjanya says this is unnecessary.
->>>>>>>
->>>>>>> Perhaps having a fixed delay before disabling clock could be
->>>>>>> enough to
->>>>>>> ensure that calibration is stopped before the clock is disabled?
->>>>>>>
->>>>>> Actually, there is a MIPI_CAL_ACTIVE bit in the status register.
->>>>>> Maybe
->>>>>> it needs to be polled until it's unset?
->>>>> Confirmed with HW design team during this patch update.
->>>>>
->>>>> SW does not need to clear START bit and only write 1 takes effect to
->>>>> that bit.
->>>>>
->>>>> Also, no need to have delay or do any other register settings
->>>>> unclear as
->>>>> its FSM and there's nothing to get stuck.
->>>>>
->>>>> Also it goes thru small finite set of codes and by the time sensor
->>>>> programming happens for enabling streaming FSM will finish its
->>>>> calibration sequence much early and it will only wait for pads LP-11.
->>>>>
->>>>> So, during cancel we only need disable MIPI clock.
->>>>>
->>>> But there is no guarantee that cancel_calibration() couldn't be invoked
->>>> in the middle of the calibration process, hence FSM could freeze in an
->>>> intermediate state if it's running on the disabled MIPI clock, this
->>>> doesn't sound good.
->>> Actual calibration logic uses UART_FST_CAL clock which is always enabled
->> What enables the UART_FST_CAL clock? I don't see this clock used
->> anywhere.
-> 
-> UART_FST_MIPI_CAL is shared with uart and is always enabled all the time.
-> 
-> I don't see mipi driver handling this and I think that's because this
-> clock is enabled all the time as its used for UART as well. Probably
-> thierry can comment on this clock.
+Hi Biju,
 
-It's not only the MIPI driver, the clock isn't defined at all neither in
-the clk driver, nor in clk DT bindings.
+On Wed, Jul 29, 2020 at 2:26 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> Some device nodes in the r8a7745-iwg22d-sodimm.dts are not sorted
+> alphabetically. This patch fixes the sorting of nodes and also fixes a
+> typo in the stmpe node.
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-It could be fragile to assume that it's always enabled.
+Thanks for your patch!
 
-> Also regarding cancel calibration, as FSM goes thru only finite sequence
-> codes by the time csi stream and sensor stream happens which is where we
-> check for calibration to complete for sure calibration will be finished
-> and calibration logic will only wait for pads to be in LP-11 to apply
-> results. So nothing special needed during cancel except to turn clock
-> off to balance its usage count.
+> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> @@ -53,6 +53,25 @@
+>                 clock-frequency = <26000000>;
+>         };
+>
+> +       backlight_lcd: backlight {
+> +               compatible = "pwm-backlight";
+> +               pwms = <&tpu 3 5000000 PWM_POLARITY_INVERTED>;
+> +               brightness-levels = <0 4 8 16 32 64 128 255>;
+> +               default-brightness-level = <7>;
+> +       };
+> +
+> +       lcd_panel: lcd {
+> +               compatible = "edt,etm043080dh6gp";
+> +               power-supply = <&vccq_panel>;
+> +               backlight = <&backlight_lcd>;
+> +
+> +               port {
+> +                       lcd_in: endpoint {
+> +                               remote-endpoint = <&du_out_rgb0>;
+> +                       };
+> +               };
+> +       };
+> +
+>         rsnd_sgtl5000: sound {
 
-I guess it should be okay for the case of the VI driver, but
-in general please don't assume that code can't change in the future. The
-common API always should be made reliable for all possible situations.
+Shouldn't the sound node be moved below the regulator nodes?
+
+>                 compatible = "simple-audio-card";
+>                 simple-audio-card,format = "i2s";
+> @@ -68,18 +87,6 @@
+>                 };
+>         };
+>
+> -       vccq_sdhi0: regulator-vccq-sdhi0 {
+> -               compatible = "regulator-gpio";
+> -
+> -               regulator-name = "SDHI0 VccQ";
+> -               regulator-min-microvolt = <1800000>;
+> -               regulator-max-microvolt = <3300000>;
+> -
+> -               gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+> -               gpios-states = <1>;
+> -               states = <3300000 1>, <1800000 0>;
+> -       };
+> -
+>         vccq_panel: regulator-vccq-panel {
+>                 compatible = "regulator-fixed";
+>                 regulator-name = "Panel VccQ";
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
