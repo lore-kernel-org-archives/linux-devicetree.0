@@ -2,94 +2,118 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7735C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686C0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C00AB21744
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E122177B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PQ7H44NK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHEIsn (ORCPT
+        id S1728198AbgHEIvP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:48:43 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41326 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgHEIsm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 04:48:42 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b22so12986544oic.8;
-        Wed, 05 Aug 2020 01:48:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1mrXzxi9uxOAW3sW2InYWxrD30ehGwVVOP3HqfzhRdk=;
-        b=ac8PtcXxGfZXOJRiBTYhlU1K0kRNtHc9Qpq2jv81kcZYZwgoljWqD+/7yrmxToLqCG
-         Sy7TBdKOMG99Q6tDrTbr4Yj+oF4elOTvyd2nv6mNBxkWs9wxyyjKYddVuNNa0qNoh0/Y
-         LdoveLh1tS52S0r/4qTehIuqF8O2qsUg/KD5KvMAI5EH1X3NdkFISVT6aZz9ls+IWa97
-         RYTyiSa7kO0Z7F9O4iY2q3yPhNi4RvyFTdmzHNQneE9w66n74Ztv33aVB6/XmUzpQbB/
-         s5Ispt87lxXU0w+dWKderoL4i8R8fRiCDaZ1FRsjuJ3ZzNtiiK2iy0k2HrTNumgIF1Km
-         Z8ig==
-X-Gm-Message-State: AOAM531Eem8/H2sOCSKCvuFcP+2uMJIWfhjwzR70cXCfQzI8KQEuyuUf
-        XFiFKJKXoaxA52F99mdxHyNpuvyIbm+sowZfUrs=
-X-Google-Smtp-Source: ABdhPJytnGMFscI/4Vj10JBqUQ7Wgi/Lqycodf6cBlV8PTnw+Znw95/OXOULRQVW5Ng30YOlYqbpGAXWXSVGKdV5pP0=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr1785208oie.153.1596617320906;
- Wed, 05 Aug 2020 01:48:40 -0700 (PDT)
+        Wed, 5 Aug 2020 04:51:15 -0400
+Received: from mout.gmx.net ([212.227.17.20]:44637 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbgHEIvK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:51:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1596617396;
+        bh=KouBFqPcVdY/N2jpqO+a5lVPiMqUcEXz0mYKHefvmGY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=PQ7H44NKYk24ie8whky4P/jtvHI4A3RB5Ggj+HPlOdWg5moXiKOsEEGJf26zYDqDb
+         vfED0TdDZhJ8LzdqPusAOPTY3PjZlnRWwDXRTRL3WrRN/o33l55OP1BrQfiw01gADm
+         1uMXYlTYrbbNv4yza3AzyOVWCPWSwEzUrIiCb/Lk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [80.208.209.197] ([80.208.209.197]) by web-mail.gmx.net
+ (3c-app-gmx-bap13.server.lan [172.19.172.83]) (via HTTP); Wed, 5 Aug 2020
+ 10:49:56 +0200
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 10:48:29 +0200
-Message-ID: <CAMuHMdXOvVkbhXXmaugHe4fo5vUK3x7bYFHPYHESPWqVdDJBjg@mail.gmail.com>
-Subject: Re: [PATCH 03/20] dt-bindings: ata: renesas,rcar-sata: Add r8a774e1 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <trinity-35b75199-be7e-4e56-bfc9-1d8bf7075df1-1596617396324@3c-app-gmx-bap13>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        David Airlie <airlied@linux.ie>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        CK Hu <ck.hu@mediatek.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Aw: Re:  Re:  Re: [PATCH v4 6/6] arm: dts: mt7623: add display
+ subsystem related device nodes
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 5 Aug 2020 10:49:56 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <bde8de134f59c4375e4048faf124c61af0b95920.camel@infradead.org>
+References: <20200804165555.75159-1-linux@fw-web.de>
+ <20200804165555.75159-8-linux@fw-web.de>
+ <3966b4f687f2fabf9041059dd5f39165177a6ef6.camel@infradead.org>
+ <trinity-5335a61e-b8f0-4441-9fe9-0827cdd67ce4-1596562816887@3c-app-gmx-bap28>
+ <45d34c6cc19c2e5c13f9e88a8e04bdae9259ffdc.camel@infradead.org>
+ <trinity-16cee263-ff59-4595-adc1-738071745162-1596612461427@3c-app-gmx-bap13>
+ <bde8de134f59c4375e4048faf124c61af0b95920.camel@infradead.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:02+hrQwIbNKgot54dm3HJDNKjTwKbsyfpioUZ2s9RwWRJQMTA7VOZRh/pL3a9UGoFVTCN
+ ERILIMlNaDjkc2TrLP6Gpib+y9jm1gT93Gao0qy6TOyS7ZY5Pcmiwa/hFmqqBw0sETOOim7kdheu
+ QrkKaZxd7kwCxWiPRVRs9Pmzo8H/6Yf7oVgLuRlm1LNtnp20Z0bybSKu/XlUT6O3aPAOSAKdTtL+
+ Z5whKcy09j+dZ6HoVVNVfUZGSTZ1QRskLbtCPoKU8es+a/aXSpcl6T8dUGYxw6dTA/aBrl0rZfzX
+ vE=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sGV1u3BLYEs=:ZmeFvu+MGFu42w9/0EZtNz
+ y3ygbRJ/gxvzAKmPS0TDo3EqFrrvRTbvlEgmMQphdULdqverfTtQWhDOvuYX4H9XeTbDYHICh
+ 1u4nPRhU8LkBfK3OQmKDaFH52AsaQoUPcpNmMFqfXgT2zismRqV4YY/DzhRedSMjbW/LXFX5O
+ 9f7pJWQR/dzVelZFUa6ktefaFla1rztZfdhFaUoCMkM/6daiFmBOTW6BxP/PfcS581BqmFRvx
+ kBqCAOKJN3+cXCFP/xnHMSZfPHlzY1hmvATTKLz+Y6VCSnJ6vCcbjujVUjEkqCOECZCpHjjBK
+ 3MxKUsIb53GKhcCQWbS+t+6c3lhZCuevgl0ISDshpHINWCIIdvqpAT1qPqihdu1YoVeSAp4jw
+ qpdG3elw3uN2wUkYCF+804pajrgO7t0IJ2JaUJHEQ3tV8xrUkA4ENN5dv+PNeOdwh9n0Mvbxw
+ HwPEJ0/j3unee2GpYuPG46ZIuA4LU/8RQKdQFDvxzD6Z4WJkDHwiEWinthNXCbpy1tivg3VnK
+ 5tc8jHH4eOvtsmFzG/AOh4Yib9Ts2ifF3dEcLYDT1k8/baNDPqKIs4fB/HH5zU+LVNg4mcTNr
+ /ZZMS/yynDp3VUr5tkPcQ3aiIHtJO7vWqHYKlM9Z65CMilYkQFILL6kJHjWVbrET0GuGryUdz
+ MLqM6V6DDQqqyb4nxNRY5/s21N7uiwhZIw6BDbNtXsFaj0hWdzTMhVOzfin8up3/DNLI=
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document SATA support for the RZ/G2H, no driver change required.
+> Gesendet: Mittwoch, 05. August 2020 um 10:36 Uhr
+> Von: "David Woodhouse" <dwmw2@infradead.org>
+
+> > mt7623.dtsi =3D> mt7623n.dtsi =3D> mt7623n-bananapi-bpi-r2.dts
+> > mt7623.dtsi =3D> mt7623a.dtsi =3D> mt7623a-unielec-u7623.dts (not exis=
+ting yet,
+> > openwrt seems to use a board-specific dtsi)
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Yes, I think we should.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i want to see what MTK/DT owner says to this...
+my current way will be still adding the nodes to existing mt7623.dtsi (lik=
+e ryder lee did it in original patch)
+but disabling them to not break mt7623a and splitting it afterwards.
 
-Gr{oetje,eeting}s,
+> I'll create mt7623a.dtsi and upstream the U7623 support; I think that
+> can happen without conflicting with anything you do.
+>
+> I note that the GPU node has been added to mt7623.dtsi in 5.8 too;
+> that'll want to move to the new mt7623n.dtsi that you create, along
+> with your other new additions.
 
-                        Geert
+i guess mali-node also needs to be moved to mt7623n.dtsi, so my current wa=
+y seems right...
+but it's decision of MTK/DT owner. if they make a note i squash the disabl=
+ing-commit into this and post v5
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+regards Frank
