@@ -2,128 +2,68 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F12C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCACC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA3022CBB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DC622CE3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596659095;
-	bh=1pc0m+mor7fcXCDG3jZxLB2PnEuA2MfsacFWqfeX5CE=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=nlfcepyDJGQsJSrWOQuwa+n/12vsMtuvUmrSgoIi3waXi3cO+MbmvzfUNUU90GAmf
-	 htZyaVDF0cWPVqUYdHuubwsIPdLm57z73176HEc4FaNVZT7qjiS6uApO3ckJK4lQ6s
-	 fSByERqxhKbMxJgO4KzoUCQGs3GgAlGrnmiNbi88=
+	s=default; t=1596659592;
+	bh=mHh1Cq5MAkcpTOCekHQeqlJ3JmplFxonYo4U25F4EB0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=mTRGSJwx98tdN7I4b8nAjnb4+cDG5wRPWuueoG7FCEphy93Y6JLw1f0bUEXA6qIru
+	 IKicW3HX+miHlZtKG7Soasff+sNoGdnPpHRaANS7mjq8gADLZ0EDqh0fS+HXk/F4OL
+	 0bG0cqPCcYne7lJ2OOWqscxnWk0o4SEClwR1oY2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgHEUYy (ORCPT
+        id S1726569AbgHEUdL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56516 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:33:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgHEUYy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:24:54 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F33422CAD;
-        Wed,  5 Aug 2020 20:24:53 +0000 (UTC)
+        id S1725771AbgHEUdK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:33:10 -0400
+Subject: Re: [GIT PULL] Devicetree updates for v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596659093;
-        bh=1pc0m+mor7fcXCDG3jZxLB2PnEuA2MfsacFWqfeX5CE=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=0tekPfO+EVNWpUVU8saTzhp7fiPLfF9kbHOizjy+L15rLvnb6b3s3nlXQnVEDDgYT
-         B1SuZTMBnHya1XTdBAzrMnM2eNxYmFxdUtddGL6uv1FieXSYDaRFbeyufRdcMQbJAE
-         Z5itMJrGoMtlgH7dbgdPFIrzDN6AupUqmVeAMLAU=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1595606878-2664-5-git-send-email-tdas@codeaurora.org>
-References: <1595606878-2664-1-git-send-email-tdas@codeaurora.org> <1595606878-2664-5-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v5 4/4] clk: qcom: lpass: Add support for LPASS clock controller for SC7180
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Wed, 05 Aug 2020 13:24:52 -0700
-Message-ID: <159665909245.1360974.10366839079633595523@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        s=default; t=1596659590;
+        bh=mHh1Cq5MAkcpTOCekHQeqlJ3JmplFxonYo4U25F4EB0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=TZBTJsl304N6ShrAdtmjJ0VxPgz9M3CWxkhDPf9c3JfZB7GZpFZq0+nREBhOskeiH
+         T8pOlNoLBv5wu8ogCbC+iWCKE2JzO0To/DdEhJ7vEP1lMtTsQRN4CJp5NXT41ocaU2
+         FuWyJEmL2PZBR1Ue1fJ1ce2rbe8G4+den1X/6M7k=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200804222811.GA1222892@bogus>
+References: <20200804222811.GA1222892@bogus>
+X-PR-Tracked-List-Id: <devicetree.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200804222811.GA1222892@bogus>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.9
+X-PR-Tracked-Commit-Id: 6f1188b4ac7577c29a4883d5618fa2231396fe9d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 441977979a78bffe51b13932d353919b1fb20c14
+Message-Id: <159665958996.13939.5485961666927813325.pr-tracker-bot@kernel.org>
+Date:   Wed, 05 Aug 2020 20:33:09 +0000
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2020-07-24 09:07:58)
-> +
-> +static struct clk_rcg2 core_clk_src =3D {
-> +       .cmd_rcgr =3D 0x1d000,
-> +       .mnd_width =3D 8,
-> +       .hid_width =3D 5,
-> +       .parent_map =3D lpass_core_cc_parent_map_2,
-> +       .clkr.hw.init =3D &(struct clk_init_data){
-> +               .name =3D "core_clk_src",
+The pull request you sent on Tue, 4 Aug 2020 16:28:11 -0600:
 
-Any chance this can get a better name? Something with LPASS prefix?
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.9
 
-> +               .parent_data =3D &(const struct clk_parent_data){
-> +                       .fw_name =3D "bi_tcxo",
-> +               },
-> +               .num_parents =3D 1,
-> +               .ops =3D &clk_rcg2_ops,
-> +       },
-> +};
-> +
-[...]
-> +
-> +static struct clk_branch lpass_audio_core_sysnoc_mport_core_clk =3D {
-> +       .halt_reg =3D 0x23000,
-> +       .halt_check =3D BRANCH_HALT,
-> +       .hwcg_reg =3D 0x23000,
-> +       .hwcg_bit =3D 1,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x23000,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "lpass_audio_core_sysnoc_mport_core_clk=
-",
-> +                       .parent_data =3D &(const struct clk_parent_data){
-> +                               .hw =3D &core_clk_src.clkr.hw,
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_regmap *lpass_core_cc_sc7180_clocks[] =3D {
-> +       [EXT_MCLK0_CLK_SRC] =3D &ext_mclk0_clk_src.clkr,
-> +       [LPAIF_PRI_CLK_SRC] =3D &lpaif_pri_clk_src.clkr,
-> +       [LPAIF_SEC_CLK_SRC] =3D &lpaif_sec_clk_src.clkr,
-> +       [CORE_CLK_SRC] =3D &core_clk_src.clkr,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/441977979a78bffe51b13932d353919b1fb20c14
 
-And all of these, can they have LPASS_ prefix on the defines? Seems
-like we're missing a namespace otherwise.
+Thank you!
 
-> +       [LPASS_AUDIO_CORE_EXT_MCLK0_CLK] =3D &lpass_audio_core_ext_mclk0_=
-clk.clkr,
-> +       [LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK] =3D
-> +               &lpass_audio_core_lpaif_pri_ibit_clk.clkr,
-> +       [LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK] =3D
-> +               &lpass_audio_core_lpaif_sec_ibit_clk.clkr,
-> +       [LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK] =3D
-> +               &lpass_audio_core_sysnoc_mport_core_clk.clkr,
-> +       [LPASS_LPAAUDIO_DIG_PLL] =3D &lpass_lpaaudio_dig_pll.clkr,
-> +       [LPASS_LPAAUDIO_DIG_PLL_OUT_ODD] =3D &lpass_lpaaudio_dig_pll_out_=
-odd.clkr,
-> +};
-> +
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
