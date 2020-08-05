@@ -2,46 +2,75 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5EEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 16:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D783DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 16:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A53D622D03
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 16:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD8222D00
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 16:56:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbk1cNPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgHEQts (ORCPT
+        id S1728342AbgHEQ4o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:49:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
+        Wed, 5 Aug 2020 12:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgHEQsi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:48:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30BCEC0A8899;
-        Wed,  5 Aug 2020 06:58:36 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id BDE0A296C3D
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id AFE19480115; Wed,  5 Aug 2020 15:58:26 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1] ARM: dts/imx6q-bx50v3: Add IRQ support for internal switch
-Date:   Wed,  5 Aug 2020 15:58:17 +0200
-Message-Id: <20200805135817.391409-1-sebastian.reichel@collabora.com>
+        with ESMTP id S1728290AbgHEQyb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:54:31 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51C1C08E834;
+        Wed,  5 Aug 2020 06:12:18 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id c19so4373567wmd.1;
+        Wed, 05 Aug 2020 06:12:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=B9JUGt8Pb9MDGuBsLIt3kVKcTw+cuX4wnQpyN3p61KQ=;
+        b=pbk1cNPRF/GvqfGkOr+BRCbGcJN5u/R67NUNZc5JeQP6+Ucu93yX5HNmhmIGcpnbDg
+         b/Vb5CNZU1Ai7dd2ZgXfZe5Eg5kzp4G+pIcJFMIjbRDvqndYePvwy8BiVcZGC3tCtAo9
+         1ONUxrvdZxxvAzMHnCb/p9eoxfg87gYN5yhFKc8hJSTQBNaQq5Hj19/HA74yll88Arrt
+         NjKOdn4OI7CxOZk6HgB0D6UUc5eiGbxAcuj0VhtfZavaaCzB0miFqJiT9b9E7RHQUSRB
+         5sFbWUnFxYCQUFI/90+Y6qZ37czHQwsEmr6FzhuPpkC64Q7HbsWa0gq0WF6xe/ubtMgM
+         cL7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B9JUGt8Pb9MDGuBsLIt3kVKcTw+cuX4wnQpyN3p61KQ=;
+        b=sxZNa+apP25vppczNLXjRDKJiB1s22yXdKGBh1woBI82+Qg/MohcBMvxgq7jTB01rO
+         BU0qWS21oOjjFVAUiu7fbvc/L034wBHFJYkGEuR3hZvhQwBSyjrzXiRMmsw7CwtIogAu
+         Lmvdvx2VS6Tlz5ZDxC5seIKc9G0TOivfwdIOm5uap+zxdqRe/Zy1NdYzhWB5bUsQbuDL
+         WDH2PaetIsYxUKB01CNDiN7v0iZlE25E0BlIAzzW4q7q1ckdC3FM1KbwY44y5mjPc0SK
+         aCeKHY3KDhOuCKb4U7ygOd22iexkjHUUfqvt2i0afBfIPgr9c/COfmTOS393e7TiiTJZ
+         60eA==
+X-Gm-Message-State: AOAM530arzSf2ncFR1sWcJXYBcSpEd6eQt0kYz3qxnApG5Orkot2vF9c
+        FfQhO/j4P1SYhpSwg5zdbhA=
+X-Google-Smtp-Source: ABdhPJx7QnQpLkIIv5E0GyPade/7mWzzITIagloPzo8qbKK9XtJXsRfCQT2mdy/5AeRoPFSS4o0yFA==
+X-Received: by 2002:a1c:6555:: with SMTP id z82mr3330653wmb.67.1596633137287;
+        Wed, 05 Aug 2020 06:12:17 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-95-251-1-48.retail.telecomitalia.it. [95.251.1.48])
+        by smtp.googlemail.com with ESMTPSA id j11sm2669756wrq.69.2020.08.05.06.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 06:12:16 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 2/2] dt-bindings: cpufreq: Document Krait CPU Cache scaling
+Date:   Wed,  5 Aug 2020 15:11:59 +0200
+Message-Id: <20200805131200.3234-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805131200.3234-1-ansuelsmth@gmail.com>
+References: <20200805131200.3234-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -49,69 +78,109 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds missing interrupt support for the internal Marvell
-switch, so that the kernel does not have to keep polling the
-PHYs on the bit-banged MDIO bus all the time.
+Document dedicated Krait CPU Cache Scaling driver.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ .../bindings/cpufreq/krait-cache-scale.yaml   | 89 +++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
 
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index 1938b04199c4..1fb67cd2b2a1 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -102,10 +102,15 @@ mdio0: mdio-gpio {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		switch@0 {
-+		switch: switch@0 {
- 			compatible = "marvell,mv88e6085"; /* 88e6240*/
- 			reg = <0>;
- 
-+			interrupt-parent = <&gpio2>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
+diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml b/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
+new file mode 100644
+index 000000000000..190276ba035a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 			switch_ports: ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -117,22 +122,32 @@ mdio {
- 
- 				switchphy0: switchphy@0 {
- 					reg = <0>;
-+					interrupt-parent = <&switch>;
-+					interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
- 				};
- 
- 				switchphy1: switchphy@1 {
- 					reg = <1>;
-+					interrupt-parent = <&switch>;
-+					interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
- 				};
- 
- 				switchphy2: switchphy@2 {
- 					reg = <2>;
-+					interrupt-parent = <&switch>;
-+					interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
- 				};
- 
- 				switchphy3: switchphy@3 {
- 					reg = <3>;
-+					interrupt-parent = <&switch>;
-+					interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
- 				};
- 
- 				switchphy4: switchphy@4 {
- 					reg = <4>;
-+					interrupt-parent = <&switch>;
-+					interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
- 				};
- 			};
- 		};
++title: Krait Cpu Cache Frequency Scaling dedicated driver
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description: |
++  This Scale the Krait CPU Cache Frequency and optionally voltage
++  when the Cpu Frequency is changed (using the cpufreq notifier).
++
++  Cache is scaled with the max frequency across all core and the cache
++  frequency will scale based on the configured threshold in the dts.
++
++  The cache is hardcoded to 3 frequency bin, idle, nominal and high.
++
++properties:
++  compatible:
++    const: qcom,krait-cache
++
++  clocks:
++    description: Phandle to the L2 CPU clock
++
++  clock-names:
++    const: "l2"
++
++  voltage-tolerance:
++    description: Same voltage tollerance of the Krait CPU
++
++  l2-rates:
++    description: |
++      Frequency the L2 cache will be scaled at.
++      Value is in Hz.
++    items:
++      - description: idle
++      - description: nominal
++      - description: high
++
++  l2-cpufreq:
++    description: |
++      Threshold used by the driver to scale the L2 cache.
++      If the max CPU Frequency is more than the set frequency,
++      the driver will transition to the next frequency bin.
++      Value is in kHz
++    items:
++      - description: idle
++      - description: nominal
++      - description: high
++
++  l2-volt:
++    description: |
++      Threshold used by the driver to scale the L2 cache.
++      If the max CPU Frequency is more than the set frequency,
++      the driver will transition to the next frequency bin.
++      Value is in microvolt.
++    items:
++      - description: idle
++      - description: nominal
++      - description: high
++
++  l2-supply:
++    description: Phandle to the L2 regulator supply.
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - voltage-tolerance
++  - l2-rates
++  - l2-cpufreq
++  - l2-supply
++  - l2-volt
++
++examples:
++  - |
++    qcom-krait-cache {
++      compatible = "qcom,krait-cache";
++      clocks = <&kraitcc 4>;
++      clock-names = "l2";
++      voltage-tolerance = <5>;
++      l2-rates = <384000000 1000000000 1200000000>;
++      l2-cpufreq = <384000 600000 1200000>;
++      l2-volt = <1100000 1100000 1150000>;
++      l2-supply = <&smb208_s1a>;
++    };
 -- 
 2.27.0
 
