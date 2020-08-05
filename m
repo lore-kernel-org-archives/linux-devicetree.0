@@ -2,88 +2,88 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30738C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C97C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2A722B42
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B9022CA1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EtnKorVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgHEUPy (ORCPT
+        id S1729592AbgHEUQH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgHEQUG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:20:06 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F79C0086A4;
-        Wed,  5 Aug 2020 07:43:39 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id a9so8816689oof.12;
-        Wed, 05 Aug 2020 07:43:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GHOG3MMfsS8Q4iK2eQgCcwA2GFKcb5/CggWXLB2DZwI=;
-        b=cdEwdP7dZcXvRLz38WwI2mBl6cQMeZH/O+UvjcNDzp+zaB+BzerBdoEo5rGyh9Fsht
-         FYCfq2oBaMBbdhOVFkui+n03ocYTEE1tlNlT5pY1/W59I0y32FyqnorZlbJMLDvcYsya
-         iedZWWisMJF3LouBc6f5yVucWaMPev3oQc9upmWEGvIVDzevQP2e0I4lCnDGQuECRu1s
-         NfSa9hNHZ6Dkd3tKlytQwvE20tRa1Xq/JL1MwAhsCVVPH0WABe1Sy8BHhPjDqzV0IDbh
-         e5Q1OiZSMOpR2g3tcDFqLmpC83zdKTtgbxzPvj6dOd2KZ65lIbXqP0kD+G3X4UlTghEV
-         T4cQ==
-X-Gm-Message-State: AOAM5314XgY4PcOsBDQHJnm/v0v8tscUalkQt5+4Zx0z2oLfETNDe/7+
-        CZeAJ/1RDpP/+gtPZwloNgeBCeI/Cmaw99viN4E=
-X-Google-Smtp-Source: ABdhPJw9RW5CudcHTtQDFGv1V5QDzRVBcVFCwYbJOv2CTxkyE1KBLND9KzWPONo2u/qPu+8W70ut9anlzKiuUHbnLAU=
-X-Received: by 2002:a4a:9d19:: with SMTP id w25mr3187978ooj.11.1596638599474;
- Wed, 05 Aug 2020 07:43:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200805142634.12252-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20200805142634.12252-1-biju.das.jz@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 16:43:08 +0200
-Message-ID: <CAMuHMdVBFQ79Bqd7qn_AEvHSeJ0P8GRVAKSK2VFwB8YM9sQ+qQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: iwg22d-sodimm: Fix dt nodes sorting
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        Wed, 5 Aug 2020 16:16:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30906 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726305AbgHEQUC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:20:02 -0400
+X-UUID: 95c1d7cd1f6f4b74820c363d0bba8f1a-20200805
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=OtQD/PJMlF3G2CJYqMrtaw2Ep2S+WhvIaUE5rI/Zd4g=;
+        b=EtnKorVp0b9nIT8NOQTAL1ojafuQtpdCZAD+N5fnSpE4HT6FqVc2QpMWe7+IoOxlAaBJphxp0sHVd78haT4c2TWzBLXTya7JNlXJFSGEZxzqOS3AsKzX1myxJhBFV9DXrE3VTdcz8v/1rDSMVFOucWTskUjCS3NMDvJktNMHAk0=;
+X-UUID: 95c1d7cd1f6f4b74820c363d0bba8f1a-20200805
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 182264108; Wed, 05 Aug 2020 18:53:22 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 5 Aug 2020 18:53:19 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 5 Aug 2020 18:53:20 +0800
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     <wsa@the-dreams.de>
+CC:     <robh+dt@kernel.org>, <linux-i2c@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <qii.wang@mediatek.com>
+Subject: [PATCH v3 4/4] i2c: mediatek: Add i2c compatible for MediaTek MT8192
+Date:   Wed, 5 Aug 2020 18:52:22 +0800
+Message-ID: <1596624742-14727-5-git-send-email-qii.wang@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
+References: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 4:26 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> Some r8a7745-iwg22d-sodimm.dts device nodes are not sorted alphabetically.
-> This patch fixes the sorting of nodes and also fixes a typo in the stmpe
-> node.
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v1->v2:- Fixed sorting of sound node
-> v1:- https://patchwork.kernel.org/patch/11690969/
+QWRkIGkyYyBjb21wYXRpYmxlIGZvciBNVDgxOTIuIENvbXBhcmUgdG8gTVQ4MTgzIGkyYyBjb250
+cm9sbGVyLA0KTVQ4MTkyIHN1cHBvcnQgbW9yZSB0aGVuIDhHQiBETUEgbW9kZS4NCg0KU2lnbmVk
+LW9mZi1ieTogUWlpIFdhbmcgPHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMv
+aTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCAxNSArKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hh
+bmdlZCwgMTUgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2Vz
+L2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCmluZGV4IDQ2
+Mzg2MGUuLmU4ODlmNzQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4
+eC5jDQorKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQpAQCAtMzg2LDYgKzM4
+NiwyMCBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLm1heF9kbWFfc3VwcG9ydCA9IDMz
+LA0KIH07DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ4MTky
+X2NvbXBhdCA9IHsNCisJLnF1aXJrcyA9ICZtdDgxODNfaTJjX3F1aXJrcywNCisJLnJlZ3MgPSBt
+dF9pMmNfcmVnc192MiwNCisJLnBtaWNfaTJjID0gMCwNCisJLmRjbSA9IDAsDQorCS5hdXRvX3Jl
+c3RhcnQgPSAxLA0KKwkuYXV4X2xlbl9yZWcgPSAxLA0KKwkudGltaW5nX2FkanVzdCA9IDEsDQor
+CS5kbWFfc3luYyA9IDEsDQorCS5sdGltaW5nX2FkanVzdCA9IDEsDQorCS5hcGRtYV9zeW5jID0g
+MSwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDM2LA0KK307DQorDQogc3RhdGljIGNvbnN0IHN0cnVj
+dCBvZl9kZXZpY2VfaWQgbXRrX2kyY19vZl9tYXRjaFtdID0gew0KIAl7IC5jb21wYXRpYmxlID0g
+Im1lZGlhdGVrLG10MjcxMi1pMmMiLCAuZGF0YSA9ICZtdDI3MTJfY29tcGF0IH0sDQogCXsgLmNv
+bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NTc3LWkyYyIsIC5kYXRhID0gJm10NjU3N19jb21wYXQg
+fSwNCkBAIC0zOTMsNiArNDA3LDcgQEAgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyB7DQogCXsgLmNv
+bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NjIyLWkyYyIsIC5kYXRhID0gJm10NzYyMl9jb21wYXQg
+fSwNCiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtaTJjIiwgLmRhdGEgPSAmbXQ4
+MTczX2NvbXBhdCB9LA0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1pMmMiLCAu
+ZGF0YSA9ICZtdDgxODNfY29tcGF0IH0sDQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4
+MTkyLWkyYyIsIC5kYXRhID0gJm10ODE5Ml9jb21wYXQgfSwNCiAJe30NCiB9Ow0KIE1PRFVMRV9E
+RVZJQ0VfVEFCTEUob2YsIG10a19pMmNfb2ZfbWF0Y2gpOw0KLS0gDQoxLjkuMQ0K
 
-Thanks for the update!
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
