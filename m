@@ -2,355 +2,220 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D73C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 03:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4897C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 04:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFB4206D4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 03:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MGLDxavF"
+	by mail.kernel.org (Postfix) with ESMTP id CD390207FC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 04:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbgHEDdN (ORCPT
+        id S1726175AbgHEE7F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:33:13 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:22032 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgHEDdM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Aug 2020 23:33:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596598390; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=yvOK0+u7lVBiPDKYRJ21zelCk8/i+fOYdyMyODCybYU=; b=MGLDxavFfF+n2n2LCgdaCEJlF0uW/ht7fBviH3PA/8wng2jgK1sZdsZtBbWn6T7oDJmGNskx
- 5gw83+1ZeoHwcJBN4d+Qqu9rPDANhiUJZFZmAys6pHjzbxSzoLj1Dj1N1AXKXa6471CyMlsE
- yK2RhZgcExC3BKlA0p7SXD7wXdA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f2a287376a940cda858a3cd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 03:33:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7BFDAC433CA; Wed,  5 Aug 2020 03:33:06 +0000 (UTC)
-Received: from [192.168.0.129] (unknown [183.83.142.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D703FC433C6;
-        Wed,  5 Aug 2020 03:32:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D703FC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
-Subject: Re: [PATCH v4 12/12] dt-bindings: sound: lpass-cpu: Move to yaml
- format
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Takashi Iwai <tiwai@suse.com>, Andy Gross <agross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1595413915-17867-1-git-send-email-rohitkr@codeaurora.org>
- <1595413915-17867-13-git-send-email-rohitkr@codeaurora.org>
- <20200723171629.GA547775@bogus>
- <d00456e3-00e1-e373-760c-8292d6e7dd1b@codeaurora.org>
- <CAL_Jsq+DwA8=iRfMgUGM+H5_CrRRb7xa7DFdAWFOCATR9+=+Rw@mail.gmail.com>
-From:   Rohit Kumar <rohitkr@codeaurora.org>
-Message-ID: <60076588-f340-ddf0-c0a8-36a95e3cdbae@codeaurora.org>
-Date:   Wed, 5 Aug 2020 09:02:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+DwA8=iRfMgUGM+H5_CrRRb7xa7DFdAWFOCATR9+=+Rw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 5 Aug 2020 00:59:05 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:60772 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbgHEE7D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Aug 2020 00:59:03 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6865F2013D5;
+        Wed,  5 Aug 2020 06:59:00 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3C7072013E5;
+        Wed,  5 Aug 2020 06:58:55 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3E5A9402E5;
+        Wed,  5 Aug 2020 06:58:49 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, galak@codeaurora.org,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 2/3] dt-bindings: serial: Convert MXS auart to json-schema
+Date:   Wed,  5 Aug 2020 12:54:18 +0800
+Message-Id: <1596603259-5367-2-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596603259-5367-1-git-send-email-Anson.Huang@nxp.com>
+References: <1596603259-5367-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the MXS auart binding to DT schema format using json-schema.
 
-On 8/3/2020 11:52 PM, Rob Herring wrote:
-> On Mon, Aug 3, 2020 at 2:28 AM Rohit Kumar <rohitkr@codeaurora.org> wrote:
->> Thanks Rob for reviewing
->>
->> On 7/23/2020 10:46 PM, Rob Herring wrote:
->>> On Wed, Jul 22, 2020 at 04:01:55PM +0530, Rohit kumar wrote:
->>>> Update lpass-cpu binding with yaml formats.
->>>>
->>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->>>> ---
->>>>    .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 130 ---------------
->>>>    .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 185 +++++++++++++++++++++
->>>>    2 files changed, 185 insertions(+), 130 deletions(-)
->>>>    delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->>>>    create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->>>> deleted file mode 100644
->>>> index c21392e..00000000
->>>> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->>>> +++ /dev/null
->>>> @@ -1,130 +0,0 @@
->>>> -* Qualcomm Technologies LPASS CPU DAI
->>>> -
->>>> -This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
->>>> -
->>>> -Required properties:
->>>> -
->>>> -- compatible                : "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
->>>> -                      "qcom,lpass-cpu-sc7180"
->>>> -- clocks            : Must contain an entry for each entry in clock-names.
->>>> -- clock-names               : A list which must include the following entries:
->>>> -                            * "ahbix-clk"
->>>> -                            * "mi2s-osr-clk"
->>>> -                            * "mi2s-bit-clk"
->>>> -                    : required clocks for "qcom,lpass-cpu-apq8016"
->>>> -                            * "ahbix-clk"
->>>> -                            * "mi2s-bit-clk0"
->>>> -                            * "mi2s-bit-clk1"
->>>> -                            * "mi2s-bit-clk2"
->>>> -                            * "mi2s-bit-clk3"
->>>> -                            * "pcnoc-mport-clk"
->>>> -                            * "pcnoc-sway-clk"
->>>> -                    : required clocks for "qcom,lpass-cpu-sc7180"
->>>> -                            * "audio-core"
->>>> -                            * "mclk0"
->>>> -                            * "mi2s-bit-clk0"
->>>> -                            * "mi2s-bit-clk1"
->>>> -                            * "pcnoc-sway-clk"
->>>> -                            * "pcnoc-mport-clk"
->>>> -
->>>> -- interrupts                : Must contain an entry for each entry in
->>>> -                      interrupt-names.
->>>> -- interrupt-names   : A list which must include the following entries:
->>>> -                            * "lpass-irq-lpaif"
->>>> -- pinctrl-N         : One property must exist for each entry in
->>>> -                      pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
->>>> -                      for details of the property values.
->>>> -- pinctrl-names             : Must contain a "default" entry.
->>>> -- reg                       : Must contain an address for each entry in reg-names.
->>>> -- reg-names         : A list which must include the following entries:
->>>> -                            * "lpass-lpaif"
->>>> -- #address-cells    : Must be 1
->>>> -- #size-cells               : Must be 0
->>>> -
->>>> -
->>>> -
->>>> -Optional properties:
->>>> -
->>>> -- qcom,adsp         : Phandle for the audio DSP node
->>>> -
->>>> -By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
->>>> -The SD lines to use can be configured by adding subnodes for each of the DAIs.
->>>> -
->>>> -Required properties for each DAI (represented by a subnode):
->>>> -- reg                       : Must be one of the DAI IDs
->>>> -                      (usually part of dt-bindings header)
->>>> -- qcom,playback-sd-lines: List of serial data lines to use for playback
->>>> -                      Each SD line should be represented by a number from 0-3.
->>>> -- qcom,capture-sd-lines     : List of serial data lines to use for capture
->>>> -                      Each SD line should be represented by a number from 0-3.
->>>> -
->>>> -Note that adding a subnode changes the default to "no lines configured",
->>>> -so both playback and capture lines should be configured when a subnode is added.
->>>> -
->>>> -Examples:
->>>> -1)
->>>> -
->>>> -lpass@28100000 {
->>>> -    compatible = "qcom,lpass-cpu";
->>>> -    clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
->>>> -    clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
->>>> -    interrupts = <0 85 1>;
->>>> -    interrupt-names = "lpass-irq-lpaif";
->>>> -    pinctrl-names = "default", "idle";
->>>> -    pinctrl-0 = <&mi2s_default>;
->>>> -    pinctrl-1 = <&mi2s_idle>;
->>>> -    reg = <0x28100000 0x10000>;
->>>> -    reg-names = "lpass-lpaif";
->>>> -    qcom,adsp = <&adsp>;
->>>> -
->>>> -    #address-cells = <1>;
->>>> -    #size-cells = <0>;
->>>> -
->>>> -    /* Optional to set different MI2S SD lines */
->>>> -    dai@3 {
->>>> -            reg = <MI2S_QUATERNARY>;
->>>> -            qcom,playback-sd-lines = <0 1>;
->>>> -    };
->>>> -};
->>>> -
->>>> -2)
->>>> -
->>>> -#include <dt-bindings/sound/sc7180-lpass.h>
->>>> -
->>>> -lpass_cpu: lpass {
->>>> -    compatible = "qcom,lpass-cpu-sc7180";
->>>> -
->>>> -    reg = <0 0x62F00000 0 0x29000>;
->>>> -
->>>> -    iommus = <&apps_smmu 0x1020 0>;
->>>> -
->>>> -    power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
->>>> -    clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
->>>> -            <&lpasscorecc LPASS_AUDIO_CORE_CORE_CLK>,
->>>> -            <&lpasscorecc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
->>>> -            <&lpasscorecc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
->>>> -            <&lpasscorecc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
->>>> -            <&lpasscorecc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
->>>> -    clock-names = "pcnoc-sway-clk", "audio-core",
->>>> -                    "mclk0", "pcnoc-mport-clk",
->>>> -                    "mi2s-bit-clk0", "mi2s-bit-clk1";
->>>> -    interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
->>>> -    interrupt-names = "lpass-irq-lpaif";
->>>> -
->>>> -
->>>> -    #sound-dai-cells = <1>;
->>>> -
->>>> -    #address-cells = <1>;
->>>> -    #size-cells = <0>;
->>>> -
->>>> -    mi2s-primary@0 {
->>>> -            reg = <MI2S_PRIMARY>;
->>>> -            qcom,playback-sd-lines = <1>;
->>>> -            qcom,capture-sd-lines = <0>;
->>>> -    };
->>>> -
->>>> -    mi2s-secondary@1 {
->>>> -            reg = <MI2S_SECONDARY>;
->>>> -            qcom,playback-sd-lines = <0>;
->>>> -    };
->>>> -};
->>>> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
->>>> new file mode 100644
->>>> index 00000000..03c598f
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
->>>> @@ -0,0 +1,185 @@
->>>> +# SPDX-License-Identifier: GPL-2.0-only
->>> If all the authors are QCom or Linaro please dual license.
->> Ok
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Qualcomm LPASS CPU dai driver bindings
->>>> +
->>>> +maintainers:
->>>> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> +  - Rohit kumar <rohitkr@codeaurora.org>
->>>> +
->>>> +description: |
->>>> +  Qualcomm SOC Low-Power Audio SubSystem (LPASS) that consist of MI2S interface
->>>> +  for audio data transfer on external codecs. LPASS cpu driver is a module to
->>>> +  configure Low-Power Audio Interface(LPAIF) core registers across different
->>>> +  IP versions.
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    oneOf:
->>>> +      - const: qcom,lpass-cpu
->>>> +        description: For IPQ806x
->>>> +
->>>> +      - const: qcom,apq8016-lpass-cpu
->>>> +        description: For APQ8016
->>>> +
->>>> +      - const: qcom,lpass-cpu-sc7180
->>>> +        description: For SC7180
->>> Use enum rather than oneOf+const
->> Sure
->>>> +
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +    description: LPAIF core registers
->>>> +
->>>> +  clocks:
->>>> +    minItems: 3
->>>> +    maxItems: 6
->>>> +
->>>> +  clock-names:
->>>> +    minItems: 3
->>>> +    maxItems: 6
->>>> +
->>>> +  interrupts:
->>>> +    maxItems: 1
->>>> +    description: LPAIF DMA buffer interrupt
->>>> +
->>>> +  qcom,adsp:
->>>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>>> +    description: Phandle for the audio DSP node
->>>> +
->>>> +  iommus:
->>>> +    maxItems: 1
->>>> +    description: Phandle to apps_smmu node with sid mask
->>>> +
->>>> +  power-domains:
->>>> +    maxItems: 1
->>>> +
->>>> +  '#sound-dai-cells':
->>>> +    const: 1
->>>> +
->>>> +patternProperties:
->>>> +  "(^mi2s-[0-9a-f]$|mi2s)":
->>>> +    type: object
->>>> +    description: Required properties for each DAI
->>>> +
->>>> +    properties:
->>>> +      reg:
->>>> +        maxItems: 1
->>>> +        description: Must be one of the DAI ID
->>>> +
->>>> +    required:
->>>> +      - reg
->>>> +
->>>> +
->>> Extra blank line.
->> Ok
->>>> +required:
->>>> +  - compatible
->>>> +  - reg
->>>> +  - clocks
->>>> +  - clock-names
->>>> +  - interrupts
->>>> +  - '#sound-dai-cells'
->>> Add:
->>>
->>> additionalProperties: false
->> If I am adding this, I am getting below error:
->>
->> Documentation/devicetree/bindings/sound/qcom,lpass-cpu.example.dt.yaml:
->> lpass@62f00000: '#address-cells', '#size-cells' do not match any of the
->> regexes: '(^mi2s-[0-9a-f]$|mi2s)', 'pinctrl-[0-9]+'
->>
->>
->> I think  this is coming because we have not mentioned mi2s-primary@0 in
->> required fields.
->> The field name is variable based on the interface to which peripheral is
->> connected to.
->> It can be either of primary/secondary/tertiary/quaternary. Can you
->> please suggest how to
->> avoid this error?
-> No, the error is because you didn't list '#address-cells' and
-> '#size-cells' as properties.
-Thanks Rob for the input. Posted v5 patches with the change.
->
-> Rob
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/serial/fsl-mxs-auart.txt   | 53 ------------
+ .../devicetree/bindings/serial/fsl-mxs-auart.yaml  | 93 ++++++++++++++++++++++
+ 2 files changed, 93 insertions(+), 53 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml
 
+diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+deleted file mode 100644
+index 5c96d41..0000000
+--- a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
++++ /dev/null
+@@ -1,53 +0,0 @@
+-* Freescale MXS Application UART (AUART)
+-
+-Required properties for all SoCs:
+-- compatible : Should be one of fallowing variants:
+-	"fsl,imx23-auart" - Freescale i.MX23
+-	"fsl,imx28-auart" - Freescale i.MX28
+-	"alphascale,asm9260-auart" - Alphascale ASM9260
+-- reg : Address and length of the register set for the device
+-- interrupts : Should contain the auart interrupt numbers
+-- dmas: DMA specifier, consisting of a phandle to DMA controller node
+-  and AUART DMA channel ID.
+-  Refer to dma.txt and fsl-mxs-dma.txt for details.
+-- dma-names: "rx" for RX channel, "tx" for TX channel.
+-
+-Required properties for "alphascale,asm9260-auart":
+-- clocks : the clocks feeding the watchdog timer. See clock-bindings.txt
+-- clock-names : should be set to
+-	"mod" - source for tick counter.
+-	"ahb" - ahb gate.
+-
+-Optional properties:
+-- uart-has-rtscts : Indicate the UART has RTS and CTS lines
+-  for hardware flow control,
+-	it also means you enable the DMA support for this UART.
+-- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
+-  line respectively. It will use specified PIO instead of the peripheral
+-  function pin for the USART feature.
+-  If unsure, don't specify this property.
+-
+-Example:
+-auart0: serial@8006a000 {
+-	compatible = "fsl,imx28-auart", "fsl,imx23-auart";
+-	reg = <0x8006a000 0x2000>;
+-	interrupts = <112>;
+-	dmas = <&dma_apbx 8>, <&dma_apbx 9>;
+-	dma-names = "rx", "tx";
+-	cts-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+-	dsr-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+-	dcd-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
+-};
+-
+-Note: Each auart port should have an alias correctly numbered in "aliases"
+-node.
+-
+-Example:
+-
+-aliases {
+-	serial0 = &auart0;
+-	serial1 = &auart1;
+-	serial2 = &auart2;
+-	serial3 = &auart3;
+-	serial4 = &auart4;
+-};
+diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml
+new file mode 100644
+index 0000000..096ef05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.yaml
+@@ -0,0 +1,93 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serial/fsl-mxs-auart.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale MXS Application UART (AUART)
++
++maintainers:
++  - Kumar Gala <galak@codeaurora.org>
++
++allOf:
++  - $ref: "serial.yaml"
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx23-auart
++      - fsl,imx28-auart
++      - alphascale,asm9260-auart
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: DMA controller phandle and request line for RX
++      - description: DMA controller phandle and request line for TX
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++  clocks:
++    items:
++      - description: mod clock
++      - description: ahb clock
++
++  clock-names:
++    items:
++      - const: mod
++      - const: ahb
++
++  uart-has-rtscts: true
++  rts-gpios: true
++  cts-gpios: true
++  dtr-gpios: true
++  dsr-gpios: true
++  rng-gpios: true
++  dcd-gpios: true
++
++if:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - alphascale,asm9260-auart
++then:
++  required:
++    - clocks
++    - clock-names
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - dmas
++  - dma-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    aliases {
++        serial0 = &auart0;
++    };
++
++    auart0: serial@8006a000 {
++        compatible = "fsl,imx28-auart";
++        reg = <0x8006a000 0x2000>;
++        interrupts = <112>;
++        dmas = <&dma_apbx 8>, <&dma_apbx 9>;
++        dma-names = "rx", "tx";
++        cts-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
++        dsr-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++        dcd-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
++    };
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+2.7.4
 
