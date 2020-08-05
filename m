@@ -4,200 +4,220 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DCCC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62515C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCFC72177B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E7822D00
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgHERWy (ORCPT
+        id S1728578AbgHERXg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:22:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbgHERVU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:21:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689F4C0086B2
-        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 07:52:43 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3KmU-0005PP-Ag; Wed, 05 Aug 2020 16:52:38 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k3KmS-0008I5-I6; Wed, 05 Aug 2020 16:52:36 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: imx25-pinfunc: add missing and fix wrong SPI related defintions
-Date:   Wed,  5 Aug 2020 16:52:34 +0200
-Message-Id: <20200805145234.17486-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Wed, 5 Aug 2020 13:23:36 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:56777 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728575AbgHERRD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:17:03 -0400
+X-IronPort-AV: E=Sophos;i="5.75,436,1589209200"; 
+   d="scan'208";a="53743861"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 05 Aug 2020 23:26:39 +0900
+Received: from localhost.localdomain (unknown [172.29.52.220])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E1BBB42921F2;
+        Wed,  5 Aug 2020 23:26:36 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2] ARM: dts: iwg22d-sodimm: Fix dt nodes sorting
+Date:   Wed,  5 Aug 2020 15:26:34 +0100
+Message-Id: <20200805142634.12252-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I used the i.MX25 Reference Manual (Rev 2 01/2011) as source for these
-additions and fixes.
+Some r8a7745-iwg22d-sodimm.dts device nodes are not sorted alphabetically.
+This patch fixes the sorting of nodes and also fixes a typo in the stmpe
+node.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
-Hello,
+v1->v2:- Fixed sorting of sound node
+v1:- https://patchwork.kernel.org/patch/11690969/
+---
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 112 ++++++++++----------
+ 1 file changed, 56 insertions(+), 56 deletions(-)
 
-as usual a second pair of eyes for these definition updates is very much
-appreciated.
-
-Best regards
-Uwe
-
- arch/arm/boot/dts/imx25-pinfunc.h | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx25-pinfunc.h b/arch/arm/boot/dts/imx25-pinfunc.h
-index d9958c4441d7..e14140e62b9b 100644
---- a/arch/arm/boot/dts/imx25-pinfunc.h
-+++ b/arch/arm/boot/dts/imx25-pinfunc.h
-@@ -87,6 +87,7 @@
- #define MX25_PAD_EB1__EB1			0x044 0x25c 0x000 0x00 0x000
- #define MX25_PAD_EB1__AUD4_RXD			0x044 0x25c 0x460 0x04 0x000
- #define MX25_PAD_EB1__GPIO_2_13			0x044 0x25c 0x000 0x05 0x000
-+#define MX25_PAD_EB1__CSPI3_SS1			0x044 0x25c 0x4c0 0x06 0x000
+diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+index b15b1b088a32..1c7b37a01f0a 100644
+--- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
++++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+@@ -53,42 +53,6 @@
+ 		clock-frequency = <26000000>;
+ 	};
  
- #define MX25_PAD_OE__OE				0x048 0x260 0x000 0x00 0x000
- #define MX25_PAD_OE__AUD4_TXC			0x048 0x260 0x000 0x04 0x000
-@@ -112,6 +113,7 @@
- #define MX25_PAD_CS5__CSPI3_MISO		0x058 0x268 0x4b4 0x06 0x000
+-	rsnd_sgtl5000: sound {
+-		compatible = "simple-audio-card";
+-		simple-audio-card,format = "i2s";
+-		simple-audio-card,bitclock-master = <&sndcodec>;
+-		simple-audio-card,frame-master = <&sndcodec>;
+-
+-		sndcpu: simple-audio-card,cpu {
+-			sound-dai = <&rcar_sound>;
+-		};
+-
+-		sndcodec: simple-audio-card,codec {
+-			sound-dai = <&sgtl5000>;
+-		};
+-	};
+-
+-	vccq_sdhi0: regulator-vccq-sdhi0 {
+-		compatible = "regulator-gpio";
+-
+-		regulator-name = "SDHI0 VccQ";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-
+-		gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+-		gpios-states = <1>;
+-		states = <3300000 1>, <1800000 0>;
+-	};
+-
+-	vccq_panel: regulator-vccq-panel {
+-		compatible = "regulator-fixed";
+-		regulator-name = "Panel VccQ";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		gpio = <&gpio1 13 GPIO_ACTIVE_LOW>;
+-		enable-active-high;
+-	};
+-
+ 	backlight_lcd: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&tpu 3 5000000 PWM_POLARITY_INVERTED>;
+@@ -107,19 +71,40 @@
+ 			};
+ 		};
+ 	};
+-};
  
- #define MX25_PAD_NF_CE0__NF_CE0			0x05c 0x26c 0x000 0x00 0x000
-+#define MX25_PAD_NF_CE0__CSPI1_SS3		0x05c 0x26c 0x490 0x01 0x000
- #define MX25_PAD_NF_CE0__GPIO_3_22		0x05c 0x26c 0x000 0x05 0x000
+-&du {
+-	pinctrl-0 = <&du0_pins>;
+-	pinctrl-names = "default";
++	vccq_panel: regulator-vccq-panel {
++		compatible = "regulator-fixed";
++		regulator-name = "Panel VccQ";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio1 13 GPIO_ACTIVE_LOW>;
++		enable-active-high;
++	};
  
- #define MX25_PAD_ECB__ECB			0x060 0x270 0x000 0x00 0x000
-@@ -122,6 +124,7 @@
- #define MX25_PAD_LBA__LBA			0x064 0x274 0x000 0x00 0x000
- #define MX25_PAD_LBA__UART5_RXD			0x064 0x274 0x578 0x03 0x000
- #define MX25_PAD_LBA__GPIO_3_24			0x064 0x274 0x000 0x05 0x000
-+#define MX25_PAD_LBA__CSPI3_RDY			0x064 0x274 0x4b0 0x06 0x000
+-	status = "okay";
++	vccq_sdhi0: regulator-vccq-sdhi0 {
++		compatible = "regulator-gpio";
  
- #define MX25_PAD_BCLK__BCLK			0x068 0x000 0x000 0x00 0x000
- #define MX25_PAD_BCLK__GPIO_4_4			0x068 0x000 0x000 0x05 0x000
-@@ -286,6 +289,7 @@
+-	ports {
+-		port@0 {
+-			endpoint {
+-				remote-endpoint = <&lcd_in>;
+-			};
++		regulator-name = "SDHI0 VccQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
++		gpios-states = <1>;
++		states = <3300000 1>, <1800000 0>;
++	};
++
++	rsnd_sgtl5000: sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&sndcodec>;
++		simple-audio-card,frame-master = <&sndcodec>;
++
++		sndcpu: simple-audio-card,cpu {
++			sound-dai = <&rcar_sound>;
++		};
++
++		sndcodec: simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
+ 		};
+ 	};
+ };
+@@ -150,6 +135,21 @@
+ 	status = "okay";
+ };
  
- #define MX25_PAD_CONTRAST__CONTRAST		0x118 0x310 0x000 0x00 0x000
- #define MX25_PAD_CONTRAST__CC4			0x118 0x310 0x000 0x01 0x000
-+#define MX25_PAD_CONTRAST__CSPI2_SS1		0x118 0x310 0x4a8 0x02 0x000
- #define MX25_PAD_CONTRAST__PWM4_PWMO		0x118 0x310 0x000 0x04 0x000
- #define MX25_PAD_CONTRAST__FEC_CRS		0x118 0x310 0x508 0x05 0x001
- #define MX25_PAD_CONTRAST__USBH2_PWR		0x118 0x310 0x000 0x06 0x000
-@@ -298,7 +302,7 @@
- #define MX25_PAD_CSI_D2__UART5_RXD		0x120 0x318 0x578 0x01 0x001
- #define MX25_PAD_CSI_D2__SIM1_CLK0		0x120 0x318 0x000 0x04 0x000
- #define MX25_PAD_CSI_D2__GPIO_1_27		0x120 0x318 0x000 0x05 0x000
--#define MX25_PAD_CSI_D2__CSPI3_MOSI		0x120 0x318 0x000 0x07 0x000
-+#define MX25_PAD_CSI_D2__CSPI3_MOSI		0x120 0x318 0x4b8 0x07 0x001
++&du {
++	pinctrl-0 = <&du0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++
++	ports {
++		port@0 {
++			endpoint {
++				remote-endpoint = <&lcd_in>;
++			};
++		};
++	};
++};
++
+ &hscif1 {
+ 	pinctrl-0 = <&hscif1_pins>;
+ 	pinctrl-names = "default";
+@@ -171,6 +171,15 @@
+ 	status = "okay";
+ 	clock-frequency = <400000>;
  
- #define MX25_PAD_CSI_D3__CSI_D3			0x124 0x31c 0x000 0x00 0x000
- #define MX25_PAD_CSI_D3__UART5_TXD		0x124 0x31c 0x000 0x01 0x000
-@@ -310,23 +314,25 @@
- #define MX25_PAD_CSI_D4__UART5_RTS		0x128 0x320 0x574 0x01 0x001
- #define MX25_PAD_CSI_D4__SIM1_VEN0		0x128 0x320 0x000 0x04 0x000
- #define MX25_PAD_CSI_D4__GPIO_1_29		0x128 0x320 0x000 0x05 0x000
--#define MX25_PAD_CSI_D4__CSPI3_SCLK		0x128 0x320 0x000 0x07 0x000
-+#define MX25_PAD_CSI_D4__CSPI3_SCLK		0x128 0x320 0x4ac 0x07 0x001
++	sgtl5000: codec@a {
++		compatible = "fsl,sgtl5000";
++		#sound-dai-cells = <0>;
++		reg = <0x0a>;
++		clocks = <&audio_clock>;
++		VDDA-supply = <&reg_3p3v>;
++		VDDIO-supply = <&reg_3p3v>;
++	};
++
+ 	stmpe811@44 {
+ 		compatible = "st,stmpe811";
+ 		reg = <0x44>;
+@@ -179,7 +188,7 @@
  
- #define MX25_PAD_CSI_D5__CSI_D5			0x12c 0x324 0x000 0x00 0x000
- #define MX25_PAD_CSI_D5__UART5_CTS		0x12c 0x324 0x000 0x01 0x000
- #define MX25_PAD_CSI_D5__SIM1_TX0		0x12c 0x324 0x000 0x04 0x000
- #define MX25_PAD_CSI_D5__GPIO_1_30		0x12c 0x324 0x000 0x05 0x000
--#define MX25_PAD_CSI_D5__CSPI3_RDY		0x12c 0x324 0x000 0x07 0x000
-+#define MX25_PAD_CSI_D5__CSPI3_RDY		0x12c 0x324 0x4b0 0x07 0x001
+ 		/* 3.25 MHz ADC clock speed */
+ 		st,adc-freq = <1>;
+-		/* ADC converstion time: 80 clocks */
++		/* ADC conversion time: 80 clocks */
+ 		st,sample-time = <4>;
+ 		/* 12-bit ADC */
+ 		st,mod-12b = <1>;
+@@ -203,15 +212,6 @@
+ 			st,touch-det-delay = <5>;
+ 		};
+ 	};
+-
+-	sgtl5000: codec@a {
+-		compatible = "fsl,sgtl5000";
+-		#sound-dai-cells = <0>;
+-		reg = <0x0a>;
+-		clocks = <&audio_clock>;
+-		VDDA-supply = <&reg_3p3v>;
+-		VDDIO-supply = <&reg_3p3v>;
+-	};
+ };
  
- #define MX25_PAD_CSI_D6__CSI_D6			0x130 0x328 0x000 0x00 0x000
- /* SION must be set; see the comment for MX25_PAD_SD1_CMD__ESDHC1_CMD. */
- #define MX25_PAD_CSI_D6__ESDHC2_CMD		0x130 0x328 0x4e0 0x12 0x001
- #define MX25_PAD_CSI_D6__SIM1_PD0		0x130 0x328 0x000 0x04 0x000
- #define MX25_PAD_CSI_D6__GPIO_1_31		0x130 0x328 0x000 0x05 0x000
-+#define MX25_PAD_CSI_D6__CSPI3_SS0		0x130 0x328 0x4bc 0x07 0x001
- 
- #define MX25_PAD_CSI_D7__CSI_D7			0x134 0x32c 0x000 0x00 0x000
- #define MX25_PAD_CSI_D7__ESDHC2_CLK		0x134 0x32C 0x4dc 0x02 0x001
- #define MX25_PAD_CSI_D7__GPIO_1_6		0x134 0x32c 0x000 0x05 0x000
-+#define MX25_PAD_CSI_D7__CSPI3_SS1		0x134 0x32c 0x4c0 0x07 0x001
- 
- #define MX25_PAD_CSI_D8__CSI_D8			0x138 0x330 0x000 0x00 0x000
- #define MX25_PAD_CSI_D8__AUD6_RXC		0x138 0x330 0x000 0x02 0x000
-@@ -417,10 +423,12 @@
- #define MX25_PAD_UART2_RTS__FEC_COL		0x188 0x380 0x504 0x02 0x002
- #define MX25_PAD_UART2_RTS__CC1			0x188 0x380 0x000 0x03 0x000
- #define MX25_PAD_UART2_RTS__GPIO_4_28		0x188 0x380 0x000 0x05 0x000
-+#define MX25_PAD_UART2_RTS__CSPI2_SS3		0x188 0x380 0x000 0x06 0x000
- 
- #define MX25_PAD_UART2_CTS__UART2_CTS		0x18c 0x384 0x000 0x00 0x000
- #define MX25_PAD_UART2_CTS__FEC_RX_ERR		0x18c 0x384 0x518 0x02 0x002
- #define MX25_PAD_UART2_CTS__GPIO_4_29		0x18c 0x384 0x000 0x05 0x000
-+#define MX25_PAD_UART2_CTS__CSPI3_SS3		0x18c 0x384 0x4c8 0x06 0x001
- 
- /*
-  * Removing the SION bit from MX25_PAD_*__ESDHCn_CMD breaks detecting an SD
-@@ -446,14 +454,17 @@
- #define MX25_PAD_SD1_DATA0__GPIO_2_25		0x198 0x390 0x000 0x05 0x000
- 
- #define MX25_PAD_SD1_DATA1__ESDHC1_DAT1		0x19c 0x394 0x000 0x00 0x000
-+#define MX25_PAD_SD1_DATA1__CSPI2_RDY		0x19c 0x394 0x498 0x01 0x001
- #define MX25_PAD_SD1_DATA1__AUD7_RXD		0x19c 0x394 0x478 0x03 0x000
- #define MX25_PAD_SD1_DATA1__GPIO_2_26		0x19c 0x394 0x000 0x05 0x000
- 
- #define MX25_PAD_SD1_DATA2__ESDHC1_DAT2		0x1a0 0x398 0x000 0x00 0x000
-+#define MX25_PAD_SD1_DATA2__CSPI2_SS0		0x1a0 0x398 0x4a4 0x01 0x001
- #define MX25_PAD_SD1_DATA2__FEC_RX_CLK		0x1a0 0x398 0x514 0x02 0x002
- #define MX25_PAD_SD1_DATA2__GPIO_2_27		0x1a0 0x398 0x000 0x05 0x000
- 
- #define MX25_PAD_SD1_DATA3__ESDHC1_DAT3		0x1a4 0x39c 0x000 0x00 0x000
-+#define MX25_PAD_SD1_DATA3__CSPI2_SS1		0x1a4 0x39c 0x4a8 0x01 0x001
- #define MX25_PAD_SD1_DATA3__FEC_CRS		0x1a4 0x39c 0x508 0x02 0x002
- #define MX25_PAD_SD1_DATA3__GPIO_2_28		0x1a4 0x39c 0x000 0x05 0x000
- 
-@@ -564,11 +575,14 @@
- #define MX25_PAD_GPIO_C__PWM4_PWMO		0x1fc 0x3f8 0x000 0x01 0x000
- #define MX25_PAD_GPIO_C__I2C2_SCL		0x1fc 0x3f8 0x51c 0x02 0x001
- #define MX25_PAD_GPIO_C__KPP_COL4		0x1fc 0x3f8 0x52c 0x03 0x001
-+#define MX25_PAD_GPIO_C__CSPI1_SS2		0x1fc 0x3f8 0x000 0x05 0x000
- #define MX25_PAD_GPIO_C__CAN2_TX		0x1fc 0x3f8 0x000 0x06 0x000
-+#define MX25_PAD_GPIO_C__CSPI2_SS2		0x1fc 0x3f8 0x000 0x07 0x000
- 
- #define MX25_PAD_GPIO_D__GPIO_D			0x200 0x3fc 0x000 0x00 0x000
- #define MX25_PAD_GPIO_D__I2C2_SDA		0x200 0x3fc 0x520 0x02 0x001
- #define MX25_PAD_GPIO_D__CAN2_RX		0x200 0x3fc 0x484 0x06 0x001
-+#define MX25_PAD_GPIO_D__CSPI3_SS2		0x200 0x3fc 0x4c4 0x07 0x001
- 
- #define MX25_PAD_GPIO_E__GPIO_E			0x204 0x400 0x000 0x00 0x000
- #define MX25_PAD_GPIO_E__I2C3_CLK		0x204 0x400 0x524 0x01 0x002
-@@ -593,7 +607,7 @@
- #define MX25_PAD_VSTBY_REQ__UART4_RTS		0x214 0x408 0x56c 0x06 0x002
- 
- #define MX25_PAD_VSTBY_ACK__VSTBY_ACK		0x218 0x40c 0x000 0x00 0x000
--#define MX25_PAD_VSTBY_ACK__CSPI1_SS3		0x218 0x40c 0x000 0x02 0x000
-+#define MX25_PAD_VSTBY_ACK__CSPI1_SS3		0x218 0x40c 0x490 0x02 0x001
- #define MX25_PAD_VSTBY_ACK__GPIO_3_18		0x218 0x40c 0x000 0x05 0x000
- 
- #define MX25_PAD_POWER_FAIL__POWER_FAIL		0x21c 0x410 0x000 0x00 0x000
+ &pci1 {
 -- 
-2.27.0
+2.17.1
 
