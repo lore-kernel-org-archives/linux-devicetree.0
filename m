@@ -2,184 +2,165 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EC9C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21DAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 11:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85C9D2067C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B86122CA0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 11:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="pqRKHVVu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="B7AZJyxo";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="TylKdN+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgHEJh4 (ORCPT
+        id S1728170AbgHEKtB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728475AbgHEJhr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 05:37:47 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA42FC061756
-        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 02:37:25 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c80so5202026wme.0
-        for <devicetree@vger.kernel.org>; Wed, 05 Aug 2020 02:37:25 -0700 (PDT)
+        Wed, 5 Aug 2020 06:49:01 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:46211 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgHEKrv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 06:47:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1596624470; x=1628160470;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version;
+  bh=wnL2TrXyKzABJPiqqAF74hddmf2SrrqhPTQIopmI9Gw=;
+  b=B7AZJyxotT0QpAIgdaWnkZAgNWK+pshG2MKqg5s3B30xyV0+CKJqorJf
+   eJYZGfpFhARp6nVrhVlWCVEcuqcAwsE2iIfaDusPhxfkkc5VHtubLaH9u
+   0rZsbSIWL88aYzShG6JmHUc8qcGZIBaIZxJMOyYASsJDJKhcghvz2I+Ge
+   SzXXrCvlsBooh9wmOt9m/DlO063EkWiTDYiYWa5PKwiahoT5ndVk7dvLf
+   vV94RSLt3xZI6htuWPn7ulWY2W8H3cWzxuE5HtYATAqOf3MFwYB2neHEx
+   egSvyKoLbPsDXqgYnu5nyqXy48miYEBvY68F6/HGeyrKDqB7uYSHmogRC
+   w==;
+IronPort-SDR: S2jPRPjkaGat99MllwYkFt7sFf41MSmYzl10Q4lZV/x1ichSxuWJH7Jacsp8ngXhaKloS/OPQB
+ Vr3FQYbChgm61iHqgqpkH5Oao48Nlbo6rJlcPl9brcQDAVx0EkmgGLjJz5KvzJxP0T8E6UFG+r
+ WZ6AHrv/R/pr08sMNFQawstqn8tjj74VK1IbD/tK/s0VN4kIQGjw6wPbYVbAHjfUjPc9txKHmz
+ 8Oy4T02SRWHb+HB4SUpRrfJqnG9y/68TqgHnHGNmammD8ZHlCqJB/qrfRLeu90+ux8Q83CjRiO
+ Iwc=
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="86765665"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Aug 2020 03:29:31 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 5 Aug 2020 03:29:30 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Wed, 5 Aug 2020 03:29:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g6hY1v890qHKscqQhfeCuap6htwi8LDeKSufF39qk6LuP4fvreE2vSCCmsmZz5Xgg89PbMipkyLfKV6ObjnBVzORDfscbdIV2Zg4ElxTDP+OkKRu6miTbVHdlkA147FvXOuDZqpBt4AhnkcqG0kPuFeLdRhJ+/O3C1XcfB7yvcPK1Pr+EFJcYYQAd2ZUBtVa86itggomcweYLc9b6TjTnZ/zv9i4INSnEUVXCMe0aCzGYttu8KfMkyTa7t63yaTsXwTX8RkkuuIv5jcDJcpxqQbRJztxDgxcvCANvkDWNqHuywyYpdV6xj6MFJJ6CZ+VVPej9v1t+5GkaoZsPREJ7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BOYTlFlry6VT0tU+WtmrdYuSroLKfMCXp1qZl3fXPpE=;
+ b=nMO6n4MsrurKGb8NGc6/h2OyI8KvuazaXjwhPnW2UPGbDEYAsT3+NyX7NQAAAsaslswJssgYHg4KD3veYgIX5d7vSVInO38ClwMsZq7RGF2/VKpiuBeT1ABkQkVLSiGm+hgk3si+Olegx2hubUOpUsTOPZDE36+ppGxUNuUiYBRkWGHXpqlH09cn17fMwuLBE80P5cx5xa3mIXohnIkHL+8hFXYy3r3HYYndNSArhj8Q3LBnPJH6gh5gTMCGjgv4KIxjzP2ozrESCUGdHk/GW0OCIBuILLUVRhYzghqDahL9IbjNMjh72Awe8JLWchso9CJXlwb+jrwNy3bHoUhzCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sa5qXdemmtPrCWAxdmJHhP03xcaLaJDyrq3fN/vAu4U=;
-        b=pqRKHVVurNL9xDGPRzkBqZKrsvlm6ebrdoTbuCmUbHaR2igYkNqOTrIraIk2xK9bfX
-         TichTCfgIeuOXRE8tgE+68RKy1i/mJ/3BMxiYvvhFbidZi3wX0AxO+u7zDclOKZHxTYQ
-         div7bohh2QkW6VYS10xA6cLHdzbthzAO2RWe8vzWPV6vhyuM7aguyEblWQwyJZKvNA86
-         fA+/ZDxNUVrQM5nPu5QLKNhhPoJV10CnEeQjrTdpyxqMswPzD6UEHEr9K6bVPBaXVaKp
-         V0VaYjFQ5LHtBdnQDQF1KGTFuOjztEngxG+sZe1Irj0/uB8n1qEfYxJ3T//RKOZXGXdi
-         y2WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sa5qXdemmtPrCWAxdmJHhP03xcaLaJDyrq3fN/vAu4U=;
-        b=J6u+p5KEvPSVxV++P/rQnneELr5OPQigqkVUZDImUTq4kRCmWIVf0UTA+2GBOfE+zQ
-         Om6SeP36rzvNrtOF+D1a8543p7cxI67Q4TT6b+DuKQOFcwsmK5OhbbZ71OV5bYKbNX+4
-         bL/gWJn2dmKIq+sY0wH3RXvm4xpy2KfasvPg00EPxSFbu5YD6mqjPOXnlvXKtrvdToWe
-         YJtk+gMttjx54T1vIOyJZIiWsFpKwj0qERk9/N8qXm89WybF+ytYaE3ijWtZpZqrY4oW
-         f3j4ADKniSCApvPIPK00bPUlDIMmWl5/Lp1F1P58rs5vGkT2XYjWWoHFCO6PwMcJQN1M
-         PPyA==
-X-Gm-Message-State: AOAM530BJvazGO7ZikCphBAQx42DIeb2vK7yHrcU1P2xfG2X94/0cqze
-        QQ4fl1zwUuvM0F/D0OcReq1VWlzGdsDhEsC11joRiA==
-X-Google-Smtp-Source: ABdhPJyrfugmunkVBA6Tq7v4TZjnpR1y3YD1khUpx+jbC4LaW34FDjfZSGZdsHD8cnc/wODH4xvSTWE9kR1//gQ7KvY=
-X-Received: by 2002:a1c:6689:: with SMTP id a131mr2349662wmc.157.1596620244449;
- Wed, 05 Aug 2020 02:37:24 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BOYTlFlry6VT0tU+WtmrdYuSroLKfMCXp1qZl3fXPpE=;
+ b=TylKdN+66x7ukhHvuRax4KU9urqY4k3Z2AtmuRCeUKb5n8/6Vn2mVuI8Tcaz51g0hAym9RDVlR8zGxX3Ctqe2pKOZzSZioUV0tA7PtdGzi+Q0cLBfkj2+M7QXrP7rWLDO4mCzEb3QcmZhSlm6I04nm7BuaelSVP5Xoztx2HoAmM=
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17)
+ by SN6PR11MB2654.namprd11.prod.outlook.com (2603:10b6:805:54::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Wed, 5 Aug
+ 2020 10:29:28 +0000
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf]) by SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf%7]) with mapi id 15.20.3261.018; Wed, 5 Aug 2020
+ 10:29:27 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <wsa@kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+Subject: Re: Re: [PATCH 0/4] i2c: core: add generic GPIO bus recovery
+Thread-Topic: Re: [PATCH 0/4] i2c: core: add generic GPIO bus recovery
+Thread-Index: AQHWakYA0GSN6ngj20ixEwnhfAzHRakpNvsAgAAa/gA=
+Date:   Wed, 5 Aug 2020 10:29:27 +0000
+Message-ID: <a776a0b1-dcf7-0e99-7076-0fb791258058@microchip.com>
+References: <20200804095926.205643-1-codrin.ciubotariu@microchip.com>
+ <20200805085236.GE1229@kunai>
+In-Reply-To: <20200805085236.GE1229@kunai>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [84.232.220.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8083837e-20f2-4f82-63d0-08d8392a6e92
+x-ms-traffictypediagnostic: SN6PR11MB2654:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB26549C481F6B82529AD48BFEE74B0@SN6PR11MB2654.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DZqypMzNIe5/iM8zhTPSNAat2vFgBtHKPXkegtQnqUePAInVOBxaMNK2o8Lr/ADCY3m/GpvfC4jnLfPyH6VmV7YoQWZCqyAanzib5yLvmr6FFsnW0yFk0Wr7t6AQTmqF6f49+H9ThZTvQp1C25QqFdoHMEZQC0T4WVaTdwqMcj+AnaV6EmeBk6yEaWox67Kfo3NbJY2tNpI5TeJ0ARj9prWQ+0V1lXIL31bnke/uqRaFAaQDKAO6vrTLEC2/XhCvAWmf/Nk/wSb8kQDrwKAK0qaOezCXNBJtoWLE4YMIU2ay1MT1PpPeEF0hqcNBk7xJ9D4+/Ts20sDkyt/w/enA00BXg96YpjspsmIVmBf2kIqsh0J9Sze1AeczmG7AqxUVmRLxLnpUnjI4KSbd4S/Z/tfRlcASs9S5AfKvaF6e32I=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3504.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(39860400002)(346002)(136003)(396003)(366004)(36756003)(71200400001)(5660300002)(186003)(26005)(6486002)(83380400001)(53546011)(66946007)(6512007)(86362001)(6506007)(31696002)(110136005)(8936002)(66476007)(2616005)(2906002)(478600001)(316002)(8676002)(66556008)(66446008)(64756008)(91956017)(76116006)(31686004)(41533002)(921003)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: K3NmTdZqyb1l4/5NBe6rgGJi3ZqagSIMrLCva2pq1U6CK4CvnI1BMDSTto1qcOWcUjxKmL5vr2O7kWVc97m90OQJwIMk9xCfIbpv0QXbnKyTFM44Z42Xnu79eMmWakvjD6CcOjjiNQQOwY2mUskTMkqItgvh8014IrMixPw6X02e6Z2aM7JSAcR8j5Q/PfbYQ44pq0uyVcxnVmunpwzHWFFSRGT+/moZrnz0GnBGzmZPt4QKjSNeW3nTaNL709vYfj/NGPLMG7xH+/iSMt0QXLdSg1R3ljXolkPd8b8oh00GQpyfcn8x03jUMFhTcR/NT/dVkWsIVKZ2dYo+fqkAM2gbpf/4wIV0bFnPrDTz1BxwDgbegh0xdBJUcjKmiqk8R/TxC0KFr75egd1RZXVAbWf9hv6cY5XZhe8IjDnET2SUQJ59jimHiY61hHR58qXjWQ3pkRBJBvL4P/tXo3xJuLCeE8KYHsAja/9bTtRm87hDdmg7e2q3IY0PAH/av6ZYwzoZWYe/QVA+B0SkWLwqsygaWSbq7iTqFuRpZkaX3GF2I/TaQ9fmkS48ds8KgXx0cpUVy8Du1ZfQpEaLC5RvpEsxGAW9buE1bUj726cvTDAQw/4O2axOgKHBQxF1qG+sFQ515JfF0Errif7VXQoluQ==
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <1270B91B2DCB434ABDBB25BDBA8AD4CE@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200724071822.126758-1-anup.patel@wdc.com> <mhng-54a5823f-7fa3-42c9-ad28-ee5a4d28c726@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-54a5823f-7fa3-42c9-ad28-ee5a4d28c726@palmerdabbelt-glaptop1>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 5 Aug 2020 15:07:03 +0530
-Message-ID: <CAAhSdy1cR8aBkiyR3ErmTBECm_cgRtd9KNb=91LhPEte0QOGBA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Dedicated CLINT timer driver
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3504.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8083837e-20f2-4f82-63d0-08d8392a6e92
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 10:29:27.7391
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8sbB6fnv8Gg18dP5ziQ0uz8HAh8swMvdTk9qQoW6yWCuxp7DJpCL0sOwxz9zRgTTXopeJqa+jVYbbwwzUt56/iC8kHbxbL2Is/G5VP73jcw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2654
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 7:17 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Fri, 24 Jul 2020 00:18:18 PDT (-0700), Anup Patel wrote:
-> > The current RISC-V timer driver is convoluted and implements two
-> > distinct timers:
-> >  1. S-mode timer: This is for Linux RISC-V S-mode with MMU. The
-> >     clocksource is implemented using TIME CSR and clockevent device
-> >     is implemented using SBI Timer calls.
-> >  2. M-mode timer: This is for Linux RISC-V M-mode without MMU. The
-> >     clocksource is implemented using CLINT MMIO time register and
-> >     clockevent device is implemented using CLINT MMIO timecmp registers.
-> >
-> > This patchset removes clint related code from RISC-V timer driver and
-> > arch/riscv directory. Instead, the series adds a dedicated MMIO based
-> > CLINT driver under drivers/clocksource directory which can be used by
-> > Linux RISC-V M-mode (i.e NoMMU Linux RISC-V).
-> >
-> > The patchset is based up Linux-5.8-rc6 and can be found at riscv_clint_v6
-> > branch of: https://github.com/avpatel/linux.git
-> >
-> > This series is tested on:
-> >  1. QEMU RV64 virt machine using Linux RISC-V S-mode
-> >  2. QEMU RV32 virt machine using Linux RISC-V S-mode
-> >  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
-> >
-> > Changes since v5:
-> >  - Fixed order of compatible strings in PATCH4
-> >  - Added "additionalProperties: false" in PATCH4
-> >  - Fixed register space size for example DT node in PATCH4
-> >
-> > Changes since v4:
-> >  - Rebased series on Linux-5.8-rc6
-> >  - Updated Kconfig option as suggested by Daniel in PATCH2
-> >  - Removed per-CPU registered flag in PATCH2
-> >  - Addressed nit comments from Atish in PATCH2
-> >
-> > Changes since v3:
-> >  - Updated commit description of PATCH2
-> >  - Use clint_get_cycles64() in clint_rdtime() of PATCH2
-> >  - Call clockevents_config_and_register() only once for each CPU in
-> >    clint_timer_starting_cpu of PATCH2
-> >  - Select CLINT timer driver from platform Kconfig in PATCH3
-> >  - Fixed 'make dt_binding_check' for PATCH4
-> >
-> > Changes since v2:
-> >  - Rebased series on Linux-5.8-rc5
-> >  - Squashed PATCH3 onto PATCH2 to preserve GIT bisectability
-> >  - Moved PATCH4 before PATCH2 to preserve GIT bisectability
-> >  - Replaced CLINT dt-bindings text document with YAML schema
-> >  - Use SiFive CLINT compatible string as per SiFive IP block versioning
-> >
-> > Changes since v1:
-> >  - Rebased series on Linux-5.8-rc2
-> >  - Added pr_warn() for case where ipi_ops not available in PATCH1
-> >  - Updated ipi_inject() prototype to use "struct cpumask *" in PATCH1
-> >  - Updated CLINT_TIMER kconfig option to depend on RISCV_M_MODE in PATCH4
-> >  - Added riscv,clint0 compatible string in DT bindings document
-> >
-> > Anup Patel (4):
-> >   RISC-V: Add mechanism to provide custom IPI operations
-> >   clocksource/drivers: Add CLINT timer driver
-> >   RISC-V: Remove CLINT related code from timer and arch
-> >   dt-bindings: timer: Add CLINT bindings
-> >
-> >  .../bindings/timer/sifive,clint.yaml          |  60 +++++
-> >  arch/riscv/Kconfig                            |   2 +-
-> >  arch/riscv/Kconfig.socs                       |   2 +
-> >  arch/riscv/configs/nommu_virt_defconfig       |   7 +-
-> >  arch/riscv/include/asm/clint.h                |  39 ---
-> >  arch/riscv/include/asm/smp.h                  |  19 ++
-> >  arch/riscv/include/asm/timex.h                |  28 +--
-> >  arch/riscv/kernel/Makefile                    |   2 +-
-> >  arch/riscv/kernel/clint.c                     |  44 ----
-> >  arch/riscv/kernel/sbi.c                       |  14 ++
-> >  arch/riscv/kernel/setup.c                     |   2 -
-> >  arch/riscv/kernel/smp.c                       |  44 ++--
-> >  arch/riscv/kernel/smpboot.c                   |   4 +-
-> >  drivers/clocksource/Kconfig                   |  12 +-
-> >  drivers/clocksource/Makefile                  |   1 +
-> >  drivers/clocksource/timer-clint.c             | 226 ++++++++++++++++++
-> >  drivers/clocksource/timer-riscv.c             |  17 +-
-> >  include/linux/cpuhotplug.h                    |   1 +
-> >  18 files changed, 371 insertions(+), 153 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >  delete mode 100644 arch/riscv/include/asm/clint.h
-> >  delete mode 100644 arch/riscv/kernel/clint.c
-> >  create mode 100644 drivers/clocksource/timer-clint.c
->
-> Thanks, this is way cleaner.  Patchwork is still broken but IIRC we reached
-> consensus on these.  I'm not going to include these in my first 5.9 PR, as I
-> want to get that out tomorrow to avoid more merge conflicts, but assuming
-> there's reviews from the other maintainers I'd like to take this for my second
-> 5.9 merge window PR.
->
-> Assuming you've been collecting reviews and acks, do you mind posting another
-> version with them?  If not I have some scripts to dig them out, so it's not a
-> big deal.
+On 05.08.2020 11:52, wsa@kernel.org wrote:
+> Codrin, everyone
+>=20
+>> This patch series was previously sent as a RFC. Significant changes
+>> since RFC:
+>> - "recovery" pinctrl state marked as deprecared in bindings;
+>> - move to "gpio" pinctrl state done after the call to prepare_recovery()
+>>    callback;
+>> - glitch protection when SDA gpio is taken at initialization;
+>=20
+> Thanks for the fast update, now all merged for inclusion into 5.9. I
+> think it is really good, but to verify and double check, I think two
+> things would be even better..
 
-Most of the Reviewed-by and Ack-by are already there, except yours and
-Rob Herring's Reviewed-by. I will post v7 based on Linux-5.9-rc1
+Happy to help.
 
-Regards,
-Anup
+>=20
+> One thing, I'll definately be doing is to add this feature to
+> i2c-sh_mobile.c and scope the results.
+>=20
+> The other thing would be to convert the PXA driver and see if our
+> generic support can help their advanced use case or if we are missing
+> something. Codrin, do you have maybe time and interest to do that? That
+> would be awesome!
+
+Naturally, these would be the next steps. I can do this, sure, but I=20
+don't have the HW. I'll look for some development kits. If you have any=20
+recommendations, please let me know.
+
+Best regards,
+Codrin
