@@ -2,407 +2,172 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AABC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351BBC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D4A2076E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657788;
-	bh=NuRrHjb75cFrk+n0vybfkD6hzBt2HG5YdzBYnMqCit0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jxUlh4haduRss+9Sr0pjR5lWyqD39l+dVuQun94y4Mo+ymntuOL9FzF313ikYuyDF
-	 XXVjrudANXK9YoDGyn/b1L9e/d5YnPQZntv1p3I0gXEyHMOJzARMhE71MRupOzuvgx
-	 1hc7SuOgwPMHmUjv2feJAi+i3OYJjTf/uyQT2PbY=
+	by mail.kernel.org (Postfix) with ESMTP id 0D8D622B42
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:07:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nPuQK4ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgHEUCY (ORCPT
+        id S1727004AbgHEUHW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgHEQii (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:38:38 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77CD52067C;
-        Wed,  5 Aug 2020 16:26:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596644802;
-        bh=NuRrHjb75cFrk+n0vybfkD6hzBt2HG5YdzBYnMqCit0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2BymGdaHusJTYFIG1xA3p908Cd/DF3LTrd7CO4lIWW06cbmdScox9iztI5jlm//wF
-         iJmXcdFRD7g73XSW/VqccNdZOhWBzPT+Z6vSsQfXYa52Vk5pqJDbY0A4HcRYFkyIjO
-         kqnDo0H5qnidMxWe2tEOBCpv6nYrUYhyipcTnJbM=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k3MFU-0003cw-Tu; Wed, 05 Aug 2020 17:26:41 +0100
+        Wed, 5 Aug 2020 16:07:22 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15177 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgHEQeG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:34:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2adf640000>; Wed, 05 Aug 2020 09:33:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 05 Aug 2020 09:33:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 05 Aug 2020 09:33:53 -0700
+Received: from [10.2.172.190] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug
+ 2020 16:33:53 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+Date:   Wed, 5 Aug 2020 09:33:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 05 Aug 2020 17:26:40 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, robh+dt@kernel.org, arnd@arndb.de,
-        Willy Tarreau <w@1wt.eu>, mark-pk.tsai@mediatek.com
-Subject: Re: [PATCH 2/3] irqchip: mstar: msc313-intc interrupt controller
- driver
-In-Reply-To: <20200805110052.2655487-3-daniel@0x0f.com>
-References: <20200805110052.2655487-1-daniel@0x0f.com>
- <20200805110052.2655487-3-daniel@0x0f.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <a2ac8875d67ce7afe1b28f01683e0c9d@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: daniel@0x0f.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, arnd@arndb.de, w@1wt.eu, mark-pk.tsai@mediatek.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596645220; bh=X5zEu6vUXobqBcWHY7aaMnj5mp+hKk0lRFA0MhBpjdw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=nPuQK4eaWgFlwk7/vscxJYA0OVSW7M2yfsfpDKz7kRU5zT0VexC2rUVHuBsKNMUsV
+         kjRTmX9Qh/kiRlOZ0BFAmPOLDLrYCPZK8oPzS+uiksdWR36LN9Wd7EgzEuWzSKJ58y
+         lFIJOCz/EU1/0T3fhP1kX497iXKKEmizr/muMZa9Xky0yeRfrXrCKv/+IBPAMLfm67
+         qCssOIui/sHjGkL3CY/l3u/IgMsuEXPWzNT5N/6BUcN1IHykJLQkmMMQMtHw9pWTmj
+         6bzvNXbPqFmNi82DOfZ1znh0cR0C/PABI4AoX+w7KgGXK3FeidCnRFxfMSqK4qn9pD
+         eofJXi6fZl8Xw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[+ Mark-PK Tsai]
 
-Hi Daniel,
+On 8/5/20 7:19 AM, Dmitry Osipenko wrote:
+> 05.08.2020 17:05, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 05.08.2020 16:46, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni wrote:
+>>>> With the split of MIPI calibration into tegra_mipi_calibrate() and
+>>>> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+>>>> is done.
+>>>>
+>>>> So, this patch skips disabling MIPI clock after triggering start of
+>>>> calibration and disables it only after waiting for done status from
+>>>> the calibration logic.
+>>>>
+>>>> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibrat=
+ion()
+>>>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+>>>> with their usage.
+>>>>
+>>>> As MIPI clock is left enabled and in case of any failures with CSI inp=
+ut
+>>>> streaming tegra_mipi_finish_calibration() will not get invoked.
+>>>> So added new API tegra_mipi_cancel_calibration() which disables MIPI c=
+lock
+>>>> and consumer drivers can call this in such cases.
+>>>>
+>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/gpu/drm/tegra/dsi.c |  4 ++--
+>>>>   drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+>>>>   include/linux/host1x.h      |  5 +++--
+>>>>   3 files changed, 15 insertions(+), 13 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+>>>> index 3820e8d..a7864e9 100644
+>>>> --- a/drivers/gpu/drm/tegra/dsi.c
+>>>> +++ b/drivers/gpu/drm/tegra/dsi.c
+>>>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_=
+dsi *dsi)
+>>>>   		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>>>>   	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+>>>>  =20
+>>>> -	err =3D tegra_mipi_calibrate(dsi->mipi);
+>>>> +	err =3D tegra_mipi_start_calibration(dsi->mipi);
+>>>>   	if (err < 0)
+>>>>   		return err;
+>>>>  =20
+>>>> -	return tegra_mipi_wait(dsi->mipi);
+>>>> +	return tegra_mipi_finish_calibration(dsi->mipi);
+>>>>   }
+>>>>  =20
+>>>>   static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned lo=
+ng bclk,
+>>>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>>>> index e606464..b15ab6e 100644
+>>>> --- a/drivers/gpu/host1x/mipi.c
+>>>> +++ b/drivers/gpu/host1x/mipi.c
+>>>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device =
+*dev)
+>>>>   }
+>>>>   EXPORT_SYMBOL(tegra_mipi_disable);
+>>>>  =20
+>>>> -int tegra_mipi_wait(struct tegra_mipi_device *device)
+>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+>>>> +{
+>>>> +	clk_disable(device->mipi->clk);
+>>> Do we need to do anything with the MIPI_CAL_CTRL and MIPI_CAL_STATUS
+>>> registers here? We don't clear the START bit in the former when the
+>>> calibration has successfully finished, but I suspect that's because
+>>> the bit is self-clearing. But I wonder if we still need to clear it
+>>> upon cancellation to make sure the calibration does indeed stop.
+>> Apparently there is no way to explicitly stop calibration other than to
+>> reset MIPI calibration block, but Sowjanya says this is unnecessary.
+>>
+>> Perhaps having a fixed delay before disabling clock could be enough to
+>> ensure that calibration is stopped before the clock is disabled?
+>>
+> Actually, there is a MIPI_CAL_ACTIVE bit in the status register. Maybe
+> it needs to be polled until it's unset?
 
-On 2020-08-05 12:00, Daniel Palmer wrote:
-> Add a driver for the two peripheral interrupt controllers
-> in MStar MSC313 and other MStar/Sigmastar Armv7 SoCs.
-> 
-> Supports both the "IRQ" and "FIQ" controllers that
-> forward interrupts from the various IP blocks inside the
-> SoC to the ARM GIC.
-> 
-> They are basically the same thing except for one difference:
-> The FIQ controller needs to clear the interrupt and the IRQ
-> controller doesn't.
-> 
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> Tested-by: Willy Tarreau <w@1wt.eu>
-> ---
->  MAINTAINERS                       |   1 +
->  drivers/irqchip/Makefile          |   1 +
->  drivers/irqchip/irq-msc313-intc.c | 210 ++++++++++++++++++++++++++++++
->  3 files changed, 212 insertions(+)
->  create mode 100644 drivers/irqchip/irq-msc313-intc.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6e64d17aad7b..4d07403a7726 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2157,6 +2157,7 @@ F:	arch/arm/boot/dts/infinity*.dtsi
->  F:	arch/arm/boot/dts/mercury*.dtsi
->  F:	arch/arm/boot/dts/mstar-v7.dtsi
->  F:	arch/arm/mach-mstar/
-> +F:	drivers/irqchip/irq-msc313-intc.c
-> 
->  ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
->  M:	Michael Petchkovsky <mkpetch@internode.on.net>
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 133f9c45744a..67f3ae3507b8 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -111,3 +111,4 @@ obj-$(CONFIG_LOONGSON_HTPIC)		+= 
-> irq-loongson-htpic.o
->  obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
->  obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
->  obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
-> +obj-$(CONFIG_ARCH_MSTARV7)		+= irq-msc313-intc.o
-> diff --git a/drivers/irqchip/irq-msc313-intc.c
-> b/drivers/irqchip/irq-msc313-intc.c
-> new file mode 100644
-> index 000000000000..b50f5c858d38
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-msc313-intc.c
-> @@ -0,0 +1,210 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Daniel Palmer
-> + */
-> +
-> +#include <linux/irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +#define REGOFF_MASK		0x0
-> +#define REGOFF_POLARITY		0x10
-> +#define REGOFF_STATUSCLEAR	0x20
-> +#define IRQSPERREG		16
-> +#define IRQBIT(hwirq)		BIT((hwirq % IRQSPERREG))
-> +#define REGOFF(hwirq)		((hwirq >> 4) * 4)
-> +
-> +struct msc313_intc {
-> +	struct irq_domain *domain;
-> +	void __iomem *base;
-> +	struct irq_chip irqchip;
+Confirmed with HW design team during this patch update.
 
-Why do you need to embed the irq_chip on a per-controller basis?
+SW does not need to clear START bit and only write 1 takes effect to=20
+that bit.
 
-> +	u8 gicoff;
+Also, no need to have delay or do any other register settings unclear as=20
+its FSM and there's nothing to get stuck.
 
-Given that basic SPIs can be in the 32-1019 range, this is at
-best risky. u32s are free, please use them.
+Also it goes thru small finite set of codes and by the time sensor=20
+programming happens for enabling streaming FSM will finish its=20
+calibration sequence much early and it will only wait for pads LP-11.
 
-> +};
-> +
-> +static void msc313_intc_maskunmask(struct msc313_intc *intc, int
-> hwirq, bool mask)
-> +{
-> +	int regoff = REGOFF(hwirq);
-> +	void __iomem *addr = intc->base + REGOFF_MASK + regoff;
-> +	u16 bit = IRQBIT(hwirq);
-> +	u16 reg = readw_relaxed(addr);
-> +
-> +	if (mask)
-> +		reg |= bit;
-> +	else
-> +		reg &= ~bit;
-> +
-> +	writew_relaxed(reg, addr);
+So, during cancel we only need disable MIPI clock.
 
-RMW on a shared MMIO register. Not going to end well. This is valid
-for all the callbacks, I believe.
-
-Also, please inline the maskunmask code in their respective callers.
-It will be much more readable.
-
-> +}
-> +
-> +static void msc313_intc_mask_irq(struct irq_data *data)
-> +{
-> +	struct msc313_intc *intc = data->chip_data;
-> +
-> +	msc313_intc_maskunmask(intc, data->hwirq, true);
-> +	irq_chip_mask_parent(data);
-> +}
-> +
-> +static void msc313_intc_unmask_irq(struct irq_data *data)
-> +{
-> +	struct msc313_intc *intc = data->chip_data;
-> +
-> +	msc313_intc_maskunmask(intc, data->hwirq, false);
-> +	irq_chip_unmask_parent(data);
-> +}
-> +
-> +static int msc313_intc_set_type_irq(struct irq_data *data, unsigned
-> int flow_type)
-> +{
-> +	struct msc313_intc *intc = data->chip_data;
-> +	int irq = data->hwirq;
-> +	int regoff = REGOFF(irq);
-> +	void __iomem *addr = intc->base + REGOFF_POLARITY + regoff;
-> +	u16 bit = IRQBIT(irq);
-> +	u16 reg = readw_relaxed(addr);
-
-Please try to write this in a more readable way. For example:
-
-
-         struct msc313_intc *intc = data->chip_data;
-         void __iomem *addr;
-         u16 reg, bit;
-
-         addr = intc->base + REGOFF_POLARITY + REGOFF(d->hwirq);
-         reg = readw_relaxed(addr);
-         bit = IRQBIT(d->hwirq);
-
-White space is free, and some of the variables are really useless.
-
-> +
-> +	if (flow_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_HIGH))
-> +		reg &= ~bit;
-> +	else
-> +		reg |= bit;
-
-I don't follow grasp the logic here. What happens on EDGE_BOTH, for
-example?
-
-> +
-> +	writew_relaxed(reg, addr);
-
-Surely you need to communicate the change of signalling mode
-to the parent irqchip, don't you?
-
-> +	return 0;
-> +}
-> +
-> +static void msc313_intc_irq_eoi(struct irq_data *data)
-> +{
-> +	struct msc313_intc *intc = data->chip_data;
-> +	int irq = data->hwirq;
-> +	int regoff = REGOFF(irq);
-> +	void __iomem *addr = intc->base + REGOFF_STATUSCLEAR + regoff;
-> +	u16 bit = IRQBIT(irq);
-> +	u16 reg = readw_relaxed(addr);
-> +
-> +	reg |= bit;
-> +	writew_relaxed(reg, addr);
-> +	irq_chip_eoi_parent(data);
-> +}
-> +
-> +static int msc313_intc_domain_translate(struct irq_domain *d,
-> +				     struct irq_fwspec *fwspec,
-> +				     unsigned long *hwirq,
-> +				     unsigned int *type)
-> +{
-> +	if (!is_of_node(fwspec->fwnode) || fwspec->param_count != 2)
-> +		return -EINVAL;
-> +
-> +	*hwirq = fwspec->param[0];
-
-Don't you want to check that the input you get is actually in range?
-Not a big deal, given that you then use it as an input parameter
-to the GIC driver, it'd better be correct.
-
-> +	*type = fwspec->param[1];
-> +
-> +	return 0;
-> +}
-> +
-> +static int msc313_intc_domain_alloc(struct irq_domain *domain,
-> unsigned int virq,
-> +				 unsigned int nr_irqs, void *data)
-> +{
-> +	struct irq_fwspec *fwspec = data;
-> +	struct irq_fwspec parent_fwspec;
-> +	struct msc313_intc *intc = domain->host_data;
-> +
-> +	if (fwspec->param_count != 2)
-> +		return -EINVAL;
-> +
-> +	irq_domain_set_hwirq_and_chip(domain, virq, fwspec->param[0],
-> &intc->irqchip, intc);
-> +
-> +	parent_fwspec.fwnode = domain->parent->fwnode;
-> +	parent_fwspec.param[0] = GIC_SPI;
-> +	parent_fwspec.param[1] = fwspec->param[0] + intc->gicoff;
-> +	parent_fwspec.param[2] = fwspec->param[1];
-> +	parent_fwspec.param_count = 3;
-> +
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
-> +					    &parent_fwspec);
-> +}
-> +
-> +static const struct irq_domain_ops msc313_intc_domain_ops = {
-> +		.translate = msc313_intc_domain_translate,
-> +		.alloc = msc313_intc_domain_alloc,
-> +		.free = irq_domain_free_irqs_common,
-> +};
-> +
-> +static int  msc313_intc_of_init(struct device_node *node,
-> +				   struct device_node *parent,
-> +				   void (*eoi)(struct irq_data *data))
-> +{
-> +	struct irq_domain *domain_parent;
-> +	struct msc313_intc *intc;
-> +	int ret = 0;
-> +	u32 gicoffset, numirqs;
-> +
-> +	if (of_property_read_u32(node, "mstar,gic-offset", &gicoffset)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	if (of_property_read_u32(node, "mstar,nr-interrupts", &numirqs)) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	domain_parent = irq_find_host(parent);
-> +	if (!domain_parent) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	intc = kzalloc(sizeof(*intc), GFP_KERNEL);
-> +	if (!intc) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	intc->base = of_iomap(node, 0);
-> +	if (IS_ERR(intc->base)) {
-> +		ret = PTR_ERR(intc->base);
-> +		goto free_intc;
-> +	}
-> +
-> +	intc->irqchip.name = node->name;
-
-No, please. /proc/interrupt isn't a dumping ground for DT related
-information. We have debugfs for that.
-
-> +	intc->irqchip.irq_mask = msc313_intc_mask_irq;
-> +	intc->irqchip.irq_unmask = msc313_intc_unmask_irq;
-> +	intc->irqchip.irq_eoi = eoi;
-> +	intc->irqchip.irq_set_type = msc313_intc_set_type_irq;
-> +	intc->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
-
-This needs to be a static irq_chip structure. Use two for the EOI
-weirdness, or test a flag in your eoi callback.
-
-> +
-> +	intc->gicoff = gicoffset;
-> +
-> +	intc->domain = irq_domain_add_hierarchy(domain_parent, 0, numirqs, 
-> node,
-> +			&msc313_intc_domain_ops, intc);
-> +	if (!intc->domain) {
-> +		ret = -ENOMEM;
-> +		goto unmap;
-> +	}
-> +
-> +	return 0;
-> +
-> +unmap:
-> +	iounmap(intc->base);
-> +free_intc:
-> +	kfree(intc);
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int __init msc313_intc_irq_of_init(struct device_node *node,
-> +				   struct device_node *parent)
-> +{
-> +	return msc313_intc_of_init(node, parent, irq_chip_eoi_parent);
-> +};
-> +
-> +static int __init msc313_intc_fiq_of_init(struct device_node *node,
-> +				   struct device_node *parent)
-> +{
-> +	return msc313_intc_of_init(node, parent, msc313_intc_irq_eoi);
-> +};
-> +
-> +IRQCHIP_DECLARE(msc313_intc_irq, "mstar,msc313-intc-irq",
-> +		msc313_intc_irq_of_init);
-> +IRQCHIP_DECLARE(mstar_intc_fiq, "mstar,msc313-intc-fiq",
-> +		msc313_intc_fiq_of_init);
-
-This driver has a massive feeling of déja-vu. It is almost
-a copy of the one posted at [1], which I reviewed early
-this week. The issues are the exact same, and I'm 98%
-sure this is the same IP block used by two SoC vendors.
-
-Please talk to each other and come up with a single driver.
-
-Thanks,
-
-         M.
-
-[1] 
-https://lore.kernel.org/r/20200803062214.24076-1-mark-pk.tsai@mediatek.com
--- 
-Jazz is not dead. It just smells funny...
