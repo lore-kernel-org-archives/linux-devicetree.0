@@ -2,129 +2,113 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ACDC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6D6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 454A12068F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA942075D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="T4l0TeVZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YJ5gkWIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgHETRJ (ORCPT
+        id S1728846AbgHETUn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:17:09 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:24222 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729126AbgHER7z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:59:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596650395; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=kg0EF5rfNOmYrsglJGmq1Vj6cS50it6TVyt41Nu8U+I=; b=T4l0TeVZPcEfvK+BLVVuXjOEGNLCB/FRqTek8cJbYLt/XBNiuzEPqlOjVxhODmEIMrqcPPQJ
- W9cthHE3HsQifWB6dqp/IpyHwkFmC3Dbz0+EFmM2lbJVn2t8DDyWLHTajNyKVIY14RaZ7bDv
- Hl+JfLybBTqAMF86YJ4lRDQlKRU=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5f2af37790893260dd5ddddc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 17:59:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9626BC433A0; Wed,  5 Aug 2020 17:59:18 +0000 (UTC)
-Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76DC1C43395;
-        Wed,  5 Aug 2020 17:59:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76DC1C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-From:   Elliot Berman <eberman@codeaurora.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Elliot Berman <eberman@codeaurora.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Steve Muckle <smuckle@google.com>,
-        Trilok Soni <tsoni@codeaurora.org>
-Subject: [PATCH] kbuild: Add dtc flag test
-Date:   Wed,  5 Aug 2020 10:58:48 -0700
-Message-Id: <1596650328-14869-1-git-send-email-eberman@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 5 Aug 2020 15:20:43 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4528 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729002AbgHERrb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:47:31 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2af04f0002>; Wed, 05 Aug 2020 10:45:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 05 Aug 2020 10:46:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 05 Aug 2020 10:46:05 -0700
+Received: from [10.2.172.190] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug
+ 2020 17:46:04 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+Date:   Wed, 5 Aug 2020 10:46:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596649551; bh=wk+Mna0/VI73TEW7qI+h1geiRlSoJNyeCelXdGiAwi0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=YJ5gkWInFeVRXM3LB3k8bi+9lMpQBAvxigcSUtTmpnVLcTq4VeNnfN3bzQ9Qgyd5L
+         ix8LHukf8weSxmB2QOv61ed/docMCPsuuqcYZRg/EcPTncOJpdzL5gB0+3XvmVkNkS
+         oL8RDAt16pKlVuVCFHsGziMocCj+8PDyD/YkmcySrksfQq/WFBDNK+vE8Lgia0bk8H
+         NayOeLZevJvnZkhVlvVe9k5OIXhUC0sQZGS3G4QSzpN93b5cYE7tkALrd0Z8s4HisV
+         bvVmqXgFRoLh3pI6BAg7AR55KFDz1Wc9Y5wSFB0knEGfmHXSlnSYUFV0t57adMkTke
+         B6mrYvnGNoKbg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Host dtc may not support the same flags as kernel's copy of dtc. Test
-if dtc supports each flag when the dtc comes from host.
 
-Signed-off-by: Elliot Berman <eberman@codeaurora.org>
----
- scripts/Makefile.lib | 34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+On 8/5/20 10:34 AM, Dmitry Osipenko wrote:
+> 05.08.2020 20:29, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> UART_FST_MIPI_CAL is the clock used for calibration logic which is FSM
+>> that goes thru sequence codes and when done waits for pads to be in
+>> LP-11 to apply results.
+>>
+>> MIPI_CLK is controller gate clock which is also need to be kept enabled
+>> as incase if it sees LP-11 it updates registers so its recommended to
+>> have this clock enabled.
+>>
+>> We can cancel_calibration() in CSI only when csi/sensor stream on fails
+>> and in which case there will be no LP-11 so we can unconditionally
+>> disable MIPI_CLK.
+>>
+> There is no guarantee that the fail comes before the LP-11. For example,
+> some odd camera driver may have a complicated enable sequence which may
+> fail after enabling the hardware streaming.
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 841ac03..2722a67 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -274,25 +274,35 @@ quiet_cmd_gzip = GZIP    $@
- 
- # DTC
- # ---------------------------------------------------------------------------
-+ifeq ("$(origin DTC)", "command line")
-+PHONY += $(DTC)
-+dtc-option = $(call try-run, $(DTC) $1 -v,$1)
-+else
-+# Just add the flag. DTC is compiled later as a prerequisite, so there's no dtc
-+# to test the flag against. This is okay because we're not testing flags which
-+# aren't supported by in-kernel dtc to begin with.
-+dtc-option = $1
-+endif
-+
- DTC ?= $(objtree)/scripts/dtc/dtc
--DTC_FLAGS += -Wno-interrupt_provider
-+DTC_FLAGS += $(call dtc-option,-Wno-interrupt_provider)
- 
- # Disable noisy checks by default
- ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
--DTC_FLAGS += -Wno-unit_address_vs_reg \
--	-Wno-unit_address_format \
--	-Wno-avoid_unnecessary_addr_size \
--	-Wno-alias_paths \
--	-Wno-graph_child_address \
--	-Wno-simple_bus_reg \
--	-Wno-unique_unit_address \
--	-Wno-pci_device_reg
-+DTC_FLAGS += $(call dtc-option,-Wno-unit_address_vs_reg) \
-+	$(call dtc-option,-Wno-unit_address_format) \
-+	$(call dtc-option,-Wno-avoid_unnecessary_addr_size) \
-+	$(call dtc-option,-Wno-alias_paths) \
-+	$(call dtc-option,-Wno-graph_child_address) \
-+	$(call dtc-option,-Wno-simple_bus_reg) \
-+	$(call dtc-option,-Wno-unique_unit_address) \
-+	$(call dtc-option,-Wno-pci_device_reg)
- endif
- 
- ifneq ($(findstring 2,$(KBUILD_EXTRA_WARN)),)
--DTC_FLAGS += -Wnode_name_chars_strict \
--	-Wproperty_name_chars_strict \
--	-Winterrupt_provider
-+DTC_FLAGS += $(call dtc-option,-Wnode_name_chars_strict) \
-+	$(call dtc-option,-Wproperty_name_chars_strict) \
-+	$(call dtc-option,-Winterrupt_provider)
- endif
- 
- DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+MIPI_CLK to keep enable is for calibration logic to update results, but=20
+like I said calibration logic uses UART_FST_MIPI_CAL clock. So even in=20
+case if fail happens from sensor after having pads in LP-11 then,=20
+calibration logic will still be running but result update will not=20
+happen with clock disabled. But HW will not stuck as this is confirmed=20
+from HW designer.
+
+
 
