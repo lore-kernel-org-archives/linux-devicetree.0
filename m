@@ -2,115 +2,186 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A54C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FF3C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63D422076E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A9222CAD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="EkQQ89yO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mOeLMqPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgHETwD (ORCPT
+        id S1728101AbgHETxC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbgHEQvq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:51:46 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F7C5C0617AB
-        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 04:01:23 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id s26so22490100pfm.4
-        for <devicetree@vger.kernel.org>; Wed, 05 Aug 2020 04:01:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IXl0op0XvQYTvwb5bcKNryRkXDVpBLnZpOMVzhjZNkQ=;
-        b=EkQQ89yOe1EY9nCbVWZoj+93xO0UKBjV3pPJai1tGnUiFF0YVCdf8dXYFZQB9ONXtR
-         ep47VBzoQ6jmxkdmei8O1tV8rewHUskV5pgNaUV3mfnLbFe/qmGR8zOxPkqx/ZrF0iIS
-         LOlEzVbCSII1vSt3mVT+9npv7i8tO6fEvWnA0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IXl0op0XvQYTvwb5bcKNryRkXDVpBLnZpOMVzhjZNkQ=;
-        b=Ky4wl8mpofC2uDVpwlFaS1oBrju476WLEWE6Vv0kwd8vNg+KsLvvGBMVfFlVKkABXH
-         17ulWUbDToY3P/NLzP2Pre1qdc6LD7kALnqgjRHDPYmmuSponUvAt9TmiODLj5XttK3a
-         cXRrY6Y/1Kfr5PVRVZmeLNNT2MGNH6b4i0OqCSPZNacBCsedxdZ6GWhDsr7e8qvkq89K
-         wSw2LOTuv/JJ8cSlobyYeGeOphNTqrDUkP6Qe705w5d54BukoR1pG2K1KXhB0X/obivv
-         BRX0rPcdV5AOVysIHLrZzJwhyqWpvt5JiS94vqovimpCuSQOZ7dG72is6XqS7lmLvr4o
-         g0Ig==
-X-Gm-Message-State: AOAM533oKUD2Vv1fqts3IEgBASvGVevjgZqTFbLFwZllIONewzZFByDJ
-        yis41+bQrmEEb8NpHiu+N6MkO5cyvz0=
-X-Google-Smtp-Source: ABdhPJzHQO7oRI8Z0FA40Z+RnWxDwemAbCPf5cqMPN8QdngN6CsqzLsAddBnozTIqq8fndWf2sqZew==
-X-Received: by 2002:a63:b74f:: with SMTP id w15mr2581625pgt.314.1596625281526;
-        Wed, 05 Aug 2020 04:01:21 -0700 (PDT)
-Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id fv21sm2583142pjb.16.2020.08.05.04.01.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 04:01:20 -0700 (PDT)
-From:   Daniel Palmer <daniel@0x0f.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, arnd@arndb.de, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH 0/3] irqchip: mstar: msc313 intc driver
-Date:   Wed,  5 Aug 2020 20:00:49 +0900
-Message-Id: <20200805110052.2655487-1-daniel@0x0f.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 5 Aug 2020 15:53:02 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3561 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbgHEQui (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:50:38 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2ae2fa0000>; Wed, 05 Aug 2020 09:48:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 05 Aug 2020 09:50:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 05 Aug 2020 09:50:37 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug
+ 2020 16:50:36 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+Date:   Wed, 5 Aug 2020 09:50:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596646138; bh=4O8NzmpI48gB34jbxeGTk9sMJ+aJbV2Wl8WhAwCHFEs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=mOeLMqPjDvuvccBzxqxLUuaWmqaolyNmwGtjbFI//CaS63LSk7TnL9piUBpDdzl/x
+         rWY14JW5sC565vIoU7fdDVzr7nK8spgJUzoOOEgBLNj8RRgV52h6zUHb4Oq+2MlfUf
+         kS7a5uMnc5gMII/O8cg+FmwD7CccTwpZTvAANFysHrQWyUvH5ovVasynWM77M64mPG
+         W2vQm2OKEQK5zm/G3kE6xsbXuUOhIjO81vLsNKch1+QsmiIQWyEAaD2aeBFp4p8aIJ
+         Kkf5/4lojEPV4SgAk+aNkV46Mj6rurEr0/hjXyRxUtbKmTE0YarZEQDv1E625JlH37
+         slgcAvUN039Cw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This driver adds support for the interrupt controllers
-present between the various IP blocks and the ARM GIC
-in MStar/SigmaStar Armv7 SoCs.
 
-All of the chips so far have two instances of this
-controller.
-
-One instance controls what are called "IRQ" interrupts
-by the vendor code I have seen.
-
-The other instance controls what are called "FIQ" interrupts
-by the vendor code. Presumably because they can be FIQ
-interrupts. Right now the FIQ bypass is disabled in the
-GIC so they operate just the same as the IRQ interrupts.
-
-The register layouts are the same for both. The FIQ one
-needs to have the status bit cleared on EOI so that difference
-is handled by a compatible string difference.
-
-I initially made this an RFC because this is my first
-interrupt controller driver and I expect to have made a
-bunch of mistakes. I've cleaned this up a bit since then
-but I still expect it's not 100% correct. Especially
-the offset to map the INTC interrupt to the GIC interrupt.
-
-Daniel Palmer (3):
-  dt: bindings: interrupt-controller: Add binding description for
-    msc313-intc
-  irqchip: mstar: msc313-intc interrupt controller driver
-  ARM: mstar: Add interrupt controller to base dtsi
-
- .../mstar,msc313-intc.yaml                    |  79 +++++++
- MAINTAINERS                                   |   2 +
- arch/arm/boot/dts/mstar-v7.dtsi               |  20 ++
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-msc313-intc.c             | 210 ++++++++++++++++++
- 5 files changed, 312 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
- create mode 100644 drivers/irqchip/irq-msc313-intc.c
-
--- 
-2.27.0
-
+On 8/5/20 9:47 AM, Dmitry Osipenko wrote:
+> 05.08.2020 19:33, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 8/5/20 7:19 AM, Dmitry Osipenko wrote:
+>>> 05.08.2020 17:05, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 05.08.2020 16:46, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni wrote:
+>>>>>> With the split of MIPI calibration into tegra_mipi_calibrate() and
+>>>>>> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibrati=
+on
+>>>>>> is done.
+>>>>>>
+>>>>>> So, this patch skips disabling MIPI clock after triggering start of
+>>>>>> calibration and disables it only after waiting for done status from
+>>>>>> the calibration logic.
+>>>>>>
+>>>>>> This patch renames tegra_mipi_calibrate() as
+>>>>>> tegra_mipi_start_calibration()
+>>>>>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inlin=
+e
+>>>>>> with their usage.
+>>>>>>
+>>>>>> As MIPI clock is left enabled and in case of any failures with CSI
+>>>>>> input
+>>>>>> streaming tegra_mipi_finish_calibration() will not get invoked.
+>>>>>> So added new API tegra_mipi_cancel_calibration() which disables
+>>>>>> MIPI clock
+>>>>>> and consumer drivers can call this in such cases.
+>>>>>>
+>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>  =C2=A0 drivers/gpu/drm/tegra/dsi.c |=C2=A0 4 ++--
+>>>>>>  =C2=A0 drivers/gpu/host1x/mipi.c=C2=A0=C2=A0 | 19 ++++++++++-------=
+--
+>>>>>>  =C2=A0 include/linux/host1x.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+ 5 +++--
+>>>>>>  =C2=A0 3 files changed, 15 insertions(+), 13 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi=
+.c
+>>>>>> index 3820e8d..a7864e9 100644
+>>>>>> --- a/drivers/gpu/drm/tegra/dsi.c
+>>>>>> +++ b/drivers/gpu/drm/tegra/dsi.c
+>>>>>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct
+>>>>>> tegra_dsi *dsi)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DSI_PAD_PREE=
+MP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dsi_writel(dsi, value, DSI_PAD=
+_CONTROL_3);
+>>>>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 err =3D tegra_mipi_calibrate(dsi->mipi);
+>>>>>> +=C2=A0=C2=A0=C2=A0 err =3D tegra_mipi_start_calibration(dsi->mipi);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err < 0)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
+>>>>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 return tegra_mipi_wait(dsi->mipi);
+>>>>>> +=C2=A0=C2=A0=C2=A0 return tegra_mipi_finish_calibration(dsi->mipi);
+>>>>>>  =C2=A0 }
+>>>>>>  =C2=A0 =C2=A0 static void tegra_dsi_set_timeout(struct tegra_dsi *d=
+si,
+>>>>>> unsigned long bclk,
+>>>>>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>>>>>> index e606464..b15ab6e 100644
+>>>>>> --- a/drivers/gpu/host1x/mipi.c
+>>>>>> +++ b/drivers/gpu/host1x/mipi.c
+>>>>>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct
+>>>>>> tegra_mipi_device *dev)
+>>>>>>  =C2=A0 }
+>>>>>>  =C2=A0 EXPORT_SYMBOL(tegra_mipi_disable);
+>>>>>>  =C2=A0 -int tegra_mipi_wait(struct tegra_mipi_device *device)
+>>>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device=
+)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable(device->mipi->clk);
+>>>>> Do we need to do anything with the MIPI_CAL_CTRL and MIPI_CAL_STATUS
+>>>>> registers here? We don't clear the START bit in the former when the
+>>>>> calibration has successfully finished, but I suspect that's because
+>>>>> the bit is self-clearing. But I wonder if we still need to clear it
+>>>>> upon cancellation to make sure the calibration does indeed stop.
+>>>> Apparently there is no way to explicitly stop calibration other than t=
+o
+>>>> reset MIPI calibration block, but Sowjanya says this is unnecessary.
+>>>>
+>>>> Perhaps having a fixed delay before disabling clock could be enough to
+>>>> ensure that calibration is stopped before the clock is disabled?
+>>>>
+>>> Actually, there is a MIPI_CAL_ACTIVE bit in the status register. Maybe
+>>> it needs to be polled until it's unset?
+>> Confirmed with HW design team during this patch update.
+>>
+>> SW does not need to clear START bit and only write 1 takes effect to
+>> that bit.
+>>
+>> Also, no need to have delay or do any other register settings unclear as
+>> its FSM and there's nothing to get stuck.
+>>
+>> Also it goes thru small finite set of codes and by the time sensor
+>> programming happens for enabling streaming FSM will finish its
+>> calibration sequence much early and it will only wait for pads LP-11.
+>>
+>> So, during cancel we only need disable MIPI clock.
+>>
+> But there is no guarantee that cancel_calibration() couldn't be invoked
+> in the middle of the calibration process, hence FSM could freeze in an
+> intermediate state if it's running on the disabled MIPI clock, this
+> doesn't sound good.
+Actual calibration logic uses UART_FST_CAL clock which is always enabled
