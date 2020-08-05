@@ -2,115 +2,129 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0CEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ACDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 002E022D01
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596654011;
-	bh=Lj/S8Vw1nYyw4Ou+vbz7LnsdC/j4JdgvaSVpWQyYUec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WJYJR7CtoYl6UP5JnLXJDMy7yGvGhdLniQu+R1D3tcDhcqDECSVcpvvYRYx0nhRPF
-	 KtSAoVL37kdhlNeUQ/0l8ldAdsI/pfUSBGQA8FhygeXzS83ru2dLsykr+HIRJxr+vM
-	 YTCWUrqOIEsWQiBzlEGvH5wby8mJQjmklVf28SL4=
+	by mail.kernel.org (Postfix) with ESMTP id 454A12068F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="T4l0TeVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgHES7v (ORCPT
+        id S1728431AbgHETRJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbgHES5q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:57:46 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 5 Aug 2020 15:17:09 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:24222 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729126AbgHER7z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:59:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596650395; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=kg0EF5rfNOmYrsglJGmq1Vj6cS50it6TVyt41Nu8U+I=; b=T4l0TeVZPcEfvK+BLVVuXjOEGNLCB/FRqTek8cJbYLt/XBNiuzEPqlOjVxhODmEIMrqcPPQJ
+ W9cthHE3HsQifWB6dqp/IpyHwkFmC3Dbz0+EFmM2lbJVn2t8DDyWLHTajNyKVIY14RaZ7bDv
+ Hl+JfLybBTqAMF86YJ4lRDQlKRU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
+ 5f2af37790893260dd5ddddc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 17:59:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9626BC433A0; Wed,  5 Aug 2020 17:59:18 +0000 (UTC)
+Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D433D22D01;
-        Wed,  5 Aug 2020 11:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596626231;
-        bh=Lj/S8Vw1nYyw4Ou+vbz7LnsdC/j4JdgvaSVpWQyYUec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1JCdrLt6M6Nh+FuzymcmpcmS2DjsdAUb1RRpBCGQskvJAa5m2HGRx3kdQ0B0IBC1Z
-         0k8BBPYxfMa7lQjqfpd0ClYYl78xbUjB/x7fZRzk7mCAFOPGjHORTR1tirRFlfaq/S
-         U4TdScLzPEAN5Ur4tgxdBTB4b13Ix7BRAGz/1aJs=
-Date:   Wed, 5 Aug 2020 13:17:09 +0200
-From:   <wsa@kernel.org>
-To:     <Codrin.Ciubotariu@microchip.com>
-Cc:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-Subject: Re: Re: [PATCH 0/4] i2c: core: add generic GPIO bus recovery
-Message-ID: <20200805111709.GA16287@kunai>
-Mail-Followup-To: <wsa@kernel.org>, <Codrin.Ciubotariu@microchip.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-References: <20200804095926.205643-1-codrin.ciubotariu@microchip.com>
- <20200805085236.GE1229@kunai>
- <a776a0b1-dcf7-0e99-7076-0fb791258058@microchip.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
-In-Reply-To: <a776a0b1-dcf7-0e99-7076-0fb791258058@microchip.com>
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76DC1C43395;
+        Wed,  5 Aug 2020 17:59:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76DC1C43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Elliot Berman <eberman@codeaurora.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Steve Muckle <smuckle@google.com>,
+        Trilok Soni <tsoni@codeaurora.org>
+Subject: [PATCH] kbuild: Add dtc flag test
+Date:   Wed,  5 Aug 2020 10:58:48 -0700
+Message-Id: <1596650328-14869-1-git-send-email-eberman@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Host dtc may not support the same flags as kernel's copy of dtc. Test
+if dtc supports each flag when the dtc comes from host.
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+---
+ scripts/Makefile.lib | 34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 841ac03..2722a67 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -274,25 +274,35 @@ quiet_cmd_gzip = GZIP    $@
+ 
+ # DTC
+ # ---------------------------------------------------------------------------
++ifeq ("$(origin DTC)", "command line")
++PHONY += $(DTC)
++dtc-option = $(call try-run, $(DTC) $1 -v,$1)
++else
++# Just add the flag. DTC is compiled later as a prerequisite, so there's no dtc
++# to test the flag against. This is okay because we're not testing flags which
++# aren't supported by in-kernel dtc to begin with.
++dtc-option = $1
++endif
++
+ DTC ?= $(objtree)/scripts/dtc/dtc
+-DTC_FLAGS += -Wno-interrupt_provider
++DTC_FLAGS += $(call dtc-option,-Wno-interrupt_provider)
+ 
+ # Disable noisy checks by default
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+-DTC_FLAGS += -Wno-unit_address_vs_reg \
+-	-Wno-unit_address_format \
+-	-Wno-avoid_unnecessary_addr_size \
+-	-Wno-alias_paths \
+-	-Wno-graph_child_address \
+-	-Wno-simple_bus_reg \
+-	-Wno-unique_unit_address \
+-	-Wno-pci_device_reg
++DTC_FLAGS += $(call dtc-option,-Wno-unit_address_vs_reg) \
++	$(call dtc-option,-Wno-unit_address_format) \
++	$(call dtc-option,-Wno-avoid_unnecessary_addr_size) \
++	$(call dtc-option,-Wno-alias_paths) \
++	$(call dtc-option,-Wno-graph_child_address) \
++	$(call dtc-option,-Wno-simple_bus_reg) \
++	$(call dtc-option,-Wno-unique_unit_address) \
++	$(call dtc-option,-Wno-pci_device_reg)
+ endif
+ 
+ ifneq ($(findstring 2,$(KBUILD_EXTRA_WARN)),)
+-DTC_FLAGS += -Wnode_name_chars_strict \
+-	-Wproperty_name_chars_strict \
+-	-Winterrupt_provider
++DTC_FLAGS += $(call dtc-option,-Wnode_name_chars_strict) \
++	$(call dtc-option,-Wproperty_name_chars_strict) \
++	$(call dtc-option,-Winterrupt_provider)
+ endif
+ 
+ DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> > The other thing would be to convert the PXA driver and see if our
-> > generic support can help their advanced use case or if we are missing
-> > something. Codrin, do you have maybe time and interest to do that? That
-> > would be awesome!
->=20
-> Naturally, these would be the next steps. I can do this, sure, but I=20
-> don't have the HW. I'll look for some development kits. If you have any=
-=20
-> recommendations, please let me know.
-
-No need for HW, I think. Just do a best effort conversion, double or
-triple check it, and CC the patches also to Russell King. If he accepts
-them, we are good.
-
-Thanks for doing it!
-
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qlTEACgkQFA3kzBSg
-KbYyRA//VMk49UkMfHPopkeGQ81lmWhwtOm5OSvxYQNaTDwIaZzQQepXUaKWar3J
-sqlKl1PfSy+LmOJRgPeWLIhbkWQQQRfTV4tppBbjjKXSZ8zeZQD9+FrptIrXaQpU
-H7noRvk2tSIBrYKLQQFU98XU+c8VmJIGs3LkWPDjjC+s7LmnOSZCgosoZlJsTPQm
-9cs30EmWNu4QHb4I+3j+Doe+rObyBDElO3gpr10cRTcUQI1V4Pu9DW0SpqMzeKTg
-vHTghhMWePAIqorJapzPG2H/9uMNDzG/e2lgwG868XMru4nilrLXarPeqBAJ+wHQ
-ckdfrLVhQCymzFr0USFNa654sYL8A6S1ViNCZmJTXBtTMmYoAgQMNhVpjA/zK4g8
-EJWLI6uxhQaPYc0TVHKHz0iD27Ti7u71G/1fMDQ0k+YJZsAtwrX50Es68GLHGbKm
-X22Bx3sv4NjPTa/kpu+hgwAOIAoDTeSsdoJ1vreJyzHMyprCyVqQFF5wDVM6GU9z
-CGYYC9wl8pBMCEgRogdVmTj+1OCEhZb4b+2yT89MaogpnJP6hUPKbNXzEU3jPIDZ
-pi9cfVKh/BDMGXKQouHH37gBhp8LP0bQ36H802VidZy+0A8dOVtk3lgjSAqNLP5Z
-J0LTEHoWU5Vsur8g3LZmob91u+tEWWElOwlTe+xWzn9LI+loU+Y=
-=vVXL
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
