@@ -2,41 +2,42 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4540C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 06:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41448C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 07:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A9721744
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 06:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F05D206B6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 07:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgHEGyL (ORCPT
+        id S1726729AbgHEHU2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:54:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43170 "EHLO inva021.nxp.com"
+        Wed, 5 Aug 2020 03:20:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59538 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgHEGyL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:54:11 -0400
+        id S1725904AbgHEHU1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:20:27 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E04062003A2;
-        Wed,  5 Aug 2020 08:54:08 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 57F512003A1;
+        Wed,  5 Aug 2020 09:20:25 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 22B2F2011A3;
-        Wed,  5 Aug 2020 08:54:06 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A6A1201418;
+        Wed,  5 Aug 2020 09:20:20 +0200 (CEST)
 Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5FEF54024E;
-        Wed,  5 Aug 2020 08:54:02 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 03B5F40309;
+        Wed,  5 Aug 2020 09:20:14 +0200 (CEST)
 From:   Anson Huang <Anson.Huang@nxp.com>
-To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        o.rempel@pengutronix.de, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+To:     axboe@kernel.dk, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: nvmem: Convert snvs lpgpr to json-schema
-Date:   Wed,  5 Aug 2020 14:49:32 +0800
-Message-Id: <1596610172-30323-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH] dt-bindings: ata: Convert i.MX sata to json-schema
+Date:   Wed,  5 Aug 2020 15:15:46 +0800
+Message-Id: <1596611746-29155-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
@@ -44,79 +45,145 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the snvs lpgpr binding to DT schema format using json-schema.
+Convert the i.MX sata binding to DT schema format using json-schema.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- .../devicetree/bindings/nvmem/snvs-lpgpr.txt       | 21 ---------------
- .../devicetree/bindings/nvmem/snvs-lpgpr.yaml      | 31 ++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 21 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
- create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml
+ Documentation/devicetree/bindings/ata/imx-sata.txt | 37 ----------
+ .../devicetree/bindings/ata/imx-sata.yaml          | 81 ++++++++++++++++++++++
+ 2 files changed, 81 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/imx-sata.txt
+ create mode 100644 Documentation/devicetree/bindings/ata/imx-sata.yaml
 
-diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+diff --git a/Documentation/devicetree/bindings/ata/imx-sata.txt b/Documentation/devicetree/bindings/ata/imx-sata.txt
 deleted file mode 100644
-index 3cb1708..0000000
---- a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+index 781f887..0000000
+--- a/Documentation/devicetree/bindings/ata/imx-sata.txt
 +++ /dev/null
-@@ -1,21 +0,0 @@
--Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
--and i.MX7 Secure Non-Volatile Storage.
+@@ -1,37 +0,0 @@
+-* Freescale i.MX AHCI SATA Controller
 -
--This DT node should be represented as a sub-node of a "syscon",
--"simple-mfd" node.
+-The Freescale i.MX SATA controller mostly conforms to the AHCI interface
+-with some special extensions at integration level.
 -
 -Required properties:
--- compatible: should be one of the fallowing variants:
--	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
--	"fsl,imx6ul-snvs-lpgpr" for Freescale i.MX6UL
--	"fsl,imx7d-snvs-lpgpr" for Freescale i.MX7D/S
+-- compatible : should be one of the following:
+-   - "fsl,imx53-ahci" for i.MX53 SATA controller
+-   - "fsl,imx6q-ahci" for i.MX6Q SATA controller
+-   - "fsl,imx6qp-ahci" for i.MX6QP SATA controller
+-- interrupts : interrupt mapping for SATA IRQ
+-- reg : registers mapping
+-- clocks : list of clock specifiers, must contain an entry for each
+-  required entry in clock-names
+-- clock-names : should include "sata", "sata_ref" and "ahb" entries
 -
--Example:
--snvs: snvs@020cc000 {
--	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
--	reg = <0x020cc000 0x4000>;
+-Optional properties:
+-- fsl,transmit-level-mV : transmit voltage level, in millivolts.
+-- fsl,transmit-boost-mdB : transmit boost level, in milli-decibels
+-- fsl,transmit-atten-16ths : transmit attenuation, in 16ths
+-- fsl,receive-eq-mdB : receive equalisation, in milli-decibels
+-  Please refer to the technical documentation or the driver source code
+-  for the list of legal values for these options.
+-- fsl,no-spread-spectrum : disable spread-spectrum clocking on the SATA
+-  link.
 -
--	snvs_lpgpr: snvs-lpgpr {
--		compatible = "fsl,imx6q-snvs-lpgpr";
--	};
+-Examples:
+-
+-sata@2200000 {
+-	compatible = "fsl,imx6q-ahci";
+-	reg = <0x02200000 0x4000>;
+-	interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks IMX6QDL_CLK_SATA>,
+-		 <&clks IMX6QDL_CLK_SATA_REF_100M>,
+-		 <&clks IMX6QDL_CLK_AHB>;
+-	clock-names = "sata", "sata_ref", "ahb";
 -};
-diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml
+diff --git a/Documentation/devicetree/bindings/ata/imx-sata.yaml b/Documentation/devicetree/bindings/ata/imx-sata.yaml
 new file mode 100644
-index 0000000..cbc6262
+index 0000000..cd94937
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml
-@@ -0,0 +1,31 @@
++++ b/Documentation/devicetree/bindings/ata/imx-sata.yaml
+@@ -0,0 +1,81 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/nvmem/snvs-lpgpr.yaml#
++$id: http://devicetree.org/schemas/ata/imx-sata.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Low Power General Purpose Register found in i.MX Secure Non-Volatile Storage
++title: Freescale i.MX AHCI SATA Controller
 +
 +maintainers:
-+  - Oleksij Rempel <o.rempel@pengutronix.de>
++  - Shawn Guo <shawn.guo@linaro.org>
++
++description: |
++  The Freescale i.MX SATA controller mostly conforms to the AHCI interface
++  with some special extensions at integration level.
 +
 +properties:
 +  compatible:
 +    enum:
-+      - fsl,imx6q-snvs-lpgpr
-+      - fsl,imx6ul-snvs-lpgpr
-+      - fsl,imx7d-snvs-lpgpr
++      - fsl,imx53-ahci
++      - fsl,imx6q-ahci
++      - fsl,imx6qp-ahci
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: sata clock
++      - description: sata reference clock
++      - description: ahb clock
++
++  clock-names:
++    items:
++      - const: sata
++      - const: sata_ref
++      - const: ahb
++
++  fsl,transmit-level-mV:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: transmit voltage level, in millivolts.
++
++  fsl,transmit-boost-mdB:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: transmit boost level, in milli-decibels.
++
++  fsl,transmit-atten-16ths:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: transmit attenuation, in 16ths.
++
++  fsl,receive-eq-mdB:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: receive equalisation, in milli-decibels.
++
++  fsl,no-spread-spectrum:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: if present, disable spread-spectrum clocking on the SATA link.
 +
 +required:
 +  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
 +
 +examples:
 +  - |
-+    snvs@20cc000 {
-+        compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
-+        reg = <0x20cc000 0x4000>;
++    #include <dt-bindings/clock/imx6qdl-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+        snvs_lpgpr: snvs-lpgpr {
-+            compatible = "fsl,imx6q-snvs-lpgpr";
-+        };
++    sata@2200000 {
++        compatible = "fsl,imx6q-ahci";
++        reg = <0x02200000 0x4000>;
++        interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6QDL_CLK_SATA>,
++                 <&clks IMX6QDL_CLK_SATA_REF_100M>,
++                 <&clks IMX6QDL_CLK_AHB>;
++        clock-names = "sata", "sata_ref", "ahb";
 +    };
 -- 
 2.7.4
