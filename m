@@ -6,54 +6,69 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C791C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 12:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F9AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 13:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8A3722CE3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 12:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CE92312C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 13:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgHEMnH (ORCPT
+        id S1728658AbgHENMx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 08:43:07 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:38087 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728411AbgHEMgA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 08:36:00 -0400
-Received: by mail-yb1-f193.google.com with SMTP id e187so11384689ybc.5;
-        Wed, 05 Aug 2020 05:35:56 -0700 (PDT)
+        Wed, 5 Aug 2020 09:12:53 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:44959 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgHEMfk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 08:35:40 -0400
+Received: by mail-ua1-f68.google.com with SMTP id x19so7653932uap.11;
+        Wed, 05 Aug 2020 05:35:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8hbSnFLozAnFw+mEl1ug9b36cQI1zAqdjX8AiRGf5eg=;
-        b=hb2pliSgGkPsyEzfmhgDjqehn0bPAW56+btYIyS3Np8i6buuK88MET9JSJ0TqygRBT
-         23LL8QrPlV9+46Lz87nOYn0sqCxZxW+eTmuw3pc69a7mZRAxC+PDtskzQ2Vjf90poscz
-         yuwCQ+uPR9dY0OkOrTorM1bTnfUnbsMuWD8k+c4PYLLoNln40qGT4lTvCJcOq+0REmKY
-         XVUiKkaQX3xNIKocFBFHvJgczF39n2el1aePaKWZf8+ySADLC7AAqJXLt2Q/dSx9Rl1F
-         u0FIXItziNBtm47+Z812Exka5pBv0CvXaIRQkaXYRyb85w+gRdHBRZo/WkKNKIAcq5L6
-         bOLw==
-X-Gm-Message-State: AOAM532FqcQHW4+l+EpxH7jOipve+LsrBI2O9m9vmgy1kqmQCzksQFuB
-        RknedRfMQu4z23qaR4phw0ZPyjC7LszLzjzOgymkEg==
-X-Google-Smtp-Source: ABdhPJz68cp3BRosp19kHXfNdEIyo86KFXA5kI74C0lDw4gKE3Oz8neNAi9dx02X0JasBYqG0QOhCPNYbri4NwptkNk=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2165898ote.107.1596628926098;
- Wed, 05 Aug 2020 05:02:06 -0700 (PDT)
+        bh=TiO7nzmTLhp/HssO4wueBR+pe6NyyJ3Wi4fmHclssB0=;
+        b=LBg+QNCOfml/osTc4ClibeS1wZAy99kRrbDkKMLWs58Wr3uooJ6eaifgdM3l6aEkxe
+         mZhYMMbPwOBn/XFE++nMivEqdLcBt4aWH+yuHsvnLfRbTIo6s0FKJA3zEIrUPOF5wsKr
+         AWAq1Em05wmu4PNN6eMaK0BZZZ1FZOveFsyWPRlsQ5gIWay+Z3h3M/5KC58MYlaoGF1n
+         V9OIvBtF/cOKd6+uqDjb9nPWHFYMCaOaytm9HGTdrvJzljN1XN+vWjDCRJ8+B1C68k8x
+         sKqKxfWkR3GByGhSkpynGBASAZjerV1kvzjGpzAQP8LsWGvASO0WairA2tnuzRSEyXTy
+         /CGg==
+X-Gm-Message-State: AOAM530ZpRRFvqSNeDnNV6VcRXm0cMt0KjGy0gjge+N7xZsKgDkjn3O1
+        UdaRM4kNkvfhibNFosWztj0vDCVgQnILJ5r5JqyR52Wp
+X-Google-Smtp-Source: ABdhPJwK6o7b8lq3G6CAJpeeN/eYVnhyuuPm34lifo/8pWI+ku4U2jyzPQkSzpymHd67QjfIjokNuU68r0XO2FkgnuU=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2044718ote.107.1596626105327;
+ Wed, 05 Aug 2020 04:15:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <1595005225-11519-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1595005225-11519-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1595005225-11519-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 14:01:54 +0200
-Message-ID: <CAMuHMdX17U-wBTZ6Z2=yHn4x9N1CwEUJNBmYKaSV5v_sxUd+5w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: r8a7742-iwg21d-q7: Enable HSUSB, USB2.0
- and xHCI
+Date:   Wed, 5 Aug 2020 13:14:54 +0200
+Message-ID: <CAMuHMdWU1UaL8B4EqA3qS3vebOZWL69uHMgkTBwUnoUz=z_p7Q@mail.gmail.com>
+Subject: Re: [PATCH 13/20] arm64: dts: renesas: r8a774e1: Add USB-DMAC and
+ HSUSB device nodes
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
         Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -61,13 +76,12 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 7:00 PM Lad Prabhakar
+On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable support for HSUSB, USB2.0 and xHCI on iWave RZ/G1H carrier board.
+> Add usb dmac and hsusb device nodes to the RZ/G2H SoC dtsi.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 i.e. will queue in renesas-devel for v5.10.
