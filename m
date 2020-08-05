@@ -2,107 +2,117 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABA3C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5120C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF9321744
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596616869;
-	bh=zYySd6XvoCKRv4SDeEL7K7ZJ5mGuugPdtHM4h7nd6EU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wd+864bnqfzY3TOM+W00XMHv2na/5nu28EztNpmGhhsZnEw/983MWlw2aFSZS3pW2
-	 BczygdoBR9PkWsFbwnBQ/Ah5VH/U6iXTK02Wx+AgVqr/p2o32Pl7CTOxWWh70BcAzb
-	 6F4YKU69fkXk8n+UoSfzB37WqkvAt0m/PCDz8cGU=
+	by mail.kernel.org (Postfix) with ESMTP id 75A1C21744
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:46:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="NwhhO7yJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgHEIlG (ORCPT
+        id S1726175AbgHEIp7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgHEIlF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:41:05 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C403B21744;
-        Wed,  5 Aug 2020 08:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596616865;
-        bh=zYySd6XvoCKRv4SDeEL7K7ZJ5mGuugPdtHM4h7nd6EU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tFqSH5aV7w2H3jkGzXz/Om89ztTJ87spi1KM2Q9qU1ByZTD9gW8cgY2rUMYO6qhly
-         mipAt/F5Cu6BQulosmAV7deBKZljR+L4puT0eb3EyK7RSWwkaOD1MeyTYv1fnYQ2ao
-         mlUjQM8gR7++TyG6U/UGmJ8co9FiHUNB/Ks1JfUI=
-Date:   Wed, 5 Aug 2020 10:41:03 +0200
-From:   <wsa@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Message-ID: <20200805084103.GD1229@kunai>
-Mail-Followup-To: <wsa@kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-References: <20200804095926.205643-1-codrin.ciubotariu@microchip.com>
- <20200804095926.205643-5-codrin.ciubotariu@microchip.com>
+        Wed, 5 Aug 2020 04:45:59 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59511 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725963AbgHEIp6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 04:45:58 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 3F3Wk0EzyuuXO3F3XkjXt6; Wed, 05 Aug 2020 10:45:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1596617155; bh=E3G95BLyAUJmVusMMfwPa0XjRXL7LH/JhsGHryHhhqk=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=NwhhO7yJ2w0SLPOlQCTV8HVXR3hQzzG8bBAd/ba0hx4r1MDZxJvLxJrSRfpFbHfJ7
+         pC6dvxXxPov+DBJUfiIWNvAsqzYcIJ+FbJCflEwJs+iuaTr48ZIZh/H3/cyA3bkypF
+         q0oOWJ7auAVO8hiOIxJtoC0ZH8EVug30KAGweyu3TZQaTC1wwdcY4UvY431Gr31zsD
+         y0mqAYuy0z3F4nWoSzVEr5DerN5Fb9m0ziv2r85J4ziv9NWwg03YPS88/Ii5HsmG/z
+         GCmVJGtat7FD67uivHpRlsQcjz3HXZwQyqvm1WdMea/12If0i3Xj4ftCviGB68E/7Q
+         0kXxxSW9KgoQQ==
+Subject: Re: [PATCH v11 00/28] Add support for mt2701 JPEG ENC support
+To:     Xia Jiang <xia.jiang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com,
+        senozhatsky@chromium.org, mojahsu@chromium.org,
+        drinkcat@chromium.org, maoguang.meng@mediatek.com
+References: <20200804034102.22983-1-xia.jiang@mediatek.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <dc3d16ad-fd05-5bab-8a16-dc5ba0ef671c@xs4all.nl>
+Date:   Wed, 5 Aug 2020 10:45:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
-Content-Disposition: inline
-In-Reply-To: <20200804095926.205643-5-codrin.ciubotariu@microchip.com>
+In-Reply-To: <20200804034102.22983-1-xia.jiang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfM7apDStT39H88fUqokBMwpoJPCF/emODIBQNG2aBDzuduKXhUGZyGxV4hNcIqRe1VY8xCHijxo80J9WV3GPg3QX8WtWlOWmC9OxmHAa8gSMTRS6zvb7
+ ozMn/nkVzm9eerHLW7F1evmUUnKxklzfb9jl06WuE5hFwg2X/aduIzDWnmnbkKIKCingeCHlQwMlNxCKP9ingl+Ho1ccKha9X76Dm27fef7U4vUPB3uPFRD3
+ SDFouRLttkjtidgZnIg7+2h0Qt5ka4rIOR3HqqIR29WRXwUw8RLN1e3tkPXiSUeuzMv3XPe6fzKB3xHKtkRu2duDB+P5G6dNv9oSC/QKiVZP8yzgEul/YhVX
+ BvBbD9au2S0ZEYAGwzBYPRqiDQzAy9l7PrUpmjXurd0Q8LQ5fpJoq7fSzegrIFAC2gw6EX6WqNF6PmJoP68nAPdOxxGudJ91X3LwXklUpt0q9q20LMPB+0WK
+ 0SY5EZREdv4xlEgOJg0MDJqp7UlUXsgYxldnQPQA92VNv9xnov6b/0HRUr4qdPSMFY8weKuspmmoT4Dg4AGosynjxE+rR9213yllcnkbGwMoQbjnMNc8eCNX
+ WOoVtGx2x10wTbPLrDekAhr2vEobzycrLDNtHMxrPFq270LiQuPfwsNAoViPVOwTylkn0UrSzhBM4+WQguWxwdaNxP+Hg6tNdYVuEMWh3i48n/K8CUckts1a
+ fOS/KoewWfa9D9N3Kh3xpLse7sadizs2u6VyNkoE3Bsb/WOivHbe7HA48IRSGg2VhFiuk3cK8zVtr53QTiBQRLygiLGf3PdhNRvC4APxE7dsDjo8Wn2j2W4E
+ SZvx5FEVMse3C1lVoDHYpiqWdypcxUl0nlvgxwFBTzMjTfYoE3rmE28QI++1Fg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 04/08/2020 05:40, Xia Jiang wrote:
+> This patchset add support for mt2701 JPEG ENC support.      
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm getting these compile warnings/errors:
 
-On Tue, Aug 04, 2020 at 12:59:26PM +0300, Codrin Ciubotariu wrote:
-> Make the Microchip at91 driver the first to use the generic GPIO bus
-> recovery support from the I2C core and discard the driver implementation.
->=20
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_enc_device_run’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:917:27: warning: variable ‘jpeg_src_buf’ set but not used [-Wunused-but-set-variable]
 
-Applied to for-next, thanks!
+  917 |  struct mtk_jpeg_src_buf *jpeg_src_buf;
+      |                           ^~~~~~~~~~~~
 
+It's indeed not used.
 
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_suspend’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:1482:2: error: implicit declaration of function ‘v4l2_m2m_suspend’; did you mean ‘v4l2_m2m_mmap’? [-Werror=implicit-function-declaration]
 
------BEGIN PGP SIGNATURE-----
+ 1482 |  v4l2_m2m_suspend(jpeg->m2m_dev);
+      |  ^~~~~~~~~~~~~~~~
+      |  v4l2_m2m_mmap
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_resume’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:1495:2: error: implicit declaration of function ‘v4l2_m2m_resume’; did you mean ‘v4l2_m2m_release’? [-Werror=implicit-function-declaration]
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qcJ8ACgkQFA3kzBSg
-Kbb4Ww/8CYUaI2G0L1UaRzOs6sZRMSSxgHuIpUzXkRhAwfyBwCoe/4GEcccJnWYc
-j7k+A+23lrLSUHKQS4vkMve01lm9GWTcW6Wdbi2PlfIkDS+02u0A4sFvihRF/tyN
-ubAp2Hby7Px1bfCxtTLXbFkyq5lmda3Rbb4oNo9eNAlCgwQzROUFSQUgCgiqc+jK
-kucUBj7z2xazt8eFixn/XCrrJTsrBmGiFeyPINGNK6KUrUJE8wVxVBYxXLl2Xpw3
-c/Wdd/GF0X+A5OtpIggnmgvRtNsnNHNvi4vWzQyYVJ0JY/C8BwuBzc8AVecHEiGa
-B6eaXlPTPh38gseN+NKSMuZf/0MZ7uQEGq4Iwx2bbreuGOJqwJns1CYa0d3fdB2L
-flMeZypzM0QZkH9JgbeR58w8B1oI/4IgUrv8tTYMWJJWvqg+pJavIyNHR3IqW23T
-vlSKvFhUK9gwN93HjSPQohX07V3/XfIibe4KGIt1Ui5olWpmLJfAOSvmeMFSsj3T
-QgIzG8KvaGmYG9f2dJk1isww6uqoHPh5RcU2f0G0CKMeoQb78BjasYuEeVOzoPD8
-/j/LS+V+j8+7Gd/5PFK2g2krMejtJTJwdQy3wAVN+9GptvtVvHJeJJ54+ovRLYSk
-T988WCHVwtHO2FI4iZRdZVlekItXjw9K9PcvF1dITkL5h3kgfBM=
-=6HiG
------END PGP SIGNATURE-----
+ 1495 |  v4l2_m2m_resume(jpeg->m2m_dev);
+      |  ^~~~~~~~~~~~~~~
+      |  v4l2_m2m_release
 
---zbGR4y+acU1DwHSi--
+This apparently relies on https://lore.kernel.org/linux-arm-kernel/20191204124732.10932-2-Jerry-Ch.chen@mediatek.com/
+
+Please add this patch to this series. Don't forget to add Tomasz' 'Reviewed-by' line.
+
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_enc_g_selection’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:525:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
+
+  525 |   s->r = ctx->out_q.enc_crop_rect;
+      |   ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:526:2: note: here
+  526 |  case V4L2_SEL_TGT_CROP_BOUNDS:
+      |  ^~~~
+
+This is definitely wrong. A break is missing here.
+
+Regards,
+
+	Hans
