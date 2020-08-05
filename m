@@ -2,119 +2,256 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48098C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B537FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 193E520792
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CA222B42
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgHEUKk (ORCPT
+        id S1729650AbgHEULj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:10:40 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:5112 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgHEQ1n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:27:43 -0400
-Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 05 Aug 2020 06:34:40 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 05 Aug 2020 06:34:38 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 05 Aug 2020 19:04:07 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id D31433EBB; Wed,  5 Aug 2020 19:04:07 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org,
-        swboyd@chromium.org, abhinavk@codeaurora.org,
-        ddavenport@chromium.org
-Subject: [v1] drm/msm/dpu: Fix reservation failures in modeset
-Date:   Wed,  5 Aug 2020 19:04:06 +0530
-Message-Id: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 5 Aug 2020 16:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgHEQ1m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:27:42 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE1AC001FD6;
+        Wed,  5 Aug 2020 09:05:26 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 76749299000
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 3D506480119; Wed,  5 Aug 2020 18:05:21 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv4 2/4] Input: EXC3000: add EXC80H60 and EXC80H84 support
+Date:   Wed,  5 Aug 2020 18:05:18 +0200
+Message-Id: <20200805160520.456570-3-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In TEST_ONLY commit, rm global_state will duplicate the
-object and request for new reservations, once they pass
-then the new state will be swapped with the old and will
-be available for the Atomic Commit.
+This adds support for EXC80H60 and EXCH84 controllers, which
+use a different event type id and have two extra bits for the
+resolution (so the maximum is 16K instead of 4K).
 
-This patch fixes some of missing links in the resource
-reservation sequence mentioned above.
-
-1) Creation of a duplicate state in test_only commit (Rob)
-2) Allow resource release only during crtc_active false.
-
-For #2
-In a modeset operation, swap state happens well before disable.
-Hence clearing reservations in disable will cause failures
-in modeset enable.
-
-Sequence:
-    Swap state --> old, new
-    modeset disables --> virt disable
-    modeset enable --> virt modeset
-
-Allow reservations to be cleared only when crtc active is false
-as in that case there wont be any modeset enable after disable.
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ .../input/touchscreen/eeti,exc3000.yaml       |  5 +-
+ drivers/input/touchscreen/exc3000.c           | 80 +++++++++++++++----
+ 2 files changed, 70 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 63976dc..b85a576 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	mode = &crtc_state->mode;
- 	adj_mode = &crtc_state->adjusted_mode;
--	global_state = dpu_kms_get_existing_global_state(dpu_kms);
-+	global_state = dpu_kms_get_global_state(crtc_state->state);
- 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
+index 022aa69a5dfe..7e6e23f8fa00 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
+@@ -14,7 +14,10 @@ allOf:
  
- 	/*
-@@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
- 	struct dpu_global_state *global_state;
-+	struct drm_crtc_state *crtc_state;
- 	int i = 0;
+ properties:
+   compatible:
+-    const: eeti,exc3000
++    enum:
++      - eeti,exc3000
++      - eeti,exc80h60
++      - eeti,exc80h84
+   reg:
+     const: 0x2a
+   interrupts:
+diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
+index 555a14305cd4..b497bd2ae41d 100644
+--- a/drivers/input/touchscreen/exc3000.c
++++ b/drivers/input/touchscreen/exc3000.c
+@@ -16,6 +16,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/sizes.h>
+ #include <linux/timer.h>
+ #include <asm/unaligned.h>
  
- 	if (!drm_enc) {
-@@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	priv = drm_enc->dev->dev_private;
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	global_state = dpu_kms_get_existing_global_state(dpu_kms);
-+	crtc_state = drm_enc->crtc->state;
+@@ -23,11 +24,43 @@
+ #define EXC3000_SLOTS_PER_FRAME		5
+ #define EXC3000_LEN_FRAME		66
+ #define EXC3000_LEN_POINT		10
+-#define EXC3000_MT_EVENT		6
++
++#define EXC3000_MT1_EVENT		0x06
++#define EXC3000_MT2_EVENT		0x18
++
+ #define EXC3000_TIMEOUT_MS		100
  
- 	trace_dpu_enc_disable(DRMID(drm_enc));
- 
-@@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 
- 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
- 
--	dpu_rm_release(global_state, drm_enc);
-+	if (crtc_state->active_changed && !crtc_state->active)
-+		dpu_rm_release(global_state, drm_enc);
- 
- 	mutex_unlock(&dpu_enc->enc_lock);
++static const struct i2c_device_id exc3000_id[];
++
++struct eeti_dev_info {
++	const char *name;
++	int max_xy;
++};
++
++enum eeti_dev_id {
++	EETI_EXC3000,
++	EETI_EXC80H60,
++	EETI_EXC80H84,
++};
++
++static struct eeti_dev_info exc3000_info[] = {
++	[EETI_EXC3000] = {
++		.name = "EETI EXC3000 Touch Screen",
++		.max_xy = SZ_4K - 1,
++	},
++	[EETI_EXC80H60] = {
++		.name = "EETI EXC80H60 Touch Screen",
++		.max_xy = SZ_16K - 1,
++	},
++	[EETI_EXC80H84] = {
++		.name = "EETI EXC80H84 Touch Screen",
++		.max_xy = SZ_16K - 1,
++	},
++};
++
+ struct exc3000_data {
+ 	struct i2c_client *client;
++	const struct eeti_dev_info *info;
+ 	struct input_dev *input;
+ 	struct touchscreen_properties prop;
+ 	struct timer_list timer;
+@@ -58,10 +91,15 @@ static void exc3000_timer(struct timer_list *t)
+ 	input_sync(data->input);
  }
+ 
+-static int exc3000_read_frame(struct i2c_client *client, u8 *buf)
++static int exc3000_read_frame(struct exc3000_data *data, u8 *buf)
+ {
++	struct i2c_client *client = data->client;
++	u8 expected_event = EXC3000_MT1_EVENT;
+ 	int ret;
+ 
++	if (data->info->max_xy == SZ_16K - 1)
++		expected_event = EXC3000_MT2_EVENT;
++
+ 	ret = i2c_master_send(client, "'", 2);
+ 	if (ret < 0)
+ 		return ret;
+@@ -76,19 +114,21 @@ static int exc3000_read_frame(struct i2c_client *client, u8 *buf)
+ 	if (ret != EXC3000_LEN_FRAME)
+ 		return -EIO;
+ 
+-	if (get_unaligned_le16(buf) != EXC3000_LEN_FRAME ||
+-			buf[2] != EXC3000_MT_EVENT)
++	if (get_unaligned_le16(buf) != EXC3000_LEN_FRAME)
++		return -EINVAL;
++
++	if (buf[2] != expected_event)
+ 		return -EINVAL;
+ 
+ 	return 0;
+ }
+ 
+-static int exc3000_read_data(struct i2c_client *client,
++static int exc3000_read_data(struct exc3000_data *data,
+ 			     u8 *buf, int *n_slots)
+ {
+ 	int error;
+ 
+-	error = exc3000_read_frame(client, buf);
++	error = exc3000_read_frame(data, buf);
+ 	if (error)
+ 		return error;
+ 
+@@ -98,7 +138,7 @@ static int exc3000_read_data(struct i2c_client *client,
+ 
+ 	if (*n_slots > EXC3000_SLOTS_PER_FRAME) {
+ 		/* Read 2nd frame to get the rest of the contacts. */
+-		error = exc3000_read_frame(client, buf + EXC3000_LEN_FRAME);
++		error = exc3000_read_frame(data, buf + EXC3000_LEN_FRAME);
+ 		if (error)
+ 			return error;
+ 
+@@ -118,7 +158,7 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+ 	int slots, total_slots;
+ 	int error;
+ 
+-	error = exc3000_read_data(data->client, buf, &total_slots);
++	error = exc3000_read_data(data, buf, &total_slots);
+ 	if (error) {
+ 		/* Schedule a timer to release "stuck" contacts */
+ 		mod_timer(&data->timer,
+@@ -149,13 +189,19 @@ static int exc3000_probe(struct i2c_client *client)
+ {
+ 	struct exc3000_data *data;
+ 	struct input_dev *input;
+-	int error;
++	int error, max_xy;
+ 
+ 	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+ 	data->client = client;
++	data->info = device_get_match_data(&client->dev);
++	if (!data->info) {
++		enum eeti_dev_id eeti_dev_id =
++			i2c_match_id(exc3000_id, client)->driver_data;
++		data->info = &exc3000_info[eeti_dev_id];
++	}
+ 	timer_setup(&data->timer, exc3000_timer, 0);
+ 
+ 	input = devm_input_allocate_device(&client->dev);
+@@ -164,11 +210,13 @@ static int exc3000_probe(struct i2c_client *client)
+ 
+ 	data->input = input;
+ 
+-	input->name = "EETI EXC3000 Touch Screen";
++	input->name = data->info->name;
+ 	input->id.bustype = BUS_I2C;
+ 
+-	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
+-	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
++	max_xy = data->info->max_xy;
++	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_xy, 0, 0);
++	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, max_xy, 0, 0);
++
+ 	touchscreen_parse_properties(input, true, &data->prop);
+ 
+ 	error = input_mt_init_slots(input, EXC3000_NUM_SLOTS,
+@@ -190,14 +238,18 @@ static int exc3000_probe(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id exc3000_id[] = {
+-	{ "exc3000", 0 },
++	{ "exc3000", EETI_EXC3000 },
++	{ "exc80h60", EETI_EXC80H60 },
++	{ "exc80h84", EETI_EXC80H84 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, exc3000_id);
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id exc3000_of_match[] = {
+-	{ .compatible = "eeti,exc3000" },
++	{ .compatible = "eeti,exc3000", .data = &exc3000_info[EETI_EXC3000] },
++	{ .compatible = "eeti,exc80h60", .data = &exc3000_info[EETI_EXC80H60] },
++	{ .compatible = "eeti,exc80h84", .data = &exc3000_info[EETI_EXC80H84] },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, exc3000_of_match);
 -- 
-1.9.1
+2.27.0
 
