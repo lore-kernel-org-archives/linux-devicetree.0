@@ -2,183 +2,157 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B567C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EADC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18EC822B42
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB7942076E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="EQulCbJg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNVGeAky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbgHETyy (ORCPT
+        id S1728071AbgHETzW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:54:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46390 "EHLO
+        Wed, 5 Aug 2020 15:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgHEQsJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:48:09 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32003C0617B1
-        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 04:01:26 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id u10so15552354plr.7
-        for <devicetree@vger.kernel.org>; Wed, 05 Aug 2020 04:01:26 -0700 (PDT)
+        with ESMTP id S1727831AbgHEQrv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:47:51 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A333C0A891E;
+        Wed,  5 Aug 2020 07:05:45 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g6so35183571ljn.11;
+        Wed, 05 Aug 2020 07:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bEXE45LcqvqPQXnOIHLz5P7xwCTBDkRs/TdXM1m+mFI=;
-        b=EQulCbJgChPEOrrWhj0Yj6pCh0S3mTWPli5hIxKes2rVZ/rB3VbS0zWELm0qovgRox
-         3RNcvKc/Ka4EV3Yu+AQsAw0wmqdiDoxPx8/cNg5caL+P1l0ZU1xGoZxU+SflhuXk8+sb
-         7TBVPNm86jPhCITaDJk8n2ts8Dzg5iWCDocwQ=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ev09fQIwwVoCVctHIyJV4BoifzLSy9cjs96TIWMwjTk=;
+        b=cNVGeAkym4a82t1dKh/mLk7LiT1I62FNbECk1sMfA46ZzG+zxPAK4lb3stMHwJb/rV
+         WWRVtEmCsbISNWfopFqtqONM27I7dFWv+eI//FBFAWQQCWLwleiBkKNfzfVzd9jmW1Tb
+         V+6lP1qFgd/v133DkeicAvG0vM7mflZVB9ncOeL7VXu439S13YBGPyvTrQ3QAFqviVd/
+         6HquEkXbMfV43y5jThSrRMnTEGGRGLnBHFRe2BdrXBqhPQ3rEpsAfk7H5kF4BG/XDGb3
+         8NYYYM+cye/RUHA1EVk1pgdQxmPTECvT9dVp740ngutHv66JxGiYINPAkY+AEHyUByrF
+         3WcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bEXE45LcqvqPQXnOIHLz5P7xwCTBDkRs/TdXM1m+mFI=;
-        b=NFX0aoi1kMW/YLpO5l9+pUHvlWcgZIRUhdh5ispLHXrnSPpn25/fo/8S7tBihswj9/
-         nmkStQW9EdTuqm8Mbcsou5f74cbZf5e1oUu5CZtqEbk81gVG3beT3LKCqBGazcuZ6ZUy
-         gkA2zT8Bt8h5r0MCRDGHyLcIk30xv16w6ZNeeZDS/pLrw2ddFQMwKJBJ2SalFyCeyIeJ
-         RsPll83oM9PPiY2xurv0UDsSrkFiR7aqPA/Gw3mEdaHb6o8aBaCSP7gwrytRyWYIB/Bj
-         ewAt8zT/aqiJkSJB3LCLe+TBD1ApeNBhszpZQ7t15IIJZjWXZqhiN3NR/dQxU4bID/h4
-         ERzQ==
-X-Gm-Message-State: AOAM5308SefdMXckFeUZEcxR/gGSo8xTj2FP7gJ4ZV78xCWzyoIwG8Xe
-        9nHcgWp18yh2vWX0gvtCE2sf3g==
-X-Google-Smtp-Source: ABdhPJyvJqUXzc7a83FfWTPCOuRjbh298XT8zPB8FEb7iiv/46NZBBTcpzUImBIfusw1aOQW/aMxLw==
-X-Received: by 2002:a17:902:ed13:: with SMTP id b19mr2520446pld.24.1596625284813;
-        Wed, 05 Aug 2020 04:01:24 -0700 (PDT)
-Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id fv21sm2583142pjb.16.2020.08.05.04.01.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 04:01:24 -0700 (PDT)
-From:   Daniel Palmer <daniel@0x0f.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, arnd@arndb.de, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH 1/3] dt: bindings: interrupt-controller: Add binding description for msc313-intc
-Date:   Wed,  5 Aug 2020 20:00:50 +0900
-Message-Id: <20200805110052.2655487-2-daniel@0x0f.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805110052.2655487-1-daniel@0x0f.com>
-References: <20200805110052.2655487-1-daniel@0x0f.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ev09fQIwwVoCVctHIyJV4BoifzLSy9cjs96TIWMwjTk=;
+        b=HKPM0CazDAvehVn+o6R3lkrfCQMW5JJGuNEPH3zl2OhUMq/JqwWGltnuLVucQzgsU4
+         1rvk3+pWoZ0U80rVPYAJWUZ4HEekrMSsZ6ZEZxOkV0q1/Q6V6dnrI1uhnSIgUsN2667A
+         x0zKbbdDW+C3+D6f1IzbQMnYqGrml5cw3jRooqc4z+hGjrBYS+HKP9OUCRw9FLGqsDpc
+         CVu1zzNlwnFrKWx49cBnpvVd1+Yuq/md7qfVg9dJWF7xARKxQZYPao/1B0xRvx8oHg6A
+         3SdMzYcyhXe1coG8wiqWU3iyWGFS5shrV1sdVo9fJV8vsvtkA4QA4rRaZTCsBPazcuCI
+         FXfw==
+X-Gm-Message-State: AOAM531zE73JdOeoCToyMHQvmbj33x34NB9vyy+SvTJTZ39DTVSMhfVP
+        g86pZ475JTgaSMRli3qNe+X4z6Bu
+X-Google-Smtp-Source: ABdhPJxUHKn3jgLLgt9PNMiup+D3HBXI8zcR+vLF4HsyQfIBRuNgWjulNBCag9k50dUroJkG40tq4w==
+X-Received: by 2002:a2e:164f:: with SMTP id 15mr1603373ljw.68.1596636342876;
+        Wed, 05 Aug 2020 07:05:42 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id q20sm941582ljj.42.2020.08.05.07.05.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 07:05:42 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+Date:   Wed, 5 Aug 2020 17:05:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200805134600.GA3351349@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds a YAML description of the binding for the msc313-intc.
+05.08.2020 16:46, Thierry Reding пишет:
+> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni wrote:
+>> With the split of MIPI calibration into tegra_mipi_calibrate() and
+>> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+>> is done.
+>>
+>> So, this patch skips disabling MIPI clock after triggering start of
+>> calibration and disables it only after waiting for done status from
+>> the calibration logic.
+>>
+>> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
+>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+>> with their usage.
+>>
+>> As MIPI clock is left enabled and in case of any failures with CSI input
+>> streaming tegra_mipi_finish_calibration() will not get invoked.
+>> So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
+>> and consumer drivers can call this in such cases.
+>>
+>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/gpu/drm/tegra/dsi.c |  4 ++--
+>>  drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+>>  include/linux/host1x.h      |  5 +++--
+>>  3 files changed, 15 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+>> index 3820e8d..a7864e9 100644
+>> --- a/drivers/gpu/drm/tegra/dsi.c
+>> +++ b/drivers/gpu/drm/tegra/dsi.c
+>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
+>>  		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>>  	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+>>  
+>> -	err = tegra_mipi_calibrate(dsi->mipi);
+>> +	err = tegra_mipi_start_calibration(dsi->mipi);
+>>  	if (err < 0)
+>>  		return err;
+>>  
+>> -	return tegra_mipi_wait(dsi->mipi);
+>> +	return tegra_mipi_finish_calibration(dsi->mipi);
+>>  }
+>>  
+>>  static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
+>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>> index e606464..b15ab6e 100644
+>> --- a/drivers/gpu/host1x/mipi.c
+>> +++ b/drivers/gpu/host1x/mipi.c
+>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
+>>  }
+>>  EXPORT_SYMBOL(tegra_mipi_disable);
+>>  
+>> -int tegra_mipi_wait(struct tegra_mipi_device *device)
+>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+>> +{
+>> +	clk_disable(device->mipi->clk);
+> 
+> Do we need to do anything with the MIPI_CAL_CTRL and MIPI_CAL_STATUS
+> registers here? We don't clear the START bit in the former when the
+> calibration has successfully finished, but I suspect that's because
+> the bit is self-clearing. But I wonder if we still need to clear it
+> upon cancellation to make sure the calibration does indeed stop.
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
----
- .../mstar,msc313-intc.yaml                    | 79 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
+Apparently there is no way to explicitly stop calibration other than to
+reset MIPI calibration block, but Sowjanya says this is unnecessary.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
-new file mode 100644
-index 000000000000..e256887aa847
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2020 thingy.jp.
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/interrupt-controller/mstar,msc313-intc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: MStar/SigmaStar ARMv7 SoC Interrupt Controller Device Tree Bindings
-+
-+maintainers:
-+  - Daniel Palmer <daniel@thingy.jp>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+properties:
-+  "#interrupt-cells":
-+    const: 2
-+
-+  compatible:
-+    enum:
-+      - mstar,msc313-intc-irq
-+      - mstar,msc313-intc-fiq
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  mstar,gic-offset:
-+    description:
-+      Offset added to the intc irq number to get the parent GIC irq.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+        maximum: 255
-+
-+  mstar,nr-interrupts:
-+    description:
-+      Number of interrupt lines this intc has.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 1
-+        maximum: 64
-+
-+required:
-+  - "#interrupt-cells"
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - mstar,gic-offset
-+  - mstar,nr-interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    intc_fiq: intc@201310 {
-+        compatible = "mstar,msc313-intc-fiq";
-+        interrupt-controller;
-+        reg = <0x201310 0x40>;
-+        #interrupt-cells = <2>;
-+        interrupt-parent = <&gic>;
-+        mstar,gic-offset = <96>;
-+        mstar,nr-interrupts = <32>;
-+    };
-+
-+  - |
-+    intc_irq: intc@201350 {
-+        compatible = "mstar,msc313-intc-irq";
-+        interrupt-controller;
-+        reg = <0x201350 0x40>;
-+        #interrupt-cells = <2>;
-+        interrupt-parent = <&gic>;
-+        mstar,gic-offset = <32>;
-+        mstar,nr-interrupts = <64>;
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c8e8232c65da..6e64d17aad7b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2152,6 +2152,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- W:	http://linux-chenxing.org/
- F:	Documentation/devicetree/bindings/arm/mstar/*
-+F:	Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
- F:	arch/arm/boot/dts/infinity*.dtsi
- F:	arch/arm/boot/dts/mercury*.dtsi
- F:	arch/arm/boot/dts/mstar-v7.dtsi
--- 
-2.27.0
-
+Perhaps having a fixed delay before disabling clock could be enough to
+ensure that calibration is stopped before the clock is disabled?
