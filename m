@@ -2,119 +2,126 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EBAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FBBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B998C2076E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A732076E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="YRCgWsJ8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mPCsyVau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgHETug (ORCPT
+        id S1728330AbgHETvN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47252 "EHLO
+        Wed, 5 Aug 2020 15:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbgHEQxJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:53:09 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE265C061290
-        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 04:01:32 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ep8so4103194pjb.3
-        for <devicetree@vger.kernel.org>; Wed, 05 Aug 2020 04:01:32 -0700 (PDT)
+        with ESMTP id S1727932AbgHEQwq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:52:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B157C0A8896
+        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 06:55:48 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id f12so4953361wru.13
+        for <devicetree@vger.kernel.org>; Wed, 05 Aug 2020 06:55:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Az+AszYcHQWzYCnqT/5thfyfYHza99FgAVuo6NVwe5o=;
-        b=YRCgWsJ8pGTf9hSUA+n2UAu2tevH60z+ftxm0yHShwRstP9B0a1upVpRfJz9WDL68j
-         l8yEHTiQCLSdNiS/bRbYfVZ+rUErAa9vmbTXK3h+gByDGPVvEMF7jquoke5sRJfn1vME
-         CoeVdQYK0iRon/IxKtqOxQkQ8hb7nxsG5ig+U=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ja++vUWPJ08EOA6SgZWSzzzNGHnYWDLpTD9FHTxS0rw=;
+        b=mPCsyVauudhQuP/KJCzACLzD1hGJ28aiHs4qkIVT+dJsG9lMfuT7dSoXYJbFizKZRP
+         kR2I6h/RpqcqrsXsr0WOQrAgDwfnAX/8FSgglt/yxTXrl83b60/gxayRpC2euEgFfaQN
+         aKk3SV25A7zijFrcxS9Y8ftx/QbxX1RciA4Z8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Az+AszYcHQWzYCnqT/5thfyfYHza99FgAVuo6NVwe5o=;
-        b=WmsoZA3hcgBQoioTebbvSMrqkwJVe2mswXLbTwbBWB52wQ9Q290gk7HncJFblvjDS8
-         MTZbArADBf1QusnbSjDe5zjsw0Bb/p5h7YDPSAcgL1yIuEm5JX4QTlcLg3T5BRKgHP9U
-         9T8VS27e46+pScvTR62/fZcDpxqqAxIRLx3BVLtrQrH31RBZ04q1fsfB/yCvHG/UELxR
-         mV2GPD8fEsbk3ehLthS1xLssA8n/Kr6c1YVzLyDCtxeiLkLxqsBlPV9OUxr169CeAMjv
-         tGQJF0sn/zPcdpQ/4jlsEca/utdpLKfwFH8YgcfhPPf4AtFbh6UsqaxFS2u+rL7i78ah
-         agSg==
-X-Gm-Message-State: AOAM533AI0/GbJA65Ql6tfMVgJK3RijJch2tTnqY9KXP2OW8VXyAuQ1H
-        ogVK+KEsRNzanJhh04/2t29Nzw==
-X-Google-Smtp-Source: ABdhPJxtCw0v0qrAXzPqLGiqTkiXcYFmKfdnKsHWfbhgvd5nuFoxNKvUzwQxkBrwLUbkzgfT+9qCGA==
-X-Received: by 2002:a17:90a:e643:: with SMTP id ep3mr2780313pjb.18.1596625292189;
-        Wed, 05 Aug 2020 04:01:32 -0700 (PDT)
-Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id fv21sm2583142pjb.16.2020.08.05.04.01.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ja++vUWPJ08EOA6SgZWSzzzNGHnYWDLpTD9FHTxS0rw=;
+        b=plHNs6jdinWFxllg40mWnXZ9Pak8/pwLjB1waLUxDfsk0J/StV5arC1Jq7HPSQ7EQM
+         NT3oZ19DCMljQGTeoo/jXIWAEKDD7ahWmUvL818qmQ+aZpZ3gs8NaseXQ0YSDB66K/Je
+         y7qN+3x4Nk6bOh00QnMoAibmyMy1QwawuXUqjb+NtugoybHtCEsVcIWm70ysyovHXC4b
+         DrCBUVZAPqtyICH7nxYLZ8F8mzRhzBIRnJnaiyosH9KGymSahjAADPDxR2tre44EFrKv
+         kVrgn0lADB1hONl+hKu3sshepItDIy354pKXvmNeAKP7gfxTCzeEhq5c2yDZKwfVdtAY
+         pyRg==
+X-Gm-Message-State: AOAM531YUOXcUEiCVLmzIQxsPdybKx295zYzQOjNmnwhb3D9BupNj8tO
+        jhrAVtXGDqDuvykH2i96/dF6LeeVWbc=
+X-Google-Smtp-Source: ABdhPJxYNtjsQJjSF6xJ7nBQbZo3fBriXEe6OI14ms3Hr23UwjYAMHhqsXQOBERea4H+jC1NM69TBw==
+X-Received: by 2002:a5d:5485:: with SMTP id h5mr2759249wrv.427.1596635746822;
+        Wed, 05 Aug 2020 06:55:46 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id p14sm3039630wrg.96.2020.08.05.06.55.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 04:01:31 -0700 (PDT)
-From:   Daniel Palmer <daniel@0x0f.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, arnd@arndb.de, Daniel Palmer <daniel@0x0f.com>,
-        Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 3/3] ARM: mstar: Add interrupt controller to base dtsi
-Date:   Wed,  5 Aug 2020 20:00:52 +0900
-Message-Id: <20200805110052.2655487-4-daniel@0x0f.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805110052.2655487-1-daniel@0x0f.com>
-References: <20200805110052.2655487-1-daniel@0x0f.com>
+        Wed, 05 Aug 2020 06:55:46 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 13:55:44 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com
+Subject: Re: [PATCH v11 22/28] media: platform: Change the call functions of
+ getting/enable/disable the jpeg's clock
+Message-ID: <20200805135544.GA1014704@chromium.org>
+References: <20200804034102.22983-1-xia.jiang@mediatek.com>
+ <20200804034102.22983-23-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804034102.22983-23-xia.jiang@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the IRQ and FIQ intc instances to the base MStar/SigmaStar v7
-dtsi. All of the known SoCs have both and at the same place with
-their common IPs using the same interrupt lines.
+Hi Xia,
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-Tested-by: Willy Tarreau <w@1wt.eu>
----
- arch/arm/boot/dts/mstar-v7.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On Tue, Aug 04, 2020 at 11:40:56AM +0800, Xia Jiang wrote:
+> Use the generic clk_bulk_* helpers to enable and disable clocks.
+> 
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v11: specify the names of the clocks in the driver
+> ---
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 28 +++++++++++++------
+>  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   |  8 +++---
+>  2 files changed, 23 insertions(+), 13 deletions(-)
+> 
 
-diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
-index 3b7b9b793736..2b3bb0886d1a 100644
---- a/arch/arm/boot/dts/mstar-v7.dtsi
-+++ b/arch/arm/boot/dts/mstar-v7.dtsi
-@@ -85,6 +85,26 @@ reboot {
- 				mask = <0x79>;
- 			};
- 
-+			intc_fiq: intc@201310 {
-+				compatible = "mstar,msc313-intc-fiq";
-+				interrupt-controller;
-+				reg = <0x201310 0x40>;
-+				#interrupt-cells = <2>;
-+				interrupt-parent = <&gic>;
-+				mstar,gic-offset = <96>;
-+				mstar,nr-interrupts = <32>;
-+			};
-+
-+			intc_irq: intc@201350 {
-+				compatible = "mstar,msc313-intc-irq";
-+				interrupt-controller;
-+				reg = <0x201350 0x40>;
-+				#interrupt-cells = <2>;
-+				interrupt-parent = <&gic>;
-+				mstar,gic-offset = <32>;
-+				mstar,nr-interrupts = <64>;
-+			};
-+
- 			l3bridge: l3bridge@204400 {
- 				compatible = "mstar,l3bridge";
- 				reg = <0x204400 0x200>;
--- 
-2.27.0
+Thank you for the patch. It looks good to me.
 
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+
+One comment below about a thing that should be fixed in the future,
+separately from this series.
+
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index 7881e9c93df7..47d570f32e3f 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -783,14 +783,15 @@ static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
+>  	ret = mtk_smi_larb_get(jpeg->larb);
+>  	if (ret)
+>  		dev_err(jpeg->dev, "mtk_smi_larb_get larbvdec fail %d\n", ret);
+> -	clk_prepare_enable(jpeg->clk_jdec_smi);
+> -	clk_prepare_enable(jpeg->clk_jdec);
+> +
+> +	ret = clk_bulk_prepare_enable(jpeg->num_clks, jpeg->clks);
+> +	if (ret)
+> +		dev_err(jpeg->dev, "Failed to open jpeg clk: %d\n", ret);
+
+The errors in this function should be propagated to the caller and
+handled properly across the whole call stack.
+
+Best regards,
+Tomasz
