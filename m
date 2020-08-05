@@ -2,132 +2,184 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09941C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688C8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D02092177B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFDE22B45
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 08:13:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMTw7nHA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="plJ3J37H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgHEIFd (ORCPT
+        id S1728231AbgHEINV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbgHEIE4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 04:04:56 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049F5C061757;
-        Wed,  5 Aug 2020 01:04:32 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id e14so9497608ybf.4;
-        Wed, 05 Aug 2020 01:04:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BiuuPtVTD0TIdLTlFbDmr4GJPdBHQfsmJUkSiUv0PmQ=;
-        b=fMTw7nHAmyojNDsyhXH2aNqC8O1PkqTHzVO/PnUwikGnJZK2hKak0OUyUzjx7VlP+S
-         HiiabgNJLGQ7dHfvKgHWb+ICEXl2kfFYqGoVM6u+FGD2Gl05sugti/x6k1XH19zn+hjr
-         /ZR5xkO31XqfJ++52Hx3pLgJpJhFnl1sW2hbqPIhUCO6edCHWPQiKzXwHWTGqwCiIQ4X
-         g0BV886F3c1y3po2yVxQSrcrv9WEGa9m5RpQvv/e6IAuZ9g1LJ6UIftUWBJeonEeAX/D
-         WYby2otwKWiWhW7mxVYcScSZ86lDJXcNCI4HMmSAHrERp2yv0aNNWBuuU3spM2EhBbRf
-         C9TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BiuuPtVTD0TIdLTlFbDmr4GJPdBHQfsmJUkSiUv0PmQ=;
-        b=TlqptdNgGfFcz+BXueeZPtumVYmXZxuqaYZbixGfIKfHbm+Z4g0Irgi0o9/8EKgkjY
-         9IaiCQTge5lMRJkAnF44Hemu4bGTI1fgw+sn75D6A2PBQ7OiV6CJM3f//jU1x3i9WZih
-         zo7QauLyKvBqKcmiDUKSGK4HT4ipNJ335X4y950MXMrwy6C3MzN655hxH+Db/uMXPgXJ
-         eKHZj8OznKxGapdqcnQInujJmxP+9t7n0YbW+wgITs7Uun7cFM8GFtADCQqkAsV+jQhO
-         oRCPv0mXm/DOc7/oyxKh8/SYGlI6lY6dBl9y+xZukNesIq0CzkihdxIphR3At/hly0KK
-         H1yQ==
-X-Gm-Message-State: AOAM533eL0qZvISCKDGz4PPamOGMf9zQeoLC/cxIJEsMSqilf8yhzZu1
-        Mbv244efvC1bmaqIawIoVXaMRw07Cep9Ese0fpU=
-X-Google-Smtp-Source: ABdhPJysh3lsTewqog7MiMBZa3uhA597rnIHVhPuIrHcPba7M8AIp8ClLZSH9skBUgGReuophzgnmo6NBEDS8+kuO3s=
-X-Received: by 2002:a25:4b01:: with SMTP id y1mr2768364yba.395.1596614671325;
- Wed, 05 Aug 2020 01:04:31 -0700 (PDT)
+        Wed, 5 Aug 2020 04:13:21 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:11831 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728357AbgHEINU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:13:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596615199; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=XSZLok439pWl7CwEqyvK09XFwTyFBf7GehR5emIIdDA=; b=plJ3J37H0I6/W+bmOcdOLdzt+yqM9DC7kwVQ78BEfftrXvz2REAFmTpCQiUKU62+uyPrwsgm
+ O2+SL267cG4dBMPiUEkkcg5MYgQlo1A47lgF41rExHZ40hGEMJTYwYkiwvgsgZGc58p91jUc
+ WOAR83UK9NPRpI2IITi0VHlwa/U=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5f2a6a19f89b692ba22d805c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 08:13:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AB0EDC43391; Wed,  5 Aug 2020 08:13:12 +0000 (UTC)
+Received: from [192.168.1.12] (unknown [61.1.228.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FDA6C433C9;
+        Wed,  5 Aug 2020 08:13:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5FDA6C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 1/3] dt-bindings: power: Introduce
+ 'assigned-performance-states' property
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
+ <1596541616-27688-2-git-send-email-rnayak@codeaurora.org>
+ <159660954201.1360974.5176671532597020049@swboyd.mtv.corp.google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <98050322-9ba6-303c-4ca4-07baa56ebd80@codeaurora.org>
+Date:   Wed, 5 Aug 2020 13:43:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594230511-24790-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAPDyKFqeiEUeajprG=Bx3Nion8bGpVrDOuM7q6-kLDpOMY-QbQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFqeiEUeajprG=Bx3Nion8bGpVrDOuM7q6-kLDpOMY-QbQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 5 Aug 2020 09:04:05 +0100
-Message-ID: <CA+V-a8txuETixBOg7iLRN_uYmSDpwpQJq=o83ewYAs6w9uHC0Q@mail.gmail.com>
-Subject: Re: [PATCH 4/8] dt-bindings: mmc: renesas,sdhi: Add r8a774e1 support
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <159660954201.1360974.5176671532597020049@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ulf,
 
-On Wed, Aug 5, 2020 at 7:32 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Wed, 8 Jul 2020 at 19:48, Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Document SDHI controller for RZ/G2H (R8A774E1) SoC, which is compatible
-> > with R-Car Gen3 SoC family.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Sorry, but this doesn't apply as the DT doc has been converted to
-> YAML. Can you please rebase and respin.
->
-Sure will respin it.
+On 8/5/2020 12:09 PM, Stephen Boyd wrote:
+> Quoting Rajendra Nayak (2020-08-04 04:46:54)
+>> While most devices within power-domains which support performance states,
+>> scale the performance state dynamically, some devices might want to
+>> set a static/default performance state while the device is active.
+>> These devices typically would also run of a fixed clock and not support
+> 
+> s/of/off/
+> 
+>> dyamically scaling the device's performance, also known as DVFS techniques.
+> 
+> s/dyamically/dynamically/
+> 
+>> Add a property 'assigned-performance-states' which client devices can
+>> use to set this default performance state on their power-domains.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/power/power-domain.yaml    | 47 ++++++++++++++++++++++
+>>   1 file changed, 47 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
+>> index ff5936e..48e9319 100644
+>> --- a/Documentation/devicetree/bindings/power/power-domain.yaml
+>> +++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+>> @@ -66,6 +66,16 @@ properties:
+>>          by the given provider should be subdomains of the domain specified
+>>          by this binding.
+>>   
+>> +  assigned-performance-states:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    description:
+>> +       Some devices might need to configure their power domains in a default
+>> +       performance state while the device is active. These devices typcially
+>> +       would also run of a fixed clock and not support dyamically scaling the
+> 
+> Same of and dynamically comment.
+> 
+>> +       device's performance, also known as DVFS techniques. The list of performance
+>> +       state values should correspond to the list of power domains specified as part
+>> +       of the power-domains property.
+> 
+> This is different than assigned-clock-rates. I guess that's OK because
+> we don't need to assign parents with more specifiers. Maybe it should be
+> worded more strongly to clearly state that each cell corresponds to one
+> power domain? And that it should match the opp-level inside any OPP
+> table for the power domain?
 
-Cheers,
-Prabhakar
+Sure, I'll reword it to make it clear that we need the same number of cells
+as power-domains, and as you pointed out below that 0 corresponds to not setting
+anything.
 
-> Kind regards
-> Uffe
->
->
->
-> > ---
-> >  Documentation/devicetree/bindings/mmc/renesas,sdhi.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> > index 0ca9a622cce0..779e484fa3ef 100644
-> > --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> > @@ -14,6 +14,7 @@ Required properties:
-> >                 "renesas,sdhi-r8a774a1" - SDHI IP on R8A774A1 SoC
-> >                 "renesas,sdhi-r8a774b1" - SDHI IP on R8A774B1 SoC
-> >                 "renesas,sdhi-r8a774c0" - SDHI IP on R8A774C0 SoC
-> > +               "renesas,sdhi-r8a774e1" - SDHI IP on R8A774E1 SoC
-> >                 "renesas,sdhi-r8a77470" - SDHI IP on R8A77470 SoC
-> >                 "renesas,sdhi-mmc-r8a77470" - SDHI/MMC IP on R8A77470 SoC
-> >                 "renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
-> > --
-> > 2.17.1
-> >
+For the matching of opp-level inside the OPP table of the power-domain, I don't
+think from the power-domain bindings we limit providers with only OPP tables to
+support performance states? It could be just a range that the provider manages
+internally?
+
+And thanks for catching all my typos :), I'll have them fixed when I re-spin.
+
+> 
+>> +
+>>   required:
+>>     - "#power-domain-cells"
+>>   
+>> @@ -129,3 +139,40 @@ examples:
+>>               min-residency-us = <7000>;
+>>           };
+>>       };
+>> +
+>> +  - |
+>> +    parent4: power-controller@12340000 {
+>> +        compatible = "foo,power-controller";
+>> +        reg = <0x12340000 0x1000>;
+>> +        #power-domain-cells = <0>;
+>> +    };
+>> +
+>> +    parent5: power-controller@43210000 {
+>> +        compatible = "foo,power-controller";
+>> +        reg = <0x43210000 0x1000>;
+>> +        #power-domain-cells = <0>;
+>> +        operating-points-v2 = <&power_opp_table>;
+>> +
+>> +        power_opp_table: opp-table {
+>> +            compatible = "operating-points-v2";
+>> +
+>> +            power_opp_low: opp1 {
+>> +                opp-level = <16>;
+>> +            };
+>> +
+>> +            rpmpd_opp_ret: opp2 {
+>> +                opp-level = <64>;
+>> +            };
+>> +
+>> +            rpmpd_opp_svs: opp3 {
+>> +                opp-level = <256>;
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> +    child4: consumer@12341000 {
+>> +        compatible = "foo,consumer";
+>> +        reg = <0x12341000 0x1000>;
+>> +        power-domains = <&parent4>, <&parent5>;
+>> +        assigned-performance-states = <0>, <256>;
+> 
+> I guess <0> means don't set anything?
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
