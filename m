@@ -4,42 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDD4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7763FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 02:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21EF22CAE
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63625208C7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 02:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgHECsP (ORCPT
+        id S1725904AbgHECzW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 4 Aug 2020 22:48:15 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:53210 "EHLO inva020.nxp.com"
+        Tue, 4 Aug 2020 22:55:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34356 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgHECsO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 4 Aug 2020 22:48:14 -0400
+        id S1725864AbgHECzV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 4 Aug 2020 22:55:21 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6335B1A04E6;
-        Wed,  5 Aug 2020 04:48:12 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 77ED01A1499;
+        Wed,  5 Aug 2020 04:55:19 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B49B91A1487;
-        Wed,  5 Aug 2020 04:48:06 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4033A1A1490;
+        Wed,  5 Aug 2020 04:55:15 +0200 (CEST)
 Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4FDAD402E1;
-        Wed,  5 Aug 2020 04:47:59 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BDA17402CF;
+        Wed,  5 Aug 2020 04:55:09 +0200 (CEST)
 From:   Anson Huang <Anson.Huang@nxp.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
-        s.trumtrar@pengutronix.de, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/3] dt-bindings: crypto: Convert MXS DCP to json-schema
-Date:   Wed,  5 Aug 2020 10:43:28 +0800
-Message-Id: <1596595410-26921-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: fsl: Convert i.MX7ULP PM to json-schema
+Date:   Wed,  5 Aug 2020 10:50:40 +0800
+Message-Id: <1596595841-27563-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
@@ -47,94 +45,90 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the MXS DCP binding to DT schema format using json-schema.
+Convert the i.MX7ULP PM binding to DT schema format using json-schema.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- .../devicetree/bindings/crypto/fsl-dcp.txt         | 18 --------
- .../devicetree/bindings/crypto/fsl-dcp.yaml        | 49 ++++++++++++++++++++++
- 2 files changed, 49 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/fsl-dcp.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/fsl-dcp.yaml
+ .../bindings/arm/freescale/fsl,imx7ulp-pm.txt      | 23 -------------
+ .../bindings/arm/freescale/fsl,imx7ulp-pm.yaml     | 40 ++++++++++++++++++++++
+ 2 files changed, 40 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.yaml
 
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-dcp.txt b/Documentation/devicetree/bindings/crypto/fsl-dcp.txt
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
 deleted file mode 100644
-index 513499f..0000000
---- a/Documentation/devicetree/bindings/crypto/fsl-dcp.txt
+index 75195be..0000000
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.txt
 +++ /dev/null
-@@ -1,18 +0,0 @@
--Freescale DCP (Data Co-Processor) found on i.MX23/i.MX28 .
+@@ -1,23 +0,0 @@
+-Freescale i.MX7ULP Power Management Components
+-----------------------------------------------
+-
+-The Multi-System Mode Controller (MSMC) is responsible for sequencing
+-the MCU into and out of all stop and run power modes. Specifically, it
+-monitors events to trigger transitions between power modes while
+-controlling the power, clocks, and memories of the MCU to achieve the
+-power consumption and functionality of that mode.
+-
+-The WFI or WFE instruction is used to invoke a Sleep, Deep Sleep or
+-Standby modes for either Cortex family. Run, Wait, and Stop are the
+-common terms used for the primary operating modes of Kinetis
+-microcontrollers.
 -
 -Required properties:
--- compatible : Should be "fsl,<soc>-dcp"
--- reg : Should contain MXS DCP registers location and length
--- interrupts : Should contain MXS DCP interrupt numbers, VMI IRQ and DCP IRQ
--               must be supplied, optionally Secure IRQ can be present, but
--	       is currently not implemented and not used.
--- clocks : Clock reference (only required on some SOCs: 6ull and 6sll).
--- clock-names : Must be "dcp".
+-- compatible:	Should be "fsl,imx7ulp-smc1".
+-- reg:		Specifies base physical address and size of the register sets.
 -
 -Example:
--
--dcp: crypto@80028000 {
--	compatible = "fsl,imx28-dcp", "fsl,imx23-dcp";
--	reg = <0x80028000 0x2000>;
--	interrupts = <52 53>;
+-smc1: smc1@40410000 {
+-	compatible = "fsl,imx7ulp-smc1";
+-	reg = <0x40410000 0x1000>;
 -};
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-dcp.yaml b/Documentation/devicetree/bindings/crypto/fsl-dcp.yaml
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.yaml b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.yaml
 new file mode 100644
-index 0000000..1ed86cd
+index 0000000..1b00294
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/fsl-dcp.yaml
-@@ -0,0 +1,49 @@
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-pm.yaml
+@@ -0,0 +1,40 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/crypto/fsl-dcp.yaml#
++$id: http://devicetree.org/schemas/arm/freescale/fsl,imx7ulp-pm.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale DCP (Data Co-Processor) found on i.MX23/i.MX28
++title: Freescale i.MX7ULP Power Management Components
 +
 +maintainers:
-+  - Marek Vasut <marex@denx.de>
++  - A.s. Dong <aisheng.dong@nxp.com>
++
++description: |
++  The Multi-System Mode Controller (MSMC) is responsible for sequencing
++  the MCU into and out of all stop and run power modes. Specifically, it
++  monitors events to trigger transitions between power modes while
++  controlling the power, clocks, and memories of the MCU to achieve the
++  power consumption and functionality of that mode.
++
++  The WFI or WFE instruction is used to invoke a Sleep, Deep Sleep or
++  Standby modes for either Cortex family. Run, Wait, and Stop are the
++  common terms used for the primary operating modes of Kinetis
++  microcontrollers.
 +
 +properties:
 +  compatible:
-+    enum:
-+      - fsl,imx23-dcp
-+      - fsl,imx28-dcp
++    const: fsl,imx7ulp-smc1
 +
 +  reg:
 +    maxItems: 1
 +
-+  interrupts:
-+    description: Should contain MXS DCP interrupt numbers, VMI IRQ and DCP IRQ
-+      must be supplied, optionally Secure IRQ can be present, but is currently
-+      not implemented and not used.
-+    items:
-+      - description: MXS DCP VMI interrupt
-+      - description: MXS DCP DCP interrupt
-+      - description: MXS DCP secure interrupt
-+    minItems: 2
-+    maxItems: 3
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: dcp
-+
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
 +
 +examples:
 +  - |
-+    crypto@80028000 {
-+        compatible = "fsl,imx23-dcp";
-+        reg = <0x80028000 0x2000>;
-+        interrupts = <53>, <54>;
++    smc1@40410000 {
++        compatible = "fsl,imx7ulp-smc1";
++        reg = <0x40410000 0x1000>;
 +    };
 -- 
 2.7.4
