@@ -2,97 +2,189 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCB9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2618DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44185206B6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26BB2073E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 17:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mRL9xHoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgHERlk (ORCPT
+        id S1728918AbgHERw4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:41:40 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43119 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbgHERdc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:33:32 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r21so23438915ota.10;
-        Wed, 05 Aug 2020 10:33:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nGe/Je8IarDkuCxG/u56QffSTYctpnR0YPw4MQUjy6A=;
-        b=rST3AuFgwVSXUW3gEpFnjQUuP+b9s0ZTn6PGbKOKO0OK/j1Bz2VXk0llZOWxlZuVO0
-         9oIMGAghTHl7Je5+n5+2DXDu/GznsnJ4YNQOMq5PtIygh1yiaj8pArkwAmdJGmw8t7vV
-         y8yVoeNhoS3DYIqAsy4Gt6Y1yh5ITWzLCzU1shD/pXIGj70jEE7glN6xEDbz2IORtivs
-         WWjD+NIisqKh2drx89yWWNp/pgChSLiBCf9nJaimJgGRP2okuj6v03kDhH2XQucahukI
-         6ZDcExgwrTEUAt5FKxmlIh2ncsblVHaIKbyGltSkjVye87qelLo/EG/OHkS4skdvIjpS
-         +5RQ==
-X-Gm-Message-State: AOAM530uffkeniOlIrjfH8CawBS6dbRM7pQSfv6ViYuOMMS6DLOMtgfK
-        /66F6f4Ls6S2Wp3IhNdRu6md7VSYEPbJdtBJFCPm8E5j
-X-Google-Smtp-Source: ABdhPJy6BJnijQ4U9574JZCK6kDHqx7/zV93wpejrM8Eh19/YBjLybIlzjjbGdFEBSswTARB1GJ4M2QmhRRIOA+7jHM=
-X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr2076468otl.145.1596625795521;
- Wed, 05 Aug 2020 04:09:55 -0700 (PDT)
+        Wed, 5 Aug 2020 13:52:56 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:55030 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729021AbgHERwu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 13:52:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596649968; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=S5hJFYd7MMSkEoR3CdrZ7jrWlq63SZiOAFEvmVnWV/Q=;
+ b=mRL9xHoT1B/HGMaH7NTVzWc7RG+l58wZT5cFhGW8GgpwTVJRPmBslWHMb2GCsWMgb5wtI6in
+ tsVgmagFa3mDMp3vfcnbKOotC4OFi11ZQ7nfL58SW4uDY6TdQ4chkonrwdEuCWpf3wg7AiIJ
+ 9jjgYhlsgOGq9iXZBvmGdeul/yk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5f2abfa7eecfc978d337cfbd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 14:18:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C623EC433C6; Wed,  5 Aug 2020 14:18:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kalyan_t)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE057C433C9;
+        Wed,  5 Aug 2020 14:18:13 +0000 (UTC)
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 13:09:43 +0200
-Message-ID: <CAMuHMdWhmQS56j4vkZhK94qQVkVhCA1eceZRNW1XipX-Sr6+8A@mail.gmail.com>
-Subject: Re: [PATCH 06/20] arm64: dts: renesas: r8a774e1: Add USB2.0 phy and
- host (EHCI/OHCI) device nodes
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Aug 2020 19:48:13 +0530
+From:   kalyan_t@codeaurora.org
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [v1] drm/msm/dpu: update reservations in commit path
+In-Reply-To: <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
+References: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
+Message-ID: <37bbf6e41a844f681e263bc13bd6e7ef@codeaurora.org>
+X-Sender: kalyan_t@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add USB2.0 phy and host (EHCI/OHCI) device nodes on RZ/G2H SoC dtsi.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On 2020-08-05 01:02, Rob Clark wrote:
+> On Tue, Aug 4, 2020 at 4:32 AM Kalyan Thota <kalyan_t@codeaurora.org> 
+> wrote:
+>> 
+>> DPU resources reserved in the atomic_check path gets unwinded
+>> during modeset operation before commit happens in a non seamless
+>> transition.
+>> 
+>> Update the reservations in the commit path to avoid resource
+>> failures. Secondly have dummy reservations in atomic_check path
+>> so that we can gracefully fail the composition if resources are
+>> not available.
+>> 
+>> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 15 +++++++++++----
+>>  1 file changed, 11 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> index 63976dc..c6b8254 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> @@ -565,7 +565,7 @@ static int dpu_encoder_virt_atomic_check(
+>>         const struct drm_display_mode *mode;
+>>         struct drm_display_mode *adj_mode;
+>>         struct msm_display_topology topology;
+>> -       struct dpu_global_state *global_state;
+>> +       struct dpu_global_state tmp_resv_state;
+>>         int i = 0;
+>>         int ret = 0;
+>> 
+>> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+>>         dpu_kms = to_dpu_kms(priv->kms);
+>>         mode = &crtc_state->mode;
+>>         adj_mode = &crtc_state->adjusted_mode;
+>> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
+>> +       memset(&tmp_resv_state, 0, sizeof(tmp_resv_state));
+> 
+> I think what you want to do is dpu_kms_get_global_state().. that will
+> clone/duplicate the existing global state (or return the already
+> duplicated global state if it is called multiple times).
+> 
+Thanks Rob, realized the same after posting patch. Made changes in the 
+new patch
+accordingly.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+> It is safe to modify this global state in the atomic_check() path.. in
+> fact that is the intention.  For a TEST_ONLY atomic commit, or if any
+> of the atomic_check()'s fail, this new duplicated global state is
+> discarded.  If all the checks succeed and the atomic update is
+> committed to hw, this new global state replaces the existing global
+> state.
+> 
+Posted a new change kindly review.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> BR,
+> -R
+> 
+>>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
+>> 
+>>         /*
+>> @@ -621,7 +621,7 @@ static int dpu_encoder_virt_atomic_check(
+>>                  * info may not be available to complete reservation.
+>>                  */
+>>                 if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+>> -                       ret = dpu_rm_reserve(&dpu_kms->rm, 
+>> global_state,
+>> +                       ret = dpu_rm_reserve(&dpu_kms->rm, 
+>> &tmp_resv_state,
+>>                                         drm_enc, crtc_state, 
+>> topology);
+>>                 }
+>>         }
+>> @@ -966,7 +966,7 @@ static void dpu_encoder_virt_mode_set(struct 
+>> drm_encoder *drm_enc,
+>>         struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
+>>         struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_ENC] = { NULL };
+>>         int num_lm, num_ctl, num_pp, num_dspp;
+>> -       int i, j;
+>> +       int i, j, rc;
+>> 
+>>         if (!drm_enc) {
+>>                 DPU_ERROR("invalid encoder\n");
+>> @@ -1006,6 +1006,13 @@ static void dpu_encoder_virt_mode_set(struct 
+>> drm_encoder *drm_enc,
+>> 
+>>         topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, 
+>> adj_mode);
+>> 
+>> +       rc = dpu_rm_reserve(&dpu_kms->rm, global_state, drm_enc,
+>> +               drm_crtc->state, topology);
+>> +       if (rc) {
+>> +               DPU_ERROR_ENC(dpu_enc, "Failed to reserve 
+>> resources\n");
+>> +               return;
+>> +       }
+>> +
+>>         /* Query resource that have been reserved in atomic check 
+>> step. */
+>>         num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, 
+>> global_state,
+>>                 drm_enc->base.id, DPU_HW_BLK_PINGPONG, hw_pp,
+>> --
+>> 1.9.1
+>> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
