@@ -2,44 +2,71 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D00C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EBAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C57922B42
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B998C2076E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="YRCgWsJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgHETsx (ORCPT
+        id S1728260AbgHETug (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47400 "EHLO
+        Wed, 5 Aug 2020 15:50:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbgHEQ4J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:56:09 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7119AC001FD5;
-        Wed,  5 Aug 2020 09:05:26 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 730E3298FFF
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 38295480115; Wed,  5 Aug 2020 18:05:21 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv4 0/4] EXC3000 Updates
-Date:   Wed,  5 Aug 2020 18:05:16 +0200
-Message-Id: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+        with ESMTP id S1728028AbgHEQxJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:53:09 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE265C061290
+        for <devicetree@vger.kernel.org>; Wed,  5 Aug 2020 04:01:32 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ep8so4103194pjb.3
+        for <devicetree@vger.kernel.org>; Wed, 05 Aug 2020 04:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Az+AszYcHQWzYCnqT/5thfyfYHza99FgAVuo6NVwe5o=;
+        b=YRCgWsJ8pGTf9hSUA+n2UAu2tevH60z+ftxm0yHShwRstP9B0a1upVpRfJz9WDL68j
+         l8yEHTiQCLSdNiS/bRbYfVZ+rUErAa9vmbTXK3h+gByDGPVvEMF7jquoke5sRJfn1vME
+         CoeVdQYK0iRon/IxKtqOxQkQ8hb7nxsG5ig+U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Az+AszYcHQWzYCnqT/5thfyfYHza99FgAVuo6NVwe5o=;
+        b=WmsoZA3hcgBQoioTebbvSMrqkwJVe2mswXLbTwbBWB52wQ9Q290gk7HncJFblvjDS8
+         MTZbArADBf1QusnbSjDe5zjsw0Bb/p5h7YDPSAcgL1yIuEm5JX4QTlcLg3T5BRKgHP9U
+         9T8VS27e46+pScvTR62/fZcDpxqqAxIRLx3BVLtrQrH31RBZ04q1fsfB/yCvHG/UELxR
+         mV2GPD8fEsbk3ehLthS1xLssA8n/Kr6c1YVzLyDCtxeiLkLxqsBlPV9OUxr169CeAMjv
+         tGQJF0sn/zPcdpQ/4jlsEca/utdpLKfwFH8YgcfhPPf4AtFbh6UsqaxFS2u+rL7i78ah
+         agSg==
+X-Gm-Message-State: AOAM533AI0/GbJA65Ql6tfMVgJK3RijJch2tTnqY9KXP2OW8VXyAuQ1H
+        ogVK+KEsRNzanJhh04/2t29Nzw==
+X-Google-Smtp-Source: ABdhPJxtCw0v0qrAXzPqLGiqTkiXcYFmKfdnKsHWfbhgvd5nuFoxNKvUzwQxkBrwLUbkzgfT+9qCGA==
+X-Received: by 2002:a17:90a:e643:: with SMTP id ep3mr2780313pjb.18.1596625292189;
+        Wed, 05 Aug 2020 04:01:32 -0700 (PDT)
+Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
+        by smtp.googlemail.com with ESMTPSA id fv21sm2583142pjb.16.2020.08.05.04.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 04:01:31 -0700 (PDT)
+From:   Daniel Palmer <daniel@0x0f.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, arnd@arndb.de, Daniel Palmer <daniel@0x0f.com>,
+        Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 3/3] ARM: mstar: Add interrupt controller to base dtsi
+Date:   Wed,  5 Aug 2020 20:00:52 +0900
+Message-Id: <20200805110052.2655487-4-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805110052.2655487-1-daniel@0x0f.com>
+References: <20200805110052.2655487-1-daniel@0x0f.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -47,80 +74,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Add the IRQ and FIQ intc instances to the base MStar/SigmaStar v7
+dtsi. All of the known SoCs have both and at the same place with
+their common IPs using the same interrupt lines.
 
-This is PATCHv3 of the EXC80Hxx support patchset.
+Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+Tested-by: Willy Tarreau <w@1wt.eu>
+---
+ arch/arm/boot/dts/mstar-v7.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Changes since [PATCHv3]:
- - reorder last two patches
- - register 'fw_version' and 'model' sysfs files in i2c device's
-   sysfs node instead of input device
- - Add Reviewed-by from Enric
- - Add Rob Herring and DT mailinglist
- - Drop probe_new API patch (applied)
-
-Changes since [PATCHv2]:
- - add #include <linux/size.h> for SZ_4K and SZ_16K (kbuild test bot)
- - fw_version_show must be ssize_t (kbuild test bot)
- - rename YAML binding file to include eeti, prefix (Enric)
- - noise from gpio-reset patch (Enric)
- - add comment for the retry loop (Enric, Martin)
- - document sysfs entries (Enric)
-
-Changes since [PATCHv1]:
- - prepend new patch converting binding document to YAML
- - prepend new patch switching to I2C probe_new
- - append new patch adding reset-gpio support
- - use explicit compatible values for the touchscreen chips instead of
-   a wildcast. Since the documentation, that I have is very vague let's
-   use different values for exc80h60 and exc80h84. This avoids wildcard
-   DT entries and means we are prepared when noticing differences
-   between the chips.
- - add accidently removed terminator entry in exc3000_id
- - use device structure with max_xy and name (suggested by Martin)
- - use SZ_4K, SZ_16K defines (suggested by Dmitry)
- - harden event check, so that MT1 and MT2 based chips only allow
-   their own event type.
- - write more detailed commit description in the fw_version/model
-   sysfs patch to explain why the values are not cached and why
-   the simpler read(); sleep(); write() approach has not been used
- - use DEVICE_ATTR_RO() in fw_version/model patch to improve readability
- - fw_version/model: replace memcpy + null termination with strlcpy
- - fw_version/model: increase buffer size for weird firmware versions
- - fw_version/model: use sizeof() instead of hardcoded buffer sizes
- - simplify exc3000_query_interrupt() by moving the complete() call to
-   the exc3000_interrupt().
-
-I think I only ignored one review feedback, that the fw_version and
-model sysfs nodes are attached to the input device instead of the
-i2c device. This was done to avoid being racy:
-
-http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
-
-Thanks in advance for looking at the patches,
-
--- Sebastian
-
-[PATCHv3] https://lore.kernel.org/linux-input/20200520153936.46869-1-sebastian.reichel@collabora.com/
-[PATCHv2] https://lore.kernel.org/linux-input/20200519182447.73405-1-sebastian.reichel@collabora.com/
-[PATCHv1] https://lore.kernel.org/linux-input/20191107181010.17211-1-sebastian.reichel@collabora.com/
-
-Sebastian Reichel (4):
-  dt-bindings: touchscreen: Convert EETI EXC3000 touchscreen to
-    json-schema
-  Input: EXC3000: add EXC80H60 and EXC80H84 support
-  Input: EXC3000: Add reset gpio support
-  Input: EXC3000: Add support to query model and fw_version
-
- .../ABI/testing/sysfs-driver-input-exc3000    |  15 ++
- .../input/touchscreen/eeti,exc3000.yaml       |  58 ++++
- .../bindings/input/touchscreen/exc3000.txt    |  26 --
- drivers/input/touchscreen/exc3000.c           | 249 +++++++++++++++++-
- 4 files changed, 308 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-input-exc3000
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-
+diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
+index 3b7b9b793736..2b3bb0886d1a 100644
+--- a/arch/arm/boot/dts/mstar-v7.dtsi
++++ b/arch/arm/boot/dts/mstar-v7.dtsi
+@@ -85,6 +85,26 @@ reboot {
+ 				mask = <0x79>;
+ 			};
+ 
++			intc_fiq: intc@201310 {
++				compatible = "mstar,msc313-intc-fiq";
++				interrupt-controller;
++				reg = <0x201310 0x40>;
++				#interrupt-cells = <2>;
++				interrupt-parent = <&gic>;
++				mstar,gic-offset = <96>;
++				mstar,nr-interrupts = <32>;
++			};
++
++			intc_irq: intc@201350 {
++				compatible = "mstar,msc313-intc-irq";
++				interrupt-controller;
++				reg = <0x201350 0x40>;
++				#interrupt-cells = <2>;
++				interrupt-parent = <&gic>;
++				mstar,gic-offset = <32>;
++				mstar,nr-interrupts = <64>;
++			};
++
+ 			l3bridge: l3bridge@204400 {
+ 				compatible = "mstar,l3bridge";
+ 				reg = <0x204400 0x200>;
 -- 
 2.27.0
 
