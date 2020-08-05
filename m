@@ -2,354 +2,407 @@ Return-Path: <SRS0=mz9M=BP=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04B0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B5922CA1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 19:59:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhlpHhK2"
+	by mail.kernel.org (Postfix) with ESMTP id 38D4A2076E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596657788;
+	bh=NuRrHjb75cFrk+n0vybfkD6hzBt2HG5YdzBYnMqCit0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jxUlh4haduRss+9Sr0pjR5lWyqD39l+dVuQun94y4Mo+ymntuOL9FzF313ikYuyDF
+	 XXVjrudANXK9YoDGyn/b1L9e/d5YnPQZntv1p3I0gXEyHMOJzARMhE71MRupOzuvgx
+	 1hc7SuOgwPMHmUjv2feJAi+i3OYJjTf/uyQT2PbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgHET71 (ORCPT
+        id S1728281AbgHEUCY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:59:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgHEQmM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Aug 2020 12:42:12 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93EF1C034628;
-        Wed,  5 Aug 2020 06:12:17 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g8so5773068wmk.3;
-        Wed, 05 Aug 2020 06:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=srwZS6E/0l7r/CgA4LVzOC1aG7HFShqrxzVtGGn4WfA=;
-        b=IhlpHhK2ckI5iP3DR3Jc6ldpkD8CmAjPZTHUAW0bm2yyP0h8jZZL1Cwmm0rebZq5HY
-         N84wbmNf9VB+gkr02sY06yDaBylKW5lLewRlFqssJW1IrUTESb+nGM2wxEZzdD2bI7sB
-         jZa9Z7ULgpjdOot2LLfvmdA4txiDD6pUbV6+6WT4ODiBf8QxHH+ZLoTya+tOp7GAbiT/
-         cPuSvb3bxjixGgGiCsgwtpiYGVLSC+EEsj0V6mu8+D2F4ZJ5ivLO70wsL+2S3DTVXDXC
-         cpBkG3eYtaZqE0d/+XQxYuxBtdh5o+iICsy4sv6szYBmj4jC+QGh4KRlg0qkCsXReCJP
-         o2JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=srwZS6E/0l7r/CgA4LVzOC1aG7HFShqrxzVtGGn4WfA=;
-        b=EVpEbHgsZ63cZGAMFsWeVYGLKLNft7Ae0NbtpJWlC7JkseR1eSM74rnx7IeZe45gET
-         ht4+2AiSZtEFnBH4eeUll+TGpzUnfxm6uXPHwuJwFdQ7edn692jHzx+CDyXN3zGjE/sn
-         Jz3t1Cnxxbb93pUfSUlEJWq+TgWlwepZtyuHlbzPnsTaV/GARx+RLJL6tSkNgu3qtXAX
-         39/BvtW6V6r542j7+4QDsrjqvD81MH2HTIwDXBkFwgZKPL/16FzHbGQ6kQLDqzM7j+jx
-         9xRwFH3yih7GFAcvDS7WzEz54wpWMD4XAGWHTGHcW8wZkJp+HVheqvg3RXjyv0b2OKxL
-         C5zg==
-X-Gm-Message-State: AOAM532K4YnYMHfPih9OFYzFC8bf1gxU/rlyJ9DocGr6n9gSwZkLLsx6
-        5Sjopei0RP3aNSGZmBuoUG4=
-X-Google-Smtp-Source: ABdhPJxm1X+NfSbrsfJom3DeI6LYmR18lUrtAYEvScy+F1e1NLhYLoOcq8zV+jdTkdA51trnYfDmbw==
-X-Received: by 2002:a7b:cb17:: with SMTP id u23mr3347935wmj.79.1596633134379;
-        Wed, 05 Aug 2020 06:12:14 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-95-251-1-48.retail.telecomitalia.it. [95.251.1.48])
-        by smtp.googlemail.com with ESMTPSA id j11sm2669756wrq.69.2020.08.05.06.12.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:12:13 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/2] cpufreq: qcom: Add Krait Cache Scaling support
-Date:   Wed,  5 Aug 2020 15:11:58 +0200
-Message-Id: <20200805131200.3234-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805131200.3234-1-ansuelsmth@gmail.com>
-References: <20200805131200.3234-1-ansuelsmth@gmail.com>
+        Wed, 5 Aug 2020 16:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbgHEQii (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:38:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77CD52067C;
+        Wed,  5 Aug 2020 16:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596644802;
+        bh=NuRrHjb75cFrk+n0vybfkD6hzBt2HG5YdzBYnMqCit0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2BymGdaHusJTYFIG1xA3p908Cd/DF3LTrd7CO4lIWW06cbmdScox9iztI5jlm//wF
+         iJmXcdFRD7g73XSW/VqccNdZOhWBzPT+Z6vSsQfXYa52Vk5pqJDbY0A4HcRYFkyIjO
+         kqnDo0H5qnidMxWe2tEOBCpv6nYrUYhyipcTnJbM=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k3MFU-0003cw-Tu; Wed, 05 Aug 2020 17:26:41 +0100
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Wed, 05 Aug 2020 17:26:40 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Daniel Palmer <daniel@0x0f.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, robh+dt@kernel.org, arnd@arndb.de,
+        Willy Tarreau <w@1wt.eu>, mark-pk.tsai@mediatek.com
+Subject: Re: [PATCH 2/3] irqchip: mstar: msc313-intc interrupt controller
+ driver
+In-Reply-To: <20200805110052.2655487-3-daniel@0x0f.com>
+References: <20200805110052.2655487-1-daniel@0x0f.com>
+ <20200805110052.2655487-3-daniel@0x0f.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <a2ac8875d67ce7afe1b28f01683e0c9d@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: daniel@0x0f.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, arnd@arndb.de, w@1wt.eu, mark-pk.tsai@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Qcom Krait CPUs use the generic cpufreq-dt driver and doesn't actually
-scale the Cache frequency when the CPU frequency is changed. This
-companion driver register with the cpu notifier and scale the Cache
-based on the max Freq across all core as the CPU cache is shared across
-all of them. If provided this also scale the voltage of the regulator
-attached to the CPU cache. The scaling logic is based on the CPU freq
-and the 3 scaling interval are set by the device dts.
+[+ Mark-PK Tsai]
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/cpufreq/Kconfig.arm   |   9 ++
- drivers/cpufreq/Makefile      |   1 +
- drivers/cpufreq/krait-cache.c | 218 ++++++++++++++++++++++++++++++++++
- 3 files changed, 228 insertions(+)
- create mode 100644 drivers/cpufreq/krait-cache.c
+Hi Daniel,
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index c6cbfc8baf72..4ed5e73051df 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -126,6 +126,15 @@ config ARM_OMAP2PLUS_CPUFREQ
- 	depends on ARCH_OMAP2PLUS
- 	default ARCH_OMAP2PLUS
- 
-+config ARM_QCOM_KRAIT_CACHE_SCALE
-+	tristate "Scaling support for Krait CPU Cache"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	help
-+	  This adds the Scaling support for the Krait CPU Cache shared by
-+	  all cores.
-+
-+	  If in doubt, say N.
-+
- config ARM_QCOM_CPUFREQ_NVMEM
- 	tristate "Qualcomm nvmem based CPUFreq"
- 	depends on ARCH_QCOM
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index f6670c4abbb0..eee53d7e8b09 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -61,6 +61,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
- obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
- obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
- obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-+obj-$(CONFIG_ARM_QCOM_KRAIT_CACHE_SCALE) += krait-cache.o
- obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
- obj-$(CONFIG_ARM_QCOM_CPUFREQ_NVMEM)	+= qcom-cpufreq-nvmem.o
- obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+= raspberrypi-cpufreq.o
-diff --git a/drivers/cpufreq/krait-cache.c b/drivers/cpufreq/krait-cache.c
-new file mode 100644
-index 000000000000..77cdd2cb22fc
---- /dev/null
-+++ b/drivers/cpufreq/krait-cache.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/cpufreq.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+#include <linux/slab.h>
-+#include <linux/regulator/consumer.h>
-+
-+struct krait_data {
-+	struct clk *l2_clk; /* L2 clock */
-+	unsigned int l2_volt_tol; /* L2 voltage tolerance */
-+
-+	struct regulator *l2_regulator; /* L2 supply */
-+	unsigned int l2_rate[3]; /* L2 bus clock rate */
-+	bool l2_rate_set;
-+
-+	unsigned int l2_cpufreq[3]; /* L2 target CPU frequency */
-+	unsigned int l2_volt[3]; /* L2 voltage array */
-+
-+	unsigned long curr_l2_freq;
-+	unsigned long curr_l2_volt;
-+
-+	struct notifier_block nb;
-+};
-+
-+static int krait_cache_notifier(struct notifier_block *nb, unsigned long cmd,
-+				void *v)
-+{
-+	struct cpufreq_freqs *freqs = (struct cpufreq_freqs *)v;
-+	unsigned long l2_freq, target_l2_freq;
-+	unsigned long l2_vol, target_l2_volt;
-+	struct regulator *l2_regulator;
-+	struct krait_data *data;
-+	struct clk *l2_clk;
-+	int ret = 0;
-+
-+	data = container_of(nb, struct krait_data, nb);
-+
-+	if (cmd == CPUFREQ_PRECHANGE) {
-+		unsigned int target_freq = freqs->new;
-+		int cpu, cur_cpu = freqs->policy->cpu, l2_index, tol = 0;
-+
-+		l2_clk = data->l2_clk;
-+
-+		/* find the max freq across all core */
-+		for_each_present_cpu(cpu)
-+			if (cpu != cur_cpu)
-+				target_freq = max(target_freq,
-+						  cpufreq_quick_get(cpu));
-+
-+		/* find l2_freq and l2_volt  */
-+		for (l2_index = 0;
-+		     l2_index < 2 && target_freq <= data->l2_cpufreq[l2_index];
-+		     l2_index++)
-+			break;
-+
-+		l2_freq = data->curr_l2_freq;
-+		target_l2_freq = data->l2_rate[l2_index];
-+
-+		/* scale only if needed */
-+		if (l2_freq != target_l2_freq) {
-+			/*
-+			 * Set to idle bin if switching from normal to high bin
-+			 * or vice versa. It has been notice that a bug is triggered
-+			 * in cache scaling when more than one bin is scaled, to fix
-+			 * this we first need to transition to the base rate and then
-+			 * to target rate
-+			 */
-+			if ((l2_index == 2 && l2_freq == data->l2_rate[1]) ||
-+			    (l2_index == 1 && l2_freq == data->l2_rate[2])) {
-+				ret = clk_set_rate(l2_clk, data->l2_rate[0]);
-+				if (ret)
-+					goto exit;
-+			}
-+
-+			ret = clk_set_rate(l2_clk, target_l2_freq);
-+			if (ret)
-+				goto exit;
-+
-+			data->curr_l2_freq = target_l2_freq;
-+
-+			l2_regulator = data->l2_regulator;
-+			if (l2_regulator) {
-+				l2_vol = data->curr_l2_volt;
-+				target_l2_volt = data->l2_volt[l2_index];
-+
-+				if (l2_vol != target_l2_volt) {
-+					tol = target_l2_volt *
-+					      data->l2_volt_tol / 100;
-+					ret = regulator_set_voltage_tol(
-+						l2_regulator, target_l2_volt,
-+						tol);
-+					if (ret)
-+						goto exit;
-+
-+					data->curr_l2_volt = target_l2_volt;
-+				}
-+			}
-+		}
-+	}
-+
-+exit:
-+	return notifier_from_errno(ret);
-+}
-+
-+static int krait_cache_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct clk *l2_clk;
-+	struct device_node *vdd;
-+	struct krait_data *data;
-+	struct regulator *l2_regulator;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->l2_clk = clk_get(dev, "l2");
-+	if (IS_ERR(l2_clk)) {
-+		ret = PTR_ERR(l2_clk);
-+		goto err;
-+	}
-+
-+	of_property_read_u32(node, "voltage-tolerance", &data->l2_volt_tol);
-+
-+	of_property_read_u32_array(node, "l2-rates", data->l2_rate, 3);
-+	if (data->l2_rate[0] && data->l2_rate[1] && data->l2_rate[2]) {
-+		data->l2_rate_set = true;
-+		of_property_read_u32_array(node, "l2-cpufreq", data->l2_cpufreq,
-+					   3);
-+		of_property_read_u32_array(node, "l2-volt", data->l2_volt, 3);
-+	} else {
-+		dev_warn(dev, "failed to parse L2 rates\n");
-+	}
-+
-+	if (!data->l2_cpufreq[0] && !data->l2_cpufreq[1] &&
-+	    !data->l2_cpufreq[2] && data->l2_rate_set) {
-+		int i;
-+
-+		dev_warn(dev,
-+			 "failed to parse target cpu freq, using defaults\n");
-+		for (i = 0; i < 3; i++)
-+			data->l2_cpufreq[i] = data->l2_rate[i];
-+	}
-+
-+	if (data->l2_volt[0] && data->l2_volt[1] && data->l2_volt[2] &&
-+	    data->l2_rate_set) {
-+		vdd = of_parse_phandle(node, "l2-supply", 0);
-+
-+		if (vdd) {
-+			l2_regulator = devm_regulator_get(dev, vdd->name);
-+			if (!IS_ERR(l2_regulator)) {
-+				data->l2_regulator = l2_regulator;
-+			} else {
-+				dev_err(dev,
-+					"failed to get l2 supply, error=%pe\n",
-+					l2_regulator);
-+			}
-+
-+			of_node_put(vdd);
-+		}
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->nb.notifier_call = krait_cache_notifier;
-+	cpufreq_register_notifier(&data->nb, CPUFREQ_TRANSITION_NOTIFIER);
-+
-+	return 0;
-+
-+err:
-+	kfree(data);
-+	return ret;
-+}
-+
-+static int krait_cache_remove(struct platform_device *pdev)
-+{
-+	struct krait_data *data = platform_get_drvdata(pdev);
-+
-+	cpufreq_unregister_notifier(&data->nb, CPUFREQ_TRANSITION_NOTIFIER);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id krait_cache_match_table[] = {
-+	{ .compatible = "qcom,krait-cache" },
-+	{}
-+};
-+
-+static struct platform_driver krait_cache_driver = {
-+	.probe		= krait_cache_probe,
-+	.remove		= krait_cache_remove,
-+	.driver		= {
-+		.name   = "krait-cache-scaling",
-+		.of_match_table = krait_cache_match_table,
-+	},
-+};
-+
-+static int __init krait_cache_init(void)
-+{
-+	return platform_driver_register(&krait_cache_driver);
-+}
-+late_initcall(krait_cache_init);
-+
-+static void __exit krait_cache_exit(void)
-+{
-+	platform_driver_unregister(&krait_cache_driver);
-+}
-+module_exit(krait_cache_exit);
-+
-+MODULE_DESCRIPTION("Krait CPU Cache Scaling driver");
-+MODULE_LICENSE("GPL v2");
+On 2020-08-05 12:00, Daniel Palmer wrote:
+> Add a driver for the two peripheral interrupt controllers
+> in MStar MSC313 and other MStar/Sigmastar Armv7 SoCs.
+> 
+> Supports both the "IRQ" and "FIQ" controllers that
+> forward interrupts from the various IP blocks inside the
+> SoC to the ARM GIC.
+> 
+> They are basically the same thing except for one difference:
+> The FIQ controller needs to clear the interrupt and the IRQ
+> controller doesn't.
+> 
+> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> Tested-by: Willy Tarreau <w@1wt.eu>
+> ---
+>  MAINTAINERS                       |   1 +
+>  drivers/irqchip/Makefile          |   1 +
+>  drivers/irqchip/irq-msc313-intc.c | 210 ++++++++++++++++++++++++++++++
+>  3 files changed, 212 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-msc313-intc.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6e64d17aad7b..4d07403a7726 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2157,6 +2157,7 @@ F:	arch/arm/boot/dts/infinity*.dtsi
+>  F:	arch/arm/boot/dts/mercury*.dtsi
+>  F:	arch/arm/boot/dts/mstar-v7.dtsi
+>  F:	arch/arm/mach-mstar/
+> +F:	drivers/irqchip/irq-msc313-intc.c
+> 
+>  ARM/NEC MOBILEPRO 900/c MACHINE SUPPORT
+>  M:	Michael Petchkovsky <mkpetch@internode.on.net>
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 133f9c45744a..67f3ae3507b8 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -111,3 +111,4 @@ obj-$(CONFIG_LOONGSON_HTPIC)		+= 
+> irq-loongson-htpic.o
+>  obj-$(CONFIG_LOONGSON_HTVEC)		+= irq-loongson-htvec.o
+>  obj-$(CONFIG_LOONGSON_PCH_PIC)		+= irq-loongson-pch-pic.o
+>  obj-$(CONFIG_LOONGSON_PCH_MSI)		+= irq-loongson-pch-msi.o
+> +obj-$(CONFIG_ARCH_MSTARV7)		+= irq-msc313-intc.o
+> diff --git a/drivers/irqchip/irq-msc313-intc.c
+> b/drivers/irqchip/irq-msc313-intc.c
+> new file mode 100644
+> index 000000000000..b50f5c858d38
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-msc313-intc.c
+> @@ -0,0 +1,210 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 Daniel Palmer
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +#define REGOFF_MASK		0x0
+> +#define REGOFF_POLARITY		0x10
+> +#define REGOFF_STATUSCLEAR	0x20
+> +#define IRQSPERREG		16
+> +#define IRQBIT(hwirq)		BIT((hwirq % IRQSPERREG))
+> +#define REGOFF(hwirq)		((hwirq >> 4) * 4)
+> +
+> +struct msc313_intc {
+> +	struct irq_domain *domain;
+> +	void __iomem *base;
+> +	struct irq_chip irqchip;
+
+Why do you need to embed the irq_chip on a per-controller basis?
+
+> +	u8 gicoff;
+
+Given that basic SPIs can be in the 32-1019 range, this is at
+best risky. u32s are free, please use them.
+
+> +};
+> +
+> +static void msc313_intc_maskunmask(struct msc313_intc *intc, int
+> hwirq, bool mask)
+> +{
+> +	int regoff = REGOFF(hwirq);
+> +	void __iomem *addr = intc->base + REGOFF_MASK + regoff;
+> +	u16 bit = IRQBIT(hwirq);
+> +	u16 reg = readw_relaxed(addr);
+> +
+> +	if (mask)
+> +		reg |= bit;
+> +	else
+> +		reg &= ~bit;
+> +
+> +	writew_relaxed(reg, addr);
+
+RMW on a shared MMIO register. Not going to end well. This is valid
+for all the callbacks, I believe.
+
+Also, please inline the maskunmask code in their respective callers.
+It will be much more readable.
+
+> +}
+> +
+> +static void msc313_intc_mask_irq(struct irq_data *data)
+> +{
+> +	struct msc313_intc *intc = data->chip_data;
+> +
+> +	msc313_intc_maskunmask(intc, data->hwirq, true);
+> +	irq_chip_mask_parent(data);
+> +}
+> +
+> +static void msc313_intc_unmask_irq(struct irq_data *data)
+> +{
+> +	struct msc313_intc *intc = data->chip_data;
+> +
+> +	msc313_intc_maskunmask(intc, data->hwirq, false);
+> +	irq_chip_unmask_parent(data);
+> +}
+> +
+> +static int msc313_intc_set_type_irq(struct irq_data *data, unsigned
+> int flow_type)
+> +{
+> +	struct msc313_intc *intc = data->chip_data;
+> +	int irq = data->hwirq;
+> +	int regoff = REGOFF(irq);
+> +	void __iomem *addr = intc->base + REGOFF_POLARITY + regoff;
+> +	u16 bit = IRQBIT(irq);
+> +	u16 reg = readw_relaxed(addr);
+
+Please try to write this in a more readable way. For example:
+
+
+         struct msc313_intc *intc = data->chip_data;
+         void __iomem *addr;
+         u16 reg, bit;
+
+         addr = intc->base + REGOFF_POLARITY + REGOFF(d->hwirq);
+         reg = readw_relaxed(addr);
+         bit = IRQBIT(d->hwirq);
+
+White space is free, and some of the variables are really useless.
+
+> +
+> +	if (flow_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_HIGH))
+> +		reg &= ~bit;
+> +	else
+> +		reg |= bit;
+
+I don't follow grasp the logic here. What happens on EDGE_BOTH, for
+example?
+
+> +
+> +	writew_relaxed(reg, addr);
+
+Surely you need to communicate the change of signalling mode
+to the parent irqchip, don't you?
+
+> +	return 0;
+> +}
+> +
+> +static void msc313_intc_irq_eoi(struct irq_data *data)
+> +{
+> +	struct msc313_intc *intc = data->chip_data;
+> +	int irq = data->hwirq;
+> +	int regoff = REGOFF(irq);
+> +	void __iomem *addr = intc->base + REGOFF_STATUSCLEAR + regoff;
+> +	u16 bit = IRQBIT(irq);
+> +	u16 reg = readw_relaxed(addr);
+> +
+> +	reg |= bit;
+> +	writew_relaxed(reg, addr);
+> +	irq_chip_eoi_parent(data);
+> +}
+> +
+> +static int msc313_intc_domain_translate(struct irq_domain *d,
+> +				     struct irq_fwspec *fwspec,
+> +				     unsigned long *hwirq,
+> +				     unsigned int *type)
+> +{
+> +	if (!is_of_node(fwspec->fwnode) || fwspec->param_count != 2)
+> +		return -EINVAL;
+> +
+> +	*hwirq = fwspec->param[0];
+
+Don't you want to check that the input you get is actually in range?
+Not a big deal, given that you then use it as an input parameter
+to the GIC driver, it'd better be correct.
+
+> +	*type = fwspec->param[1];
+> +
+> +	return 0;
+> +}
+> +
+> +static int msc313_intc_domain_alloc(struct irq_domain *domain,
+> unsigned int virq,
+> +				 unsigned int nr_irqs, void *data)
+> +{
+> +	struct irq_fwspec *fwspec = data;
+> +	struct irq_fwspec parent_fwspec;
+> +	struct msc313_intc *intc = domain->host_data;
+> +
+> +	if (fwspec->param_count != 2)
+> +		return -EINVAL;
+> +
+> +	irq_domain_set_hwirq_and_chip(domain, virq, fwspec->param[0],
+> &intc->irqchip, intc);
+> +
+> +	parent_fwspec.fwnode = domain->parent->fwnode;
+> +	parent_fwspec.param[0] = GIC_SPI;
+> +	parent_fwspec.param[1] = fwspec->param[0] + intc->gicoff;
+> +	parent_fwspec.param[2] = fwspec->param[1];
+> +	parent_fwspec.param_count = 3;
+> +
+> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
+> +					    &parent_fwspec);
+> +}
+> +
+> +static const struct irq_domain_ops msc313_intc_domain_ops = {
+> +		.translate = msc313_intc_domain_translate,
+> +		.alloc = msc313_intc_domain_alloc,
+> +		.free = irq_domain_free_irqs_common,
+> +};
+> +
+> +static int  msc313_intc_of_init(struct device_node *node,
+> +				   struct device_node *parent,
+> +				   void (*eoi)(struct irq_data *data))
+> +{
+> +	struct irq_domain *domain_parent;
+> +	struct msc313_intc *intc;
+> +	int ret = 0;
+> +	u32 gicoffset, numirqs;
+> +
+> +	if (of_property_read_u32(node, "mstar,gic-offset", &gicoffset)) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	if (of_property_read_u32(node, "mstar,nr-interrupts", &numirqs)) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	domain_parent = irq_find_host(parent);
+> +	if (!domain_parent) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	intc = kzalloc(sizeof(*intc), GFP_KERNEL);
+> +	if (!intc) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	intc->base = of_iomap(node, 0);
+> +	if (IS_ERR(intc->base)) {
+> +		ret = PTR_ERR(intc->base);
+> +		goto free_intc;
+> +	}
+> +
+> +	intc->irqchip.name = node->name;
+
+No, please. /proc/interrupt isn't a dumping ground for DT related
+information. We have debugfs for that.
+
+> +	intc->irqchip.irq_mask = msc313_intc_mask_irq;
+> +	intc->irqchip.irq_unmask = msc313_intc_unmask_irq;
+> +	intc->irqchip.irq_eoi = eoi;
+> +	intc->irqchip.irq_set_type = msc313_intc_set_type_irq;
+> +	intc->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
+
+This needs to be a static irq_chip structure. Use two for the EOI
+weirdness, or test a flag in your eoi callback.
+
+> +
+> +	intc->gicoff = gicoffset;
+> +
+> +	intc->domain = irq_domain_add_hierarchy(domain_parent, 0, numirqs, 
+> node,
+> +			&msc313_intc_domain_ops, intc);
+> +	if (!intc->domain) {
+> +		ret = -ENOMEM;
+> +		goto unmap;
+> +	}
+> +
+> +	return 0;
+> +
+> +unmap:
+> +	iounmap(intc->base);
+> +free_intc:
+> +	kfree(intc);
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int __init msc313_intc_irq_of_init(struct device_node *node,
+> +				   struct device_node *parent)
+> +{
+> +	return msc313_intc_of_init(node, parent, irq_chip_eoi_parent);
+> +};
+> +
+> +static int __init msc313_intc_fiq_of_init(struct device_node *node,
+> +				   struct device_node *parent)
+> +{
+> +	return msc313_intc_of_init(node, parent, msc313_intc_irq_eoi);
+> +};
+> +
+> +IRQCHIP_DECLARE(msc313_intc_irq, "mstar,msc313-intc-irq",
+> +		msc313_intc_irq_of_init);
+> +IRQCHIP_DECLARE(mstar_intc_fiq, "mstar,msc313-intc-fiq",
+> +		msc313_intc_fiq_of_init);
+
+This driver has a massive feeling of déja-vu. It is almost
+a copy of the one posted at [1], which I reviewed early
+this week. The issues are the exact same, and I'm 98%
+sure this is the same IP block used by two SoC vendors.
+
+Please talk to each other and come up with a single driver.
+
+Thanks,
+
+         M.
+
+[1] 
+https://lore.kernel.org/r/20200803062214.24076-1-mark-pk.tsai@mediatek.com
 -- 
-2.27.0
-
+Jazz is not dead. It just smells funny...
