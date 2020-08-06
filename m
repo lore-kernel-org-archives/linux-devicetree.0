@@ -2,119 +2,76 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0556C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE6FC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E80D2086A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295EB2086A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgHFQzs (ORCPT
+        id S1729861AbgHFQ4A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:55:48 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:33314 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbgHFQzr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:55:47 -0400
-Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 8EC6B3B2C33;
-        Thu,  6 Aug 2020 14:37:42 +0000 (UTC)
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 75B25C000F;
-        Thu,  6 Aug 2020 14:32:18 +0000 (UTC)
-Date:   Thu, 6 Aug 2020 16:35:59 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: ov772x: Document endpoint
- properties
-Message-ID: <20200806143559.ha6amfa4gq2o4jbi@uno.localdomain>
-References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1596454753-13612-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 6 Aug 2020 12:56:00 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36072 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728912AbgHFQkn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:40:43 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 11A872005E0;
+        Thu,  6 Aug 2020 13:53:36 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 376DF200869;
+        Thu,  6 Aug 2020 13:53:32 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 14A3340252;
+        Thu,  6 Aug 2020 13:53:27 +0200 (CEST)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: imx6sl-evk: Add headphone detection for sound card
+Date:   Thu,  6 Aug 2020 19:48:53 +0800
+Message-Id: <1596714533-16350-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Headphone detection is triggered by GPIO, then driver can
+switch between speaker and headphone.
 
-On Mon, Aug 03, 2020 at 12:39:11PM +0100, Lad Prabhakar wrote:
-> Document endpoint properties required for parallel interface
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov772x.txt     | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> index 0b3ede5b8e6a..1f4153484717 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> @@ -21,6 +21,22 @@ subnode for its digital output video port, in accordance with the video
->  interface bindings defined in Documentation/devicetree/bindings/media/
->  video-interfaces.txt.
->
-> +Endpoint node required properties for parallel connection are:
-> +- remote-endpoint: a phandle to the bus receiver's endpoint node.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sl-evk.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-we allow endpoints without a remote end connected usually. They can be
-filled in later, in example, with an overlay.
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index bc86cfaaa9c2..a17d6b784c0d 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -106,6 +106,7 @@ sound {
+ 			"IN3R", "AMIC";
+ 		mux-int-port = <2>;
+ 		mux-ext-port = <3>;
++		hp-det-gpio = <&gpio4 19 GPIO_ACTIVE_LOW>;
+ 	};
+ 
+ 	panel {
+@@ -295,6 +296,7 @@ MX6SL_PAD_REF_CLK_32K__GPIO3_IO22 0x17059
+ 				MX6SL_PAD_KEY_COL4__GPIO4_IO00	0x80000000
+ 				MX6SL_PAD_KEY_COL5__GPIO4_IO02	0x80000000
+ 				MX6SL_PAD_AUD_MCLK__AUDIO_CLK_OUT 0x4130b0
++				MX6SL_PAD_FEC_RX_ER__GPIO4_IO19	  0x1b0b0
+ 			>;
+ 		};
+ 
+-- 
+2.27.0
 
-> +- bus-width: shall be set to <8> for 8 bits parallel bus
-> +	     or <10> for 10 bits parallel bus
-> +- data-shift: shall be set to <2> for 8 bits parallel bus
-> +	      (lines 9:2 are used) or <0> for 10 bits parallel bus
-
-defining what is required or optional might be hard. I don't see the
-driver enforcing their presence and I assume they have safe default.
-Maybe make them optional and specify what the defaul value is ?
-
-
-> +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> +		(Not required for bus-type equal 6)
-> +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> +		(Not required for bus-type equal 6)
-
-If they're not required, they're optional, aren't they ? :)
-
-> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
-> +	       signal. (Not required for bus-type equal 6)
-
-Why the pclk polarity is does not apply to BT.656 ?
-
-> +- bus-type: data bus type. Possible values are:
-> +	    5 - Parallel
-> +	    6 - Bt.656
-
-Are we making this required, or do we expect this to be deduced
-depending on which other properties have been specified ? Sakari it
-seems you would like this to become a properties that has to be
-specified most of the times, right ? (I tend to agree with that FWIW),
-but does it impact retro-compatibility ?
-
-> +
->  Example:
->
->  &i2c0 {
-> --
-> 2.17.1
->
