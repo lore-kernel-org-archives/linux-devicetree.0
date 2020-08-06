@@ -2,100 +2,113 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D707EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DE0C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29DA7206B2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6551B206B2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H/LXcHAb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrMpilwZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgHFRpX (ORCPT
+        id S1730084AbgHFRpX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 6 Aug 2020 13:45:23 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54742 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728984AbgHFQiU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:38:20 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 076FCr1E111118;
-        Thu, 6 Aug 2020 10:12:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596726773;
-        bh=clr1VV5fPhd6AHkch16xD7rviP96hWisxiD/e/1uR3I=;
-        h=To:CC:From:Subject:Date;
-        b=H/LXcHAbdCuFU8t9rrNFf1lbDN0jDofl7KV460VgutudTGmclKw2O/+Fi6CChq6Xz
-         R70EdAi+CWvRbSwm2sTogdRiWVorO+CWI/+jHffJGI+p5Fp2loBnzid9sKDGXFYUzq
-         BOZ4u2anwRvP9jXUzhN5CGjOGt8DhMrYtEOP5eVQ=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076FCroR047443;
-        Thu, 6 Aug 2020 10:12:53 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
- 2020 10:12:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 6 Aug 2020 10:12:52 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076FCqGN065312;
-        Thu, 6 Aug 2020 10:12:52 -0500
-To:     Rob Herring <robh@kernel.org>
-CC:     "Rivera-Matos, Ricardo" <r-rivera-matos@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Subject: [RFC] Writing a yaml to support multiple devices
-Message-ID: <d8963f7a-c675-0e83-7ad9-cb79455cce58@ti.com>
-Date:   Thu, 6 Aug 2020 10:12:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgHFQii (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:38:38 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF47C0A8937;
+        Thu,  6 Aug 2020 09:37:52 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id i10so17745342ljn.2;
+        Thu, 06 Aug 2020 09:37:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4Q0WTpvCCL+6Pe1EDwbYvKPkRlKq8z+DxxZ7AeLCJVg=;
+        b=TrMpilwZ9M4MwreBNnwma2VJI2q26VefA0WuFvLmreCsroIk7jwLukMoCftKuFEuhS
+         HjGOlFlw/dYW35bodmQ6KKv0WGlQYjZH/XbqPrpMGhlaVF9lk6rQoZeA7tpKXz4kOSlg
+         XyZx8DGJYmazif0infQGFLCmFl+o4w8GFZHCaIKFlhIlY0sdWoZEjWMO0w1it2SS4fwk
+         gbYGX6VbT0MA5LPdQq8Wpt6+s3LMoJcTIfMqzpPDgBIrs29E48gURdn0VRoshdUsYcKo
+         AIWWxTFDiyb0GIaIchp1SJDjiTtVTWZc0IECA4QTnL5L+aidt2pZTIoFIoZO4YWqrQNG
+         7wdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4Q0WTpvCCL+6Pe1EDwbYvKPkRlKq8z+DxxZ7AeLCJVg=;
+        b=BxIJiPKdwoPV/iH0CQVNCPjmD5sSMC8rZEils/HQegH/+r9BYoX83aM3t6qzO1BOcH
+         GI5OjO7eV1WCpSTORZpE0oMXvnmU99cSqn7Vvkiv4F9fKcCQIZx8wUqDNYfEW2JhT6VS
+         V+e17ygsHe2FiEkIwn4pUukkzAPJqXGp291qytKWA+8Ahg8HMmENOFFK/m6/Zec9Gy00
+         STQnD6Bn8XO20nQUx0JTUbuj9YIV81tFJ5ERTpRkIECVhOR0QXWPhuj6fPj/7H74+j83
+         fRdZ+TRNvonSG2kxCfjxJ3MRG1DlgJkqhoAK4SbtGm1NmYUvwSyLH81vvVmgYYzU0HdY
+         UhCw==
+X-Gm-Message-State: AOAM532GDQkSMSeCEOPd+ROYfgtaq9npF73iIa3Jeo/UqTHgp8qv71f6
+        c5eB4cJhseWQQF0kdoDKGGyAmqVb
+X-Google-Smtp-Source: ABdhPJx4ujwkV04InWB60thG1oTCOQyv6u1R0K+P5Nf1ivz2mWIs/0ZQn9L5vQD/xYaS9UXOT+8p8w==
+X-Received: by 2002:a05:651c:330:: with SMTP id b16mr4315610ljp.77.1596731868683;
+        Thu, 06 Aug 2020 09:37:48 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id e14sm2613354ljl.96.2020.08.06.09.37.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 09:37:47 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <9deaee09-c422-5694-7c19-d85354b9b703@gmail.com>
+Message-ID: <14793e8c-30dc-5cf5-fdf9-6f64fa433818@gmail.com>
+Date:   Thu, 6 Aug 2020 19:37:46 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9deaee09-c422-5694-7c19-d85354b9b703@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
-Message-ID: <20200806151252.WuqjHBOlNYLbBHIxVkjnSXPEbdtIwpk42bap2mkst7o@z>
 
-Rob
+06.08.2020 19:13, Dmitry Osipenko пишет:
+> 06.08.2020 18:59, Sowjanya Komatineni пишет:
+> ..
+>> We cant use active status check for specific pads under calibration.
+>> This is common bit for all pads.
+> 
+> I'm not sure why this is a problem.
+> 
 
-I have a question on how to properly instrument a yaml that supports a 
-family of charger devices.  These devices will have a common driver 
-since the register maps are the same but the min,max and default values 
-are different in different registers.
-
-The devices are the BQ25980, BQ25975 and the BQ25960 they have a 
-configuration to provide over voltage protection values as in the 
-example below.
-
-ti,sc-ovp-limit-microvolt:
-     description: |
-       Minimum input voltage limit in micro volts with a when the 
-charger is in
-       switch cap mode. 100000 micro volt step.
-     default: 17800000
-     minimum: 14000000
-     maximum: 22000000
-
-The issue here is that the min, max and default are for the BQ25980 
-where as the 975 and 960 have min of 7v, a max of 12.75v and a default 
-of 8.9v.  I am not sure how to write the yaml to indicate these differences.
-
-Can you point me to an example yaml that may have this properly done?  
-Or should we create a separate yaml for the 980 and inherit the 975 and 
-960 yaml?
-
-Any guidance is appreciated.  I think we have a similar situations on 
-some other drivers we are writing so the guidance will go a long way.
-
-Dan
-
+IIUC, the start_calibration() should wait for the MIPI_CAL_STATUS_ACTIVE
+and finish_calibration() should wait for MIPI_AUTO_CAL_DONE_CSIA/B.
