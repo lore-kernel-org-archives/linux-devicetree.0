@@ -2,514 +2,413 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B7DC433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16BCC433E1
 	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD8002311A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F342311C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ygfsba48"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mqnrLYT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgHFRYD (ORCPT
+        id S1729231AbgHFRYE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
+        Thu, 6 Aug 2020 13:24:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729954AbgHFRE4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:04:56 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB05C03461F
-        for <devicetree@vger.kernel.org>; Thu,  6 Aug 2020 06:25:45 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so34031959wrm.6
-        for <devicetree@vger.kernel.org>; Thu, 06 Aug 2020 06:25:45 -0700 (PDT)
+        with ESMTP id S1729892AbgHFREx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:04:53 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73148C061A29
+        for <devicetree@vger.kernel.org>; Thu,  6 Aug 2020 05:22:31 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f24so29590003ejx.6
+        for <devicetree@vger.kernel.org>; Thu, 06 Aug 2020 05:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=57HL3Mhek2tPr4EHNczJ9yRHMOPu9jYI3Mibt+cFat8=;
-        b=Ygfsba48/5RguXx55Fy4DT6mPC2nit0tDjqGKYxagikf0yZ3StU3ryTf6RPDTM1Hq8
-         CUEa2GWqoHcIj89f5mBjDgLLSYHbJHSK6o0dffWzl2CBwN60qv3ZVD1JrgF3aTx2/Z/a
-         WaZJ+kF30wHbGLXbouRXiimf4C/xvYmtcXqejy5J1i5X3m1voxsIDC0v7BVByUh2q6NC
-         ZLOZaPCKNi5dXm72yQKqgqS4DBjQcdDklqp2TyRsljH2U2YK6M5RqljImEZuq0wJxcj9
-         ItkesKOAxa0KgImYv7gJOOoRy6M56PczFU5tqsc+qq3DtQlHgr6pO7XqvVd025q3jprx
-         QWHg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ygTHH6z3t5pz1vFwQDOJBdjYbzbAicrJ7bWsKtBIPiQ=;
+        b=mqnrLYT8csUaJlYAbqCi05AguC/CSNhhI47z1VTPY9KV2yS3v1aSa46a+IZs5wUUtg
+         ww//Y7TIeAey2H/zuWRwJ+ihmxZoNp0WqcpDme9qnTz7mKx0dY24x+GLNbUp2BHJu/us
+         NIghKodgtId9O20fLKuZZhiv8NZ7i3cF/tK7M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=57HL3Mhek2tPr4EHNczJ9yRHMOPu9jYI3Mibt+cFat8=;
-        b=Mv/G83yDaa+tWs+Ho03pKkQLLg1JisOTRMO92/OXqaUYsd+ntSlR7z151ECK/9aDx5
-         YNwWN1mKBnB4KruI91DnKwhbC9k89naC9Pce3GwuPERY+p2RfvozGgt0okKmEppymcdh
-         /6Wx4S2r69a5RyQ/mtnM7hplXopi6SBAm7aVAVbLXgjtZi/1ZYw7saPEuvRe+wf35LKH
-         XHalbG6XMN5KVD0PNakcvj8X10i4i/dVI+Gxt/7AcndFMHKyZH+87UH7e819Xw1VO2OM
-         b/COz4y8DNd69gzZwKlyl/ZWbiHrz4mByxI95FoOXUcB1fUqwjTx4po+i9+PUEYF+pLZ
-         ToLA==
-X-Gm-Message-State: AOAM531ISrQIqfgfFgpKbL7AqI1a+czuC4YfU3ToyO5JDFUuAOEPW7GD
-        WzgLnNxaFC8qcST8sLAR0yo9U0IZGeYqYA==
-X-Google-Smtp-Source: ABdhPJyRXZkGjLDuIuKYo610OUx0FT6uueCMypc6l+mPGszPnxiow1UwkKF7kmNpjRP9XliwnJOwqQ==
-X-Received: by 2002:adf:ee51:: with SMTP id w17mr7779745wro.239.1596720338502;
-        Thu, 06 Aug 2020 06:25:38 -0700 (PDT)
-Received: from linux.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v29sm6558153wrv.51.2020.08.06.06.25.37
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ygTHH6z3t5pz1vFwQDOJBdjYbzbAicrJ7bWsKtBIPiQ=;
+        b=W5XbNwjmyjWsDddYWDDVifLKXHcnCoL/gufHJcv9qN6q9UC8hf9tDCWR0Vxb3XyGEt
+         CZ3pVgaLIxzfLn7O3VURduPSOpHQTXtpMhkRLRllux6hajfx34g0J8iyH6+bKVxmP9NM
+         LJ2Q9WhpQ4KNCMDDbItE6K+C+R+dDDegsxsF3waE1uJROAiVuU7U4qyT7gdND8OCvxM/
+         Xq6s3puaVIIFG9n6rp0vls21PeqPWXOCcTqtG146MxQPGiqq+QYzq3eLAGa4q7mlRkqR
+         v4hHVcte/3EvR20h0t8GH6ta1sDYcxyzaWnywxA/oR6h+ldb+LvL1qqacjho37PgjUP7
+         vB2g==
+X-Gm-Message-State: AOAM532Jd5V9T7aplA43BpXmMOJaM4XI2H6xp/9yWnb9t3sucVcghM1Y
+        ZQ6IpYZwbz1UmZ5U5+wFVs82sRxK4VYjPw==
+X-Google-Smtp-Source: ABdhPJyuH2HhspX8oJcC/MNRUvLJoC81YaCKjuwO3Qkcp6JaK+8biTLRpKt+q3f/x2EGfYPxhNUk0w==
+X-Received: by 2002:a17:907:94ca:: with SMTP id dn10mr4077730ejc.110.1596716547921;
+        Thu, 06 Aug 2020 05:22:27 -0700 (PDT)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
+        by smtp.gmail.com with ESMTPSA id b2sm3632453ejg.70.2020.08.06.05.22.26
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 06:25:37 -0700 (PDT)
-Subject: Re: [PATCH 2/6] remoteproc: Add a remoteproc driver for the MT8183's
- APU
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200713132927.24925-1-abailon@baylibre.com>
- <20200713132927.24925-3-abailon@baylibre.com>
- <20200720221726.GD1113627@xps15>
-From:   Alexandre Bailon <abailon@baylibre.com>
-Message-ID: <0a3ce3bb-87aa-c1a7-6791-b4482117e3e2@baylibre.com>
-Date:   Thu, 6 Aug 2020 15:25:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 06 Aug 2020 05:22:26 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id a5so33835408wrm.6
+        for <devicetree@vger.kernel.org>; Thu, 06 Aug 2020 05:22:26 -0700 (PDT)
+X-Received: by 2002:adf:82b2:: with SMTP id 47mr7026358wrc.17.1596716545374;
+ Thu, 06 Aug 2020 05:22:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200720221726.GD1113627@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-6-helen.koike@collabora.com> <20190816001323.GF5011@pendragon.ideasonboard.com>
+ <30b6367d-9088-d755-d041-904ff2a48130@collabora.com> <20200722152459.GC1828171@chromium.org>
+ <32a95f66-0328-dfe7-c05c-657aba0d1b25@collabora.com> <05fb7b03-22b5-c981-2602-bbe877943d58@collabora.com>
+In-Reply-To: <05fb7b03-22b5-c981-2602-bbe877943d58@collabora.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 6 Aug 2020 14:22:13 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5AWEOr62OrBfRb2HW53omjYfpvN_BAO+eQdRkR9Cixx9w@mail.gmail.com>
+Message-ID: <CAAFQd5AWEOr62OrBfRb2HW53omjYfpvN_BAO+eQdRkR9Cixx9w@mail.gmail.com>
+Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Eddie Cai <eddie.cai.linux@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Chen Jacob <jacob2.chen@rock-chips.com>,
+        Jeffy <jeffy.chen@rock-chips.com>,
+        =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        kernel@collabora.com, Ezequiel Garcia <ezequiel@collabora.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Jacob Chen <cc@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mathieu,
+On Thu, Aug 6, 2020 at 11:21 AM Dafna Hirschfeld
+<dafna.hirschfeld@collabora.com> wrote:
+>
+>
+>
+> Am 05.08.20 um 23:10 schrieb Dafna Hirschfeld:
+> > Hi
+> >
+> > On 22.07.20 17:24, Tomasz Figa wrote:
+> >> Hi Dafna,
+> >>
+> >> On Sat, Jul 11, 2020 at 01:04:31PM +0200, Dafna Hirschfeld wrote:
+> >>> Hi Laurent,
+> >>>
+> >>> On 16.08.19 02:13, Laurent Pinchart wrote:
+> >>>> Hello Helen,
+> >>>>
+> >>>> Thank you for the patch.
+> >>>>
+> >>>> On Tue, Jul 30, 2019 at 03:42:47PM -0300, Helen Koike wrote:
+> >> [snip]
+> >>>>> +static void rkisp1_isp_queue_event_sof(struct rkisp1_isp_subdev *isp)
+> >>>>> +{
+> >>>>> +    struct v4l2_event event = {
+> >>>>> +        .type = V4L2_EVENT_FRAME_SYNC,
+> >>>>> +        .u.frame_sync.frame_sequence =
+> >>>>> +            atomic_inc_return(&isp->frm_sync_seq) - 1,
+> >>>>
+> >>>> I would move the increment to the caller, hiding it in this function is
+> >>>> error-prone (and if you look at the caller I'm pointing out one possible
+> >>>> error :-)).
+> >>>>
+> >>>> In general usage of frm_sync_seq through the driver seems to be very
+> >>>> race-prone. It's read in various IRQ handling functions, all coming from
+> >>>> the same IRQ, so that part is fine (and wouldn't require an atomic
+> >>>> variable), but when read from the buffer queue handlers I really get a
+> >>>> red light flashing in my head. I'll try to investigate more when
+> >>>> reviewing the next patches.
+> >>>
+> >>> I see that the only place were 'frame_sequence' is read outside of the irq
+> >>> handlers is in the capture in 'rkisp1_vb2_buf_queue':
+> >>>
+> >>>     /*
+> >>>           * If there's no next buffer assigned, queue this buffer directly
+> >>>           * as the next buffer, and update the memory interface.
+> >>>           */
+> >>>          if (cap->is_streaming && !cap->buf.next &&
+> >>>              atomic_read(&cap->rkisp1->isp.frame_sequence) == -1) {
+> >>>                  cap->buf.next = ispbuf;
+> >>>                  rkisp1_set_next_buf(cap);
+> >>>          } else {
+> >>>                  list_add_tail(&ispbuf->queue, &cap->buf.queue);
+> >>>          }
+> >>> This "if" condition seems very specific, a case where we already stream but v-start was not yet received.
+> >>> I think it is possible to remove the test 'atomic_read(&cap->rkisp1->isp.frame_sequence) == -1'
+> >>> from the above condition so that the next buffer is updated in case it is null not just before the first
+> >>> v-start signal.
+> >>>
+> >>
+> >> We don't have this special case in the Chrome OS code.
+> >>
+> >> I suppose it would make it possible to resume the capture 1 frame
+> >> earlier after a queue underrun, as otherwise the new buffer would be
+> >> only programmed after the next frame start interrupt and used for the
+> >> next-next frame.  However, it's racy, because programming of the buffer
+> >> addresses is not atomic and could end up with the hardware using few
+> >> plane addresses from the new buffer and few from the dummy buffer.
+> >>
+> >> Given that and also the fact that a queue underrun is a very special
+> >> case, where the system was already having problems catching up, I'd just
+> >> remove this special case.
+> >>
+> >> [snip]
+> >>>>> +void rkisp1_isp_isr(unsigned int isp_mis, struct rkisp1_device *dev)
+> >>>>> +{
+> >>>>> +    void __iomem *base = dev->base_addr;
+> >>>>> +    unsigned int isp_mis_tmp = 0;
+> >>>>
+> >>>> _tmp are never good names :-S
+> >>>>
+> >>>>> +    unsigned int isp_err = 0;
+> >>>>
+> >>>> Neither of these variable need to be initialised to 0.
+> >>>>
+> >>>>> +
+> >>>>> +    /* start edge of v_sync */
+> >>>>> +    if (isp_mis & CIF_ISP_V_START) {
+> >>>>> +        rkisp1_isp_queue_event_sof(&dev->isp_sdev);
+> >>>>
+> >>>> This will increment the frame sequence number. What if the interrupt is
+> >>>> slightly delayed and the next frame starts before we get a change to
+> >>>> copy the sequence number to the buffers (before they will complete
+> >>>> below) ?
+> >>>
+> >>> Do you mean that we get two sequental v-start signals and then the next
+> >>> frame-end signal in MI_MIS belongs to the first v-start signal of the two?
+> >>> How can this be solved? I wonder if any v-start signal has a later signal
+> >>> that correspond to the same frame so that we can follow it?
+> >>>
+> >>> Maybe we should have one counter that is incremented on v-start signal,
+> >>> and another counter that is incremented uppon some other signal?
+> >>>
+> >>
+> >> We're talking about a hard IRQ. I can't imagine the interrupt handler
+> >> being delayed for a time close to a full frame interval (~16ms for 60
+> >> fps) to trigger such scenario.
+> >>
+> >>>>
+> >>>>> +
+> >>>>> +        writel(CIF_ISP_V_START, base + CIF_ISP_ICR);
+> >>>>
+> >>>> Do you need to clear all interrupt bits individually, can't you write
+> >>>> isp_mis to CIF_ISP_ICR at the beginning of the function to clear them
+> >>>> all in one go ?
+> >>>>
+> >>>>> +        isp_mis_tmp = readl(base + CIF_ISP_MIS);
+> >>>>> +        if (isp_mis_tmp & CIF_ISP_V_START)
+> >>>>> +            v4l2_err(&dev->v4l2_dev, "isp icr v_statr err: 0x%x\n",
+> >>>>> +                 isp_mis_tmp);
+> >>>>
+> >>>> This require some explanation. It looks like a naive way to protect
+> >>>> against something, but I think it could trigger under normal
+> >>>> circumstances if IRQ handling is delayed, and wouldn't do much anyway.
+> >>>> Same for the similar constructs below.
+> >>>>
+> >>>>> +    }
+> >>>>> +
+> >>>>> +    if ((isp_mis & CIF_ISP_PIC_SIZE_ERROR)) {
+> >>>>> +        /* Clear pic_size_error */
+> >>>>> +        writel(CIF_ISP_PIC_SIZE_ERROR, base + CIF_ISP_ICR);
+> >>>>> +        isp_err = readl(base + CIF_ISP_ERR);
+> >>>>> +        v4l2_err(&dev->v4l2_dev,
+> >>>>> +             "CIF_ISP_PIC_SIZE_ERROR (0x%08x)", isp_err);
+> >>>>
+> >>>> What does this mean ?
+> >>>>
+> >>>>> +        writel(isp_err, base + CIF_ISP_ERR_CLR);
+> >>>>> +    } else if ((isp_mis & CIF_ISP_DATA_LOSS)) {
+> >>>>
+> >>>> Are CIF_ISP_PIC_SIZE_ERROR and CIF_ISP_DATA_LOSS mutually exclusive ?
+> >>>>
+> >>>>> +        /* Clear data_loss */
+> >>>>> +        writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
+> >>>>> +        v4l2_err(&dev->v4l2_dev, "CIF_ISP_DATA_LOSS\n");
+> >>>>> +        writel(CIF_ISP_DATA_LOSS, base + CIF_ISP_ICR);
+> >>>>> +    }
+> >>>>> +
+> >>>>> +    /* sampled input frame is complete */
+> >>>>> +    if (isp_mis & CIF_ISP_FRAME_IN) {
+> >>>>> +        writel(CIF_ISP_FRAME_IN, base + CIF_ISP_ICR);
+> >>>>> +        isp_mis_tmp = readl(base + CIF_ISP_MIS);
+> >>>>> +        if (isp_mis_tmp & CIF_ISP_FRAME_IN)
+> >>>>> +            v4l2_err(&dev->v4l2_dev, "isp icr frame_in err: 0x%x\n",
+> >>>>> +                 isp_mis_tmp);
+> >>>>> +    }
+> >>>>> +
+> >>>>> +    /* frame was completely put out */
+> >>>>
+> >>>> "put out" ? :-) What's the difference between ISP_FRAME_IN and ISP_FRAME
+> >>>> ? The two comments could do with a bit of brush up, and I think the
+> >>>> ISP_FRAME_IN interrupt could be disabled as it doesn't perform any
+> >>>> action.
+> >>>
+> >>> Those two oneline comments are just copy-paste from the datasheet.
+> >>>
+> >>> ""
+> >>> 5 MIS_FRAME_IN sampled input frame is complete
+> >>> 1 MIS_FRAME frame was completely put out
+> >>> ""
+> >>>
+> >>> Unfrotunately, the datasheet does not add any further explanation about those signals.
+> >>>
+> >>>
+> >>
+> >> My loose recollection is that the former is signaled when then frame
+> >> is fully input to the ISP and the latter when the ISP completes
+> >> outputting the frame to the next block in the pipeline, but someone
+> >> would need to verify this, for example by printing timestamps for all
+> >> the various interrupts.
+> >>
+> >>>>
+> >>>>> +    if (isp_mis & CIF_ISP_FRAME) {
+> >>>>> +        u32 isp_ris = 0;
+> >>>>
+> >>>> No need to initialise this to 0.
+> >>>>
+> >>>>> +        /* Clear Frame In (ISP) */
+> >>>>> +        writel(CIF_ISP_FRAME, base + CIF_ISP_ICR);
+> >>>>> +        isp_mis_tmp = readl(base + CIF_ISP_MIS);
+> >>>>> +        if (isp_mis_tmp & CIF_ISP_FRAME)
+> >>>>> +            v4l2_err(&dev->v4l2_dev,
+> >>>>> +                 "isp icr frame end err: 0x%x\n", isp_mis_tmp);
+> >>>>> +
+> >>>>> +        isp_ris = readl(base + CIF_ISP_RIS);
+> >>>>> +        if (isp_ris & (CIF_ISP_AWB_DONE | CIF_ISP_AFM_FIN |
+> >>>>> +                   CIF_ISP_EXP_END | CIF_ISP_HIST_MEASURE_RDY))
+> >>>>> +            rkisp1_stats_isr(&dev->stats_vdev, isp_ris);
+> >>>>
+> >>>> Is there a guarantee that the statistics will be fully written out
+> >>>> before the video frame itself ? And doesn't this test if any of the
+> >>>> statistics is complete, not all of them ? I think the logic is wrong, it
+> >>>
+> >>> The datasheet does not add any explanation of what is expected to come first.
+> >>> Should we wait until all statistics measurements are done? In the struct
+> >>> sent to userspace there is a bitmaks for which of the statistics are read.
+> >>> I think that if only part of the statistics are ready, we can already send the once
+> >>> that are ready to userspace.
+> >>>
+> >>
+> >> If we look further into the code, rkisp1_stats_isr() checks the
+> >> interrupt status mask passed to it and reads out only the parameters
+> >> with indicated completion. The statistics metadata buffer format
+> >> includes a bit mask which tells the userspace which measurements are
+> >> available.
+> >>
+> >> However, I think I've spotted a bug there. At the beginning of
+> >> rkisp1_stats_isr(), all the 4 interrupt status bits are cleared,
+> >> regardless of the mask used later to decide which readouts need to be
+> >> done. This could mean that with an unfortunate timing, some measurements
+> >> would be lost. So at least the code should be fixed to only clear the
+> >> interrupts bits really handled.
+> >
+> > I'll fix that
+>
+> I actually don't think this is a bug. The statistics interrupts are not
+> enabled and are read from the raw interrupts register. This means
+> that if we missed a statistics for the current frame and we don't reset it
+> then we will read it only when the next frame comes out, so it will be
+> wrongly set as statistics for the next frame although it is actually for the
+> current frame.
 
-On 7/21/20 12:17 AM, Mathieu Poirier wrote:
-> On Mon, Jul 13, 2020 at 03:29:23PM +0200, Alexandre Bailon wrote:
->> This adds a driver to control the APU present in the MT8183.
->> This loads the firmware and start the DSP.
->>
->> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
->> ---
->>   drivers/remoteproc/Kconfig         |  10 +
->>   drivers/remoteproc/Makefile        |   1 +
->>   drivers/remoteproc/mtk_apu_rproc.c | 308 +++++++++++++++++++++++++++++
-> I would name the file mtk_apu.c to be consistent with the existing mtk_scp.c
-I will rename it
->
->>   3 files changed, 319 insertions(+)
->>   create mode 100644 drivers/remoteproc/mtk_apu_rproc.c
->>
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index c4d1731295eb..e116d4a12ac3 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -42,6 +42,16 @@ config MTK_SCP
->>   
->>   	  It's safe to say N here.
->>   
->> +config MTK_APU
->> +	tristate "Mediatek APU remoteproc support"
->> +	depends on ARCH_MEDIATEK
->> +	depends on MTK_IOMMU
->> +	help
->> +	  Say y to support the Mediatek's Accelerated Processing Unit (APU) via
->> +	  the remote processor framework.
->> +
->> +	  It's safe to say N here.
->> +
->>   config OMAP_REMOTEPROC
->>   	tristate "OMAP remoteproc support"
->>   	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index e8b886e511f0..2ea231b75fa6 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -12,6 +12,7 @@ remoteproc-y				+= remoteproc_elf_loader.o
->>   obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->>   obj-$(CONFIG_INGENIC_VPU_RPROC)		+= ingenic_rproc.o
->>   obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
->> +obj-$(CONFIG_MTK_APU)			+= mtk_apu_rproc.o
->>   obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->>   obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->>   obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
->> diff --git a/drivers/remoteproc/mtk_apu_rproc.c b/drivers/remoteproc/mtk_apu_rproc.c
->> new file mode 100644
->> index 000000000000..fb416a817ef3
->> --- /dev/null
->> +++ b/drivers/remoteproc/mtk_apu_rproc.c
->> @@ -0,0 +1,308 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2020 BayLibre SAS
->> + */
->> +
->> +#include <linux/bitops.h>
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/iommu.h>
->> +#include <linux/irq.h>
->> +#include <linux/kernel.h>
->> +#include <linux/highmem.h>
-> Move this below "delay.h"
->
->> +#include <linux/module.h>
->> +#include <linux/of_reserved_mem.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/remoteproc.h>
->> +
->> +#include "remoteproc_internal.h"
->> +
->> +/* From MT8183 4.5 Vision Processor Unit (VPU).pdf datasheet */
->> +#define SW_RST					(0x0000000C)
->> +#define  SW_RST_OCD_HALT_ON_RST			BIT(12)
->> +#define  SW_RST_IPU_D_RST			BIT(8)
->> +#define  SW_RST_IPU_B_RST			BIT(4)
-> Please don't indent defines.
->
->> +#define CORE_CTRL				(0x00000110)
->> +#define  CORE_CTRL_PDEBUG_ENABLE		BIT(31)
->> +#define	 CORE_CTRL_SRAM_64K_iMEM		(0x00 << 27)
->> +#define	 CORE_CTRL_SRAM_96K_iMEM		(0x01 << 27)
->> +#define	 CORE_CTRL_SRAM_128K_iMEM		(0x02 << 27)
->> +#define	 CORE_CTRL_SRAM_192K_iMEM		(0x03 << 27)
->> +#define	 CORE_CTRL_SRAM_256K_iMEM		(0x04 << 27)
->> +#define  CORE_CTRL_PBCLK_ENABLE			BIT(26)
->> +#define  CORE_CTRL_RUN_STALL			BIT(23)
->> +#define  CORE_CTRL_STATE_VECTOR_SELECT		BIT(19)
->> +#define  CORE_CTRL_PIF_GATED			BIT(17)
->> +#define  CORE_CTRL_NMI				BIT(0)
->> +#define CORE_XTENSA_INT				(0x00000114)
->> +#define CORE_CTL_XTENSA_INT			(0x00000118)
->> +#define CORE_DEFAULT0				(0x0000013C)
->> +#define  CORE_DEFAULT0_QOS_SWAP_0		(0x00 << 28)
->> +#define  CORE_DEFAULT0_QOS_SWAP_1		(0x01 << 28)
->> +#define  CORE_DEFAULT0_QOS_SWAP_2		(0x02 << 28)
->> +#define  CORE_DEFAULT0_QOS_SWAP_3		(0x03 << 28)
->> +#define  CORE_DEFAULT0_ARUSER_USE_IOMMU		(0x10 << 23)
->> +#define  CORE_DEFAULT0_AWUSER_USE_IOMMU		(0x10 << 18)
->> +#define CORE_DEFAULT1				(0x00000140)
->> +#define  CORE_DEFAULT0_ARUSER_IDMA_USE_IOMMU	(0x10 << 0)
->> +#define  CORE_DEFAULT0_AWUSER_IDMA_USE_IOMMU	(0x10 << 5)
->> +#define CORE_XTENSA_ALTRESETVEC			(0x000001F8)
->> +
->> +struct mtk_vpu_rproc {
->> +	struct device *dev;
->> +	struct rproc *rproc;
->> +
->> +	void __iomem *base;
->> +	int irq;
->> +	struct clk *axi;
->> +	struct clk *ipu;
->> +	struct clk *jtag;
->> +};
->> +
->> +static u32 vpu_read32(struct mtk_vpu_rproc *vpu_rproc, u32 off)
->> +{
->> +	return readl(vpu_rproc->base + off);
->> +}
->> +
->> +static void vpu_write32(struct mtk_vpu_rproc *vpu_rproc, u32 off, u32 value)
->> +{
->> +	writel(value, vpu_rproc->base + off);
->> +}
-> Not sure that much is gained by adding the above two functions.  Just using
-> readl/writel would suit me just fine.
-I though this was more convenient to use but using readl/writel is also 
-fine for me.
->> +
->> +static int mtk_vpu_rproc_start(struct rproc *rproc)
->> +{
->> +	struct mtk_vpu_rproc *vpu_rproc = rproc->priv;
->> +	u32 core_ctrl;
->> +
->> +	vpu_write32(vpu_rproc, CORE_XTENSA_ALTRESETVEC, rproc->bootaddr);
->> +
->> +	core_ctrl = vpu_read32(vpu_rproc, CORE_CTRL);
->> +	core_ctrl |= CORE_CTRL_PDEBUG_ENABLE | CORE_CTRL_PBCLK_ENABLE |
->> +		     CORE_CTRL_STATE_VECTOR_SELECT | CORE_CTRL_RUN_STALL |
->> +		     CORE_CTRL_PIF_GATED;
->> +	vpu_write32(vpu_rproc, CORE_CTRL, core_ctrl);
->> +
->> +	vpu_write32(vpu_rproc, SW_RST, SW_RST_OCD_HALT_ON_RST |
->> +				       SW_RST_IPU_B_RST | SW_RST_IPU_D_RST);
->> +	ndelay(27);
-> What is this for?  The state of the VPU can't be polled?
+Yes, I noticed that the driver attempts to reduce the number of
+interrupts by assuming that the ISP statistics can be read after the
+MIS_FRAME interrupt. However, in this case, I don't think we can ever
+miss statistics for a frame (unless the system is broken and has
+unacceptable interrupt latencies) nor the unfortunate timing I
+suggested before could ever take place.
 
-TBH, I don't know. I got the programming model from Mediatek's kernel.
+Best regards,
+Tomasz
 
-I assumed that was the minimum time required to maintain reset asserted 
-to make it effective.
-
->
->> +	vpu_write32(vpu_rproc, SW_RST, 0);
->> +
->> +	core_ctrl &= ~CORE_CTRL_PIF_GATED;
->> +	vpu_write32(vpu_rproc, CORE_CTRL, core_ctrl);
->> +
->> +	vpu_write32(vpu_rproc, CORE_DEFAULT0, CORE_DEFAULT0_AWUSER_USE_IOMMU |
->> +					      CORE_DEFAULT0_ARUSER_USE_IOMMU |
->> +					      CORE_DEFAULT0_QOS_SWAP_1);
->> +	vpu_write32(vpu_rproc, CORE_DEFAULT1,
->> +		    CORE_DEFAULT0_AWUSER_IDMA_USE_IOMMU |
->> +		    CORE_DEFAULT0_ARUSER_IDMA_USE_IOMMU);
->> +
->> +	core_ctrl &= ~CORE_CTRL_RUN_STALL;
->> +	vpu_write32(vpu_rproc, CORE_CTRL, core_ctrl);
-> I would certainly appreciate more comments that describe that is going on in
-> this function.
-I will try to comment a little more but again, this come from Mediatek's 
-kernel.
-Even if I have access to the datasheet, there are no much details.
->
->> +
->> +	return 0;
->> +}
->> +
->> +static int mtk_vpu_rproc_stop(struct rproc *rproc)
->> +{
->> +	struct mtk_vpu_rproc *vpu_rproc = rproc->priv;
->> +	u32 core_ctrl;
->> +
->> +	core_ctrl = vpu_read32(vpu_rproc, CORE_CTRL);
->> +	vpu_write32(vpu_rproc, CORE_CTRL, core_ctrl | CORE_CTRL_RUN_STALL);
->> +
->> +	return 0;
->> +}
->> +
->> +static void mtk_vpu_rproc_kick(struct rproc *rproc, int vqid)
->> +{
->> +	struct mtk_vpu_rproc *vpu_rproc = rproc->priv;
->> +
->> +	vpu_write32(vpu_rproc, CORE_CTL_XTENSA_INT, 1 << vqid);
->> +}
->> +
->> +static const struct rproc_ops mtk_vpu_rproc_ops = {
->> +	.start		= mtk_vpu_rproc_start,
->> +	.stop		= mtk_vpu_rproc_stop,
->> +	.kick		= mtk_vpu_rproc_kick,
->> +};
->> +
->> +static irqreturn_t mtk_vpu_rproc_callback(int irq, void *data)
->> +{
->> +	struct rproc *rproc = (struct rproc *)data;
-> There is no need to cast when working with a void pointer.  The same comment
-> applies throughout.
->
->> +	struct mtk_vpu_rproc *vpu_rproc = (struct mtk_vpu_rproc *)rproc->priv;
->> +
->> +	vpu_write32(vpu_rproc, CORE_XTENSA_INT, 1);
->> +
->> +	return IRQ_WAKE_THREAD;
->> +}
->> +
->> +static irqreturn_t handle_event(int irq, void *data)
->> +{
->> +	struct rproc *rproc = (struct rproc *)data;
->> +
->> +	rproc_vq_interrupt(rproc, 0);
->> +	rproc_vq_interrupt(rproc, 1);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int mtk_vpu_rproc_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct mtk_vpu_rproc *vpu_rproc;
->> +	struct rproc *rproc;
->> +	struct resource *res;
->> +	int ret;
->> +
->> +	rproc = rproc_alloc(dev, "apu", &mtk_vpu_rproc_ops, NULL,
->> +			    sizeof(*vpu_rproc));
-> The problem with hard coding the name of the remote process is that it work on
-> only when there is a single processor.  Based on the DTS extention sent with
-> this serie, there seems to be a possibility of having more the one.  As such
-> both remote processor will be called "apu", mandating you to look at the
-> platform resources to know which is which.  Consider using dev_name() or
-> dev->of_node->name.
->
->> +	if (!rproc)
->> +		return -ENOMEM;
->> +
->> +	rproc->recovery_disabled = true;
->> +	rproc->has_iommu = false;
->> +
->> +	vpu_rproc = rproc->priv;
->> +	vpu_rproc->rproc = rproc;
->> +	vpu_rproc->dev = dev;
->> +
->> +	platform_set_drvdata(pdev, rproc);
->> +
->> +	rproc->domain = iommu_get_domain_for_dev(dev);
->> +	if (!rproc->domain) {
->> +		dev_err(dev, "Failed to get the IOMMU domain\n");
->> +		ret = -EINVAL;
->> +		goto free_rproc;
->> +	}
->> +
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	vpu_rproc->base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(vpu_rproc->base)) {
->> +		dev_err(&pdev->dev, "Failed to map mmio\n");
-> Above dev_err() is used with @dev while here @pdev->dev is.  Please pick one you
-> like and stick with it.
->
->> +		ret = PTR_ERR(vpu_rproc->base);
->> +		goto free_rproc;
->> +	}
->> +
->> +	vpu_rproc->irq = platform_get_irq(pdev, 0);
->> +	if (vpu_rproc->irq < 0) {
->> +		ret = vpu_rproc->irq;
->> +		goto free_rproc;
->> +	}
->> +
->> +	ret = devm_request_threaded_irq(dev, vpu_rproc->irq,
->> +					mtk_vpu_rproc_callback, handle_event,
->> +					IRQF_SHARED | IRQF_ONESHOT,
->> +					"mtk_vpu-remoteproc", rproc);
-> Same problem as above, i.e hard coding the name of the interrupt will be
-> confusing when probing sysfs.  Here rproc->index holds the value that
-> corresponds to 'X' in /sys/dev/class/remoteproc/remoteprocX.  Simply build a
-> string using that and feed it to devm_request_threaded_ifq().
->
->
->> +	if (ret) {
->> +		dev_err(dev, "devm_request_threaded_irq error: %d\n", ret);
->> +		goto free_rproc;
->> +	}
->> +
->> +	vpu_rproc->ipu = devm_clk_get(dev, "ipu");
->> +	if (IS_ERR(vpu_rproc->ipu)) {
->> +		dev_err(dev, "Failed to get ipu clock\n");
->> +		ret = PTR_ERR(vpu_rproc->ipu);
->> +		goto free_rproc;
->> +	}
->> +
->> +	ret = clk_prepare_enable(vpu_rproc->ipu);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable ipu clock\n");
->> +		goto free_rproc;
->> +	}
->> +
->> +	vpu_rproc->axi = devm_clk_get(dev, "axi");
->> +	if (IS_ERR(vpu_rproc->axi)) {
->> +		dev_err(dev, "Failed to get axi clock\n");
->> +		ret = PTR_ERR(vpu_rproc->axi);
->> +		goto clk_disable_ipu;
->> +	}
->> +
->> +	ret = clk_prepare_enable(vpu_rproc->axi);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable axi clock\n");
->> +		goto clk_disable_ipu;
->> +	}a
-> Please look at how Paul use the clock bulk API to deal with multiple clocs in
-> ingenic_rproc.c and see if it is possible to use the same scheme.
-I did not knew the bulk API. I think it should work.
->
->> +
->> +	vpu_rproc->jtag = devm_clk_get_optional(dev, "jtag");
-> Why is the jtag clock optional when the binding document says that it "seems to
-> be required to run the DSP, even when JTAG is not in use"?
-
-I forget to change it to devm_clk_get when I figured out this was 
-actually not optional.
-
-Thanks,
-Alexandre
-
->
->> +	if (IS_ERR(vpu_rproc->jtag)) {
->> +		dev_err(dev, "Failed to enable jtag clock\n");
->> +		ret = PTR_ERR(vpu_rproc->jtag);
->> +		goto clk_disable_axi;
->> +	}
->> +
->> +	ret = clk_prepare_enable(vpu_rproc->jtag);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to enable jtag clock\n");
->> +		goto clk_disable_axi;
->> +	}
->> +
->> +	ret = of_reserved_mem_device_init(dev);
->> +	if (ret) {
->> +		dev_err(dev, "device does not have specific CMA pool\n");
->> +		goto clk_disable_jtag;
->> +	}
->> +
->> +	ret = rproc_add(rproc);
->> +	if (ret) {
->> +		dev_err(dev, "rproc_add failed: %d\n", ret);
->> +		goto free_mem;
->> +	}
->> +
->> +	return 0;
->> +
->> +free_mem:
->> +	of_reserved_mem_device_release(dev);
->> +clk_disable_jtag:
->> +	clk_disable_unprepare(vpu_rproc->jtag);
->> +clk_disable_axi:
->> +	clk_disable_unprepare(vpu_rproc->axi);
->> +clk_disable_ipu:
->> +	clk_disable_unprepare(vpu_rproc->ipu);
->> +free_rproc:
->> +	rproc_free(rproc);
->> +
->> +	return ret;
->> +}
->> +
->> +static int mtk_vpu_rproc_remove(struct platform_device *pdev)
->> +{
->> +	struct rproc *rproc = platform_get_drvdata(pdev);
->> +	struct mtk_vpu_rproc *vpu_rproc = (struct mtk_vpu_rproc *)rproc->priv;
->> +	struct device *dev = &pdev->dev;
->> +
->> +	disable_irq(vpu_rproc->irq);
->> +
->> +	rproc_del(rproc);
->> +	of_reserved_mem_device_release(dev);
->> +	clk_disable_unprepare(vpu_rproc->jtag);
->> +	clk_disable_unprepare(vpu_rproc->axi);
->> +	clk_disable_unprepare(vpu_rproc->ipu);
->> +	rproc_free(rproc);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id mtk_vpu_rproc_of_match[] __maybe_unused = {
-> Why is "__maybe_unused" needed?
 >
 > Thanks,
-> Mathieu
+> Dafna
 >
->
->> +	{ .compatible = "mediatek,mt8183-apu", },
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, mtk_vpu_rproc_of_match);
->> +
->> +static struct platform_driver mtk_vpu_rproc_driver = {
->> +	.probe = mtk_vpu_rproc_probe,
->> +	.remove = mtk_vpu_rproc_remove,
->> +	.driver = {
->> +		.name = "mtk_vpu-rproc",
->> +		.of_match_table = of_match_ptr(mtk_vpu_rproc_of_match),
->> +	},
->> +};
->> +module_platform_driver(mtk_vpu_rproc_driver);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR("Alexandre Bailon");
->> +MODULE_DESCRIPTION("Mt8183 VPU Remote Processor control driver");
->> -- 
->> 2.26.2
->>
+> >
+> >>
+> >> As for whether to send separate buffers for each measurement, I guess
+> >> it's not a bad thing to let the userspace access the ones available
+> >> earlier. Now I only don't recall why we decided to put all the
+> >> measurements into one metadata structure, rather than splitting the 4
+> >> into their own structures and buffer queues...
+> >
+> > Is it possible to have several queues to the same video node?
+> >
+> >>
+> >>>> seems it should be moved out of the CIF_ISP_FRAME test, to a test of its
+> >>>> own. It's hard to tell for sure without extra information though (for
+> >>>> instance why are the stats-related bits read from CIF_ISP_RIS, when
+> >>>> they seem to be documented as valid in CIF_ISP_ISR), but this should be
+> >>>> validated, and most probably fixed. Care should be taken to keep
+> >>>> synchronisation of sequence number between the different queues.
+> >>>
+> >>> I see that the capture buffers are done before incrementing the frame_sequence with
+> >>> the following explanation:
+> >>>
+> >>>     /*
+> >>>           * Call rkisp1_capture_isr() first to handle the frame that
+> >>>           * potentially completed using the current frame_sequence number before
+> >>>           * it is potentially incremented by rkisp1_isp_isr() in the vertical
+> >>>           * sync.
+> >>>           */
+> >>>
+> >>> I think reading the stats/params should also be done before calling rkisp1_capture_isr
+> >>> for the same reason. (so to match the correct frame_sequence)
+> >>
+> >> My recollection of the sequence of interrupts in this hardware is like
+> >> this:
+> >>
+> >> CIF_ISP_V_START (frame 0)
+> >>    CIF_ISP_FRAME_IN (frame 0)
+> >>      CIF_ISP_FRAME (frame 0)
+> >>        CIF_ISP_AWB_DONE
+> >>        CIF_ISP_AFM_FIN
+> >>        CIF_ISP_EXP_END
+> >>        CIF_ISP_HIST_MEASURE_RDY
+> >>        CIF_MI_FRAME*
+> >>        CIF_ISP_V_START (frame 1)
+> >>          CIF_ISP_FRAME_IN (frame 1)
+> >>            CIF_ISP_FRAME (frame 1)
+> >>              ...
+> >>
+> >> where the interrupts at the same indentation level can happen
+> >> independently of each other. Again, someone would have to verify this.
+> >
+> > I wrote this patch to print the interrupts and the time difference between interrupts:
+> > https://gitlab.collabora.com/dafna/linux/-/commit/9b9c5ddc2f06a6b87d2c1b210219f69de83296c5
+> >
+> > I got this output: http://ix.io/2tl8,
+> > there is a repeating pattern where only v-start interrupt is sent, indicated by the prints "isp mis 0x00000040" then about 23 milisec later are the other interrupts
+> > (FRAME_IN, FRAME, MI_FRAME* ) and about 10 milisec the v-start interrupt again.
+> >
+> > I am still not sure why the mi_frame interrupt should be handled first. If it happen for example that all the interrupts arrive at once, how can
+> > we know that the MI_FRAME interrupt relates to the previous v-start interrupt and not the current one?
+> > I think that for that we need a code that keep track of the previous interrupt.
+> >
+> > Thanks,
+> > Dafna
+> >
+> >
+> >>
+> >> Best regards,
+> >> Tomasz
+> >>
