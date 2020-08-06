@@ -2,107 +2,306 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CE3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB78BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC4923119
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309FE2086A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:55:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKtgqXyM"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="tOwdgn1x";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="MUPEndLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgHFQxe (ORCPT
+        id S1729574AbgHFQyr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729352AbgHFQut (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:50:49 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05AEEC002172;
-        Thu,  6 Aug 2020 09:13:44 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id d2so20782820lfj.1;
-        Thu, 06 Aug 2020 09:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MmVura5RdAnpr7fQMyfSzUsj8YChs1506fdeSTUofBA=;
-        b=cKtgqXyMnWAhAXx07h6MqHavPWnX+8vXN9E3//RSzZrZbRq/c5xK4c3KEh+FuEAUsr
-         sUmOhnTKG4o6G4tAlFBd34n2g7jgUAJ1pmlPWRXqeq4RIO6bYlb6uIIIVHUBGrlr3yCB
-         JVWuF90zqMAtaVrlgRDv2u5AOYCVWSTnQL7HKFCIDDRZT7ZgmLEg2YBkdE1/Yan5LJA9
-         vB2G/v8lSG5MgS23J6HzSe+XRoEjUSb/yAfBGuuXZd2PWH2glivmm7E7VVcQoPGzzShk
-         rl5AFSHzVbyAhRAzcIbLDbrT7vhF1A2E07b/dz7NNT4hVAy5scVNkcaYqKTo05qb/ELK
-         dm8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MmVura5RdAnpr7fQMyfSzUsj8YChs1506fdeSTUofBA=;
-        b=dMBv2BeMaxnRGmLhCxVasCTfvwSld5znC5C8FDaVmlgmvqfDUol9nNlwlPYW95siXE
-         tJLaoRVyXXdL5P3EkyU5ncKOzERw/2qd7znz60wdTLXLk90BFke7Qkf+qds5kCRXFg0l
-         BvR5UTc5jQ8LoGr994BJGRSUIaROy3DwGPsFf41s8MTsxmkuRnonBBC8WdvHQqgCNX17
-         QAkQ8o6RL6kks9eT6u+Z1ZWIVVrlz7jQEnD8GSLMmRj8sobOMLYscc14eBaltNS2eZgG
-         d4catp8WQ8wEda9NjoA5/OZNK37Bv+KniZ+j457qKK31XMxZDPwgO7hYWEtScT04HpUT
-         QNFQ==
-X-Gm-Message-State: AOAM533ovDejqT8diYMVSPhxp+Ja4nCKn2Bqw4+ITS7Av5OJyRdede7e
-        a92hX05cmLP+rVYIUI2NXJFgifpC
-X-Google-Smtp-Source: ABdhPJxyQ5DUwhm0mMp316XsoDHXatr2AKM4d69hS19HNWsjohoDpk8gx0kZj8bJ5qSAUfPGeLHkvw==
-X-Received: by 2002:a19:c68b:: with SMTP id w133mr4214252lff.189.1596730420623;
-        Thu, 06 Aug 2020 09:13:40 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id d13sm2905531lfl.89.2020.08.06.09.13.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 09:13:39 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9deaee09-c422-5694-7c19-d85354b9b703@gmail.com>
-Date:   Thu, 6 Aug 2020 19:13:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 12:54:47 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:41298 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729553AbgHFQuP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:50:15 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076BPHEA021976;
+        Thu, 6 Aug 2020 04:34:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
+ b=tOwdgn1xj8iQeTTNkWlbqv/Z7e5ov9tvfiACiFqqopM4nQrVYB+LJCaA0vqzGpBsyl4i
+ ECDKkaYuiq4CC1riaV41jEDfvhF4zFp0JMI4TchpIAIhcaN/9ZJ1F3ZXTAGC15PDVQa8
+ /VTNEoWgcrSutU3nXHrKNafweVcFrpH+XTrcD2Qjl5eyAoANUpr0cbkBFGlp+W2OT9p7
+ HfH0INjkF1/OjxH4dNDQTiCn3JnaW3A4+OXCK5Um+5zad1jvHRcNxYMSSvqtv/fumFWx
+ L6D0HupBOseuNMYBexEJ2xwy+oKU0dqcgDSqfcAMTH6i2Obilvgk9dEotgT8u7H2hYNT Rw== 
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2104.outbound.protection.outlook.com [104.47.58.104])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 32n8gy1uv9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 04:34:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B6KIIb228bj11R77OeOpZU3wXab7L/Deq63qL90YrW8r1snK5Fir0jb1vhcZbGwVfZ1cBJ/C8dd94gXAlax5fLWKe1qv2xbczaFr+5VR/GpEd3LvNXOtkcSZZsaCvVIVOJ37g2RMZT5YSGdYqnRmh+QaHqOdzM5RNLX8TCXUYeYtBF/paurW8ZCg/4lX5xJ0a1uRQTseEJtmR/t6mui88a3jcNyphA0P/K5+7aeE09rS72oaJmLqRGtOHY0ihcKIvFPjrryiLUexaT7sZv1QknhX0JSHq+y9sUFs2aguvZSmiI9Sy5fG+MHyJsIJekhQN/T7sPgPu+dpeN2u99Zn6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
+ b=fcVnIMqkk2K8LYcjX25IVMJzZzoC6qYP0PlOnM65d4ceW3P+ZsDPOeQMJqns5I9OBrnqvWYAiInK4LJVEW1DfiiL5LqdVdtga4kq6VtV9PgtaUymtG6Yuy+RVt9yggO+/XXoJSCOn9gAR+M7upGHaTF/H1lrjtKRjKh8m87YMln1R+EjE7neWFxCBO8gSWY+8nKVxpKo+Aeoc8XMJ9H4b0PLgSaoKUOAQ+0055fyPBMkF8xFitlv79haqHFFEmy3j1FzGa9kZBooiuD/m8Gny7GVi3kyEFyLSc9D49Q17xyq9W64xqwZUg3HYfVkPLFaTlOpG5N2thi/7BI8B8dicQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.244) smtp.rcpttodomain=samsung.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lpu3R9pnJEeYMPfZkRDd6NNNOjlZmLlWX81096+hIF0=;
+ b=MUPEndLzT8+BVNZStgGY/AiFobRpIJ4wHQ6BfmpJkM6uxfR7laTDmDcCEjRsKMLNv5mYNH1vuGSLGWGZ/Aa4ouNmI9u9b5YzIXa2c17jEpTIJcnxNN80rEIDABIQqkGWArbIfdizPuW+oBn77tFjP9hMd+/9oS9x7HQgrplJiFA=
+Received: from MWHPR21CA0040.namprd21.prod.outlook.com (2603:10b6:300:129::26)
+ by BN7PR07MB4835.namprd07.prod.outlook.com (2603:10b6:406:f0::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Thu, 6 Aug
+ 2020 11:34:48 +0000
+Received: from MW2NAM12FT039.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:300:129:cafe::14) by MWHPR21CA0040.outlook.office365.com
+ (2603:10b6:300:129::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.0 via Frontend
+ Transport; Thu, 6 Aug 2020 11:34:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
+ smtp.mailfrom=cadence.com; samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
+ MW2NAM12FT039.mail.protection.outlook.com (10.13.181.39) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3261.10 via Frontend Transport; Thu, 6 Aug 2020 11:34:46 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 076BYZWm083124
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 04:34:37 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 076BYZLq008204;
+        Thu, 6 Aug 2020 13:34:35 +0200
+Received: (from sjakhade@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 076BYZd7008203;
+        Thu, 6 Aug 2020 13:34:35 +0200
+From:   Swapnil Jakhade <sjakhade@cadence.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Laurent.pinchart@ideasonboard.com>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>, <praneeth@ti.com>
+Subject: [PATCH v8 1/3] dt-bindings: drm/bridge: Document Cadence MHDP bridge bindings
+Date:   Thu, 6 Aug 2020 13:34:30 +0200
+Message-ID: <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bd2c18fb-e488-464f-70c8-08d839fcb8d4
+X-MS-TrafficTypeDiagnostic: BN7PR07MB4835:
+X-Microsoft-Antispam-PRVS: <BN7PR07MB4835FC8D026B146DE90B33EDC5480@BN7PR07MB4835.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VE7roeJIKnK+Jfd7Ulve5dZTvD8CxfqyBVlj/HnwVk62aPU6H9hcvuZGifUCPFU4ImF/3gyrcbi/AyYM0n4P97MDopg20ZKR5pzWJf7rwA1VwNogV6uTy6OnychY6ZfZrnzryQhrBc9TA6i3EqhQDSBPnb1GkE+EFjln3Py6NMjaSQ5DxXs4KJ7EdypN+qNX5KQpr91jdsLm/vDUw2EQZ37nA4mFsk06La3YoNxghnJw3JWnwNhTpSZ3nIXbQvu+GZljRRqpsqKJeLL92U8o0jgwpQW3zKkk4a9YyuNDUO6kBzeqtNBkrzRyUoAVgsHf06C7djiC8SNipfY2N7b1puZgTz+tBOcYiQSnwRlGg8sk3cYMRG/cEdDHUzbZoNpt++PZtlY2M69kxtW980Ol/3BqdOBlARjnJNvivqur+Iu4Riqv73IsVRkBi9Mlx4LF4Qnoc7vgbSQ3LO6n/nmYIvhFh+rGcU+9/hkrWC51fSjmjYLyAWcDeGMTgW12slciaYO2oL5sY5SHnYUKhMldEvvwIL0SznhuQCFvMrpGogyDJZyu86Yg9yulHqUW/zEUr7efnR6kCCASagt0+L/W6g==
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(36092001)(46966005)(8936002)(8676002)(7416002)(47076004)(4326008)(82740400003)(70586007)(478600001)(36756003)(186003)(81166007)(70206006)(26005)(83380400001)(82310400002)(356005)(86362001)(6666004)(36906005)(2616005)(336012)(426003)(2906002)(316002)(54906003)(42186006)(110136005)(5660300002)(921003)(21314003)(2101003)(83996005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:34:46.7797
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd2c18fb-e488-464f-70c8-08d839fcb8d4
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: MW2NAM12FT039.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR07MB4835
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008060083
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-06.08.2020 18:59, Sowjanya Komatineni пишет:
-..
-> We cant use active status check for specific pads under calibration.
-> This is common bit for all pads.
+From: Yuti Amonkar <yamonkar@cadence.com>
 
-I'm not sure why this is a problem.
+Document the bindings used for the Cadence MHDP DPI/DP bridge in
+yaml format.
+
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../bindings/display/bridge/cdns,mhdp.yaml    | 139 ++++++++++++++++++
+ 1 file changed, 139 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+new file mode 100644
+index 000000000000..dabccefe0983
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+@@ -0,0 +1,139 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence MHDP bridge
++
++maintainers:
++  - Swapnil Jakhade <sjakhade@cadence.com>
++  - Yuti Amonkar <yamonkar@cadence.com>
++
++properties:
++  compatible:
++    enum:
++      - cdns,mhdp8546
++      - ti,j721e-mhdp8546
++
++  reg:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description:
++          Register block of mhdptx apb registers up to PHY mapped area (AUX_CONFIG_P).
++          The AUX and PMA registers are not part of this range, they are instead
++          included in the associated PHY.
++      - description:
++          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
++
++  reg-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: mhdptx
++      - const: j721e-intg
++
++  clocks:
++    maxItems: 1
++    description:
++      DP bridge clock, used by the IP to know how to translate a number of
++      clock cycles into a time (which is used to comply with DP standard timings
++      and delays).
++
++  phys:
++    maxItems: 1
++    description:
++      phandle to the DisplayPort PHY.
++
++  ports:
++    type: object
++    description:
++      Ports as described in Documentation/devicetree/bindings/graph.txt.
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          Input port representing the DP bridge input.
++
++      port@1:
++        type: object
++        description:
++          Output port representing the DP bridge output.
++
++    required:
++      - port@0
++      - port@1
++      - '#address-cells'
++      - '#size-cells'
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: ti,j721e-mhdp8546
++    then:
++      properties:
++        reg:
++          minItems: 2
++        reg-names:
++          minItems: 2
++    else:
++      properties:
++        reg:
++          maxItems: 1
++        reg-names:
++          maxItems: 1
++
++required:
++  - compatible
++  - clocks
++  - reg
++  - reg-names
++  - phys
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        mhdp: dp-bridge@f0fb000000 {
++            compatible = "cdns,mhdp8546";
++            reg = <0xf0 0xfb000000 0x0 0x1000000>;
++            reg-names = "mhdptx";
++            clocks = <&mhdp_clock>;
++            phys = <&dp_phy>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    dp_bridge_input: endpoint {
++                        remote-endpoint = <&xxx_dpi_output>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    dp_bridge_output: endpoint {
++                        remote-endpoint = <&xxx_dp_connector_input>;
++                    };
++                };
++            };
++        };
++    };
++...
+-- 
+2.26.1
+
