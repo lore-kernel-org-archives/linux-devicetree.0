@@ -2,173 +2,357 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC4BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5ADC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11ED223119
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0507F2311B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PN8wgwt6"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="mRpjVNWc";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="V4t7kp1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgHFRMT (ORCPT
+        id S1730121AbgHFRMh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:12:19 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2932 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729728AbgHFRMP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:12:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2c39e10000>; Thu, 06 Aug 2020 10:12:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 10:12:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 10:12:15 -0700
-Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 17:12:14 +0000
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
- <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
- <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
-Message-ID: <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
-Date:   Thu, 6 Aug 2020 10:12:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 13:12:37 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:42264 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730377AbgHFRM3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:12:29 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076BPekl022269;
+        Thu, 6 Aug 2020 04:34:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=jN3tbJ0H5AhuKPfGuwHh/w2l9PpmjpyYwBaGYK77DDk=;
+ b=mRpjVNWc3jzKQsF9st+GufeZGtZl9B/cp/7Fei5tKb7rZlS1bY68c+VRCOricoYkKk3I
+ Sm9lBD3nqRpFDKM0Zht4Kf3E2tlYwI8mYkR13O3l9m704R8pWiWgCdJVmFjZ33v1uCrd
+ F9QTNUOwB/MxdZZei4suClSiGNA491Wwf+hDcxuLpkcMzCw0SQwbyXtzP+CNVFoKMgpr
+ d6g5R9LrZketZdtWusPPgOiMCwx4PYriP0Ek8kYauQx79k+z8SSzu3hIr1iZzqb0jeS7
+ 05Y222Aci3q+axuejhnVkVX98Atzs52B+DD4RX8MmenH2fbiNSakHttTLAZvYh5c+PyC DQ== 
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 32n8gy1uvc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 04:34:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4si2uPlYGI+WhAZtgvA7WH/XRGFf8xNU8OOCYi6TxyZl+jvXxZrz/R7NI/tNZHgXvDUXmYZzuxTxgrgfsEt1Uob1IVrDp4BxwZ3FSH3Qg51N1yuED5aquyI02mFGzg9KmnS4g0/e5RG5tlZLw+mJnNsUNNKv6BE6gNnvEzkO8eNGXikfq0t6Xfi6XjprtHqM37jgg1BhEZug1TnGcJx4nNKn6qhR2kWTxlSCov861wHQ0ENOPEzou8+qrnnUGHpOdeJGJfWOHIMGV9joBg9G6Tap95XBZOst9l8N9dBIhh7Kyu/tu/hjv13zhoaJP8XixcF0Bea0wP6enVG7RWU4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jN3tbJ0H5AhuKPfGuwHh/w2l9PpmjpyYwBaGYK77DDk=;
+ b=QJGVwwh8p2oqtdAD4TOgIbtTxVldGpRFmqTkNTTnk3u7WgGzXZ6XuCzwIGf/p0F29h7+QiX5m48YSW7BibGzP1IeJrPPN//msVVbds/2YT9bqG1Z2zaB8PtJhk69G/JD5+G/p4OZ8+LdtOVBI3d5rq2BWt69ntWjNyyVG7QVqnpuILx3gXVZxXtJcs3aOfdy5UJnMFXSHXlhgMN2xP6zwc4+kwqdooAbrixAC30QiFOzhoT4Fb1EC52pz6cQk1i5eYVHOJ1oVlDC9QyISQc/I33ekDK0anLGcX/syz39f049Rq5+m657z5Y2VutyIkNfjYTdryEy5PxQEvqpct+lzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.244) smtp.rcpttodomain=samsung.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jN3tbJ0H5AhuKPfGuwHh/w2l9PpmjpyYwBaGYK77DDk=;
+ b=V4t7kp1CMp71KySbV/5uDMBXagoFSEasgraHqB1v7BGQCUZYluUwHvLMjC5bDRghKXik9fHKjAXLLPpNCfdMQu78djRJsJMANpBJGCLxyE52erCxPEvMF4m3JkO+SSN7oaB7pl+VG5vZU2m5aUK1Mv5hWi+YWniDt8O2+z7Na0s=
+Received: from CO2PR04CA0158.namprd04.prod.outlook.com (2603:10b6:104:4::12)
+ by MN2PR07MB6605.namprd07.prod.outlook.com (2603:10b6:208:164::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Thu, 6 Aug
+ 2020 11:34:50 +0000
+Received: from MW2NAM12FT033.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:104:4:cafe::3a) by CO2PR04CA0158.outlook.office365.com
+ (2603:10b6:104:4::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend
+ Transport; Thu, 6 Aug 2020 11:34:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
+ smtp.mailfrom=cadence.com; samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
+ MW2NAM12FT033.mail.protection.outlook.com (10.13.181.41) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3261.10 via Frontend Transport; Thu, 6 Aug 2020 11:34:48 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 076BYZWp083124
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 04:34:48 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 6 Aug 2020 13:34:35 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 076BYZ6w008213;
+        Thu, 6 Aug 2020 13:34:35 +0200
+Received: (from sjakhade@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 076BYZ2X008212;
+        Thu, 6 Aug 2020 13:34:35 +0200
+From:   Swapnil Jakhade <sjakhade@cadence.com>
+To:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Laurent.pinchart@ideasonboard.com>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>, <praneeth@ti.com>
+Subject: [PATCH v8 3/3] drm: bridge: cdns-mhdp: Add j721e wrapper
+Date:   Thu, 6 Aug 2020 13:34:32 +0200
+Message-ID: <1596713672-8146-4-git-send-email-sjakhade@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596733921; bh=8R4NwntznSiP6O5k0i98yl5vksbAueRfRDWej6dHhRc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=PN8wgwt6ALE6zdY6YvNQGyrb1FNErEKu+7Pey8d02YYIMkCBwkUbxgJQNRFGl9BZl
-         RHI7aicJhNvbYl82P4hOkAvDdRq+xd3S83SlJjRzh9tXFurNGW8B2MqigplyvScKlR
-         J8YLGTDys0E+/PelzyZtdZi1Aw5QHcD3SoWDbvfoakSyxkWIbx4/WN67D/ceu0uJVC
-         1EGTuTzVBVy8nQJwDMHYRFNKh7WynIlOhC7OrbO7b4g9EpmRAMSs+1M9JnPhk6wg/H
-         r6Dw5ONZ0EuFeU710fBBgvvnv6CIZ29VM45cDZp4fdJAxDVgGU2rWKAPu9Qd3sgWLU
-         jdrkFVU3r1vdw==
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 44b8cd8d-25d0-4308-5547-08d839fcba24
+X-MS-TrafficTypeDiagnostic: MN2PR07MB6605:
+X-Microsoft-Antispam-PRVS: <MN2PR07MB6605FC0000CE0644E6D2B282C5480@MN2PR07MB6605.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s0Ly7MvAeJUpGzw/9bSuX873JnhTgoUq9+jVRirOWqxwkIx/JirQNLW4KQRm6lJP2LZOWDt/lNyYLkMgSs308YAAK/h3HfDOI3j54ZZTp+r9AR5oRKWFsiHI3HvrFhpSzJrfXVis7CzVi/ML9EdOyerr7HvRbGj3jiLyNN4srxmyHPbQ+44JhNdXT0iM5SgkWgWhsbVsqZTQetKonuZG0EH09SXk5EJ3JrbpJntyFLCeYKMmje9KM68XtdegumqAI5/UNLSx8Ydkzp4VTSTUacpjRoXXZtR5xFxQERX1mFzCDKeE1RhoDBfJ59/jUE6mfK3CyAs+tCzxsOJbEq1GI09CsgVqEm66Vw7cwbaLqap0/ZaiTRH36piqXAckk4psGlAgdYw24lhL2aUabhIfRzQ/rpfCCcgNl/l+3SMdrcZuYR+vtzn2hyNTTXEIWoAE4i/1Q1kdG/TsVOOCfLDZNrQvt/terPjrCxANMZB/nv0lTzplJ2bsqKqGDybZJaQ2w9eZHgL3VqqkxbXQyErZ+ZjyRIDKjOTqh5wMrWWEVdsZAYWbzhT2dzjlyAgDOKVu
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(36092001)(46966005)(36756003)(36906005)(186003)(82310400002)(4326008)(6666004)(2906002)(83380400001)(8936002)(5660300002)(26005)(336012)(86362001)(110136005)(81166007)(426003)(356005)(42186006)(47076004)(82740400003)(316002)(8676002)(478600001)(54906003)(966005)(2616005)(70586007)(70206006)(7416002)(921003)(83996005)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2020 11:34:48.9770
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44b8cd8d-25d0-4308-5547-08d839fcba24
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: MW2NAM12FT033.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6605
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008060083
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add j721e wrapper for mhdp, which sets up the clock and data muxes.
 
-On 8/6/20 9:41 AM, Sowjanya Komatineni wrote:
->
-> On 8/6/20 9:10 AM, Dmitry Osipenko wrote:
->> 06.08.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>>>> Confirmed from HW designer, calibration FSM to finish takes worst=20
->>>>> case
->>>>> 72uS so by the time it gets to sensor stream it will be done its
->>>>> sequence and will be waiting for DONE bit.
->>>>>
->>>>> So disabling MIPI CAL clock on sensor stream fails is safe.
->>>> 72us is quite a lot of time, what will happen if LP-11 happens before
->>>> FSM finished calibration?
->>>>
->>>> Maybe the finish_calibration() needs to split into two parts:
->>>>
->>>> =C2=A0=C2=A0 1. wait for CAL_STATUS_ACTIVE before enabling sensor
->>>> =C2=A0=C2=A0 2. wait for CAL_STATUS_DONE after enabling sensor
->>> I don't think we need to split for active and done. Active will be 1 as
->>> long as other pads are in calibration as well.
->>>
->>> We cant use active status check for specific pads under calibration.
->>> This is common bit for all pads.
->> Does hardware have a single FSM block shared by all pads or there is FSM
->> per group of pads?
->
-> MIPI CAL status register has DONE bits for individual pads status and=20
-> single ACTIVE bit.
->
-> ACTIVE bit set to 1 indicates auto calibration is active which is the=20
-> case even when other pads (other CSI pads from other ports streaming=20
-> in case of parallel stream) are under calibration. Also DSI is shared=20
-> as well.
->
-> We do calibration for individual pads. So, we should not rely on=20
-> ACTIVE bit.
->
->
-> MIPI driver checks for condition ACTIVE =3D=3D 1 && DONE =3D=3D 1 from th=
-e=20
-> beginning.
->
-> But I think this also should be fixed as in case of parallel streams=20
-> calibration can happen in parallel waiting for ACTIVE to be cleared=20
-> makes all calibration callers to wait for longer than needed as ACTIVE=20
-> is common for all pads.
->
->>
->>> Unfortunately HW don't have separate status indicating when sequence is
->>> done to indicate its waiting for LP11.
->>>
->>>
->>> To avoid all this, will remove cancel_calibration() totally and use=20
->>> same
->>> finish calibration even in case of stream failure then.
->>>
->> What about to add 72us delay to the end of start_calibration() in order
->> to ensure that FSM is finished before LP-11?
->
-> Why we should add 72uS in start_calibration() when can use same=20
-> finish_calibration() for both pass/fail cases?
->
-> Only timing loose we see is in case of failure we still wait for 250ms=20
-> and as this is failing case I hope should be ok.
->
-Also as we don't need cancel_calibration(), keeping tegra_mipi_wait()=20
-like earlier makes sense I believe as we are letting it finish going=20
-thru sequence.
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ drivers/gpu/drm/bridge/Kconfig           | 13 +++++
+ drivers/gpu/drm/bridge/Makefile          |  2 +
+ drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 15 +++++
+ drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
+ drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 72 ++++++++++++++++++++++++
+ drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 19 +++++++
+ 6 files changed, 122 insertions(+)
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
 
-So I think below are fixes,
-
-1. Existing MIPI driver, tegra_mipi_wait() to not use status ACTIVE bit=20
-to be 0 and use only DONE bit to be 1 for wait condition=C2=A0 as we are=20
-calibrating separately for individual pads and this ACTIVE bit is common=20
-for all pads where it will not be 0 in case of other parallel streams=20
-which may also be under calibration.
-
-2. No need for separate cancel_calibration. So, probably earlier names=20
-tegra_mipi_calibrate() and tegra_mipi_wait() hols good as we are waiting=20
-for calibration sequence to finish irrespective of fail/pass.
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 6a4c324302a8..8c1738653b7e 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -38,6 +38,19 @@ config DRM_CDNS_MHDP
+ 	  It takes a DPI stream as input and outputs it encoded
+ 	  in DP format.
+ 
++if DRM_CDNS_MHDP
++
++config DRM_CDNS_MHDP_J721E
++	depends on ARCH_K3_J721E_SOC
++	bool "J721E Cadence DPI/DP wrapper support"
++	default y
++	help
++	  Support J721E Cadence DPI/DP wrapper. This is a wrapper
++	  which adds support for J721E related platform ops. It
++	  initializes the J721e Display Port and sets up the
++	  clock and data muxes.
++endif
++
+ config DRM_CHRONTEL_CH7033
+ 	tristate "Chrontel CH7033 Video Encoder"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 7046bf077603..be92ebf620b6 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -2,6 +2,8 @@
+ obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+ obj-$(CONFIG_DRM_CDNS_MHDP) += cdns-mhdp.o
+ cdns-mhdp-y := cdns-mhdp-core.o
++cdns-mhdp-$(CONFIG_DRM_CDNS_MHDP_J721E) += cdns-mhdp-j721e.o
++
+ obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
+ obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
+ obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+index d47187ab358b..53c25f6ecddf 100644
+--- a/drivers/gpu/drm/bridge/cdns-mhdp-core.c
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
+@@ -42,6 +42,8 @@
+ 
+ #include "cdns-mhdp-core.h"
+ 
++#include "cdns-mhdp-j721e.h"
++
+ static DECLARE_WAIT_QUEUE_HEAD(fw_load_wq);
+ 
+ static int cdns_mhdp_mailbox_read(struct cdns_mhdp_device *mhdp)
+@@ -1702,6 +1704,16 @@ static int cdns_mhdp_connector_init(struct cdns_mhdp_device *mhdp)
+ 
+ 	conn->display_info.bus_flags = DRM_BUS_FLAG_DE_HIGH;
+ 
++	if (of_device_is_compatible(mhdp->dev->of_node, "ti,j721e-mhdp8546"))
++	/*
++	 * DP is internal to J7 SoC and we need to use DRIVE_POSEDGE
++	 * in the display controller. This is achieved for the time being
++	 * by defining SAMPLE_NEGEDGE here.
++	 */
++		conn->display_info.bus_flags |=
++					DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
++					DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE;
++
+ 	ret = drm_connector_attach_encoder(conn, bridge->encoder);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to attach connector to encoder\n");
+@@ -2521,6 +2533,9 @@ static int cdns_mhdp_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id mhdp_ids[] = {
+ 	{ .compatible = "cdns,mhdp8546", },
++#ifdef CONFIG_DRM_CDNS_MHDP_J721E
++	{ .compatible = "ti,j721e-mhdp8546", .data = &mhdp_ti_j721e_ops },
++#endif
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, mhdp_ids);
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.h b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
+index bd97a7aeb28b..d40a0f8615a4 100644
+--- a/drivers/gpu/drm/bridge/cdns-mhdp-core.h
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
+@@ -343,6 +343,7 @@ struct cdns_mhdp_bridge_state {
+ 
+ struct cdns_mhdp_device {
+ 	void __iomem *regs;
++	void __iomem *j721e_regs;
+ 
+ 	struct device *dev;
+ 	struct clk *clk;
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+new file mode 100644
+index 000000000000..cc33c9afb5bb
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * TI j721e Cadence MHDP DP wrapper
++ *
++ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++ * Author: Jyri Sarha <jsarha@ti.com
++ */
++
++#include <linux/io.h>
++#include <linux/platform_device.h>
++
++#include "cdns-mhdp-j721e.h"
++
++#define	REVISION			0x00
++#define	DPTX_IPCFG			0x04
++#define	ECC_MEM_CFG			0x08
++#define	DPTX_DSC_CFG			0x0c
++#define	DPTX_SRC_CFG			0x10
++#define	DPTX_VIF_SECURE_MODE_CFG	0x14
++#define	DPTX_VIF_CONN_STATUS		0x18
++#define	PHY_CLK_STATUS			0x1c
++
++#define DPTX_SRC_AIF_EN			BIT(16)
++#define DPTX_SRC_VIF_3_IN30B		BIT(11)
++#define DPTX_SRC_VIF_2_IN30B		BIT(10)
++#define DPTX_SRC_VIF_1_IN30B		BIT(9)
++#define DPTX_SRC_VIF_0_IN30B		BIT(8)
++#define DPTX_SRC_VIF_3_SEL_DPI5		BIT(7)
++#define DPTX_SRC_VIF_3_SEL_DPI3		0
++#define DPTX_SRC_VIF_2_SEL_DPI4		BIT(6)
++#define DPTX_SRC_VIF_2_SEL_DPI2		0
++#define DPTX_SRC_VIF_1_SEL_DPI3		BIT(5)
++#define DPTX_SRC_VIF_1_SEL_DPI1		0
++#define DPTX_SRC_VIF_0_SEL_DPI2		BIT(4)
++#define DPTX_SRC_VIF_0_SEL_DPI0		0
++#define DPTX_SRC_VIF_3_EN		BIT(3)
++#define DPTX_SRC_VIF_2_EN		BIT(2)
++#define DPTX_SRC_VIF_1_EN		BIT(1)
++#define DPTX_SRC_VIF_0_EN		BIT(0)
++
++/* TODO turn DPTX_IPCFG fw_mem_clk_en at pm_runtime_suspend. */
++
++static int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp)
++{
++	struct platform_device *pdev = to_platform_device(mhdp->dev);
++
++	mhdp->j721e_regs = devm_platform_ioremap_resource(pdev, 1);
++	return PTR_ERR_OR_ZERO(mhdp->j721e_regs);
++}
++
++static void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
++{
++	/*
++	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
++	 * to eDP DPI2. This is the only supported SST configuration on
++	 * J721E.
++	 */
++	writel(DPTX_SRC_VIF_0_EN | DPTX_SRC_VIF_0_SEL_DPI2,
++	       mhdp->j721e_regs + DPTX_SRC_CFG);
++}
++
++static void cdns_mhdp_j721e_disable(struct cdns_mhdp_device *mhdp)
++{
++	/* Put everything to defaults  */
++	writel(0, mhdp->j721e_regs + DPTX_DSC_CFG);
++}
++
++const struct mhdp_platform_ops mhdp_ti_j721e_ops = {
++	.init = cdns_mhdp_j721e_init,
++	.enable = cdns_mhdp_j721e_enable,
++	.disable = cdns_mhdp_j721e_disable,
++};
+diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
+new file mode 100644
+index 000000000000..7a4a1a269b5e
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * TI j721e Cadence MHDP DP wrapper
++ *
++ * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
++ * Author: Jyri Sarha <jsarha@ti.com
++ */
++
++#ifndef CDNS_MHDP_J721E_H
++#define CDNS_MHDP_J721E_H
++
++#include <linux/platform_device.h>
++#include "cdns-mhdp-core.h"
++
++struct mhdp_platform_ops;
++
++extern const struct mhdp_platform_ops mhdp_ti_j721e_ops;
++
++#endif /* !CDNS_MHDP_J721E_H */
+-- 
+2.26.1
 
