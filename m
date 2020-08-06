@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10866C3F2DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF92C4727D
 	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35C522DD6
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DF722DD6
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eP7V6nlX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LZbolm5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgHFHta (ORCPT
+        id S1728522AbgHFHuD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:49:30 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50400 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728849AbgHFHt2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 03:49:28 -0400
+        Thu, 6 Aug 2020 03:50:03 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34666 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728808AbgHFHtc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 03:49:32 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0767n7jR108745;
-        Thu, 6 Aug 2020 02:49:07 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0767nNh8006061;
+        Thu, 6 Aug 2020 02:49:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596700147;
-        bh=BHn2ShQ+9JoKHEmyCMyZndat+wKFdhXUBVYP8K8OPxQ=;
+        s=ti-com-17Q1; t=1596700163;
+        bh=/T8EzDdxuZG0N3E9FMOLlEz6HKFhWOs4DWZ0wgJjJQM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=eP7V6nlXKgotmoIytjiykI3UBChuiL3ioXNikT1zOyyh9STGfvSKEUIkRpaCYdPeg
-         kJjQ5i1sCxDu0IEJaGSm/975oVoEfFy1SOscyRuUihLRXK9DCfE2fs0444VGFgIbeK
-         H8XPtTkzDnDIulGOIenMpdhKjQDmQl/pt0LoHQbY=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0767n7GN018318
+        b=LZbolm5E6W7qImv/2sPs/jKsDFDioaAMtXBsXFCnLP1x7mlDrNmV23T1nGpy350mY
+         p8xL3uVrKCDSbs2X4gSEyDM96OReliKQ1Z5xpPrDNTtxcaeaqto+cTnG1r8ZH23vjY
+         trdBYhHtxlaJDZuBAOe7Z4u4S+cemA+kMGTQLd3Y=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0767nNTt018553
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Aug 2020 02:49:07 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 6 Aug 2020 02:49:23 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
- 2020 02:49:06 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 02:49:23 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 6 Aug 2020 02:49:06 -0500
+ Frontend Transport; Thu, 6 Aug 2020 02:49:23 -0500
 Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0767mSYv051454;
-        Thu, 6 Aug 2020 02:49:02 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0767mSZ1051454;
+        Thu, 6 Aug 2020 02:49:19 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
 CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
@@ -57,11 +57,10 @@ CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 08/13] dt-bindings: irqchip: Convert ti,sci-inta bindings to yaml
-Date:   Thu, 6 Aug 2020 13:18:21 +0530
-Message-ID: <20200806074826.24607-9-lokeshvutla@ti.com>
+        Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v6 12/13] arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
+Date:   Thu, 6 Aug 2020 13:18:25 +0530
+Message-ID: <20200806074826.24607-13-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200806074826.24607-1-lokeshvutla@ti.com>
 References: <20200806074826.24607-1-lokeshvutla@ti.com>
@@ -74,208 +73,150 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In order to automate the verification of DT nodes convert
-ti,sci-inta.txt ti,sci-inta.yaml.
+Update the INTA and INTR dt nodes to the latest DT bindings.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- .../interrupt-controller/ti,sci-inta.txt      | 66 -------------
- .../interrupt-controller/ti,sci-inta.yaml     | 98 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 99 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 24 +++++++++----------
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  8 +++----
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts |  4 ++--
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  1 -
+ 4 files changed, 17 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
-deleted file mode 100644
-index 5fd3ee0f7167..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--Texas Instruments K3 Interrupt Aggregator
--=========================================
--
--The Interrupt Aggregator (INTA) provides a centralized machine
--which handles the termination of system events to that they can
--be coherently processed by the host(s) in the system. A maximum
--of 64 events can be mapped to a single interrupt.
--
--
--                              Interrupt Aggregator
--                     +-----------------------------------------+
--                     |      Intmap            VINT             |
--                     | +--------------+  +------------+        |
--            m ------>| | vint  | bit  |  | 0 |.....|63| vint0  |
--               .     | +--------------+  +------------+        |       +------+
--               .     |         .               .               |       | HOST |
--Globalevents  ------>|         .               .               |------>| IRQ  |
--               .     |         .               .               |       | CTRL |
--               .     |         .               .               |       +------+
--            n ------>| +--------------+  +------------+        |
--                     | | vint  | bit  |  | 0 |.....|63| vintx  |
--                     | +--------------+  +------------+        |
--                     |                                         |
--                     +-----------------------------------------+
--
--Configuration of these Intmap registers that maps global events to vint is done
--by a system controller (like the Device Memory and Security Controller on K3
--AM654 SoC). Driver should request the system controller to get the range
--of global events and vints assigned to the requesting host. Management
--of these requested resources should be handled by driver and requests
--system controller to map specific global event to vint, bit pair.
--
--Communication between the host processor running an OS and the system
--controller happens through a protocol called TI System Control Interface
--(TISCI protocol). For more details refer:
--Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
--
--TISCI Interrupt Aggregator Node:
---------------------------------
--- compatible:		Must be "ti,sci-inta".
--- reg:			Should contain registers location and length.
--- interrupt-controller:	Identifies the node as an interrupt controller
--- msi-controller:	Identifies the node as an MSI controller.
--- interrupt-parent:	phandle of irq parent.
--- ti,sci:		Phandle to TI-SCI compatible System controller node.
--- ti,sci-dev-id:	TISCI device id of interrupt controller.
--- ti,interrupt-ranges:	Set of triplets containing ranges that convert
--			the INTA output interrupt numbers to parent's
--			interrupt number. Each triplet has following entries:
--			- First entry specifies the base for vint
--			- Second entry specifies the base for parent irqs
--			- Third entry specifies the limit
--
--
--Example:
----------
--main_udmass_inta: interrupt-controller@33d00000 {
--	compatible = "ti,sci-inta";
--	reg = <0x0 0x33d00000 0x0 0x100000>;
--	interrupt-controller;
--	msi-controller;
--	interrupt-parent = <&main_navss_intr>;
--	ti,sci = <&dmsc>;
--	ti,sci-dev-id = <179>;
--	ti,interrupt-ranges = <0 0 256>;
--};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
-new file mode 100644
-index 000000000000..c7cd05656a3e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/ti,sci-inta.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments K3 Interrupt Aggregator
-+
-+maintainers:
-+  - Lokesh Vutla <lokeshvutla@ti.com>
-+
-+allOf:
-+  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
-+
-+description: |
-+  The Interrupt Aggregator (INTA) provides a centralized machine
-+  which handles the termination of system events to that they can
-+  be coherently processed by the host(s) in the system. A maximum
-+  of 64 events can be mapped to a single interrupt.
-+
-+                                Interrupt Aggregator
-+                       +-----------------------------------------+
-+                       |      Intmap            VINT             |
-+                       | +--------------+  +------------+        |
-+              m ------>| | vint  | bit  |  | 0 |.....|63| vint0  |
-+                 .     | +--------------+  +------------+        |      +------+
-+                 .     |         .               .               |      | HOST |
-+  Globalevents  ------>|         .               .               |----->| IRQ  |
-+                 .     |         .               .               |      | CTRL |
-+                 .     |         .               .               |      +------+
-+              n ------>| +--------------+  +------------+        |
-+                       | | vint  | bit  |  | 0 |.....|63| vintx  |
-+                       | +--------------+  +------------+        |
-+                       |                                         |
-+                       +-----------------------------------------+
-+
-+  Configuration of these Intmap registers that maps global events to vint is
-+  done by a system controller (like the Device Memory and Security Controller
-+  on AM654 SoC). Driver should request the system controller to get the range
-+  of global events and vints assigned to the requesting host. Management
-+  of these requested resources should be handled by driver and requests
-+  system controller to map specific global event to vint, bit pair.
-+
-+  Communication between the host processor running an OS and the system
-+  controller happens through a protocol called TI System Control Interface
-+  (TISCI protocol).
-+
-+properties:
-+  compatible:
-+    const: ti,sci-inta
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  msi-controller: true
-+
-+  ti,interrupt-ranges:
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    description: |
-+      Interrupt ranges that converts the INTA output hw irq numbers
-+      to parents's input interrupt numbers.
-+    items:
-+      items:
-+        - description: |
-+            "output_irq" specifies the base for inta output irq
-+        - description: |
-+            "parent's input irq" specifies the base for parent irq
-+        - description: |
-+            "limit" specifies the limit for translation
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - msi-controller
-+  - ti,sci
-+  - ti,sci-dev-id
-+  - ti,interrupt-ranges
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        main_udmass_inta: msi-controller@33d00000 {
-+            compatible = "ti,sci-inta";
-+            reg = <0x0 0x33d00000 0x0 0x100000>;
-+            interrupt-controller;
-+            msi-controller;
-+            interrupt-parent = <&main_navss_intr>;
-+            ti,sci = <&dmsc>;
-+            ti,sci-dev-id = <179>;
-+            ti,interrupt-ranges = <0 0 256>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 58d4740b0a9d..4591338634cf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16991,7 +16991,7 @@ L:	linux-arm-kernel@lists.infradead.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
- F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
--F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
-+F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
- F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
- F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
- F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 9edfae5944f7..996a82ff983e 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -417,10 +417,10 @@ intr_main_gpio: interrupt-controller0 {
+ 		ti,intr-trigger-type = <1>;
+ 		interrupt-controller;
+ 		interrupt-parent = <&gic500>;
+-		#interrupt-cells = <2>;
++		#interrupt-cells = <1>;
+ 		ti,sci = <&dmsc>;
+-		ti,sci-dst-id = <56>;
+-		ti,sci-rm-range-girq = <0x1>;
++		ti,sci-dev-id = <100>;
++		ti,interrupt-ranges = <0 392 32>;
+ 	};
+ 
+ 	main_navss {
+@@ -438,10 +438,11 @@ intr_main_navss: interrupt-controller1 {
+ 			ti,intr-trigger-type = <4>;
+ 			interrupt-controller;
+ 			interrupt-parent = <&gic500>;
+-			#interrupt-cells = <2>;
++			#interrupt-cells = <1>;
+ 			ti,sci = <&dmsc>;
+-			ti,sci-dst-id = <56>;
+-			ti,sci-rm-range-girq = <0x0>, <0x2>;
++			ti,sci-dev-id = <182>;
++			ti,interrupt-ranges = <0 64 64>,
++					      <64 448 64>;
+ 		};
+ 
+ 		inta_main_udmass: interrupt-controller@33d00000 {
+@@ -452,8 +453,7 @@ inta_main_udmass: interrupt-controller@33d00000 {
+ 			msi-controller;
+ 			ti,sci = <&dmsc>;
+ 			ti,sci-dev-id = <179>;
+-			ti,sci-rm-range-vint = <0x0>;
+-			ti,sci-rm-range-global-event = <0x1>;
++			ti,interrupt-ranges = <0 0 256>;
+ 		};
+ 
+ 		secure_proxy_main: mailbox@32c00000 {
+@@ -622,7 +622,7 @@ cpts@310d0000 {
+ 			reg-names = "cpts";
+ 			clocks = <&main_cpts_mux>;
+ 			clock-names = "cpts";
+-			interrupts-extended = <&intr_main_navss 163 0>;
++			interrupts-extended = <&intr_main_navss 391>;
+ 			interrupt-names = "cpts";
+ 			ti,cpts-periodic-outputs = <6>;
+ 			ti,cpts-ext-ts-inputs = <8>;
+@@ -645,8 +645,7 @@ main_gpio0:  main_gpio0@600000 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-parent = <&intr_main_gpio>;
+-		interrupts = <57 256>, <57 257>, <57 258>, <57 259>, <57 260>,
+-				<57 261>;
++		interrupts = <192>, <193>, <194>, <195>, <196>, <197>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		ti,ngpio = <96>;
+@@ -661,8 +660,7 @@ main_gpio1:  main_gpio1@601000 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-parent = <&intr_main_gpio>;
+-		interrupts = <58 256>, <58 257>, <58 258>, <58 259>, <58 260>,
+-				<58 261>;
++		interrupts = <200>, <201>, <202>, <203>, <204>, <205>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		ti,ngpio = <90>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+index 5f55b9e82cf1..a1ffe88d9664 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+@@ -74,10 +74,10 @@ intr_wkup_gpio: interrupt-controller2 {
+ 		ti,intr-trigger-type = <1>;
+ 		interrupt-controller;
+ 		interrupt-parent = <&gic500>;
+-		#interrupt-cells = <2>;
++		#interrupt-cells = <1>;
+ 		ti,sci = <&dmsc>;
+-		ti,sci-dst-id = <56>;
+-		ti,sci-rm-range-girq = <0x4>;
++		ti,sci-dev-id = <156>;
++		ti,interrupt-ranges = <0 712 16>;
+ 	};
+ 
+ 	wkup_gpio0: wkup_gpio0@42110000 {
+@@ -86,7 +86,7 @@ wkup_gpio0: wkup_gpio0@42110000 {
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-parent = <&intr_wkup_gpio>;
+-		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
++		interrupts = <60>, <61>, <62>, <63>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		ti,ngpio = <56>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 611e66207010..b8a8a0fcb8af 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -384,7 +384,7 @@ &pcie1_ep {
+ };
+ 
+ &mailbox0_cluster0 {
+-	interrupts = <164 0>;
++	interrupts = <436>;
+ 
+ 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
+ 		ti,mbox-tx = <1 0 0>;
+@@ -393,7 +393,7 @@ mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
+ };
+ 
+ &mailbox0_cluster1 {
+-	interrupts = <165 0>;
++	interrupts = <432>;
+ 
+ 	mbox_mcu_r5fss0_core1: mbox-mcu-r5fss0-core1 {
+ 		ti,mbox-tx = <1 0 0>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+index e00cf2a08e6d..c4a48e8d420a 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+@@ -105,7 +105,6 @@ wkup_gpio_intr: interrupt-controller2 {
+ 		ti,sci = <&dmsc>;
+ 		ti,sci-dev-id = <137>;
+ 		ti,interrupt-ranges = <16 960 16>;
+-		ti,sci-rm-range-girq = <0x5>;
+ 	};
+ 
+ 	wkup_gpio0: gpio@42110000 {
 -- 
 2.27.0
 
