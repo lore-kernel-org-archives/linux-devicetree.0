@@ -2,108 +2,104 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB55C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A58C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF02B23119
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DQTHrTBM"
+	by mail.kernel.org (Postfix) with ESMTP id 9CD8F23119
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596732526;
+	bh=fIcGRzA8iSE5aYRClbTn+TFozKD1F4bTWoRgTAtda9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YBAx3afajXpwmjRjVrK8txvcNs5JlO18R1WoJtLFR1NCIZYIXtTPHVX0XlF3oL0Jb
+	 7i3swAefpHLy+PBgv1iYO0fICE0w5ue0R3T167SLVwiK/LZinGILPeKY6IkOZYBlUU
+	 paCfZcyCM8yU9Jen8gRStkWnwEppsdXU5prWnTF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgHFQrm (ORCPT
+        id S1729497AbgHFQsG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:47:42 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16765 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgHFQm6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:42:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2c32ad0000>; Thu, 06 Aug 2020 09:41:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 09:42:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 06 Aug 2020 09:42:57 -0700
-Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 16:42:57 +0000
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
- <9deaee09-c422-5694-7c19-d85354b9b703@gmail.com>
- <14793e8c-30dc-5cf5-fdf9-6f64fa433818@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <c9709f37-02dd-cd1a-b83f-07784365945d@nvidia.com>
-Date:   Thu, 6 Aug 2020 09:42:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 12:48:06 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39918 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgHFQmu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:42:50 -0400
+Received: by mail-io1-f65.google.com with SMTP id z6so50313543iow.6;
+        Thu, 06 Aug 2020 09:42:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xm0fEuCIzwDzQykroFSnT+aLdkyYmWsu6Ftt9JukdD8=;
+        b=pQJ5Wbk0onBVVfm9KbkO0nmaavZycrP8XIUYtq43nQTVhrVaoIj+HDrpXaQeHZoj59
+         bNGNwgQnjRvBDVB/vPd0DsKWMA1sfz2rPl5hAU8wwG+FozqCsYo5t6auZZmEqQJVG2Mh
+         /xn53eG5weFyiy3aFt7BcE6R5TgqTEFj2EdR5jSMimAxO8Lx0LgSWY/ZDfj9ItB+8pGk
+         kLmKTY4CqlgBxFS59tfv9jMQGLq3KrnNAD77oiUFLKD863sr+Lr0UH5FAd0CAgAhkGpW
+         vX0cWACmID12vfpA3D69yKou7Nnb2gE/F6Ew0H2+5tZbjba0LjR4QBgG1jSf3kmWOAhI
+         hjHQ==
+X-Gm-Message-State: AOAM530Kbs0aPqTvXwfU4E/hDBIMWRR2hASQtLdH+SGIeDHupjYJifa3
+        akdjR06qiDIpvz3F5Uhx4JO9CxY=
+X-Google-Smtp-Source: ABdhPJyjT8GHER76WNSFqjmQvUAzAjClMjTAIIg56K2M86QwRA9rbhDENI7nQUMj/Vpq8VKa/Li+pA==
+X-Received: by 2002:a92:1589:: with SMTP id 9mr11145233ilv.234.1596725235912;
+        Thu, 06 Aug 2020 07:47:15 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s74sm4198158ilb.44.2020.08.06.07.47.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 07:47:15 -0700 (PDT)
+Received: (nullmailer pid 834882 invoked by uid 1000);
+        Thu, 06 Aug 2020 14:47:13 -0000
+Date:   Thu, 6 Aug 2020 08:47:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>, pisa@cmp.felk.cvut.cz
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        mkl@pengutronix.de, socketcan@hartkopp.net, wg@grandegger.com,
+        davem@davemloft.net, mark.rutland@arm.com, c.emde@osadl.org,
+        armbru@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
+        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
+        porazil@pikron.com
+Subject: Re: [PATCH v4 2/6] dt-bindings: net: can: binding for CTU CAN FD
+ open-source IP core.
+Message-ID: <20200806144713.GA829771@bogus>
+References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+ <701442883f2b439637ff84544745725bdee7bcf8.1596408856.git.pisa@cmp.felk.cvut.cz>
+ <20200804091817.yuf6s26bclehpwwi@duo.ucw.cz>
+ <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz>
 MIME-Version: 1.0
-In-Reply-To: <14793e8c-30dc-5cf5-fdf9-6f64fa433818@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596732077; bh=iDI3V2L85r1lv2jtVd4uBOO2hPT5n4v0tS3+rooYMIw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=DQTHrTBM0+agMOZIqShyUnF2jKLQnF8Ry58xSDxnuepU0A+VdXYkwov3Ty0JnGiJP
-         h/0m/+nLqk/gLLvNgJIfU0GdWJybBe/jnwPDO+pYi0XNbdj5Hw8PGJaEEWmyrOnB/b
-         12ewdRLYh9wB8qhGljRRVCRmqmHA2EHDWjTM+6eyQ1uhos7sDdYGvRex7eiG/wvz0g
-         ZXkfiL0gVwGET/DJLfjaVe7oDir51HcIsAFaxg/zCRKab6libTN2H40z05dxMbHhni
-         1UNDMSruVD16Ru2YuDce2CE20ZaVAP46PbAqYPvZef7Ie+2J72TiwTbOXee78N6Y2V
-         DzyrbPOlzqiMA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Aug 04, 2020 at 11:20:21AM +0200, Pavel Machek wrote:
+> On Tue 2020-08-04 11:18:17, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > The commit text again to make checkpatch happy.
+> > 
+> > ?
+> > 
+> > 
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - const: ctu,ctucanfd
+> > > +          - const: ctu,canfd-2
+> > > +      - const: ctu,ctucanfd
+> > 
+> > For consistency, can we have ctu,canfd-1, ctu,canfd-2?
+> 
+> Make it ctu,ctucanfd-1, ctu,ctucanfd-2... to make it consistent with
+> the file names.
 
-On 8/6/20 9:37 AM, Dmitry Osipenko wrote:
-> 06.08.2020 19:13, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> 06.08.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ..
->>> We cant use active status check for specific pads under calibration.
->>> This is common bit for all pads.
->> I'm not sure why this is a problem.
->>
-> IIUC, the start_calibration() should wait for the MIPI_CAL_STATUS_ACTIVE
-> and finish_calibration() should wait for MIPI_AUTO_CAL_DONE_CSIA/B.
+If you are going to do version numbers, please define where they come 
+from. Hopefully some tag of the h/w IP version...
 
-As soon as START bit it set, FSM will set ACTIVE =3D 1
+Better yet, put version numbers in the h/w registers itself and you 
+don't need different compatibles.
 
-There is no added advantage of waiting for ACTIVE to be in=20
-start_calibration()
-
+Rob
