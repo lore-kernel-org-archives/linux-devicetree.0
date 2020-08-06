@@ -2,154 +2,91 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BD7C433FB
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D98C43478
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C97D02250E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662F322D02
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lk5N9u3e"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SmiOYQX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgHFFXQ (ORCPT
+        id S1727985AbgHFG10 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 01:23:16 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:11910 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726038AbgHFFXP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 01:23:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596691393; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=bvZnrTkOnWDZNUUhPw1+FJ3XFluG45rscsa1dJ+3kus=; b=Lk5N9u3ePpxHsjSDmt38lZGYuh50tSAEXE1cuUtM0h2YhExLomYmNkpEQE+2qOBl66PZwyfE
- qMj3GjWbLkoKYttUa8z1PQPXllaDILT+esrrZEKYtaT/oHomhgZhfiCa4MHdWyVIhvA0x2nc
- svRFZTyl5JSWwQnjJLTgz4NBsZA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f2b93c1725833be306e2d87 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 05:23:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D79BC43391; Thu,  6 Aug 2020 05:23:12 +0000 (UTC)
-Received: from [192.168.0.105] (unknown [49.204.182.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5DD4EC433C6;
-        Thu,  6 Aug 2020 05:23:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5DD4EC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v5 4/4] clk: qcom: lpass: Add support for LPASS clock
- controller for SC7180
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org
-References: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
- <1595606878-2664-5-git-send-email-tdas@codeaurora.org>
- <159665909245.1360974.10366839079633595523@swboyd.mtv.corp.google.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <13ac9aad-2377-472d-b2be-a762a21c2dac@codeaurora.org>
-Date:   Thu, 6 Aug 2020 10:53:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 6 Aug 2020 02:27:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:65192 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726051AbgHFG10 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 02:27:26 -0400
+X-UUID: 2fc2f2a842ec4c078ca32d6b7ed97daf-20200806
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0AEHGNsfy4Kowym5Y/9MX+FAdIMhxa+q99bMpmtdLlk=;
+        b=SmiOYQX5nyus4h0miAuTv0wdQMYEQaHIIwRMlc3P5i506JhUbx5z30hsDOB89C96iB3eHHb5Qc770W0lXJTvqw4ggj9gtm6OdEaIFxOd1+8gHq0siEBivLLJ6SvSaNQ0ZoZ8Msp7vo3D7iBGOgHaitPGIcCOmK8Y1UWdERXj+/w=;
+X-UUID: 2fc2f2a842ec4c078ca32d6b7ed97daf-20200806
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1876968445; Thu, 06 Aug 2020 14:27:21 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 6 Aug 2020 14:27:18 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 6 Aug 2020 14:27:18 +0800
+Message-ID: <1596695238.26800.4.camel@mtkswgap22>
+Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant
+ queue structure
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
+Date:   Thu, 6 Aug 2020 14:27:18 +0800
+In-Reply-To: <20200727094458.GU12965@vkoul-mobl>
+References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+         <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
+         <20200715061957.GA34333@vkoul-mobl> <1595471650.22392.12.camel@mtkswgap22>
+         <20200727094458.GU12965@vkoul-mobl>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <159665909245.1360974.10366839079633595523@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: F4B7DC2C1D8B20EE4F229651815F3A8E35BCF4AAA4E64D95EAC95B78FBFF707C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+T24gTW9uLCAyMDIwLTA3LTI3IGF0IDE1OjE0ICswNTMwLCBWaW5vZCBLb3VsIHdyb3RlOg0KPiBP
+biAyMy0wNy0yMCwgMTA6MzQsIEVhc3RMIHdyb3RlOg0KPiA+IE9uIFdlZCwgMjAyMC0wNy0xNSBh
+dCAxMTo0OSArMDUzMCwgVmlub2QgS291bCB3cm90ZToNCj4gPiA+IE9uIDAyLTA3LTIwLCAxNTow
+NiwgRWFzdEwgTGVlIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+ICBzdGF0aWMgZW51bSBkbWFfc3Rh
+dHVzIG10a19jcWRtYV90eF9zdGF0dXMoc3RydWN0IGRtYV9jaGFuICpjLA0KPiA+ID4gPiAgCQkJ
+CQkgICBkbWFfY29va2llX3QgY29va2llLA0KPiA+ID4gPiAgCQkJCQkgICBzdHJ1Y3QgZG1hX3R4
+X3N0YXRlICp0eHN0YXRlKQ0KPiA+ID4gPiAgew0KPiA+ID4gPiAtCXN0cnVjdCBtdGtfY3FkbWFf
+dmNoYW4gKmN2YyA9IHRvX2NxZG1hX3ZjaGFuKGMpOw0KPiA+ID4gPiAtCXN0cnVjdCBtdGtfY3Fk
+bWFfdmRlc2MgKmN2ZDsNCj4gPiA+ID4gLQlzdHJ1Y3QgdmlydF9kbWFfZGVzYyAqdmQ7DQo+ID4g
+PiA+IC0JZW51bSBkbWFfc3RhdHVzIHJldDsNCj4gPiA+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdz
+Ow0KPiA+ID4gPiAtCXNpemVfdCBieXRlcyA9IDA7DQo+ID4gPiA+IC0NCj4gPiA+ID4gLQlyZXQg
+PSBkbWFfY29va2llX3N0YXR1cyhjLCBjb29raWUsIHR4c3RhdGUpOw0KPiA+ID4gPiAtCWlmIChy
+ZXQgPT0gRE1BX0NPTVBMRVRFIHx8ICF0eHN0YXRlKQ0KPiA+ID4gPiAtCQlyZXR1cm4gcmV0Ow0K
+PiA+ID4gPiAtDQo+ID4gPiA+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJmN2Yy0+dmMubG9jaywgZmxh
+Z3MpOw0KPiA+ID4gPiAtCXZkID0gbXRrX2NxZG1hX2ZpbmRfYWN0aXZlX2Rlc2MoYywgY29va2ll
+KTsNCj4gPiA+ID4gLQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZjdmMtPnZjLmxvY2ssIGZsYWdz
+KTsNCj4gPiA+ID4gLQ0KPiA+ID4gPiAtCWlmICh2ZCkgew0KPiA+ID4gPiAtCQljdmQgPSB0b19j
+cWRtYV92ZGVzYyh2ZCk7DQo+ID4gPiA+IC0JCWJ5dGVzID0gY3ZkLT5yZXNpZHVlOw0KPiA+ID4g
+PiAtCX0NCj4gPiA+ID4gLQ0KPiA+ID4gPiAtCWRtYV9zZXRfcmVzaWR1ZSh0eHN0YXRlLCBieXRl
+cyk7DQo+ID4gPiANCj4gPiA+IGFueSByZWFzb24gd2h5IHlvdSB3YW50IHRvIHJlbW92ZSBzZXR0
+aW5nIHJlc2lkdWU/DQo+ID4gQmVjYXVzZSBNZWRpYXRlayBDUURNQSBIVyBjYW4ndCBzdXBwb3J0
+IHJlc2lkdWUuDQo+IA0KPiBBbmQgcHJldmlvdXNseSBpdCBkaWQ/DQpObywgSXQgd2FzIGNhbGN1
+bGF0ZWQgYnkgc3cgYmVmb3JlLg0KV2UgZm91bmQgdGhhdCB0aGUgcmVzaWR1ZSB3YXMgbm90IG5l
+Y2Vzc2FyeSwgc28gd2UgcmVtb3ZlZCBpdC4NCg0K
 
-On 8/6/2020 1:54 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2020-07-24 09:07:58)
->> +
->> +static struct clk_rcg2 core_clk_src = {
->> +       .cmd_rcgr = 0x1d000,
->> +       .mnd_width = 8,
->> +       .hid_width = 5,
->> +       .parent_map = lpass_core_cc_parent_map_2,
->> +       .clkr.hw.init = &(struct clk_init_data){
->> +               .name = "core_clk_src",
-> 
-> Any chance this can get a better name? Something with LPASS prefix?
-> 
-
-These are the exact clock names from the hardware plan.
-
->> +               .parent_data = &(const struct clk_parent_data){
->> +                       .fw_name = "bi_tcxo",
->> +               },
->> +               .num_parents = 1,
->> +               .ops = &clk_rcg2_ops,
->> +       },
->> +};
->> +
-> [...]
->> +
->> +static struct clk_branch lpass_audio_core_sysnoc_mport_core_clk = {
->> +       .halt_reg = 0x23000,
->> +       .halt_check = BRANCH_HALT,
->> +       .hwcg_reg = 0x23000,
->> +       .hwcg_bit = 1,
->> +       .clkr = {
->> +               .enable_reg = 0x23000,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "lpass_audio_core_sysnoc_mport_core_clk",
->> +                       .parent_data = &(const struct clk_parent_data){
->> +                               .hw = &core_clk_src.clkr.hw,
->> +                       },
->> +                       .num_parents = 1,
->> +                       .flags = CLK_SET_RATE_PARENT,
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +static struct clk_regmap *lpass_core_cc_sc7180_clocks[] = {
->> +       [EXT_MCLK0_CLK_SRC] = &ext_mclk0_clk_src.clkr,
->> +       [LPAIF_PRI_CLK_SRC] = &lpaif_pri_clk_src.clkr,
->> +       [LPAIF_SEC_CLK_SRC] = &lpaif_sec_clk_src.clkr,
->> +       [CORE_CLK_SRC] = &core_clk_src.clkr,
-> 
-> And all of these, can they have LPASS_ prefix on the defines? Seems
-> like we're missing a namespace otherwise.
-> 
-
-These are generated as they are in the HW plan. Do you still think I 
-should update them?
-
->> +       [LPASS_AUDIO_CORE_EXT_MCLK0_CLK] = &lpass_audio_core_ext_mclk0_clk.clkr,
->> +       [LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK] =
->> +               &lpass_audio_core_lpaif_pri_ibit_clk.clkr,
->> +       [LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK] =
->> +               &lpass_audio_core_lpaif_sec_ibit_clk.clkr,
->> +       [LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK] =
->> +               &lpass_audio_core_sysnoc_mport_core_clk.clkr,
->> +       [LPASS_LPAAUDIO_DIG_PLL] = &lpass_lpaaudio_dig_pll.clkr,
->> +       [LPASS_LPAAUDIO_DIG_PLL_OUT_ODD] = &lpass_lpaaudio_dig_pll_out_odd.clkr,
->> +};
->> +
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
