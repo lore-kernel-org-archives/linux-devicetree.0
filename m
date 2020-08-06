@@ -2,87 +2,91 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3A0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13159C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76622086A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596733010;
-	bh=U3uBfWioJUPDgcwJ6XPtT9d1vDxgz5hfwnpBBHafS8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EDR1yXf+RXj3slUQOiB60SnsNHFzCmU/Lic03UWXmFlcxxYHY86ibzomDuMRc1AGH
-	 BAJxzAeFzGykKMSS0CQoN8WkgxHzksRICTrGbkUexBiBTmoi0Yj2AYXzzWXwrTSBiD
-	 H57+ONhqmbVY42icD2QlcABk1fYfoYHlLPyre5KY=
+	by mail.kernel.org (Postfix) with ESMTP id 5D94623120
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgHFQ4A (ORCPT
+        id S1729649AbgHFQ45 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:56:00 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]:44077 "EHLO
-        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbgHFQkn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:40:43 -0400
-Received: by mail-qk1-f177.google.com with SMTP id j187so45469190qke.11;
-        Thu, 06 Aug 2020 09:39:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gc23MbsN7Py2AbboYagkFP2z88M/HrX+ProFw+VbFVM=;
-        b=ROfPHsG6aonG5ia7Kjn4qzG5KZvRkxWic1szCGP6lTh53B6aupm1JBYrYjidlefO+K
-         GI/z5QCsB5xrIqeJQHmS8I7ANLG1fvkD/Nzpufp0+wxPOanjWlV9SeBUjTnTI+T4egmK
-         o+zR8Ra8siBZtlGN0h2MbIa0yF5Ff96VYfMJsWrfwT+0iRsd1qOSUNtUBhDuedo/agTz
-         TWrGvmcFU+kEgHclxWTGAmZOSHXhPOkCq2S9+WSV68TwCWSzCmT432EMQ+qY2oq9NrXD
-         aUpya/G7M2l+4TSFQipVySQg2xjJ7umDBOcYz3pzvnhsvLhrm0FSR1MCnlnU35sew8cJ
-         CGXQ==
-X-Gm-Message-State: AOAM532r5OyYGjGo1ZXBdDtaw7EHHCx9wUJm/9JJ2v/AwnKv0uUhAS5m
-        nR+U0L+FHfpQpD3K4B/6Hmn6BHA=
-X-Google-Smtp-Source: ABdhPJyL1DZXcZGnPUV+B06ZfrnB9Tblb5Z4e91WZYwHydSuUfJe04oo3xFTp2utb9Cfoqi/+eTqGA==
-X-Received: by 2002:a02:3445:: with SMTP id z5mr12031366jaz.134.1596725365863;
-        Thu, 06 Aug 2020 07:49:25 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n10sm4371029ila.2.2020.08.06.07.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:49:25 -0700 (PDT)
-Received: (nullmailer pid 838369 invoked by uid 1000);
-        Thu, 06 Aug 2020 14:49:23 -0000
-Date:   Thu, 6 Aug 2020 08:49:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-input@vger.kernel.org, Ahmet Inan <inan@distec.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        kernel@collabora.com, devicetree@vger.kernel.org
-Subject: Re: [PATCHv4 1/4] dt-bindings: touchscreen: Convert EETI EXC3000
- touchscreen to json-schema
-Message-ID: <20200806144923.GA838296@bogus>
-References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
- <20200805160520.456570-2-sebastian.reichel@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805160520.456570-2-sebastian.reichel@collabora.com>
+        Thu, 6 Aug 2020 12:56:57 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36064 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728903AbgHFQkn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Aug 2020 12:40:43 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DAB18200873;
+        Thu,  6 Aug 2020 13:55:00 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B7ED200869;
+        Thu,  6 Aug 2020 13:54:57 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E7BAC40252;
+        Thu,  6 Aug 2020 13:54:51 +0200 (CEST)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: imx6sx-sdb: Add headphone detection for sound card
+Date:   Thu,  6 Aug 2020 19:50:17 +0800
+Message-Id: <1596714617-16387-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 05 Aug 2020 18:05:17 +0200, Sebastian Reichel wrote:
-> Convert the EETI EXC3000 binding to DT schema format using json-schema
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../input/touchscreen/eeti,exc3000.yaml       | 53 +++++++++++++++++++
->  .../bindings/input/touchscreen/exc3000.txt    | 26 ---------
->  2 files changed, 53 insertions(+), 26 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> 
+Headphone detection is triggered by GPIO, then driver can
+switch between speaker and headphone.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sx-sdb.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index 3e5fb72f21fc..15f486a15f24 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -165,6 +165,7 @@ sound {
+ 			"IN3R", "AMIC";
+ 		mux-int-port = <2>;
+ 		mux-ext-port = <6>;
++		hp-det-gpio = <&gpio1 17 GPIO_ACTIVE_LOW>;
+ 	};
+ 
+ 	panel {
+@@ -374,6 +375,9 @@ &wdog1 {
+ 
+ &iomuxc {
+ 	imx6x-sdb {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_hog>;
++
+ 		pinctrl_audmux: audmuxgrp {
+ 			fsl,pins = <
+ 				MX6SX_PAD_CSI_DATA00__AUDMUX_AUD6_TXC	0x130b0
+@@ -450,6 +454,12 @@ MX6SX_PAD_CSI_DATA05__GPIO1_IO_19 0x17059
+ 			>;
+ 		};
+ 
++		pinctrl_hog: hoggrp {
++			fsl,pins = <
++				MX6SX_PAD_CSI_DATA03__GPIO1_IO_17 0x17059
++			>;
++		};
++
+ 		pinctrl_i2c1: i2c1grp {
+ 			fsl,pins = <
+ 				MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1
+-- 
+2.27.0
+
