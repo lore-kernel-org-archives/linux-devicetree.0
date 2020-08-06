@@ -2,119 +2,179 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF0EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 19:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB91C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 20:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15393206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 19:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AF72177B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 20:15:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QUY4zm6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgHFTIo (ORCPT
+        id S1726055AbgHFUPY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:08:44 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:35468 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgHFTIo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 15:08:44 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id EB4271C0BD2; Thu,  6 Aug 2020 21:08:40 +0200 (CEST)
-Date:   Thu, 6 Aug 2020 21:08:40 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Grant Feng <von81@163.com>, jacek.anaszewski@gmail.com,
-        robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low
- pulse when startup
-Message-ID: <20200806190840.zyovbkqgr2ey7rd6@duo.ucw.cz>
-References: <20200806062130.25187-1-von81@163.com>
- <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
+        Thu, 6 Aug 2020 16:15:24 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:35156 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725875AbgHFUPY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 16:15:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596744923; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ZYadisCTQSXaXKPrEzfTRnoXgPlBsKm1tiWBuOzw0mE=;
+ b=QUY4zm6Yjx0Rk3JqrMpgpooqS0/wPexhZIzWieKLxED+TmkJK0k/Ze96CfAX4yXcWvhljJWX
+ sI7CZxvbQU5B8lFTmJFJY2MuXGSQ7Inj67xDduN2l+ejUSFepc4kdRJBVra2xm/EzGPZsnVK
+ B3vMRFuxAVIlWZolk9w2EBFPu9A=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f2c17a04c787f237b7af23a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 14:45:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F2FEC43391; Thu,  6 Aug 2020 14:45:52 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kalyan_t)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BFEC3C433C9;
+        Thu,  6 Aug 2020 14:45:51 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bbh4x4visauhrnzh"
-Content-Disposition: inline
-In-Reply-To: <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 06 Aug 2020 20:15:51 +0530
+From:   kalyan_t@codeaurora.org
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [v1] drm/msm/dpu: Fix reservation failures in modeset
+In-Reply-To: <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
+References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
+Message-ID: <1101abba0c8082da196f36636ef07a84@codeaurora.org>
+X-Sender: kalyan_t@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2020-08-05 21:18, Rob Clark wrote:
+> On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org> 
+> wrote:
+>> 
+>> In TEST_ONLY commit, rm global_state will duplicate the
+>> object and request for new reservations, once they pass
+>> then the new state will be swapped with the old and will
+>> be available for the Atomic Commit.
+>> 
+>> This patch fixes some of missing links in the resource
+>> reservation sequence mentioned above.
+>> 
+>> 1) Creation of a duplicate state in test_only commit (Rob)
+>> 2) Allow resource release only during crtc_active false.
+>> 
+>> For #2
+>> In a modeset operation, swap state happens well before disable.
+>> Hence clearing reservations in disable will cause failures
+>> in modeset enable.
+>> 
+>> Sequence:
+>>     Swap state --> old, new
+>>     modeset disables --> virt disable
+>>     modeset enable --> virt modeset
+>> 
+>> Allow reservations to be cleared only when crtc active is false
+>> as in that case there wont be any modeset enable after disable.
+>> 
+>> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> index 63976dc..b85a576 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+>>         dpu_kms = to_dpu_kms(priv->kms);
+>>         mode = &crtc_state->mode;
+>>         adj_mode = &crtc_state->adjusted_mode;
+>> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
+>> +       global_state = dpu_kms_get_global_state(crtc_state->state);
+>>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
+>> 
+>>         /*
+>> @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct 
+>> drm_encoder *drm_enc)
+>>         struct msm_drm_private *priv;
+>>         struct dpu_kms *dpu_kms;
+>>         struct dpu_global_state *global_state;
+>> +       struct drm_crtc_state *crtc_state;
+>>         int i = 0;
+>> 
+>>         if (!drm_enc) {
+>> @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct 
+>> drm_encoder *drm_enc)
+>>         priv = drm_enc->dev->dev_private;
+>>         dpu_kms = to_dpu_kms(priv->kms);
+>>         global_state = dpu_kms_get_existing_global_state(dpu_kms);
+>> +       crtc_state = drm_enc->crtc->state;
+>> 
+>>         trace_dpu_enc_disable(DRMID(drm_enc));
+>> 
+>> @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct 
+>> drm_encoder *drm_enc)
+>> 
+>>         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+>> 
+>> -       dpu_rm_release(global_state, drm_enc);
+>> +       if (crtc_state->active_changed && !crtc_state->active)
+>> +               dpu_rm_release(global_state, drm_enc);
+> 
+> I still think releasing the state in the atomic_commit() path is the
+> wrong thing to do.  In the commit path, the various state objects
+> should be immutable.. ie. in the atomic_test() path you derive the new
+> hw state (including assignment/release of resources), and
+> atomic_commit() is simply pushing the state down to the hw.
+> 
+> Otherwise, this looks better than v1.
+> 
+> BR,
+> -R
+> 
+okay. Should we avoid reservation all together if active=0 on that crtc 
+and trigger rm_release on the enc during atomic_check ?
+how do you see the approach ?
 
---bbh4x4visauhrnzh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-> On 8/6/20 1:21 AM, Grant Feng wrote:
-> > generate a 5ms low pulse on sdb pin when startup, then the chip
-> > becomes more stable in the complex EM environment.
-> >=20
-> > Signed-off-by: Grant Feng <von81@163.com>
-> > ---
-> >   drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
-> >   1 file changed, 12 insertions(+)
-> >=20
-> > diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl3=
-19x.c
-> > index ca6634b8683c..b4f70002cec9 100644
-> > --- a/drivers/leds/leds-is31fl319x.c
-> > +++ b/drivers/leds/leds-is31fl319x.c
-> > @@ -16,6 +16,8 @@
-> >   #include <linux/of_device.h>
-> >   #include <linux/regmap.h>
-> >   #include <linux/slab.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> >   /* register numbers */
-> >   #define IS31FL319X_SHUTDOWN		0x00
-> > @@ -61,6 +63,7 @@
-> >   struct is31fl319x_chip {
-> >   	const struct is31fl319x_chipdef *cdef;
-> >   	struct i2c_client               *client;
-> > +	struct gpio_desc		*sdb_pin;
-> >   	struct regmap                   *regmap;
-> >   	struct mutex                    lock;
-> >   	u32                             audio_gain_db;
-> > @@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
-> >   		is31->audio_gain_db =3D min(is31->audio_gain_db,
-> >   					  IS31FL319X_AUDIO_GAIN_DB_MAX);
-> > +	is31->sdb_pin =3D gpiod_get(dev, "sdb", GPIOD_ASIS);
->=20
-> Since this is optional maybe use devm_gpiod_get_optional.
->=20
-> If this is required for stability then if the GPIO is not present then the
-> parse_dt should return the error.
->=20
-> And use the devm_gpiod_get call.=A0 Otherwise you are missing the gpiod_p=
-ut
-> when exiting or removing the driver.
-
-Yep, thanks for the review, I dropped it from for-next.
-
-And yes, this should be in series with device tree change, and we need
-Rob 's ack.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bbh4x4visauhrnzh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXyxVOAAKCRAw5/Bqldv6
-8mvbAJ46DdLOlQpYoIX7cBpeV+MXqJF7sACgjhIt85JkN1o3CwQpzvbS95S9rWo=
-=MLCx
------END PGP SIGNATURE-----
-
---bbh4x4visauhrnzh--
+-Kalyan
+>> 
+>>         mutex_unlock(&dpu_enc->enc_lock);
+>>  }
+>> --
+>> 1.9.1
+>> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
