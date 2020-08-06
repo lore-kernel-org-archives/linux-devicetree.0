@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF92C4727D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:20 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DF722DD6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9D6C4361B
 	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:19 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 62E18221E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LZbolm5E"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="upLcmO6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgHFHuD (ORCPT
+        id S1728848AbgHFHtY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 03:50:03 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34666 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbgHFHtc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 03:49:32 -0400
+        Thu, 6 Aug 2020 03:49:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50380 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgHFHtR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 03:49:17 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0767nNh8006061;
-        Thu, 6 Aug 2020 02:49:23 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0767mspG108586;
+        Thu, 6 Aug 2020 02:48:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596700163;
-        bh=/T8EzDdxuZG0N3E9FMOLlEz6HKFhWOs4DWZ0wgJjJQM=;
+        s=ti-com-17Q1; t=1596700134;
+        bh=mQz77AWFdi3UjjdsG0v0lCQYWub3Idv8f0kCXeTCPRY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LZbolm5E6W7qImv/2sPs/jKsDFDioaAMtXBsXFCnLP1x7mlDrNmV23T1nGpy350mY
-         p8xL3uVrKCDSbs2X4gSEyDM96OReliKQ1Z5xpPrDNTtxcaeaqto+cTnG1r8ZH23vjY
-         trdBYhHtxlaJDZuBAOe7Z4u4S+cemA+kMGTQLd3Y=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0767nNTt018553
+        b=upLcmO6b7ZD1XphOY2IwbRdL0avHcY0fbBbtijrfSsypjWM57ZIfYH9oXEC0B+1wa
+         3YXwBTHFwl3uKEgzQcwcrM0JrEscxdRxdAwN2km6zk/2Gc6jXv9BM0Ms3ROU34+n++
+         nwtV3rTkk+RZaGdeBPS/+eN6i4WnipzlLhpgM7TU=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0767mskP017928
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Aug 2020 02:49:23 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 6 Aug 2020 02:48:54 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
- 2020 02:49:23 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 02:48:53 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 6 Aug 2020 02:49:23 -0500
+ Frontend Transport; Thu, 6 Aug 2020 02:48:53 -0500
 Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0767mSZ1051454;
-        Thu, 6 Aug 2020 02:49:19 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0767mSYs051454;
+        Thu, 6 Aug 2020 02:48:49 -0500
 From:   Lokesh Vutla <lokeshvutla@ti.com>
 To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
 CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
@@ -57,10 +57,11 @@ CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v6 12/13] arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
-Date:   Thu, 6 Aug 2020 13:18:25 +0530
-Message-ID: <20200806074826.24607-13-lokeshvutla@ti.com>
+        Suman Anna <s-anna@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 05/13] dt-bindings: irqchip: Convert ti,sci-intr bindings to yaml
+Date:   Thu, 6 Aug 2020 13:18:18 +0530
+Message-ID: <20200806074826.24607-6-lokeshvutla@ti.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200806074826.24607-1-lokeshvutla@ti.com>
 References: <20200806074826.24607-1-lokeshvutla@ti.com>
@@ -73,150 +74,229 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the INTA and INTR dt nodes to the latest DT bindings.
+In order to automate the verification of DT nodes convert
+ti,sci-intr.txt ti,sci-intr.yaml.
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 24 +++++++++----------
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  8 +++----
- .../arm64/boot/dts/ti/k3-am654-base-board.dts |  4 ++--
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  1 -
- 4 files changed, 17 insertions(+), 20 deletions(-)
+ .../interrupt-controller/ti,sci-intr.txt      |  83 --------------
+ .../interrupt-controller/ti,sci-intr.yaml     | 102 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 103 insertions(+), 84 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 9edfae5944f7..996a82ff983e 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -417,10 +417,10 @@ intr_main_gpio: interrupt-controller0 {
- 		ti,intr-trigger-type = <1>;
- 		interrupt-controller;
- 		interrupt-parent = <&gic500>;
--		#interrupt-cells = <2>;
-+		#interrupt-cells = <1>;
- 		ti,sci = <&dmsc>;
--		ti,sci-dst-id = <56>;
--		ti,sci-rm-range-girq = <0x1>;
-+		ti,sci-dev-id = <100>;
-+		ti,interrupt-ranges = <0 392 32>;
- 	};
- 
- 	main_navss {
-@@ -438,10 +438,11 @@ intr_main_navss: interrupt-controller1 {
- 			ti,intr-trigger-type = <4>;
- 			interrupt-controller;
- 			interrupt-parent = <&gic500>;
--			#interrupt-cells = <2>;
-+			#interrupt-cells = <1>;
- 			ti,sci = <&dmsc>;
--			ti,sci-dst-id = <56>;
--			ti,sci-rm-range-girq = <0x0>, <0x2>;
-+			ti,sci-dev-id = <182>;
-+			ti,interrupt-ranges = <0 64 64>,
-+					      <64 448 64>;
- 		};
- 
- 		inta_main_udmass: interrupt-controller@33d00000 {
-@@ -452,8 +453,7 @@ inta_main_udmass: interrupt-controller@33d00000 {
- 			msi-controller;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <179>;
--			ti,sci-rm-range-vint = <0x0>;
--			ti,sci-rm-range-global-event = <0x1>;
-+			ti,interrupt-ranges = <0 0 256>;
- 		};
- 
- 		secure_proxy_main: mailbox@32c00000 {
-@@ -622,7 +622,7 @@ cpts@310d0000 {
- 			reg-names = "cpts";
- 			clocks = <&main_cpts_mux>;
- 			clock-names = "cpts";
--			interrupts-extended = <&intr_main_navss 163 0>;
-+			interrupts-extended = <&intr_main_navss 391>;
- 			interrupt-names = "cpts";
- 			ti,cpts-periodic-outputs = <6>;
- 			ti,cpts-ext-ts-inputs = <8>;
-@@ -645,8 +645,7 @@ main_gpio0:  main_gpio0@600000 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&intr_main_gpio>;
--		interrupts = <57 256>, <57 257>, <57 258>, <57 259>, <57 260>,
--				<57 261>;
-+		interrupts = <192>, <193>, <194>, <195>, <196>, <197>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <96>;
-@@ -661,8 +660,7 @@ main_gpio1:  main_gpio1@601000 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&intr_main_gpio>;
--		interrupts = <58 256>, <58 257>, <58 258>, <58 259>, <58 260>,
--				<58 261>;
-+		interrupts = <200>, <201>, <202>, <203>, <204>, <205>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <90>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index 5f55b9e82cf1..a1ffe88d9664 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -74,10 +74,10 @@ intr_wkup_gpio: interrupt-controller2 {
- 		ti,intr-trigger-type = <1>;
- 		interrupt-controller;
- 		interrupt-parent = <&gic500>;
--		#interrupt-cells = <2>;
-+		#interrupt-cells = <1>;
- 		ti,sci = <&dmsc>;
--		ti,sci-dst-id = <56>;
--		ti,sci-rm-range-girq = <0x4>;
-+		ti,sci-dev-id = <156>;
-+		ti,interrupt-ranges = <0 712 16>;
- 	};
- 
- 	wkup_gpio0: wkup_gpio0@42110000 {
-@@ -86,7 +86,7 @@ wkup_gpio0: wkup_gpio0@42110000 {
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&intr_wkup_gpio>;
--		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
-+		interrupts = <60>, <61>, <62>, <63>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <56>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 611e66207010..b8a8a0fcb8af 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -384,7 +384,7 @@ &pcie1_ep {
- };
- 
- &mailbox0_cluster0 {
--	interrupts = <164 0>;
-+	interrupts = <436>;
- 
- 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
- 		ti,mbox-tx = <1 0 0>;
-@@ -393,7 +393,7 @@ mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
- };
- 
- &mailbox0_cluster1 {
--	interrupts = <165 0>;
-+	interrupts = <432>;
- 
- 	mbox_mcu_r5fss0_core1: mbox-mcu-r5fss0-core1 {
- 		ti,mbox-tx = <1 0 0>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index e00cf2a08e6d..c4a48e8d420a 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -105,7 +105,6 @@ wkup_gpio_intr: interrupt-controller2 {
- 		ti,sci = <&dmsc>;
- 		ti,sci-dev-id = <137>;
- 		ti,interrupt-ranges = <16 960 16>;
--		ti,sci-rm-range-girq = <0x5>;
- 	};
- 
- 	wkup_gpio0: gpio@42110000 {
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
+deleted file mode 100644
+index c7046f3da201..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
++++ /dev/null
+@@ -1,83 +0,0 @@
+-Texas Instruments K3 Interrupt Router
+-=====================================
+-
+-The Interrupt Router (INTR) module provides a mechanism to mux M
+-interrupt inputs to N interrupt outputs, where all M inputs are selectable
+-to be driven per N output. An Interrupt Router can either handle edge triggered
+-or level triggered interrupts and that is fixed in hardware.
+-
+-                                 Interrupt Router
+-                             +----------------------+
+-                             |  Inputs     Outputs  |
+-        +-------+            | +------+    +-----+  |
+-        | GPIO  |----------->| | irq0 |    |  0  |  |       Host IRQ
+-        +-------+            | +------+    +-----+  |      controller
+-                             |    .           .     |      +-------+
+-        +-------+            |    .           .     |----->|  IRQ  |
+-        | INTA  |----------->|    .           .     |      +-------+
+-        +-------+            |    .        +-----+  |
+-                             | +------+    |  N  |  |
+-                             | | irqM |    +-----+  |
+-                             | +------+             |
+-                             |                      |
+-                             +----------------------+
+-
+-There is one register per output (MUXCNTL_N) that controls the selection.
+-Configuration of these MUXCNTL_N registers is done by a system controller
+-(like the Device Memory and Security Controller on K3 AM654 SoC). System
+-controller will keep track of the used and unused registers within the Router.
+-Driver should request the system controller to get the range of GIC IRQs
+-assigned to the requesting hosts. It is the drivers responsibility to keep
+-track of Host IRQs.
+-
+-Communication between the host processor running an OS and the system
+-controller happens through a protocol called TI System Control Interface
+-(TISCI protocol). For more details refer:
+-Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+-
+-TISCI Interrupt Router Node:
+-----------------------------
+-Required Properties:
+-- compatible:		Must be "ti,sci-intr".
+-- ti,intr-trigger-type:	Should be one of the following:
+-			1: If intr supports edge triggered interrupts.
+-			4: If intr supports level triggered interrupts.
+-- interrupt-controller:	Identifies the node as an interrupt controller
+-- #interrupt-cells:	Specifies the number of cells needed to encode an
+-			interrupt source. The value should be 1.
+-			First cell should contain interrupt router input number
+-			as specified by hardware.
+-- ti,sci:		Phandle to TI-SCI compatible System controller node.
+-- ti,sci-dev-id:	TISCI device id of interrupt controller.
+-- ti,interrupt-ranges:	Set of triplets containing ranges that convert
+-			the INTR output interrupt numbers to parent's
+-			interrupt number. Each triplet has following entries:
+-			- First entry specifies the base for intr output irq
+-			- Second entry specifies the base for parent irqs
+-			- Third entry specifies the limit
+-
+-For more details on TISCI IRQ resource management refer:
+-https://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
+-
+-Example:
+---------
+-The following example demonstrates both interrupt router node and the consumer
+-node(main gpio) on the AM654 SoC:
+-
+-main_gpio_intr: interrupt-controller0 {
+-	compatible = "ti,sci-intr";
+-	ti,intr-trigger-type = <1>;
+-	interrupt-controller;
+-	interrupt-parent = <&gic500>;
+-	#interrupt-cells = <1>;
+-	ti,sci = <&dmsc>;
+-	ti,sci-dev-id = <131>;
+-	ti,interrupt-ranges = <0 360 32>;
+-};
+-
+-main_gpio0: gpio@600000 {
+-	...
+-	interrupt-parent = <&main_gpio_intr>;
+-	interrupts = <192>, <193>, <194>, <195>, <196>, <197>;
+-	...
+-};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
+new file mode 100644
+index 000000000000..cff6a956afb4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/ti,sci-intr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments K3 Interrupt Router
++
++maintainers:
++  - Lokesh Vutla <lokeshvutla@ti.com>
++
++allOf:
++  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
++
++description: |
++  The Interrupt Router (INTR) module provides a mechanism to mux M
++  interrupt inputs to N interrupt outputs, where all M inputs are selectable
++  to be driven per N output. An Interrupt Router can either handle edge
++  triggered or level triggered interrupts and that is fixed in hardware.
++
++                                   Interrupt Router
++                               +----------------------+
++                               |  Inputs     Outputs  |
++          +-------+            | +------+    +-----+  |
++          | GPIO  |----------->| | irq0 |    |  0  |  |       Host IRQ
++          +-------+            | +------+    +-----+  |      controller
++                               |    .           .     |      +-------+
++          +-------+            |    .           .     |----->|  IRQ  |
++          | INTA  |----------->|    .           .     |      +-------+
++          +-------+            |    .        +-----+  |
++                               | +------+    |  N  |  |
++                               | | irqM |    +-----+  |
++                               | +------+             |
++                               |                      |
++                               +----------------------+
++
++  There is one register per output (MUXCNTL_N) that controls the selection.
++  Configuration of these MUXCNTL_N registers is done by a system controller
++  (like the Device Memory and Security Controller on K3 AM654 SoC). System
++  controller will keep track of the used and unused registers within the Router.
++  Driver should request the system controller to get the range of GIC IRQs
++  assigned to the requesting hosts. It is the drivers responsibility to keep
++  track of Host IRQs.
++
++  Communication between the host processor running an OS and the system
++  controller happens through a protocol called TI System Control Interface
++  (TISCI protocol).
++
++properties:
++  compatible:
++    const: ti,sci-intr
++
++  ti,intr-trigger-type:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 4]
++    description: |
++      Should be one of the following.
++        1 = If intr supports edge triggered interrupts.
++        4 = If intr supports level triggered interrupts.
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 1
++    description: |
++      The 1st cell should contain interrupt router input hw number.
++
++  ti,interrupt-ranges:
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    description: |
++      Interrupt ranges that converts the INTR output hw irq numbers
++      to parents's input interrupt numbers.
++    items:
++      items:
++        - description: |
++            "output_irq" specifies the base for intr output irq
++        - description: |
++            "parent's input irq" specifies the base for parent irq
++        - description: |
++            "limit" specifies the limit for translation
++
++required:
++  - compatible
++  - ti,intr-trigger-type
++  - interrupt-controller
++  - '#interrupt-cells'
++  - ti,sci
++  - ti,sci-dev-id
++  - ti,interrupt-ranges
++
++examples:
++  - |
++    main_gpio_intr: interrupt-controller0 {
++        compatible = "ti,sci-intr";
++        ti,intr-trigger-type = <1>;
++        interrupt-controller;
++        interrupt-parent = <&gic500>;
++        #interrupt-cells = <1>;
++        ti,sci = <&dmsc>;
++        ti,sci-dev-id = <131>;
++        ti,interrupt-ranges = <0 360 32>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0fdb9a7c5ffd..58d4740b0a9d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16992,7 +16992,7 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+ F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
+-F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
++F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
+ F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+ F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+ F:	drivers/clk/keystone/sci-clk.c
 -- 
 2.27.0
 
