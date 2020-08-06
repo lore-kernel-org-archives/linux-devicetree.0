@@ -2,202 +2,111 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F41BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3473C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF99204FD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F85F23119
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoPd66cT"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nxRpKDfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgHFQow (ORCPT
+        id S1729220AbgHFQp0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:44:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbgHFQoq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:44:46 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FDA5C0A8921;
-        Thu,  6 Aug 2020 09:44:46 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c10so5921598edk.6;
-        Thu, 06 Aug 2020 09:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7j5tR0m8H3OjMJuPim98FwiN1aMkbIjxdxVhuyjo0Ew=;
-        b=eoPd66cTTjH9l86GoO63fQ8X+ctw+Tj6hSPmE5nYp/Vdw7ql/bdp4r9RzKYlJMfuc6
-         Uv8D1gdE4B+TP1mfI9optHvVmRoSLmApmaSXNVcECB65pZ8tz+2AyjO9ruPRFC25iy7P
-         GUKejLwQ/2ZaTbOxLdkbRqTHAS7Pf8nC9vskid09nzG5twd6YAD24ztc9/h6xh5r/wS8
-         IxPxwM73RIb7oiyYJwFcLdvxiVLKrNZLEgBmui6leAyfg2ByBszOKKDeCehFyiG9JPsm
-         K4eQ1HVC6piC9IOLSV2KMGGIbEXbSenlSoNegi0W7skQxYA720JZqAWd99NG0vJG3oe2
-         rXFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7j5tR0m8H3OjMJuPim98FwiN1aMkbIjxdxVhuyjo0Ew=;
-        b=hAkF1lbYeNCZFijXsiDk3SbtrBrVXg8sZ86tD+Aayf8RUylTCerVFt6frl2MMMwqfQ
-         k755u8odwthqIgOnX++qrN1IIIHTZXnbVQj9xENANWVgBYypEbrJTkj+ayywWzrcNmw/
-         uLTiUpME1QgJvW9mQTdwnlPv9qSSGDY8L98N+25zB5SG35SDzjsCgw5cCLXSaoHXgQHo
-         LStdYKt7a07CKKjSyBUVZhBcwd2OhxgImD8eZBk5MPIKBVJzhwTbGA+LLA+IBMrut2GS
-         cpx9bYo7qAu3yZbP+8aoHq5rSHjapwKZUJygOhQZTLgNoaR/B5yBSfAXk0bxyfJG1BNB
-         uBbw==
-X-Gm-Message-State: AOAM533TpVzbHddcFJSZv+bontlBIJ8h3uqTg6J/0RtZa9TSXM173UQk
-        IB7TM1bD6u5QlGD2i5QfsC2Ir43VmVb85rqUR/s=
-X-Google-Smtp-Source: ABdhPJwR1WrcmmYyv3xVh2Lg73XDm1Qy31RKbQCdDoen+3KsX/nStphPf+QMMn9o4Ud82k5K1qcstkFDVwFQJCjr5Ao=
-X-Received: by 2002:a05:6402:a5b:: with SMTP id bt27mr5003305edb.120.1596732284503;
- Thu, 06 Aug 2020 09:44:44 -0700 (PDT)
+        Thu, 6 Aug 2020 12:45:26 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16829 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729092AbgHFQn4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:43:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c32e80000>; Thu, 06 Aug 2020 09:42:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 09:43:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 09:43:56 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 16:43:55 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <9deaee09-c422-5694-7c19-d85354b9b703@gmail.com>
+ <14793e8c-30dc-5cf5-fdf9-6f64fa433818@gmail.com>
+ <c9709f37-02dd-cd1a-b83f-07784365945d@nvidia.com>
+Message-ID: <268dd631-bf5e-8236-1e38-786989cc06ac@nvidia.com>
+Date:   Thu, 6 Aug 2020 09:43:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com> <1101abba0c8082da196f36636ef07a84@codeaurora.org>
-In-Reply-To: <1101abba0c8082da196f36636ef07a84@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 6 Aug 2020 09:45:28 -0700
-Message-ID: <CAF6AEGu2Lfb94kjnd7+GU_c93z0Zw2SgQ==UcrjPg3Wah=24ng@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm/dpu: Fix reservation failures in modeset
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c9709f37-02dd-cd1a-b83f-07784365945d@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596732136; bh=AVma5jGXArZVd4VOJRBFrVAEISxBozYZ4GHgECLEV44=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=nxRpKDfI7GJ2NX/+f4CE3ZG2NfJ8m63EHQqW9Lf4HtzODFngRWyrvW3/GI193Al3Z
+         5hT8fQDXbpDTJ3xoNXf9vZHsjrqS7IyHjLvCDPPk/in4bwaTGtFAom24aw+DsK56a3
+         gIPd99YZJ/GczfS6LsvaFQGe8tkShsAjW4+WWHIrdNmImypEY3VPulBZEdIHm/X19J
+         jH0heLw6YbcZ3Y5C4Ao2vPFTsUq8mWI0VUio6pD5zNG/bNio5cuC3/OF4SBu9Cpxkh
+         Vnp27Dc6+2CgPwcd1JVjNuO1cQ6b910aqxloJoxcvBMNhJIypyKrxkCDxHIn6XAGf0
+         CcXe1CbyKVa2Q==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 7:46 AM <kalyan_t@codeaurora.org> wrote:
+
+On 8/6/20 9:42 AM, Sowjanya Komatineni wrote:
 >
-> On 2020-08-05 21:18, Rob Clark wrote:
-> > On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org>
-> > wrote:
-> >>
-> >> In TEST_ONLY commit, rm global_state will duplicate the
-> >> object and request for new reservations, once they pass
-> >> then the new state will be swapped with the old and will
-> >> be available for the Atomic Commit.
-> >>
-> >> This patch fixes some of missing links in the resource
-> >> reservation sequence mentioned above.
-> >>
-> >> 1) Creation of a duplicate state in test_only commit (Rob)
-> >> 2) Allow resource release only during crtc_active false.
-> >>
-> >> For #2
-> >> In a modeset operation, swap state happens well before disable.
-> >> Hence clearing reservations in disable will cause failures
-> >> in modeset enable.
-> >>
-> >> Sequence:
-> >>     Swap state --> old, new
-> >>     modeset disables --> virt disable
-> >>     modeset enable --> virt modeset
-> >>
-> >> Allow reservations to be cleared only when crtc active is false
-> >> as in that case there wont be any modeset enable after disable.
-> >>
-> >> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> >> ---
-> >>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
-> >>  1 file changed, 5 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> index 63976dc..b85a576 100644
-> >> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> >> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
-> >>         dpu_kms = to_dpu_kms(priv->kms);
-> >>         mode = &crtc_state->mode;
-> >>         adj_mode = &crtc_state->adjusted_mode;
-> >> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> >> +       global_state = dpu_kms_get_global_state(crtc_state->state);
-> >>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
-> >>
-> >>         /*
-> >> @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct
-> >> drm_encoder *drm_enc)
-> >>         struct msm_drm_private *priv;
-> >>         struct dpu_kms *dpu_kms;
-> >>         struct dpu_global_state *global_state;
-> >> +       struct drm_crtc_state *crtc_state;
-> >>         int i = 0;
-> >>
-> >>         if (!drm_enc) {
-> >> @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct
-> >> drm_encoder *drm_enc)
-> >>         priv = drm_enc->dev->dev_private;
-> >>         dpu_kms = to_dpu_kms(priv->kms);
-> >>         global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> >> +       crtc_state = drm_enc->crtc->state;
-> >>
-> >>         trace_dpu_enc_disable(DRMID(drm_enc));
-> >>
-> >> @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct
-> >> drm_encoder *drm_enc)
-> >>
-> >>         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
-> >>
-> >> -       dpu_rm_release(global_state, drm_enc);
-> >> +       if (crtc_state->active_changed && !crtc_state->active)
-> >> +               dpu_rm_release(global_state, drm_enc);
-> >
-> > I still think releasing the state in the atomic_commit() path is the
-> > wrong thing to do.  In the commit path, the various state objects
-> > should be immutable.. ie. in the atomic_test() path you derive the new
-> > hw state (including assignment/release of resources), and
-> > atomic_commit() is simply pushing the state down to the hw.
-> >
-> > Otherwise, this looks better than v1.
-> >
-> > BR,
-> > -R
-> >
-> okay. Should we avoid reservation all together if active=0 on that crtc
-> and trigger rm_release on the enc during atomic_check ?
-> how do you see the approach ?
-
-Yeah, I suppose something like:
-
-   if (drm_atomic_crtc_needs_modeset()) {
-      reserve()
-   } else if (active_changed && !active) {
-      release()
-   }
-
-I think it could happen (at least with atomic api) that you get a
-modeset without active_changed, so we might need to release() and then
-reserve() in that case?  (This is probably where starting to run more
-IGT tests would be useful)
-
-BR,
--R
-
-> -Kalyan
-> >>
-> >>         mutex_unlock(&dpu_enc->enc_lock);
-> >>  }
-> >> --
-> >> 1.9.1
-> >>
-> > _______________________________________________
-> > Freedreno mailing list
-> > Freedreno@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+> On 8/6/20 9:37 AM, Dmitry Osipenko wrote:
+>> 06.08.2020 19:13, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 06.08.2020 18:59, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ..
+>>>> We cant use active status check for specific pads under calibration.
+>>>> This is common bit for all pads.
+>>> I'm not sure why this is a problem.
+>>>
+>> IIUC, the start_calibration() should wait for the MIPI_CAL_STATUS_ACTIVE
+>> and finish_calibration() should wait for MIPI_AUTO_CAL_DONE_CSIA/B.
+>
+> As soon as START bit it set, FSM will set ACTIVE =3D 1
+>
+> There is no added advantage of waiting for ACTIVE to be in=20
+> start_calibration()
+Also like I explained in other post of same discussion, ACTIVE we will=20
+be 1 even when other parallel pads are under calibration.
