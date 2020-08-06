@@ -2,91 +2,100 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13159C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18572C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D94623120
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D052086A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596733022;
+	bh=PoWQddXtujhSCVkBqg8jlbbT/TOIWo3jPZgW3tFasjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gcVPm9UnSzK1jDbQ9lWk34OfaVlkq6qxYN+i1SVXS5RZzWVYutOappFg4OUbnfDe8
+	 RFUvXur6rCsOSz75AOFgbl3+26xEkt8R7nvRCm27XWJdvJlB4rKaNzaiC0ADC1KQRd
+	 ye8Swr6MK9Qvc4ugTbckZBScUQJm5psdh0aYuBMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgHFQ45 (ORCPT
+        id S1729745AbgHFQ5A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:56:57 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:36064 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgHFQkn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Aug 2020 12:40:43 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DAB18200873;
-        Thu,  6 Aug 2020 13:55:00 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B7ED200869;
-        Thu,  6 Aug 2020 13:54:57 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E7BAC40252;
-        Thu,  6 Aug 2020 13:54:51 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: imx6sx-sdb: Add headphone detection for sound card
-Date:   Thu,  6 Aug 2020 19:50:17 +0800
-Message-Id: <1596714617-16387-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 6 Aug 2020 12:57:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36648 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbgHFQkm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:40:42 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p3so27121834pgh.3;
+        Thu, 06 Aug 2020 09:39:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NGFLJxMeBxJCNtUDHjRW6ZiLVs82vJu7FA4KSa9s8BU=;
+        b=ZCPVEgjElsHlVvJFI36AFgZD2tNn/l0eRBgVjjNS3JYOwTnpUesShQ64aaQwziztbg
+         hNS2kNv/jZWdMMypyaXYOLOf1gK0lwohQnM2IuUTgnPM+pzkqhAOPYd9s3zfA6Vb2t6Z
+         nH1hT0Xeq1UVIW+HqUyIyuGrVzfJnSX5FHLlNVCrT8SGcU/Wf9YtG0qgmw3A5gRqCb+S
+         5gH9zRtoFheT4myIHFBFrX8u//LKvDXTwmOuz3ZScaTlbR1bawzPlURrf11M740PNG2H
+         EPTS99wPwEYaVIksq+qij8ptMZl5IAsheWyWQmWIeYqjtMm7m5kb/O/LOylbv3pPgKSF
+         fnTA==
+X-Gm-Message-State: AOAM530qhH3iew1NiCRmMKQP9mDUaZTgVmVHCEtMKicywPqteTiJN2dg
+        COlVdatINMoMRr8rabbbY7jECEY=
+X-Google-Smtp-Source: ABdhPJylkZQ+5iAfHEgte0gd4yrfCNYNVomE5IG2p4UtcVZBqQMjGgI/WCTWEagKSExRTf0dapNetA==
+X-Received: by 2002:a6b:3bd4:: with SMTP id i203mr10428163ioa.205.1596723384461;
+        Thu, 06 Aug 2020 07:16:24 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id a16sm1583882ilh.12.2020.08.06.07.16.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 07:16:23 -0700 (PDT)
+Received: (nullmailer pid 782817 invoked by uid 1000);
+        Thu, 06 Aug 2020 14:16:22 -0000
+Date:   Thu, 6 Aug 2020 08:16:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] dt-bindings: cpufreq: Document Krait CPU Cache
+ scaling
+Message-ID: <20200806141622.GA782018@bogus>
+References: <20200805131200.3234-1-ansuelsmth@gmail.com>
+ <20200805131200.3234-3-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805131200.3234-3-ansuelsmth@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Headphone detection is triggered by GPIO, then driver can
-switch between speaker and headphone.
+On Wed, 05 Aug 2020 15:11:59 +0200, Ansuel Smith wrote:
+> Document dedicated Krait CPU Cache Scaling driver.
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/cpufreq/krait-cache-scale.yaml   | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
+> 
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm/boot/dts/imx6sx-sdb.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index 3e5fb72f21fc..15f486a15f24 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -165,6 +165,7 @@ sound {
- 			"IN3R", "AMIC";
- 		mux-int-port = <2>;
- 		mux-ext-port = <6>;
-+		hp-det-gpio = <&gpio1 17 GPIO_ACTIVE_LOW>;
- 	};
- 
- 	panel {
-@@ -374,6 +375,9 @@ &wdog1 {
- 
- &iomuxc {
- 	imx6x-sdb {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_hog>;
-+
- 		pinctrl_audmux: audmuxgrp {
- 			fsl,pins = <
- 				MX6SX_PAD_CSI_DATA00__AUDMUX_AUD6_TXC	0x130b0
-@@ -450,6 +454,12 @@ MX6SX_PAD_CSI_DATA05__GPIO1_IO_19 0x17059
- 			>;
- 		};
- 
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				MX6SX_PAD_CSI_DATA03__GPIO1_IO_17 0x17059
-+			>;
-+		};
-+
- 		pinctrl_i2c1: i2c1grp {
- 			fsl,pins = <
- 				MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1
--- 
-2.27.0
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: l2-cpufreq: [[384000, 600000, 1200000]] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: l2-rates: [[384000000, 1000000000, 1200000000]] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.example.dt.yaml: qcom-krait-cache: l2-volt: [[1100000, 1100000, 1150000]] is too short
+
+
+See https://patchwork.ozlabs.org/patch/1341295
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
