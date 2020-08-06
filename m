@@ -2,202 +2,387 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F081EC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CB0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5CE221E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CF322DCC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9WJfCrp"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="r5Rp1ZyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgHFR1V (ORCPT
+        id S1728675AbgHFR17 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49156 "EHLO
+        Thu, 6 Aug 2020 13:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgHFR1U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:27:20 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D470CC061574;
-        Thu,  6 Aug 2020 10:27:18 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id i10so17919639ljn.2;
-        Thu, 06 Aug 2020 10:27:18 -0700 (PDT)
+        with ESMTP id S1729526AbgHFRBb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:01:31 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EEE4C094244
+        for <devicetree@vger.kernel.org>; Thu,  6 Aug 2020 06:49:57 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 184so9784281wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 06 Aug 2020 06:49:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aV1obyLP1kSAuWoOSd1TJKMwTZ27aQ8wVfEpw+0wGBU=;
-        b=a9WJfCrpB0mlGFNpjp3IMfO8eESkaYVXerUr07b3nryvHt7lbOBlM6Ty3pQW2Q544O
-         uUTqXruVltYm4Xm/9+qUMi8tpCWA/dePs4LvfKbLdpYyscOAy70TzTqm+ezEu8bsb/BF
-         c5I3sLn+QKgstFfFONCvce0M4QYvl8bofh0CsIl7Io8GCP0KMzaUk/uRXs6+tDT9ufm1
-         7EviczQgNP7fD0T30hHs6/6YLgLWnhHPk9J+xAK4GJbNxyCeRHPgo9B7ln9sJlL/6r88
-         F/Gf0r+jAUN9aunIRSR+SVbJQlWyHBbNynqgnOM3DI2RNT2KWf75FuJSEVdSoWs4MoAJ
-         3H4w==
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=D2nPuh6+PfL0pW7ynAT+SzMECoPzN1zrqCQoSJsgD8I=;
+        b=r5Rp1ZyQLReNIQzLJnzNIwfTUQ2LL3PCoGanIuiyoHll/QnJXJrqFFw5jOcck2mM+v
+         L7IMLj4cPILDecQWjxOXKfxnlp37Rrn2Hkl6KflsSK+lZY8N1cipRb0fiPzy++JDQqt6
+         l8t8g1L6iwhDQjazMh+Ay4NJ6VNloCD+tdnAogxjSHEho40vqMhitBoJQcuxt7l/ONws
+         U0mzNbRE4E5OGJEnAawJUHfVaTTNL8KbpdA28hJ1IBahnFIug2GGzLTiXvRGiGlJf4Cu
+         cM+roV5Uvye60/uRXodWvu0Og3luLHWs9GmuZlcfs5drdGBkDLqBTI8QCwKifYnnshMK
+         JG5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aV1obyLP1kSAuWoOSd1TJKMwTZ27aQ8wVfEpw+0wGBU=;
-        b=jWfmdvpRKtHfvME27eeiVVdgejwUCu1576N44sd6lUKCFGik305IGfzQOmiEWeNoYL
-         fMI7Z65ftnBiu/VjLioupFI6eCakvQLKq/95hXTEhbfVlcmLQte3vq6Jn2D462w7JU7X
-         KSH6NFFw83afqfgJ4rSifIIHMRFQTP1ngGJs2ACszrx5Q8A1/IB/mtiNT9bUsoHzOwXn
-         qN2ImEY52KcpnY2qjSXzSLFclAk0WoanbPVCsTjyXc9awx4B9VKJwS7kB246dx20pTwn
-         lvJOlRcq7IuuFdWlola2SH6I2NjKyb5s5bmV2oKTsCivKTr9tTcMkWLf07i4GtI4QC6V
-         T97A==
-X-Gm-Message-State: AOAM533QiENBK8PcbuB4vm2+zHRpuPSHkguBq7SmwZjRP8Zr7/cYwU1K
-        jkol+OkNROXLyDRuBNCdCAGIQeN2
-X-Google-Smtp-Source: ABdhPJwUrsHV/vYp5HAg8LZBKkEWEoGc94/DcNh333osFJkTDq+NVE9tPWlFcJqOShjfbHUUSP/66w==
-X-Received: by 2002:a2e:b0d2:: with SMTP id g18mr4011627ljl.136.1596734836681;
-        Thu, 06 Aug 2020 10:27:16 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id g4sm2974058lfh.13.2020.08.06.10.27.15
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=D2nPuh6+PfL0pW7ynAT+SzMECoPzN1zrqCQoSJsgD8I=;
+        b=jx/iXZ3tU3yIxSlb9i0Fo5v8GwPUlFQDL3koxLSnIoOeonKHr68QZBgi5Y5Knihiun
+         nB+LKegGChRxsoqILKV5l3AZIATizfmmQ2R8WPGRr+cwL2lHw7Nh+7L4v+9vflhVFi9D
+         KH8bJejCML7/299lm93qXx3YQrzMkyim5CZnSWIhMVnTScEoQls9wa7/Pe6pK+r2Dx8I
+         2yQR+KU46n/HmRvaNLKWlks73A6ruVBwa7ET1lTWADCa4qyz6N6nsXLuns3Gm38ss6rS
+         /HJxzzWEbxb1dL0P0fjwixICTzP7ds7pAtWQMVbQc5YLidXCqWOl68GQks7Buq0SNGFU
+         JsGw==
+X-Gm-Message-State: AOAM533YMGqY/Dt7NSszGwIh78Kaowc7bMEjTVSpdSMnFYqXVO6ww0EN
+        Yp5NFS7UeA1rp8S6tCSL/l6AdA==
+X-Google-Smtp-Source: ABdhPJzCtC50wteJfCe1Z+M9Kc8c7ktFbmPycBp15RkNBzYTe4u5SEDG5ziRmdrOT3g3TUsL6szDNA==
+X-Received: by 2002:a1c:28c4:: with SMTP id o187mr7776064wmo.62.1596721788974;
+        Thu, 06 Aug 2020 06:49:48 -0700 (PDT)
+Received: from linux.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h11sm6535503wrb.68.2020.08.06.06.49.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 10:27:15 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
- <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
- <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
- <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6ff57c38-9847-42b0-643b-0d167c13779f@gmail.com>
-Date:   Thu, 6 Aug 2020 20:27:15 +0300
+        Thu, 06 Aug 2020 06:49:48 -0700 (PDT)
+Subject: Re: [PATCH 3/6] remoteproc: mtk_vpu_rproc: Add support of JTAG
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200713132927.24925-1-abailon@baylibre.com>
+ <20200713132927.24925-4-abailon@baylibre.com>
+ <20200721195231.GA1227776@xps15>
+From:   Alexandre Bailon <abailon@baylibre.com>
+Message-ID: <cc53a2c1-4349-e489-0087-a31a13edef8f@baylibre.com>
+Date:   Thu, 6 Aug 2020 15:49:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200721195231.GA1227776@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-06.08.2020 20:12, Sowjanya Komatineni пишет:
-> 
-> On 8/6/20 9:41 AM, Sowjanya Komatineni wrote:
->>
->> On 8/6/20 9:10 AM, Dmitry Osipenko wrote:
->>> 06.08.2020 18:59, Sowjanya Komatineni пишет:
->>> ...
->>>>>> Confirmed from HW designer, calibration FSM to finish takes worst
->>>>>> case
->>>>>> 72uS so by the time it gets to sensor stream it will be done its
->>>>>> sequence and will be waiting for DONE bit.
->>>>>>
->>>>>> So disabling MIPI CAL clock on sensor stream fails is safe.
->>>>> 72us is quite a lot of time, what will happen if LP-11 happens before
->>>>> FSM finished calibration?
->>>>>
->>>>> Maybe the finish_calibration() needs to split into two parts:
->>>>>
->>>>>    1. wait for CAL_STATUS_ACTIVE before enabling sensor
->>>>>    2. wait for CAL_STATUS_DONE after enabling sensor
->>>> I don't think we need to split for active and done. Active will be 1 as
->>>> long as other pads are in calibration as well.
->>>>
->>>> We cant use active status check for specific pads under calibration.
->>>> This is common bit for all pads.
->>> Does hardware have a single FSM block shared by all pads or there is FSM
->>> per group of pads?
->>
->> MIPI CAL status register has DONE bits for individual pads status and
->> single ACTIVE bit.
->>
->> ACTIVE bit set to 1 indicates auto calibration is active which is the
->> case even when other pads (other CSI pads from other ports streaming
->> in case of parallel stream) are under calibration. Also DSI is shared
->> as well.
->>
->> We do calibration for individual pads. So, we should not rely on
->> ACTIVE bit.
->>
->>
->> MIPI driver checks for condition ACTIVE == 1 && DONE == 1 from the
->> beginning.
->>
->> But I think this also should be fixed as in case of parallel streams
->> calibration can happen in parallel waiting for ACTIVE to be cleared
->> makes all calibration callers to wait for longer than needed as ACTIVE
->> is common for all pads.
->>
->>>
->>>> Unfortunately HW don't have separate status indicating when sequence is
->>>> done to indicate its waiting for LP11.
->>>>
->>>>
->>>> To avoid all this, will remove cancel_calibration() totally and use
->>>> same
->>>> finish calibration even in case of stream failure then.
->>>>
->>> What about to add 72us delay to the end of start_calibration() in order
->>> to ensure that FSM is finished before LP-11?
->>
->> Why we should add 72uS in start_calibration() when can use same
->> finish_calibration() for both pass/fail cases?
->>
->> Only timing loose we see is in case of failure we still wait for 250ms
->> and as this is failing case I hope should be ok.
->>
-> Also as we don't need cancel_calibration(), keeping tegra_mipi_wait()
-> like earlier makes sense I believe as we are letting it finish going
-> thru sequence.
-> 
-> So I think below are fixes,
-> 
-> 1. Existing MIPI driver, tegra_mipi_wait() to not use status ACTIVE bit
-> to be 0 and use only DONE bit to be 1 for wait condition  as we are
-> calibrating separately for individual pads and this ACTIVE bit is common
-> for all pads where it will not be 0 in case of other parallel streams
-> which may also be under calibration.
 
-Yes, looks like it's a mistake of the current MIPI driver that it polls
-the ACTIVE bit.
+On 7/21/20 9:52 PM, Mathieu Poirier wrote:
+> On Mon, Jul 13, 2020 at 03:29:24PM +0200, Alexandre Bailon wrote:
+>> The DSP could be debugged using JTAG.
+>> The support of JTAG could enabled at build time and it could be enabled
+>> using debugfs.
+>>
+>> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+>> ---
+>>   drivers/remoteproc/Kconfig         |   9 ++
+>>   drivers/remoteproc/mtk_apu_rproc.c | 156 ++++++++++++++++++++++++++++-
+>>   2 files changed, 162 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>> index e116d4a12ac3..e1158563e2e8 100644
+>> --- a/drivers/remoteproc/Kconfig
+>> +++ b/drivers/remoteproc/Kconfig
+>> @@ -52,6 +52,15 @@ config MTK_APU
+>>   
+>>   	  It's safe to say N here.
+>>   
+>> +config MTK_APU_JTAG
+>> +	bool "Enable support of JTAG"
+>> +	depends on MTK_APU
+>> +	help
+>> +	  Say y to enable support of JTAG.
+>> +	  By default, JTAG will remain disabled until it is enabled using
+>> +	  debugfs: remoteproc/remoteproc0/jtag. Write 1 to enable it and
+>> +	  0 to disable it.
+>> +
+>>   config OMAP_REMOTEPROC
+>>   	tristate "OMAP remoteproc support"
+>>   	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
+>> diff --git a/drivers/remoteproc/mtk_apu_rproc.c b/drivers/remoteproc/mtk_apu_rproc.c
+>> index fb416a817ef3..f2342b747a35 100644
+>> --- a/drivers/remoteproc/mtk_apu_rproc.c
+>> +++ b/drivers/remoteproc/mtk_apu_rproc.c
+>> @@ -5,6 +5,7 @@
+>>   
+>>   #include <linux/bitops.h>
+>>   #include <linux/clk.h>
+>> +#include <linux/debugfs.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/io.h>
+>> @@ -14,6 +15,7 @@
+>>   #include <linux/highmem.h>
+>>   #include <linux/module.h>
+>>   #include <linux/of_reserved_mem.h>
+>> +#include <linux/pinctrl/consumer.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/remoteproc.h>
+>>   
+>> @@ -48,6 +50,11 @@
+>>   #define CORE_DEFAULT1				(0x00000140)
+>>   #define  CORE_DEFAULT0_ARUSER_IDMA_USE_IOMMU	(0x10 << 0)
+>>   #define  CORE_DEFAULT0_AWUSER_IDMA_USE_IOMMU	(0x10 << 5)
+>> +#define CORE_DEFAULT2				(0x00000144)
+>> +#define CORE_DEFAULT2_DBG_EN			BIT(3)
+>> +#define CORE_DEFAULT2_NIDEN			BIT(2)
+>> +#define CORE_DEFAULT2_SPNIDEN			BIT(1)
+>> +#define CORE_DEFAULT2_SPIDEN			BIT(0)
+>>   #define CORE_XTENSA_ALTRESETVEC			(0x000001F8)
+>>   
+>>   struct mtk_vpu_rproc {
+>> @@ -59,6 +66,13 @@ struct mtk_vpu_rproc {
+>>   	struct clk *axi;
+>>   	struct clk *ipu;
+>>   	struct clk *jtag;
+>> +
+>> +#ifdef CONFIG_MTK_APU_JTAG
+>> +	struct pinctrl *pinctrl;
+>> +	struct pinctrl_state *pinctrl_default;
+>> +	struct pinctrl_state *pinctrl_jtag;
+>> +	bool jtag_enabled;
+>> +#endif
+>>   };
+>>   
+>>   static u32 vpu_read32(struct mtk_vpu_rproc *vpu_rproc, u32 off)
+>> @@ -149,6 +163,133 @@ static irqreturn_t handle_event(int irq, void *data)
+>>   	return IRQ_HANDLED;
+>>   }
+>>   
+>> +#ifdef CONFIG_MTK_APU_JTAG
+>> +
+>> +static int vpu_enable_jtag(struct mtk_vpu_rproc *vpu_rproc)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (vpu_rproc->jtag_enabled)
+>> +		return -EINVAL;
+>> +
+>> +	ret = pinctrl_select_state(vpu_rproc->pinctrl,
+>> +				   vpu_rproc->pinctrl_jtag);
+>> +	if (ret < 0) {
+>> +		dev_err(vpu_rproc->dev, "Failed to configure pins for JTAG\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	vpu_write32(vpu_rproc, CORE_DEFAULT2,
+>> +		    CORE_DEFAULT2_SPNIDEN | CORE_DEFAULT2_SPIDEN |
+>> +		    CORE_DEFAULT2_NIDEN | CORE_DEFAULT2_DBG_EN);
+>> +
+>> +	vpu_rproc->jtag_enabled = 1;
+> There should be mutex that gets taken at the beginning and released at the end of
+> this function.
+>
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int vpu_disable_jtag(struct mtk_vpu_rproc *vpu_rproc)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (!vpu_rproc->jtag_enabled)
+>> +		return -EINVAL;
+>> +
+>> +	vpu_write32(vpu_rproc, CORE_DEFAULT2, 0);
+>> +
+>> +	ret = pinctrl_select_state(vpu_rproc->pinctrl,
+>> +				   vpu_rproc->pinctrl_default);
+>> +	if (ret < 0) {
+>> +		dev_err(vpu_rproc->dev,
+>> +			"Failed to configure pins to default\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	vpu_rproc->jtag_enabled = 0;
+> Same comment as above.
+>
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static ssize_t rproc_jtag_read(struct file *filp, char __user *userbuf,
+>> +			       size_t count, loff_t *ppos)
+>> +{
+>> +	struct rproc *rproc = filp->private_data;
+>> +	struct mtk_vpu_rproc *vpu_rproc = (struct mtk_vpu_rproc *)rproc->priv;
+>> +	char *buf = vpu_rproc->jtag_enabled ? "enabled\n" : "disabled\n";
+>> +
+>> +	return simple_read_from_buffer(userbuf, count, ppos, buf, strlen(buf));
+>> +}
+>> +
+>> +static ssize_t rproc_jtag_write(struct file *filp, const char __user *user_buf,
+>> +				size_t count, loff_t *ppos)
+>> +{
+>> +	struct rproc *rproc = filp->private_data;
+>> +	struct mtk_vpu_rproc *vpu_rproc = (struct mtk_vpu_rproc *)rproc->priv;
+>> +	char buf[10];
+>> +	int ret;
+>> +
+>> +	if (count < 1 || count > sizeof(buf))
+>> +		return -EINVAL;
+>> +
+>> +	ret = copy_from_user(buf, user_buf, count);
+>> +	if (ret)
+>> +		return -EFAULT;
+>> +
+>> +	/* remove end of line */
+>> +	if (buf[count - 1] == '\n')
+>> +		buf[count - 1] = '\0';
+>> +
+>> +	if (!strncmp(buf, "1", count) || !strncmp(buf, "enabled", count))
+>> +		ret = vpu_enable_jtag(vpu_rproc);
+>> +	else if (!strncmp(buf, "0", count) || !strncmp(buf, "disabled", count))
+>> +		ret = vpu_disable_jtag(vpu_rproc);
+>> +	else
+>> +		return -EINVAL;
+> I think we should simply stick with "enabled" and "disabled" to be in line with
+> what is done in rproc_recovery_write().
+>
+>> +
+>> +	return ret ? ret : count;
+>> +}
+>> +
+>> +static const struct file_operations rproc_jtag_ops = {
+>> +	.read = rproc_jtag_read,
+>> +	.write = rproc_jtag_write,
+>> +	.open = simple_open,
+>> +};
+>> +
+>> +static int vpu_jtag_probe(struct mtk_vpu_rproc *vpu_rproc)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!vpu_rproc->rproc->dbg_dir)
+>> +		return -ENODEV;
+>> +
+>> +	vpu_rproc->pinctrl = devm_pinctrl_get(vpu_rproc->dev);
+>> +	if (IS_ERR(vpu_rproc->pinctrl)) {
+>> +		dev_warn(vpu_rproc->dev, "Failed to find JTAG pinctrl\n");
+>> +		return PTR_ERR(vpu_rproc->pinctrl);
+>> +	}
+>> +
+>> +	vpu_rproc->pinctrl_default = pinctrl_lookup_state(vpu_rproc->pinctrl,
+>> +							PINCTRL_STATE_DEFAULT);
+> Indentation problem.
+>
+>> +	if (IS_ERR(vpu_rproc->pinctrl_default))
+>> +		return PTR_ERR(vpu_rproc->pinctrl_default);
+>> +
+>> +	vpu_rproc->pinctrl_jtag = pinctrl_lookup_state(vpu_rproc->pinctrl,
+>> +						       "jtag");
+>> +	if (IS_ERR(vpu_rproc->pinctrl_jtag))
+>> +		return PTR_ERR(vpu_rproc->pinctrl_jtag);
+>> +
+>> +	ret = pinctrl_select_state(vpu_rproc->pinctrl,
+>> +				   vpu_rproc->pinctrl_default);
+> What is the default configuration for?  It does not seem to be needed to
+> properly boot the remote processor since it is not part of the example in the
+> bindings or dts patch included in this set.   Moreover it is part of a
+> configuration option so I really don't understand what it does.
 
-> 2. No need for separate cancel_calibration. So, probably earlier names
-> tegra_mipi_calibrate() and tegra_mipi_wait() hols good as we are waiting
-> for calibration sequence to finish irrespective of fail/pass.
+I have a poor knowledge of pinctrl framework so I may have done things 
+wrong here.
+This is not really needed for the remote processor.
+By default, I don't want pin to be configured for JTAG until we enable 
+it and
+I want to be able to revert it the default state.
+May be this is too much and I should assume that if we build the driver 
+with JTAG enabled
+then we want the pins to be configured for JTAG by default.
 
-The new names reflect better what those functions actually do, IMO.
+>
+>
+>
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	debugfs_create_file("jtag", 0600, vpu_rproc->rproc->dbg_dir,
+>> +			    vpu_rproc->rproc, &rproc_jtag_ops);
+>> +
+>> +	return 0;
+>> +}
+>> +#endif /* CONFIG_MTK_APU_JTAG */
+>> +
+>>   static int mtk_vpu_rproc_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device *dev = &pdev->dev;
+>> @@ -228,16 +369,16 @@ static int mtk_vpu_rproc_probe(struct platform_device *pdev)
+>>   		goto clk_disable_ipu;
+>>   	}
+>>   
+>> -	vpu_rproc->jtag = devm_clk_get_optional(dev, "jtag");
+>> +	vpu_rproc->jtag = devm_clk_get(vpu_rproc->dev, "jtag");
+> As I remarked in my comments on the previous patch, this should have been
+> devm_clk_get() from the start.  Either that or the bindings are wrong.
 
-What about to make finish_calibration() to take an additional argument
-which corresponds to the awaited HW bits? For example if it's CSIA, then
-it could be:
+I should have not made the change in this patch. I will fix it.
 
-  tegra_mipi_finish_calibration(csi_chan->mipi, MIPI_CAL_CSIA);
+Thanks,
+Alexandre
 
-
-Also, is it okay that DSI and CSI could change MIPI_CAL_CTRL after DSI
-or CSI already started calibration?
-
-Looking at the current start_calibration(), I think the mutex should be
-kept locked and then finish_calibration() should unlock it.
+>
+>>   	if (IS_ERR(vpu_rproc->jtag)) {
+>> -		dev_err(dev, "Failed to enable jtag clock\n");
+>> +		dev_err(vpu_rproc->dev, "Failed to get jtag clock\n");
+> Why go from dev to vpu_rproc->dev?
+>
+>>   		ret = PTR_ERR(vpu_rproc->jtag);
+>>   		goto clk_disable_axi;
+>>   	}
+>>   
+>>   	ret = clk_prepare_enable(vpu_rproc->jtag);
+>>   	if (ret) {
+>> -		dev_err(dev, "Failed to enable jtag clock\n");
+>> +		dev_err(vpu_rproc->dev, "Failed to enable jtag clock\n");
+> Same here.
+>
+>>   		goto clk_disable_axi;
+>>   	}
+>>   
+>> @@ -253,6 +394,12 @@ static int mtk_vpu_rproc_probe(struct platform_device *pdev)
+>>   		goto free_mem;
+>>   	}
+>>   
+>> +#ifdef CONFIG_MTK_APU_JTAG
+>> +	ret = vpu_jtag_probe(vpu_rproc);
+>> +	if (ret)
+>> +		dev_warn(dev, "Failed to configure jtag\n");
+>> +#endif
+> Please don't use #ifdefs in the code like that.  It is better to introduce a
+> #else (above) with stubs that don't do anything.
+>
+>> +
+>>   	return 0;
+>>   
+>>   free_mem:
+>> @@ -277,6 +424,9 @@ static int mtk_vpu_rproc_remove(struct platform_device *pdev)
+>>   
+>>   	disable_irq(vpu_rproc->irq);
+>>   
+>> +#ifdef CONFIG_MTK_APU_JTAG
+>> +	vpu_disable_jtag(vpu_rproc);
+>> +#endif
+>>   	rproc_del(rproc);
+>>   	of_reserved_mem_device_release(dev);
+>>   	clk_disable_unprepare(vpu_rproc->jtag);
+>> -- 
+>> 2.26.2
+>>
