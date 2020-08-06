@@ -2,49 +2,198 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=BAYES_50,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B63C43635
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A80C4345E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED5122D37
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE63322D05
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:17:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z8tydMrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgHFKdu convert rfc822-to-8bit (ORCPT
+        id S1725988AbgHFLFO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 06:33:50 -0400
-Received: from [125.140.134.231] ([125.140.134.231]:63312 "EHLO
-        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729279AbgHFKdu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 06:33:50 -0400
-Received: from [185.191.231.247] ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
-         Thu, 6 Aug 2020 19:32:45 +0900
-Content-Type: text/plain; charset="iso-8859-1"
+        Thu, 6 Aug 2020 07:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729390AbgHFKgX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 06:36:23 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAFE3C06179E
+        for <devicetree@vger.kernel.org>; Thu,  6 Aug 2020 03:26:34 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d19so2901194pgl.10
+        for <devicetree@vger.kernel.org>; Thu, 06 Aug 2020 03:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HFQwzbiefbpfbQFLc0zRge0aMRzUuoiJq6/bLA8CABQ=;
+        b=z8tydMrbJZmdGu0lb6D8fiATUQOQnZ2LTi3TH8K+kklHy1YxIMA7o18BjoXkNo8SLu
+         uDGXiQIhcaweqBHVQaS6UwO954M24jqnaK3oZEE49+ChN0NRBTjvEJttxbrsPVBge/3J
+         kX1nJEAklBNWWZXdGZ1fyUiWi9EBasqndrPm2LhFaaI2/uWnnk6n1BAYBZXWeD6MSUww
+         d3740yD04zI0BzUmuurGfrH2rXG794yB3fE9/pGbc5eEz3Fmu2wpxjzX5Xi7/6R6g5P3
+         g35ZMrhUwug0NSjANrWSnp7LSIfGJAgDOMOdfSRpNmi+jSZoTbCV+bE8Glrk15ra+PVk
+         oetg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HFQwzbiefbpfbQFLc0zRge0aMRzUuoiJq6/bLA8CABQ=;
+        b=nayzkhmVtQMbB5aN4WtfJxj3GJz+DDKuzALEEAT8fclqhwfF4PbTeO68v81KcPbWwX
+         AXW+7ZceQhMhGA/+nZv0YtqTh3gXzS32GcsLH49QVCqfAJKVxTOOsIV0ESKda5h5xjJ1
+         vIELVoMR9sjY3mxi+prcvSmhIM3ANIcCyZYcQOkcAbsMvYsXY+oX3Am8Vq+RDS0/9hrZ
+         knW8SxsgPNR4faxf4oPm2mvV1V/oKSYXNAbJ6vWFhzA/iuGglq9N6sMzUlLxIIWiLp0x
+         WIICU94kMPkWIV2cVmORJGsxBxiBmiU8+WwgDeW9w+gIrjnJRAaJ3PfEYSvU+Oho2Blo
+         GuYg==
+X-Gm-Message-State: AOAM531vIeY1XbYU7pN/g4/trXYDYcf1C0T2UY05LA/9RLl7Ygz2yLaB
+        w8Sx+t4SiEL9zzc3Y9dzTbLy
+X-Google-Smtp-Source: ABdhPJyeuaqpfkpPTZXEXyS2DV+YjRijY6hoRp+ZiREGIm+IZTpaxIeO+Am8BZpkc2kEWk4wH+OEtA==
+X-Received: by 2002:a63:c50a:: with SMTP id f10mr6885148pgd.167.1596709591711;
+        Thu, 06 Aug 2020 03:26:31 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:594:2f7a:c8c3:17bf:d7ce:f7e2])
+        by smtp.gmail.com with ESMTPSA id a18sm6181942pjh.42.2020.08.06.03.26.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Aug 2020 03:26:31 -0700 (PDT)
+Date:   Thu, 6 Aug 2020 15:56:23 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sricharan@codeaurora.org
+Subject: Re: [PATCH v2 3/3] arm64: dts: Enabled MHI device over PCIe
+Message-ID: <20200806102623.GB2406@Mani-XPS-13-9360>
+References: <1596706332-12957-1-git-send-email-gokulsri@codeaurora.org>
+ <1596706332-12957-4-git-send-email-gokulsri@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: INVESTMENT
-To:     devicetree@vger.kernel.org
-From:   campbellclark016@gmail.com
-Date:   Thu, 06 Aug 2020 03:32:50 -0700
-Reply-To: campbell.clark24@yahoo.com
-Message-ID: <WIN-DAONO245HJF5Cxq00ab08cc@WIN-DAONO245HJF>
-X-OriginalArrivalTime: 06 Aug 2020 10:32:45.0406 (UTC) FILETIME=[EC37B7E0:01D66BDC]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596706332-12957-4-git-send-email-gokulsri@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Aug 06, 2020 at 03:02:12PM +0530, Gokul Sriram Palanisamy wrote:
+> Enabled MHI device support over PCIe and added memory
+> reservation required for MHI enabled QCN9000 PCIe card.
+> 
 
-Good day,
+There is no DT support exist for MHI as of now, so this is not going to work.
 
- You were recommended by a mutual associate. I write you regarding an investment of bearer bonds I made on behalf of a client. The investment was made in 2009 and has been under my management. The said investor is deceased. The window is now available to assign these bonds to any name or company of my choice. I have all the necessary information to achieve this within 10 banking days. The total value of the bond is 100 million pounds sterling, in a million pound denominations. If you can handle this, do contact me at your earliest convenience via my email campbell.clark24@yahoo.com So we can discuss the finer details
+Thanks,
+Mani
 
-
-Thank you
-
-
-Mr Campbell Clark
+> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi | 58 ++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi      |  8 +++++
+>  2 files changed, 66 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+> index 0827055..d201a7b 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074-hk10.dtsi
+> @@ -24,6 +24,22 @@
+>  		device_type = "memory";
+>  		reg = <0x0 0x40000000 0x0 0x20000000>;
+>  	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		qcn9000_pcie0: memory@50f00000 {
+> +			no-map;
+> +			reg = <0x0 0x50f00000 0x0 0x03700000>;
+> +		};
+> +
+> +		qcn9000_pcie1: memory@54600000 {
+> +			no-map;
+> +			reg = <0x0 0x54600000 0x0 0x03700000>;
+> +		};
+> +	};
+>  };
+>  
+>  &blsp1_spi1 {
+> @@ -74,3 +90,45 @@
+>  		nand-bus-width = <8>;
+>  	};
+>  };
+> +
+> +&pcie0_rp {
+> +	status = "ok";
+> +
+> +	mhi_0: qcom,mhi@0 {
+> +		reg = <0 0 0 0 0 >;
+> +		qrtr_instance_id = <0x20>;
+> +		#address-cells = <0x2>;
+> +		#size-cells = <0x2>;
+> +
+> +		base-addr = <0x50f00000>;
+> +		qcom,caldb-addr = <0x53E00000>;
+> +		qrtr_node_id = <0x27>;
+> +		mhi,max-channels = <30>;
+> +		mhi,timeout = <10000>;
+> +
+> +		pcie0_mhi: pcie0_mhi {
+> +			status = "ok";
+> +		};
+> +	};
+> +};
+> +
+> +&pcie1_rp {
+> +	status = "ok";
+> +
+> +	mhi_1: qcom,mhi@1 {
+> +		reg = <0 0 0 0 0 >;
+> +		qrtr_instance_id = <0x21>;
+> +		#address-cells = <0x2>;
+> +		#size-cells = <0x2>;
+> +
+> +		base-addr = <0x54600000>;
+> +		qcom,caldb-addr = <0x57500000>;
+> +		qrtr_node_id = <0x28>;
+> +		mhi,max-channels = <30>;
+> +		mhi,timeout = <10000>;
+> +
+> +		pcie1_mhi: pcie1_mhi {
+> +			status = "ok";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> index b651345..eef47c1 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> @@ -709,6 +709,10 @@
+>  				      "ahb",
+>  				      "axi_m_sticky";
+>  			status = "disabled";
+> +
+> +			pcie1_rp: pcie1_rp {
+> +				reg = <0 0 0 0 0>;
+> +			};
+>  		};
+>  
+>  		pcie0: pci@20000000 {
+> @@ -779,6 +783,10 @@
+>  				      "axi_m_sticky",
+>  				      "axi_s_sticky";
+>  			status = "disabled";
+> +
+> +			pcie0_rp: pcie0_rp {
+> +				reg = <0 0 0 0 0>;
+> +			};
+>  		};
+>  
+>  		tcsr_q6: syscon@1945000 {
+> -- 
+> 2.7.4
+> 
