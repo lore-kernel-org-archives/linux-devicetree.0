@@ -2,122 +2,88 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CB9C43470
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FD2C433FE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC5822CAE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA8C221E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S9i0qvly"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SN5MGle4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHFGaa (ORCPT
+        id S1728048AbgHFGiB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 02:30:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbgHFGa3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 02:30:29 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA40C061574;
-        Wed,  5 Aug 2020 23:30:29 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so42865215wrw.1;
-        Wed, 05 Aug 2020 23:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=TGBk281x4usHvdNF4g8zlmo5D8Bhv5Q8McyHFyF9+HM=;
-        b=S9i0qvlyIu7dYtrctjS8zURJfTNuaHUJFmsq4RntwuztGPv3fezc0gZ2Inj8VFKNBP
-         4rhI8IZMOrILBx/Nbiu+ecCVYOd6XKJ4IIXi84lO/jr0ffXbsSPR8BVfOXcKV+7zVLPv
-         5lQyCgYIBncfg0vVH+zfq4RCtq4+YpON6IY+zrQI0YuRYdezFn4PU8pDKr4sX20MPbR6
-         iO36Y7WznBJxbke2ec0xKTU746X/WAqFqCAY5rM1p/koUVFiGPSoZEyXvJKrKc8Nd69L
-         6j+pSMvOmWkc9u17AydlJuDf+u2HEQLwt1/sWDZjwKMIlzOfkgzmIOW7+l5pz6QcMiri
-         A/9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TGBk281x4usHvdNF4g8zlmo5D8Bhv5Q8McyHFyF9+HM=;
-        b=tWZm01VGgzcptqn4kiDBEGyvnaOeCxCzwmkDgKpbLdRMt20qTjAbnv6IJoRi9jkgdM
-         gXt0LOKZV5TN1G0lGly+XpNb7egoZu8nj09SsZ10e+gvvQwu+cq2bfpIqMaHYozP6t4i
-         ZQw5Qac8CyZv/PGDCHCCVF92HWBDfovO35kA1YHh8jje36SHlcCwV7cOn075ZahCU0Tj
-         9pHnSiLVjBiAdd40Miyzq0i2W1tuMZUdFbty5kADInUU2pjSCwrGNGYO6YpciXYcnb4d
-         4TyMIRItiohezjZHWlxtx1PXSK7tdRw/Jzm7YXhb2CdMqYVDcTdkBv3gAX0mNKmnRjX9
-         QFvA==
-X-Gm-Message-State: AOAM533NP/V2xhE4ny9TTZS+GH+g68gqnvKAaW7eLY7T7Sr35McsX2xV
-        twAHMdpj4XgrPnr09P/tRVs=
-X-Google-Smtp-Source: ABdhPJz3fQId2Mfvo2IM9cPHd13bLT4jFeUUbQi44lKhwcEHOz/i4+jVOl9dhB1/oKwPNdmuXVjHIA==
-X-Received: by 2002:adf:b1ca:: with SMTP id r10mr6294501wra.150.1596695427645;
-        Wed, 05 Aug 2020 23:30:27 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.117.232])
-        by smtp.gmail.com with ESMTPSA id t11sm4967586wrs.66.2020.08.05.23.30.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 23:30:26 -0700 (PDT)
-Subject: Re: [PATCH v3 0/4] add i2c support for mt8192
-To:     wsa@the-dreams.de, Qii Wang <qii.wang@mediatek.com>,
-        robh+dt@kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        srv_heupstream@mediatek.com
-References: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
- <20200805214242.GA2182@kunai>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <249df8b3-6125-6ebd-2835-ab703f05b85a@gmail.com>
-Date:   Thu, 6 Aug 2020 08:30:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200805214242.GA2182@kunai>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Aug 2020 02:38:01 -0400
+Received: from m12-15.163.com ([220.181.12.15]:32968 "EHLO m12-15.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726051AbgHFGiA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Aug 2020 02:38:00 -0400
+X-Greylist: delayed 939 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Aug 2020 02:37:57 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=b4Vljfz11N5B3BsXB/
+        jU+jLNNdpMd3l8kupGK/FIHnQ=; b=SN5MGle4MIp3KSKXRDPu290DgzSt7dTQJD
+        fGhFwn8vRFwNlRWqFKLxUn2oEe0BV14NgDRduHZobrliuXmYHOJ//xfcrpLKwMIP
+        59FW5K294r5swrb4TWJ8RACE+6l2YZtwag5bk3BtF9mRAlrnhko4xTdMAarFnO+B
+        bwUdHtark=
+Received: from localhost.localdomain (unknown [58.33.126.62])
+        by smtp11 (Coremail) with SMTP id D8CowADnbcp1oStf0rT5EQ--.55997S3;
+        Thu, 06 Aug 2020 14:21:48 +0800 (CST)
+From:   Grant Feng <von81@163.com>
+To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] DT: leds: Add an optional property named 'sdb-gpios'
+Date:   Thu,  6 Aug 2020 14:21:30 +0800
+Message-Id: <20200806062130.25187-2-von81@163.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200806062130.25187-1-von81@163.com>
+References: <20200806062130.25187-1-von81@163.com>
+X-CM-TRANSID: D8CowADnbcp1oStf0rT5EQ--.55997S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4fCFWfXFW7XFy3XrWfAFb_yoWkKFX_G3
+        Z7JrsFqas8uF1vgr4qvr15Wr43Cr47AF1kCw15ZF48Aw1fXas09FZ7t34Yyr15WFZxurZx
+        C3ykCr4qqr17GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0_Oz5UUUUU==
+X-Originating-IP: [58.33.126.62]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiNxx4OlWBhkubuAAAsT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The chip enters hardware shutdown when the SDB pin is pulled low.
+The chip releases hardware shutdown when the SDB pin is pulled high.
+
+Signed-off-by: Grant Feng <von81@163.com>
+---
+ Documentation/devicetree/bindings/leds/leds-is31fl319x.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+index fc2603484544..e8bef4be57dc 100644
+--- a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+@@ -16,6 +16,7 @@ Optional properties:
+ - audio-gain-db : audio gain selection for external analog modulation input.
+ 	Valid values: 0 - 21, step by 3 (rounded down)
+ 	Default: 0
++- sdb-gpios : Specifier of the GPIO connected to SDB pin.
+ 
+ Each led is represented as a sub-node of the issi,is31fl319x device.
+ There can be less leds subnodes than the chip can support but not more.
+@@ -44,6 +45,7 @@ fancy_leds: leds@65 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	reg = <0x65>;
++	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+ 
+ 	red_aux: led@1 {
+ 		label = "red:aux";
+-- 
+2.17.1
 
 
-On 05/08/2020 23:42, wsa@the-dreams.de wrote:
-> On Wed, Aug 05, 2020 at 06:52:18PM +0800, Qii Wang wrote:
->> This series are based on 5.8-rc1 and we provide four i2c patches
->> to support mt8192 SoC.
->>
->> Main changes compared to v2:
->> --delete unused I2C_DMA_4G_MODE
->>
->> Main changes compared to v1:
->> --modify the commit with access more than 8GB dram
->> --add Reviewed-by and Acked-by from Yingjoe, Matthias and Rob
->>
->> Qii Wang (4):
->>    i2c: mediatek: Add apdma sync in i2c driver
->>    i2c: mediatek: Add access to more than 8GB dram in i2c driver
->>    dt-bindings: i2c: update bindings for MT8192 SoC
->>    i2c: mediatek: Add i2c compatible for MediaTek MT8192
->>
->>   .../devicetree/bindings/i2c/i2c-mt65xx.txt         |  1 +
-> 
-> Applied to for-next, thanks!
-> 
-> Sidenote: I get these warnings when compiling the driver:
-> 
-> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_low_ns' not described in 'i2c_spec_values'
-> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_high_ns' not described in 'i2c_spec_values'
-> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_su_sta_ns' not described in 'i2c_spec_values'
-> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'max_hd_dat_ns' not described in 'i2c_spec_values'
-> drivers/i2c/busses/i2c-mt65xx.c:267: warning: Function parameter or member 'min_su_dat_ns' not described in 'i2c_spec_values'
-> 
-> Is someone interested to fix these?
-> 
-
-I just send a fix for that.
-
-Regards,
-Matthias
