@@ -2,109 +2,150 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9050DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2241EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4753221E2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:54:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y2xVrIuw"
+	by mail.kernel.org (Postfix) with ESMTP id 7F093206B2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgHFRx4 (ORCPT
+        id S1726844AbgHFQaK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:53:56 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57026 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728158AbgHFQaz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:30:55 -0400
-X-UUID: 8a705a9515e04b39a6104849cbefd20c-20200806
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=hq0WCel81lE8aBCRSm65DN3f8dXfFefcGZQW+R17dLo=;
-        b=Y2xVrIuwGI/P8R/00nM96g+DhrSFCLQRUZXV4uPxR4pI6N6PwHAWxxJlXn+q+xOUH8VkQIA/emt/xfOhOQcwlPclkctFwcm2+47lmBDJjhhjcoJRHh5lxD9SO4tE6uDtl5BB06K7VZ0GNJz+jkCAMxMZWXGB2MyIF8eyIePyNIA=;
-X-UUID: 8a705a9515e04b39a6104849cbefd20c-20200806
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 63181443; Thu, 06 Aug 2020 20:18:46 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 6 Aug 2020 20:18:43 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 6 Aug 2020 20:18:44 +0800
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>
-CC:     <wsd_upstream@mediatek.com>, <hector.yuan@mediatek.com>
-Subject: [PATCH v1 2/2] dt-bindings: cpufreq: add  MediaTek cpufreq bindings
-Date:   Thu, 6 Aug 2020 20:18:40 +0800
-Message-ID: <1596716320-19811-3-git-send-email-hector.yuan@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1596716320-19811-1-git-send-email-hector.yuan@mediatek.com>
-References: <1596716320-19811-1-git-send-email-hector.yuan@mediatek.com>
+        Thu, 6 Aug 2020 12:30:10 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41904 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbgHFQ3Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:29:25 -0400
+Received: by mail-ot1-f68.google.com with SMTP id a65so27461392otc.8;
+        Thu, 06 Aug 2020 09:28:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GfRNKclYJY9TFgLDludWTlpzguMceCfSaUZal/qDN6s=;
+        b=mucsV4XvZdLPQxIuifzETBesBUCVGlX5wh10vA6hs7DMJcqfZEeJRoYFy0Qstdp26z
+         dWDzFflwqajIGQk9ckIz++zQujOWL7HagizIRPK2zskVRYX9S8qqvgysDqX0acWwFpjP
+         hM/jzjBXUwNTLWPdPzBJTJ6l7lQL7hNVZ3Fbtf5AfmuPebkufn5i5pHbj0bdfsf9hFEC
+         zOg5SGURrR9Are5To1UFdHcB8modghHZmbkHjTIYClw4lhRXBgk22yR6A4lfHpkDMElN
+         FVmBpqqNdfcDvQiSH/rARb8NlhDS96slJgFrXwuPOVYHJF5QBkHNGAcqETd2PunleUAf
+         X+Fg==
+X-Gm-Message-State: AOAM533oCfizdYpwXQIXOZH0VxdJFyWGAcA1wczlg6qDS29Nn2k77/DE
+        7yWF52kGbJXnYuU+mOG4a/gvI3L46lf74I7tARo8Euib
+X-Google-Smtp-Source: ABdhPJxsjDZTTqPo+9e6awj5yV1LG1Imzyw5Civ8gt7ap18JuUVGKty3JozPE/qiMGjuARTMT9EOZFY2swizOMfqf1E=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr6431613ote.107.1596714489705;
+ Thu, 06 Aug 2020 04:48:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com> <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
+In-Reply-To: <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 6 Aug 2020 13:47:58 +0200
+Message-ID: <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com>
+Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogIkhlY3Rvci5ZdWFuIiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KDQpBZGQgZGV2
-aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgSFcgZHJpdmVyLg0KDQpTaWduZWQtb2ZmLWJ5
-OiBIZWN0b3IuWXVhbiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2JpbmRp
-bmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sICAgICAgfCAgIDU2ICsrKysrKysr
-KysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDU2IGluc2VydGlvbnMoKykNCiBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1
-ZnJlcS1tZWRpYXRlay1ody55YW1sDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9jcHVmcmVxLW1lZGlhdGVrLWh3LnlhbWwgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9jcHVmcmVxLW1lZGlhdGVrLWh3Lnlh
-bWwNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi4yYTM1MDk4DQotLS0gL2Rl
-di9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY3B1ZnJlcS9j
-cHVmcmVxLW1lZGlhdGVrLWh3LnlhbWwNCkBAIC0wLDAgKzEsNTYgQEANCisjIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZSkNCislWUFNTCAxLjIN
-CistLS0NCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2NwdWZyZXEvY3B1ZnJl
-cS1tZWRpYXRlay1ody55YW1sIw0KKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRh
-LXNjaGVtYXMvY29yZS55YW1sIw0KKw0KK3RpdGxlOiBNZWRpYVRlaydzIENQVUZSRVEgQmluZGlu
-Z3MNCisNCittYWludGFpbmVyczoNCisgIC0gSGVjdG9yIFl1YW4gPGhlY3Rvci55dWFuQG1lZGlh
-dGVrLmNvbT4NCisNCitkZXNjcmlwdGlvbjoNCisgIENQVUZSRVEgSFcgaXMgYSBoYXJkd2FyZSBl
-bmdpbmUgdXNlZCBieSBNZWRpYVRlaw0KKyAgU29DcyB0byBtYW5hZ2UgZnJlcXVlbmN5IGluIGhh
-cmR3YXJlLiBJdCBpcyBjYXBhYmxlIG9mIGNvbnRyb2xsaW5nIGZyZXF1ZW5jeQ0KKyAgZm9yIG11
-bHRpcGxlIGNsdXN0ZXJzLg0KKw0KK3Byb3BlcnRpZXM6DQorICBjb21wYXRpYmxlOg0KKyAgICBj
-b25zdDogbWVkaWF0ZWssY3B1ZnJlcS1odw0KKw0KKyAgcmVnOg0KKyAgICBtaW5JdGVtczogMQ0K
-KyAgICBtYXhJdGVtczogMg0KKyAgICBkZXNjcmlwdGlvbjogfA0KKyAgICAgIEFkZHJlc3NlcyBh
-bmQgc2l6ZXMgZm9yIHRoZSBtZW1vcnkgb2YgdGhlIEhXIGJhc2VzIGluIGVhY2ggZnJlcXVlbmN5
-IGRvbWFpbi4NCisNCisgIHJlZy1uYW1lczoNCisgICAgaXRlbXM6DQorICAgICAgLSBjb25zdDog
-ImZyZXEtZG9tYWluMCINCisgICAgICAtIGNvbnN0OiAiZnJlcS1kb21haW4xIg0KKyAgICBkZXNj
-cmlwdGlvbjogfA0KKyAgICAgIEZyZXF1ZW5jeSBkb21haW4gbmFtZS4NCisNCisgICIjZnJlcS1k
-b21haW4tY2VsbHMiOg0KKyAgICBjb25zdDogMQ0KKyAgICBkZXNjcmlwdGlvbjogfA0KKyAgICAg
-IE51bWJlciBvZiBjZWxscyBpbiBhIGZyZXFlbmN5IGRvbWFpbiBzcGVjaWZpZXIuDQorDQorcmVx
-dWlyZWQ6DQorICAtIGNvbXBhdGlibGUNCisgIC0gcmVnDQorICAtIHJlZy1uYW1lcw0KKyAgLSAi
-I2ZyZXEtZG9tYWluLWNlbGxzIg0KKw0KK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KKw0K
-K2V4YW1wbGVzOg0KKyAgLSB8DQorICAgIGNwdWZyZXFfaHc6IGNwdWZyZXFAMTFiYzAwIHsNCisg
-ICAgICAgICAgICBjb21wYXRpYmxlID0gIm1lZGlhdGVrLGNwdWZyZXEtaHciOw0KKyAgICAgICAg
-ICAgIHJlZyA9IDwwIDB4MTFiYzEwIDAgMHg4Yz4sDQorICAgICAgICAgICAgICAgIDwwIDB4MTFi
-Y2EwIDAgMHg4Yz47DQorICAgICAgICAgICAgcmVnLW5hbWVzID0gImZyZXEtZG9tYWluMCIsICJm
-cmVxLWRvbWFpbjEiOw0KKyAgICAgICAgICAgICNmcmVxLWRvbWFpbi1jZWxscyA9IDwxPjsNCisg
-ICAgfTsNCisNCi0tIA0KMS43LjkuNQ0K
+Hi Prabhakar,
 
+On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > However, before I queue this in renesas-devel for v5.10, I'd like to
+> > have some clarification about the issue below.
+> >
+> > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> >
+> > > +               vin4: video@e6ef4000 {
+> > > +                       compatible = "renesas,vin-r8a774e1";
+> > > +                       reg = <0 0xe6ef4000 0 0x1000>;
+> > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > > +                       clocks = <&cpg CPG_MOD 807>;
+> > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> > > +                       resets = <&cpg 807>;
+> > > +                       renesas,id = <4>;
+> > > +                       status = "disabled";
+> > > +
+> > > +                       ports {
+> > > +                               #address-cells = <1>;
+> > > +                               #size-cells = <0>;
+> > > +
+> > > +                               port@1 {
+> > > +                                       #address-cells = <1>;
+> > > +                                       #size-cells = <0>;
+> >
+> > "make dtbs W=1" says:
+> >
+> >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
+> > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
+> > has single child node 'endpoint@0', #address-cells/#size-cells are not
+> > necessary
+> >
+> > (same for vin5-7 below)
+> >
+> Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
+> VIN endpoint numbering") we definitely need endpoint numbering.
+> Probably the driver needs to be fixed to handle such cases.
+
+> > > +
+> > > +                                       reg = <1>;
+> > > +
+> > > +                                       vin4csi20: endpoint@0 {
+> > > +                                               reg = <0>;
+> > > +                                               remote-endpoint = <&csi20vin4>;
+
+On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
+complain. Here it is at address 0.
+
+Niklas?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
