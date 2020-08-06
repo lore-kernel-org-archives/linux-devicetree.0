@@ -2,84 +2,100 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BE5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D707EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9045B206B2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:45:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596735916;
-	bh=h9yr92Fex5ltfMP+qZOHpzmYyhnDbgztEcO9IPRg14o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x6xMwUwESkCsNZg3BXtdYYrCN2txsmM151qifcsRLitA0JzIkrO7yWSVqvZ0NEk1q
-	 g5i0sY6i/fVzacs/UBMt4ScgWiAXUKwdlgnIxRbUsf26gl8Kb8LwdbiMBm9jl4gt1c
-	 gTNxxjGpngQP+mEmv8oxa0ErVyM+kzVpxmvkzHLY=
+	by mail.kernel.org (Postfix) with ESMTP id 29DA7206B2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H/LXcHAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgHFRpO (ORCPT
+        id S1730215AbgHFRpX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbgHFRbQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:31:16 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1461623128;
-        Thu,  6 Aug 2020 14:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596723354;
-        bh=h9yr92Fex5ltfMP+qZOHpzmYyhnDbgztEcO9IPRg14o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SQDMiQDH41Bduy8zoYbVAfI1ioXwch+Hw8pNUzKqCX2MjAD2ryIr5Gl8Ixh5iSDGF
-         hzbKHCaBI82bn+gUycQq5cVNgIHMjRL/jLOD/6Nvabu7cFfTYtBxRAlfrvBst0NzEr
-         TdnUI0Ffg11czHV29VkAyY6GqIDi43LPD7H3JqL8=
-Received: by mail-oi1-f181.google.com with SMTP id a24so22463317oia.6;
-        Thu, 06 Aug 2020 07:15:53 -0700 (PDT)
-X-Gm-Message-State: AOAM532lI08zG8zLUVbGfN/KshGLOClfA9MXa/abph4tWBHvPgwfFX/5
-        W9MeNwKUGtJpgILszFJKKDCUUEH/FeIYiv788Q==
-X-Google-Smtp-Source: ABdhPJxA2Sjm3IZPFJP0zjMdosn8kZNNtfiDvPae0/2S8FhdH5gX0PWIZLExsEmKzhoQ6UqOVM42ZrqnCy1Ja5rnJmA=
-X-Received: by 2002:aca:c3d8:: with SMTP id t207mr7387578oif.152.1596723353187;
- Thu, 06 Aug 2020 07:15:53 -0700 (PDT)
+        Thu, 6 Aug 2020 13:45:23 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54742 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728984AbgHFQiU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:38:20 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 076FCr1E111118;
+        Thu, 6 Aug 2020 10:12:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596726773;
+        bh=clr1VV5fPhd6AHkch16xD7rviP96hWisxiD/e/1uR3I=;
+        h=To:CC:From:Subject:Date;
+        b=H/LXcHAbdCuFU8t9rrNFf1lbDN0jDofl7KV460VgutudTGmclKw2O/+Fi6CChq6Xz
+         R70EdAi+CWvRbSwm2sTogdRiWVorO+CWI/+jHffJGI+p5Fp2loBnzid9sKDGXFYUzq
+         BOZ4u2anwRvP9jXUzhN5CGjOGt8DhMrYtEOP5eVQ=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076FCroR047443;
+        Thu, 6 Aug 2020 10:12:53 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
+ 2020 10:12:52 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 6 Aug 2020 10:12:52 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076FCqGN065312;
+        Thu, 6 Aug 2020 10:12:52 -0500
+To:     Rob Herring <robh@kernel.org>
+CC:     "Rivera-Matos, Ricardo" <r-rivera-matos@ti.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Subject: [RFC] Writing a yaml to support multiple devices
+Message-ID: <d8963f7a-c675-0e83-7ad9-cb79455cce58@ti.com>
+Date:   Thu, 6 Aug 2020 10:12:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200805110052.2655487-1-daniel@0x0f.com> <20200805110052.2655487-2-daniel@0x0f.com>
-In-Reply-To: <20200805110052.2655487-2-daniel@0x0f.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 6 Aug 2020 08:15:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK5YWe71HU+bSMG2uNZOgFN85x4zatuiS-fkUYKXHDs-w@mail.gmail.com>
-Message-ID: <CAL_JsqK5YWe71HU+bSMG2uNZOgFN85x4zatuiS-fkUYKXHDs-w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt: bindings: interrupt-controller: Add binding
- description for msc313-intc
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
-
-On Wed, Aug 5, 2020 at 5:01 AM Daniel Palmer <daniel@0x0f.com> wrote:
->
-> Adds a YAML description of the binding for the msc313-intc.
->
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> ---
->  .../mstar,msc313-intc.yaml                    | 79 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
-
-Why are you sending another version? You ignored the errors and my
-questions on the RFC.
+Message-ID: <20200806151252.WuqjHBOlNYLbBHIxVkjnSXPEbdtIwpk42bap2mkst7o@z>
 
 Rob
+
+I have a question on how to properly instrument a yaml that supports a 
+family of charger devices.  These devices will have a common driver 
+since the register maps are the same but the min,max and default values 
+are different in different registers.
+
+The devices are the BQ25980, BQ25975 and the BQ25960 they have a 
+configuration to provide over voltage protection values as in the 
+example below.
+
+ti,sc-ovp-limit-microvolt:
+     description: |
+       Minimum input voltage limit in micro volts with a when the 
+charger is in
+       switch cap mode. 100000 micro volt step.
+     default: 17800000
+     minimum: 14000000
+     maximum: 22000000
+
+The issue here is that the min, max and default are for the BQ25980 
+where as the 975 and 960 have min of 7v, a max of 12.75v and a default 
+of 8.9v.  I am not sure how to write the yaml to indicate these differences.
+
+Can you point me to an example yaml that may have this properly done?  
+Or should we create a separate yaml for the 980 and inherit the 975 and 
+960 yaml?
+
+Any guidance is appreciated.  I think we have a similar situations on 
+some other drivers we are writing so the guidance will go a long way.
+
+Dan
+
