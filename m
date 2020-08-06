@@ -2,119 +2,118 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D6CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249D5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B7A23120
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E8A2311A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="RU0tPU8b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssHYXLl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgHFQq1 (ORCPT
+        id S1729320AbgHFQq1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Thu, 6 Aug 2020 12:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729235AbgHFQpo (ORCPT
+        with ESMTP id S1729249AbgHFQpo (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:45:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65BCFC0A3BD0
-        for <devicetree@vger.kernel.org>; Thu,  6 Aug 2020 07:58:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y3so44311784wrl.4
-        for <devicetree@vger.kernel.org>; Thu, 06 Aug 2020 07:58:30 -0700 (PDT)
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29D1DC0A8921;
+        Thu,  6 Aug 2020 09:45:38 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id v4so42843573ljd.0;
+        Thu, 06 Aug 2020 09:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I2QgUmIlO6maUIvLNmFMIgB6tFghLiGYEgxkf43Wx9U=;
-        b=RU0tPU8bAxRiOuvHY7DJRlCCP2+QRbiYTaM0EYG5OIICce80n/byLWVwV7uLOp8vjb
-         zWbCdW/3rPa2b9W3bVCAqFeyee6Kk5YIEQGfReqtSa12vcltpB6yZj0yIp6dXYe+ZXTA
-         uj1D2Zs5Yu49k1Pzvv5W7vUodcbxEQk3yvggE=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ULS+dmM0AEMlQQMxcozaFfDaR9JxN5gUmDbcuK2poXI=;
+        b=ssHYXLl75BAletdkGTRysoezhQ7GhZoRcCXxrcfVfXHWXVDElDW9q3WK7E9FXd/2p9
+         Y4btKeyAh0MBTSVQLpVD3B1UApGNbZU4xiTpg4vUXUp+X0wpv3MDBX82iMKSgnnO4LNc
+         xdcr3/7DgSghShtxoJ0BvPLJY3eS+lynwvMyO/7kPzzZSksXoYsu3XYrUXWNT+UP569W
+         eB0GyXTfNSNezfK/hZFzN6TKvi0BTKeo+ndEYdIP2MsaOXyuYHKuspct4aW3/ZN/YXQ4
+         7wFHnG9pc2l1o5iy7wKHiC/yu+TOznNgtaYl7NR49/g4QHOwx+HYgaIwd8+9v29mI1Wk
+         yomg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I2QgUmIlO6maUIvLNmFMIgB6tFghLiGYEgxkf43Wx9U=;
-        b=e25jB6xdAUCXYdVLixhYglHVV9PXN3jK+mVRMYo1bDx9bx0wE/qy6mxnWferAq1K9p
-         M0DEtjdkxr5Hrz+M+O2C3y+bEbTbJviM0hUrefdcRYLbCW4Bffbx7TGOLkyQm87op0+r
-         axPQxVh7PRWTKh97VJJXPk8qzSywWbcWxfMuzVpDru0A+frUxD0uupRwolqfRJZZgdQq
-         htxfldullBUgcWVw9DvtE0fcdc7fHzHKqSoXxhC3SvSzZ3fsKNA6Fs8iHhqBzHUT+7rm
-         4SjEyCZoJXuLUzrkoZkEe9kIEYjHukqvsdfwow/Rh+COZe4cVEXvaeXHqRk98bBAVIja
-         JsFQ==
-X-Gm-Message-State: AOAM530F4JWU3/0zw5YYK+PQllH3B8ODK+Ptu8shNSRRF9EK1FK4NJww
-        QW6trSIewi7JNfjL4G4M523mKVuUBhG3GE1hA5eYUQ==
-X-Google-Smtp-Source: ABdhPJxei3fOQSc5RtFiRdeqUA8wYj3HA5L3OtFNsjWOwMSmZXT0JK+Zw+6cm6ro6Yk62WFzA6yS7yy5PVLA37ZNW0U=
-X-Received: by 2002:adf:ed85:: with SMTP id c5mr7800963wro.307.1596725908629;
- Thu, 06 Aug 2020 07:58:28 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ULS+dmM0AEMlQQMxcozaFfDaR9JxN5gUmDbcuK2poXI=;
+        b=piuFnMGxuezJqJ0qdulPs7ANaF/pSWxflQlJDlkbvgVsGNpi1XOHfkvLmR9xpTmpX+
+         E7xqGovfU6WUiL62tmNjuMBqcuVWTnwaJrtQHt0w7DcM8+aFeNpfkvT62m0rAQx8HPPf
+         A5sYC5qkA8IsbT+Z+72ttT2fPOCAyek6ctIxfBsGP5BCrkrzUhLLwjyEB1NuKdy5BDyY
+         NnoBBz746vUDVWI6+PedGTbHF7dacHPA2Y+xgNenR85iqDRh8rghM/tKTwFM8SDT1COB
+         1C9KgtnRQpOaOoyJ4FaX3Zta245aTPO7pM8Q/SN8X9BkVi60LhFB126R6V8JK5X6WW/N
+         VyfQ==
+X-Gm-Message-State: AOAM531vk24HcFOIM0d9IodUFnPWb++EnqlmIOd0og4ynyzCfy2B7alJ
+        D6lqLRbZe8Aiq2RWdX2q8Op0APSX
+X-Google-Smtp-Source: ABdhPJwMByj9oXpeH/pigQ82iDhhxhkgE29vp4nVuIDDzccgEWKuzvPUmwpaIcgvBHLB08c96IUgRA==
+X-Received: by 2002:a2e:9f43:: with SMTP id v3mr4215124ljk.266.1596732335025;
+        Thu, 06 Aug 2020 09:45:35 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id d10sm2164937ljg.87.2020.08.06.09.45.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 09:45:34 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
+ <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <04413bc8-8d89-7e57-9b34-84bb11ecb008@gmail.com>
+Date:   Thu, 6 Aug 2020 19:45:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CAFr9PX=Gk9h6ASi6saBLhoZ45g-WqCzDQo2XWT033fJykFSY_g@mail.gmail.com>
- <20200806140739.31501-1-mark-pk.tsai@mediatek.com>
-In-Reply-To: <20200806140739.31501-1-mark-pk.tsai@mediatek.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Thu, 6 Aug 2020 23:58:33 +0900
-Message-ID: <CAFr9PXkFJJKnqVkPBXgh1kqL_serK4DmrmJ73xU+ZMA+NuF-bA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] irqchip: irq-mt58xx: Add mt58xx series interrupt
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     alix.wu@mediatek.com, DTML <devicetree@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark-PK,
+06.08.2020 19:41, Sowjanya Komatineni пишет:
+...
+>> What about to add 72us delay to the end of start_calibration() in order
+>> to ensure that FSM is finished before LP-11?
+> 
+> Why we should add 72uS in start_calibration() when can use same
+> finish_calibration() for both pass/fail cases?
+> 
+> Only timing loose we see is in case of failure we still wait for 250ms
+> and as this is failing case I hope should be ok.
+> 
 
-On Thu, 6 Aug 2020 at 23:08, Mark-PK Tsai <mark-pk.tsai@mediatek.com> wrote:
-> > Do you know if it would be possible to confirm if they are
-> > the
-> > same thing? MediaTek bought MStar a few years ago so it seems likely
-> > but I have no hard information.
-> >
->
-> Yes, it's for the same interrupt controller IP.
-
-That's good news. :)
-
-> > If they are the same thing could we work on making one series that
-> > supports both use cases?
->
-> Sure, and I think the irq controller driver should support both use cases.
-> So how about keep the MTK version driver?
-
-I'm fine with that. Maybe you can push the MTK version and I can send
-a small patch after that to add the small bits I need?
-
-> I'll send patch v2 after -rc1 as I mentioned in the previous mail,
-> and keep you posted.
-> And any suggestion is welcome. :)
-
-I think Marc's comments on my series apply to your driver and I think
-maybe answer some of the questions you had. For example what
-to do about the read-modify-write sequence for updating the registers.
-
-> > It's also possible that if the interrupt controller is the same some
-> > other things like the SPI NOR controller etc are also common and
-> > working
-> > on a single driver for those would save us both time.
->
-> I'm not sure about that.
-> I'll check the patches you contributed and confirm with our driver owners.
-
-I have a very messy tree with support for the SPI NOR controller, SPI, i2c etc
-that were used in MStar chips. If any of those are shared it'd be great to know.
-
-Thanks,
-
-Daniel
+You said that calibration settings are applied to pads on LP-11, but if
+LP-11 happens before FSM is finished, then what values will be applied
+if any?
