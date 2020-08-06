@@ -2,121 +2,119 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC97FC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF0EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 19:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071E2206C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 19:02:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AGTaxQzl"
+	by mail.kernel.org (Postfix) with ESMTP id 15393206C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 19:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgHFTBh (ORCPT
+        id S1727057AbgHFTIo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 15:01:37 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11890 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbgHFTBf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 15:01:35 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2c53820000>; Thu, 06 Aug 2020 12:01:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 12:01:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 12:01:35 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 19:01:35 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 6 Aug 2020 19:01:35 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.172.190]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f2c538e0000>; Thu, 06 Aug 2020 12:01:34 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 01/10] media: tegra-video: Fix channel format alignment
-Date:   Thu, 6 Aug 2020 12:01:25 -0700
-Message-ID: <1596740494-19306-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
-References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 6 Aug 2020 15:08:44 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35468 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725272AbgHFTIo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 15:08:44 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id EB4271C0BD2; Thu,  6 Aug 2020 21:08:40 +0200 (CEST)
+Date:   Thu, 6 Aug 2020 21:08:40 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Grant Feng <von81@163.com>, jacek.anaszewski@gmail.com,
+        robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low
+ pulse when startup
+Message-ID: <20200806190840.zyovbkqgr2ey7rd6@duo.ucw.cz>
+References: <20200806062130.25187-1-von81@163.com>
+ <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596740482; bh=8GJbUvoTqNXQhoilqMQO06MgCPv5IgO6eahUeR7/0ig=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=AGTaxQzlQLTFQm/4qXhLeVAYZHuEmIBEFFH0XWjHbf9f0aiWaqY/N2EYhBKKKFWF6
-         rTenc8UUQiy8yTKp0pY8RsElZeuuxQtGTO7bbfJNkov4NTtZx0YGpY8ur6jgr2OiDf
-         IXdJFQKuI1i/gy2Ip3fT4zc5XO7DmpJOPzCKaSfO4EgGzCunfvYiln3ZIlSyqJNp3Z
-         YCzUeK7e0xtg2DQSA9pyPvT7Y8YflkuJIvxYOr8yO4qZtZEOJEjG0DfE9mSoi98/yx
-         KPatUg6EbJX2Vu3wJPfjJw5yhJyJ3YCjZm5mokdyZgk7+o4pLHj5M99zz5TSKJfunv
-         9YcQCJ9VQ6J0w==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bbh4x4visauhrnzh"
+Content-Disposition: inline
+In-Reply-To: <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
+User-Agent: NeoMutt/20180716
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Pixel format width is mistakenly aligned to surface align bytes
-and altering width to aligned value may force sensor mode change
-other than the requested one and also cause mismatch in width
-programmed between sensor and vi which can lead to capture errors.
 
-This patch removes width alignment and clamps width as per Tegra
-minimum and maximum limits.
+--bbh4x4visauhrnzh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/staging/media/tegra-video/vi.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+Hi!
+> On 8/6/20 1:21 AM, Grant Feng wrote:
+> > generate a 5ms low pulse on sdb pin when startup, then the chip
+> > becomes more stable in the complex EM environment.
+> >=20
+> > Signed-off-by: Grant Feng <von81@163.com>
+> > ---
+> >   drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
+> >   1 file changed, 12 insertions(+)
+> >=20
+> > diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl3=
+19x.c
+> > index ca6634b8683c..b4f70002cec9 100644
+> > --- a/drivers/leds/leds-is31fl319x.c
+> > +++ b/drivers/leds/leds-is31fl319x.c
+> > @@ -16,6 +16,8 @@
+> >   #include <linux/of_device.h>
+> >   #include <linux/regmap.h>
+> >   #include <linux/slab.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/gpio/consumer.h>
+> >   /* register numbers */
+> >   #define IS31FL319X_SHUTDOWN		0x00
+> > @@ -61,6 +63,7 @@
+> >   struct is31fl319x_chip {
+> >   	const struct is31fl319x_chipdef *cdef;
+> >   	struct i2c_client               *client;
+> > +	struct gpio_desc		*sdb_pin;
+> >   	struct regmap                   *regmap;
+> >   	struct mutex                    lock;
+> >   	u32                             audio_gain_db;
+> > @@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
+> >   		is31->audio_gain_db =3D min(is31->audio_gain_db,
+> >   					  IS31FL319X_AUDIO_GAIN_DB_MAX);
+> > +	is31->sdb_pin =3D gpiod_get(dev, "sdb", GPIOD_ASIS);
+>=20
+> Since this is optional maybe use devm_gpiod_get_optional.
+>=20
+> If this is required for stability then if the GPIO is not present then the
+> parse_dt should return the error.
+>=20
+> And use the devm_gpiod_get call.=A0 Otherwise you are missing the gpiod_p=
+ut
+> when exiting or removing the driver.
 
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 1b5e660..d621ebc 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -359,25 +359,15 @@ static void tegra_channel_fmt_align(struct tegra_vi_channel *chan,
- 				    struct v4l2_pix_format *pix,
- 				    unsigned int bpp)
- {
--	unsigned int align;
--	unsigned int min_width;
--	unsigned int max_width;
--	unsigned int width;
- 	unsigned int min_bpl;
- 	unsigned int max_bpl;
- 	unsigned int bpl;
- 
- 	/*
--	 * The transfer alignment requirements are expressed in bytes. Compute
--	 * minimum and maximum values, clamp the requested width and convert
--	 * it back to pixels. Use bytesperline to adjust the width.
-+	 * The transfer alignment requirements are expressed in bytes.
-+	 * Clamp the requested width and height to the limits.
- 	 */
--	align = lcm(SURFACE_ALIGN_BYTES, bpp);
--	min_width = roundup(TEGRA_MIN_WIDTH, align);
--	max_width = rounddown(TEGRA_MAX_WIDTH, align);
--	width = roundup(pix->width * bpp, align);
--
--	pix->width = clamp(width, min_width, max_width) / bpp;
-+	pix->width = clamp(pix->width, TEGRA_MIN_WIDTH, TEGRA_MAX_WIDTH);
- 	pix->height = clamp(pix->height, TEGRA_MIN_HEIGHT, TEGRA_MAX_HEIGHT);
- 
- 	/* Clamp the requested bytes per line value. If the maximum bytes per
--- 
-2.7.4
+Yep, thanks for the review, I dropped it from for-next.
 
+And yes, this should be in series with device tree change, and we need
+Rob 's ack.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bbh4x4visauhrnzh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXyxVOAAKCRAw5/Bqldv6
+8mvbAJ46DdLOlQpYoIX7cBpeV+MXqJF7sACgjhIt85JkN1o3CwQpzvbS95S9rWo=
+=MLCx
+-----END PGP SIGNATURE-----
+
+--bbh4x4visauhrnzh--
