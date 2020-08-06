@@ -2,151 +2,205 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99738C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7141AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76EF221E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyRZbQfG"
+	by mail.kernel.org (Postfix) with ESMTP id BEB1F221E3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596738743;
+	bh=ifE3q8dvN5O9kW6qxl8b0ad3j9sHHhi+zNx7/LqGEHY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nbK4FnnqYMR/RrwUis8TEkyvS/H7rpmaiybQe2asRUzq0gNPepoPm0YmLKeWzlaRt
+	 InBSbqWQodK98Aq5TU0KbdDyeqxh/uqFhTE53kpSyOJyfyKNOHaZD9XSp3Z6Thtqp9
+	 zYw7S1A1gkfdQQISpUhiLEj+FkkTWqRFuBZcC5v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgHFSbR (ORCPT
+        id S1728445AbgHFScQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbgHFSaI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 14:30:08 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B82DC0617A2;
-        Thu,  6 Aug 2020 11:18:39 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id b30so26611445lfj.12;
-        Thu, 06 Aug 2020 11:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zyDgQ58yfMwWuCC3duccdkOno3vWVcRNh6nKRXhidek=;
-        b=MyRZbQfGm1TKcB+zBssqDMtxcidwjYO7hE4TlnATgTe0SqNa0BctoPeiVmFPhWxaxw
-         9HgsPi+ytgS6C+dLS5cbg0t0zGUI60l7w7qf/X76752INI/nDLHSPBvwvEwIxHkg72yr
-         t1fYK9Exm0UHawEzsVglsQvCFsKhh/WbzOc/0g23Wo7JMNB/zosNweCHyQ2LegAovw05
-         WJ3fpKjmLSt7TgLgMRKQU3ArR+P/c9OM3aRMi98LMDd/HJX3vg5qP+/AzIuUBlYSNOkA
-         oQyNWVqpRJlY7P35stTlbYDVn/6G4U4AAhKrSI/lKFSErmYn1AgtYwJ6iTmw+k9jSvsP
-         9WdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zyDgQ58yfMwWuCC3duccdkOno3vWVcRNh6nKRXhidek=;
-        b=FhyP0Nfzr24jUSUFQ8fqTltCvBNEe8LZsNSLvoewUNY6us5ZV+uc4+4yoFMEKQNjDB
-         9GljJU84S5p+pAUZBWt5bJnl6TebTu+TgcRXHxhWPdVvJz/R6wtAvBRFwBk5J3IGWGy4
-         T533yTqL5lkDKBneHhlMwgd0bndgCKkCHWEKNs5JOQSUqPR6/LJuGPsZmW+vMEi3HnDm
-         RZwxmocv6A0sMC7sc8+VmDQLVlc+k2pMQ2+3Iz93vUWvoJOcdyoklMGBZxJRdizQ6vSn
-         MoqA3zqBJja5TNDX1OkIPuw052LzSe8VEUx+y488bnJuMIekgleSIceyokd43z+xOvLJ
-         +b3A==
-X-Gm-Message-State: AOAM530qLF2xi/+NlrRlTq0Pd+RyCpcAKc0S3CbFxTui5x4WomIuD8WU
-        VUvazRwHhNA1LM+T2k8PBu1D1lEA
-X-Google-Smtp-Source: ABdhPJwsXrrzhKIHd4U+0mxTpUSDS+7zShPN2F0Yc4n/A8sv96yqeEPFnojDg1v3UbYpBfNORZD/4A==
-X-Received: by 2002:ac2:5e2c:: with SMTP id o12mr4378022lfg.71.1596737916355;
-        Thu, 06 Aug 2020 11:18:36 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id 1sm2751561ljr.6.2020.08.06.11.18.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 11:18:35 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
- <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
- <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
- <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
- <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
- <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
- <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
- <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
- <6ff57c38-9847-42b0-643b-0d167c13779f@gmail.com>
- <c6ef5e77-2b0a-1712-ca58-dbd8d232e1f1@nvidia.com>
- <ed79b201-85ba-f725-c5fa-fcde0761bc3d@nvidia.com>
- <26ed2841-db5d-aeb0-11c7-cbe2ddd1d76b@gmail.com>
- <eddfdaf0-818a-c4dd-e3b4-4d432af56982@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e965076a-dc31-5774-dd27-98c992331bd2@gmail.com>
-Date:   Thu, 6 Aug 2020 21:18:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 14:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728460AbgHFSbS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Aug 2020 14:31:18 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 071CA2311E;
+        Thu,  6 Aug 2020 18:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596738662;
+        bh=ifE3q8dvN5O9kW6qxl8b0ad3j9sHHhi+zNx7/LqGEHY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=COMD6VDLuWla/+lmK58mlUNjqv6lYcFIFiz36oWeov/YgPF3LKV1aecWHiCUaSiot
+         xs5FGqCiRlXyHFSPiukjSZ71BDEcwNaylxalW9E8ZGHkcBYKQfQyC4LGw64kLycJmX
+         RPAo5r/qH6ewcUL0bGLK+XnUiBnjBTf982vH6E8o=
+Date:   Thu, 6 Aug 2020 19:30:57 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v5 07/15] iio: sx9310: Use long instead of int for
+ channel bitmaps
+Message-ID: <20200806193057.163e2363@archlinux>
+In-Reply-To: <20200803175559.v5.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+References: <20200803235815.778997-1-campello@chromium.org>
+        <20200803175559.v5.7.Iecaa50e469918a385b3e5dab375e442540ea2ad4@changeid>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <eddfdaf0-818a-c4dd-e3b4-4d432af56982@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-06.08.2020 21:07, Sowjanya Komatineni пишет:
+On Mon,  3 Aug 2020 17:58:07 -0600
+Daniel Campello <campello@chromium.org> wrote:
+
+> Uses for_each_set_bit() macro to loop over channel bitmaps.
 > 
-> On 8/6/20 11:01 AM, Dmitry Osipenko wrote:
->> 06.08.2020 20:52, Sowjanya Komatineni пишет:
->> ...
->>> Right mutex_unlock should happen at end of finish_calibration.
->>>
->>> With keeping mutex locked in start, we dont have to check for active to
->>> be 0 to issue start as mutex will keep it locked and other pads
->>> calibration can only go thru when current one is done.
->>>
->>> So instead of below sequence, its simpler to do this way?
->>>
->>> start_calibration()
->>>
->>> - mutex_lock
->>>
->>> - wait for 72uS after start
->>>
->>> finish_calibration()
->>>
->>> - keep check for ACTIVE = 0 and DONE = 1
->> I think only the DONE bits which correspond to the mipi_device->pads
->> bitmask should be awaited.
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Applied,
+
+Thanks,
+
+Jonathan
+
+> ---
 > 
-> As next START can't be triggered when auto cal is ACTIVE, we should keep
-> this in finish.
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3:
+>  - Added static assert for number of channels.
 > 
-> As we do mutex_unlock only at end of finish, other pads calibrations
-> dont go thru till the one in process is finished.
+> Changes in v2:
+>  - Changed prox_stat to chan_prox_stat bitmap.
 > 
-> So in this case ACTIVE applies to current selected pads that are under
-> calibration.
+>  drivers/iio/proximity/sx9310.c | 39 ++++++++++++++++++----------------
+>  1 file changed, 21 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index 127b1ba79e2dea..f78500b8a5841e 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -119,6 +119,7 @@
+>  
+>  /* 4 hardware channels, as defined in STAT0: COMB, CS2, CS1 and CS0. */
+>  #define SX9310_NUM_CHANNELS				4
+> +static_assert(SX9310_NUM_CHANNELS < BITS_PER_LONG);
+>  
+>  struct sx9310_data {
+>  	/* Serialize access to registers and channel configuration */
+> @@ -130,7 +131,7 @@ struct sx9310_data {
+>  	 * Last reading of the proximity status for each channel.
+>  	 * We only send an event to user space when this changes.
+>  	 */
+> -	bool prox_stat[SX9310_NUM_CHANNELS];
+> +	unsigned long chan_prox_stat;
+>  	bool trigger_enabled;
+>  	/* Ensure correct alignment of timestamp when present. */
+>  	struct {
+> @@ -140,7 +141,8 @@ struct sx9310_data {
+>  	/* Remember enabled channels and sample rate during suspend. */
+>  	unsigned int suspend_ctrl0;
+>  	struct completion completion;
+> -	unsigned int chan_read, chan_event;
+> +	unsigned long chan_read;
+> +	unsigned long chan_event;
+>  	int channel_users[SX9310_NUM_CHANNELS];
+>  	unsigned int whoami;
+>  };
+> @@ -283,15 +285,16 @@ static const struct regmap_config sx9310_regmap_config = {
+>  };
+>  
+>  static int sx9310_update_chan_en(struct sx9310_data *data,
+> -				 unsigned int chan_read,
+> -				 unsigned int chan_event)
+> +				 unsigned long chan_read,
+> +				 unsigned long chan_event)
+>  {
+>  	int ret;
+> +	unsigned long channels = chan_read | chan_event;
+>  
+> -	if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
+> +	if ((data->chan_read | data->chan_event) != channels) {
+>  		ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
+>  					 SX9310_REG_PROX_CTRL0_SENSOREN_MASK,
+> -					 chan_read | chan_event);
+> +					 channels);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -532,6 +535,7 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
+>  	unsigned int val, chan;
+>  	struct sx9310_data *data = iio_priv(indio_dev);
+>  	s64 timestamp = iio_get_time_ns(indio_dev);
+> +	unsigned long prox_changed;
+>  
+>  	/* Read proximity state on all channels */
+>  	ret = regmap_read(data->regmap, SX9310_REG_STAT0, &val);
+> @@ -540,24 +544,23 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
+>  		return;
+>  	}
+>  
+> -	for (chan = 0; chan < SX9310_NUM_CHANNELS; chan++) {
+> +	/*
+> +	 * Only iterate over channels with changes on proximity status that have
+> +	 * events enabled.
+> +	 */
+> +	prox_changed = (data->chan_prox_stat ^ val) & data->chan_event;
+> +
+> +	for_each_set_bit(chan, &prox_changed, SX9310_NUM_CHANNELS) {
+>  		int dir;
+>  		u64 ev;
+> -		bool new_prox = val & BIT(chan);
+> -
+> -		if (!(data->chan_event & BIT(chan)))
+> -			continue;
+> -		if (new_prox == data->prox_stat[chan])
+> -			/* No change on this channel. */
+> -			continue;
+>  
+> -		dir = new_prox ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
+> +		dir = val & BIT(chan) ? IIO_EV_DIR_FALLING : IIO_EV_DIR_RISING;
+>  		ev = IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, chan,
+>  					  IIO_EV_TYPE_THRESH, dir);
+>  
+>  		iio_push_event(indio_dev, ev, timestamp);
+> -		data->prox_stat[chan] = new_prox;
+>  	}
+> +	data->chan_prox_stat = val;
+>  }
+>  
+>  static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
+> @@ -714,13 +717,13 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
+>  static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+>  	struct sx9310_data *data = iio_priv(indio_dev);
+> -	unsigned int channels = 0;
+> +	unsigned long channels = 0;
+>  	int bit, ret;
+>  
+>  	mutex_lock(&data->mutex);
+>  	for_each_set_bit(bit, indio_dev->active_scan_mask,
+>  			 indio_dev->masklength)
+> -		channels |= BIT(indio_dev->channels[bit].channel);
+> +		__set_bit(indio_dev->channels[bit].channel, &channels);
+>  
+>  	ret = sx9310_update_chan_en(data, channels, data->chan_event);
+>  	mutex_unlock(&data->mutex);
 
-Should be better to check only the relevant bits in order to catch bugs,
-otherwise you may get a DONE status from the irrelevant pads.
-
->>> - mutex_unlock()
->> Perhaps the start_calibration() also needs to be changed to not touch
->> the MIPI_CAL_CONFIG bits of the unrelated pads?
-> Driver already takes care of programming corresponding pads config only.
-
-It writes 0 to the config of the unrelated pads, which probably isn't
-nice if some pads use periodic auto-calibration.
-
-https://elixir.bootlin.com/linux/v5.8/source/drivers/gpu/host1x/mipi.c#L350
-
-Although looks like auto-calibration isn't supported by the current driver.
