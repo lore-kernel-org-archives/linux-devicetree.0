@@ -2,194 +2,131 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A46BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE62FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E381823119
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BE42312D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="QA1PAQYn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lsc6cj3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgHFRVc (ORCPT
+        id S1729675AbgHFRVv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:21:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:62906 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730280AbgHFRQG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:16:06 -0400
-IronPort-SDR: fUu7rFtrozVUF+Zdcdw6Kcz0ng60nUTQxo+G/gFIt10e6MTf1q1g37i5QRyqPt9lN6canOZB9u
- W6/g6Ys3Kc6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="170850918"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="170850918"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 04:27:11 -0700
-IronPort-SDR: 7X9rh/eOTZY6LxE2YkAsLS6rwjbvfymTJj/pbEOu4z/vJvpp5MVi1iV2My6DjWzl3HuHpmMIoT
- nzCt36pKkFdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="333157896"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by orsmga007.jf.intel.com with ESMTP; 06 Aug 2020 04:27:10 -0700
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Aug 2020 04:27:10 -0700
-Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Aug 2020 04:27:10 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx124.amr.corp.intel.com (10.18.125.39) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 6 Aug 2020 04:27:09 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 6 Aug 2020 04:27:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZwSh+bkZzEJsIHyctH6MP1vMuewmvnGKgQQgSQjjvkDAPuNQgsAtkAKBy4o126JucFmswP9Yv2APumtoGcNy+kVjRUSh3NWcwwyUE2ciPmRnF05/KbLjSOfsnnF0nNcPun6C3qpZoH/NIg2P1ivLzqTTJh0A1Ei6yMn/iDVNRfcNmjlLW0nZSDAlULFS7r1I107QhAG7e2YxSCT0kgA3OLrCJzvmq2fQ+eg+wPTx1MBJDKwbHGBzFiMt68I/vV/gNL2cQz6W+7Rt81rqb0+PsxZCujx3CBaHd9JCYPoUGwZke6KckTir/EK/0WdGuyOqn3wE8R+FiniN4PeP1iuaBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ht630EpjhlpCJrY7DtUdLR5S1lgjOxKuIWyV/rfg5ZU=;
- b=CJPIMZOLIBqjBDFqURux7cNaW/2zry9jrj5B8Ir7Q17Z6ghPqzgFa6UMxsw/88/KOMLCW2WAv0BWSeTDuVFRekQ77/mGoXnGtrl/jVVY2uh8fvBbzjqBz9vFDEti7MnN7KmwykpC281o/cIxq12UVdrcpoe11aKTzImhT2xN3FpsXrgpznorWlaof6m1V2tFon1iDYYcoccDL6Hb0kdJUCCTVDYSdX3zzRlro8E6poKUVcRRvii4Wwx8WlPTkM/g/q4QRDdger0CXcvdCb9mtj1In98e1Gbmj8NaZWRlRn2l1jaFLA9Jf46JEo8HYkPrf4cEKoISJYeFlc8syneETw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ht630EpjhlpCJrY7DtUdLR5S1lgjOxKuIWyV/rfg5ZU=;
- b=QA1PAQYnEDoHhOMLus+G3tkja29BwZyxrwcCoV986Q4dVa+4/8YwrfKkBmUS2ohmtV1Q4tLEtW9WN4lC6QDLLz19nUIUmSIqwOzkqC9uAzttjRlBMIQNVKwyX28MWZqE39Hf4ifratAeXmObjhVHnG7Qcirc+YO4PCBXJ6Z0jvI=
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com (2603:10b6:805:57::20)
- by SA0PR11MB4527.namprd11.prod.outlook.com (2603:10b6:806:72::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Thu, 6 Aug
- 2020 11:27:05 +0000
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::6407:40fd:19e3:e270]) by SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::6407:40fd:19e3:e270%7]) with mapi id 15.20.3261.019; Thu, 6 Aug 2020
- 11:27:05 +0000
-From:   "G Jaya Kumaran, Vineetha" <vineetha.g.jaya.kumaran@intel.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Voon, Weifeng" <weifeng.voon@intel.com>,
-        "Kweh, Hock Leong" <hock.leong.kweh@intel.com>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Subject: RE: [PATCH v2 0/2] Add Ethernet support for Intel Keem Bay SoC
-Thread-Topic: [PATCH v2 0/2] Add Ethernet support for Intel Keem Bay SoC
-Thread-Index: AQHWYm0U3dOFCeirEkqoBFXOtaTjdKkrA7Dw
-Date:   Thu, 6 Aug 2020 11:27:05 +0000
-Message-ID: <SN6PR11MB2575B44356D218768D24229DF6480@SN6PR11MB2575.namprd11.prod.outlook.com>
-References: <1595672279-13648-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-In-Reply-To: <1595672279-13648-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7e1018f6-ff7c-4467-c7d7-08d839fba5f9
-x-ms-traffictypediagnostic: SA0PR11MB4527:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA0PR11MB45279CD6FEEA61F3CD1175F0F6480@SA0PR11MB4527.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5n2rAl2fov7W7VvSvGmX/e/0xbhzZhe/fHm7mXiaGG8ywe6OPIdpspOrA3Nms52QaknDVadpPqzXan6841tUfBdVHdZLBV9uE0MVk7r1Amwuwn/B8he1m5ySV+1VsE52FRYTy8+XoOl3Woql24eHBqYamstAChU1r0i84dgYC9+b0dRmuRyiXZztbpYWZSPzju3qDbjbxX5/bi6y3iuOlt4vqQn0z/S3Hrpj24zStlhpZNuqPBxTHWBekV+WM4keRHi9gkQqOGxP82HMXltA/JwRe5ZkYDKXasy9jtsl5IxmzCPZ9bN2yQ50dg6zBVE1EHUM7dWnkSd4jY/TqYTpcA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2575.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(376002)(136003)(346002)(39860400002)(54906003)(110136005)(33656002)(86362001)(9686003)(107886003)(55016002)(316002)(83380400001)(71200400001)(76116006)(8676002)(2906002)(66946007)(7696005)(478600001)(4326008)(8936002)(26005)(53546011)(66476007)(5660300002)(52536014)(6506007)(64756008)(66446008)(66556008)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: CncZdrhcC5pVcru57/qpzMtZ5B20qEBgzkTDKVuLXzDD320CaA5aJufLL/GZfE3Bg0BM9162WpwNVVr5dE69IO8r8BIsOT0+aiRqS0z1FcPwHX/xpdVZj/Q/fkADr3G3JZtBoKinup37eJ7k1G9pYrcAa/lsM5qphDHKZj0nDFH3PC3iPBFg2hG8N1l49unF/p/2CFCSqussdpuRyysNqiduulmXsPcDHwv65/dgUGP9gLWkflvEmh6vbxc6Wr9A2CLdEtjKdDzhYDDqXmhxvgQGSMJJmjzPFecOiNKIqNmudWyx454fEgCamQ/aeQY6UO3JXY587syfh1mchfiGlfD5aBSrWhUFBHiQuDnlgMu0V91v2Ch55zMFyNFfSCx3eIn7cfFj+wDTeYwJMD6tCBZVQEs8/ZXQ0R2Lm90UBZVhQCjoy2EK5k+CGVwBPZai/MOoYT7YaqAQwNXK5Mw+hfEUu5K8ICkx7dKl/uHo9om6K2fhvGrZD414FZ9fl2g3KcGlPTSRbuTxteuGgrbLFlnHgvtWIhWxOCr9Kc5JurtmoccDbm5Nf5BOwPDpY4GnS8OGS8ut8UlXvlJt8KISwLzQqxrpS1B1M4D6UcDtbLpmm139FknVkoZbjw/RJdozNh73onhQpYak5RXaLAS95A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Aug 2020 13:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730518AbgHFRPf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:15:35 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96871C061574;
+        Thu,  6 Aug 2020 10:15:34 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v12so22306615ljc.10;
+        Thu, 06 Aug 2020 10:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ALTYLAQ3IF5Q6AInIrtNyU1qBePxrCmDcDyuOTeQy9Y=;
+        b=Lsc6cj3SvMXYewcgpRmsTLJWDJws5KlVPLifrBe2vi4HVkdkdGH1OCIF6qt/b0TYdb
+         fBQPjv7cXyTeNR3+T20qb8C/yyMeQvxj3NVIiI4bqRwEAsJPIMR7/9zaq7b2pGV45h8o
+         /NoWgLWNl/NiZ3AwJvq23BIswzmbukHgeqGvNTxoO05/f46YsD77+bZ1b7XohBkw35nq
+         hB8YpgpxCgZTBmXIcneCC02ZEkajficPHsvV0fDZeqw50DHGQ5/MDgbprRQEo/pYjrqY
+         7wA0IIp4TH59c4xrPUidMptTRzw2d5cxjOEIoeBxhJkLU27YDJpoh/3fijuvKru04zD+
+         A4eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ALTYLAQ3IF5Q6AInIrtNyU1qBePxrCmDcDyuOTeQy9Y=;
+        b=FON4IyIFl0RH/S2wFfNm7s/Gl2zBY9kLjhcg7fMgQq+0MxY5MQtkbhhLvl5OZNVCHr
+         1Qcn3x5F4eNcE3H4WIFPVpZalvFzk/z+tbG0pgdo4U54lGFsSHMrsDMHxNKKGzb0MGEX
+         ttK94PTbQE6rNqaW1HrA5romngYjNNwbuGo5D+vwpOdMWQvtc2dScul7+LAQDSgPqCsA
+         WIhP143Zc77XRn+JnLV1+fQEALgR25+hetnavJZiCwzFsk3FWdpFiNw7YjKktWpOB1bf
+         J1S1wzbCbTswEhhO7sEOYrJQdhbmSam6Zt/XiSRCgOd5DaGxpX1GA2GKL7Hak09e14QF
+         iUmw==
+X-Gm-Message-State: AOAM530oO/7WKTOsTqAQSRP9zFmY71M2sfTElYjzf/ecJRKism7dwYkQ
+        XenwsD2YupCLcFgfApNDj+HPYopR
+X-Google-Smtp-Source: ABdhPJw1gE+yOOHWwMRLcp4zdcZbVUSxeeiv3EB7wxlT/Df1tq89MCqwbfznDRb+nFU9xwx5yHOAYQ==
+X-Received: by 2002:a2e:92c4:: with SMTP id k4mr4458094ljh.238.1596734132840;
+        Thu, 06 Aug 2020 10:15:32 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id k12sm2680295ljh.95.2020.08.06.10.15.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 10:15:32 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
+ <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
+ <04413bc8-8d89-7e57-9b34-84bb11ecb008@gmail.com>
+ <60c38774-05d6-2825-bec5-be5eee9c3dea@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <55e02aa3-98cd-3570-3e54-c55a4b3687ef@gmail.com>
+Date:   Thu, 6 Aug 2020 20:15:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2575.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e1018f6-ff7c-4467-c7d7-08d839fba5f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2020 11:27:05.5990
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Sxj1eTb9UOVLxEUsi7fSONemgMIiEgYNH+OhOPRS1F3uU/mNgd4sqP8xJUy6/w5CaxEXJ1quZcWyHMfpZdL2Ve2k0GnH+hUtyKs9eH9SpxQ0/LKggt9iY5o/ln7+i1Hl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4527
-X-OriginatorOrg: intel.com
+In-Reply-To: <60c38774-05d6-2825-bec5-be5eee9c3dea@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+06.08.2020 19:51, Sowjanya Komatineni пишет:
+>>>> What about to add 72us delay to the end of start_calibration() in order
+>>>> to ensure that FSM is finished before LP-11?
+>>> Why we should add 72uS in start_calibration() when can use same
+>>> finish_calibration() for both pass/fail cases?
+>>>
+>>> Only timing loose we see is in case of failure we still wait for 250ms
+>>> and as this is failing case I hope should be ok.
+>>>
+>> You said that calibration settings are applied to pads on LP-11, but if
+>> LP-11 happens before FSM is finished, then what values will be applied
+>> if any?
+> 
+> No calibration logic will check for LP-11 only after finishing
+> calibration sequence codes.
+> 
+> After that if it sees LP-11, it will apply results to pads and DONE bit
+> will then be set to 1 indication pad results update.
 
-May I know if there are any comments regarding this patch-set before I subm=
-it a V3?
-Just would like to check, since so far the feedback obtained for V1 and V2 =
-has been regarding only the DT documentation.
+Are you sure that HW doesn't use level-triggered logic for LP-11 signal?
 
-Thank you,
-Vineetha
+> Unfortunately like I said we don't have status indication for
+> calibrating finished before waiting for LP-11.
 
-> -----Original Message-----
-> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
-> Behalf Of vineetha.g.jaya.kumaran@intel.com
-> Sent: Saturday, July 25, 2020 6:18 PM
-> To: davem@davemloft.net; kuba@kernel.org; mcoquelin.stm32@gmail.com;
-> robh+dt@kernel.org
-> Cc: netdev@vger.kernel.org; devicetree@vger.kernel.org; Voon, Weifeng
-> <weifeng.voon@intel.com>; Kweh, Hock Leong <hock.leong.kweh@intel.com>;
-> Ong, Boon Leong <boon.leong.ong@intel.com>
-> Subject: [PATCH v2 0/2] Add Ethernet support for Intel Keem Bay SoC
->=20
-> From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
->=20
-> Hello,
->=20
-> This patch set enables support for Ethernet on the Intel Keem Bay SoC.
-> The first patch contains the required Device Tree bindings documentation,
-> while the second patch adds the Intel platform glue layer for the stmmac
-> device driver.
->=20
-> This driver was tested on the Keem Bay evaluation module board.
->=20
-> Thank you.
->=20
-> Best regards,
-> Vineetha
->=20
-> Changes since v1:
-> -Removed clocks maxItems property from DT bindings documentation
-> -Removed phy compatible strings from DT bindings documentation
->=20
-> Rusaimi Amira Ruslan (1):
->   net: stmmac: Add dwmac-intel-plat for GBE driver
->=20
-> Vineetha G. Jaya Kumaran (1):
->   dt-bindings: net: Add bindings for Intel Keem Bay
->=20
->  .../devicetree/bindings/net/intel,dwmac-plat.yaml  | 121 +++++++++++++
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  10 ++
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
->  .../net/ethernet/stmicro/stmmac/dwmac-intel-plat.c | 191
-> +++++++++++++++++++++
->  4 files changed, 323 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/intel,dwmac-
-> plat.yaml
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.=
-c
->=20
-> --
-> 1.9.1
-
+This is not a problem if hardware can cope with LP-11 happened at the
+time of calibration. If hardware can't cope with that, then somethings
+needs to be done about it.
