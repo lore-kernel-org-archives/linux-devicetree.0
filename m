@@ -2,179 +2,128 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB91C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 20:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20711C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 22:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28AF72177B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 20:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QUY4zm6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 04F2222D02
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 22:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596751969;
+	bh=5kIwo2Mps+WdhyyhERg/v0Yl22kiC8RQaCXpPI4M014=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x0k7/TJygJT8Iz5kJMk8mhvhPf0ei7VGKmDK7Hma+48VeSsD4mYlNqK24vitAPU4U
+	 gjdMkx+S0Tw0Ky0J8mQTKsXpQ6sB/4rVuaSEZFbeoGavR012eOeiZcsDjRxUaZfzUP
+	 43b4RMMywwfVNVumW6xs6noBIiYrweFJaxhOpMnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgHFUPY (ORCPT
+        id S1725783AbgHFWMs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 16:15:24 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:35156 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725875AbgHFUPY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 16:15:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596744923; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ZYadisCTQSXaXKPrEzfTRnoXgPlBsKm1tiWBuOzw0mE=;
- b=QUY4zm6Yjx0Rk3JqrMpgpooqS0/wPexhZIzWieKLxED+TmkJK0k/Ze96CfAX4yXcWvhljJWX
- sI7CZxvbQU5B8lFTmJFJY2MuXGSQ7Inj67xDduN2l+ejUSFepc4kdRJBVra2xm/EzGPZsnVK
- B3vMRFuxAVIlWZolk9w2EBFPu9A=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5f2c17a04c787f237b7af23a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 06 Aug 2020 14:45:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F2FEC43391; Thu,  6 Aug 2020 14:45:52 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Thu, 6 Aug 2020 18:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgHFWMr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Aug 2020 18:12:47 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BFEC3C433C9;
-        Thu,  6 Aug 2020 14:45:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE374221E3;
+        Thu,  6 Aug 2020 22:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596751967;
+        bh=5kIwo2Mps+WdhyyhERg/v0Yl22kiC8RQaCXpPI4M014=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=InKJtaBBiNTqyGpsmNkDccmciz3oHLLWtcH3xB9h2+Vzs0MB1bUqnpN+kB/KuGDLm
+         vrVKeETgv4CVf3pfiEuyvS1p6bVA0WpFpdDmY+VQWV7ACFUzR1vK5Q1sKV5wXbb+AD
+         8eBlV9CcL2zJkfes/ta+8AnwX84RPfk7pMR/Ued0=
+Received: by mail-ot1-f53.google.com with SMTP id h22so74752otq.11;
+        Thu, 06 Aug 2020 15:12:46 -0700 (PDT)
+X-Gm-Message-State: AOAM5315Tnja29A1HsgZeSUWrvCtrCONpFK4yAanBfwQADLmrXR17wR8
+        pVa4zn6Ei3+Fdw2J+SE/uUOsm9PObd7t6Wma4Q==
+X-Google-Smtp-Source: ABdhPJymKfUI6jSAReX64xGfCidAykanzrZqSlJ6L628ZfqbwHcACImpWOlyFoKKUkxKjQjAZZyIRI+/aKWC/GjuN+U=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr8745864ote.107.1596751965884;
+ Thu, 06 Aug 2020 15:12:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 06 Aug 2020 20:15:51 +0530
-From:   kalyan_t@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+References: <20200731164853.3020946-1-campello@chromium.org>
+ <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
+ <20200801160639.1410944e@archlinux> <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com>
+ <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com> <20200806191451.3ce5ec57@archlinux>
+In-Reply-To: <20200806191451.3ce5ec57@archlinux>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 6 Aug 2020 16:12:34 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
+Message-ID: <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Daniel Campello <campello@chromium.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Douglas Anderson <dianders@chromium.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dpu: Fix reservation failures in modeset
-In-Reply-To: <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
-References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
-Message-ID: <1101abba0c8082da196f36636ef07a84@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-05 21:18, Rob Clark wrote:
-> On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org> 
-> wrote:
->> 
->> In TEST_ONLY commit, rm global_state will duplicate the
->> object and request for new reservations, once they pass
->> then the new state will be swapped with the old and will
->> be available for the Atomic Commit.
->> 
->> This patch fixes some of missing links in the resource
->> reservation sequence mentioned above.
->> 
->> 1) Creation of a duplicate state in test_only commit (Rob)
->> 2) Allow resource release only during crtc_active false.
->> 
->> For #2
->> In a modeset operation, swap state happens well before disable.
->> Hence clearing reservations in disable will cause failures
->> in modeset enable.
->> 
->> Sequence:
->>     Swap state --> old, new
->>     modeset disables --> virt disable
->>     modeset enable --> virt modeset
->> 
->> Allow reservations to be cleared only when crtc active is false
->> as in that case there wont be any modeset enable after disable.
->> 
->> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> ---
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c 
->> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> index 63976dc..b85a576 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
->>         dpu_kms = to_dpu_kms(priv->kms);
->>         mode = &crtc_state->mode;
->>         adj_mode = &crtc_state->adjusted_mode;
->> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
->> +       global_state = dpu_kms_get_global_state(crtc_state->state);
->>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
->> 
->>         /*
->> @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct 
->> drm_encoder *drm_enc)
->>         struct msm_drm_private *priv;
->>         struct dpu_kms *dpu_kms;
->>         struct dpu_global_state *global_state;
->> +       struct drm_crtc_state *crtc_state;
->>         int i = 0;
->> 
->>         if (!drm_enc) {
->> @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct 
->> drm_encoder *drm_enc)
->>         priv = drm_enc->dev->dev_private;
->>         dpu_kms = to_dpu_kms(priv->kms);
->>         global_state = dpu_kms_get_existing_global_state(dpu_kms);
->> +       crtc_state = drm_enc->crtc->state;
->> 
->>         trace_dpu_enc_disable(DRMID(drm_enc));
->> 
->> @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct 
->> drm_encoder *drm_enc)
->> 
->>         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
->> 
->> -       dpu_rm_release(global_state, drm_enc);
->> +       if (crtc_state->active_changed && !crtc_state->active)
->> +               dpu_rm_release(global_state, drm_enc);
-> 
-> I still think releasing the state in the atomic_commit() path is the
-> wrong thing to do.  In the commit path, the various state objects
-> should be immutable.. ie. in the atomic_test() path you derive the new
-> hw state (including assignment/release of resources), and
-> atomic_commit() is simply pushing the state down to the hw.
-> 
-> Otherwise, this looks better than v1.
-> 
-> BR,
-> -R
-> 
-okay. Should we avoid reservation all together if active=0 on that crtc 
-and trigger rm_release on the enc during atomic_check ?
-how do you see the approach ?
+On Thu, Aug 6, 2020 at 12:14 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Mon, 3 Aug 2020 20:01:06 -0600
+> Rob Herring <robh+dt@kernel.org> wrote:
+>
+> > On Mon, Aug 3, 2020 at 1:00 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Jonathan Cameron (2020-08-01 08:06:39)
+> > > > On Fri, 31 Jul 2020 10:48:38 -0600
+> > > > Daniel Campello <campello@chromium.org> wrote:
+> > > > > diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> > > > > new file mode 100644
+> > > > > index 00000000000000..5739074d3592fe
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> > > > > @@ -0,0 +1,65 @@
+> > > [...]
+> > > > > +
+> > > > > +  "#io-channel-cells":
+> > > > > +    const: 1
+> > > > > +
+> > > > > +required:
+> > > > > +  - compatible
+> > > > > +  - reg
+> > > > > +  - "#io-channel-cells"
+> > > >
+> > > > Missed this in earlier review (only noticed when I saw whilst santity
+> > > > checking earlier versions.
+> > > >
+> > > > Fairly sure we should only need #io-channel-cells if we have
+> > > > a consumer of a channel somewhere else in DT.  So it's not
+> > > > required as far as I can see.
+> > > >
+> > >
+> > > This is mostly a decision for Rob to make, but I would make it required
+> > > because the device is always an io channel provider. It may be that it
+> > > isn't providing anything in the DT to something else in the DT but it is
+> > > providing this information somewhere so always having to spell that out
+> > > is simple and doesn't hurt.
+> >
+> > I agree. If the user is split in a board file or overlay, we don't
+> > want to have to be adding it to the provider at that time.
+>
+> That is perhaps a reasonable view point for devices with channels that
+> are likely to be used by consumer drivers, but in this particular case we
+> are talking about a proximity sensor.  So far I don't think we
+> have any consumer drivers for this type of sensor (I might have forgotten
+> one of course!)
 
--Kalyan
->> 
->>         mutex_unlock(&dpu_enc->enc_lock);
->>  }
->> --
->> 1.9.1
->> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+Indeed, I didn't consider whether it made sense in the first place. So
+should it just not be specified at all in this case? I can't really
+picture what the usecase for a consumer node would be.
+
+Rob
