@@ -2,92 +2,131 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A93C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842C5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A1E206A2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596737236;
-	bh=7sDGk0cuRvKpwl0wjGQQORXcJOfy5qUAfrD9AR4suV4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vjRFcjfQ9QlvDz8Ne2uMZC8oLSyVpkwuo16UFdGeM+Nd3CjgFGBGU554kSPWaowgV
-	 gEr7bWgavShZz3oPc1F4Oxr95Zm7U89lBfsfX0AY3aszKSq/r4Jpexm+8ja14gZMtS
-	 luvKyk5+cTp3IhSZoD7MenKFyDR7pN7Kc/3pvIws=
+	by mail.kernel.org (Postfix) with ESMTP id CA06722CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 18:16:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="T8n9C5xA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgHFSFx (ORCPT
+        id S1727891AbgHFSHX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 14:05:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726927AbgHFSF3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Aug 2020 14:05:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8982206A2;
-        Thu,  6 Aug 2020 18:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596737128;
-        bh=7sDGk0cuRvKpwl0wjGQQORXcJOfy5qUAfrD9AR4suV4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qDVKR1Q8SOhlcBYyvzGbAx6d/ZXEhGCx+WAd5yDqWr54rlRGXKe07Parn0LftjmGM
-         U6wY6LBST7W8oOx2MwnSWuRvuc0NyXbpnNzc8rv9YKaFdQsilTIptKL7x8+tzyfwEM
-         G1y9cQI+//X8o6qkuRmFDV8J39knvZKei+WXxXxw=
-Date:   Thu, 6 Aug 2020 19:05:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH V2] dt-bindings: iio: adc: maxim,max1118 yaml conversion
-Message-ID: <20200806190523.712d2115@archlinux>
-In-Reply-To: <20200803215826.GA3211566@bogus>
-References: <20200801175850.1140006-1-jic23@kernel.org>
-        <20200803215826.GA3211566@bogus>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 6 Aug 2020 14:07:23 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10588 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727843AbgHFSHT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 14:07:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2c46a50000>; Thu, 06 Aug 2020 11:06:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 11:07:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 11:07:19 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 18:07:18 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+ <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
+ <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
+ <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
+ <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
+ <fde2431a-0585-ac32-ac25-73e198aaa948@nvidia.com>
+ <4025a458-fa78-924d-c84f-166f82df0f8e@gmail.com>
+ <4f15d655-3d62-cf9f-82da-eae379d60fa6@nvidia.com>
+ <b5612e93-f1c4-4762-baa1-5d85eb1edbe1@gmail.com>
+ <412f8c53-1aca-db31-99a1-a0ecb2081ca5@nvidia.com>
+ <61275bd6-58e7-887f-aa7d-8e60895e7b2b@nvidia.com>
+ <6ff57c38-9847-42b0-643b-0d167c13779f@gmail.com>
+ <c6ef5e77-2b0a-1712-ca58-dbd8d232e1f1@nvidia.com>
+ <ed79b201-85ba-f725-c5fa-fcde0761bc3d@nvidia.com>
+ <26ed2841-db5d-aeb0-11c7-cbe2ddd1d76b@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <eddfdaf0-818a-c4dd-e3b4-4d432af56982@nvidia.com>
+Date:   Thu, 6 Aug 2020 11:07:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <26ed2841-db5d-aeb0-11c7-cbe2ddd1d76b@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596737189; bh=sv4+c3VUgdhY9NyeYY7yjrF5/QPHLa+clVNNxjB/fsg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=T8n9C5xA3wOpIjrClJphuID9+rlVkFxZGQI6dUqxHya9/2ZSS8MOx4oQzKhdCcqDH
+         m5g1tvnmjYBcA/JwZDZgtJWWX5SVVArf2PlCBwUlE98Aw1zgKRfYCYpPoNlIKHUi6V
+         VCWxyvJ2LBN6PjSNEVAO2E7PddDUKsN8sTcRnRQ0np6bfEW4E63dV5o2k2DSWydCjJ
+         tWla0Wulywp7QyUlO+XUZIUjqtjbTApuTYIISRNKXaLlGBlxPcbrvZU/luzcZXIIvm
+         xq1RS1zZNZleZ6VBvO9B3NaA6SS/mMy10DlNLQbcJHrNseFktttAfzJkwi2z0qGZcm
+         FU1p/chMMtkYg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 3 Aug 2020 15:58:26 -0600
-Rob Herring <robh@kernel.org> wrote:
 
-> On Sat, 01 Aug 2020 18:58:50 +0100, Jonathan Cameron wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > Simple device with a simple conversion.  Special handling needed
-> > for the max1118 which is the only supported part that has an external
-> > reference voltage.
-> > 
-> > Cc: Akinobu Mita <akinobu.mita@gmail.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > v2:
-> > * Added additionalProperties: false. Other changes are to make this work.
-> > * Move the vref-supply definition up
-> > * Add an else clause
-> > 
-> > .../devicetree/bindings/iio/adc/max1118.txt   | 21 -------
-> >  .../bindings/iio/adc/maxim,max1118.yaml       | 62 +++++++++++++++++++
-> >  2 files changed, 62 insertions(+), 21 deletions(-)
-> >   
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Thanks,  
+On 8/6/20 11:01 AM, Dmitry Osipenko wrote:
+> 06.08.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> Right mutex_unlock should happen at end of finish_calibration.
+>>
+>> With keeping mutex locked in start, we dont have to check for active to
+>> be 0 to issue start as mutex will keep it locked and other pads
+>> calibration can only go thru when current one is done.
+>>
+>> So instead of below sequence, its simpler to do this way?
+>>
+>> start_calibration()
+>>
+>> - mutex_lock
+>>
+>> - wait for 72uS after start
+>>
+>> finish_calibration()
+>>
+>> - keep check for ACTIVE =3D 0 and DONE =3D 1
+> I think only the DONE bits which correspond to the mipi_device->pads
+> bitmask should be awaited.
 
-Applied to the togreg branch off iio.git and pushed out as testing for autobuilders
-etc.
+As next START can't be triggered when auto cal is ACTIVE, we should keep=20
+this in finish.
 
-Jonathan
+As we do mutex_unlock only at end of finish, other pads calibrations=20
+dont go thru till the one in process is finished.
 
+So in this case ACTIVE applies to current selected pads that are under=20
+calibration.
+
+>
+>> - mutex_unlock()
+> Perhaps the start_calibration() also needs to be changed to not touch
+> the MIPI_CAL_CONFIG bits of the unrelated pads?
+Driver already takes care of programming corresponding pads config only.
+>
+> Otherwise sounds good to me.
