@@ -2,86 +2,246 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9ECC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 04:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B528C433F2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5EC21744
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 04:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Fumor4Q8"
+	by mail.kernel.org (Postfix) with ESMTP id 648E423102
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 11:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgHFEMX (ORCPT
+        id S1727103AbgHFFWn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 00:12:23 -0400
-Received: from m12-18.163.com ([220.181.12.18]:47678 "EHLO m12-18.163.com"
+        Thu, 6 Aug 2020 01:22:43 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45928 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgHFEMX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Aug 2020 00:12:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=58O72jhnrDHl5eaGDS
-        i3G0TKF4cP/BfnN/97i4BIIUM=; b=Fumor4Q835MmuBAcAHETNxr5hii6jxVH79
-        hAmksMG7pjemk0jjpsoXtZ9YamDSQzSIa4iCYYP+pDIFJfoUMshf+Dx0mFiH8K2U
-        lnU5lUHIGYGvDgLTYtDnuyt3ehMnkiP0yI2PrMai6Irg4ygxgeQnxHS0FXFHnEKi
-        s6zlDhKkk=
-Received: from localhost.localdomain (unknown [58.33.79.182])
-        by smtp14 (Coremail) with SMTP id EsCowADn96PVgitfLPkDHw--.22232S2;
-        Thu, 06 Aug 2020 12:11:18 +0800 (CST)
-From:   Grant Feng <von81@163.com>
-To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        id S1727828AbgHFFWl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 6 Aug 2020 01:22:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CCBEB200788;
+        Thu,  6 Aug 2020 07:22:37 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2946A200785;
+        Thu,  6 Aug 2020 07:22:34 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8650640309;
+        Thu,  6 Aug 2020 07:22:29 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        shengjiu.wang@nxp.com, alsa-devel@alsa-project.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] leds: Add an optional property named 'sdb-gpios'
-Date:   Thu,  6 Aug 2020 12:10:49 +0800
-Message-Id: <20200806041049.19255-1-von81@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: EsCowADn96PVgitfLPkDHw--.22232S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4fCFWfXFW7XFy3XrWfAFb_yoWDtFc_Ja
-        s7Cr4IgrZ8uF4vgw1DZr1avr4UCw4xAF1kCw4IqF1kAw1xt3sIgF92q34Yyr1UGana9r43
-        Ca97ta4UJ3ZFkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU055r5UUUUU==
-X-Originating-IP: [58.33.79.182]
-X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiNwZ4OlWBhkqCiwAAsi
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: sound: Convert NXP spdif to json-schema
+Date:   Thu,  6 Aug 2020 13:17:57 +0800
+Message-Id: <1596691077-30658-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The chip enters hardware shutdown when the SDB pin is pulled low.
-The chip releases hardware shutdown when the SDB pin is pulled high.
+Convert the NXP SPDIF binding to DT schema format using json-schema.
 
-Signed-off-by: Grant Feng <von81@163.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/sound/fsl,spdif.txt        |  68 -------------
+ .../devicetree/bindings/sound/fsl,spdif.yaml       | 108 +++++++++++++++++++++
+ 2 files changed, 108 insertions(+), 68 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.yaml
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-index 926c2117942c..94f02827fd83 100644
---- a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-@@ -15,6 +15,8 @@ Required properties:
- - reg: I2C slave address
- - address-cells : must be 1
- - size-cells : must be 0
-+- sdb-gpios : (optional)
-+  Specifier of the GPIO connected to SDB pin.
- 
- LED sub-node properties:
- - reg : LED channel number (1..N)
-@@ -31,6 +33,7 @@ is31fl3236: led-controller@3c {
- 	reg = <0x3c>;
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-+	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
- 
- 	led@1 {
- 		reg = <1>;
+diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
+deleted file mode 100644
+index e1365b0..0000000
+--- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
++++ /dev/null
+@@ -1,68 +0,0 @@
+-Freescale Sony/Philips Digital Interface Format (S/PDIF) Controller
+-
+-The Freescale S/PDIF audio block is a stereo transceiver that allows the
+-processor to receive and transmit digital audio via an coaxial cable or
+-a fibre cable.
+-
+-Required properties:
+-
+-  - compatible		: Compatible list, should contain one of the following
+-			  compatibles:
+-			  "fsl,imx35-spdif",
+-			  "fsl,vf610-spdif",
+-			  "fsl,imx6sx-spdif",
+-
+-  - reg			: Offset and length of the register set for the device.
+-
+-  - interrupts		: Contains the spdif interrupt.
+-
+-  - dmas		: Generic dma devicetree binding as described in
+-			  Documentation/devicetree/bindings/dma/dma.txt.
+-
+-  - dma-names		: Two dmas have to be defined, "tx" and "rx".
+-
+-  - clocks		: Contains an entry for each entry in clock-names.
+-
+-  - clock-names		: Includes the following entries:
+-	"core"		  The core clock of spdif controller.
+-	"rxtx<0-7>"	  Clock source list for tx and rx clock.
+-			  This clock list should be identical to the source
+-			  list connecting to the spdif clock mux in "SPDIF
+-			  Transceiver Clock Diagram" of SoC reference manual.
+-			  It can also be referred to TxClk_Source bit of
+-			  register SPDIF_STC.
+-	"spba"		  The spba clock is required when SPDIF is placed as a
+-			  bus slave of the Shared Peripheral Bus and when two
+-			  or more bus masters (CPU, DMA or DSP) try to access
+-			  it. This property is optional depending on the SoC
+-			  design.
+-
+-Optional properties:
+-
+-   - big-endian		: If this property is absent, the native endian mode
+-			  will be in use as default, or the big endian mode
+-			  will be in use for all the device registers.
+-
+-Example:
+-
+-spdif: spdif@2004000 {
+-	compatible = "fsl,imx35-spdif";
+-	reg = <0x02004000 0x4000>;
+-	interrupts = <0 52 0x04>;
+-	dmas = <&sdma 14 18 0>,
+-	       <&sdma 15 18 0>;
+-	dma-names = "rx", "tx";
+-
+-	clocks = <&clks 197>, <&clks 3>,
+-	       <&clks 197>, <&clks 107>,
+-	       <&clks 0>, <&clks 118>,
+-	       <&clks 62>, <&clks 139>,
+-	       <&clks 0>;
+-	clock-names = "core", "rxtx0",
+-		"rxtx1", "rxtx2",
+-		"rxtx3", "rxtx4",
+-		"rxtx5", "rxtx6",
+-		"rxtx7";
+-
+-	big-endian;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.yaml b/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
+new file mode 100644
+index 0000000..819f37f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
+@@ -0,0 +1,108 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/fsl,spdif.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Sony/Philips Digital Interface Format (S/PDIF) Controller
++
++maintainers:
++  - Shengjiu Wang <shengjiu.wang@nxp.com>
++
++description: |
++  The Freescale S/PDIF audio block is a stereo transceiver that allows the
++  processor to receive and transmit digital audio via an coaxial cable or
++  a fibre cable.
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx35-spdif
++      - fsl,vf610-spdif
++      - fsl,imx6sx-spdif
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: DMA controller phandle and request line for RX
++      - description: DMA controller phandle and request line for TX
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++  clocks:
++    items:
++      - description: The core clock of spdif controller.
++      - description: Clock for tx0 and rx0.
++      - description: Clock for tx1 and rx1.
++      - description: Clock for tx2 and rx2.
++      - description: Clock for tx3 and rx3.
++      - description: Clock for tx4 and rx4.
++      - description: Clock for tx5 and rx5.
++      - description: Clock for tx6 and rx6.
++      - description: Clock for tx7 and rx7.
++      - description: The spba clock is required when SPDIF is placed as a bus
++          slave of the Shared Peripheral Bus and when two or more bus masters
++          (CPU, DMA or DSP) try to access it. This property is optional depending
++          on the SoC design.
++    minItems: 9
++
++  clock-names:
++    items:
++      - const: core
++      - const: rxtx0
++      - const: rxtx1
++      - const: rxtx2
++      - const: rxtx3
++      - const: rxtx4
++      - const: rxtx5
++      - const: rxtx6
++      - const: rxtx7
++      - const: spba
++    minItems: 9
++
++  big-endian:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      If this property is absent, the native endian mode will be in use
++      as default, or the big endian mode will be in use for all the device
++      registers. Set this flag for HCDs with big endian descriptors and big
++      endian registers.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - dmas
++  - dma-names
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    spdif@2004000 {
++        compatible = "fsl,imx35-spdif";
++        reg = <0x02004000 0x4000>;
++        interrupts = <0 52 0x04>;
++        dmas = <&sdma 14 18 0>,
++               <&sdma 15 18 0>;
++        dma-names = "rx", "tx";
++        clocks = <&clks 197>, <&clks 3>,
++                 <&clks 197>, <&clks 107>,
++                 <&clks 0>, <&clks 118>,
++                 <&clks 62>, <&clks 139>,
++                 <&clks 0>;
++        clock-names = "core", "rxtx0",
++                      "rxtx1", "rxtx2",
++                      "rxtx3", "rxtx4",
++                      "rxtx5", "rxtx6",
++                      "rxtx7";
++        big-endian;
++    };
 -- 
-2.17.1
-
+2.7.4
 
