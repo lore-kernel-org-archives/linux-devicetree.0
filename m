@@ -2,120 +2,192 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FC3C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11211C433E0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C459C23119
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:53:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IydTJGkv"
+	by mail.kernel.org (Postfix) with ESMTP id 5A0CD23119
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 16:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596732845;
+	bh=reoxg1OU6PPP9fdVuqvnanXwoeHJ0JP5rHmItm1LTWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CBC7lepkAU0+pjrQUI2izRQ9dh2K5Gm9zdLlQfvhLAQC8oQcxn3qLDCFhLA8wATk7
+	 H17AeBnAMgb0xacBTHDsQgMsVCRrGqvNSgYBy/I6MvrFSuPYiVpsSVANJTmwA1tO9j
+	 kUjsSGxFQ3X6P9rmN276pcxTm19G0cp4IbP7Ogz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgHFQxW (ORCPT
+        id S1729726AbgHFQxu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 12:53:22 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56292 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729231AbgHFQwy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:52:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 076F15Ev107938;
-        Thu, 6 Aug 2020 10:01:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596726065;
-        bh=SsDht611ujdkNQFc6BFSfYMna5LmuK9AurW2tYiBVyU=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=IydTJGkvBiT7VaX6EBJOe1Z1CzhZiR6dHukbm9n8mlGN/ogWpgM04AcWOGWWqilRV
-         aVoxk2TSG5yjqHjWygESa/KQksSSpl/nyd+5j9Y0f+uKkuyeyay94f0K+0S0ahvi4w
-         a3NIvRw6BmqgBwxkkKa4qNyqzlfEDuB14CS9L//w=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 076F15G0015172
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Aug 2020 10:01:05 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 6 Aug
- 2020 10:01:05 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 6 Aug 2020 10:01:05 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 076F14J2050834;
-        Thu, 6 Aug 2020 10:01:04 -0500
-Subject: Re: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low
- pulse when startup
-To:     Grant Feng <von81@163.com>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200806062130.25187-1-von81@163.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
-Date:   Thu, 6 Aug 2020 10:00:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 6 Aug 2020 12:53:50 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44898 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729352AbgHFQxs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 12:53:48 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so30458443qtp.11;
+        Thu, 06 Aug 2020 09:53:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SgCMlkNPygbvmU3HrFba/PxFp5hi1G153yx66x79hj0=;
+        b=HroBpKqx6ctcuV9YTTXncCgaO4RMC+jUUvb3ClR+fLkKyM1HtydHkoItAgNbPIJte9
+         VEP3+8bgdRRxUlDNOXy72q7DhFzlhDU3WhsK+iit7K0mdgeLt2hU9Km7I3cqhoCXN+eZ
+         FQM+gKYVBACgLgwA5JJcVp7hQgC7jXa3fXcztIg/otfJDL+UfOuFw+b90XFjeEEt0fGw
+         5NT1yETrUfJ6jXcAPR7m5XJSWVo6eZ6yO2EPwnzrC0Qot/4P5wz5G9JDt64lbC8RV2oQ
+         xBiH4AwV95oWyl1/5/zjG6NqhIrsWrwAghCDdpmTEw8D3CHQDh8IptRC0veCkLo1TM8s
+         Z3Cg==
+X-Gm-Message-State: AOAM5311svnm+AQltet0wHOEjArVA5UUN3MdbXF6xC6pURY1aGUPNXt1
+        gcqcU3SVp65vuEfQ0lrU6CvYnBs=
+X-Google-Smtp-Source: ABdhPJzPkEr9rf/8BLhAY46DOssPh7LKZIJw6TequaQtxXBjF1VpMWpsZbUoIIIX/G8kSI9FFjY1+w==
+X-Received: by 2002:a05:6638:419:: with SMTP id q25mr12491976jap.85.1596725027758;
+        Thu, 06 Aug 2020 07:43:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id m13sm2133599iov.35.2020.08.06.07.43.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 07:43:47 -0700 (PDT)
+Received: (nullmailer pid 829322 invoked by uid 1000);
+        Thu, 06 Aug 2020 14:43:45 -0000
+Date:   Thu, 6 Aug 2020 08:43:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     pisa@cmp.felk.cvut.cz
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        mkl@pengutronix.de, socketcan@hartkopp.net, wg@grandegger.com,
+        davem@davemloft.net, mark.rutland@arm.com, c.emde@osadl.org,
+        armbru@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
+        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
+        porazil@pikron.com
+Subject: Re: [PATCH v4 2/6] dt-bindings: net: can: binding for CTU CAN FD
+ open-source IP core.
+Message-ID: <20200806144345.GA822372@bogus>
+References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+ <701442883f2b439637ff84544745725bdee7bcf8.1596408856.git.pisa@cmp.felk.cvut.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200806062130.25187-1-von81@163.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <701442883f2b439637ff84544745725bdee7bcf8.1596408856.git.pisa@cmp.felk.cvut.cz>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Grant
-
-On 8/6/20 1:21 AM, Grant Feng wrote:
-> generate a 5ms low pulse on sdb pin when startup, then the chip
-> becomes more stable in the complex EM environment.
->
-> Signed-off-by: Grant Feng <von81@163.com>
+On Mon, Aug 03, 2020 at 08:34:50PM +0200, pisa@cmp.felk.cvut.cz wrote:
+> From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> 
+> The device-tree bindings for open-source CAN FD IP core
+> which design started at Department of Measurement
+> at Faculty of Electrical Engineering
+> of Czech Technical University in Prague.
+> The IP core main author is Ondrej Ille who continues
+> on the core development even after finishing the studies.
+> 
+> The CTU CAN FD IP core main repository
+> 
+>   https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
+> 
+> The list of related CAN bus projects which we participate in
+> 
+>    http://canbus.pages.fel.cvut.cz/
+> 
+> The commit text again to make checkpatch happy.
+> 
+> Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 > ---
->   drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
-> index ca6634b8683c..b4f70002cec9 100644
-> --- a/drivers/leds/leds-is31fl319x.c
-> +++ b/drivers/leds/leds-is31fl319x.c
-> @@ -16,6 +16,8 @@
->   #include <linux/of_device.h>
->   #include <linux/regmap.h>
->   #include <linux/slab.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->   
->   /* register numbers */
->   #define IS31FL319X_SHUTDOWN		0x00
-> @@ -61,6 +63,7 @@
->   struct is31fl319x_chip {
->   	const struct is31fl319x_chipdef *cdef;
->   	struct i2c_client               *client;
-> +	struct gpio_desc		*sdb_pin;
->   	struct regmap                   *regmap;
->   	struct mutex                    lock;
->   	u32                             audio_gain_db;
-> @@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
->   		is31->audio_gain_db = min(is31->audio_gain_db,
->   					  IS31FL319X_AUDIO_GAIN_DB_MAX);
->   
-> +	is31->sdb_pin = gpiod_get(dev, "sdb", GPIOD_ASIS);
+>  .../devicetree/bindings/net/can/ctu,ctucanfd.yaml  | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+> new file mode 100644
+> index 000000000000..b74bfc951062
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/can/ctu,ctucanfd.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: CTU CAN FD Open-source IP Core Device Tree Bindings
+> +
+> +description: |
+> +  Open-source CAN FD IP core developed at the Czech Technical University in Prague
+> +
+> +  The core sources and documentation on project page
+> +    [1] sources : https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
+> +    [2] datasheet : https://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
+> +
+> +  Integration in Xilinx Zynq SoC based system together with
+> +  OpenCores SJA1000 compatible controllers
+> +    [3] project : https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top
+> +  Martin Jerabek dimploma thesis with integration and testing
+> +  framework description
+> +    [4] PDF : https://dspace.cvut.cz/bitstream/handle/10467/80366/F3-DP-2019-Jerabek-Martin-Jerabek-thesis-2019-canfd.pdf
+> +
+> +maintainers:
+> +  - Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> +  - Ondrej Ille <ondrej.ille@gmail.com>
+> +  - Martin Jerabek <martin.jerabek01@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - const: ctu,ctucanfd
+> +          - const: ctu,canfd-2
 
-Since this is optional maybe use devm_gpiod_get_optional.
+The order is supposed to be be most specific compatible first, but this 
+seems backwards given 'ctu,ctucanfd' alone is allowed.
 
-If this is required for stability then if the GPIO is not present then 
-the parse_dt should return the error.
+> +      - const: ctu,ctucanfd
+> +
+> +  reg:
+> +    description:
+> +      mapping into bus address space, offset and size
 
-And use the devm_gpiod_get call.  Otherwise you are missing the 
-gpiod_put when exiting or removing the driver.
+No need to describe common properties unless you have something specific 
+to this device to say.
 
-Dan
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: |
+> +      interrupt source. For Zynq SoC system, format is <(is_spi) (number) (type)>
+> +      where is_spi defines if it is SPI (shared peripheral) interrupt,
+> +      the second number is translated to the vector by addition of 32
+> +      on Zynq-7000 systems and type is IRQ_TYPE_LEVEL_HIGH (4) for Zynq.
 
+That's all outside the scope of this binding.
 
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: |
+> +      phandle of reference clock (100 MHz is appropriate
+> +      for FPGA implementation on Zynq-7000 system).
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    ctu_can_fd_0: can@43c30000 {
+> +      compatible = "ctu,ctucanfd";
+> +      interrupts = <0 30 4>;
+> +      clocks = <&clkc 15>;
+> +      reg = <0x43c30000 0x10000>;
+> +    };
+> -- 
+> 2.11.0
+> 
