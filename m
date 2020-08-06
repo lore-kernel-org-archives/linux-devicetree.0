@@ -2,128 +2,123 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20711C433E0
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 22:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6387CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 23:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04F2222D02
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 22:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596751969;
-	bh=5kIwo2Mps+WdhyyhERg/v0Yl22kiC8RQaCXpPI4M014=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=x0k7/TJygJT8Iz5kJMk8mhvhPf0ei7VGKmDK7Hma+48VeSsD4mYlNqK24vitAPU4U
-	 gjdMkx+S0Tw0Ky0J8mQTKsXpQ6sB/4rVuaSEZFbeoGavR012eOeiZcsDjRxUaZfzUP
-	 43b4RMMywwfVNVumW6xs6noBIiYrweFJaxhOpMnY=
+	by mail.kernel.org (Postfix) with ESMTP id 6B3CF221E2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 23:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qz+Tzz7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbgHFWMs (ORCPT
+        id S1726198AbgHFXDk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 18:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgHFWMr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Aug 2020 18:12:47 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE374221E3;
-        Thu,  6 Aug 2020 22:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596751967;
-        bh=5kIwo2Mps+WdhyyhERg/v0Yl22kiC8RQaCXpPI4M014=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=InKJtaBBiNTqyGpsmNkDccmciz3oHLLWtcH3xB9h2+Vzs0MB1bUqnpN+kB/KuGDLm
-         vrVKeETgv4CVf3pfiEuyvS1p6bVA0WpFpdDmY+VQWV7ACFUzR1vK5Q1sKV5wXbb+AD
-         8eBlV9CcL2zJkfes/ta+8AnwX84RPfk7pMR/Ued0=
-Received: by mail-ot1-f53.google.com with SMTP id h22so74752otq.11;
-        Thu, 06 Aug 2020 15:12:46 -0700 (PDT)
-X-Gm-Message-State: AOAM5315Tnja29A1HsgZeSUWrvCtrCONpFK4yAanBfwQADLmrXR17wR8
-        pVa4zn6Ei3+Fdw2J+SE/uUOsm9PObd7t6Wma4Q==
-X-Google-Smtp-Source: ABdhPJymKfUI6jSAReX64xGfCidAykanzrZqSlJ6L628ZfqbwHcACImpWOlyFoKKUkxKjQjAZZyIRI+/aKWC/GjuN+U=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr8745864ote.107.1596751965884;
- Thu, 06 Aug 2020 15:12:45 -0700 (PDT)
+        Thu, 6 Aug 2020 19:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgHFXDi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 19:03:38 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B17C061575
+        for <devicetree@vger.kernel.org>; Thu,  6 Aug 2020 16:03:38 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y6so154071plt.3
+        for <devicetree@vger.kernel.org>; Thu, 06 Aug 2020 16:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=0gDnN//bxk4XCQG+5+85qQKDntN2R3o5FFO9hcqipr4=;
+        b=Qz+Tzz7bYWSKTO2D5D1zgMNC/JGFqIwqPZZilBd/61zHOwvpLorhkmc7e7VEaUMNzu
+         LnaRmb/RxkNitmzslzS10MrXEJp5npQp/zZZeMPjlconFW4iWIkykeZ/wB04ja2fGUB3
+         6OJdfKhct7H5dJi16+7wGmBn1PO/p/GPHw/Y8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=0gDnN//bxk4XCQG+5+85qQKDntN2R3o5FFO9hcqipr4=;
+        b=peha9xL+s5MxtzperDLQ6u0aKbb/3i8OFLRIYsB5s65goZCebMOJc596CAKDcTInqR
+         BRetBDMC0JOmQaOX46tWsa9E6/aj6qRedCldlGvL6JpqLQlUB/9a6N4mNbmICL5mzIKV
+         E3xd8qeSjUNgo4TAwJ33R9Fi7VdcqMPxB2qpKJxCE+3gfdu+M2OrcZqE8t1vicQYxt8c
+         AgKsU7gGFkVnF5HbKpYrcOSVSrRYNl/DWYcI0zoJpDWW/+CHvEEnTsGmt28HfUc94qG7
+         GooPKzWED6irzwwUq96exp1BAOY7NhwCvRhOVvW2ILbOAvyys81ALYlYbEGbJrYD3QVn
+         rX/A==
+X-Gm-Message-State: AOAM533cd0NULZ1lfQFTsacvj/ktQNOm+h/4GtxB71pik3i9p/3971WT
+        qh38UmLLqb0z9FWLXTsnJqkDnA==
+X-Google-Smtp-Source: ABdhPJxheayUk8uIULBY6NewH6D0OhojLErEsa5goOKcKVPS5xWNRVsItvYP7z12DSkLAXSq9aVcRA==
+X-Received: by 2002:a17:902:7405:: with SMTP id g5mr9862707pll.173.1596755017579;
+        Thu, 06 Aug 2020 16:03:37 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id j16sm8166331pgb.33.2020.08.06.16.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2020 16:03:36 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200731164853.3020946-1-campello@chromium.org>
- <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
- <20200801160639.1410944e@archlinux> <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com>
- <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com> <20200806191451.3ce5ec57@archlinux>
-In-Reply-To: <20200806191451.3ce5ec57@archlinux>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 6 Aug 2020 16:12:34 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
-Message-ID: <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid> <20200801160639.1410944e@archlinux> <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com> <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com> <20200806191451.3ce5ec57@archlinux> <CAL_JsqJou=yHsyQB+TUvwbNHDh81g7Lm7oWJfavYmPuYtxhREQ@mail.gmail.com>
 Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Daniel Campello <campello@chromium.org>,
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Campello <campello@chromium.org>,
         LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Douglas Anderson <dianders@chromium.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Douglas Anderson <dianders@chromium.org>, open list:
+        IIO SUBSYSTEM AND DRIVERS <linux-iio@vger.kernel.org>, ;
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     ;
+                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 06 Aug 2020 16:03:35 -0700
+Message-ID: <159675501533.1360974.12010874193333451805@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 12:14 PM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Mon, 3 Aug 2020 20:01:06 -0600
-> Rob Herring <robh+dt@kernel.org> wrote:
->
-> > On Mon, Aug 3, 2020 at 1:00 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Jonathan Cameron (2020-08-01 08:06:39)
-> > > > On Fri, 31 Jul 2020 10:48:38 -0600
-> > > > Daniel Campello <campello@chromium.org> wrote:
-> > > > > diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> > > > > new file mode 100644
-> > > > > index 00000000000000..5739074d3592fe
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> > > > > @@ -0,0 +1,65 @@
-> > > [...]
-> > > > > +
-> > > > > +  "#io-channel-cells":
-> > > > > +    const: 1
-> > > > > +
-> > > > > +required:
-> > > > > +  - compatible
-> > > > > +  - reg
-> > > > > +  - "#io-channel-cells"
-> > > >
-> > > > Missed this in earlier review (only noticed when I saw whilst santity
-> > > > checking earlier versions.
-> > > >
-> > > > Fairly sure we should only need #io-channel-cells if we have
-> > > > a consumer of a channel somewhere else in DT.  So it's not
-> > > > required as far as I can see.
-> > > >
-> > >
-> > > This is mostly a decision for Rob to make, but I would make it required
-> > > because the device is always an io channel provider. It may be that it
-> > > isn't providing anything in the DT to something else in the DT but it is
-> > > providing this information somewhere so always having to spell that out
-> > > is simple and doesn't hurt.
+Quoting Rob Herring (2020-08-06 15:12:34)
+> On Thu, Aug 6, 2020 at 12:14 PM Jonathan Cameron <jic23@kernel.org> wrote:
 > >
-> > I agree. If the user is split in a board file or overlay, we don't
-> > want to have to be adding it to the provider at that time.
->
-> That is perhaps a reasonable view point for devices with channels that
-> are likely to be used by consumer drivers, but in this particular case we
-> are talking about a proximity sensor.  So far I don't think we
-> have any consumer drivers for this type of sensor (I might have forgotten
-> one of course!)
+> > On Mon, 3 Aug 2020 20:01:06 -0600
+> > Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > > On Mon, Aug 3, 2020 at 1:00 PM Stephen Boyd <swboyd@chromium.org> wro=
+te:
+> > > >
+> > > > This is mostly a decision for Rob to make, but I would make it requ=
+ired
+> > > > because the device is always an io channel provider. It may be that=
+ it
+> > > > isn't providing anything in the DT to something else in the DT but =
+it is
+> > > > providing this information somewhere so always having to spell that=
+ out
+> > > > is simple and doesn't hurt.
+> > >
+> > > I agree. If the user is split in a board file or overlay, we don't
+> > > want to have to be adding it to the provider at that time.
+> >
+> > That is perhaps a reasonable view point for devices with channels that
+> > are likely to be used by consumer drivers, but in this particular case =
+we
+> > are talking about a proximity sensor.  So far I don't think we
+> > have any consumer drivers for this type of sensor (I might have forgott=
+en
+> > one of course!)
+>=20
+> Indeed, I didn't consider whether it made sense in the first place. So
+> should it just not be specified at all in this case? I can't really
+> picture what the usecase for a consumer node would be.
+>=20
 
-Indeed, I didn't consider whether it made sense in the first place. So
-should it just not be specified at all in this case? I can't really
-picture what the usecase for a consumer node would be.
-
-Rob
+I was thinking that a WiFi DT node may directly grab the channel from
+this device and use this for SAR power changes. That would avoid going
+all the way to userspace to figure out that something is close proximity
+and then tell WiFi to reduce power.
