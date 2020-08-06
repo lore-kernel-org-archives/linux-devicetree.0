@@ -2,416 +2,161 @@ Return-Path: <SRS0=kUjg=BQ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5F5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ECFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26AB23119
-	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596733622;
-	bh=wStRA4EuUEMGRja+kX3fM5/SC48dkvfk/I/nuiwn6b8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1EzvEouC572cdQxIGFiSf2Cwtn9yq5WIzV+CSYNXzZZRS0D4OCwxLQim3bH8hhLf3
-	 IjFOtgJ1uhs63P3iVY7fFTp52vLT2+AO1xOjE5km/szl8BkQQhSW+tB08VCon/AOAf
-	 CrRcaDZgWGchahoc5m9ugJ4B+x33HrX3Q0uTmd1k=
+	by mail.kernel.org (Postfix) with ESMTP id 3836F20786
+	for <linux-devicetree@archiver.kernel.org>; Thu,  6 Aug 2020 17:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbgHFRGs (ORCPT
+        id S1729957AbgHFRIq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 13:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45856 "EHLO
+        Thu, 6 Aug 2020 13:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730045AbgHFRGQ (ORCPT
+        with ESMTP id S1730024AbgHFRGQ (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 13:06:16 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3916CC0D941F;
-        Thu,  6 Aug 2020 08:44:57 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id z3so30607426ilh.3;
-        Thu, 06 Aug 2020 08:44:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0CY+HYyjcG5KgYKlxO2qEhQLPlSK9IFLuMhYDCyAc1U=;
-        b=FjP3381/2AAw3DqbYidJGmmAULC84Azwx5b+lMkcgiohdEZk9beIEOJwMygnxE8G1b
-         ytLdbjNQ0Kfuvb+WTqTp7+oAZwftU9MRIMq1WwBlrYAIkX1vywy3n/SJ+dvdu8QZqtxQ
-         YEAjT8+TYSEvuaYS2L2eJQEYEATXR0IwRbikzXrwbpoqyCLX5is3kFieVz0vYqmrs58U
-         wTFLDcIHxURXKNQEVzndUJNE7eZg0EF1lJGwtoqrtL5aRcmRPpza494eDiXspfFfePGe
-         s6O/GFG7tb2+7NJfhT9HvlATsGqV2g0ewjS+iaRtr/DC+UsX0ezh8JcyEVsflf4M/jBg
-         acNA==
-X-Gm-Message-State: AOAM532AE+b0qNJAYPat9huQvwcMnbK9/xfEK/ZHYqMXpr4QKaFYTStP
-        LpYYHO1XyIsfCVyMeiLnmy/7qJo=
-X-Google-Smtp-Source: ABdhPJxKrJnGykiV0FQHbkUGGMsTv5GN+QsIdL7usfPBxcMT6Pw2io1HLz3mOlEhGcOsgiGNkkPcJA==
-X-Received: by 2002:a5e:d519:: with SMTP id e25mr10418055iom.36.1596724429814;
-        Thu, 06 Aug 2020 07:33:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 13sm1680404ilj.49.2020.08.06.07.33.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2020 07:33:49 -0700 (PDT)
-Received: (nullmailer pid 813532 invoked by uid 1000);
-        Thu, 06 Aug 2020 14:33:48 -0000
-Date:   Thu, 6 Aug 2020 08:33:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rohit kumar <rohitkr@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 12/12] dt-bindings: sound: lpass-cpu: Move to yaml
- format
-Message-ID: <20200806143348.GA807751@bogus>
-References: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
- <1596528453-11437-13-git-send-email-rohitkr@codeaurora.org>
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D6B12C002156;
+        Thu,  6 Aug 2020 08:55:08 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 076Frg7D045971;
+        Thu, 6 Aug 2020 17:53:42 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 076FrfBn002665;
+        Thu, 6 Aug 2020 17:53:41 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 076FrfWs002664;
+        Thu, 6 Aug 2020 17:53:41 +0200
+X-Authentication-Warning: haar.felk.cvut.cz: pisa set sender to pisa@cmp.felk.cvut.cz using -f
+From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
+To:     Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/6] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
+Date:   Thu, 6 Aug 2020 17:53:40 +0200
+User-Agent: KMail/1.9.10
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-can@vger.kernel.org,
+        devicetree@vger.kernel.org, mkl@pengutronix.de,
+        socketcan@hartkopp.net, wg@grandegger.com, davem@davemloft.net,
+        mark.rutland@arm.com, c.emde@osadl.org, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
+        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com
+References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz> <20200804092021.yd3wisz3g2ed6ioe@duo.ucw.cz> <20200806144713.GA829771@bogus>
+In-Reply-To: <20200806144713.GA829771@bogus>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <1596528453-11437-13-git-send-email-rohitkr@codeaurora.org>
+Message-Id: <202008061753.40832.pisa@cmp.felk.cvut.cz>
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 076Frg7D045971
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached, score=-0.1,
+        required 6, BAYES_00 -0.50, KHOP_HELO_FCRDNS 0.40,
+        NICE_REPLY_A -0.00, SPF_HELO_NONE 0.00, SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1597334025.32967@lL+aMP+/PLx5Ni1jQOKRFQ
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:37:33PM +0530, Rohit kumar wrote:
-> Update lpass-cpu binding with yaml formats.
-> 
-> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-> ---
->  .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 130 ---------------
->  .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 179 +++++++++++++++++++++
->  2 files changed, 179 insertions(+), 130 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-> deleted file mode 100644
-> index c07202c..00000000
-> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-> +++ /dev/null
-> @@ -1,130 +0,0 @@
-> -* Qualcomm Technologies LPASS CPU DAI
-> -
-> -This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
-> -
-> -Required properties:
-> -
-> -- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
-> -			  "qcom,sc7180-lpass-cpu"
-> -- clocks		: Must contain an entry for each entry in clock-names.
-> -- clock-names		: A list which must include the following entries:
-> -				* "ahbix-clk"
-> -				* "mi2s-osr-clk"
-> -				* "mi2s-bit-clk"
-> -			: required clocks for "qcom,lpass-cpu-apq8016"
-> -				* "ahbix-clk"
-> -				* "mi2s-bit-clk0"
-> -				* "mi2s-bit-clk1"
-> -				* "mi2s-bit-clk2"
-> -				* "mi2s-bit-clk3"
-> -				* "pcnoc-mport-clk"
-> -				* "pcnoc-sway-clk"
-> -			: required clocks for "qcom,lpass-cpu-sc7180"
-> -				* "audio-core"
-> -				* "mclk0"
-> -				* "mi2s-bit-clk0"
-> -				* "mi2s-bit-clk1"
-> -				* "pcnoc-sway-clk"
-> -				* "pcnoc-mport-clk"
-> -
-> -- interrupts		: Must contain an entry for each entry in
-> -			  interrupt-names.
-> -- interrupt-names	: A list which must include the following entries:
-> -				* "lpass-irq-lpaif"
-> -- pinctrl-N		: One property must exist for each entry in
-> -			  pinctrl-names.  See ../pinctrl/pinctrl-bindings.txt
-> -			  for details of the property values.
-> -- pinctrl-names		: Must contain a "default" entry.
-> -- reg			: Must contain an address for each entry in reg-names.
-> -- reg-names		: A list which must include the following entries:
-> -				* "lpass-lpaif"
-> -- #address-cells	: Must be 1
-> -- #size-cells		: Must be 0
-> -
-> -
-> -
-> -Optional properties:
-> -
-> -- qcom,adsp		: Phandle for the audio DSP node
-> -
-> -By default, the driver uses up to 4 MI2S SD lines, for a total of 8 channels.
-> -The SD lines to use can be configured by adding subnodes for each of the DAIs.
-> -
-> -Required properties for each DAI (represented by a subnode):
-> -- reg			: Must be one of the DAI IDs
-> -			  (usually part of dt-bindings header)
-> -- qcom,playback-sd-lines: List of serial data lines to use for playback
-> -			  Each SD line should be represented by a number from 0-3.
-> -- qcom,capture-sd-lines	: List of serial data lines to use for capture
-> -			  Each SD line should be represented by a number from 0-3.
-> -
-> -Note that adding a subnode changes the default to "no lines configured",
-> -so both playback and capture lines should be configured when a subnode is added.
-> -
-> -Examples:
-> -1)
-> -
-> -lpass@28100000 {
-> -	compatible = "qcom,lpass-cpu";
-> -	clocks = <&lcc AHBIX_CLK>, <&lcc MI2S_OSR_CLK>, <&lcc MI2S_BIT_CLK>;
-> -	clock-names = "ahbix-clk", "mi2s-osr-clk", "mi2s-bit-clk";
-> -	interrupts = <0 85 1>;
-> -	interrupt-names = "lpass-irq-lpaif";
-> -	pinctrl-names = "default", "idle";
-> -	pinctrl-0 = <&mi2s_default>;
-> -	pinctrl-1 = <&mi2s_idle>;
-> -	reg = <0x28100000 0x10000>;
-> -	reg-names = "lpass-lpaif";
-> -	qcom,adsp = <&adsp>;
-> -
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -
-> -	/* Optional to set different MI2S SD lines */
-> -	dai@3 {
-> -		reg = <MI2S_QUATERNARY>;
-> -		qcom,playback-sd-lines = <0 1>;
-> -	};
-> -};
-> -
-> -2)
-> -
-> -#include <dt-bindings/sound/sc7180-lpass.h>
-> -
-> -lpass_cpu: lpass {
-> -	compatible = "qcom,sc7180-lpass-cpu";
-> -
-> -	reg = <0 0x62F00000 0 0x29000>;
-> -
-> -	iommus = <&apps_smmu 0x1020 0>;
-> -
-> -	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> -	clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_CORE_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
-> -		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
-> -	clock-names = "pcnoc-sway-clk", "audio-core",
-> -			"mclk0", "pcnoc-mport-clk",
-> -			"mi2s-bit-clk0", "mi2s-bit-clk1";
-> -	interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
-> -	interrupt-names = "lpass-irq-lpaif";
-> -
-> -
-> -	#sound-dai-cells = <1>;
-> -
-> -	#address-cells = <1>;
-> -	#size-cells = <0>;
-> -
-> -	mi2s-primary@0 {
-> -		reg = <MI2S_PRIMARY>;
-> -		qcom,playback-sd-lines = <1>;
-> -		qcom,capture-sd-lines = <0>;
-> -	};
-> -
-> -	mi2s-secondary@1 {
-> -		reg = <MI2S_SECONDARY>;
-> -		qcom,playback-sd-lines = <0>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> new file mode 100644
-> index 00000000..5c1881d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-> @@ -0,0 +1,179 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,lpass-cpu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies Inc. LPASS CPU dai driver bindings
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +  - Rohit kumar <rohitkr@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm Technologies Inc. SOC Low-Power Audio SubSystem (LPASS) that consist
-> +  of MI2S interface for audio data transfer on external codecs. LPASS cpu driver
-> +  is a module to configure Low-Power Audio Interface(LPAIF) core registers
-> +  across different IP versions.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,lpass-cpu
-> +      - qcom,apq8016-lpass-cpu
-> +      - qcom,sc7180-lpass-cpu
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: LPAIF core registers
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 6
-> +
-> +  clock-names:
-> +    minItems: 3
-> +    maxItems: 6
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: LPAIF DMA buffer interrupt
-> +
-> +  qcom,adsp:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle for the audio DSP node
-> +
-> +  iommus:
-> +    maxItems: 1
-> +    description: Phandle to apps_smmu node with sid mask
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  "(^mi2s-[0-9a-f]$|mi2s)":
+Hello Pavel and Rob,
 
-I believe this will work:
+thanks much for review.
 
-"^mi2s(-[0-9a-f])?$"
+On Thursday 06 of August 2020 16:47:13 Rob Herring wrote:
+> On Tue, Aug 04, 2020 at 11:20:21AM +0200, Pavel Machek wrote:
+> > On Tue 2020-08-04 11:18:17, Pavel Machek wrote:
+> > > Hi!
+> > >
+> > > > The commit text again to make checkpatch happy.
+> > >
+> > > ?
 
-> +    type: object
-> +    description: Required properties for each DAI
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +        description: Must be one of the DAI ID
-> +
-> +    required:
-> +      - reg
+The checkpatch reports as a problem when there is no description
+of the patch. At least for patch
 
-       additionalProperties: false
+  [PATCH v4 1/6] dt-bindings: vendor-prefix: add prefix for the Czech Technical University in Prague.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - '#sound-dai-cells'
-> +
-> +additionalProperties: false
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,lpass-cpu
-> +
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          items:
-> +            - const: ahbix-clk
-> +            - const: mi2s-osr-clk
-> +            - const: mi2s-bit-clk
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,apq8016-lpass-cpu
-> +
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          items:
-> +            - const: ahbix-clk
-> +            - const: mi2s-bit-clk0
-> +            - const: mi2s-bit-clk1
-> +            - const: mi2s-bit-clk2
-> +            - const: mi2s-bit-clk3
-> +            - const: pcnoc-mport-clk
-> +            - const: pcnoc-sway-clk
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,sc7180-lpass-cpu
-> +
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          items:
-> +            - const: pcnoc-sway-clk
-> +            - const: audio-core
-> +            - const: mclk0
-> +            - const: pcnoc-mport-clk
-> +            - const: mi2s-bit-clk0
-> +            - const: mi2s-bit-clk1
-> +      required:
-> +        - iommus
-> +        - power-domains
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/sound/sc7180-lpass.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        lpass@62f00000 {
-> +            compatible = "qcom,sc7180-lpass-cpu";
-> +
-> +            reg = <0 0x62f00000  0 0x29000>;
-> +
-> +            iommus = <&apps_smmu 0x1020 0>;
-> +            power-domains = <&lpass_hm 0>;
-> +
-> +            clocks = <&gcc 131>,
-> +                 <&lpasscorecc 6>,
-> +                 <&lpasscorecc 7>,
-> +                 <&lpasscorecc 10>,
-> +                 <&lpasscorecc 8>,
-> +                 <&lpasscorecc 9>;
-> +
-> +            clock-names = "pcnoc-sway-clk", "audio-core",
-> +                          "mclk0", "pcnoc-mport-clk",
-> +                          "mi2s-bit-clk0", "mi2s-bit-clk1";
-> +
-> +            interrupts = <0 160 1>;
-> +
-> +            #sound-dai-cells = <1>;
-> +
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            /* Optional to set different MI2S SD lines */
-> +            mi2s-primary@0 {
-> +                reg = <MI2S_PRIMARY>;
-> +                qcom,playback-sd-lines = <1>;
-> +                qcom,capture-sd-lines = <0>;
+I consider that little pontificate but I have fullfiled its suggestion
+with remark, that in this case, It is not my intention to add these
+promotions. I remove the reference to patchcheck from these commit messages.
 
-These 2 aren't documented.
+> > > > +    oneOf:
+> > > > +      - items:
+> > > > +          - const: ctu,ctucanfd
+> > > > +          - const: ctu,canfd-2
+> > > > +      - const: ctu,ctucanfd
+> > >
+> > > For consistency, can we have ctu,canfd-1, ctu,canfd-2?
+> >
+> > Make it ctu,ctucanfd-1, ctu,ctucanfd-2... to make it consistent with
+> > the file names.
+>
+> If you are going to do version numbers, please define where they come
+> from. Hopefully some tag of the h/w IP version...
+>
+> Better yet, put version numbers in the h/w registers itself and you
+> don't need different compatibles.
 
-Rob
+The actual major version of the core is 2. The minor intended
+for release was 1. But we wait for driver inclusion and release
+and IP core release has not been realized. Sources moved to
+2.2-pre version and compiled core reports 2.2 now.
+There is added control bit for protocol exception
+behavior selection and minor enhancements in sync of standard
+and data rate bittimes starts.
+
+Yes, version can be obtained from hardware.
+There is magic and version in the first core register.
+See 3.1.1 DEVICE_ID section of the manual (page 22/28)
+
+  http://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
+
+As for the DT identifier we use "ctu,ctucanfd" in more projects already.
+Some devices are in the wild now. So I would prefer to keep compatibility
+with that name. Other name reflects that this driver is compatible with major
+version 2 of the core. It can be "ctu,ctucanfd-2". I am not sure if the
+repeat of "ctu" is good idea, but yes, full sources prefix is "ctucanfd".
+The second alias can be omitted alltogether. But I am not sure, there can
+be one day fundamental change between IP core versions which would be better
+handled by change of PCI ID and DT ID. It is questionable if attempt to keep
+single driver for more too different versions would be more manageable
+or convoluted than two fully independent ones. May it be we do not need
+to solve that because by that time it would be "ctu,ctucanxl".
+
+At this time, our actual first first choic for the IP core identifier
+is ctu,ctucanfd.
+
+As for the pointed description, I would remove them from version 5
+according to your reference. My personal one is to keep documentation
+(even of actual/local functional setup) directly in the sources and mainline
+to find it out when I or somebody else need to recreate or update designs,
+my biological memory is already worn out by past events.
+
+I am not sure if I should wait for subsystem maintainers review now
+or sent new patches version. I may get to its preparation tommorrow
+or may it be later because I want to take some time in
+countrysite/mountains.
+
+Best wishes
+
+                Pavel
+-- 
+                Pavel Pisa
+    phone:      +420 603531357
+    e-mail:     pisa@cmp.felk.cvut.cz
+    Department of Control Engineering FEE CVUT
+    Karlovo namesti 13, 121 35, Prague 2
+    university: http://dce.fel.cvut.cz/
+    personal:   http://cmp.felk.cvut.cz/~pisa
+    projects:   https://www.openhub.net/accounts/ppisa
+    CAN related:http://canbus.pages.fel.cvut.cz/
+
