@@ -2,31 +2,31 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6D5C433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 17:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3929C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 17:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E70BD22CF6
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 17:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2DAC2086A
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 17:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgHGRuA (ORCPT
+        id S1728244AbgHGRuT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 13:50:00 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:53015 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728080AbgHGRt7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 13:49:59 -0400
+        Fri, 7 Aug 2020 13:50:19 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:29111 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728228AbgHGRuT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 13:50:19 -0400
 X-IronPort-AV: E=Sophos;i="5.75,446,1589209200"; 
-   d="scan'208";a="53937333"
+   d="scan'208";a="54150750"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 08 Aug 2020 02:49:57 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 08 Aug 2020 02:50:18 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id F03A74004BA6;
-        Sat,  8 Aug 2020 02:49:54 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A30534004BA6;
+        Sat,  8 Aug 2020 02:50:15 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -39,45 +39,162 @@ To:     Geert Uytterhoeven <geert+renesas@glider.be>,
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 0/7] r8a7742: Enable DU and LVDS
-Date:   Fri,  7 Aug 2020 18:49:47 +0100
-Message-Id: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 7/7] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
+Date:   Fri,  7 Aug 2020 18:49:54 +0100
+Message-Id: <20200807174954.14448-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+The iwg21d comes with a 7" capacitive touch screen, therefore
+add support for it.
 
-This patch series adds support for DU and LVDS to r8a7742
-SoC and enables LCD support on r8a7742-iwg21d-q7 board.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 84 +++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
-This patch series applies on top of [1].
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
-    renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
-
-Cheers,
-Prabhakar
-
-Lad Prabhakar (7):
-  dt-bindings: display: renesas,du: Document the r8a7742 bindings
-  drm: rcar-du: Add r8a7742 support
-  dt-bindings: display: renesas,lvds: Document r8a7742 bindings
-  drm: rcar-du: lvds: Add r8a7742 support
-  ARM: dts: r8a7742: Add DU support
-  ARM: dts: r8a7742: Add LVDS support
-  ARM: dts: r8a7742-iwg21d-q7: Add LCD support
-
- .../bindings/display/bridge/renesas,lvds.txt  |  1 +
- .../bindings/display/renesas,du.txt           |  2 +
- arch/arm/boot/dts/r8a7742-iwg21d-q7.dts       | 84 +++++++++++++++++
- arch/arm/boot/dts/r8a7742.dtsi                | 89 +++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_du_drv.c         |  5 +-
- drivers/gpu/drm/rcar-du/rcar_lvds.c           |  1 +
- 6 files changed, 180 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+index b3461a61a4bf..cf59fd61e422 100644
+--- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
++++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+@@ -30,6 +30,7 @@
+ 
+ /dts-v1/;
+ #include "r8a7742-iwg21m.dtsi"
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+@@ -52,6 +53,50 @@
+ 		clock-frequency = <26000000>;
+ 	};
+ 
++	lcd_backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&tpu 2 5000000 0>;
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		pinctrl-0 = <&backlight_pins>;
++		pinctrl-names = "default";
++		default-brightness-level = <7>;
++		enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
++	};
++
++	lvds-receiver {
++		compatible = "ti,ds90cf384a", "lvds-decoder";
++		powerdown-gpios = <&gpio5 28 GPIO_ACTIVE_LOW>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				lvds_receiver_in: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				lvds_receiver_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
++
++	panel {
++		compatible = "edt,etm0700g0dh6";
++		backlight = <&lcd_backlight>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds_receiver_out>;
++			};
++		};
++	};
++
+ 	reg_1p5v: 1p5v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "1P5V";
+@@ -129,12 +174,31 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 		VDDD-supply = <&reg_1p5v>;
+ 	};
++
++	touch: touchpanel@38 {
++		compatible = "edt,edt-ft5406";
++		reg = <0x38>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
++	};
+ };
+ 
+ &cmt0 {
+ 	status = "okay";
+ };
+ 
++&du {
++	status = "okay";
++};
++
++&gpio0 {
++	touch-interrupt {
++		gpio-hog;
++		gpios = <24 GPIO_ACTIVE_LOW>;
++		input;
++	};
++};
++
+ &hsusb {
+ 	pinctrl-0 = <&usb0_pins>;
+ 	pinctrl-names = "default";
+@@ -165,6 +229,11 @@
+ 		function = "avb";
+ 	};
+ 
++	backlight_pins: backlight {
++		groups = "tpu0_to2";
++		function = "tpu0";
++	};
++
+ 	i2c2_pins: i2c2 {
+ 		groups = "i2c2_b";
+ 		function = "i2c2";
+@@ -208,6 +277,17 @@
+ 	};
+ };
+ 
++&lvds0 {
++	status = "okay";
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&lvds_receiver_in>;
++			};
++		};
++	};
++};
++
+ &rcar_sound {
+ 	pinctrl-0 = <&sound_pins>;
+ 	pinctrl-names = "default";
+@@ -261,6 +341,10 @@
+ 	shared-pin;
+ };
+ 
++&tpu {
++	status = "okay";
++};
++
+ &usbphy {
+ 	status = "okay";
+ };
 -- 
 2.17.1
 
