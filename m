@@ -2,126 +2,90 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749A3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 12:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D56C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 12:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5628122CA1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 12:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E77122C9F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 12:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gJfiHdAa"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="t43ETIaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgHGMo0 (ORCPT
+        id S1725872AbgHGMwP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:44:26 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36770 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgHGMo0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 08:44:26 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 077CiMrb062525;
-        Fri, 7 Aug 2020 07:44:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596804262;
-        bh=SA/mjyJ9qsKYdqzDY+hhaGKzabuGPeWkwbkzS+s7smg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gJfiHdAavSwDlpcYenGNF5i6AEoGG1Oq9ba86fYZwdn2qVnm10Niz+wRRUmbDSZom
-         eZTQ75uIT5nH1sKCiTI0rxam61a7sVZhVoIDjF2HFNVmHciFYZUEMcPkTFpfclI4Ug
-         oxZqwFidRmE9XbtuveHZ6KzORe9J4I4N9kObCby0=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 077CiMHO000445
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 7 Aug 2020 07:44:22 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 7 Aug
- 2020 07:44:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 7 Aug 2020 07:44:22 -0500
-Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 077CiCeH072818;
-        Fri, 7 Aug 2020 07:44:20 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-j7200-som-p0: Add HyperFlash node
-Date:   Fri, 7 Aug 2020 18:14:07 +0530
-Message-ID: <20200807124407.12604-3-vigneshr@ti.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200807124407.12604-1-vigneshr@ti.com>
-References: <20200807124407.12604-1-vigneshr@ti.com>
+        Fri, 7 Aug 2020 08:52:15 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58663 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725815AbgHGMwP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 08:52:15 -0400
+X-UUID: e2ce0aac34324cc4a86a3828c652b6b6-20200807
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=mztOhQW0Qq5rF36HzmEccKSTcbg3ytjmt1H64T/6/Fw=;
+        b=t43ETIajGTKqWq9hYaCkVJTGesRh7ItdyoZ5aolm8/57Bkziyzfy2U/u0+7RQ/71pJm1ciMTVPc/wZWSKBavBMSfIbvpGSIAXSK0wEbevV3U+goJryIqUHkpJH8K1ORfEOyD3EBY7WxDrIZ4mv7iGA6hJRkut9rMbz0+uB7Vi4c=;
+X-UUID: e2ce0aac34324cc4a86a3828c652b6b6-20200807
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <mark-pk.tsai@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2053474008; Fri, 07 Aug 2020 20:52:10 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 7 Aug 2020 20:52:07 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 7 Aug 2020 20:52:07 +0800
+From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+To:     <maz@kernel.org>, Daniel Palmer <daniel@0x0f.com>,
+        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+CC:     <alix.wu@mediatek.com>, <devicetree@vger.kernel.org>,
+        <jason@lakedaemon.net>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
+        <robh+dt@kernel.org>, <tglx@linutronix.de>,
+        <yj.chiang@mediatek.com>
+Subject: Re: [PATCH 0/2] irqchip: irq-mt58xx: Add mt58xx series interrupt
+Date:   Fri, 7 Aug 2020 20:52:04 +0800
+Message-ID: <20200807125204.2739-1-mark-pk.tsai@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <654a81dcefb3024d762ff338d4bd7f14@kernel.org>
+References: <654a81dcefb3024d762ff338d4bd7f14@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-J7200 SoM has a HyperFlash connected to HyperBus memory controller. But
-HyperBus is muxed with OSPI, therefore keep HyperBus node disabled.
-Bootloader will detect the mux and enable the node as required.
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi | 36 +++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-index 22fc50bd5c4c4..0984977f381ad 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
-@@ -27,3 +27,39 @@ secure_ddr: optee@9e800000 {
- 		};
- 	};
- };
-+
-+&wkup_pmx0 {
-+	mcu_fss0_hpb0_pins_default: mcu-fss0-hpb0-pins-default {
-+		pinctrl-single,pins = <
-+			J721E_WKUP_IOPAD(0x0, PIN_OUTPUT, 1) /* (B6) MCU_OSPI0_CLK.MCU_HYPERBUS0_CK */
-+			J721E_WKUP_IOPAD(0x4, PIN_OUTPUT, 1) /* (C8) MCU_OSPI0_LBCLKO.MCU_HYPERBUS0_CKn */
-+			J721E_WKUP_IOPAD(0x2c, PIN_OUTPUT, 1) /* (D6) MCU_OSPI0_CSn0.MCU_HYPERBUS0_CSn0 */
-+			J721E_WKUP_IOPAD(0x30, PIN_OUTPUT, 1) /* (D7) MCU_OSPI0_CSn1.MCU_HYPERBUS0_RESETn */
-+			J721E_WKUP_IOPAD(0x8, PIN_INPUT, 1) /* (B7) MCU_OSPI0_DQS.MCU_HYPERBUS0_RWDS */
-+			J721E_WKUP_IOPAD(0xc, PIN_INPUT, 1) /* (D8) MCU_OSPI0_D0.MCU_HYPERBUS0_DQ0 */
-+			J721E_WKUP_IOPAD(0x10, PIN_INPUT, 1) /* (C7) MCU_OSPI0_D1.MCU_HYPERBUS0_DQ1 */
-+			J721E_WKUP_IOPAD(0x14, PIN_INPUT, 1) /* (C5) MCU_OSPI0_D2.MCU_HYPERBUS0_DQ2 */
-+			J721E_WKUP_IOPAD(0x18, PIN_INPUT, 1) /* (A5) MCU_OSPI0_D3.MCU_HYPERBUS0_DQ3 */
-+			J721E_WKUP_IOPAD(0x1c, PIN_INPUT, 1) /* (A6) MCU_OSPI0_D4.MCU_HYPERBUS0_DQ4 */
-+			J721E_WKUP_IOPAD(0x20, PIN_INPUT, 1) /* (B8) MCU_OSPI0_D5.MCU_HYPERBUS0_DQ5 */
-+			J721E_WKUP_IOPAD(0x24, PIN_INPUT, 1) /* (A8) MCU_OSPI0_D6.MCU_HYPERBUS0_DQ6 */
-+			J721E_WKUP_IOPAD(0x28, PIN_INPUT, 1) /* (A7) MCU_OSPI0_D7.MCU_HYPERBUS0_DQ7 */
-+		>;
-+	};
-+};
-+
-+&hbmc {
-+	/* OSPI and HBMC are muxed inside FSS, Bootloader will enable
-+	 * appropriate node based on board detection
-+	 */
-+	status = "disabled";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcu_fss0_hpb0_pins_default>;
-+	ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* 64MB Flash on CS0 */
-+		 <0x1 0x0 0x5 0x04000000 0x800000>; /* 8MB RAM on CS1 */
-+
-+	flash@0,0 {
-+		compatible = "cypress,hyperflash", "cfi-flash";
-+		reg = <0x0 0x0 0x4000000>;
-+	};
-+};
--- 
-2.28.0
+RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPiBPbiAyMDIwLTA4LTA2IDE1
+OjU4LCBEYW5pZWwgUGFsbWVyIHdyb3RlOg0KPiA+IEhpIE1hcmstUEssDQo+ID4gDQo+ID4gT24g
+VGh1LCA2IEF1ZyAyMDIwIGF0IDIzOjA4LCBNYXJrLVBLIFRzYWkgPG1hcmstcGsudHNhaUBtZWRp
+YXRlay5jb20+IA0KPiA+IHdyb3RlOg0KPiA+PiA+IERvIHlvdSBrbm93IGlmIGl0IHdvdWxkIGJl
+IHBvc3NpYmxlIHRvIGNvbmZpcm0gaWYgdGhleSBhcmUNCj4gPj4gPiB0aGUNCj4gPj4gPiBzYW1l
+IHRoaW5nPyBNZWRpYVRlayBib3VnaHQgTVN0YXIgYSBmZXcgeWVhcnMgYWdvIHNvIGl0IHNlZW1z
+IGxpa2VseQ0KPiA+PiA+IGJ1dCBJIGhhdmUgbm8gaGFyZCBpbmZvcm1hdGlvbi4NCj4gPj4gPg0K
+PiA+PiANCj4gPj4gWWVzLCBpdCdzIGZvciB0aGUgc2FtZSBpbnRlcnJ1cHQgY29udHJvbGxlciBJ
+UC4NCj4gPiANCj4gPiBUaGF0J3MgZ29vZCBuZXdzLiA6KQ0KPiA+IA0KPiA+PiA+IElmIHRoZXkg
+YXJlIHRoZSBzYW1lIHRoaW5nIGNvdWxkIHdlIHdvcmsgb24gbWFraW5nIG9uZSBzZXJpZXMgdGhh
+dA0KPiA+PiA+IHN1cHBvcnRzIGJvdGggdXNlIGNhc2VzPw0KPiA+PiANCj4gPj4gU3VyZSwgYW5k
+IEkgdGhpbmsgdGhlIGlycSBjb250cm9sbGVyIGRyaXZlciBzaG91bGQgc3VwcG9ydCBib3RoIHVz
+ZSANCj4gPj4gY2FzZXMuDQo+ID4+IFNvIGhvdyBhYm91dCBrZWVwIHRoZSBNVEsgdmVyc2lvbiBk
+cml2ZXI/DQo+ID4gDQo+ID4gSSdtIGZpbmUgd2l0aCB0aGF0LiBNYXliZSB5b3UgY2FuIHB1c2gg
+dGhlIE1USyB2ZXJzaW9uIGFuZCBJIGNhbiBzZW5kDQo+ID4gYSBzbWFsbCBwYXRjaCBhZnRlciB0
+aGF0IHRvIGFkZCB0aGUgc21hbGwgYml0cyBJIG5lZWQ/DQo+IA0KPiBJbiB0aGUgaW50ZXJlc3Qg
+b2YgYmVpbmcgdmVuZG9yIGFnbm9zdGljLCBwbGVhc2UgcmVuYW1lIHRoZSBwcm9wZXJ0aWVzDQo+
+IHN1Y2ggYXMgbWVkaWF0ZWssaXJxcy1tYXAtcmFuZ2UgdG8gc29tZXRoaW5nIGxlc3MgYnJhbmQt
+c3BlY2lmaWMuDQo+IFRoZSBjb21wYXRpYmxlIHN0cmluZyBzaG91bGQgYmUgZW5vdWdoLg0KDQpJ
+IGNhbid0IGZpbmQgdGhlIHN1aXRhYmxlIHByb3BlcnR5IGluIHN0YW5kYXJkIG9uZXMgdGhhdCBt
+YXRjaCB0aGUgY3VzdG9tDQpwcm9wZXJ0aWVzIGhlcmUuDQpBbmQgdGhlIHZlbmRvciBwcmVmaXhl
+ZCBydWxlIGlzIGRlc2NyaWJlZCBpbiBbMV0uDQoNClRoZSBpbnRlcnJ1cHQgY29udHJvbGxlciBp
+cyBmaXJzdCB1c2VkIGluIE1zdGFyIFRWIFNvQ3MuDQpOb3cgaXQncyB1c2VkIGluIE1USyBUViBh
+bmQgU2lnbWFzdGFyIFNvQ3MuDQpTbyBJIHRoaW5rIE1zdGFyIHByZWZpeGVkIHdvdWxkIG1ha2Ug
+bW9yZSBzZW5zZS4NCkkgd2lsbCByZW5hbWUgdGhlIGRyaXZlciBpbnRvIG1zdGFyLWludGMsIGFu
+ZCBNVEsgd2lsbCBtYWludGFpbiB0aGlzIGRyaXZlci4NCg0KWzFdIGh0dHBzOi8vd3d3Lmtlcm5l
+bC5vcmcvZG9jL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9ib290aW5nLXdpdGhvdXQtb2YudHh0
 
