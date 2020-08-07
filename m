@@ -2,169 +2,108 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17369C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 09:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BA2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 10:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC92221E5
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 09:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="FnPFmg0+"
+	by mail.kernel.org (Postfix) with ESMTP id 8C53F2177B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 10:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgHGJsy (ORCPT
+        id S1726750AbgHGKMP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 05:48:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgHGJsx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 05:48:53 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF7BC061575
-        for <devicetree@vger.kernel.org>; Fri,  7 Aug 2020 02:48:53 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u20so737116pfn.0
-        for <devicetree@vger.kernel.org>; Fri, 07 Aug 2020 02:48:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Qtqjn9bdXGvUfpcD1HWzU/py18DJffCjiF+w/RFjz2g=;
-        b=FnPFmg0+YjpnOkedvmWUx/ChyDyzoLbOYxMCplO9uSXgjyi2P9moYPhApSPzIst4Q/
-         FyVpEp9zRgs4lIOPwgA2WL+R4KAyqm6b1reDWc64DnQ+JNLRyC1CdS07wQVyYO0zSLug
-         LO8Tgr/oTyUjlzGhqSXRbsCFJMaaBRVMzOWCc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Qtqjn9bdXGvUfpcD1HWzU/py18DJffCjiF+w/RFjz2g=;
-        b=cLTu1pqNn9lGdt0i/GZV+V1Pq8NFEbRkhgOVYFJDUSv+G7XnBQN6TZCnKRsXCDh3as
-         jMcqaeEH/lz69o5b1kch9rcbadbTYpA0aFwRT0r1t2IoBdSkEeo/dKphS6/eVYOQbDx3
-         h1XTRP7toUfVvAU8/rvCxuhLgcenafMleqmQ47Xh8vSJia9IYBoNw4i9RqTwN9GmIGtl
-         SNLNZOaI6V1j5npQZuVCwpOTgadt8WftjltekN1qx/M7zTjAcgdCFOHgBMDxe3geBsBZ
-         jZnI6u+wu8of0RYPwRNE9XZ0qQE+P1kUiANuihMaI1y9p/11nTuuMZi9PZ6Bcd8GNbuW
-         JZ7w==
-X-Gm-Message-State: AOAM530J2iCgmxywJ4R8FvZCZiv0umEgiAzYoypliX1IpAUY9JxFqN6T
-        oxEbaNgtlu1G/FdTKgD55A7ltQ==
-X-Google-Smtp-Source: ABdhPJzQ/zkmkBdBxmXc5ZdCVmyPR4dyh4piPTo+ebtaM8xlE4gOHHzep/PgunOz6/hEUBRNDtgpfg==
-X-Received: by 2002:a62:7ac2:: with SMTP id v185mr12567409pfc.277.1596793733318;
-        Fri, 07 Aug 2020 02:48:53 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:6097:2d32:26bb:64fe])
-        by smtp.gmail.com with ESMTPSA id d65sm11412112pfc.97.2020.08.07.02.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 02:48:52 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v4 4/4] arm64: dts: rockchip: Add Radxa ROCK Pi 4C support
-Date:   Fri,  7 Aug 2020 15:18:26 +0530
-Message-Id: <20200807094826.12019-4-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200807094826.12019-1-jagan@amarulasolutions.com>
-References: <20200807094826.12019-1-jagan@amarulasolutions.com>
+        Fri, 7 Aug 2020 06:12:15 -0400
+Received: from mx.socionext.com ([202.248.49.38]:31411 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbgHGKMP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Aug 2020 06:12:15 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 07 Aug 2020 19:12:13 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 9FA22180BB5;
+        Fri,  7 Aug 2020 19:12:13 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 7 Aug 2020 19:12:13 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 2AAB04033C;
+        Fri,  7 Aug 2020 19:12:13 +0900 (JST)
+Received: from [10.212.5.35] (unknown [10.212.5.35])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 66107120138;
+        Fri,  7 Aug 2020 19:12:12 +0900 (JST)
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <20200714132727.GA13061@e121166-lin.cambridge.arm.com>
+ <293ed6fe-6e73-f664-c26e-0aef744ce933@socionext.com>
+Message-ID: <50936df1-313c-aa9b-14b5-975f5e4330df@socionext.com>
+Date:   Fri, 7 Aug 2020 19:12:12 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <293ed6fe-6e73-f664-c26e-0aef744ce933@socionext.com>
+Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rock PI 4C has AP6256 Wifi/BT, PoE, miniDP, USB Host enabled
-GPIO pin change compared to 4B, 4C.
+On 2020/07/15 19:04, Kunihiko Hayashi wrote:
+> Hi Lorenzo,
+> 
+> On 2020/07/14 22:27, Lorenzo Pieralisi wrote:
+>> On Thu, Jun 18, 2020 at 05:38:09PM +0900, Kunihiko Hayashi wrote:
+>>> The misc interrupts consisting of PME, AER, and Link event, is handled
+>>> by INTx handler, however, these interrupts should be also handled by
+>>> MSI handler.
+>>
+>> Define what you mean please.
 
-So, add or enable difference nodes/properties in 4C dts
-by including common dtsi.
+[snip]
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>> I think this is wrong. pp->irq_domain is the DWC MSI domain, how do
+>> you know that hwirq 0 *is* the AER/PME interrupt ?
+> 
+> When AER/PME drivers are probed, AER/PME interrupts are registered
+> as MSI-0.
+> 
+> The pcie_message_numbers() function refers the following fields of
+> PCI registers,
+> 
+>     - PCI_EXP_FLAGS_IRQ (for PME)
+>     - PCI_ERR_ROOT_AER_IRQ (for AER)
+> 
+> and decides AER/PME interrupts numbers in MSI domain.
+> Initial values of both fields are 0, so these interrupts are set to MSI-0.
+> 
+> However, pcie_uniphier driver doesn't know that these interrupts are MSI-0.
+> Surely using 0 here is wrong.
+> I think that the method to get virq for AER/PME from pcieport is needed.
+
+To avoid using hard-coded MSI-0, I'll add new function to get a virq number
+corresponding to each service (AER/PME) to portdrv.
+
+I'll update the series in v6.
+
+Thank you,
 ---
-Changes for v4, v3:
-- none
-Changes for v2:
-- update commit message
-- add radxa,rockpi4c
-
- arch/arm64/boot/dts/rockchip/Makefile         |  1 +
- .../boot/dts/rockchip/rk3399-rock-pi-4c.dts   | 51 +++++++++++++++++++
- 2 files changed, 52 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 8832d05c2571..02cdb3c4a6c1 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -35,6 +35,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4a.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4b.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64-v2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
-new file mode 100644
-index 000000000000..4c7ebb1c5d2d
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Radxa Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "rk3399-rock-pi-4.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK Pi 4C";
-+	compatible = "radxa,rockpi4c", "radxa,rockpi4", "rockchip,rk3399";
-+};
-+
-+&sdio0 {
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
-+		interrupt-names = "host-wake";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_host_wake_l>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
-+	};
-+};
-+
-+&vcc5v0_host {
-+	gpio = <&gpio3 RK_PD6 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&vcc5v0_host_en {
-+	rockchip,pins = <3 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
-+};
--- 
-2.25.1
-
+Best Regards
+Kunihiko Hayashi
