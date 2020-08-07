@@ -2,292 +2,328 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C9BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 15:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F123DC433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 16:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 894072224D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 15:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596815583;
-	bh=t2fo8nswvDUj9OgHJSB/JaXbuihZdBj0/aI3FhdbsfY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IX1skoMlprtXUffsKZ+7ihfZ6oyVfMZTRbThGtqu1Z8sKwa67Px4MiGUHpWGEhwWI
-	 VHrlu/1vrB3zauP0/wtm/dNJVt7ZI79TPMsTtEGVnhh462ldWXntVx1pSZqXVOCjza
-	 CSWU2+QfzyUbCdJOGc3GOH/l4jGS/WEe9gLy4P20=
+	by mail.kernel.org (Postfix) with ESMTP id D14FD22C9F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 16:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRp6iVZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgHGPxC (ORCPT
+        id S1726536AbgHGQAH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 11:53:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbgHGPxC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 7 Aug 2020 11:53:02 -0400
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232EA2224D;
-        Fri,  7 Aug 2020 15:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596815581;
-        bh=t2fo8nswvDUj9OgHJSB/JaXbuihZdBj0/aI3FhdbsfY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=svUTAYvAhVTToupAthkykPQs2Gi9PP0ArhrzQEgO0qcVFsE5SYa6HSeNKFkQUvBSy
-         9d4318C7dNrTi8p/eufc9bCJfiCP6fMwRHWTlTQdg66Fle0mjv0+1xMXI4t4EisJB9
-         vATS/ZsaAUttTPWLho8uDpRYRqZvHRKhciV9Ra3w=
-Received: by mail-ej1-f45.google.com with SMTP id kq25so2585095ejb.3;
-        Fri, 07 Aug 2020 08:53:01 -0700 (PDT)
-X-Gm-Message-State: AOAM533Xb/epPrYNIJSEKovlyQlXCNdy4s4NSrWhYoP7C+5M0mKHp7lt
-        hwru9qcT0GP94cLIWhE5Iiei3gmEoF2mT74XtQ==
-X-Google-Smtp-Source: ABdhPJywPDp7r/UHFFfAdrs9VZgY/N3hDuj3KDipoSAqFEn6JLt3Q7T8qsxFQsxjTQ/zqN2p9P9ZoUU9kLncn+GtEZw=
-X-Received: by 2002:a17:906:d92c:: with SMTP id rn12mr9564523ejb.187.1596815579698;
- Fri, 07 Aug 2020 08:52:59 -0700 (PDT)
+        Fri, 7 Aug 2020 12:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgHGQAG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 12:00:06 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE5FC061756;
+        Fri,  7 Aug 2020 09:00:06 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 74so1197498pfx.13;
+        Fri, 07 Aug 2020 09:00:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WPQQlSgEdI2Eagwa12liyv9Vg/vXkk+ke4oNOGSYqvM=;
+        b=oRp6iVZjiclZ3tQtkyXp+pOlN1Xt/hHOeFJc7zz9kiG+w1RpnlOK1vaCorLa+GVoZc
+         yoNdgE0dJewp5BukDmWT3Hfxo4m63LzsEvui5wytU7f4pwJ3eHDSFZUnlD0Tkg/liPLx
+         zfH1wHOOWl+B/uDAOAjPbLMMiMhLspqpOrCTtFwHR6eMKdems8TlIHSKkb8Facd24+v6
+         N6jNBLtvCWbZVZRE8n3J0hGJfOIiwOdu9IxZCXfFf44yzh5+Pq38F734m8nweOiV++Si
+         2nH9M98HdFCDf7m3nkyLgEk8CG0cDfpjqgi4IpDRxojcjEF1o4Lbo/u9UFOcGhwp16GC
+         pM1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=WPQQlSgEdI2Eagwa12liyv9Vg/vXkk+ke4oNOGSYqvM=;
+        b=bU4vYBA9ivWr0FOKhvxsYpGeOEfsd4UcOxnJ26csD15AOUGFQi0tLFKH3TjWCzojR7
+         WBwiapoz0gPyJIAIarTL6rik68dCbQ9L7bJbPiOITRV52J8ZJLQoDk75QfCG1MU81Ykl
+         K80l4MR8LN07ZA3zxWT2ZGWJgecvV7/OZfJyqlr04gaIPkm/boIHM2714svGxgtAyB6M
+         QdBgBqJWrvyl5SYFFZ0m3YsFmdzuB44tTMeKNziihIBemtndToTuEtCvng/IovjUusSo
+         +ahF1EkeOI7Xpq+tzRcFP1h/f76k4AyE5fIfF/7OZz2i85tX98nraUboBMxb7Lm4+iZ+
+         rbPA==
+X-Gm-Message-State: AOAM5331kl66kh79o4QhVeFesl/UpdVvo8pC8RWfXwgl4fAOYoxKo/b9
+        SGRo+foilc/7hTBsXVQomxs=
+X-Google-Smtp-Source: ABdhPJyUoNuSTCDVUJDJR+Rik5VFMf+3VlxkZ/J+FtOu2z9haZ5pRC6dABxqBugMSo+U3H3LAakcOA==
+X-Received: by 2002:a65:6287:: with SMTP id f7mr12493062pgv.307.1596816005684;
+        Fri, 07 Aug 2020 09:00:05 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b15sm10989133pjo.48.2020.08.07.09.00.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Aug 2020 09:00:05 -0700 (PDT)
+Date:   Fri, 7 Aug 2020 09:00:04 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     alexandru.tachici@analog.com
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v7 5/9] hwmon: pmbus: adm1266: read blackbox
+Message-ID: <20200807160004.GA39964@roeck-us.net>
 MIME-Version: 1.0
-References: <1596766948-29767-1-git-send-email-neal.liu@mediatek.com> <1596766948-29767-3-git-send-email-neal.liu@mediatek.com>
-In-Reply-To: <1596766948-29767-3-git-send-email-neal.liu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 7 Aug 2020 23:52:48 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8dhV8Ns4w9SqSpA7BvRO1gLn=hgRWU-hCJjNM6ZJf+rw@mail.gmail.com>
-Message-ID: <CAAOTY_8dhV8Ns4w9SqSpA7BvRO1gLn=hgRWU-hCJjNM6ZJf+rw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] soc: mediatek: add mt6779 devapc driver
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Neal:
-
-Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=887=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8810:34=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> MediaTek bus fabric provides TrustZone security support and data
-> protection to prevent slaves from being accessed by unexpected
-> masters.
-> The security violation is logged and sent to the processor for
-> further analysis or countermeasures.
->
-> Any occurrence of security violation would raise an interrupt, and
-> it will be handled by mtk-devapc driver. The violation
-> information is printed in order to find the murderer.
->
-> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+On Mon, Jul 27, 2020 at 07:19:24PM +0300, alexandru.tachici@analog.com wrote:
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
+> 
+> Use the nvmem kernel api to expose the black box
+> chip functionality to userspace.
+> 
+> Using this feature, the device is capable of recording
+> to nonvolatile flash memory the vital data about the
+> system status that caused the system to perform a
+> black box write.
+> 
+> A blackbox is 64 bytes of data containing all the
+> status registers, last two states of the sequencer,
+> timestamp and counters. The mapping of this data is
+> described in the adm1266 datasheet.
+> 
+> On power-up the driver sets the unix time to
+> the adm1266 using the SET_RTC command. This value
+> is incremented by an internal clock and it is used
+> as timestamp for the black box feature.
+> 
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 > ---
-
-[snip]
-
+>  drivers/hwmon/pmbus/adm1266.c | 165 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 165 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+> index 0ea016b7e113..b61a968d67f9 100644
+> --- a/drivers/hwmon/pmbus/adm1266.c
+> +++ b/drivers/hwmon/pmbus/adm1266.c
+> @@ -15,12 +15,19 @@
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/nvmem-provider.h>
+>  #include "pmbus.h"
+>  #include <linux/slab.h>
+> +#include <linux/timekeeping.h>
+>  
+> +#define ADM1266_BLACKBOX_CONFIG	0xD3
+>  #define ADM1266_PDIO_CONFIG	0xD4
+>  #define ADM1266_READ_STATE	0xD9
+> +#define ADM1266_READ_BLACKBOX	0xDE
+> +#define ADM1266_SET_RTC		0xDF
+>  #define ADM1266_GPIO_CONFIG	0xE1
+> +#define ADM1266_BLACKBOX_INFO	0xE6
+>  #define ADM1266_PDIO_STATUS	0xE9
+>  #define ADM1266_GPIO_STATUS	0xEA
+>  
+> @@ -37,6 +44,9 @@
+>  #define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
+>  #define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
+>  
+> +#define ADM1266_BLACKBOX_OFFSET		0x7F700
+> +#define ADM1266_BLACKBOX_SIZE		64
 > +
-> +#define PHY_DEVAPC_TIMEOUT     0x10000
+>  #define ADM1266_PMBUS_BLOCK_MAX		255
+>  
+>  struct adm1266_data {
+> @@ -45,11 +55,22 @@ struct adm1266_data {
+>  	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
+>  	struct i2c_client *client;
+>  	struct dentry *debugfs_dir;
+> +	struct nvmem_config nvmem_config;
+> +	struct nvmem_device *nvmem;
+> +	u8 *dev_mem;
+>  	struct mutex buf_mutex;
+>  	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+>  	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+>  };
+>  
+> +static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
+> +	{
+> +		.name           = "blackbox",
+> +		.offset         = ADM1266_BLACKBOX_OFFSET,
+> +		.bytes          = 2048,
+> +	},
+> +};
 > +
-> +/*
-> + * devapc_sync_vio_dbg - do "shift" mechansim" to get full violation inf=
-ormation.
-> + *                       shift mechanism is depends on devapc hardware d=
-esign.
-> + *                       Mediatek devapc set multiple slaves as a group.
-> + *                       When violation is triggered, violation info is =
-kept
-> + *                       inside devapc hardware.
-> + *                       Driver should do shift mechansim to sync full v=
-iolation
-> + *                       info to VIO_DBGs registers.
-> + *
-> + */
-> +static int devapc_sync_vio_dbg(struct mtk_devapc_context *ctx)
+>  DECLARE_CRC8_TABLE(pmbus_crc_table);
+>  
+>  /*
+> @@ -320,6 +341,142 @@ static void adm1266_init_debugfs(struct adm1266_data *data)
+>  				    adm1266_state_read);
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_NVMEM)
+
+Other drivers don't make this conditional, and I am not a friend of conditional
+code either if it can be avoided.
+
+The nvmem core supports dummy functions if NVMEM is not enabled.
+Either this is needed or not. If it is not needed, it should ignore nvmem
+registration errors. If it is, and only then, it should return an error.
+If it is mandatory, either select or depend on NVMEM in the Kconfig file.
+
+Thanks,
+Guenter
+
+> +static int adm1266_nvmem_read_blackbox(struct adm1266_data *data, u8 *read_buff)
 > +{
-> +       void __iomem *pd_vio_shift_sta_reg;
-> +       void __iomem *pd_vio_shift_sel_reg;
-> +       void __iomem *pd_vio_shift_con_reg;
-> +       int min_shift_group;
-> +       int ret;
-> +       u32 val;
+> +	int record_count;
+> +	char index;
+> +	u8 buf[5];
+> +	int ret;
 > +
-> +       pd_vio_shift_sta_reg =3D ctx->infra_base +
-> +                              ctx->data->vio_shift_sta_offset;
-> +       pd_vio_shift_sel_reg =3D ctx->infra_base +
-> +                              ctx->data->vio_shift_sel_offset;
-> +       pd_vio_shift_con_reg =3D ctx->infra_base +
-> +                              ctx->data->vio_shift_con_offset;
+> +	ret = i2c_smbus_read_block_data(data->client, ADM1266_BLACKBOX_INFO, buf);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +       /* Find the minimum shift group which has violation */
-> +       val =3D readl(pd_vio_shift_sta_reg);
-> +       if (!val)
-> +               return false;
+> +	if (ret != 4)
+> +		return -EIO;
 > +
-> +       min_shift_group =3D __ffs(val);
+> +	record_count = buf[3];
 > +
-> +       /* Assign the group to sync */
-> +       writel(0x1 << min_shift_group, pd_vio_shift_sel_reg);
+> +	for (index = 0; index < record_count; index++) {
+> +		ret = adm1266_pmbus_block_xfer(data, ADM1266_READ_BLACKBOX, 1, &index, read_buff);
+> +		if (ret < 0)
+> +			return ret;
 > +
-> +       /* Start syncing */
-> +       writel(0x1, pd_vio_shift_con_reg);
+> +		if (ret != ADM1266_BLACKBOX_SIZE)
+> +			return -EIO;
 > +
-> +       ret =3D readl_poll_timeout(pd_vio_shift_con_reg, val, val =3D=3D =
-0x3, 0,
-> +                                PHY_DEVAPC_TIMEOUT);
-> +       if (ret) {
-> +               dev_err(ctx->dev, "%s: Shift violation info failed\n", __=
-func__);
-> +               return false;
-> +       }
+> +		read_buff += ADM1266_BLACKBOX_SIZE;
+> +	}
 > +
-> +       /* Stop syncing */
-> +       writel(0x0, pd_vio_shift_con_reg);
-> +       writel(0x0, pd_vio_shift_sel_reg);
-
-This is redundant because you set this register before start syncing.
-
-> +       writel(0x1 << min_shift_group, pd_vio_shift_sta_reg);
-
-You read this register to find minimum shift group, but you write it
-back into this register, so this function would get the same minimum
-shift group in next time, isn't it?
-
-> +
-> +       return true;
+> +	return 0;
 > +}
 > +
-> +/*
-> + * devapc_extract_vio_dbg - extract full violation information after doi=
-ng
-> + *                          shift mechanism.
-> + */
-> +static void devapc_extract_vio_dbg(struct mtk_devapc_context *ctx)
+> +static bool adm1266_cell_is_accessed(const struct nvmem_cell_info *mem_cell, unsigned int offset,
+> +				     size_t bytes)
 > +{
-> +       struct mtk_devapc_vio_dbgs *vio_dbgs;
-
-struct mtk_devapc_vio_dbgs vio_dbgs;
-
-Use stack instead of allocating from heap.
-
-> +       void __iomem *vio_dbg0_reg;
-> +       void __iomem *vio_dbg1_reg;
+> +	unsigned int start_addr = offset;
+> +	unsigned int end_addr = offset + bytes;
+> +	unsigned int cell_start = mem_cell->offset;
+> +	unsigned int cell_end = mem_cell->offset + mem_cell->bytes;
 > +
-> +       vio_dbgs =3D devm_kzalloc(ctx->dev, sizeof(struct mtk_devapc_vio_=
-dbgs),
-> +                               GFP_KERNEL);
-> +       if (!vio_dbgs)
-> +               return;
-> +
-> +       vio_dbg0_reg =3D ctx->infra_base + ctx->data->vio_dbg0_offset;
-> +       vio_dbg1_reg =3D ctx->infra_base + ctx->data->vio_dbg1_offset;
-> +
-> +       vio_dbgs->vio_dbg0 =3D readl(vio_dbg0_reg);
-> +       vio_dbgs->vio_dbg1 =3D readl(vio_dbg1_reg);
-> +
-> +       /* Print violation information */
-> +       if (vio_dbgs->dbg0_bits.vio_w)
-> +               dev_info(ctx->dev, "Write Violation\n");
-> +       else if (vio_dbgs->dbg0_bits.vio_r)
-> +               dev_info(ctx->dev, "Read Violation\n");
-> +
-> +       dev_info(ctx->dev, "Bus ID:0x%x, Dom ID:0x%x, Vio Addr:0x%x\n",
-> +                vio_dbgs->dbg0_bits.mstid, vio_dbgs->dbg0_bits.dmnid,
-> +                vio_dbgs->vio_dbg1);
+> +	return start_addr <= cell_end && cell_start <= end_addr;
 > +}
 > +
-
-[snip]
-
-> +
-> +/*
-> + * start_devapc - unmask slave's irq to start receiving devapc violation=
-.
-> + */
-> +static void start_devapc(struct mtk_devapc_context *ctx)
+> +static int adm1266_read_mem_cell(struct adm1266_data *data, const struct nvmem_cell_info *mem_cell)
 > +{
-> +       void __iomem *pd_apc_con_reg;
+> +	u8 *mem_offset;
+> +	int ret;
 > +
-> +       pd_apc_con_reg =3D ctx->infra_base + ctx->data->apc_con_offset;
-> +       writel(BIT(31), pd_apc_con_reg);
-
-pd_apc_con_reg is used once, so
-
-writel(BIT(31), ctx->infra_base + ctx->data->apc_con_offset);
-
+> +	switch (mem_cell->offset) {
+> +	case ADM1266_BLACKBOX_OFFSET:
+> +		mem_offset = data->dev_mem + mem_cell->offset;
 > +
-> +       mask_module_irq(ctx, false);
+> +		memset(mem_offset, 0, ADM1266_BLACKBOX_SIZE);
+> +
+> +		ret = adm1266_nvmem_read_blackbox(data, mem_offset);
+> +		if (ret)
+> +			dev_err(&data->client->dev, "Could not read blackbox!");
+> +		return ret;
+> +	default:
+> +		return -EINVAL;
+> +	}
 > +}
 > +
-
-[snip]
-
-> +
-> +static int mtk_devapc_probe(struct platform_device *pdev)
+> +static int adm1266_nvmem_read(void *priv, unsigned int offset, void *val,
+> +			      size_t bytes)
 > +{
-> +       struct device_node *node =3D pdev->dev.of_node;
-> +       struct mtk_devapc_context *ctx;
-> +       u32 devapc_irq;
-> +       int ret;
+> +	const struct nvmem_cell_info *mem_cell;
+> +	struct adm1266_data *data = priv;
+> +	int ret;
+> +	int i;
 > +
-> +       if (IS_ERR(node))
-> +               return -ENODEV;
+> +	for (i = 0; i < data->nvmem_config.ncells; i++) {
+> +		mem_cell = &adm1266_nvmem_cells[i];
+> +		if (!adm1266_cell_is_accessed(mem_cell, offset, bytes))
+> +			continue;
 > +
-> +       ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-> +       if (!ctx)
-> +               return -ENOMEM;
+> +		ret = adm1266_read_mem_cell(data, mem_cell);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
 > +
-> +       ctx->data =3D of_device_get_match_data(&pdev->dev);
-> +       ctx->dev =3D &pdev->dev;
+> +	memcpy(val, data->dev_mem + offset, bytes);
 > +
-> +       ctx->infra_base =3D of_iomap(node, 0);
-> +       if (!ctx->infra_base)
-> +               return -EINVAL;
-> +
-> +       devapc_irq =3D irq_of_parse_and_map(node, 0);
-> +       if (!devapc_irq)
-> +               return -EINVAL;
-> +
-> +       ctx->infra_clk =3D devm_clk_get(&pdev->dev, "devapc-infra-clock")=
-;
-> +       if (IS_ERR(ctx->infra_clk))
-> +               return -EINVAL;
-> +
-> +       if (clk_prepare_enable(ctx->infra_clk))
-> +               return -EINVAL;
-> +
-> +       ret =3D devm_request_irq(&pdev->dev, devapc_irq,
-> +                              (irq_handler_t)devapc_violation_irq,
-> +                              IRQF_TRIGGER_NONE, "devapc", ctx);
-> +       if (ret) {
-> +               clk_disable_unprepare(ctx->infra_clk);
-> +               return ret;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, ctx);
-> +
-> +       start_devapc(ctx);
-> +
-> +       return 0;
+> +	return 0;
 > +}
 > +
-> +static int mtk_devapc_remove(struct platform_device *pdev)
+> +static int adm1266_config_nvmem(struct adm1266_data *data)
 > +{
-> +       struct mtk_devapc_context *ctx =3D platform_get_drvdata(pdev);
+> +	data->nvmem_config.name = dev_name(&data->client->dev);
+> +	data->nvmem_config.dev = &data->client->dev;
+> +	data->nvmem_config.root_only = true;
+> +	data->nvmem_config.read_only = true;
+> +	data->nvmem_config.owner = THIS_MODULE;
+> +	data->nvmem_config.reg_read = adm1266_nvmem_read;
+> +	data->nvmem_config.cells = adm1266_nvmem_cells;
+> +	data->nvmem_config.ncells = ARRAY_SIZE(adm1266_nvmem_cells);
+> +	data->nvmem_config.priv = data;
+> +	data->nvmem_config.stride = 1;
+> +	data->nvmem_config.word_size = 1;
+> +	data->nvmem_config.size = 0x80000;
 > +
-
-stop_devapc(ctx);
-
-Regards,
-Chun-Kuang.
-
-> +       if (ctx->infra_clk)
-> +               clk_disable_unprepare(ctx->infra_clk);
+> +	data->dev_mem = devm_kzalloc(&data->client->dev, data->nvmem_config.size, GFP_KERNEL);
+> +	if (!data->dev_mem)
+> +		return -ENOMEM;
 > +
-> +       return 0;
+> +	data->nvmem = devm_nvmem_register(&data->client->dev, &data->nvmem_config);
+> +	if (IS_ERR(data->nvmem)) {
+> +		dev_err(&data->client->dev, "Could not register nvmem!");
+> +		return PTR_ERR(data->nvmem);
+> +	}
+> +
+> +	return 0;
+> +}
+> +#else
+> +static int adm1266_config_nvmem(struct adm1266_data *data)
+> +{
+> +	return 0;
+> +}
+> +#endif /* CONFIG_NVMEM */
+> +
+> +static int adm1266_set_rtc(struct adm1266_data *data)
+> +{
+> +	time64_t kt;
+> +	char write_buf[6];
+> +	int i;
+> +
+> +	kt = ktime_get_seconds();
+> +
+> +	memset(write_buf, 0, sizeof(write_buf));
+> +
+> +	for (i = 0; i < 4; i++)
+> +		write_buf[2 + i] = (kt >> (i * 8)) & 0xFF;
+> +
+> +	return i2c_smbus_write_block_data(data->client, ADM1266_SET_RTC, sizeof(write_buf),
+> +					  write_buf);
 > +}
 > +
+>  static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  {
+>  	struct adm1266_data *data;
+> @@ -343,6 +500,14 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	ret = adm1266_set_rtc(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = adm1266_config_nvmem(data);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	ret = pmbus_do_probe(client, id, &data->info);
+>  	if (ret)
+>  		return ret;
