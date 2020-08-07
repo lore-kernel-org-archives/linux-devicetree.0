@@ -2,215 +2,110 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF51C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 08:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D323C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 09:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69DA0206B5
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 08:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F502177B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 09:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="P5BLbM7N"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V7I86E3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHGI5q (ORCPT
+        id S1727804AbgHGJjR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 04:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgHGI5p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 04:57:45 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA98C061756
-        for <devicetree@vger.kernel.org>; Fri,  7 Aug 2020 01:57:45 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x5so1053923wmi.2
-        for <devicetree@vger.kernel.org>; Fri, 07 Aug 2020 01:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H73Msn3ig8oo+rXLBRFR40qhkjSySvB7pfbrGJDIkto=;
-        b=P5BLbM7NaQMP5e2hJpp/jGb9n9cEXDqguDO01xB7EI9UcQR7OyzK98j0PVhTipFk+W
-         TQ70UzqxnBDEJangW88G9Dq+lqyXD9Rf/jm+IVd7toPT5l6IrZDIoKO127KmFgkwabTs
-         W14uS0QIQXZq8BKcRvIVDm4eJj+ZOC+728qNQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=H73Msn3ig8oo+rXLBRFR40qhkjSySvB7pfbrGJDIkto=;
-        b=Z9YyPZhijyAe5cBeJmM+vStpr6r792TqNXAHiEXLhUmRqr9mgugRtorYWkG6KgyUVp
-         ndEf6nYeECzusGDeoNidT6/WDqsipwOLGyuogtkiD2MZZeqYG9jbvqUGqYqwhscnm33h
-         1ZcxxYxIgUobZmrAq8Gl5uLuIgDKH6yXePYXRwxgIRlfaPa4YYBquPRqa0J4dMo2pDFu
-         rfG9MM7zEvd9uyorDSPqyQUyyPig6evOINWhOgewkhNqJKtEHuzVq5TrkEPc/VykYYZr
-         vXkWv5aGOmaq5w9NKqISvJurw4onCrn7iS8270/V6ttf1SDfhUviPNoICg1x67dtVfES
-         kiUw==
-X-Gm-Message-State: AOAM532GD17tCaEZdkEXDFt1o9QyxcM0iQtoSZrtmpb2GuISR+CBSQen
-        wrQeTnQKjpPLf5pek045CdyNYg==
-X-Google-Smtp-Source: ABdhPJynkqQfgSYGXyIhXXRsLuU2JaYCqT62Ezi3rAu3TCxoggostYXPfA0lWy6VQU0lDkGUgE8khA==
-X-Received: by 2002:a1c:df02:: with SMTP id w2mr12869666wmg.137.1596790663593;
-        Fri, 07 Aug 2020 01:57:43 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id o30sm9643520wra.67.2020.08.07.01.57.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 01:57:42 -0700 (PDT)
-Date:   Fri, 7 Aug 2020 10:57:40 +0200
-From:   daniel@ffwll.ch
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [v1] drm/msm/dpu: Fix reservation failures in modeset
-Message-ID: <20200807085740.GR6419@phenom.ffwll.local>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
+        Fri, 7 Aug 2020 05:39:17 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52350 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgHGJjQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 05:39:16 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0779cwpV020790;
+        Fri, 7 Aug 2020 04:38:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596793138;
+        bh=Ci3SQG5GuTu5PfVgX5SPec+hpQmMwKCLgIR+XPhEscc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=V7I86E3He3ICPEnFPJ60kxm8G0x6UY3g4dV1pFfZT51+oR2f1A/swiZ93BNqbwKyN
+         wkx2F34f/8JctQbFLF/aANYv6pI+5ECOKkAoxl+djwGg+Poo2BRYurSDgRrxJ1RttI
+         gPj0WrXko5rYJXKT6nBt5GeF2mi3XqNd8O5CV3Kc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0779cweJ084121;
+        Fri, 7 Aug 2020 04:38:58 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 7 Aug
+ 2020 04:38:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 7 Aug 2020 04:38:58 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0779csxd102220;
+        Fri, 7 Aug 2020 04:38:55 -0500
+Subject: Re: [PATCH v8 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
+ bridge
+To:     Swapnil Jakhade <sjakhade@cadence.com>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <Laurent.pinchart@ideasonboard.com>,
+        <robh+dt@kernel.org>, <a.hajda@samsung.com>,
+        <narmstrong@baylibre.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <yamonkar@cadence.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>, <praneeth@ti.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <1596713672-8146-3-git-send-email-sjakhade@cadence.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <0fe8e670-c9eb-729c-f013-28c53bd65abd@ti.com>
+Date:   Fri, 7 Aug 2020 12:38:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1596713672-8146-3-git-send-email-sjakhade@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 08:48:34AM -0700, Rob Clark wrote:
-> On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
-> >
-> > In TEST_ONLY commit, rm global_state will duplicate the
-> > object and request for new reservations, once they pass
-> > then the new state will be swapped with the old and will
-> > be available for the Atomic Commit.
-> >
-> > This patch fixes some of missing links in the resource
-> > reservation sequence mentioned above.
-> >
-> > 1) Creation of a duplicate state in test_only commit (Rob)
-> > 2) Allow resource release only during crtc_active false.
-> >
-> > For #2
-> > In a modeset operation, swap state happens well before disable.
-> > Hence clearing reservations in disable will cause failures
-> > in modeset enable.
-> >
-> > Sequence:
-> >     Swap state --> old, new
-> >     modeset disables --> virt disable
-> >     modeset enable --> virt modeset
-> >
-> > Allow reservations to be cleared only when crtc active is false
-> > as in that case there wont be any modeset enable after disable.
-> >
-> > Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> > ---
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> > index 63976dc..b85a576 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> > @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
-> >         dpu_kms = to_dpu_kms(priv->kms);
-> >         mode = &crtc_state->mode;
-> >         adj_mode = &crtc_state->adjusted_mode;
-> > -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> > +       global_state = dpu_kms_get_global_state(crtc_state->state);
-> >         trace_dpu_enc_atomic_check(DRMID(drm_enc));
-> >
-> >         /*
-> > @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
-> >         struct msm_drm_private *priv;
-> >         struct dpu_kms *dpu_kms;
-> >         struct dpu_global_state *global_state;
-> > +       struct drm_crtc_state *crtc_state;
-> >         int i = 0;
-> >
-> >         if (!drm_enc) {
-> > @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
-> >         priv = drm_enc->dev->dev_private;
-> >         dpu_kms = to_dpu_kms(priv->kms);
-> >         global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> > +       crtc_state = drm_enc->crtc->state;
-> >
-> >         trace_dpu_enc_disable(DRMID(drm_enc));
-> >
-> > @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
-> >
-> >         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
-> >
-> > -       dpu_rm_release(global_state, drm_enc);
-> > +       if (crtc_state->active_changed && !crtc_state->active)
-> > +               dpu_rm_release(global_state, drm_enc);
+Hi Swapnil,
+
+On 06/08/2020 14:34, Swapnil Jakhade wrote:
+> Add a new DRM bridge driver for Cadence MHDP DPTX IP used in TI J721e SoC.
+> MHDP DPTX IP is the component that complies with VESA DisplayPort (DP) and
+> embedded Display Port (eDP) standards. It integrates uCPU running the
+> embedded Firmware (FW) interfaced over APB interface.
 > 
-> I still think releasing the state in the atomic_commit() path is the
-> wrong thing to do.  In the commit path, the various state objects
-> should be immutable.. ie. in the atomic_test() path you derive the new
-> hw state (including assignment/release of resources), and
-> atomic_commit() is simply pushing the state down to the hw.
+> Basically, it takes a DPI stream as input and outputs it encoded in DP
+> format. Currently, it supports only SST mode.
 > 
-> Otherwise, this looks better than v1.
+> Co-developed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Co-developed-by: Jyri Sarha <jsarha@ti.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> ---
 
-Yeah this races and is total no-go. If you touch your state in commit
-(except some very specific exceptions), then a next TEST_ONLY atomic_check
-might duplicate the atomic state object in an incosistent state, and fail.
+<snip>
 
-Worse, this looks like if you race like that then you might duplicate an
-object with old reservations still in place, and then we've essentially
-leaked those resources and need to reboot. Yes most compositors use
-blocking modesets, but some actually do full nonblocking modesets.
+> +	mhdp_state = to_cdns_mhdp_bridge_state(new_state);
+> +
+> +	mhdp_state->current_mode = drm_mode_duplicate(bridge->dev, mode);
+> +	drm_mode_set_name(mhdp_state->current_mode);
+> +
 
-This stuff needs to be moved into the atomic_check code, and your commit
-code needs to be careful to use the right state (old or new) when pushing
-it into hw.
+current_mode is never freed, so this leaks memory.
 
-Cheers, Daniel
-
-> 
-> BR,
-> -R
-> 
-> >
-> >         mutex_unlock(&dpu_enc->enc_lock);
-> >  }
-> > --
-> > 1.9.1
-> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+ Tomi
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
