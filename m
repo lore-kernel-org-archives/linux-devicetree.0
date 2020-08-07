@@ -2,188 +2,162 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E163C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 11:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFFDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 11:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1538822C9F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 11:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C242075D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 11:46:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="YgGjELde";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="dipOJooK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgHGLhA convert rfc822-to-8bit (ORCPT
+        id S1728278AbgHGLq3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 07:37:00 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:43049 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgHGLg7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 07:36:59 -0400
-Received: by mail-oo1-f65.google.com with SMTP id z10so353625ooi.10;
-        Fri, 07 Aug 2020 04:36:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XXMM2VmPbdzScEgaWzC2c7QfQOtrLAuTY8gvz9Vc4VA=;
-        b=i2+bmzm6DH1N21mIeZptUZA7++/9Dot11W8Go1vfnZmv6NLxFyMUQ3NYRJuC/9zZy6
-         JX/bJkajC04xQ0mBs4txh8Yn7UV9MSBsecOVOhqPddopu6nuxkL6IbMmaXS/xAMW5Mvd
-         nv3umyDWILaKzFR7VW4BYeeOlryd9pgvlQ4pUTT9vXozKkZfSdocnpmAfzdm0Y0pWMOv
-         F5tLDf8S9Bh/f0zH0WTKncPNiKabeEPgjnv0/Wen5JEKC7M+AKARxSd/pGnNoYX0BaLm
-         sXcGmj0gCJQeZz+Z/yXvZrzWEKU6vP40BbDzJy5zcH3lwP7CZr0PjAWEfKMX45B+tbll
-         8TSw==
-X-Gm-Message-State: AOAM5321t5vfKYT5soHllJlIECFhExrcIHDvk9hNqFzsqTFdqXVR4wMV
-        ZLSjKRnGrwCzbJxf3irZSYkIYbyhRdwti3Lbm18=
-X-Google-Smtp-Source: ABdhPJzvkXusENrHFbx7Z4UeU5tcAYrWmu2wMgV9PP1LU7MWabSySITzZd9SeQneUYYb9H/JEkRsCIws54cijEZ+u5w=
-X-Received: by 2002:a4a:4201:: with SMTP id h1mr12077660ooj.1.1596800217309;
- Fri, 07 Aug 2020 04:36:57 -0700 (PDT)
+        Fri, 7 Aug 2020 07:46:29 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:12908 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727783AbgHGLq3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 07:46:29 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 077BhO1T011150;
+        Fri, 7 Aug 2020 04:46:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=DYsKn1aOnKpLqJ0DlGanpW9unfAJnnZiELnORBWZSD4=;
+ b=YgGjELdecskDwS9rz+MC+KhrJVS7EHZfNX892MeNL7TQkrZrlnh8NQ217pFIm1zpF6A3
+ 1GQWoVH7ymRqMQNs4uLzwuZt7nRWeR3M3/TffC9pH345zXAXR6RNzM2K0HK0UjBy0Xw+
+ nj8LPEI015r7NXWwXhCs5yKnhzuLB+T87ZSiV+tue+cdQ+ECoKJaJBkeZSCMripWCQB5
+ ercELIIKQDhnlKup2hmxAZ/WSVlkFjxXFC9CYiJPNnpQTY5YrvAPtcIHL2sM/q52eHGg
+ KtrX3roJ2+vUBy9Ye2hobv4QnfNyPoUJQsEYqGU2ecKzi5urWcdb1LGFsDbuKRECnnNX wA== 
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2175.outbound.protection.outlook.com [104.47.56.175])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 32nme0mc39-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Aug 2020 04:46:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mrNW4fA1+v39zh/udvVciwMve+NNBStH8lY6spDjl0SmwtQdUPI8bFuFq+b8qIwsyy5OHoyOfkAO+MYb/dukcZkr42npcYLDx87fnbDdITiWef01BeZyKOdBzHTqzYqu2eJwXc6KYi9SVQjD8PcH5xFXVgWcK6wjT8ngI3LEXXjkryQcssPtkoD+NiNPQxYx44L0MVMm3EsvCSx7OILLE7C6w40W0SUSZmJfPt7c+MT/It+DOnO4rjPF5DTA0uFIFpSzOe+Ysr7b4UHvfHimV/ZUyWd9P78WiCMvUgjasHRuDFXdYJwymqkjvFAQxcsOJmqeO/ZHfRBe2jrdJOblJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DYsKn1aOnKpLqJ0DlGanpW9unfAJnnZiELnORBWZSD4=;
+ b=PLA9okadL2N7U62MBdFbJf/EPwgxY/5yixbv+RwEAqjxlHVBd9ClwcVcogAOjSKNAowDGTSobUEvc7i2Fi/SfGynwVdGGWlpZwP5L+YGWhNY07xOtM0o3t+UHFA6K7h/xk5VmoOXAxBXV07m/iyEfSxvq78KhQIqueOeAGipsGE9WxwsqxEOGJyja8OCjjUFpkg9gszsFSWeamup4/LDcSXMNxIX4fqVr3WSSpJimepiYQQxPzCAEkRWJtnHGuGthKemH1X1xisSYswtXDp48pikMIM2kpfDEBQURvW23JO42Bq+d6ZORTPN3aZe8gITLu/r9AldEYMpH0r7l72V1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.23) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DYsKn1aOnKpLqJ0DlGanpW9unfAJnnZiELnORBWZSD4=;
+ b=dipOJooKPmAXqoe4RNP1IOw5u5VP9qSp60ngHzdYCdECbQ65D71pzCmfO3yMG7HQ8ZdGM81ciJPnXlnz+2gYk3VjB8cuqKFt/PPX60yQgFUPS+/Dxqrbs3nKB/kiusrNK0puaCqgAXSARyVPUXxCufxyGmzF6lMkndYRww4JvUk=
+Received: from DM5PR04CA0025.namprd04.prod.outlook.com (2603:10b6:3:12b::11)
+ by DM6PR07MB5001.namprd07.prod.outlook.com (2603:10b6:5:20::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Fri, 7 Aug
+ 2020 11:46:16 +0000
+Received: from DM6NAM12FT050.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:3:12b:cafe::a5) by DM5PR04CA0025.outlook.office365.com
+ (2603:10b6:3:12b::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend
+ Transport; Fri, 7 Aug 2020 11:46:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
+ smtp.mailfrom=cadence.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.23) by
+ DM6NAM12FT050.mail.protection.outlook.com (10.13.178.215) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3261.10 via Frontend Transport; Fri, 7 Aug 2020 11:46:16 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 077Bk9P8029785
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 7 Aug 2020 07:46:15 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Fri, 7 Aug 2020 13:46:09 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Fri, 7 Aug 2020 13:46:09 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 077Bk8Vw000840;
+        Fri, 7 Aug 2020 13:46:08 +0200
+Received: (from sjakhade@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 077Bk8F4000839;
+        Fri, 7 Aug 2020 13:46:08 +0200
+From:   Swapnil Jakhade <sjakhade@cadence.com>
+To:     <vkoul@kernel.org>, <kishon@ti.com>, <robh+dt@kernel.org>,
+        <p.zabel@pengutronix.de>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>
+Subject: [PATCH v1 04/13] dt-bindings: phy: Add PHY_TYPE_QSGMII definition
+Date:   Fri, 7 Aug 2020 13:45:58 +0200
+Message-ID: <1596800767-784-5-git-send-email-sjakhade@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1596800767-784-1-git-send-email-sjakhade@cadence.com>
+References: <1596800767-784-1-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
- <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
- <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com> <20200807112754.GC3387836@oden.dyn.berto.se>
-In-Reply-To: <20200807112754.GC3387836@oden.dyn.berto.se>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 7 Aug 2020 13:36:46 +0200
-Message-ID: <CAMuHMdW1Ofjouj4P+bdg2VWmYohD73=si8R6ivZ4QiZps6=HAQ@mail.gmail.com>
-Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
-To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 995c994b-09b2-4863-ef34-08d83ac77e43
+X-MS-TrafficTypeDiagnostic: DM6PR07MB5001:
+X-Microsoft-Antispam-PRVS: <DM6PR07MB5001D4A69A9F77805AA33EA1C5490@DM6PR07MB5001.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vazfED5KQvW3DRdwJPyGUIb+5PvE+zm3p7dtUat3BHShMnZQz+44FuwbGcSbhp0yrUkzuI3HwevNA0aPk9pRvq52Ybo10Zk9o24cX9Cb+GOEht37C++jMmovyy9gC3nQSq0bnrM6aeFdrh8LePNX40micxKyGjWs9LtlkGXS/pk3ppwHUfX3mu3Fp7YjUV01tj0BQRPQaSnIdTIp4mZzJ/vB0TFgZ1iDzLBnr9uNMTVAhxJl6poYHnZllXqj/Ola6HkoDGlIFXFiBmpqEhol6BJ+WifOEVK1Hhkli+dtCegDe2jg6iS1j4JAe8ekyoIc6FoeutCGe5COHeJTkohi5tmi++RndVwryzqZ7sHC/nrPPRfj7CWW+oCPve6R2JSeUS4O5ZHQCZKmRnDiuYVvlO9IDH+zGxxAhcZMMGxq7vw=
+X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(36092001)(46966005)(82740400003)(2906002)(8936002)(47076004)(82310400002)(70206006)(70586007)(8676002)(5660300002)(356005)(81166007)(6666004)(2616005)(42186006)(316002)(36906005)(110136005)(54906003)(4326008)(336012)(86362001)(26005)(186003)(36756003)(426003)(4744005)(478600001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 11:46:16.3539
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 995c994b-09b2-4863-ef34-08d83ac77e43
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT050.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB5001
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-07_08:2020-08-06,2020-08-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
+ phishscore=0 mlxlogscore=841 mlxscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 priorityscore=1501
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008070085
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Niklas,
+Add definition for QSGMII phy type.
 
-On Fri, Aug 7, 2020 at 1:27 PM Niklas Söderlund
-<niklas.soderlund@ragnatech.se> wrote:
-> On 2020-08-06 13:47:58 +0200, Geert Uytterhoeven wrote:
-> > On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
-> > > > >
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > >
-> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > >
-> > > > However, before I queue this in renesas-devel for v5.10, I'd like to
-> > > > have some clarification about the issue below.
-> > > >
-> > > > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > >
-> > > > > +               vin4: video@e6ef4000 {
-> > > > > +                       compatible = "renesas,vin-r8a774e1";
-> > > > > +                       reg = <0 0xe6ef4000 0 0x1000>;
-> > > > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > +                       clocks = <&cpg CPG_MOD 807>;
-> > > > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> > > > > +                       resets = <&cpg 807>;
-> > > > > +                       renesas,id = <4>;
-> > > > > +                       status = "disabled";
-> > > > > +
-> > > > > +                       ports {
-> > > > > +                               #address-cells = <1>;
-> > > > > +                               #size-cells = <0>;
-> > > > > +
-> > > > > +                               port@1 {
-> > > > > +                                       #address-cells = <1>;
-> > > > > +                                       #size-cells = <0>;
-> > > >
-> > > > "make dtbs W=1" says:
-> > > >
-> > > >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
-> > > > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
-> > > > has single child node 'endpoint@0', #address-cells/#size-cells are not
-> > > > necessary
-> > > >
-> > > > (same for vin5-7 below)
-> > > >
-> > > Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
-> > > VIN endpoint numbering") we definitely need endpoint numbering.
-> > > Probably the driver needs to be fixed to handle such cases.
-> >
-> > > > > +
-> > > > > +                                       reg = <1>;
-> > > > > +
-> > > > > +                                       vin4csi20: endpoint@0 {
-> > > > > +                                               reg = <0>;
-> > > > > +                                               remote-endpoint = <&csi20vin4>;
-> >
-> > On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
-> > complain. Here it is at address 0.
-> >
-> > Niklas?
->
-> First the R-Car VIN driver makes decisions based on which endpoint is
-> described, each endpoint 0-3 represents a different CSI-2 block on the
-> other end (0: CSI20, 1: CSI21, 2: CSI40 and 3: CSI41).
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+---
+ include/dt-bindings/phy/phy.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-That's my understanding, too.
-
-> Then how to handle the warning I'm not sure. I can only really see 2
-> options.
->
-> 1. Ignore the warning.
-> 2. Remove #address-cells, #size-cells and reg properties from port@ if
->    the only endpoint described is endpoint@0.
->
-> I would prefers option 2. that is what we do in other cases (for example
-> on Gen2 boards that only have a single parallel sensor in some early DTS
-> files we don't have the ports node and just describe a single port with
-> the same reasoning.
->
-> We are not at risk at someone describing a second CSI-2 bock as an
-> overlay so I see no real harm in option 2.
-
-Yeah, no overlay possible for on-SoC wiring ;-)
-
-> What are your thoughts Geert?
-> You know more about DT then me.
-
-You have too much faith in me ;-)
-
-AFAIK we don't get this warning for e.g. SPI buses, which can have a
-single device at address 0, and #{address,size}-cells is mandatory
-there. So endpoints (or SPI?) are treated special?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+index 36e8c241cf48..887a31b250a8 100644
+--- a/include/dt-bindings/phy/phy.h
++++ b/include/dt-bindings/phy/phy.h
+@@ -19,5 +19,6 @@
+ #define PHY_TYPE_DP		6
+ #define PHY_TYPE_XPCS		7
+ #define PHY_TYPE_SGMII		8
++#define PHY_TYPE_QSGMII		9
+ 
+ #endif /* _DT_BINDINGS_PHY */
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
