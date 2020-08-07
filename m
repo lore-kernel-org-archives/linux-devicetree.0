@@ -2,90 +2,138 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D56C433E0
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 12:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A971C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 13:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E77122C9F
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 12:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="t43ETIaj"
+	by mail.kernel.org (Postfix) with ESMTP id EB37722CAE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 13:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgHGMwP (ORCPT
+        id S1726198AbgHGNKE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 08:52:15 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58663 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725815AbgHGMwP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 08:52:15 -0400
-X-UUID: e2ce0aac34324cc4a86a3828c652b6b6-20200807
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=mztOhQW0Qq5rF36HzmEccKSTcbg3ytjmt1H64T/6/Fw=;
-        b=t43ETIajGTKqWq9hYaCkVJTGesRh7ItdyoZ5aolm8/57Bkziyzfy2U/u0+7RQ/71pJm1ciMTVPc/wZWSKBavBMSfIbvpGSIAXSK0wEbevV3U+goJryIqUHkpJH8K1ORfEOyD3EBY7WxDrIZ4mv7iGA6hJRkut9rMbz0+uB7Vi4c=;
-X-UUID: e2ce0aac34324cc4a86a3828c652b6b6-20200807
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2053474008; Fri, 07 Aug 2020 20:52:10 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 7 Aug 2020 20:52:07 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 7 Aug 2020 20:52:07 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>, Daniel Palmer <daniel@0x0f.com>,
-        Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-CC:     <alix.wu@mediatek.com>, <devicetree@vger.kernel.org>,
-        <jason@lakedaemon.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <yj.chiang@mediatek.com>
-Subject: Re: [PATCH 0/2] irqchip: irq-mt58xx: Add mt58xx series interrupt
-Date:   Fri, 7 Aug 2020 20:52:04 +0800
-Message-ID: <20200807125204.2739-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <654a81dcefb3024d762ff338d4bd7f14@kernel.org>
-References: <654a81dcefb3024d762ff338d4bd7f14@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 7 Aug 2020 09:10:04 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:59639 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgHGNKC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 09:10:02 -0400
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 07 Aug 2020 06:10:00 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Aug 2020 06:09:59 -0700
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Aug 2020 18:39:30 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 1689349FA; Fri,  7 Aug 2020 18:39:29 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org,
+        swboyd@chromium.org, abhinavk@codeaurora.org,
+        ddavenport@chromium.org
+Subject: [v2] drm/msm/dpu: Fix reservation failures in modeset
+Date:   Fri,  7 Aug 2020 18:39:27 +0530
+Message-Id: <1596805767-29339-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPiBPbiAyMDIwLTA4LTA2IDE1
-OjU4LCBEYW5pZWwgUGFsbWVyIHdyb3RlOg0KPiA+IEhpIE1hcmstUEssDQo+ID4gDQo+ID4gT24g
-VGh1LCA2IEF1ZyAyMDIwIGF0IDIzOjA4LCBNYXJrLVBLIFRzYWkgPG1hcmstcGsudHNhaUBtZWRp
-YXRlay5jb20+IA0KPiA+IHdyb3RlOg0KPiA+PiA+IERvIHlvdSBrbm93IGlmIGl0IHdvdWxkIGJl
-IHBvc3NpYmxlIHRvIGNvbmZpcm0gaWYgdGhleSBhcmUNCj4gPj4gPiB0aGUNCj4gPj4gPiBzYW1l
-IHRoaW5nPyBNZWRpYVRlayBib3VnaHQgTVN0YXIgYSBmZXcgeWVhcnMgYWdvIHNvIGl0IHNlZW1z
-IGxpa2VseQ0KPiA+PiA+IGJ1dCBJIGhhdmUgbm8gaGFyZCBpbmZvcm1hdGlvbi4NCj4gPj4gPg0K
-PiA+PiANCj4gPj4gWWVzLCBpdCdzIGZvciB0aGUgc2FtZSBpbnRlcnJ1cHQgY29udHJvbGxlciBJ
-UC4NCj4gPiANCj4gPiBUaGF0J3MgZ29vZCBuZXdzLiA6KQ0KPiA+IA0KPiA+PiA+IElmIHRoZXkg
-YXJlIHRoZSBzYW1lIHRoaW5nIGNvdWxkIHdlIHdvcmsgb24gbWFraW5nIG9uZSBzZXJpZXMgdGhh
-dA0KPiA+PiA+IHN1cHBvcnRzIGJvdGggdXNlIGNhc2VzPw0KPiA+PiANCj4gPj4gU3VyZSwgYW5k
-IEkgdGhpbmsgdGhlIGlycSBjb250cm9sbGVyIGRyaXZlciBzaG91bGQgc3VwcG9ydCBib3RoIHVz
-ZSANCj4gPj4gY2FzZXMuDQo+ID4+IFNvIGhvdyBhYm91dCBrZWVwIHRoZSBNVEsgdmVyc2lvbiBk
-cml2ZXI/DQo+ID4gDQo+ID4gSSdtIGZpbmUgd2l0aCB0aGF0LiBNYXliZSB5b3UgY2FuIHB1c2gg
-dGhlIE1USyB2ZXJzaW9uIGFuZCBJIGNhbiBzZW5kDQo+ID4gYSBzbWFsbCBwYXRjaCBhZnRlciB0
-aGF0IHRvIGFkZCB0aGUgc21hbGwgYml0cyBJIG5lZWQ/DQo+IA0KPiBJbiB0aGUgaW50ZXJlc3Qg
-b2YgYmVpbmcgdmVuZG9yIGFnbm9zdGljLCBwbGVhc2UgcmVuYW1lIHRoZSBwcm9wZXJ0aWVzDQo+
-IHN1Y2ggYXMgbWVkaWF0ZWssaXJxcy1tYXAtcmFuZ2UgdG8gc29tZXRoaW5nIGxlc3MgYnJhbmQt
-c3BlY2lmaWMuDQo+IFRoZSBjb21wYXRpYmxlIHN0cmluZyBzaG91bGQgYmUgZW5vdWdoLg0KDQpJ
-IGNhbid0IGZpbmQgdGhlIHN1aXRhYmxlIHByb3BlcnR5IGluIHN0YW5kYXJkIG9uZXMgdGhhdCBt
-YXRjaCB0aGUgY3VzdG9tDQpwcm9wZXJ0aWVzIGhlcmUuDQpBbmQgdGhlIHZlbmRvciBwcmVmaXhl
-ZCBydWxlIGlzIGRlc2NyaWJlZCBpbiBbMV0uDQoNClRoZSBpbnRlcnJ1cHQgY29udHJvbGxlciBp
-cyBmaXJzdCB1c2VkIGluIE1zdGFyIFRWIFNvQ3MuDQpOb3cgaXQncyB1c2VkIGluIE1USyBUViBh
-bmQgU2lnbWFzdGFyIFNvQ3MuDQpTbyBJIHRoaW5rIE1zdGFyIHByZWZpeGVkIHdvdWxkIG1ha2Ug
-bW9yZSBzZW5zZS4NCkkgd2lsbCByZW5hbWUgdGhlIGRyaXZlciBpbnRvIG1zdGFyLWludGMsIGFu
-ZCBNVEsgd2lsbCBtYWludGFpbiB0aGlzIGRyaXZlci4NCg0KWzFdIGh0dHBzOi8vd3d3Lmtlcm5l
-bC5vcmcvZG9jL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9ib290aW5nLXdpdGhvdXQtb2YudHh0
+In TEST_ONLY commit, rm global_state will duplicate the
+object and request for new reservations, once they pass
+then the new state will be swapped with the old and will
+be available for the Atomic Commit.
+
+This patch fixes some of missing links in the resource
+reservation sequence mentioned above.
+
+1) Creation of duplicate state in test_only commit (Rob)
+2) Allocate and release the resources on every modeset.
+3) Avoid allocation only when active is false.
+
+In a modeset operation, swap state happens well before
+disable. Hence clearing reservations in disable will
+cause failures in modeset enable.
+
+Allow reservations to be cleared/allocated before swap,
+such that only newly committed resources are pushed to HW.
+
+Changes in v1:
+ - Move the rm release to atomic_check.
+ - Ensure resource allocation and free happens when active
+   is not changed i.e only when mode is changed.(Rob)
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 63976dc..50a98d1 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+ 	dpu_kms = to_dpu_kms(priv->kms);
+ 	mode = &crtc_state->mode;
+ 	adj_mode = &crtc_state->adjusted_mode;
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
++	global_state = dpu_kms_get_global_state(crtc_state->state);
+ 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
+ 
+ 	/*
+@@ -617,12 +617,15 @@ static int dpu_encoder_virt_atomic_check(
+ 	/* Reserve dynamic resources now. */
+ 	if (!ret) {
+ 		/*
+-		 * Avoid reserving resources when mode set is pending. Topology
+-		 * info may not be available to complete reservation.
++		 * Release and Allocate resources on every modeset
++		 * Dont allocate when active is false.
+ 		 */
+ 		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+-			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
+-					drm_enc, crtc_state, topology);
++			dpu_rm_release(global_state, drm_enc);
++
++			if (!crtc_state->active_changed || crtc_state->active)
++				ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
++						drm_enc, crtc_state, topology);
+ 		}
+ 	}
+ 
+@@ -1171,7 +1174,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 	struct dpu_encoder_virt *dpu_enc = NULL;
+ 	struct msm_drm_private *priv;
+ 	struct dpu_kms *dpu_kms;
+-	struct dpu_global_state *global_state;
+ 	int i = 0;
+ 
+ 	if (!drm_enc) {
+@@ -1190,7 +1192,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 
+ 	priv = drm_enc->dev->dev_private;
+ 	dpu_kms = to_dpu_kms(priv->kms);
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
+ 
+ 	trace_dpu_enc_disable(DRMID(drm_enc));
+ 
+@@ -1220,8 +1221,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 
+ 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+ 
+-	dpu_rm_release(global_state, drm_enc);
+-
+ 	mutex_unlock(&dpu_enc->enc_lock);
+ }
+ 
+-- 
+1.9.1
 
