@@ -2,172 +2,101 @@ Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE3CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD12C433E0
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 02:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6374722D05
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 01:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DE822CF7
+	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 02:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q1ihf0KV"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="c5FOfhM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgHGByG (ORCPT
+        id S1726126AbgHGCOw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 6 Aug 2020 21:54:06 -0400
-Received: from mail-eopbgr60065.outbound.protection.outlook.com ([40.107.6.65]:64619
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbgHGByG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 6 Aug 2020 21:54:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=COeQz/KObXZ4zSybl2AAyrlEWggYKJDzEhExf9n5RLbBL1iYa8TJsjUuccZX1BmI80G3mgKkdrx+5QIg7fktfbE+0GX7yENqbMeyO0Ne7bWHYW/RA0zSnkUNCJL7IHKqakjLXdlEHyiobh/BgXW3MtewxTL9ZXDxXeM+P33KCxKqriG594GvLxN06AexStpcRjzCKBkFRyh6aYqY6kG06zmJx2Q3+FnNUv0nU1hoEwIIsnFsWMfSDrVWPlJRGJdX6oLDcMzhIylPlIVvKMeBs6J1NIt9uqm5C+AbMfSXSHwOpLrl+LxtRDOV3HcdPcqa8yOkWVpvw0zoi44yzshM5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
- b=XrbmlmvsagfKxkMHidGSyKcjL8IcMuxpnlNFr7zTjGs9u/2MYhjbsDRwxND8p3l6Hkf4KsFAtyl4HLeyvF1EGLP+fOp7fCAKiTmvaIAtYRK9cJyE8G187fKk/Y6c4sQoKJSP0OBRbqlRG2Th3Z8V58jRaDlkMpx+jvnB0gMrciQjOB7MXE7AeKUn8+e4NkMNdjQqUcNRHK53fG/x/s/9a3KNjJJaeZUiOlah7GSrmgayhIiVOgfOtzT3ZylVlNfvZd6GyLhK5ub0ZjvqFOktcWWcbXeTGqaFqVKhYODXrm+ke7FFByxxbsTyb7JIXbTWAxaOx2rss1bmuyclRAIcvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0gg7y9SEdrLnRrNAPj9ui40tIdIt+TJJh4hajEZ96fY=;
- b=Q1ihf0KVKFWCqmioH9pp8jvf7wU5Mn6H2DJbO3cK3I/cJ9uVEqAUmxILdcHYOrQsXI1lbIiHl24ScqKx3ajx3HwRNrTo2b+WX3QZH/CucI6h8SqJ2PafClTWwF9qfq91t2BIuK5ixyaFCMrSMDLRaqzLP237jTDwB73p6RPG/mc=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB7PR04MB5994.eurprd04.prod.outlook.com (2603:10a6:10:89::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Fri, 7 Aug
- 2020 01:54:02 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8db5:8715:8570:1406]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8db5:8715:8570:1406%7]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
- 01:54:02 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "stefan@agner.ch" <stefan@agner.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
-Thread-Topic: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
-Thread-Index: AQHWanDUsv5s6HEs8UmAXMW6+qGJdqkrIOgAgADEmlA=
-Date:   Fri, 7 Aug 2020 01:54:02 +0000
-Message-ID: <DB3PR0402MB39160FB9BEE17C4375308D57F5490@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1596553308-13190-1-git-send-email-Anson.Huang@nxp.com>
- <20200806140718.GA766974@bogus>
-In-Reply-To: <20200806140718.GA766974@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c8118909-d4c1-48f0-7ed8-08d83a74c263
-x-ms-traffictypediagnostic: DB7PR04MB5994:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB599455B1A71014E70E135B48F5490@DB7PR04MB5994.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f8SUzQPaTIYj9mkB354UShLjRp4dv8Y4zn+x1y4/Y5oqHHzZaQvQeiAY4D270+S5Z+m5TSTfc+8boIgq1JR5N1iNwgHPZBFSbcYzBUVYfUSwu6RJ2Q7SHaqXrfMQZzOnSZ+CaRC45+eR699n3f66hI+ZfkCXDghwkMAYBcaU2EJNjoGGIyA2H1sAYLYVpNhwLURJqtihj+r9a1UkTZHIkYuY3elBnP4kKTDw50t6Xq7yarurDx3YIWFrV3I6k0HPgepWVEO67Pa0QrbrmI2NQRBhe49m8WxMl8mxU05d9AS9NZxOzFqPWgdRsO7Jf7tD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(39860400002)(136003)(396003)(26005)(33656002)(7696005)(8936002)(6506007)(8676002)(66556008)(5660300002)(4326008)(2906002)(64756008)(186003)(52536014)(66446008)(66476007)(76116006)(66946007)(316002)(83380400001)(55016002)(86362001)(71200400001)(9686003)(44832011)(54906003)(478600001)(6916009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: hatUAiSV3BcQqaCbZo6yoZMUUZr0gHocLMZCDE4Yi9mh3QnOMHXevua4mAjsf/rQqThG2+KGIWHE1nwcgor/eA5DEI9Sgx2AZPeQqLfFPDqoZJHkD1dtR48TmeI2mW7ITieFAFKy2tq71OElienxOGaqLX/mPiDGmePT6zaVBgbDodomFnYYmLpQr/nZY8YNhCWqfjWRMjpmJqVEVG5hs46KJdOqe/qrudBZRLuk+v0V4aZUuRCTVjl4e+bR3BGcznZdYkP4/Kqrxk9GCEDt1Hj7RgqaXvcEDs4emhS7PnXwRnlr/wGfLISkZLlM6mZfB907Ud9pwCe2LJgmj4p04LgdQmBsFdw2GNmvuoHmPBxgeyRYSJtlqiGVElV2qxOOLR1qfPRxVYE3jI6Ok9fhwEJeCj0jJ2Y2v/3YRxBLfpodjxgN/exlYDfJv56pagESbuRcVHOwFxeXo2LMUSfXdj1qgFK3dWkwm7brIOVNsXbJD/saQBCY1oTicRMBJaIHVKeZpK5knl1QccY+0OtM2beYUggw6vQT3MIVteooN9VFaJFXOm3S0JTG5LkrdWR+jGngKS9krGg4LSKkXpAPoGbe6/3I2Vq8wfehD5qagn49mLCaxH57zmutKjEgAmu0PmXR834Q94I80BBaJQbUCw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Aug 2020 22:14:52 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:43331 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726027AbgHGCOw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Aug 2020 22:14:52 -0400
+X-UUID: ae261989d0a84694b73d2c8c8dba076f-20200807
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JxLw+a2yeVjmglZikNxU8lr4nwwrSEYeYUL+KumKsqM=;
+        b=c5FOfhM3iSiu7+xP15b3XDvMWwrLlwtsPmxaHuWGhHoYIBNpLdWiYZJGvrfdK7jufM6otqkjqxA5FBbkLi+uAgsDYoMhfIPLdZwQwGc4nR78riPRRhBuVnYDK3Bbv/cI9bV7NAMueuIRJJUtPLzD1LV5vHtvpwLSZMPWlKchP70=;
+X-UUID: ae261989d0a84694b73d2c8c8dba076f-20200807
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2043936039; Fri, 07 Aug 2020 10:14:44 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 7 Aug
+ 2020 10:14:39 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 7 Aug 2020 10:14:41 +0800
+Message-ID: <1596766438.18559.4.camel@mhfsdcap03>
+Subject: Re: [PATCH 11/21] iommu/mediatek: Add power-domain operation
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     chao hao <Chao.Hao@mediatek.com>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, <cui.zhang@mediatek.com>,
+        <ming-fan.chen@mediatek.com>, chao hao <"Chao. Hao"@mediatek.com>
+Date:   Fri, 7 Aug 2020 10:13:58 +0800
+In-Reply-To: <1595839778.2350.4.camel@mbjsdccf07>
+References: <20200711064846.16007-1-yong.wu@mediatek.com>
+         <20200711064846.16007-12-yong.wu@mediatek.com>
+         <1595839778.2350.4.camel@mbjsdccf07>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8118909-d4c1-48f0-7ed8-08d83a74c263
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2020 01:54:02.4103
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kbCkXll3KVQcuMhTqVv8yME0xjK+n8ezhlFGvTwA684DciqbZ8W+FDVR5hJJillhOclcnLCqph9O6jORyoWoPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5994
+X-TM-SNTS-SMTP: 1FA9D0F3014E9C59CFEAA84127CB84AF86104ADCF9CE47405B4B97E5C86E5DE82000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Rob
-
-
-> Subject: Re: [PATCH] dt-bindings: gpio: Convert vf610 to json-schema
->=20
-> On Tue, 04 Aug 2020 23:01:48 +0800, Anson Huang wrote:
-> > Convert the vf610 gpio binding to DT schema format using json-schema.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  .../devicetree/bindings/gpio/gpio-vf610.txt        | 63 --------------=
----
-> >  .../devicetree/bindings/gpio/gpio-vf610.yaml       | 79
-> ++++++++++++++++++++++
-> >  2 files changed, 79 insertions(+), 63 deletions(-)  delete mode
-> > 100644 Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> >
->=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio=
-/
-> gpio-vf610.example.dt.yaml: example-0: gpio@40049000:reg:0: [1074040832,
-> 4096, 1074786304, 64] is too long
->=20
-
-I updated the dt-schema and the latest commit is as below, and there is no =
-build error
-on my side, do you know why?
-
-commit 8fd8ce7ff6bd47616ceb48f69d1a04116dee7a41
-Author: Rob Herring <robh@kernel.org>
-Date:   Wed Aug 5 10:38:08 2020 -0600
-
-    dt-extract-example: Use the C yaml parser
-
-    The 'pure' (Python) loader was needed at one time for YAML 1.2, but rua=
-mel
-    has supported 1.2 with its libyaml since 0.15.63 and we depend on versi=
-on
-    0.15.70 at least.
-
-    Signed-off-by: Rob Herring <robh@kernel.org>
-
-tools/dt-extract-example
-
-
-anson@anson-OptiPlex-790:~/workspace/stash/linux-next$ make.cross ARCH=3Dar=
-m dt_binding_check DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/gpio=
-/gpio-vf610.yaml
-make CROSS_COMPILE=3D/opt/gcc-4.9.0-nolibc/arm-unknown-linux-gnueabi/bin/ar=
-m-unknown-linux-gnueabi- --jobs=3D8 ARCH=3Darm dt_binding_check DT_SCHEMA_F=
-ILES=3DDocumentation/devicetree/bindings/gpio/gpio-vf610.yaml
-  CHKDT   Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.yaml
-/home/anson/workspace/stash/linux-next/Documentation/devicetree/bindings/pi=
-nctrl/ingenic,pinctrl.yaml: ignoring, error in schema: additionalProperties
-warning: no schema found in file: ./Documentation/devicetree/bindings/pinct=
-rl/ingenic,pinctrl.yaml
-  DTC     Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
-  CHECK   Documentation/devicetree/bindings/gpio/gpio-vf610.example.dt.yaml
-anson@anson-OptiPlex-790:~/workspace/stash/linux-next$
-
-Thanks,
-Anson
+T24gTW9uLCAyMDIwLTA3LTI3IGF0IDE2OjQ5ICswODAwLCBjaGFvIGhhbyB3cm90ZToNCj4gT24g
+U2F0LCAyMDIwLTA3LTExIGF0IDE0OjQ4ICswODAwLCBZb25nIFd1IHdyb3RlOg0KPiA+IEluIHRo
+ZSBwcmV2aW91cyBTb0MsIHRoZSBNNFUgSFcgaXMgaW4gdGhlIEVNSSBwb3dlciBkb21haW4gd2hp
+Y2ggaXMNCj4gPiBhbHdheXMgb24uIHRoZSBsYXRlc3QgTTRVIGlzIGluIHRoZSBkaXNwbGF5IHBv
+d2VyIGRvbWFpbiB3aGljaCBtYXkgYmUNCj4gPiB0dXJuZWQgb24vb2ZmLCB0aHVzIHdlIGhhdmUg
+dG8gYWRkIHBtX3J1bnRpbWUgaW50ZXJmYWNlIGZvciBpdC4NCj4gPiANCj4gPiB3ZSBzaG91bGQg
+ZW5hYmxlIGl0cyBwb3dlciBiZWZvcmUgTTRVIGh3IGluaXRpYWwuIGFuZCBkaXNhYmxlIGl0IGFm
+dGVyIEhXDQo+ID4gaW5pdGlhbGl6ZS4NCj4gPiANCj4gPiBXaGVuIHRoZSBlbmdpbmUgd29yaywg
+dGhlIGVuZ2luZSBhbHdheXMgZW5hYmxlIHRoZSBwb3dlciBhbmQgY2xvY2tzIGZvcg0KPiA+IHNt
+aS1sYXJiL3NtaS1jb21tb24sIHRoZW4gdGhlIE00VSdzIHBvd2VyIHdpbGwgYWx3YXlzIGJlIHBv
+d2VyZWQgb24NCj4gPiBhdXRvbWF0aWNhbGx5IHZpYSB0aGUgZGV2aWNlIGxpbmsgd2l0aCBzbWkt
+Y29tbW9uLg0KPiA+IA0KPiA+IE5vdGU6IHdlIGRvbid0IGVuYWJsZSB0aGUgTTRVIHBvd2VyIGlu
+IGlvbW11X21hcC91bm1hcCBmb3IgdGxiIGZsdXNoLg0KPiA+IElmIGl0cyBwb3dlciBhbHJlYWR5
+IGlzIG9uLCBvZiBjb3Vyc2UgaXQgaXMgb2suIGlmIHRoZSBwb3dlciBpcyBvZmYsDQo+ID4gdGhl
+IG1haW4gdGxiIHdpbGwgYmUgcmVzZXQgd2hpbGUgTTRVIHBvd2VyIG9uLCB0aHVzIHRoZSB0bGIg
+Zmx1c2ggd2hpbGUNCj4gPiBtNHUgcG93ZXIgb2ZmIGlzIHVubmVjZXNzYXJ5LCBqdXN0IHNraXAg
+aXQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWW9uZyBXdSA8eW9uZy53dUBtZWRpYXRlay5j
+b20+DQoNCi4uLg0KDQo+ID4gIA0KPiA+ICAJaWYgKGRhdGEtPnBsYXRfZGF0YS0+bTR1X3BsYXQg
+PT0gTTRVX01UODE3Mykgew0KPiA+IEBAIC03MjgsNyArNzU2LDE1IEBAIHN0YXRpYyBpbnQgbXRr
+X2lvbW11X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIA0KPiA+ICAJ
+cGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgZGF0YSk7DQo+ID4gIA0KPiA+ICsJaWYgKGRldi0+
+cG1fZG9tYWluKQ0KPiA+ICsJCXBtX3J1bnRpbWVfZW5hYmxlKGRldik7DQo+IA0KPiBoaSB5b25n
+LA0KPiANCj4gSWYgeW91IHB1dCAicG1fcnVudGltZV9lbmFibGUiIGhlcmUsIGl0IG1heWJlIG5v
+dCBkZXZpY2VfbGluayB3aXRoDQo+IHNtaV9jb21tb24gZm9yIHByZXZpb3VzIHBhdGNoOiANCj4g
+aWYoaSB8fCAhcG1fcnVudGltZV9lbmFibGVkKGRldikpDQo+ICAgICBjb250aW51ZTsNCj4gDQo+
+IFdoZXRoZXIgcHV0IGl0IHVwIGZyb250Pw0KDQpUaGFua3MgZm9yIHJldmlldy4gTXkgZmF1bHQg
+aGVyZS4gSSB3aWxsIGZpeCBpdC4NCg0KPiANCj4gYmVzdCByZWdhcmRzLA0KPiBjaGFvDQoNCg==
 
