@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24217C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72963C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F122320672
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B83206E9
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930327;
-	bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+	s=default; t=1596930385;
+	bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lcMGwwoIvwrDnYbTwlj4X7a5lwlqOuy3KgmC4/yPyIsT1fss5ceHLMh5nFRzkRg6A
-	 8vGidEHBn4MeUO5v6kxrTM6NjUkDAfD7qLaCzJxwvOjn7yX+ltwsKvlT84X30lIMBl
-	 t9DtU9dtgPIbkwMUjLoIjrU1RNX//YPn0tY9Jokc=
+	b=urCB9zikBY/fTeD5MMQwsbDh4E/nrCxRGC8FVMEvdcaly11TX9tf2enrD4hra8ozu
+	 vEFYknjBXmCgPt7mKOKbWJESqwu8qiJNdJhevfX1Q6FeZswdS2TG/J0L41C9YkKS7q
+	 vL6NnbcJ01/g+OGClyT8IQr0p352iQS3aSbMn/sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgHHXpP (ORCPT
+        id S1726677AbgHHXqQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:45:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53174 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbgHHXiu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:50 -0400
+        id S1728278AbgHHXiX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65D3820791;
-        Sat,  8 Aug 2020 23:38:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54CD020825;
+        Sat,  8 Aug 2020 23:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929930;
-        bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+        s=default; t=1596929903;
+        bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHcvm/D4VfGJrFBrLBeS/FfiSHlxTY0O6ympdahiOSmiX3raWW9VZosTZSRs+R+bH
-         kcbkGPkdnBo3NU+6RwNzoFL7Qwq+684Q2AYGAQKQLkCB2He2B1kzZcdq1/Gku+cnRQ
-         grJQchitYYDUArogW76UKf3Q/Km2xYu7ycVP8Gts=
+        b=0asBzYcDcPKJ1XcwNEWBgH7bvtXSBwxytS95onbG66uccHC8rsYxpP0t+LgqXhyXR
+         YgFCKfRQQWqOgAoX1rD6Aqq4t4wsjwHDho5My4qLhxaP0qHt35l0IAvkUdp1LlWRy9
+         0AKmis6WAT6M+QV1VWwmuEHY3ucScnveQJe80dlQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 04/40] arm64: dts: rockchip: fix rk3368-lion gmac reset gpio
-Date:   Sat,  8 Aug 2020 19:38:08 -0400
-Message-Id: <20200808233844.3618823-4-sashal@kernel.org>
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 42/58] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Sat,  8 Aug 2020 19:37:08 -0400
+Message-Id: <20200808233724.3618168-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
-References: <20200808233844.3618823-1-sashal@kernel.org>
+In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
+References: <20200808233724.3618168-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +61,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit 2300e6dab473e93181cf76e4fe6671aa3d24c57b ]
+[ Upstream commit f1bb924e8f5b50752a80fa5b48c43003680a7b64 ]
 
-The lion gmac node currently uses opposite active-values for the
-gmac phy reset pin. The gpio-declaration uses active-high while the
-separate snps,reset-active-low property marks the pin as active low.
+Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+tuning errors on VIM3 after a few hours uptime:
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
 
-So bring this in line and make both properties match, similar to the
-other Rockchip board.
+I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
+to silence the error, then (re)add it to the VIM3L dts.
 
-Fixes: d99a02bcfa81 ("arm64: dts: rockchip: add RK3368-uQ7 (Lion) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200607212909.920575-1-heiko@sntech.de
+Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+Fixes: 700ab8d83927 ("arm64: dts: khadas-vim3: add support for the SM1 based VIM3L")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200721015950.11816-1-christianshewitt@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
+ arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-index e17311e090826..216aafd90e7f1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-@@ -156,7 +156,7 @@ &gmac {
- 	pinctrl-0 = <&rgmii_pins>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
--	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
- 	tx_delay = <0x10>;
- 	rx_delay = <0x10>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 1ef1e3672b967..ff5ba85b7562e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -270,7 +270,6 @@ &sd_emmc_a {
+ 
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
+ 
+ 	non-removable;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index dbbf29a0dbf6d..026b21708b078 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -88,6 +88,10 @@ &pcie {
  	status = "okay";
+ };
+ 
++&sd_emmc_a {
++	sd-uhs-sdr50;
++};
++
+ &usb {
+ 	phys = <&usb2_phy0>, <&usb2_phy1>;
+ 	phy-names = "usb2-phy0", "usb2-phy1";
 -- 
 2.25.1
 
