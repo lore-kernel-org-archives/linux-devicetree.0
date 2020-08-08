@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2CFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF706C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA7252075D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8664020825
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929863;
-	bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
+	s=default; t=1596929894;
+	bh=uiIpGsEYTqwL6nQJ02O5kTo3YTu+/mkyN/E6AG/P8pM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBouQtltHSJyQSlJCQydKQ20U/lQgb4pjh509Mc385qyFJzSXOG5BTCh6+OQX4ENq
-	 R+rx5+T7vY/owqNuxp7pBg7JHLH4MXdT70WGC+biN3Ol/Tdoi52LsjBhdPawxU40wH
-	 0pK4oUFnjySmTPO0xwW8Ynid0o6uyPBjYQdSUyHM=
+	b=VxXUFbRDIAsj0rjE87TAD18vyLf3K+bbAtfqSVRi4nDBZBW6FUz6iics3HFaq0Ekr
+	 fIaGAKR7QyRIAf2hg1uQAUz3v/u02CeRpnT9BLNWDoy6Zy06DvoPOXuddP09tCgoMq
+	 kWFGybh8rAcQ9+TIi+5mZgRYcOftcIZTd8wk98v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgHHXhm (ORCPT
+        id S1728193AbgHHXiO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:38:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbgHHXhm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:42 -0400
+        id S1728190AbgHHXiK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:38:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C05972073E;
-        Sat,  8 Aug 2020 23:37:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE6620825;
+        Sat,  8 Aug 2020 23:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929861;
-        bh=DBiaXqIuFdlZnQECKgMrDMKXCs/X1vQkapo9xw7XxWs=;
+        s=default; t=1596929889;
+        bh=uiIpGsEYTqwL6nQJ02O5kTo3YTu+/mkyN/E6AG/P8pM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CDqmoxZurqj+hAmU6sPo+2fiVxCGyyxacQJKSUr08nlHSfBNrDsmUQJjoL98FqcNE
-         eLnSNJbDdk1NR4+cZ1wdbMqnHCpRjyaZwz7Ff2Qgeop88LBFxh402H9kQeEh1LRXQ6
-         tkdjcAcgeu/B+o0H9ovz7d1ClIfLL9U+M02Sdb6Y=
+        b=iKR4SJcgVH/eQUvyrcz/7PrDSefmfGKcgclf8POE9tyg/xO5qcWf0/9rLIGBpZ3XK
+         RqTPy556940JES6jgsEV0U+VAi3D049U0mpn9a8LFLACquMgnhGO0YlC9W6I4UA8V7
+         gtHOjWE5uoLCQJkltU4fPoUvUiTdcN7nT2F4LRpE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 13/58] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
-Date:   Sat,  8 Aug 2020 19:36:39 -0400
-Message-Id: <20200808233724.3618168-13-sashal@kernel.org>
+Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 31/58] ARM: dts: gose: Fix ports node name for adv7612
+Date:   Sat,  8 Aug 2020 19:36:57 -0400
+Message-Id: <20200808233724.3618168-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,79 +62,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
+[ Upstream commit 59692ac5a7bb8c97ff440fc8917828083fbc38d6 ]
 
-msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
-pin configurations. This was likely copied from the qcom kernel fork
-where the same property was used for these audio pins.
+When adding the adv7612 device node the ports node was misspelled as
+port, fix this.
 
-However, "bias-pull-none" actually does not exist at all - not in
-mainline and not in downstream. I can only guess that the original
-intention was to configure "no pull", i.e. bias-disable.
-
-Change it to that instead.
-
-Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: bc63cd87f3ce924f ("ARM: dts: gose: add HDMI input")
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/20200713111016.523189-1-niklas.soderlund+renesas@ragnatech.se
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 242aaea688040..1235830ffd0b7 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -508,7 +508,7 @@ pinconf {
- 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
- 				       "gpio67", "gpio68";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
- 		cdc_pdm_lines_sus: pdm_lines_off {
-@@ -537,7 +537,7 @@ pinconf {
- 				pins = "gpio113", "gpio114", "gpio115",
- 				       "gpio116";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index a378b54867bb4..10c3536b8e3d9 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -394,7 +394,7 @@ hdmi-in@4c {
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			default-input = <0>;
  
-@@ -565,7 +565,7 @@ pinmux {
- 			pinconf {
- 				pins = "gpio110";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
+-			port {
++			ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  
-@@ -591,7 +591,7 @@ pinmux {
- 			pinconf {
- 				pins = "gpio116";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
- 		ext_mclk_tlmm_lines_sus: mclk_lines_off {
-@@ -619,7 +619,7 @@ pinconf {
- 				pins = "gpio112", "gpio117", "gpio118",
- 					"gpio119";
- 				drive-strength = <8>;
--				bias-pull-none;
-+				bias-disable;
- 			};
- 		};
- 		ext_sec_tlmm_lines_sus: tlmm_lines_off {
 -- 
 2.25.1
 
