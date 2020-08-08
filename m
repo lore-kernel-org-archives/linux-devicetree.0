@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C23CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1847C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4986F2075D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D5320866
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929952;
-	bh=lWgkR05ZLdyajB7h9qa3gzGicGf+5etfvA1S5tRgY10=;
+	s=default; t=1596929965;
+	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FMlDzQckW5GikHQLRMeZmffrzJ/WMS1gFaQuXxxuYY5JVOZI3yrkffat1XAf+5pej
-	 rZmMF+uY2xdU1pYBe4OinenKA0ExllOJUuE7/fZ7QQjkT770J85k6HQIxFjA54blGC
-	 PLgoLcUGbgeN2mmXsiDOexVCEwKrOryzjR3amh00=
+	b=c5QZHl2hhnbq/qSsm2vj8mYC4ex1pez975hsDAaDNOz1waLx1aFv1qUxOSsEMC3we
+	 t07qiSVVjROEnbLvxN1TYpTxboUC1fKseH44zByfs9DNiPhmk31vUR/0K0dD2A37iz
+	 iK+ttfHHa5V5Oxzs5HDx3HgiOaK8JJTazFPWM1Iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgHHXjJ (ORCPT
+        id S1728532AbgHHXjX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53546 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728461AbgHHXjD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:03 -0400
+        id S1728528AbgHHXjV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7616920885;
-        Sat,  8 Aug 2020 23:39:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86B8B20791;
+        Sat,  8 Aug 2020 23:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929943;
-        bh=lWgkR05ZLdyajB7h9qa3gzGicGf+5etfvA1S5tRgY10=;
+        s=default; t=1596929961;
+        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gN0DpA5A3imi7ihUKgcwsH6vPOS/R1dfzCqIU0UXhweoLsK13yzCvHj6Nw/FXFMce
-         Npt3lIEg6UsAx/24WuooPirjYx32ag3LkIJHK4ZF3x0QaJ7rO8dJPDIu8sGjGbA4ld
-         ctHqRckuFX/ZpGX+GafV2TiovCF9LciWPc94IzTc=
+        b=NPt7TBdGnlxCJ+s4LUU12GN7i6pgVcWxyrZYX2Y1+wB2j5LxatNj9eq5rrl9kZJZs
+         +UdcqqujiSjXQkNBDH4kxClLD9lV+okWau3XykmJsVs9C2rp7AHNXuoNDGQ5RnM0jl
+         77XnyLZgYavjvdeQDnUdXihFQI/vyx3BxuUPlu6I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/40] arm64: dts: exynos: Fix silent hang after boot on Espresso
-Date:   Sat,  8 Aug 2020 19:38:18 -0400
-Message-Id: <20200808233844.3618823-14-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 24/40] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
+Date:   Sat,  8 Aug 2020 19:38:28 -0400
+Message-Id: <20200808233844.3618823-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -61,35 +59,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
+[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
 
-Once regulators are disabled after kernel boot, on Espresso board silent
-hang observed because of LDO7 being disabled.  LDO7 actually provide
-power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
-always-on to fix this hang.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
-Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Assign the same regulator supply to the remaining CPU cores to address
+this.
+
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 080e0f56e108f..61ee7b6a31594 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1150000>;
- 				regulator-enable-ramp-delay = <125>;
-+				regulator-always-on;
- 			};
- 
- 			ldo8_reg: LDO8 {
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index 22466afd38a3a..a628b5ee72b65 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
+ };
++
++&cpu1 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu2 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu3 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 -- 
 2.25.1
 
