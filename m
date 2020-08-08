@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61BBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA84DC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAE620672
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8241206B5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930698;
-	bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+	s=default; t=1596930722;
+	bh=OSBbNWTMY2Y785oTTliEJuQjhRr8+lsvQKyr6/Eo6lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+VoqoQfG67HQBOFRDKO4zPyOWEhFJfFnW/AP34yt5tW4AI235soza2z6Fi6zW1S+
-	 V2FeLzWuKRgkk3gDgsPVQ7GKvVbsNGZQLE1mg5mslPErQcrMVkyNU6zgmwcVSJAj7i
-	 eMJGlmb9MNWQucEBsE/vN+NSdp0PLSUirPtEEZRo=
+	b=pfvDnexSGDznD11KbAsVAG51OzXxvHIMwThgcE9mJnb7v92faz65oUQnCh6LuNsJG
+	 /Z4pasyeoETXpekoN21CQKBqZhiC3qBJ9WMEpowudyfC12gRxHD0L8HJ1WNeJrQpER
+	 6NDTw1JVRsqrM0tdXM6mjS2b8au1d02Rqptb4h7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgHHXf7 (ORCPT
+        id S1726087AbgHHXfr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:35:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgHHXf5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:35:57 -0400
+        id S1726040AbgHHXfq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:35:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740D320791;
-        Sat,  8 Aug 2020 23:35:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A12206E9;
+        Sat,  8 Aug 2020 23:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929757;
-        bh=aYFQSt6KXZxgKtvmLhTIs84s0J4Db4P+g7kKUrTJG78=;
+        s=default; t=1596929745;
+        bh=OSBbNWTMY2Y785oTTliEJuQjhRr8+lsvQKyr6/Eo6lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nm63yhMHe8SE2JEv2KOGUVekIeJU05M6peQEx11dCDXpom/w65uq1Rn61kPwNeJ6/
-         18lN281Afxhw3F3HNb4iwC4D7sB3Wacg/I2ukig6F1j5rQmHnBsSBNohQERWF2K5FB
-         DOam7YUbSTQPIn8QLb4gsl2LwsGgCh1Nnm6KT6GU=
+        b=jmS0HuE3XBkgDLEmJ0MJXPcyrNKcKZBKkHlsj62842h7und4pEnTsyBdNf6PGWSTs
+         DWwFqKIYhmXq9yU9/faSIStH3Iu+r77EFdvqK9ImmLohAEVyJkPCE2rm4uj0yDC0ry
+         BXJ8cOVvFxlY8KlV8ZOVIEAMTX4Jooftr3Rqf8CU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+Cc:     Erwan Le Ray <erwan.leray@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 11/72] arm64: dts: rockchip: fix rk3399-puma vcc5v0-host gpio
-Date:   Sat,  8 Aug 2020 19:34:40 -0400
-Message-Id: <20200808233542.3617339-11-sashal@kernel.org>
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 02/72] ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
+Date:   Sat,  8 Aug 2020 19:34:31 -0400
+Message-Id: <20200808233542.3617339-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,41 +61,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Erwan Le Ray <erwan.leray@st.com>
 
-[ Upstream commit 7a7184f6cfa9279f1a1c10a1845d247d7fad54ff ]
+[ Upstream commit 391e437eedc0dab0a9f2c26997e68e040ae04ea3 ]
 
-The puma vcc5v0_host regulator node currently uses opposite active-values
-for the enable pin. The gpio-declaration uses active-high while the
-separate enable-active-low property marks the pin as active low.
+Fix uart7_pins_a comments to indicate UART7 pins instead of UART4 pins.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+Fixes: bf4b5f379fed ("ARM: dts: stm32: Add missing pinctrl definitions for STM32MP157")
 
-So bring this in line and make both properties match, similar to the
-gmac fix.
-
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200604091239.424318-1-heiko@sntech.de
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 07694b196fdbe..063f59a420b65 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -101,7 +101,7 @@ vcc3v3_sys: vcc3v3-sys {
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index b31923a9498b5..49132921feeb9 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -1615,15 +1615,15 @@ pins2 {
  
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
--		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
- 		enable-active-low;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
+ 	uart7_pins_a: uart7-0 {
+ 		pins1 {
+-			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
++			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
+ 			bias-disable;
+ 			drive-push-pull;
+ 			slew-rate = <0>;
+ 		};
+ 		pins2 {
+-			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
+-				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
+-				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
++			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART7_RX */
++				 <STM32_PINMUX('E', 10, AF7)>, /* UART7_CTS */
++				 <STM32_PINMUX('E', 9, AF7)>; /* UART7_RTS */
+ 			bias-disable;
+ 		};
+ 	};
 -- 
 2.25.1
 
