@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22790C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECD8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8F3020672
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF8D20672
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930584;
-	bh=y3ay4eqwenAnrngmgR+QAaAj3ao0sQXVgUW43M+TdYA=;
+	s=default; t=1596930612;
+	bh=iMAbjkb444Fs60V9JgSpamSFR5MPp1FyaSoD1MkeyFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QqVsfXwgJVWI0qzHLi6GcAj+si8K5OC0AXVhcgH1ausFOYzt3HjdqwemNCRLRL9B4
-	 Krx6PDPlQm7/Dl8IjFLC30i/ZTl9epHWBivYufxTDofokez007imVYDJLKD5B/Y7/5
-	 87agtDga7Hx2khjufoCupMNXS5aJ8hYX78BQqf+M=
+	b=Jc7bJ6MUzK8xVcDog+VYkEPTHr00EBDe25Tcx/4casdIWRKkj5wujuA1127EKwLmk
+	 KL2brg9kX33BBitE8plPbXw7j6/XXENC2rDJh6/eh/2IrmFzd58/0V3XpUVJ1O4hmY
+	 lGrG/5GIPCB3oQLBMIhJYBpLNup0mYJJfpB+pQwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgHHXtn (ORCPT
+        id S1727992AbgHHXuK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49690 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbgHHXgy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:54 -0400
+        id S1727002AbgHHXgo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD7F22BEF;
-        Sat,  8 Aug 2020 23:36:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1995206C3;
+        Sat,  8 Aug 2020 23:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929813;
-        bh=y3ay4eqwenAnrngmgR+QAaAj3ao0sQXVgUW43M+TdYA=;
+        s=default; t=1596929803;
+        bh=iMAbjkb444Fs60V9JgSpamSFR5MPp1FyaSoD1MkeyFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0nQNoKqZGn2YAkbc+IF5qRn7F+/MADliA6WhMZbWSRVSZQ9pp0ASH7+8RVWCXJ0x
-         vEXhUIhBdOAnTDBpXPergsICETL682qYhPeVsIZxYjMwR6PcxwdX///uBC9MGkRBt1
-         7U7V34v0Et+pZikpWs4ePobHh0G9gaNEfT/bJi7c=
+        b=YbIoF6IoJOKUTaN8bV9Ycp/tofdKTp5Xz835SavrA6RjphauJYmG4TbkzFAMuHTCd
+         bExa5wDItpzeOu4kzp7U8HMpuK8pi9IR6fndy4VpAM2JEOK2/4CzdAJBxO37bfP4XQ
+         CiZoTrK4AayOCtzwrdD9yxgMwsSVC9mgHmYPgbRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+Cc:     Patrick Delaunay <patrick.delaunay@st.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 49/72] arm64: dts: meson: misc fixups for w400 dtsi
-Date:   Sat,  8 Aug 2020 19:35:18 -0400
-Message-Id: <20200808233542.3617339-49-sashal@kernel.org>
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 41/72] ARM: dts: stm32: Fix spi4 pins in stm32mp15-pinctrl
+Date:   Sat,  8 Aug 2020 19:35:10 -0400
+Message-Id: <20200808233542.3617339-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -61,56 +62,67 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+From: Patrick Delaunay <patrick.delaunay@st.com>
 
-[ Upstream commit 2fa17dd09533d5d83201be3229a28c1010a8ea3e ]
+[ Upstream commit 4fe663890ac5b3b099f458b20cce13fe8efec12b ]
 
-Current devices using the W400 dtsi show mmc tuning errors:
+Move spi4_pins_a nodes from pinctrl_z to pinctrl as the associated pins
+are not in BANK Z.
 
-[12483.917391] mmc0: tuning execution failed: -5
-[30535.551221] mmc0: tuning execution failed: -5
-[35359.953671] mmc0: tuning execution failed: -5
-[35561.875332] mmc0: tuning execution failed: -5
-[61733.348709] mmc0: tuning execution failed: -5
+Fixes: 498a7014989d ("ARM: dts: stm32: Add missing pinctrl entries for STM32MP15")
 
-Removing "sd-uhs-sdr50" from the SDIO node prevents this. We also add
-keep-power-in-suspend to the SDIO node and fix an indentation.
-
-Fixes: 3cb74db9b256 ("arm64: dts: meson: convert ugoos-am6 to common w400 dtsi")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200721013952.11635-1-christianshewitt@gmail.com
+Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 28 ++++++++++++------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-index 98b70d216a6f3..2802ddbb83ac7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-@@ -336,9 +336,11 @@ &sd_emmc_a {
- 
- 	bus-width = <4>;
- 	cap-sd-highspeed;
--	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
- 
-+	/* WiFi firmware requires power to be kept while in suspend */
-+	keep-power-in-suspend;
-+
- 	non-removable;
- 	disable-wp;
- 
-@@ -398,7 +400,7 @@ bluetooth {
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
- 		max-speed = <2000000>;
- 		clocks = <&wifi32k>;
--	clock-names = "lpo";
-+		clock-names = "lpo";
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 49132921feeb9..cc505458da2fd 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -1654,6 +1654,20 @@ pins2 {
+ 		};
  	};
- };
  
++	spi4_pins_a: spi4-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
++				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
++			bias-disable;
++		};
++	};
++
+ 	usart2_pins_a: usart2-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
+@@ -1776,18 +1790,4 @@ pins2 {
+ 			bias-disable;
+ 		};
+ 	};
+-
+-	spi4_pins_a: spi4-0 {
+-		pins {
+-			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
+-				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
+-			bias-disable;
+-			drive-push-pull;
+-			slew-rate = <1>;
+-		};
+-		pins2 {
+-			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
+-			bias-disable;
+-		};
+-	};
+ };
 -- 
 2.25.1
 
