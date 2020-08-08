@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF120C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC590C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0AE42053B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F832053B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930207;
-	bh=AJdfUHO4l5D00o3yPa3sY5WniLcDVEYNu3amYEpYBL8=;
+	s=default; t=1596930266;
+	bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XyB/zhZBylej/dzRKPm6OlUVxpjAv5XqWJpgFAV83NyDj7nS0Ox3eTcpzzE+ISxID
-	 Bm3CNaAI9GyTR+zG8qUlku4Zw5iNw0QTNxdzi+VX6g+i/RAdYSL1hCfyPsyyLmBeLP
-	 xWJ2fGjoU4p4dt7RWrycOg07XJu/mX8g1J8EpUhs=
+	b=u5vExu5TIN6cwOZ8QJfm7hQgrppnnreA5Zvb1Vrsdqfu23TXjaYBNFEkJd0L9PiC8
+	 4pTUfqOhTeLYe7sK1k/dvDVlBxvPMSC9PDbxemgyC0qodV3RCt55FCCgwD/oygn/+7
+	 pu1U1M8pO7Wp/6/7TM8EVc6lpoblPTf0cL3qG5UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgHHXnW (ORCPT
+        id S1728844AbgHHXoO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:44:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728648AbgHHXjs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:48 -0400
+        id S1728486AbgHHXjX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9996720825;
-        Sat,  8 Aug 2020 23:39:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD9342073E;
+        Sat,  8 Aug 2020 23:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929988;
-        bh=AJdfUHO4l5D00o3yPa3sY5WniLcDVEYNu3amYEpYBL8=;
+        s=default; t=1596929962;
+        bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mUit9YM8EojmDseSy2UTCHQ52SsVskYCF74RtZy2SZuSQmYB5Ed9TknvtXJZyxkor
-         TtXKHroW+OJf+yIa3kmBNLlJ8lLrPcX3qeooR42tKsa8cB5ol8Mph2MnFxpx7k//pV
-         J51VQikhgAg83yt7fIH8o9qlIh3fDt+VWsav2FzM=
+        b=VrvGBGRJDU5q6G4ZKA2eKaYIqs1Oe515RKwTNbfaiyn+ApfM1xfXi886J2mYVoveI
+         xFLJsNBIx1nO+WsseUSVwDk9egM3BIipZjswXFa/WG4zm0ZmxypGdiFSbw0+Pqm85F
+         TzmWTQPiY/Ea+teZQ5E0x2eZ0EjCTNDG7EDOfNTE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 05/21] arm64: dts: rockchip: fix rk3399-puma vcc5v0-host gpio
-Date:   Sat,  8 Aug 2020 19:39:25 -0400
-Message-Id: <20200808233941.3619277-5-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 25/40] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
+Date:   Sat,  8 Aug 2020 19:38:29 -0400
+Message-Id: <20200808233844.3618823-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233941.3619277-1-sashal@kernel.org>
-References: <20200808233941.3619277-1-sashal@kernel.org>
+In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
+References: <20200808233844.3618823-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +59,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 7a7184f6cfa9279f1a1c10a1845d247d7fad54ff ]
+[ Upstream commit e4dae01bf08b754de79072441c357737220b873f ]
 
-The puma vcc5v0_host regulator node currently uses opposite active-values
-for the enable pin. The gpio-declaration uses active-high while the
-separate enable-active-low property marks the pin as active low.
+The Bananapi M2+ uses a GPIO line to change the effective resistance of
+the CPU supply regulator's feedback resistor network. The voltages
+described in the device tree were given directly by the vendor. This
+turns out to be slightly off compared to the real values.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+The updated voltages are based on calculations of the feedback resistor
+network, and verified down to three decimal places with a multi-meter.
 
-So bring this in line and make both properties match, similar to the
-gmac fix.
-
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200604091239.424318-1-heiko@sntech.de
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-4-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 0130b9f98c9de..baacb6e227b95 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -101,7 +101,7 @@ vcc3v3_sys: vcc3v3-sys {
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index a628b5ee72b65..235994a4a2ebb 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -16,12 +16,12 @@ reg_vdd_cpux: vdd-cpux {
+ 		regulator-type = "voltage";
+ 		regulator-boot-on;
+ 		regulator-always-on;
+-		regulator-min-microvolt = <1100000>;
+-		regulator-max-microvolt = <1300000>;
++		regulator-min-microvolt = <1108475>;
++		regulator-max-microvolt = <1308475>;
+ 		regulator-ramp-delay = <50>; /* 4ms */
+ 		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
+ 		gpios-states = <0x1>;
+-		states = <1100000 0>, <1300000 1>;
++		states = <1108475 0>, <1308475 1>;
+ 	};
+ };
  
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
--		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
- 		enable-active-low;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
 -- 
 2.25.1
 
