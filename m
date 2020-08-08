@@ -2,99 +2,106 @@ Return-Path: <SRS0=1SIx=BS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AE9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 16:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEA8C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 16:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8D120716
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 16:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQg49/dD"
+	by mail.kernel.org (Postfix) with ESMTP id B0B3420748
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 16:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596903289;
+	bh=UhfRsD3gCNBaDuX7v23KYcWuUlaYedsYaBZ1AvOdqr4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2PuXsOkMCreCrv9nRIDR4daErn0cz0ZMkIS58bhQLAKVWpt+upYY6bT2xFoXQtxt7
+	 z3mfpT6SAJ/EBgp6KuSQwkkKNujVZzHGHJS+b6uPW/4HjF1d4cRGcB/UN9uX2zPdk6
+	 llT5Fp3T3O4B9vzHfoAWYVX71E291ASQVpmhzH7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgHHQG3 (ORCPT
+        id S1726242AbgHHQOt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 12:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHHQG3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Aug 2020 12:06:29 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8586C061A27;
-        Sat,  8 Aug 2020 09:06:28 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id i6so3401757edy.5;
-        Sat, 08 Aug 2020 09:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r6WsXeiq0Ut11OzvYqqtiLlAFgk8K33cS8Kgpn15xCo=;
-        b=MQg49/dDoFPKDET/rcICcAaAIoNyR31tPeIs78lqlFEQSECptV4qgfNd0Mc4c2woee
-         jWuWKR6LKkUfmweIMbokWAesfG7PO7RrkfddPD4BV+CRCItfNtEKE8/X6WnnazCUECHB
-         bksRbcLIb07+RrJTMQcg+hxc5GBiFAQ1vvDX2A83t0pj/XCm+VhvakfFHKXEDCja29Qb
-         ZI9i4dM3271KpEOG9LYgGkIbmd30P67QMU2buCi6pH6iHhb5jlVwmrlhvvTSRWY19bBV
-         Ip77ScFcrvF2r0vp4BCGKQehAiql4gdeydKLPtqGa4HzakyNIqLVKxBjjMRlwOrnDfAE
-         F4Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=r6WsXeiq0Ut11OzvYqqtiLlAFgk8K33cS8Kgpn15xCo=;
-        b=JYgGSGc+pWn0/3vSddwXvGaFftIl5Rpmsz+dFNb3mN/S1KdcP3MJ+gXQYVMHHCfBWs
-         N47ptf05XbTVe+PaeuIscwEeT7ES4t2xExf6diRBZsmYhMLHugUvIKSHDmyL5h8knoio
-         ZqUp6lNLRPvIMll/EeEwQ9uTI3W3/+b5lNB6CW7YhPL/fcFdwqERsMIkZovjFJZG6sB0
-         QA7xSlUXyFqm3FoaJ+RBpv17r2IZpHEWSvequwjJ+j8ocTQRGY8/fBeHwl365yppwzVs
-         AO8JuN2HpEUjXgDGgUtcvIBYJBEOqZR9ZaVsaxr0kCWwwMWCCRbfCYJWlxL4iX2rX2Dr
-         0iqg==
-X-Gm-Message-State: AOAM533S2CQvfhukL+RuvzZb5pg95ralG9M38J4h1tzmg3FMt5m78f+g
-        BcwoWGyHha51dyOXuY2TA7T2frTX7fk=
-X-Google-Smtp-Source: ABdhPJxnGuJi3oe1inrY1DofySMD4JumQKU8qO11m20jkq0TBp4OhWMoSja61/wkkbCQ6CtlQy0Xgg==
-X-Received: by 2002:a05:6402:1057:: with SMTP id e23mr13980684edu.11.1596902787416;
-        Sat, 08 Aug 2020 09:06:27 -0700 (PDT)
-Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k24sm8404338ejz.102.2020.08.08.09.06.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Aug 2020 09:06:27 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] dt-bindings: Add vendor prefix for Shenzhen Zkmagic Technology Co., Ltd.
-Date:   Sat,  8 Aug 2020 18:06:16 +0200
-Message-Id: <20200808160618.15445-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200808160618.15445-1-jbx6244@gmail.com>
-References: <20200808160618.15445-1-jbx6244@gmail.com>
+        Sat, 8 Aug 2020 12:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbgHHQOs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 12:14:48 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F68D20716;
+        Sat,  8 Aug 2020 16:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596903288;
+        bh=UhfRsD3gCNBaDuX7v23KYcWuUlaYedsYaBZ1AvOdqr4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K8/IxSO6ttFIPtbFPN71HU11kXTWDdIpysuVBcv6RtDrO+6GdVFNqeG7N3nFnBU3r
+         n2N80CPA28Kh1H2o2RIurfSuBBgjTIP7y46B0lcmnpekPJ9qn3+CHZhsQdZUOqDGbQ
+         VxphEr9eqW+iaeqYKISSkXdYb2y0x5rBPkXmfGHM=
+Date:   Sat, 8 Aug 2020 17:14:43 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/2] iio: light: as73211: New driver
+Message-ID: <20200808171443.114c8e05@archlinux>
+In-Reply-To: <4466981.tjO45I7u8z@n95hx1g2>
+References: <20200805055744.31909-1-ceggers@arri.de>
+        <20200805055744.31909-3-ceggers@arri.de>
+        <20200806184451.04293626@archlinux>
+        <4466981.tjO45I7u8z@n95hx1g2>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add vendor prefix for Shenzhen Zkmagic Technology Co., Ltd.
+On Fri, 7 Aug 2020 17:46:36 +0200
+Christian Eggers <ceggers@arri.de> wrote:
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+> Hi Jonathan,
+> 
+> On Thursday, 6 August 2020, 19:44:51 CEST, Jonathan Cameron wrote:
+> > Hi Christian,
+> > 
+> > I'll take this, but please send a follow up patch to add documentation
+> > for in_intensity_x_raw and all the other new ABI this adds in
+> > Documentation/ABI/testing/sysfs-bus-iio
+> > I should have mentioned that earlier, but kind of assumed we already
+> > had these documented for some reason!  
+> where to add these entries in Documentation/ABI/testing/sysfs-bus-iio?
+> Shall all missing entries be added together at the bottom (as AS73211
+> is the first device using it) , or inserted in different existing paragraphs
+> (when the enums where introduced)?
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index f3d847832..f4bd9b9a1 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1197,6 +1197,8 @@ patternProperties:
-     description: Shenzhen Zidoo Technology Co., Ltd.
-   "^zii,.*":
-     description: Zodiac Inflight Innovations
-+  "^zkmagic,.*":
-+    description: Shenzhen Zkmagic Technology Co., Ltd.
-   "^zte,.*":
-     description: ZTE Corp.
-   "^zyxel,.*":
--- 
-2.11.0
+Insert them into the relevant groups that already exist.  In some cases
+it will just be adding an entry with no specific explanation.
+For the _raw attribute add a bit more info about what x, y and z are
+(basically just say they are from cie1931 (I think?)
+
+> 
+> Which kernel version shall I use (5.10)?
+This file doesn't change that quickly so that should be fine. I'll deal
+with any merge conflicts that do occur.
+
+Thanks,
+
+Jonathan
+
+> 
+> regards
+> Christian
+> 
+> 
+> 
+> 
 
