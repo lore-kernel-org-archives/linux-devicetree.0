@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6EDC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3771C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1AD20672
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74B520672
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930655;
-	bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
+	s=default; t=1596930656;
+	bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RxuHZ/BFK6k9eefda6Ec5DCq6D9h6O4LAwg7cCdvESN7STXWgizx2NLK87Ac7EwGB
-	 xYNHVXfWEfaUsMy0aSKuvTosKWyWs6CHGjZuF7DVjCEcFC1KCl6Hbjcikl8dBK9R1h
-	 q+8t8wbKuAUntKBNOR2eeJXFFIEFNyVeDEmeabPM=
+	b=jLAoNq0VjiJ9yCB+eFM3ksng3pvzUdr86int7q//lRhNLbqN58x+/Y0D2laBqWsvX
+	 P+/DATmBb/2SlxbDp3yHBLK65HxUMcOWc79K/KPfUXC5BmSIRHLW65XmPGAfH4lXp/
+	 X08kzdszgFWZ5LL7yUwICNpqSMihIufT8ca6p8hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgHHXgP (ORCPT
+        id S1726766AbgHHXuz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48572 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbgHHXgO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:14 -0400
+        id S1726479AbgHHXgN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 913B8206E9;
-        Sat,  8 Aug 2020 23:36:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 572E820791;
+        Sat,  8 Aug 2020 23:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929774;
-        bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
+        s=default; t=1596929773;
+        bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rO2h/gjVqzNETr/ewIKo0TKiLFOCW9dQDyU2PIK8plkI+w24pUg4v9m2/8tTFa7Qh
-         WoMRMs/h4u5/T+RkkRZPuNAvZrPpY0UVYU0286u593y4mXllDm0W4W1bU1MjdsfXBz
-         1KlCP+sB2SyxGpyZpzx7c9pBzfZqUpVwXgV1k+Z8=
+        b=f554LPEyCAzkyMCHnI5UtEhZlGOejBA9tDgbInlWXYwTrfjtTlYIcsS+V0nElGcUZ
+         rcOuYV6NHFgyBQ1aVB2BylQJvu5K5n/RB3R2RcVyv6dZCUVIgAVXZl44ooOOiJywhE
+         tqlwD1Nwcpu0x+Gi66rSPUSyyiMfapNUJmtN4tu8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 24/72] arm64: dts: exynos: Fix silent hang after boot on Espresso
-Date:   Sat,  8 Aug 2020 19:34:53 -0400
-Message-Id: <20200808233542.3617339-24-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 23/72] arm64: dts: sun50i-pinephone: dldo4 must not be >= 1.8V
+Date:   Sat,  8 Aug 2020 19:34:52 -0400
+Message-Id: <20200808233542.3617339-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -61,35 +60,46 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
+[ Upstream commit 86be5c789690eb08656b08c072c50a7b02bf41f1 ]
 
-Once regulators are disabled after kernel boot, on Espresso board silent
-hang observed because of LDO7 being disabled.  LDO7 actually provide
-power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
-always-on to fix this hang.
+Some outputs from the RTL8723CS are connected to the PL port (BT_WAKE_AP),
+which runs at 1.8V. When BT_WAKE_AP is high, the PL pin this signal is
+connected to is overdriven, and the whole PL port's voltage rises
+somewhat. This results in changing voltage on the R_PWM pin (PL10),
+which is the cause for backlight flickering very noticeably when typing
+on a Bluetooth keyboard, because backlight intensity is highly sensitive
+to the voltage of the R_PWM pin.
 
-Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Limit the maximum WiFi/BT I/O voltage to 1.8V to avoid overdriving
+the PL port pins via BT and WiFi IO port signals. WiFi and BT
+functionality is unaffected by this change.
+
+This completely stops the backlight flicker when using bluetooth.
+
+Fixes: 91f480d40942 ("arm64: dts: allwinner: Add initial support for Pine64 PinePhone")
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Link: https://lore.kernel.org/r/20200703194842.111845-4-megous@megous.com
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 7af288fa9475f..a9412805c1d6a 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1150000>;
- 				regulator-enable-ramp-delay = <125>;
-+				regulator-always-on;
- 			};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index cefda145c3c9d..342733a20c337 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -279,7 +279,7 @@ &reg_dldo3 {
  
- 			ldo8_reg: LDO8 {
+ &reg_dldo4 {
+ 	regulator-min-microvolt = <1800000>;
+-	regulator-max-microvolt = <3300000>;
++	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vcc-wifi-io";
+ };
+ 
 -- 
 2.25.1
 
