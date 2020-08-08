@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983C0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6EDC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAFB20672
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1AD20672
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930641;
-	bh=jUQYFr/zNcIZpn8MHrRMQ4VbgAFjyryo9kcyksEqlsg=;
+	s=default; t=1596930655;
+	bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=THNUsVdCypI9I4ws894gfYdfTp3bht7/qHnioqiYOY50N5Yq1XC5I0yEOg5O3icxZ
-	 9QgNSY0yUo8Xhx1Gt18Ao5qPq+GBn+V3nBJCZ0R3x3gy4+UMeUAKCpKbu9CR9KY46C
-	 vxovmMR5k823ptuTRly2aOMwUUgyK9B5wpVg1DxU=
+	b=RxuHZ/BFK6k9eefda6Ec5DCq6D9h6O4LAwg7cCdvESN7STXWgizx2NLK87Ac7EwGB
+	 xYNHVXfWEfaUsMy0aSKuvTosKWyWs6CHGjZuF7DVjCEcFC1KCl6Hbjcikl8dBK9R1h
+	 q+8t8wbKuAUntKBNOR2eeJXFFIEFNyVeDEmeabPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgHHXgc (ORCPT
+        id S1726726AbgHHXgP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49074 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbgHHXgc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:32 -0400
+        id S1726713AbgHHXgO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29EFA20716;
-        Sat,  8 Aug 2020 23:36:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 913B8206E9;
+        Sat,  8 Aug 2020 23:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929791;
-        bh=jUQYFr/zNcIZpn8MHrRMQ4VbgAFjyryo9kcyksEqlsg=;
+        s=default; t=1596929774;
+        bh=bkVpK0KOWR9Ed9jeIrDj4gZF2KKuZLesyyGYbP4hNZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p1Rgaam9xGBgbuPmqqtlYwYQuehpa0gMXCDoWjbbCwdTSeXU9nD8v28MRahTsrO/C
-         Bp5XR9swxtlAkFBCiCRRCyZIUVI+0b6C6NiUcVtrjppY4NS+cFB4HQf9Bg0Y9a+2iH
-         0DOYKwIn7xkFjz3GaRj6NLTrfVMPfNhb6kW5b/M4=
+        b=rO2h/gjVqzNETr/ewIKo0TKiLFOCW9dQDyU2PIK8plkI+w24pUg4v9m2/8tTFa7Qh
+         WoMRMs/h4u5/T+RkkRZPuNAvZrPpY0UVYU0286u593y4mXllDm0W4W1bU1MjdsfXBz
+         1KlCP+sB2SyxGpyZpzx7c9pBzfZqUpVwXgV1k+Z8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 32/72] ARM: dts: gose: Fix ports node name for adv7180
-Date:   Sat,  8 Aug 2020 19:35:01 -0400
-Message-Id: <20200808233542.3617339-32-sashal@kernel.org>
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 24/72] arm64: dts: exynos: Fix silent hang after boot on Espresso
+Date:   Sat,  8 Aug 2020 19:34:53 -0400
+Message-Id: <20200808233542.3617339-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,35 +61,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-[ Upstream commit d344234abde938ae1062edb6c05852b0bafb4a03 ]
+[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
 
-When adding the adv7180 device node the ports node was misspelled as
-port, fix this.
+Once regulators are disabled after kernel boot, on Espresso board silent
+hang observed because of LDO7 being disabled.  LDO7 actually provide
+power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
+always-on to fix this hang.
 
-Fixes: 8cae359049a88b75 ("ARM: dts: gose: add composite video input")
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/20200704155856.3037010-2-niklas.soderlund+renesas@ragnatech.se
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 79baf06019f5a..a378b54867bb4 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -336,7 +336,7 @@ composite-in@20 {
- 			reg = <0x20>;
- 			remote = <&vin1>;
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 7af288fa9475f..a9412805c1d6a 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1150000>;
+ 				regulator-enable-ramp-delay = <125>;
++				regulator-always-on;
+ 			};
  
--			port {
-+			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
+ 			ldo8_reg: LDO8 {
 -- 
 2.25.1
 
