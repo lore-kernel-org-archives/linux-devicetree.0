@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAE4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F66FC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D25A20748
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEDC207BB
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929748;
-	bh=CrbNmZ6FMVsPMZu0i7WiMTRVaTILOfMy4YBuKJ5xS6w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TSGx+mGOkH7bG9QlcJtlbykv/wbDhhzDg7FKMacHKR0311etxa5TJ5H6AQQRZFOls
-	 szfhovP+jbA0hHyXKsujirc5b8PSPrllFfVWmcfvGMN3+owXUpijZh+ka312yvi8cY
-	 ZyUtpxAinXpuR9UTtRQswXBij2o4jp4KTel3JY/Y=
+	s=default; t=1596929758;
+	bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kcCQFlgeGyuxWtVhA3eCgk+rUqNoWGXVSecpZ/RddlUj324Z1V7T3k5cDBY9AV3QI
+	 6dfoILs511uojyNRY4rFasGu9YPTJk4zV26rNCXe0+aSMUse3GlDZm+LCyYY41MMRt
+	 XEHCzkhdaXnISbagxfl0bdHSNORz3xx++PWrgEvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbgHHXfr (ORCPT
+        id S1726482AbgHHXf5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47938 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbgHHXfp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:35:45 -0400
+        id S1726478AbgHHXf4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:35:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DF4A206C3;
-        Sat,  8 Aug 2020 23:35:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D335206C3;
+        Sat,  8 Aug 2020 23:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929744;
-        bh=CrbNmZ6FMVsPMZu0i7WiMTRVaTILOfMy4YBuKJ5xS6w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VEK8RwyWfbKk2PJHsJrOlYhvBkIsGxtAzNkuxbEqRocb9sGyp/jZ2rMBuglA9pxgY
-         ahqs4w69x+r7YoicB+5JpCyz/4J8Bjr+Ri7ONf3hpADDlTWnO4UxsA/yhBpU2NZXZs
-         lAUU4Ibp9k+MjmIKQzAe6sUH89jg4FuD3hu0yG1w=
+        s=default; t=1596929756;
+        bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=saHh26g877MHoXkCvECVmlx4sILZN3wAbfORu8mNjIi/HzSdYddmb8SLRoO5bmIOf
+         9oawQfctq7mqE2Elu7Y4r0+QS6A3PlT7lgbhzY51m6b7irCGoVQR65r/MLwSVvrqlu
+         YXT9pgGlCSscCDPPRXgh+PhKNjaxCnlenQmGxIho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 01/72] ARM: dts: stm32: fix uart nodes ordering in stm32mp15-pinctrl
-Date:   Sat,  8 Aug 2020 19:34:30 -0400
-Message-Id: <20200808233542.3617339-1-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 10/72] arm64: dts: rockchip: fix rk3368-lion gmac reset gpio
+Date:   Sat,  8 Aug 2020 19:34:39 -0400
+Message-Id: <20200808233542.3617339-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
+References: <20200808233542.3617339-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,221 +60,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-[ Upstream commit f6b43d89d3b5a31bf4251a26c61e92bf659e74c5 ]
+[ Upstream commit 2300e6dab473e93181cf76e4fe6671aa3d24c57b ]
 
-Fix usart and uart nodes ordering. Several usart nodes didn't respect
-expecting ordering.
+The lion gmac node currently uses opposite active-values for the
+gmac phy reset pin. The gpio-declaration uses active-high while the
+separate snps,reset-active-low property marks the pin as active low.
 
-Fixes: 077e0638fc83 ("ARM: dts: stm32: Add alternate pinmux for USART2 pins on stm32mp15")
+While on the kernel side this works ok, other DT users may get
+confused - as seen with uboot right now.
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+So bring this in line and make both properties match, similar to the
+other Rockchip board.
+
+Fixes: d99a02bcfa81 ("arm64: dts: rockchip: add RK3368-uQ7 (Lion) SoM")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20200607212909.920575-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 102 +++++++++++------------
- 1 file changed, 51 insertions(+), 51 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 7eb858732d6d0..b31923a9498b5 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1574,143 +1574,143 @@ pins2 {
- 		};
- 	};
- 
--	usart2_pins_a: usart2-0 {
-+	uart4_pins_a: uart4-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
--				 <STM32_PINMUX('D', 4, AF7)>; /* USART2_RTS */
-+			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('D', 6, AF7)>, /* USART2_RX */
--				 <STM32_PINMUX('D', 3, AF7)>; /* USART2_CTS_NSS */
-+			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
- 			bias-disable;
- 		};
- 	};
- 
--	usart2_sleep_pins_a: usart2-sleep-0 {
--		pins {
--			pinmux = <STM32_PINMUX('F', 5, ANALOG)>, /* USART2_TX */
--				 <STM32_PINMUX('D', 4, ANALOG)>, /* USART2_RTS */
--				 <STM32_PINMUX('D', 6, ANALOG)>, /* USART2_RX */
--				 <STM32_PINMUX('D', 3, ANALOG)>; /* USART2_CTS_NSS */
--		};
--	};
--
--	usart2_pins_b: usart2-1 {
-+	uart4_pins_b: uart4-1 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
--				 <STM32_PINMUX('A', 1, AF7)>; /* USART2_RTS */
-+			pinmux = <STM32_PINMUX('D', 1, AF8)>; /* UART4_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('F', 4, AF7)>, /* USART2_RX */
--				 <STM32_PINMUX('E', 15, AF7)>; /* USART2_CTS_NSS */
-+			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
- 			bias-disable;
- 		};
- 	};
- 
--	usart2_sleep_pins_b: usart2-sleep-1 {
--		pins {
--			pinmux = <STM32_PINMUX('F', 5, ANALOG)>, /* USART2_TX */
--				 <STM32_PINMUX('A', 1, ANALOG)>, /* USART2_RTS */
--				 <STM32_PINMUX('F', 4, ANALOG)>, /* USART2_RX */
--				 <STM32_PINMUX('E', 15, ANALOG)>; /* USART2_CTS_NSS */
--		};
--	};
--
--	usart3_pins_a: usart3-0 {
-+	uart4_pins_c: uart4-2 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
-+			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('B', 12, AF8)>; /* USART3_RX */
-+			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
- 			bias-disable;
- 		};
- 	};
- 
--	uart4_pins_a: uart4-0 {
-+	uart7_pins_a: uart7-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
-+				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
-+				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
- 			bias-disable;
- 		};
- 	};
- 
--	uart4_pins_b: uart4-1 {
-+	uart7_pins_b: uart7-1 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('D', 1, AF8)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('F', 7, AF7)>; /* UART7_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+			pinmux = <STM32_PINMUX('F', 6, AF7)>; /* UART7_RX */
- 			bias-disable;
- 		};
- 	};
- 
--	uart4_pins_c: uart4-2 {
-+	uart8_pins_a: uart8-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('E', 1, AF8)>; /* UART8_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+			pinmux = <STM32_PINMUX('E', 0, AF8)>; /* UART8_RX */
- 			bias-disable;
- 		};
- 	};
- 
--	uart7_pins_a: uart7-0 {
-+	usart2_pins_a: usart2-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
-+				 <STM32_PINMUX('D', 4, AF7)>; /* USART2_RTS */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
--				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
--				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
-+			pinmux = <STM32_PINMUX('D', 6, AF7)>, /* USART2_RX */
-+				 <STM32_PINMUX('D', 3, AF7)>; /* USART2_CTS_NSS */
- 			bias-disable;
- 		};
- 	};
- 
--	uart7_pins_b: uart7-1 {
-+	usart2_sleep_pins_a: usart2-sleep-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('F', 5, ANALOG)>, /* USART2_TX */
-+				 <STM32_PINMUX('D', 4, ANALOG)>, /* USART2_RTS */
-+				 <STM32_PINMUX('D', 6, ANALOG)>, /* USART2_RX */
-+				 <STM32_PINMUX('D', 3, ANALOG)>; /* USART2_CTS_NSS */
-+		};
-+	};
-+
-+	usart2_pins_b: usart2-1 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('F', 7, AF7)>; /* UART7_TX */
-+			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
-+				 <STM32_PINMUX('A', 1, AF7)>; /* USART2_RTS */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('F', 6, AF7)>; /* UART7_RX */
-+			pinmux = <STM32_PINMUX('F', 4, AF7)>, /* USART2_RX */
-+				 <STM32_PINMUX('E', 15, AF7)>; /* USART2_CTS_NSS */
- 			bias-disable;
- 		};
- 	};
- 
--	uart8_pins_a: uart8-0 {
-+	usart2_sleep_pins_b: usart2-sleep-1 {
-+		pins {
-+			pinmux = <STM32_PINMUX('F', 5, ANALOG)>, /* USART2_TX */
-+				 <STM32_PINMUX('A', 1, ANALOG)>, /* USART2_RTS */
-+				 <STM32_PINMUX('F', 4, ANALOG)>, /* USART2_RX */
-+				 <STM32_PINMUX('E', 15, ANALOG)>; /* USART2_CTS_NSS */
-+		};
-+	};
-+
-+	usart3_pins_a: usart3-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('E', 1, AF8)>; /* UART8_TX */
-+			pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('E', 0, AF8)>; /* UART8_RX */
-+			pinmux = <STM32_PINMUX('B', 12, AF8)>; /* USART3_RX */
- 			bias-disable;
- 		};
- 	};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
+index e17311e090826..216aafd90e7f1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
+@@ -156,7 +156,7 @@ &gmac {
+ 	pinctrl-0 = <&rgmii_pins>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_HIGH>;
++	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
+ 	tx_delay = <0x10>;
+ 	rx_delay = <0x10>;
+ 	status = "okay";
 -- 
 2.25.1
 
