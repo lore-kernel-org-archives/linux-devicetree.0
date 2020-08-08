@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3771C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1E5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B74B520672
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE36920672
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930656;
-	bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
+	s=default; t=1596930693;
+	bh=vc8NGM3wB9EpgjxwZ28okfuV02spWivhd7Nv1uL4HzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLAoNq0VjiJ9yCB+eFM3ksng3pvzUdr86int7q//lRhNLbqN58x+/Y0D2laBqWsvX
-	 P+/DATmBb/2SlxbDp3yHBLK65HxUMcOWc79K/KPfUXC5BmSIRHLW65XmPGAfH4lXp/
-	 X08kzdszgFWZ5LL7yUwICNpqSMihIufT8ca6p8hY=
+	b=wEs2UQ4Ma8A07nhqCH3FuWJS6aRwkb5ODAzLhDpBH3TKpBts/CUt/VM2BPW0NoTD9
+	 MB5LzD5H7qmcBsx0kVPqviDTmTS0JC4E64Q1E7kNnX7dgfog4HZT5agg9IpuxsF8g+
+	 TI6O+OtAHiXSWzGt2emnbJoj85chXtdoIg56tje8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHHXuz (ORCPT
+        id S1726629AbgHHXv2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:51:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgHHXgN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:13 -0400
+        id S1726584AbgHHXgC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 572E820791;
-        Sat,  8 Aug 2020 23:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D85A206D8;
+        Sat,  8 Aug 2020 23:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929773;
-        bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
+        s=default; t=1596929762;
+        bh=vc8NGM3wB9EpgjxwZ28okfuV02spWivhd7Nv1uL4HzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f554LPEyCAzkyMCHnI5UtEhZlGOejBA9tDgbInlWXYwTrfjtTlYIcsS+V0nElGcUZ
-         rcOuYV6NHFgyBQ1aVB2BylQJvu5K5n/RB3R2RcVyv6dZCUVIgAVXZl44ooOOiJywhE
-         tqlwD1Nwcpu0x+Gi66rSPUSyyiMfapNUJmtN4tu8=
+        b=e9EgseR7w5PEQYCY3Um2pMFaNEJ2oOg/c5Oej7nMt7+0XynQ8ykum13Vj/BnevrcB
+         uATooZR27nQQ8nq+ZeS/3Z3xsAKhUtT8wpeaQUdz++D5Z01X3Pxg87FVSZR09p4K2L
+         lW9bZsDDZ0YeMnCZQLEZaecWkDWMZvLmrWpSNhLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 23/72] arm64: dts: sun50i-pinephone: dldo4 must not be >= 1.8V
-Date:   Sat,  8 Aug 2020 19:34:52 -0400
-Message-Id: <20200808233542.3617339-23-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 15/72] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
+Date:   Sat,  8 Aug 2020 19:34:44 -0400
+Message-Id: <20200808233542.3617339-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -60,46 +61,79 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 86be5c789690eb08656b08c072c50a7b02bf41f1 ]
+[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
 
-Some outputs from the RTL8723CS are connected to the PL port (BT_WAKE_AP),
-which runs at 1.8V. When BT_WAKE_AP is high, the PL pin this signal is
-connected to is overdriven, and the whole PL port's voltage rises
-somewhat. This results in changing voltage on the R_PWM pin (PL10),
-which is the cause for backlight flickering very noticeably when typing
-on a Bluetooth keyboard, because backlight intensity is highly sensitive
-to the voltage of the R_PWM pin.
+msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
+pin configurations. This was likely copied from the qcom kernel fork
+where the same property was used for these audio pins.
 
-Limit the maximum WiFi/BT I/O voltage to 1.8V to avoid overdriving
-the PL port pins via BT and WiFi IO port signals. WiFi and BT
-functionality is unaffected by this change.
+However, "bias-pull-none" actually does not exist at all - not in
+mainline and not in downstream. I can only guess that the original
+intention was to configure "no pull", i.e. bias-disable.
 
-This completely stops the backlight flicker when using bluetooth.
+Change it to that instead.
 
-Fixes: 91f480d40942 ("arm64: dts: allwinner: Add initial support for Pine64 PinePhone")
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Link: https://lore.kernel.org/r/20200703194842.111845-4-megous@megous.com
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index cefda145c3c9d..342733a20c337 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -279,7 +279,7 @@ &reg_dldo3 {
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index e9c00367f7fd0..5785bf0a807ce 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -556,7 +556,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		cdc_pdm_lines_sus: pdm-lines-off {
+@@ -585,7 +585,7 @@ pinconf {
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
- &reg_dldo4 {
- 	regulator-min-microvolt = <1800000>;
--	regulator-max-microvolt = <3300000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vcc-wifi-io";
- };
+@@ -613,7 +613,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio110";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
+@@ -639,7 +639,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_mclk_tlmm_lines_sus: mclk-lines-off {
+@@ -667,7 +667,7 @@ pinconf {
+ 				pins = "gpio112", "gpio117", "gpio118",
+ 					"gpio119";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_sec_tlmm_lines_sus: tlmm-lines-off {
 -- 
 2.25.1
 
