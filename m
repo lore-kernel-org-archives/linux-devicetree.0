@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1847C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A417C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D5320866
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B5A2177B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929965;
-	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
+	s=default; t=1596929989;
+	bh=Pj1WHtb+BEQmkB26jXecBgqP3ELpmtSuKfICJXH07as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5QZHl2hhnbq/qSsm2vj8mYC4ex1pez975hsDAaDNOz1waLx1aFv1qUxOSsEMC3we
-	 t07qiSVVjROEnbLvxN1TYpTxboUC1fKseH44zByfs9DNiPhmk31vUR/0K0dD2A37iz
-	 iK+ttfHHa5V5Oxzs5HDx3HgiOaK8JJTazFPWM1Iw=
+	b=kvVEi4vmbFeGnCiGcy0l6yV3H1VRWvStOn63U+Xltwln3S5j3YqT2k8reMYhm71d6
+	 VZlx/Boxx3XDd2a1jGfx1ZvtHVpcRU6VjoKKO2GaFDiuOZSGS7mTrviihu2DhSfC1X
+	 znEDcGNrtBT6fY3BiNJwrcqA1yEfcu4fQNIXrTwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgHHXjX (ORCPT
+        id S1728558AbgHHXjs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54058 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728528AbgHHXjV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:39:21 -0400
+        id S1728637AbgHHXjr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B8B20791;
-        Sat,  8 Aug 2020 23:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 639FD20716;
+        Sat,  8 Aug 2020 23:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929961;
-        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
+        s=default; t=1596929987;
+        bh=Pj1WHtb+BEQmkB26jXecBgqP3ELpmtSuKfICJXH07as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPt7TBdGnlxCJ+s4LUU12GN7i6pgVcWxyrZYX2Y1+wB2j5LxatNj9eq5rrl9kZJZs
-         +UdcqqujiSjXQkNBDH4kxClLD9lV+okWau3XykmJsVs9C2rp7AHNXuoNDGQ5RnM0jl
-         77XnyLZgYavjvdeQDnUdXihFQI/vyx3BxuUPlu6I=
+        b=atFnFZOTJ3SrXDcBD+FuuTUd1L7SdKwgxlLgN+gxxg07es1UbRf6CJOnKc3sfAroq
+         Fcrsy2rHVkECzd9e760G55hJPjZ8FQOMGSwocCxwoKD2V7oNrSRKrS6OcOEdVFABj9
+         Vpq0orMXA0BeSdVU6LQK2cWIVWivnB//wafvT7II=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
+Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 24/40] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
-Date:   Sat,  8 Aug 2020 19:38:28 -0400
-Message-Id: <20200808233844.3618823-24-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 04/21] arm64: dts: rockchip: fix rk3368-lion gmac reset gpio
+Date:   Sat,  8 Aug 2020 19:39:24 -0400
+Message-Id: <20200808233941.3619277-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
-References: <20200808233844.3618823-1-sashal@kernel.org>
+In-Reply-To: <20200808233941.3619277-1-sashal@kernel.org>
+References: <20200808233941.3619277-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,47 +60,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
+[ Upstream commit 2300e6dab473e93181cf76e4fe6671aa3d24c57b ]
 
-The device tree currently only assigns the a supply for the first CPU
-core, when in reality the regulator supply is shared by all four cores.
-This might cause an issue if the implementation does not realize the
-sharing of the supply.
+The lion gmac node currently uses opposite active-values for the
+gmac phy reset pin. The gpio-declaration uses active-high while the
+separate snps,reset-active-low property marks the pin as active low.
 
-Assign the same regulator supply to the remaining CPU cores to address
-this.
+While on the kernel side this works ok, other DT users may get
+confused - as seen with uboot right now.
 
-Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
+So bring this in line and make both properties match, similar to the
+other Rockchip board.
+
+Fixes: d99a02bcfa81 ("arm64: dts: rockchip: add RK3368-uQ7 (Lion) SoM")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20200607212909.920575-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-index 22466afd38a3a..a628b5ee72b65 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
- &cpu0 {
- 	cpu-supply = <&reg_vdd_cpux>;
- };
-+
-+&cpu1 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
+index 1315972412df3..23098c13ad83b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
+@@ -159,7 +159,7 @@ &gmac {
+ 	pinctrl-0 = <&rgmii_pins>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_HIGH>;
++	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
+ 	tx_delay = <0x10>;
+ 	rx_delay = <0x10>;
+ 	status = "okay";
 -- 
 2.25.1
 
