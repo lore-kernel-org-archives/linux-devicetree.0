@@ -5,53 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F66FC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEDC207BB
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A92720716
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929758;
-	bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+	s=default; t=1596929799;
+	bh=uiIpGsEYTqwL6nQJ02O5kTo3YTu+/mkyN/E6AG/P8pM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kcCQFlgeGyuxWtVhA3eCgk+rUqNoWGXVSecpZ/RddlUj324Z1V7T3k5cDBY9AV3QI
-	 6dfoILs511uojyNRY4rFasGu9YPTJk4zV26rNCXe0+aSMUse3GlDZm+LCyYY41MMRt
-	 XEHCzkhdaXnISbagxfl0bdHSNORz3xx++PWrgEvY=
+	b=jMeoB1Bthr4k+Ijm8Y4PqHsdRGadPlt5hwxj26HcuP3Box33WRDSWRsY8h1KYW1eo
+	 bBs5m5/SXuvkwvo8JT6YAv2ZCXjeJSAezPCcs3vZfMb6HHtc3JY25Lc9Bi98jKlsTS
+	 ht6KjHateygKrhWW6s8pJtGvSoparGHMxvbAR8r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgHHXf5 (ORCPT
+        id S1726958AbgHHXgh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgHHXf4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:35:56 -0400
+        id S1726935AbgHHXgf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D335206C3;
-        Sat,  8 Aug 2020 23:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E837206C3;
+        Sat,  8 Aug 2020 23:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929756;
-        bh=sB317FLKXl8ZWzvoUjIVlaxiV8Hf9CrJJB1t9Ct1CJM=;
+        s=default; t=1596929795;
+        bh=uiIpGsEYTqwL6nQJ02O5kTo3YTu+/mkyN/E6AG/P8pM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=saHh26g877MHoXkCvECVmlx4sILZN3wAbfORu8mNjIi/HzSdYddmb8SLRoO5bmIOf
-         9oawQfctq7mqE2Elu7Y4r0+QS6A3PlT7lgbhzY51m6b7irCGoVQR65r/MLwSVvrqlu
-         YXT9pgGlCSscCDPPRXgh+PhKNjaxCnlenQmGxIho=
+        b=M4HsklInVhAAE+r1pxZvszRr3vg6bs0tUrYr9JhyIH23SK41a+bOG1EstShHNE1Lh
+         +ZVHuGZHltKSyCD+qGfp4M3SL9OhozWnnlO37Z2lAWbo7y8ncdKPr7EWry6Wj7m+1p
+         7KZunv757XTYq63cgSW6QjQZxMYRnzmxJS7VVE8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 10/72] arm64: dts: rockchip: fix rk3368-lion gmac reset gpio
-Date:   Sat,  8 Aug 2020 19:34:39 -0400
-Message-Id: <20200808233542.3617339-10-sashal@kernel.org>
+Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 34/72] ARM: dts: gose: Fix ports node name for adv7612
+Date:   Sat,  8 Aug 2020 19:35:03 -0400
+Message-Id: <20200808233542.3617339-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +62,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[ Upstream commit 2300e6dab473e93181cf76e4fe6671aa3d24c57b ]
+[ Upstream commit 59692ac5a7bb8c97ff440fc8917828083fbc38d6 ]
 
-The lion gmac node currently uses opposite active-values for the
-gmac phy reset pin. The gpio-declaration uses active-high while the
-separate snps,reset-active-low property marks the pin as active low.
+When adding the adv7612 device node the ports node was misspelled as
+port, fix this.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
-
-So bring this in line and make both properties match, similar to the
-other Rockchip board.
-
-Fixes: d99a02bcfa81 ("arm64: dts: rockchip: add RK3368-uQ7 (Lion) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200607212909.920575-1-heiko@sntech.de
+Fixes: bc63cd87f3ce924f ("ARM: dts: gose: add HDMI input")
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/20200713111016.523189-1-niklas.soderlund+renesas@ragnatech.se
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi | 2 +-
+ arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-index e17311e090826..216aafd90e7f1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi
-@@ -156,7 +156,7 @@ &gmac {
- 	pinctrl-0 = <&rgmii_pins>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
--	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PB3 GPIO_ACTIVE_LOW>;
- 	tx_delay = <0x10>;
- 	rx_delay = <0x10>;
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index a378b54867bb4..10c3536b8e3d9 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -394,7 +394,7 @@ hdmi-in@4c {
+ 			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+ 			default-input = <0>;
+ 
+-			port {
++			ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
 -- 
 2.25.1
 
