@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE83C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C602EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79E8F206B5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1DC206B5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930628;
-	bh=CD3HPUADLYe44TSi72mJmigB4TKXwZYje3mQ+Tm1oJA=;
+	s=default; t=1596930634;
+	bh=z7ZNn6eeYtfkCDO8d2hkE9LchQxp4kDowcvpH3wRMhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fzYLo3sBY/G8c7wpkdQtfSPZWG/a++CUczDSyEFFIVbzGqSOU06MANWSjiv2AJrsk
-	 GXmZwpuCkYUOkAEc5gHE4Bsk3up8ohxYPQ9sDpba5LYQ0FZjrooPq+qW7Gn6IQU8Rp
-	 6FGypvmdw+BwP/yayIpUFuJFFlz5mTwYY8A8HVbI=
+	b=GgqBPO07xK6OTM0tX5hk2ARBUH3oL9wg26WDtyNF8gokrtXxERmeEXTH8RneUeK1E
+	 Ls9er/dalvhghhGKKcoUm12pkqB3gHa/tCaUR61i1gzohN0ovhfJTPVJJ55Jwnzt1S
+	 hX8o/BGKT85JMFT06V8ZaiqvBTSlqxSVNYrBW3wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgHHXgj (ORCPT
+        id S1726949AbgHHXgg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49248 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgHHXgi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:38 -0400
+        id S1726927AbgHHXgf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E62B206C3;
-        Sat,  8 Aug 2020 23:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB238206E9;
+        Sat,  8 Aug 2020 23:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929797;
-        bh=CD3HPUADLYe44TSi72mJmigB4TKXwZYje3mQ+Tm1oJA=;
+        s=default; t=1596929793;
+        bh=z7ZNn6eeYtfkCDO8d2hkE9LchQxp4kDowcvpH3wRMhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTTk8jV8xMHer0yyGJy0DQbaNE/Yc+2Cq2AfLjC4jqexbA2yfdqW2AeFD00zyWcgg
-         CFekU2/rrgmlQSvBXPlMaKtkOtj7zfoNYPxvvyAAzrfmIsLHPhwFZPKuHnS8yA+8Ba
-         ZRa0CIgFL0WavmlFOj1wTgJr9dFNJmk0izgBDqXc=
+        b=IJUz+BtzxzrRhMd0WLpixWZTwGYpaIiBSL2YJW4C3fS3syc+IvnQCsDl3/1XdnILR
+         HJHVa4WKFZ/jhs2rgfgplzw3LRUMTCmpKVS+Jm3kHsbPsRY8Wsp5AaCTu8B9Ehy1h5
+         yLHyVFvCEk8mpYFwrrEHyno0G6gMNYyiBba++fsg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 36/72] ARM: dts: exynos: Disable frequency scaling for FSYS bus on Odroid XU3 family
-Date:   Sat,  8 Aug 2020 19:35:05 -0400
-Message-Id: <20200808233542.3617339-36-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 33/72] arm64: dts: renesas: Fix SD Card/eMMC interface device node names
+Date:   Sat,  8 Aug 2020 19:35:02 -0400
+Message-Id: <20200808233542.3617339-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -62,56 +60,353 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit 9ff416cf45a08f28167b75045222c762a0347930 ]
+[ Upstream commit a6cb262af1e1adfa6287cb43f09021ee42beb21c ]
 
-Commit 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the
-values correct for Exynos5422 Odroids") changed the parameters of the
-OPPs for the FSYS bus. Besides the frequency adjustments, it also removed
-the 'shared-opp' property from the OPP table used for FSYS_APB and FSYS
-busses.
+Fix the device node names as "mmc@".
 
-This revealed that in fact the FSYS bus frequency scaling never worked.
-When one OPP table is marked as 'opp-shared', only the first bus which
-selects the OPP sets the rate of its clock. Then OPP core assumes that
-the other busses have been changed to that OPP and no change to their
-clock rates are needed. Thus when FSYS_APB bus, which was registered
-first, set the rate for its clock, the OPP core did not change the FSYS
-bus clock later.
-
-The mentioned commit removed that behavior, what introduced a regression
-on some Odroid XU3 boards. Frequency scaling of the FSYS bus causes
-instability of the USB host operation, what can be observed as network
-hangs. To restore old behavior, simply disable frequency scaling for the
-FSYS bus.
-
-Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
-Fixes: 1019fe2c7280 ("ARM: dts: exynos: Adjust bus related OPPs to the values correct for Exynos5422 Odroids")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 663386c3e1aa ("arm64: dts: renesas: r8a774a1: Add SDHI nodes")
+Fixes: 9b33e3001b67 ("arm64: dts: renesas: Initial r8a774b1 SoC device tree")
+Fixes: 77223211f44d ("arm64: dts: renesas: r8a774c0: Add SDHI nodes")
+Fixes: d9d67010e0c6 ("arm64: dts: r8a7795: Add SDHI support to dtsi")
+Fixes: a513cf1e6457 ("arm64: dts: r8a7796: add SDHI nodes")
+Fixes: 111cc9ace2b5 ("arm64: dts: renesas: r8a77961: Add SDHI nodes")
+Fixes: f51746ad7d1f ("arm64: dts: renesas: Add Renesas R8A77961 SoC support")
+Fixes: df863d6f95f5 ("arm64: dts: renesas: initial R8A77965 SoC device tree")
+Fixes: 9aa3558a02f0 ("arm64: dts: renesas: ebisu: Add and enable SDHI device nodes")
+Fixes: 83f18749c2f6 ("arm64: dts: renesas: r8a77995: Add SDHI (MMC) support")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1594382634-13714-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a774b1.dtsi | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 6 +++---
+ arch/arm64/boot/dts/renesas/r8a77951.dtsi | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a77960.dtsi | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a77961.dtsi | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a77990.dtsi | 6 +++---
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 2 +-
+ 9 files changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index ab27ff8bc3dca..afe090578e8fa 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -411,12 +411,6 @@ &bus_fsys_apb {
- 	status = "okay";
- };
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index a603d947970ec..16b059d7fd015 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -2250,7 +2250,7 @@ usb2_phy1: usb-phy@ee0a0200 {
+ 			status = "disabled";
+ 		};
  
--&bus_fsys {
--	operating-points-v2 = <&bus_fsys2_opp_table>;
--	devfreq = <&bus_wcore>;
--	status = "okay";
--};
--
- &bus_fsys2 {
- 	operating-points-v2 = <&bus_fsys2_opp_table>;
- 	devfreq = <&bus_wcore>;
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a774a1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -2262,7 +2262,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a774a1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -2274,7 +2274,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi2: sd@ee140000 {
++		sdhi2: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a774a1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
+@@ -2286,7 +2286,7 @@ sdhi2: sd@ee140000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a774a1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+index 1e51855c7cd38..6db8b6a4d191b 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+@@ -2108,7 +2108,7 @@ usb2_phy1: usb-phy@ee0a0200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a774b1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -2120,7 +2120,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a774b1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -2132,7 +2132,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi2: sd@ee140000 {
++		sdhi2: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a774b1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
+@@ -2144,7 +2144,7 @@ sdhi2: sd@ee140000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a774b1",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+index 5c72a7efbb035..42171190cce46 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+@@ -1618,7 +1618,7 @@ usb2_phy0: usb-phy@ee080200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a774c0",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -1630,7 +1630,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a774c0",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -1642,7 +1642,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a774c0",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77951.dtsi b/arch/arm64/boot/dts/renesas/r8a77951.dtsi
+index 61d67d9714ab9..9beb8e76d9235 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77951.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77951.dtsi
+@@ -2590,7 +2590,7 @@ usb2_phy3: usb-phy@ee0e0200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a7795",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -2603,7 +2603,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a7795",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -2616,7 +2616,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi2: sd@ee140000 {
++		sdhi2: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a7795",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
+@@ -2629,7 +2629,7 @@ sdhi2: sd@ee140000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a7795",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77960.dtsi b/arch/arm64/boot/dts/renesas/r8a77960.dtsi
+index 33bf62acffbb7..4dfb7f0767871 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77960.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77960.dtsi
+@@ -2394,7 +2394,7 @@ usb2_phy1: usb-phy@ee0a0200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a7796",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -2407,7 +2407,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a7796",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -2420,7 +2420,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi2: sd@ee140000 {
++		sdhi2: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a7796",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
+@@ -2433,7 +2433,7 @@ sdhi2: sd@ee140000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a7796",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
+index 760e738b75b3d..eabb0e635cd4c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
+@@ -1257,7 +1257,7 @@ usb2_phy1: usb-phy@ee0a0200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a77961",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -1269,7 +1269,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a77961",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -1281,7 +1281,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi2: sd@ee140000 {
++		sdhi2: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a77961",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
+@@ -1293,7 +1293,7 @@ sdhi2: sd@ee140000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a77961",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 6f7ab39fd2824..fe4dc12e2bdfa 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -2120,7 +2120,7 @@ usb2_phy1: usb-phy@ee0a0200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a77965",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -2133,7 +2133,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a77965",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -2146,7 +2146,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi2: sd@ee140000 {
++		sdhi2: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a77965",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
+@@ -2159,7 +2159,7 @@ sdhi2: sd@ee140000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a77965",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+index cd11f24744d4a..1991bdc36792f 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
+@@ -1595,7 +1595,7 @@ usb2_phy0: usb-phy@ee080200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi0: sd@ee100000 {
++		sdhi0: mmc@ee100000 {
+ 			compatible = "renesas,sdhi-r8a77990",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee100000 0 0x2000>;
+@@ -1608,7 +1608,7 @@ sdhi0: sd@ee100000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi1: sd@ee120000 {
++		sdhi1: mmc@ee120000 {
+ 			compatible = "renesas,sdhi-r8a77990",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee120000 0 0x2000>;
+@@ -1621,7 +1621,7 @@ sdhi1: sd@ee120000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi3: sd@ee160000 {
++		sdhi3: mmc@ee160000 {
+ 			compatible = "renesas,sdhi-r8a77990",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee160000 0 0x2000>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index e5617ec0f49cb..2c2272f5f5b52 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -916,7 +916,7 @@ usb2_phy0: usb-phy@ee080200 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdhi2: sd@ee140000 {
++		sdhi2: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a77995",
+ 				     "renesas,rcar-gen3-sdhi";
+ 			reg = <0 0xee140000 0 0x2000>;
 -- 
 2.25.1
 
