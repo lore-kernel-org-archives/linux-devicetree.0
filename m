@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE56C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 21:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BBBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 21:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26EAD206CD
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 21:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3724206B6
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 21:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wbOX5wvD"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NL2MjYY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgHHVGy (ORCPT
+        id S1726463AbgHHVNm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 17:06:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
+        Sat, 8 Aug 2020 17:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgHHVGy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Aug 2020 17:06:54 -0400
+        with ESMTP id S1726200AbgHHVNl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Aug 2020 17:13:41 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E28C061756;
-        Sat,  8 Aug 2020 14:06:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A745AC061756;
+        Sat,  8 Aug 2020 14:13:41 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (85-76-78-184-nat.elisa-mobile.fi [85.76.78.184])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 37A64F9;
-        Sat,  8 Aug 2020 23:06:48 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 92B2AF9;
+        Sat,  8 Aug 2020 23:13:38 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1596920813;
-        bh=wBoG54W+/jDooiVBY76hppIsOwwlaHbKCiW74XOTc/s=;
+        s=mail; t=1596921219;
+        bh=rtS6tS3nmrZ2AAjnJbktvLuwGb3JE1Bru8oeDg8DkDk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wbOX5wvD20ZYK7WxF1vHAF8CqhL16GWG0UV+DlPa31b4mjzq1ScU9TPhd3zXeO/VQ
-         czp/pItI0cINu6VmtM3ywKTeh1y0QfWFvmxSts4XnT78eu7sXzl5GaIQJ1823T1dUe
-         aFGb/Tk8k+yyTnxWCb66QIx2OzNcVLXkHbIc0/pg=
-Date:   Sun, 9 Aug 2020 00:06:31 +0300
+        b=NL2MjYY6cydNHOnjQ3wufTITscClL0972hLsySCWwOibCWKCN688Uw4V3/Fbm2suL
+         W9K5hSXQP1N+476ZYm7l669wpGinOL66oDPrQi+t44XlEiJkRABi64nwAu30io5yBK
+         4FlXBL5PUt15aEtA3ql4FPp941fPuSr382DhpS+I=
+Date:   Sun, 9 Aug 2020 00:13:23 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -47,14 +47,14 @@ Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 4/7] drm: rcar-du: lvds: Add r8a7742 support
-Message-ID: <20200808210631.GQ6186@pendragon.ideasonboard.com>
+Subject: Re: [PATCH 6/7] ARM: dts: r8a7742: Add LVDS support
+Message-ID: <20200808211323.GR6186@pendragon.ideasonboard.com>
 References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200807174954.14448-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200807174954.14448-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200807174954.14448-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -64,31 +64,93 @@ Hi Prabhakar,
 
 Thank you for the patch.
 
-On Fri, Aug 07, 2020 at 06:49:51PM +0100, Lad Prabhakar wrote:
-> The LVDS encoders on RZ/G1H SoC is identical to the R-Car Gen2 family. Add
-> support for RZ/G1H (R8A7742) SoC to the LVDS encoder driver.
+On Fri, Aug 07, 2020 at 06:49:53PM +0100, Lad Prabhakar wrote:
+> Add LVDS encoder node to r8a7742 SoC DT.
 > 
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> ---
+>  arch/arm/boot/dts/r8a7742.dtsi | 54 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+> index a979a4b3de61..a7e66220d63a 100644
+> --- a/arch/arm/boot/dts/r8a7742.dtsi
+> +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> @@ -1534,11 +1534,65 @@
+>  				port@1 {
+>  					reg = <1>;
+>  					du_out_lvds0: endpoint {
+> +						remote-endpoint = <&lvds0_in>;
+>  					};
+>  				};
+>  				port@2 {
+>  					reg = <2>;
+>  					du_out_lvds1: endpoint {
+> +						remote-endpoint = <&lvds1_in>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		lvds0: lvds@feb90000 {
+> +			compatible = "renesas,r8a7742-lvds";
+> +			reg = <0 0xfeb90000 0 0x1c>;
+
+Isn't 0x14 enough for the size ? 0x1c won't hurt though. Same comment
+below.
+
+With or without this addressed,
 
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> ---
->  drivers/gpu/drm/rcar-du/rcar_lvds.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> index ab0d49618cf9..34b833cc05be 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> @@ -982,6 +982,7 @@ static const struct rcar_lvds_device_info rcar_lvds_r8a77995_info = {
->  };
->  
->  static const struct of_device_id rcar_lvds_of_table[] = {
-> +	{ .compatible = "renesas,r8a7742-lvds", .data = &rcar_lvds_gen2_info },
->  	{ .compatible = "renesas,r8a7743-lvds", .data = &rcar_lvds_gen2_info },
->  	{ .compatible = "renesas,r8a7744-lvds", .data = &rcar_lvds_gen2_info },
->  	{ .compatible = "renesas,r8a774a1-lvds", .data = &rcar_lvds_gen3_info },
+> +			clocks = <&cpg CPG_MOD 726>;
+> +			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+> +			resets = <&cpg 726>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					lvds0_in: endpoint {
+> +						remote-endpoint = <&du_out_lvds0>;
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +					lvds0_out: endpoint {
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		lvds1: lvds@feb94000 {
+> +			compatible = "renesas,r8a7742-lvds";
+> +			reg = <0 0xfeb94000 0 0x1c>;
+> +			clocks = <&cpg CPG_MOD 725>;
+> +			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
+> +			resets = <&cpg 725>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					lvds1_in: endpoint {
+> +						remote-endpoint = <&du_out_lvds1>;
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +					lvds1_out: endpoint {
+>  					};
+>  				};
+>  			};
 
 -- 
 Regards,
