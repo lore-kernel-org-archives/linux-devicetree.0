@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463CBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F6BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13220206B5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4307D20672
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930619;
-	bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+	s=default; t=1596930627;
+	bh=8INbqVHcC//Bj7jsi7PEmcghl29Dn+dGUL9hboMj/8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M2qNG3J4oW5EZWwvv0ChIx7FXLz4FWPnQM/ILja8pctmhaPpNZyD7j8FyIv8gZAiK
-	 7TmYYl9o2jA8ULHsBKq4TkDcv7471VZEpkx+WRcHSemRB2d7cKR4gBCqRy1fiuMvYn
-	 W20Bw9XTmwAzOCTZ5/PpSlviDqJRWDE+w39SREsM=
+	b=hA6mbeW86QkBJxQP7PkTIA8p5o1nVJk1FIkm4bqrdiFp/7wn0g9zHia0YMVCyXWjZ
+	 EZ4RbYT+cdxk/yBwzBq+RlIXekPrJs02bvnJ2Cg/K/bNDcsuu40oL7tkYVerM0j8U8
+	 ZFhsdG1k0+nmx+MIH5SGJQwjjmPsoIY+kF6FGCF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgHHXuS (ORCPT
+        id S1726984AbgHHXuX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:50:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49428 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbgHHXgn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:43 -0400
+        id S1726903AbgHHXgk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8445F2075D;
-        Sat,  8 Aug 2020 23:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29246206D8;
+        Sat,  8 Aug 2020 23:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929802;
-        bh=r9cARwlmRmQB2cn/JMr7t+CaD0wcuI04mAkfiugb6E4=;
+        s=default; t=1596929799;
+        bh=8INbqVHcC//Bj7jsi7PEmcghl29Dn+dGUL9hboMj/8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hFmRidix3ACMxyfkatuZ0PmPk3686DLPF5ZAlG29l0CDyoBwwEEhbswsiqIDmyqH5
-         UrIMZ+iug/vLwWYEyEBEEshu5lDMSqhJ0TpvM8oqdVnfd7F34EEfAroXUjxkBqfUkW
-         IypmmWtGFgu7nJXh3ExVCkM2nzWNdFiTqLxEJR1o=
+        b=lwE92NZQCRNbm7qLbeh5luOwj1xaszQxnwoR/8bRlXnS+E5mcuB7ocIcTU3O5HPrN
+         MKKBzaCRZK3+DwRE/tlj4oUOIuDRFVVA8mwaR94Bs1xY9VEZdUinjZ7m6bum92SwJ0
+         hdsjP9jf8KAyqPrTIil3a9/dsfTLlp95H550bFDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 40/72] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
-Date:   Sat,  8 Aug 2020 19:35:09 -0400
-Message-Id: <20200808233542.3617339-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 38/72] ARM: dts: at91: sama5d3_xplained: change phy-mode
+Date:   Sat,  8 Aug 2020 19:35:07 -0400
+Message-Id: <20200808233542.3617339-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -59,47 +59,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit e4dae01bf08b754de79072441c357737220b873f ]
+[ Upstream commit 7dbf4bbf1c320d82058878bd44805724d171e1e8 ]
 
-The Bananapi M2+ uses a GPIO line to change the effective resistance of
-the CPU supply regulator's feedback resistor network. The voltages
-described in the device tree were given directly by the vendor. This
-turns out to be slightly off compared to the real values.
+Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+KSZ9031 PHY"), networking is broken on sama5d3 xplained.
 
-The updated voltages are based on calculations of the feedback resistor
-network, and verified down to three decimal places with a multi-meter.
+The device tree has phy-mode = "rgmii" and this worked before, because
+KSZ9031 PHY started with default RGMII internal delays configuration (TX
+off, RX on 1.2 ns) and MAC provided TX delay. After above commit, the
+KSZ9031 PHY starts handling phy mode properly and disables RX delay, as
+result networking is become broken.
 
-Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/r/20200717160053.31191-4-wens@kernel.org
+Fix it by switching to phy-mode = "rgmii-rxid" to reflect previous
+behavior.
+
+Fixes: bcf3440c6dd78bfe ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20200717233644.841080-1-alexandre.belloni@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/at91-sama5d3_xplained.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-index a628b5ee72b65..235994a4a2ebb 100644
---- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -16,12 +16,12 @@ reg_vdd_cpux: vdd-cpux {
- 		regulator-type = "voltage";
- 		regulator-boot-on;
- 		regulator-always-on;
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1300000>;
-+		regulator-min-microvolt = <1108475>;
-+		regulator-max-microvolt = <1308475>;
- 		regulator-ramp-delay = <50>; /* 4ms */
- 		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
- 		gpios-states = <0x1>;
--		states = <1100000 0>, <1300000 1>;
-+		states = <1108475 0>, <1308475 1>;
- 	};
- };
+diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+index 61f068a7b362a..7abf555cd2fe3 100644
+--- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+@@ -128,7 +128,7 @@ vddana_reg: LDO_REG2 {
+ 			};
  
+ 			macb0: ethernet@f0028000 {
+-				phy-mode = "rgmii";
++				phy-mode = "rgmii-rxid";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "okay";
 -- 
 2.25.1
 
