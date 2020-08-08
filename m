@@ -2,94 +2,87 @@ Return-Path: <SRS0=1SIx=BS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F20C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 02:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747C9C433E4
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 03:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E500022D74
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 02:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E48F221E5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 03:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PdgSFw7v"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qA5UwQJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgHHCyu (ORCPT
+        id S1726202AbgHHDiT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 22:54:50 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31249 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726402AbgHHCyu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 22:54:50 -0400
-X-UUID: ddbac345f5e74a21981891c55e09fc18-20200808
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=kWZieeEiWrI+QZxqM8iMJlo9waGC/mplSmKIIdhtLMI=;
-        b=PdgSFw7vspKz17JdzFIEkma5RdcW3k+kTkWggYb+mTlFmeJaGYU7ME7rm+AluucggevyUCyMCYlJPEjeALEnG2OYS34lOqjJkAPdklg0qIWN9tedegs5HpN3tAss310WcTUHlHClWWk8VDM+BijQtxBRku3nW+dcLpzxBUneLNA=;
-X-UUID: ddbac345f5e74a21981891c55e09fc18-20200808
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 8359250; Sat, 08 Aug 2020 10:54:41 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 8 Aug 2020 10:54:39 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 8 Aug 2020 10:54:39 +0800
-From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [RESEND v7, PATCH 1/7] dt-bindings: mediatek: add rdma_fifo_size description for mt8183 display
-Date:   Sat, 8 Aug 2020 10:53:45 +0800
-Message-ID: <1596855231-5782-2-git-send-email-yongqiang.niu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
-References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Fri, 7 Aug 2020 23:38:19 -0400
+Received: from m12-15.163.com ([220.181.12.15]:53170 "EHLO m12-15.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbgHHDiS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Aug 2020 23:38:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=b4Vljfz11N5B3BsXB/
+        jU+jLNNdpMd3l8kupGK/FIHnQ=; b=qA5UwQJunYoKky7jyzdoOO7BiUiDJnfUpl
+        7FnzlXWMXhvNw0BXLLz2bFds0T3r/8u83UnJyKo3X0BVbvZRFPa/jb7If7+yosA7
+        eYh5A2j92mSxH/0QYsnSZfVYQ8wLOdv5U8h3l2ruH2EdsgFb9punixbmRP/vFaes
+        t0rAZ+ffs=
+Received: from localhost.localdomain (unknown [58.33.126.62])
+        by smtp11 (Coremail) with SMTP id D8CowACnoqoHHi5fN_NeEw--.35350S3;
+        Sat, 08 Aug 2020 11:37:50 +0800 (CST)
+From:   Grant Feng <von81@163.com>
+To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] leds: Add an optional property named 'sdb-gpios'
+Date:   Sat,  8 Aug 2020 11:37:31 +0800
+Message-Id: <20200808033731.15695-2-von81@163.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200808033731.15695-1-von81@163.com>
+References: <20200808033731.15695-1-von81@163.com>
+X-CM-TRANSID: D8CowACnoqoHHi5fN_NeEw--.35350S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4fCFWfXFW7XFy3XrWfAFb_yoWkKFX_G3
+        Z7JrsFqas8uF1vgr4qvr15Wr43Cr47AF1kCw15ZF48Aw1fXas09FZ7t34Yyr15WFZxurZx
+        C3ykCr4qqr17GjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU09qXPUUUUU==
+X-Originating-IP: [58.33.126.62]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/xtbBiA96OlaD8Fa+wAAAsK
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-cmRtYSBmaWZvIHNpemUgbWF5IGJlIGRpZmZlcmVudCBldmVuIGluIHNhbWUgU09DLCBhZGQgdGhp
-cw0KcHJvcGVydHkgdG8gdGhlIGNvcnJlc3BvbmRpbmcgcmRtYQ0KDQpDaGFuZ2UtSWQ6IEk2NzYz
-NWVjN2YzZjU5Y2Y0Y2JjNzczNzI4NWU1ZTI4ZmYwYWI3MWM5DQpTaWduZWQtb2ZmLWJ5OiBZb25n
-cWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgfCAxNCArKysr
-KysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
-ZWRpYXRlayxkaXNwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0DQppbmRleCBiOTFlNzA5Li5lNmJiZTMyIDEw
-MDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVk
-aWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3AudHh0DQpAQCAtNjYsNiArNjYs
-MTEgQEAgUmVxdWlyZWQgcHJvcGVydGllcyAoRE1BIGZ1bmN0aW9uIGJsb2Nrcyk6DQogICBhcmd1
-bWVudCwgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9tZWRpYXRl
-ayxpb21tdS50eHQNCiAgIGZvciBkZXRhaWxzLg0KIA0KK09wdGlvbmFsIHByb3BlcnRpZXMgKFJE
-TUEgZnVuY3Rpb24gYmxvY2tzKToNCistIG1lZGlhdGVrLHJkbWFfZmlmb19zaXplOiByZG1hIGZp
-Zm8gc2l6ZSBtYXkgYmUgZGlmZmVyZW50IGV2ZW4gaW4gc2FtZSBTT0MsIGFkZCB0aGlzDQorICBw
-cm9wZXJ0eSB0byB0aGUgY29ycmVzcG9uZGluZyByZG1hDQorICB0aGUgdmFsdWUgaXMgdGhlIE1h
-eCB2YWx1ZSB3aGljaCBkZWZpbmVkIGluIGhhcmR3YXJlIGRhdGEgc2hlZXQuDQorDQogRXhhbXBs
-ZXM6DQogDQogbW1zeXM6IGNsb2NrLWNvbnRyb2xsZXJAMTQwMDAwMDAgew0KQEAgLTIwNywzICsy
-MTIsMTIgQEAgb2RAMTQwMjMwMDAgew0KIAlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTcz
-X1BPV0VSX0RPTUFJTl9NTT47DQogCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfT0Q+Ow0K
-IH07DQorDQorcmRtYTE6IHJkbWFAMTQwMGMwMDAgew0KKwljb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10ODE4My1kaXNwLXJkbWEiOw0KKwlyZWcgPSA8MCAweDE0MDBjMDAwIDAgMHgxMDAwPjsNCisJ
-aW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyOSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KKwlwb3dlci1k
-b21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCisJY2xvY2tzID0g
-PCZtbXN5cyBDTEtfTU1fRElTUF9SRE1BMT47DQorCW1lZGlhdGVrLHJkbWFfZmlmb19zaXplID0g
-PDIwNDg+Ow0KK307DQotLSANCjEuOC4xLjEuZGlydHkNCg==
+The chip enters hardware shutdown when the SDB pin is pulled low.
+The chip releases hardware shutdown when the SDB pin is pulled high.
+
+Signed-off-by: Grant Feng <von81@163.com>
+---
+ Documentation/devicetree/bindings/leds/leds-is31fl319x.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+index fc2603484544..e8bef4be57dc 100644
+--- a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
++++ b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+@@ -16,6 +16,7 @@ Optional properties:
+ - audio-gain-db : audio gain selection for external analog modulation input.
+ 	Valid values: 0 - 21, step by 3 (rounded down)
+ 	Default: 0
++- sdb-gpios : Specifier of the GPIO connected to SDB pin.
+ 
+ Each led is represented as a sub-node of the issi,is31fl319x device.
+ There can be less leds subnodes than the chip can support but not more.
+@@ -44,6 +45,7 @@ fancy_leds: leds@65 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	reg = <0x65>;
++	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+ 
+ 	red_aux: led@1 {
+ 		label = "red:aux";
+-- 
+2.17.1
+
 
