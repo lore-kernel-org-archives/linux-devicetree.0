@@ -2,226 +2,98 @@ Return-Path: <SRS0=1SIx=BS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D9BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 07:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F98C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 12:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE19221E2
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 07:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563042053B
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 12:27:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="1VzsDiFw"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Ac8Ay/g4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgHHHsW (ORCPT
+        id S1726125AbgHHM1x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 03:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgHHHsU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Aug 2020 03:48:20 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C54C061756
-        for <devicetree@vger.kernel.org>; Sat,  8 Aug 2020 00:48:19 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g6so4474739ljn.11
-        for <devicetree@vger.kernel.org>; Sat, 08 Aug 2020 00:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=TLcg4skVrYQV7y3Fp8lGIPLLhHgq3utx3e26pLPa0Zw=;
-        b=1VzsDiFwx3l4LbKM/adAoH2A5LXc8uTDm51hB67MB1DJvEWnbiUdZNnlk/zqW1rXSg
-         e84S+Nl/AciZotRytrok/YlrcU/uiDU1/77EXZK77pT6Q1oC5xrOJvfLcVhpUqE98khz
-         6kTVv/T8M1DZVlE+3yMPlWUbNv3pfTNYDdvwHeR5NreLP+hgq/2HDHCW9MFGvqOReLCc
-         2eP5+ic5f/8mKBztlQVtF3jMIMGyQywRBgosNIzttuxZzA6TQNn9uiVR0bbgnDa6HZle
-         DPPPCBx6a+HQgGGayBbSWTf2mDUUjjNMxEx9zwDmzxCXS51qFl126b0ccUDbq3JU/9Vo
-         rIwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TLcg4skVrYQV7y3Fp8lGIPLLhHgq3utx3e26pLPa0Zw=;
-        b=pWZPR9t5VfyIKVJnRbkrfBljL4FFR8lSLvteEwOWqRs0Rb15Obh7CLFesOiP9voWze
-         xolPN4Q7cA6fDzOb6KtNLHbBulgOV+fIQ7OKOV9s1cSvZUkGA5wFnd8sCfcFJD1Yuavp
-         Fz3cyCU741VACS5otnYpu7UngTarkYkzgf5M2J73DVLyLRlnLiQy7sAm6cIfBkwOKK5w
-         JmQ23dTGjYZP1elvQBOWJK5J2VR58bvZQpaiwibFVIooc0K0DS/sLlZnkXIUErhZboM7
-         5UONJKBjCdLAQCAxMKLEvj1oxAfbD0rig6c1ff1WC5hYkh27R6YgsTSy+6//tP6H05kd
-         cyUA==
-X-Gm-Message-State: AOAM530dRBdx9IP2VlDjyMZ1NCrnecaEsdQZT3wtOE1DjQt8F/+8fllG
-        VkpIh3k4kFq19mYohEJV2gPbqA==
-X-Google-Smtp-Source: ABdhPJyzPqtbc6UrehHkmR4Cf0yev8vWKE8xcenwd+6WhMYR2wiWLxsRKUzx4J4XCGaANv0EYiKsqQ==
-X-Received: by 2002:a2e:b8cf:: with SMTP id s15mr8289054ljp.166.1596872895201;
-        Sat, 08 Aug 2020 00:48:15 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id o68sm5341891lff.57.2020.08.08.00.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2020 00:48:14 -0700 (PDT)
-Date:   Sat, 8 Aug 2020 09:48:12 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2
- nodes
-Message-ID: <20200808074812.GD3387836@oden.dyn.berto.se>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
- <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
- <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com>
- <20200807112754.GC3387836@oden.dyn.berto.se>
- <CAMuHMdW1Ofjouj4P+bdg2VWmYohD73=si8R6ivZ4QiZps6=HAQ@mail.gmail.com>
+        Sat, 8 Aug 2020 08:27:53 -0400
+Received: from mout.gmx.net ([212.227.17.20]:40657 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725957AbgHHM1w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 08:27:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1596889651;
+        bh=YRbpvjuQuUd9oUTYdd74s47n04KsNZ+0RJ4NNZHvrW4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Ac8Ay/g4NhVcWKf1ivzizjaXPHEYlLspSJrl3IX9eX3w0NEmgiLY7P9w0FkMFQ1kV
+         z8pv1RdMycE7ypOg2SN5mZEdMLcJR7HohsAG3jeFyoFYc18DFn0eQ6sZC8JfIxCvbN
+         nV9nnEChY6Ew/C9O/iasVKgJwmP8mdg4jKvCQ5LQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.152.39] ([217.61.152.39]) by web-mail.gmx.net
+ (3c-app-gmx-bap69.server.lan [172.19.172.69]) (via HTTP); Sat, 8 Aug 2020
+ 14:27:31 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdW1Ofjouj4P+bdg2VWmYohD73=si8R6ivZ4QiZps6=HAQ@mail.gmail.com>
+Message-ID: <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        chunkuang Hu <chunkuang.hu@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Subject: Aw: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes
+ to mt7623n.dtsi
+Content-Type: text/plain; charset=UTF-8
+Date:   Sat, 8 Aug 2020 14:27:31 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20200807082754.6790-2-linux@fw-web.de>
+References: <20200807082754.6790-1-linux@fw-web.de>
+ <20200807082754.6790-2-linux@fw-web.de>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:ti0yCfi31/teh3YG5W8qHJKm0SNcwMUtl+Gh3qRvfzdI39vY36mhVNFwgmQlANRwWuXRO
+ Z6odYE+tNXJDzG2hhPWYLSJ+LehW097tyrdY4ZWCvmtw8QM1KOlsE3tWRUy+HszSnAJqLjymHU02
+ 70wAG2aV5CCLsxL8NCvVtNO0I6sHMK1kargEMcNlAOiz4XKtns3T+ioAUTclxBHnpHw/E/TUB+0k
+ uQb3Y1YlrpjhAwgYqCwuhQBImUKCyIjjZ+jglLM8Y2BjVAcb76w78MOuy9YNpMkqLSrP8J8NXR4L
+ wA=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:96prrdCvRSw=:4cFUpjcBGoMlIJ4q5azFOV
+ ZPu1Xu6AyqM0dVANroC5UivKoN6sCAV/hXO+hDGjcQuxftR4HvWuBvFXXQBbyJFUFc+g2VCtA
+ gYvg79gJ1dQ8BTVUFmEBLp1DzhuOL/0/Q7lbFxcWPxe1XaQf+c5bnEn3xdEyF2nYuoTtY9mra
+ RqnFsop3Xp6gjJAEA/jSigphoWVJdDtEFudZ9zT+rVYVlrLG8k1SIvgxv4soTKB4/X839pRrp
+ QaNKOAG+ikWmavzmSUUSft9gQyzBwFd5B90FZlqqMrysbLoa2luT7YMykhm7NZs8GAC5vNJbG
+ KQ+LsGq4zUqlrGOY/qzRPzCZrktH3Ecm7Yr0nr76md40e2Oyjxe0tEGc363p5CaGovKmvLyka
+ hBcAFFV3Mys1CN5HaNCuSlzEPFDWujiJZhJqlHBhZeiJisWr4xrMCAqgIwo4GW3phsuNQy2qm
+ AWQE2l+L0D90boCesDOnvmElbFEYqrzIXk5pEB95eJr/Pv6wJJRHnf+iwcWT5vDGfsjeTz4Hj
+ 7LNcRJvy6qZlnuJRmUbyPEIv8lhfNHfhIetqUYb+iWUouyUzjhJwWmvETV/aEkUEQmsyt/MVO
+ Zy2jK+Qr85BSwS9TyETEH+PP6LhgSlgdKpVDDJ4e20WyhgExqgLUOTLj2bpRZ6nOBZFL0rRQV
+ 8sse9Bnt5HaDJ8M9C8wFqpIKSONiJk/RcW7V154wSFM3SjjL0rvETAn7TmQcPJ/SBies=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert and Lad,
+Hi,
 
-On 2020-08-07 13:36:46 +0200, Geert Uytterhoeven wrote:
-> Hi Niklas,
-> 
-> On Fri, Aug 7, 2020 at 1:27 PM Niklas Söderlund
-> <niklas.soderlund@ragnatech.se> wrote:
-> > On 2020-08-06 13:47:58 +0200, Geert Uytterhoeven wrote:
-> > > On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
-> > > <prabhakar.csengg@gmail.com> wrote:
-> > > > On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-> > > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
-> > > > > >
-> > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > > >
-> > > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > >
-> > > > > However, before I queue this in renesas-devel for v5.10, I'd like to
-> > > > > have some clarification about the issue below.
-> > > > >
-> > > > > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > > > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > > >
-> > > > > > +               vin4: video@e6ef4000 {
-> > > > > > +                       compatible = "renesas,vin-r8a774e1";
-> > > > > > +                       reg = <0 0xe6ef4000 0 0x1000>;
-> > > > > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > +                       clocks = <&cpg CPG_MOD 807>;
-> > > > > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> > > > > > +                       resets = <&cpg 807>;
-> > > > > > +                       renesas,id = <4>;
-> > > > > > +                       status = "disabled";
-> > > > > > +
-> > > > > > +                       ports {
-> > > > > > +                               #address-cells = <1>;
-> > > > > > +                               #size-cells = <0>;
-> > > > > > +
-> > > > > > +                               port@1 {
-> > > > > > +                                       #address-cells = <1>;
-> > > > > > +                                       #size-cells = <0>;
-> > > > >
-> > > > > "make dtbs W=1" says:
-> > > > >
-> > > > >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
-> > > > > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
-> > > > > has single child node 'endpoint@0', #address-cells/#size-cells are not
-> > > > > necessary
-> > > > >
-> > > > > (same for vin5-7 below)
-> > > > >
-> > > > Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
-> > > > VIN endpoint numbering") we definitely need endpoint numbering.
-> > > > Probably the driver needs to be fixed to handle such cases.
-> > >
-> > > > > > +
-> > > > > > +                                       reg = <1>;
-> > > > > > +
-> > > > > > +                                       vin4csi20: endpoint@0 {
-> > > > > > +                                               reg = <0>;
-> > > > > > +                                               remote-endpoint = <&csi20vin4>;
-> > >
-> > > On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
-> > > complain. Here it is at address 0.
-> > >
-> > > Niklas?
-> >
-> > First the R-Car VIN driver makes decisions based on which endpoint is
-> > described, each endpoint 0-3 represents a different CSI-2 block on the
-> > other end (0: CSI20, 1: CSI21, 2: CSI40 and 3: CSI41).
-> 
-> That's my understanding, too.
-> 
-> > Then how to handle the warning I'm not sure. I can only really see 2
-> > options.
-> >
-> > 1. Ignore the warning.
-> > 2. Remove #address-cells, #size-cells and reg properties from port@ if
-> >    the only endpoint described is endpoint@0.
-> >
-> > I would prefers option 2. that is what we do in other cases (for example
-> > on Gen2 boards that only have a single parallel sensor in some early DTS
-> > files we don't have the ports node and just describe a single port with
-> > the same reasoning.
-> >
-> > We are not at risk at someone describing a second CSI-2 bock as an
-> > overlay so I see no real harm in option 2.
-> 
-> Yeah, no overlay possible for on-SoC wiring ;-)
-> 
-> > What are your thoughts Geert?
-> > You know more about DT then me.
-> 
-> You have too much faith in me ;-)
-> 
-> AFAIK we don't get this warning for e.g. SPI buses, which can have a
-> single device at address 0, and #{address,size}-cells is mandatory
-> there. So endpoints (or SPI?) are treated special?
+as i made a mistake in cover-letter, it is not assigned to the series.
 
-That is a good question, I don't know if either of those are treated 
-special. Lad could you look into this?
+to show its content, i send it here as comment (instead of resending the whole series):
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+based on series from David Woodhouse [1]
+i moved more display-nodes out of mt7623.dtsi to new mt7623n.dtsi
+and changed last part from my series [2] to add these nodes to this new dtsi
 
--- 
-Regards,
-Niklas Söderlund
+the depency of dtsi-dtsi-dts is already done for mt7623a, so i guess it's a good
+way to use it for mt7623n too.
+
+this first set is an RFC if all nodes are in right order and if it is wanted to move
+them out as i have no technical document about mt7623a/n which describes which parts
+are available on both or only on one of them
+
+added MTK DRM Maintainer CK Hu, Ryder Lee and Sean Wang, maybe they can give me some advice
+how to proceed further here
+
+[1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=329209
+[2] https://patchwork.kernel.org/patch/11700699/
