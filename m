@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BE0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED9AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A36B0206B5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CBD220672
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930492;
-	bh=n5BejSjOLaNTzyZ8gbGcxvwo3oVY7+1z+ltbc4YdsIE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vamYshNpKj8+SstIiCWlqVL1PR9mCWuFbyMMRgpctkvsfdthMHps0tpfyjVWYjAO2
-	 Ltsp2CwLcLNNw3pDvUdkhCzzm8zTSmOMYO2vIyEADufdBpRO3txSHUpaaCFO7c6nRt
-	 QSRg8ANJmjODu9QQnEJlr9+G6QEK58PIBTJ28gXk=
+	s=default; t=1596930583;
+	bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YOBO2ZDVW8kC3NffreSY4knaWAMNzztz0iAqjpHnzT6jGkrB+5epEheBcTAX5t6WY
+	 z/P3P9W061k9QHBXLqstf0UB8iaPgH9PblmCm8RXJAgq3O9HtRTqEpIVTN/pK6qdyM
+	 kPqd7mellCevtL2hKwVEO9G+dTYFNF5VEB0ptkUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgHHXh3 (ORCPT
+        id S1728072AbgHHXtm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:37:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgHHXh0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:26 -0400
+        id S1727104AbgHHXg4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E49B2075D;
-        Sat,  8 Aug 2020 23:37:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D2F206E9;
+        Sat,  8 Aug 2020 23:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929846;
-        bh=n5BejSjOLaNTzyZ8gbGcxvwo3oVY7+1z+ltbc4YdsIE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WotUL1i2ejVWD/YZk+P7yvZT/3r0jpOf0Cs3F3KYsgdSv6AnGc4b2DEYTg6ADSvXT
-         geHelzUydwp3LvikxNFZv66q7akoZRNHD+IYTcA0eN5q8K8nIdZU1yK9j1yiJIvOU4
-         ezZ3QzbDxcsJPDyEcqT8iOnL0GKZyKd8RIo5C7fU=
+        s=default; t=1596929815;
+        bh=PkKczme5tW5pmLkOMAZI0L7Dfxsl6ApuLO0C0aQmgH4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ewEmXvHEUz/v5ymIVQSLy6frQ42+Hn04Dd43L67E7MFWp4AEB86nfu+Ebogw85gRl
+         4Awgh1UmvsgTQWF/A+iVTBmybzwEVmLcioDv3sDdXbpXtECqpJEW/W67teHos0w7TK
+         LMZQmCNPOk0O947YAVMxkjqrspn+QOF7juNwciSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 01/58] ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
-Date:   Sat,  8 Aug 2020 19:36:27 -0400
-Message-Id: <20200808233724.3618168-1-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 50/72] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Sat,  8 Aug 2020 19:35:19 -0400
+Message-Id: <20200808233542.3617339-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
+References: <20200808233542.3617339-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,45 +61,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit 391e437eedc0dab0a9f2c26997e68e040ae04ea3 ]
+[ Upstream commit f1bb924e8f5b50752a80fa5b48c43003680a7b64 ]
 
-Fix uart7_pins_a comments to indicate UART7 pins instead of UART4 pins.
+Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+tuning errors on VIM3 after a few hours uptime:
 
-Fixes: bf4b5f379fed ("ARM: dts: stm32: Add missing pinctrl definitions for STM32MP157")
+[12483.917391] mmc0: tuning execution failed: -5
+[30535.551221] mmc0: tuning execution failed: -5
+[35359.953671] mmc0: tuning execution failed: -5
+[35561.875332] mmc0: tuning execution failed: -5
+[61733.348709] mmc0: tuning execution failed: -5
 
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+I do not see the same on VIM3L, so remove sd-uhs-sdr50 from the common dtsi
+to silence the error, then (re)add it to the VIM3L dts.
+
+Fixes: 4f26cc1c96c9 ("arm64: dts: khadas-vim3: move common nodes into meson-khadas-vim3.dtsi")
+Fixes: 700ab8d83927 ("arm64: dts: khadas-vim3: add support for the SM1 based VIM3L")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/20200721015950.11816-1-christianshewitt@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi     | 1 -
+ arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts | 4 ++++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 73c07f0dfad27..4b67b682dd53f 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1095,15 +1095,15 @@ pins2 {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+index 1ef1e3672b967..ff5ba85b7562e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
+@@ -270,7 +270,6 @@ &sd_emmc_a {
  
- 	uart7_pins_a: uart7-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
--				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
--				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
-+			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART7_RX */
-+				 <STM32_PINMUX('E', 10, AF7)>, /* UART7_CTS */
-+				 <STM32_PINMUX('E', 9, AF7)>; /* UART7_RTS */
- 			bias-disable;
- 		};
- 	};
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	sd-uhs-sdr50;
+ 	max-frequency = <100000000>;
+ 
+ 	non-removable;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+index dbbf29a0dbf6d..026b21708b078 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+@@ -88,6 +88,10 @@ &pcie {
+ 	status = "okay";
+ };
+ 
++&sd_emmc_a {
++	sd-uhs-sdr50;
++};
++
+ &usb {
+ 	phys = <&usb2_phy0>, <&usb2_phy1>;
+ 	phy-names = "usb2-phy0", "usb2-phy1";
 -- 
 2.25.1
 
