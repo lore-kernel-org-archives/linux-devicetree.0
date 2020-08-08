@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63372C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E96AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 340422224D
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DBB2073E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930124;
-	bh=IfDtPWHDu6w1xaYNiEa8Sqca5Op8tyggw6IiHrLJwWM=;
+	s=default; t=1596930135;
+	bh=MN5EgeoI4ccyyJSmPxzesSCVCG8knB0bfsW7JeAjl2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fdQuUmoUvM9Wz17xwG4bSQh1gBodJ552s50IRiZV+QabV9CZNa03E4vnCxRrgNZDT
-	 mr4eiGSmp6gXQknBt3goupxqs4D+/l6qnPGa+/AgopWzNwXqD4KPTV1VdEehlLA6wi
-	 hXp6krYLOoLh+21c3sAHUCA1kIYx0UwTmCvt87y8=
+	b=AmdHxgsBjlMf9m8uECyeTihj4OhPHLwSSQy7IQHOqT1Jtr4YpUUv4iJXEAHVVnKsf
+	 0DgBxGn6+bUEnrmfpxbab6YzGnhkc5E/2rcL/sIbMI02QQA95ZYH72CAD3G4UK8Td8
+	 X3773oFHteByuGgcmSewJGx9b0jShoKQ7IvRiQwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgHHXkZ (ORCPT
+        id S1728163AbgHHXmH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:42:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbgHHXkX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:40:23 -0400
+        id S1727074AbgHHXkV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:40:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC25D20855;
-        Sat,  8 Aug 2020 23:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE37208B3;
+        Sat,  8 Aug 2020 23:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596930022;
-        bh=IfDtPWHDu6w1xaYNiEa8Sqca5Op8tyggw6IiHrLJwWM=;
+        s=default; t=1596930021;
+        bh=MN5EgeoI4ccyyJSmPxzesSCVCG8knB0bfsW7JeAjl2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tGiQ+Y7j5cwtcsD5j0v+PQTvnF/xy/FjyIPTJzqh5stlvyquKKTLSHzX6SosASxdu
-         F5w1trTWocnEPw1E+9XTLs2nvmSKUo0G59vPCZRJC4X+2JG1ExbThxsjT1AZmzI/VD
-         Wo9tsMm/jd/bHMqiKllN7umu9mhqPXG0Mn+ApXqk=
+        b=wFIYANe+6ri5veOVYVtmZ44wyEKg+4sMMChKGMA8+Igus9yj3ZPhUBL06WSVjsqal
+         sTOZNOqao+3ASld7ppuKTP81Bq241ynbHwJ4zdNgCeZlWXAptu0fZQAZFYhrZLQUDc
+         RwH8wt2hR0yzHO2GrUuxYaDqdeST++/H6fL28lB8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/14] arm64: dts: exynos: Fix silent hang after boot on Espresso
-Date:   Sat,  8 Aug 2020 19:40:06 -0400
-Message-Id: <20200808234013.3619541-7-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/14] arm64: dts: qcom: msm8916: Replace invalid bias-pull-none property
+Date:   Sat,  8 Aug 2020 19:40:05 -0400
+Message-Id: <20200808234013.3619541-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808234013.3619541-1-sashal@kernel.org>
 References: <20200808234013.3619541-1-sashal@kernel.org>
@@ -61,35 +61,79 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
+[ Upstream commit 1b6a1a162defe649c5599d661b58ac64bb6f31b6 ]
 
-Once regulators are disabled after kernel boot, on Espresso board silent
-hang observed because of LDO7 being disabled.  LDO7 actually provide
-power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
-always-on to fix this hang.
+msm8916-pins.dtsi specifies "bias-pull-none" for most of the audio
+pin configurations. This was likely copied from the qcom kernel fork
+where the same property was used for these audio pins.
 
-Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+However, "bias-pull-none" actually does not exist at all - not in
+mainline and not in downstream. I can only guess that the original
+intention was to configure "no pull", i.e. bias-disable.
+
+Change it to that instead.
+
+Fixes: 143bb9ad85b7 ("arm64: dts: qcom: add audio pinctrls")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-2-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 4a8b1fb51243c..c8824b918693d 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -155,6 +155,7 @@ ldo7_reg: LDO7 {
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1150000>;
- 				regulator-enable-ramp-delay = <125>;
-+				regulator-always-on;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 4cb0b58341432..69ba1d79bcd5d 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -542,7 +542,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
  			};
+ 		};
+ 		cdc_pdm_lines_sus: pdm_lines_off {
+@@ -571,7 +571,7 @@ pinconf {
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
  
- 			ldo8_reg: LDO8 {
+@@ -599,7 +599,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio110";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 
+@@ -625,7 +625,7 @@ pinmux {
+ 			pinconf {
+ 				pins = "gpio116";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_mclk_tlmm_lines_sus: mclk_lines_off {
+@@ -653,7 +653,7 @@ pinconf {
+ 				pins = "gpio112", "gpio117", "gpio118",
+ 					"gpio119";
+ 				drive-strength = <8>;
+-				bias-pull-none;
++				bias-disable;
+ 			};
+ 		};
+ 		ext_sec_tlmm_lines_sus: tlmm_lines_off {
 -- 
 2.25.1
 
