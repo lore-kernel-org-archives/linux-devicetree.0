@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECD8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7E8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF8D20672
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839BD206B5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930612;
-	bh=iMAbjkb444Fs60V9JgSpamSFR5MPp1FyaSoD1MkeyFc=;
+	s=default; t=1596930618;
+	bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jc7bJ6MUzK8xVcDog+VYkEPTHr00EBDe25Tcx/4casdIWRKkj5wujuA1127EKwLmk
-	 KL2brg9kX33BBitE8plPbXw7j6/XXENC2rDJh6/eh/2IrmFzd58/0V3XpUVJ1O4hmY
-	 lGrG/5GIPCB3oQLBMIhJYBpLNup0mYJJfpB+pQwA=
+	b=g11vUoH1q7l2GQFxnlFGdgxDQB/qv1Srgn/QKDSZwcmTnZgs9dM0eLgTMqt47/MXq
+	 yZ+Dh36q6UndY64Bvk5DcJlnKqsNf1Q+QPLKF3nRIHoBypXb9DjI8vFXq9D8eLy4kV
+	 uDn/5KXO3Jv+VavC8FXCluup1byMc2dgw0W+AMOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgHHXuK (ORCPT
+        id S1726989AbgHHXgm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbgHHXgo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:36:44 -0400
+        id S1726981AbgHHXgl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:36:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1995206C3;
-        Sat,  8 Aug 2020 23:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B61D20716;
+        Sat,  8 Aug 2020 23:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929803;
-        bh=iMAbjkb444Fs60V9JgSpamSFR5MPp1FyaSoD1MkeyFc=;
+        s=default; t=1596929801;
+        bh=i4zhqUPJ+dMplr2JiLDz7Y+XOtarvFX1bYE2TU8H5W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YbIoF6IoJOKUTaN8bV9Ycp/tofdKTp5Xz835SavrA6RjphauJYmG4TbkzFAMuHTCd
-         bExa5wDItpzeOu4kzp7U8HMpuK8pi9IR6fndy4VpAM2JEOK2/4CzdAJBxO37bfP4XQ
-         CiZoTrK4AayOCtzwrdD9yxgMwsSVC9mgHmYPgbRU=
+        b=BCquYTAzRcdAbRzXcQBw0eA203YR1lLTO+QNTy5JTLgm5vblZlNKc01iR7puxgwb+
+         nVSCR1oGo88usBJMHbckJTdU3lHC/5Fs3aYTdU5f5aR0rLlf+lVuNGcFCtJ46S0Dwu
+         pFEVtyQ3ZgF2p6NtXLkp9fHiaqhMwPFSnIssvp+c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Patrick Delaunay <patrick.delaunay@st.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 41/72] ARM: dts: stm32: Fix spi4 pins in stm32mp15-pinctrl
-Date:   Sat,  8 Aug 2020 19:35:10 -0400
-Message-Id: <20200808233542.3617339-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 39/72] ARM: dts: sunxi: bananapi-m2-plus-v1.2: Add regulator supply to all CPU cores
+Date:   Sat,  8 Aug 2020 19:35:08 -0400
+Message-Id: <20200808233542.3617339-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
 References: <20200808233542.3617339-1-sashal@kernel.org>
@@ -62,67 +59,47 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Patrick Delaunay <patrick.delaunay@st.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 4fe663890ac5b3b099f458b20cce13fe8efec12b ]
+[ Upstream commit 55b271af765b0e03d1ff29502f81644b1a3c87fd ]
 
-Move spi4_pins_a nodes from pinctrl_z to pinctrl as the associated pins
-are not in BANK Z.
+The device tree currently only assigns the a supply for the first CPU
+core, when in reality the regulator supply is shared by all four cores.
+This might cause an issue if the implementation does not realize the
+sharing of the supply.
 
-Fixes: 498a7014989d ("ARM: dts: stm32: Add missing pinctrl entries for STM32MP15")
+Assign the same regulator supply to the remaining CPU cores to address
+this.
 
-Signed-off-by: Patrick Delaunay <patrick.delaunay@st.com>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Fixes: 6eeb4180d4b9 ("ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://lore.kernel.org/r/20200717160053.31191-3-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 28 ++++++++++++------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 49132921feeb9..cc505458da2fd 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1654,6 +1654,20 @@ pins2 {
- 		};
- 	};
- 
-+	spi4_pins_a: spi4-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
-+				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
-+			bias-disable;
-+		};
-+	};
-+
- 	usart2_pins_a: usart2-0 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
-@@ -1776,18 +1790,4 @@ pins2 {
- 			bias-disable;
- 		};
- 	};
--
--	spi4_pins_a: spi4-0 {
--		pins {
--			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
--				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
--			bias-disable;
--			drive-push-pull;
--			slew-rate = <1>;
--		};
--		pins2 {
--			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
--			bias-disable;
--		};
--	};
+diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+index 22466afd38a3a..a628b5ee72b65 100644
+--- a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
++++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
+@@ -28,3 +28,15 @@ reg_vdd_cpux: vdd-cpux {
+ &cpu0 {
+ 	cpu-supply = <&reg_vdd_cpux>;
  };
++
++&cpu1 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu2 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
++&cpu3 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
 -- 
 2.25.1
 
