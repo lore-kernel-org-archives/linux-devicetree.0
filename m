@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6140C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C23CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8398222BEA
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4986F2075D
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596929934;
-	bh=9Wfo/T5nRMTrgQs2EpSoH9Fb8QXefxTIJ/cvjSqMFsg=;
+	s=default; t=1596929952;
+	bh=lWgkR05ZLdyajB7h9qa3gzGicGf+5etfvA1S5tRgY10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNdEzt0g35H9wdSCuKJhPmknXqYwPuIzY4hMETsPS8k9SsE3CogKiXGem/UCbLGU8
-	 IarnlusnDh8JsH2OjWOkQ2jJ8qt3/wW5bwZfk80zVNdn7S/A9UK3vB8/nRcssiLXya
-	 ALnwnI8BsKo+CtakX+ETDY9p69CqypSlqD4L3cWg=
+	b=FMlDzQckW5GikHQLRMeZmffrzJ/WMS1gFaQuXxxuYY5JVOZI3yrkffat1XAf+5pej
+	 rZmMF+uY2xdU1pYBe4OinenKA0ExllOJUuE7/fZ7QQjkT770J85k6HQIxFjA54blGC
+	 PLgoLcUGbgeN2mmXsiDOexVCEwKrOryzjR3amh00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgHHXix (ORCPT
+        id S1728477AbgHHXjJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:38:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53270 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbgHHXix (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:38:53 -0400
+        id S1728461AbgHHXjD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:39:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5EB620829;
-        Sat,  8 Aug 2020 23:38:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7616920885;
+        Sat,  8 Aug 2020 23:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929932;
-        bh=9Wfo/T5nRMTrgQs2EpSoH9Fb8QXefxTIJ/cvjSqMFsg=;
+        s=default; t=1596929943;
+        bh=lWgkR05ZLdyajB7h9qa3gzGicGf+5etfvA1S5tRgY10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOs/966urLV5C8z0z7yetdffq05V4jD1WnDbBerGeai5Xjm3GKstrclztJr13/LQO
-         3cJb1u8DkOkmjfCyRsqAE8k2/m6EPkwdRffQyJtj8hjP75VWFr/dBe9FhfCHHoKrrf
-         Tw6Wc/U9OoECBXQm3fRCgRh8aKLGtUThJPLFk8u8=
+        b=gN0DpA5A3imi7ihUKgcwsH6vPOS/R1dfzCqIU0UXhweoLsK13yzCvHj6Nw/FXFMce
+         Npt3lIEg6UsAx/24WuooPirjYx32ag3LkIJHK4ZF3x0QaJ7rO8dJPDIu8sGjGbA4ld
+         ctHqRckuFX/ZpGX+GafV2TiovCF9LciWPc94IzTc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 06/40] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
-Date:   Sat,  8 Aug 2020 19:38:10 -0400
-Message-Id: <20200808233844.3618823-6-sashal@kernel.org>
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 14/40] arm64: dts: exynos: Fix silent hang after boot on Espresso
+Date:   Sat,  8 Aug 2020 19:38:18 -0400
+Message-Id: <20200808233844.3618823-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233844.3618823-1-sashal@kernel.org>
 References: <20200808233844.3618823-1-sashal@kernel.org>
@@ -60,41 +61,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
+[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
 
-The puma gmac node currently uses opposite active-values for the
-gmac phy reset pin. The gpio-declaration uses active-high while the
-separate snps,reset-active-low property marks the pin as active low.
+Once regulators are disabled after kernel boot, on Espresso board silent
+hang observed because of LDO7 being disabled.  LDO7 actually provide
+power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
+always-on to fix this hang.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
-
-So bring this in line and make both properties match, similar to the
-other Rockchip board.
-
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
+Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index fb47e4046f4e4..45b86933c6ea0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -157,7 +157,7 @@ &gmac {
- 	phy-mode = "rgmii";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rgmii_pins>;
--	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
-+	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
- 	tx_delay = <0x10>;
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 080e0f56e108f..61ee7b6a31594 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -157,6 +157,7 @@ ldo7_reg: LDO7 {
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1150000>;
+ 				regulator-enable-ramp-delay = <125>;
++				regulator-always-on;
+ 			};
+ 
+ 			ldo8_reg: LDO8 {
 -- 
 2.25.1
 
