@@ -1,189 +1,115 @@
-Return-Path: <SRS0=8zDs=BR=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=1SIx=BS=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA12C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 23:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE72C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 00:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38E462087C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  7 Aug 2020 23:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2E0221E5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 00:53:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sM38sMaD"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hKcfOSaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgHGXtf (ORCPT
+        id S1726200AbgHHAxK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 7 Aug 2020 19:49:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgHGXte (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 7 Aug 2020 19:49:34 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A240C061756;
-        Fri,  7 Aug 2020 16:49:34 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l4so3697203ejd.13;
-        Fri, 07 Aug 2020 16:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dHQBU7t7T20Mh1z63rmZ4I7YSFYzsVFZZE+YkusJ0rc=;
-        b=sM38sMaDokJqT/vk8/35OVNaZAePDPVhSzz83SpBrV4shGmijp9eCcA8Uy0uC++VIA
-         a9pZlZKUvEMuB5SPJd1NBw/3vi38RfsUr2pK03VSzF5WrR1G0WpBxhZihU9rDMcxYl/y
-         zD/GSVvXauB+nbxOiKbql+y47yGOmKjJCGKpF6wjE07pNKY/6EURXpM0oYIm6K4CJf2S
-         oVfMScQ209biRBR2SOvsWh/bwjbJ/552UWUbaPteMoM4jgL+dR5PCmK7Yflq2AnP0u/k
-         gpOQt67yyjkTJ5lUY0UA6iSd3ArsfqwMZP7Fcsm5o1ePW7bTWT1f30d3qsbwV1U+hzuU
-         v76w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dHQBU7t7T20Mh1z63rmZ4I7YSFYzsVFZZE+YkusJ0rc=;
-        b=ZSM8ramGuNztETud/Ghk4k2eiR2h86jdSgUNHXwbk749pyny63J+LiVUuEe6l0bdhT
-         BbiD64WetC49hamk/v4a2V9af52MX7111tY8hDT3gtyYxAadBRWQxaoG8tzddN3sIOFM
-         UNAgxeX9C8CPRUkkQiFFQ8VsN8ySXQ/Y+kTSvvsmiKl/RYmj38uENIrZ4gJ/IaWH+2gb
-         jtaCWMbQr1f2RsnaH8DLay/kO3vq52Ig/QHpdTSRKDUvI6Vl3O2uN+6+YHDUXF/DSkZ4
-         7FD79jP5OOIfKLsdvYxG3pHx33kDG50Q0y+RjCpII9Ck3ARZWQqCskl5vERbUPv89++u
-         HB+A==
-X-Gm-Message-State: AOAM532M4jgtpJ12T4oglfLh9q4sGC9NT7IzGS4fLYF/tcRpvBlyFJg0
-        4NQpo4D+ZrMRCeN68P/EmY4=
-X-Google-Smtp-Source: ABdhPJw/cjforkPb3dWMq6damt7+jFKHTFLKXmaPTyWK5qxmEwrx+QbHedOGzkf6CoLMWybIwC2WNg==
-X-Received: by 2002:a17:906:c1d8:: with SMTP id bw24mr11502645ejb.91.1596844172842;
-        Fri, 07 Aug 2020 16:49:32 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain ([87.13.195.83])
-        by smtp.googlemail.com with ESMTPSA id k17sm6977826eji.28.2020.08.07.16.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 16:49:32 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        Fri, 7 Aug 2020 20:53:10 -0400
+Received: from m12-18.163.com ([220.181.12.18]:47268 "EHLO m12-18.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbgHHAxJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Aug 2020 20:53:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=nRtYJ
+        XoFhjBTmnR7isAG1Uh5+HC6OQId+GHWfmRaIus=; b=hKcfOSaVcP8GsaxcUk99E
+        VAg9HwyesM6XnLUp0gR/YLb+ifBtKLCamXKT+0FCl0i2esBhFIYx6dBZ09gmenm7
+        W5lSizHz55q99n7osRoLodjj71sj6J0A52e5J6Hls12SeqrUHpv+o9pMo4T7Z/XY
+        X3vFWOjvtcTZoftbtz0lBo=
+Received: from [192.168.1.166] (unknown [58.33.79.182])
+        by smtp14 (Coremail) with SMTP id EsCowADHI7hJ9y1fTAJCIA--.4765S2;
+        Sat, 08 Aug 2020 08:52:25 +0800 (CST)
+Subject: Re: [PATCH 1/2] leds: is31fl319x: Add sdb pin and generate a 5ms low
+ pulse when startup
+To:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, linux-leds@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU Cache scaling
-Date:   Sat,  8 Aug 2020 01:49:12 +0200
-Message-Id: <20200807234914.7341-3-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200807234914.7341-1-ansuelsmth@gmail.com>
-References: <20200807234914.7341-1-ansuelsmth@gmail.com>
+References: <20200806062130.25187-1-von81@163.com>
+ <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
+From:   Grant Feng <von81@163.com>
+Message-ID: <9904b022-d3ff-3714-d0e6-30d93b4dcfd0@163.com>
+Date:   Sat, 8 Aug 2020 08:52:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.0
 MIME-Version: 1.0
+In-Reply-To: <7c828160-bef6-45b5-60d1-85c6074953c4@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: EsCowADHI7hJ9y1fTAJCIA--.4765S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ww1DJFW7XF13XF4fAryxKrg_yoW8WF4kpF
+        4DCF1rCrsxJryIgr17uFy7ZFy5ta18Kr1DJrWIqa4av3WYgF1kWFykJFn09F13ZrWxuF4Y
+        vF4rtFWrurs7ZrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b7_-PUUUUU=
+X-Originating-IP: [58.33.79.182]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/xtbBSQl6OlaD7rrhBQAAsl
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document dedicated Krait CPU Cache Scaling driver.
+Thanks for the review, I will rewrit it.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../bindings/cpufreq/krait-cache-scale.yaml   | 92 +++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
+Grant
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml b/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
-new file mode 100644
-index 000000000000..f10b1f386a99
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Krait Cpu Cache Frequency Scaling dedicated driver
-+
-+maintainers:
-+  - Ansuel Smith <ansuelsmth@gmail.com>
-+
-+description: |
-+  This Scale the Krait CPU Cache Frequency and optionally voltage
-+  when the Cpu Frequency is changed (using the cpufreq notifier).
-+
-+  Cache is scaled with the max frequency across all core and the cache
-+  frequency will scale based on the configured threshold in the dts.
-+
-+  The cache is hardcoded to 3 frequency bin, idle, nominal and high.
-+
-+properties:
-+  compatible:
-+    const: qcom,krait-cache
-+
-+  clocks:
-+    description: Phandle to the L2 CPU clock
-+
-+  clock-names:
-+    const: "l2"
-+
-+  voltage-tolerance:
-+    description: Same voltage tollerance of the Krait CPU
-+
-+  l2-rates:
-+    description: |
-+      Frequency the L2 cache will be scaled at.
-+      Value is in Hz.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    items:
-+      - description: idle
-+      - description: nominal
-+      - description: high
-+
-+  l2-cpufreq:
-+    description: |
-+      Threshold used by the driver to scale the L2 cache.
-+      If the max CPU Frequency is more than the set frequency,
-+      the driver will transition to the next frequency bin.
-+      Value is in kHz
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    items:
-+      - description: idle
-+      - description: nominal
-+      - description: high
-+
-+  l2-volt:
-+    description: |
-+      Threshold used by the driver to scale the L2 cache.
-+      If the max CPU Frequency is more than the set frequency,
-+      the driver will transition to the next frequency bin.
-+      Value is in microvolt.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    items:
-+      - description: idle
-+      - description: nominal
-+      - description: high
-+
-+  l2-supply:
-+    description: Phandle to the L2 regulator supply.
-+
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - voltage-tolerance
-+  - l2-rates
-+  - l2-cpufreq
-+  - l2-supply
-+  - l2-volt
-+
-+examples:
-+  - |
-+    qcom-krait-cache {
-+      compatible = "qcom,krait-cache";
-+      clocks = <&kraitcc 4>;
-+      clock-names = "l2";
-+      voltage-tolerance = <5>;
-+      l2-rates = <384000000 1000000000 1200000000>;
-+      l2-cpufreq = <384000 600000 1200000>;
-+      l2-volt = <1100000 1100000 1150000>;
-+      l2-supply = <&smb208_s1a>;
-+    };
--- 
-2.27.0
+On 2020-08-06 23:00, Dan Murphy wrote:
+> Grant
+>
+> On 8/6/20 1:21 AM, Grant Feng wrote:
+>> generate a 5ms low pulse on sdb pin when startup, then the chip
+>> becomes more stable in the complex EM environment.
+>>
+>> Signed-off-by: Grant Feng <von81@163.com>
+>> ---
+>>   drivers/leds/leds-is31fl319x.c | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>
+>> diff --git a/drivers/leds/leds-is31fl319x.c 
+>> b/drivers/leds/leds-is31fl319x.c
+>> index ca6634b8683c..b4f70002cec9 100644
+>> --- a/drivers/leds/leds-is31fl319x.c
+>> +++ b/drivers/leds/leds-is31fl319x.c
+>> @@ -16,6 +16,8 @@
+>>   #include <linux/of_device.h>
+>>   #include <linux/regmap.h>
+>>   #include <linux/slab.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/gpio/consumer.h>
+>>     /* register numbers */
+>>   #define IS31FL319X_SHUTDOWN        0x00
+>> @@ -61,6 +63,7 @@
+>>   struct is31fl319x_chip {
+>>       const struct is31fl319x_chipdef *cdef;
+>>       struct i2c_client               *client;
+>> +    struct gpio_desc        *sdb_pin;
+>>       struct regmap                   *regmap;
+>>       struct mutex                    lock;
+>>       u32                             audio_gain_db;
+>> @@ -265,6 +268,15 @@ static int is31fl319x_parse_dt(struct device *dev,
+>>           is31->audio_gain_db = min(is31->audio_gain_db,
+>>                         IS31FL319X_AUDIO_GAIN_DB_MAX);
+>>   +    is31->sdb_pin = gpiod_get(dev, "sdb", GPIOD_ASIS);
+>
+> Since this is optional maybe use devm_gpiod_get_optional.
+>
+> If this is required for stability then if the GPIO is not present then 
+> the parse_dt should return the error.
+>
+> And use the devm_gpiod_get call.  Otherwise you are missing the 
+> gpiod_put when exiting or removing the driver.
+>
+> Dan
+>
 
