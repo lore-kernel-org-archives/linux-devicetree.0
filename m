@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E50C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA271C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94F66206B5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D15206B5
+	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930461;
-	bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
+	s=default; t=1596930484;
+	bh=+mpINWnZ77fQrIFcKNZzBdvpHqJ/JoGT+r1RxI/vdvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F1WDbnawPLahMj8E4ZAPPngipFypm7Qu9QuG0R1Jay0w3EB++QmbefLUPhKLw7czT
-	 ddxReyoHVTEd+LZ7ZiJhvgXQqXKSuHQN35XyLo4UcCBJ017EJAv1CK1dMgxTKFumcL
-	 5CHeb0W60pWkBA4kvrZl6TiB9DVtDfs/hSoeAmvs=
+	b=VkEr38IfZ8Xk93UgKleFOLdCJKP/4FhRWFvK14J1pQ8SBHagZ4Zf4ud2Ao9YY7Y2n
+	 rye6hN1JVPsMZ2SQjGSUnmFrofOqEMosPBMqo5z0FUM0jQuK25I4hY/0PFIlrP7gyC
+	 le1U4XWHWyoNfMHv8Hw93cY4r6kouVMXXUxgfc6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgHHXrd (ORCPT
+        id S1726933AbgHHXr7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:47:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 19:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728118AbgHHXhv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:37:51 -0400
+        id S1728028AbgHHXhh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 19:37:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 364452073E;
-        Sat,  8 Aug 2020 23:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E4C420829;
+        Sat,  8 Aug 2020 23:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929871;
-        bh=0/hszbWEWY+uc1pMJXENVvjhlqC59WOheY0I+GsN32Y=;
+        s=default; t=1596929857;
+        bh=+mpINWnZ77fQrIFcKNZzBdvpHqJ/JoGT+r1RxI/vdvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ib5YtUe1xL+57MrE1w1WtPok9Bim07ir+mikydiBnzduLEaZB4NuFV0t5X9AaabYP
-         t+eUr9ikFvR0m0uth7XFDD58hOSrQZ1T1LIKXaCpLQctOloaIKA2EmPJBOXBVYaVJn
-         JhU5eyNJLJFI6rG4/a7Yc+5Hn9vwt4MgVlCFbhCw=
+        b=mrn7/ikUCHCULEsouDbGaMStPfCOoU/pR4rSD1xsYMb43nWynnlCz+8ujJufs9BaC
+         TLLckLO6VNVIObC2yXKXrdsbzU9AhyxQUX1v0flIE78nkNtclWFAReYBsidoWkO+Ag
+         CiEol7PdZ3Q572WWFkU+dOyOSj5wsVxq9DVJhCZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+Cc:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 20/58] arm64: dts: sun50i-pinephone: dldo4 must not be >= 1.8V
-Date:   Sat,  8 Aug 2020 19:36:46 -0400
-Message-Id: <20200808233724.3618168-20-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 10/58] arm64: dts: rockchip: fix rk3399-puma gmac reset gpio
+Date:   Sat,  8 Aug 2020 19:36:36 -0400
+Message-Id: <20200808233724.3618168-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200808233724.3618168-1-sashal@kernel.org>
 References: <20200808233724.3618168-1-sashal@kernel.org>
@@ -60,46 +60,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-[ Upstream commit 86be5c789690eb08656b08c072c50a7b02bf41f1 ]
+[ Upstream commit 8a445086f8af0b7b9bd8d1901d6f306bb154f70d ]
 
-Some outputs from the RTL8723CS are connected to the PL port (BT_WAKE_AP),
-which runs at 1.8V. When BT_WAKE_AP is high, the PL pin this signal is
-connected to is overdriven, and the whole PL port's voltage rises
-somewhat. This results in changing voltage on the R_PWM pin (PL10),
-which is the cause for backlight flickering very noticeably when typing
-on a Bluetooth keyboard, because backlight intensity is highly sensitive
-to the voltage of the R_PWM pin.
+The puma gmac node currently uses opposite active-values for the
+gmac phy reset pin. The gpio-declaration uses active-high while the
+separate snps,reset-active-low property marks the pin as active low.
 
-Limit the maximum WiFi/BT I/O voltage to 1.8V to avoid overdriving
-the PL port pins via BT and WiFi IO port signals. WiFi and BT
-functionality is unaffected by this change.
+While on the kernel side this works ok, other DT users may get
+confused - as seen with uboot right now.
 
-This completely stops the backlight flicker when using bluetooth.
+So bring this in line and make both properties match, similar to the
+other Rockchip board.
 
-Fixes: 91f480d40942 ("arm64: dts: allwinner: Add initial support for Pine64 PinePhone")
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Link: https://lore.kernel.org/r/20200703194842.111845-4-megous@megous.com
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
+Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Link: https://lore.kernel.org/r/20200603132836.362519-1-heiko@sntech.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index cefda145c3c9d..342733a20c337 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -279,7 +279,7 @@ &reg_dldo3 {
- 
- &reg_dldo4 {
- 	regulator-min-microvolt = <1800000>;
--	regulator-max-microvolt = <3300000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vcc-wifi-io";
- };
- 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 063f59a420b65..72c06abd27ea7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -157,7 +157,7 @@ &gmac {
+ 	phy-mode = "rgmii";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii_pins>;
+-	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_HIGH>;
++	snps,reset-gpio = <&gpio3 RK_PC0 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+ 	tx_delay = <0x10>;
 -- 
 2.25.1
 
