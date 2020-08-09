@@ -2,98 +2,218 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F12CC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119ABC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1238B206B5
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:40:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7w+q029"
+	by mail.kernel.org (Postfix) with ESMTP id D9873206E9
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596934337;
+	bh=0z/Z71osg3eyFsMFe8xBmU/V7BFVUMmz+ZgNVRDikSA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TUJw00+3vajLYEW/GEtHlAIqRZLHEi0i+5fxoR+J7QQ25Q2EBrX1KNcmDx7BifHu4
+	 MjTE4PaEKJgXtV8sKBPkJTfiXxNMJaM6lRnZVTfimAX8ZiqRQOAO7ActidJXYw3vha
+	 Ma8qss6BVWhkEBXmutwJf25UX1YYu/vqmf8jtCAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726009AbgHIAkM (ORCPT
+        id S1726291AbgHIAwR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 20:40:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHIAkM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Aug 2020 20:40:12 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F06C061756;
-        Sat,  8 Aug 2020 17:40:11 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q17so2989536pls.9;
-        Sat, 08 Aug 2020 17:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OoI02kIPv5v2lQrEFtWYTVFM7JZrBv3uT+arvbEzRC8=;
-        b=O7w+q029hE2KX4W8MHGLpAX6jI7rJTMsRIVLfGKcz4IDDrum74DBgfi/oS6bOM0xOv
-         5nt6w4rcu6Wv8mPvg0cJVFGaZgTIF6UYC0zVyKsTfebJHS6jn2Z19BpAzIaTevZfKhsv
-         ldZLWj4PgusGw+dcJfro0TSwI4Zex4GOSFI9TxeiPs9LMq0ovRMyLqYwzN13jAXJg2v3
-         qCauBZAaBriDfmqxtgbJnTT01UWwBOWMUALtWCW1gJ9kBu/MKIU89gCEHrlYjcFuXO5e
-         gj4Ss5YHfrnq4NytbkeXvOHx3xOA+u1jIyCJkKSJNCEfiF1rDwZ0x+0/XU9SkIQfH038
-         cJtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OoI02kIPv5v2lQrEFtWYTVFM7JZrBv3uT+arvbEzRC8=;
-        b=H2gcUUqgcEfLCYf99sPX8rJl9Hwez12rgME2SoVEIlBlmN3CsIzhzkz9ETyEmkpfja
-         dOKhD5e/J6Zkp3oUBDD0w09q19GBoT9NSP7EFs0ZcQ8Z+SbH8B+GvTLhs5fgs9gwAzEO
-         YCzXGBSoiJ0OSMlz4BDyJswFzkhpFV4sKPpM0EwUaOGlV8fbMsVK7jnodKvmwN8PSDXM
-         i7u97piagXNMP8MiuYEEEukJT5KPFOp5rid/BXFQ8QF7lA4v2CxuZj6pDT9Uxd/wLwVW
-         avm6TtSc41sIyJd4eDo9iREF7mlU1PYvutDQTR3NwGKHualT5NHnDga15vAL4qgtIiH4
-         SpdQ==
-X-Gm-Message-State: AOAM531hVicW5DWJuUzIVRrZpv/mVRwtRFL/+0PSUnGXW3NYGilhKbsM
-        akgULP/XTC3GWTgjSHulqQI=
-X-Google-Smtp-Source: ABdhPJybEzbAts0RW8NMwyR4Aw7rMrZw1oGKzNLjQ+QABcupg38fRhfBMrvsw9hvY/vFeMXGqKtkPA==
-X-Received: by 2002:a17:90a:8909:: with SMTP id u9mr20792249pjn.119.1596933611431;
-        Sat, 08 Aug 2020 17:40:11 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q2sm18909579pfc.40.2020.08.08.17.40.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 08 Aug 2020 17:40:10 -0700 (PDT)
-Date:   Sat, 8 Aug 2020 17:40:09 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, thierry.reding@gmail.com,
-        robh+dt@kernel.org, mirq-linux@rere.qmqm.pl,
-        devicetree@vger.kernel.org, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bbasu@nvidia.com, mperttunen@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v6 3/3] cpufreq: Add Tegra194 cpufreq
- driver
-Message-ID: <20200809004009.GA96704@roeck-us.net>
-References: <1594819885-31016-1-git-send-email-sumitg@nvidia.com>
- <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
+        Sat, 8 Aug 2020 20:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgHIAwQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 20:52:16 -0400
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B9620772;
+        Sun,  9 Aug 2020 00:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596934335;
+        bh=0z/Z71osg3eyFsMFe8xBmU/V7BFVUMmz+ZgNVRDikSA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LIoe2xE0rXdW+zvXDMvwmQKw276z7cbIc09/WdCEPlrHjcAtwP4g66M+twROS3A00
+         y/obU8dbo2rACU8uFScuMhwY6fEuGZ1wOQUiAjDO5RUUw58IMML/Ad0iMcl4NksTrc
+         KLL0w+lRA9YplB45x0BE3cS8nyS8oZVsGXsUpDKA=
+Received: by mail-ej1-f46.google.com with SMTP id o23so5898419ejr.1;
+        Sat, 08 Aug 2020 17:52:15 -0700 (PDT)
+X-Gm-Message-State: AOAM531GZ6gi9GYX/N1jAasSUcciRFgINNHzqOQy18SLOznyaoASiFse
+        GAnhL1gedMBZwa+1pfcZWqhAbP19YYC13jSe+w==
+X-Google-Smtp-Source: ABdhPJyZt1CSoIboKSwTbNAnnwaQ2vRrvv4qzD8K8i6CZ7BvEyJ3034SciF2SNRDbzK5xcdTgDcXaD4qHRXWuJehpPA=
+X-Received: by 2002:a17:906:d92c:: with SMTP id rn12mr15178620ejb.187.1596934333673;
+ Sat, 08 Aug 2020 17:52:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594819885-31016-4-git-send-email-sumitg@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com> <1596855231-5782-3-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1596855231-5782-3-git-send-email-yongqiang.niu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 9 Aug 2020 08:52:02 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__ZbNfRNfQ+DLdZh0WHVqUeQ6AbO=Lc-CUZpx25X=2Kyg@mail.gmail.com>
+Message-ID: <CAAOTY__ZbNfRNfQ+DLdZh0WHVqUeQ6AbO=Lc-CUZpx25X=2Kyg@mail.gmail.com>
+Subject: Re: [RESEND v7, PATCH 2/7] drm/mediatek: move ddp component define
+ into mtk_mmsys.h
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 07:01:25PM +0530, Sumit Gupta wrote:
-> Add support for CPU frequency scaling on Tegra194. The frequency
-> of each core can be adjusted by writing a clock divisor value to
-> a MSR on the core. The range of valid divisors is queried from
-> the BPMP.
-> 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8811:05=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> mmsys is the driver which control the routing of these ddp component,
+> so the definition of mtk_ddp_comp_id should be placed in mtk-mmsys.h
+>
 
-If built as module:
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
-
-Guenter
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 34 +----------------------=
+------
+>  drivers/soc/mediatek/mtk-mmsys.c            |  4 +---
+>  include/linux/soc/mediatek/mtk-mmsys.h      | 33 +++++++++++++++++++++++=
++++++
+>  3 files changed, 35 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/dr=
+m/mediatek/mtk_drm_ddp_comp.h
+> index debe363..161201f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -7,6 +7,7 @@
+>  #define MTK_DRM_DDP_COMP_H
+>
+>  #include <linux/io.h>
+> +#include <linux/soc/mediatek/mtk-mmsys.h>
+>
+>  struct device;
+>  struct device_node;
+> @@ -35,39 +36,6 @@ enum mtk_ddp_comp_type {
+>         MTK_DDP_COMP_TYPE_MAX,
+>  };
+>
+> -enum mtk_ddp_comp_id {
+> -       DDP_COMPONENT_AAL0,
+> -       DDP_COMPONENT_AAL1,
+> -       DDP_COMPONENT_BLS,
+> -       DDP_COMPONENT_CCORR,
+> -       DDP_COMPONENT_COLOR0,
+> -       DDP_COMPONENT_COLOR1,
+> -       DDP_COMPONENT_DITHER,
+> -       DDP_COMPONENT_DPI0,
+> -       DDP_COMPONENT_DPI1,
+> -       DDP_COMPONENT_DSI0,
+> -       DDP_COMPONENT_DSI1,
+> -       DDP_COMPONENT_DSI2,
+> -       DDP_COMPONENT_DSI3,
+> -       DDP_COMPONENT_GAMMA,
+> -       DDP_COMPONENT_OD0,
+> -       DDP_COMPONENT_OD1,
+> -       DDP_COMPONENT_OVL0,
+> -       DDP_COMPONENT_OVL_2L0,
+> -       DDP_COMPONENT_OVL_2L1,
+> -       DDP_COMPONENT_OVL1,
+> -       DDP_COMPONENT_PWM0,
+> -       DDP_COMPONENT_PWM1,
+> -       DDP_COMPONENT_PWM2,
+> -       DDP_COMPONENT_RDMA0,
+> -       DDP_COMPONENT_RDMA1,
+> -       DDP_COMPONENT_RDMA2,
+> -       DDP_COMPONENT_UFOE,
+> -       DDP_COMPONENT_WDMA0,
+> -       DDP_COMPONENT_WDMA1,
+> -       DDP_COMPONENT_ID_MAX,
+> -};
+> -
+>  struct mtk_ddp_comp;
+>  struct cmdq_pkt;
+>  struct mtk_ddp_comp_funcs {
+> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-=
+mmsys.c
+> index a55f255..36ad66b 100644
+> --- a/drivers/soc/mediatek/mtk-mmsys.c
+> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+> @@ -5,13 +5,11 @@
+>   */
+>
+>  #include <linux/device.h>
+> +#include <linux/io.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/soc/mediatek/mtk-mmsys.h>
+>
+> -#include "../../gpu/drm/mediatek/mtk_drm_ddp.h"
+> -#include "../../gpu/drm/mediatek/mtk_drm_ddp_comp.h"
+> -
+>  #define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN      0x040
+>  #define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN      0x044
+>  #define DISP_REG_CONFIG_DISP_OD_MOUT_EN                0x048
+> diff --git a/include/linux/soc/mediatek/mtk-mmsys.h b/include/linux/soc/m=
+ediatek/mtk-mmsys.h
+> index 7bab5d9..2228bf6 100644
+> --- a/include/linux/soc/mediatek/mtk-mmsys.h
+> +++ b/include/linux/soc/mediatek/mtk-mmsys.h
+> @@ -9,6 +9,39 @@
+>  enum mtk_ddp_comp_id;
+>  struct device;
+>
+> +enum mtk_ddp_comp_id {
+> +       DDP_COMPONENT_AAL0,
+> +       DDP_COMPONENT_AAL1,
+> +       DDP_COMPONENT_BLS,
+> +       DDP_COMPONENT_CCORR,
+> +       DDP_COMPONENT_COLOR0,
+> +       DDP_COMPONENT_COLOR1,
+> +       DDP_COMPONENT_DITHER,
+> +       DDP_COMPONENT_DPI0,
+> +       DDP_COMPONENT_DPI1,
+> +       DDP_COMPONENT_DSI0,
+> +       DDP_COMPONENT_DSI1,
+> +       DDP_COMPONENT_DSI2,
+> +       DDP_COMPONENT_DSI3,
+> +       DDP_COMPONENT_GAMMA,
+> +       DDP_COMPONENT_OD0,
+> +       DDP_COMPONENT_OD1,
+> +       DDP_COMPONENT_OVL0,
+> +       DDP_COMPONENT_OVL_2L0,
+> +       DDP_COMPONENT_OVL_2L1,
+> +       DDP_COMPONENT_OVL1,
+> +       DDP_COMPONENT_PWM0,
+> +       DDP_COMPONENT_PWM1,
+> +       DDP_COMPONENT_PWM2,
+> +       DDP_COMPONENT_RDMA0,
+> +       DDP_COMPONENT_RDMA1,
+> +       DDP_COMPONENT_RDMA2,
+> +       DDP_COMPONENT_UFOE,
+> +       DDP_COMPONENT_WDMA0,
+> +       DDP_COMPONENT_WDMA1,
+> +       DDP_COMPONENT_ID_MAX,
+> +};
+> +
+>  void mtk_mmsys_ddp_connect(struct device *dev,
+>                            enum mtk_ddp_comp_id cur,
+>                            enum mtk_ddp_comp_id next);
+> --
+> 1.8.1.1.dirty
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
