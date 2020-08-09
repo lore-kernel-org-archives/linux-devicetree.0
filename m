@@ -2,160 +2,138 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC35AC433ED
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9B1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6AF2075D
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B26206E9
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596972018;
-	bh=Cbyhs/Xet1hHvl6FhTjFIxhhezZP6HgWsZoUKNXnESw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sULfMyp82hc2SuFa4HlkyUkaeV58/pHDXgwkvkkO1Ea3x6LKTFHJuGuO0h9Ngfo3P
-	 NpRaqsHjPyetk61ocYpX2C1Ln0JG1Si+bG43wN3XwYT6/kMwNYwIYSwHjXA0JWUDzp
-	 fjugqW01TGWvkb76CP6LyTK7kvtq3tvxyKJefz5k=
+	s=default; t=1596973331;
+	bh=SXd31qhIHTOsuMWmdS7B/a+qIW0feHpAlIkdm499JMY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gtVaEsSRpqe/Y3XpMP/hq2J8rY3cb3oJrrIK1Fi352REbsmhd3OPeieg3l5lcz8Dv
+	 7rh18Z7apUd7TWFN3qj/WSrmt5JdecnZ0YajfyGHZnJ/luP2g7OCc3okC+HUkMlB0v
+	 oFJvbcLlOt5aESuF0Zyv1e1xdoOrk/d8tvsbx8pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgHILUS (ORCPT
+        id S1726210AbgHILmI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 07:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
+        Sun, 9 Aug 2020 07:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgHILUS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Aug 2020 07:20:18 -0400
-Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726009AbgHILmF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 07:42:05 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63DF5206D8;
-        Sun,  9 Aug 2020 11:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F430206B5;
+        Sun,  9 Aug 2020 11:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596972017;
-        bh=Cbyhs/Xet1hHvl6FhTjFIxhhezZP6HgWsZoUKNXnESw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o3SGvmQ8Bk2IGmKQFKQgD9GJBqSzw64tcmZUmSJF2n++bMGZttlFPyIiwKnERK5l0
-         NNCKlnW0t5Nw4yDDV5sYIj8F8a0wOaNSwZswCGpowhyIBvCKuA6zhrnraGo7ptiWNG
-         ENWEW24JWurXJ9gDYprYSOnG3CGPbMmxFJsXxlxU=
+        s=default; t=1596973325;
+        bh=SXd31qhIHTOsuMWmdS7B/a+qIW0feHpAlIkdm499JMY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hWmZmaMJPt6X2x2O2uSifqBCDfF6Xb5u2rBTtng7P14AfN4RhiUtwpq0reWkV7Ljf
+         sLzZD1eKgc3AFdnXzq7MCHTpDXH9lmsI3t9CdP8j9qYGhMnVLvXx2Zfu1OXhBy9dJ9
+         u76eixjabh1ydcnffTWOONchwLKsNXPwQ+/No6mA=
+Date:   Sun, 9 Aug 2020 12:42:00 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     linux-iio@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Phil Reid <preid@electromag.com.au>
-Subject: [PATCH 13/13] dt-bindings: iio: adc: ti,tlc4541 binding conversion
-Date:   Sun,  9 Aug 2020 12:17:53 +0100
-Message-Id: <20200809111753.156236-14-jic23@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200809111753.156236-1-jic23@kernel.org>
-References: <20200809111753.156236-1-jic23@kernel.org>
+To:     Eugene Zaikonnikov <ez@norphonic.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, development@norphonic.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v10 2/2] dt-bindings: iio: humidity: Add TI HDC20x0
+ support
+Message-ID: <20200809124200.5c90342d@archlinux>
+In-Reply-To: <86h7te34hu.fsf@norphonic.com>
+References: <86imdu35gs.fsf@norphonic.com>
+        <86h7te34hu.fsf@norphonic.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Fri, 07 Aug 2020 16:38:53 +0200
+Eugene Zaikonnikov <ez@norphonic.com> wrote:
 
-Simple binding so easy to convert.
-Dropped the stated value of maximum spi bus frequency as it does
-not seem to correspond to the datasheet.  The value of 200kHz
-is the max sampling frequency of the ADC, not the clock frequency of
-the SPI bus.
+> Add device tree bindings for HDC2010/HDC2080 family of humidity and
+> temperature sensors.
+> 
+> Signed-off-by: Eugene Zaikonnikov <ez@norphonic.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Added #io-channel-cells to allow use as a provider of channels to
-other devices via the consumer binding.
+Both applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Phil Reid <preid@electromag.com.au>
----
- .../bindings/iio/adc/ti,tlc4541.yaml          | 52 +++++++++++++++++++
- .../bindings/iio/adc/ti-tlc4541.txt           | 17 ------
- 2 files changed, 52 insertions(+), 17 deletions(-)
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti,tlc4541.yaml b/Documentation/devicetree/bindings/iio/adc/ti,tlc4541.yaml
-new file mode 100644
-index 000000000000..6c2539b3d707
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti,tlc4541.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/ti,tlc4541.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments TLC4541 and similar ADCs
-+
-+maintainers:
-+  - Phil Reid <preid@electromag.com.au>
-+
-+description: |
-+  14/16bit single channel ADC with SPI interface.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,tlc3541
-+      - ti,tlc4541
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency: true
-+
-+  vref-supply: true
-+
-+  "#io-channel-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@0 {
-+            compatible = "ti,tlc4541";
-+            reg = <0>;
-+            vref-supply = <&vdd_supply>;
-+            spi-max-frequency = <200000>;
-+            #io-channel-cells = <1>;
-+        };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
-deleted file mode 100644
-index 6b2692723a04..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--* Texas Instruments' TLC4541
--
--Required properties:
-- - compatible: Should be one of
--	* "ti,tlc4541"
--	* "ti,tlc3541"
--	- reg: SPI chip select number for the device
-- - vref-supply: The regulator supply for ADC reference voltage
-- - spi-max-frequency: Max SPI frequency to use (<= 200000)
--
--Example:
--adc@0 {
--	compatible = "ti,tlc4541";
--	reg = <0>;
--	vref-supply = <&vdd_supply>;
--	spi-max-frequency = <200000>;
--};
--- 
-2.28.0
+Jonathan
+
+> ---
+> 
+> No changes since v9.
+> 
+> Changes since v8:
+> - document the use of reg
+> - change the license terms to GPL-2.0-only or BSD-2-clause
+> 
+> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml
+> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
+> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	2020-07-10 13:08:46.818076734 +0200
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/humidity/ti,hdc2010.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HDC2010/HDC2080 humidity and temperature iio sensors
+> +
+> +maintainers:
+> +  - Eugene Zaikonnikov <ez@norophonic.com>
+> +
+> +description: |
+> +  Relative humidity and tempereature sensors on I2C bus
+> +
+> +  Datasheets are available at:
+> +    http://www.ti.com/product/HDC2010/datasheet
+> +    http://www.ti.com/product/HDC2080/datasheet
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,hdc2010
+> +      - ti,hdc2080
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      humidity@40 {
+> +          compatible = "ti,hdc2010";
+> +          reg = <0x40>;
+> +      };
+> +    };
 
