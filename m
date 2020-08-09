@@ -2,51 +2,51 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23583C433E8
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429A6C433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2CFA2075D
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC39206E9
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596972004;
-	bh=YzI06x2VtwyLUH1SPEtarEcOok5X9Xg6xMPI3fOMg1k=;
+	s=default; t=1596972012;
+	bh=CAzT3HPKe2SQrpGNfbhdhwDB86fP9HyD4MBfA8HPvVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxYOjdvnmHTZIpZyJ+IUz/HNEJ9v3KrgucEQhbw8WhTDAqgf252clVYGoyDHOp0C3
-	 CcbzLgl3pSpz2mzpfGAe/eHxfZmn6hfXtVtMqUFvv1q+9D1YCHL5HaNdZ5hkmLw4p5
-	 xs3FIdw4AS6YlTjOfcFoJJqeIokfBY+wHfJ6EwoU=
+	b=hJCqpjXCXTRHx41/ukzUxnUDsfVT+3qgLqloNPnzRI99hwa20GoqSvLXA4N3osPVX
+	 aW3kaKEtBnZW1AeghSD7ps9TN7XCQXJ7j2SF1G+rBH6tYZFlYykXCMAE8jyMJhBsEe
+	 ccPhABG8oVRd2V4qNktoDGPQ5cUKKRZsVVOfUfwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHILUC (ORCPT
+        id S1726398AbgHILUL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 07:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53936 "EHLO mail.kernel.org"
+        Sun, 9 Aug 2020 07:20:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgHILUC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Aug 2020 07:20:02 -0400
+        id S1726350AbgHILUL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 07:20:11 -0400
 Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95F920716;
-        Sun,  9 Aug 2020 11:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5692620772;
+        Sun,  9 Aug 2020 11:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596972001;
-        bh=YzI06x2VtwyLUH1SPEtarEcOok5X9Xg6xMPI3fOMg1k=;
+        s=default; t=1596972010;
+        bh=CAzT3HPKe2SQrpGNfbhdhwDB86fP9HyD4MBfA8HPvVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T3PDVTw+IyIiacQJjOgMAktxiJNuniHdmMrvqgAF6tawyP5D3Ddsgafi9A4WbavO+
-         McbWrEFHk+ZymTTMrFVGFEROaFt8lOAr2kD6+/ePh/VYEG6+DkBbOHogQ1zFAYq4Ag
-         Fu6jo95lf1PKIjOSwVEz6AWmKaJNDal9TFhKkrr8=
+        b=ckN5hj2NGVUyDXDC6Mm7Q31owdOSqoRbYN2wDANNGS0BNrdy0LTvf6uBE5MuE1v45
+         pjfeUtyerLw1OLM0g+Sr4Gs5xmMhQ9S9kkh0kkxp3hJeaERFt7mscIPEV5tdgd0DKC
+         JD+yr8S6+V79vwJAqTU/WKLwxgf3VBlJPHvOFPeU=
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     linux-iio@vger.kernel.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Angelo Compagnucci <angelo.compagnucci@gmail.com>
-Subject: [PATCH 02/13] dt-bindings: trivial-devices: Add mcp342x ADCs and drop separate binding doc.
-Date:   Sun,  9 Aug 2020 12:17:42 +0100
-Message-Id: <20200809111753.156236-3-jic23@kernel.org>
+        Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 08/13] dt-bindings: iio: adc: ti,adc12138 yaml conversion.
+Date:   Sun,  9 Aug 2020 12:17:48 +0100
+Message-Id: <20200809111753.156236-9-jic23@kernel.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200809111753.156236-1-jic23@kernel.org>
 References: <20200809111753.156236-1-jic23@kernel.org>
@@ -59,69 +59,150 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-These i2c devices have simple bindings, well described by trivial-device.yaml
-so rather than convert the binding doc to yaml, let us just add them to
-trivial devices and drop the old binding document.
+Simple binding conversion.  Only addition was #io-channel-cells to
+allow for potential consumers of the channels on this device.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- .../devicetree/bindings/iio/adc/mcp3422.txt   | 19 -------------------
- .../devicetree/bindings/trivial-devices.yaml  | 16 ++++++++++++++++
- 2 files changed, 16 insertions(+), 19 deletions(-)
+ .../bindings/iio/adc/ti,adc12138.yaml         | 85 +++++++++++++++++++
+ .../bindings/iio/adc/ti-adc12138.txt          | 37 --------
+ 2 files changed, 85 insertions(+), 37 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3422.txt b/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,adc12138.yaml b/Documentation/devicetree/bindings/iio/adc/ti,adc12138.yaml
+new file mode 100644
+index 000000000000..3e8c43aa8ef3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti,adc12138.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/ti,adc12138.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments ADC12138 and similar self-calibrating ADCs
++
++maintainers:
++  - Akinobu Mita <akinobu.mita@gmail.com>
++
++description: |
++  13 bit ADCs with 1, 2 or 8 inputs and self calibrating circuitry to
++  correct for linearity, zero and full scale errors.
++
++properties:
++  compatible:
++    enum:
++      - ti,adc12130
++      - ti,adc12132
++      - ti,adc12138
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++    description: End of Conversion (EOC) interrupt
++
++  clocks:
++    maxItems: 1
++    description: Conversion clock input.
++
++  spi-max-frequency: true
++
++  vref-p-supply:
++    description: The regulator supply for positive analog voltage reference
++
++  vref-n-suppy:
++    description: |
++      The regulator supply for negative analog voltage reference
++      (Note that this must not go below GND or exceed vref-p)
++      If not specified, this is assumed to be analog ground.
++
++  ti,acquisition-time:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 6, 10, 18, 34]
++    description: |
++      The number of conversion clock periods for the S/H's acquisition time.
++      For high source impedances, this value can be increased to 18 or 34.
++      For less ADC accuracy and/or slower CCLK frequencies this value may be
++      decreased to 6.  See section 6.0 INPUT SOURCE RESISTANCE in the
++      datasheet for details.
++
++  "#io-channel-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - vref-p-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "ti,adc12138";
++            reg = <0>;
++            interrupts = <28 IRQ_TYPE_EDGE_RISING>;
++            interrupt-parent = <&gpio1>;
++            clocks = <&cclk>;
++            vref-p-supply = <&ldo4_reg>;
++            spi-max-frequency = <5000000>;
++            ti,acquisition-time = <6>;
++            #io-channel-cells = <1>;
++        };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
 deleted file mode 100644
-index 82bcce07255d..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
+index 049a1d36f013..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
 +++ /dev/null
-@@ -1,19 +0,0 @@
--* Microchip mcp3421/2/3/4/6/7/8 chip family (ADC)
+@@ -1,37 +0,0 @@
+-* Texas Instruments' ADC12130/ADC12132/ADC12138
 -
 -Required properties:
-- - compatible: Should be
--	"microchip,mcp3421" or
--	"microchip,mcp3422" or
--	"microchip,mcp3423" or
--	"microchip,mcp3424" or
--	"microchip,mcp3425" or
--	"microchip,mcp3426" or
--	"microchip,mcp3427" or
--	"microchip,mcp3428"
-- - reg: I2C address for the device
+- - compatible: Should be one of
+-	* "ti,adc12130"
+-	* "ti,adc12132"
+-	* "ti,adc12138"
+- - reg: SPI chip select number for the device
+- - interrupts: Should contain interrupt for EOC (end of conversion)
+- - clocks: phandle to conversion clock input
+- - spi-max-frequency: Definision as per
+-	Documentation/devicetree/bindings/spi/spi-bus.txt
+- - vref-p-supply: The regulator supply for positive analog voltage reference
+-
+-Optional properties:
+- - vref-n-supply: The regulator supply for negative analog voltage reference
+-	(Note that this must not go below GND or exceed vref-p)
+-	If not specified, this is assumed to be analog ground.
+- - ti,acquisition-time: The number of conversion clock periods for the S/H's
+-	acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
+-	default value of 10 is used.
+-	For high source impedances, this value can be increased to 18 or 34.
+-	For less ADC accuracy and/or slower CCLK frequencies this value may be
+-	decreased to 6.  See section 6.0 INPUT SOURCE RESISTANCE in the
+-	datasheet for details.
 -
 -Example:
 -adc@0 {
--	compatible = "microchip,mcp3424";
--	reg = <0x68>;
+-	compatible = "ti,adc12138";
+-	reg = <0>;
+-	interrupts = <28 IRQ_TYPE_EDGE_RISING>;
+-	interrupt-parent = <&gpio1>;
+-	clocks = <&cclk>;
+-	vref-p-supply = <&ldo4_reg>;
+-	spi-max-frequency = <5000000>;
+-	ti,acquisition-time = <6>;
 -};
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 4165352a590a..837592ec62aa 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -130,6 +130,22 @@ properties:
-           - mcube,mc3230
-             # MEMSIC 2-axis 8-bit digital accelerometer
-           - memsic,mxc6225
-+            # Microchip differential I2C ADC, 1 Channel, 18 bit
-+          - microchip,mcp3421
-+            # Microchip differential I2C ADC, 2 Channel, 18 bit
-+          - microchip,mcp3422
-+            # Microchip differential I2C ADC, 2 Channel, 18 bit
-+          - microchip,mcp3423
-+            # Microchip differential I2C ADC, 4 Channel, 18 bit
-+          - microchip,mcp3424
-+            # Microchip differential I2C ADC, 1 Channel, 16 bit
-+          - microchip,mcp3425
-+            # Microchip differential I2C ADC, 2 Channel, 16 bit
-+          - microchip,mcp3426
-+            # Microchip differential I2C ADC, 2 Channel, 16 bit
-+          - microchip,mcp3427
-+            # Microchip differential I2C ADC, 4 Channel, 16 bit
-+          - microchip,mcp3428
-             # Microchip 7-bit Single I2C Digital POT (5k)
-           - microchip,mcp4017-502
-             # Microchip 7-bit Single I2C Digital POT (10k)
 -- 
 2.28.0
 
