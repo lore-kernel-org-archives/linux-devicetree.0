@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10390C433E4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607FBC433EA
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2471206D8
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE5C2065D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596972014;
-	bh=zX+Eyv6yclmWuiZrXaWJbTjM36u3RWP0l5Yzy5J3K3E=;
+	s=default; t=1596972013;
+	bh=qomiOKxTUeSfn56banZXI2i5A5k2DuDKDauQW496Q2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gx0GFusesdzv+SrZ3HylovCoYw+dgC1sHg+wvd09NQ8U2AnEUDsTdPhTFHiO5VGEl
-	 EOhaGJ/a6POfXUFrT12MCUX6W1gHYyce0d53UAPOSpLRv6CLo55B7BFVnKj60d7cbB
-	 8h1lC9gP4SpVy/3nTHYZKJaxDEA28vaM33WeBoiM=
+	b=2u+5gMGaOxIBXkJ6MnpciGIXdrMZNqQBTaMhVfP3/zE+adTNNJ9F+e5cvnQkTVeZw
+	 IExX1++RdQaBxaDyIu+f/75KYRmkr/kknVn6BtwcfTstl/4q5+NrWVbl22mhMANIhx
+	 8Qrwjl1tWttrz6Ii09ZogX6pJjfo1lBnfDgm/oo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgHILUO (ORCPT
+        id S1726401AbgHILUM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 07:20:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54212 "EHLO mail.kernel.org"
+        Sun, 9 Aug 2020 07:20:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgHILUN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Aug 2020 07:20:13 -0400
+        id S1726350AbgHILUM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 07:20:12 -0400
 Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A92020748;
-        Sun,  9 Aug 2020 11:20:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBB52076C;
+        Sun,  9 Aug 2020 11:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596972013;
-        bh=zX+Eyv6yclmWuiZrXaWJbTjM36u3RWP0l5Yzy5J3K3E=;
+        s=default; t=1596972011;
+        bh=qomiOKxTUeSfn56banZXI2i5A5k2DuDKDauQW496Q2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CjXpeF0fDM6+j2A0utWKWNhbJqWc5Yt8R77HGnUYw6y2ikTv3w1e58PdQbqa2R7M
-         H2z7m4RHktVGyOYfHP6QZ+g9JtoXUiHy9lueYyeamwuPwoP9zwPrKhlxbKzMRB7lS2
-         KR/2c6nQvcvpi5YDZdtjbN4W8Jv/EjOhXYkkYBOE=
+        b=0CUMNyqOnUDYMkuAZ4WYvIO/iea7VTrcoIOimCRhulp1UdOR2rBx6yWUld+rCwji6
+         YeYo1ScbyI8/Ict68IKTeokOSsZ4ROPw/C/xO/YEbl9ZEgYpemUF7SJJPFhnJ1NuvI
+         p/rZ15RIp5qn7ViDvwtSvpRw5UHSlD7stlP8SdN4=
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     linux-iio@vger.kernel.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        David Lechner <david@lechnology.com>
-Subject: [PATCH 10/13] dt-bindings: iio: adc: ti,ads7950 binding conversion
-Date:   Sun,  9 Aug 2020 12:17:50 +0100
-Message-Id: <20200809111753.156236-11-jic23@kernel.org>
+        Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Subject: [PATCH 09/13] dt-bindings: iio: adc: ti,adc128s052 yaml conversion.
+Date:   Sun,  9 Aug 2020 12:17:49 +0100
+Message-Id: <20200809111753.156236-10-jic23@kernel.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200809111753.156236-1-jic23@kernel.org>
 References: <20200809111753.156236-1-jic23@kernel.org>
@@ -59,59 +59,55 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Simple conversion.  This binding already had the
-that is necessary, I'm happy to leave it as previously documented.
+Simple binding.  Only addition to txt version is
+as a provider of channels to other devices using the consumer
+binding.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: David Lechner <david@lechnology.com>
+Cc: Angelo Compagnucci <angelo.compagnucci@gmail.com>
 ---
- .../bindings/iio/adc/ti,ads7950.yaml          | 64 +++++++++++++++++++
- .../bindings/iio/adc/ti-ads7950.txt           | 23 -------
- 2 files changed, 64 insertions(+), 23 deletions(-)
+ .../bindings/iio/adc/ti,adc128s052.yaml       | 59 +++++++++++++++++++
+ .../bindings/iio/adc/ti-adc128s052.txt        | 25 --------
+ 2 files changed, 59 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads7950.yaml b/Documentation/devicetree/bindings/iio/adc/ti,ads7950.yaml
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml b/Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml
 new file mode 100644
-index 000000000000..a759d9064718
+index 000000000000..d54a0183f024
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti,ads7950.yaml
-@@ -0,0 +1,64 @@
++++ b/Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml
+@@ -0,0 +1,59 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/iio/adc/ti,ads7950.yaml#
++$id: http://devicetree.org/schemas/iio/adc/ti,adc128s052.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments ADS7950 and similar ADCs
++title: Texas Instruments ADC128S052 and similar ADCs
 +
 +maintainers:
-+  - David Lechner <david@lechnology.com>
++  - Angelo Compagnucci <angelo.compagnucci@gmail.com>
 +
 +description: |
-+  Family of 4-16 channel, 8-12 bit ADCs with SPI interface.
++  Family of 12 bit SPI ADCs with 2 to 8 channels with a range of different
++  target sample rates.
 +
 +properties:
 +  compatible:
 +    enum:
-+      - ti,ads7950
-+      - ti,ads7951
-+      - ti,ads7952
-+      - ti,ads7953
-+      - ti,ads7954
-+      - ti,ads7955
-+      - ti,ads7956
-+      - ti,ads7957
-+      - ti,ads7958
-+      - ti,ads7959
-+      - ti,ads7960
-+      - ti,ads7961
++      - ti,adc122s021
++      - ti,adc122s051
++      - ti,adc122s101
++      - ti,adc124s021
++      - ti,adc124s051
++      - ti,adc124s101
++      - ti,adc128s052
 +
 +  reg:
 +    maxItems: 1
 +
 +  spi-max-frequency: true
 +
-+  vref-supply:
-+    description: Supply the 2.5V or 5V reference voltage
++  vref-supply: true
 +
 +  "#io-channel-cells":
 +    const: 1
@@ -120,41 +116,44 @@ index 000000000000..a759d9064718
 +  - compatible
 +  - reg
 +  - vref-supply
-+  - "#io-channel-cells"
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
 +    spi {
 +        #address-cells = <1>;
 +        #size-cells = <0>;
 +
 +        adc@0 {
-+            compatible = "ti,ads7957";
++            compatible = "ti,adc128s052";
 +            reg = <0>;
-+            vref-supply = <&refin_supply>;
-+            spi-max-frequency = <10000000>;
++            vref-supply = <&vdd_supply>;
++            spi-max-frequency = <1000000>;
 +            #io-channel-cells = <1>;
 +        };
 +    };
 +...
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt b/Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
 deleted file mode 100644
-index e77a6f7e1001..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt
+index c07ce1a3f5c4..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
 +++ /dev/null
-@@ -1,23 +0,0 @@
--* Texas Instruments ADS7950 family of A/DC chips
+@@ -1,25 +0,0 @@
+-* Texas Instruments' ADC128S052, ADC122S021 and ADC124S021 ADC chip
 -
 -Required properties:
-- - compatible: Must be one of "ti,ads7950", "ti,ads7951", "ti,ads7952",
--   "ti,ads7953", "ti,ads7954", "ti,ads7955", "ti,ads7956", "ti,ads7957",
--   "ti,ads7958", "ti,ads7959", "ti,ads7960", or "ti,ads7961"
-- - reg: SPI chip select number for the device
-- - #io-channel-cells: Must be 1 as per ../iio-bindings.txt
-- - vref-supply: phandle to a regulator node that supplies the 2.5V or 5V
--   reference voltage
+- - compatible: Should be one of:
+-   - "ti,adc128s052"
+-   - "ti,adc122s021"
+-   - "ti,adc122s051"
+-   - "ti,adc122s101"
+-   - "ti,adc124s021"
+-   - "ti,adc124s051"
+-   - "ti,adc124s101"
+- - reg: spi chip select number for the device
+- - vref-supply: The regulator supply for ADC reference voltage
 -
 -Recommended properties:
 - - spi-max-frequency: Definition as per
@@ -162,11 +161,10 @@ index e77a6f7e1001..000000000000
 -
 -Example:
 -adc@0 {
--	compatible = "ti,ads7957";
+-	compatible = "ti,adc128s052";
 -	reg = <0>;
--	#io-channel-cells = <1>;
--	vref-supply = <&refin_supply>;
--	spi-max-frequency = <10000000>;
+-	vref-supply = <&vdd_supply>;
+-	spi-max-frequency = <1000000>;
 -};
 -- 
 2.28.0
