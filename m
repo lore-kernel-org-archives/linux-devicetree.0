@@ -2,51 +2,51 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0C5C433EC
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23583C433E8
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 679392075D
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CFA2075D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596972009;
-	bh=C27VUfhRi25GeeObvS3kCP/nI3TO5p769C0N1WNJtZ4=;
+	s=default; t=1596972004;
+	bh=YzI06x2VtwyLUH1SPEtarEcOok5X9Xg6xMPI3fOMg1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9KCdBsxLyzGuV93fFeFjSfa8IMnIkgynSwdZFKZmawHrV5ZERTNXHTlbNIpPFbrf
-	 Ke1p+Vv5i5Zuu7v4Rrr2Wax80SJbjPbjCCC0xAiSFKete3a6N9YY3t3ulGzHmikqca
-	 Icdtz0np7dXLtEAuxkQSX8+RX7Hrw8wT4uewncT0=
+	b=dxYOjdvnmHTZIpZyJ+IUz/HNEJ9v3KrgucEQhbw8WhTDAqgf252clVYGoyDHOp0C3
+	 CcbzLgl3pSpz2mzpfGAe/eHxfZmn6hfXtVtMqUFvv1q+9D1YCHL5HaNdZ5hkmLw4p5
+	 xs3FIdw4AS6YlTjOfcFoJJqeIokfBY+wHfJ6EwoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbgHILUI (ORCPT
+        id S1726335AbgHILUC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 07:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54092 "EHLO mail.kernel.org"
+        Sun, 9 Aug 2020 07:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgHILUI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Aug 2020 07:20:08 -0400
+        id S1726199AbgHILUC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 07:20:02 -0400
 Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8F92078D;
-        Sun,  9 Aug 2020 11:20:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C95F920716;
+        Sun,  9 Aug 2020 11:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596972007;
-        bh=C27VUfhRi25GeeObvS3kCP/nI3TO5p769C0N1WNJtZ4=;
+        s=default; t=1596972001;
+        bh=YzI06x2VtwyLUH1SPEtarEcOok5X9Xg6xMPI3fOMg1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVPjdETgavHuC98ssCQ4WZMTLwtRabgITT0pBO1zV2ZEuC5m7t4AyMbMYxLb4uFq7
-         3BOFHF0fgUjbKKww8pCl/1PtjsGCXFutxkFgJhhD90xQiAES4ZX4/Q7PfiE+oAyTGh
-         trgXHtCnxN+tCx4/UDML650r8oNeZZeqlxlJeiNE=
+        b=T3PDVTw+IyIiacQJjOgMAktxiJNuniHdmMrvqgAF6tawyP5D3Ddsgafi9A4WbavO+
+         McbWrEFHk+ZymTTMrFVGFEROaFt8lOAr2kD6+/ePh/VYEG6+DkBbOHogQ1zFAYq4Ag
+         Fu6jo95lf1PKIjOSwVEz6AWmKaJNDal9TFhKkrr8=
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     linux-iio@vger.kernel.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 06/13] dt-bindings: iio: adc: ti,adc0832 yaml conversion.
-Date:   Sun,  9 Aug 2020 12:17:46 +0100
-Message-Id: <20200809111753.156236-7-jic23@kernel.org>
+        Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Subject: [PATCH 02/13] dt-bindings: trivial-devices: Add mcp342x ADCs and drop separate binding doc.
+Date:   Sun,  9 Aug 2020 12:17:42 +0100
+Message-Id: <20200809111753.156236-3-jic23@kernel.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200809111753.156236-1-jic23@kernel.org>
 References: <20200809111753.156236-1-jic23@kernel.org>
@@ -59,106 +59,69 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Simple binding conversion of this SPI ADC binding, with reference
-voltage.
-
-Added the optional property #io-channel-cells to allow for
-consumers of channels if that makes sense for a given board.
+These i2c devices have simple bindings, well described by trivial-device.yaml
+so rather than convert the binding doc to yaml, let us just add them to
+trivial devices and drop the old binding document.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: Angelo Compagnucci <angelo.compagnucci@gmail.com>
 ---
- .../bindings/iio/adc/ti,adc0832.yaml          | 56 +++++++++++++++++++
- .../bindings/iio/adc/ti-adc0832.txt           | 19 -------
- 2 files changed, 56 insertions(+), 19 deletions(-)
+ .../devicetree/bindings/iio/adc/mcp3422.txt   | 19 -------------------
+ .../devicetree/bindings/trivial-devices.yaml  | 16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti,adc0832.yaml b/Documentation/devicetree/bindings/iio/adc/ti,adc0832.yaml
-new file mode 100644
-index 000000000000..f5a923cc847f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti,adc0832.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/ti,adc0832.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments ADC0832 and similar ADCs
-+
-+maintainers:
-+  - Akinobu Mita <akinobu.mita@gmail.com>
-+
-+description: |
-+  8 bit ADCs with 1, 2, 4 or 8 inputs for single ended or differential
-+  conversion.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,adc0831
-+      - ti,adc0832
-+      - ti,adc0834
-+      - ti,adc0838
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency: true
-+
-+  vref-supply:
-+    description: External reference, needed to establish input scaling
-+
-+  "#io-channel-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@0 {
-+            compatible = "ti,adc0832";
-+            reg = <0>;
-+            vref-supply = <&vdd_supply>;
-+            spi-max-frequency = <200000>;
-+            #io-channel-cells = <1>;
-+        };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt
+diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3422.txt b/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
 deleted file mode 100644
-index d91130587d01..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt
+index 82bcce07255d..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
 +++ /dev/null
 @@ -1,19 +0,0 @@
--* Texas Instruments' ADC0831/ADC0832/ADC0832/ADC0838
+-* Microchip mcp3421/2/3/4/6/7/8 chip family (ADC)
 -
 -Required properties:
-- - compatible: Should be one of
--	* "ti,adc0831"
--	* "ti,adc0832"
--	* "ti,adc0834"
--	* "ti,adc0838"
-- - reg: spi chip select number for the device
-- - vref-supply: The regulator supply for ADC reference voltage
-- - spi-max-frequency: Max SPI frequency to use (< 400000)
+- - compatible: Should be
+-	"microchip,mcp3421" or
+-	"microchip,mcp3422" or
+-	"microchip,mcp3423" or
+-	"microchip,mcp3424" or
+-	"microchip,mcp3425" or
+-	"microchip,mcp3426" or
+-	"microchip,mcp3427" or
+-	"microchip,mcp3428"
+- - reg: I2C address for the device
 -
 -Example:
 -adc@0 {
--	compatible = "ti,adc0832";
--	reg = <0>;
--	vref-supply = <&vdd_supply>;
--	spi-max-frequency = <200000>;
+-	compatible = "microchip,mcp3424";
+-	reg = <0x68>;
 -};
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 4165352a590a..837592ec62aa 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -130,6 +130,22 @@ properties:
+           - mcube,mc3230
+             # MEMSIC 2-axis 8-bit digital accelerometer
+           - memsic,mxc6225
++            # Microchip differential I2C ADC, 1 Channel, 18 bit
++          - microchip,mcp3421
++            # Microchip differential I2C ADC, 2 Channel, 18 bit
++          - microchip,mcp3422
++            # Microchip differential I2C ADC, 2 Channel, 18 bit
++          - microchip,mcp3423
++            # Microchip differential I2C ADC, 4 Channel, 18 bit
++          - microchip,mcp3424
++            # Microchip differential I2C ADC, 1 Channel, 16 bit
++          - microchip,mcp3425
++            # Microchip differential I2C ADC, 2 Channel, 16 bit
++          - microchip,mcp3426
++            # Microchip differential I2C ADC, 2 Channel, 16 bit
++          - microchip,mcp3427
++            # Microchip differential I2C ADC, 4 Channel, 16 bit
++          - microchip,mcp3428
+             # Microchip 7-bit Single I2C Digital POT (5k)
+           - microchip,mcp4017-502
+             # Microchip 7-bit Single I2C Digital POT (10k)
 -- 
 2.28.0
 
