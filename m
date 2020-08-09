@@ -2,69 +2,70 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A349C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB91C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0233D2067D
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BBA206B5
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596932234;
-	bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
+	s=default; t=1596933334;
+	bh=coQD0wBPaBdDQivRZlkVTAL9bKjxlMoqwYidiCYobu8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0/pif/4BbqYKnEYwnOSt4dMqVCc8dTAW3hRiLooSDjnV2nKgV5pgqnkeqLBuRVw+U
-	 JftOvsC8/1Od7rvcRB7MTyt/Uik6Zc3/TnluKlyC6stlQWFYbCbiMPjEHO6CTgpY/M
-	 bAsY0ld/EZfQByUSGYMVFpkxDDZN6LHlrpepnDMM=
+	b=AlwDyh4/d/ngBKa/ic14irthUXGmy/CqDu1n234J6tLxYG4P8MT6nw9fCXsg095DW
+	 AVAEAvvGSIdzmJhDa1Kw9nyDddg7ENNrYro5G1NA8rrnhsKjsJUZvQvdUlznLRWGJv
+	 QaFhucddRfGs/4/vV6gco3PWoun/rOn6bFLA+yLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgHIARN (ORCPT
+        id S1726087AbgHIAfe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 20:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 20:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbgHIARM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 20:17:12 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        id S1725950AbgHIAfe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 20:35:34 -0400
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8D2067D;
-        Sun,  9 Aug 2020 00:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1A73206B5;
+        Sun,  9 Aug 2020 00:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596932232;
-        bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
+        s=default; t=1596933333;
+        bh=coQD0wBPaBdDQivRZlkVTAL9bKjxlMoqwYidiCYobu8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Vv9wm6DIxUbHozRvA1AyxMizji9rUv8gSn3bnmKzgNyQUT59XCuSpVianl1FP2xDO
-         NSa6d3yKuHd8zLwIotp5zI0vf34jeLzSopbflNOV58GA3NKWOO1xrTfdkvhQG92GG4
-         0YgAHkE74fzWggP0wdmyN1FmG2fZVztME3deAnKA=
-Received: by mail-ej1-f50.google.com with SMTP id bo3so5827444ejb.11;
-        Sat, 08 Aug 2020 17:17:12 -0700 (PDT)
-X-Gm-Message-State: AOAM530dcZJV9hhkZg6Fm9HRvXQM03xfY2zkSjKW98wMOAAh6wb8TrEj
-        nd2ZuCgkMByNvbUHZFJJ5UicZBeFsejk9TB1sg==
-X-Google-Smtp-Source: ABdhPJxtuqSyNCglh1lnoj77PKcLmVpUqyOklSdTDUwAHMVSJ1wm9tl/cLlSapqD2wcderKhmNy5ajxAxrVAyBhhL3s=
-X-Received: by 2002:a17:906:60d5:: with SMTP id f21mr15560600ejk.94.1596932230832;
- Sat, 08 Aug 2020 17:17:10 -0700 (PDT)
+        b=ZhdXHSbGknQR+b+3YLI9YqMjsJmJW+yYdR4b9uOVrGZRu+SOjPpI4W6MI+qb4zD1G
+         gQCWZk7GJOgQQakgyUQUaM48Ej8u9z1HE0O4IHBQDQqlhWYb/hADg8auRSzisTMMQe
+         pg7hsgKz1+jnLfV6QaWpVMMtJuJb+6xgSPjrKjkg=
+Received: by mail-ed1-f44.google.com with SMTP id cq28so3716024edb.10;
+        Sat, 08 Aug 2020 17:35:32 -0700 (PDT)
+X-Gm-Message-State: AOAM530xMZrks3g24WatN8/NDN+FKy5Y0OfPXiyEt+aJ4CJJ6ai0rA/E
+        BEtbl92qhp8Y4A5U+NK8/dwSymM7pObCp9vWvg==
+X-Google-Smtp-Source: ABdhPJxZvcW8PgfFlsq/+msJNbIn+ca0CblF0488HSrYloUzKvPr/KfxkqW6W3mw1LCCbvI377JkyUuaVPVehXXvAnA=
+X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr14822310edb.48.1596933331512;
+ Sat, 08 Aug 2020 17:35:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
- <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
-In-Reply-To: <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com> <1596855231-5782-7-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1596855231-5782-7-git-send-email-yongqiang.niu@mediatek.com>
 From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 9 Aug 2020 08:16:59 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
-Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+Date:   Sun, 9 Aug 2020 08:35:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8B0xC5QspmLS0NNTD5fG1V+OY6hNU9F4+qcqHFdQtCWw@mail.gmail.com>
+Message-ID: <CAAOTY_8B0xC5QspmLS0NNTD5fG1V+OY6hNU9F4+qcqHFdQtCWw@mail.gmail.com>
+Subject: Re: [RESEND v7, PATCH 6/7] drm/mediatek: add support for mediatek SOC MT8183
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        chunkuang Hu <chunkuang.hu@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
@@ -72,49 +73,82 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Frank:
+Hi, Yongqiang:
 
-Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=888:27=E5=AF=AB=E9=81=93=
+Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8811:05=E5=AF=AB=E9=81=93=
 =EF=BC=9A
 >
-> Hi,
+> This patch add support for mediatek SOC MT8183
+> 1. add ovl private data
+> 2. add rdma private data
+> 3. add mutes private data
+> 4. add main and external path module for crtc create
 >
-> as i made a mistake in cover-letter, it is not assigned to the series.
->
-> to show its content, i send it here as comment (instead of resending the =
-whole series):
->
-> based on series from David Woodhouse [1]
-> i moved more display-nodes out of mt7623.dtsi to new mt7623n.dtsi
-> and changed last part from my series [2] to add these nodes to this new d=
-tsi
->
-> the depency of dtsi-dtsi-dts is already done for mt7623a, so i guess it's=
- a good
-> way to use it for mt7623n too.
->
-> this first set is an RFC if all nodes are in right order and if it is wan=
-ted to move
-> them out as i have no technical document about mt7623a/n which describes =
-which parts
-> are available on both or only on one of them
->
-> added MTK DRM Maintainer CK Hu, Ryder Lee and Sean Wang, maybe they can g=
-ive me some advice
-> how to proceed further here
->
-> [1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D32=
-9209
-> [2] https://patchwork.kernel.org/patch/11700699/
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-I would like to put all device in mt7623.dtsi with some device's
-status is "disabled" and change its status in platform dtsi.
-I would like to see all device in mt7623.dtsi because of its name. If
-you move some device to platform dtsi, we would trace all platform
-dtsi to find out how many device in mt7623. One day a new platform
-enable different devices, you would reorganize all these platform
-dtsi?
+[snip]
+
+> +
+>  static const struct of_device_id mtk_disp_ovl_driver_dt_match[] =3D {
+>         { .compatible =3D "mediatek,mt2701-disp-ovl",
+>           .data =3D &mt2701_ovl_driver_data},
+>         { .compatible =3D "mediatek,mt8173-disp-ovl",
+>           .data =3D &mt8173_ovl_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-ovl",
+
+"mediatek,mt8183-disp-ovl" is not defined in binding document [1]
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt?h=3Dv=
+5.8
+
+> +         .data =3D &mt8183_ovl_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-ovl-2l",
+
+Ditto.
+
+> +         .data =3D &mt8183_ovl_2l_driver_data},
+>         {},
+>  };
+
+[snip]
+
+> +
+>  static const struct of_device_id mtk_disp_rdma_driver_dt_match[] =3D {
+>         { .compatible =3D "mediatek,mt2701-disp-rdma",
+>           .data =3D &mt2701_rdma_driver_data},
+>         { .compatible =3D "mediatek,mt8173-disp-rdma",
+>           .data =3D &mt8173_rdma_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-rdma",
+
+Ditto.
+
+> +         .data =3D &mt8183_rdma_driver_data},
+>         {},
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_disp_rdma_driver_dt_match);
+
+[snip]
+
+> +
+>  struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned i=
+nt id)
+>  {
+>         struct mtk_ddp *ddp =3D dev_get_drvdata(dev);
+> @@ -402,6 +447,8 @@ static int mtk_ddp_remove(struct platform_device *pde=
+v)
+>           .data =3D &mt2712_ddp_driver_data},
+>         { .compatible =3D "mediatek,mt8173-disp-mutex",
+>           .data =3D &mt8173_ddp_driver_data},
+> +       { .compatible =3D "mediatek,mt8183-disp-mutex",
+
+Ditto.
 
 Regards,
 Chun-Kuang.
+
+> +         .data =3D &mt8183_ddp_driver_data},
+>         {},
+>  };
+>  MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
