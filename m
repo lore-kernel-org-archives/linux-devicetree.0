@@ -2,52 +2,55 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2993C433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A51C433E5
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A839120729
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A2C207DA
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596972000;
-	bh=qezfHXu7d4uZ1zFJ3qL4F+s7KmzK69YZvv4gZhRXFH0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=O8yByl00vUU3YaQrg1JSRqWvMcw4gL8wqaAuh5SEl1XaG67+uz6lmYS/o8QB6oESs
-	 U9hMCbDePSnPLM4xjrc8Q4b89vaLll/g621Fq3JoNXQdIkXALm0aN4n9mayjWDVeJZ
-	 rstoKMyekuXeWMDuO60OZWGnd8ibOqnC1YTMsI+s=
+	s=default; t=1596972006;
+	bh=fFjRg4u2O6rIsnmb5QeqklxTxGScNwRug1+xq9CT+p0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qtVWWgAUOFHdWCwhNicE8LSfbln3XnIIxLt1fFzKZy4XyKkqp3HFn3CwKZ41L8qcr
+	 BoddeVOcTPyrs0vyGwmKMs/qarZPbhZ2lpT5dwu+CgoUhOYCypXP/lwSMwt7gkEMS0
+	 agK6jx6Qwkx+O4eJFmhW74txehHjlJNX58exvxCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgHILUA (ORCPT
+        id S1726199AbgHILUF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 07:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53912 "EHLO mail.kernel.org"
+        Sun, 9 Aug 2020 07:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgHILT7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Aug 2020 07:19:59 -0400
+        id S1726350AbgHILUF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 07:20:05 -0400
 Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17EA02065D;
-        Sun,  9 Aug 2020 11:19:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A103C20748;
+        Sun,  9 Aug 2020 11:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596971999;
-        bh=qezfHXu7d4uZ1zFJ3qL4F+s7KmzK69YZvv4gZhRXFH0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ARlSaoqxJWSu33zkHWOJAXZUqdlH0M/qik7tElZnbNt00JH8aQwz9DABJP8hHeh8N
-         uMOM+rio/zAcH6O7JCzjBNqPpJ6hKGGghJFIFC2CovPciPqK3JTRf4MGKzLXlvKTtr
-         obC6mY90o5b+fOirkw72xrXsWlz05sL47gZCRzDE=
+        s=default; t=1596972004;
+        bh=fFjRg4u2O6rIsnmb5QeqklxTxGScNwRug1+xq9CT+p0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=c9XRpL4iWTFkrLxl5H//i2fokGeZPU0w1XWxyYUoCgx22XO6pN/NOjoNrxOkbtz7w
+         ty7xAdr5PiWp/Y4WhjqT/LCtXez2KpIY01JVz2hrfMOjyA3HcCwYRJ1BV6Nl5b4pIe
+         0wDi20TRDL/BttaDA9xEPSFBG6N9AIkuJMF14dD4=
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     linux-iio@vger.kernel.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 00/13] dt-bindings: yaml conversions of some simple ADC bindings.
-Date:   Sun,  9 Aug 2020 12:17:40 +0100
-Message-Id: <20200809111753.156236-1-jic23@kernel.org>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: [PATCH 04/13] dt-bindings: iio: adc: lltc,ltc2497 yaml conversion.
+Date:   Sun,  9 Aug 2020 12:17:44 +0100
+Message-Id: <20200809111753.156236-5-jic23@kernel.org>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200809111753.156236-1-jic23@kernel.org>
+References: <20200809111753.156236-1-jic23@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -56,92 +59,86 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-This set coverts over some of the low hanging fruit from amongst the IIO
-ADC bindings.  Mostly they are very straight forward bindings.
+Very simple binding for this i2c device with a reference supply.
 
-One quirk is that I found I had one old binding doc in my local
-checked out copy that never made it into mainline. I've created
-a special patch for that so we don't lose the history.  It reflects
-the tags from the original patch that I seem to have messed up applying.
+Added the #io-channel-cells property to allow for consumers.
 
-I've added the #io-channel-cells property to  most of them, so that
-additionalProperties: false works if they are used as providers
-of channels to consumers.  For ADCs it is fairly likely they
-will be providing measurement services to another device in DT.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>
+---
+ .../bindings/iio/adc/lltc,ltc2497.yaml        | 44 +++++++++++++++++++
+ .../devicetree/bindings/iio/adc/ltc2497.txt   | 13 ------
+ 2 files changed, 44 insertions(+), 13 deletions(-)
 
-I have put the Maintainer as the original author of the old bindings
-/ driver. Hopefully everyone is fine with that. If not, let me know
-and I'll put my own details in there as I'll end up reviewing pretty
-much anything that touches these anyway.
-
-All comments welcome.
-
-Jonathan Cameron (12):
-  dt-bindings: iio: adc: microchip,mcp3201 yaml conversion.
-  dt-bindings: trivial-devices: Add mcp342x ADCs and drop separate
-    binding doc.
-  dt-bindings: iio: adc: ti,adc108s102 yaml conversion
-  dt-bindings: iio: adc: lltc,ltc2497 yaml conversion.
-  dt-bindings: iio: adc: ti,adc161s626 yaml conversion.
-  dt-bindings: iio: adc: ti,adc0832 yaml conversion.
-  dt-bindings: iio: adc: ti,adc084s021 yaml conversion
-  dt-bindings: iio: adc: ti,adc12138 yaml conversion.
-  dt-bindings: iio: adc: ti,adc128s052 yaml conversion.
-  dt-bindings: iio: adc: ti,ads7950 binding conversion
-  dt-bindings: iio: adc: ti,ads8344 yaml conversion
-  dt-bindings: iio: adc: ti,tlc4541 binding conversion
-
-Phil Reid (1):
-  dt-bindings: iio: adc: tlc4541 - recover accidentally dropped binding
-    doc
-
- .../bindings/iio/adc/lltc,ltc2497.yaml        | 44 +++++++++
- .../devicetree/bindings/iio/adc/ltc2497.txt   | 13 ---
- .../devicetree/bindings/iio/adc/mcp320x.txt   | 57 ------------
- .../devicetree/bindings/iio/adc/mcp3422.txt   | 19 ----
- .../bindings/iio/adc/microchip,mcp3201.yaml   | 93 +++++++++++++++++++
- .../bindings/iio/adc/ti,adc0832.yaml          | 56 +++++++++++
- .../bindings/iio/adc/ti,adc084s021.yaml       | 58 ++++++++++++
- .../bindings/iio/adc/ti,adc108s102.yaml       | 47 ++++++++++
- .../bindings/iio/adc/ti,adc12138.yaml         | 85 +++++++++++++++++
- .../bindings/iio/adc/ti,adc128s052.yaml       | 59 ++++++++++++
- .../bindings/iio/adc/ti,adc161s626.yaml       | 51 ++++++++++
- .../bindings/iio/adc/ti,ads7950.yaml          | 64 +++++++++++++
- .../bindings/iio/adc/ti,ads8344.yaml          | 51 ++++++++++
- .../bindings/iio/adc/ti,tlc4541.yaml          | 52 +++++++++++
- .../bindings/iio/adc/ti-adc0832.txt           | 19 ----
- .../bindings/iio/adc/ti-adc084s021.txt        | 19 ----
- .../bindings/iio/adc/ti-adc108s102.txt        | 18 ----
- .../bindings/iio/adc/ti-adc12138.txt          | 37 --------
- .../bindings/iio/adc/ti-adc128s052.txt        | 25 -----
- .../bindings/iio/adc/ti-adc161s626.txt        | 18 ----
- .../bindings/iio/adc/ti-ads7950.txt           | 23 -----
- .../bindings/iio/adc/ti-ads8344.txt           | 19 ----
- .../devicetree/bindings/trivial-devices.yaml  | 16 ++++
- 23 files changed, 676 insertions(+), 267 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/lltc,ltc2497.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ltc2497.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/mcp320x.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3422.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,mcp3201.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,adc0832.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,adc084s021.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,adc108s102.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,adc12138.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,adc128s052.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,adc161s626.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,ads7950.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,ads8344.yaml
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,tlc4541.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc0832.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc084s021.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc108s102.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc161s626.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt
- delete mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/lltc,ltc2497.yaml b/Documentation/devicetree/bindings/iio/adc/lltc,ltc2497.yaml
+new file mode 100644
+index 000000000000..6a176f551d75
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/lltc,ltc2497.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/lltc,ltc2497.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Linear Technology / Analog Devices LTC2497 ADC
++
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++
++description: |
++  16bit ADC supporting up to 16 single ended or 8 differential inputs.
++  I2C interface.
++
++properties:
++  compatible:
++    const:
++      lltc,ltc2497
++
++  reg: true
++  vref-supply: true
++  "#io-channel-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - vref-supply
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@76 {
++            compatible = "lltc,ltc2497";
++            reg = <0x76>;
++            vref-supply = <&ltc2497_reg>;
++            #io-channel-cells = <1>;
++        };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/iio/adc/ltc2497.txt b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+deleted file mode 100644
+index a237ed99c0d8..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
++++ /dev/null
+@@ -1,13 +0,0 @@
+-* Linear Technology / Analog Devices LTC2497 ADC
+-
+-Required properties:
+- - compatible: Must be "lltc,ltc2497"
+- - reg: Must contain the ADC I2C address
+- - vref-supply: The regulator supply for ADC reference voltage
+-
+-Example:
+-	ltc2497: adc@76 {
+-		compatible = "lltc,ltc2497";
+-		reg = <0x76>;
+-		vref-supply = <&ltc2497_reg>;
+-	};
 -- 
 2.28.0
 
