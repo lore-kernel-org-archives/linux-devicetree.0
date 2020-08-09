@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A51C433E5
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81A5C433EB
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A2C207DA
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE602076B
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596972006;
-	bh=fFjRg4u2O6rIsnmb5QeqklxTxGScNwRug1+xq9CT+p0=;
+	s=default; t=1596972005;
+	bh=WbQLTXNbjRMQftFIIOZ4GiMYlCKeyiFb4uALYzHXB4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qtVWWgAUOFHdWCwhNicE8LSfbln3XnIIxLt1fFzKZy4XyKkqp3HFn3CwKZ41L8qcr
-	 BoddeVOcTPyrs0vyGwmKMs/qarZPbhZ2lpT5dwu+CgoUhOYCypXP/lwSMwt7gkEMS0
-	 agK6jx6Qwkx+O4eJFmhW74txehHjlJNX58exvxCU=
+	b=LyBl8xhUf/RB5O50gbmu14FNIglBNdCXuQs7Ahfl7ZKChCqGM/ORxUBhDGyATYQ+y
+	 D2sla0tKJPzKTas8D3I14HqhnKNo9UTj4Gun+wg4LiXB+li7p9/0v7w8Ajc5e5RPYW
+	 6O5mlIm4k/7M1KKOtJbATncTXBQMm2FqZ0R7jt+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgHILUF (ORCPT
+        id S1726377AbgHILUE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 07:20:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54022 "EHLO mail.kernel.org"
+        Sun, 9 Aug 2020 07:20:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgHILUF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Aug 2020 07:20:05 -0400
+        id S1726199AbgHILUD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 07:20:03 -0400
 Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A103C20748;
-        Sun,  9 Aug 2020 11:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AA6B20729;
+        Sun,  9 Aug 2020 11:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596972004;
-        bh=fFjRg4u2O6rIsnmb5QeqklxTxGScNwRug1+xq9CT+p0=;
+        s=default; t=1596972003;
+        bh=WbQLTXNbjRMQftFIIOZ4GiMYlCKeyiFb4uALYzHXB4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9XRpL4iWTFkrLxl5H//i2fokGeZPU0w1XWxyYUoCgx22XO6pN/NOjoNrxOkbtz7w
-         ty7xAdr5PiWp/Y4WhjqT/LCtXez2KpIY01JVz2hrfMOjyA3HcCwYRJ1BV6Nl5b4pIe
-         0wDi20TRDL/BttaDA9xEPSFBG6N9AIkuJMF14dD4=
+        b=HAs6g7GqIqdYEfCex97mPrbW5xmGnJVKkD1CkghjUUS+uq3KiFfvtLakmdxv/o4D4
+         cm/RatgTSVNp0oZNCpPW946MkyqdYYGEeV9lmuKn1BcsM+qnGtc+WB/6e4KzgaVbtR
+         PC1/SwQqKYtbyG8AgVZhBsqW5Zd5BDsPIowNxcSk=
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     linux-iio@vger.kernel.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: [PATCH 04/13] dt-bindings: iio: adc: lltc,ltc2497 yaml conversion.
-Date:   Sun,  9 Aug 2020 12:17:44 +0100
-Message-Id: <20200809111753.156236-5-jic23@kernel.org>
+        Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH 03/13] dt-bindings: iio: adc: ti,adc108s102 yaml conversion
+Date:   Sun,  9 Aug 2020 12:17:43 +0100
+Message-Id: <20200809111753.156236-4-jic23@kernel.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200809111753.156236-1-jic23@kernel.org>
 References: <20200809111753.156236-1-jic23@kernel.org>
@@ -59,45 +59,45 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Very simple binding for this i2c device with a reference supply.
+Very simple conversion of spi device with reference supply.
 
 Added the #io-channel-cells property to allow for consumers.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
 ---
- .../bindings/iio/adc/lltc,ltc2497.yaml        | 44 +++++++++++++++++++
- .../devicetree/bindings/iio/adc/ltc2497.txt   | 13 ------
- 2 files changed, 44 insertions(+), 13 deletions(-)
+ .../bindings/iio/adc/ti,adc108s102.yaml       | 47 +++++++++++++++++++
+ .../bindings/iio/adc/ti-adc108s102.txt        | 18 -------
+ 2 files changed, 47 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/lltc,ltc2497.yaml b/Documentation/devicetree/bindings/iio/adc/lltc,ltc2497.yaml
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,adc108s102.yaml b/Documentation/devicetree/bindings/iio/adc/ti,adc108s102.yaml
 new file mode 100644
-index 000000000000..6a176f551d75
+index 000000000000..54955f03df93
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/lltc,ltc2497.yaml
-@@ -0,0 +1,44 @@
++++ b/Documentation/devicetree/bindings/iio/adc/ti,adc108s102.yaml
+@@ -0,0 +1,47 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/iio/adc/lltc,ltc2497.yaml#
++$id: http://devicetree.org/schemas/iio/adc/ti,adc108s102.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Linear Technology / Analog Devices LTC2497 ADC
++title: Texas Instruments ADC108S102 and ADC128S102
 +
 +maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
++  - Bogdan Pricop <bogdan.pricop@emutex.com>
 +
 +description: |
-+  16bit ADC supporting up to 16 single ended or 8 differential inputs.
-+  I2C interface.
++  Family of 8 channel, 10/12 bit, SPI, single ended ADCs.
 +
 +properties:
 +  compatible:
 +    const:
-+      lltc,ltc2497
++      ti,adc108s102
 +
 +  reg: true
 +  vref-supply: true
++  spi-max-frequency: true
 +  "#io-channel-cells":
 +    const: 1
 +
@@ -106,39 +106,47 @@ index 000000000000..6a176f551d75
 +  - reg
 +  - vref-supply
 +
++additionalProperties: false
++
 +examples:
 +  - |
-+    i2c {
-+        #address-cells = <1>;
++    spi {
++        #address-cells= <1>;
 +        #size-cells = <0>;
 +
-+        adc@76 {
-+            compatible = "lltc,ltc2497";
-+            reg = <0x76>;
-+            vref-supply = <&ltc2497_reg>;
++        adc@0 {
++            compatible = "ti,adc108s102";
++            reg = <0>;
++            vref-supply = <&vdd_supply>;
++            spi-max-frequency = <1000000>;
 +            #io-channel-cells = <1>;
 +        };
 +    };
 +...
-diff --git a/Documentation/devicetree/bindings/iio/adc/ltc2497.txt b/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc108s102.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc108s102.txt
 deleted file mode 100644
-index a237ed99c0d8..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/ltc2497.txt
+index bbbbb4a9f58f..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/ti-adc108s102.txt
 +++ /dev/null
-@@ -1,13 +0,0 @@
--* Linear Technology / Analog Devices LTC2497 ADC
+@@ -1,18 +0,0 @@
+-* Texas Instruments' ADC108S102 and ADC128S102 ADC chip
 -
 -Required properties:
-- - compatible: Must be "lltc,ltc2497"
-- - reg: Must contain the ADC I2C address
+- - compatible: Should be "ti,adc108s102"
+- - reg: spi chip select number for the device
 - - vref-supply: The regulator supply for ADC reference voltage
 -
+-Recommended properties:
+- - spi-max-frequency: Definition as per
+-		Documentation/devicetree/bindings/spi/spi-bus.txt
+-
 -Example:
--	ltc2497: adc@76 {
--		compatible = "lltc,ltc2497";
--		reg = <0x76>;
--		vref-supply = <&ltc2497_reg>;
--	};
+-adc@0 {
+-	compatible = "ti,adc108s102";
+-	reg = <0>;
+-	vref-supply = <&vdd_supply>;
+-	spi-max-frequency = <1000000>;
+-};
 -- 
 2.28.0
 
