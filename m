@@ -2,93 +2,78 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ED9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 17:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB81AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 19:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA0D206C0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 17:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAD1206CD
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 19:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgHIRlK (ORCPT
+        id S1726296AbgHITUG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 13:41:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgHIRlJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Aug 2020 13:41:09 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35223C061786
-        for <devicetree@vger.kernel.org>; Sun,  9 Aug 2020 10:41:09 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1k4pJh-00024Q-Fk; Sun, 09 Aug 2020 19:41:05 +0200
-Subject: Re: [PATCH v7 3/3] ARM: dts: stm32: add initial support for
- stm32mp157-odyssey board
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, mani@kernel.org, sam@ravnborg.org,
-        linus.walleij@linaro.org, arnd@arndb.de, broonie@kernel.org,
-        lkundrak@v3.sk, daniel@0x0f.com, kuninori.morimoto.gx@renesas.com,
-        allen.chen@ite.com.tw, robh@kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
- <20200809164450.289731-3-marcin.sloniewski@gmail.com>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <73c2439a-0250-4010-ad5d-601ac9f4b7df@pengutronix.de>
-Date:   Sun, 9 Aug 2020 19:40:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200809164450.289731-3-marcin.sloniewski@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Sun, 9 Aug 2020 15:20:06 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:29611 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726289AbgHITUG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Aug 2020 15:20:06 -0400
+X-IronPort-AV: E=Sophos;i="5.75,454,1589209200"; 
+   d="scan'208";a="54243689"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 10 Aug 2020 04:20:04 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 50A0D40D82E8;
+        Mon, 10 Aug 2020 04:20:02 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2] dt-bindings: mmc: renesas,sdhi: Add r8a774e1 support
+Date:   Sun,  9 Aug 2020 20:20:01 +0100
+Message-Id: <20200809192001.19156-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Marcin,
+Document SDHI controller for RZ/G2H (R8A774E1) SoC, which is compatible
+with R-Car Gen3 SoC family.
 
-On 8/9/20 6:44 PM, Marcin Sloniewski wrote:
-> Add support for Seeed Studio's stm32mp157c odyssey board.
-> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
-> and carrier board with USB and ETH interfaces, SD card connector,
-> wifi and BT chip AP6236.
-> 
-> In this patch only basic kernel boot is supported and interfacing
-> SD card and on-board eMMC.
-> 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v1->v2
+* Rebased the patch on YAML binding conversion changes (this patch
+  is part of series [1], reset of the patches have been picked up).
+* I have restored the Ack's from v1
+  [1] https://lkml.org/lkml/2020/7/8/1211
+---
+ Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-
-> ---
-
-> +
-> +&rng1 {
-> +	status = "okay";
-> +};
-
-I think we should put this into the SoC dtsi instead.
-
-Cheers
-Ahmad
-
-
+diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+index e5dbc20456e5..04eb0d3c5fa4 100644
+--- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
++++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+@@ -50,6 +50,7 @@ properties:
+               - renesas,sdhi-r8a774a1 # RZ/G2M
+               - renesas,sdhi-r8a774b1 # RZ/G2N
+               - renesas,sdhi-r8a774c0 # RZ/G2E
++              - renesas,sdhi-r8a774e1 # RZ/G2H
+               - renesas,sdhi-r8a7795  # R-Car H3
+               - renesas,sdhi-r8a7796  # R-Car M3-W
+               - renesas,sdhi-r8a77961 # R-Car M3-W+
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.17.1
+
