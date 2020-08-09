@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE71C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC35AC433ED
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7933206D8
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6AF2075D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 11:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596972015;
-	bh=U4FgdftWxD8YI33Nce7CbbUhkmxE3fQ82dNpmo1uPX4=;
+	s=default; t=1596972018;
+	bh=Cbyhs/Xet1hHvl6FhTjFIxhhezZP6HgWsZoUKNXnESw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FyXIDeldgMw7PhBv3yUZfXxqhaUk5dHykODl8jlzMRWJWcmJkuoxFdfzhhC+r8BJv
-	 uAzbdZ2ZevzGykmamaUf060Cu4hhhtxmd57dZ2IO6mnvBHF1H8fWXqqxy2njcCDAGG
-	 V1li0q44un/euUywr8aZC+o+t6g7MdJKb4L5mZAo=
+	b=sULfMyp82hc2SuFa4HlkyUkaeV58/pHDXgwkvkkO1Ea3x6LKTFHJuGuO0h9Ngfo3P
+	 NpRaqsHjPyetk61ocYpX2C1Ln0JG1Si+bG43wN3XwYT6/kMwNYwIYSwHjXA0JWUDzp
+	 fjugqW01TGWvkb76CP6LyTK7kvtq3tvxyKJefz5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgHILUP (ORCPT
+        id S1726439AbgHILUS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 07:20:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54236 "EHLO mail.kernel.org"
+        Sun, 9 Aug 2020 07:20:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbgHILUP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Aug 2020 07:20:15 -0400
+        id S1726350AbgHILUS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 07:20:18 -0400
 Received: from localhost.localdomain (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 902162065D;
-        Sun,  9 Aug 2020 11:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63DF5206D8;
+        Sun,  9 Aug 2020 11:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596972014;
-        bh=U4FgdftWxD8YI33Nce7CbbUhkmxE3fQ82dNpmo1uPX4=;
+        s=default; t=1596972017;
+        bh=Cbyhs/Xet1hHvl6FhTjFIxhhezZP6HgWsZoUKNXnESw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rxsSWMqzQmj4ZZ/g8HUV2hlFpM3oH1237R5b3hMMD3p+EGQwxdo/L7dYdCIsMVpGF
-         Qgk6ILEBO1ZJzJJFqAkd2oGShr+VA99qjCqoZddTE2H0wKfjXDDMxZSskcs4SUM3/P
-         aTcTNUxwFotmKYv2J4tRwzUhyh0sp4kMbcWzH79Q=
+        b=o3SGvmQ8Bk2IGmKQFKQgD9GJBqSzw64tcmZUmSJF2n++bMGZttlFPyIiwKnERK5l0
+         NNCKlnW0t5Nw4yDDV5sYIj8F8a0wOaNSwZswCGpowhyIBvCKuA6zhrnraGo7ptiWNG
+         ENWEW24JWurXJ9gDYprYSOnG3CGPbMmxFJsXxlxU=
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     linux-iio@vger.kernel.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 11/13] dt-bindings: iio: adc: ti,ads8344 yaml conversion
-Date:   Sun,  9 Aug 2020 12:17:51 +0100
-Message-Id: <20200809111753.156236-12-jic23@kernel.org>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Phil Reid <preid@electromag.com.au>
+Subject: [PATCH 13/13] dt-bindings: iio: adc: ti,tlc4541 binding conversion
+Date:   Sun,  9 Aug 2020 12:17:53 +0100
+Message-Id: <20200809111753.156236-14-jic23@kernel.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200809111753.156236-1-jic23@kernel.org>
 References: <20200809111753.156236-1-jic23@kernel.org>
@@ -59,44 +60,53 @@ X-Mailing-List: devicetree@vger.kernel.org
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 Simple binding so easy to convert.
+Dropped the stated value of maximum spi bus frequency as it does
+not seem to correspond to the datasheet.  The value of 200kHz
+is the max sampling frequency of the ADC, not the clock frequency of
+the SPI bus.
+
+Added #io-channel-cells to allow use as a provider of channels to
+other devices via the consumer binding.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Phil Reid <preid@electromag.com.au>
 ---
- .../bindings/iio/adc/ti,ads8344.yaml          | 51 +++++++++++++++++++
- .../bindings/iio/adc/ti-ads8344.txt           | 19 -------
- 2 files changed, 51 insertions(+), 19 deletions(-)
+ .../bindings/iio/adc/ti,tlc4541.yaml          | 52 +++++++++++++++++++
+ .../bindings/iio/adc/ti-tlc4541.txt           | 17 ------
+ 2 files changed, 52 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads8344.yaml b/Documentation/devicetree/bindings/iio/adc/ti,ads8344.yaml
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,tlc4541.yaml b/Documentation/devicetree/bindings/iio/adc/ti,tlc4541.yaml
 new file mode 100644
-index 000000000000..b8c398187d5c
+index 000000000000..6c2539b3d707
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti,ads8344.yaml
-@@ -0,0 +1,51 @@
++++ b/Documentation/devicetree/bindings/iio/adc/ti,tlc4541.yaml
+@@ -0,0 +1,52 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/iio/adc/ti,ads8344.yaml#
++$id: http://devicetree.org/schemas/iio/adc/ti,tlc4541.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments ADS8344 ADC
++title: Texas Instruments TLC4541 and similar ADCs
 +
 +maintainers:
-+  - Gregory Clement <gregory.clement@bootlin.com>
++  - Phil Reid <preid@electromag.com.au>
 +
 +description: |
-+  16bit 8-channel ADC with single ended inputs.
++  14/16bit single channel ADC with SPI interface.
 +
 +properties:
 +  compatible:
-+    const: ti,ads8344
++    enum:
++      - ti,tlc3541
++      - ti,tlc4541
 +
 +  reg:
 +    maxItems: 1
 +
 +  spi-max-frequency: true
 +
-+  vref-supply:
-+    description: Supply the 2.5V or 5V reference voltage
++  vref-supply: true
 +
 +  "#io-channel-cells":
 +    const: 1
@@ -115,38 +125,36 @@ index 000000000000..b8c398187d5c
 +        #size-cells = <0>;
 +
 +        adc@0 {
-+            compatible = "ti,ads8344";
++            compatible = "ti,tlc4541";
 +            reg = <0>;
-+            vref-supply = <&refin_supply>;
-+            spi-max-frequency = <10000000>;
++            vref-supply = <&vdd_supply>;
++            spi-max-frequency = <200000>;
 +            #io-channel-cells = <1>;
 +        };
 +    };
 +...
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt b/Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt b/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
 deleted file mode 100644
-index e47c3759a82b..000000000000
---- a/Documentation/devicetree/bindings/iio/adc/ti-ads8344.txt
+index 6b2692723a04..000000000000
+--- a/Documentation/devicetree/bindings/iio/adc/ti-tlc4541.txt
 +++ /dev/null
-@@ -1,19 +0,0 @@
--* Texas Instruments ADS8344 A/DC chip
+@@ -1,17 +0,0 @@
+-* Texas Instruments' TLC4541
 -
 -Required properties:
-- - compatible: Must be "ti,ads8344"
-- - reg: SPI chip select number for the device
-- - vref-supply: phandle to a regulator node that supplies the
--   reference voltage
--
--Recommended properties:
-- - spi-max-frequency: Definition as per
--		Documentation/devicetree/bindings/spi/spi-bus.txt
+- - compatible: Should be one of
+-	* "ti,tlc4541"
+-	* "ti,tlc3541"
+-	- reg: SPI chip select number for the device
+- - vref-supply: The regulator supply for ADC reference voltage
+- - spi-max-frequency: Max SPI frequency to use (<= 200000)
 -
 -Example:
 -adc@0 {
--	compatible = "ti,ads8344";
+-	compatible = "ti,tlc4541";
 -	reg = <0>;
--	vref-supply = <&refin_supply>;
--	spi-max-frequency = <10000000>;
+-	vref-supply = <&vdd_supply>;
+-	spi-max-frequency = <200000>;
 -};
 -- 
 2.28.0
