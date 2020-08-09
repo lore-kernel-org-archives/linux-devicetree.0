@@ -2,157 +2,136 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6DFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 01:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F3BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 02:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B589820716
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 01:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596935338;
-	bh=eqq7sVY8BRS8obJcxE/XbjiiZrd9saTF1MqNPfw36BM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F38RGLdvSK/ncKoXtXtqYD4dlK5dr2XPwJaV5rcTaJzwLiz6ilghRHei16cnnWsab
-	 SgSIXF57NlpbF+nJb9dvp8LyY7ySTCVlkYsfLBEwK9SM6nn0nfFUaWCGcvQT0dgW2o
-	 5uG6yyuyT6c+9g8/s3YuNzHeYSQJB7WSxD0gj23M=
+	by mail.kernel.org (Postfix) with ESMTP id 34522206E2
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 02:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="t4LVxzQX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tMMos/Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHIBI6 (ORCPT
+        id S1726073AbgHICS0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 21:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgHIBI5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 21:08:57 -0400
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 408C120716;
-        Sun,  9 Aug 2020 01:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596935337;
-        bh=eqq7sVY8BRS8obJcxE/XbjiiZrd9saTF1MqNPfw36BM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j3ycVpAK+U2RAxmk8LW1Cm4sWW/Dd9s3TyWPyq4VS0zdIUaZ+FtAwQ/ut5Dbvd46Z
-         4SicMmRxX+ahR9u5GQPPSWj1yVQ8LO8U/aVZjPpSb7EEViz9zYf1wHawG+9T0TFvEm
-         eBZgQjGig5PXmey8AKQwA+Etvnivf2RmrKLM3hBA=
-Received: by mail-ej1-f45.google.com with SMTP id c16so5880085ejx.12;
-        Sat, 08 Aug 2020 18:08:57 -0700 (PDT)
-X-Gm-Message-State: AOAM532XIMOl1+ulkGuFqD6IZ9tEcnjavSQCQaz9NoIT8xoaWG1G6GMY
-        nkfBDtoD9N9dOS3Qa3+sDYNQZ4E6Rb17bM99RA==
-X-Google-Smtp-Source: ABdhPJyt5U/LEKGnmkq7BQqREwAcqBg7M1Dqq6mXYt8dTYgXNNhPV/x47So5Wr70sZ5dRyMB8d2S5BnxaVfn+mAciEA=
-X-Received: by 2002:a17:906:7492:: with SMTP id e18mr15505191ejl.375.1596935335797;
- Sat, 08 Aug 2020 18:08:55 -0700 (PDT)
+        Sat, 8 Aug 2020 22:18:26 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:42003 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbgHICS0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 8 Aug 2020 22:18:26 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 3D98F9B0;
+        Sat,  8 Aug 2020 22:18:25 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sat, 08 Aug 2020 22:18:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=gHv/rpfSLcjiU1EWYFEkVOAG62
+        ry5U4QM/lSUqvQPZg=; b=t4LVxzQXi70hcj1qWNqY4NM/GErtsMOi5aiuJ2atIL
+        tOB6XxOSz4yZFnHiT5aTP4rlFsLiStigtTUWodyZiPXKpj5d1L1g4/3oyt95qs5R
+        xFLySds5QLSBob6+r+0CLxKycckfmaNqB3Mjn1QMAmyxZQDal0g0ODn45UKx6oQd
+        cVSJ6fOL083WcFL32tPFQdoUScZzyVJt5v0GpxUJoH3e3zdgyavM/E+hLh/lKxq4
+        4Vu0CzeU14Qxkfp/yzfOtglOHbOIYy1vqOr0rCZnUcx9DK3gZUBunc3A4vyks9If
+        L00Aeqg8/7vLTEkIboxBOmGAAXyOKpFNhclGb9FK7prQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=gHv/rpfSLcjiU1EWY
+        FEkVOAG62ry5U4QM/lSUqvQPZg=; b=tMMos/TajiRlbynnTcvRwRIJhirYjp4r1
+        BdT8B4CUAfGjjs0UrVd01gZQVLTPjXRVuQFFXXnyFOBColIzahdMYAL1O0824EmI
+        /MnK0j56bxrP0QlVi3Jto30KdLHAGNd/QOksgF4pxRp3oEbyqAF8hzmT1g8uwce9
+        9mQXAI0I4daQ+GuoZE8edXbh+ffGLqrjkqxuZuSAV3n4mfbUDsUFaUpKz2N7/+RG
+        dLZ5dL5BbuHeP/LvnwFaOdQY7HbDpBS/YqhirJA4wzPfecH3pKWLDNKcxXBAWQ0K
+        44fF+oDTnDd5sZdrPfxk2xOrGPYQPZwrrdOs5xrbGdYLtX9VfPAZQ==
+X-ME-Sender: <xms:71wvXxYTuqDkgkxdv-0O8GQcTu4abrM3bs2hxCxsaWR9rta1nLQ4UQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrkeehgdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrfgrth
+    htvghrnhepieetkefhheduudfgledtudefjeejfeegveehkeeufffhhfejkeehiefftdev
+    tdevnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdho
+    rhhg
+X-ME-Proxy: <xmx:71wvX4YAnpBS3YQnj-kWUK4fQyLk8Keu12_VoQx9uK2ISs2kFuc1_g>
+    <xmx:71wvXz_1pi6sDLSfhda_v5e0ob2R0T_bUau3KXkXtUwvufuIWo0zaA>
+    <xmx:71wvX_pxZNo4tvUwYKiDJFC1M-GpaUwyul2FF5c04Sy0544UQT7TyA>
+    <xmx:8FwvXz1kty-PT2Bn6mjCo2Rxqsw5803bXqcOVt5BI90zlJXc5Wh_pw>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 13A8930600A9;
+        Sat,  8 Aug 2020 22:18:23 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH] arm64: dts: allwinner: Mark timer as stopped in suspend
+Date:   Sat,  8 Aug 2020 21:18:22 -0500
+Message-Id: <20200809021822.5285-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
- <1596855231-5782-2-git-send-email-yongqiang.niu@mediatek.com> <CAAOTY_9myENG+APAhC6MANHn3bqGZ-jtq08v4pTWCq2v9DDjNA@mail.gmail.com>
-In-Reply-To: <CAAOTY_9myENG+APAhC6MANHn3bqGZ-jtq08v4pTWCq2v9DDjNA@mail.gmail.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 9 Aug 2020 09:08:44 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__b8h9FaqaeBb0Ewf9m0t8qVBzwgrF3n1RynR7+BAFGwg@mail.gmail.com>
-Message-ID: <CAAOTY__b8h9FaqaeBb0Ewf9m0t8qVBzwgrF3n1RynR7+BAFGwg@mail.gmail.com>
-Subject: Re: [RESEND v7, PATCH 1/7] dt-bindings: mediatek: add rdma_fifo_size
- description for mt8183 display
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
+When possible, system firmware on 64-bit Allwinner platforms disables
+OSC24M during system suspend. Since this oscillator is the clock source
+for the ARM architectural timer, this causes the timer to stop counting.
+Therefore, the ARM architectural timer must not be marked as NONSTOP on
+these platforms, or the time will be wrong after system resume.
 
-Chun-Kuang Hu <chunkuang.hu@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=889=
-=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8A=E5=8D=888:56=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> Hi, Yongqiang:
->
-> Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=8811:04=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> >
-> > rdma fifo size may be different even in same SOC, add this
-> > property to the corresponding rdma
-> >
-> > Change-Id: I67635ec7f3f59cf4cbc7737285e5e28ff0ab71c9
->
-> Remove change-id.
->
-> > Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/display/mediatek/mediatek,disp.txt | 14 ++++++=
-++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediate=
-k,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,di=
-sp.txt
-> > index b91e709..e6bbe32 100644
-> > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.=
-txt
-> > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.=
-txt
-> > @@ -66,6 +66,11 @@ Required properties (DMA function blocks):
-> >    argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu=
-.txt
-> >    for details.
-> >
-> > +Optional properties (RDMA function blocks):
-> > +- mediatek,rdma_fifo_size: rdma fifo size may be different even in sam=
-e SOC, add this
-> > +  property to the corresponding rdma
-> > +  the value is the Max value which defined in hardware data sheet.
-> > +
-> >  Examples:
-> >
-> >  mmsys: clock-controller@14000000 {
-> > @@ -207,3 +212,12 @@ od@14023000 {
-> >         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM>;
-> >         clocks =3D <&mmsys CLK_MM_DISP_OD>;
-> >  };
-> > +
-> > +rdma1: rdma@1400c000 {
-> > +       compatible =3D "mediatek,mt8183-disp-rdma";
-> > +       reg =3D <0 0x1400c000 0 0x1000>;
-> > +       interrupts =3D <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> > +       power-domains =3D <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> > +       clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
-> > +       mediatek,rdma_fifo_size =3D <2048>;
-> > +};
->
-> I would like you to show rdma0 as well so that could prove two rdma
-> have different fifo size in the same SoC.
+Adding the arm,no-tick-in-suspend property forces the kernel to ignore
+the ARM architectural timer when calculating sleeptime; it falls back to
+reading the RTC. Note that this only affects deep suspend, not s2idle.
 
-Sorry, rdma0 is already define in this file. Just ignore this comment.
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 1 +
+ 3 files changed, 3 insertions(+)
 
-Regards,
-Chun-Kuang.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 8dfbcd144072..5d19cf6f6d4f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -157,6 +157,7 @@ link_codec: simple-audio-card,codec {
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		allwinner,erratum-unknown1;
++		arm,no-tick-in-suspend;
+ 		interrupts = <GIC_PPI 13
+ 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 14
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index 4462a68c0681..a6c8b43b99a3 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -53,6 +53,7 @@ psci {
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
++		arm,no-tick-in-suspend;
+ 		interrupts = <GIC_PPI 13
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 14
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 9ce78a7b117d..28c77d6872f6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -90,6 +90,7 @@ psci {
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
++		arm,no-tick-in-suspend;
+ 		interrupts = <GIC_PPI 13
+ 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+ 			     <GIC_PPI 14
+-- 
+2.26.2
 
->
-> Regards,
-> Chun-Kuang.
->
-> > --
-> > 1.8.1.1.dirty
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
