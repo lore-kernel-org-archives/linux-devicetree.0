@@ -2,70 +2,111 @@ Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A3AC433E0
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 19:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D79C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50445206B5
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 19:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F48206E9
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 19:55:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVj0/PQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgHITfw (ORCPT
+        id S1726395AbgHITzg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 15:35:52 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:43008 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726242AbgHITfv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Aug 2020 15:35:51 -0400
-X-IronPort-AV: E=Sophos;i="5.75,454,1589209200"; 
-   d="scan'208";a="54030776"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 10 Aug 2020 04:35:49 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9713140DD1CC;
-        Mon, 10 Aug 2020 04:35:47 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] dt-bindings: iommu: renesas,ipmmu-vmsa: Sort compatible string in increasing number of the SoC
-Date:   Sun,  9 Aug 2020 20:35:27 +0100
-Message-Id: <20200809193527.19659-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 9 Aug 2020 15:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgHITzf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Aug 2020 15:55:35 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FCAC061756;
+        Sun,  9 Aug 2020 12:55:35 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v9so7391323ljk.6;
+        Sun, 09 Aug 2020 12:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=gEex+sxqDKUVPlri56W6GJ2mSxGnivkW+gKH+hakLOQ=;
+        b=HVj0/PQ/3OaMWrCoamAvziPNkznvcRrRng7jJaKfouGJ+fj8l4IdZmMKlgCVKAhg6k
+         2k0QP0SGtM0J+Ju8SxQt/OrmAc49RRrrjmjDlwzq1pBK2H8PnC/fuff6nYliQifl3lca
+         KDG3BWcSEF3QjnJGnHPfGbOb4dBs/e5FK8Uhbs1jokgiaSCHQiKzH9LR5bve08N4AMD8
+         HvsgNFESfguyXkbervtBdyrD7wOgh0NponO5mihsBkohjAoGWOVkrzgY+SyW8ZBgYRvr
+         e2XYU/fgjpDOoF4hd6a464pcVLGsDs4619zFK5pnAQodHNq5xZA4KrJOl5NA60YrFaKg
+         ZosA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gEex+sxqDKUVPlri56W6GJ2mSxGnivkW+gKH+hakLOQ=;
+        b=epCE/WcY5N6GN/mG/3Z/qtHmXXKoDVT19Xeaazchr8irDg5hi5zVlGc0fxi1LJDcDy
+         CiyJ8yYveK8pAbuUHtTYqdz2hz1+FH+ymmINJ+YSfMS8BZzfzFSg1YaKs7/hom7ltKLR
+         lzIrVk++a+qiYxM0p+jUCujsZJqTqZ+2Uf3QRfc1BkwCh/7OPt8W7UhuGag/Act5kOXq
+         twKGsCa3qv0mTahjQ494bYEgTdvvcXOaqwm1Ua3PBVL+xyLJiBZwvdcNtk/U2pSlQKBu
+         DLEERwmbKPqxRM8csS9RDWQFbS9apJ5bXWH1++U4HfHGqwjsVbjeTfNrs/POJoOk03pt
+         M8vg==
+X-Gm-Message-State: AOAM531ohVdTwIgL/CJNLl7ilT4ctPKWKX9obYF99miLOy563b+y3LCn
+        XQBJcjQy2A8IDlMF/APAGSUJEsOhxuk=
+X-Google-Smtp-Source: ABdhPJwDZkj1p7MsiBCLaRLyV7loewdezRxQeqbc7Ppnj9H8iwVf0EgGpDw2ny0QUDQTWNaa4Zp6mw==
+X-Received: by 2002:a2e:96d9:: with SMTP id d25mr10568109ljj.376.1597002933351;
+        Sun, 09 Aug 2020 12:55:33 -0700 (PDT)
+Received: from [192.168.1.100] (host-46-186-7-151.dynamic.mm.pl. [46.186.7.151])
+        by smtp.gmail.com with ESMTPSA id h17sm8191818ljj.118.2020.08.09.12.55.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Aug 2020 12:55:32 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: qcom: pm660: Fix missing pound sign in
+ interrupt-cells
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200725082417.8507-1-priv.luk@gmail.com>
+From:   LuK1337 <priv.luk@gmail.com>
+Message-ID: <ce0da794-14fa-2e50-4b90-003d46668c8e@gmail.com>
+Date:   Sun, 9 Aug 2020 21:55:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200725082417.8507-1-priv.luk@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sort the items in the compatible string list in increasing number of SoC.
+Bumping this thread, would be nice if someone could handle this simple fix.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-index 6bfa090fd73a..9ada67b1f5f4 100644
---- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
-@@ -32,8 +32,8 @@ properties:
-           - enum:
-               - renesas,ipmmu-r8a774a1 # RZ/G2M
-               - renesas,ipmmu-r8a774b1 # RZ/G2N
--              - renesas,ipmmu-r8a774e1 # RZ/G2H
-               - renesas,ipmmu-r8a774c0 # RZ/G2E
-+              - renesas,ipmmu-r8a774e1 # RZ/G2H
-               - renesas,ipmmu-r8a7795  # R-Car H3
-               - renesas,ipmmu-r8a7796  # R-Car M3-W
-               - renesas,ipmmu-r8a77961 # R-Car M3-W+
--- 
-2.17.1
-
+On 7/25/20 10:24 AM, LuK1337 wrote:
+> From: Łukasz Patron <priv.luk@gmail.com>
+> 
+> Also add a space after '=' while at it.
+> 
+> Signed-off-by: Łukasz Patron <priv.luk@gmail.com>
+> ---
+>   arch/arm64/boot/dts/qcom/pm660.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm660.dtsi b/arch/arm64/boot/dts/qcom/pm660.dtsi
+> index ea0e9558d0f2..2e6a6f6c3b66 100644
+> --- a/arch/arm64/boot/dts/qcom/pm660.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm660.dtsi
+> @@ -44,7 +44,7 @@ pm660_gpios: gpios@c000 {
+>   			gpio-ranges = <&pm660_gpios 0 0 13>;
+>   			#gpio-cells = <2>;
+>   			interrupt-controller;
+> -			interrupt-cells =<2>;
+> +			#interrupt-cells = <2>;
+>   		};
+>   	};
+>   };
+> 
