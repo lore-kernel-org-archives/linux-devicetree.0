@@ -1,105 +1,120 @@
-Return-Path: <SRS0=1SIx=BS=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA84DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A349C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8241206B5
-	for <linux-devicetree@archiver.kernel.org>; Sat,  8 Aug 2020 23:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0233D2067D
+	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 00:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596930722;
-	bh=OSBbNWTMY2Y785oTTliEJuQjhRr8+lsvQKyr6/Eo6lg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pfvDnexSGDznD11KbAsVAG51OzXxvHIMwThgcE9mJnb7v92faz65oUQnCh6LuNsJG
-	 /Z4pasyeoETXpekoN21CQKBqZhiC3qBJ9WMEpowudyfC12gRxHD0L8HJ1WNeJrQpER
-	 6NDTw1JVRsqrM0tdXM6mjS2b8au1d02Rqptb4h7E=
+	s=default; t=1596932234;
+	bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0/pif/4BbqYKnEYwnOSt4dMqVCc8dTAW3hRiLooSDjnV2nKgV5pgqnkeqLBuRVw+U
+	 JftOvsC8/1Od7rvcRB7MTyt/Uik6Zc3/TnluKlyC6stlQWFYbCbiMPjEHO6CTgpY/M
+	 bAsY0ld/EZfQByUSGYMVFpkxDDZN6LHlrpepnDMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgHHXfr (ORCPT
+        id S1725988AbgHIARN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 8 Aug 2020 19:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47950 "EHLO mail.kernel.org"
+        Sat, 8 Aug 2020 20:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgHHXfq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 8 Aug 2020 19:35:46 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1725950AbgHIARM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 8 Aug 2020 20:17:12 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A12206E9;
-        Sat,  8 Aug 2020 23:35:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD8D2067D;
+        Sun,  9 Aug 2020 00:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596929745;
-        bh=OSBbNWTMY2Y785oTTliEJuQjhRr8+lsvQKyr6/Eo6lg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jmS0HuE3XBkgDLEmJ0MJXPcyrNKcKZBKkHlsj62842h7und4pEnTsyBdNf6PGWSTs
-         DWwFqKIYhmXq9yU9/faSIStH3Iu+r77EFdvqK9ImmLohAEVyJkPCE2rm4uj0yDC0ry
-         BXJ8cOVvFxlY8KlV8ZOVIEAMTX4Jooftr3Rqf8CU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 02/72] ARM: dts: stm32: fix uart7_pins_a comments in stm32mp15-pinctrl
-Date:   Sat,  8 Aug 2020 19:34:31 -0400
-Message-Id: <20200808233542.3617339-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200808233542.3617339-1-sashal@kernel.org>
-References: <20200808233542.3617339-1-sashal@kernel.org>
+        s=default; t=1596932232;
+        bh=uzR2Q9T845pna8XP3B5MtZKhh2vQixFYmQxSnDQle0Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Vv9wm6DIxUbHozRvA1AyxMizji9rUv8gSn3bnmKzgNyQUT59XCuSpVianl1FP2xDO
+         NSa6d3yKuHd8zLwIotp5zI0vf34jeLzSopbflNOV58GA3NKWOO1xrTfdkvhQG92GG4
+         0YgAHkE74fzWggP0wdmyN1FmG2fZVztME3deAnKA=
+Received: by mail-ej1-f50.google.com with SMTP id bo3so5827444ejb.11;
+        Sat, 08 Aug 2020 17:17:12 -0700 (PDT)
+X-Gm-Message-State: AOAM530dcZJV9hhkZg6Fm9HRvXQM03xfY2zkSjKW98wMOAAh6wb8TrEj
+        nd2ZuCgkMByNvbUHZFJJ5UicZBeFsejk9TB1sg==
+X-Google-Smtp-Source: ABdhPJxtuqSyNCglh1lnoj77PKcLmVpUqyOklSdTDUwAHMVSJ1wm9tl/cLlSapqD2wcderKhmNy5ajxAxrVAyBhhL3s=
+X-Received: by 2002:a17:906:60d5:: with SMTP id f21mr15560600ejk.94.1596932230832;
+ Sat, 08 Aug 2020 17:17:10 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
+ <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+In-Reply-To: <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sun, 9 Aug 2020 08:16:59 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
+Message-ID: <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        chunkuang Hu <chunkuang.hu@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+Hi, Frank:
 
-[ Upstream commit 391e437eedc0dab0a9f2c26997e68e040ae04ea3 ]
+Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=888=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=888:27=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> Hi,
+>
+> as i made a mistake in cover-letter, it is not assigned to the series.
+>
+> to show its content, i send it here as comment (instead of resending the =
+whole series):
+>
+> based on series from David Woodhouse [1]
+> i moved more display-nodes out of mt7623.dtsi to new mt7623n.dtsi
+> and changed last part from my series [2] to add these nodes to this new d=
+tsi
+>
+> the depency of dtsi-dtsi-dts is already done for mt7623a, so i guess it's=
+ a good
+> way to use it for mt7623n too.
+>
+> this first set is an RFC if all nodes are in right order and if it is wan=
+ted to move
+> them out as i have no technical document about mt7623a/n which describes =
+which parts
+> are available on both or only on one of them
+>
+> added MTK DRM Maintainer CK Hu, Ryder Lee and Sean Wang, maybe they can g=
+ive me some advice
+> how to proceed further here
+>
+> [1] https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D32=
+9209
+> [2] https://patchwork.kernel.org/patch/11700699/
 
-Fix uart7_pins_a comments to indicate UART7 pins instead of UART4 pins.
+I would like to put all device in mt7623.dtsi with some device's
+status is "disabled" and change its status in platform dtsi.
+I would like to see all device in mt7623.dtsi because of its name. If
+you move some device to platform dtsi, we would trace all platform
+dtsi to find out how many device in mt7623. One day a new platform
+enable different devices, you would reorganize all these platform
+dtsi?
 
-Fixes: bf4b5f379fed ("ARM: dts: stm32: Add missing pinctrl definitions for STM32MP157")
-
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index b31923a9498b5..49132921feeb9 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1615,15 +1615,15 @@ pins2 {
- 
- 	uart7_pins_a: uart7-0 {
- 		pins1 {
--			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-+			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
- 			bias-disable;
- 			drive-push-pull;
- 			slew-rate = <0>;
- 		};
- 		pins2 {
--			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
--				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
--				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
-+			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART7_RX */
-+				 <STM32_PINMUX('E', 10, AF7)>, /* UART7_CTS */
-+				 <STM32_PINMUX('E', 9, AF7)>; /* UART7_RTS */
- 			bias-disable;
- 		};
- 	};
--- 
-2.25.1
-
+Regards,
+Chun-Kuang.
