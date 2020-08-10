@@ -2,74 +2,119 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC66C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 17:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C64C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 17:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19909207DA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 17:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE2E20885
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 17:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgHJRmP (ORCPT
+        id S1727872AbgHJRtv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 13:42:15 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:40294 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727841AbgHJRmP (ORCPT
+        Mon, 10 Aug 2020 13:49:51 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:27402 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727003AbgHJRtv (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 13:42:15 -0400
+        Mon, 10 Aug 2020 13:49:51 -0400
 X-IronPort-AV: E=Sophos;i="5.75,458,1589209200"; 
-   d="scan'208";a="54094692"
+   d="scan'208";a="54308205"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 11 Aug 2020 02:42:13 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D22BE40B1007;
-        Tue, 11 Aug 2020 02:42:10 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-pci@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: [PATCH 0/2] r8a7742 add PCIe node
-Date:   Mon, 10 Aug 2020 18:41:54 +0100
-Message-Id: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+  by relmlie5.idc.renesas.com with ESMTP; 11 Aug 2020 02:49:49 +0900
+Received: from localhost.localdomain (unknown [172.29.53.63])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id ED58A40B42F2;
+        Tue, 11 Aug 2020 02:49:46 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3] ARM: dts: iwg20d-q7-common: Fix touch controller probe failure
+Date:   Mon, 10 Aug 2020 18:49:44 +0100
+Message-Id: <20200810174944.2892-1-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+As per the iWave RZ/G1M schematic, the signal LVDS_PPEN controls supply
+voltage for touch panel, LVDS receiver and RGB LCD panel. Add regulator
+for these device nodes and remove powerdown-gpios property from
+lvds-receiver node as it results in touch controller driver probe failure.
 
-This patch set adds PCIe instance to r8a7742 Soc dtsi.
-patches apply on-top of [1] + [2]
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+This patch depend on below patches
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
-    renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
-[2] https://patchwork.kernel.org/project/linux-renesas-soc/
-    list/?series=330277
+1) https://patchwork.kernel.org/patch/11707595/
+2) https://patchwork.kernel.org/patch/11707593/
 
-Cheers,
-Prabhakar
+v2->v3 : Added the missing part from the patch. removal of powerdown-gpios property.
+v1->v2 : Add regulator in touch panel, LVDS receiver and RGB LCD panel device nodes
+           (Ref: https://patchwork.kernel.org/patch/11707559/)
+v1 : https://patchwork.kernel.org/patch/11705819/
+---
+ arch/arm/boot/dts/iwg20d-q7-common.dtsi | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-Lad Prabhakar (2):
-  dt-bindings: PCI: rcar: Add device tree support for r8a7742
-  ARM: dts: r8a7742: Add PCIe Controller device node
-
- .../devicetree/bindings/pci/rcar-pci.txt      |  3 +-
- arch/arm/boot/dts/r8a7742.dtsi                | 35 +++++++++++++++++++
- 2 files changed, 37 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+index ebbe1518ef8a..056f93119d8a 100644
+--- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
++++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+@@ -57,7 +57,7 @@
+ 
+ 	lvds-receiver {
+ 		compatible = "ti,ds90cf384a", "lvds-decoder";
+-		powerdown-gpios = <&gpio7 25 GPIO_ACTIVE_LOW>;
++		vcc-supply = <&vcc_3v3_tft1>;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+@@ -81,6 +81,7 @@
+ 	panel {
+ 		compatible = "edt,etm0700g0dh6";
+ 		backlight = <&lcd_backlight>;
++		power-supply = <&vcc_3v3_tft1>;
+ 
+ 		port {
+ 			panel_in: endpoint {
+@@ -113,6 +114,17 @@
+ 		};
+ 	};
+ 
++	vcc_3v3_tft1: regulator-panel {
++		compatible = "regulator-fixed";
++
++		regulator-name = "Panel Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		enable-active-high;
++		startup-delay-us = <70000>;
++		gpio = <&gpio7 25 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	vcc_sdhi1: regulator-vcc-sdhi1 {
+ 		compatible = "regulator-fixed";
+ 
+@@ -207,6 +219,7 @@
+ 		reg = <0x38>;
+ 		interrupt-parent = <&gpio2>;
+ 		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
++		vcc-supply = <&vcc_3v3_tft1>;
+ 	};
+ };
+ 
 -- 
 2.17.1
 
