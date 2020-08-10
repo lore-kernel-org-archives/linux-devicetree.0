@@ -2,168 +2,145 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F96C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF9AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 674EE206E9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304512070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHJMpO (ORCPT
+        id S1726609AbgHJMtx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:45:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:55908 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgHJMpO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 08:45:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92B9B30E;
-        Mon, 10 Aug 2020 05:45:13 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB6DD3F718;
-        Mon, 10 Aug 2020 05:45:11 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 13:45:09 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     ansuelsmth@gmail.com
-Cc:     'Viresh Kumar' <viresh.kumar@linaro.org>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        'Rob Herring' <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: R: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU
- Cache scaling
-Message-ID: <20200810124509.GC31434@bogus>
-References: <20200807234914.7341-1-ansuelsmth@gmail.com>
- <20200807234914.7341-3-ansuelsmth@gmail.com>
- <20200810080146.GA31434@bogus>
- <061301d66f07$8beae690$a3c0b3b0$@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <061301d66f07$8beae690$a3c0b3b0$@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 10 Aug 2020 08:49:53 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:8911 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgHJMtx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 08:49:53 -0400
+Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 10 Aug 2020 05:49:52 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 10 Aug 2020 05:49:49 -0700
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 10 Aug 2020 18:19:21 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 8338048E5; Mon, 10 Aug 2020 18:19:20 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, mkrishn@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org,
+        swboyd@chromium.org, abhinavk@codeaurora.org,
+        ddavenport@chromium.org
+Subject: [v3] drm/msm/dpu: Fix reservation failures in modeset
+Date:   Mon, 10 Aug 2020 18:19:18 +0530
+Message-Id: <1597063758-26238-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 01:15:24PM +0200, ansuelsmth@gmail.com wrote:
->
->
-> > -----Messaggio originale-----
-> > Da: Sudeep Holla <sudeep.holla@arm.com>
-> > Inviato: lunedì 10 agosto 2020 10:02
-> > A: Ansuel Smith <ansuelsmth@gmail.com>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>; Rafael J. Wysocki
-> > <rjw@rjwysocki.net>; Rob Herring <robh+dt@kernel.org>; linux-
-> > pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Oggetto: Re: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU
-> > Cache scaling
-> >
-> > On Sat, Aug 08, 2020 at 01:49:12AM +0200, Ansuel Smith wrote:
-> > > Document dedicated Krait CPU Cache Scaling driver.
-> > >
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > > ---
-> > >  .../bindings/cpufreq/krait-cache-scale.yaml   | 92
-> > +++++++++++++++++++
-> > >  1 file changed, 92 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-
-> > cache-scale.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cache-
-> > scale.yaml b/Documentation/devicetree/bindings/cpufreq/krait-cache-
-> > scale.yaml
-> > > new file mode 100644
-> > > index 000000000000..f10b1f386a99
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-
-> > scale.yaml
-> > > @@ -0,0 +1,92 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Krait Cpu Cache Frequency Scaling dedicated driver
-> > > +
-> > > +maintainers:
-> > > +  - Ansuel Smith <ansuelsmth@gmail.com>
-> > > +
-> > > +description: |
-> > > +  This Scale the Krait CPU Cache Frequency and optionally voltage
-> > > +  when the Cpu Frequency is changed (using the cpufreq notifier).
-> > > +
-> > > +  Cache is scaled with the max frequency across all core and the cache
-> > > +  frequency will scale based on the configured threshold in the dts.
-> > > +
-> > > +  The cache is hardcoded to 3 frequency bin, idle, nominal and high.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: qcom,krait-cache
-> > > +
-> >
-> > How does this fit in the standard cache hierarchy nodes ? Extend the
-> > example to cover that.
-> >
->
-> I think i didn't understand this question. You mean that I should put
-> in the example how the standard l2 cache nodes are defined?
->
+In TEST_ONLY commit, rm global_state will duplicate the
+object and request for new reservations, once they pass
+then the new state will be swapped with the old and will
+be available for the Atomic Commit.
 
-I was referring to something like below which I found now in
-arch/arm/boot/dts/qcom-msm8974.dtsi:
-	L2: l2-cache {
-		compatible = "cache";
-		cache-level = <2>;
-		qcom,saw = <&saw_l2>;
-	};
+This patch fixes some of missing links in the resource
+reservation sequence mentioned above.
 
-> > > +  clocks:
-> > > +    description: Phandle to the L2 CPU clock
-> > > +
-> > > +  clock-names:
-> > > +    const: "l2"
-> > > +
-> > > +  voltage-tolerance:
-> > > +    description: Same voltage tollerance of the Krait CPU
-> > > +
-> > > +  l2-rates:
-> > > +    description: |
-> > > +      Frequency the L2 cache will be scaled at.
-> > > +      Value is in Hz.
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +    items:
-> > > +      - description: idle
-> > > +      - description: nominal
-> > > +      - description: high
-> > > +
-> >
-> > Why can't you re-use the standard OPP v2 bindings ?
-> >
->
-> Isn't overkill to use the OPP v2 bindings to represent the the microvolt
-> related to the le freq? Is the OPP v1 sufficient?
+1) Creation of duplicate state in test_only commit (Rob)
+2) Allocate and release the resources on every modeset.
+3) Avoid allocation only when active is false.
 
-Should be fine if it is allowed. v2 came out in the flow of my thought
-and was not intentional.
+In a modeset operation, swap state happens well before
+disable. Hence clearing reservations in disable will
+cause failures in modeset enable.
 
-> Also I can't find a way to reflect this specific case where the l2 rates
-> are changed based on the cpu freq value? Any idea about that?
->
+Allow reservations to be cleared/allocated before swap,
+such that only newly committed resources are pushed to HW.
 
-OK, I am always opposed to giving such independent controls in the kernel
-as one can play around say max cpu freq and lowest cache or vice-versa
-and create instabilities. IMO this should be completely hidden from OS.
-But I know these are old platforms, so I will shut my mouth ;)
+Changes in v1:
+ - Move the rm release to atomic_check.
+ - Ensure resource allocation and free happens when active
+   is not changed i.e only when mode is changed.(Rob)
 
---
-Regards,
-Sudeep
+Changes in v2:
+ - Handle dpu_kms_get_global_state API failure as it may
+   return EDEADLK (swboyd).
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 63976dc..39e0b32 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -582,7 +582,10 @@ static int dpu_encoder_virt_atomic_check(
+ 	dpu_kms = to_dpu_kms(priv->kms);
+ 	mode = &crtc_state->mode;
+ 	adj_mode = &crtc_state->adjusted_mode;
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
++	global_state = dpu_kms_get_global_state(crtc_state->state);
++	if (IS_ERR(global_state))
++		return PTR_ERR(global_state);
++
+ 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
+ 
+ 	/*
+@@ -617,12 +620,15 @@ static int dpu_encoder_virt_atomic_check(
+ 	/* Reserve dynamic resources now. */
+ 	if (!ret) {
+ 		/*
+-		 * Avoid reserving resources when mode set is pending. Topology
+-		 * info may not be available to complete reservation.
++		 * Release and Allocate resources on every modeset
++		 * Dont allocate when active is false.
+ 		 */
+ 		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+-			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
+-					drm_enc, crtc_state, topology);
++			dpu_rm_release(global_state, drm_enc);
++
++			if (!crtc_state->active_changed || crtc_state->active)
++				ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
++						drm_enc, crtc_state, topology);
+ 		}
+ 	}
+ 
+@@ -1171,7 +1177,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 	struct dpu_encoder_virt *dpu_enc = NULL;
+ 	struct msm_drm_private *priv;
+ 	struct dpu_kms *dpu_kms;
+-	struct dpu_global_state *global_state;
+ 	int i = 0;
+ 
+ 	if (!drm_enc) {
+@@ -1190,7 +1195,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 
+ 	priv = drm_enc->dev->dev_private;
+ 	dpu_kms = to_dpu_kms(priv->kms);
+-	global_state = dpu_kms_get_existing_global_state(dpu_kms);
+ 
+ 	trace_dpu_enc_disable(DRMID(drm_enc));
+ 
+@@ -1220,8 +1224,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ 
+ 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+ 
+-	dpu_rm_release(global_state, drm_enc);
+-
+ 	mutex_unlock(&dpu_enc->enc_lock);
+ }
+ 
+-- 
+1.9.1
+
