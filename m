@@ -2,148 +2,232 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0B2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFBBC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDD220791
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7469E2073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xQ1R7jn5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jTIoUOZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgHJHNe (ORCPT
+        id S1726472AbgHJHTk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgHJHNd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 03:13:33 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB13C061786
-        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id 88so7113812wrh.3
-        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
-        b=xQ1R7jn546DiRqc42dCW1K0GBZinc8U+spujkwGvBUURTctIhYaWn2QdhGZfToWnw/
-         5WaTr1uaqsnHbcqicFNMbrOXBvK3DRuOoa97gNdCZ3P/jMkT5DMw8Oqxo1o+rrdWnycB
-         F1Cmwbw50K8AsHAmU5ovD0YutO27HrbG0f5BRd7XGL/5CQdplPTOe43ukzJHgt0QJuIM
-         D49YXIRmo8bTF+TIGOxUn4gLC+4NkqpjzL3XxxmadY2k4VEgAi1B7xaQTHPeVPo2lVZS
-         qyQZU1p/vIReqk4RRLfGi8wx+XfFdG1W58Ic/CLzzZfCQ4+MaAjNBW4DYLLJJNqNd9tS
-         kRWw==
+        Mon, 10 Aug 2020 03:19:40 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58331 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726382AbgHJHTf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Aug 2020 03:19:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597043973;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IdPp+ky3+l0vsDUx1MEmcIdtmS3DI4hGyGGscVhnCXA=;
+        b=jTIoUOZhFYL1H3a3rPj7qYH42WuoQ8kdoMyb1n9T/rGAg06J0Sei5k2RwXdu6dIOJ+gylP
+        HxTI5KIu8J6SESQWigva3vh7eliVWbxrqKSL5+MIBtgN25jUpwKv7VXRU7/fK9rCYWjhOp
+        pA4vk6M+nMJ3AfloqCM/h74SAQRx1oI=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-175-wHTvlccuOQ-vGiVUGnts2g-1; Mon, 10 Aug 2020 03:19:32 -0400
+X-MC-Unique: wHTvlccuOQ-vGiVUGnts2g-1
+Received: by mail-ej1-f69.google.com with SMTP id lg2so3481597ejb.23
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 00:19:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
-        b=fayS2LASMcrGKFzT4lt9hiZvHYTrCDnJJh7EBjWOPxVyfe2SLFFJGgP7Y/ryAeJSwY
-         lecxt1ssZO69rklLMrHEJJ4C0G05bXw9x41z0mmCrt4MAttsCVXZRbvfskseikHpCpr0
-         dO9224jPoGvgQxU+LMt94D6kqOVAOX6dQXSuOur8rJ0cnUBZ4F3gJgcLfVrJzlhKMLKh
-         s3sZYBZnVZj/Nz+ZCEMpKl6v5ZySQRIaIcW/gOxWkVWR3gNo+JnUyxbWtQu/kTFTf1Xj
-         72YMmYOi8/HJB9GlTPjB2h0CrhL6EY5TJYaPXGa1aVcBWy15UFM1dVyoMJmOPTmP1pLr
-         8/iQ==
-X-Gm-Message-State: AOAM532qs0mDo53pIWkbECxtXJahP+iKDG2GorpoHIpwKUteJl/1hcNj
-        5+PilhtkeOj6T1ZcY+i1GzeOEg==
-X-Google-Smtp-Source: ABdhPJyqMpwZFIytM3dip4yb9zg/T5q+SVei4Y+VdZ3uIDP/QBRxHBX79zX6kLVNBEQ3N66zTYZL3w==
-X-Received: by 2002:a5d:51c3:: with SMTP id n3mr23689763wrv.104.1597043611405;
-        Mon, 10 Aug 2020 00:13:31 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id t3sm3850812wrx.5.2020.08.10.00.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 00:13:30 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 08:13:28 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IdPp+ky3+l0vsDUx1MEmcIdtmS3DI4hGyGGscVhnCXA=;
+        b=crnIHJ+rrsYvkLx7nckVV1FoKRY6N6RPnyBQ6eeeEmERuMeyHDkbaQasiUOzhWMx2H
+         HtcOo1N9pMY/zhgYTEpPYjJpxML7lIbWVLMHLLiN2nZ3T8eB7jk8AMQtsd0bFOYcW9tC
+         YaAvCLvt29kq6nympmw0Xp0TKIbgjdYYW1kHAdXeL48WsQuFc4geWUq9tSBIw51OAsPk
+         yZ8ZXOkMrFH7INXp86wulhnuwj4ybe4gKLDI/6O/2HpB4S2HCrnha8h7RvuWtDjci+Kq
+         NW5JMfUrH9+hZxgwI26DcvfZXmgYqMAXd1nFZu07P+NW2CYEymWnJywbV4TmTwgaApIU
+         m63w==
+X-Gm-Message-State: AOAM531gCWeCxANG2WPuRpANMF60x0JheKXPRk+acE+CqhSU8ptjKBja
+        parQbbTfudt5oBRPEcd02R8ctnwEyk+jJBOKyaidlwYsN5Xow9/KI6YDYPNtkGCLcY444WBLH3+
+        i41RH6VOCuuMPaxcxjP1CuA==
+X-Received: by 2002:a17:906:198e:: with SMTP id g14mr20008160ejd.266.1597043969748;
+        Mon, 10 Aug 2020 00:19:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyLKBIb+PD1XhZu/ndFYc7QoSd0w8khDmgEo6fDLbZ20zyRucoNKIZnBD3zTeN8gtsxsMiimA==
+X-Received: by 2002:a17:906:198e:: with SMTP id g14mr20008139ejd.266.1597043969449;
+        Mon, 10 Aug 2020 00:19:29 -0700 (PDT)
+Received: from x1.localdomain ([78.108.130.193])
+        by smtp.gmail.com with ESMTPSA id sd8sm12500696ejb.58.2020.08.10.00.19.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Aug 2020 00:19:28 -0700 (PDT)
+Subject: Re: [PATCH 2/4] usb: typec: Add
+ typec_port_register_altmodes_from_fwnode()
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200810071328.GB4411@dell>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc>
+        Rob Herring <robh+dt@kernel.org>,
+        Tobias Schramm <t.schramm@manjaro.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200714113617.10470-1-hdegoede@redhat.com>
+ <20200714113617.10470-3-hdegoede@redhat.com>
+ <20200727130528.GB883641@kuha.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <469f369a-73f4-c348-b9ee-1662956f45be@redhat.com>
+Date:   Mon, 10 Aug 2020 09:19:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e288ca6cfee819223395712e04159dd9@walle.cc>
+In-Reply-To: <20200727130528.GB883641@kuha.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 07 Aug 2020, Michael Walle wrote:
+Hi,
 
-> Hi Uwe, Hi Lee,
+On 7/27/20 3:05 PM, Heikki Krogerus wrote:
+> Hi Hans,
 > 
-> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
-> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
-> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > > index 7dbcf6973d33..a0d50d70c3b9 100644
-> > > --- a/drivers/pwm/Kconfig
-> > > +++ b/drivers/pwm/Kconfig
-> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
-> > >  	  To compile this driver as a module, choose M here: the module
-> > >  	  will be called pwm-sifive.
-> > > 
-> > > +config PWM_SL28CPLD
-> > > +	tristate "Kontron sl28cpld PWM support"
-> > > +	select MFD_SIMPLE_MFD_I2C
-> > 
-> > Is it sensible to present this option to everyone? Maybe
-> > 
-> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
+> On Tue, Jul 14, 2020 at 01:36:15PM +0200, Hans de Goede wrote:
+>> This can be used by Type-C controller drivers which use a standard
+>> usb-connector fwnode, with altmodes sub-node, to describe the available
+>> altmodes.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/usb/typec/class.c | 56 +++++++++++++++++++++++++++++++++++++++
+>>   include/linux/usb/typec.h |  7 +++++
+>>   2 files changed, 63 insertions(+)
+>>
+>> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+>> index c9234748537a..47de2b2e3d54 100644
+>> --- a/drivers/usb/typec/class.c
+>> +++ b/drivers/usb/typec/class.c
+>> @@ -1607,6 +1607,62 @@ typec_port_register_altmode(struct typec_port *port,
+>>   }
+>>   EXPORT_SYMBOL_GPL(typec_port_register_altmode);
+>>   
+>> +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
+>> +	const struct typec_altmode_ops *ops, void *drvdata,
+>> +	struct typec_altmode **altmodes, size_t n,
+>> +	struct fwnode_handle *fwnode)
+>> +{
+>> +	struct fwnode_handle *altmodes_node, *child;
+>> +	struct typec_altmode_desc desc;
+>> +	struct typec_altmode *alt;
+>> +	size_t index = 0;
+>> +	u32 svid, vdo;
+>> +	int ret;
+>> +
+>> +	altmodes_node = fwnode_get_named_child_node(fwnode, "altmodes");
+>> +	if (!altmodes_node)
+>> +		return;
 > 
-> Because there is now no real MFD driver anymore, there is also
-> no symbol for that. The closest would be ARCH_ARM64 but I don't
-> think that is a good idea.
-> 
-> Lee, what do you think about adding a symbol to the MFD, which
-> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
-> 
-> I.e.
-> config MFD_SL28CPLD
->     tristate "Kontron sl28cpld"
->     select MFD_SIMPLE_MFD_I2C
->     help
->       Say yes here to add support for the Kontron sl28cpld board
->       management controller.
-> 
-> Then all the other device driver could depend on the MFD_SL28CPLD
-> symbol.
+> Do we need that? Why not just make the sub-nodes describing the
+> alternate modes direct children of the connector node instead of
+> grouping them under a special sub-node?
 
-You want to add a virtual symbol to prevent having to present a real
-one?  How is that a reasonable solution?
+If you envision how this will look in e.g. DTS sources then I think
+you will see that this grouping keeps the DTS source code more
+readable. Grouping things together like this is somewhat normal in
+devicetree files. E.g. PMIC's or other regulator providers typical
+have a "regulators" node grouping all their regulators; and also the OF
+graph bindings which are used in the USB-connector node start with a
+"ports" parent / grouping node.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> If the child node of the connector has device properties "svid" and
+> "vdo" then it is an alt mode that the connector supports, and it can't
+> be anything else, no?
+
+If you want to get rid of the altmodes parent/grouping node, then the
+usual way to do this would be to add a compatible string to the nodes,
+rather then check for the existence of some properties.
+
+Regards,
+
+Hans
+
+
+> 
+> 
+>> +	child = NULL;
+>> +	while ((child = fwnode_get_next_child_node(altmodes_node, child))) {
+>> +		ret = fwnode_property_read_u32(child, "svid", &svid);
+>> +		if (ret) {
+>> +			dev_err(&port->dev, "Error reading svid for altmode %s\n",
+>> +				fwnode_get_name(child));
+>> +			continue;
+>> +		}
+>> +
+>> +		ret = fwnode_property_read_u32(child, "vdo", &vdo);
+>> +		if (ret) {
+>> +			dev_err(&port->dev, "Error reading vdo for altmode %s\n",
+>> +				fwnode_get_name(child));
+>> +			continue;
+>> +		}
+>> +
+>> +		if (index >= n) {
+>> +			dev_err(&port->dev, "Error not enough space for altmode %s\n",
+>> +				fwnode_get_name(child));
+>> +			continue;
+>> +		}
+>> +
+>> +		desc.svid = svid;
+>> +		desc.vdo = vdo;
+>> +		desc.mode = index + 1;
+>> +		alt = typec_port_register_altmode(port, &desc);
+>> +		if (IS_ERR(alt)) {
+>> +			dev_err(&port->dev, "Error registering altmode %s\n",
+>> +				fwnode_get_name(child));
+>> +			continue;
+>> +		}
+>> +
+>> +		alt->ops = ops;
+>> +		typec_altmode_set_drvdata(alt, drvdata);
+>> +		altmodes[index] = alt;
+>> +		index++;
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL_GPL(typec_port_register_altmodes_from_fwnode);
+>> +
+>>   /**
+>>    * typec_register_port - Register a USB Type-C Port
+>>    * @parent: Parent device
+>> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+>> index 5daa1c49761c..fbe4bccb3a98 100644
+>> --- a/include/linux/usb/typec.h
+>> +++ b/include/linux/usb/typec.h
+>> @@ -17,6 +17,7 @@ struct typec_partner;
+>>   struct typec_cable;
+>>   struct typec_plug;
+>>   struct typec_port;
+>> +struct typec_altmode_ops;
+>>   
+>>   struct fwnode_handle;
+>>   struct device;
+>> @@ -121,6 +122,12 @@ struct typec_altmode
+>>   struct typec_altmode
+>>   *typec_port_register_altmode(struct typec_port *port,
+>>   			     const struct typec_altmode_desc *desc);
+>> +
+>> +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
+>> +	const struct typec_altmode_ops *ops, void *drvdata,
+>> +	struct typec_altmode **altmodes, size_t n,
+>> +	struct fwnode_handle *fwnode);
+>> +
+>>   void typec_unregister_altmode(struct typec_altmode *altmode);
+>>   
+>>   struct typec_port *typec_altmode2port(struct typec_altmode *alt);
+>> -- 
+>> 2.26.2
+> 
+> thanks,
+> 
+
