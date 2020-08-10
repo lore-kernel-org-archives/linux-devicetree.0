@@ -2,136 +2,79 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1FAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F742C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97A4320709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EAB206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:36:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eeEIpWvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgHJJWP (ORCPT
+        id S1726657AbgHJJga (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:22:15 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:35017 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726029AbgHJJWO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:22:14 -0400
-X-IronPort-AV: E=Sophos;i="5.75,457,1589209200"; 
-   d="scan'208";a="54286662"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 10 Aug 2020 18:22:13 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F35E641EF621;
-        Mon, 10 Aug 2020 18:22:11 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        devicetree@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 1/2] arm64: dts: renesas: r8a774e1: Add FCPF and FCPV instances
-Date:   Mon, 10 Aug 2020 10:22:07 +0100
-Message-Id: <20200810092208.27320-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200810092208.27320-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200810092208.27320-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 10 Aug 2020 05:36:30 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:11038 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725809AbgHJJg3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 05:36:29 -0400
+X-UUID: 961db87e583542018ad200db35459a15-20200810
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=VwRgWjEdkPYGkWZKNJSxx1FhonydZDDe5W6HPLrIeDY=;
+        b=eeEIpWvS96ga53cQzaNwO/MvUBF8zz1atKtNYY7cJmUcqxBmKHQcHUu0K5ycnuVXCq/zkJfe80j3nANG4mDhzL28sHSuTqop1eNwcSufHtxqL4tYHOiKZ9b91D45Kbpe+We/CeXO+bUFZYV85vVZorq48Tun943h9wkxLUCeN5Q=;
+X-UUID: 961db87e583542018ad200db35459a15-20200810
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <wendell.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 746720287; Mon, 10 Aug 2020 17:36:27 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 10 Aug 2020 17:36:24 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 10 Aug 2020 17:36:25 +0800
+Message-ID: <1597052186.27843.1.camel@mtkswgap22>
+Subject: Re: [PATCH 1/1] clk: Export clk_register_composite
+From:   Wendell Lin <wendell.lin@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Date:   Mon, 10 Aug 2020 17:36:26 +0800
+In-Reply-To: <1595493126-21611-1-git-send-email-wendell.lin@mediatek.com>
+References: <1595493126-21611-1-git-send-email-wendell.lin@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Add FCPF and FCPV instances to the r8a774e1 dtsi.
-
-Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 64 +++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index d08a1385dc27..1954a07f3e85 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -2374,6 +2374,70 @@
- 			status = "disabled";
- 		};
- 
-+		fcpf0: fcp@fe950000 {
-+			compatible = "renesas,fcpf";
-+			reg = <0 0xfe950000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 615>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 615>;
-+		};
-+
-+		fcpf1: fcp@fe951000 {
-+			compatible = "renesas,fcpf";
-+			reg = <0 0xfe951000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 614>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 614>;
-+		};
-+
-+		fcpvb0: fcp@fe96f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe96f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 607>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 607>;
-+		};
-+
-+		fcpvb1: fcp@fe92f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe92f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 606>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 606>;
-+		};
-+
-+		fcpvi0: fcp@fe9af000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe9af000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 611>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 611>;
-+		};
-+
-+		fcpvi1: fcp@fe9bf000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe9bf000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 610>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 610>;
-+		};
-+
-+		fcpvd0: fcp@fea27000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea27000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 603>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 603>;
-+		};
-+
-+		fcpvd1: fcp@fea2f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea2f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 602>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 602>;
-+		};
-+
- 		csi20: csi2@fea80000 {
- 			compatible = "renesas,r8a774e1-csi2";
- 			reg = <0 0xfea80000 0 0x10000>;
--- 
-2.17.1
+SGkgTWF0dGhpYXMgYW5kIGFsbCwNCg0KR2VudGxlIHBpbmcgb24gdGhpcyBwYXRjaC4NCg0KVGhh
+bmtzDQoNCldlbmRlbGwgTGluDQoNCg0KT24gVGh1LCAyMDIwLTA3LTIzIGF0IDE2OjMyICswODAw
+LCBXZW5kZWxsIExpbiB3cm90ZToNCj4gY2xrX3JlZ2lzdGVyX2NvbXBvc2l0ZSgpIHdpbGwgYmUg
+dXNlZCBpbiBtZWRpYXRlaydzDQo+IGNsb2NrIGtlcm5lbCBtb2R1bGUsIHNvIGV4cG9ydCBpdCB0
+byBHUEwgbW9kdWxlcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFdlbmRlbGwgTGluIDx3ZW5kZWxs
+LmxpbkBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9jbGsvY2xrLWNvbXBvc2l0ZS5j
+IHwgICAgMSArDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2Nsay9jbGstY29tcG9zaXRlLmMgYi9kcml2ZXJzL2Nsay9jbGstY29t
+cG9zaXRlLmMNCj4gaW5kZXggNzM3NmY1Ny4uN2M2MDljMiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9jbGsvY2xrLWNvbXBvc2l0ZS5jDQo+ICsrKyBiL2RyaXZlcnMvY2xrL2Nsay1jb21wb3NpdGUu
+Yw0KPiBAQCAtMzYwLDYgKzM2MCw3IEBAIHN0cnVjdCBjbGsgKmNsa19yZWdpc3Rlcl9jb21wb3Np
+dGUoc3RydWN0IGRldmljZSAqZGV2LCBjb25zdCBjaGFyICpuYW1lLA0KPiAgCQlyZXR1cm4gRVJS
+X0NBU1QoaHcpOw0KPiAgCXJldHVybiBody0+Y2xrOw0KPiAgfQ0KPiArRVhQT1JUX1NZTUJPTF9H
+UEwoY2xrX3JlZ2lzdGVyX2NvbXBvc2l0ZSk7DQo+ICANCj4gIHN0cnVjdCBjbGsgKmNsa19yZWdp
+c3Rlcl9jb21wb3NpdGVfcGRhdGEoc3RydWN0IGRldmljZSAqZGV2LCBjb25zdCBjaGFyICpuYW1l
+LA0KPiAgCQkJY29uc3Qgc3RydWN0IGNsa19wYXJlbnRfZGF0YSAqcGFyZW50X2RhdGEsDQoNCg==
 
