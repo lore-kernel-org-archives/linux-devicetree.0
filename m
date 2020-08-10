@@ -1,126 +1,115 @@
-Return-Path: <SRS0=aLuy=BT=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CECC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 23:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F4DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 00:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6228620709
-	for <linux-devicetree@archiver.kernel.org>; Sun,  9 Aug 2020 23:03:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VtVnT3xc"
+	by mail.kernel.org (Postfix) with ESMTP id 1BE812070B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 00:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597018002;
+	bh=R4aysq8cb7E0lt1g+L7QoE7drym+sqAlY7Kl5ewT9W4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VUf2C2ML9y5ddORY2FXVtnPTKAJYo4o5wJ/PTDdgqqTZcURPe42XEaMzOM7PMoLoS
+	 8Ynzvf3Ehcwbdic8p7c9C+ebZEHhnUFlnBt5XxhhL8cO9/MaMCH646L3td6AZ4Sbi5
+	 Lo1yRGGsCKifAw3l5AMTfHo1Pm8AunZYuSKaxwIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgHIXDr (ORCPT
+        id S1726323AbgHJAGl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 9 Aug 2020 19:03:47 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48038 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgHIXDr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 9 Aug 2020 19:03:47 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 04897F9;
-        Mon, 10 Aug 2020 01:03:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597014224;
-        bh=Kk+tp0hb9UsCcHFvuEh/LTmlcLsTugnaUod79jKG4WQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VtVnT3xcPU0HcewhkSz1Wn++3m01M5NnNU4t08w/nWeK+64gvqP4zx20lfCoW+zN8
-         pDnNZS1BJp8kAg7W8V4A1sCQaftbW6Ski6g+mBr4cDIzVP3uflcMDSH1g2yjyh77fo
-         7IEa7S52D4HtgH3h48Gsuzl/83sUGAD7xo8HDDSM=
-Date:   Mon, 10 Aug 2020 02:03:30 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 2/7] drm: rcar-du: Add r8a7742 support
-Message-ID: <20200809230330.GA12018@pendragon.ideasonboard.com>
-References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200807174954.14448-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200808210219.GN6186@pendragon.ideasonboard.com>
- <CA+V-a8ts72UAUbtcN6TTDwcHqFEF3HipLx=dkQxFCXTLLzgfXA@mail.gmail.com>
+        Sun, 9 Aug 2020 20:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbgHJAGl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 9 Aug 2020 20:06:41 -0400
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC032070B;
+        Mon, 10 Aug 2020 00:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597018000;
+        bh=R4aysq8cb7E0lt1g+L7QoE7drym+sqAlY7Kl5ewT9W4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PFJUK4RboaUyQadDQQxPBwd2mWFx5eqi8vYU/1ln23GMqVDmgxMjmS8OiCE5deT3T
+         3jL6lR41OYOSmVjW7gbdLQs4YANUBtRuawMrQz6qjssK0V/MZ1bA1wI7barj0aKoPP
+         oOqZccr58IG6qLu1rgsAHBxZYdck4+UEHXlk0n0U=
+Received: by mail-ed1-f43.google.com with SMTP id a14so5143136edx.7;
+        Sun, 09 Aug 2020 17:06:40 -0700 (PDT)
+X-Gm-Message-State: AOAM531aZqzbWlvlU+JyNk3zsiWHXygUB9R8hDg4+zU9UkIS/4L+fi05
+        WNjBRDhbyVUoNJxyZQis64lJfEqumwL+mUzPlA==
+X-Google-Smtp-Source: ABdhPJzs3hNq441TdiNg5sGMfiRejhS75UfI9CWnqxJ5HqFTUExR+ocEV58lXwZry63RX+M/RRZzyTn/TlCXxBAyudU=
+X-Received: by 2002:a05:6402:38c:: with SMTP id o12mr19470902edv.271.1597017998978;
+ Sun, 09 Aug 2020 17:06:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8ts72UAUbtcN6TTDwcHqFEF3HipLx=dkQxFCXTLLzgfXA@mail.gmail.com>
+References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de>
+ <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+ <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de>
+In-Reply-To: <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 10 Aug 2020 08:06:27 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
+Message-ID: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Hi, Frank:
 
-On Sun, Aug 09, 2020 at 09:38:05PM +0100, Lad, Prabhakar wrote:
-> On Sat, Aug 8, 2020 at 10:02 PM Laurent Pinchart wrote:
-> > On Fri, Aug 07, 2020 at 06:49:49PM +0100, Lad Prabhakar wrote:
-> > > Add direct support for the r8a7742 (RZ/G1H).
-> > >
-> > > The RZ/G1H shares a common, compatible configuration with the r8a7790
-> > > (R-Car H2) so that device info structure is reused, the only difference
-> > > being TCON is unsupported on RZ/G1H (Currently unsupported by the driver).
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > ---
-> > >  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > > index 3e67cf70f040..7e286c7a7a6c 100644
-> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> > > @@ -216,8 +216,8 @@ static const struct rcar_du_device_info rcar_du_r8a7790_info = {
-> > >       .channels_mask = BIT(2) | BIT(1) | BIT(0),
-> > >       .routes = {
-> > >               /*
-> > > -              * R8A7790 has one RGB output, two LVDS outputs and one
-> > > -              * (currently unsupported) TCON output.
-> > > +              * R8A7742 and R8A7790 each have one RGB output and two LVDS outputs. Additionally
-> > > +              * R8A7790 supports one TCON output (currently unsupported by the driver).
-> >
-> > Once we support TCON we'll have to split this, but for now I suppose
-> > it's fine. Would you however mind wrapping this to 80 columns ? I can do
-> > so when applying if it's fine with you.
+Frank Wunderlich <frank-w@public-files.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=889=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8B=E5=8D=883:22=E5=AF=AB=E9=81=93=
+=EF=BC=9A
 >
-> Agreed once TCON is added this has to be split. But isn't  the column
-> size has been increased (checkpatch too doesn't complain about), but
-
-It has, but it doesn't mean it's mandatory to increase line length :-)
-I think aligning with the style of the existing code should be favoured.
-
-> feel free to wrapp it for 80 columns.
-
-OK, I'll do that.
-
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+>
+> Am 9. August 2020 02:16:59 MESZ schrieb Chun-Kuang Hu <chunkuang.hu@kerne=
+l.org>:
 > >
-> > >                */
-> > >               [RCAR_DU_OUTPUT_DPAD0] = {
-> > >                       .possible_crtcs = BIT(2) | BIT(1) | BIT(0),
-> > > @@ -443,6 +443,7 @@ static const struct rcar_du_device_info rcar_du_r8a7799x_info = {
-> > >  };
-> > >
-> > >  static const struct of_device_id rcar_du_of_table[] = {
-> > > +     { .compatible = "renesas,du-r8a7742", .data = &rcar_du_r8a7790_info },
-> > >       { .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
-> > >       { .compatible = "renesas,du-r8a7744", .data = &rzg1_du_r8a7743_info },
-> > >       { .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
+> >I would like to put all device in mt7623.dtsi with some device's
+> >status is "disabled" and change its status in platform dtsi.
+> >I would like to see all device in mt7623.dtsi because of its name. If
+> >you move some device to platform dtsi, we would trace all platform
+> >dtsi to find out how many device in mt7623. One day a new platform
+> >enable different devices, you would reorganize all these platform
+> >dtsi?
+>
+> Ok,then i change the dts-patch from hdmi-series to disable all nodes and =
+enabling them in bpi-r2 dts. Do they need to be in alphabetical order (or a=
+ny other)?
 
--- 
+Alphabetical order is better.
+
+>
+> Is the tmds Patch ok? (because review missing) https://patchwork.kernel.o=
+rg/patch/11700679/
+
+That patch looks really like a hack patch. I would wait for a long
+time to see whether any one has comment for this. Or you could have a
+better explain for it.
+I could apply other patches first.
+
 Regards,
+Chun-Kuang.
 
-Laurent Pinchart
+>
+> Just to know before reposting series as v5 :)
+> regards Frank
