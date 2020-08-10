@@ -2,314 +2,160 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631BEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 16:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF461C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 16:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B98207DE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 16:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597077312;
-	bh=6XZCNzTvPDPpAJipzV4KMM4oXZn8UErU3tUeLjJnPCk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yt0W6IyuVZk/T6axfD7ZApT9w2XLH3Zhz/+XTY6T0wvBQvf3c+iAwSzfTRZdHiSG+
-	 brGhwaVyhx9sWs9/I/058t2IgzkjoZJTsY0cx23s0d7k27GRhGNg3iZkNFHpXGHf0A
-	 BinixcAKWWtg4hboLe2OGjHKRM5rAduoxY2qKQ/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 96EE820829
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 16:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tZU4MM/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgHJQfL (ORCPT
+        id S1726910AbgHJQxE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 12:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgHJQfL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 12:35:11 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAAF52076B;
-        Mon, 10 Aug 2020 16:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597077310;
-        bh=6XZCNzTvPDPpAJipzV4KMM4oXZn8UErU3tUeLjJnPCk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zpYCuMyjNm7ScaxBAs25N/CLxoq1R0aZYc8lhma9LfjkEOo9r1Gyzj5PvFJTv8lPm
-         q1z+PvbVM5lydCLNJrwkyolBlLqz183vQ6vTcg9sgBJ/UoISGsXAQNwXgemNBVSjTq
-         BNpBRXVMrWpcxsk8oVaVLFw8Nq22ya/EA1Ubr5Vc=
-Date:   Mon, 10 Aug 2020 18:35:03 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 11/11] misc: hisi_hikey_usb: Driver to support
- usb functionality of Hikey960
-Message-ID: <20200810183503.3e8bae80@coco.lan>
-In-Reply-To: <20191016033340.1288-12-john.stultz@linaro.org>
-References: <20191016033340.1288-1-john.stultz@linaro.org>
-        <20191016033340.1288-12-john.stultz@linaro.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 10 Aug 2020 12:53:04 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35346 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgHJQxD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 12:53:03 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07AGqqfd104330;
+        Mon, 10 Aug 2020 11:52:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597078372;
+        bh=YTBNSuZB1ViSASi+2W5j6KH0rLJ0ephtkfszy/zEjVg=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=tZU4MM/StuZckikVJtsvPHNAs5WxAZEvCytqpDar+fxaCplcRREoRzF1ECr9WbcnD
+         Wvl1dqcEv4USEx8O9kXYXWA5NgO89WqYAIUqNH6bh9nPd7EwTwg78m45xpzBg4iVTo
+         a+zN/rqlFMP9W4l5BtdiFJC10mljni9qh7J9SiLI=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07AGqpUv107641
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Aug 2020 11:52:51 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 10
+ Aug 2020 11:52:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 10 Aug 2020 11:52:51 -0500
+Received: from [10.250.34.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07AGqpNQ055556;
+        Mon, 10 Aug 2020 11:52:51 -0500
+Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+From:   Suman Anna <s-anna@ti.com>
+To:     Stefano Stabellini <stefano.stabellini@xilinx.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <stefanos@xilinx.com>,
+        <BLEVINSK@xilinx.com>, <tomase@xilinx.com>
+References: <20200630024922.32491-1-s-anna@ti.com>
+ <20200630024922.32491-2-s-anna@ti.com> <20200714171553.GA2522956@bogus>
+ <20200716171903.GA3286345@xps15>
+ <alpine.DEB.2.21.2007161232400.3886@sstabellini-ThinkPad-T480s>
+ <b7415d48-a354-5610-a657-08cdefc482a6@ti.com>
+Message-ID: <8ba1f240-df9a-d63e-5c05-1a4a13e03213@ti.com>
+Date:   Mon, 10 Aug 2020 11:52:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <b7415d48-a354-5610-a657-08cdefc482a6@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi John,
+Hi Rob,
 
-Em Wed, 16 Oct 2019 03:33:40 +0000
-John Stultz <john.stultz@linaro.org> escreveu:
-
-> From: Yu Chen <chenyu56@huawei.com>
+On 7/27/20 5:39 PM, Suman Anna wrote:
+> Hi Rob,
 > 
-> The HiKey960 has a fairly complex USB configuration due to it
-> needing to support a USB-C port for host/device mode and multiple
-> USB-A ports in host mode using a single USB controller.
+> On 7/16/20 2:43 PM, Stefano Stabellini wrote:
+>> On Thu, 16 Jul 2020, Mathieu Poirier wrote:
+>>> Hi Rob,
+>>>
+>>> On Tue, Jul 14, 2020 at 11:15:53AM -0600, Rob Herring wrote:
+>>>> On Mon, Jun 29, 2020 at 09:49:19PM -0500, Suman Anna wrote:
+>>>>> The Texas Instruments K3 family of SoCs have one or more dual-core
+>>>>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+>>>>> can be split between multiple voltage domains as well. Add the device
+>>>>> tree bindings document for these R5F subsystem devices. These R5F
+>>>>> processors do not have an MMU, and so require fixed memory carveout
+>>>>> regions matching the firmware image addresses. The nodes require more
+>>>>> than one memory region, with the first memory region used for DMA
+>>>>> allocations at runtime. The remaining memory regions are reserved
+>>>>> and are used for the loading and running of the R5F remote processors.
+>>>>> The R5F processors can also optionally use any internal on-chip SRAM
+>>>>> memories either for executing code or using it as fast-access data.
+>>>>>
+>>>>> The added example illustrates the DT nodes for the single R5FSS device
+>>>>> present on K3 AM65x family of SoCs.
+>>>>>
+>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>> ---
+>>>>> v2:
+>>>>>   - Renamed "lockstep-mode" property to "ti,cluster-mode"
+>>>>
+>>>> I don't think that's a move in the right direction given this is at
+>>>> least partially a standard feature.
+>>>>
+>>>> As I said before, I'm very hesistant to accept anything here given I
+>>>> know the desires and activity to define 'system Devicetrees' of which
+>>>> TI is participating. While maybe an rproc node is sufficient for a
+>>>> DSP, it seems multiple vendors have R cores and want to define them in
+>>>> system DT.
 > 
-> See schematics here:
->   https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+> Ping on this discussion. TI is participating on the System DT evolution in general, but we don't have any plans to use DTS on our remote cores. We have our own auto-generated Chip-Support-Library (CSL) code that gets used on our firmwares.
 > 
-> This driver acts as a usb-role-switch intermediary, intercepting
-> the role switch notifications from the tcpm code, and passing
-> them on to the dwc3 core.
+> Also, most of the properties I defined are rather standard properties. I have posted a revised v3 [1] after the common ti,sci properties refactoring. This series is only waiting on the bindings. I am happy to change any ti, prefixed properties. I had one open question [2] that I am waiting for a response from you for identifying the R5F Core.
+
+Ping on this. 
+
+regards
+Suman
+
 > 
-> In doing so, it also controls the onboard hub and power gpios in
-> order to properly route the data lines between the USB-C port
-> and the onboard hub to the USB-A ports.
+> regards
+> Suman
 > 
-> NOTE: It was noted that controlling the TYPEC_VBUS_POWER_OFF and
-> TYPEC_VBUS_POWER_ON values here is not reccomended. I'm looking
-> for a way to remove that bit from the logic here, but wanted to
-> still get feedback on this approach.
-
-Let me somewhat hijack this thread. I'm trying to add support here
-for the Hikey 970 driver. Maybe you might help me finding the remaing
-issues over there ;-)
-
-The Hikey 970 has lots of things in common with Hikey 960, but
-the USB hub uses a somewhat different approach (based on what I
-saw at the Linaro's 4.9 official Hikey kernel tree).
-
-Basically, with the enclosed patch applied, the USB hub needs these
-at the DT file:
-
-		hikey_usbhub: hikey_usbhub {
-			compatible = "hisilicon,kirin970_hikey_usbhub";
-
-			typec-vbus-gpios = <&gpio26 1 0>;
-			otg-switch-gpios = <&gpio4 2 0>;
-			hub_reset_en_gpio = <&gpio0 3 0>;
-			hub-vdd-supply = <&ldo17>;
-			usb-role-switch;
-...
-		}
-
-E.g. when compared with Hikey 960, the USB hub:
-
-- Hikey 970 uses a regulator instead of GPIO for powering on;
-- Hikey 970 has a reset pin controlled via GPIO.
-
-It should be simple to add support for it, as done by the
-enclosed patch. With this, the phy driver for Hikey 970 and a new
-small driver to properly set clocks and reset lines at dwg3[1],
-I can now see the hub on my Hikey970:
-
-	$ lsusb
-	Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-	Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-
-Still, I'm missing something to make it work, as, besides the hub,
-right now, it doesn't detect the keyboard/mouse, which are
-attached at the USB hub.
-
-Do you have any ideas?
-
--
-
-[1] Right now, this is needed:
-	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/usb/dwc3/dwc3-hisi.c
-
-    Placing dwc3 directly under soc at DT causes some weird NMI, with
-    either produce an OOPS or hangs the machine at boot time.
-
-Thanks,
-Mauro
-
-[PATCH] misc: hisi_hikey_usb: add support for Hikey 970
-
-The HiKey 970 board uses a voltage regulator and GPIO reset pin.
-
-Add support for them.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
-index 3a98a890757c..76eb38fc6169 100644
---- a/drivers/misc/hisi_hikey_usb.c
-+++ b/drivers/misc/hisi_hikey_usb.c
-@@ -14,8 +14,10 @@
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/usb/role.h>
- 
-@@ -46,18 +48,27 @@ struct hisi_hikey_usb {
- 
- static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
- {
-+	if (!hisi_hikey_usb->hub_vbus)
-+		return;
-+
- 	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
- }
- 
- static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
- 			    int switch_to)
- {
-+	if (!hisi_hikey_usb->otg_switch)
-+		return;
-+
- 	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
- }
- 
- static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
- 				 int value)
- {
-+	if (!hisi_hikey_usb->typec_vbus)
-+		return;
-+
- 	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
- }
- 
-@@ -117,31 +128,89 @@ static int hub_usb_role_switch_set(struct usb_role_switch *sw, enum usb_role rol
- 	return 0;
- }
- 
-+static int hisi_hikey_usb_parse_kirin970(struct platform_device *pdev)
-+{
-+	struct regulator *regulator;
-+	int hub_reset_en_gpio;
-+	int ret;
-+
-+	regulator = devm_regulator_get_optional(&pdev->dev, "hub-vdd");
-+	if (IS_ERR(regulator)) {
-+		if (PTR_ERR(regulator) == -EPROBE_DEFER) {
-+			dev_info(&pdev->dev,
-+				"waiting for hub-vdd-supply to be probed\n");
-+			return PTR_ERR(regulator);
-+		} else {
-+			/* let it fall back to regulator dummy */
-+			regulator = devm_regulator_get(&pdev->dev, "hub-vdd");
-+			if (IS_ERR(regulator)) {
-+				dev_err(&pdev->dev,
-+					"get hub-vdd-supply failed with error %ld\n",
-+					PTR_ERR(regulator));
-+				return PTR_ERR(regulator);
-+			}
-+		}
-+	}
-+
-+	ret = regulator_set_voltage(regulator, 3300000, 3300000);
-+	if (ret)
-+		dev_err(&pdev->dev, "set hub-vdd-supply voltage failed\n");
-+
-+	hub_reset_en_gpio = of_get_named_gpio(pdev->dev.of_node,
-+					      "hub_reset_en_gpio", 0);
-+	if (!gpio_is_valid(hub_reset_en_gpio)) {
-+		dev_err(&pdev->dev, "Failed to get a valid reset gpio\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = devm_gpio_request(&pdev->dev, hub_reset_en_gpio,
-+				"hub_reset_en_gpio");
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to request the reset gpio\n");
-+		return ret;
-+	}
-+	ret = gpio_direction_output(hub_reset_en_gpio, 1);
-+	if (ret)
-+		dev_err(&pdev->dev,
-+			"Failed to set the direction of the reset gpio\n");
-+
-+	return ret;
-+}
-+
- static int hisi_hikey_usb_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct hisi_hikey_usb *hisi_hikey_usb;
- 	struct usb_role_switch_desc hub_role_switch = {NULL};
-+	int ret;
- 
- 	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
- 	if (!hisi_hikey_usb)
- 		return -ENOMEM;
- 
--	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
--						    GPIOD_OUT_LOW);
--	if (IS_ERR(hisi_hikey_usb->typec_vbus))
--		return PTR_ERR(hisi_hikey_usb->typec_vbus);
--
- 	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch",
- 						    GPIOD_OUT_HIGH);
- 	if (IS_ERR(hisi_hikey_usb->otg_switch))
- 		return PTR_ERR(hisi_hikey_usb->otg_switch);
- 
--	/* hub-vdd33-en is optional */
--	hisi_hikey_usb->hub_vbus = devm_gpiod_get_optional(dev, "hub-vdd33-en",
--							   GPIOD_OUT_HIGH);
--	if (IS_ERR(hisi_hikey_usb->hub_vbus))
--		return PTR_ERR(hisi_hikey_usb->hub_vbus);
-+	/* Parse Kirin 970-specific OF data */
-+	if (of_device_is_compatible(pdev->dev.of_node,
-+				    "hisilicon,kirin970_hikey_usbhub")) {
-+		ret = hisi_hikey_usb_parse_kirin970(pdev);
-+		if (ret)
-+			return ret;
-+	} else {
-+		hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
-+							    GPIOD_OUT_LOW);
-+		if (IS_ERR(hisi_hikey_usb->typec_vbus))
-+			return PTR_ERR(hisi_hikey_usb->typec_vbus);
-+
-+		/* hub-vdd33-en is optional */
-+		hisi_hikey_usb->hub_vbus = devm_gpiod_get_optional(dev, "hub-vdd33-en",
-+								GPIOD_OUT_HIGH);
-+		if (IS_ERR(hisi_hikey_usb->hub_vbus))
-+			return PTR_ERR(hisi_hikey_usb->hub_vbus);
-+	}
- 
- 	hisi_hikey_usb->dev_role_sw = usb_role_switch_get(dev);
- 	if (!hisi_hikey_usb->dev_role_sw)
-@@ -185,6 +254,7 @@ static int  hisi_hikey_usb_remove(struct platform_device *pdev)
- 
- static const struct of_device_id id_table_hisi_hikey_usb[] = {
- 	{.compatible = "hisilicon,gpio_hubv1"},
-+	{.compatible = "hisilicon,kirin970_hikey_usbhub"},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, id_table_hisi_hikey_usb);
-
+> [1] https://patchwork.kernel.org/patch/11679331/
+> [2] https://patchwork.kernel.org/comment/23273441/
+> 
+>>>>
+>>>> Though the system DT effort has not yet given any thought to what is the
+>>>> view of one processor or instance to another instance (which is what
+>>>> this binding is). We'll still need something defined for that, but I'd
+>>>> expect that to be dependent on what is defined for system DT.
+>>>
+>>> Efforts related to the definition of the system DT are under way, something I
+>>> expect to keep going on for some time to come.  I agree with the need to use the
+>>> system DT to define remote processors and I look forward to the time we can do
+>>> so.
+>>
+>> I'll take this opportunity to add that I should be able to publicly
+>> present a System Device Tree proposal for this during the next call (the
+>> next one after the call early next week that has already a full agenda.)
+>>
+>>
+>>> That being said we need to find a concensus on how to move forward with patches
+>>> that are ready to be merged.  What is your opinion on that?
+>>
+>> In my opinion we don't have to necessarily wait for System Device Tree
+>> to make progress with those if they look OK.
+>>
+> 
 
