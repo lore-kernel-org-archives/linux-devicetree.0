@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8072BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433F6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2942076C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 22:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209D820768
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 22:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aaA7a6Qf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j37HvFfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgHJW10 (ORCPT
+        id S1727863AbgHJW2N (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 18:27:26 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:23253 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgHJW1X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 18:27:23 -0400
+        Mon, 10 Aug 2020 18:28:13 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49125 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727793AbgHJW2H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Aug 2020 18:28:07 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597098443; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597098487; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=GrEw3oSw++nMPzEl+/BHJDxleP5vanw4s1YWFdwf0mU=; b=aaA7a6Qf1Es3ESjzt/mPCnN/oGovZlzS4RrsfkPOEXewf+1KiL/hroMzTR0tXddckdZzyhFq
- P8N653YeO2kVuTHEkLss1vR9PetCPc4LLx7Fq2KfA9iDP+XDFODq5g/XHWNVI5Jjr1mccIhX
- paOsNygrvguK8Fhwk8rVPrppHpk=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=yOMYncf5nMXrU1PRqoN8EKXZ0DovQfRsHybdYeETpeQ=; b=j37HvFfP7YiceAuQxpymJrbB9CUlTOJFuL4NtPORGAJv68GxtDV6KvmGJcBK6DOLyYX+kmKW
+ TgETuG0biRyv2ABO0SmsNjgIDe0tuG15B6hdOE5ODaXhsK33rDptEV2MpfgmKikDNYMTWamu
+ My1aZ24fPLaH5oojTMiRk1IwoHg=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f31c9cac85a1092b0faef35 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:22
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f31c9e12889723bf87907e1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 22:27:45
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 658CAC433B2; Mon, 10 Aug 2020 22:27:22 +0000 (UTC)
+        id 116ECC4344F; Mon, 10 Aug 2020 22:27:41 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E7E2C433C9;
-        Mon, 10 Aug 2020 22:27:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E7E2C433C9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 917CBC4344D;
+        Mon, 10 Aug 2020 22:27:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 917CBC4344D
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -53,12 +54,12 @@ Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Herring <robh@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v12 06/13] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
-Date:   Mon, 10 Aug 2020 16:26:50 -0600
-Message-Id: <20200810222657.1841322-7-jcrouse@codeaurora.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v12 12/13] arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+Date:   Mon, 10 Aug 2020 16:26:56 -0600
+Message-Id: <20200810222657.1841322-13-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
 References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
@@ -69,34 +70,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-devices depend on unique features such as split pagetables,
-different stall/halt requirements and other settings. Identify them
-with a compatible string so that they can be identified in the
-arm-smmu implementation specific code.
+Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+split pagetables and per-instance pagetables for drm/msm.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index 503160a7b9a0..70996348c1d8 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -49,6 +49,10 @@ properties:
-           - enum:
-               - nvidia,tegra194-smmu
-           - const: nvidia,smmu-500
-+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-+        items:
-+          - const: qcom,adreno-smmu
-+          - const: qcom,smmu-v2
-       - items:
-           - const: arm,mmu-500
-           - const: arm,smmu-v2
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2884577dcb77..6a9adaa401a9 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -4058,7 +4058,7 @@ opp-257000000 {
+ 		};
+ 
+ 		adreno_smmu: iommu@5040000 {
+-			compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
++			compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
+ 			reg = <0 0x5040000 0 0x10000>;
+ 			#iommu-cells = <1>;
+ 			#global-interrupts = <2>;
 -- 
 2.25.1
 
