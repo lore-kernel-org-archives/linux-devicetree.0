@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C12C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1FAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3781F20709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A4320709
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 09:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbgHJJWR (ORCPT
+        id S1726722AbgHJJWP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 05:22:17 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:21575 "EHLO
+        Mon, 10 Aug 2020 05:22:15 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:35017 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726304AbgHJJWQ (ORCPT
+        by vger.kernel.org with ESMTP id S1726029AbgHJJWO (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 05:22:16 -0400
+        Mon, 10 Aug 2020 05:22:14 -0400
 X-IronPort-AV: E=Sophos;i="5.75,457,1589209200"; 
-   d="scan'208";a="54286667"
+   d="scan'208";a="54286662"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 10 Aug 2020 18:22:15 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 10 Aug 2020 18:22:13 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 0F8FD41EF40F;
-        Mon, 10 Aug 2020 18:22:13 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F35E641EF621;
+        Mon, 10 Aug 2020 18:22:11 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         devicetree@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add VSP instances
-Date:   Mon, 10 Aug 2020 10:22:08 +0100
-Message-Id: <20200810092208.27320-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 1/2] arm64: dts: renesas: r8a774e1: Add FCPF and FCPV instances
+Date:   Mon, 10 Aug 2020 10:22:07 +0100
+Message-Id: <20200810092208.27320-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200810092208.27320-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20200810092208.27320-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -49,93 +49,89 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-The RZ/G2H (R8A774E1) has 6 VSP instances.
-
-Based on the work done for r8a7795 SoC.
+Add FCPF and FCPV instances to the r8a774e1 dtsi.
 
 Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 66 +++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 64 +++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index 1954a07f3e85..8f762bd2c9aa 100644
+index d08a1385dc27..1954a07f3e85 100644
 --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -2374,6 +2374,72 @@
+@@ -2374,6 +2374,70 @@
  			status = "disabled";
  		};
  
-+		vspbc: vsp@fe920000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe920000 0 0x8000>;
-+			interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 624>;
++		fcpf0: fcp@fe950000 {
++			compatible = "renesas,fcpf";
++			reg = <0 0xfe950000 0 0x200>;
++			clocks = <&cpg CPG_MOD 615>;
 +			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 624>;
-+
-+			renesas,fcp = <&fcpvb1>;
++			resets = <&cpg 615>;
 +		};
 +
-+		vspbd: vsp@fe960000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe960000 0 0x8000>;
-+			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 626>;
++		fcpf1: fcp@fe951000 {
++			compatible = "renesas,fcpf";
++			reg = <0 0xfe951000 0 0x200>;
++			clocks = <&cpg CPG_MOD 614>;
 +			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 626>;
-+
-+			renesas,fcp = <&fcpvb1>;
++			resets = <&cpg 614>;
 +		};
 +
-+		vspd0: vsp@fea20000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea20000 0 0x5000>;
-+			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 623>;
++		fcpvb0: fcp@fe96f000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfe96f000 0 0x200>;
++			clocks = <&cpg CPG_MOD 607>;
++			power-domains = <&sysc R8A774E1_PD_A3VP>;
++			resets = <&cpg 607>;
++		};
++
++		fcpvb1: fcp@fe92f000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfe92f000 0 0x200>;
++			clocks = <&cpg CPG_MOD 606>;
++			power-domains = <&sysc R8A774E1_PD_A3VP>;
++			resets = <&cpg 606>;
++		};
++
++		fcpvi0: fcp@fe9af000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfe9af000 0 0x200>;
++			clocks = <&cpg CPG_MOD 611>;
++			power-domains = <&sysc R8A774E1_PD_A3VP>;
++			resets = <&cpg 611>;
++		};
++
++		fcpvi1: fcp@fe9bf000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfe9bf000 0 0x200>;
++			clocks = <&cpg CPG_MOD 610>;
++			power-domains = <&sysc R8A774E1_PD_A3VP>;
++			resets = <&cpg 610>;
++		};
++
++		fcpvd0: fcp@fea27000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea27000 0 0x200>;
++			clocks = <&cpg CPG_MOD 603>;
 +			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 623>;
-+
-+			renesas,fcp = <&fcpvd0>;
++			resets = <&cpg 603>;
 +		};
 +
-+		vspd1: vsp@fea28000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea28000 0 0x5000>;
-+			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 622>;
++		fcpvd1: fcp@fea2f000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea2f000 0 0x200>;
++			clocks = <&cpg CPG_MOD 602>;
 +			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 622>;
-+
-+			renesas,fcp = <&fcpvd1>;
++			resets = <&cpg 602>;
 +		};
 +
-+		vspi0: vsp@fe9a0000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe9a0000 0 0x8000>;
-+			interrupts = <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 631>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 631>;
-+
-+			renesas,fcp = <&fcpvi0>;
-+		};
-+
-+		vspi1: vsp@fe9b0000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe9b0000 0 0x8000>;
-+			interrupts = <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 630>;
-+			power-domains = <&sysc R8A774E1_PD_A3VP>;
-+			resets = <&cpg 630>;
-+
-+			renesas,fcp = <&fcpvi1>;
-+		};
-+
- 		fcpf0: fcp@fe950000 {
- 			compatible = "renesas,fcpf";
- 			reg = <0 0xfe950000 0 0x200>;
+ 		csi20: csi2@fea80000 {
+ 			compatible = "renesas,r8a774e1-csi2";
+ 			reg = <0 0xfea80000 0 0x10000>;
 -- 
 2.17.1
 
