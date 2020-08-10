@@ -2,114 +2,148 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CC1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 05:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0B2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16BD8206B5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 05:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DDD220791
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Oqakvl6b"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xQ1R7jn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725857AbgHJFkF (ORCPT
+        id S1726457AbgHJHNe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 01:40:05 -0400
-Received: from mout.gmx.net ([212.227.15.19]:58783 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgHJFkE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 01:40:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597037977;
-        bh=pLncW+jsTSqwL2/XFxBd7F5/jdIdJnDnczpYfxUFrHM=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=Oqakvl6bHX3ulQwioK1Kp46rWFK8aLjIv6l1rN0OB87EXMDJkjcteccKZT3SiPToS
-         N0tqMRZWikFcsWAAeiv2UL4D7JfV3C0E7rsuzElz4K2LK998q7Osldf/hokJCvCzOQ
-         HeOnI5fHrnoDJaWcbgj9NSqyKLyBalP3Ei/IfCCU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([37.60.4.172]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFbW0-1jvfGw3I0E-00H73E; Mon, 10
- Aug 2020 07:39:36 +0200
-Date:   Mon, 10 Aug 2020 07:39:32 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
-References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de> <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69> <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <81DFA743-B455-498F-B2F2-161DD9D51F57@public-files.de> <CAAOTY_-DYsbAWkdKfiGeJOwmPUOO1T+6WmOmhDQEUbzoRh+KPw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-CC:     devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mon, 10 Aug 2020 03:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgHJHNd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 03:13:33 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB13C061786
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 88so7113812wrh.3
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 00:13:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
+        b=xQ1R7jn546DiRqc42dCW1K0GBZinc8U+spujkwGvBUURTctIhYaWn2QdhGZfToWnw/
+         5WaTr1uaqsnHbcqicFNMbrOXBvK3DRuOoa97gNdCZ3P/jMkT5DMw8Oqxo1o+rrdWnycB
+         F1Cmwbw50K8AsHAmU5ovD0YutO27HrbG0f5BRd7XGL/5CQdplPTOe43ukzJHgt0QJuIM
+         D49YXIRmo8bTF+TIGOxUn4gLC+4NkqpjzL3XxxmadY2k4VEgAi1B7xaQTHPeVPo2lVZS
+         qyQZU1p/vIReqk4RRLfGi8wx+XfFdG1W58Ic/CLzzZfCQ4+MaAjNBW4DYLLJJNqNd9tS
+         kRWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+TUd9JRbZ1pyZaCnuclZ/AO9DW45PgvoNIXxTZ6zZrE=;
+        b=fayS2LASMcrGKFzT4lt9hiZvHYTrCDnJJh7EBjWOPxVyfe2SLFFJGgP7Y/ryAeJSwY
+         lecxt1ssZO69rklLMrHEJJ4C0G05bXw9x41z0mmCrt4MAttsCVXZRbvfskseikHpCpr0
+         dO9224jPoGvgQxU+LMt94D6kqOVAOX6dQXSuOur8rJ0cnUBZ4F3gJgcLfVrJzlhKMLKh
+         s3sZYBZnVZj/Nz+ZCEMpKl6v5ZySQRIaIcW/gOxWkVWR3gNo+JnUyxbWtQu/kTFTf1Xj
+         72YMmYOi8/HJB9GlTPjB2h0CrhL6EY5TJYaPXGa1aVcBWy15UFM1dVyoMJmOPTmP1pLr
+         8/iQ==
+X-Gm-Message-State: AOAM532qs0mDo53pIWkbECxtXJahP+iKDG2GorpoHIpwKUteJl/1hcNj
+        5+PilhtkeOj6T1ZcY+i1GzeOEg==
+X-Google-Smtp-Source: ABdhPJyqMpwZFIytM3dip4yb9zg/T5q+SVei4Y+VdZ3uIDP/QBRxHBX79zX6kLVNBEQ3N66zTYZL3w==
+X-Received: by 2002:a5d:51c3:: with SMTP id n3mr23689763wrv.104.1597043611405;
+        Mon, 10 Aug 2020 00:13:31 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id t3sm3850812wrx.5.2020.08.10.00.13.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 00:13:30 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:13:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <F446502F-E898-465C-9273-813CD032B40F@public-files.de>
-X-Provags-ID: V03:K1:5IVYYxOkmECFWiGF+n4+3P6wuzhQjm/Mwi6B6QcyROBdlqK+Xyv
- qGLxbENEomX3fdARW2G1IrCKDsKVoGwag9vcdwl3A8L3DxlC6sYMe9XWdIrshdkxig+a2MS
- N+7JBeLAvN88QJ8AkyL+qo9SRo2hFT28DWerRjlLrf4Edny8i86CVHt7HDWGvWCB8pTbCwX
- q7CNSqs/0jSGwHCIcI39A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fCEvVk70z04=:UB7jVjv5E0mU8AovmEO0k8
- d+s9k2krktemNdv0J5Vxs3lBepHgF+/xjc/KsDwoCNGaeBldlL+9mV/D1G7xL5lMnREUsGsz4
- R2hUWrnxrrSYtm5UdvERUwk0DyqGXwxJjRatuUciccPaj9cFFCBx1kJJGC6wDnikOmWveVuOz
- M45oEhoJUy3DikE1I3l1Fcbhdm3FehYksrYSDXk7ywo+nDlmHbwPrQWlGZtEmTj8WqapgxPK6
- X+FA53QjGBN0jKCXvagIOCGMLI8ZGJozZicV/wZO0vDIhWuLEQMT9NyC4PHyypulnWvWrN8bt
- 2bkpIZe2fLCFkyNvucMGJW/z0WLadrtx5UnARD4FmL0bjiS0sP/I5+kVxOok2k8KHkV3Oxa5/
- a4ynD8hxd0T/FROjIRLFS1bXnTKh2OAA63mF+wAR3wNRWz3OMf065jM9RSdTQHPAsvT5ik2VH
- +HuC3djEAtZn2QzzPnUXq7c1CnUfhSRuTbD/idI3yNvqfRak4HOu+zhfttLHm99u98NNQh3C4
- isO0JCqfuh6eHTINuUlqlmARFwBa8vvNnLFT5urELaQu/oNqieVvuL65L4KkoQrBKxc7mkviN
- 97+Gva3NqTEmHKDEgYesVu9YJErNf56TT/zGa6qx9sYL6Rqw699+sFUN0jqmuGLfDKUmARNzU
- 1W7INJJaQK1/pp7W9kSiCwSdJTWhJaJx1nyslYTOUxtPpmksTp82OwrGOInqMx3r/1mWV1KHg
- ah4SZ1cqyFoUbh4fz0ZshyYsLPLYt1kdAAaC9HgLF5t4oSxvItOl/RM9hc7qce1yuBl6zJXV/
- UPw4vOq46ECBkOhMMsz+lnRwn9xa6b/vYcvC4/JIgvQbuKVvsiRxCp6OdhwI2bd98Vi5hzGqq
- v0RVrY0O7MQV7fZGcCGVMFYVrgLbd4qCYtsGEPReeBCY1rVg05CToO2qO+dlFQiGhe3Ys/sf6
- 7CuhjEAC0Atu1ygE9i1g2k85Nsp81rd5ssLJxNKbH/mNhnuSmRZzLgxwCsBl8kJ/VT2dmCkJM
- oquIoZoZidpPx7CehiLzYIxFojqcKFDC8RtqQMUkgnb3hsdRhUSnk82swDL30aAkprnChVH7p
- w2YiCSdoHcU3W26XZtVkQGXiPr6A4cDxt1QpeWRgIwqqJWPAFwZQKpBCbun4qMMxNe87u65kw
- qVu/jnUN5/oANfjLWsmq5YaXlAwWI7oZjGYG6Bw6hy2ZvzJ5wt0gfhP/XjuWGedSf7B8am1QA
- +Er7mpeqwUuIswYVxmhWoxQvhvHJrNnszZp3xTw==
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200810071328.GB4411@dell>
+References: <20200803093559.12289-1-michael@walle.cc>
+ <20200803093559.12289-7-michael@walle.cc>
+ <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
+ <e288ca6cfee819223395712e04159dd9@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e288ca6cfee819223395712e04159dd9@walle.cc>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, 07 Aug 2020, Michael Walle wrote:
 
+> Hi Uwe, Hi Lee,
+> 
+> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
+> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
+> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > index 7dbcf6973d33..a0d50d70c3b9 100644
+> > > --- a/drivers/pwm/Kconfig
+> > > +++ b/drivers/pwm/Kconfig
+> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
+> > >  	  To compile this driver as a module, choose M here: the module
+> > >  	  will be called pwm-sifive.
+> > > 
+> > > +config PWM_SL28CPLD
+> > > +	tristate "Kontron sl28cpld PWM support"
+> > > +	select MFD_SIMPLE_MFD_I2C
+> > 
+> > Is it sensible to present this option to everyone? Maybe
+> > 
+> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
+> 
+> Because there is now no real MFD driver anymore, there is also
+> no symbol for that. The closest would be ARCH_ARM64 but I don't
+> think that is a good idea.
+> 
+> Lee, what do you think about adding a symbol to the MFD, which
+> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
+> 
+> I.e.
+> config MFD_SL28CPLD
+>     tristate "Kontron sl28cpld"
+>     select MFD_SIMPLE_MFD_I2C
+>     help
+>       Say yes here to add support for the Kontron sl28cpld board
+>       management controller.
+> 
+> Then all the other device driver could depend on the MFD_SL28CPLD
+> symbol.
 
-Am 10=2E August 2020 02:06:27 MESZ schrieb Chun-Kuang Hu <chunkuang=2Ehu@k=
-ernel=2Eorg>:
+You want to add a virtual symbol to prevent having to present a real
+one?  How is that a reasonable solution?
 
->Alphabetical order is better=2E
-In dts there is alphabetical order but not yet in dtsi=2E=2E=2Ei try to fi=
-x this=2E
-
->> Is the tmds Patch ok? (because review missing)
->https://patchwork=2Ekernel=2Eorg/patch/11700679/
->
->That patch looks really like a hack patch=2E I would wait for a long
->time to see whether any one has comment for this=2E Or you could have a
->better explain for it=2E
-As i have documentation for mt7623 and there were no further comments on o=
-ld series (https://patchwork=2Ekernel=2Eorg/patch/10903303/) i guess i cann=
-ot fix this=2E I only know it is needed to get clear image on my 1280x1024 =
-display with this Patch
-
-I adressed Ryder and Bibby directly maybe they can help here
-
->I could apply other patches first=2E
-
-I guess i need to fix order in dtsi first=2E=2E=2Eafair any hdmi node crea=
-tes an serial device moved the others +1=2E So maybe nodes need to be added=
- after uartx (or at least the one if i found out which)=2E
-regards Frank
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
