@@ -2,193 +2,601 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE97C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546BDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35AA2073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AA620678
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="MWIH91Xe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qVbLNwjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgHJHcx (ORCPT
+        id S1725894AbgHJHk6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:32:53 -0400
-Received: from mail-eopbgr40127.outbound.protection.outlook.com ([40.107.4.127]:25251
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726569AbgHJHcv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 03:32:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kqAY2JlfC5JMQiXQy72prOfoc7OWoJBLeZsiPUXW7DLTmqd5M5+98bFpVtANC5450BKw6UxQcSqSsMaCt177xv8hZRzRjlgOdRAl1J4IShodub9XMdrvIMom7KZdQTDVy0uldM3OvA/rbUVVQojMqbmYeRW93QPHApPMtF3ZIqf192Pxn8E8Gc0cD1sR6wkJDMYgVbb49VNzDKQ1GsvhzR4Fx56R3HuLrK7TuDZff23R5gBFkoFUz145oS1rMmodHv09b0ws/umJjvU7UzS1ZREy3UjZVRkdYEu9ubhYt1X2WY77RQz4wt98S9UYkNruBFTesGkhci/mSHZEF7ZR4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
- b=CtynKHPbyYjsGhPrZALL8UX24MHRvDJXb4dwPefbstAGiLnEiX4SI8ULnwHFfeQ0GGKtwWX3+TwZRtmVaXuYwneRAvVB5Kw8U7F2jDXrEv3FcKT7es2Ee9MgNiCdVkC+8YxruuTEV6NYaG7ea1vRg2Kpr7PPHF3wqCeBfEFKhCt7Owp+HEpJBeLyxCPgJ4tNGKfANQ8FWjC9rv3xu4Z82ofr/8iU6qllN4qbUuzJFgSzhghag1XsrIGq5gIL/zPm6cWuXuyi4uEqjQeE7sjnqin9Q38Sibhf8rQW5i7LiSRlJ8mD4PAhCMz3AFRMKz/zYULONUQAIy3epyQjuAG4AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
- b=MWIH91XeuqHc4pa2tNQAwlWxvaV6BHlLz0WmpxzWpWEUc9j0y1TD0KN0XpAC1hFA/+pKdmqSmWvuBPk269MNvGo/p25/XEG9J1zhqgnSO+uW5Q4bkYN+3+sh37iz2vXZj+p0lFIbEVHPvvPqdjgS2CBd1zZ6Sr7ZJuA4YjRd7MY=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
-Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:157::14)
- by AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:15f::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Mon, 10 Aug
- 2020 07:32:46 +0000
-Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51f5:dfc0:24bb:309c]) by AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51f5:dfc0:24bb:309c%7]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 07:32:46 +0000
-Subject: Re: [PATCH v11 12/12] dmaengine: imx-sdma: add uart rom script
-To:     Robin Gong <yibin.gong@nxp.com>, mark.rutland@arm.com,
-        broonie@kernel.org, robh+dt@kernel.org, catalin.marinas@arm.com,
-        vkoul@kernel.org, will.deacon@arm.com, shawnguo@kernel.org,
-        festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
-References: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
- <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <89946dc6-6c0f-b3d5-9c9a-517f1ed7b5e1@kontron.de>
-Date:   Mon, 10 Aug 2020 09:32:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR02CA0107.eurprd02.prod.outlook.com
- (2603:10a6:208:154::48) To AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:157::14)
+        Mon, 10 Aug 2020 03:40:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgHJHk5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 03:40:57 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D50C061756;
+        Mon, 10 Aug 2020 00:40:57 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id e14so4673414ybf.4;
+        Mon, 10 Aug 2020 00:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=piWUj+xPkyaqixroPtoNIA5dh5TZxEACShbrmVpvsk8=;
+        b=qVbLNwjBKVsa2D7r8YvfgERjWoWLu8zukynZOgDqueHHA91AYIbo7GIF0wOvPZB5VG
+         hF3RXvwy4lXytHDMTbzIIvxySpzqnreMO3g9AwmierHEFzEimdq4QeE0mbT19glezL3U
+         foPIMnuWFs9NrobEahLA/qNLd6lZ3JPS7e+pGaqCtr6nA9C8moiZho/AMi/HWTHQPEcc
+         lxver4gH4ThTifD3O/CMD3SmSbNklEtt7nyewrbEz0bnMMv6/ej6sgEpP1NJzBsRI9JU
+         3VqgnSKsyJQmvgIs75Ojf8y7dcWkKIEkht1A5KtQFtjulrEzr5QPToixg7HPlKvfv4pD
+         u3XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=piWUj+xPkyaqixroPtoNIA5dh5TZxEACShbrmVpvsk8=;
+        b=YlFDExy95v4PjwPDYxWpWXLHsCJSlrOdsKe3csOkb8yDDrKl+TroSm/pu/tzj1tUMC
+         aEoz8c+mcWCx/diwKIx7z6SOUVhe+M9IvknBQT8cz4I3N8oP2K8tRSDQwZ0ym5JHnoSu
+         Bp3Z2wHudsimCd4bxqwNqUwibuqrSkzIvlYHSvD1Jf42ek8fz4JYHq+onsnJ0nyJ/bpq
+         j8Sxqhu+RQlH/wTAUsxlywaRtQwBesXi+EXUq91qLNVKRG4rGuFXoR/zpePkiLq5A3Ko
+         ue7DXTJtUSpMWYxt1CezIGCQe0aOvDf3jQrN4amVlPK6LzX0Fh2jwtSuOJnQ8I9nRAyM
+         vgqg==
+X-Gm-Message-State: AOAM530ixADXAEPIUqIAYrh19XgqnT+pqMYsas8Aj2EvVR6j6ifHySbK
+        wNhLyQUP2rLulPA4Z4wMcejYSUqtW2WMBByU/gs=
+X-Google-Smtp-Source: ABdhPJyBYz5iVkKmhrRp0cZqFdVYnYWABmdGZUbej8LcD0as0YUboRxdaQ57VIyFXjPMiik/TfFirJbi8JY6/ZIDA8w=
+X-Received: by 2002:a25:2a58:: with SMTP id q85mr40965605ybq.518.1597045255329;
+ Mon, 10 Aug 2020 00:40:55 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.99.60] (80.147.118.32) by AM0PR02CA0107.eurprd02.prod.outlook.com (2603:10a6:208:154::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20 via Frontend Transport; Mon, 10 Aug 2020 07:32:45 +0000
-X-Originating-IP: [80.147.118.32]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f572f286-5146-40aa-ac3d-08d83cff938a
-X-MS-TrafficTypeDiagnostic: AM0PR10MB3617:
-X-Microsoft-Antispam-PRVS: <AM0PR10MB36173BDE7887CDE9797D8B92E9440@AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wEAWs8wDhczFWLmu7VdEtJ/7MA+VhMJ9oFWoyN9A2yxZr2lt4BGaRe6Bn6PFCLrgNtizyiKVweulvbynMH0/7iHrnPEa3C/YqWwEXdthErSwF41Xqd7zu8nnWfRNSGbj2Ers5GGtt7yRHnJqomOPAPCLGZwGpfb2bPldSVgS29cZekeT3re+cdokJKLwyQWGDlhssfUSFJAioB8E0oQv9nuJkhc25z+Inw60Spfbq5LpI1ffW1ge8H8x9mQ11Ux2h7WHeSd2rKFAFpMh1H2FZxjLa4U4dj7DhzLYDdfJmo1bAwnesbbSp3viTN3D1T4XRv88dAJFK/eukTEob5qkIs45C2kfjeqBgEv0qn2YE3BMNcOXHx6U1+iMPiU6Dy2FzMMIyXspMeMM4PFxtVOAKHk8epTtvVUS0vf/54ipaAVu99QWGgMvr/LlxpB9jEBhbqY1Su161NBh+0IiZNjnYbBD2EvEhUu6Eb5L2IrVWZE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(366004)(376002)(39850400004)(36756003)(53546011)(2906002)(44832011)(8936002)(8676002)(66556008)(66476007)(45080400002)(26005)(31696002)(86362001)(16576012)(316002)(66946007)(7416002)(4326008)(186003)(16526019)(5660300002)(52116002)(31686004)(6486002)(956004)(2616005)(966005)(478600001)(83380400001)(921003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: CWnfoRRrz/r7n29kvET7xMZW6VdI50yOMevZMWDc2RDu6lZdIkWE/KMQi91rj+8KHaADqltL9phu01wFY2BxsOJaIpXXqoI2Wm3KZ9+a6K14eJz2NU+0CFJslWJ0UkEyZyUoemkosIkTzOgloiFsIXv9wWb73FyybsAfYUqdEGE3iDJyz3B2lVzY6xkr9RDza/04+PCGtcIvz9bX3J2hXNnClw156GHRMxWVh8vz53IByQWlfqZ0qGRj0NYnD0dEdJwVpo2MWtGHQ4ntYByIBVr9KkrVqiZHctoQ7pYbkrfJNXq8sJYtWb3ajIvKgq1p3R0w39BUoYMmxdVpKDlN4tt7kpCi29r6ITVrKIXRkz6LXAevRA33Q5d9uaMBEsi9bVZj/1Em0Lat1MqvGBIDKO9TP+9RtnGT+fDe3r5Aj0gP4Egadaw6cswlet7sfS7ds+YI+UQvDWhQFNzLyj68KNrbbb0zqL2gRpq5cBKT9JU4rKfwRrx/UNyVQyLEFxTeikdYLZwPRkunnEJWryGpvepK3C1bh+bkFq06VY89Uub+R1FjChDnjL6qoV2hOQv8CgSKU2T1ca0tLwy7nWUaZhCnKC8FygU/CPlN9gMpKH43DkkwWkzT5nwM8x+bexLlJyqb4J5Oy4QIkZ2TpIYffQ==
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: f572f286-5146-40aa-ac3d-08d83cff938a
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 07:32:46.5639
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Kpo2hEXZdm4VIj5PxBTSRhyO+LvCXwtG6Z5l2VQFtz7UphUI++Boi8Z4GyTdTdFybELyMoKlWgJEuOx/DpOlPUrOOXiC/GpIfIyv4iYvOXg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3617
+References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596465107-14251-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200806163054.vz7t7jgm4bapzkpq@uno.localdomain> <CA+V-a8tmnqRvmW1=55K7Za2DoxBR+4LD4oZMGfX14-WfBocokQ@mail.gmail.com>
+ <20200807084606.oqw2vwmitblbmcft@uno.localdomain>
+In-Reply-To: <20200807084606.oqw2vwmitblbmcft@uno.localdomain>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 10 Aug 2020 08:40:29 +0100
+Message-ID: <CA+V-a8v7fngYswCGnh5D6CONC1R1coHViGwa7wEHrazpGOKZMg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] media: i2c: ov5640: Enable data pins on poweron
+ for DVP mode
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     paul.kocialkowski@bootlin.com,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
+Hi Jacopo,
 
-On 24.07.20 20:51, Robin Gong wrote:
-> For the compatibility of NXP internal legacy kernel before 4.19 which
-> is based on uart ram script and upstreaming kernel based on uart rom
-> script, add both uart ram/rom script in latest sdma firmware. By default
-> uart rom script used.
-> Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-> back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
-> 
-> rom script:
->          uart_2_mcu_addr
-> 	uartsh_2_mcu_addr /* through spba bus */
-> am script:
-> 	uart_2_mcu_ram_addr
-> 	uartsh_2_mcu_ram_addr /* through spba bus */
-> 
-> Please get latest sdma firmware from the below and put them into the path
-> (/lib/firmware/imx/sdma/):
-> https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-firmware.git&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7Caa98331fadca476ca15c08d82fbdaf32%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637311839017457806&amp;sdata=cbM33k4fdr0IAni1njQWgIrzxbEJ%2BQBkxN10fnagO6k%3D&amp;reserved=0
-> /tree/imx/sdma
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
+Thank you for the review.
 
-This patch seems to break UART DMA in case the ROM firmware is used. In 
-that case sdma->script_number is set to SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1, 
-so the ROM scripts at uart_2_mcu_addr and uartsh_2_mcu_addr will never 
-be added in sdma_add_scripts() as they are now moved beyond the V1 max 
-index.
+On Fri, Aug 7, 2020 at 9:42 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hi Prabhakar,
+>    + Paul who is working with this chip on a parallel setup
+>
+> On Thu, Aug 06, 2020 at 05:38:57PM +0100, Lad, Prabhakar wrote:
+> > Hi Jacopo,
+> >
+> > Thank you for the review.
+> >
+> > On Thu, Aug 6, 2020 at 5:27 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
+> > >
+> > > Hi Prabhakar,
+> > >
+> > > On Mon, Aug 03, 2020 at 03:31:45PM +0100, Lad Prabhakar wrote:
+> > > > During testing this sensor on iW-RainboW-G21D-Qseven platform in 8-bit DVP
+> > > > mode with rcar-vin bridge noticed the capture worked fine for the first run
+> > > > (with yavta), but for subsequent runs the bridge driver waited for the
+> > > > frame to be captured. Debugging further noticed the data lines were
+> > > > enabled/disabled in stream on/off callback and dumping the register
+> > > > contents 0x3017/0x3018 in ov5640_set_stream_dvp() reported the correct
+> > > > values, but yet frame capturing failed.
+> > >
+> > > That's pretty weird, I wonder if that's not an issue in the bridge, as
+> > > I expect someone tryed to capture more than 1 image in DVP mode with
+> > > this driver already.
+> > >
+> > I did try the bridge driver with an ov7725 sensor and it works fine in
+> > both the modes (DVP and BT656).
+> >
+> > > I didn't get from your commit message if you have been able to
+> > > identify where the issue is. You said register values are correct, but
+> > > did you try to plug a scope and see if data are actually put on the
+> > > bus ? Does this happen with full parallel too or BT.656 only ?
+> > >
+> > unfortunately I didn't scope the pins, but this issue happened in both
+> > the modes. And with this patch it improves handling the sensor in
+> > s_stream call.
+> >
+>
+> For the record, I tested this one with my CSI-2 setup and capture
+> still works as expected.
+>
+Thank you for testing this.
 
-Reverting this patch fixes UART DMA with ROM firmware.
-Can you please find a way to fix this or just drop this change?
+> > Cheers,
+> > Prabhakar
+> >
+> > > >
+> > > > To get around this issue the following actions are performed for
+> > > > parallel mode (DVP):
+> > > > 1: Keeps the sensor in software power down mode and is woken up only in
+> > > >    ov5640_set_stream_dvp() callback.
+> > > > 2: Enables data lines in s_power callback
+> > > > 3: Configures HVP lines in s_power callback instead of configuring
+> > > >    everytime in ov5640_set_stream_dvp().
+> > > > 4: Disables MIPI interface.
+> > > >
+> > > > Fixes: f22996db44e2d ("media: ov5640: add support of DVP parallel interface")
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > > ---
+> > > >  drivers/media/i2c/ov5640.c | 321 ++++++++++++++++++++-----------------
+> > > >  1 file changed, 172 insertions(+), 149 deletions(-)
+> > > >
+> > > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > > > index 2fe4a7ac0592..ec444bee2ce9 100644
+> > > > --- a/drivers/media/i2c/ov5640.c
+> > > > +++ b/drivers/media/i2c/ov5640.c
+> > > > @@ -94,6 +94,9 @@
+> > > >  #define OV5640_REG_SDE_CTRL5         0x5585
+> > > >  #define OV5640_REG_AVG_READOUT               0x56a1
+> > > >
+> > > > +#define OV5640_SOFTWARE_PWDN         0x42
+> > > > +#define OV5640_SOFTWARE_WAKEUP               0x02
+>
+> These two are bitmasks to apply to register 0x3008. I would place them
+> below the register definition and name them:
+>
+> #define OV5640_REG_SYS_CTRL0_SW_PWDN         0x42
+> #define OV5640_REG_SYS_CTRL0_SW_PWUP         0x02
+>
+> or even:
+> #define OV5640_REG_SYS_CTRL0_SW_POWER(on)    (0x2 | (on ? 0x40 : 0x00))
+>
+> Up to you, but I would keep them close to the register definition.
+>
+Agreed shall pick up the second option.
 
-Thanks,
-Frieder
+> > > > +
+> > > >  enum ov5640_mode_id {
+> > > >       OV5640_MODE_QCIF_176_144 = 0,
+> > > >       OV5640_MODE_QVGA_320_240,
+> > > > @@ -274,7 +277,7 @@ static inline struct v4l2_subdev *ctrl_to_sd(struct v4l2_ctrl *ctrl)
+> > > >  /* YUV422 UYVY VGA@30fps */
+> > > >  static const struct reg_value ov5640_init_setting_30fps_VGA[] = {
+> > > >       {0x3103, 0x11, 0, 0}, {0x3008, 0x82, 0, 5}, {0x3008, 0x42, 0, 0},
+> > > > -     {0x3103, 0x03, 0, 0}, {0x3017, 0x00, 0, 0}, {0x3018, 0x00, 0, 0},
+> > > > +     {0x3103, 0x03, 0, 0},
+> > > >       {0x3630, 0x36, 0, 0},
+>
+> Could you reflow this lines to not leave holes ?
+>
+Will do.
 
-> ---
->   drivers/dma/imx-sdma.c                     | 4 ++--
->   include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
->   2 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 8735606..5900e32 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1729,8 +1729,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
->   
->   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
->   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
-> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
-> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
->   
->   static void sdma_add_scripts(struct sdma_engine *sdma,
->   		const struct sdma_script_start_addrs *addr)
-> diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-> index 30e676b..e12d2e8 100644
-> --- a/include/linux/platform_data/dma-imx-sdma.h
-> +++ b/include/linux/platform_data/dma-imx-sdma.h
-> @@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
->   	s32 per_2_firi_addr;
->   	s32 mcu_2_firi_addr;
->   	s32 uart_2_per_addr;
-> -	s32 uart_2_mcu_addr;
-> +	s32 uart_2_mcu_ram_addr;
->   	s32 per_2_app_addr;
->   	s32 mcu_2_app_addr;
->   	s32 per_2_per_addr;
->   	s32 uartsh_2_per_addr;
-> -	s32 uartsh_2_mcu_addr;
-> +	s32 uartsh_2_mcu_ram_addr;
->   	s32 per_2_shp_addr;
->   	s32 mcu_2_shp_addr;
->   	s32 ata_2_mcu_addr;
-> @@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
->   	s32 zcanfd_2_mcu_addr;
->   	s32 zqspi_2_mcu_addr;
->   	s32 mcu_2_ecspi_addr;
-> +	s32 mcu_2_sai_addr;
-> +	s32 sai_2_mcu_addr;
-> +	s32 uart_2_mcu_addr;
-> +	s32 uartsh_2_mcu_addr;
->   	/* End of v3 array */
->   	s32 mcu_2_zqspi_addr;
->   	/* End of v4 array */
-> 
+> > > >       {0x3631, 0x0e, 0, 0}, {0x3632, 0xe2, 0, 0}, {0x3633, 0x12, 0, 0},
+> > > >       {0x3621, 0xe0, 0, 0}, {0x3704, 0xa0, 0, 0}, {0x3703, 0x5a, 0, 0},
+> > > > @@ -1120,6 +1123,11 @@ static int ov5640_load_regs(struct ov5640_dev *sensor,
+> > > >               val = regs->val;
+> > > >               mask = regs->mask;
+> > > >
+> > > > +             /* remain in power down mode for DVP */
+> > > > +             if (regs->reg_addr == OV5640_REG_SYS_CTRL0 && val == OV5640_SOFTWARE_WAKEUP &&
+> > > > +                 sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY)
+> > > > +                     continue;
+> > > > +
+>
+> I'm not yet convinced this is a good idea. This will cause the
+> ov5640_set_dvp() function to be called while the chip is still in
+> 'software power-down' mode. I tried to do the same for CSI-2 as well
+> and indeed I have LP-11 errors from the CSI-2 receiver, but then
+> capture works fine (puzzling! it might indicate that register values
+> as actually retained between software power up/down)
+>
+> This driver is such a mess I won't mind this 'special' dvp handling,
+> but it really puzzles me.
+>
+> From what I see here the bulk of this patch is about moving the
+> parallel bus configuration from s_stream() to s_power(), is this bit
+> here really required for that to work or is it a leftover ? Have you
+> tested it without the above hunk ?
+>
+Yes I have and it does work. but the idea behind this is to keep the
+sensor in powerdon mode all the time when nor streaming for DVP mode.
+
+> Paul, would you be able to test this series with your parallel setup
+> as well ?
+>
+> Also, if not strictly necessary, let's try to remain in the 80 cols limit.
+>
+OK.
+
+>
+> > > >               if (mask)
+> > > >                       ret = ov5640_mod_reg(sensor, reg_addr, mask, val);
+> > > >               else
+> > > > @@ -1210,96 +1218,8 @@ static int ov5640_set_autogain(struct ov5640_dev *sensor, bool on)
+> > > >
+> > > >  static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
+> > > >  {
+> > > > -     int ret;
+> > > > -     unsigned int flags = sensor->ep.bus.parallel.flags;
+> > > > -     u8 pclk_pol = 0;
+> > > > -     u8 hsync_pol = 0;
+> > > > -     u8 vsync_pol = 0;
+> > > > -
+> > > > -     /*
+> > > > -      * Note about parallel port configuration.
+> > > > -      *
+> > > > -      * When configured in parallel mode, the OV5640 will
+> > > > -      * output 10 bits data on DVP data lines [9:0].
+> > > > -      * If only 8 bits data are wanted, the 8 bits data lines
+> > > > -      * of the camera interface must be physically connected
+> > > > -      * on the DVP data lines [9:2].
+> > > > -      *
+> > > > -      * Control lines polarity can be configured through
+> > > > -      * devicetree endpoint control lines properties.
+> > > > -      * If no endpoint control lines properties are set,
+> > > > -      * polarity will be as below:
+> > > > -      * - VSYNC:     active high
+> > > > -      * - HREF:      active low
+> > > > -      * - PCLK:      active low
+> > > > -      */
+> > > > -
+> > > > -     if (on) {
+> > > > -             /*
+> > > > -              * configure parallel port control lines polarity
+> > > > -              *
+> > > > -              * POLARITY CTRL0
+> > > > -              * - [5]:       PCLK polarity (0: active low, 1: active high)
+> > > > -              * - [1]:       HREF polarity (0: active low, 1: active high)
+> > > > -              * - [0]:       VSYNC polarity (mismatch here between
+> > > > -              *              datasheet and hardware, 0 is active high
+> > > > -              *              and 1 is active low...)
+> > > > -              */
+> > > > -             if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> > > > -                     pclk_pol = 1;
+> > > > -             if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> > > > -                     hsync_pol = 1;
+> > > > -             if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> > > > -                     vsync_pol = 1;
+> > > > -
+> > > > -             ret = ov5640_write_reg(sensor,
+> > > > -                                    OV5640_REG_POLARITY_CTRL00,
+> > > > -                                    (pclk_pol << 5) |
+> > > > -                                    (hsync_pol << 1) |
+> > > > -                                    vsync_pol);
+> > > > -
+> > > > -             if (ret)
+> > > > -                     return ret;
+> > > > -     }
+> > > > -
+> > > > -     /*
+> > > > -      * powerdown MIPI TX/RX PHY & disable MIPI
+> > > > -      *
+> > > > -      * MIPI CONTROL 00
+> > > > -      * 4:    PWDN PHY TX
+> > > > -      * 3:    PWDN PHY RX
+> > > > -      * 2:    MIPI enable
+> > > > -      */
+> > > > -     ret = ov5640_write_reg(sensor,
+> > > > -                            OV5640_REG_IO_MIPI_CTRL00, on ? 0x18 : 0);
+> > > > -     if (ret)
+> > > > -             return ret;
+> > > > -
+> > > > -     /*
+> > > > -      * enable VSYNC/HREF/PCLK DVP control lines
+> > > > -      * & D[9:6] DVP data lines
+> > > > -      *
+> > > > -      * PAD OUTPUT ENABLE 01
+> > > > -      * - 6:         VSYNC output enable
+> > > > -      * - 5:         HREF output enable
+> > > > -      * - 4:         PCLK output enable
+> > > > -      * - [3:0]:     D[9:6] output enable
+> > > > -      */
+> > > > -     ret = ov5640_write_reg(sensor,
+> > > > -                            OV5640_REG_PAD_OUTPUT_ENABLE01,
+> > > > -                            on ? 0x7f : 0);
+> > > > -     if (ret)
+> > > > -             return ret;
+> > > > -
+> > > > -     /*
+> > > > -      * enable D[5:0] DVP data lines
+> > > > -      *
+> > > > -      * PAD OUTPUT ENABLE 02
+> > > > -      * - [7:2]:     D[5:0] output enable
+> > > > -      */
+> > > > -     return ov5640_write_reg(sensor,
+> > > > -                             OV5640_REG_PAD_OUTPUT_ENABLE02,
+> > > > -                             on ? 0xfc : 0);
+> > > > +     return ov5640_write_reg(sensor, OV5640_REG_SYS_CTRL0, on ?
+> > > > +                             OV5640_SOFTWARE_WAKEUP : OV5640_SOFTWARE_PWDN);
+>
+> I'm surprised entering/exiting from what is called "Software power
+> down" in the chip manual retains the registers state!
+>
+In fact as part of the initial register sequence the sensor is put
+into power down mode, the required registers are set and then the
+sensor is woken up.
+
+> > > >  }
+> > > >
+> > > >  static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
+> > > > @@ -2001,6 +1921,159 @@ static void ov5640_set_power_off(struct ov5640_dev *sensor)
+> > > >       clk_disable_unprepare(sensor->xclk);
+> > > >  }
+> > > >
+> > > > +static int ov5640_set_mipi(struct ov5640_dev *sensor, bool on)
+>
+> Maybe 'ov5640_set_power_mipi()' ? (same for dvp)
+>
+OK will replace it.
+
+> > > > +{
+> > > > +     int ret = 0;
+> > > > +
+> > > > +     if (!on) {
+> > > > +             /* Reset MIPI bus settings to their default values. */
+> > > > +             ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x58);
+> > > > +             ov5640_write_reg(sensor, OV5640_REG_MIPI_CTRL00, 0x04);
+> > > > +             ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT00, 0x00);
+> > > > +
+> > > > +             return ret;
+> > > > +     }
+>
+> I know this was there already, but I wonder if this is now necessary
+> (same for the DVP counterpart).
+>
+> We call this from the power up/down routine, if we get here with on=1
+> we are exiting from the chip powerdown mode and I expect registers to
+> be restored to their default values.
+>
+No waking up the sensor from power down mode doesnt restore the
+register to default values, infact it will retain the values which are
+already set to. Fyi I picked up the datasheet from [1]
+
+[1] http://e2e.ti.com/cfs-file.ashx/__key/communityserver-discussions-components-files/100/2604.OV7725_5F00_CSP2_5F00_DS-_2800_1_5B00_1_5D00_.31_2900_.pdf
+
+> > > > +
+> > > > +     /*
+> > > > +      * Power up MIPI HS Tx and LS Rx; 2 data lanes mode
+> > > > +      *
+> > > > +      * 0x300e = 0x40
+> > > > +      * [7:5] = 010  : 2 data lanes mode (see FIXME note in
+> > > > +      *                "ov5640_set_stream_mipi()")
+> > > > +      * [4] = 0      : Power up MIPI HS Tx
+> > > > +      * [3] = 0      : Power up MIPI LS Rx
+> > > > +      * [2] = 0      : MIPI interface disabled
+> > > > +      */
+> > > > +     ret = ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x40);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     /*
+> > > > +      * Gate clock and set LP11 in 'no packets mode' (idle)
+> > > > +      *
+> > > > +      * 0x4800 = 0x24
+> > > > +      * [5] = 1      : Gate clock when 'no packets'
+> > > > +      * [2] = 1      : MIPI bus in LP11 when 'no packets'
+> > > > +      */
+> > > > +     ret = ov5640_write_reg(sensor, OV5640_REG_MIPI_CTRL00, 0x24);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     /*
+> > > > +      * Set data lanes and clock in LP11 when 'sleeping'
+> > > > +      *
+> > > > +      * 0x3019 = 0x70
+> > > > +      * [6] = 1      : MIPI data lane 2 in LP11 when 'sleeping'
+> > > > +      * [5] = 1      : MIPI data lane 1 in LP11 when 'sleeping'
+> > > > +      * [4] = 1      : MIPI clock lane in LP11 when 'sleeping'
+> > > > +      */
+> > > > +     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT00, 0x70);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     /* Give lanes some time to coax into LP11 state. */
+> > > > +     usleep_range(500, 1000);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int ov5640_set_dvp(struct ov5640_dev *sensor, bool on)
+> > > > +{
+> > > > +     unsigned int flags = sensor->ep.bus.parallel.flags;
+> > > > +     u8 pclk_pol = 0;
+> > > > +     u8 hsync_pol = 0;
+> > > > +     u8 vsync_pol = 0;
+> > > > +     int ret = 0;
+> > > > +
+> > > > +     if (!on) {
+> > > > +             /* Reset settings to their default values. */
+> > > > +             ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x58);
+> > > > +             ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00, 0x20);
+> > > > +             ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01, 0x00);
+> > > > +             ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE02, 0x00);
+> > > > +
+> > > > +             return ret;
+> > > > +     }
+> > > > +
+> > > > +     /*
+> > > > +      * Note about parallel port configuration.
+> > > > +      *
+> > > > +      * When configured in parallel mode, the OV5640 will
+> > > > +      * output 10 bits data on DVP data lines [9:0].
+> > > > +      * If only 8 bits data are wanted, the 8 bits data lines
+> > > > +      * of the camera interface must be physically connected
+> > > > +      * on the DVP data lines [9:2].
+> > > > +      *
+> > > > +      * Control lines polarity can be configured through
+> > > > +      * devicetree endpoint control lines properties.
+> > > > +      * If no endpoint control lines properties are set,
+> > > > +      * polarity will be as below:
+> > > > +      * - VSYNC:     active high
+> > > > +      * - HREF:      active low
+> > > > +      * - PCLK:      active low
+> > > > +      */
+> > > > +     /*
+> > > > +      * configure parallel port control lines polarity
+> > > > +      *
+> > > > +      * POLARITY CTRL0
+> > > > +      * - [5]:       PCLK polarity (0: active low, 1: active high)
+> > > > +      * - [1]:       HREF polarity (0: active low, 1: active high)
+> > > > +      * - [0]:       VSYNC polarity (mismatch here between
+> > > > +      *              datasheet and hardware, 0 is active high
+> > > > +      *              and 1 is active low...)
+> > > > +      */
+> > > > +     if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> > > > +             pclk_pol = 1;
+> > > > +     if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> > > > +             hsync_pol = 1;
+> > > > +     if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> > > > +             vsync_pol = 1;
+> > > > +
+> > > > +     ret = ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00,
+> > > > +                            (pclk_pol << 5) | (hsync_pol << 1) | vsync_pol);
+> > > > +
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     /*
+> > > > +      * powerdown MIPI TX/RX PHY & disable MIPI
+> > > > +      *
+> > > > +      * MIPI CONTROL 00
+> > > > +      * 4:    PWDN PHY TX
+> > > > +      * 3:    PWDN PHY RX
+> > > > +      * 2:    MIPI enable
+> > > > +      */
+> > > > +     ret = ov5640_write_reg(sensor, OV5640_REG_IO_MIPI_CTRL00, 0x18);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     /*
+> > > > +      * enable VSYNC/HREF/PCLK DVP control lines
+> > > > +      * & D[9:6] DVP data lines
+> > > > +      *
+> > > > +      * PAD OUTPUT ENABLE 01
+> > > > +      * - 6:         VSYNC output enable
+> > > > +      * - 5:         HREF output enable
+> > > > +      * - 4:         PCLK output enable
+> > > > +      * - [3:0]:     D[9:6] output enable
+> > > > +      */
+> > > > +     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01, 0x7f);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     /*
+> > > > +      * enable D[5:0] DVP data lines
+> > > > +      *
+> > > > +      * PAD OUTPUT ENABLE 02
+> > > > +      * - [7:2]:     D[5:0] output enable
+> > > > +      */
+> > > > +     ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE02, 0xfc);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > >  static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+> > > >  {
+> > > >       int ret = 0;
+> > > > @@ -2013,67 +2086,17 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+> > > >               ret = ov5640_restore_mode(sensor);
+> > > >               if (ret)
+> > > >                       goto power_off;
+> > > > +     }
+> > > >
+> > > > -             /* We're done here for DVP bus, while CSI-2 needs setup. */
+> > > > -             if (sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY)
+> > > > -                     return 0;
+> > > > -
+> > > > -             /*
+> > > > -              * Power up MIPI HS Tx and LS Rx; 2 data lanes mode
+> > > > -              *
+> > > > -              * 0x300e = 0x40
+> > > > -              * [7:5] = 010  : 2 data lanes mode (see FIXME note in
+> > > > -              *                "ov5640_set_stream_mipi()")
+> > > > -              * [4] = 0      : Power up MIPI HS Tx
+> > > > -              * [3] = 0      : Power up MIPI LS Rx
+> > > > -              * [2] = 0      : MIPI interface disabled
+> > > > -              */
+> > > > -             ret = ov5640_write_reg(sensor,
+> > > > -                                    OV5640_REG_IO_MIPI_CTRL00, 0x40);
+> > > > -             if (ret)
+> > > > -                     goto power_off;
+> > > > -
+> > > > -             /*
+> > > > -              * Gate clock and set LP11 in 'no packets mode' (idle)
+> > > > -              *
+> > > > -              * 0x4800 = 0x24
+> > > > -              * [5] = 1      : Gate clock when 'no packets'
+> > > > -              * [2] = 1      : MIPI bus in LP11 when 'no packets'
+> > > > -              */
+> > > > -             ret = ov5640_write_reg(sensor,
+> > > > -                                    OV5640_REG_MIPI_CTRL00, 0x24);
+> > > > -             if (ret)
+> > > > -                     goto power_off;
+> > > > -
+> > > > -             /*
+> > > > -              * Set data lanes and clock in LP11 when 'sleeping'
+> > > > -              *
+> > > > -              * 0x3019 = 0x70
+> > > > -              * [6] = 1      : MIPI data lane 2 in LP11 when 'sleeping'
+> > > > -              * [5] = 1      : MIPI data lane 1 in LP11 when 'sleeping'
+> > > > -              * [4] = 1      : MIPI clock lane in LP11 when 'sleeping'
+> > > > -              */
+> > > > -             ret = ov5640_write_reg(sensor,
+> > > > -                                    OV5640_REG_PAD_OUTPUT00, 0x70);
+> > > > -             if (ret)
+> > > > -                     goto power_off;
+> > > > -
+> > > > -             /* Give lanes some time to coax into LP11 state. */
+> > > > -             usleep_range(500, 1000);
+> > > > -
+> > > > -     } else {
+> > > > -             if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
+> > > > -                     /* Reset MIPI bus settings to their default values. */
+> > > > -                     ov5640_write_reg(sensor,
+> > > > -                                      OV5640_REG_IO_MIPI_CTRL00, 0x58);
+> > > > -                     ov5640_write_reg(sensor,
+> > > > -                                      OV5640_REG_MIPI_CTRL00, 0x04);
+> > > > -                     ov5640_write_reg(sensor,
+> > > > -                                      OV5640_REG_PAD_OUTPUT00, 0x00);
+> > > > -             }
+> > > > +     if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
+> > > > +             ret = ov5640_set_mipi(sensor, on);
+> > > > +     else
+> > > > +             ret = ov5640_set_dvp(sensor, on);
+> > > > +     if (ret)
+> > > > +             goto power_off;
+>
+> If you agree the  if (!on) case in the two set_mipi()/set_dvp() functions
+> above can be removed, this function should become
+>
+I would keep it, as mentioned above.
+
+Cheers,
+Prabhakar
