@@ -2,125 +2,123 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E748BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5B0C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 20:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20BC22B4B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 19:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087996;
-	bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GeqVCvsI9dDrxBwKu68kBZya9eRZEUscGmGDawZDlcun37KAItHwK8JikLJTPeWQt
-	 KMdKFfIJ7OywJ5ChlzXUIO5oRgA55OMcBJJ90zFV+ObHDiQoBdkd7WQGOcdVdu//M7
-	 mmNhQLERQaOPxYDkQKnv1U215KriTVVPzYrDNJXM=
+	by mail.kernel.org (Postfix) with ESMTP id DC9232065D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 20:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D315fVRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgHJTJ1 (ORCPT
+        id S1726468AbgHJUOd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:09:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbgHJTJ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:09:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD16E2078D;
-        Mon, 10 Aug 2020 19:09:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086564;
-        bh=zHckG6m84Zqzd5VIOruZMFe/2Q7NFzcOkZYzhVCARjw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pdQBm1tGz22W58g7obmG1F8X7KkVMfGGbaSo80yHBopIwTIXNVraWRsFiYMWKAvBA
-         1vIaa9zWM7GST4qo8ylZY9MECVNNZ5M1BVi5aZvQyBx/X4rJAIGKDORJIAwbVDS0is
-         nOxWldnxl7WkAxN/jgZFwJRNs/xMPGLIgO9S5cWU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 18/64] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
-Date:   Mon, 10 Aug 2020 15:08:13 -0400
-Message-Id: <20200810190859.3793319-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
-References: <20200810190859.3793319-1-sashal@kernel.org>
+        Mon, 10 Aug 2020 16:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbgHJUOd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 16:14:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 499BFC061787
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 13:14:33 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y6so5668392plt.3
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 13:14:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yjJB3+Z/0aZarJNHmOU4wwzDVsOhWe4UX3O+qXnKkZk=;
+        b=D315fVRb850mO3LUwSaH5+WRqtQmJmDFRqL2o4vasXmIOfw3VutVGbMieVHlV2+0w3
+         CORt+WG1i6KWddVJL9TGkYpPQZZBnUI2jlQ/6+oxD7/SK9NwtZzgw8XASnhjv86r9lG7
+         NdOdfMDxsJaJh+5bixY34Qp8RXFczHt9VnFb+oU9B0oMHBmrPJxZNZtS3j9g5xGV/sVs
+         7gIplLgBcSi7Fv9dkvhJHDVJVs/5bUQy9Q8yiadzlPbZJZkPfhBvvP6nXpmE7lo20k2J
+         8pV7jNmcXeSidq8zL6XSO45EiVX9xk7WarsehNhXhQH6G7kLe5oerN15lRCzMGuYgZcw
+         2l4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yjJB3+Z/0aZarJNHmOU4wwzDVsOhWe4UX3O+qXnKkZk=;
+        b=eZT83uezL8q3NQjAvwgCH+WCYHaID4q/K411DuI1x22C97f/7dA7OQKnE8r0inlBOQ
+         O6V+ywJmLeiQf2YkJVIvkqgKRHYZ6g/L08Z3aEbMnvZGP0SclULL0IM+gviTilWidNQB
+         WDPyJS6IAO58K1CCmbTaPTETLRNwal1LqHLu7ajJ8iunANmRulyeZTiG56nj5bZIEY/z
+         sIgn00xfofOlTlfuX5yubnnE1k9GL0FfzkYBIJyvKe4og21zvLkB38GC8S2DS4FJhuoa
+         zrIaf4R940RX9XkcJo5NdT1E2lYe+8Un0lXWHE5X/up/fCjPaMC6uUUk8/EpEcrrTejM
+         1pIQ==
+X-Gm-Message-State: AOAM533s3Yqvpw6HVYAoPHo3BcnrQcfHTZmJbA+EknlUU4/9Btde/eYD
+        2yK/n42fMDOSGgvYS9FhMhJJ6A==
+X-Google-Smtp-Source: ABdhPJz0Ia+wr+uzc5KKftJulbyoLBKBFceiyjkmmkJYK0EY6YnedgFHXqXlLMMam09Ze8RCIOmJwQ==
+X-Received: by 2002:a17:902:714c:: with SMTP id u12mr8565017plm.290.1597090472745;
+        Mon, 10 Aug 2020 13:14:32 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id f3sm24471837pfj.206.2020.08.10.13.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 13:14:32 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 14:14:30 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mike.leach@linaro.org, coresight@lists.linaro.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 14/14] dts: bindings: coresight: ETMv4.4 system
+ register access only units
+Message-ID: <20200810201430.GC3223977@xps15>
+References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
+ <20200722172040.1299289-15-suzuki.poulose@arm.com>
+ <20200729172058.GA3060370@xps15>
+ <7036b8c5-b920-3de7-21d0-474e759e2624@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7036b8c5-b920-3de7-21d0-474e759e2624@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+On Thu, Jul 30, 2020 at 05:38:37PM +0100, Suzuki K Poulose wrote:
+> On 07/29/2020 06:20 PM, Mathieu Poirier wrote:
+> > On Wed, Jul 22, 2020 at 06:20:40PM +0100, Suzuki K Poulose wrote:
+> > > Document the bindings for ETMv4.4 and later with only system register
+> > > access.
+> > > 
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > Cc: Mike Leach <mike.leach@linaro.org>
+> > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > ---
+> > >   Documentation/devicetree/bindings/arm/coresight.txt | 6 +++++-
+> > >   1 file changed, 5 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> > > index d711676b4a51..cfe47bdda728 100644
+> > > --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> > > @@ -34,9 +34,13 @@ its hardware characteristcs.
+> > >   					Program Flow Trace Macrocell:
+> > >   			"arm,coresight-etm3x", "arm,primecell";
+> > > -		- Embedded Trace Macrocell (version 4.x):
+> > > +		- Embedded Trace Macrocell (version 4.x), with memory mapped access.
+> > >   			"arm,coresight-etm4x", "arm,primecell";
+> > > +		- Embedded Trace Macrocell (version 4.4 and later) with system
+> > > +		  register access only.
+> > > +			"arm,coresight-etm-v4.4";
+> > 
+> > I would rather call this "arm,coresight-etm-v4.4+" so that the binding's
+> > semantic is still relevant when dealing with ETM v4.5 and onward.
+> 
+> AFAIUC, "compatible" stands for something that is compatible with v4.4.
+> All v4.4+ versions that are compatible with v4.4 are covered here.
 
-[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
+Your position is valid - let's to with what you had.
 
-hi3660-hikey960.dts:
-  Define a 'ports' node for 'adv7533: adv7533@39' and the
-  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
-  binding.
-
-  This fills the requirements to meet the binding requirements,
-  remote endpoints are not defined.
-
-hi6220-hikey.dts:
-  Change property name s/pd-gpio/pd-gpios, gpio properties should be
-  plural. This is just a cosmetic change.
-
-Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
- 2 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index e035cf195b19a..8c4bfbaf3a806 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -530,6 +530,17 @@ adv7533: adv7533@39 {
- 		status = "ok";
- 		compatible = "adi,adv7533";
- 		reg = <0x39>;
-+		adi,dsi-lanes = <4>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+			};
-+			port@1 {
-+				reg = <1>;
-+			};
-+		};
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index c14205cd6bf5c..3e47150c05ec2 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -516,7 +516,7 @@ adv7533: adv7533@39 {
- 		reg = <0x39>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <1 2>;
--		pd-gpio = <&gpio0 4 0>;
-+		pd-gpios = <&gpio0 4 0>;
- 		adi,dsi-lanes = <4>;
- 		#sound-dai-cells = <0>;
- 
--- 
-2.25.1
-
+> Having said that I am fine with "arm,coresight-etm-v4.4+" , if it
+> is fine by the DT conventions.
+> 
+> Cheers
+> Suzuki
