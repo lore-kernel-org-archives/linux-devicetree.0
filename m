@@ -2,123 +2,155 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5B0C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 20:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD145C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 20:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC9232065D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 20:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53669206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 20:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D315fVRb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mqKj/a0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgHJUOd (ORCPT
+        id S1726515AbgHJUvs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 16:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbgHJUOd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 16:14:33 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 499BFC061787
-        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 13:14:33 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y6so5668392plt.3
-        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 13:14:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yjJB3+Z/0aZarJNHmOU4wwzDVsOhWe4UX3O+qXnKkZk=;
-        b=D315fVRb850mO3LUwSaH5+WRqtQmJmDFRqL2o4vasXmIOfw3VutVGbMieVHlV2+0w3
-         CORt+WG1i6KWddVJL9TGkYpPQZZBnUI2jlQ/6+oxD7/SK9NwtZzgw8XASnhjv86r9lG7
-         NdOdfMDxsJaJh+5bixY34Qp8RXFczHt9VnFb+oU9B0oMHBmrPJxZNZtS3j9g5xGV/sVs
-         7gIplLgBcSi7Fv9dkvhJHDVJVs/5bUQy9Q8yiadzlPbZJZkPfhBvvP6nXpmE7lo20k2J
-         8pV7jNmcXeSidq8zL6XSO45EiVX9xk7WarsehNhXhQH6G7kLe5oerN15lRCzMGuYgZcw
-         2l4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yjJB3+Z/0aZarJNHmOU4wwzDVsOhWe4UX3O+qXnKkZk=;
-        b=eZT83uezL8q3NQjAvwgCH+WCYHaID4q/K411DuI1x22C97f/7dA7OQKnE8r0inlBOQ
-         O6V+ywJmLeiQf2YkJVIvkqgKRHYZ6g/L08Z3aEbMnvZGP0SclULL0IM+gviTilWidNQB
-         WDPyJS6IAO58K1CCmbTaPTETLRNwal1LqHLu7ajJ8iunANmRulyeZTiG56nj5bZIEY/z
-         sIgn00xfofOlTlfuX5yubnnE1k9GL0FfzkYBIJyvKe4og21zvLkB38GC8S2DS4FJhuoa
-         zrIaf4R940RX9XkcJo5NdT1E2lYe+8Un0lXWHE5X/up/fCjPaMC6uUUk8/EpEcrrTejM
-         1pIQ==
-X-Gm-Message-State: AOAM533s3Yqvpw6HVYAoPHo3BcnrQcfHTZmJbA+EknlUU4/9Btde/eYD
-        2yK/n42fMDOSGgvYS9FhMhJJ6A==
-X-Google-Smtp-Source: ABdhPJz0Ia+wr+uzc5KKftJulbyoLBKBFceiyjkmmkJYK0EY6YnedgFHXqXlLMMam09Ze8RCIOmJwQ==
-X-Received: by 2002:a17:902:714c:: with SMTP id u12mr8565017plm.290.1597090472745;
-        Mon, 10 Aug 2020 13:14:32 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id f3sm24471837pfj.206.2020.08.10.13.14.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2020 13:14:32 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 14:14:30 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mike.leach@linaro.org, coresight@lists.linaro.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 14/14] dts: bindings: coresight: ETMv4.4 system
- register access only units
-Message-ID: <20200810201430.GC3223977@xps15>
-References: <20200722172040.1299289-1-suzuki.poulose@arm.com>
- <20200722172040.1299289-15-suzuki.poulose@arm.com>
- <20200729172058.GA3060370@xps15>
- <7036b8c5-b920-3de7-21d0-474e759e2624@arm.com>
+        Mon, 10 Aug 2020 16:51:48 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:16401 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726422AbgHJUvs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Aug 2020 16:51:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597092708; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=v2bPcIhJzgNJjDaAtjyj+VEpCVRojqaWUChwZ3DzC8U=; b=mqKj/a0rfpVWM9rI0d460ZaUFV5ehwPT9P9K+2HflFNEVrIgEAa7G55+OUz4aOW2O4xTkhAg
+ N+SdNhHFHfg8lgaDXknESWldsn2zDMC8TDISvhXbp86WnHTxfB7UxdBGnkc8mlgZVZgTXa2n
+ FnYyBtKNfXlxx4lqtBGeNxi0cAk=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f31b357440a07969aac07d3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 10 Aug 2020 20:51:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DA650C43391; Mon, 10 Aug 2020 20:51:34 +0000 (UTC)
+Received: from [10.110.5.78] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F1E1C433CA;
+        Mon, 10 Aug 2020 20:51:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F1E1C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH 3/3] usb: dwc3: dwc3-qcom: Find USB connector and register
+ role switch
+To:     Felipe Balbi <balbi@kernel.org>, bjorn.andersson@linaro.org,
+        kishon@ti.com, vkoul@kernel.org, agross@kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <20200731045712.28495-1-wcheng@codeaurora.org>
+ <20200731045712.28495-4-wcheng@codeaurora.org> <87ft8upukf.fsf@kernel.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <e46edf7a-04b8-35fb-df6c-0379dfb63a6b@codeaurora.org>
+Date:   Mon, 10 Aug 2020 13:51:32 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7036b8c5-b920-3de7-21d0-474e759e2624@arm.com>
+In-Reply-To: <87ft8upukf.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 05:38:37PM +0100, Suzuki K Poulose wrote:
-> On 07/29/2020 06:20 PM, Mathieu Poirier wrote:
-> > On Wed, Jul 22, 2020 at 06:20:40PM +0100, Suzuki K Poulose wrote:
-> > > Document the bindings for ETMv4.4 and later with only system register
-> > > access.
-> > > 
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > Cc: Mike Leach <mike.leach@linaro.org>
-> > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > ---
-> > >   Documentation/devicetree/bindings/arm/coresight.txt | 6 +++++-
-> > >   1 file changed, 5 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > > index d711676b4a51..cfe47bdda728 100644
-> > > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > > @@ -34,9 +34,13 @@ its hardware characteristcs.
-> > >   					Program Flow Trace Macrocell:
-> > >   			"arm,coresight-etm3x", "arm,primecell";
-> > > -		- Embedded Trace Macrocell (version 4.x):
-> > > +		- Embedded Trace Macrocell (version 4.x), with memory mapped access.
-> > >   			"arm,coresight-etm4x", "arm,primecell";
-> > > +		- Embedded Trace Macrocell (version 4.4 and later) with system
-> > > +		  register access only.
-> > > +			"arm,coresight-etm-v4.4";
-> > 
-> > I would rather call this "arm,coresight-etm-v4.4+" so that the binding's
-> > semantic is still relevant when dealing with ETM v4.5 and onward.
-> 
-> AFAIUC, "compatible" stands for something that is compatible with v4.4.
-> All v4.4+ versions that are compatible with v4.4 are covered here.
 
-Your position is valid - let's to with what you had.
 
-> Having said that I am fine with "arm,coresight-etm-v4.4+" , if it
-> is fine by the DT conventions.
+On 8/10/2020 5:13 AM, Felipe Balbi wrote:
 > 
-> Cheers
-> Suzuki
+> Hi,
+> 
+> Wesley Cheng <wcheng@codeaurora.org> writes:
+>> @@ -190,6 +195,73 @@ static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
+>>  	return 0;
+>>  }
+>>  
+>> +static int dwc3_qcom_usb_role_switch_set(struct usb_role_switch *sw,
+>> +					 enum usb_role role)
+>> +{
+>> +	struct dwc3_qcom *qcom = usb_role_switch_get_drvdata(sw);
+>> +	struct fwnode_handle *child;
+>> +	bool enable = false;
+>> +
+>> +	if (!qcom->dwc3_drd_sw) {
+>> +		child = device_get_next_child_node(qcom->dev, NULL);
+>> +		if (child) {
+>> +			qcom->dwc3_drd_sw = usb_role_switch_find_by_fwnode(child);
+>> +			fwnode_handle_put(child);
+>> +			if (IS_ERR(qcom->dwc3_drd_sw)) {
+>> +				qcom->dwc3_drd_sw = NULL;
+>> +				return 0;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	usb_role_switch_set_role(qcom->dwc3_drd_sw, role);
+> 
+> why is this done at the glue layer instead of core.c?
+> 
+Hi Felipe,
+
+Thanks for the feedback.  So the DWC3 DRD driver already registers a
+role switch device for receiving external events.  However, the DWC3
+glue (dwc3-qcom) needs to also know of the role changes, so that it can
+set the override bits accordingly in the controller.  I've seen a few
+implementations, ie using a notifier block to notify the glue of these
+events, but that placed a dependency on the DWC3 core being available to
+the DWC3 glue at probe time.  If the DWC3 core was not available at that
+time, the dwc3-qcom driver will finish its probing routine, and since
+the notifier was never registered, the role change events would not be
+received.
+
+By registering another role switch device in the DWC3 glue, this gives
+us a place to attempt initializing a channel w/ the DWC3 core if it
+wasn't ready during probe().  For example...
+
+usb_conn_detect_cable(role=USB_ROLE_DEVICE)
+-->usb_role_switch_set_role(sw=dwc3-qcom)
+  -->dwc3_qcom_usb_role_switch_set()
+    -- IF DWC3 core role switch available
+	-->usb_role_switch_set_role(sw=drd)
+    -- ELSE
+	--> do nothing.
+
+So basically, the goal is to just propagate the role change event down
+to the DWC3 core, while breaking the dependency of it being available at
+probe.
+>> +	if (role == USB_ROLE_DEVICE)
+>> +		enable = true;
+>> +	else
+>> +		enable = false;
+>> +
+>> +	qcom->mode = (role == USB_ROLE_HOST) ? USB_DR_MODE_HOST :
+>> +					       USB_DR_MODE_PERIPHERAL;
+>> +	dwc3_qcom_vbus_overrride_enable(qcom, enable);
+> 
+> could you add a patch fixing this typo?
+> 
+Sure, I'll submit a separate patch to remove that extra 'r'
+
+Thanks
+Wesley
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
