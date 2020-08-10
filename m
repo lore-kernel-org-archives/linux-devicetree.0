@@ -2,86 +2,92 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAB6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 18:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2DFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1F20207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 18:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DD320774
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 18:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597085916;
+	bh=hQXDCWWlQ1DnxMOL5VXJ+bAuZfFOfBLepB41/sfErNQ=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=XjwBput9jqEAP0TxpO2zEhk5qRoyWQTUihAgtNRq7g9CNYx/kiU3w/EsHHZcN5E+n
+	 M9MQFaBz3bGlB9V2/FAPjm1ngo90sVavwGlFp7suhqHSjVd30Gk7flI3ewbcmORpE5
+	 J7UOj+1TCDUXbRSFm1MGtnG1WZrm/PBPU9CEF9l4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgHJS1R (ORCPT
+        id S1728272AbgHJS6f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 14:27:17 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:54584 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbgHJS1Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 14:27:16 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
+        Mon, 10 Aug 2020 14:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728071AbgHJS6f (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Aug 2020 14:58:35 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 4F7CB20023;
-        Mon, 10 Aug 2020 20:27:13 +0200 (CEST)
-Date:   Mon, 10 Aug 2020 20:27:12 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        Hermes Wu <Hermes.Wu@ite.com.tw>,
-        Kenneth Hung <Kenneth.Hung@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] ite-it6505 change trigger conditions
-Message-ID: <20200810182712.GA408647@ravnborg.org>
-References: <1597053278-25421-1-git-send-email-allen.chen@ite.com.tw>
- <1597053278-25421-2-git-send-email-allen.chen@ite.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597053278-25421-2-git-send-email-allen.chen@ite.com.tw>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=d2tX9T8KrmGLFF5Hj1IA:9 a=CjuIK1q_8ugA:10
+        by mail.kernel.org (Postfix) with ESMTPSA id 379432080C;
+        Mon, 10 Aug 2020 18:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597085915;
+        bh=hQXDCWWlQ1DnxMOL5VXJ+bAuZfFOfBLepB41/sfErNQ=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=GWHXBAfhN9c4Xi+C3+oD1nMDSSew8bsntbkOwjZ/+ag8zD35AOfHxPWwsXUnZThvS
+         jrvuEk6mLKnUDO9vBgApfdOFqu0wSQ1elF60FWOGMS4CTu4Wjq+WNP31wilciH/D1z
+         N/LQKrlYdnltRo/tPLdHWEfmOtASnr6iEagbFTrQ=
+Date:   Mon, 10 Aug 2020 19:58:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Clark Wang <xiaoning.wang@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-spi@vger.kernel.org
+In-Reply-To: <20200807121057.14204-1-geert+renesas@glider.be>
+References: <20200807121057.14204-1-geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: lpspi: Add missing boolean type for fsl,spi-only-use-cs1-sel
+Message-Id: <159708588098.21609.11539908447717402760.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Allen.
-
-On Mon, Aug 10, 2020 at 05:53:17PM +0800, allen wrote:
-> it6505 changes trigger conditions.
-> ---
->  Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, 7 Aug 2020 14:10:57 +0200, Geert Uytterhoeven wrote:
+> When running "make dt_binding_check" (even if restricted to an unrelated
+> binding document using DT_SCHEMA_FILES=...):
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> index 2c50016..bf0e889 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> @@ -73,7 +73,7 @@ examples:
->  
->          dp-bridge@5c {
->              compatible = "ite,it6505";
-> -            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
-> +            interrupts = <152 IRQ_TYPE_LEVEL_LOW 152 0>;
->              reg = <0x5c>;
->              pinctrl-names = "default";
->              pinctrl-0 = <&it6505_pins>;
-I fail to see the need for this. The example shall describe the binding
-and is not necessarily a correct description of the HW.
-People should look in the dts file for the HW descriptions, not the
-binding examples. So I have dropped this patch.
+>     Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml: ignoring, error in schema: properties: fsl,spi-only-use-cs1-sel
+>     warning: no schema found in file: Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
+> 
+> Fix this by adding a proper type definition for the vendor-specific
+> fsl,spi-only-use-cs1-sel property.
 
-	Sam
+Applied to
 
-> -- 
-> 1.9.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[1/1] dt-bindings: lpspi: Add missing boolean type for fsl,spi-only-use-cs1-sel
+      commit: 0454357faaf8eea07af4f01a9e7afde175377b41
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
