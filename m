@@ -2,133 +2,193 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C65C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE97C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E604920782
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35AA2073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:32:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="RskBIHUq"
+	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="MWIH91Xe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgHJHbt (ORCPT
+        id S1726654AbgHJHcx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgHJHbt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 03:31:49 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDBA0C061756;
-        Mon, 10 Aug 2020 00:31:48 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EDE7F22ED5;
-        Mon, 10 Aug 2020 09:31:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1597044704;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5klQWMMHU8Ee9M3fQmjdVoNMXn8r8NKjAB/+jN2Z22o=;
-        b=RskBIHUqm9dJEuq24ixJy/wnCPI1k+LlLwGD3YDaMNrIxpT7alp+IYBbidU9g/DDYL17L4
-        +i3UjQC+yZJzfyR+7fP0K9WgOcXXb0uA7lTIZWVLIgGcL8iORxooes7NnEN1Xjqmv1M1tg
-        UbCyOZUMcttJxhVpPMjuSDQ4j3mrgTQ=
+        Mon, 10 Aug 2020 03:32:53 -0400
+Received: from mail-eopbgr40127.outbound.protection.outlook.com ([40.107.4.127]:25251
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726569AbgHJHcv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Aug 2020 03:32:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kqAY2JlfC5JMQiXQy72prOfoc7OWoJBLeZsiPUXW7DLTmqd5M5+98bFpVtANC5450BKw6UxQcSqSsMaCt177xv8hZRzRjlgOdRAl1J4IShodub9XMdrvIMom7KZdQTDVy0uldM3OvA/rbUVVQojMqbmYeRW93QPHApPMtF3ZIqf192Pxn8E8Gc0cD1sR6wkJDMYgVbb49VNzDKQ1GsvhzR4Fx56R3HuLrK7TuDZff23R5gBFkoFUz145oS1rMmodHv09b0ws/umJjvU7UzS1ZREy3UjZVRkdYEu9ubhYt1X2WY77RQz4wt98S9UYkNruBFTesGkhci/mSHZEF7ZR4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
+ b=CtynKHPbyYjsGhPrZALL8UX24MHRvDJXb4dwPefbstAGiLnEiX4SI8ULnwHFfeQ0GGKtwWX3+TwZRtmVaXuYwneRAvVB5Kw8U7F2jDXrEv3FcKT7es2Ee9MgNiCdVkC+8YxruuTEV6NYaG7ea1vRg2Kpr7PPHF3wqCeBfEFKhCt7Owp+HEpJBeLyxCPgJ4tNGKfANQ8FWjC9rv3xu4Z82ofr/8iU6qllN4qbUuzJFgSzhghag1XsrIGq5gIL/zPm6cWuXuyi4uEqjQeE7sjnqin9Q38Sibhf8rQW5i7LiSRlJ8mD4PAhCMz3AFRMKz/zYULONUQAIy3epyQjuAG4AQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
+ dkim=pass header.d=kontron.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
+ s=selector2-mysnt-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tc9IW4hoT1tZkhIMEzBBVRF1zUZ/g9YJQLse3mLtcdw=;
+ b=MWIH91XeuqHc4pa2tNQAwlWxvaV6BHlLz0WmpxzWpWEUc9j0y1TD0KN0XpAC1hFA/+pKdmqSmWvuBPk269MNvGo/p25/XEG9J1zhqgnSO+uW5Q4bkYN+3+sh37iz2vXZj+p0lFIbEVHPvvPqdjgS2CBd1zZ6Sr7ZJuA4YjRd7MY=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
+Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:157::14)
+ by AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:15f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Mon, 10 Aug
+ 2020 07:32:46 +0000
+Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::51f5:dfc0:24bb:309c]) by AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::51f5:dfc0:24bb:309c%7]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
+ 07:32:46 +0000
+Subject: Re: [PATCH v11 12/12] dmaengine: imx-sdma: add uart rom script
+To:     Robin Gong <yibin.gong@nxp.com>, mark.rutland@arm.com,
+        broonie@kernel.org, robh+dt@kernel.org, catalin.marinas@arm.com,
+        vkoul@kernel.org, will.deacon@arm.com, shawnguo@kernel.org,
+        festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
+References: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
+ <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
+From:   Frieder Schrempf <frieder.schrempf@kontron.de>
+Message-ID: <89946dc6-6c0f-b3d5-9c9a-517f1ed7b5e1@kontron.de>
+Date:   Mon, 10 Aug 2020 09:32:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR02CA0107.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::48) To AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:157::14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 10 Aug 2020 09:31:38 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 06/13] pwm: add support for sl28cpld PWM controller
-In-Reply-To: <20200810071328.GB4411@dell>
-References: <20200803093559.12289-1-michael@walle.cc>
- <20200803093559.12289-7-michael@walle.cc>
- <20200806084000.k3aj5nmqdodmb35v@pengutronix.de>
- <e288ca6cfee819223395712e04159dd9@walle.cc> <20200810071328.GB4411@dell>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <2ca0a3a3f03a1f5b9b2777738824123b@walle.cc>
-X-Sender: michael@walle.cc
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.99.60] (80.147.118.32) by AM0PR02CA0107.eurprd02.prod.outlook.com (2603:10a6:208:154::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20 via Frontend Transport; Mon, 10 Aug 2020 07:32:45 +0000
+X-Originating-IP: [80.147.118.32]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f572f286-5146-40aa-ac3d-08d83cff938a
+X-MS-TrafficTypeDiagnostic: AM0PR10MB3617:
+X-Microsoft-Antispam-PRVS: <AM0PR10MB36173BDE7887CDE9797D8B92E9440@AM0PR10MB3617.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wEAWs8wDhczFWLmu7VdEtJ/7MA+VhMJ9oFWoyN9A2yxZr2lt4BGaRe6Bn6PFCLrgNtizyiKVweulvbynMH0/7iHrnPEa3C/YqWwEXdthErSwF41Xqd7zu8nnWfRNSGbj2Ers5GGtt7yRHnJqomOPAPCLGZwGpfb2bPldSVgS29cZekeT3re+cdokJKLwyQWGDlhssfUSFJAioB8E0oQv9nuJkhc25z+Inw60Spfbq5LpI1ffW1ge8H8x9mQ11Ux2h7WHeSd2rKFAFpMh1H2FZxjLa4U4dj7DhzLYDdfJmo1bAwnesbbSp3viTN3D1T4XRv88dAJFK/eukTEob5qkIs45C2kfjeqBgEv0qn2YE3BMNcOXHx6U1+iMPiU6Dy2FzMMIyXspMeMM4PFxtVOAKHk8epTtvVUS0vf/54ipaAVu99QWGgMvr/LlxpB9jEBhbqY1Su161NBh+0IiZNjnYbBD2EvEhUu6Eb5L2IrVWZE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(366004)(376002)(39850400004)(36756003)(53546011)(2906002)(44832011)(8936002)(8676002)(66556008)(66476007)(45080400002)(26005)(31696002)(86362001)(16576012)(316002)(66946007)(7416002)(4326008)(186003)(16526019)(5660300002)(52116002)(31686004)(6486002)(956004)(2616005)(966005)(478600001)(83380400001)(921003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: CWnfoRRrz/r7n29kvET7xMZW6VdI50yOMevZMWDc2RDu6lZdIkWE/KMQi91rj+8KHaADqltL9phu01wFY2BxsOJaIpXXqoI2Wm3KZ9+a6K14eJz2NU+0CFJslWJ0UkEyZyUoemkosIkTzOgloiFsIXv9wWb73FyybsAfYUqdEGE3iDJyz3B2lVzY6xkr9RDza/04+PCGtcIvz9bX3J2hXNnClw156GHRMxWVh8vz53IByQWlfqZ0qGRj0NYnD0dEdJwVpo2MWtGHQ4ntYByIBVr9KkrVqiZHctoQ7pYbkrfJNXq8sJYtWb3ajIvKgq1p3R0w39BUoYMmxdVpKDlN4tt7kpCi29r6ITVrKIXRkz6LXAevRA33Q5d9uaMBEsi9bVZj/1Em0Lat1MqvGBIDKO9TP+9RtnGT+fDe3r5Aj0gP4Egadaw6cswlet7sfS7ds+YI+UQvDWhQFNzLyj68KNrbbb0zqL2gRpq5cBKT9JU4rKfwRrx/UNyVQyLEFxTeikdYLZwPRkunnEJWryGpvepK3C1bh+bkFq06VY89Uub+R1FjChDnjL6qoV2hOQv8CgSKU2T1ca0tLwy7nWUaZhCnKC8FygU/CPlN9gMpKH43DkkwWkzT5nwM8x+bexLlJyqb4J5Oy4QIkZ2TpIYffQ==
+X-OriginatorOrg: kontron.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: f572f286-5146-40aa-ac3d-08d83cff938a
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 07:32:46.5639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Kpo2hEXZdm4VIj5PxBTSRhyO+LvCXwtG6Z5l2VQFtz7UphUI++Boi8Z4GyTdTdFybELyMoKlWgJEuOx/DpOlPUrOOXiC/GpIfIyv4iYvOXg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3617
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-08-10 09:13, schrieb Lee Jones:
-> On Fri, 07 Aug 2020, Michael Walle wrote:
-> 
->> Hi Uwe, Hi Lee,
->> 
->> Am 2020-08-06 10:40, schrieb Uwe Kleine-König:
->> > On Mon, Aug 03, 2020 at 11:35:52AM +0200, Michael Walle wrote:
->> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> > > index 7dbcf6973d33..a0d50d70c3b9 100644
->> > > --- a/drivers/pwm/Kconfig
->> > > +++ b/drivers/pwm/Kconfig
->> > > @@ -428,6 +428,16 @@ config PWM_SIFIVE
->> > >  	  To compile this driver as a module, choose M here: the module
->> > >  	  will be called pwm-sifive.
->> > >
->> > > +config PWM_SL28CPLD
->> > > +	tristate "Kontron sl28cpld PWM support"
->> > > +	select MFD_SIMPLE_MFD_I2C
->> >
->> > Is it sensible to present this option to everyone? Maybe
->> >
->> > 	depends on SOME_SYMBOL_ONLY_TRUE_ON_SL28CPLD || COMPILE_TEST
->> 
->> Because there is now no real MFD driver anymore, there is also
->> no symbol for that. The closest would be ARCH_ARM64 but I don't
->> think that is a good idea.
->> 
->> Lee, what do you think about adding a symbol to the MFD, which
->> selects MFD_SIMPLE_MFD_I2C but doesn't enable any C modules?
->> 
->> I.e.
->> config MFD_SL28CPLD
->>     tristate "Kontron sl28cpld"
->>     select MFD_SIMPLE_MFD_I2C
->>     help
->>       Say yes here to add support for the Kontron sl28cpld board
->>       management controller.
->> 
->> Then all the other device driver could depend on the MFD_SL28CPLD
->> symbol.
-> 
-> You want to add a virtual symbol to prevent having to present a real
-> one?  How is that a reasonable solution?
+Hi Robin,
 
-(1) Its a symbol on which all sl28cpld will depend on. Thus they will
-     all be hidden if that is not set.
-(2) the drivers itself wouldn't need to depend on MFD_SIMPLE_MFD_I2C,
-     which is more correct, because they don't have anything to do with
-     i2c.
+On 24.07.20 20:51, Robin Gong wrote:
+> For the compatibility of NXP internal legacy kernel before 4.19 which
+> is based on uart ram script and upstreaming kernel based on uart rom
+> script, add both uart ram/rom script in latest sdma firmware. By default
+> uart rom script used.
+> Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
+> back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+> 
+> rom script:
+>          uart_2_mcu_addr
+> 	uartsh_2_mcu_addr /* through spba bus */
+> am script:
+> 	uart_2_mcu_ram_addr
+> 	uartsh_2_mcu_ram_addr /* through spba bus */
+> 
+> Please get latest sdma firmware from the below and put them into the path
+> (/lib/firmware/imx/sdma/):
+> https://eur04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ffirmware%2Flinux-firmware.git&amp;data=02%7C01%7Cfrieder.schrempf%40kontron.de%7Caa98331fadca476ca15c08d82fbdaf32%7C8c9d3c973fd941c8a2b1646f3942daf1%7C0%7C0%7C637311839017457806&amp;sdata=cbM33k4fdr0IAni1njQWgIrzxbEJ%2BQBkxN10fnagO6k%3D&amp;reserved=0
+> /tree/imx/sdma
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
 
--michael
+This patch seems to break UART DMA in case the ROM firmware is used. In 
+that case sdma->script_number is set to SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1, 
+so the ROM scripts at uart_2_mcu_addr and uartsh_2_mcu_addr will never 
+be added in sdma_add_scripts() as they are now moved beyond the V1 max 
+index.
+
+Reverting this patch fixes UART DMA with ROM firmware.
+Can you please find a way to fix this or just drop this change?
+
+Thanks,
+Frieder
+
+> ---
+>   drivers/dma/imx-sdma.c                     | 4 ++--
+>   include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
+>   2 files changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 8735606..5900e32 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -1729,8 +1729,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
+>   
+>   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+>   #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
+>   
+>   static void sdma_add_scripts(struct sdma_engine *sdma,
+>   		const struct sdma_script_start_addrs *addr)
+> diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+> index 30e676b..e12d2e8 100644
+> --- a/include/linux/platform_data/dma-imx-sdma.h
+> +++ b/include/linux/platform_data/dma-imx-sdma.h
+> @@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
+>   	s32 per_2_firi_addr;
+>   	s32 mcu_2_firi_addr;
+>   	s32 uart_2_per_addr;
+> -	s32 uart_2_mcu_addr;
+> +	s32 uart_2_mcu_ram_addr;
+>   	s32 per_2_app_addr;
+>   	s32 mcu_2_app_addr;
+>   	s32 per_2_per_addr;
+>   	s32 uartsh_2_per_addr;
+> -	s32 uartsh_2_mcu_addr;
+> +	s32 uartsh_2_mcu_ram_addr;
+>   	s32 per_2_shp_addr;
+>   	s32 mcu_2_shp_addr;
+>   	s32 ata_2_mcu_addr;
+> @@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
+>   	s32 zcanfd_2_mcu_addr;
+>   	s32 zqspi_2_mcu_addr;
+>   	s32 mcu_2_ecspi_addr;
+> +	s32 mcu_2_sai_addr;
+> +	s32 sai_2_mcu_addr;
+> +	s32 uart_2_mcu_addr;
+> +	s32 uartsh_2_mcu_addr;
+>   	/* End of v3 array */
+>   	s32 mcu_2_zqspi_addr;
+>   	/* End of v4 array */
+> 
