@@ -2,190 +2,153 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D24C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 11:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B19C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F58C20678
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 11:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQVZgih9"
+	by mail.kernel.org (Postfix) with ESMTP id 4F421206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597061644;
+	bh=IFnp5bKUa+G5klYWJa8znYTxFhwY8FgJZKRPDrSMId4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=H8YL5hyAKAN0LP93q2QromSSEk3dQDUH9sq4XmdfuY9VlQ+zVSCewzyWrcnvIBh1a
+	 HlX/K3ckpWTt4pD0kQ4l+xcNmcTXBaDQUGICWL3w5EoAhE2cOjmAq3A7NMfvT12Y4d
+	 HewFcmE7ux9XDyPa+PSNJ1jTxUsupZRsNEFy/UCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgHJLPb (ORCPT
+        id S1726536AbgHJMOD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 07:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
+        Mon, 10 Aug 2020 08:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgHJLPb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 07:15:31 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F58BC061756;
-        Mon, 10 Aug 2020 04:15:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a15so7746904wrh.10;
-        Mon, 10 Aug 2020 04:15:28 -0700 (PDT)
+        with ESMTP id S1726146AbgHJMOC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 08:14:02 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB11C061756;
+        Mon, 10 Aug 2020 05:14:00 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id k13so4571404lfo.0;
+        Mon, 10 Aug 2020 05:14:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=jM/x2ogPXMvwtQt/xozdmqVBQPu8Fwaz54JOytXUpzU=;
-        b=FQVZgih9symQj4VmUqzuy5/O3o69bDPE03jXa5anR2KLy1aYIj6gP+vioW6Qs/8jx2
-         +oPVqOSobGoHWu2uFAvqg6Ikpe/IXpNgHjT5I/kZyOl/s6i0rauCf9WM3QRuUcceqFga
-         LKKgjupgWz8hcEo0OHNMkr8piLHKjfRvOy6holSnDoRtTDos6orfmrzIGUx1yIzX4h2T
-         /fKnDwHLkhFwyskcjMZlERHguAR+TcYrigfZVmpP4K4kbtnOf5KPXUUMgh4Vb1Zsceau
-         FcNmkHZy3l6Nh39qcVjHooZkZI9AkISbzLRkeO4imbg/3Ko3ZSANAZ/Dp5zJc10ue76p
-         PQxA==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=2zpgXHsKMxHRy+CTgH2l0F8HPiOlelNzEHmaBlOocK4=;
+        b=H4EKnd2/IMOPN7QcPZaBTccnrrrH8e3ffZ0cWvlnNI+gKP6k5M2RtjcjEdBqkveAoE
+         x1iiqe+BvWXG+Sfx3Yfi6y84aj2/Q58qAGkFAldO+N/7aSFs63oQ4e6HhsNJHVOmM3x2
+         LLR1HiZlOo/6m7N/9cc0m8JfOYuEArfmM8Ic5JZ5ZYWFFvl+pgNS8feZY7B7uCvFYt2N
+         u8ZxRj1VswVraR6vmsED9V6EW2o/4pAffRTnP9yMiO4skrHgpjhnhi6P41alsesMqJl8
+         +Te1H3uwktnxWReKRjeUaEaFmVfmvdAi9q55tiKWGVqcPffB0+j0+UwT+jfgaDnVQWgP
+         XzZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=jM/x2ogPXMvwtQt/xozdmqVBQPu8Fwaz54JOytXUpzU=;
-        b=DD+6/L3WehnJgxT8hCF4ZCqt4cwFTb1Em8vN0laaeVZwEYCT7TtpLYK0G7rcFF2lHk
-         WfFMA6XBcTQyB1hj/Y/1/n9E/r0I3kaE6HBfM4UmVqcRd5S8zaLJEP9MggygTv2KMSGt
-         D1c3meJqOBY+gSIH74XyjG7SKaMOkVm/K8fxuBDH719DJRXGSpQUzpiclaVtA7oU/I6/
-         LXnd6YiRV5fWbXBIZCYovpscgog0dzDk4+XkxUbc9VgYvVzjMyzLFt/a38NE0a5otUkm
-         trkjmVSHCQG5t155Wu/mTu4ulrTRqK2dzIU48L1avzPwTtXdJnrSPXm+499uj6WFbjcU
-         EY5Q==
-X-Gm-Message-State: AOAM531pTiiOj2K97YIcCARxO9BD1Z7Gi5jEJ6uTynIX5+eIWkSPPivC
-        LDiy09zWKZxPz/0yRL2/I/475llm
-X-Google-Smtp-Source: ABdhPJwcPHCeAo0uTg5hEi7rDqLfIVZ9pqeTFyQLI1zqaFaT/2ollaueAscNjF2L8b2q2fbgrUdzLg==
-X-Received: by 2002:a5d:6381:: with SMTP id p1mr23595566wru.112.1597058126918;
-        Mon, 10 Aug 2020 04:15:26 -0700 (PDT)
-Received: from AnsuelXPS (host-79-13-255-165.retail.telecomitalia.it. [79.13.255.165])
-        by smtp.gmail.com with ESMTPSA id b203sm21323133wmc.22.2020.08.10.04.15.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Aug 2020 04:15:26 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Sudeep Holla'" <sudeep.holla@arm.com>
-Cc:     "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Rob Herring'" <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200807234914.7341-1-ansuelsmth@gmail.com> <20200807234914.7341-3-ansuelsmth@gmail.com> <20200810080146.GA31434@bogus>
-In-Reply-To: <20200810080146.GA31434@bogus>
-Subject: R: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU Cache scaling
-Date:   Mon, 10 Aug 2020 13:15:24 +0200
-Message-ID: <061301d66f07$8beae690$a3c0b3b0$@gmail.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=2zpgXHsKMxHRy+CTgH2l0F8HPiOlelNzEHmaBlOocK4=;
+        b=JgDBI3qJrp/DPpYGxnjJbRbXNKFKzch6nbWJpZYys/UI58lLAGfa997RWkHRfLiRVv
+         dMep78LxjilzSz6dV1E1xAn5fIFzqhZIjwsFwBCMWztJh8YRqPLkG7/3eenj8hKw+2q9
+         TlPQzAPmHhaXrqP4V7rbPwGr3h+fkp3+ws4pOXUBgEpUkMZIMvJwHgRS4I6nM6slrzWZ
+         gTnpFleO691EgFIaCuZculPoPy5GIDo4tYgaxQ0qzV4m91fT7TB2zCn67iqy8/Hog32c
+         g2QzK6l7gBVPskhmI6Nql001z3I/9z05pVuB75ZoAuNLU6SOsJ2SgljPuqadW+pNieJk
+         s2NA==
+X-Gm-Message-State: AOAM530wxsFoUim8eqZzIgNszKLGImUy1c2WPrngn8PNEE0OlRXib68I
+        zWxNhhP338CuEL5ti1wsB9c=
+X-Google-Smtp-Source: ABdhPJxIaVuL8YZg7Ejoa7FxGJp7/UUKqnY1VC6gXHFiza3h/gnhOJscPbwlFx9mDc1J7KJMkckN4g==
+X-Received: by 2002:a19:8644:: with SMTP id i65mr384598lfd.20.1597061638305;
+        Mon, 10 Aug 2020 05:13:58 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id a1sm10592918lfb.10.2020.08.10.05.13.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Aug 2020 05:13:57 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>, bjorn.andersson@linaro.org,
+        kishon@ti.com, vkoul@kernel.org, agross@kernel.org,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: Re: [PATCH 3/3] usb: dwc3: dwc3-qcom: Find USB connector and register role switch
+In-Reply-To: <20200731045712.28495-4-wcheng@codeaurora.org>
+References: <20200731045712.28495-1-wcheng@codeaurora.org> <20200731045712.28495-4-wcheng@codeaurora.org>
+Date:   Mon, 10 Aug 2020 15:13:52 +0300
+Message-ID: <87ft8upukf.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQJQ3CWQUPMUi8qrdt9OPWHZDAmorwGMMbnpAk5rSZOoHXwVIA==
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-> -----Messaggio originale-----
-> Da: Sudeep Holla <sudeep.holla@arm.com>
-> Inviato: luned=EC 10 agosto 2020 10:02
-> A: Ansuel Smith <ansuelsmth@gmail.com>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>; Rafael J. Wysocki
-> <rjw@rjwysocki.net>; Rob Herring <robh+dt@kernel.org>; linux-
-> pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Oggetto: Re: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait =
-CPU
-> Cache scaling
->=20
-> On Sat, Aug 08, 2020 at 01:49:12AM +0200, Ansuel Smith wrote:
-> > Document dedicated Krait CPU Cache Scaling driver.
-> >
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  .../bindings/cpufreq/krait-cache-scale.yaml   | 92
-> +++++++++++++++++++
-> >  1 file changed, 92 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-
-> cache-scale.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cache-
-> scale.yaml b/Documentation/devicetree/bindings/cpufreq/krait-cache-
-> scale.yaml
-> > new file mode 100644
-> > index 000000000000..f10b1f386a99
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-
-> scale.yaml
-> > @@ -0,0 +1,92 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Krait Cpu Cache Frequency Scaling dedicated driver
-> > +
-> > +maintainers:
-> > +  - Ansuel Smith <ansuelsmth@gmail.com>
-> > +
-> > +description: |
-> > +  This Scale the Krait CPU Cache Frequency and optionally voltage
-> > +  when the Cpu Frequency is changed (using the cpufreq notifier).
-> > +
-> > +  Cache is scaled with the max frequency across all core and the =
-cache
-> > +  frequency will scale based on the configured threshold in the =
-dts.
-> > +
-> > +  The cache is hardcoded to 3 frequency bin, idle, nominal and =
-high.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: qcom,krait-cache
-> > +
->=20
-> How does this fit in the standard cache hierarchy nodes ? Extend the
-> example to cover that.
->=20
+Hi,
 
-I think i didn't understand this question. You mean that I should put
-in the example how the standard l2 cache nodes are defined?
+Wesley Cheng <wcheng@codeaurora.org> writes:
+> @@ -190,6 +195,73 @@ static int dwc3_qcom_register_extcon(struct dwc3_qco=
+m *qcom)
+>  	return 0;
+>  }
+>=20=20
+> +static int dwc3_qcom_usb_role_switch_set(struct usb_role_switch *sw,
+> +					 enum usb_role role)
+> +{
+> +	struct dwc3_qcom *qcom =3D usb_role_switch_get_drvdata(sw);
+> +	struct fwnode_handle *child;
+> +	bool enable =3D false;
+> +
+> +	if (!qcom->dwc3_drd_sw) {
+> +		child =3D device_get_next_child_node(qcom->dev, NULL);
+> +		if (child) {
+> +			qcom->dwc3_drd_sw =3D usb_role_switch_find_by_fwnode(child);
+> +			fwnode_handle_put(child);
+> +			if (IS_ERR(qcom->dwc3_drd_sw)) {
+> +				qcom->dwc3_drd_sw =3D NULL;
+> +				return 0;
+> +			}
+> +		}
+> +	}
+> +
+> +	usb_role_switch_set_role(qcom->dwc3_drd_sw, role);
 
-> > +  clocks:
-> > +    description: Phandle to the L2 CPU clock
-> > +
-> > +  clock-names:
-> > +    const: "l2"
-> > +
-> > +  voltage-tolerance:
-> > +    description: Same voltage tollerance of the Krait CPU
-> > +
-> > +  l2-rates:
-> > +    description: |
-> > +      Frequency the L2 cache will be scaled at.
-> > +      Value is in Hz.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    items:
-> > +      - description: idle
-> > +      - description: nominal
-> > +      - description: high
-> > +
->=20
-> Why can't you re-use the standard OPP v2 bindings ?
->=20
+why is this done at the glue layer instead of core.c?
 
-Isn't overkill to use the OPP v2 bindings to represent the the microvolt
-related
-to the le freq? Is the OPP v1 sufficient? Also I can't find a way to =
-reflect
-this specific
-case where the l2 rates are changed based on the cpu freq value? Any =
-idea
-about that?
+> +	if (role =3D=3D USB_ROLE_DEVICE)
+> +		enable =3D true;
+> +	else
+> +		enable =3D false;
+> +
+> +	qcom->mode =3D (role =3D=3D USB_ROLE_HOST) ? USB_DR_MODE_HOST :
+> +					       USB_DR_MODE_PERIPHERAL;
+> +	dwc3_qcom_vbus_overrride_enable(qcom, enable);
 
-> --
-> Regards,
-> Sudeep
+could you add a patch fixing this typo?
 
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8xOgAACgkQzL64meEa
+mQZ8Zw//eFsuJ6NPTaokHR1rlrCmk0sslHZNSmcQ+J0h1dnmc+FW8zVN2fueQMEt
+OvRZKCsoo069xcAKRcD15GIphiAjqcX7NsqVCHnvASV3ts7Lk8/OLe2HydDAwuS9
+vavlIfjGUBofKSFS24p6nGva5lH+QcDbSaQEX2AMRP8O4rrIMNjkwB4luCiSUDMn
+py0FVm7eSuSDbuB0oZftw385e4BrS6pXdX8HYP1EBHbcYT5H6Z0WO9lflb5PgkM8
+uA+pc9UM7kbJrbd++J+siVJ6kYI8Nd9OZDQZjc/5+EqIsQsK384ewpigxs9dXwbB
+Mzu1izAeahlLdYXBbhRGCDL5xtfGMbmZ6D/8op9EEJDCZ4aOmSm5LmJCtax+rrsF
+6J7bjat+viFQT1n04gyZCpiEQrV1T+TWhuxRVOpwRxx9aN1pygJ7w4o9ieAiBZnA
+ubSjkygnQLcMUh24iNTWSg10CI8g35T9E0hatDWOnTJon1gTRC0ScPif7WpC3MPh
+rabVNAFq+suuDVcHGxNBbMO8OGOrTLgWeUtf92bAtaaD/e2ZAM8/GNtKR/Ru3E5g
+naw4rb4PsfCANjf9j7eEqsKJZmzBpGgLzjc16hAiZSbmZveoF9gDI8B/1F9sqilS
+tLulenKhCkwsmyjB+AJgMi2R5bebRSukHlcHkiM8X3Mkdc0uuWc=
+=Do2q
+-----END PGP SIGNATURE-----
+--=-=-=--
