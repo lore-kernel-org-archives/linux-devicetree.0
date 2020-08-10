@@ -2,145 +2,239 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF9AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977BAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 304512070B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC5D206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:51:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fh8Py677"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHJMtx (ORCPT
+        id S1726769AbgHJMvL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:49:53 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:8911 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgHJMtx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 08:49:53 -0400
-Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 10 Aug 2020 05:49:52 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 10 Aug 2020 05:49:49 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 10 Aug 2020 18:19:21 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 8338048E5; Mon, 10 Aug 2020 18:19:20 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org,
-        swboyd@chromium.org, abhinavk@codeaurora.org,
-        ddavenport@chromium.org
-Subject: [v3] drm/msm/dpu: Fix reservation failures in modeset
-Date:   Mon, 10 Aug 2020 18:19:18 +0530
-Message-Id: <1597063758-26238-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 10 Aug 2020 08:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgHJMvK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 08:51:10 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B0BC061756;
+        Mon, 10 Aug 2020 05:51:09 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id cq28so6100315edb.10;
+        Mon, 10 Aug 2020 05:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=LrkS8bPL538kQ7bNdv7BnP1bghXsTc7kkI6BCl+cUtw=;
+        b=fh8Py677GNM8lDBajIebrsFFBOPP0YQsZp8PIrAMxtughKQDkP7nqfmiWPRrciKKjj
+         Zw0Wwxbc1kMlEOmHfKrTriCAqj2+gST55rnJq97sopjtJXilWd5KCggoSmJPmY6m8biB
+         91x/FWL6PCL6J1Wpjs6ZRc3f7EpToVGNa2vIOVKYh1+hlAKBBqVOjmyPYDDXi+THH9O+
+         bT8iX9M1U97ny0ZEyfqVhm9xeBht1AvbI2NhKS17O951Qjz+/58EJyv1QOt67AG8TMzQ
+         4z4FMz6DJ4AyNjkJkQ/RqQiq4rdGeT5pcEZrPhIueojHwZWViAdcB+rIOFqQQbO5414Z
+         SQqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=LrkS8bPL538kQ7bNdv7BnP1bghXsTc7kkI6BCl+cUtw=;
+        b=PcUTfioTxondRprjERHjDVWfKBwj4lPH0GooPNQ0nEmSM8vEV6wL/wzVP4o88Uk2IQ
+         ZLjFf0NvC+UvzPql9wI9xHzca+1nsq5P9pYa94X0D/fDs8t/syjlqgCIXyXSAF5cW95X
+         o/P+FC8gsjBspkxx8W2lCklhBimTj7aPoSZ0oXNd8GYPSbTnQDRfK+Pu8bRW4JLzTpIL
+         Pe0pJrYTOPTDD2LxaHAQ9abAYVXLxEviUh6QAFUfN4idRZgosfLihXUp+LooFD+vWQIA
+         wi2eoV5Kig7r9PXQkvv+tkzp4iT+TQiWkmU8gBlRL7iZ8xDaC7Xr8QObulC8OgzpZ5wi
+         PFIg==
+X-Gm-Message-State: AOAM532SKbPIsTXSmadhT8k6Wz+3sGoXIp5VWRhr/OpHJdEq9trs3TUj
+        nPpQ7W/OeaI5CUo93X7UPJgndjOi
+X-Google-Smtp-Source: ABdhPJw4m6xe0M6IfgxazF7sadfNQMuScg+4nFYyInLy7KM2wlF1Pfm6VXShZ+RDUoJZg/woWz3BDA==
+X-Received: by 2002:a50:ee0a:: with SMTP id g10mr19981370eds.289.1597063867494;
+        Mon, 10 Aug 2020 05:51:07 -0700 (PDT)
+Received: from AnsuelXPS (host-79-13-255-165.retail.telecomitalia.it. [79.13.255.165])
+        by smtp.gmail.com with ESMTPSA id gl20sm13283010ejb.86.2020.08.10.05.51.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Aug 2020 05:51:06 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Sudeep Holla'" <sudeep.holla@arm.com>
+Cc:     "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Rob Herring'" <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200807234914.7341-1-ansuelsmth@gmail.com> <20200807234914.7341-3-ansuelsmth@gmail.com> <20200810080146.GA31434@bogus> <061301d66f07$8beae690$a3c0b3b0$@gmail.com> <20200810124509.GC31434@bogus>
+In-Reply-To: <20200810124509.GC31434@bogus>
+Subject: R: R: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU Cache scaling
+Date:   Mon, 10 Aug 2020 14:51:02 +0200
+Message-ID: <000101d66f14$e9bc2920$bd347b60$@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJQ3CWQUPMUi8qrdt9OPWHZDAmorwGMMbnpAk5rSZMCKND62AGS0mSDp/++qdA=
+Content-Language: it
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In TEST_ONLY commit, rm global_state will duplicate the
-object and request for new reservations, once they pass
-then the new state will be swapped with the old and will
-be available for the Atomic Commit.
 
-This patch fixes some of missing links in the resource
-reservation sequence mentioned above.
 
-1) Creation of duplicate state in test_only commit (Rob)
-2) Allocate and release the resources on every modeset.
-3) Avoid allocation only when active is false.
+> -----Messaggio originale-----
+> Da: Sudeep Holla <sudeep.holla@arm.com>
+> Inviato: luned=EC 10 agosto 2020 14:45
+> A: ansuelsmth@gmail.com
+> Cc: 'Viresh Kumar' <viresh.kumar@linaro.org>; 'Rafael J. Wysocki'
+> <rjw@rjwysocki.net>; 'Rob Herring' <robh+dt@kernel.org>; linux-
+> pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Oggetto: Re: R: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document =
+Krait
+> CPU Cache scaling
+>=20
+> On Mon, Aug 10, 2020 at 01:15:24PM +0200, ansuelsmth@gmail.com
+> wrote:
+> >
+> >
+> > > -----Messaggio originale-----
+> > > Da: Sudeep Holla <sudeep.holla@arm.com>
+> > > Inviato: luned=EC 10 agosto 2020 10:02
+> > > A: Ansuel Smith <ansuelsmth@gmail.com>
+> > > Cc: Viresh Kumar <viresh.kumar@linaro.org>; Rafael J. Wysocki
+> > > <rjw@rjwysocki.net>; Rob Herring <robh+dt@kernel.org>; linux-
+> > > pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org
+> > > Oggetto: Re: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document =
+Krait
+> CPU
+> > > Cache scaling
+> > >
+> > > On Sat, Aug 08, 2020 at 01:49:12AM +0200, Ansuel Smith wrote:
+> > > > Document dedicated Krait CPU Cache Scaling driver.
+> > > >
+> > > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > > ---
+> > > >  .../bindings/cpufreq/krait-cache-scale.yaml   | 92
+> > > +++++++++++++++++++
+> > > >  1 file changed, 92 insertions(+)
+> > > >  create mode 100644
+> Documentation/devicetree/bindings/cpufreq/krait-
+> > > cache-scale.yaml
+> > > >
+> > > > diff --git =
+a/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > > scale.yaml =
+b/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > > scale.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..f10b1f386a99
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > > scale.yaml
+> > > > @@ -0,0 +1,92 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: =
+http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Krait Cpu Cache Frequency Scaling dedicated driver
+> > > > +
+> > > > +maintainers:
+> > > > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > > > +
+> > > > +description: |
+> > > > +  This Scale the Krait CPU Cache Frequency and optionally =
+voltage
+> > > > +  when the Cpu Frequency is changed (using the cpufreq =
+notifier).
+> > > > +
+> > > > +  Cache is scaled with the max frequency across all core and =
+the
+cache
+> > > > +  frequency will scale based on the configured threshold in the
+dts.
+> > > > +
+> > > > +  The cache is hardcoded to 3 frequency bin, idle, nominal and
+high.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: qcom,krait-cache
+> > > > +
+> > >
+> > > How does this fit in the standard cache hierarchy nodes ? Extend =
+the
+> > > example to cover that.
+> > >
+> >
+> > I think i didn't understand this question. You mean that I should =
+put
+> > in the example how the standard l2 cache nodes are defined?
+> >
+>=20
+> I was referring to something like below which I found now in
+> arch/arm/boot/dts/qcom-msm8974.dtsi:
+> 	L2: l2-cache {
+> 		compatible =3D "cache";
+> 		cache-level =3D <2>;
+> 		qcom,saw =3D <&saw_l2>;
+> 	};
+>=20
+> > > > +  clocks:
+> > > > +    description: Phandle to the L2 CPU clock
+> > > > +
+> > > > +  clock-names:
+> > > > +    const: "l2"
+> > > > +
+> > > > +  voltage-tolerance:
+> > > > +    description: Same voltage tollerance of the Krait CPU
+> > > > +
+> > > > +  l2-rates:
+> > > > +    description: |
+> > > > +      Frequency the L2 cache will be scaled at.
+> > > > +      Value is in Hz.
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > > +    items:
+> > > > +      - description: idle
+> > > > +      - description: nominal
+> > > > +      - description: high
+> > > > +
+> > >
+> > > Why can't you re-use the standard OPP v2 bindings ?
+> > >
+> >
+> > Isn't overkill to use the OPP v2 bindings to represent the the =
+microvolt
+> > related to the le freq? Is the OPP v1 sufficient?
+>=20
+> Should be fine if it is allowed. v2 came out in the flow of my thought
+> and was not intentional.
+>=20
+> > Also I can't find a way to reflect this specific case where the l2 =
+rates
+> > are changed based on the cpu freq value? Any idea about that?
+> >
+>=20
+> OK, I am always opposed to giving such independent controls in the =
+kernel
+> as one can play around say max cpu freq and lowest cache or vice-versa
+> and create instabilities. IMO this should be completely hidden from =
+OS.
+> But I know these are old platforms, so I will shut my mouth ;)
+>=20
 
-In a modeset operation, swap state happens well before
-disable. Hence clearing reservations in disable will
-cause failures in modeset enable.
+If we really want to deny this practice, I can add a check in the probe
+function to fail if the l2 freq threshold is less than the cpu freq.=20
 
-Allow reservations to be cleared/allocated before swap,
-such that only newly committed resources are pushed to HW.
-
-Changes in v1:
- - Move the rm release to atomic_check.
- - Ensure resource allocation and free happens when active
-   is not changed i.e only when mode is changed.(Rob)
-
-Changes in v2:
- - Handle dpu_kms_get_global_state API failure as it may
-   return EDEADLK (swboyd).
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 63976dc..39e0b32 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -582,7 +582,10 @@ static int dpu_encoder_virt_atomic_check(
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	mode = &crtc_state->mode;
- 	adj_mode = &crtc_state->adjusted_mode;
--	global_state = dpu_kms_get_existing_global_state(dpu_kms);
-+	global_state = dpu_kms_get_global_state(crtc_state->state);
-+	if (IS_ERR(global_state))
-+		return PTR_ERR(global_state);
-+
- 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
- 
- 	/*
-@@ -617,12 +620,15 @@ static int dpu_encoder_virt_atomic_check(
- 	/* Reserve dynamic resources now. */
- 	if (!ret) {
- 		/*
--		 * Avoid reserving resources when mode set is pending. Topology
--		 * info may not be available to complete reservation.
-+		 * Release and Allocate resources on every modeset
-+		 * Dont allocate when active is false.
- 		 */
- 		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
--			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
--					drm_enc, crtc_state, topology);
-+			dpu_rm_release(global_state, drm_enc);
-+
-+			if (!crtc_state->active_changed || crtc_state->active)
-+				ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
-+						drm_enc, crtc_state, topology);
- 		}
- 	}
- 
-@@ -1171,7 +1177,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	struct dpu_encoder_virt *dpu_enc = NULL;
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
--	struct dpu_global_state *global_state;
- 	int i = 0;
- 
- 	if (!drm_enc) {
-@@ -1190,7 +1195,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 
- 	priv = drm_enc->dev->dev_private;
- 	dpu_kms = to_dpu_kms(priv->kms);
--	global_state = dpu_kms_get_existing_global_state(dpu_kms);
- 
- 	trace_dpu_enc_disable(DRMID(drm_enc));
- 
-@@ -1220,8 +1224,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 
- 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
- 
--	dpu_rm_release(global_state, drm_enc);
--
- 	mutex_unlock(&dpu_enc->enc_lock);
- }
- 
--- 
-1.9.1
+> --
+> Regards,
+> Sudeep
 
