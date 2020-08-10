@@ -2,86 +2,120 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4D4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 10:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0652FC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 10:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C07F420729
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 10:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94DE206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 10:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHJKNy (ORCPT
+        id S1726310AbgHJK3Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 06:13:54 -0400
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:38405 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgHJKNx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 06:13:53 -0400
-IronPort-SDR: KhJ1Mduwj6S13dySc2r90OYQqLBK8mBy+O+908azohce8a03aDIuWIwVBxHZ6NYIygICJVBuMp
- 0paVvEIFmcPw==
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 10 Aug 2020 18:13:53 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
-        by mse.ite.com.tw with ESMTP id 07AADnKu029681;
-        Mon, 10 Aug 2020 18:13:49 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 10 Aug 2020 18:13:49 +0800
-From:   allen <allen.chen@ite.com.tw>
-CC:     Allen Chen <allen.chen@ite.com.tw>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        Hermes Wu <Hermes.Wu@ite.com.tw>,
-        Kenneth Hung <Kenneth.Hung@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 1/2] ite-it6505 change trigger conditions
-Date:   Mon, 10 Aug 2020 18:11:15 +0800
-Message-ID: <1597054312-25538-2-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1597054312-25538-1-git-send-email-allen.chen@ite.com.tw>
-References: <1597054312-25538-1-git-send-email-allen.chen@ite.com.tw>
+        Mon, 10 Aug 2020 06:29:24 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35508 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgHJK3W (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 06:29:22 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 93so6883412otx.2;
+        Mon, 10 Aug 2020 03:29:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Go317pGo6+E74z4fYb+Icks9NWzJHn8WmbX/udh4wXw=;
+        b=ulkvPKVUcNvoxLX278BlbPYK0Ym+KUX0S0PxgBP2tdDQgL5RcHFxAcmeGGPCGrb9/t
+         NYQqR5aDVky7agx/CMzxKFyJj7rEsaad3fHYtbX30SVbgfjKOm6SphjtbWRG+tKnR4e9
+         fWzSNUnpFkYjJJ8/ouOt06nTUKNzIvmY2WNZz06qqlgd9BeyGbFDq/Ln4qVXIOIAiqfb
+         2JyPfGENJHNxBw0WUBC4F24UPUOSwkoxwY42ZjsGVAjJ1e+KxEJZViEH6ouQRrVP6/xV
+         lAJze02KP7PYly/0FBtQQXfUXfhjSoNibP9UsPjUXeKZUHtqnamZydBwkgMnL/SS120j
+         RVEw==
+X-Gm-Message-State: AOAM532pXMoj8FVPFXaBc6gtYkjvYh1NLaxNwqK2LWpr7YjJGQKxQoq5
+        y0W7rViwmL42t39XuSQzTkL4zyh9f61A13iz3EU=
+X-Google-Smtp-Source: ABdhPJzpOW36/c8DwbhaGYb1uYsh2blnD0gOlHMHWEA9HBLomN2/1TYMyLhrGR3babIZrsC/Suo0JpZr7dg5cUiaF0I=
+X-Received: by 2002:a9d:1b62:: with SMTP id l89mr178716otl.145.1597055361766;
+ Mon, 10 Aug 2020 03:29:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.70.14]
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP: 9BB551AEEA2F831AB4F685F6465B568ADED0B3146C8B08C174BAB4C65DBB5F6A2000:8
-X-MAIL: mse.ite.com.tw 07AADnKu029681
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200810092208.27320-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200810092208.27320-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200810092208.27320-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 10 Aug 2020 12:29:10 +0200
+Message-ID: <CAMuHMdUiRHEYnL-7mbYKVDESBcDbEeCzNYGeamEAie+bYh_Fug@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add VSP instances
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-it6505 changes trigger conditions.
----
- Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Prabhakar,
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-index 2c50016..bf0e889 100644
---- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-@@ -73,7 +73,7 @@ examples:
- 
-         dp-bridge@5c {
-             compatible = "ite,it6505";
--            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
-+            interrupts = <152 IRQ_TYPE_LEVEL_LOW 152 0>;
-             reg = <0x5c>;
-             pinctrl-names = "default";
-             pinctrl-0 = <&it6505_pins>;
+On Mon, Aug 10, 2020 at 11:22 AM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> The RZ/G2H (R8A774E1) has 6 VSP instances.
+>
+> Based on the work done for r8a7795 SoC.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> @@ -2374,6 +2374,72 @@
+>                         status = "disabled";
+>                 };
+>
+> +               vspbc: vsp@fe920000 {
+> +                       compatible = "renesas,vsp2";
+> +                       reg = <0 0xfe920000 0 0x8000>;
+> +                       interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&cpg CPG_MOD 624>;
+> +                       power-domains = <&sysc R8A774E1_PD_A3VP>;
+> +                       resets = <&cpg 624>;
+> +
+> +                       renesas,fcp = <&fcpvb1>;
+> +               };
+> +
+> +               vspbd: vsp@fe960000 {
+> +                       compatible = "renesas,vsp2";
+> +                       reg = <0 0xfe960000 0 0x8000>;
+> +                       interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&cpg CPG_MOD 626>;
+> +                       power-domains = <&sysc R8A774E1_PD_A3VP>;
+> +                       resets = <&cpg 626>;
+> +
+> +                       renesas,fcp = <&fcpvb1>;
+
+According to "FCPVB0 (for VSPBD): H' FE96_F000", this should be
+
+    renesas,fcp = <&fcpvb0>;
+
+? If you agree, I can fix that while applying.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-1.9.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
