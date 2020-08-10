@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AB8C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D00C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 19:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A026122CAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 19:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763CD2080C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 19:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597087219;
-	bh=ZYzY6ErG/NfSQMyGO+ymxwRPG0Hb5eEKj9Iv+PmCo5M=;
+	s=default; t=1597087324;
+	bh=pAS/hYblmsO3E35MNJN90DL9EWQ7bUZaa5L6YODH46Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nfP8R13Zo4l1CNaD5qXPVtbnZniyEz1iawwCPQTop9WrZbB7uMwWbQ6yhd9ejsMiX
-	 3AEidvy3kQDxj1jXgOSeekmGkkXjqzN21ZxR8/xONCrOW1EU6dRPKwspcdezi4I/iC
-	 /LVdB6pV03h8Lcre8AVP7rpb9vflN8Iuir/lXI0E=
+	b=mVOcqVTnEmtQQixTXmZOvGYFoQJptZDqtcUXM3VWdbyTqospOILXlLdy0LB2BieUO
+	 7xgJA52XSFCVFLWTXiunCzCrT3UHc8i/wRxUFoVGkZv+pCMmFSDWFChfyb5T1JEMTl
+	 bYVrKcA4tKzzIRBG1E9LOEgrdInA8r8TLPelPwfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbgHJTN4 (ORCPT
+        id S1729053AbgHJTV7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 15:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45518 "EHLO mail.kernel.org"
+        Mon, 10 Aug 2020 15:21:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbgHJTN4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 15:13:56 -0400
+        id S1729723AbgHJTNR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Aug 2020 15:13:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FC122B49;
-        Mon, 10 Aug 2020 19:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DFEE22BEB;
+        Mon, 10 Aug 2020 19:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597086835;
-        bh=ZYzY6ErG/NfSQMyGO+ymxwRPG0Hb5eEKj9Iv+PmCo5M=;
+        s=default; t=1597086796;
+        bh=pAS/hYblmsO3E35MNJN90DL9EWQ7bUZaa5L6YODH46Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7atsh4PWRP3j5M0E2fDvXXRP5x8IIfi6Z861pAoxDqOySxEPqKVIillUdwyCJ6Yv
-         mcJpz8zcwqGP6ST4p+iJbjVRp2stDexQNNl+4BFBTjgaMmsZKVQNRIaTdl4U7k54UF
-         TePh2q44ZO87MXX4lybeEODKPK0yXFqeTLpPA6+0=
+        b=eCk1t4A8kYsui06XRV9bG9yx4K5oWO0TvSlsl5I4Rh06LK8Pjt//dgmEjQCGIay18
+         9sYMmuvFP7LYSFILXpL0LXYtrKZsCjUUtVLJJzpLJcCtBCeW17njl3whndL+rNfYAY
+         kfWuFr/5joD0eROdohu/4teRZHj4x40/QQ6WJXzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/22] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
-Date:   Mon, 10 Aug 2020 15:13:29 -0400
-Message-Id: <20200810191345.3795166-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 11/31] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
+Date:   Mon, 10 Aug 2020 15:12:39 -0400
+Message-Id: <20200810191259.3794858-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200810191345.3795166-1-sashal@kernel.org>
-References: <20200810191345.3795166-1-sashal@kernel.org>
+In-Reply-To: <20200810191259.3794858-1-sashal@kernel.org>
+References: <20200810191259.3794858-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -87,10 +87,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index e9f87cb61ade7..8587912e1eb00 100644
+index c98bcbc8dfba3..53848e0e5e0c6 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
 +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -210,6 +210,17 @@ adv7533: adv7533@39 {
+@@ -530,6 +530,17 @@ adv7533: adv7533@39 {
  		status = "ok";
  		compatible = "adi,adv7533";
  		reg = <0x39>;
@@ -109,10 +109,10 @@ index e9f87cb61ade7..8587912e1eb00 100644
  };
  
 diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 6887cc1a743d4..f78e6468b02fc 100644
+index e80a792827edb..60568392d21eb 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -513,7 +513,7 @@ adv7533: adv7533@39 {
+@@ -515,7 +515,7 @@ adv7533: adv7533@39 {
  		reg = <0x39>;
  		interrupt-parent = <&gpio1>;
  		interrupts = <1 2>;
