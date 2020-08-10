@@ -3,176 +3,167 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4492CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F96C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8A3207BB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674EE206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 12:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgHJMej (ORCPT
+        id S1726609AbgHJMpO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 08:34:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgHJMej (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 08:34:39 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17582C061756;
-        Mon, 10 Aug 2020 05:34:39 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id A3DE7293654
-Subject: Re: [PATCH 2/3] ARM: l2c: update prefetch bits in L2X0_AUX_CTRL using
- DT value
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
- <79a628daef56c2d542e379f550de21da4fe3c901.1596028601.git.guillaume.tucker@collabora.com>
- <20200729141801.GB1551@shell.armlinux.org.uk>
- <a85d7b4e-abfd-268a-01a5-f78068d7e30c@collabora.com>
-Message-ID: <46fa1159-fcd6-b528-b8e8-2fba048236b2@collabora.com>
-Date:   Mon, 10 Aug 2020 13:34:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 10 Aug 2020 08:45:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:55908 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbgHJMpO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 10 Aug 2020 08:45:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92B9B30E;
+        Mon, 10 Aug 2020 05:45:13 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB6DD3F718;
+        Mon, 10 Aug 2020 05:45:11 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 13:45:09 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     ansuelsmth@gmail.com
+Cc:     'Viresh Kumar' <viresh.kumar@linaro.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        'Rob Herring' <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: R: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU
+ Cache scaling
+Message-ID: <20200810124509.GC31434@bogus>
+References: <20200807234914.7341-1-ansuelsmth@gmail.com>
+ <20200807234914.7341-3-ansuelsmth@gmail.com>
+ <20200810080146.GA31434@bogus>
+ <061301d66f07$8beae690$a3c0b3b0$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a85d7b4e-abfd-268a-01a5-f78068d7e30c@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <061301d66f07$8beae690$a3c0b3b0$@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 29/07/2020 17:22, Guillaume Tucker wrote:
-> On 29/07/2020 15:18, Russell King - ARM Linux admin wrote:
->> On Wed, Jul 29, 2020 at 02:47:32PM +0100, Guillaume Tucker wrote:
->>> The L310_PREFETCH_CTRL register bits 28 and 29 to enable data and
->>> instruction prefetch respectively can also be accessed via the
->>> L2X0_AUX_CTRL register.  They appear to be actually wired together in
->>> hardware between the registers.  Changing them in the prefetch
->>> register only will get undone when restoring the aux control register
->>> later on.  For this reason, set these bits in both registers during
->>> initialisation according to the DT attributes.
->>
->> How will that happen?
->>
->> We write the auxiliary control register before the prefetch control
->> register, so the prefetch control register will take precedence.  See
->> l2c310_configure() - l2c_configure() writes the auxiliary control
->> register, and the function writes the prefetch control register later.
-> 
-> What I'm seeing is that outer_cache.configure() gets called, at
-> least on exynos4412-odroidx2.  See l2c_enable():
-> 
-> 	if (outer_cache.configure)
-> 		outer_cache.configure(&l2x0_saved_regs);
-> 	else
-> 		l2x0_data->configure(base);
-> 
-> Then instead of l2c310_configure(), exynos_l2_configure() gets
-> called and writes prefetch_ctrl right before aux_ctrl.  Should
-> exynos_l2_configure() be changed to swap the register writes?
-> 
-> 
->> I think the real issue is that Exynos has been modifying the prefetch
->> settings via its machine .aux_mask / .aux_val configuration, and the
->> opposite is actually true: the prefetch control register values will
->> overwrite the attempt to modify the auxiliary control values set through
->> the machine .aux_mask/.aux_val.
-> 
-> Yes with l2c310_configure() but not with exynos_l2_configure().
-> 
-> To be clear, this is what I've found to be happening, if you
-> switch to using the device tree prefetch attributes and clear
-> the bits in the default l2c_aux_val (see PATCH 3/3):
-> 
-> 1. l2x0_of_init() first gets called with the default aux_val
-> 
-> 2. l2c310_of_parse() sets the bits in l2x0_saved_regs.prefetch_ctrl
->    but not in aux_val (unless you apply this patch 2/3)
-> 
-> 3. l2c_enable() calls exynos_l2_configure() which writes
->    prefetch_ctrl and then aux_ctrl - thus setting the prefetch bits
->    and then clearing them just after
-> 
-> 4. l2c310_enable() reads back aux_ctrl and prefetch, both of which
->    now have the bits cleared (the pr_info() message about prefetch
->    enabled gets skipped)
-> 
-> 
-> That's why I thought it would be safer to set the prefetch bits
-> in both registers so it should work regardless if the
-> initialisation sequence.  Also, if we want these bits to be
-> changed, we should clear them in the aux_mask value to not get
-> another error message about register corruption - so I'm doing
-> that too.
+On Mon, Aug 10, 2020 at 01:15:24PM +0200, ansuelsmth@gmail.com wrote:
+>
+>
+> > -----Messaggio originale-----
+> > Da: Sudeep Holla <sudeep.holla@arm.com>
+> > Inviato: lunedì 10 agosto 2020 10:02
+> > A: Ansuel Smith <ansuelsmth@gmail.com>
+> > Cc: Viresh Kumar <viresh.kumar@linaro.org>; Rafael J. Wysocki
+> > <rjw@rjwysocki.net>; Rob Herring <robh+dt@kernel.org>; linux-
+> > pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Oggetto: Re: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU
+> > Cache scaling
+> >
+> > On Sat, Aug 08, 2020 at 01:49:12AM +0200, Ansuel Smith wrote:
+> > > Document dedicated Krait CPU Cache Scaling driver.
+> > >
+> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > ---
+> > >  .../bindings/cpufreq/krait-cache-scale.yaml   | 92
+> > +++++++++++++++++++
+> > >  1 file changed, 92 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-
+> > cache-scale.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > scale.yaml b/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > scale.yaml
+> > > new file mode 100644
+> > > index 000000000000..f10b1f386a99
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-
+> > scale.yaml
+> > > @@ -0,0 +1,92 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Krait Cpu Cache Frequency Scaling dedicated driver
+> > > +
+> > > +maintainers:
+> > > +  - Ansuel Smith <ansuelsmth@gmail.com>
+> > > +
+> > > +description: |
+> > > +  This Scale the Krait CPU Cache Frequency and optionally voltage
+> > > +  when the Cpu Frequency is changed (using the cpufreq notifier).
+> > > +
+> > > +  Cache is scaled with the max frequency across all core and the cache
+> > > +  frequency will scale based on the configured threshold in the dts.
+> > > +
+> > > +  The cache is hardcoded to 3 frequency bin, idle, nominal and high.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: qcom,krait-cache
+> > > +
+> >
+> > How does this fit in the standard cache hierarchy nodes ? Extend the
+> > example to cover that.
+> >
+>
+> I think i didn't understand this question. You mean that I should put
+> in the example how the standard l2 cache nodes are defined?
+>
 
-I've kept this patch as-is in the v2 because I wasn't sure
-whether you wanted the issue to be addressed differently in the
-end.  I just made it a bit clearer in the commit message that
-it's fixing an issue when using the DT prefetch properties.
-Please let me know if you want me to rework this in any way.
+I was referring to something like below which I found now in
+arch/arm/boot/dts/qcom-msm8974.dtsi:
+	L2: l2-cache {
+		compatible = "cache";
+		cache-level = <2>;
+		qcom,saw = <&saw_l2>;
+	};
 
-Thanks,
-Guillaume
+> > > +  clocks:
+> > > +    description: Phandle to the L2 CPU clock
+> > > +
+> > > +  clock-names:
+> > > +    const: "l2"
+> > > +
+> > > +  voltage-tolerance:
+> > > +    description: Same voltage tollerance of the Krait CPU
+> > > +
+> > > +  l2-rates:
+> > > +    description: |
+> > > +      Frequency the L2 cache will be scaled at.
+> > > +      Value is in Hz.
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +    items:
+> > > +      - description: idle
+> > > +      - description: nominal
+> > > +      - description: high
+> > > +
+> >
+> > Why can't you re-use the standard OPP v2 bindings ?
+> >
+>
+> Isn't overkill to use the OPP v2 bindings to represent the the microvolt
+> related to the le freq? Is the OPP v1 sufficient?
 
->>> Fixes: ec3bd0e68a67 ("ARM: 8391/1: l2c: add options to overwrite prefetching behavior")
->>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->>> ---
->>>  arch/arm/mm/cache-l2x0.c | 16 ++++++++++++----
->>>  1 file changed, 12 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
->>> index 12c26eb88afb..43d91bfd2360 100644
->>> --- a/arch/arm/mm/cache-l2x0.c
->>> +++ b/arch/arm/mm/cache-l2x0.c
->>> @@ -1249,20 +1249,28 @@ static void __init l2c310_of_parse(const struct device_node *np,
->>>  
->>>  	ret = of_property_read_u32(np, "prefetch-data", &val);
->>>  	if (ret == 0) {
->>> -		if (val)
->>> +		if (val) {
->>>  			prefetch |= L310_PREFETCH_CTRL_DATA_PREFETCH;
->>> -		else
->>> +			*aux_val |= L310_PREFETCH_CTRL_DATA_PREFETCH;
->>> +		} else {
->>>  			prefetch &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
->>> +			*aux_val &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
->>> +		}
->>> +		*aux_mask &= ~L310_PREFETCH_CTRL_DATA_PREFETCH;
->>>  	} else if (ret != -EINVAL) {
->>>  		pr_err("L2C-310 OF prefetch-data property value is missing\n");
->>>  	}
->>>  
->>>  	ret = of_property_read_u32(np, "prefetch-instr", &val);
->>>  	if (ret == 0) {
->>> -		if (val)
->>> +		if (val) {
->>>  			prefetch |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
->>> -		else
->>> +			*aux_val |= L310_PREFETCH_CTRL_INSTR_PREFETCH;
->>> +		} else {
->>>  			prefetch &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
->>> +			*aux_val &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
->>> +		}
->>> +		*aux_mask &= ~L310_PREFETCH_CTRL_INSTR_PREFETCH;
->>>  	} else if (ret != -EINVAL) {
->>>  		pr_err("L2C-310 OF prefetch-instr property value is missing\n");
->>>  	}
->>> -- 
->>> 2.20.1
->>>
->>>
->>
-> 
+Should be fine if it is allowed. v2 came out in the flow of my thought
+and was not intentional.
 
+> Also I can't find a way to reflect this specific case where the l2 rates
+> are changed based on the cpu freq value? Any idea about that?
+>
+
+OK, I am always opposed to giving such independent controls in the kernel
+as one can play around say max cpu freq and lowest cache or vice-versa
+and create instabilities. IMO this should be completely hidden from OS.
+But I know these are old platforms, so I will shut my mouth ;)
+
+--
+Regards,
+Sudeep
