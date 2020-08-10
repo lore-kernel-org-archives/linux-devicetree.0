@@ -2,137 +2,158 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC72C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292ACC433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 781B62073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040762073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 07:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OG+MeLJS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KmjOr7lG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725857AbgHJH01 (ORCPT
+        id S1726428AbgHJHbd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 03:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
+        Mon, 10 Aug 2020 03:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbgHJH00 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 03:26:26 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A90AC061756;
-        Mon, 10 Aug 2020 00:26:25 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id m200so4640926ybf.10;
-        Mon, 10 Aug 2020 00:26:25 -0700 (PDT)
+        with ESMTP id S1725846AbgHJHbc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 03:31:32 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D7EC061756
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 00:31:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a15so7129354wrh.10
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 00:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a/yQjIpGQ9bwN19T0c8h1wga/yLfPYyGvmAA4RpqO9o=;
-        b=OG+MeLJSksMXQYnng3ZOq6fUtWnCYdY5dR1M1xCP2OB9ND+9+4gTccvtg9esOBO8aY
-         gtirQoqKkpqoqmrbG7tGO0qdLyMXyV0NJ/xJER24xixIb67EJa8RmSQF2Ff7aIr2wYAG
-         bAoeaXl/I2YDiY3TlR4Q8dzk+t2YsYj46MLrVBciwEz2H7kh6AorllAny6O+UFnqdWsF
-         oVAqzKJFAsREVEASyYves69+s+Y/hLecF33Xiz/Gck+5vGk2HL4Ngq/msOKp+arz7rHV
-         sjHchbSuQbUBIppXohuffpkxb3UsDyddlDTDs+IACcu8BNO6GDRwD0PhZpPHJkJj0axg
-         39Lw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=4x9G4BKQPEodKbNbhS34JTOCfB7se7v0YDW0moilQvg=;
+        b=KmjOr7lGhApH6KmO1rV2ur9Cq8V7cNEvM8FRBK312jsW9+HLFlI/uzKP10UPa5smUh
+         MoOjclfPeo/4V+LP8l7LPZ68sn9H/heVE996XMzsiBINWGZfhnIE+3CJJd4WeacdBgBa
+         kg4kjO9LHV4tvpX3bK4xbgbWcsXdIN4b3k/ISucIebTERr0TEg1H8+JuovkT6/2gBHWn
+         HcWBMkGEy5oDrrBGqN9Haq1IlLCWfIWvZsDoy/7r1majuwzYvVqFwkiLFLJ3SeHEjEl+
+         ENQHPT2cAjuLfipnQNOXfEHR9/QMK+2cPXur508C9BBp0SQIbaek9bsgdDPq4vL/m0il
+         YJzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a/yQjIpGQ9bwN19T0c8h1wga/yLfPYyGvmAA4RpqO9o=;
-        b=nku+gK88rrPf6TCNq7PmCU4m+fGk6qquKezO60dXXYaLUd2mnncLJY6taH+eahrGMM
-         pJVOboJK1nRwZzyGNj1SUTxQd4L8v5J1dutJLVSbWo7pGWdWLYUpe8KiSC/AIv4gK+j3
-         6/oiVAaTnY/UDljhEQt5cdPfYa8Yx2pO/vt99S9SBhFhUrAQNkVa4o8umkOD/37OFYyw
-         3QwDpUuIftvgT1oCEoIBlRxz5WJmE7huXVWLlg5+Bp37Q2MxZ/KfBwQms52hlvNcp2Tu
-         WJ5AsQdSMytmcvxFtgYOe1gfzB/VHibFQR5oF82X0Q+nv5KDcaHt7O1Rbg0UbNoMkff7
-         gBBA==
-X-Gm-Message-State: AOAM531T2GleVWjQet8F1kX8dndv8rVswAN7m+4irktcJHRH/UewRpTq
-        BmcDNcJ12iODtC0zWlC1985CxTpTjSn1tQ4lRwE=
-X-Google-Smtp-Source: ABdhPJx5ZqLguTnboxWSbfqbxWq6Zi7lwEzwh50vnLLZ5b7sQaMUmIrC4FfDLxZUtT0lEp3C6ZVNHYQi/QODDA9MeYY=
-X-Received: by 2002:a25:b74b:: with SMTP id e11mr3088014ybm.395.1597044384816;
- Mon, 10 Aug 2020 00:26:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4x9G4BKQPEodKbNbhS34JTOCfB7se7v0YDW0moilQvg=;
+        b=VIz21cpQA0CRNTNn5/Uti2rYi579zGHkv4crGI9A9yGlqI3uVPCjT5Cn+k9AHfqrvp
+         wmOyG3wS469vhdW62XqQbN7na6WD+01OzYobBaG2w1YrWN/enPJH4HSHkVehcvS3kj96
+         ogU9XfCdpW6Yh+0QQdAV1AzRJMPY8Yz7/buIY/D4Xx14/5qkc/NdmnD6eC4ZELTvWAQ5
+         N5ARLhBmEaKXXRyNoxLZcwBsrzG3XWuQDH/uyx4XiRvZdxojUA0Z+3dXhzmgGJ9CLKbL
+         zLlhXdxTDtiawmVh5MHyOYyUHdaabWTelJl0m+DR7/jCZ/5LE8BXpmMt4PLdG2vis7lX
+         h05Q==
+X-Gm-Message-State: AOAM533ls+XXGDq+WAVL0uKfZecqyggV2rewTQnDmpgq9vHvOPTb1+IT
+        VdSuPMhMpu4UYS2Ep6uSiO/RmaLwkME=
+X-Google-Smtp-Source: ABdhPJxExxrYLyu6qXhRPgZztXKPrU/zgJr51FhpKEO58wSzN65gPrJEPbrrE6QHLTBHtOvwIbO0TA==
+X-Received: by 2002:adf:a351:: with SMTP id d17mr23056398wrb.111.1597044691012;
+        Mon, 10 Aug 2020 00:31:31 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id z15sm20056653wrn.89.2020.08.10.00.31.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 00:31:30 -0700 (PDT)
+Date:   Mon, 10 Aug 2020 08:31:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Subject: Re: [PATCH 1/8] mfd: mt6358: refine interrupt code
+Message-ID: <20200810073128.GC4411@dell>
+References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <20200727154840.GY1850026@dell>
+ <1596443379.31084.3.camel@mtksdaap41>
 MIME-Version: 1.0
-References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200806144828.bflbpla2x4sjfsbp@uno.localdomain>
-In-Reply-To: <20200806144828.bflbpla2x4sjfsbp@uno.localdomain>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 10 Aug 2020 08:25:58 +0100
-Message-ID: <CA+V-a8tmU2OVg8L8qsySG1CtpMw08BmjeyYBiakXdAh8vgxuNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] media: i2c: ov5640 feature enhancement and fixes
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1596443379.31084.3.camel@mtksdaap41>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Mon, 03 Aug 2020, Hsin-hsiung Wang wrote:
 
+> Hi,
+> 
+> On Mon, 2020-07-27 at 16:48 +0100, Lee Jones wrote:
+> > On Thu, 23 Jul 2020, Hsin-Hsiung Wang wrote:
+> > 
+> > > This patch refines the interrupt related code to support new chips.
+> > 
+> > Refines in what way?
+> > 
+> > What makes this better?
+> > 
+> 
+> Thanks for the comment. I will add more information into comment message
+> based on my below explanation.
 
-On Thu, Aug 6, 2020 at 3:44 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
->
-> Hello,
->
-> On Mon, Aug 03, 2020 at 03:31:43PM +0100, Lad Prabhakar wrote:
-> > Hi All,
-> >
-> > This patch series fixes DVP support and enables BT656 mode in
-> > the driver.
-> >
-> > @Jacopo Mondi - patch 1/4 will collide with your patch series [1],
-> > feel free to merge it as part of your v2.
->
-> This would actually make my life simpler, as one of the issues I had
-> was trying to make bus-type required to be able to differentiate
-> between different properties.
->
-Thank you for taking care of it.
+Thanks.
 
-Cheers,
-Prabhakar
+> > > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > > ---
+> > >  drivers/mfd/mt6358-irq.c        | 65 ++++++++++++++++++++++++-----------------
+> > >  include/linux/mfd/mt6358/core.h |  8 ++---
+> > >  2 files changed, 41 insertions(+), 32 deletions(-)
+> > > 
+> > > diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> > > index db734f2..4b094e5 100644
+> > > --- a/drivers/mfd/mt6358-irq.c
+> > > +++ b/drivers/mfd/mt6358-irq.c
+> > > @@ -13,7 +13,9 @@
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/regmap.h>
+> > >  
+> > > -static struct irq_top_t mt6358_ints[] = {
+> > > +#define MTK_PMIC_REG_WIDTH 16
+> > > +
+> > > +static const struct irq_top_t mt6358_ints[] = {
+> > >  	MT6358_TOP_GEN(BUCK),
+> > >  	MT6358_TOP_GEN(LDO),
+> > >  	MT6358_TOP_GEN(PSC),
+> > > @@ -24,6 +26,13 @@ static struct irq_top_t mt6358_ints[] = {
+> > >  	MT6358_TOP_GEN(MISC),
+> > >  };
+> > >  
+> > > +static struct pmic_irq_data mt6358_irqd = {
+> > > +	.num_top = ARRAY_SIZE(mt6358_ints),
+> > > +	.num_pmic_irqs = MT6358_IRQ_NR,
+> > > +	.top_int_status_reg = MT6358_TOP_INT_STATUS0,
+> > > +	.pmic_ints = mt6358_ints,
+> > > +};
+> > 
+> > Dynamically assigned driver data is usually preferred.
+> > 
+> > Why have you gone static?
+> > 
+> 
+> Do you consider the memory allocation?
+> Below modification is to assign necessary data dynamically and the code
+> will become longer with more chips if we assign every member of the
+> structure.
 
-> >
-> > [1] https://www.spinics.net/lists/linux-renesas-soc/msg51236.html
-> >
-> > Cheers,
-> > Prabhakar
-> >
-> > Changes for v2:
-> > * Added support to fallback in parallel mode
-> > * Documented bus-type property
-> > * Added descriptive commit message for patch 2/4 as pointed
-> >   by Sakari
-> > * Fixed review comments pointed by Laurent to have separate functions
-> >   for mipi and dvp setup
-> > * Made sure the sensor is in power down mode during startup too for
-> >   DVP mode
-> >
-> > Lad Prabhakar (4):
-> >   dt-bindings: media: i2c: ov5640: Document bus-type property
-> >   media: i2c: ov5640: Enable data pins on poweron for DVP mode
-> >   media: i2c: ov5640: Add support for BT656 mode
-> >   media: i2c: ov5640: Fallback to parallel mode
-> >
-> >  .../devicetree/bindings/media/i2c/ov5640.txt  |   9 +-
-> >  drivers/media/i2c/ov5640.c                    | 333 ++++++++++--------
-> >  2 files changed, 198 insertions(+), 144 deletions(-)
-> >
-> > --
-> > 2.17.1
-> >
+[...]
+
+Never mind.  On second glance, this should be fine.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
