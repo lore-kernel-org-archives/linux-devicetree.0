@@ -2,117 +2,134 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ED1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 08:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC04CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 08:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1232073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 08:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AFA206B5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 08:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgHJIB4 (ORCPT
+        id S1726089AbgHJI1h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 04:01:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:53928 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725846AbgHJIB4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 10 Aug 2020 04:01:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A2FF1FB;
-        Mon, 10 Aug 2020 01:01:55 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8976E3F7BB;
-        Mon, 10 Aug 2020 01:01:53 -0700 (PDT)
-Date:   Mon, 10 Aug 2020 09:01:46 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/2] dt-bindings: cpufreq: Document Krait CPU
- Cache scaling
-Message-ID: <20200810080146.GA31434@bogus>
-References: <20200807234914.7341-1-ansuelsmth@gmail.com>
- <20200807234914.7341-3-ansuelsmth@gmail.com>
+        Mon, 10 Aug 2020 04:27:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35489 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgHJI1g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 04:27:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 93so6670533otx.2;
+        Mon, 10 Aug 2020 01:27:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=//ZK6+SFvrkRSTwRR61xNq9XPyj33yV4vd1Xm7D7328=;
+        b=KdYzGd8//xrDW54nDglMiU2RSU1/1oS/X8Mu9wxTdKCvzy5lWlw1HFWzposhWK3C/u
+         XaA3wCkVaZIINUJLsx1LukGzDQQEajWaTHgb8ChmI6s3GL+JBSI3gLLEdVb7RIRASWF8
+         WmVLq+VNkiTfpZa8aoX4L57LGNrHEHd0v7NBSP9lnoD3vgCSoUCgWOwkuPMajwxWc/R4
+         /p7CFxhRIfIVwxnqRKmRrLfqSv0yYl/84t+b5Pae7zMkDjAip3YDyyZ/rjrh+oibdlG6
+         GcuJ99k/10LY4c/mF/lMDBQ7ORFpUovjcx+Fg/GxtlwlLZmPgT16zPQUOWShGgg+NXru
+         eSAw==
+X-Gm-Message-State: AOAM5308vUMB/JFcZ2ymKWZQs0Bt0iWdEqSLA+ifS+jIlYUaexketyAs
+        iE5LxWMih4B1wesri9EbEjZ+0GdrTsnzALRfGT5mdA==
+X-Google-Smtp-Source: ABdhPJxwJlWiihOYnopaBk+U2KL7gmjD5NzWrgNpwHGalMg3unmme5HI285YIPGLyiOjEUmWDvwr253KoLAdDpnJgHA=
+X-Received: by 2002:a9d:1b62:: with SMTP id l89mr11199918otl.145.1597048055761;
+ Mon, 10 Aug 2020 01:27:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200807234914.7341-3-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200808211323.GR6186@pendragon.ideasonboard.com> <CA+V-a8v0nXwe0iN2ymqE5YgcgOymWYv-Xf6N+rw_nJnUgx4yMQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8v0nXwe0iN2ymqE5YgcgOymWYv-Xf6N+rw_nJnUgx4yMQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 10 Aug 2020 10:27:24 +0200
+Message-ID: <CAMuHMdXH_ttYNrKpMxxkSTvhYcxkCD6v_ueXMGN6mXhkbpoyPA@mail.gmail.com>
+Subject: Re: [PATCH 6/7] ARM: dts: r8a7742: Add LVDS support
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Aug 08, 2020 at 01:49:12AM +0200, Ansuel Smith wrote:
-> Document dedicated Krait CPU Cache Scaling driver.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/cpufreq/krait-cache-scale.yaml   | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml b/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
-> new file mode 100644
-> index 000000000000..f10b1f386a99
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/krait-cache-scale.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/cpufreq/krait-cache-scale.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Krait Cpu Cache Frequency Scaling dedicated driver
-> +
-> +maintainers:
-> +  - Ansuel Smith <ansuelsmth@gmail.com>
-> +
-> +description: |
-> +  This Scale the Krait CPU Cache Frequency and optionally voltage
-> +  when the Cpu Frequency is changed (using the cpufreq notifier).
-> +
-> +  Cache is scaled with the max frequency across all core and the cache
-> +  frequency will scale based on the configured threshold in the dts.
-> +
-> +  The cache is hardcoded to 3 frequency bin, idle, nominal and high.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,krait-cache
-> +
+Hi Prabhakar, Laurent,
 
-How does this fit in the standard cache hierarchy nodes ? Extend the
-example to cover that.
+On Sun, Aug 9, 2020 at 11:30 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Sat, Aug 8, 2020 at 10:13 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Fri, Aug 07, 2020 at 06:49:53PM +0100, Lad Prabhakar wrote:
+> > > Add LVDS encoder node to r8a7742 SoC DT.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > > ---
+> > >  arch/arm/boot/dts/r8a7742.dtsi | 54 ++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 54 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+> > > index a979a4b3de61..a7e66220d63a 100644
+> > > --- a/arch/arm/boot/dts/r8a7742.dtsi
+> > > +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> > > @@ -1534,11 +1534,65 @@
+> > >                               port@1 {
+> > >                                       reg = <1>;
+> > >                                       du_out_lvds0: endpoint {
+> > > +                                             remote-endpoint = <&lvds0_in>;
+> > >                                       };
+> > >                               };
+> > >                               port@2 {
+> > >                                       reg = <2>;
+> > >                                       du_out_lvds1: endpoint {
+> > > +                                             remote-endpoint = <&lvds1_in>;
+> > > +                                     };
+> > > +                             };
+> > > +                     };
+> > > +             };
+> > > +
+> > > +             lvds0: lvds@feb90000 {
+> > > +                     compatible = "renesas,r8a7742-lvds";
+> > > +                     reg = <0 0xfeb90000 0 0x1c>;
+> >
+> > Isn't 0x14 enough for the size ? 0x1c won't hurt though. Same comment
+> > below.
 
-> +  clocks:
-> +    description: Phandle to the L2 CPU clock
-> +
-> +  clock-names:
-> +    const: "l2"
-> +
-> +  voltage-tolerance:
-> +    description: Same voltage tollerance of the Krait CPU
-> +
-> +  l2-rates:
-> +    description: |
-> +      Frequency the L2 cache will be scaled at.
-> +      Value is in Hz.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    items:
-> +      - description: idle
-> +      - description: nominal
-> +      - description: high
-> +
+I can fix that while applying.
 
-Why can't you re-use the standard OPP v2 bindings ?
+> Agreed, 0x1c comes from Gen-3 manuals.
 
---
-Regards,
-Sudeep
+All R-Car Gen3 and RZ/G2 .dtsi use 0x14 or 0x20.
+All R-Car Gen2 and RZ/G1 .dtsi use 0x1c, but their manual suggests 0x14, too?
+
+Doesn't matter much, as the hardware address decoder probably uses a
+multiple of 2, and page mapping granularity is at least 4 KiB anyway.
+
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10, with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
