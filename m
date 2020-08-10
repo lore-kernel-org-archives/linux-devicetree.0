@@ -2,43 +2,71 @@ Return-Path: <SRS0=OVGR=BU=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71EEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 21:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09505C433E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9270020734
-	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 21:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51AB2073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 10 Aug 2020 22:18:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Q7MSp+6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgHJVwb (ORCPT
+        id S1726678AbgHJWSC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 17:52:31 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37213 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgHJVwa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 17:52:30 -0400
-X-Originating-IP: 82.52.18.94
-Received: from uno.homenet.telecomitalia.it (host-82-52-18-94.retail.telecomitalia.it [82.52.18.94])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id E8FA640008;
-        Mon, 10 Aug 2020 21:52:25 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        dave.stevenson@raspberrypi.com, linux-renesas-soc@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com,
-        roman.kovalivskyi@globallogic.com
-Subject: [PATCH v4 4/4] media: MAINTAINERS: ov5647: Replace maintainer
-Date:   Mon, 10 Aug 2020 23:55:43 +0200
-Message-Id: <20200810215543.113206-5-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200810215543.113206-1-jacopo+renesas@jmondi.org>
-References: <20200810215543.113206-1-jacopo+renesas@jmondi.org>
+        Mon, 10 Aug 2020 18:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgHJWSC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 18:18:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2EC3C06174A
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 15:18:01 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f10so5827623plj.8
+        for <devicetree@vger.kernel.org>; Mon, 10 Aug 2020 15:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vBIQCcYBYKE0CK0O3JpZQF/aDW336DAnKM6R6BbGj7s=;
+        b=Q7MSp+6ZeJHNiLkPjUGr27POOQJapymBm+bWfnrg7JjPU2IOhuG0rjzJcgwrsnCZf3
+         o7kRE3EtutAIoom++pDXYgEYbAVTHvEyyn5iZE0qpifrLum2nytjCPfGafkpr4PbKYMQ
+         ET/ILf4IJcGITVrOeX/FDpL5yRVQ+q5n3YBHvwSoeWBVXyspmmizhpw0BIg6Kbr244es
+         4L9fzG2DiJaVNQcS42UsP7ZFm3meuelftPbhw8Fk1HkxIXdGcU4Fx+mwaX/OhMdxoK8s
+         0QgsZI3jOolUvzXWqpQLFXcMDDAVnfWs9LWtuagyzEL3NqIv6VFeEQhjR7ZjuUDMEFVn
+         VRdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vBIQCcYBYKE0CK0O3JpZQF/aDW336DAnKM6R6BbGj7s=;
+        b=hvn+IiZKjbAu4lYJXjiiZvJ89evK36oBuPKO52c3BUxhqFfxtItMWKiD3fEohVMu5p
+         EbJxEWMn0soQGILrMbT3aZ/0oUYG1t8HjrMMkQ3rfiZXBpaNvoNeYYrbuuSurcJDhum+
+         U6kNbxN28SeA4gnt8EyJ6ab88D05PtF1SCgRvRHtSGfinXL3HxJsZy8Dk5kBRQqsYi/x
+         HhCnb1/AinU2f6dM9hDyehY6qXSWk6A4/J7b9I5oaAx4U9NvTIMUlSgNUogLa+1CnveH
+         AuyybdOidVEa6E9MHVBIrjtFyNF2SGnSX/Dfh4koYhtbgpIrZs1fnAcmvaID7FajO4L2
+         2dog==
+X-Gm-Message-State: AOAM533+6wp3QYfDOwROFMTZwmf5lo8br1esD3ZQaYDr81tOvrToC1g6
+        +iMCeQ3wqN289tFHRrTVYIwLrA==
+X-Google-Smtp-Source: ABdhPJwsV7V0NSLQKQ7xjhZ4JJpUKz4dZj+ie2tUgdeIEyL7BWjueK/+zdWZ27iCa1NMdqyQ4rhkcQ==
+X-Received: by 2002:a17:902:ac82:: with SMTP id h2mr26126281plr.300.1597097881464;
+        Mon, 10 Aug 2020 15:18:01 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id 63sm22311820pfu.196.2020.08.10.15.18.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2020 15:18:00 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 0/2] arm64: dts: meson: odroid-n2: update sound card
+Date:   Mon, 10 Aug 2020 15:17:58 -0700
+Message-Id: <159709786936.10576.16096406991867503196.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200701094556.194498-1-jbrunet@baylibre.com>
+References: <20200701094556.194498-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -46,29 +74,23 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the current maintainer email address bounces back, replace
-the entry and make myself and Dave Stevenson maintainers of the driver.
+On Wed, 1 Jul 2020 11:45:54 +0200, Jerome Brunet wrote:
+> This patchset adds the support for the TDM loopback and audio on the jack
+> output using the internal codec.
+> 
+> Jerome Brunet (2):
+>   arm64: dts: meson: odroid-n2: enable audio loopback
+>   arm64: dts: meson: odroid-n2: add jack audio output support
+> 
+> [...]
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 21e6c3120152..6a9d87282578 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12625,7 +12625,8 @@ T:	git git://linuxtv.org/media_tree.git
- F:	drivers/media/i2c/ov5640.c
- 
- OMNIVISION OV5647 SENSOR DRIVER
--M:	Luis Oliveira <lolivei@synopsys.com>
-+M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
-+M:	Jacopo Mondi <jacopo@jmondi.org>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- T:	git git://linuxtv.org/media_tree.git
+[1/2] arm64: dts: meson: odroid-n2: enable audio loopback
+      (no commit info)
+[2/2] arm64: dts: meson: odroid-n2: add jack audio output support
+      (no commit info)
+
+Best regards,
 -- 
-2.27.0
-
+Kevin Hilman <khilman@baylibre.com>
