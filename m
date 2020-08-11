@@ -2,235 +2,93 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816CCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 00:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A0DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 01:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 505E020734
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 00:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA5820734
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 01:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="U/ZYWgTR"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="D5xe5xHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHKAgz (ORCPT
+        id S1727989AbgHKBsZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 10 Aug 2020 20:36:55 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47604 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgHKAgz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 20:36:55 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0B85258;
-        Tue, 11 Aug 2020 02:36:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597106211;
-        bh=WT68YabTY7ddQtfmBQDHNawp8dKMoR3tuUNkUHEYri8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U/ZYWgTR0lteTac7vshe8KLcnDQhg18O1y4w88+HuaU7uRPqtIYegIMJcB/v6JOIn
-         1L2sfaJ7TL0nBT1s6YOu6MjZBAJzpOjpLarFFsmxPqyg6xIVlBh6dLQK0QhfmYvFOQ
-         VkGn6r82gLmg5Me9dGehE+y++xE70HnqcOPhnvSI=
-Date:   Tue, 11 Aug 2020 03:36:38 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, tomi.valkeinen@ti.com,
-        jsarha@ti.com, nsekhar@ti.com, praneeth@ti.com
-Subject: Re: [PATCH v8 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
- bridge bindings
-Message-ID: <20200811003638.GB13513@pendragon.ideasonboard.com>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
- <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
+        Mon, 10 Aug 2020 21:48:25 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:38721 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727985AbgHKBsY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Aug 2020 21:48:24 -0400
+X-UUID: e0bcfdbec32f4749bb90bb0cdf6668f2-20200811
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wWsrLG80qkuNgSA4gGuAfus81URferVVdJm10Q2FyI0=;
+        b=D5xe5xHA5gYU4RjvI4svlu2vpiIEvWNSbxoNBMxV6fsBFEh7XUnCIzEhcxit2gjbmLb/SoG7QG199yCWvAiQ6iuLaXw/n65SADtIe80VB8oBog3MAKzSvAg1ncAtGNYPi5ZUkRBevl/4QRRai+erZaaYa1TFh1sXUnrG2mKdBK8=;
+X-UUID: e0bcfdbec32f4749bb90bb0cdf6668f2-20200811
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 855901188; Tue, 11 Aug 2020 09:48:21 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS32N1.mediatek.inc (172.27.4.71) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 11 Aug 2020 09:48:18 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 11 Aug 2020 09:47:23 +0800
+Message-ID: <1597110443.22273.5.camel@mtksdaap41>
+Subject: Re: [PATCH v17 1/3] dt-bindings: Add bindings for Mediatek matrix
+ keypad
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Fengping Yu <fengping.yu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 11 Aug 2020 09:47:23 +0800
+In-Reply-To: <20200810064058.6467-2-fengping.yu@mediatek.com>
+References: <20200810064058.6467-1-fengping.yu@mediatek.com>
+         <20200810064058.6467-2-fengping.yu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1596713672-8146-2-git-send-email-sjakhade@cadence.com>
+X-TM-SNTS-SMTP: B2CD043487BC2843B3826AD6DB0F9EC3DC55BA7D3B4D9836D2D5FCFBC9953D792000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Swapnil,
+SGksDQoNCg0KT24gTW9uLCAyMDIwLTA4LTEwIGF0IDE0OjQwICswODAwLCBGZW5ncGluZyBZdSB3
+cm90ZToNCj4gRnJvbTogImZlbmdwaW5nLnl1IiA8ZmVuZ3BpbmcueXVAbWVkaWF0ZWsuY29tPg0K
+PiANCj4gVGhpcyBwYXRjaCBhZGQgZGV2aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWF0ZWsgbWF0
+cml4IGtleXBhZCBkcml2ZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBmZW5ncGluZy55dSA8ZmVu
+Z3BpbmcueXVAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2lucHV0L210ay1rcGQueWFtbCAgICB8IDg3ICsrKysrKysrKysrKysrKysrKysNCj4gIDEgZmls
+ZSBjaGFuZ2VkLCA4NyBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L210ay1rcGQueWFtbA0KPiANCj4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9tdGsta3Bk
+LnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55
+YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uZDc0ZGQ4
+YTZmYmRlDQoNCjwuLi4+DQoNCg0KPiArICBrZXlwYWQsbnVtLWNvbHVtbnM6DQo+ICsgICAgZGVz
+Y3JpcHRpb246IE51bWJlciBvZiBjb2x1bW4gbGluZXMgY29ubmVjdGVkIHRvIHRoZSBrZXlwYWQg
+Y29udHJvbGxlciwNCj4gKyAgICBpdCBpcyBub3QgZXF1YWwgdG8gUENCIGNvbHVtbnMgbnVtYmVy
+LCBpbnN0ZWFkIHlvdSBzaG91bGQgYWRkIHJlcXVpcmVkIHZhbHVlDQo+ICsgICAgZm9yIGVhY2gg
+SUMuIElmIG5vdCBzcGVjaWZpZWQsIHRoZSBkZWZhdWx0IHZhbHVlIGlzIDEuDQo+ICsNCj4gKyAg
+a2V5cGFkLG51bS1yb3dzOg0KPiArICAgIGRlc2NyaXB0aW9uOiBOdW1iZXIgb2Ygcm93IGxpbmVz
+IGNvbm5lY3RlZCB0byB0aGUga2V5cGFkIGNvbnRyb2xsZXIsIGl0IGlzDQo+ICsgICAgbm90IGVx
+dWFsIHRvIFBDQiByb3dzIG51bWJlciwgaW5zdGVhZCB5b3Ugc2hvdWxkIGFkZCByZXF1aXJlZCB2
+YWx1ZSBmb3IgZWFjaCBJQy4NCj4gKyAgICBJZiBub3Qgc3BlY2lmaWVkLCB0aGUgZGVmYXVsdCB2
+YWx1ZSBpcyAxLg0KDQpZb3VyIHNvdXJjZSBjb2RlIGNhbid0IHJlYWxseSBoYW5kbGUgZHRzIHdp
+dGhvdXQgcm93cy9jb2x1bW5zDQpwcm9wZXJ0aWVzLiBBbHNvLCB0aGUgZGVmYXVsdCB2YWx1ZSBk
+b2Vzbid0IG1ha2UgYW55IHNlbnNlLiBObyBJQyB3aWxsDQpoYXZlIHJvd3Mgb3IgY29sdW1ucyBz
+ZXQgdG8gMS4NCg0KU2luY2UgdGhlc2UgYXJlIElDIHNwZWNpZmllZCwgbm90IGJvYXJkIHNwZWNp
+ZmllZCwgSSB0aGluayB5b3Ugc2hvdWxkDQpqdXN0IGhhdmUgdGhlIGNvcnJlY3QgbnVtYmVycyBp
+biBkcml2ZXIuDQoNCkpvZS5DDQoNCg==
 
-Thank you for the patch.
-
-On Thu, Aug 06, 2020 at 01:34:30PM +0200, Swapnil Jakhade wrote:
-> From: Yuti Amonkar <yamonkar@cadence.com>
-> 
-> Document the bindings used for the Cadence MHDP DPI/DP bridge in
-> yaml format.
-> 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  .../bindings/display/bridge/cdns,mhdp.yaml    | 139 ++++++++++++++++++
->  1 file changed, 139 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> new file mode 100644
-> index 000000000000..dabccefe0983
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> @@ -0,0 +1,139 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence MHDP bridge
-> +
-> +maintainers:
-> +  - Swapnil Jakhade <sjakhade@cadence.com>
-> +  - Yuti Amonkar <yamonkar@cadence.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cdns,mhdp8546
-> +      - ti,j721e-mhdp8546
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description:
-> +          Register block of mhdptx apb registers up to PHY mapped area (AUX_CONFIG_P).
-> +          The AUX and PMA registers are not part of this range, they are instead
-> +          included in the associated PHY.
-> +      - description:
-> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: mhdptx
-> +      - const: j721e-intg
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      DP bridge clock, used by the IP to know how to translate a number of
-> +      clock cycles into a time (which is used to comply with DP standard timings
-> +      and delays).
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description:
-> +      phandle to the DisplayPort PHY.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      Ports as described in Documentation/devicetree/bindings/graph.txt.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description:
-> +          Input port representing the DP bridge input.
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          Output port representing the DP bridge output.
-
-I've got a chance to study the J721E datasheet, and it shows the DP
-bridge has 4 inputs, to support MST. Shouldn't this already be reflected
-in the DT bindings ? I think it should be as simple as having 4 input
-ports (port@0 to port@3) and one output port (port@4).
-
-The bindings are ABI, so care must be taken to support all features and
-avoid future changes that would break backward compatibility. It's fine
-if the driver doesn't implement this feature yet.
-
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: ti,j721e-mhdp8546
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +        reg-names:
-> +          minItems: 2
-> +    else:
-> +      properties:
-> +        reg:
-> +          maxItems: 1
-> +        reg-names:
-> +          maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - reg
-> +  - reg-names
-> +  - phys
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        mhdp: dp-bridge@f0fb000000 {
-> +            compatible = "cdns,mhdp8546";
-> +            reg = <0xf0 0xfb000000 0x0 0x1000000>;
-> +            reg-names = "mhdptx";
-> +            clocks = <&mhdp_clock>;
-> +            phys = <&dp_phy>;
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    reg = <0>;
-> +                    dp_bridge_input: endpoint {
-> +                        remote-endpoint = <&xxx_dpi_output>;
-> +                    };
-> +                };
-> +
-> +                port@1 {
-> +                    reg = <1>;
-> +                    dp_bridge_output: endpoint {
-> +                        remote-endpoint = <&xxx_dp_connector_input>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-
--- 
-Regards,
-
-Laurent Pinchart
