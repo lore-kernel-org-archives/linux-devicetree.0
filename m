@@ -2,265 +2,232 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	DATE_IN_FUTURE_06_12,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E0CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE533C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A08F520774
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597129971;
-	bh=M9Ja8kNbyn5AIHtY4B9BzoTdDpmMCZG2UlxPFzkaqew=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=tmsletkP3bBaLRvmegfAuPBF4/K/d5ZADhow13IREQOjg/RKOJvhjMgVLLrh9Ffmc
-	 PfbditcbKj6xMY7O77lafApbhC7M0alu28G1Hm92TCEaWaxlpqSj6Eu+nn1bxe53MZ
-	 MpLEFoH3/8Snj2j+aYrq84twDt3RivZPwokyCbWU=
+	by mail.kernel.org (Postfix) with ESMTP id 7FCD7206B2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:39:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EXEYlndC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgHKHMu (ORCPT
+        id S1727942AbgHKHjv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:12:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbgHKHMt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 03:12:49 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37288C06174A;
-        Tue, 11 Aug 2020 00:12:49 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h19so12326109ljg.13;
-        Tue, 11 Aug 2020 00:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=7bmfSdcP8nAJ6eufJvnZyOOA5fmvgr+qxvCK6Eif1M8=;
-        b=dp0taWtrZcdTBfRahr1KwjxanpDhAeW+LmzOYnbXNKFYs2UmRBHHKNsI3+zsCh72k+
-         3PA75AfLdqW0ypTG+MckbCre9zWTtCc20U5kpS8H7QtjuGk4mdniioosZle2Bs8fS2hi
-         c8ahMXv28FmeGZYOFYWkLfH28IEVn+st2cKfRLdHkMxG3MA6iKfUlCvlIeBGEPmUWhCv
-         /yf1MYQRJUuesyS4IyQTYftirdQfremLX8InLveWiiMuX6DCha0XIoewAVMkuqXzmhgQ
-         h2QQz5Z5s9OC020DL3xn4rMqY0CedZ3RZ1Z33b5TmBDYYyn0i2b0Bfq7N3QHaregiUdU
-         rBdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=7bmfSdcP8nAJ6eufJvnZyOOA5fmvgr+qxvCK6Eif1M8=;
-        b=X6jjrju8WO5gf+J8slSL4EbFIPpkWvxXpB9/5wixMMR6C7Wbq8zfgYK+9fVlesfGhK
-         M3Ai1cyJk/HhaHP+2dX/PXr+YQasz+6ebuy7pPZ3KlwVY5OdR8/AZttHEmfjYNAundgO
-         vFUiGqp4ckg9iUoF0biuLid+clYee9sMRGwITTsxWlt6PDy1ke213Qg3zdXjtbrXIqI8
-         eNpeiamRe8iDwiT8OuLnyIZJlrbHcgdf/sSpSS+zkQXIH1/Rxczbq33x1OMznlPKEY9G
-         VXLVIiWrwVJ0QRJaEIEpp9rMlzXPatHLhm1I6tO9pd05I2O6ldCJmPqNvqEGexpJpb1V
-         l0NA==
-X-Gm-Message-State: AOAM531dU+I1Zg6DaBVJ2HKvTcM8uomdt8mJ5K6Mr5wVAhRzvETPnUdt
-        2oVrGkkqkzV1L11sMgMv65JgTCSuaNE=
-X-Google-Smtp-Source: ABdhPJxRuWMchbZpnBgVASzaeeTvW03Mo41per/jH9BlTQnm/4RZmD3Ce0Kf6Te/n5xLF+SccGNSCQ==
-X-Received: by 2002:a2e:6808:: with SMTP id c8mr2580495lja.13.1597129967438;
-        Tue, 11 Aug 2020 00:12:47 -0700 (PDT)
-Received: from saruman ([194.34.132.58])
-        by smtp.gmail.com with ESMTPSA id s1sm11520605lfi.76.2020.08.11.00.12.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Aug 2020 00:12:46 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org
-Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
-In-Reply-To: <b0c8a95b-45e3-0d79-2a7c-14c8936dd551@codeaurora.org>
-References: <20200624022848.7765-1-wcheng@codeaurora.org> <20200624022848.7765-2-wcheng@codeaurora.org> <87d03yptxi.fsf@kernel.org> <b0c8a95b-45e3-0d79-2a7c-14c8936dd551@codeaurora.org>
-Date:   Tue, 11 Aug 2020 10:12:41 +0300
-Message-ID: <877du5pseu.fsf@kernel.org>
+        Tue, 11 Aug 2020 03:39:51 -0400
+Received: from mail-eopbgr00062.outbound.protection.outlook.com ([40.107.0.62]:21889
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726397AbgHKHjv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Aug 2020 03:39:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QwX8qKT3wglDwqBCkpQVMXKMdSV6EmU87f36e9eVzLsaziyRBjKVWREQOYCfNjyekOhWuX87QCo/8yUhO+qenr8TdN6lojN6/67/HoTIUOBSNtdkxAQZ29UvQS8PXea6ydge48JNi7YBsNjpsxg4fE/KJD8Mz45xBvKqGyZfOwYZfN0mgZJT4vtypwZx1UC21ZU0AlLGA6aIXXSF5NZOh0Exdrxi07Wf/DAG5CcsT0EWBYDFDAc8VyK4V5ac6NokOAf7mhCTqsdOpbWbQEO2/PJF/EuuzEwRU4mZIj3smAjXdwbdQv9ToNbMrwWX+xGUmsghCNUfnT4b9wH00PakCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wMKxs/ZEjDEgld8kt/MVxOQ0Otgzqax1Huz6azM9aIo=;
+ b=cYZqcKT40oXwp1fDQ3k17U/vDt3Pp70vGewGO+/ICNTqf7Aengbg2eHSD5i8OwpEaveJeceJ+ZhsrUMFyeCSnxFcy9LtAFjICde5T+KEEFsPPCJTPG+o4ITW6HmlA/uhWh3n+QEkZMB6jV+OSAw3VM4fL+Lmj9A9+8I7DQkXTZRtX5OMtyne+Egm55IoP3bm9KODr9GBSPCQt3hhPBmW1KIdKUmfON+EtB7qbQJJwTR8cmUm3BKcJZ1iQZ/8tK+3QYMhWA6RN5rlYXpgZYA3k9aINLRjMjf7WfB1Z9HPXd/u3EEwCK9bOz/28eBev3KE6RWe9IQLBEMlJTG7Of4PaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wMKxs/ZEjDEgld8kt/MVxOQ0Otgzqax1Huz6azM9aIo=;
+ b=EXEYlndCfIxP3jalkExqPYAbFML7qyqpjR/AZZntpg7EnLdN7YCb5q6dlWG5xBcgoaHZaKAEh0iIDtWDUzCyHxJrAezcJc60JPy3mb34Z9Q+YlaAirEPfDUl70Muj3z6WofWJ5w3pgnAfQvICx+dOFRA/xpd5RWD8Mqg5hBoqlY=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB6630.eurprd04.prod.outlook.com (2603:10a6:20b:f4::33)
+ by AM6PR04MB4006.eurprd04.prod.outlook.com (2603:10a6:209:3f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Tue, 11 Aug
+ 2020 07:39:45 +0000
+Received: from AM6PR04MB6630.eurprd04.prod.outlook.com
+ ([fe80::c9b8:4020:7705:e3dd]) by AM6PR04MB6630.eurprd04.prod.outlook.com
+ ([fe80::c9b8:4020:7705:e3dd%7]) with mapi id 15.20.3261.025; Tue, 11 Aug 2020
+ 07:39:45 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
+        frieder.schrempf@kontron.de, r.schwebel@pengutronix.de
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
+Subject: [PATCH v12 00/12] add ecspi ERR009165 for i.mx6/7 soc family
+Date:   Tue, 11 Aug 2020 23:53:39 +0800
+Message-Id: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2P153CA0014.APCP153.PROD.OUTLOOK.COM (2603:1096::24) To
+ AM6PR04MB6630.eurprd04.prod.outlook.com (2603:10a6:20b:f4::33)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2P153CA0014.APCP153.PROD.OUTLOOK.COM (2603:1096::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3305.2 via Frontend Transport; Tue, 11 Aug 2020 07:39:39 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 226765bf-889c-4756-3a27-08d83dc9b75c
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4006:
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR04MB4006FBB024BB424CC9A5E45289450@AM6PR04MB4006.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XXdzyXHfnZk/ylcAWLhpn6S7VjdHsRzVP38KRHqDkUuhucODHCLpI60ssJ7F25mElV4zr1HoSwRuCDrY9yYwhybnUs/uXpMfj7+Qe0jPyXJ5KlNwP6WT7a7kCl+DHDSO51SJLCHv9fGfIYwrdlBVEawFztuZ98bz3EywcqnoVVB9vx6EU49E/19vZdDuJUYoTtHVHSSOc6LSp+s256NJTUR6MT8+s+7cW/N+02PpiutIzXfkYaqk/UWQu+FYrnXGMjDeDAi5o61ylIeKmDmmckgK++RMp5WCDZJ7nzIVlwHQLdfIdegF6XwsCZTIXb9qiMvtlMfXrutns82MQr6+Pj5SBY/ONWW/Gok5OXbV/skjkHzttCaB3upwJd31Y9Gy/ZW8ZLUNFCL18WezLQTrWwCBFwUQxPsZO194inMe8qVE8tZc0ho/5/XcrEwkGnEc
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB6630.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(39860400002)(396003)(376002)(136003)(316002)(8936002)(6486002)(4326008)(86362001)(478600001)(966005)(8676002)(7416002)(2616005)(5660300002)(956004)(6506007)(66946007)(186003)(52116002)(26005)(16526019)(66476007)(66556008)(2906002)(6512007)(83380400001)(36756003)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: jI00qO/DhRJizzSpL4Tf4e9owUxiWY9WA5vRFBISGqRsEtV0kInyoPFWVAAc7aq04vd65B8Pvv7o+XSQbs2VTR53Qo0YCxSSQA0q1i2+7LhXADBw7W6PoJCv6J6nQwa8L5h6uQScC8abF9N69TD2+KlJcUywWhTbBwJnU+DHbBMVtQThv2GVZhGSqsp+5AKX+gurzHIKjN8ppF4hZvh9DtE6EMnpawt9CNtcSIxzi9jxSSCMZbZ2CXxWTWpnkg4CiQdxCRZkRU2Q8z7QmuVIJhQTnED3bColJ/MHUytHFN3rRgCLGLM1PXkENGl+cjJfUU/B5Hw4qNN2eRD/6aEs8fnpcZ+rD4zgAOy4dug5hX+5OZxpf1vQ0qX4gb+VCbbXI0iXaSU0qYAwbmJhJ/jwo0TRP5EoJ659NKcskYOuvnku+aOcmxN2zfvilsxLVtIDSV6AH5Rm7641u5tcuPC1MNv/Lh6y84PEhOlOscA8X2spKv3tJcUTl1xyGFQg8iImqplmxJuhyLBFUga9taEIEh41aX9nAbmsT1x+DuD4REttC99hscLNdvFlGEnmQgruX2eO3QaG3khWxQc8eD4Tuz1bFvmitBKlrYgSeJcPL1oOHtM8CF1KMwaSeuBto7gUSVI9dlNw8P0J3q9190jOUQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 226765bf-889c-4756-3a27-08d83dc9b75c
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB6630.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 07:39:44.8929
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C29B17eyJLxKKpdkV7vbRWXM19P0OiuQFZUi3K2PdeFhMUp9SShFESQ+sLhniCEHiJiVXmmwe2/l2lcO0ZagFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4006
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+transfer to be send twice in DMA mode. Please get more information from:
+https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+new sdma ram script which works in XCH  mode as PIO inside sdma instead
+of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+exist on all legacy i.mx6/7 soc family before i.mx6ul.
+NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+or not.
+The first two reverted patches should be the same issue, though, it
+seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+have the chance to test this patch set if could fix their issues.
+Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+on i.mx8mm because the event id is zero.
 
+PS:
+   Please get sdma firmware from below linux-firmware and copy it to your
+local rootfs /lib/firmware/imx/sdma.
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-Hi,
+v2:
+  1.Add commit log for reverted patches.
+  2.Add comment for 'ecspi_fixed' in sdma driver.
+  3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+    rather than remove.
+v3:
+  1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+    /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+    Correct dts related dts patch in v2.
+  2.Clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+    in spi-imx driver to state ERR009165 fixed or not.
+  3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+    errata workaroud, thus improve performance as possible.
+v4:
+  1.Add Ack tag from Mark and Vinod
+  2.Remove checking 'event_id1' zero as 'event_id0'.
+v5:
+  1.Add the last patch for compatible with the current uart driver which
+    using rom script, so both uart ram script and rom script supported
+    in latest firmware, by default uart rom script used. UART driver
+    will be broken without this patch.
+v6:
+  1.Resend after rebase the latest next branch.
+  2.Remove below No.13~No.15 patches of v5 because they were mergered.
+  	ARM: dts: imx6ul: add dma support on ecspi
+  	ARM: dts: imx6sll: correct sdma compatible
+  	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+  3.Revert "dmaengine: imx-sdma: fix context cache" since
+    'context_loaded' removed.
+v7:
+  1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix context
+    cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma: refine
+    to load context only once" so that no building waring during comes out
+    during bisect.
+  2.Address Sascha's comments, including eliminating any i.mx6sx in this
+    series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and taking
+    care SMC bit for PIO.
+  3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
+   'spi: imx: add new i.mx6ul compatible name in binding doc'
+v8:
+  1.remove 0003-Revert-dmaengine-imx-sdma-fix-context-cache.patch and merge
+    it into 04/13 of v7
+  2.add 0005-spi-imx-fallback-to-PIO-if-dma-setup-failure.patch for no any
+    ecspi function broken even if sdma firmware not updated.
+  3.merge 'tx.dst_maxburst' changes in the two continous patches into one
+    patch to avoid confusion.
+  4.fix typo 'duplicated'.
+v9:
+  1. add "spi: imx: add dma_sync_sg_for_device after fallback from dma"
+     to fix the potential issue brought by commit bcd8e7761ec9("spi: imx:
+     fallback to PIO if dma setup failure") which is the only one patch
+     of v8 merged. Thanks Matthias for reporting:
+     https://lore.kernel.org/linux-arm-kernel/5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com/
+  2. remove 05/13 of v8 "spi: imx:fallback to PIO if dma setup failure"
+     since it's been merged.
+v10:
+  1. remove 01/13 "spi: imx: add dma_sync_sg_for_device after fallback from dma"
+     since there is another independent patch merged:
+     -- commit 809b1b04df898 ("spi: introduce fallback to pio")
+  2. add "dmaengine: dma: imx-sdma: add fw_loaded and is_ram_script" which
+     is used to fix the potential dma_alloc_coherent() failure while this
+     patchset applied but sdma firmware may not be ready for long time.
+  3. burst size change back from fifo size to normal wml to align with nxp
+     internal tree which has been test for years. Overnight with loopback
+     test with spidev failed with fifo size, but pass with wml(half of fifo
+     size).Seems the whole fifo size fed may cause rxfifo overflow during
+     tx shift out while rx shift in.
+     "spi: imx: remove ERR009165 workaround on i.mx6ul"
+  4. remove 12/13 'dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm'
+     since below two similar patches merged:
+     -- commit 25962e1a7f1d ("dmaengine: imx-sdma: Fix the event id check to
+     include RX event for UART6")
+     -- commit 2f57b8d57673 ("dmaengine: imx-sdma: Fix: Remove 'always true'
+     comparison")
+v11:
+  1. change dev_err() to dev_warn_once() in case sdma firmware not loaded to
+     eliminate meaningless duplicate log print.
+v12:
+  1. take care uart_2_mcu_addr/uartsh_2_mcu_addr since such rom scripts are
+     now located in the bottom part of sdma_script_start_addrs which are beyond
+     the SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1. Reported by Frieder as below:
+     https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2263544.html
 
-Wesley Cheng <wcheng@codeaurora.org> writes:
-> On 8/10/2020 5:27 AM, Felipe Balbi wrote:
->> Wesley Cheng <wcheng@codeaurora.org> writes:
->>=20
->> Hi,
->>=20
->>> Some devices have USB compositions which may require multiple endpoints
->>> that support EP bursting.  HW defined TX FIFO sizes may not always be
->>> sufficient for these compositions.  By utilizing flexible TX FIFO
->>> allocation, this allows for endpoints to request the required FIFO dept=
-h to
->>> achieve higher bandwidth.  With some higher bMaxBurst configurations, u=
-sing
->>> a larger TX FIFO size results in better TX throughput.
->>=20
->> how much better? What's the impact? Got some real numbers of this
->> running with upstream kernel? I guess mass storage gadget is the
->> simplest one to test.
->>=20
-> Hi Felipe,
->
-> Thanks for the input.
->
-> Sorry for not including the numbers in the patch itself, but I did
-> mention the set of mass storage tests I ran w/ the upstream kernel on
-> SM8150 in the cover letter.  Let me just share that here:
->
-> Test Parameters:
->  - Platform: Qualcomm SM8150
->  - bMaxBurst =3D 6
->  - USB req size =3D 256kB
->  - Num of USB reqs =3D 16
->  - USB Speed =3D Super-Speed
->  - Function Driver: Mass Storage (w/ ramdisk)
->  - Test Application: CrystalDiskMark
->
-> Results:
->
-> TXFIFO Depth =3D 3 max packets
->
-> Test Case | Data Size | AVG tput (in MB/s)
-> -------------------------------------------
-> Sequential|1 GB x     |
-> Read      |9 loops    | 193.60
-> 	  |           | 195.86
->           |           | 184.77
->           |           | 193.60
-> -------------------------------------------
->
-> TXFIFO Depth =3D 6 max packets
->
-> Test Case | Data Size | AVG tput (in MB/s)
-> -------------------------------------------
-> Sequential|1 GB x     |
-> Read      |9 loops    | 287.35
-> 	  |           | 304.94
->           |           | 289.64
->           |           | 293.61
-> -------------------------------------------
+Robin Gong (12):
+  Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+  Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+  Revert "dmaengine: imx-sdma: refine to load context only once"
+  dmaengine: imx-sdma: remove duplicated sdma_load_context
+  dmaengine: dma: imx-sdma: add fw_loaded and is_ram_script
+  dmaengine: imx-sdma: add mcu_2_ecspi script
+  spi: imx: fix ERR009165
+  spi: imx: remove ERR009165 workaround on i.mx6ul
+  spi: imx: add new i.mx6ul compatible name in binding doc
+  dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+  dma: imx-sdma: add i.mx6ul compatible name
+  dmaengine: imx-sdma: add uart rom script
 
-awesome, thanks a lot for this :-) It's a considerable increase in your
-setup. My only fear here is that we may end up creating a situation
-where we can't allocate enough FIFO for all endpoints. This is, of
-course, a consequence of the fact that we enable one endpoint at a
-time.
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+ arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
+ drivers/dma/imx-sdma.c                             | 76 +++++++++++++++++-----
+ drivers/spi/spi-imx.c                              | 52 +++++++++++++--
+ include/linux/platform_data/dma-imx-sdma.h         |  8 ++-
+ 7 files changed, 119 insertions(+), 29 deletions(-)
 
-Perhaps we could envision a way where function driver requests endpoints
-in bulk, i.e. combines all endpoint requirements into a single method
-call for gadget framework and, consequently, for UDC.
+-- 
+2.7.4
 
->>> +	if (!dwc->needs_fifo_resize)
->>> +		return 0;
->>> +
->>> +	/* resize IN endpoints except ep0 */
->>> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <=3D 1)
->>> +		return 0;
->>> +
->>> +	/* Don't resize already resized IN endpoint */
->>> +	if (dep->fifo_depth)
->>=20
->> using fifo_depth as a flag seems flakey to me. What happens when someone
->> in the future changes the behavior below and this doesn't apply anymore?
->>=20
->> Also, why is this procedure called more than once for the same endpoint?
->> Does that really happen?
->>=20
-> I guess it can be considered a bug elsewhere (ie usb gadget or function
-> driver) if this happens twice.  Plus, if we decide to keep this in the
-> dwc3 enable endpoint path, the DWC3_EP_ENABLED flag will ensure it's
-> called only once as well.  Its probably overkill to check fifo_depth here.
-
-We could add a dev_WARN_ONCE() just to catch any possible bugs elsewhere.
-
->>> +	if (remaining < fifo_size) {
->>> +		if (remaining > 0)
->>> +			fifo_size =3D remaining;
->>> +		else
->>> +			fifo_size =3D 0;
->>> +	}
->>> +
->>> +	fifo_size +=3D fifo;
->>> +	fifo_size++;
->>=20
->> why the increment?
->>=20
-> This is to account for the last +1 in the equation from the DWC3 databook:
-> fifo_size =3D mult * ((max_packet + mdwidth)/mdwidth + 1) + 1 <- this one
-
-great, could you add this detail as a comment so it doesn't look as
-cryptic? :-)
-
->>> +	return 0;
->>> +}
->>> +
->>>  static int dwc3_gadget_set_ep_config(struct dwc3_ep *dep, unsigned int=
- action)
->>>  {
->>>  	const struct usb_ss_ep_comp_descriptor *comp_desc;
->>> @@ -620,6 +731,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep =
-*dep, unsigned int action)
->>>  	int			ret;
->>>=20=20
->>>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
->>> +		ret =3D dwc3_gadget_resize_tx_fifos(dep);
->>> +		if (ret)
->>> +			return ret;
->>=20
->> doesn't it look odd that you're resizing every fifo every time a new
->> endpoint is enabled? Is there a better way to achieve this?
->>=20
-> We're only resizing a single fifo per call, and clearing the previous
-> fifo configuration upon receiving the set address.  In the past, I know
-> the change was to resize all fifos after receiving the set configuration
-> packet.  With that approach, I believe we saw issues with some function
-> drivers that immediately queued a USB request during their set_alt()
-> routine, followed by the dwc3 ep0 driver calling the TX fifo resize
-> API.(as the tx fifo resize was executed after we delegated the set
-> config packet to the USB composite)
-
-I don't remember seeing such an issue. Allocating FIFOs after we know
-the entire requirements would avoid another possible situation, that of
-dwc3 exausting FIFO space before it knows there are more enpdoints to
-enable.
-
-One possibility around this was suggested above, something along the
-lines of:
-
-	usb_gadget_ep_enable_bulk(struct usb_gadget *, struct
-		usb_ep_alloc_desc *alloc_desc)
-
-(please think of better names, I'm hopeless haha)
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8yROkACgkQzL64meEa
-mQYsgw//VrujRt4ABbuiEhJpUVG0Uu0meU5L8aQMg+eTI3U55m2TViV+G+sIs1+T
-JjE8Ly1rGqaBL+M3uf38+XNqaHL63J25udIgKeycTb3hOurfQMbqIXUBmVmaMe7l
-XGIu4oGw7K4iH0VyqTomvfnWidVRgJMYygv6OFMiSkgGugWW2A4wJ5Wum/+8VweB
-YpNSOXC7rp12Ws/cL3+760sJPEqS1FrND33MEilIVJh2nWUk8UEalBo16+OCcf7Y
-IzWP+ek6355TiKbCvTCE9OMhg1AySEF3nzXrne1LJkZGBYJrUZ0dQh7h6mmdPZIy
-jRwspFEu0eNHDdpuKdCuMurVNc6rJR9RXFsCQJSUFXDig8KJOMlRVO5GlsmHhfjt
-VEdHhej0ZZDxL+M49Af9OBV6VXE0KrUE2FU7j/wotYV+A+7pn+5M1/aMaBFy62OA
-96EjNiPBGf9O/6fvhCt3zFp+d+g2el0A7Jbha9N8W+aHQM8YOiQ9pW+ulqQh2du5
-SoiTtmIzg0DBDlS6Kei4w04e/keD+vn09ALLsbaKE1E3swDq5t8ZKlek2GErugNO
-LegzKyzJe9f5mop1EE0L/1xVzGI1bhcYeDHfPJt3LlWess2XxVZ5+ysGklD4Fs0u
-bBLlQ3EvO7vyzN/GntKDZjyr/DuHqEQ+MCp4YbkolTu2HYhqxb4=
-=vvEl
------END PGP SIGNATURE-----
---=-=-=--
