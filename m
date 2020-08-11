@@ -2,100 +2,112 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C66C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 11:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3904C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 11:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F742076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 11:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597145688;
-	bh=tXSK1bbJjI8f7pE16RsNSU4/vL0xPNkq0yMICmwmV7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0riFWjWEg2BGMtSDpaup/0xEgU60Xq9cYHC0AIjAgV35UjNsa+Wq84UXikGJk+gzC
-	 7MN9eLUX/xd4UzDO17DPiGiRgssG+2z5xBq5clHiCMVDBHSPuqWUg/8DtEpW6A8187
-	 ml153yApVK3uBaTerQgvVxv0NanzilOycgL/RscQ=
+	by mail.kernel.org (Postfix) with ESMTP id B594620716
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 11:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Owbomwry"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgHKLes (ORCPT
+        id S1728454AbgHKLkW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 07:34:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728454AbgHKLer (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Aug 2020 07:34:47 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A051C20658;
-        Tue, 11 Aug 2020 11:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597145686;
-        bh=tXSK1bbJjI8f7pE16RsNSU4/vL0xPNkq0yMICmwmV7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pH40c6yTYqg22uhlT4NSUDlyC96ngKf0rrFT+lKuLnUPSnEmZzI4DU/7BeBTiXgrv
-         ZuLMX5dhmPB1MCEWquSnPrmgtTHJwRxj+sJlRXYObCD0aulnGT6FZWQEE0IhPB1wcp
-         uIQ7FPzd22LXMgvgvccxjud+Qxl752QjsaNXOlI0=
-Date:   Tue, 11 Aug 2020 12:34:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rohit Kumar <rohitkr@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ajit Pandey <ajitp@codeaurora.org>
-Subject: Re: [PATCH v5 01/12] ASoC: qcom: Add common array to initialize soc
- based core clocks
-Message-ID: <20200811113418.GD6967@sirena.org.uk>
-References: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
- <1596528453-11437-2-git-send-email-rohitkr@codeaurora.org>
- <3e390421-84ce-3b74-a72d-8fc09e908971@codeaurora.org>
+        Tue, 11 Aug 2020 07:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgHKLkV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 07:40:21 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 234FBC06174A
+        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 04:40:21 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x15so1937642plr.11
+        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 04:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yz4TcW9rTup6J1JHf4cL+vgG/kmFz0aHv9ruePdNsKs=;
+        b=OwbomwryuHmiOn5hy7eYtGyiClOiCcWJDWxsATng2SfBZjNv4F+rhN++srWChEOyIp
+         IIbTu2KcACM8Io/5U+ed1Px+/yOuzl70Ed3jMBW/OjicT0u+ynAN6xcCrGSNpnrub1gb
+         6kkxQCekx2kYh+Y3vxmeBHHLXi+Foh3S6MVum2Os+Qidchsd2LxSHOFbQYhV26IXzL9u
+         WBCK3pXjTHbkE5ed3HrxO4Xc/a6R4L6jtqa7yHC5AfwbIBJhcn64A7ipDVSLZ4D3vuOJ
+         T2B+jy7BOYY8QBro7gxWbDiG9Ir0yDSBXVCanb3s9t5A6SYmNgq2KvDOxKhOdSUjYbGY
+         1uXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yz4TcW9rTup6J1JHf4cL+vgG/kmFz0aHv9ruePdNsKs=;
+        b=JGKI52E2ULdY6gmNyf/91r+pOzZMCZ8TiROs+8R6jjW8OQIz5D9N5vg5rz1ebk/lMK
+         E2eJEVgtgBUtNobVGXiUKOnWN3G8wcsl3XeeBKLG8ds0hVNHcI5sNdgkE+RwAFKxjpJ7
+         z1gYUxUxvz3meEADe6rLUFMoF0OkJVy++jPjuHSWHhHvQmmqfEoS4tewAw+piwM8fMkR
+         2adyminIiIhpZrMTOjlOpbvkfteAtQjcEhoIwCcG67Koa7Rq1j6QKbHLD0eBFN4M+vor
+         DD6vm2ycj+8EYURrRj1M5P9zqBDFxnW8iUivIjBd9I59sWa5xtsOdpQZ4Na6ZpAhsQCj
+         Syww==
+X-Gm-Message-State: AOAM533f0LvQf79B0KyHx9H2sqLF4eoGtxmvkWGGQJcsoTHk3cQYmKH9
+        iGg9wLMz/If4JnVVDQzhjLP/tg==
+X-Google-Smtp-Source: ABdhPJxBcA3xjSg7J7I1G+dD1OTi46lk8vkw86E5QUA7ZoYDypIkJGMn79PaN++6AgEprAKWBFDtFg==
+X-Received: by 2002:a17:90a:77c9:: with SMTP id e9mr654872pjs.142.1597146020082;
+        Tue, 11 Aug 2020 04:40:20 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id gj2sm2600448pjb.21.2020.08.11.04.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 04:40:19 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [RESEND PATCH v3 0/2] Add support for Tianma nt36672a video mode panel
+Date:   Tue, 11 Aug 2020 17:10:08 +0530
+Message-Id: <20200811114010.17807-1-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
-Content-Disposition: inline
-In-Reply-To: <3e390421-84ce-3b74-a72d-8fc09e908971@codeaurora.org>
-X-Cookie: Gravity is a myth, the Earth sucks.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Some Poco F1 phones from Xiaomi have an nt36672a video mode panel; add support
+for the same.
+Most of the panel data is taken from downstream panel dts, and is converted to
+drm-panel based driver by me.
+It has been validated with v5.8-rc5 on Poco F1 phone; my tree with other
+dependent patches is here [1]
 
---Hf61M2y+wYpnELGG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[1]: https://git.linaro.org/people/sumit.semwal/linux-dev.git/log/?h=dev/poco-panel-upstreaming
 
-On Tue, Aug 11, 2020 at 04:13:03PM +0530, Rohit Kumar wrote:
+---
+v2: In dt-binding, removed ports node, making port@0 directly under panel@0 node.
+    Also updated the panel_on delay to a safer 200ms as needed for latest Android.
+v3: Replaced port@0 with just port in panel@0 node.
 
-> Do you see any concern with patches (1-11).
-> As of now, there is comment only in patch 12 from Rob which I am
-> planning to update once other patches are merged. Can you
-> please review and let me know if anything is missing.
+[1]: 
 
-Please just post the fixed series instead of sending me a stream of
-pings, it must be taking you more time to do this than it would to just
-send the fix.  I'm not going to apply your patches during the merge
-window, they are not bug fixes and sending me content free pings just
-makes me delay the review.
+Sumit Semwal (2):
+  dt-bindings: display: panel: Add bindings for Tianma nt36672a panel
+  drm: panel: Add tianma nt36672a panel driver
 
---Hf61M2y+wYpnELGG
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../display/panel/tianma,nt36672a.yaml        |  95 ++
+ MAINTAINERS                                   |   7 +
+ drivers/gpu/drm/panel/Kconfig                 |  11 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-tianma-nt36672a.c | 859 ++++++++++++++++++
+ 5 files changed, 973 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-tianma-nt36672a.c
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.27.0
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ygjkACgkQJNaLcl1U
-h9C3RQf+PBe4o8K1iH4v9zKqTg+1dkOUhKkRgi+zmCmrCy0wnVLIGktdvj8PoOth
-GeEGbH6rwDHgoaPShdTLAykiT6SKUWOd6ORFRfQtoMCF1Wi7ZowLA5ewKguKTpN5
-rNCSk5wWOHjBR9Iys8swI05RzZngX2gARWUdUcU3TqRQGDhtvM9C8nM46TUFxrG2
-e3x7GVEvrWuRmO+4+e7B9x7Ax+raNo3skRiWvASCRi0pItCxRbvJWOS21Q6DTAn0
-8ZIAQVkI+DDm2kqnvJfxx6IiNTNL9Bcpf3T9BEKhQbud96OOer3iWY+X5X1RTeoM
-jvlXIkOdDhohHWms7RtOxp2Drhu6/g==
-=WQkS
------END PGP SIGNATURE-----
-
---Hf61M2y+wYpnELGG--
