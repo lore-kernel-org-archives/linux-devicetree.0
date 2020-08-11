@@ -2,134 +2,235 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F33C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E824C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 09:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A623A206B5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F282076B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 09:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597137160;
+	bh=JRnhXaH/f3fE892cqJcIwk+cBEd8EiSVWDW91lbdx2Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=qS8iDCtRXSbz2hOayXfsxF3bVx5w82jqG/ZVNnpGWNUFqbYGegPphOMQWK6wIJsjy
+	 6qdrVR7PIlxNmZ0RKH0xGUiiLDU9vp+aoOHVyU40xLYnHF4QhvkF4L7GOtpe9LWtss
+	 uuDDz34w2wcKpv9iy1LtxWUzposqwYyTWF8t0zMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgHKI5v (ORCPT
+        id S1728367AbgHKJMb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:57:51 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33872 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgHKI5v (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:57:51 -0400
-IronPort-SDR: hhrZbCcZRh0Sdybu/vfzBM6qAONDK1+1j3R6DppUJ3gqgUZ8YF3rjl//Jh+07QQcW8Qu2DnN4i
- bT7tXicfI20g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="218030568"
-X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
-   d="scan'208";a="218030568"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:49 -0700
-IronPort-SDR: EmAtZuRpcdtRFUCT8R9mvEDeG40/XSjZz7NwrbIXaM72Jbh4UNwML1IGy6XVooLEowvXfWqy3P
- Zit6SPImqfOg==
-X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
-   d="scan'208";a="277522857"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:46 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 391D8206E3; Tue, 11 Aug 2020 11:57:44 +0300 (EEST)
-Date:   Tue, 11 Aug 2020 11:57:44 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Tue, 11 Aug 2020 05:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbgHKJMa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 05:12:30 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD18C06174A;
+        Tue, 11 Aug 2020 02:12:28 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g6so12652738ljn.11;
+        Tue, 11 Aug 2020 02:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Eqc+3NbaxwoojpJ4wCmnVzMHGK5tFF910hokAKhwEAQ=;
+        b=QGaJh62swSOyNJSej4GYVVg1+IdjpM91enN86WzVB5D+VT3gJ4F2gVyA67n+QbKlwi
+         vOTvwRtaSkKpVxiRAM6wu07GI0JFfpOm8/6lScOdsMeg9mVzJW0sJjUcEG8LePKK5UzG
+         vOmRdtSMMmGeXonsMVc+4kuQntv6eIFkgFRChGKD0yE7iLNJhb781Qegs1T/6rjUmYSY
+         yHHMHg6aSyFt7wH61PFJNXIJLwCtHc/CnVtcnIvwMNol9qgLVN0L4hoiwDdWAnXfpp6d
+         7C3oBFWGT6N6Sq5YOV1MyyY5dEVm//TnIWGtn5HxSJ2+FFCMhhYhgY3tXa85AwwGEY5K
+         kO1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=Eqc+3NbaxwoojpJ4wCmnVzMHGK5tFF910hokAKhwEAQ=;
+        b=BUGSmkK2CbeLYf1+o60B+F3yS99E892Zdt71hMaH1zwRrYjTs6hq8zJJMzCcEDpsU+
+         J1TkAGtLqa74N+ExkqpGGABUj9r4oPHWQrrwRjUWEmEFLvOs2UxM8P9Rv2LdK/W67Dbl
+         gNokHJcd3AD42Dt+LiV29LDDt+PHHinmMQxrU4Tcrn4DXGpzZ6G6x5pZOGx0itHpTAT/
+         v5Z2JByJA2y06GuKZPt6DtzeKMwZ65YcBVzEJK3KUbFZbTRZP8hA3YczwXLgMGWXytcy
+         mP/EoHQnlGz5gslXISTCao3tICIXshl3/3m4kijnop4pZsSTv1y5TFEDgjIVwLCoCjGe
+         9qvg==
+X-Gm-Message-State: AOAM533fHwVsdqVrVtchwmqorfIKe8D7ybF1KYB94Bk4Fnal+yUx/Nem
+        Ko6n2nn4mSxSSp/ilAObqFA=
+X-Google-Smtp-Source: ABdhPJyywIbiOv+zXy+wOQ3SXRh/6kavcG9IMhbtAn8xZQHQnrTcXEUm0BS+Ph7ZWqu7cv6m9U017Q==
+X-Received: by 2002:a2e:3c10:: with SMTP id j16mr2740226lja.324.1597137147094;
+        Tue, 11 Aug 2020 02:12:27 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id d20sm11416961lfn.85.2020.08.11.02.12.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 02:12:26 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] i2c: Allow driver to manage the device's power
- state during probe
-Message-ID: <20200811085744.GK16270@paasikivi.fi.intel.com>
-References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
- <20200810142747.12400-2-sakari.ailus@linux.intel.com>
- <20200810144148.GD31434@bogus>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org> <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+Date:   Tue, 11 Aug 2020 12:12:20 +0300
+Message-ID: <874kp9pmvf.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200810144148.GD31434@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sudeep,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the review.
+Sandeep Maheswaram <sanm@codeaurora.org> writes:
 
-On Mon, Aug 10, 2020 at 03:41:48PM +0100, Sudeep Holla wrote:
-> On Mon, Aug 10, 2020 at 05:27:42PM +0300, Sakari Ailus wrote:
-> > Enable drivers to tell ACPI that there's no need to power on a device for
-> > probe. Drivers should still perform this by themselves if there's a need
-> > to. In some cases powering on the device during probe is undesirable, and
-> > this change enables a driver to choose what fits best for it.
-> >
-> > Add a field called "flags" into struct i2c_driver for driver flags, and a
-> > flag I2C_DRV_FL_ALLOW_LOW_POWER_PROBE to tell a driver supports probe in
-> > low power state.
-> >
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  drivers/i2c/i2c-core-base.c | 17 ++++++++++++++---
-> >  include/linux/i2c.h         | 14 ++++++++++++++
-> >  2 files changed, 28 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> > index 34a9609f256da..cde9cf49a07e6 100644
-> > --- a/drivers/i2c/i2c-core-base.c
-> > +++ b/drivers/i2c/i2c-core-base.c
-> > @@ -436,6 +436,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
-> >  	return irq > 0 ? irq : -ENXIO;
-> >  }
-> >
-> > +static bool allow_low_power_probe(struct device *dev)
-> > +{
-> > +	struct i2c_driver *driver = to_i2c_driver(dev->driver);
-> > +
-> > +	return driver->flags & I2C_DRV_FL_ALLOW_LOW_POWER_PROBE &&
-> > +		device_property_present(dev, "allow-low-power-probe");
-> 
-> I assume this change makes even the DT property "allow-low-power-probe"
-> work in the same way. Should we have proper DT binding for that ?
-> 
-> This comment applies for any property using device_property_* but has
-> no explicit DT binding ? Just asking the question to know the strategy
-> followed. Sorry if this is redundant question, feel free to point me
-> to the past discussions.
+> Avoiding phy powerdown in host mode so that it can be wake up by devices.
+> Set usb controller wakeup capable when wakeup capable devices are
+> connected to the host.
+>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
+>  drivers/usb/dwc3/core.h      |  1 +
+>  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----=
+------
+>  3 files changed, 91 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..8370350 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,15 +31,19 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+>=20=20
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+>=20=20
+>  #include "debug.h"
+> +#include "../host/xhci.h"
 
-It's not a redundant question, no.
+nope
 
-I²C drivers on OF are responsible for controlling device's power state
-already (using runtime PM or without) so I think the drivers could use the
-property directly on OF systems (and document the property in DT bindings
-first) if there's a need to. IOW this code isn't needed on OF.
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
+>=20=20
+> +bool need_phy_for_wakeup;
 
-Note that the power_on or power_off arguments are not used by
-genpd_dev_pm_attach() or genpd_dev_pm_detach() so this patch only affects
-ACPI. I think I should check the device is an ACPI device above, for
-clarity.
+nope
 
-Cc also DT list. The entire set is here:
+> +
+>  /**
+>   * dwc3_get_dr_mode - Validates and sets dr_mode
+>   * @dwc: pointer to our context structure
+> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 =
+*dwc)
+>  	return ret;
+>  }
+>=20=20
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
+> +{
+> +
+> +	int i, num_ports;
+> +	u32 reg;
+> +	struct usb_hcd	*hcd =3D platform_get_drvdata(dwc->xhci);
+> +	struct xhci_hcd	*xhci_hcd =3D hcd_to_xhci(hcd);
+> +
+> +	dwc->hs_phy_flags &=3D ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
+> +
+> +	reg =3D readl(&xhci_hcd->cap_regs->hcs_params1);
+> +
+> +	num_ports =3D HCS_MAX_PORTS(reg);
+> +	for (i =3D 0; i < num_ports; i++) {
+> +		reg =3D readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
+> +		if (reg & PORT_PE) {
+> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_HS;
+> +			else if (DEV_LOWSPEED(reg))
+> +				dwc->hs_phy_flags |=3D PHY_MODE_USB_HOST_LS;
+> +		}
+> +	}
+> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
 
-<URL:https://lore.kernel.org/linux-acpi/20200810142747.12400-1-sakari.ailus@linux.intel.com/>
+XHCI already supports PHY framework, no?
 
--- 
-Kind regards,
+>  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+>  {
+>  	unsigned long	flags;
+>  	u32 reg;
+> +	struct usb_hcd  *hcd =3D platform_get_drvdata(dwc->xhci);
+>=20=20
+>  	switch (dwc->current_dr_role) {
+>  	case DWC3_GCTL_PRTCAP_DEVICE:
+> @@ -1643,9 +1673,10 @@ static int dwc3_suspend_common(struct dwc3 *dwc, p=
+m_message_t msg)
+>  		dwc3_core_exit(dwc);
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+> +		dwc3_set_phy_speed_flags(dwc);
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			dwc3_core_exit(dwc);
+> -			break;
+> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +				need_phy_for_wakeup =3D true;
 
-Sakari Ailus
+should be done in xhci-plat
+
+> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, p=
+m_message_t msg)
+>  		break;
+>  	case DWC3_GCTL_PRTCAP_HOST:
+>  		if (!PMSG_IS_AUTO(msg)) {
+> -			ret =3D dwc3_core_init_for_resume(dwc);
+> -			if (ret)
+> -				return ret;
+> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+> -			break;
+> +			if (!need_phy_for_wakeup) {
+> +				ret =3D dwc3_core_init_for_resume(dwc);
+> +				if (ret)
+> +					return ret;
+> +				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
+> +				break;
+
+why?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8yYPQACgkQzL64meEa
+mQYzpQ//RlvBlJqDn5YjtLQDgcPnIwSd+Toup6FmId0ZU9y6UA08aKYTxxtjupUq
+kx4XvOOrPY0xggUoWDd1od1LIXfwbRci1os+5J4yEyKT9tANjTZucJZLaYH7j5ki
+mCB1Pf8g5LJ1ol5j/fh7UElA+CJ6ZYFXj3Mky9Knd5T++ve02jLzAhqga1cz3fiL
+NHXkCPt2MqILB8H7NYE8Pytp9DHTElr//+lrVBSkxyqTT8buM/pZ2kfo04nJvO6+
+v2yiq6Edksa+Ky8H5NxOM/Up5Y/anuh6AqLiwvirWl1Ugf1gBV3LxCPunezeIg2I
+hXGJ2xnGX+pJkcFhFT5mac6gQVd2qxPOtaQLWRbuswewykyOhtp7e6yOqma5SjuZ
+7VnYVLZ8By/oRH4/dBAtRSrJyagY2+RWOJFOzF3G6zgx0PrDITwWn9qaYzD5f3FD
+Iy1Ybz1U1O8a+TcB9R7DhfSTLTmWswHT8xniuaqdqXOuJKiTwjBZuBkt9WIzvBAS
+Gnnd2jYpu0DMvS037Wv3mnAcps78rPuG7YeepUEzs3irck0HNvI+DajEh/TVzRpe
+NmzFnb9SsfkoLc+cnFvU/GAW4mlyadxZrqydDVI4zawmqxF+eNqxgP6r21waq8Nq
+KchxxSssP4X7sECoErPZRI6O5zPLk1VaXHg7IyjBvCILWcEskLE=
+=3o7M
+-----END PGP SIGNATURE-----
+--=-=-=--
