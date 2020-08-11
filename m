@@ -2,115 +2,186 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D106C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7C7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33C81206B2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8B32087C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="L9Gg824r"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ceAw3QK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgHKIlp (ORCPT
+        id S1728325AbgHKIvU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:41:45 -0400
-Received: from mout.gmx.net ([212.227.17.22]:46277 "EHLO mout.gmx.net"
+        Tue, 11 Aug 2020 04:51:20 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:32619 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbgHKIlp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:41:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597135279;
-        bh=M9M7qYL8VZFfg/dq2QG/8WazSOytN0i1RiT2ZH3VShU=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=L9Gg824rKifp4DZEmES80yQQS8zjkZ0656CU/rv/kf0AvMpd8mW39dovbcHUbuOOF
-         4XjbVV3SkuE3wS+lGgBjiRjnJniin5A78y+LZ7aLW6w9/Rr82k1Au5YRiIjS6tNYCr
-         faGOE5KkYDQDGoaYBlPq/c5q2IYvHtwRtWyyDO+Y=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([185.53.41.139]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26vB-1k7sgQ1b21-002Xlb; Tue, 11
- Aug 2020 10:41:19 +0200
-Date:   Tue, 11 Aug 2020 10:41:10 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAOTY__4Qs93EMjrpK_jW4NsxyZf7w3RHa7vDSRecea_JwAxKw@mail.gmail.com>
-References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de> <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69> <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <cefc273c226c93c605f4dc76afa9eb5aacceaf26.camel@infradead.org> <CAAOTY__4Qs93EMjrpK_jW4NsxyZf7w3RHa7vDSRecea_JwAxKw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>
-CC:     Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        id S1728372AbgHKIvU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:51:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597135878; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=7WwnnDLcpDYR0mzRDFxxHd6DBQPVie18LRrLzCaS3S4=; b=ceAw3QK3bXE+HqpS/zcmXP9zjADrLYznkg3EV+Y1+WGbQp2yUb0XWaQqPV4PwvTpVeV27wad
+ vXPLYWZAlTXCR1P+kYClfQT5/It3ivx/X7ZM6oE7ymc9j0KBmLOECGnF4pKtEE3w8NB3Xt2X
+ 7sjMTubGPTX7fTNhBzDWs2/P1qM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5f325bf82b87d66049f524f4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 08:51:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 125CAC433A1; Tue, 11 Aug 2020 08:51:04 +0000 (UTC)
+Received: from [10.131.194.49] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mgautam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22AE7C433C9;
+        Tue, 11 Aug 2020 08:50:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22AE7C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
+Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <363F05E9-8D03-4CFD-83C3-1E874DA34309@public-files.de>
-X-Provags-ID: V03:K1:ZNP3U6E48qwNApq7w86xi3lRf1wvP7J2P3fv+9MmDvflbc90kRU
- UNDIqQJOtP4hVaiDFfbEwVPzgkHgtgrRs3f+xv1TBSpshhMuXxjpV1UJhr9z/twLft1AurV
- TP41dErgCY9+JWekywsyK+R/hnQAXc1bzVRwzAV9auDSEiemgH1RhIRxJNAsuUjg8TpbQ2K
- Z6onIfvwHsD4BxUOoaRkw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+2n+Y8/MXsM=:bnJA+dMMm77ZPibQTsNOPh
- SIKHVzHS5GuhHng9LDWVYEEjf/X5Prbo+PP21597Rd14PoqrJ6UjPZIPfn1CUZzXUJ7gVIXsG
- hu4YDHInCN16n9QC3PnZPfzYm4JWTHwPePbF11V2D+cvcGZ5rfwAgttI5YBPDhD/5OkZ3TRD0
- eoSXXDprqSdeTF8QGwT4TKIc3axA9/KwBGdUd5O7tk9xMfS7LbUNcGK8Xpt0VIcf5jUUJdktm
- jo6L/qfDcwGGpdhj5I8mU6Kz1LBzy/RuaTLnu9bWN53pYvnmJaWsy81ZXyNqBmtIe+LC5N8ve
- BYyJ1VBHzu9pVhBYcnD8lsRkCcJTCgdEMyvN1qaj6zoS19424Z8M7EHcCtkoUDIxZxGaEtbX1
- og3wADu1C1EJJqAVoxXh/kDVANUTpyKP0u4Q/uZpHv2dxRnPp9h4HyyLXqkYe5P/t6rDFGT8u
- 6kIHRoWlafywgKE4/3UYD3OYtzH/ZWCeA+1/p8MqAYwjKjdAXRzeYDZ9EYI2sC4VBWHuvClxG
- Yr2VGYqWF3h0vSVBNOAuWowsbFyymfCAVYhzXo8F0j39M3Ij0CSH7lDoBjybCJ+HplVprZTm2
- kw0dCto+tFE5TCG/ola1CV0zhP0x7qu49IZnfBoRgH/dXl6wdA7SY0XKDLh6S9URDDxH2Nu0R
- hXYTE2KzI/5rTacIC0slIw8wda6Y1wRvriuyI/LeQCXLJH3yGjFYvXlkay+2XfVVHR7A5W8rO
- 1mLzsM1BPCGfc08rh/CzffmiRJy4pdXcmI3rMF0z/Poncpsy8xjSr6iF1TrVg3Oo9OvYDUHpd
- zfrJPnmhyHVv01mT2hs4LVVuHw4yjJBvMSPBqj0NQmRMLrrbEdZC5EEI22U6BGyWNfqSeyzla
- yeQFyQktRO4+LN6w7z92ZIL16YS9/7Jt6HNNBYLv/o5c7xwb6FIUZoX1hobm8Ymnm1WlkhNZc
- F702YyD8nv6VRYiuLDtHO5vtnCbOSKjF9XUsFeqxJNYK+rKgf6Lk1OyabHVLeGdJ14eqozS4o
- EFrt077igFUDImRaGmM3/RiV2vSZ4CZy/6hpubDgfhWwRVhqi5vmpcSOEWrGbU4KmuVqDt/pY
- Taz0RWvnJT9wU7waFhOJ/h8/kIwMkkO7wO73qOfn/t5KDpsGzA4s08dn8jUjzD+uNH+bbgpZt
- OZyd0bD366jDdWXDJEgAqSkylUzXSCfjOyCLlFrCxqeCx5t5UPuJicTNo0dXps06kKMcjR4gJ
- vtUsWtRr7L7HmLf/Kk7mUqStGI9aldpEP25PrIg==
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
+References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
+ <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+From:   Manu Gautam <mgautam@codeaurora.org>
+Message-ID: <7e2e94c8-e06b-1ecc-4304-008fcce1fe30@codeaurora.org>
+Date:   Tue, 11 Aug 2020 14:20:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+Hi,
 
-Am 11=2E August 2020 01:28:25 MESZ schrieb Chun-Kuang Hu <chunkuang=2Ehu@k=
-ernel=2Eorg>:
->Sorry I does not notice that mt7623a and mt7623n are different SoC=2E
->Because they are different SoC, I think the first step is to upstream
->mt7623a=2Edtsi and mt7623n=2Edtsi independently=2E That means in each dts=
-i,
->it include all devices of its SoC=2E After both dtsi is upsteamed, we
->could find out what is the common part, then we create a common dtsi
->these two SoC, for example mt7623a_mt7623n_common=2Edtsi=2E (Maybe there
->is a SoC's name is exactly 'mt7623', so I prefer mt7623=2Edtsi is
->reserved for that SoC, and mt7623_common=2Edtsi is not preferred because
->I don't know there are how many mt7623 family SoC and
->mt7623_common=2Edtsi should be use for all mt7623 family)
+On 6/11/2020 7:58 PM, Sandeep Maheswaram wrote:
+> Avoiding phy powerdown in host mode so that it can be wake up by devices.
+> Set usb controller wakeup capable when wakeup capable devices are
+> connected to the host.
+>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
+>  drivers/usb/dwc3/core.h      |  1 +
+>  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----------
+>  3 files changed, 91 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 25c686a7..8370350 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -31,15 +31,19 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/of.h>
+>  #include <linux/usb/otg.h>
+> +#include <linux/usb/hcd.h>
+>  
+>  #include "core.h"
+>  #include "gadget.h"
+>  #include "io.h"
+>  
+>  #include "debug.h"
+> +#include "../host/xhci.h"
+>  
+>  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
+>  
+> +bool need_phy_for_wakeup;
+> +
+>  /**
+>   * dwc3_get_dr_mode - Validates and sets dr_mode
+>   * @dwc: pointer to our context structure
+> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
+>  	return ret;
+>  }
+>  
+> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
+> +{
+> +
+> +	int i, num_ports;
+> +	u32 reg;
+> +	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
 
-Afair there is only mt7623a and mt7623n=2E Mt7623a uses mt7623=2Edtsi as c=
-ommon part=2E These 2 soc are released 5 years ago=2E=2E=2Eand only these 2=
- from that family)=2E
+dwc->xhci could be NULL for DR_MODE = PERIPHERAL.
 
-https://www=2Emediatek=2Ecom/news-events/press-releases/mediatek-launches-=
-the-mt7623-and-mt7683-multi-standard-iot-gateways-with-high-speed-wlan-to-l=
-an-to-drive-the-secure-smart-home
 
-So from my current pov the best way (to no more delay my hdmi series) is t=
-o move display related stuff in new mt7623n=2Edtsi and keep mt7623=2Edtsi a=
-s common=2E So we can avoid touching mt7623a=2Edtsi for now (can be done la=
-ter if really needed)=2E
-regards Frank
+> +	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
+> +
+> +	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
+> +
+> +	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
+> +
+> +	num_ports = HCS_MAX_PORTS(reg);
+> +	for (i = 0; i < num_ports; i++) {
+> +		reg = readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
+> +		if (reg & PORT_PE) {
+> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
+> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
+> +			else if (DEV_LOWSPEED(reg))
+> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
+> +		}
+> +	}
+> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
+
+
+Can we move this logic to xhci driver instead?
+
+> +}
+> +
+..
+> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+>  {
+>  	u32 val;
+>  	int i;
+> +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
+> +	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
+
+dwc->xhci could be NULL
+
+
+> +
+> +	if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
+> +		device_init_wakeup(qcom->dev, 1);
+>  
+>  	if (qcom->is_suspended)
+>  		return 0;
+> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+>  	int ret;
+>  	int i;
+>  
+> +	device_init_wakeup(qcom->dev, 0);
+> +
+>  	if (!qcom->is_suspended)
+>  		return 0;
+>  
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
