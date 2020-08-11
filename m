@@ -2,186 +2,134 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7C7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F33C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8B32087C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:51:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ceAw3QK3"
+	by mail.kernel.org (Postfix) with ESMTP id A623A206B5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 08:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgHKIvU (ORCPT
+        id S1728358AbgHKI5v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 04:51:20 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:32619 "EHLO m43-7.mailgun.net"
+        Tue, 11 Aug 2020 04:57:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:33872 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728372AbgHKIvU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Aug 2020 04:51:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597135878; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=7WwnnDLcpDYR0mzRDFxxHd6DBQPVie18LRrLzCaS3S4=; b=ceAw3QK3bXE+HqpS/zcmXP9zjADrLYznkg3EV+Y1+WGbQp2yUb0XWaQqPV4PwvTpVeV27wad
- vXPLYWZAlTXCR1P+kYClfQT5/It3ivx/X7ZM6oE7ymc9j0KBmLOECGnF4pKtEE3w8NB3Xt2X
- 7sjMTubGPTX7fTNhBzDWs2/P1qM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5f325bf82b87d66049f524f4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 08:51:04
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 125CAC433A1; Tue, 11 Aug 2020 08:51:04 +0000 (UTC)
-Received: from [10.131.194.49] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mgautam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22AE7C433C9;
-        Tue, 11 Aug 2020 08:50:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22AE7C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mgautam@codeaurora.org
-Subject: Re: [PATCH 2/2] usb: dwc3: Host wake up support from system suspend
-To:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        id S1728336AbgHKI5v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Aug 2020 04:57:51 -0400
+IronPort-SDR: hhrZbCcZRh0Sdybu/vfzBM6qAONDK1+1j3R6DppUJ3gqgUZ8YF3rjl//Jh+07QQcW8Qu2DnN4i
+ bT7tXicfI20g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9709"; a="218030568"
+X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
+   d="scan'208";a="218030568"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:49 -0700
+IronPort-SDR: EmAtZuRpcdtRFUCT8R9mvEDeG40/XSjZz7NwrbIXaM72Jbh4UNwML1IGy6XVooLEowvXfWqy3P
+ Zit6SPImqfOg==
+X-IronPort-AV: E=Sophos;i="5.75,460,1589266800"; 
+   d="scan'208";a="277522857"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2020 01:57:46 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 391D8206E3; Tue, 11 Aug 2020 11:57:44 +0300 (EEST)
+Date:   Tue, 11 Aug 2020 11:57:44 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
-References: <1591885683-29514-1-git-send-email-sanm@codeaurora.org>
- <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-From:   Manu Gautam <mgautam@codeaurora.org>
-Message-ID: <7e2e94c8-e06b-1ecc-4304-008fcce1fe30@codeaurora.org>
-Date:   Tue, 11 Aug 2020 14:20:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] i2c: Allow driver to manage the device's power
+ state during probe
+Message-ID: <20200811085744.GK16270@paasikivi.fi.intel.com>
+References: <20200810142747.12400-1-sakari.ailus@linux.intel.com>
+ <20200810142747.12400-2-sakari.ailus@linux.intel.com>
+ <20200810144148.GD31434@bogus>
 MIME-Version: 1.0
-In-Reply-To: <1591885683-29514-3-git-send-email-sanm@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200810144148.GD31434@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Sudeep,
 
-On 6/11/2020 7:58 PM, Sandeep Maheswaram wrote:
-> Avoiding phy powerdown in host mode so that it can be wake up by devices.
-> Set usb controller wakeup capable when wakeup capable devices are
-> connected to the host.
->
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/core.c      | 47 ++++++++++++++++++++++++++-----
->  drivers/usb/dwc3/core.h      |  1 +
->  drivers/usb/dwc3/dwc3-qcom.c | 66 +++++++++++++++++++++++++++++++++-----------
->  3 files changed, 91 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 25c686a7..8370350 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,15 +31,19 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/hcd.h>
->  
->  #include "core.h"
->  #include "gadget.h"
->  #include "io.h"
->  
->  #include "debug.h"
-> +#include "../host/xhci.h"
->  
->  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
->  
-> +bool need_phy_for_wakeup;
-> +
->  /**
->   * dwc3_get_dr_mode - Validates and sets dr_mode
->   * @dwc: pointer to our context structure
-> @@ -1627,10 +1631,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
->  	return ret;
->  }
->  
-> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
-> +{
-> +
-> +	int i, num_ports;
-> +	u32 reg;
-> +	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
+Thanks for the review.
 
-dwc->xhci could be NULL for DR_MODE = PERIPHERAL.
+On Mon, Aug 10, 2020 at 03:41:48PM +0100, Sudeep Holla wrote:
+> On Mon, Aug 10, 2020 at 05:27:42PM +0300, Sakari Ailus wrote:
+> > Enable drivers to tell ACPI that there's no need to power on a device for
+> > probe. Drivers should still perform this by themselves if there's a need
+> > to. In some cases powering on the device during probe is undesirable, and
+> > this change enables a driver to choose what fits best for it.
+> >
+> > Add a field called "flags" into struct i2c_driver for driver flags, and a
+> > flag I2C_DRV_FL_ALLOW_LOW_POWER_PROBE to tell a driver supports probe in
+> > low power state.
+> >
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  drivers/i2c/i2c-core-base.c | 17 ++++++++++++++---
+> >  include/linux/i2c.h         | 14 ++++++++++++++
+> >  2 files changed, 28 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> > index 34a9609f256da..cde9cf49a07e6 100644
+> > --- a/drivers/i2c/i2c-core-base.c
+> > +++ b/drivers/i2c/i2c-core-base.c
+> > @@ -436,6 +436,14 @@ static int i2c_smbus_host_notify_to_irq(const struct i2c_client *client)
+> >  	return irq > 0 ? irq : -ENXIO;
+> >  }
+> >
+> > +static bool allow_low_power_probe(struct device *dev)
+> > +{
+> > +	struct i2c_driver *driver = to_i2c_driver(dev->driver);
+> > +
+> > +	return driver->flags & I2C_DRV_FL_ALLOW_LOW_POWER_PROBE &&
+> > +		device_property_present(dev, "allow-low-power-probe");
+> 
+> I assume this change makes even the DT property "allow-low-power-probe"
+> work in the same way. Should we have proper DT binding for that ?
+> 
+> This comment applies for any property using device_property_* but has
+> no explicit DT binding ? Just asking the question to know the strategy
+> followed. Sorry if this is redundant question, feel free to point me
+> to the past discussions.
 
+It's not a redundant question, no.
 
-> +	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
-> +
-> +	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
-> +
-> +	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
-> +
-> +	num_ports = HCS_MAX_PORTS(reg);
-> +	for (i = 0; i < num_ports; i++) {
-> +		reg = readl(&xhci_hcd->op_regs->port_status_base + i*0x10);
-> +		if (reg & PORT_PE) {
-> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
-> +			else if (DEV_LOWSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
-> +		}
-> +	}
-> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
+I²C drivers on OF are responsible for controlling device's power state
+already (using runtime PM or without) so I think the drivers could use the
+property directly on OF systems (and document the property in DT bindings
+first) if there's a need to. IOW this code isn't needed on OF.
 
+Note that the power_on or power_off arguments are not used by
+genpd_dev_pm_attach() or genpd_dev_pm_detach() so this patch only affects
+ACPI. I think I should check the device is an ACPI device above, for
+clarity.
 
-Can we move this logic to xhci driver instead?
+Cc also DT list. The entire set is here:
 
-> +}
-> +
-..
-> @@ -240,6 +267,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
->  {
->  	u32 val;
->  	int i;
-> +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
-> +	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
-
-dwc->xhci could be NULL
-
-
-> +
-> +	if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +		device_init_wakeup(qcom->dev, 1);
->  
->  	if (qcom->is_suspended)
->  		return 0;
-> @@ -262,6 +294,8 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
->  	int ret;
->  	int i;
->  
-> +	device_init_wakeup(qcom->dev, 0);
-> +
->  	if (!qcom->is_suspended)
->  		return 0;
->  
+<URL:https://lore.kernel.org/linux-acpi/20200810142747.12400-1-sakari.ailus@linux.intel.com/>
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Kind regards,
 
+Sakari Ailus
