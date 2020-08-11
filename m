@@ -2,168 +2,265 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001D7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E0CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D17382080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="aDbVPCjg"
+	by mail.kernel.org (Postfix) with ESMTP id A08F520774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 07:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597129971;
+	bh=M9Ja8kNbyn5AIHtY4B9BzoTdDpmMCZG2UlxPFzkaqew=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=tmsletkP3bBaLRvmegfAuPBF4/K/d5ZADhow13IREQOjg/RKOJvhjMgVLLrh9Ffmc
+	 PfbditcbKj6xMY7O77lafApbhC7M0alu28G1Hm92TCEaWaxlpqSj6Eu+nn1bxe53MZ
+	 MpLEFoH3/8Snj2j+aYrq84twDt3RivZPwokyCbWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgHKHKv (ORCPT
+        id S1728277AbgHKHMu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 03:10:51 -0400
-Received: from mail-eopbgr10102.outbound.protection.outlook.com ([40.107.1.102]:32426
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726792AbgHKHKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Aug 2020 03:10:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mo+MxBgtGvfXxBNnWTq+FotrXuyAcvd1pXXZpvNBQ0jLx2JgZjt18quAonb1VBGHmzoETyx2/5/HXqAa+WTUMqxyFNw4NVerbSaq233vEDO60Lb03OUv9x0ySf1q4YORIpX6rn1cyFngedahQKGcRtjOMV2k48RzCLotpArgDTBH82H550ET6ugBvGJCJb+mCsSu99qIPzWja89QWpMQnO4JL0LaIslXLYcQqPAoToR2bpvv3q0LW1RrZ9FU4NOc5MfHRz/PXxEkxdMCgVpK7oJxinZipYZi7V2qeaaDcEx9gwb0M3I+kTP8UpJx7Jh9Anyt2sxl6Ys/itNIRBkWwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B2mhbkkVV7ZcSHcIK0bzQclRLmTqSP5nMkh8DJZxcBc=;
- b=j7e18hCO3HnoJSKRFo0QxODeiizz5+lcVHTofuuRdM7dZt0/v64YjzpA3jbXWP38xIPvKmdc+pnAm+vJq/yztTtUFoSaJjb5WX1ECld/BItvyzWMEHrWITmZRMQrZiD/7BX1G3bHjIsRECRy5eEpzjsG2Qs6WmN4unIOXAzMoTun4TYBOIXLZkKalb5nk+PpTxOiEjiwNy8STmsH9bmgJAkSNjDkLZRU9eTC0uw7pRt1E9qHWMQVCFUYBoxKrUj5yPQefbeqS3lezpJDzQ40/DIu5xzx8cHtbbSmY6zfz40nWbmywMlo0Icweuxw0HUY6IEJSwa0CumOfvFYQuH8xA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B2mhbkkVV7ZcSHcIK0bzQclRLmTqSP5nMkh8DJZxcBc=;
- b=aDbVPCjgu0gR/2WtK8z43QUQBWQz0skameRns3+lWEaFnYPofag2yr/zvC2WWWmVBlFiKVQQ0uX5rfowygu3poqejrz6HEbMSwzz+hH/yHNZ5DyfFEHkoPkS8lhYnrdDdTU3RPr7OgH4VnKY6ebUDBggjUAOsyO25VRLg9bvi5g=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=kontron.de;
-Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:157::14)
- by AM8PR10MB4241.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:1ee::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Tue, 11 Aug
- 2020 07:10:45 +0000
-Received: from AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51f5:dfc0:24bb:309c]) by AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::51f5:dfc0:24bb:309c%7]) with mapi id 15.20.3261.025; Tue, 11 Aug 2020
- 07:10:45 +0000
-Subject: Re: [PATCH v11 12/12] dmaengine: imx-sdma: add uart rom script
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
- <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
- <89946dc6-6c0f-b3d5-9c9a-517f1ed7b5e1@kontron.de>
- <VE1PR04MB6638F057BC8F7F38E954316F89440@VE1PR04MB6638.eurprd04.prod.outlook.com>
-From:   Frieder Schrempf <frieder.schrempf@kontron.de>
-Message-ID: <0f20e018-81e3-46ae-0a56-bf245a7790c5@kontron.de>
-Date:   Tue, 11 Aug 2020 09:10:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <VE1PR04MB6638F057BC8F7F38E954316F89440@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR07CA0033.eurprd07.prod.outlook.com
- (2603:10a6:208:ac::46) To AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:157::14)
+        Tue, 11 Aug 2020 03:12:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgHKHMt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 03:12:49 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37288C06174A;
+        Tue, 11 Aug 2020 00:12:49 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so12326109ljg.13;
+        Tue, 11 Aug 2020 00:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=7bmfSdcP8nAJ6eufJvnZyOOA5fmvgr+qxvCK6Eif1M8=;
+        b=dp0taWtrZcdTBfRahr1KwjxanpDhAeW+LmzOYnbXNKFYs2UmRBHHKNsI3+zsCh72k+
+         3PA75AfLdqW0ypTG+MckbCre9zWTtCc20U5kpS8H7QtjuGk4mdniioosZle2Bs8fS2hi
+         c8ahMXv28FmeGZYOFYWkLfH28IEVn+st2cKfRLdHkMxG3MA6iKfUlCvlIeBGEPmUWhCv
+         /yf1MYQRJUuesyS4IyQTYftirdQfremLX8InLveWiiMuX6DCha0XIoewAVMkuqXzmhgQ
+         h2QQz5Z5s9OC020DL3xn4rMqY0CedZ3RZ1Z33b5TmBDYYyn0i2b0Bfq7N3QHaregiUdU
+         rBdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=7bmfSdcP8nAJ6eufJvnZyOOA5fmvgr+qxvCK6Eif1M8=;
+        b=X6jjrju8WO5gf+J8slSL4EbFIPpkWvxXpB9/5wixMMR6C7Wbq8zfgYK+9fVlesfGhK
+         M3Ai1cyJk/HhaHP+2dX/PXr+YQasz+6ebuy7pPZ3KlwVY5OdR8/AZttHEmfjYNAundgO
+         vFUiGqp4ckg9iUoF0biuLid+clYee9sMRGwITTsxWlt6PDy1ke213Qg3zdXjtbrXIqI8
+         eNpeiamRe8iDwiT8OuLnyIZJlrbHcgdf/sSpSS+zkQXIH1/Rxczbq33x1OMznlPKEY9G
+         VXLVIiWrwVJ0QRJaEIEpp9rMlzXPatHLhm1I6tO9pd05I2O6ldCJmPqNvqEGexpJpb1V
+         l0NA==
+X-Gm-Message-State: AOAM531dU+I1Zg6DaBVJ2HKvTcM8uomdt8mJ5K6Mr5wVAhRzvETPnUdt
+        2oVrGkkqkzV1L11sMgMv65JgTCSuaNE=
+X-Google-Smtp-Source: ABdhPJxRuWMchbZpnBgVASzaeeTvW03Mo41per/jH9BlTQnm/4RZmD3Ce0Kf6Te/n5xLF+SccGNSCQ==
+X-Received: by 2002:a2e:6808:: with SMTP id c8mr2580495lja.13.1597129967438;
+        Tue, 11 Aug 2020 00:12:47 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id s1sm11520605lfi.76.2020.08.11.00.12.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 00:12:46 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
+In-Reply-To: <b0c8a95b-45e3-0d79-2a7c-14c8936dd551@codeaurora.org>
+References: <20200624022848.7765-1-wcheng@codeaurora.org> <20200624022848.7765-2-wcheng@codeaurora.org> <87d03yptxi.fsf@kernel.org> <b0c8a95b-45e3-0d79-2a7c-14c8936dd551@codeaurora.org>
+Date:   Tue, 11 Aug 2020 10:12:41 +0300
+Message-ID: <877du5pseu.fsf@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.99.60] (80.147.118.32) by AM0PR07CA0033.eurprd07.prod.outlook.com (2603:10a6:208:ac::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.10 via Frontend Transport; Tue, 11 Aug 2020 07:10:44 +0000
-X-Originating-IP: [80.147.118.32]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 26148fb4-8026-45c5-0e2e-08d83dc5aac1
-X-MS-TrafficTypeDiagnostic: AM8PR10MB4241:
-X-Microsoft-Antispam-PRVS: <AM8PR10MB4241AA8E30B9D9BEBA7C33E0E9450@AM8PR10MB4241.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 79wCSmH/3uK63iP7R1nM5fMbnJZUdhL8+TqKWK04Df49AqY9kP03C89oIabZGBk58WMqzZ7pKgcAsrnyb/dL0Ialk3UkbCQN/3rtL86YutQ0ie7tJTbVj17UV4C7dKSWGFGiiKQO37J/y0nhDrd2tEzgD0d+lN9axeV5SAh7Dql3DOQJ0YMHA0YA70kVFB/R8+lK4RYmSom/TeNnvuni193UDSTjex4Lag5vE2RBwxgGvXmP+wD8DFnpGqNTEzSxyqL32msW5A4a+9/kMgRdCugcJX/eMxj7CCfSaMvGRVoX3f3LzdTn2ZN6eHueF5379T44seouiUGmmRhkYvdqda7DskNsC7EuiGX1WxuMsz1Sw1+aAzi6iD5l0U23Q7Q4w/oRkVJQc/wUeO/p0h9YrQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(136003)(39860400002)(376002)(366004)(52116002)(66476007)(66556008)(6486002)(31686004)(86362001)(5660300002)(8936002)(53546011)(4326008)(36756003)(66946007)(316002)(186003)(16576012)(16526019)(54906003)(110136005)(26005)(8676002)(7416002)(478600001)(2906002)(956004)(31696002)(2616005)(44832011)(921003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: ZwLizx8t/s4X03WRDN3M1Xa+fPynh3NwW1mU/X4YNuqqg+YrXQkKxdnxtOii7cS4glYP2u49kUJyVJEYSnse8vdRZsA5rnY/+PviU8tSlRANVr+DTpDSwJ1usjfdwkBxMoUaJJqwRoeIU4+AQyqNUQdVGL7VK+fQTl8LMNRGqo4epTd6qAkjOjO9+00SaRYSoIeX5M1A2qXcPyeOqXpOf+6ra1TFLD2+LOovOZAkl5MprsFd80okJlwYKO2BqXRSAr9xBZSPRUjvnjQkZdYW8Lda0nnYcaoUEwFwD3aED52MqgvHfU/Vsm2NjFNr3ZxhsolNpBWTTUfi9t+b+gR2R5wAdyjRXjmrKMR8mapjO11O4ga4aackhu3j5N4k0WI8ismmSLDo2OQdRMY6GFuZ7Uas8Jc+trUaPWhitGLe4UxZTekjcBggKlEgHLjpRA66fkXCPiv09HyBPGy2gKoghmRyQ5foWqMzGeOpAjDoiI6d2qblQ28+wWhVocQLdmZ9OuzpZ/JljKAbJYutSkI7fWV181GfX+LcrXk7KNTlPwbzV2/RWo9flr5rcZouxPe1XTW1+F5Cs+TiW92gCya37K4PN/SP5HzW9x1jqYMMvfUY6oNVi9OgNSQD0ggFPq0nB2aEh1XNETH6ved2bWV39A==
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26148fb4-8026-45c5-0e2e-08d83dc5aac1
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB2963.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2020 07:10:45.7134
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mvJk+VR2iyUKsa+wiJ8TSmlfvFcEfM3e9MaAnTma2Z3fgdvHtk1BXWMtQLinE11cTAZ2XvBPROYuCpxy5IsdXAzec/Y49yssqktEEMekc30=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR10MB4241
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10.08.20 12:57, Robin Gong wrote:
-> On 2020/08/10 15:33 Frieder Schrempf <frieder.schrempf@kontron.de> wrote:
->> Hi Robin,
->>
->> This patch seems to break UART DMA in case the ROM firmware is used. In that
->> case sdma->script_number is set to SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1, so
->> the ROM scripts at uart_2_mcu_addr and uartsh_2_mcu_addr will never be
->> added in sdma_add_scripts() as they are now moved beyond the V1 max index.
->>
->> Reverting this patch fixes UART DMA with ROM firmware.
->> Can you please find a way to fix this or just drop this change?
->>
-> Hi Frieder,
-> 	Thanks for your report, could you try with the additional below patch?
-> If that works, I'll merge it into next version.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, I can't promise to find the time to spin up a test for this 
-anytime soon. But the diff looks like it would work.
 
-It would be nice if we could get this patchset merged soon, as it also 
-seems to provide fixes for SPI on i.MX8MM. So any help with reviewing 
-and testing is appreciated.
+Hi,
 
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 5900e32..4db55b9 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1754,6 +1754,19 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
->          for (i = 0; i < sdma->script_number; i++)
->                  if (addr_arr[i] > 0)
->                          saddr_arr[i] = addr_arr[i];
-> +
-> +       /*
-> +        * get uart_2_mcu_addr/uartsh_2_mcu_addr rom script specially because
-> +        * they are now replaced by uart_2_mcu_ram_addr/uartsh_2_mcu_ram_addr
-> +        * to be compatible with legacy freescal/nxp sdma firmware, and they
-> +        * are located in the bottom part of sdma_script_start_addrs which are
-> +        * beyond the SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1.
-> +        */
-> +       if (addr->uart_2_mcu_addr)
-> +               sdma->script_addrs->uart_2_mcu_addr = addr->uart_2_mcu_addr;
-> +       if (addr->uartsh_2_mcu_addr)
-> +               sdma->script_addrs->uartsh_2_mcu_addr = addr->uartsh_2_mcu_addr;
-> +
->   }
-> 
-> 
+Wesley Cheng <wcheng@codeaurora.org> writes:
+> On 8/10/2020 5:27 AM, Felipe Balbi wrote:
+>> Wesley Cheng <wcheng@codeaurora.org> writes:
+>>=20
+>> Hi,
+>>=20
+>>> Some devices have USB compositions which may require multiple endpoints
+>>> that support EP bursting.  HW defined TX FIFO sizes may not always be
+>>> sufficient for these compositions.  By utilizing flexible TX FIFO
+>>> allocation, this allows for endpoints to request the required FIFO dept=
+h to
+>>> achieve higher bandwidth.  With some higher bMaxBurst configurations, u=
+sing
+>>> a larger TX FIFO size results in better TX throughput.
+>>=20
+>> how much better? What's the impact? Got some real numbers of this
+>> running with upstream kernel? I guess mass storage gadget is the
+>> simplest one to test.
+>>=20
+> Hi Felipe,
+>
+> Thanks for the input.
+>
+> Sorry for not including the numbers in the patch itself, but I did
+> mention the set of mass storage tests I ran w/ the upstream kernel on
+> SM8150 in the cover letter.  Let me just share that here:
+>
+> Test Parameters:
+>  - Platform: Qualcomm SM8150
+>  - bMaxBurst =3D 6
+>  - USB req size =3D 256kB
+>  - Num of USB reqs =3D 16
+>  - USB Speed =3D Super-Speed
+>  - Function Driver: Mass Storage (w/ ramdisk)
+>  - Test Application: CrystalDiskMark
+>
+> Results:
+>
+> TXFIFO Depth =3D 3 max packets
+>
+> Test Case | Data Size | AVG tput (in MB/s)
+> -------------------------------------------
+> Sequential|1 GB x     |
+> Read      |9 loops    | 193.60
+> 	  |           | 195.86
+>           |           | 184.77
+>           |           | 193.60
+> -------------------------------------------
+>
+> TXFIFO Depth =3D 6 max packets
+>
+> Test Case | Data Size | AVG tput (in MB/s)
+> -------------------------------------------
+> Sequential|1 GB x     |
+> Read      |9 loops    | 287.35
+> 	  |           | 304.94
+>           |           | 289.64
+>           |           | 293.61
+> -------------------------------------------
+
+awesome, thanks a lot for this :-) It's a considerable increase in your
+setup. My only fear here is that we may end up creating a situation
+where we can't allocate enough FIFO for all endpoints. This is, of
+course, a consequence of the fact that we enable one endpoint at a
+time.
+
+Perhaps we could envision a way where function driver requests endpoints
+in bulk, i.e. combines all endpoint requirements into a single method
+call for gadget framework and, consequently, for UDC.
+
+>>> +	if (!dwc->needs_fifo_resize)
+>>> +		return 0;
+>>> +
+>>> +	/* resize IN endpoints except ep0 */
+>>> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <=3D 1)
+>>> +		return 0;
+>>> +
+>>> +	/* Don't resize already resized IN endpoint */
+>>> +	if (dep->fifo_depth)
+>>=20
+>> using fifo_depth as a flag seems flakey to me. What happens when someone
+>> in the future changes the behavior below and this doesn't apply anymore?
+>>=20
+>> Also, why is this procedure called more than once for the same endpoint?
+>> Does that really happen?
+>>=20
+> I guess it can be considered a bug elsewhere (ie usb gadget or function
+> driver) if this happens twice.  Plus, if we decide to keep this in the
+> dwc3 enable endpoint path, the DWC3_EP_ENABLED flag will ensure it's
+> called only once as well.  Its probably overkill to check fifo_depth here.
+
+We could add a dev_WARN_ONCE() just to catch any possible bugs elsewhere.
+
+>>> +	if (remaining < fifo_size) {
+>>> +		if (remaining > 0)
+>>> +			fifo_size =3D remaining;
+>>> +		else
+>>> +			fifo_size =3D 0;
+>>> +	}
+>>> +
+>>> +	fifo_size +=3D fifo;
+>>> +	fifo_size++;
+>>=20
+>> why the increment?
+>>=20
+> This is to account for the last +1 in the equation from the DWC3 databook:
+> fifo_size =3D mult * ((max_packet + mdwidth)/mdwidth + 1) + 1 <- this one
+
+great, could you add this detail as a comment so it doesn't look as
+cryptic? :-)
+
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int dwc3_gadget_set_ep_config(struct dwc3_ep *dep, unsigned int=
+ action)
+>>>  {
+>>>  	const struct usb_ss_ep_comp_descriptor *comp_desc;
+>>> @@ -620,6 +731,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep =
+*dep, unsigned int action)
+>>>  	int			ret;
+>>>=20=20
+>>>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
+>>> +		ret =3D dwc3_gadget_resize_tx_fifos(dep);
+>>> +		if (ret)
+>>> +			return ret;
+>>=20
+>> doesn't it look odd that you're resizing every fifo every time a new
+>> endpoint is enabled? Is there a better way to achieve this?
+>>=20
+> We're only resizing a single fifo per call, and clearing the previous
+> fifo configuration upon receiving the set address.  In the past, I know
+> the change was to resize all fifos after receiving the set configuration
+> packet.  With that approach, I believe we saw issues with some function
+> drivers that immediately queued a USB request during their set_alt()
+> routine, followed by the dwc3 ep0 driver calling the TX fifo resize
+> API.(as the tx fifo resize was executed after we delegated the set
+> config packet to the USB composite)
+
+I don't remember seeing such an issue. Allocating FIFOs after we know
+the entire requirements would avoid another possible situation, that of
+dwc3 exausting FIFO space before it knows there are more enpdoints to
+enable.
+
+One possibility around this was suggested above, something along the
+lines of:
+
+	usb_gadget_ep_enable_bulk(struct usb_gadget *, struct
+		usb_ep_alloc_desc *alloc_desc)
+
+(please think of better names, I'm hopeless haha)
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8yROkACgkQzL64meEa
+mQYsgw//VrujRt4ABbuiEhJpUVG0Uu0meU5L8aQMg+eTI3U55m2TViV+G+sIs1+T
+JjE8Ly1rGqaBL+M3uf38+XNqaHL63J25udIgKeycTb3hOurfQMbqIXUBmVmaMe7l
+XGIu4oGw7K4iH0VyqTomvfnWidVRgJMYygv6OFMiSkgGugWW2A4wJ5Wum/+8VweB
+YpNSOXC7rp12Ws/cL3+760sJPEqS1FrND33MEilIVJh2nWUk8UEalBo16+OCcf7Y
+IzWP+ek6355TiKbCvTCE9OMhg1AySEF3nzXrne1LJkZGBYJrUZ0dQh7h6mmdPZIy
+jRwspFEu0eNHDdpuKdCuMurVNc6rJR9RXFsCQJSUFXDig8KJOMlRVO5GlsmHhfjt
+VEdHhej0ZZDxL+M49Af9OBV6VXE0KrUE2FU7j/wotYV+A+7pn+5M1/aMaBFy62OA
+96EjNiPBGf9O/6fvhCt3zFp+d+g2el0A7Jbha9N8W+aHQM8YOiQ9pW+ulqQh2du5
+SoiTtmIzg0DBDlS6Kei4w04e/keD+vn09ALLsbaKE1E3swDq5t8ZKlek2GErugNO
+LegzKyzJe9f5mop1EE0L/1xVzGI1bhcYeDHfPJt3LlWess2XxVZ5+ysGklD4Fs0u
+bBLlQ3EvO7vyzN/GntKDZjyr/DuHqEQ+MCp4YbkolTu2HYhqxb4=
+=vvEl
+-----END PGP SIGNATURE-----
+--=-=-=--
