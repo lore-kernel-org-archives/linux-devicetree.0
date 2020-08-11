@@ -2,116 +2,99 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E75FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 19:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBDEC433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 20:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0AE20782
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 19:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DE820756
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 20:02:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qp530flH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="faC1ldrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgHKT42 (ORCPT
+        id S1726527AbgHKUCK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 15:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgHKT41 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 15:56:27 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C35D3C061787
-        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 12:56:27 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y6so46102plt.3
-        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 12:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jSpZyl6zszveRQTb+X3U9qCb6qt2a47wW3ClpVmbJd4=;
-        b=Qp530flHFX5VujI6zk3JRpc5NHS0opLYWMJdFxardQIeNKy0kHusBV2UjudiK3A/4d
-         nhhJ7oBQKZ6dPIgZTqyjIwb2PYjNxf/8dXO0LCpeQh/2qJxRxpIku/gGymanLHhOJsy1
-         esS5XOfi4eJ93Bw3t3emRXrWxZh6+lZj0+EUeHdRJovtGI421LpFAVG73OAU8Wm38dwF
-         Yvs2LPr7qeBJjl8N6xCV/LmhXVZeZPyhvIcIlVNVdRTRIYsjAprLT0GpUX5pJwMrZyvW
-         MwElCRoigXVExeMWpHlCirPTR10nssTPHq+fhb4VqNW4sctT7PS2MvSBfBnd4wuC4mlz
-         XWrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jSpZyl6zszveRQTb+X3U9qCb6qt2a47wW3ClpVmbJd4=;
-        b=nJWouHCzl7wSzqkISM6wfkUjC/etgdm5nAyxhor/94yhUi6M6GH177uoyhfIsY6PBC
-         CMwg1iaCskXk9oEnpFDS4fIahPbw3x0ANog1PAfgqWSkjC6d6S0vC2GUgoQOQXAPoBMZ
-         jgR0CGBW7Ur3DGxkOqHWK7ktZlgEWzlCvmZLLuINjq2/QWol4emy48Dx4rwJM20bW78P
-         5jW77OQYopH3mMgr9RwzY55k8P9Js5f8Qt7Cczc8/g+R0SnRi9UM/XKlMRwzx1pYQAPm
-         XMMrsqFs4p31wYbGUlozwHRurO9wuFW2K+CjysLmuIpYdJCigboxlkKbNlgY6WloiVd8
-         wdkg==
-X-Gm-Message-State: AOAM5319WNqFYNVGAlkv3oMp7Aofd/Ai2KfWmN2uAP2pCrxpkYimlZz6
-        NA4nzzqWrrpLRv7cFBLFqIFGSQ==
-X-Google-Smtp-Source: ABdhPJzEvYm0TmVimHvXEGe/uKF0y2jzt+VsiVIHOLfRm4O0wA7RC6raA0fGG6z0aao+n1UTTAZFJw==
-X-Received: by 2002:a17:90a:9f44:: with SMTP id q4mr2826417pjv.66.1597175787041;
-        Tue, 11 Aug 2020 12:56:27 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id h24sm21487728pgi.85.2020.08.11.12.56.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2020 12:56:26 -0700 (PDT)
-Date:   Tue, 11 Aug 2020 13:56:24 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     bjorn.andersson@linaro.org, o.rempel@pengutronix.de,
-        robh+dt@kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 02/10] remoteproc: imx_rproc: correct err message
-Message-ID: <20200811195624.GA3370567@xps15>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-3-peng.fan@nxp.com>
+        Tue, 11 Aug 2020 16:02:10 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:56622 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbgHKUCI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Aug 2020 16:02:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597176128; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Eg0yaT7k7a3ozvjvXJg0xCTB4GB4zNL/QNKAE2MeKPE=; b=faC1ldrV0D8SnWmA4XQv5XqTpM+KsZFK0Yxepjg9sahfQH/4eMD4Iiryn6I4YL5garjSnP1j
+ /n9ZcG3Z2n9uAXI2IFmJneS/2oSos1zvlUwJ9DAt+w8zTl8Y11oeeh1nEkcmW4xbY8fQWd4v
+ uQiv9/QeJQ7iBs1Iz62DU7ija8I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f32f937440a07969ae5f5d2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 11 Aug 2020 20:01:59
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39C92C433C9; Tue, 11 Aug 2020 20:01:59 +0000 (UTC)
+Received: from [10.206.24.160] (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B4793C433C6;
+        Tue, 11 Aug 2020 20:01:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B4793C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org>
+ <1595869597-26049-2-git-send-email-sanm@codeaurora.org>
+ <20200727192050.GD3191083@google.com>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
+Date:   Wed, 12 Aug 2020 01:31:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724080813.24884-3-peng.fan@nxp.com>
+In-Reply-To: <20200727192050.GD3191083@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 04:08:05PM +0800, Peng Fan wrote:
-> It is using devm_ioremap, so not devm_ioremap_resource. Correct
-> the error message and print out sa/size.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 8957ed271d20..3b3904ebac75 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -268,7 +268,7 @@ static int imx_rproc_addr_init(struct imx_rproc *priv,
->  		priv->mem[b].cpu_addr = devm_ioremap(&pdev->dev,
->  						     att->sa, att->size);
->  		if (!priv->mem[b].cpu_addr) {
-> -			dev_err(dev, "devm_ioremap_resource failed\n");
-> +			dev_err(dev, "devm_ioremap sa:0x%x size:0x%x failed\n", att->sa, att->size);
+Hi Felipe,
 
-I'm good with fixing the devm_ioremap part but please remove the address and
-size.  Printing them provides little value because they come from the device
-configuration area that is private to the driver.  That way we don't expose
-system information involuntarily. 
+On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
+> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
+>> Add interconnect support in dwc3-qcom driver to vote for bus
+>> bandwidth.
+>>
+>> This requires for two different paths - from USB to
+>> DDR. The other is from APPS to USB.
+>>
+>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Please ack if you are ok with this patch.
 
-With that:
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
->  			return -ENOMEM;
->  		}
->  		priv->mem[b].sys_addr = att->sa;
-> -- 
-> 2.16.4
-> 
