@@ -2,108 +2,114 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F55C433E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 16:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F020C433E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 17:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A624920756
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 16:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597162185;
-	bh=8jTFVmarRZLLRTfqotP58rz//cPI05u7z4Z4fPoK9ZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ocvv3app2WyLrT1YDTH3FAMw2BvYx5ktz+07ZgQQHkAvRL2B0IXf1aJc5V/UPSSm1
-	 JW454/Ih/MMZEddRgNe0XDSjdxXFP/eNdgmEqDm8zNEQFjM3UH/DjdPGRQ4un1NsfU
-	 OF0YzmE7JrURypaOOIdDsHT4BdiKyL2xuKVdfrbc=
+	by mail.kernel.org (Postfix) with ESMTP id C4D2820771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 17:07:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tyan8PK9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgHKQJm (ORCPT
+        id S1729204AbgHKRHn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 12:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728906AbgHKQJl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 11 Aug 2020 12:09:41 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6CB6206B5;
-        Tue, 11 Aug 2020 16:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597162181;
-        bh=8jTFVmarRZLLRTfqotP58rz//cPI05u7z4Z4fPoK9ZQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mhmVk4N7ydGphZMmV4huNncs+K5JbFMJHish1R9dGkgTYL6kwjf20Ear+JYinh9vw
-         1iY2fdLQvpZ7mwxTFteKfpXr99Pt/ga5y+Eg2ClZP3ayBqChJ4UeMkKhZcp98SzAc9
-         VS8D3yP7VivBmmiyeuHdrPazLiOUK0tETerRsx8Y=
-Date:   Tue, 11 Aug 2020 17:09:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        linux-arm-msm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        Mayulong <mayulong1@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/33] Add driver for HiSilicon SPMI PMIC for Hikey 970
-Message-ID: <20200811160913.GJ6967@sirena.org.uk>
-References: <cover.1597160086.git.mchehab+huawei@kernel.org>
+        Tue, 11 Aug 2020 13:07:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47488 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgHKRHm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 13:07:42 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07BH7JbR038660;
+        Tue, 11 Aug 2020 12:07:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597165639;
+        bh=0Uod0ZsKogiy0hAZ1QvXFWCmrhC6bXLrN4FQiX676XY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Tyan8PK9D4AkYSrOMQdfT/LbHRMOR8DHwioYL58bbUdjapkmaOnV+0NGhCemu8u+x
+         Ji6lH/Tp4aWKwqGXzGuqGmDpJC3duRB6MLCodSlnZBP8iH9ieiLD21+42Wv8Xi/Ry/
+         V1vdAw9EiK3j5vZNBS7KG1lPhoqDZ8L3FdTSaTSA=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07BH7JUb008455;
+        Tue, 11 Aug 2020 12:07:19 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 11
+ Aug 2020 12:07:19 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 11 Aug 2020 12:07:19 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07BH7JpU080863;
+        Tue, 11 Aug 2020 12:07:19 -0500
+Subject: Re: [PATCH v32 1/6] dt: bindings: lp50xx: Introduce the lp50xx family
+ of RGB drivers
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200722153146.8767-1-dmurphy@ti.com>
+ <20200722153146.8767-2-dmurphy@ti.com>
+ <20200811102028.tjea7oqbzb5jjqip@duo.ucw.cz>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <92d1448f-8b17-0ce6-0464-b60ff6a6eb16@ti.com>
+Date:   Tue, 11 Aug 2020 12:07:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AXxEqdD4tcVTjWte"
-Content-Disposition: inline
-In-Reply-To: <cover.1597160086.git.mchehab+huawei@kernel.org>
-X-Cookie: Gravity is a myth, the Earth sucks.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200811102028.tjea7oqbzb5jjqip@duo.ucw.cz>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Pavel
 
---AXxEqdD4tcVTjWte
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 8/11/20 5:20 AM, Pavel Machek wrote:
+> Hi!
+> On Wed 2020-07-22 10:31:41, Dan Murphy wrote:
+>> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+>> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+>> can control RGB LEDs individually or as part of a control bank group.
+>> These devices have the ability to adjust the mixing control for the RGB
+>> LEDs to obtain different colors independent of the overall brightness of
+>> the LED grouping.
+>>
+>> Datasheet:
+>> http://www.ti.com/lit/ds/symlink/lp5012.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>
+>> +           multi-led@1 {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               reg = <0x1>;
+>> +               color = <LED_COLOR_ID_MULTI>;
+>> +               function = LED_FUNCTION_CHARGING;
+> These are just examples, but we should really separate "MULTI" colors
+> and "RGB".
 
-On Tue, Aug 11, 2020 at 05:41:26PM +0200, Mauro Carvalho Chehab wrote:
+If we do then the LP55xx was not updated when the change was made.
 
-> This patch series backport the OOT drivers from the Linaro's official
-> tree for this board:
+I will change it to RGB since I have to touch this file and probably 
+submit the LP55xx patch as well.
 
-> 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+Dan
 
-> Porting them to upstream, cleaning up coding style issues, solving
-> driver probing order and adding DT documentation.
 
-> I opted to not fold all patches into a single one, in order to:
->=20
-> - Preserve the authorship of the original authors;
-> - Keep a history of changes.
-
-Please don't do this, please send this as a normal upstream submission
-like other MFD drivers - split things up per subsystem and fold any
-fixes into the initial submission of the driver.
-
---AXxEqdD4tcVTjWte
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8ywqgACgkQJNaLcl1U
-h9Drcgf47oBDBjVvpLy10e9lrcilMI2JzHAypdkY4X1XY/G0vFSIROQ2rUrUJ7/k
-M3cRmaTWtkUkodo499B1yKd6PgsCk3GbeHV/KOUMjEJTkDZrAby0EPGu3tqggJ+6
-kh5Y768OqrCx68KN3RWcQH5cIch4+ewb7b89veaufmLcga8yI2sSWUsezKk1Z9D3
-uZLImihVf2au7uQ27Y9lMHuN2g8xsVeR7F1Y6rmfSK75GvlPfzvNntHPfcs2aig+
-hbXJR/mV6z8HhRBYiWOCaOturerbIYpRt/pfOaFN/OaQNB0FSi/C5M1Od4icg0UG
-+ymksv0gSyzXpjNIj5NmPgp5Jqso
-=2YNd
------END PGP SIGNATURE-----
-
---AXxEqdD4tcVTjWte--
+> Best regards,
+> 									Pavel
