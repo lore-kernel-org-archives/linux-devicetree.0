@@ -2,98 +2,203 @@ Return-Path: <SRS0=YFsx=BV=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF538C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 18:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C020EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 19:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83AA2076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 18:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913B320774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 11 Aug 2020 19:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHTxic7s"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lpt7Jm9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgHKSte (ORCPT
+        id S1726468AbgHKTac (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 14:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34506 "EHLO
+        Tue, 11 Aug 2020 15:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgHKSte (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 14:49:34 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57E8C06174A;
-        Tue, 11 Aug 2020 11:49:33 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id 140so7239547lfi.5;
-        Tue, 11 Aug 2020 11:49:33 -0700 (PDT)
+        with ESMTP id S1725889AbgHKTaa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 15:30:30 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE783C06174A
+        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 12:30:30 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x15so2541898plr.11
+        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 12:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7DTn5uFhSyuimkf8VN00wRIDhk5oSwcyOf7Qxcw85tU=;
-        b=FHTxic7sIGkNM9Mo36Oe6nF3rOGpsHOfy3yxhDcm5QMz3AhdVdCcXTd3NsgZaqo+qy
-         ihoaGod/PfgjHpbpNk5AyW9DJGD6QDZQt76KDc3AvtA0ax1l3eBL5vNL5QsrPwrHLSHx
-         GlPlE2dFHy2B79D5xFheaebZMp2jIwR60Dhc4Rx04I3qSjxf16K4GatDDw7Z8ZdjbE7I
-         vjPVjy1RBWJWVoMejf5kPcBe4uJwwUKqewXHIMi5WPA1E9qXZOwtJKDwSgQtX6f9wvUD
-         tH2k9vgPMyk40flenKHxNwj+s78W3dKo59xMPsb4vJeQO4cioIePxdKkh/nXw9n1i8ay
-         Y9DA==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=+n9PUP/yu05/9MDe2VuxcN4yg1PRKAeGWVDeYP991FY=;
+        b=lpt7Jm9cDHqdN9rwJn9az98LIyC8PWOAXXdc78UL2gjQNuYua8XrdpG+POwMqKX9XB
+         VyYODz3OKowxSXkD5UMXyRoCr6j1yD6TQBP1AMmD2lNsNEIMj9+9D9uEG7figGQCkTI9
+         4PaMD18uQVJm6IdYI6oiKA3MPtbWp8CC8dFG4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7DTn5uFhSyuimkf8VN00wRIDhk5oSwcyOf7Qxcw85tU=;
-        b=jhpZT/ChH8Fa4WrJTw8GNQwkMcFdZW3dS81QMoid/h84HKiwcCRZy0Q6v3KBA29X7g
-         rnkX7XdmEVCbziiutjZAoPXcfWe/4wAZRLrTiY/+BwB2mE/wkz7+cLSlTYJUP9QI+ZMs
-         00d7BWt8q34+A/5DhQAtbyvnJ9gUrUnVdGU/r+PVUJzDFwK4iDqC/Gs1xY3vMCHS9y3C
-         ORg8fLQB6xgPExIYH43Xqjz2fVApKj17n8MgvOsPzIvZskH/0V7BhLLhQbz4RqcEv+Xg
-         4x62EjcRcPgYtYgw0dpCxNbXyB5fGaRMWDD7Sb/BOVHcNexI8SVixfGZZZmRichKqiRK
-         hO3g==
-X-Gm-Message-State: AOAM5311mhrw0xuxfC4py9ZXb8HJQeeGlu5CNBkxSl0E2YC97hEJVpSa
-        J9x2pvDgt9Qm7cnsNvPrdaCLyI0h
-X-Google-Smtp-Source: ABdhPJz/FpzQOdn9OOGGCezMzFAL+DHV0SHGzs6yjrB2lFiiEejBhhvW3hCAbATSPtqyb2YfEP5Tow==
-X-Received: by 2002:a19:654c:: with SMTP id c12mr3907741lfj.132.1597171771257;
-        Tue, 11 Aug 2020 11:49:31 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id i11sm11690790lfl.31.2020.08.11.11.49.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2020 11:49:30 -0700 (PDT)
-Subject: Re: [PATCH v9 09/10] media: tegra-video: Add CSI MIPI pads
- calibration
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596740494-19306-1-git-send-email-skomatineni@nvidia.com>
- <1596740494-19306-10-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0eb1c3ac-7cd7-d58c-9480-bd8d762c27f1@gmail.com>
-Date:   Tue, 11 Aug 2020 21:49:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=+n9PUP/yu05/9MDe2VuxcN4yg1PRKAeGWVDeYP991FY=;
+        b=Q/6xwLZTzwGtZpt8r58lVdH5RGXb0iopg1mq+T9d0ZliKdR51EQ6nC/FhyNYA6dpwX
+         NVxA7hWxSvyfY03L1z8/maNEiH5Y8mE4a9y2OcftLvXQ+GZ6bNeQcRS2qvacI1/R2gnB
+         a041zg4L6XHc5VFUiFYiaRMgIFEZUIXLU2s5tXc+NlE2LCR+4x5VDMsZcnT/U4reAbP9
+         Li/L0izGBlRxgyTigTlx0EXs8qYl4l40rI7AwFUBtPuv9gwqHfiUlcyKSAziYOso5oCG
+         jHtQkmgcVMRPqriIOEf7Yi3se5y7BWWD5menF3pKUrdxVF+GjPINQHMrR+OLxBXX86Jx
+         LHpw==
+X-Gm-Message-State: AOAM533IGxO7R6IEJBlV7JMaSnnfQchGLqoRKnHLJ49EwyTftqZISISf
+        eQC+KsXAoZ/WCAZJeBXnKoRUAoD2Ut4=
+X-Google-Smtp-Source: ABdhPJwe4qk4u80qb7K6M0UTxshn2s9EH/901eeU60PzedzdUY+tVv6ME7a5eBT8eA4fvUg13Z569w==
+X-Received: by 2002:a17:902:82c1:: with SMTP id u1mr2289880plz.224.1597174230361;
+        Tue, 11 Aug 2020 12:30:30 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id y12sm16694716pgi.75.2020.08.11.12.30.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 12:30:29 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <1596740494-19306-10-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200811021553.25023-1-tanmay@codeaurora.org>
+References: <20200811021553.25023-1-tanmay@codeaurora.org>
+Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add Display Port dt node
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+To:     Tanmay Shah <tanmay@codeaurora.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        robdclark@gmail.com
+Date:   Tue, 11 Aug 2020 12:30:28 -0700
+Message-ID: <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-06.08.2020 22:01, Sowjanya Komatineni пишет:
-...
-> +	err = tegra_mipi_finish_calibration(csi_chan->mipi);
+Quoting Tanmay Shah (2020-08-10 19:15:53)
+> @@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
+> =20
+>                                 status =3D "disabled";
+>                         };
 > +
-> +	if (ret < 0 && ret != -ENOIOCTLCMD)
-> +		goto err_disable_csi_stream;
+> +                       msm_dp: displayport-controller@ae90000 {
+> +                               status =3D "disabled";
+> +                               compatible =3D "qcom,sc7180-dp";
 > +
-> +	if (err < 0)
-> +		dev_warn(csi_chan->csi->dev,
-> +			 "MIPI calibration failed: %d\n", ret);
+> +                               reg =3D <0 0x0ae90000 0 0x1400>;
+> +
+> +                               interrupt-parent =3D <&mdss>;
+> +                               interrupts =3D <12 IRQ_TYPE_NONE>;
 
-err
+Please drop the flags. It's not required per the binding. It should just
+be a single number, i.e. <12>.
+
+> +
+> +                               clocks =3D <&dispcc DISP_CC_MDSS_AHB_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_DP_AUX_CLK=
+>,
+> +                                        <&dispcc DISP_CC_MDSS_DP_LINK_CL=
+K>,
+> +                                        <&dispcc DISP_CC_MDSS_DP_LINK_IN=
+TF_CLK>,
+> +                                        <&dispcc DISP_CC_MDSS_DP_PIXEL_C=
+LK>;
+> +                               clock-names =3D "core_iface", "core_aux",=
+ "ctrl_link",
+> +                                             "ctrl_link_iface", "stream_=
+pixel";
+> +                               #clock-cells =3D <1>;
+> +                               assigned-clocks =3D <&dispcc DISP_CC_MDSS=
+_DP_LINK_CLK_SRC>,
+> +                                                 <&dispcc DISP_CC_MDSS_D=
+P_PIXEL_CLK_SRC>;
+> +                               assigned-clock-parents =3D <&msm_dp 0>, <=
+&msm_dp 1>;
+> +
+> +                               operating-points-v2 =3D <&dp_opp_table>;
+> +                               power-domains =3D <&rpmhpd SC7180_CX>;
+
+Can you send another patch to add the hpd pinctrl binding for the hpd
+function? It would be useful to have that in the SoC level in case any
+board wants to use the hpd pin on this SoC without having to implement
+it themselves. It could be assigned here too as the pinctrl but I'm not
+sure if that is correct. Probably better to just have it in the SoC file
+and then let boards pick to use it.
+
+> +
+> +                               ports {
+> +                                       #address-cells =3D <1>;
+> +                                       #size-cells =3D <0>;
+> +                                       port@0 {
+> +                                               reg =3D <0>;
+> +                                               dp_in: endpoint {
+> +                                                       remote-endpoint =
+=3D <&dpu_intf0_out>;
+> +                                               };
+> +                                       };
+> +
+> +                                       port@1 {
+> +                                               reg =3D <1>;
+> +                                               dp_out: endpoint { };
+> +                                       };
+> +                               };
+> +
+> +                               dp_opp_table: dp-opp-table {
+
+Can this be called opp-table? I don't see the need to make it more
+specific given that it doesn't share the namespace at this level with
+anything else that is an opp table.
+
+> +                                       compatible =3D "operating-points-=
+v2";
+> +
+> +                                       opp-160000000 {
+> +                                               opp-hz =3D /bits/ 64 <160=
+000000>;
+> +                                               required-opps =3D <&rpmhp=
+d_opp_low_svs>;
+> +                                       };
+> +
+> +                                       opp-270000000 {
+> +                                               opp-hz =3D /bits/ 64 <270=
+000000>;
+> +                                               required-opps =3D <&rpmhp=
+d_opp_svs>;
+> +                                       };
+> +
+> +                                       opp-540000000 {
+> +                                               opp-hz =3D /bits/ 64 <540=
+000000>;
+> +                                               required-opps =3D <&rpmhp=
+d_opp_svs_l1>;
+> +                                       };
+> +
+> +                                       opp-810000000 {
+> +                                               opp-hz =3D /bits/ 64 <810=
+000000>;
+> +                                               required-opps =3D <&rpmhp=
+d_opp_nom>;
+> +                                       };
+> +                               };
+> +                       };
+>                 };
+> =20
+>                 dispcc: clock-controller@af00000 {
+> @@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
+>                                  <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+>                                  <&dsi_phy 0>,
+>                                  <&dsi_phy 1>,
+> -                                <0>,
+> -                                <0>;
+> +                                <&msm_dp 0>,
+> +                                <&msm_dp 1>;
+
+This bit will have to change when the DP phy is split off into the qmp
+driver.
+
+>                         clock-names =3D "bi_tcxo",
+>                                       "gcc_disp_gpll0_clk_src",
+>                                       "dsi0_phy_pll_out_byteclk",
