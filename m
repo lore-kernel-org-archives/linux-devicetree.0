@@ -2,124 +2,159 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16445C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 20:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2638AC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 20:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4B0C2080C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 20:00:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="IlNtlpm9"
+	by mail.kernel.org (Postfix) with ESMTP id F085820774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 20:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597262767;
+	bh=2VWwmpkVznPunxuAQlBtAZXvL6orBK9iBc7tcjFoXL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tUSjRsJs/1+rHsr0XrP+ZTyHz4f6n9cSznRag1W0IQ2qhh6HdIGYy+EefOa/gP6uo
+	 i0aeqHqJYiV221PjxHZTc8N3Gdh22AEqMuSxykfnVAyBbKjIYfP0BnYpAjOZLQm1T9
+	 cLASMa/2CpcUQwrgf5Z/FYLbcfU+9LB5pn7FCEh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHLUAU (ORCPT
+        id S1726688AbgHLUGG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 16:00:20 -0400
-Received: from mout.gmx.net ([212.227.17.21]:49737 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgHLUAT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 16:00:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597262395;
-        bh=KtVP+9CoE4x+P4vIm7WdD2oTdBMHgUjg2pO7nFUsGy4=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=IlNtlpm9OvaMM5ly6CLvZ7pQXLwCegnuqg5V5ukfCW1CpTOPLBuUhZab8AUTKS3CD
-         REEUQ3yi7TUrVXEMQ3SmlH5d2yYh2pa/xxu1J3QzlyV50hF7WWatiAdyM9PiKqSwpE
-         h8ouvPU1jf+4AQKIz87eyv+3SdU6W6Y38VM0Kw88=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from frank-s9 ([37.60.0.210]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M8hVB-1k1qJ80Cen-004kFf; Wed, 12
- Aug 2020 21:59:55 +0200
-Date:   Wed, 12 Aug 2020 21:59:48 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <f65aeebb6c372a7138e496a30ce39f879d4e24ed.camel@pengutronix.de>
-References: <20200812093726.10123-1-wenbin.mei@mediatek.com> <20200812093726.10123-4-wenbin.mei@mediatek.com> <f65aeebb6c372a7138e496a30ce39f879d4e24ed.camel@pengutronix.de>
+        Wed, 12 Aug 2020 16:06:06 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41676 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbgHLUGG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 16:06:06 -0400
+Received: by mail-il1-f196.google.com with SMTP id q14so3125839ilj.8;
+        Wed, 12 Aug 2020 13:06:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sdw79P/b8ad4oz6D+MvgiHI8TVk9LcAmrvQU+/ipUlU=;
+        b=UbW2jzv01eFaV4+rLDiqgOGCH91SlYp/Hn5d0BoA84Y26WGr6uO2EpJjDHmErr9O1Q
+         EhlCle4/uEE1WHTtTs8RkTyfEf41CyfMuDm3x9C1DCeruCysFzXktTQdsWQlkOCl1GR0
+         zTTDgoPM4waCsXBRkyCvrbvgHf7WcRWMJpVWvCRYGSb7V/l8c9FyrXoYkbduawQ2JGfR
+         PlOdhXYTIrhjQ4/CQEqIm9tX/aYrMSphMQ42OjEsJWNhPDmTg5TLiZvhG7lxWUfN0TZZ
+         3xfVvwrtriwllq59++jK3w5o2Df4LXRBNUmr7Sbu/pJ6kHDO2WLs1hGFqap+mg3xhUiW
+         6LHQ==
+X-Gm-Message-State: AOAM532txzg7drehsm1J+caVUouIUDP/y8DbKKCexnhUzmfN5pdpOHZE
+        Zw7muFZkG+5lp9GaFEFwTQ==
+X-Google-Smtp-Source: ABdhPJw95pjXXqED1L9WxNpMIlkk/ghd8MNBAHlgMlqvDLcv08qX7/s5+H/BNE5Cd5Z8u3sHKPWkmA==
+X-Received: by 2002:a92:cf52:: with SMTP id c18mr1367470ilr.44.1597262764996;
+        Wed, 12 Aug 2020 13:06:04 -0700 (PDT)
+Received: from xps15 ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id u124sm1473531iod.20.2020.08.12.13.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 13:06:04 -0700 (PDT)
+Received: (nullmailer pid 2617083 invoked by uid 1000);
+        Wed, 12 Aug 2020 20:06:02 -0000
+Date:   Wed, 12 Aug 2020 14:06:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: at25: convert the binding document to
+ yaml
+Message-ID: <20200812200602.GA2612803@bogus>
+References: <20200803221206.GA3211829@bogus>
+ <20200804063307.10029-1-ceggers@arri.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/3] mmc: mediatek: add optional module reset property
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <68A53B8B-6646-4A99-B1E3-FAC3D550D67E@public-files.de>
-X-Provags-ID: V03:K1:vDQU52f3FqwgkLuBMaKcXThRs6qVswcU8BOJ+WZ5ghW9KrzJQ1q
- e/SI6LMvfIkwUCO3/Wa8qTqwpiEn9lGtWcc9VzeTHsed9ct4Dp0qg03i8ENLNZiOYuppXS3
- ZiDR5ZvJxbjcXUiwqK0mToyPDSNFJiguxIaXWS8y+YN3e8zyjGVErKWEl4V8Q8Zlj94L71v
- hnzH1BLS79HezmS/FRhuA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p59SumFpprs=:+LkbvK2TZ5bPPW/pQ57ycF
- KG042IfHbwc7KkexS9WFbMK9ExAb4XlLmIpi4dX782ilxvnR6KUFDPpQv+YTkTSzhBIMFSdVQ
- XPXdJIpjGZ/hsMEgsFZyhzzkFX/GY1kJoKoXzkWtR+eraeXeaFhTSdyJwSPZj3H2epYSnSq1E
- zjUaE9qExDhoVFCbdGKwaiOBrz2h3vL47DxR+DCfUWh4/rBAOclwEJi0d0MIFCas5lTYyDKSG
- 4fE/fVQo2JZH7p1vWTjhtgzsKbhp7QUK8KY4ApxhEWmisboUpBJb319hO6HbdjiOFYA9xNEGH
- cWSyRsIhtxEBSN+cLY0e1i0/+MsgqhWwG54eDlnREaSIkppaFu6T6DgoNH4m7hjPP4Jg3XsD5
- 4JylB5HsNJ9kvv+z8a0GlsdG7LL2Sy5+dDWlFFFAH1/Y+AwGCJvDKO7I24lScCA3SYfiRLZDg
- 61vP+yiNYGZvtiM+JuXFqk8S/jaRSe+djJ7iK0HY4ElLwCERqcnU43CpCEJETSSKWlb6P9qFP
- 4QIEbFeaB7wsm1rMJLUzJiHH2lxRQyH4Tj3Pr73aoraUYX+pRFx9USxD8wmgJAHm0hL0ptOVf
- /J/SHCxjvUEwb6/xMVRj8UKFt10O4XgEUKWjRaQWqLcTaGXM1onIyxLfhqkFCFhht1i6BYmvL
- HzB/PhSNM7Rm8yMnBHYKZibOWZ+rCfay/E/mxRtmzDDZQtctMX6A3k/7vdtVtGG/soBvkkKTm
- tg7RCMPpl4KgisQhE7J06WE2bAfVwIHmi6qlNW1CFFMVbospYfkZ9PcsdnBcgfzZHMMkIfPQj
- doiqLJcqSfPpVD0uBel1xSE6T0TfQfNPn/isQkOpnc29STKUXACLihS+NQwwHFqiOB6tbZIX/
- QUajC1d+Y1WVtHT0oeT94ri7yUbcICFJhmgCbrAS+7XEe001AeqnXu7NUG4yvhiZ7z9T/RSMq
- CTfZVSCW63NVtLGpW5ddHx+oBBOqIxySXSEk6RPxSCK3hzarM7HLDrIlL2zyzFEZvwDr6l0BY
- I6Io4W+mXq0Wltlb62S+62kbxK3AmUE80+HAz63dCn3RPOELM+xHWZosQabWterLIFoAIg1cF
- WTpsk2hyc5f5ZnhHjN3xxZojUh9aA+rnsWpuQCdL+ebWEmtu35yDAj9Fwb6oS8XSV3oeRRVpb
- AizB3FlyrWu4+Qg1pPxSowX5p8j+XUXiHPeCL3Mp3YvXWBxKfkHQgE5LzDNc+0Zn0ndnQjzhk
- 6RN/8UrtKW8Up6jlr9NsdQssHELKNKedLkFum7A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804063307.10029-1-ceggers@arri.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tested with these 2 changes below too=2E
+On Tue, Aug 04, 2020 at 08:33:07AM +0200, Christian Eggers wrote:
+> Convert the binding document for at25 EEPROMs from txt to yaml.
+> 
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
+> ---
+> On Tuesday, 4 August 2020, 00:12:06 CEST, Rob Herring wrote:
+> > On Sun, Aug 02, 2020 at 07:46:26PM +0200, Christian Eggers wrote:
+> > > As there is virtually an infinite list of possible vendors and products
+> > > for such type of hardware, is there any value to use expressions like in
+> > > the at24 binding?
+> > 
+> > Maybe so, but there are only 4 compatible strings to document in the
+> > tree. That's not a lot to cover and we already have some of them in
+> > free-form text. If the infinite number becomes a problem we can always
+> > address that later. I'm sure that less than infinite buyers/products
+> > will prevent infinite producers.
+> 
+> Added the following devices to the new yaml binding:
+> - Examples from description of previous txt binding.
+> - Result of grepping .dts and .dtsi files for atmel,at25
+> - Devices I personally use (dts files not mainlined yet).
+> 
+>  .../devicetree/bindings/eeprom/at25.txt       |  46 +------
+>  .../devicetree/bindings/eeprom/at25.yaml      | 129 ++++++++++++++++++
+>  2 files changed, 130 insertions(+), 45 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
+> index fe91ecf1f61b..d9ef7dc5fb8e 100644
+> --- a/Documentation/devicetree/bindings/eeprom/at25.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/at25.txt
+> @@ -1,45 +1 @@
+> -EEPROMs (SPI) compatible with Atmel at25.
+> -
+> -Required properties:
+> -- compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
+> -  Example "<vendor>,<type>" values:
+> -    "anvo,anv32e61w"
+> -    "microchip,25lc040"
+> -    "st,m95m02"
+> -    "st,m95256"
+> -
+> -- reg : chip select number
+> -- spi-max-frequency : max spi frequency to use
+> -- pagesize : size of the eeprom page
+> -- size : total eeprom size in bytes
+> -- address-width : number of address bits (one of 8, 9, 16, or 24).
+> -  For 9 bits, the MSB of the address is sent as bit 3 of the instruction
+> -  byte, before the address byte.
+> -
+> -Optional properties:
+> -- spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
+> -- spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
+> -- read-only : this parameter-less property disables writes to the eeprom
+> -- wp-gpios : GPIO to which the write-protect pin of the chip is connected
+> -
+> -Obsolete legacy properties can be used in place of "size", "pagesize",
+> -"address-width", and "read-only":
+> -- at25,byte-len : total eeprom size in bytes
+> -- at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
+> -- at25,page-size : size of the eeprom page
+> -
+> -Additional compatible properties are also allowed.
+> -
+> -Example:
+> -	eeprom@0 {
+> -		compatible = "st,m95256", "atmel,at25";
+> -		reg = <0>;
+> -		spi-max-frequency = <5000000>;
+> -		spi-cpha;
+> -		spi-cpol;
+> -		wp-gpios = <&gpio1 3 0>;
+> -
+> -		pagesize = <64>;
+> -		size = <32768>;
+> -		address-width = <16>;
+> -	};
+> +This file has been moved to at25.yaml.
 
-Am 12=2E August 2020 14:08:19 MESZ schrieb Philipp Zabel <p=2Ezabel@pengut=
-ronix=2Ede>:
+We only do this to save updating a bunch of references and there aren't 
+any, so just remove the file.
 
->> +	if (!IS_ERR(host->reset)) {
->> +		reset_control_assert(host->reset);
->> +		usleep_range(10, 50);
->> +		reset_control_deassert(host->reset);
->> +	}
->> +
->
->This should be:
->
->	if (host->reset) {
->		reset_control_assert(host->reset);
->		usleep_range(10, 50);
->		reset_control_deassert(host->reset);
->	}
->
+I'd just fix it up, but this wouldn't apply for me on Linus' current 
+master. Please rebase and resend (You can want til rc1 if you want 
+because that's what I'll ultimately apply it too).
 
->> +	host->reset =3D devm_reset_control_get_optional_exclusive(&pdev->dev,
->> +								"hrst");
->> +	if (PTR_ERR(host->reset) =3D=3D -EPROBE_DEFER)
->> +		return PTR_ERR(host->reset);
->> +
->
->This should be:
->
->	host->reset =3D devm_reset_control_get_optional_exclusive(&pdev->dev,
->								"hrst");
->	if (IS_ERR(host->reset))
->		return PTR_ERR(host->reset);
->
-
->With these two changes,
->
->Reviewed-by: Philipp Zabel <p=2Ezabel@pengutronix=2Ede>
-
-regards Frank
+Rob
