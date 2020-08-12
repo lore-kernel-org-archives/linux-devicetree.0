@@ -2,137 +2,113 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B512C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7DEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8CE7204FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108422053B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aTSr7viQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sA2/JxzA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgHLHBe (ORCPT
+        id S1725845AbgHLHGr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:01:34 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:39712 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbgHLHBe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:01:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597215693; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=1lYd7mEpSaT77nxAeNLUtAPE92rtIeFulVxU9PJ93dc=; b=aTSr7viQ2G6b7kNqdnxe23PB0xaT/Cj5AJ0Rj2aWBx/tJue/9qjBBCn/N5F/+0T+iedMBzhE
- spKMxg+GbF7Y7TFOsKfUxoZQD1n9GmgMC8lQW4o1omrHgPXHoEFkDIgsPLuINjPqdAFtRolo
- gZ766wNBwZFgJW492yeEf3jF0+k=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f339390668ab3fef615857f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 07:00:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8BD0BC43395; Wed, 12 Aug 2020 07:00:31 +0000 (UTC)
-Received: from [10.110.76.76] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 375A2C433C6;
-        Wed, 12 Aug 2020 07:00:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 375A2C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
- requirements
-To:     Peter Chen <hzpeterchen@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        robh+dt@kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>, jackp@codeaurora.org
-References: <20200624022848.7765-1-wcheng@codeaurora.org>
- <20200624022848.7765-2-wcheng@codeaurora.org>
- <CAL411-qvuCTib1VBV9uRwL-rEHkefFLm1x-WLLP4kYzcNtQd_g@mail.gmail.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <47f1568e-ba8f-b7f2-9f67-a891c0e06541@codeaurora.org>
-Date:   Wed, 12 Aug 2020 00:00:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 12 Aug 2020 03:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgHLHGr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 03:06:47 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A7AC06174A
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 00:06:44 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id m22so1066320ljj.5
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 00:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1K3oBY2TmVMmKmOQPQU9rGoPDuwC0BKmISYgxAAqZh0=;
+        b=sA2/JxzA87QKxFrPbrsRcibJjyOop9YGxHZfHVpWBOhpNgNBqF2M99mhzFO5usLltA
+         yCCieRwGJQ/Yz1qJniQBW62M4N/xu4mtFydfjbsroic7Qefl1yGqesIC/YTD0aN0RLb7
+         ctNAU3Ky8WocEYoPfnwd9+KZvgo6jYRwv8PfRH6l0riaFQsbqMqlPv2aOLlDTN0wfct0
+         l//OWg5HMlmaT0EWOoaKeUgagXCqZuIviho+rfl31HGYSMpuXsHQwBaUKok7bhrXlefp
+         AgXIcIMTFWzihEfQoEjqVaGgtbIgIxmp47OqxXypL9Lgs3lF6rQ13ZKlFv6n33XY16n7
+         iVkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1K3oBY2TmVMmKmOQPQU9rGoPDuwC0BKmISYgxAAqZh0=;
+        b=IdYbwPMrwvUqOrGvuOeiXJpEaWQX5WmIutgqiGe1HQlQSlSEgFoT5Ol9lv71WnzEQm
+         cCY5x6EnA6vTI2KlvIvC0r6A5xJ2hc7JiqPf+KO2eCDxzlM0kWvp1q5hL//LlTh7h+EA
+         z+c+fA7WP0pkCa9N/6g7ES9c5x72rIshLlwv4pcr8m73QgZM8s175AR1clbZSc/IdDmG
+         J8rrxN4NorClaa1ygcr0RHIGhVgzV/gSTHES318Bkq+2/KJrxmdIXk99ULGf0PNgMHla
+         88qWx6crU5QA7n9j2Wv1bf+qlWdT+DmASP2YDQQhDnwzuLEXM4QhLtwBapz7uiYMLdmw
+         Y6xw==
+X-Gm-Message-State: AOAM533ZGg4QRLWDmS9hCL6ETYHQse5rnes6HeFMtyN9LzsqyOwJjCL8
+        F6BSvJpQeMbxgw4FSijQwiMd1mFX8ko=
+X-Google-Smtp-Source: ABdhPJzH6F+S+xoXqrRl1v1JHzHUOLZcg1CROsMwfaQqhrUi6WDHKFvTmk4NPXCT/bYpEAFBywq+LA==
+X-Received: by 2002:a2e:b00f:: with SMTP id y15mr4886274ljk.223.1597216003082;
+        Wed, 12 Aug 2020 00:06:43 -0700 (PDT)
+Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id s2sm263317lfs.4.2020.08.12.00.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 00:06:42 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] dt-bindings: pip command elaboration
+Date:   Wed, 12 Aug 2020 09:06:40 +0200
+Message-Id: <20200812070640.2543557-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <CAL411-qvuCTib1VBV9uRwL-rEHkefFLm1x-WLLP4kYzcNtQd_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+pip is now for most practical set-ups implied to be pip3, so
+just use "pip" rather than "pip3" in the instructions.
+Pass --user explicitly in the example so it is clear that this
+gets installed in the user home directory.
 
+Add an additional instruction on how to upgrade the project,
+not everyone is aware of how pip works.
 
-On 8/11/2020 7:22 PM, Peter Chen wrote:
-> On Wed, Jun 24, 2020 at 10:31 AM Wesley Cheng <wcheng@codeaurora.org> wrote:
->>
->> Some devices have USB compositions which may require multiple endpoints
->> that support EP bursting.  HW defined TX FIFO sizes may not always be
->> sufficient for these compositions.  By utilizing flexible TX FIFO
->> allocation, this allows for endpoints to request the required FIFO depth to
->> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
->> a larger TX FIFO size results in better TX throughput.
->>
->> Ensure that one TX FIFO is reserved for every IN endpoint.  This allows for
->> the FIFO logic to prevent running out of FIFO space.
->>
-> 
-> You may do this for only allocated endpoints, but you need override
-> default .match_ep
-> API. See cdns3/gadget.c and cdns3/ep0.c as an example.
-> 
-> Peter
-> 
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ Documentation/devicetree/writing-schema.rst | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Hi Peter,
-
-Thank you for your input.  I've actually considered doing some
-matching/resizing in the .match_ep route as well, but it doesn't work
-well for situations where multiple configurations are in play. The
-reason being that if you look at the epautoconf APIs, the configfs
-driver will use the usb_ep_autoconfig_reset() to reset the endpoints
-claimed between initialization of each configuration.  This means that
-the epautoconf driver expects to re-use the usb_endpoints:
-
-static int configfs_composite_bind(struct usb_gadget *gadget,
-	struct usb_gadget_driver *gdriver)
-{
-...
-
-/* Go through all configs, attach all functions */
-list_for_each_entry(c, &gi->cdev.configs, list) {
-...
-list_for_each_entry_safe(f, tmp, &cfg->func_list, list) {
-	list_del(&f->list);
-	ret = usb_add_function(c, f);
-	if (ret) {
-		list_add(&f->list, &cfg->func_list);
-		goto err_purge_funcs;
-	}
-}
-usb_ep_autoconfig_reset(cdev->gadget);
-}
-
-So in this situation, I wouldn't want the dwc3 gadget driver to assign a
-different dwc3 ep for endpoints in each configuration, when we know that
-only one set of EPs will be active when the host chooses.  I hope I
-understood your feedback correctly, and definitely appreciate the input!
-
-Thanks
-Wesley
-
+diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
+index 8c74a99f95e2..a9cebfca8d31 100644
+--- a/Documentation/devicetree/writing-schema.rst
++++ b/Documentation/devicetree/writing-schema.rst
+@@ -115,11 +115,16 @@ The DT schema project must be installed in order to validate the DT schema
+ binding documents and validate DTS files using the DT schema. The DT schema
+ project can be installed with pip::
+ 
+-    pip3 install git+https://github.com/devicetree-org/dt-schema.git@master
++    pip install --user git+https://github.com/devicetree-org/dt-schema.git@master
+ 
+ Several executables (dt-doc-validate, dt-mk-schema, dt-validate) will be
+ installed. Ensure they are in your PATH (~/.local/bin by default).
+ 
++We sometimes update th DT schema project, and then you can simply add the
++"--upgrade" option to the above command to get to the latest version:
++
++    pip install --user --upgrade git+https://github.com/devicetree-org/dt-schema.git@master
++
+ dtc must also be built with YAML output support enabled. This requires that
+ libyaml and its headers be installed on the host system. For some distributions
+ that involves installing the development package, such as:
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.26.2
+
