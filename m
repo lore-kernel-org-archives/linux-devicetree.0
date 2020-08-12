@@ -2,129 +2,118 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52644C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE64C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155F92076B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB962076B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597249847;
-	bh=aRNIdyFGDEVq5YbckPNv6Oi2knBVAOE2NwnDD8n86kQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g+BXyhgOHD2PEhZIDGW+BOZ4ciAjCALmYSHx/GqAhUTCRfWd84+fb5lDUgEMGRytE
-	 E9ZT1JBwopCinbwHkgTLZg0bAYDbLTqagYjM7m6GcA3JJ5DQAjmUewkuKS/tkkv0bO
-	 ZlKA6WQs56sC/4yA1X7alyT+RVbEBw2xunIkGShs=
+	s=default; t=1597249849;
+	bh=0ft0DAsjQKl8VL9qkDOrMKNFN8uwK11yE2PS9SCRfxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ljWahUTdR0IIXj2d3rK39Z2sqDDG/ISugfa7LtWA0Y1Ud+g54px5fvzFecEsA9nVi
+	 927gmNSy4GY4QE/5DtBeoLuSsxHlUz1Cx9u8CSa9DTX6IA2MHrLkH2uNVrSG84idPm
+	 MIRwH8Vdouk1g9BMaJaLnvEPl+NHKjnONqFRqtNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgHLQaU (ORCPT
+        id S1726578AbgHLQan (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgHLQaN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 12:30:13 -0400
-Received: from localhost.localdomain (unknown [194.230.155.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAB1C20838;
-        Wed, 12 Aug 2020 16:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597249813;
-        bh=aRNIdyFGDEVq5YbckPNv6Oi2knBVAOE2NwnDD8n86kQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=hckRolMk/frqldIVx8MbphEyY0rtqnyRrksVVE7bOBIdVDRfz4utioX/h7SYLWEpT
-         iXPzSwHW9dYXL3VkggOrF4FXFU2EmSbjViDAxEpzNB4BwKGZaJw5KPVQpKhRz/c2rp
-         ub+mRvN5jkbe1mzAN0A94RtUrx/zDVdNDHWinWHU=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 05/11] extcon: ptn5150: Use generic "interrupts" property
-Date:   Wed, 12 Aug 2020 18:29:52 +0200
-Message-Id: <20200812162958.6180-5-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200812162958.6180-1-krzk@kernel.org>
-References: <20200812162958.6180-1-krzk@kernel.org>
+        Wed, 12 Aug 2020 12:30:43 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38491 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgHLQal (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 12:30:41 -0400
+Received: by mail-il1-f195.google.com with SMTP id 77so2350968ilc.5;
+        Wed, 12 Aug 2020 09:30:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qbqEkaQ15mtFpbr/JyMCw9XOODlZ8i0VURftlLjm2sI=;
+        b=ry/Uu2yXco4KBqItHp9puYoZOYGLnWsWfwznRcCdpMa+7p6HfMXZF301+EO8fXGRmy
+         qRP/2I0T+gfwAQokLL+X0BaE2XQqAuOU5T2iTUUpMDFVadYREI3JkcxBF22zZ/lT5M6a
+         Ld6t8iTVFzev+dJXNbEPoyGfjCmYlIWJqVCeGhMl9SyLfZ6mX4OfRJxJbQPM6mgSEJdE
+         YS7dDMLVa+vKNwo9O7V6mcdfuKDVzp8fRrG8fVuTzxArP6NRs07BR73ohJoSMSFtWDjd
+         kCL0KQuOhBAgkL81lWencucdV1XGPZWxCjLrnkDMG0S5mAr2hQ6qlB6BPIpwKlKCgDVv
+         h6nw==
+X-Gm-Message-State: AOAM532wpI3wWKzs3zJzkvWZX/4ojnFM4VZ64+wqN2Y/+I6VN7Ybuc/v
+        dNtT3Y7eXqR52gJi9hGGGwIVa54=
+X-Google-Smtp-Source: ABdhPJx5yFY86n1UYDBGncdOmXu5uB+u/miINL2rA94dhWt7DYre7QceJa73MR38R9bHmfRzK4CkFA==
+X-Received: by 2002:a92:9fdb:: with SMTP id z88mr454553ilk.154.1597249839214;
+        Wed, 12 Aug 2020 09:30:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id q1sm1187361iow.8.2020.08.12.09.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 09:30:38 -0700 (PDT)
+Received: (nullmailer pid 2326239 invoked by uid 1000);
+        Wed, 12 Aug 2020 16:30:36 -0000
+Date:   Wed, 12 Aug 2020 10:30:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linuxarm@huawei.com,
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, mauro.chehab@huawei.com
+Subject: Re: [PATCH 31/33] dt: document HiSilicon SPMI controller and
+ mfd/regulator properties
+Message-ID: <20200812163036.GA2324764@bogus>
+References: <cover.1597160086.git.mchehab+huawei@kernel.org>
+ <176043f329dfa9889f014feec04e7e1553077873.1597160086.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <176043f329dfa9889f014feec04e7e1553077873.1597160086.git.mchehab+huawei@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Interrupts do not have to be always GPIO based so instead of expecting
-"int-gpios" property and converting the GPIO to an interrupt, just
-accept any interrupt via generic "interrupts" property.
+On Tue, 11 Aug 2020 17:41:57 +0200, Mauro Carvalho Chehab wrote:
+> Add documentation for the properties needed by the HiSilicon
+> 6421v600 driver, and by the SPMI controller used to access
+> the chipset.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 175 ++++++++++++++++++
+>  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
+>  2 files changed, 229 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+> 
 
-Keep support for old "int-gpios" for backware compatibility.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/extcon/extcon-ptn5150.c | 33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-index 5f5252752644..12e52ddbd77e 100644
---- a/drivers/extcon/extcon-ptn5150.c
-+++ b/drivers/extcon/extcon-ptn5150.c
-@@ -239,11 +239,6 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
- 
- 	info->dev = &i2c->dev;
- 	info->i2c = i2c;
--	info->int_gpiod = devm_gpiod_get(&i2c->dev, "int", GPIOD_IN);
--	if (IS_ERR(info->int_gpiod)) {
--		dev_err(dev, "failed to get INT GPIO\n");
--		return PTR_ERR(info->int_gpiod);
--	}
- 	info->vbus_gpiod = devm_gpiod_get(&i2c->dev, "vbus", GPIOD_IN);
- 	if (IS_ERR(info->vbus_gpiod)) {
- 		dev_err(dev, "failed to get VBUS GPIO\n");
-@@ -267,22 +262,30 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	if (info->int_gpiod) {
-+	if (i2c->irq > 0) {
-+		info->irq = i2c->irq;
-+	} else {
-+		info->int_gpiod = devm_gpiod_get(&i2c->dev, "int", GPIOD_IN);
-+		if (IS_ERR(info->int_gpiod)) {
-+			dev_err(dev, "failed to get INT GPIO\n");
-+			return PTR_ERR(info->int_gpiod);
-+		}
-+
- 		info->irq = gpiod_to_irq(info->int_gpiod);
- 		if (info->irq < 0) {
- 			dev_err(dev, "failed to get INTB IRQ\n");
- 			return info->irq;
- 		}
-+	}
- 
--		ret = devm_request_threaded_irq(dev, info->irq, NULL,
--						ptn5150_irq_handler,
--						IRQF_TRIGGER_FALLING |
--						IRQF_ONESHOT,
--						i2c->name, info);
--		if (ret < 0) {
--			dev_err(dev, "failed to request handler for INTB IRQ\n");
--			return ret;
--		}
-+	ret = devm_request_threaded_irq(dev, info->irq, NULL,
-+					ptn5150_irq_handler,
-+					IRQF_TRIGGER_FALLING |
-+					IRQF_ONESHOT,
-+					i2c->name, info);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to request handler for INTB IRQ\n");
-+		return ret;
- 	}
- 
- 	/* Allocate extcon device */
--- 
-2.17.1
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:34.15-28: Warning (reg_format): /example-0/pmic@0/regulators/ldo3@16:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:57.15-28: Warning (reg_format): /example-0/pmic@0/regulators/ldo4@17:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:33.27-54.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo3@16: Relying on default #address-cells value
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:33.27-54.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo3@16: Relying on default #size-cells value
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:56.27-76.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo4@17: Relying on default #address-cells value
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dts:56.27-76.15: Warning (avoid_default_addr_size): /example-0/pmic@0/regulators/ldo4@17: Relying on default #size-cells value
+Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: example-0: spmi@fff24000:reg:0: [0, 4294066176, 0, 4096] is too long
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: spmi@fff24000: spmi-channel:0: 'number of the SPMI channel where the PMIC is connected' was expected
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.example.dt.yaml: pmic@0: 'spmi-channel' is a required property
+
+
+See https://patchwork.ozlabs.org/patch/1343370
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
