@@ -2,185 +2,117 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A90DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04851207F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597247975;
-	bh=qGFs9JrB+b04B2G3TVM5XfHPg3jI3+wg5+FVNEksffE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LhUD7Dw7WCgmnJMvDd0AcS1Cd1ZOvFIF0iaZFParGQytdOH2zZBEknFU8QIa9HA24
-	 DOncTSw54ITwcKqt8KyHs+cRPxv89TOn4Oa2e4ImFg7juEI/Bj6O8Z20QFAznVN1B0
-	 jw63l8NCCn4/jk+kN9R52RaMIgPwQOyDncU4f0e0=
+	by mail.kernel.org (Postfix) with ESMTP id 2D0EB20675
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:00:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H9w2mY6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHLP5B (ORCPT
+        id S1726554AbgHLQAp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:57:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgHLP5A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:57:00 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47FC120838;
-        Wed, 12 Aug 2020 15:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597247819;
-        bh=qGFs9JrB+b04B2G3TVM5XfHPg3jI3+wg5+FVNEksffE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TzdBsEB9byzsy6EPq+XQIImU+5yJfJMUWKP5jxM/oOsLe8KPTj9Oo3TfWjVAOFuZ0
-         VnDtAkyr/zyr04JBj3ZMcZOS63rN1LjU1H+tN8XpflmEQM31S9OXb4i7Byk+fObFwj
-         b8SXaSi8qZAuVVYq6PDsY5GITY28+xCc1TyV/Bv4=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1k5t7Z-005t5W-4R; Wed, 12 Aug 2020 17:56:57 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
-        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 00/44] SPMI patches needed by Hikey 970
-Date:   Wed, 12 Aug 2020 17:56:10 +0200
-Message-Id: <cover.1597247164.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 12 Aug 2020 12:00:45 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44740 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgHLQAp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 12:00:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CG0T8O050082;
+        Wed, 12 Aug 2020 11:00:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597248029;
+        bh=02ZEbPG60T+9TFX2JsaFFkktquPFZf1Si0VmO18RfTI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=H9w2mY6fm2wsqTgq5ZDyXKbESuoPz5xCTPTw7JcD1v+0frmNswa+/P16xRDrueRTq
+         BxxFRwmDae62UFwrI9pzsW/wOURR2wYtkG3oZNYI7RGKvUfxmRGQXdkeCabpSxLYXz
+         u0UE60yVj57QY2U2dVV0MljMtnwdtj0hAe30Rsus=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CG0Tlf109184
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 11:00:29 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
+ Aug 2020 11:00:29 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 12 Aug 2020 11:00:29 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CG0Sa2007723;
+        Wed, 12 Aug 2020 11:00:29 -0500
+Subject: Re: [PATCH v32 2/6] leds: lp50xx: Add the LP50XX family of the RGB
+ LED driver
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200722153146.8767-1-dmurphy@ti.com>
+ <20200722153146.8767-3-dmurphy@ti.com>
+ <20200811105413.r2m2f7bubuz55rrt@duo.ucw.cz>
+ <935119fa-6d1f-8e99-51f9-87966b4d03ad@ti.com> <20200811220109.GA9105@amd>
+ <3ce38a31-a4f0-4cd7-ad09-6bdad27e6756@ti.com> <20200811222602.GA10181@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <5efcba1b-995e-b6fd-9004-fbafaae5b8a3@ti.com>
+Date:   Wed, 12 Aug 2020 11:00:23 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200811222602.GA10181@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Greg,
+Pavel
 
-This patch series is part of a work I'm doing in order to be able to support
-a HiKey 970 board that I recently got on my hands.
+On 8/11/20 5:26 PM, Pavel Machek wrote:
+> Hi!
+>
+>>>> Well it depends on where we want to create the default cache values.
+>>>>
+>>>> Either we run through a for..loop during driver probe and delay device start
+>>>> up or we keep the simple arrays and increase the driver total size.
+>>> for loop will be better.
+>>>
+>>> Plus, REGCACHE_RBTREE is very likely overkill.
+>> Well if I eliminate the reg_cache then I can eliminate the defaults too.
+> I'm not asking for that. But please investigate REGCACHE_FLAT.
+>
+> 									Pavel
 
-I received some freedback from Mark and from Jonathan on a first
-attempt I made to upstream this.
+After looking at this a loop makes no sense here.  The regmap call back 
+values are determined at build time not during runtime.
 
-I'm opting to submit it via staging, because I had to start from the
-patch that originally added this driver on a 4.9 Kernel tree:
+Adding a loop here makes the code more complex just to reduce the 
+overall LoC.  In adding the loop the reg_default array will have to be 
+re-allocated and copied at run time and then be expanded to include the 
+additional values.
 
-	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+And the regmap defaults call backs will need to be updated to reflect 
+the new values.  And these are part of a const struct because the 
+devm_regmap_init declares the config as a const.
 
-In order to preserve the original SOB from the driver's author.
+     .reg_defaults = lp5012_reg_defs,
+     .num_reg_defaults = ARRAY_SIZE(lp5012_reg_defs),
 
-The patches following it are on the standard way: one patch per
-logical change.
+So I am not sure that adding a loop here just to eliminate some LoC is 
+adding any value here.  I can remove the #defines for the unused runtime 
+registers and hard code the additional register addresses in the default 
+array.  That will at least eliminate some LoC and reduce the object size.
 
-This is part of a bigger work whose goal is to have upstream support
-for USB and DRM/KMS on such boards. 
+I have no issue with using the REGCACHE_FLAT so I will make that change.
 
-I suspect that, maybe except for the DT part, those 3 specific drivers
-are more or less ready to be moved from staging, but the other
-drivers that are also part of this attempt aren't ready. Specially the
-DRM driver has some bugs that came from the OOT version.
-
-So, my current plan is to submit those drivers to staging for 5.9
-and move the ones that are ok out of staging on Kernel 5.10.
-
-Regards,
-Mauro.
-
-Mauro Carvalho Chehab (41):
-  staging: spmi: hisi-spmi-controller: coding style fixup
-  staging: spmi: hisi-spmi-controller: fix it to probe successfully
-  staging: spmi: hisi-spmi-controller: fix a typo
-  staging: spmi: hisi-spmi-controller: adjust whitespaces at defines
-  staging: spmi: hisi-spmi-controller: use le32 macros where needed
-  staging: spmi: hisi-spmi-controller: add debug when values are
-    read/write
-  staging: spmi: hisi-spmi-controller: fix the dev_foo() logic
-  staging: spmi: hisi-spmi-controller: add it to the building system
-  staging: spmi: hisi-spmi-controller: do some code cleanups
-  staging: mfd: hi6421-spmi-pmic: get rid of unused code
-  staging: mfd: hi6421-spmi-pmic: deal with non-static functions
-  staging: mfd: hi6421-spmi-pmic: get rid of the static vars
-  staging: mfd: hi6421-spmi-pmic: cleanup hi6421-spmi-pmic.h header
-  staging: mfd: hi6421-spmi-pmic: change the binding logic
-  staging: mfd: hi6421-spmi-pmic: get rid of unused OF properties
-  staging: mfd: hi6421-spmi-pmic: cleanup OF properties
-  staging: mfd: hi6421-spmi-pmic: change namespace on its functions
-  staging: mfd: hi6421-spmi-pmic: fix some coding style issues
-  staging: mfd: hi6421-spmi-pmic: add it to the building system
-  staging: mfd: hi6421-spmi-pmic: cleanup the code
-  staging: regulator: hi6421v600-regulator: get rid of unused code
-  staging: regulator: hi6421v600-regulator: port it to upstream
-  staging: regulator: hi6421v600-regulator: coding style fixups
-  staging: regulator: hi6421v600-regulator: change the binding logic
-  staging: regulator: hi6421v600-regulator: cleanup struct
-    hisi_regulator
-  staging: regulator: hi6421v600-regulator: cleanup debug messages
-  staging: regulator: hi6421v600-regulator: use shorter names for OF
-    properties
-  staging: regulator: hi6421v600-regulator: better handle modes
-  staging: regulator: hi6421v600-regulator: change namespace
-  staging: regulator: hi6421v600-regulator: convert to use get/set
-    voltage_sel
-  staging: regulator: hi6421v600-regulator: don't use usleep_range for
-    off_on_delay
-  staging: regulator: hi6421v600-regulator: add a driver-specific debug
-    macro
-  staging: regulator: hi6421v600-regulator: initialize ramp_delay
-  staging: regulator: hi6421v600-regulator: cleanup DT settings
-  staging: regulator: hi6421v600-regulator: fix some coding style issues
-  staging: regulator: hi6421v600-regulator: add it to the building
-    system
-  staging: regulator: hi6421v600-regulator: code cleanup
-  staging: hikey9xx: add a TODO list
-  MAINTAINERS: add an entry for HiSilicon 6421v600 drivers
-  dt: document HiSilicon SPMI controller and mfd/regulator properties
-  dt: hisilicon: add support for the PMIC found on Hikey 970
-
-Mayulong (3):
-  staging: spmi: add Hikey 970 SPMI controller driver
-  staging: mfd: add a PMIC driver for HiSilicon 6421 SPMI version
-  staging: regulator: add a regulator driver for HiSilicon 6421v600 SPMI
-    PMIC
-
- .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 +++++++
- .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++
- MAINTAINERS                                   |   6 +
- .../boot/dts/hisilicon/hi3670-hikey970.dts    |  16 +-
- .../boot/dts/hisilicon/hikey970-pmic.dtsi     | 200 ++++++++
- drivers/staging/Kconfig                       |   2 +
- drivers/staging/Makefile                      |   1 +
- drivers/staging/hikey9xx/Kconfig              |  35 ++
- drivers/staging/hikey9xx/Makefile             |   5 +
- drivers/staging/hikey9xx/TODO                 |   5 +
- drivers/staging/hikey9xx/hi6421-spmi-pmic.c   | 381 ++++++++++++++
- .../staging/hikey9xx/hi6421v600-regulator.c   | 479 ++++++++++++++++++
- .../staging/hikey9xx/hisi-spmi-controller.c   | 351 +++++++++++++
- include/linux/mfd/hi6421-spmi-pmic.h          |  68 +++
- 14 files changed, 1773 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
- create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
- create mode 100644 drivers/staging/hikey9xx/Kconfig
- create mode 100644 drivers/staging/hikey9xx/Makefile
- create mode 100644 drivers/staging/hikey9xx/TODO
- create mode 100644 drivers/staging/hikey9xx/hi6421-spmi-pmic.c
- create mode 100644 drivers/staging/hikey9xx/hi6421v600-regulator.c
- create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
- create mode 100644 include/linux/mfd/hi6421-spmi-pmic.h
-
--- 
-2.26.2
-
+Dan
 
