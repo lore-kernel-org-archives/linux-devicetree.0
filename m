@@ -2,38 +2,45 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980F3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 18:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774C7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A3020774
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 18:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5C52087C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597259260;
+	bh=+2MX8lMPobxkg5Sd92d2N9QmRdXu/gmf1DtCDwVeNMc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zlGCN9UB2hokq9mxSLYgYb+p6oYq9TmAsOgO91H5ciiEJogOaydUScdA2sJUTziLe
+	 0n0Psdc02NGUev9WbWeuhMkpXfK4nSjvAq39/KQ/UQiy1fngw/Sj1qYl45BxHBaSFY
+	 FgJds1n7sYczRy0/CXkqaufyh458KEQH9CC4IpNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgHLS7A (ORCPT
+        id S1726573AbgHLTHg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 14:59:00 -0400
-Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:54520 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726447AbgHLS7A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 14:59:00 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 78FAA100E86C6;
-        Wed, 12 Aug 2020 18:58:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: head53_0e1322226fed
-X-Filterd-Recvd-Size: 1835
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 12 Aug 2020 18:58:56 +0000 (UTC)
-Message-ID: <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
-Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+        Wed, 12 Aug 2020 15:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgHLTHg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:07:36 -0400
+Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A4E420838;
+        Wed, 12 Aug 2020 19:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597259256;
+        bh=+2MX8lMPobxkg5Sd92d2N9QmRdXu/gmf1DtCDwVeNMc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GGJWOUBHdHx6FYBQZUIF1C/maagqop8zENLGUFECJirYqYO7THLnB5L8mL2qZhWMH
+         /bk+NJSZeSNSAPBTE/soRkC21ws7Km2DH7YNNb0hBmuuD7LpbJ1Gy8CEzb2UTuWY9G
+         9gf8QWZCIv2NIBjtiDYQwSjQsac7gBG5saW6K1Ek=
+Date:   Wed, 12 Aug 2020 16:07:30 -0300
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Joe Perches <joe@perches.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linuxarm@huawei.com, mauro.chehab@huawei.com,
         Stephen Boyd <sboyd@kernel.org>,
@@ -45,34 +52,42 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
         linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date:   Wed, 12 Aug 2020 11:58:55 -0700
-In-Reply-To: <20200812154752.3223b9d8@onda.lan>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+Message-ID: <20200812160730.292ae1d4@onda.lan>
+In-Reply-To: <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
 References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-         <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
-         <20200812154752.3223b9d8@onda.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
+        <20200812154752.3223b9d8@onda.lan>
+        <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-08-12 at 15:47 -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 12 Aug 2020 10:13:51 -0700
-> Joe Perches <joe@perches.com> escreveu:
+Em Wed, 12 Aug 2020 11:58:55 -0700
+Joe Perches <joe@perches.com> escreveu:
+
+> On Wed, 2020-08-12 at 15:47 -0300, Mauro Carvalho Chehab wrote:
+> > Em Wed, 12 Aug 2020 10:13:51 -0700
+> > Joe Perches <joe@perches.com> escreveu:
+> >   
+> > > Perhaps these trivial bits on top:  
+> > 
+> > Sounds fine for me. Feel free to send it with your SOB, adding my reviewed by:
+> > 
+> > Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
 > 
-> > Perhaps these trivial bits on top:
+> I don't know that your original
+> series is going to be applied as-is
+> so I think you should carry it.
+
+
+Ok. I'll then add the hunks you wrote to the affected changesets.
 > 
-> Sounds fine for me. Feel free to send it with your SOB, adding my reviewed by:
+> cheers, Joe
 > 
-> Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-I don't know that your original
-series is going to be applied as-is
-so I think you should carry it.
-
-cheers, Joe
-
-
+> 
