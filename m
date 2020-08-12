@@ -2,299 +2,354 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31869C433F2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 22:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329CAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 22:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA6A20774
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 22:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597272104;
-	bh=+TgKkV6KqLhfjYAFIPeYwktp69RC4Ly6UgDwT/dBhDE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Om6iCcZMW0K+eatWdCCpMPUTHBaeGHJjS8EP0iPPT4UxoW7UuhRhJleAQ1mG5pgHX
-	 5XPJHSGCuwV63JHas0B8YAQBm20/zKVupp5me76ZOufd+CLZOklg+qMOJHcdUhsHfF
-	 biT2iTEOH2DpjYR+mvtflMEBKPeHU1wHuoYOqC3I=
+	by mail.kernel.org (Postfix) with ESMTP id 0F1F52087C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 22:42:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpswO3Hh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgHLWle (ORCPT
+        id S1726503AbgHLWmA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 18:41:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbgHLWle (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 18:41:34 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87E4920838;
-        Wed, 12 Aug 2020 22:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597272092;
-        bh=+TgKkV6KqLhfjYAFIPeYwktp69RC4Ly6UgDwT/dBhDE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BbGfi0lG5QCcZTN884K1SsY5f22mZrWcKc6andleE2eVn9J4s1FjOglMSu0+SqG3v
-         +frY1T2SqpMd3XD/fVjzgYIYdMyKcSZNyNrFpW2gjYxwvnGx0Lx/+i6VDImXTzJebw
-         DftdpKvxqxEh1Aq0dLD/uTX0EFfHI5KFKPGlsQmU=
-Received: by mail-ot1-f49.google.com with SMTP id r21so3279005ota.10;
-        Wed, 12 Aug 2020 15:41:32 -0700 (PDT)
-X-Gm-Message-State: AOAM530xhU6SkELa+42mY7e8vwwZmcs+vbeQAwFpyHeNWMrtlDdyVzuN
-        8z67Kext0oDxM4ek1JcAEal/TQfB7pp6aBJfsw==
-X-Google-Smtp-Source: ABdhPJzHpRcjvIrip5SaXz0gOR2Dk5E1eheEnWizjmaZ+srfkuyaKcplDT6pTJKb9I9sGnPFKTkG9V8xTaEbGjKVycM=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr1655834ote.107.1597272091695;
- Wed, 12 Aug 2020 15:41:31 -0700 (PDT)
+        Wed, 12 Aug 2020 18:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgHLWl5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 18:41:57 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17FEC061384
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 15:41:56 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id qc22so4048678ejb.4
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 15:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BKPDTr0AtTkoqc7ofCXce3fJ9/UUAi7uqf5Gd7Rb1eU=;
+        b=BpswO3Hha1PclIsf1ZrAOOAebhYnFB0EkzQhBnuLuDKzU43zkgRY0jjGK6EYXCY/iD
+         4EqRiV5Yv9u6gVePVrYGqySZmX3eE7EoZmgOSWTp7Ih8SW2rOkvziuzUBi8aoNMciZji
+         zwtHHVncIuhhmqAUWgz1mNUTfs4WiGUNrTmSfpH/Ky3gg1+2abHq7il2aKA6Ew8EGGqD
+         xdg1IllHkusw/5Mwe9J/I1Is+81fcGm2YfrknzCgv3+iubbR1CMI5I1Jd10JoAo+97Os
+         I30A/zPNaq4IasU5FD9MV77LKh0i7A4JwAsvdiwwQGQB9zhEsRX/pEJmwjP9LEDYjpi/
+         DyxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BKPDTr0AtTkoqc7ofCXce3fJ9/UUAi7uqf5Gd7Rb1eU=;
+        b=CTqLYxsZDYV+XEwUtoaCEvrTM2XvtrATJlBFhy3xGEfB2im0zRUtS0CACSVLB0kuci
+         DBPH+ImHZGfssrzfdS51LaKLMZ1OxLduli2Qe0yMCFg0Dafq3LhblLJi/nie3ySlV4l9
+         MlEQI1vmr816Luxj6ONxln1J9BS123Il8Up7Yyp468pusY79+viEVe9mmSw8X5uzVXET
+         2a4ALXTxQvE45B9SUzAmmmlYOlNjnhfaNt+m4UOwSaocpIwOjknxzKWC699Ps86/JUsu
+         Wkbeh8AV4rJ2vi5v7kmgT477bPj3sPpH0+U+FNxpeK4+Jkb8oxEd78Kt/ax7m9ICIp7Y
+         u1Dw==
+X-Gm-Message-State: AOAM5336d+nBAGh+jTy4ZryFy7KiENw66pE3e068CbUaksUGD2szPejf
+        DA+wM8IBqy5u+kCiQyGpB1o=
+X-Google-Smtp-Source: ABdhPJxaOAInqb+Ph3Sagvt/ynMIUgC8/OriJwqS/4cePg6AiCjkVzk6ZbIwtZQOzak93sE3BV+5xw==
+X-Received: by 2002:a17:906:c7c8:: with SMTP id dc8mr1901680ejb.399.1597272115286;
+        Wed, 12 Aug 2020 15:41:55 -0700 (PDT)
+Received: from debian64.daheim (pd9e293b6.dip0.t-ipconnect.de. [217.226.147.182])
+        by smtp.gmail.com with ESMTPSA id j24sm2405170ejv.32.2020.08.12.15.41.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 15:41:54 -0700 (PDT)
+Received: from chuck by debian64.daheim with local (Exim 4.94)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1k5zRR-005oDX-TS; Thu, 13 Aug 2020 00:41:53 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Cc:     Chris Blake <chrisrblake93@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [RFC PATCH v1 3/4] powerpc: apm82181: add Meraki MR24 AP
+Date:   Thu, 13 Aug 2020 00:41:52 +0200
+Message-Id: <0732d462e1f727dc95898bd33cdde920ce81e2ff.1597271958.git.chunkeey@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <08dd11e8ce996a0df27dca3a9316bfc4ede0d0d0.1597271958.git.chunkeey@gmail.com>
+References: <cover.1597271958.git.chunkeey@gmail.com> <15a94dddc15d29bac02439beb77fd066771c747a.1597271958.git.chunkeey@gmail.com> <08dd11e8ce996a0df27dca3a9316bfc4ede0d0d0.1597271958.git.chunkeey@gmail.com>
 MIME-Version: 1.0
-References: <20200812203618.2656699-1-robh@kernel.org> <20200812213453.GA690477@ravnborg.org>
-In-Reply-To: <20200812213453.GA690477@ravnborg.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 12 Aug 2020 16:41:20 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJLoTojYv5gLB-iWACc-rkUU9t3v1XBZtdRz6A715Z3Uw@mail.gmail.com>
-Message-ID: <CAL_JsqJLoTojYv5gLB-iWACc-rkUU9t3v1XBZtdRz6A715Z3Uw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 3:34 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> On Wed, Aug 12, 2020 at 02:36:18PM -0600, Rob Herring wrote:
-> > Clean-up incorrect indentation, extra spaces, long lines, and missing
-> > EOF newline in schema files. Most of the clean-ups are for list
-> > indentation which should always be 2 spaces more than the preceding
-> > keyword.
-> >
-> > Found with yamllint (which I plan to integrate into the checks).
->
-> I have browsed through the patch - and there was only a few things
-> that jumped at me.
->
-> With these points considered:
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
->
-> I expect only some (few) of my points to actually results in any updates.
->
-> I look forward to have the lint functionality as part of the built-in
-> tools so we catch these things early.
->
->         Sam
->
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index f63895c8ce2d..88814a2a14a5 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -273,8 +273,8 @@ properties:
-> >                - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
-> >                - kontron,imx6ull-n6411-som # Kontron N6411 SOM
-> >                - myir,imx6ull-mys-6ulx-eval # MYiR Tech iMX6ULL Evaluation Board
-> > -              - toradex,colibri-imx6ull-eval            # Colibri iMX6ULL Module on Colibri Evaluation Board
-> > -              - toradex,colibri-imx6ull-wifi-eval       # Colibri iMX6ULL Wi-Fi / Bluetooth Module on Colibri Evaluation Board
-> > +              - toradex,colibri-imx6ull-eval      # Colibri iMX6ULL Module on Colibri Eval Board
-> > +              - toradex,colibri-imx6ull-wifi-eval # Colibri iMX6ULL Wi-Fi / BT Module on Colibri Eval Board
-> >            - const: fsl,imx6ull
->
-> This change looks bad as it drops the alignment with the comments below.
-> See following patch chunck:
+This patch adds the device-tree definitions for Meraki MR24
+Accesspoint devices.
 
-Yes, but as a whole there's no alignment in this file. Even the rest
-of the entries for the hunk below aren't aligned.
+Ready to go images and install instruction can be found @OpenWrt.
 
-Perhaps this form would be better:
+Signed-off-By: Chris Blake <chrisrblake93@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+---
+ arch/powerpc/boot/dts/meraki-mr24.dts      | 237 +++++++++++++++++++++
+ arch/powerpc/platforms/44x/ppc44x_simple.c |   1 +
+ 2 files changed, 238 insertions(+)
+ create mode 100644 arch/powerpc/boot/dts/meraki-mr24.dts
 
-    # Colibri iMX6ULL Wi-Fi / BT Module on Colibri Eval Board
-  - toradex,colibri-imx6ull-wifi-eval
+diff --git a/arch/powerpc/boot/dts/meraki-mr24.dts b/arch/powerpc/boot/dts/meraki-mr24.dts
+new file mode 100644
+index 000000000000..945e3e6b2585
+--- /dev/null
++++ b/arch/powerpc/boot/dts/meraki-mr24.dts
+@@ -0,0 +1,237 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Device Tree Source for Meraki MR24 (Ikarem)
++ *
++ * Copyright (C) 2016 Chris Blake <chrisrblake93@gmail.com>
++ *
++ * Based on Cisco Meraki GPL Release r23-20150601 MR24 DTS
++ */
++
++/dts-v1/;
++
++#include "apm82181.dtsi"
++
++/ {
++	model = "Meraki MR24 Access Point";
++	compatible = "meraki,mr24";
++
++	aliases {
++		serial0 = &UART1;
++		led-boot = &status;
++		led-failsafe = &failsafe;
++		led-running = &status;
++		led-upgrade = &status;
++	};
++
++	chosen {
++		stdout-path = "/plb/opb/serial@ef600400";
++	};
++};
++
++
++&CRYPTO {
++	status = "okay";
++};
++
++&PKA {
++	status = "okay";
++};
++
++&TRNG {
++	status = "okay";
++};
++
++&EBC0 {
++	/* Ikarem has 32MB of NAND */
++	ndfc@1,0 {
++		status = "okay";
++		/* 32 MiB NAND Flash */
++		nand {
++			partition@0 {
++				label = "u-boot";
++				reg = <0x00000000 0x00150000>;
++				read-only;
++			};
++
++			partition@150000 {
++				/*
++				 * The u-boot environment size is one NAND
++				 * block (16KiB). u-boot allocates four NAND
++				 * blocks (64KiB) in order to have spares
++				 * around for bad block management
++				 */
++				label = "u-boot-env";
++				reg = <0x00150000 0x00010000>;
++				read-only;
++			};
++
++			partition@160000 {
++				/*
++				 * redundant u-boot environment.
++				 * has to be kept it in sync with the
++				 * data in "u-boot-env".
++				 */
++				label = "u-boot-env-redundant";
++				reg = <0x00160000 0x00010000>;
++				read-only;
++			};
++
++			partition@170000 {
++				label = "oops";
++				reg = <0x00170000 0x00010000>;
++			};
++
++			partition@180000 {
++				label = "ubi";
++				reg = <0x00180000 0x01e80000>;
++			};
++		};
++	};
++};
++
++&UART1 {
++	status = "okay";
++};
++
++&GPIO0 {
++	status = "okay";
++};
++
++&IIC0 {
++	status = "okay";
++	/* Boot ROM is at 0x52-0x53, do not touch */
++	/* Unknown chip at 0x6e, not sure what it is */
++};
++
++&EMAC0 {
++	status = "okay";
++
++	phy-mode = "rgmii-id";
++	phy-map = <0x2>;
++	phy-address = <0x1>;
++	phy-handle = <&phy>;
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy: phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <1>;
++		};
++	};
++};
++
++&POB0 {
++	leds {
++		compatible = "gpio-leds";
++
++		status: power-green {
++			label = "mr24:green:power";
++			gpios = <&GPIO0 18 GPIO_ACTIVE_LOW>;
++		};
++
++		failsafe: power-orange {
++			label = "mr24:orange:power";
++			gpios = <&GPIO0 19 GPIO_ACTIVE_LOW>;
++		};
++
++		lan {
++			label = "mr24:green:wan";
++			gpios = <&GPIO0 17 GPIO_ACTIVE_LOW>;
++		};
++
++		ssi-0 {
++			label = "mr24:green:wifi1";
++			gpios = <&GPIO0 23 GPIO_ACTIVE_LOW>;
++		};
++
++		ssi-1 {
++			label = "mr24:green:wifi2";
++			gpios = <&GPIO0 22 GPIO_ACTIVE_LOW>;
++		};
++
++		ssi-2 {
++			label = "mr24:green:wifi3";
++			gpios = <&GPIO0 21 GPIO_ACTIVE_LOW>;
++		};
++
++		ssi-3 {
++			label = "mr24:green:wifi4";
++			gpios = <&GPIO0 20 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	keys {
++		compatible = "gpio-keys";
++
++		reset {
++			/* Label as per Meraki's "MR24 Installation Guide" */
++			label = "Factory Reset Button";
++			linux,code = <KEY_RESTART>;
++			interrupt-parent = <&UIC1>;
++			interrupts = <0x15 IRQ_TYPE_EDGE_FALLING>;
++			gpios = <&GPIO0 16 GPIO_ACTIVE_LOW>;
++			debounce-interval = <60>;
++		};
++	};
++};
++
++&PCIE0 {
++	status = "okay";
++	/*
++	 * relevant lspci topology:
++	 *
++	 *	-+-[0000:40]---00.0-[41-7f]----00.0-[42-45]--+-02.0-[43]----00.0
++	 *	                                             +-03.0-[44]----00.0
++	 *
++	 */
++
++	bridge@64,0 {
++		reg = <0x00400000 0 0 0 0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		ranges;
++
++		bridge@65,0 {
++			/* IDT PES3T3 PCI Express Switch */
++			compatible = "pci111d,8039";
++			reg = <0x00410000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			ranges;
++
++			bridge@66,2 {
++				compatible = "pci111d,8039";
++				reg = <0x00421000 0 0 0 0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++
++		                wifi0: wifi@67,0 {
++					/* Atheros AR9380 2.4GHz */
++					compatible = "pci168c,0030";
++					reg = <0x00430000 0 0 0 0>;
++				};
++			};
++
++			bridge@66,3 {
++				compatible = "pci111d,8039";
++				reg = <0x00421800 0 0 0 0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++
++				wifi1: wifi@68,0 {
++					/* Atheros AR9380 5GHz */
++					compatible = "pci168c,0030";
++					reg = <0x00440000 0 0 0 0>;
++				};
++			};
++		};
++	};
++};
++
++&MSI {
++	status = "okay";
++};
+diff --git a/arch/powerpc/platforms/44x/ppc44x_simple.c b/arch/powerpc/platforms/44x/ppc44x_simple.c
+index 1122702c804a..7d479928fd48 100644
+--- a/arch/powerpc/platforms/44x/ppc44x_simple.c
++++ b/arch/powerpc/platforms/44x/ppc44x_simple.c
+@@ -60,6 +60,7 @@ static char *board[] __initdata = {
+ 	"amcc,taishan",
+ 	"amcc,yosemite",
+ 	"mosaixtech,icon",
++	"meraki,mr24",
+ 	"wd,mybooklive",
+ };
+ 
+-- 
+2.28.0
 
-But I really don't want to go fix this in the whole file...
-
-> >        - description: Kontron N6411 S Board
-> > @@ -312,9 +312,12 @@ properties:
-> >                - toradex,colibri-imx7d                   # Colibri iMX7 Dual Module
-> >                - toradex,colibri-imx7d-aster             # Colibri iMX7 Dual Module on Aster Carrier Board
-> >                - toradex,colibri-imx7d-emmc              # Colibri iMX7 Dual 1GB (eMMC) Module
-> > -              - toradex,colibri-imx7d-emmc-aster        # Colibri iMX7 Dual 1GB (eMMC) Module on Aster Carrier Board
-> > -              - toradex,colibri-imx7d-emmc-eval-v3      # Colibri iMX7 Dual 1GB (eMMC) Module on Colibri Evaluation Board V3
-> > -              - toradex,colibri-imx7d-eval-v3           # Colibri iMX7 Dual Module on Colibri Evaluation Board V3
-> > +              - toradex,colibri-imx7d-emmc-aster        # Colibri iMX7 Dual 1GB (eMMC) Module on
-> > +                                                        #  Aster Carrier Board
->
->
->
-> > diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml
-> > index 177d48c5bd97..e89c1ea62ffa 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml
-> > +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9322.yaml
-> > @@ -25,8 +25,7 @@ properties:
-> >    compatible:
-> >      items:
-> >        - enum:
-> > -        - dlink,dir-685-panel
-> > -
-> > +          - dlink,dir-685-panel
-> >        - const: ilitek,ili9322
-> >
-> >    reset-gpios: true
-> > diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
-> > index a39332276bab..76a9068a85dd 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
-> > +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
-> > @@ -13,8 +13,7 @@ properties:
-> >    compatible:
-> >      items:
-> >        - enum:
-> > -        - bananapi,lhr050h41
-> > -
-> > +          - bananapi,lhr050h41
-> >        - const: ilitek,ili9881c
-> >
->
-> The extra lines is a simple way to indicate that here shall be added
-> more in the future. So I like the empty line.
-
-News to me. I thought 'enum' indicates that. My preference here is a
-blank line just between DT properties.
-
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> > index 32e0896c6bc1..47938e372987 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> > @@ -79,7 +79,8 @@ properties:
-> >      description: |
-> >        kHz; switching frequency.
-> >      $ref: /schemas/types.yaml#/definitions/uint32
-> > -    enum: [ 600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200, 4800, 9600 ]
-> > +    enum: [ 600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371, 1600, 1920,
-> > +            2400, 3200, 4800, 9600 ]
-> >
-> >    qcom,ovp:
-> >      description: |
->
-> In the modern world we are living in now line length of 100 chars are
-> OK. checkpatch and coding_style is updated to reflected this.
-
-Yes, and it was 102. For yamllint I actually put it at 110 just to get
-to a reasonable number that I wanted to fix and warning free. I think
-I fixed all non comment cases to be less than 100 and comments to be
-up to 110.
-
-> > diff --git a/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml b/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
-> > index 4ddb42a4ae05..9102feae90a2 100644
-> > --- a/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
-> > +++ b/Documentation/devicetree/bindings/spi/mikrotik,rb4xx-spi.yaml
-> > @@ -33,4 +33,5 @@ examples:
-> >          reg = <0x1f000000 0x10>;
-> >      };
-> >
-> > -...
-> > \ No newline at end of file
-> > +...
-> > +
->
-> Added one line too much?
-
-Indeed.
-
->  diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-> > index 0ae692dc28b5..3d3fed63409b 100644
-> > --- a/Documentation/devicetree/bindings/spi/spi-mux.yaml
-> > +++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
-> > @@ -43,47 +43,47 @@ properties:
-> >      maxItems: 1
-> >
-> >  required:
-> > -   - compatible
-> > -   - reg
-> > -   - spi-max-frequency
-> > -   - mux-controls
-> > +  - compatible
-> > +  - reg
-> > +  - spi-max-frequency
-> > +  - mux-controls
-> >
-> >  examples:
-> > -   - |
-> > -     #include <dt-bindings/gpio/gpio.h>
-> > -     mux: mux-controller {
-> > -       compatible = "gpio-mux";
-> > -       #mux-control-cells = <0>;
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    mux: mux-controller {
-> > +        compatible = "gpio-mux";
-> > +        #mux-control-cells = <0>;
-> >
-> > -       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
-> > -     };
-> > +        mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
-> > +    };
->
-> Example is updated to use 4-space indent. I like.
->
-> But many other examples are left untouched.
-
-That was not the purpose here. The '- |' line was indented 1 too many.
-IIRC, the parser is not happy if you only change that line, so at
-least the 1st line of the example had to be updated anyways.
-
-> So I wonder if updating all examples to the same indent should
-> be left for another mega-patch?
-
-I've said this before, but until example indentation is automatically
-checked I'm not going to care.
-
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > index f3d847832fdc..2baee2c817c1 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > @@ -993,7 +993,8 @@ patternProperties:
-> >    "^sst,.*":
-> >      description: Silicon Storage Technology, Inc.
-> >    "^sstar,.*":
-> > -    description: Xiamen Xingchen(SigmaStar) Technology Co., Ltd. (formerly part of MStar Semiconductor, Inc.)
-> > +    description: Xiamen Xingchen(SigmaStar) Technology Co., Ltd.
-> > +      (formerly part of MStar Semiconductor, Inc.)
-> >    "^st,.*":
-> >      description: STMicroelectronics
-> >    "^starry,.*":
->
-> Did you check that they are all in alphabetical order?
-> I would be suprised if this is the only issue in this file.
-
-Nope, as that's not a WS or linter thing. Alphabetical order is about
-the only thing I look at reviewing additions to this, but I'm sure
-some errors have slipped in.
-
-Thanks for taking a look.
-
-
-Rob
