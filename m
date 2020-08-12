@@ -6,82 +6,83 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6648C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BDAC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9BEB206C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE82B2087C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597259736;
-	bh=UDrEMi0VlmISi/5lpg6y0NZppPMZmBpjabfrMXthIPY=;
+	s=default; t=1597259758;
+	bh=sKd9CcqWKzpCbjJUlDS4CnVVNx2pwjfTUwMJeBJ3upI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MyB3O/psF3BH18kLotj3wb7zubXiUsr9ANwQj1AdTOqSrkBNh7QTJXAoLu2BfmKGX
-	 fHpXfSJscZTkoyCPteEo3NH4a1g9VXLY2eLHNwA772j+2IK4KOIT2GL6s1spRU/Ouy
-	 FqZV6ESbl5+A3nolpp9YmrpoarkMK4gMAc5k88Dg=
+	b=pzbi8LIrSaUhZxygH6ZeK9vD48Gp9bCFNQbYM8yiag4j75+BEeRApM1nFrpFscliP
+	 vzTDp/FUcec/d23u9kFEDY3W/1FSIYLapmJqZwMAIy6O9xXV+nzOduL+hy7CVIcYy2
+	 QZ8x9FKiOuarmNKcqTag3TCZqmzGKDNtehqdbbOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgHLTPg (ORCPT
+        id S1726554AbgHLTP6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:15:36 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42665 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgHLTPe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:15:34 -0400
-Received: by mail-il1-f196.google.com with SMTP id t13so2983766ile.9;
-        Wed, 12 Aug 2020 12:15:34 -0700 (PDT)
+        Wed, 12 Aug 2020 15:15:58 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38165 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgHLTP6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:15:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id h4so4242701ioe.5;
+        Wed, 12 Aug 2020 12:15:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=afi3llV2EPe4Y8Y32WwKuYJ0I6s5AGYAmnoxQ7HHMxY=;
-        b=rSanSJAWvEvyZi7aLFZlvnb7e5opPwoUl8PEbA5Geck3/R9uG0Qy33b51SfbRx0LEt
-         2ZAZ6rDFvL2pQyQU/dl8rXTYiNpplgUllKjOrEHsj7gpbCIw5e9vUSvzjoACe9nQlaHn
-         Dzu4o+tXoBIJ3K+RWVwAIh62zMg4fWTHLwPis9/WWSfmRvdN4FDVm6Z7XOtUDIcN1orX
-         7H8oTT/5FLRnAn9Y+JXqrG8+0nCPq5tTNhvxLsXrL7EmucbZFWTchtYzEBVk/wSBYTNG
-         9RjBVusn6AtRh0i6EMG3OggfecD3+1s4kOML8kb69d0MxcnfRfJ8pqenKqz8yE3gb4ht
-         ZeSA==
-X-Gm-Message-State: AOAM530bQDQxndQUCHkLS2JExEqA5OXqVtgf164cyQ7ONsAUUJByhBRO
-        XTl/z+QKztXFzacp78mw/A==
-X-Google-Smtp-Source: ABdhPJzBRv/bNqO291He4v741bwaIa0Q5f8vFZ18ShTcjF8vo3A7x5RkYAOjbNJrOPgjGHrrPNhgUQ==
-X-Received: by 2002:a92:980f:: with SMTP id l15mr1102831ili.51.1597259734263;
-        Wed, 12 Aug 2020 12:15:34 -0700 (PDT)
+        bh=6bmFd3LE8loSA5iYwsZ25NXI7nulgcJ7a63PMeV4Enk=;
+        b=T1mpUpked1p9tNfUO7Ho0udc5QEOlpQH39dNJVomj2LSaELfFqglSBG+lYxzl4+L1u
+         UI3R9LX0SggSpy3AUb4WRjKFwVci/rckwpw4sVfh+YrocxMfIBmM8UB/ROV0TzAWZeh+
+         JLqg3Nkw51D+cXxhjMUB4J/mfPwlQi7p5gaM4mG61oaGXKw4zKLRsG+KucnTQU9QKs3A
+         iLhbjyoZ58K+knZFy5pbpZBHHbBAXr8FLI1ObMAhdtE4GNFdqqKgQOjI+4V8WXSOdp1s
+         DuIcyicMs+kq3NCDwNa9Mwnu/wIDcA3cXIcUKlKAWcei6SkCg+ywuh+12TL9FIQ//Wr0
+         ljzQ==
+X-Gm-Message-State: AOAM5326EVIqNpxTDy9fJxzqZi52XvIKSX+LRq3FOZ0s3qHF/4IHyAJN
+        yLTvkyGH3lB3USiG5CthxysolM0=
+X-Google-Smtp-Source: ABdhPJzkhDTUp4fGr5JcbsYvPTSvZvi/175AnF5oJtPz3FsfaL7w+r2SZ9PQIgIgkpvwJ+rK87Tchw==
+X-Received: by 2002:a02:3e13:: with SMTP id s19mr993711jas.95.1597259757344;
+        Wed, 12 Aug 2020 12:15:57 -0700 (PDT)
 Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id y7sm1514370ili.74.2020.08.12.12.15.32
+        by smtp.gmail.com with ESMTPSA id x12sm1468420ile.14.2020.08.12.12.15.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:15:33 -0700 (PDT)
-Received: (nullmailer pid 2548978 invoked by uid 1000);
-        Wed, 12 Aug 2020 19:15:32 -0000
-Date:   Wed, 12 Aug 2020 13:15:32 -0600
+        Wed, 12 Aug 2020 12:15:56 -0700 (PDT)
+Received: (nullmailer pid 2549586 invoked by uid 1000);
+        Wed, 12 Aug 2020 19:15:54 -0000
+Date:   Wed, 12 Aug 2020 13:15:54 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        linux-renesas-soc@vger.kernel.org, dave.stevenson@raspberrypi.com,
+Cc:     Jacopo Mondi <jacopo@jmondi.org>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, linux-renesas-soc@vger.kernel.org,
         laurent.pinchart@ideasonboard.com,
-        Jacopo Mondi <jacopo@jmondi.org>, robh+dt@kernel.org,
-        roman.kovalivskyi@globallogic.com, hverkuil-cisco@xs4all.nl
-Subject: Re: [PATCH v4 2/4] dt-bindings: media: ov5647: Document pwdn-gpios
-Message-ID: <20200812191532.GA2548922@bogus>
+        roman.kovalivskyi@globallogic.com, dave.stevenson@raspberrypi.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        hverkuil-cisco@xs4all.nl, robh+dt@kernel.org
+Subject: Re: [PATCH v4 3/4] dt-bindings: media: ov5647: Document
+ clock-noncontinuous
+Message-ID: <20200812191554.GA2549533@bogus>
 References: <20200810215543.113206-1-jacopo+renesas@jmondi.org>
- <20200810215543.113206-3-jacopo+renesas@jmondi.org>
+ <20200810215543.113206-4-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810215543.113206-3-jacopo+renesas@jmondi.org>
+In-Reply-To: <20200810215543.113206-4-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Aug 2020 23:55:41 +0200, Jacopo Mondi wrote:
+On Mon, 10 Aug 2020 23:55:42 +0200, Jacopo Mondi wrote:
 > From: Jacopo Mondi <jacopo@jmondi.org>
 > 
-> Document in dt-schema bindings for the ov5647 sensor the optional
-> 'pwdn-gpios' property.
+> Document the optional clock-noncontinuous endpoint property that
+> allows enabling MIPI CSI-2 non-continuous clock operations.
 > 
 > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
 > ---
->  Documentation/devicetree/bindings/media/i2c/ov5647.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/media/i2c/ov5647.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
