@@ -2,86 +2,143 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991C5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4EDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6132D20781
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KjmsEoeh"
+	by mail.kernel.org (Postfix) with ESMTP id 876BE20781
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgHLOT3 (ORCPT
+        id S1726542AbgHLOUF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:19:29 -0400
-Received: from mout.gmx.net ([212.227.15.18]:48351 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgHLOT3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:19:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597241944;
-        bh=2qIIIi+kVG7PNoSbul+CG9EF5Wr4xueF6mcdgIcW3EU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=KjmsEoehBkJWt2WfLKDifatf+nhathRfdQWsUbieC3G4XEsJxHNktlZZq9HdNN4oE
-         JH2NtPH+SiluY9OBzFBhByu+/T+tMynOuKF+DqIGL7o3x6QsRhtkP/kGEvj31JOBEF
-         guug7jtkFazXpfY09Nqn46/088gEaBZ1+BAfB4to=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
- (3c-app-gmx-bs32.server.lan [172.19.170.84]) (via HTTP); Wed, 12 Aug 2020
- 16:19:04 +0200
+        Wed, 12 Aug 2020 10:20:05 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62614 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726485AbgHLOUE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 10:20:04 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CECObX020969;
+        Wed, 12 Aug 2020 10:20:03 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32sry4drtr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Aug 2020 10:20:03 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07CEK2VJ013707
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 12 Aug 2020 10:20:02 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 12 Aug 2020 10:20:01 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 12 Aug 2020 10:20:01 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 12 Aug 2020 10:20:00 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07CEJoT1020255;
+        Wed, 12 Aug 2020 10:19:59 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v8 6/6] dt-bindings: hwmon: Add bindings for ADM1266
+Date:   Wed, 12 Aug 2020 17:20:55 +0300
+Message-ID: <20200812142055.9213-7-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200812142055.9213-1-alexandru.tachici@analog.com>
+References: <20200812142055.9213-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Message-ID: <trinity-b7a0d7ed-cbc7-421d-810d-162fd178a8f3-1597241944268@3c-app-gmx-bs32>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: Aw: [v2,3/3] mmc: mediatek: add optional module reset property
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 12 Aug 2020 16:19:04 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200812130129.13519-4-wenbin.mei@mediatek.com>
-References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
- <20200812130129.13519-4-wenbin.mei@mediatek.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:DI9ytn25Mt7akP/u6K+zVHv5f9HCrC6Cv16qnII6teMTpW2XwfNpVoOFjsieNPVwxH/l4
- cU9JOsQ/EywXacZma3nl2x+nLnZRWJetq0muKjnIFXHkClEF1/JKMVLhiQGD47pDpFys17mtusRl
- IZj0JuYw2/1ZQNpDUsRUHTLewSnpAmCMNyaFY3QyL81a+Exg1Hd9W45f5B3QKDiXi8YPcFl3ujSC
- htEJ6QIHlc+SwUugRjsLYSIYvPxrpe1U85FJ2oxUj1HDNAkgp5/kWi3ABWD/dfqso+NKIE0XQUAB
- MA=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pT+4PmpTWt0=:MAHvXFTaSHTxJHOLIoWHrt
- oieG5CBLtcg1W4OdS36hlQtCDvmdbxV16P+T5VgicjXog+nlR9AzaD1rc8OhGi9pfBxrkh6IF
- N1BQtB/D649DurS3NpQSXn3DugHgBTDz8BIhxvccpJuvhkliYkmNM9ObXQmMTXrpsiFmYG3bX
- K3ej55UX74QCj7oadVwk3Ml6YQ6+tB6DQ7Ab4eJjDDc9eSoIogYElzPQ4z//Zsvwq6VJgqFID
- 7W+fnvwjUO6hUb5fE/Yct+QWj6rH46A/AEuGRsfBFDRUyytFj/ngG0b3WIXy8EvZHszgpO8nQ
- i6jjqHuIJSZEZvlIbgfxHmQSMGVTfR3gcPfoFe6pcjkx/eRm6ZKIkCEJEshGVqTElrtikL3Yc
- +mhl1GcwQcgkSYairRNGXtjkZvKH7A2/dALySYSkYWGa7UtZ8IwB03HXTPXe0VDJvcWRwJZ0n
- YFcHDHDhLh+Ioyn9WTYMCTdsR3uCKjfrTHex4diVF1H9qMrsVBXNnHWcyMIL+G/dBt0nriNL8
- o4NleJ1UuPAt05XXmA75uEJ0lMvjrMtGXBPetM3y+Mpzf6p5iupJ6PU4BXq38KLkvRmzXKccU
- UdR+Ixupe4/pUkzw4pK7mJXlMxPvQZqdzZ3uMTb/5QFYmjQplOEtC9NeNEEH86EWZtWxHezUm
- 5VjR2tYCGpgtxm3PBz4FgT28n6s4wMGzFHdRzJacbioG/hokFAsLHRZFufw2d3/VN8sI=
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-12_06:2020-08-11,2020-08-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 adultscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008120101
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-it looks like you missed Philipps comments in v1
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-for stable i guess you need only add Cc: Stable-line to signed-off-area (not add it to CC of mail), sorry my mistake
+Add bindings for the Analog Devices ADM1266 sequencer.
 
-Cc: stable@vger.kernel.org
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ .../bindings/hwmon/adi,adm1266.yaml           | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
 
-regards Frank
+diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+new file mode 100644
+index 000000000000..43b4f4f57b49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
++  Control and Fault Recording
++
++maintainers:
++  - Alexandru Tachici <alexandru.tachici@analog.com>
++
++description: |
++  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
++  Control and Fault Recording.
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,adm1266
++
++  reg:
++    description: |
++      I2C address of slave device.
++    items:
++      minimum: 0x40
++      maximum: 0x4F
++
++  avcc-supply:
++    description: |
++      Phandle to the Avcc power supply.
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adm1266@40 {
++                compatible = "adi,adm1266";
++                reg = <0x40>;
++        };
++    };
++...
+-- 
+2.20.1
+
