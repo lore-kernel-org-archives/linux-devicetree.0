@@ -2,207 +2,86 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DCDC433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF545C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8330620639
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DEDB20756
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:44:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaA0+jQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHLOUl (ORCPT
+        id S1726492AbgHLOoL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:20:41 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:12792 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726809AbgHLOUL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:20:11 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07CEAGmH027033;
-        Wed, 12 Aug 2020 10:19:57 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32snw5du9g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 12 Aug 2020 10:19:57 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07CEJubG013662
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 12 Aug 2020 10:19:56 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 12 Aug
- 2020 10:19:55 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 12 Aug 2020 10:19:55 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07CEJoSv020255;
-        Wed, 12 Aug 2020 10:19:53 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v8 2/6] hwmon: pmbus: adm1266: Add Block process call
-Date:   Wed, 12 Aug 2020 17:20:51 +0300
-Message-ID: <20200812142055.9213-3-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200812142055.9213-1-alexandru.tachici@analog.com>
-References: <20200812142055.9213-1-alexandru.tachici@analog.com>
+        Wed, 12 Aug 2020 10:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgHLOoL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 10:44:11 -0400
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2385FC061383;
+        Wed, 12 Aug 2020 07:44:11 -0700 (PDT)
+Received: by mail-ot1-x331.google.com with SMTP id a65so2102395otc.8;
+        Wed, 12 Aug 2020 07:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xHViXDWcaL5XfNSH272S9iDsrjwnvk4hUcO/qoZuaVs=;
+        b=VaA0+jQ74AeZSOrwygkYlWSRj0z7ACT7aZlVtDLpBi5z7N7CEUAlMJmjhsbvlcNBh+
+         gHU7bvyECTt/OMIXuH5HcA0paxBOB5E2E3mf1XwthH0vynG6EE1csykq0mpafmhxIg1k
+         i7p5lldt7ssk7xGcmKXT0igFJ328lQ6vkMyiNp7zXyeea5IZoI3rU4LOvOg5gnZxnc00
+         1QYjWT3Mo17KHjB12lXrmsBcPkNWHkWi0/49dhx70O9DGCzV+CjLuZVz/NI70lBQnH89
+         8yicIJz7L3lfR8C/2+3mhVMme/mhwecO84y9WAjYAk0WKYBugqPsvd3QNMa4DVXHCYa+
+         RtiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xHViXDWcaL5XfNSH272S9iDsrjwnvk4hUcO/qoZuaVs=;
+        b=I6hfwAjl9UROV9t8CnMfcGybGebwQ55xXYRgGDF2qxVDLOAUcPwvuy+Y4ZamGI+hqF
+         KDv15Fm7qNtdyg4HJZQFwlKFtETuDvwYR+z2pioE518PWXRg4PN8Y6uYdH1YulTQsbZv
+         JKNmnuSqKTiYgZ4zY+zLh+qwrpbI2RZtJPB0ASI6SK1HvN6SrTs+NFhLDwamTwxlAK53
+         /TkVMN9V7smydq+q43iv12/Y/qEgEOApl1NcWoZZsZDwvIn2KBo+4+L6R8P1CaKMRAB2
+         ebIluKl9RJcDEjbCdIhgHz1y4FEHOMUw9GKltckqAaLUzPz6iPRaTiT8+wlDKGa9bAfZ
+         N45g==
+X-Gm-Message-State: AOAM530lXDVITbJ2l9uWVX+gYRacWk64IAluuAdMyKpc1ivmBaAa33Yk
+        iFbMqydbVtx8Sw5FX1llpIJV8sj0p9vP6uwgMGU=
+X-Google-Smtp-Source: ABdhPJySHEBwiOi3qXSQCHV3l6a9l5hLKG96zwi1N2QEUT6FjWsrZwLXke9DhCaXu30Osnb4KgJRz45QoixNcPkNq00=
+X-Received: by 2002:a9d:22a5:: with SMTP id y34mr40314ota.0.1597243449856;
+ Wed, 12 Aug 2020 07:44:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-12_06:2020-08-11,2020-08-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008120101
+References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
+ <24f1687c-043a-a15e-0be4-8392e7b5c96b@metux.net> <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
+ <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
+In-Reply-To: <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Wed, 12 Aug 2020 10:43:58 -0400
+Message-ID: <CAGngYiUN4Cmf+bJDYJJwTi1DC1bZSa==AfATG+jdjmXqQxcL4A@mail.gmail.com>
+Subject: Re: [Q] devicetree overlays
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+On Wed, Aug 12, 2020 at 9:28 AM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> But I've still got another problem: how can I use DT along w/ ACPI ?
+>
 
-PmBus devices support Block Write-Block Read Process
-Call described in SMBus specification v 2.0 with the
-exception that Block writes and reads are permitted to
-have up 255 data bytes instead of max 32 bytes (SMBus).
-
-This patch adds Block WR process call support for ADM1266.
-
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/hwmon/pmbus/Kconfig   |  1 +
- drivers/hwmon/pmbus/adm1266.c | 78 +++++++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
-
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index da34083e1ffd..c04068b665e6 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -28,6 +28,7 @@ config SENSORS_PMBUS
- 
- config SENSORS_ADM1266
- 	tristate "Analog Devices ADM1266 Sequencer"
-+	select CRC8
- 	help
- 	  If you say yes here you get hardware monitoring support for Analog
- 	  Devices ADM1266 Cascadable Super Sequencer.
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-index 79e8d90886b8..9db1c317029b 100644
---- a/drivers/hwmon/pmbus/adm1266.c
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -6,6 +6,7 @@
-  * Copyright 2020 Analog Devices Inc.
-  */
- 
-+#include <linux/crc8.h>
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -13,11 +14,85 @@
- #include "pmbus.h"
- #include <linux/slab.h>
- 
-+#define ADM1266_PMBUS_BLOCK_MAX		255
-+
- struct adm1266_data {
- 	struct pmbus_driver_info info;
- 	struct i2c_client *client;
-+	struct mutex buf_mutex;
-+	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
-+	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
- };
- 
-+DECLARE_CRC8_TABLE(pmbus_crc_table);
-+
-+/*
-+ * Different from Block Read as it sends data and waits for the slave to
-+ * return a value dependent on that data. The protocol is simply a Write Block
-+ * followed by a Read Block without the Read-Block command field and the
-+ * Write-Block STOP bit.
-+ */
-+static int adm1266_pmbus_block_xfer(struct adm1266_data *data, u8 cmd, u8 w_len, u8 *data_w,
-+				    u8 *data_r)
-+{
-+	struct i2c_client *client = data->client;
-+	struct i2c_msg msgs[2] = {
-+		{
-+			.addr = client->addr,
-+			.flags = I2C_M_DMA_SAFE,
-+			.buf = data->write_buf,
-+			.len = w_len + 2,
-+		},
-+		{
-+			.addr = client->addr,
-+			.flags = I2C_M_RD | I2C_M_DMA_SAFE,
-+			.buf = data->read_buf,
-+			.len = ADM1266_PMBUS_BLOCK_MAX + 2,
-+		}
-+	};
-+	u8 addr;
-+	u8 crc;
-+	int ret;
-+
-+	mutex_lock(&data->buf_mutex);
-+
-+	msgs[0].buf[0] = cmd;
-+	msgs[0].buf[1] = w_len;
-+	memcpy(&msgs[0].buf[2], data_w, w_len);
-+
-+	ret = i2c_transfer(client->adapter, msgs, 2);
-+	if (ret != 2) {
-+		if (ret >= 0)
-+			ret = -EPROTO;
-+
-+		mutex_unlock(&data->buf_mutex);
-+
-+		return ret;
-+	}
-+
-+	if (client->flags & I2C_CLIENT_PEC) {
-+		addr = i2c_8bit_addr_from_msg(&msgs[0]);
-+		crc = crc8(pmbus_crc_table, &addr, 1, 0);
-+		crc = crc8(pmbus_crc_table, msgs[0].buf,  msgs[0].len, crc);
-+
-+		addr = i2c_8bit_addr_from_msg(&msgs[1]);
-+		crc = crc8(pmbus_crc_table, &addr, 1, crc);
-+		crc = crc8(pmbus_crc_table, msgs[1].buf,  msgs[1].buf[0] + 1, crc);
-+
-+		if (crc != msgs[1].buf[msgs[1].buf[0] + 1]) {
-+			mutex_unlock(&data->buf_mutex);
-+			return -EBADMSG;
-+		}
-+	}
-+
-+	memcpy(data_r, &msgs[1].buf[1], msgs[1].buf[0]);
-+
-+	ret = msgs[1].buf[0];
-+	mutex_unlock(&data->buf_mutex);
-+
-+	return ret;
-+}
-+
- static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
- 	struct adm1266_data *data;
-@@ -33,6 +108,9 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
- 	for (i = 0; i < data->info.pages; i++)
- 		data->info.func[i] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+	crc8_populate_msb(pmbus_crc_table, 0x7);
-+	mutex_init(&data->buf_mutex);
-+
- 	return pmbus_do_probe(client, id, &data->info);
- }
- 
--- 
-2.20.1
-
+That's a very good question. I focus on arm, so I'm unfamiliar with ACPI.
+Hopefully someone with ACPI knowledge can chime in.
