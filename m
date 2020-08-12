@@ -2,107 +2,219 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A718C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12825C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3661420781
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8FD20675
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CVa57jyq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UFfEB4pO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgHLKI1 (ORCPT
+        id S1726946AbgHLKLS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:08:27 -0400
-Received: from mout.gmx.net ([212.227.17.21]:52737 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgHLKI1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:08:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597226878;
-        bh=UkqjCxKKHV1HDyi41mZtq9yMhrKx967IftYVnHuBMGo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=CVa57jyqOd+wAZ7HXJCaZTcWrbj9dKyv+WghkaTGAXpiP2JsIvR0EQYgZWjbrGYiO
-         lsBWgX1QG8ZF82HjYytXjIkoJrHZCMtWf3yQ1+ICaGkXnM6d6nfr+pmeun5MhEhTqE
-         zqpiozDA1NGXVxf3FFncbmNurNIBF6Kx6a5QKPTs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
- (3c-app-gmx-bap56.server.lan [172.19.172.126]) (via HTTP); Wed, 12 Aug 2020
- 12:07:58 +0200
+        Wed, 12 Aug 2020 06:11:18 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51574 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgHLKLP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 06:11:15 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CABBlo081432;
+        Wed, 12 Aug 2020 05:11:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597227071;
+        bh=RYPEYFQZ1QFXT5zzo/sh99PaE9LQd6lVR0rqcndrkzo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UFfEB4pOlJDSwwYkIUgKFs10D0b4xWDTu+q9HsqeLqfAubRUdkhhNRbCfU3k1LEn1
+         PfdYZcbVSUpKaRsHBZShqxjux3yZUsWpcmEwBLN2oL6qFAAoRQ70yjsqKXe9F3Je9v
+         IMRjCJ3MkBFt+QtOp2QDb0uWrJZJ8Yj+vsHDIPrI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CABBsP021642
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 05:11:11 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
+ Aug 2020 05:11:11 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 12 Aug 2020 05:11:11 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CAB6pr119158;
+        Wed, 12 Aug 2020 05:11:07 -0500
+Subject: Re: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
+ PHY bindings for generic use
+To:     Swapnil Jakhade <sjakhade@cadence.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <mparab@cadence.com>, <yamonkar@cadence.com>,
+        <tomi.valkeinen@ti.com>, <jsarha@ti.com>, <nsekhar@ti.com>
+References: <1596795165-13341-1-git-send-email-sjakhade@cadence.com>
+ <1596795165-13341-8-git-send-email-sjakhade@cadence.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <d7cfd890-2540-7d9e-72a9-8f2011b7b0ff@ti.com>
+Date:   Wed, 12 Aug 2020 15:41:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <trinity-5b810acf-eb8f-452e-b08a-30e1fe46226d-1597226878715@3c-app-gmx-bap56>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Wenbin Mei <wenbin.mei@mediatek.com>,
-        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        stable@vger.kernel.org
-Subject: Aw: [PATCH 3/3] mmc: mediatek: add optional module reset property
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 12 Aug 2020 12:07:58 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200812093726.10123-4-wenbin.mei@mediatek.com>
-References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
- <20200812093726.10123-4-wenbin.mei@mediatek.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:t+v+dbXvTKFePvkpJQAkYHe5HoNVIemuMfLD56cl7pscYB573WfuroyNnOcU3eKU+Ux0w
- Bzr/Ckkf3ghFKTc0HwsL4hjb7JZpcAuLKIGlYRTDdvf/jlTHtulh0AIxWzbgZD0o/QUDiCzNjkkT
- sO5kefkm7G1UW6cNByINedYydy1x5x1KSNZ4caJ/jgdEUkwBF3dN/4r2t4BJSmLaKk6FpWb6i+m/
- LIO56ZvPG/DHOzaEApF96sk+MKAwEB1GS2joHA8xJDYDQNhmgLVskiKFp++wXff8gvYfNKazeZL8
- Bo=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1lebNj6ihXA=:yKrs1mlHJa1VH4DNmWf8T7
- QJv04DKWPHCKukADg6WgoibuSsh8OqnB3RcbFU3Hime9w81JXHzcUKJZhuZcawE6T0x8wLLKD
- JiDKf7eLoturt4bAUdUxm1LFnv2JmFegH1M35dhP0jeqQbe8FxWjYrS9hg53qbKvLsipJwhnN
- 92goZdJzEhOQbDBdxP8Vtq2F62SWwzwnixojAUFr8ieyEdQAojALTxVrP6q5a8gxqhCIDeoV4
- THzEuSaCf33VF+3EIRe59nHodktmpEc42dTqERD8uQWsd0cfPmh6Ieb5eSfhGbHDoScIK7EO6
- w/ETHBOlzdCYaknwVuG9lGJu2/gdYUID21RXu0CJSmF04V/4aALKHIAu/mGfRd0ykYkIfF3Ht
- pNwVjBCIqtZriHaxV+77szPbiiWBK2xEvReXULdqZwX5X0jZkYhtheoWT2z98SDx2hAiNEOUU
- MfPblapX0RDVVZ4p0+02p4WfY2rW2t5fSwFD9AZD9vHdyBxM6LOe3k5B05lY+Ehlp/YZv7UH3
- oBgrvgJ0On8H4UXi5FKrZ0xPqu9qxwDb+Yyre98Ot4FfxvMOUbCHGbQhW4tI71aH7TeLjWBvO
- rLnf0guUcE+asNRp8rcfkVl0RIBrEgcoDSf7iW8OvwIFa4C9I8a0hWHQ9y51edL70I44SAAMB
- zLSiW3Buc5mCvDUdGE+2uhCK5m2ifvaVV4mBafLf+nGumAfwR77CEoehMf1ob2y5Za+0=
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1596795165-13341-8-git-send-email-sjakhade@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Gesendet: Mittwoch, 12. August 2020 um 11:37 Uhr
-> Von: "Wenbin Mei" <wenbin.mei@mediatek.com>
-> Betreff: [PATCH 3/3] mmc: mediatek: add optional module reset property
+Hi Swapnil,
 
-> This patch adds a optional reset management for msdc.
-> Sometimes the bootloader does not bring msdc register
-> to default state, so need reset the msdc controller.
->
-> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+On 8/7/2020 3:42 PM, Swapnil Jakhade wrote:
+> Torrent PHY can be used in different multi-link multi-protocol
+> configurations including protocols other than DisplayPort also,
+> such as PCIe, USB, SGMII, QSGMII etc. Update the bindings to have
+> support for these configurations.
+> 
+> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> ---
+>  .../bindings/phy/phy-cadence-torrent.yaml     | 76 ++++++++++++++-----
+>  1 file changed, 58 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> index a7ee19d27c19..b2275712363d 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> @@ -4,11 +4,13 @@
+>  $id: "http://devicetree.org/schemas/phy/phy-cadence-torrent.yaml#"
+>  $schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>  
+> -title: Cadence Torrent SD0801 PHY binding for DisplayPort
+> +title: Cadence Torrent SD0801 PHY binding
+>  
+>  description:
+>    This binding describes the Cadence SD0801 PHY (also known as Torrent PHY)
+> -  hardware included with the Cadence MHDP DisplayPort controller.
+> +  hardware included with the Cadence MHDP DisplayPort controller. Torrent
+> +  PHY also supports multilink multiprotocol combinations including protocols
+> +  such as PCIe, USB, SGMII, QSGMII etc.
+>  
+>  maintainers:
+>    - Swapnil Jakhade <sjakhade@cadence.com>
+> @@ -49,13 +51,14 @@ properties:
+>        - const: dptx_phy
+>  
+>    resets:
+> -    maxItems: 1
+> -    description:
+> -      Torrent PHY reset.
+> -      See Documentation/devicetree/bindings/reset/reset.txt
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: Torrent PHY reset.
+> +      - description: Torrent APB reset. This is optional.
+>  
+>  patternProperties:
+> -  '^phy@[0-7]+$':
+> +  '^link@[0-7]+$':
 
-Thanks for posting the fix to Mainline
+Wouldn't this break older device tree binding? Or are there no upstream DT
+nodes with phy sub-node?
 
-imho this should contain a fixes-Tag as it fixes eMMC-Access on mt7622/Bpi=
--R64
+Thanks
+Kishon
 
-before we got these Errors on mounting eMMC ion R64:
-
-[   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 o=
-p 0x1:(WRITE) flags 0x800 phys_seg 1 prio class 0
-[   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sy=
-nc page write
-
-Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-Tested-By: Frank Wunderlich <frank-w@public-files.de>
-
-and it needs to be fixed at least for 5.4+, so adding stable-CC
-
-Cc: stable@vger.kernel.org
+>      type: object
+>      description:
+>        Each group of PHY lanes with a single master lane should be represented as a sub-node.
+> @@ -78,13 +81,13 @@ patternProperties:
+>            Specifies the type of PHY for which the group of PHY lanes is used.
+>            Refer include/dt-bindings/phy/phy.h. Constants from the header should be used.
+>          $ref: /schemas/types.yaml#/definitions/uint32
+> -        enum: [1, 2, 3, 4, 5, 6]
+> +        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+>  
+>        cdns,num-lanes:
+>          description:
+> -          Number of DisplayPort lanes.
+> +          Number of lanes.
+>          $ref: /schemas/types.yaml#/definitions/uint32
+> -        enum: [1, 2, 4]
+> +        enum: [1, 2, 3, 4]
+>          default: 4
+>  
+>        cdns,ssc-mode:
+> @@ -108,6 +111,7 @@ patternProperties:
+>        - resets
+>        - "#phy-cells"
+>        - cdns,phy-type
+> +      - cdns,num-lanes
+>  
+>      additionalProperties: false
+>  
+> @@ -141,15 +145,51 @@ examples:
+>              clock-names = "refclk";
+>              #address-cells = <1>;
+>              #size-cells = <0>;
+> -            phy@0 {
+> -                      reg = <0>;
+> -                      resets = <&phyrst 1>, <&phyrst 2>,
+> -                               <&phyrst 3>, <&phyrst 4>;
+> -                      #phy-cells = <0>;
+> -                      cdns,phy-type = <PHY_TYPE_DP>;
+> -                      cdns,num-lanes = <4>;
+> -                      cdns,max-bit-rate = <8100>;
+> +            link@0 {
+> +                reg = <0>;
+> +                resets = <&phyrst 1>, <&phyrst 2>,
+> +                         <&phyrst 3>, <&phyrst 4>;
+> +                #phy-cells = <0>;
+> +                cdns,phy-type = <PHY_TYPE_DP>;
+> +                cdns,num-lanes = <4>;
+> +                cdns,max-bit-rate = <8100>;
+> +            };
+> +        };
+> +    };
+> +  - |
+> +    #include <dt-bindings/phy/phy.h>
+> +    #include <dt-bindings/phy/phy-cadence-torrent.h>
+> +
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        torrent-phy@f0fb500000 {
+> +            compatible = "cdns,torrent-phy";
+> +            reg = <0xf0 0xfb500000 0x0 0x00100000>;
+> +            reg-names = "torrent_phy";
+> +            resets = <&phyrst 0>, <&phyrst 1>;
+> +            clocks = <&ref_clk>;
+> +            clock-names = "refclk";
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            link@0 {
+> +                reg = <0>;
+> +                resets = <&phyrst 2>, <&phyrst 3>;
+> +                #phy-cells = <0>;
+> +                cdns,phy-type = <PHY_TYPE_PCIE>;
+> +                cdns,num-lanes = <2>;
+> +                cdns,ssc-mode = <TORRENT_SERDES_NO_SSC>;
+>              };
+> +
+> +            link@2 {
+> +                reg = <2>;
+> +                resets = <&phyrst 4>;
+> +                #phy-cells = <0>;
+> +                cdns,phy-type = <PHY_TYPE_SGMII>;
+> +                cdns,num-lanes = <1>;
+> +                cdns,ssc-mode = <TORRENT_SERDES_NO_SSC>;
+> +           };
+>          };
+>      };
+>  ...
+> 
