@@ -2,84 +2,91 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11A0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 08:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E329EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953F520825
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 08:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1ED520825
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 08:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbgHLIun (ORCPT
+        id S1726976AbgHLI4b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:50:43 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41775 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLIun (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 04:50:43 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b22so1147302oic.8;
-        Wed, 12 Aug 2020 01:50:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6uTYye0fY5xHwFogECVNisHJHp+VC3dHv4j/KKmYK8w=;
-        b=UEA0L7ANqNJEu5JOijhbZx5y4QCrhc4YR0b1w4Z9Em8tLCOyvf7cYvx+1TBLjdrwIL
-         ynIoYju+xwEPhME2piqmnCq1pGbLhoMrES/LaVjwMTgSAwHwx5jgX0HIzhBEO3gsPiml
-         apWq4k7oKm3ebmAjFO1NB1eyE7Gso/7/ni+dJZwGxajt1GRpq6w8D0eyw4v5grKzyJ0O
-         YBu5iS8llJJhwlBEOYVkRgEXs6r2pdDoH7k68m6Ffk1cnZBCqYIAW46Z9F+SALH0uycU
-         j9+X6tI8N7ityhxToVaKAeOUW7ibq/fqRCuXwwrUiIPdnHjg5JrlxUEam0Mjt/B/IXG2
-         Yd+A==
-X-Gm-Message-State: AOAM532tWt47pKhzaYdMq1di4kuuWXdvy9tDJTb31b2+JRyzj+zL2lji
-        gzteML89Jyr4r03FN5unl8AvfBGYLvZ8y07mqk7G5Q==
-X-Google-Smtp-Source: ABdhPJw7NICRip8/V/ucliYbvy3i/MNS3MwKtQtkxSBn9whONMZltPCkuXrVVaWTiDaZxJcYGioLbNjFI+L1GhYUl6U=
-X-Received: by 2002:aca:b742:: with SMTP id h63mr6362059oif.148.1597222242627;
- Wed, 12 Aug 2020 01:50:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 12 Aug 2020 10:50:31 +0200
-Message-ID: <CAMuHMdW_tgt9YHoUPL7duk5E3EdtKTE7FkemKu0O=rGN94gHrw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: rcar: Add device tree support for r8a7742
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 12 Aug 2020 04:56:31 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49026 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726572AbgHLI4b (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 04:56:31 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A63AA1A0CAE;
+        Wed, 12 Aug 2020 10:56:28 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CB74F1A004F;
+        Wed, 12 Aug 2020 10:56:22 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 52DD14024E;
+        Wed, 12 Aug 2020 10:56:15 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, gregkh@linuxfoundation.org,
+        galak@codeaurora.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/5] dt-bindings: clock: Update i.MX28 example
+Date:   Wed, 12 Aug 2020 16:51:20 +0800
+Message-Id: <1597222284-32609-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 7:42 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for r8a7742. The Renesas RZ/G1H (R8A7742) PCIe controller
-> is identical to the R-Car Gen2 family.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Update the i.MX28 clock example to align with MXS AUART binding doc to
+avoid below build error:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+  serial@8006a000: clocks: [[4294967295, 45]] is too short
+Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+  serial@8006a000: compatible: Additional items are not allowed
+  ('fsl,imx23-auart' was unexpected)
+Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+  serial@8006a000: compatible: ['fsl,imx28-auart', 'fsl,imx23-auart']
+  is too long
+Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+  serial@8006a000: 'dmas' is a required property
+Documentation/devicetree/bindings/clock/imx28-clock.example.dt.yaml:
+  serial@8006a000: 'dma-names' is a required property
 
-Gr{oetje,eeting}s,
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+new patch.
+---
+ Documentation/devicetree/bindings/clock/imx28-clock.yaml | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.yaml b/Documentation/devicetree/bindings/clock/imx28-clock.yaml
+index 72328d5..671b279 100644
+--- a/Documentation/devicetree/bindings/clock/imx28-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx28-clock.yaml
+@@ -108,8 +108,10 @@ examples:
+     };
+ 
+     serial@8006a000 {
+-        compatible = "fsl,imx28-auart", "fsl,imx23-auart";
++        compatible = "fsl,imx28-auart";
+         reg = <0x8006a000 0x2000>;
+-        interrupts = <112 70 71>;
++        interrupts = <112>;
++        dmas = <&dma_apbx 8>, <&dma_apbx 9>;
++        dma-names = "rx", "tx";
+         clocks = <&clks 45>;
+     };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
