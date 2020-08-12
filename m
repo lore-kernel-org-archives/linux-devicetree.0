@@ -2,152 +2,109 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77690C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB0CC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 09:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5696720781
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 08:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6045206B2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 09:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="viBOK34v"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O5q29GXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgHLI7B (ORCPT
+        id S1726255AbgHLJFg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 04:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgHLI7B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 04:59:01 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7AF9C06174A
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 01:59:00 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t23so1384546ljc.3
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 01:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=r3OkcCRL7MqoBL5xlT//nFVOTrvwkEqxrrABannpZUk=;
-        b=viBOK34vTfDKsrR+xt3ygb+l9eq6m1AdCnrWwi6eVuJtpRgu3PZx2QLv2oh3vpDuLY
-         m6o7ISyRqr3b8U/phrDB11xintLMnuYwkcfiV6HOoXxX+9AB+sRHgQiVL/GoLGVauGuV
-         eMojLcq3AwEbmJVkEgM6WbgzVsJjpzocYSm1e6PlXWpTJgIY0+sTSPBgqDn5mv7nSa2t
-         KOLQH71Zem5nq5UHvCrIWWoquss/cU3MovJHLwijnrW7Og38TSyjXgbKb1n1oyMxHcFN
-         Y5Px1rfKFKFE5bXniCz5sn9ksCoPr01UwJfApeCFFqElUIJ3L83FLb3b4FAcOptSdu3d
-         rPeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=r3OkcCRL7MqoBL5xlT//nFVOTrvwkEqxrrABannpZUk=;
-        b=pq3KMFzvvl+9WYyUrrgF+tBHqWyiwQb15FRgaB5zQ+DP/uepl8hVUCY28Pwi/1b6SN
-         wJiG2PDX0H6O2Z+eED7BuOeM5xfscfnfzPFd9J1kapqhIRfMs1kNyeYsxFeTabwblkE1
-         UWlNDkbiF2ruuyzTqGYYuYBe3ThoZX565Sui4MzCgmlVASKu4wKnWVBmZAtsTb7xnU4G
-         qfNMAsgmmCEROqpufePUPeWc/6x+bnQ2B0ZJr7Q6qxTmDDNnfCVoaNjDEy+7fXi4fCTK
-         cyJsc8hM+aPFB0sJ+Z7eTBKzV3fIr74tyoOzXQ/8AyMKHcSKPkt2bLKoPTKctqAiFlYa
-         kv+g==
-X-Gm-Message-State: AOAM531m4fVfRv4ztBjPIpCaRfuz6uNmrnrN3bXud6PMvEFDvU/EaAx7
-        X36zsXzBNjUoWqaef6BHvZucMA==
-X-Google-Smtp-Source: ABdhPJylmCLkSU4B+1axzBLT+omZduMnxFTxK6z1UpJm5jeIGGXgoNolQRVC4TPIwNP1vM30nO0JRw==
-X-Received: by 2002:a05:651c:2007:: with SMTP id s7mr4581626ljo.74.1597222739347;
-        Wed, 12 Aug 2020 01:58:59 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id 132sm325676lfo.16.2020.08.12.01.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 01:58:58 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 2/3 v2] dt-bindings: backlight: Add Kinetic KTD253 bindings
-Date:   Wed, 12 Aug 2020 10:58:49 +0200
-Message-Id: <20200812085850.2643820-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200812085850.2643820-1-linus.walleij@linaro.org>
-References: <20200812085850.2643820-1-linus.walleij@linaro.org>
+        Wed, 12 Aug 2020 05:05:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57977 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726601AbgHLJFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 05:05:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597223133; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=iNoMFzi6wivdS43d2jnSYlOQT+G0stMjqpRwc/JfHtg=; b=O5q29GXnzZMQfdJWLdtG3fCaSR3th9848zPe76MUfRhpn6rywM1CAVNUedWE3Y8dMURBYLjB
+ 2znVZj/F7py5kHadBXcJBiXNkiS98yiVoH9ySor2MW1I3pt1ZlIRHI9zT93X0GAy3PaOfIsb
+ xdadXO/YVNvcsoiLtvy3Zgw0suA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f33b0ce4c787f237b791f79 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 09:05:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A205DC43395; Wed, 12 Aug 2020 09:05:18 +0000 (UTC)
+Received: from [10.206.24.160] (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D234EC433C9;
+        Wed, 12 Aug 2020 09:05:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D234EC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Felipe Balbi <balbi@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org>
+ <1595869597-26049-2-git-send-email-sanm@codeaurora.org>
+ <20200727192050.GD3191083@google.com>
+ <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
+ <87v9honyff.fsf@kernel.org>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <322d193c-d4d2-789b-ffec-ebdee2730c1e@codeaurora.org>
+Date:   Wed, 12 Aug 2020 14:35:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87v9honyff.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Kinetic KTD253
-white LED backlight driver.
+Hi
 
-Cc: devicetree@vger.kernel.org
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Create common.yaml for backlight as suggested by Sam and
-  use that.
-- Rename the GPIO line "enable-gpios"
----
- .../leds/backlight/kinetic,ktd253.yaml        | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
+On 8/12/2020 12:27 PM, Felipe Balbi wrote:
+> "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
+>
+>> Hi Felipe,
+>>
+>> On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
+>>> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
+>>>> Add interconnect support in dwc3-qcom driver to vote for bus
+>>>> bandwidth.
+>>>>
+>>>> This requires for two different paths - from USB to
+>>>> DDR. The other is from APPS to USB.
+>>>>
+>>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+>>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> Please ack if you are ok with this patch.
+> What's the plan to get this upstream? Should I take dwc3-qcom patch and
+> ignore the rest? Is there a hard-dependency on something else?
+Yes take dwc3-qcom patch only,the dt change is already in linux-next.
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-new file mode 100644
-index 000000000000..e17f45a2a6bf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/backlight/kinetic,ktd253.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Kinetic Technologies KTD253 one-wire backlight
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  The Kinetic Technologies KTD253 is a white LED backlight that is
-+  controlled by a single GPIO line. If you just turn on the backlight
-+  it goes to maximum backlight then you can set the level of backlight
-+  using pulses on the enable wire. This is sometimes referred to as
-+  "expresswire".
-+
-+allOf:
-+  - $ref: common.yaml#
-+
-+properties:
-+  compatible:
-+    const: kinetic,ktd253
-+
-+  enable-gpios:
-+    description: GPIO to use to enable/disable and dim the backlight.
-+    maxItems: 1
-+
-+  default-on: true
-+  default-brightness: true
-+  max-brightness: true
-+
-+required:
-+  - compatible
-+  - enable-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    backlight {
-+        compatible = "kinetic,ktd253";
-+        enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-+        default-on;
-+        default-brightness = <160>;
-+    };
 -- 
-2.26.2
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
