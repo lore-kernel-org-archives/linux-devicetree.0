@@ -2,183 +2,361 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DDEC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 02:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDABC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 02:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9062206DA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 02:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942562076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 02:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lefbEPYF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HthDeMH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgHLCOt (ORCPT
+        id S1726405AbgHLCW3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 11 Aug 2020 22:14:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42518 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgHLCOt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 22:14:49 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07C2EM9o070631;
-        Tue, 11 Aug 2020 21:14:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597198462;
-        bh=vz9BEO3i2jUTUw/IKHhLkCoRWIB1qfwD0VHvKfxxhec=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lefbEPYFL+kZdcIKAEEOULw6p6eYv2ctX7LCeJyOFTEAnmIybsgXQH22PCGCZQ1ix
-         7nnn5aO6+I2am+1xRe3h89WT6C7Hmy0ML2EayPEwwyR+mhnQq2uM4rtz5CRguCQkn4
-         Yci6SwmTispJqko2bfeF9xRNGeGYYRvCONdiJ0i8=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07C2EMPn011412;
-        Tue, 11 Aug 2020 21:14:22 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 11
- Aug 2020 21:14:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 11 Aug 2020 21:14:22 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07C2EHeE066337;
-        Tue, 11 Aug 2020 21:14:18 -0500
-Subject: Re: [PATCH v6 00/13] irqchip: ti,sci-intr/inta: Update the dt
- bindings to accept different interrupt parents
-To:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>
-References: <20200806074826.24607-1-lokeshvutla@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <1fdd24e2-6579-857b-b62d-cff17c0250ef@ti.com>
-Date:   Wed, 12 Aug 2020 07:44:17 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 11 Aug 2020 22:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgHLCW2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Aug 2020 22:22:28 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E818C06174A;
+        Tue, 11 Aug 2020 19:22:28 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g6so486188ljn.11;
+        Tue, 11 Aug 2020 19:22:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z/e0pOtFdHj174q/0e3ZuFusjMXBEvLuHWOiwJUcqag=;
+        b=HthDeMH8RKFpoZxRW1lCINtZq/UMQN2pqoJOs9NPlXzmgEo+6F41VMa8XTK7ai2nn+
+         rrSYvJLCAOdrY9iTRzYfiCfI5a33DOFeTXsCvppdtcl1+bRlvfhyo7Z1CmuJW8yvVA/o
+         B0OyCYbbD/X5mXcDaGIiHfZTf8kw39czwMhxwli+a+laCmbZboHkskH0H5elV7L3XsYv
+         fbH96jF6YFygUBkhAfUysrSBV0xiLuTO2h/nCvSnwpCCbOMcNNiPbGK47rYRywxeQdyE
+         g+oidsGklmAjO0r2HMKwED00LoPTdhyE6/ue15inbfYpXjzigIcZYDkWIpetnNtyOVki
+         RgRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/e0pOtFdHj174q/0e3ZuFusjMXBEvLuHWOiwJUcqag=;
+        b=cwUwtXst4+gxO+Lznp4zpJ3kiZf+/pVa93Nk6fXx6NuaCyStQGf/ODQvfJRdTiCdjA
+         HgapSfBJqqlO0ntUXkxRZQ5U2a8WAOsdArhqa9373lgBj3RsIl+XaoqPBEE9d2RoIqWv
+         m251hpp2NpbzZX7TzciAsRLLZAyTFxDwBZFogbWEJkwxGVr1H7Bx7mgLuRz0hkjkF6Rf
+         RyOSKscRgox8LcujUs/khseWf+e/hoRdVY+VzQu9EjFXZb8up+/Xa5szbA4enRGC0et0
+         6u0e92aLabcRhKG1u7xZDupsiISxhNqYv+49AgEy4OnQDvkNEacwgkD2aM5wjKunFs2g
+         +AaQ==
+X-Gm-Message-State: AOAM532c07sv7bUzf+8Hev1tADKpijTAxIkBl8QN4AoAlAi1eSvwKzrU
+        U3ohvcWybVYjA9ENh5D+K2oe6JCryOY1ojvIizy0k/T1TabEMQ==
+X-Google-Smtp-Source: ABdhPJzl3jNhuD5EmOAmK4WMWsW6xQpy5lPBYv0/o9ZVAfwjheq+1/Uc8OHGuLpNPcFJsVLBp0BDjTDipB6dxSoXfe4=
+X-Received: by 2002:a2e:9c86:: with SMTP id x6mr4165220lji.346.1597198946676;
+ Tue, 11 Aug 2020 19:22:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200806074826.24607-1-lokeshvutla@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200624022848.7765-1-wcheng@codeaurora.org> <20200624022848.7765-2-wcheng@codeaurora.org>
+In-Reply-To: <20200624022848.7765-2-wcheng@codeaurora.org>
+From:   Peter Chen <hzpeterchen@gmail.com>
+Date:   Wed, 12 Aug 2020 10:22:15 +0800
+Message-ID: <CAL411-qvuCTib1VBV9uRwL-rEHkefFLm1x-WLLP4kYzcNtQd_g@mail.gmail.com>
+Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        robh+dt@kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>, jackp@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marc
+On Wed, Jun 24, 2020 at 10:31 AM Wesley Cheng <wcheng@codeaurora.org> wrote:
+>
+> Some devices have USB compositions which may require multiple endpoints
+> that support EP bursting.  HW defined TX FIFO sizes may not always be
+> sufficient for these compositions.  By utilizing flexible TX FIFO
+> allocation, this allows for endpoints to request the required FIFO depth to
+> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
+> a larger TX FIFO size results in better TX throughput.
+>
+> Ensure that one TX FIFO is reserved for every IN endpoint.  This allows for
+> the FIFO logic to prevent running out of FIFO space.
+>
 
-On 06/08/20 1:18 pm, Lokesh Vutla wrote:
-> Hi Marc,
-> 	This is continuation of the RFC patches[0] regarding the driver
-> updates to support for following interrupt parent connection:
-> - INTR -> INTR
-> - INTA -> GICv3
-> The current existing driver assumes that INTR is always connected to
-> GICv3 and INTA is always connected to INTR.
-> 
-> As discussed this change breaks the DT backward compatibility but it
-> allows to not depend on TISCI firmware properties in DT node. IMHO, this
-> will ensure that any future changes will not effect DT properties.
-> 
-> This series depends on the the new Yaml bindings for common TISCI[1].
+You may do this for only allocated endpoints, but you need override
+default .match_ep
+API. See cdns3/gadget.c and cdns3/ep0.c as an example.
 
-This dependency is merged into mainline[0]. Is it possible to pull this series
-in or is it too late to ask now?
+Peter
 
-
-[0]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt?id=2a2180206ab62b42c6a7fd3d77c47c3675cbc893
-
-Thanks and regards,
-Lokesh
-
-> 
-> [0] https://lore.kernel.org/linux-arm-kernel/20190923042405.26064-1-lokeshvutla@ti.com/
-> [1] https://patchwork.kernel.org/patch/11676843/
-> 
-> Tested with: (There is a build error on Today's master while building dtbs. So I enabled
-> 	      only the TI specific components for building DTBS).
-> - DT_SCHEMA_FILES="Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml"
->   v8make dt_binding_check
-> - DT_SCHEMA_FILES="Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml"
->   v8make dt_binding_check
-> - DT_SCHEMA_FILES="Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml"
->   v8make dtbs_check
-> - DT_SCHEMA_FILES="Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml"
->   v8make dtbs_check
-> - v8make allmodconfig
-> 
-> Changes since v5:
-> - Rebased on latest master.
-> - Collected Reviewed-by from Rob.
-> - Included DT changes in the same series so that everything can be merged in a single go.
->   Without DT changes, there are regressions for DMA and other consumer peripherals so suggestion
->   is to merge everthing in a single go. DT changes apply cleanly on next and Linus's master
->   without any merge conflicts.
-> 
-> Changes since v4:
-> - Fixed Rob's comment on INTR and INTA yaml documentation
-> - Collected Reviewed-by's and Acked-by's
-> 
-> Changes since v3:
-> - Hardcode param_count based on parent instead of reading it from DT.
-> - Drop storing TISCI device id in platform device id field.
-> 
-> Changes since v2:
-> - Fixed comments from Rob
-> - Fixed DT schema warnings.
-> 
-> Changes since v1:
-> - Rebased on top of latest Linux master
-> - Dropped DT patches.
-> 
-> Lokesh Vutla (13):
->   firmware: ti_sci: Drop the device id to resource type translation
->   firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
->   firmware: ti_sci: Add support for getting resource with subtype
->   dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage
->     of gic as parent
->   dt-bindings: irqchip: Convert ti,sci-intr bindings to yaml
->   irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
->   dt-bindings: irqchip: ti,sci-inta: Update docs to support different
->     parent.
->   dt-bindings: irqchip: Convert ti,sci-inta bindings to yaml
->   irqchip/ti-sci-inta: Do not store TISCI device id in platform device
->     id field
->   irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
->   arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
->   arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
->   arm64: dts: k3-am65: Update the RM resource types
-> 
->  .../interrupt-controller/ti,sci-inta.txt      |  66 --------
->  .../interrupt-controller/ti,sci-inta.yaml     |  98 +++++++++++
->  .../interrupt-controller/ti,sci-intr.txt      |  82 ---------
->  .../interrupt-controller/ti,sci-intr.yaml     | 102 ++++++++++++
->  MAINTAINERS                                   |   4 +-
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  36 ++--
->  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  12 +-
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |   8 +-
->  .../arm64/boot/dts/ti/k3-am654-base-board.dts |   4 +-
->  .../dts/ti/k3-j721e-common-proc-board.dts     |  10 +-
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     |  43 ++---
->  .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  12 +-
->  drivers/firmware/ti_sci.c                     | 155 ++++++++----------
->  drivers/irqchip/irq-ti-sci-inta.c             |  95 +++++++++--
->  drivers/irqchip/irq-ti-sci-intr.c             | 152 ++++++++++-------
->  include/linux/soc/ti/ti_sci_protocol.h        |  13 ++
->  16 files changed, 516 insertions(+), 376 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
-> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  drivers/usb/dwc3/core.c   |   2 +
+>  drivers/usb/dwc3/core.h   |   8 +++
+>  drivers/usb/dwc3/ep0.c    |  37 +++++++++++-
+>  drivers/usb/dwc3/gadget.c | 115 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 161 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index edc17155cb2b..cca555493929 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -1304,6 +1304,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+>                                 &tx_thr_num_pkt_prd);
+>         device_property_read_u8(dev, "snps,tx-max-burst-prd",
+>                                 &tx_max_burst_prd);
+> +       dwc->needs_fifo_resize = device_property_read_bool(dev,
+> +                               "tx-fifo-resize");
+>
+>         dwc->disable_scramble_quirk = device_property_read_bool(dev,
+>                                 "snps,disable_scramble_quirk");
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+> index 4c171a8e215f..ce0bf288b6ac 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -675,6 +675,7 @@ struct dwc3_event_buffer {
+>   *             isochronous START TRANSFER command failure workaround
+>   * @start_cmd_status: the status of testing START TRANSFER command with
+>   *             combo_num = 'b00
+> + * @fifo_depth: allocated TXFIFO depth
+>   */
+>  struct dwc3_ep {
+>         struct usb_ep           endpoint;
+> @@ -727,6 +728,7 @@ struct dwc3_ep {
+>         /* For isochronous START TRANSFER workaround only */
+>         u8                      combo_num;
+>         int                     start_cmd_status;
+> +       int                     fifo_depth;
+>  };
+>
+>  enum dwc3_phy {
+> @@ -1004,6 +1006,7 @@ struct dwc3_scratchpad_array {
+>   *     1       - utmi_l1_suspend_n
+>   * @is_fpga: true when we are using the FPGA board
+>   * @pending_events: true when we have pending IRQs to be handled
+> + * @needs_fifo_resize: not all users might want fifo resizing, flag it
+>   * @pullups_connected: true when Run/Stop bit is set
+>   * @setup_packet_pending: true when there's a Setup Packet in FIFO. Workaround
+>   * @three_stage_setup: set if we perform a three phase setup
+> @@ -1044,6 +1047,8 @@ struct dwc3_scratchpad_array {
+>   * @dis_metastability_quirk: set to disable metastability quirk.
+>   * @imod_interval: set the interrupt moderation interval in 250ns
+>   *                 increments or 0 to disable.
+> + * @last_fifo_depth: total TXFIFO depth of all enabled USB IN/INT endpoints
+> + * @num_ep_resized: the number of TX FIFOs that have already been resized
+>   */
+>  struct dwc3 {
+>         struct work_struct      drd_work;
+> @@ -1204,6 +1209,7 @@ struct dwc3 {
+>         unsigned                is_utmi_l1_suspend:1;
+>         unsigned                is_fpga:1;
+>         unsigned                pending_events:1;
+> +       unsigned                needs_fifo_resize:1;
+>         unsigned                pullups_connected:1;
+>         unsigned                setup_packet_pending:1;
+>         unsigned                three_stage_setup:1;
+> @@ -1236,6 +1242,8 @@ struct dwc3 {
+>         unsigned                dis_metastability_quirk:1;
+>
+>         u16                     imod_interval;
+> +       int                     last_fifo_depth;
+> +       int                     num_ep_resized;
+>  };
+>
+>  #define INCRX_BURST_MODE 0
+> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+> index 6dee4dabc0a4..76db9b530861 100644
+> --- a/drivers/usb/dwc3/ep0.c
+> +++ b/drivers/usb/dwc3/ep0.c
+> @@ -601,8 +601,9 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, struct usb_ctrlrequest *ctrl)
+>  {
+>         enum usb_device_state state = dwc->gadget.state;
+>         u32 cfg;
+> -       int ret;
+> +       int ret, num, size;
+>         u32 reg;
+> +       struct dwc3_ep *dep;
+>
+>         cfg = le16_to_cpu(ctrl->wValue);
+>
+> @@ -611,6 +612,40 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, struct usb_ctrlrequest *ctrl)
+>                 return -EINVAL;
+>
+>         case USB_STATE_ADDRESS:
+> +               /*
+> +                * If tx-fifo-resize flag is not set for the controller, then
+> +                * do not clear existing allocated TXFIFO since we do not
+> +                * allocate it again in dwc3_gadget_resize_tx_fifos
+> +                */
+> +               if (dwc->needs_fifo_resize) {
+> +                       /* Read ep0IN related TXFIFO size */
+> +                       dep = dwc->eps[1];
+> +                       size = dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
+> +                       if (dwc3_is_usb31(dwc))
+> +                               dep->fifo_depth = DWC31_GTXFIFOSIZ_TXFDEP(size);
+> +                       else
+> +                               dep->fifo_depth = DWC3_GTXFIFOSIZ_TXFDEP(size);
+> +
+> +                       dwc->last_fifo_depth = dep->fifo_depth;
+> +                       /* Clear existing TXFIFO for all IN eps except ep0 */
+> +                       for (num = 3; num < min_t(int, dwc->num_eps,
+> +                               DWC3_ENDPOINTS_NUM); num += 2) {
+> +                               dep = dwc->eps[num];
+> +                               /* Don't change TXFRAMNUM on usb31 version */
+> +                               size = dwc3_is_usb31(dwc) ?
+> +                                       dwc3_readl(dwc->regs,
+> +                                                  DWC3_GTXFIFOSIZ(num >> 1)) &
+> +                                                  DWC31_GTXFIFOSIZ_TXFRAMNUM :
+> +                                                  0;
+> +
+> +                               dwc3_writel(dwc->regs,
+> +                                           DWC3_GTXFIFOSIZ(num >> 1),
+> +                                           size);
+> +                               dep->fifo_depth = 0;
+> +                       }
+> +                       dwc->num_ep_resized = 0;
+> +               }
+> +
+>                 ret = dwc3_ep0_delegate_req(dwc, ctrl);
+>                 /* if the cfg matches and the cfg is non zero */
+>                 if (cfg && (!ret || (ret == USB_GADGET_DELAYED_STATUS))) {
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 00746c2848c0..777badf3e85d 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -540,6 +540,117 @@ static int dwc3_gadget_start_config(struct dwc3_ep *dep)
+>         return 0;
+>  }
+>
+> +/*
+> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-case
+> + * @dwc: pointer to our context structure
+> + *
+> + * This function will a best effort FIFO allocation in order
+> + * to improve FIFO usage and throughput, while still allowing
+> + * us to enable as many endpoints as possible.
+> + *
+> + * Keep in mind that this operation will be highly dependent
+> + * on the configured size for RAM1 - which contains TxFifo -,
+> + * the amount of endpoints enabled on coreConsultant tool, and
+> + * the width of the Master Bus.
+> + *
+> + * In general, FIFO depths are represented with the following equation:
+> + *
+> + * fifo_size = mult * ((max_packet + mdwidth)/mdwidth + 1) + 1
+> + *
+> + * Conversions can be done to the equation to derive the number of packets that
+> + * will fit to a particular FIFO size value.
+> + */
+> +static int dwc3_gadget_resize_tx_fifos(struct dwc3_ep *dep)
+> +{
+> +       struct dwc3 *dwc = dep->dwc;
+> +       int ram1_depth, mdwidth, fifo_0_start, tmp, num_in_ep;
+> +       int min_depth, remaining, fifo_size, mult = 1, fifo, max_packet = 1024;
+> +
+> +       if (!dwc->needs_fifo_resize)
+> +               return 0;
+> +
+> +       /* resize IN endpoints except ep0 */
+> +       if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <= 1)
+> +               return 0;
+> +
+> +       /* Don't resize already resized IN endpoint */
+> +       if (dep->fifo_depth)
+> +               return 0;
+> +
+> +       ram1_depth = DWC3_RAM1_DEPTH(dwc->hwparams.hwparams7);
+> +       mdwidth = DWC3_MDWIDTH(dwc->hwparams.hwparams0);
+> +       /* MDWIDTH is represented in bits, we need it in bytes */
+> +       mdwidth >>= 3;
+> +
+> +       if (((dep->endpoint.maxburst > 1) &&
+> +                       usb_endpoint_xfer_bulk(dep->endpoint.desc))
+> +                       || usb_endpoint_xfer_isoc(dep->endpoint.desc))
+> +               mult = 3;
+> +
+> +       if ((dep->endpoint.maxburst > 6) &&
+> +                       usb_endpoint_xfer_bulk(dep->endpoint.desc)
+> +                       && dwc3_is_usb31(dwc))
+> +               mult = 6;
+> +
+> +       /* FIFO size for a single buffer */
+> +       fifo = (max_packet + mdwidth)/mdwidth;
+> +       fifo++;
+> +
+> +       /* Calculate the number of remaining EPs w/o any FIFO */
+> +       num_in_ep = dwc->num_eps/2;
+> +       num_in_ep -= dwc->num_ep_resized;
+> +       /* Ignore EP0 IN */
+> +       num_in_ep--;
+> +
+> +       /* Reserve at least one FIFO for the number of IN EPs */
+> +       min_depth = num_in_ep * (fifo+1);
+> +       remaining = ram1_depth - min_depth - dwc->last_fifo_depth;
+> +
+> +       /* We've already reserved 1 FIFO per EP, so check what we can fit in
+> +        * addition to it.  If there is not enough remaining space, allocate
+> +        * all the remaining space to the EP.
+> +        */
+> +       fifo_size = (mult-1) * fifo;
+> +       if (remaining < fifo_size) {
+> +               if (remaining > 0)
+> +                       fifo_size = remaining;
+> +               else
+> +                       fifo_size = 0;
+> +       }
+> +
+> +       fifo_size += fifo;
+> +       fifo_size++;
+> +       dep->fifo_depth = fifo_size;
+> +
+> +       /* Check if TXFIFOs start at non-zero addr */
+> +       tmp = dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
+> +       fifo_0_start = DWC3_GTXFIFOSIZ_TXFSTADDR(tmp);
+> +
+> +       fifo_size |= (fifo_0_start + (dwc->last_fifo_depth << 16));
+> +       if (dwc3_is_usb31(dwc))
+> +               dwc->last_fifo_depth += DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +       else
+> +               dwc->last_fifo_depth += DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +
+> +       /* Check fifo size allocation doesn't exceed available RAM size. */
+> +       if (dwc->last_fifo_depth >= ram1_depth) {
+> +               dev_err(dwc->dev, "Fifosize(%d) > RAM size(%d) %s depth:%d\n",
+> +                               (dwc->last_fifo_depth * mdwidth), ram1_depth,
+> +                               dep->endpoint.name, fifo_size);
+> +               if (dwc3_is_usb31(dwc))
+> +                       fifo_size = DWC31_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +               else
+> +                       fifo_size = DWC3_GTXFIFOSIZ_TXFDEP(fifo_size);
+> +               dwc->last_fifo_depth -= fifo_size;
+> +               dep->fifo_depth = 0;
+> +               return -ENOMEM;
+> +       }
+> +
+> +       dwc3_writel(dwc->regs, DWC3_GTXFIFOSIZ(dep->number >> 1), fifo_size);
+> +       dwc->num_ep_resized++;
+> +       return 0;
+> +}
+> +
+>  static int dwc3_gadget_set_ep_config(struct dwc3_ep *dep, unsigned int action)
+>  {
+>         const struct usb_ss_ep_comp_descriptor *comp_desc;
+> @@ -620,6 +731,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
+>         int                     ret;
+>
+>         if (!(dep->flags & DWC3_EP_ENABLED)) {
+> +               ret = dwc3_gadget_resize_tx_fifos(dep);
+> +               if (ret)
+> +                       return ret;
+> +
+>                 ret = dwc3_gadget_start_config(dep);
+>                 if (ret)
+>                         return ret;
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
