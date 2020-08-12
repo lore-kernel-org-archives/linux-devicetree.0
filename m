@@ -2,88 +2,95 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5EFC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9388EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA5A20774
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dzcq8VsG"
+	by mail.kernel.org (Postfix) with ESMTP id 5E8C4206DA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597261416;
+	bh=y4ELIOsvGVAFxRhK1EnW2G9rTljAV6PZKr1+MkHcOZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SgSYTcOfJ87fQtcFFYzjq/KJlXZG9KPgT75ftBjTs5QMl8VHZqBNmaEQe+MlRdQd2
+	 OA4M3Qpkob4x+LRnJfWljZSZQ0LzTdtdtEHqzK+y9IyHuVxUy+SWlwE+3Yv85imftg
+	 fU35yhvZ3xxat9alf8mcrhh8F6x9jB8ehhHXwDmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLTdC (ORCPT
+        id S1726542AbgHLTng (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:33:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42704 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHLTdC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:33:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CJWted106805;
-        Wed, 12 Aug 2020 14:32:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597260775;
-        bh=1EW1OwfLbnIn6nn3Pcy0uYF/8AosEYu2FExcNrqoGvo=;
-        h=From:To:CC:Subject:Date;
-        b=Dzcq8VsGzzadMpEJ0qY/ryBydU1TzxOXmjA9xwrva09hV+cg+m3TZ3wk+cIzRmOTY
-         P9ifs19pOmwVRnUzIjwvhibcy160ZHSpE/cU6Z5NaXdNUtDK5Ny0IxLLaLtM6b+ChS
-         PK8hZyPrVqc5Tr5qD6LaTV3WCZdJ93LplJTuYD5w=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CJWtw6024876
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Aug 2020 14:32:55 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
- Aug 2020 14:32:55 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 12 Aug 2020 14:32:55 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CJWsvi013991;
-        Wed, 12 Aug 2020 14:32:54 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH] dt: bindings: lp55xx: Updte yaml examples with new color ID
-Date:   Wed, 12 Aug 2020 14:32:48 -0500
-Message-ID: <20200812193248.11325-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 12 Aug 2020 15:43:36 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33507 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgHLTnf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:43:35 -0400
+Received: by mail-il1-f196.google.com with SMTP id p16so3089052ile.0;
+        Wed, 12 Aug 2020 12:43:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=F25zreK/uMPj1Zeh3/PKOdX/kNSOqJf1CQzVccpZong=;
+        b=ih3bdNbffP96OWOdGAjUwTnLFJFiVPQyXj9OSLdn10xvmcj2IKzOXdNo2dSwx+uw4q
+         cQxN0U4yNFJTRxlREU6tmNu9jmLAsKiRM3eiEi7RnePTMZRGwVeJAhQxNmbEHZ24DyNB
+         zuhO+UrfQxlXoHWRG1uhIjrKEq8J85nSFNR/mNaP7erHjsZgBlY78z9cjuEGnV5V4P9Q
+         D1NQVwt9/HS9iu9FbkKRfP4dXvTl2IPHQfGbWLbdrUlNNd2hYebY3OQmcPOXlZ8wLf3E
+         +BRdnSO1OTm73E9y3KO5zsTjZcrtQKfVo2pPVksTlfmLZecanlgFPNVwVICjQCzEE5Au
+         W+Wg==
+X-Gm-Message-State: AOAM53211IaQkPOfcUickkcqF1uvl2+VddEaNckfLcmJY4d/u3f/qvAt
+        VmLn6rQUz4Kb4CqsAwmKo3dOML0=
+X-Google-Smtp-Source: ABdhPJzXbKpQczi7VhkjG9X+vXDz4AATVf/LWQQxKg2HZu8cGQum7joDaIR3c56n1O/YtSkfWB1Qog==
+X-Received: by 2002:a05:6e02:1207:: with SMTP id a7mr1177891ilq.303.1597261413373;
+        Wed, 12 Aug 2020 12:43:33 -0700 (PDT)
+Received: from xps15 ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id x12sm1503060ile.14.2020.08.12.12.43.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 12:43:32 -0700 (PDT)
+Received: (nullmailer pid 2586064 invoked by uid 1000);
+        Wed, 12 Aug 2020 19:43:29 -0000
+Date:   Wed, 12 Aug 2020 13:43:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, ludovic.desroches@microchip.com,
+        alsa-devel@alsa-project.org, robh+dt@kernel.org,
+        nicolas.ferre@microchip.com, tiwai@suse.com,
+        linux-arm-kernel@lists.infradead.org,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: sound: add DT bindings for Microchip
+ S/PDIF TX Controller
+Message-ID: <20200812194329.GA2585991@bogus>
+References: <20200803081851.102570-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803081851.102570-1-codrin.ciubotariu@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the binding examples for the color ID to LED_COLOR_ID_RGB
+On Mon, 03 Aug 2020 11:18:50 +0300, Codrin Ciubotariu wrote:
+> This patch adds DT bindings for the new Microchip S/PDIF TX Controller
+> embedded inside sama7g5 SoCs.
+> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
+> 
+> Changes in v3:
+>  - removed 'oneOf' from 'compatible' property;
+>  - added 'maxItems: 1' to 'dmas' property;
+>  - removed pinctrl related properties;
+> 
+> Changes in v2:
+>  - replaced https with http;
+>  - reworked example, included bindings;
+> 
+>  .../bindings/sound/mchp,spdiftx.yaml          | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/mchp,spdiftx.yaml
+> 
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/devicetree/bindings/leds/leds-lp55xx.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-index b1bb3feb0f4d..89f69d62493e 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-@@ -189,7 +189,7 @@ examples:
-                #address-cells = <1>;
-                #size-cells = <0>;
-                reg = <0x2>;
--               color = <LED_COLOR_ID_MULTI>;
-+               color = <LED_COLOR_ID_RGB>;
-                function = LED_FUNCTION_STANDBY;
-                linux,default-trigger = "heartbeat";
- 
--- 
-2.28.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
