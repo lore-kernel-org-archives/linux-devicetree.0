@@ -2,71 +2,64 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7DEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BDAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 108422053B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D9220781
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sA2/JxzA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xR8hupYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725845AbgHLHGr (ORCPT
+        id S1726718AbgHLHT6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgHLHGr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 03:06:47 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A7AC06174A
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 00:06:44 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id m22so1066320ljj.5
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 00:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1K3oBY2TmVMmKmOQPQU9rGoPDuwC0BKmISYgxAAqZh0=;
-        b=sA2/JxzA87QKxFrPbrsRcibJjyOop9YGxHZfHVpWBOhpNgNBqF2M99mhzFO5usLltA
-         yCCieRwGJQ/Yz1qJniQBW62M4N/xu4mtFydfjbsroic7Qefl1yGqesIC/YTD0aN0RLb7
-         ctNAU3Ky8WocEYoPfnwd9+KZvgo6jYRwv8PfRH6l0riaFQsbqMqlPv2aOLlDTN0wfct0
-         l//OWg5HMlmaT0EWOoaKeUgagXCqZuIviho+rfl31HGYSMpuXsHQwBaUKok7bhrXlefp
-         AgXIcIMTFWzihEfQoEjqVaGgtbIgIxmp47OqxXypL9Lgs3lF6rQ13ZKlFv6n33XY16n7
-         iVkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1K3oBY2TmVMmKmOQPQU9rGoPDuwC0BKmISYgxAAqZh0=;
-        b=IdYbwPMrwvUqOrGvuOeiXJpEaWQX5WmIutgqiGe1HQlQSlSEgFoT5Ol9lv71WnzEQm
-         cCY5x6EnA6vTI2KlvIvC0r6A5xJ2hc7JiqPf+KO2eCDxzlM0kWvp1q5hL//LlTh7h+EA
-         z+c+fA7WP0pkCa9N/6g7ES9c5x72rIshLlwv4pcr8m73QgZM8s175AR1clbZSc/IdDmG
-         J8rrxN4NorClaa1ygcr0RHIGhVgzV/gSTHES318Bkq+2/KJrxmdIXk99ULGf0PNgMHla
-         88qWx6crU5QA7n9j2Wv1bf+qlWdT+DmASP2YDQQhDnwzuLEXM4QhLtwBapz7uiYMLdmw
-         Y6xw==
-X-Gm-Message-State: AOAM533ZGg4QRLWDmS9hCL6ETYHQse5rnes6HeFMtyN9LzsqyOwJjCL8
-        F6BSvJpQeMbxgw4FSijQwiMd1mFX8ko=
-X-Google-Smtp-Source: ABdhPJzH6F+S+xoXqrRl1v1JHzHUOLZcg1CROsMwfaQqhrUi6WDHKFvTmk4NPXCT/bYpEAFBywq+LA==
-X-Received: by 2002:a2e:b00f:: with SMTP id y15mr4886274ljk.223.1597216003082;
-        Wed, 12 Aug 2020 00:06:43 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id s2sm263317lfs.4.2020.08.12.00.06.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 00:06:42 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] dt-bindings: pip command elaboration
-Date:   Wed, 12 Aug 2020 09:06:40 +0200
-Message-Id: <20200812070640.2543557-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 12 Aug 2020 03:19:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:20329 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726829AbgHLHT5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 03:19:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597216796; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=hRoj2LZK59sHECbT7NZeBWdsLnA+4KciJ9iB/VeG7nQ=; b=xR8hupYLqcdv2kPofBZvG9DYgr/K9dR8Z4b/OkYvM83WQ2askwWu9NYlyXHF/dYABvsKZE7F
+ 9BQuc6UCWNp3teLgq8teZr9NjEXrrjfpmV8Dns4vDmjm3HfdQQAiwwYv3vIrRqOG8DBi3q/g
+ CpIZwpWYvLcSCfFtLFPStS1ho3k=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f33981b46ed9966744fb2c8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 07:19:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AD01AC433CB; Wed, 12 Aug 2020 07:19:55 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0462C433C6;
+        Wed, 12 Aug 2020 07:19:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0462C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     sboyd@kernel.org, heikki.krogerus@linux.intel.com,
+        agross@kernel.org, robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v8 3/4] arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
+Date:   Wed, 12 Aug 2020 00:19:24 -0700
+Message-Id: <20200812071925.315-4-wcheng@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200812071925.315-1-wcheng@codeaurora.org>
+References: <20200812071925.315-1-wcheng@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -74,41 +67,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pip is now for most practical set-ups implied to be pip3, so
-just use "pip" rather than "pip3" in the instructions.
-Pass --user explicitly in the example so it is clear that this
-gets installed in the user home directory.
+The PM8150B has a dedicated USB type C block, which can be used for type C
+orientation and role detection.  Create the reference node to this type C
+block for further use.
 
-Add an additional instruction on how to upgrade the project,
-not everyone is aware of how pip works.
-
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 ---
- Documentation/devicetree/writing-schema.rst | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-index 8c74a99f95e2..a9cebfca8d31 100644
---- a/Documentation/devicetree/writing-schema.rst
-+++ b/Documentation/devicetree/writing-schema.rst
-@@ -115,11 +115,16 @@ The DT schema project must be installed in order to validate the DT schema
- binding documents and validate DTS files using the DT schema. The DT schema
- project can be installed with pip::
+diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+index e112e8876db6..053c659734a7 100644
+--- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+@@ -53,6 +53,13 @@ power-on@800 {
+ 			status = "disabled";
+ 		};
  
--    pip3 install git+https://github.com/devicetree-org/dt-schema.git@master
-+    pip install --user git+https://github.com/devicetree-org/dt-schema.git@master
- 
- Several executables (dt-doc-validate, dt-mk-schema, dt-validate) will be
- installed. Ensure they are in your PATH (~/.local/bin by default).
- 
-+We sometimes update th DT schema project, and then you can simply add the
-+"--upgrade" option to the above command to get to the latest version:
++		pm8150b_typec: typec@1500 {
++			compatible = "qcom,pm8150b-usb-typec";
++			status = "disabled";
++			reg = <0x1500>;
++			interrupts = <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
++		};
 +
-+    pip install --user --upgrade git+https://github.com/devicetree-org/dt-schema.git@master
-+
- dtc must also be built with YAML output support enabled. This requires that
- libyaml and its headers be installed on the host system. For some distributions
- that involves installing the development package, such as:
+ 		pm8150b_temp: temp-alarm@2400 {
+ 			compatible = "qcom,spmi-temp-alarm";
+ 			reg = <0x2400>;
 -- 
-2.26.2
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
