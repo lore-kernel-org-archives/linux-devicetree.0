@@ -2,90 +2,224 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7686C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45643C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A828920838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597260236;
-	bh=srW2kulFvhXRcIZk8PnUNz7klBws/aLaxIdD9RzOmIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ln/SA/LEC5zj1rUp8I7VWwtkEPP3p2i7eouf6O+UKdmMgBufm8q/qjabOfZQ2bTvT
-	 5nN1UsgAbKQUUwfNnfs1udEbM6NeY7mLTCmOPQdOzH3nsR+pp0p8K/7HxQjA36/6Pw
-	 8y9j1hlHbCrloB+RD+WS4da6cJiPLhmiDuU2nNdI=
+	by mail.kernel.org (Postfix) with ESMTP id 1D09220658
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LZHGIZxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHLTX4 (ORCPT
+        id S1726542AbgHLTaf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:23:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35249 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgHLTXz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:23:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id s189so4296449iod.2;
-        Wed, 12 Aug 2020 12:23:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CAWF7Jt4a9XH9KYO4dcyBdn0laPconrW8GiC39C5qmk=;
-        b=O59A/9vuIQ8aX09iSw2qD7fUk9fdrCA/papeWBrQg/Ut0WiQaA86nIj+iFNTaelGWs
-         ESHO8lkel2Az1SO5m5qSP4PgeB3GevpPbVXUVv7nSVknW180CuztqWoY1bhq1QWf7Uzy
-         6OsMDhbT3WnCqUr36okUxEpUg7gUNnymFR0iDRqt2TTgmQz1WaApG5hefntKCTMwewyo
-         SzWeKBT7ujPefNDNFKW3qYhJ2eDXV2xJKMFj/tw4WxydvObDc8/zchzcdnFycL+CIhDo
-         7EGqS6ltZ4Dk5fxAzWP32MNB+aZZC5AuVkCQ5hXVmiAi9aZb7oEwSy9cU7eMrwxozNnC
-         ClwQ==
-X-Gm-Message-State: AOAM533+InAr/xaqoTGPfCwkOCCVXwzVfYKSr6QSAozeigGaNlerlpcU
-        qO/S6G9jSAL7Or24nZXeLg==
-X-Google-Smtp-Source: ABdhPJy/vlGNYKad8kn1HY+zNDmhj32gPvXevOi1ZbKRT33+ddL1/5yDNmY9YEuLloWmlp3gX5Vmwg==
-X-Received: by 2002:a6b:e70d:: with SMTP id b13mr1270683ioh.141.1597260234242;
-        Wed, 12 Aug 2020 12:23:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id e1sm1522784ilq.40.2020.08.12.12.23.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:23:53 -0700 (PDT)
-Received: (nullmailer pid 2560563 invoked by uid 1000);
-        Wed, 12 Aug 2020 19:23:51 -0000
-Date:   Wed, 12 Aug 2020 13:23:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: regulator: Convert sy8824x to json-schema
-Message-ID: <20200812192351.GA2560480@bogus>
-References: <20200803144436.5d2b7e54@xhacker.debian>
+        Wed, 12 Aug 2020 15:30:35 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:56001 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726512AbgHLTae (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 15:30:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597260633; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=4+/wN/ZFlubPC8f06kWYCcnSStIOeSWNXCfdlUIBb6Q=;
+ b=LZHGIZxf81YIKeSqCLpIsfmg9MYJEeGKRdDGlqqHLcdctl1hUWk0xXIyE+mJXSE9rCJFjp4E
+ RS5DgyQBtt4k9F6FRCxAS851KGcSM4WFd14rqr6HDIDitZ4uLcDvRUFtpwwZ8P7wS1eao7v6
+ CYu6zwiT/Qf1VCWr2Tm954v+eF8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f3443514c787f237bb0c856 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 19:30:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C1637C433C6; Wed, 12 Aug 2020 19:30:24 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC4C6C433C9;
+        Wed, 12 Aug 2020 19:30:23 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803144436.5d2b7e54@xhacker.debian>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 12 Aug 2020 12:30:23 -0700
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, robdclark@gmail.com,
+        airlied@linux.ie, linux-kernel@vger.kernel.org,
+        abhinavk@codeaurora.org, khsieh@codeaurora.org,
+        seanpaul@chromium.org, aravindh@codeaurora.org,
+        freedreno@lists.freedesktop.org,
+        dri-devel <dri-devel-bounces@lists.freedesktop.org>
+Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add Display Port dt node
+In-Reply-To: <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
+References: <20200811021553.25023-1-tanmay@codeaurora.org>
+ <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
+Message-ID: <70d8a4f073abf7a038c9830ec6586709@codeaurora.org>
+X-Sender: tanmay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 03 Aug 2020 14:44:36 +0800, Jisheng Zhang wrote:
-> Convert the sy8824x binding to DT schema format using json-schema.
+On 2020-08-11 12:30, Stephen Boyd wrote:
+> Quoting Tanmay Shah (2020-08-10 19:15:53)
+>> @@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
+>> 
+>>                                 status = "disabled";
+>>                         };
+>> +
+>> +                       msm_dp: displayport-controller@ae90000 {
+>> +                               status = "disabled";
+>> +                               compatible = "qcom,sc7180-dp";
+>> +
+>> +                               reg = <0 0x0ae90000 0 0x1400>;
+>> +
+>> +                               interrupt-parent = <&mdss>;
+>> +                               interrupts = <12 IRQ_TYPE_NONE>;
 > 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
-> Since v2:
->  - add $ref to regulator.yaml
->  - add unevaluatedProperties
-> 
-> Since v1:
->  - It seems there's something wrong with my last email, so send out a v2 with
->    another email account
-> 
->  .../bindings/regulator/silergy,sy8824x.yaml   | 45 +++++++++++++++++++
->  .../devicetree/bindings/regulator/sy8824x.txt | 24 ----------
->  2 files changed, 45 insertions(+), 24 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/regulator/silergy,sy8824x.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/sy8824x.txt
+> Please drop the flags. It's not required per the binding. It should 
+> just
+> be a single number, i.e. <12>.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sure. I will change DP-bindings accordingly as well.
+
+>> +
+>> +                               clocks = <&dispcc 
+>> DISP_CC_MDSS_AHB_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_AUX_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_LINK_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_LINK_INTF_CLK>,
+>> +                                        <&dispcc
+> DISP_CC_MDSS_DP_PIXEL_CLK>;
+>> +                               clock-names = "core_iface", 
+>> "core_aux",
+> "ctrl_link",
+>> +                                             "ctrl_link_iface",
+> "stream_pixel";
+>> +                               #clock-cells = <1>;
+>> +                               assigned-clocks = <&dispcc
+> DISP_CC_MDSS_DP_LINK_CLK_SRC>,
+>> +                                                 <&dispcc
+> DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
+>> +                               assigned-clock-parents = <&msm_dp 0>,
+> <&msm_dp 1>;
+>> +
+>> +                               operating-points-v2 = <&dp_opp_table>;
+>> +                               power-domains = <&rpmhpd SC7180_CX>;
+> 
+> Can you send another patch to add the hpd pinctrl binding for the hpd
+> function? It would be useful to have that in the SoC level in case any
+> board wants to use the hpd pin on this SoC without having to implement
+> it themselves. It could be assigned here too as the pinctrl but I'm not
+> sure if that is correct. Probably better to just have it in the SoC 
+> file
+> and then let boards pick to use it.
+> 
+
+We have tlmm node in sc7180.dtsi. We can define pinctrl definition for 
+"dp_hot" funtionality there.
+
+>> +
+>> +                               ports {
+>> +                                       #address-cells = <1>;
+>> +                                       #size-cells = <0>;
+>> +                                       port@0 {
+>> +                                               reg = <0>;
+>> +                                               dp_in: endpoint {
+>> +                                                       
+>> remote-endpoint
+> = <&dpu_intf0_out>;
+>> +                                               };
+>> +                                       };
+>> +
+>> +                                       port@1 {
+>> +                                               reg = <1>;
+>> +                                               dp_out: endpoint { };
+>> +                                       };
+>> +                               };
+>> +
+>> +                               dp_opp_table: dp-opp-table {
+> 
+> Can this be called opp-table? I don't see the need to make it more
+> specific given that it doesn't share the namespace at this level with
+> anything else that is an opp table.
+> 
+
+DSI and MDP's OPP table names were posted here:
+https://lore.kernel.org/dri-devel/1594292674-15632-4-git-send-email-rnayak@codeaurora.org/
+
+So, It makes sense to keep naming conventions similar to dsi and mdp's 
+opp table.
+
+>> +                                       compatible =
+> "operating-points-v2";
+>> +
+>> +                                       opp-160000000 {
+>> +                                               opp-hz = /bits/ 64
+> <160000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_low_svs>;
+>> +                                       };
+>> +
+>> +                                       opp-270000000 {
+>> +                                               opp-hz = /bits/ 64
+> <270000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_svs>;
+>> +                                       };
+>> +
+>> +                                       opp-540000000 {
+>> +                                               opp-hz = /bits/ 64
+> <540000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_svs_l1>;
+>> +                                       };
+>> +
+>> +                                       opp-810000000 {
+>> +                                               opp-hz = /bits/ 64
+> <810000000>;
+>> +                                               required-opps =
+> <&rpmhpd_opp_nom>;
+>> +                                       };
+>> +                               };
+>> +                       };
+>>                 };
+>> 
+>>                 dispcc: clock-controller@af00000 {
+>> @@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
+>>                                  <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+>>                                  <&dsi_phy 0>,
+>>                                  <&dsi_phy 1>,
+>> -                                <0>,
+>> -                                <0>;
+>> +                                <&msm_dp 0>,
+>> +                                <&msm_dp 1>;
+> 
+> This bit will have to change when the DP phy is split off into the qmp
+> driver.
+> 
+
+Yes. It will be <&dp_phy 0> and <&dp_phy 1> assuming dp_phy is DP PHY 
+dts node name.
+
+>>                         clock-names = "bi_tcxo",
+>>                                       "gcc_disp_gpll0_clk_src",
+>>                                       "dsi0_phy_pll_out_byteclk",
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
