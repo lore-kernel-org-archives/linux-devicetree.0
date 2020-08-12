@@ -2,88 +2,88 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08E7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FA9C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD1E320781
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5031D2080C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgHLPCa (ORCPT
+        id S1726488AbgHLPID convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:02:30 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:41770 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726488AbgHLPC3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:02:29 -0400
-X-IronPort-AV: E=Sophos;i="5.76,304,1592838000"; 
-   d="scan'208";a="54233369"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 13 Aug 2020 00:02:28 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id AD201400492E;
-        Thu, 13 Aug 2020 00:02:25 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-spi@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7742: Add QSPI support
-Date:   Wed, 12 Aug 2020 16:00:48 +0100
-Message-Id: <20200812150048.27721-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 12 Aug 2020 11:08:03 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53913 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgHLPIC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 11:08:02 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 28CE020008;
+        Wed, 12 Aug 2020 15:07:59 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 17:07:58 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
+        Conor Culhane <conor.culhane@silvaco.com>,
+        <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 4/4] MAINTAINERS: Add Silvaco I3C master
+Message-ID: <20200812170758.452f7048@xps13>
+In-Reply-To: <20200812141312.3331-4-miquel.raynal@bootlin.com>
+References: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+        <20200812141312.3331-4-miquel.raynal@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add QSPI DT node to R8A7742 SoC dtsi.
+Hello,
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
- arch/arm/boot/dts/r8a7742.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Wed, 12 Aug 2020
+16:13:12 +0200:
 
-diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
-index 5070e2a87231..009827708bf4 100644
---- a/arch/arm/boot/dts/r8a7742.dtsi
-+++ b/arch/arm/boot/dts/r8a7742.dtsi
-@@ -701,6 +701,22 @@
- 			status = "disabled";
- 		};
- 
-+		qspi: spi@e6b10000 {
-+			compatible = "renesas,qspi-r8a7742", "renesas,qspi";
-+			reg = <0 0xe6b10000 0 0x2c>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 917>;
-+			dmas = <&dmac0 0x17>, <&dmac0 0x18>,
-+			       <&dmac1 0x17>, <&dmac1 0x18>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
-+			resets = <&cpg 917>;
-+			num-cs = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		scifa0: serial@e6c40000 {
- 			compatible = "renesas,scifa-r8a7742",
- 				     "renesas,rcar-gen2-scifa", "renesas,scifa";
--- 
-2.17.1
+> Add Conor and myself as maintainers.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+> 
+> Changes in v2:
+> * None.
+> 
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e627ed60d75a..fedd10537723 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15764,6 +15764,14 @@ S:	Maintained
+>  F:	Documentation/fb/sm712fb.rst
+>  F:	drivers/video/fbdev/sm712*
+>  
+> +SILVACO I3C DUAL-ROLE MASTER
+> +M:	Miquel Raynal <miquel.raynal@bootlin.com>
+> +M:	Conor Culhane <conor.culhane@silvaco.com>
+> +L:	linux-i3c@lists.infradead.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/i3c/svc,i3c-master.yaml
 
+Should be silvaco,i3c-master.yaml...
+
+I'll correct in v3.
+
+Thanks,
+Miquèl
