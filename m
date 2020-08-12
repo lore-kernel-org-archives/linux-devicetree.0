@@ -2,92 +2,86 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774C7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6648C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5C52087C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BEB206C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597259260;
-	bh=+2MX8lMPobxkg5Sd92d2N9QmRdXu/gmf1DtCDwVeNMc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zlGCN9UB2hokq9mxSLYgYb+p6oYq9TmAsOgO91H5ciiEJogOaydUScdA2sJUTziLe
-	 0n0Psdc02NGUev9WbWeuhMkpXfK4nSjvAq39/KQ/UQiy1fngw/Sj1qYl45BxHBaSFY
-	 FgJds1n7sYczRy0/CXkqaufyh458KEQH9CC4IpNw=
+	s=default; t=1597259736;
+	bh=UDrEMi0VlmISi/5lpg6y0NZppPMZmBpjabfrMXthIPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MyB3O/psF3BH18kLotj3wb7zubXiUsr9ANwQj1AdTOqSrkBNh7QTJXAoLu2BfmKGX
+	 fHpXfSJscZTkoyCPteEo3NH4a1g9VXLY2eLHNwA772j+2IK4KOIT2GL6s1spRU/Ouy
+	 FqZV6ESbl5+A3nolpp9YmrpoarkMK4gMAc5k88Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgHLTHg (ORCPT
+        id S1726642AbgHLTPg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgHLTHg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:07:36 -0400
-Received: from onda.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A4E420838;
-        Wed, 12 Aug 2020 19:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597259256;
-        bh=+2MX8lMPobxkg5Sd92d2N9QmRdXu/gmf1DtCDwVeNMc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GGJWOUBHdHx6FYBQZUIF1C/maagqop8zENLGUFECJirYqYO7THLnB5L8mL2qZhWMH
-         /bk+NJSZeSNSAPBTE/soRkC21ws7Km2DH7YNNb0hBmuuD7LpbJ1Gy8CEzb2UTuWY9G
-         9gf8QWZCIv2NIBjtiDYQwSjQsac7gBG5saW6K1Ek=
-Date:   Wed, 12 Aug 2020 16:07:30 -0300
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
-        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
-Message-ID: <20200812160730.292ae1d4@onda.lan>
-In-Reply-To: <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
-        <20200812154752.3223b9d8@onda.lan>
-        <81cfca4309624b4f33cace78297872a526aa4763.camel@perches.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Aug 2020 15:15:36 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42665 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgHLTPe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:15:34 -0400
+Received: by mail-il1-f196.google.com with SMTP id t13so2983766ile.9;
+        Wed, 12 Aug 2020 12:15:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=afi3llV2EPe4Y8Y32WwKuYJ0I6s5AGYAmnoxQ7HHMxY=;
+        b=rSanSJAWvEvyZi7aLFZlvnb7e5opPwoUl8PEbA5Geck3/R9uG0Qy33b51SfbRx0LEt
+         2ZAZ6rDFvL2pQyQU/dl8rXTYiNpplgUllKjOrEHsj7gpbCIw5e9vUSvzjoACe9nQlaHn
+         Dzu4o+tXoBIJ3K+RWVwAIh62zMg4fWTHLwPis9/WWSfmRvdN4FDVm6Z7XOtUDIcN1orX
+         7H8oTT/5FLRnAn9Y+JXqrG8+0nCPq5tTNhvxLsXrL7EmucbZFWTchtYzEBVk/wSBYTNG
+         9RjBVusn6AtRh0i6EMG3OggfecD3+1s4kOML8kb69d0MxcnfRfJ8pqenKqz8yE3gb4ht
+         ZeSA==
+X-Gm-Message-State: AOAM530bQDQxndQUCHkLS2JExEqA5OXqVtgf164cyQ7ONsAUUJByhBRO
+        XTl/z+QKztXFzacp78mw/A==
+X-Google-Smtp-Source: ABdhPJzBRv/bNqO291He4v741bwaIa0Q5f8vFZ18ShTcjF8vo3A7x5RkYAOjbNJrOPgjGHrrPNhgUQ==
+X-Received: by 2002:a92:980f:: with SMTP id l15mr1102831ili.51.1597259734263;
+        Wed, 12 Aug 2020 12:15:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id y7sm1514370ili.74.2020.08.12.12.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 12:15:33 -0700 (PDT)
+Received: (nullmailer pid 2548978 invoked by uid 1000);
+        Wed, 12 Aug 2020 19:15:32 -0000
+Date:   Wed, 12 Aug 2020 13:15:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        linux-renesas-soc@vger.kernel.org, dave.stevenson@raspberrypi.com,
+        laurent.pinchart@ideasonboard.com,
+        Jacopo Mondi <jacopo@jmondi.org>, robh+dt@kernel.org,
+        roman.kovalivskyi@globallogic.com, hverkuil-cisco@xs4all.nl
+Subject: Re: [PATCH v4 2/4] dt-bindings: media: ov5647: Document pwdn-gpios
+Message-ID: <20200812191532.GA2548922@bogus>
+References: <20200810215543.113206-1-jacopo+renesas@jmondi.org>
+ <20200810215543.113206-3-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810215543.113206-3-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Wed, 12 Aug 2020 11:58:55 -0700
-Joe Perches <joe@perches.com> escreveu:
+On Mon, 10 Aug 2020 23:55:41 +0200, Jacopo Mondi wrote:
+> From: Jacopo Mondi <jacopo@jmondi.org>
+> 
+> Document in dt-schema bindings for the ov5647 sensor the optional
+> 'pwdn-gpios' property.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov5647.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-> On Wed, 2020-08-12 at 15:47 -0300, Mauro Carvalho Chehab wrote:
-> > Em Wed, 12 Aug 2020 10:13:51 -0700
-> > Joe Perches <joe@perches.com> escreveu:
-> >   
-> > > Perhaps these trivial bits on top:  
-> > 
-> > Sounds fine for me. Feel free to send it with your SOB, adding my reviewed by:
-> > 
-> > Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> 
-> I don't know that your original
-> series is going to be applied as-is
-> so I think you should carry it.
-
-
-Ok. I'll then add the hunks you wrote to the affected changesets.
-> 
-> cheers, Joe
-> 
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
