@@ -3,263 +3,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5713C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAEDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9412320838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597228715;
-	bh=g6m2gf+6OBWGn05WPGw6L9qsMIa6by+okI+mSWeQnNo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=V3zbRofNCbXv79HarBqgH8NfAqdrPawJNkmhSeppE2bH0/xZiQuKfiBk0WCNk8Z11
-	 BohiAskp60B67S1+P8uZrpdivCU9OHpZt/Q7X/eOygyyAny5wFk6vNMLmgOD2d2u7V
-	 BYZDtikBub9klPz/03gwV1KFxvhituhB5A5FyL+0=
+	by mail.kernel.org (Postfix) with ESMTP id 07B6B20781
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:48:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FLCDAVbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgHLKic (ORCPT
+        id S1726722AbgHLKsV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgHLKi2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:38:28 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7713720838;
-        Wed, 12 Aug 2020 10:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597228706;
-        bh=g6m2gf+6OBWGn05WPGw6L9qsMIa6by+okI+mSWeQnNo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OZKhUZ1nNA7h16NoZvqKrSSMLoAEgHrDumMmmOAoE8cskcUXIGxGGF8/8f7q5bgBZ
-         xRuVMbeZ5p4FU0cj0sH3T1QqA1qHLpxuCTU6sIDSQo1G9UdFf7wSKUmW8q/QsXDoYn
-         dRvExUU7pzCJqAAIiy7ah4Bca9bihRA4tprKTgu0=
-Date:   Wed, 12 Aug 2020 12:38:20 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, Mark Brown <broonie@kernel.org>,
-        Mayulong <mayulong1@huawei.com>, <linuxarm@huawei.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/33] Add driver for HiSilicon SPMI PMIC for Hikey 970
-Message-ID: <20200812123820.61fcdcc0@coco.lan>
-In-Reply-To: <20200812094353.00006311@huawei.com>
-References: <cover.1597160086.git.mchehab+huawei@kernel.org>
-        <20200811175429.748a69b6@coco.lan>
-        <20200811185111.00000648@Huawei.com>
-        <20200812094540.3ab13185@coco.lan>
-        <20200812094353.00006311@huawei.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 12 Aug 2020 06:48:21 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38822 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHLKsV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 06:48:21 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CAllRr030912;
+        Wed, 12 Aug 2020 05:47:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597229267;
+        bh=evki6dI5ts5KOmGlF8qCX59wMWhwGQMc/ZNVJhMADKg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FLCDAVbve+oTVJhXUk7KB9Nf1N8Y5hv2YdvDJfrw1FlDnAjzXHCfuyeJByBhGI5VC
+         IRk6YOcrYOzn50dLMDMAAUNtsDpxbJe1ntKJBfo4mxBorMFfFWdsFwycdn86j+IJ8L
+         ZGVk/Vu1l5zcx7oB8QZkFkIBnkfHCFzIrC1ZStKw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CAll8W063305
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 05:47:47 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
+ Aug 2020 05:47:47 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 12 Aug 2020 05:47:47 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CAlhX8025723;
+        Wed, 12 Aug 2020 05:47:43 -0500
+Subject: Re: [PATCH v8 0/3] drm: Add support for Cadence MHDP DPI/DP bridge
+ and J721E wrapper.
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Swapnil Jakhade <sjakhade@cadence.com>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Laurent.pinchart@ideasonboard.com>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <yamonkar@cadence.com>, <praneeth@ti.com>, <nsekhar@ti.com>,
+        <jsarha@ti.com>, <sandor.yu@nxp.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <20200812083937.GA8816@bogon.m.sigxcpu.org>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
+Date:   Wed, 12 Aug 2020 13:47:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200812083937.GA8816@bogon.m.sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Wed, 12 Aug 2020 09:43:53 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> escreveu:
+Hi Guido,
 
-> On Wed, 12 Aug 2020 09:45:40 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > > 
-> > > This is mixing and matching managed an unmanaged. Should be one or the other
-> > > or we might be hiding some race conditions.    
+On 12/08/2020 11:39, Guido Günther wrote:
+> Hi,
+> On Thu, Aug 06, 2020 at 01:34:29PM +0200, Swapnil Jakhade wrote:
+>> This patch series adds new DRM bridge driver for Cadence MHDP DPI/DP
+>> bridge. The Cadence Display Port IP is also referred as MHDP (Mobile High
+>> Definition Link, High-Definition Multimedia Interface, Display Port).
+>> Cadence Display Port complies with VESA DisplayPort (DP) and embedded
+>> Display Port (eDP) standards.
 > 
-> I intended this as a more localized comment, though the following answers
-> another question I had.
+> Is there any relation to the cadence mhdp ip core used inthe imx8mq:
 > 
-> request_threaded_irq is not using devm_ whilst the add devices is.
-> As a result we might have a path in which the irq goes away before
-> the device cleanup happens.   
-
-Ah, good point! I'll address it.
-
-> > Actually, it is just the opposite. It took me a lot of time to
-> > figure out a good solution that will prevent all race conditions at
-> > probe time.
-> > 
-> > See, the SPMI variant of HiSilicon 6421 requires the drivers to be
-> > probed on a very specific order:
-> > 
-> > - The SPMI controller should be loaded first, as it provides 
-> >   the low-level I/O access to the serial bus used to talk with the
-> >   PMICs. This bus is somewhat similar to the I2C bus.
-> > 
-> >   Once the controller is registered, the SPMI bus probes the PMIC
-> >   driver.
-> > 
-> > - Then, the MFD PMIC driver should be loaded. This adds support for
-> >   a high level set of I/O operations, which are used by the regulator
-> >   driver. Again, this approach is similar to the one taken by the
-> >   I2C Kernel drivers.
-> > 
-> > - Finally, the regulator drivers should come, as they rely on the
-> >   MFD I/O operations in order to talk with the SPMI bus.
-> > 
-> > The OOT driver probing was based on a some dirty hacks: it had an
-> > empty SPMI entry at the SoC, carrying on just the "compatible" line.
-> > 
-> > Then, another entry at DT with the real SPMI settings.
-> > 
-> > With such dirty hack, on Kernel 4.9, the PMIC driver were always 
-> > loading before the regulator ones, as the SPMI bus code were 
-> > serializing the probe there.
-> > 
-> > However, such settings were too fragile and broke after porting to
-> > upstream Kernels, because the regulator drivers were probed on
-> > a random order, typically before the MFD one (and sometimes even 
-> > before the SPMI controller driver). Adding EPROBE_DEFER didn't
-> > solve all the issues, and made a complex and hard to debug scenario.
-> > Also, regulators were probed on a random order, making harder to
-> > debug issues there.  
+>     https://lore.kernel.org/dri-devel/cover.1590982881.git.Sandor.yu@nxp.com/
 > 
-> There are no ordering guarantees IIRC in mfd children coming up even
-> in the normal path.  It might currently happen in a particular order
-> but relying on that seems fragile to me.
+> It looks very similar in several places so should that use the same driver?
+> Cheers,
+>  -- Guido
 
-True, but in the case of SPMI controller and PMIC, there's no way
-to support them to be initialized on a random order.
+Interesting.
 
-That's why the approach I took is serializing the probe.
+So the original Cadence DP patches for TI SoCs did create a common driver with Rockchip's older mhdp
+driver. And looks like the IMX series points to an early version of that patch ("drm/rockchip:
+prepare common code for cdns and rk dpi/dp driver").
 
-> > 
-> > So, I ended using the same solution used by the already-existing
-> > drivers/mfd/hi6421-pmic-core.c driver[1].
-> > 
-> > [1] This variant of the 6421 chipset is a lot simpler, as it
-> >     doesn't use the SPMI bus.
-> > 
-> > With such approach, the probing is warranted to happen the
-> > way it is expected by the driver:
-> > 
-> > SPMI controller code starts:
-> > 	[    0.416862] spmi_controller fff24000.spmi: HISI SPMI probe
-> > 	[    0.422419] spmi spmi-0: allocated controller 0x(____ptrval____) id 0
-> > 	[    0.428929] spmi_controller fff24000.spmi: spmi_add_controller base addr=0xffff800012055000!
-> > 	[    0.437480] spmi spmi-0: adding child /spmi@fff24000/pmic@0
-> > 	[    0.443109] spmi spmi-0: read usid 00
-> > 	[    0.446821] spmi 2-00: device 2-00 registered
-> > 	[    0.451220] spmi spmi-0: spmi-2 registered: dev:(____ptrval____)
-> > 	[    0.457286] spmi_controller fff24000.spmi: spmi_add_controller initialized
-> > 
-> > The PMIC probe happens sometime after spmi_controller registers itself
-> > at the SPMI bus:
-> > 
-> > 	[    1.955838] [hi6421_spmi_pmic_probe]. pmic->irqs[0] = 43
-> > ...
-> > 	[    2.036298] [hi6421_spmi_pmic_probe]. pmic->irqs[15] = 58
-> > 
-> > After being ready to handle I/O requests, it starts probing the
-> > regulators:
-> > 
-> > 	[    2.057815] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo3@16
-> > 	[    2.199827] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo4@17
-> > 	[    2.336284] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo9@1C
-> > 	[    2.472675] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo15@21
-> > 	[    2.609402] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo16@22
-> > 	[    2.746378] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo17@23
-> > 	[    2.846707] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo33@32
-> > 	[    2.988646] hi6421v600-regulator hi6421v600-regulator: adding child /spmi@fff24000/pmic@0/regulators/ldo34@33
-> > 
-> > As the current code serializes the regulator probing, it ensured that
-> > they'll happen at the right order, avoiding race conditions at
-> > probe time.  
-> 
-> Why do we need the regulators to come up in a particular order?
-> That sounds suspicious as any relationships between different ones should be expressed
-> either in DT or in the order they are enabled in the drivers using them.
+We gave up on that as the IPs did have differences and the firmwares used were apparently quite
+different. The end result was very difficult to maintain, especially as (afaik) none of the people
+involved had relevant Rockchip HW.
 
-There's no need for them to come up on a particular order.
+The idea was to get a stable DP driver for TI SoCs ready and upstream, and then carefully try to
+create common parts with Rockchip's driver in small pieces.
 
-What I meant to say is that the that the SPMI controller and MFD
-should go first.
+If the Rockchip and IMX mhdp have the same IP and same firmware, then they obviously should share
+code as done in the series you point to.
 
-- 
+Perhaps Cadence can clarify the differences between IMX, TI and Rockchip IPs and FWs?
 
-Yet, incidentally, the current code also serializes the regulator
-probe. I could have written the code on a different way that
-would allow them to be probed in parallel, by moving a loop
-from the regulator driver to the PMIC one. However, I don't see any 
-advantage on doing that, as the regulator initialization code ends 
-calling the SPMI serial bus, whose access is already serialized by 
-a spinlock.
+I'm worried that if there are IP differences, even if not great ones, and if the FWs are different
+and developed separately, it'll be a constant "fix X for SoC A, and accidentally break Y for SoC B
+and C", especially if too much code is shared.
 
-So, there's no performance gain by allowing them to be probed
-in parallel, as most of the regulator's probing time is probably
-waiting for the relatively slow I/O serial transfers to happen. 
+In the long run I'm all for a single driver (or large shared parts), but I'm not sure if we should
+start with that approach.
 
-Also, a nice a side effect of serializing the probe at the 
-regulator driver is that the devices are ordered according
-their LDO numbers, and the debug logs from probing time will
-be altogether, helping to debug potential issues over there.
+ Tomi
 
-> > > > +static int hi6421_spmi_regulator_set_voltage_sel(struct regulator_dev *rdev,
-> > > > +						 unsigned int selector)
-> > > > +{
-> > > > +	struct hi6421v600_regulator *sreg = rdev_get_drvdata(rdev);
-> > > > +	struct hi6421_spmi_pmic *pmic = sreg->pmic;
-> > > > +	u32 reg_val;
-> > > > +
-> > > > +	/* unlikely to happen. sanity test done by regulator core */      
-> > > 
-> > > Unlikely or can't?
-> > >     
-> > > > +	if (unlikely(selector >= rdev->desc->n_voltages))
-> > > > +		return -EINVAL;    
-> > 
-> > Good question. I almost removed this check, but I didn't check the
-> > regulator code with enough care to be 100% sure. So, I opted to keep it
-> > here.  
-> 
-> I'd drop the comment then :)  If someone else wants to figure it out
-> in future then they are welcome to.
-
-Ok.
-
-> > > > +	if (load_uA || ((unsigned int)load_uA > sreg->eco_uA)) {
-> > > > +		rdev_dbg(rdev, "normal mode");      
-> > > 
-> > > Debug seems unnecessary to me, but maybe keep it if you want.    
-> > 
-> > I actually used this debug. There are some LDO lines which don't
-> > support eco mode. The original driver was hard to understand that.
-> > So, I ended by re-writing the part of the code which sets/uses it[1]:
-> > 
-> > +	/* hisi regulator supports two modes */
-> > +	constraint = &initdata->constraints;
-> > +
-> > +	constraint->valid_modes_mask = REGULATOR_MODE_NORMAL;
-> > +	if (sreg->eco_mode_mask) {
-> > +		constraint->valid_modes_mask |= REGULATOR_MODE_IDLE;
-> > +		constraint->valid_ops_mask |= REGULATOR_CHANGE_MODE;
-> > +	}
-> > +
-> > 
-> > [1] https://lore.kernel.org/lkml/176043f329dfa9889f014feec04e7e1553077873.1597160086.git.mchehab+huawei@kernel.org/T/#m337e09adf04e4b8ce56af93ba37e3720b2a3002b
-> > 
-> > Those debug messages are useful to double-check if something bad is
-> > not happening with the modes/ops masks.  
-> 
-> That's fine, but is it useful to have it upstream now you have debugged
-> those issues?  I'm not completely convinced it is and debug prints have
-> a habit of rotting just like comments.
-
-Good point. I'll do a review at the printks inside the driver anyway.
-
-I'll try to cleanup some things that doesn't make much sense
-after having the driver working properly.
-
-
-Thanks,
-Mauro
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
