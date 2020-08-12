@@ -2,135 +2,138 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71029C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 05:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA32C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5232C20771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 05:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6255C20768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:31:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8Ljwbab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgHLFbh (ORCPT
+        id S1726799AbgHLGbf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 01:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48504 "EHLO
+        Wed, 12 Aug 2020 02:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgHLFbh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 01:31:37 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C324AC06174A;
-        Tue, 11 Aug 2020 22:31:36 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 5B25D28DF93
-Subject: Re: [PATCH 06/13] ARM: dts: omap4-panda-common: Add CMA pools and
- enable IPU & DSP
-To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernelci-results@groups.io
-References: <20200709231954.1973-1-s-anna@ti.com>
- <20200709231954.1973-7-s-anna@ti.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <3e44fc46-07ac-6103-5c4d-8c7389453b87@collabora.com>
-Date:   Wed, 12 Aug 2020 06:31:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        with ESMTP id S1726572AbgHLGbf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 02:31:35 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2556BC06174A;
+        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id y3so938329wrl.4;
+        Tue, 11 Aug 2020 23:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s+W2KNSfxt+TusGOoBlggzdrLIrra6LZ2EEZWr0qxxg=;
+        b=h8Ljwbab37d7TOBhq1tXfSegVssJHdWNOoI+wFqC4x5QurtELxYWxhPF2zqNq1mXVU
+         fJ9zbcTXGRB6SRZIpPWpNuwCE0wKl23/9JZh1JjVi//JHvUbCylMgww7xotqLJvf4+oC
+         bmK7ZXkxyVvhNg9PC4XPs+u1aVnGMQE1RHEUe/Go6yppEH393EbF9SZuXVps5n051g3i
+         j4jTBA5u89+fdow2n0Qlfv9L1dWFWgbXADLatGvDg0pxm80+ziooBJveZChdQSRXfn/T
+         vBNCyV5Dbiw77RB8wQ5tSq0SvxxTcoIaBw49XCheCok9S2T8LlZnd04pOIRWfyMOU2Ni
+         0HtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s+W2KNSfxt+TusGOoBlggzdrLIrra6LZ2EEZWr0qxxg=;
+        b=hNgNSPgavnw+WYkfnwJxoJ/i368ZdcdNatIPw0FChl58N0WjymYXrjyiA3LYpGbZFH
+         PvQPkFKdzV1xvFEfe4xO7kJoGZ7x44GGC2Q92hy9cVobtoXWYf2fwf6K8evFsWKngadS
+         O0Jf276esV31hzQEiQRuC710Z05MXD+RO1PN2Nc98zHYrkwbrQ3vzkQI2PyFIozwZb09
+         z1fqkylM2p7nECuMrgCt3y38cpNqSeZ2UW5z87V4oyVk8F3v4G6xSwSJvSv+QS/JKEIq
+         WBDON3ovDjQ5QWprVolZDtgC/0NPGpe+G6PYuHPW7PCQG0l+d6irdwOKzW7R3kR5hfFj
+         SMMA==
+X-Gm-Message-State: AOAM533aJ9L2fNcXQb45owCRjOfDMydlhZ9ASG3E+A68JLhpERkOKETB
+        7ysuTMfEmY6DuxWvNL52YhKSMbB+
+X-Google-Smtp-Source: ABdhPJzNHsi5MhhPLOLNTQvdztPaMWIkUFu8BCtXisQJFx8zkIGGBTVR5eZ5XcuYRe+eHs7QdYyhmQ==
+X-Received: by 2002:adf:ba52:: with SMTP id t18mr31838238wrg.26.1597213892758;
+        Tue, 11 Aug 2020 23:31:32 -0700 (PDT)
+Received: from skynet.lan (88.red-83-49-60.dynamicip.rima-tde.net. [83.49.60.88])
+        by smtp.gmail.com with ESMTPSA id m16sm2149945wrr.71.2020.08.11.23.31.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2020 23:31:31 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     f.fainelli@gmail.com, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH 00/14] mips: bmips: include dt-bindings headers
+Date:   Wed, 12 Aug 2020 08:31:15 +0200
+Message-Id: <20200812063129.361862-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200709231954.1973-7-s-anna@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/07/2020 00:19, Suman Anna wrote:
-> The CMA reserved memory nodes have been added for the IPU and DSP
-> remoteproc devices on all the OMAP4-based Panda boards. These nodes
-> are assigned to the respective rproc device nodes, and both the
-> IPU and DSP remote processors are enabled for all these boards.
-> 
-> The current CMA pools and sizes are defined statically for each device.
-> The starting addresses are fixed to meet current dependencies on the
-> remote processor firmwares, and will go away when the remote-side
-> code has been improved to gather this information runtime during
-> its initialization.
-> 
-> An associated pair of the rproc node and its CMA node can be disabled
-> later on if there is no use-case defined to use that remote processor.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->  arch/arm/boot/dts/omap4-panda-common.dtsi | 30 +++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> index 55ea8b6189af..ef79028fc95f 100644
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> @@ -12,6 +12,26 @@ memory@80000000 {
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		dsp_memory_region: dsp-memory@98000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x98000000 0x800000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-> +
-> +		ipu_memory_region: ipu-memory@98800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x98800000 0x7000000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-> +	};
-> +
->  	chosen {
->  		stdout-path = &uart3;
->  	};
-> @@ -571,3 +591,13 @@ hdmi_out: endpoint {
->  		};
->  	};
->  };
-> +
-> +&dsp {
-> +	status = "okay";
-> +	memory-region = <&dsp_memory_region>;
-> +};
-> +
-> +&ipu {
-> +	status = "okay";
-> +	memory-region = <&ipu_memory_region>;
-> +};
-> 
+Allow including dt-bindings header files and use them for bcm63xx.
 
-This appears to be causing some BUG alert messages:
+Álvaro Fernández Rojas (14):
+  mips: dts: brcm: allow including header files
+  mips: bmips: add BCM3368 irq definitions
+  mips: bmips: add BCM6318 irq definitions
+  mips: bmips: add BCM6328 irq definitions
+  mips: bmips: add BCM6358 irq definitions
+  mips: bmips: add BCM6362 irq definitions
+  mips: bmips: add BCM6368 irq definitions
+  mips: bmips: add BCM63268 irq definitions
+  mips: bmips: bcm3368: include and use dt-bindings
+  mips: bmips: bcm6328: include and use dt-bindings
+  mips: bmips: bcm6358: include and use dt-bindings
+  mips: bmips: bcm6362: include and use dt-bindings
+  mips: bmips: bcm6368: include and use dt-bindings
+  mips: bmips: bcm63268: include and use dt-bindings
 
-  BUG: Bad page state in process swapper/0  pfn:9c801
+ .../boot/dts/brcm/bcm3368-netgear-cvg834g.dts |  2 +-
+ arch/mips/boot/dts/brcm/bcm3368.dtsi          |  8 +-
+ .../dts/brcm/bcm63268-comtrend-vr-3032u.dts   |  2 +-
+ arch/mips/boot/dts/brcm/bcm63268.dtsi         | 12 ++-
+ arch/mips/boot/dts/brcm/bcm6328.dtsi          | 12 ++-
+ .../dts/brcm/bcm6358-neufbox4-sercomm.dts     |  2 +-
+ arch/mips/boot/dts/brcm/bcm6358.dtsi          | 12 ++-
+ .../dts/brcm/bcm6362-neufbox6-sercomm.dts     |  2 +-
+ arch/mips/boot/dts/brcm/bcm6362.dtsi          | 12 ++-
+ arch/mips/boot/dts/brcm/bcm6368.dtsi          | 12 ++-
+ arch/mips/boot/dts/brcm/bcm93384wvg.dts       |  2 +-
+ arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts |  2 +-
+ arch/mips/boot/dts/brcm/bcm96368mvwg.dts      |  2 +-
+ arch/mips/boot/dts/brcm/bcm97125cbmb.dts      |  2 +-
+ arch/mips/boot/dts/brcm/bcm97346dbsmb.dts     |  4 +-
+ arch/mips/boot/dts/brcm/bcm97358svmb.dts      |  4 +-
+ arch/mips/boot/dts/brcm/bcm97360svmb.dts      |  2 +-
+ arch/mips/boot/dts/brcm/bcm97362svmb.dts      |  4 +-
+ arch/mips/boot/dts/brcm/bcm97420c.dts         |  2 +-
+ arch/mips/boot/dts/brcm/bcm97425svmb.dts      |  4 +-
+ arch/mips/boot/dts/brcm/bcm97435svmb.dts      |  4 +-
+ arch/mips/boot/dts/brcm/bcm9ejtagprb.dts      |  2 +-
+ .../bcm3368-interrupt-controller.h            | 19 ++++
+ .../bcm6318-interrupt-controller.h            | 84 ++++++++++++++++++
+ .../bcm63268-interrupt-controller.h           | 86 +++++++++++++++++++
+ .../bcm6328-interrupt-controller.h            | 68 +++++++++++++++
+ .../bcm6358-interrupt-controller.h            | 38 ++++++++
+ .../bcm6362-interrupt-controller.h            | 71 +++++++++++++++
+ .../bcm6368-interrupt-controller.h            | 71 +++++++++++++++
+ 29 files changed, 504 insertions(+), 43 deletions(-)
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm3368-interrupt-controller.h
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm6318-interrupt-controller.h
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm63268-interrupt-controller.h
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm6328-interrupt-controller.h
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm6358-interrupt-controller.h
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm6362-interrupt-controller.h
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm6368-interrupt-controller.h
 
-as reported on kernelci.org:
-
-  https://kernelci.org/test/case/id/5f326c6661360154c452c1c9/
-
-I've run a bisection and it landed on this commit.  If you fix it
-with another patch, please add:
-
-  Reported-by: "kernelci.org bot" <bot@kernelci.org>
-
-Hope this helps!
-
-Thanks,
-Guillaume
+-- 
+2.28.0
 
