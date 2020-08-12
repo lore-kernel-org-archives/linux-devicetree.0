@@ -2,224 +2,88 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45643C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5EFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D09220658
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA5A20774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LZHGIZxf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dzcq8VsG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHLTaf (ORCPT
+        id S1726554AbgHLTdC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:30:35 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:56001 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726512AbgHLTae (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 15:30:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597260633; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=4+/wN/ZFlubPC8f06kWYCcnSStIOeSWNXCfdlUIBb6Q=;
- b=LZHGIZxf81YIKeSqCLpIsfmg9MYJEeGKRdDGlqqHLcdctl1hUWk0xXIyE+mJXSE9rCJFjp4E
- RS5DgyQBtt4k9F6FRCxAS851KGcSM4WFd14rqr6HDIDitZ4uLcDvRUFtpwwZ8P7wS1eao7v6
- CYu6zwiT/Qf1VCWr2Tm954v+eF8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f3443514c787f237bb0c856 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 19:30:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C1637C433C6; Wed, 12 Aug 2020 19:30:24 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC4C6C433C9;
-        Wed, 12 Aug 2020 19:30:23 +0000 (UTC)
+        Wed, 12 Aug 2020 15:33:02 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42704 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgHLTdC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:33:02 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CJWted106805;
+        Wed, 12 Aug 2020 14:32:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597260775;
+        bh=1EW1OwfLbnIn6nn3Pcy0uYF/8AosEYu2FExcNrqoGvo=;
+        h=From:To:CC:Subject:Date;
+        b=Dzcq8VsGzzadMpEJ0qY/ryBydU1TzxOXmjA9xwrva09hV+cg+m3TZ3wk+cIzRmOTY
+         P9ifs19pOmwVRnUzIjwvhibcy160ZHSpE/cU6Z5NaXdNUtDK5Ny0IxLLaLtM6b+ChS
+         PK8hZyPrVqc5Tr5qD6LaTV3WCZdJ93LplJTuYD5w=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CJWtw6024876
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 14:32:55 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
+ Aug 2020 14:32:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 12 Aug 2020 14:32:55 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CJWsvi013991;
+        Wed, 12 Aug 2020 14:32:54 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <pavel@ucw.cz>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] dt: bindings: lp55xx: Updte yaml examples with new color ID
+Date:   Wed, 12 Aug 2020 14:32:48 -0500
+Message-ID: <20200812193248.11325-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 12 Aug 2020 12:30:23 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, robdclark@gmail.com,
-        airlied@linux.ie, linux-kernel@vger.kernel.org,
-        abhinavk@codeaurora.org, khsieh@codeaurora.org,
-        seanpaul@chromium.org, aravindh@codeaurora.org,
-        freedreno@lists.freedesktop.org,
-        dri-devel <dri-devel-bounces@lists.freedesktop.org>
-Subject: Re: [PATCH v5] arm64: dts: qcom: sc7180: Add Display Port dt node
-In-Reply-To: <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
-References: <20200811021553.25023-1-tanmay@codeaurora.org>
- <159717422853.1360974.2200109790995932014@swboyd.mtv.corp.google.com>
-Message-ID: <70d8a4f073abf7a038c9830ec6586709@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-11 12:30, Stephen Boyd wrote:
-> Quoting Tanmay Shah (2020-08-10 19:15:53)
->> @@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
->> 
->>                                 status = "disabled";
->>                         };
->> +
->> +                       msm_dp: displayport-controller@ae90000 {
->> +                               status = "disabled";
->> +                               compatible = "qcom,sc7180-dp";
->> +
->> +                               reg = <0 0x0ae90000 0 0x1400>;
->> +
->> +                               interrupt-parent = <&mdss>;
->> +                               interrupts = <12 IRQ_TYPE_NONE>;
-> 
-> Please drop the flags. It's not required per the binding. It should 
-> just
-> be a single number, i.e. <12>.
-> 
+Update the binding examples for the color ID to LED_COLOR_ID_RGB
 
-Sure. I will change DP-bindings accordingly as well.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/leds/leds-lp55xx.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> +
->> +                               clocks = <&dispcc 
->> DISP_CC_MDSS_AHB_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_AUX_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_LINK_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_LINK_INTF_CLK>,
->> +                                        <&dispcc
-> DISP_CC_MDSS_DP_PIXEL_CLK>;
->> +                               clock-names = "core_iface", 
->> "core_aux",
-> "ctrl_link",
->> +                                             "ctrl_link_iface",
-> "stream_pixel";
->> +                               #clock-cells = <1>;
->> +                               assigned-clocks = <&dispcc
-> DISP_CC_MDSS_DP_LINK_CLK_SRC>,
->> +                                                 <&dispcc
-> DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
->> +                               assigned-clock-parents = <&msm_dp 0>,
-> <&msm_dp 1>;
->> +
->> +                               operating-points-v2 = <&dp_opp_table>;
->> +                               power-domains = <&rpmhpd SC7180_CX>;
-> 
-> Can you send another patch to add the hpd pinctrl binding for the hpd
-> function? It would be useful to have that in the SoC level in case any
-> board wants to use the hpd pin on this SoC without having to implement
-> it themselves. It could be assigned here too as the pinctrl but I'm not
-> sure if that is correct. Probably better to just have it in the SoC 
-> file
-> and then let boards pick to use it.
-> 
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+index b1bb3feb0f4d..89f69d62493e 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
++++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+@@ -189,7 +189,7 @@ examples:
+                #address-cells = <1>;
+                #size-cells = <0>;
+                reg = <0x2>;
+-               color = <LED_COLOR_ID_MULTI>;
++               color = <LED_COLOR_ID_RGB>;
+                function = LED_FUNCTION_STANDBY;
+                linux,default-trigger = "heartbeat";
+ 
+-- 
+2.28.0
 
-We have tlmm node in sc7180.dtsi. We can define pinctrl definition for 
-"dp_hot" funtionality there.
-
->> +
->> +                               ports {
->> +                                       #address-cells = <1>;
->> +                                       #size-cells = <0>;
->> +                                       port@0 {
->> +                                               reg = <0>;
->> +                                               dp_in: endpoint {
->> +                                                       
->> remote-endpoint
-> = <&dpu_intf0_out>;
->> +                                               };
->> +                                       };
->> +
->> +                                       port@1 {
->> +                                               reg = <1>;
->> +                                               dp_out: endpoint { };
->> +                                       };
->> +                               };
->> +
->> +                               dp_opp_table: dp-opp-table {
-> 
-> Can this be called opp-table? I don't see the need to make it more
-> specific given that it doesn't share the namespace at this level with
-> anything else that is an opp table.
-> 
-
-DSI and MDP's OPP table names were posted here:
-https://lore.kernel.org/dri-devel/1594292674-15632-4-git-send-email-rnayak@codeaurora.org/
-
-So, It makes sense to keep naming conventions similar to dsi and mdp's 
-opp table.
-
->> +                                       compatible =
-> "operating-points-v2";
->> +
->> +                                       opp-160000000 {
->> +                                               opp-hz = /bits/ 64
-> <160000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_low_svs>;
->> +                                       };
->> +
->> +                                       opp-270000000 {
->> +                                               opp-hz = /bits/ 64
-> <270000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_svs>;
->> +                                       };
->> +
->> +                                       opp-540000000 {
->> +                                               opp-hz = /bits/ 64
-> <540000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_svs_l1>;
->> +                                       };
->> +
->> +                                       opp-810000000 {
->> +                                               opp-hz = /bits/ 64
-> <810000000>;
->> +                                               required-opps =
-> <&rpmhpd_opp_nom>;
->> +                                       };
->> +                               };
->> +                       };
->>                 };
->> 
->>                 dispcc: clock-controller@af00000 {
->> @@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
->>                                  <&gcc GCC_DISP_GPLL0_CLK_SRC>,
->>                                  <&dsi_phy 0>,
->>                                  <&dsi_phy 1>,
->> -                                <0>,
->> -                                <0>;
->> +                                <&msm_dp 0>,
->> +                                <&msm_dp 1>;
-> 
-> This bit will have to change when the DP phy is split off into the qmp
-> driver.
-> 
-
-Yes. It will be <&dp_phy 0> and <&dp_phy 1> assuming dp_phy is DP PHY 
-dts node name.
-
->>                         clock-names = "bi_tcxo",
->>                                       "gcc_disp_gpll0_clk_src",
->>                                       "dsi0_phy_pll_out_byteclk",
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
