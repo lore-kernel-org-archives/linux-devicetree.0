@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6344DC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890EDC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FDC20756
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6468320885
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="SWWPiB4Q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H81HBxxX"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="lIPY4fVS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j6q48Ofk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgHLNZg (ORCPT
+        id S1728061AbgHLNZr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:25:36 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:49379 "EHLO
+        Wed, 12 Aug 2020 09:25:47 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:54297 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727873AbgHLNZd (ORCPT
+        by vger.kernel.org with ESMTP id S1728056AbgHLNZq (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 09:25:33 -0400
+        Wed, 12 Aug 2020 09:25:46 -0400
 Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 49D315803DD;
-        Wed, 12 Aug 2020 09:25:32 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id A6F7E5803D8;
+        Wed, 12 Aug 2020 09:25:44 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 12 Aug 2020 09:25:32 -0400
+  by compute1.internal (MEProxy); Wed, 12 Aug 2020 09:25:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=i8XRP2VVPIQwUPhvLuLe5eBXjcL
-        /b/B3ukCtwKVvXZk=; b=SWWPiB4QgAlnbKDiZPT8AW01PsffGj0mrWQyc97g3/v
-        8EPAPSx3q4uR8pxdunQOQdU3CYfzEhUxi5IhHk/51NWbbiJ01IZM+D1Y9okbKR4l
-        1PA/DephHOSIaKmiDIX1mNczVU915u5qaonwiLa6hKJcIGUSoay3uhJFlrsVIxJ0
-        7bDIfW5zXV/E5r2IjpFq47bwdwj6ZFNEEqd62aGIxTOxMpjNpdWmcS2QsRKUHAAx
-        4dvCTHv7OU9ZD8yLwR/pgNv3x3mMxC6LjFM9z2SmWrAnkZlG4lm8pmvECAj2ezxX
-        Yvocn/52skKMNrlbvLEw/W0WigZZNHGM+fzo6gL6zfw==
+        :content-type:in-reply-to; s=fm1; bh=ogsRn8UJvYnJnHmnmoJD8EeRCxv
+        OuB0FI3xBqc0qcuQ=; b=lIPY4fVS/yyIBCu1HgDe/hcTkqorszv3Knz35oiXGxo
+        25RZMhsPABOSsbX5pqdYE7aD/GPKLPdNTxSqyNvdDo9EEEbwRTDiuckF00b9FEXL
+        PeLn/goTNMAHalcs/sK07UwI2HAcYuOn1xMso0zGO2ln5TLDAonjPwJeEd6ozHs1
+        mdUb3o/rg98N+6CK+/x1+5s5bT81wkZ/tR+oxA7TEezvyHXcUzidJUck18HaX13/
+        h/YcciJ92M359yzD5dqDq2t7+Ymn7fzfyx4yFfTH6HTXecZEtydoiDYROW3TOUaI
+        qFS/vw7gw248kdqHLwq5oqjRd1dI2BcTFMsFDK0LI7Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=i8XRP2
-        VVPIQwUPhvLuLe5eBXjcL/b/B3ukCtwKVvXZk=; b=H81HBxxX4JrQ1zha30YBda
-        yr7S3/jm8F8i9uy8C00665rTJX54SHUOYIgS8RGB4a2RB06bU/IoQOeP7JmGSe+d
-        qXCpfzLe7HemRq/yohmq4iJQp6jivUGOaMmt4LuxgpanlaXXjL16Nv4QJuAzvo+l
-        m1LWrhDUBu1dtyZS26dubDnv6zrkRrRwejUK+FsgoobjYVpZcZkrj9T63yd3fo6s
-        l19ih6HVi9IwN4jRG4/HfexvL1K3lg1saqBGFn+JqYfCz3kkffosOCXqwFZgXCGb
-        pDY7ilHTwGAixd0Dw5LeOAeKncOxiQQOm5qGbgUPZCjr3dJkq14I1GGMdv6sI0cg
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ogsRn8
+        UJvYnJnHmnmoJD8EeRCxvOuB0FI3xBqc0qcuQ=; b=j6q48OfkZkL6IhRSVkrHag
+        3QhD/klT3dNA5dOCQ6K6Dw+8cNat4Zorh/qx+KOQC6dHElclKdVrD+TCLpivJevO
+        Obq6M0lG1E37fC814+uhcOWEQb2UyW4/vzUX4t8qT4CjmYRBJUSplSYookVg/WUD
+        6yiCdPsUORGpkNjZl773Pf1qSGEunmVf9zIt8LzJUUfTHoYztR/wuttth1VvdFix
+        NOFgCfDDfIw4DY9AhTWGDRjlRs7rQhTMZcGkclPmanxYH+BiOg2MicJspeRR26e+
+        R9pmxkLrx8SWNtOcuxs/bgMBPuY/PDsYFgY2KFZROy5ddQaPtNN+K55DhKRsrPyw
         ==
-X-ME-Sender: <xms:zO0zX8_wVHT6keAG2IM9EuvNFhU4C5-AX9rYIl_H8Fv46Xfa_Q45mQ>
+X-ME-Sender: <xms:2O0zX5T5Qj95O1-mTPmVA_mMJte538fKlYq_YAkw-8B3nNGF1rNeBg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledvgdeifecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -57,16 +57,16 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrledvgdeifecutefuodetggdote
     jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueelledthe
     ekleethfeludduvdfhffeuvdffudevgeehkeegieffveehgeeftefgnecuffhomhgrihhn
     pehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
+    gvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
     rdgtohhm
-X-ME-Proxy: <xmx:zO0zX0ueTqGbRvjnBEbuQALeQ5o0wI2a13y2RDS_hugxcXohwqCI8w>
-    <xmx:zO0zXyAgNT_2F1bYAu-jI8QUAQdouYfi0Mic-WLHGhTqOkxbtDsdrA>
-    <xmx:zO0zX8fZ3kavY9GE9pSuhTtb6NLKG9QmvKTAGaypXZRRBEiLw_jQJA>
-    <xmx:zO0zX0r6iSe_5AL_yw0hjMkHh0CPJdYs_vqclR_254UT70VS5pKEaA>
+X-ME-Proxy: <xmx:2O0zXyxYJdCmoSSma5ECQPwlNv1CvWD6_PNcNGK6vxqeJUkh0lcx5g>
+    <xmx:2O0zX-1qDpX9rRtegMpKmfcTRHbdD7_oC2X5UB3wbEXZVpmm6IsxPg>
+    <xmx:2O0zXxDhk8h2P_vhj0t36IKfEcnaHsbKL-pZhpw7yxGBmY1sosxbnQ>
+    <xmx:2O0zX9Nloy36PNgGgACebPlvIfM1zIlboHBNMPEWroLg42gjgO89EA>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B536B328005D;
-        Wed, 12 Aug 2020 09:25:31 -0400 (EDT)
-Date:   Wed, 12 Aug 2020 15:25:42 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0A9F0328005D;
+        Wed, 12 Aug 2020 09:25:44 -0400 (EDT)
+Date:   Wed, 12 Aug 2020 15:25:55 +0200
 From:   Greg KH <greg@kroah.com>
 To:     Wenbin Mei <wenbin.mei@mediatek.com>
 Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
@@ -78,42 +78,82 @@ Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         stable@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [v2,2/3] arm64: dts: mt7622: add reset node for mmc device
-Message-ID: <20200812132542.GB2489711@kroah.com>
+Subject: Re: [v2,3/3] mmc: mediatek: add optional module reset property
+Message-ID: <20200812132555.GD2489711@kroah.com>
 References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
- <20200812130129.13519-3-wenbin.mei@mediatek.com>
+ <20200812130129.13519-4-wenbin.mei@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812130129.13519-3-wenbin.mei@mediatek.com>
+In-Reply-To: <20200812130129.13519-4-wenbin.mei@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 09:01:28PM +0800, Wenbin Mei wrote:
-> This commit adds reset node for mmc device.
+On Wed, Aug 12, 2020 at 09:01:29PM +0800, Wenbin Mei wrote:
+> This patch fixs eMMC-Access on mt7622/Bpi-64.
+> Before we got these Errors on mounting eMMC ion R64:
+> [   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
+> flags 0x800 phys_seg 1 prio class 0
+> [   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
+> 
+> This patch adds a optional reset management for msdc.
+> Sometimes the bootloader does not bring msdc register
+> to default state, so need reset the msdc controller.
 > 
 > Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
 > Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
 > Tested-by: Frank Wunderlich <frank-w@public-files.de>
 > ---
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/mmc/host/mtk-sd.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index 1a39e0ef776b..5b9ec032ce8d 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -686,6 +686,8 @@
->  		clocks = <&pericfg CLK_PERI_MSDC30_0_PD>,
->  			 <&topckgen CLK_TOP_MSDC50_0_SEL>;
->  		clock-names = "source", "hclk";
-> +		resets = <&pericfg MT7622_PERI_MSDC0_SW_RST>;
-> +		reset-names = "hrst";
->  		status = "disabled";
->  	};
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 39e7fc54c438..2b243c03c9b2 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/reset.h>
 >  
+>  #include <linux/mmc/card.h>
+>  #include <linux/mmc/core.h>
+> @@ -434,6 +435,7 @@ struct msdc_host {
+>  	struct msdc_save_para save_para; /* used when gate HCLK */
+>  	struct msdc_tune_para def_tune_para; /* default tune setting */
+>  	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
+> +	struct reset_control *reset;
+>  };
+>  
+>  static const struct mtk_mmc_compatible mt8135_compat = {
+> @@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_host *host)
+>  	u32 val;
+>  	u32 tune_reg = host->dev_comp->pad_tune_reg;
+>  
+> +	if (!IS_ERR(host->reset)) {
+> +		reset_control_assert(host->reset);
+> +		usleep_range(10, 50);
+> +		reset_control_deassert(host->reset);
+> +	}
+> +
+>  	/* Configure to MMC/SD mode, clock free running */
+>  	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
+>  
+> @@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>  	if (IS_ERR(host->src_clk_cg))
+>  		host->src_clk_cg = NULL;
+>  
+> +	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
+> +								"hrst");
+> +	if (PTR_ERR(host->reset) == -EPROBE_DEFER)
+> +		return PTR_ERR(host->reset);
+> +
+>  	host->irq = platform_get_irq(pdev, 0);
+>  	if (host->irq < 0) {
+>  		ret = -EINVAL;
 > -- 
 > 2.18.0
 
