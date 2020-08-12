@@ -2,152 +2,93 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4D3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 09:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3D8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 09:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4677320781
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 09:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC8120774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 09:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XdScEtS9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q57wbOro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgHLJHW (ORCPT
+        id S1726618AbgHLJJ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 05:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53446 "EHLO
+        Wed, 12 Aug 2020 05:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbgHLJHW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 05:07:22 -0400
+        with ESMTP id S1726255AbgHLJJ6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 05:09:58 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAAEC061788
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 02:07:21 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i10so1415353ljn.2
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 02:07:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119B6C06174A
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 02:09:58 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t23so1417080ljc.3
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 02:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t7cpfjcHtDHnwaPBBHF6z2YVNppEhyu7a7r8Eo2vTf8=;
-        b=XdScEtS9GfoaxLnDQMiuBSmxXLy2IuRtYlnwb+sCkNgVqyATKyej4FweOmqFRX9UiZ
-         tW3PZb8EVnA25e7lpon/YDc9+j8mn/iIYnnYzYnaMXU+rVebnu14Y7ngP0+Oo/yZRWdI
-         oIzmimPplM4cKANibNhXGBZAcfxUD+x3lEc1/rlmspth1alhZgJN6Uv3E8fkVEPyXZAo
-         VAHRsKovjPu7d+FCyxbwSvN0rMXdd5wx8IOrlCdKdZAvCoPLEM6+Q/ZD+3jQTlHMdh9m
-         6rB8EQf8byp8cKfMVquuLO+aQ/4WGALOTIUJio3jh4E9Cr0BAqKrXBrhDB/NhnLAAV8a
-         gwOA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FY3s3maREqriezAI0XSi4RMXYCcvv0BPXHDmals4/6M=;
+        b=Q57wbOrowTYtxr1anQHxx0lBW2HWmtXxI9cPkMmt9j2D8O8jN2fqlCByUwMz3CncD4
+         M5+/o5UCGvGqf+Ja2GyGAHGLz58rayiAE77Bvu2bNxeGHWvlZ2AcC938js3h9lK6d+P9
+         j06AleNQ0Kc0CXQUyC+JrZODbXEeCnONOp4A2lKlPyzzNe+3IRNR92xkPyLzI6K2pfh3
+         aAX9ZHH4qp/PgXDpjuL0MxVktNWv9h7Ls120D7HEo6aYz0cFC8fc4L1zXGz4pdYeMLzf
+         X1pbwWWNBJgM3ofqqinadVsDI4s9gX1sLP4p+7XBaYLciaX95yuS+pI2YxbGfEcJ2xF2
+         U7fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t7cpfjcHtDHnwaPBBHF6z2YVNppEhyu7a7r8Eo2vTf8=;
-        b=kvdkF+3bTwmj+nkJ/7mfZ3nDwip4E4nEppC3zTHaoaG8e1+W9jYHM6Bry1ZHLkWsx8
-         d4Odb4dsUpWWS7YKZZxrWkXIhJEV9mfMANo/yZM/LCpwqmcJJ/3fS6ZenXl2Q99pGU/U
-         DGL1rauBIQKwea4YoFNCpMiSZZmokg+qY0skxd3b0YJQvQaETG1jyrhMgV1NEJm1/RaH
-         x7wAMtCdpPyKjOKHLH+pfPhp45LHiGqIU3YBcIHnF5ZW+m7cXBNb3dapiQFGCPG5ri6c
-         4BLDh7IKyumPp0nIfsoMoY3BhgCsG9T+rghtCI6plmGz1Ieua+PhkCF+5AM/ZqkSB013
-         JUZg==
-X-Gm-Message-State: AOAM533cX+1FmUwFIeQEM17yGlRharkBTOGUfihjutnegJG1lmfsuACW
-        zzBR0K3DB+KDpTW1yQeTGAstAw==
-X-Google-Smtp-Source: ABdhPJxBEtVvf5OqH1WJEI9KjtZWUXh4iSaCHjlHFv1XwLfsmWZiGITNhV//KKl5W0tJd+rRXy2CsQ==
-X-Received: by 2002:a05:651c:1293:: with SMTP id 19mr4639969ljc.427.1597223239940;
-        Wed, 12 Aug 2020 02:07:19 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id s4sm305346lja.124.2020.08.12.02.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 02:07:19 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     linux-leds@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        newbytee@protonmail.com, Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: leds: Add DT binding for Richtek RT8515
-Date:   Wed, 12 Aug 2020 11:07:10 +0200
-Message-Id: <20200812090711.2644688-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FY3s3maREqriezAI0XSi4RMXYCcvv0BPXHDmals4/6M=;
+        b=o7gPxlPlQWSqJasrlC68VV2nWXYzp/DrRKYNxPI5VA05ettVD9cCY8+L8PkCvuuwa4
+         BWXjOauyEmpXpEA0fIZigI5QVRE5pJXJYyaD980VQxVHeBJCyozPIqwuX3F5JpEvQWKN
+         08BkoNvQ5Gt0SNcFNVloWRgzfABIiMMIRJORbukw6/Ce2eQXtN8yx3VUFg4C/p8uMrLf
+         BQizcqFiVb9MbqyaAIuFuWg/E8S0cp1QSSdqG/22eEwWpGzloxQ6fhmjA1+Hod0+NSuB
+         EHNwwlEbEjmzzSQxnY5hrShxY//xyk9BD+PdLorIk5QRxz4+ka9XZfm+qcIJeWgP7fn/
+         AZtg==
+X-Gm-Message-State: AOAM531x2ENyRMuvIQU1MhlRXy4SV6jrEMKTXlibl6pjWcfzdvvqKU9a
+        ttpX8pXJHDFX8ZbG+QLO0QqcOEAVx1bqfp794Kf2VQ==
+X-Google-Smtp-Source: ABdhPJwk3HeAScHDHyqAL6rzVjK90mHBIkeel3C16tOuoxFFvERp8sKFXIkkmblpmQ+SXrfuD2s2ooieJ3igNrOfAAc=
+X-Received: by 2002:a2e:4e09:: with SMTP id c9mr5087144ljb.283.1597223396558;
+ Wed, 12 Aug 2020 02:09:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200720203506.3883129-1-linus.walleij@linaro.org>
+ <20200721083228.GA283099@ravnborg.org> <CACRpkdbuihAwvsx4QmV6PnVM5aDFMiaR9h-8aBF8EzXRGZ1XNA@mail.gmail.com>
+ <20200812073454.GA584918@ravnborg.org>
+In-Reply-To: <20200812073454.GA584918@ravnborg.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Aug 2020 11:09:45 +0200
+Message-ID: <CACRpkdbFf7ZTwNt5_DCd1nYWqeUnnY8HPJMakJ9UVwkfBtjRoQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v1] dt-bindings: backlight: Add Kinetic KTD253 bindings
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a YAML devicetree binding for the Richtek RT8515
-dual channel flash/torch LED driver.
+On Wed, Aug 12, 2020 at 9:34 AM Sam Ravnborg <sam@ravnborg.org> wrote:
 
-Cc: newbytee@protonmail.com
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../bindings/leds/richtek,rt8515.yaml         | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/richtek,rt8515.yaml
+> Hmm, I think I looked at leds/ when I wrote that comment about
+> common.yaml.
+>
+> Please consider Rob's comment in commit: 44e1655a444fe7a1bd81994d34c6bbb5245b9e60
+> ("dt-bindings: backlight: Convert common backlight bindings to DT
+> schema")
+>
+> Rob did not see the need for a common binding - but that may change as
+> we add more backlight bindings.
 
-diff --git a/Documentation/devicetree/bindings/leds/richtek,rt8515.yaml b/Documentation/devicetree/bindings/leds/richtek,rt8515.yaml
-new file mode 100644
-index 000000000000..579ef8a2e40a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/richtek,rt8515.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/richtek,rt8515.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Richtek RT8515 1.5A dual channel LED driver
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  The Richtek RT8515 is a dual channel (two mode) LED driver that
-+  supports driving a white LED in flash or torch mode.
-+
-+properties:
-+  compatible:
-+    const: richtek,rt8515
-+
-+  enf-gpios:
-+    maxItems: 1
-+    description: A connection to the 'ENF' (enable flash) pin.
-+
-+  ent-gpios:
-+    maxItems: 1
-+    description: A connection to the 'ENT' (enable torch) pin.
-+
-+  led:
-+    type: object
-+    $ref: common.yaml#
-+
-+required:
-+  - compatible
-+  - ent-gpios
-+  - enf-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/leds/common.h>
-+
-+    led-controller {
-+        compatible = "richtek,rt8515";
-+        enf-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
-+        ent-gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
-+
-+        led {
-+            function = LED_FUNCTION_FLASH;
-+            color = <LED_COLOR_ID_WHITE>;
-+            flash-max-timeout-us = <250000>;
-+        };
-+    };
--- 
-2.26.2
+It can't hurt. The proposal is out there, there are some drivers in
+backlight that can readily be converted to use it if it is favored.
 
+Thanks!
+Linus Walleij
