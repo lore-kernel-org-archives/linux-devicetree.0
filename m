@@ -2,95 +2,137 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E22C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FB5C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDC512076B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpYvDBU0"
+	by mail.kernel.org (Postfix) with ESMTP id 9EA432076B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597215492;
+	bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=BLPOlvpzDaXAHtLaeR+E/tB33ORjP5BvVSIxU2ncdaSAPvJh7CqpXPH7JAKG8D9Sx
+	 86iBK+YTEU34VgKZ7YENgfndsVHOUnJvfF4YrvOxiovQy2j2AuPahQD+l7vJsDjy6e
+	 jHt6NCyQOjGMbtJG2fXClZ/B0kLagRNIfUO+zcds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgHLGs4 (ORCPT
+        id S1726629AbgHLG6M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
+        Wed, 12 Aug 2020 02:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbgHLGs4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 02:48:56 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF62C06174A
-        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 23:48:56 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m22so1020660ljj.5
-        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 23:48:55 -0700 (PDT)
+        with ESMTP id S1725845AbgHLG6K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 02:58:10 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9497C06174A;
+        Tue, 11 Aug 2020 23:58:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v4so1066249ljd.0;
+        Tue, 11 Aug 2020 23:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J31UG4xZfaTIfqQug3jDowpRaMecAJvi+cR7RWW/6Kc=;
-        b=VpYvDBU0f25AQ9m3GDVHoUNKGkkDhwbrnVrRQGv9qnG12eXf4IY7Tpb4nKzyaA5GnR
-         AHtuTeNxArmL+axuWPrSumZ/XebgP77RRcTE+GQkB8i0oVWOsRSw3z0wBHwftrhm/jFP
-         CvNNCuSx/bwusMpWV+mV9dc66XOoA5fxPM26P+c7ZZjLqGy7wW5QVw4vw9fqIqUTa5cF
-         PSVEIwmtvgOvsay+aDb9WpoGr6AwxjmjiR43zYa7iWp4i2u/PL9XMjOAPLVij/0Pn1yV
-         +mULTLZ5F3Go7VxJFDc79NuukaGuX283qR5QhEyWTK2QvmhsNtuRRq7Luw33QF6WG0Zs
-         U7Og==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
+        b=mz3OVwjODnqn65vdacVrQiFPA1vOaCAoYiB5WT6oEvEd8L8Sncni3/5D68IOlz+wTW
+         HdE/UzuLQnU7UK9TUNBXbidbYiXgREpSJYrREgKn+CguVrUFT0pzK0DPQ6mYlkasmdDN
+         BGxcpOZnQIBfdkcyc2lfXiq7ZNF5gWDgDlToFroW1rCbei4t90jCT5q/qO1RPDKneC58
+         QMJHSL/vAmCs7geoIDSh8nXGj7xFZFgJl9s7xc10WmohgX+GBozBVThWQlahkx29S++7
+         gO8DDZm9Yq2xCRtxh/2+93S0cektm0qmwB54UouGs9Nv50jYSyf13idwSRRL/XDb/7ry
+         rUMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J31UG4xZfaTIfqQug3jDowpRaMecAJvi+cR7RWW/6Kc=;
-        b=LmLta2sXx6lBWLxVljEummR+eQgwq7fhpSZot9K7cf3yc7hbbYTPNuUYFhT1QisX0d
-         cMse4sQcn94CUMn7F8NpafiOHewIprg8GxHklFX0lTV+5VohpPQAgisH9OIJOQ4g4ATq
-         FKIF/390fjo7nOKSrrjMNuocRZyGJxyIjzM8NvDtFit9hC1iE5OsCY1OByxfBLpjLeH4
-         KJ76/UE+i17DnwA/RvLVzjzbB7rjiitnJ0QLckcR8ttBe9PSNhEQrG+hpzYjWakDTZA4
-         KtitdXPo6rwHRdlsSboOKu9hU1XRPqaIeNdSVBrkF/Ul5yIgFFt1en0IngPzcEKq3NRF
-         KJdA==
-X-Gm-Message-State: AOAM533YX94VCvH+YkNmuFtD2Q3XNK++wkTpJKCoH4u8SLnuX+kaH4T0
-        dS/HJb4f+Q4WXV3/CyXF9pZMECyjKabhUnXynBgApw==
-X-Google-Smtp-Source: ABdhPJxHxwmcGrskpI/3oFiCVwxSZLG0pwpgInuuMV19jZuo3wuyU4iLrgAO3cTWdJQBKcHLd6uIZH9VRx2ad2MKIIE=
-X-Received: by 2002:a2e:8144:: with SMTP id t4mr4977361ljg.100.1597214934520;
- Tue, 11 Aug 2020 23:48:54 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=JDo/BACFUxJcnbPKuRjxysz+ibKnzqeL4/IU1qfe/OU=;
+        b=sAFD5aFHkxJQSL0ORSMatdKa1c3ji9VBPgcDczqG5NNSnjkvJRUzKQEfINTddC9UVx
+         ATbofgPPwC8ASkvrm0xPcgithZoUJUX9CO0z1roa8wYkqEbn0vgypQBzaYLKbgWkKOIn
+         lpnCTtb+UA5LCFeZh7ibhlZ+BVTe5I0C7O9cp70Tr0+OHDuF/e66FPddN2zMb/IrQ1hQ
+         sQHU+w//r6Eqz4OZz5B5JJ3inZga9DHpn4KHs4+xw0WBLSWeAcQ3RkE2w/BwDM/uE8pT
+         EjQp7z/x0oFIOovFCjmZPhjECCVzKi/JXc9WaHx6WCMldKInosg0MfNTZcFMLosrx8nJ
+         fcNA==
+X-Gm-Message-State: AOAM531ax39K39AX7DiCyRvc0kqSMnVq7EYS42lSLsap/UkP23+oEXuR
+        E5SWYqe/0STT6zkmJuQubQMBGTJ2ROg=
+X-Google-Smtp-Source: ABdhPJx+BrV4abo+2L2SpPIELjzqPN1tFHwc9ZdV9OZvI8hh2TNoDpuM4R8+7/Do3EaLSNt66fHsxQ==
+X-Received: by 2002:a2e:85d3:: with SMTP id h19mr5005266ljj.363.1597215488366;
+        Tue, 11 Aug 2020 23:58:08 -0700 (PDT)
+Received: from saruman ([194.34.132.58])
+        by smtp.gmail.com with ESMTPSA id k12sm238314ljh.95.2020.08.11.23.58.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Aug 2020 23:58:07 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Sandeep Maheswaram \(Temp\)" <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v11 1/2] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+In-Reply-To: <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
+References: <1595869597-26049-1-git-send-email-sanm@codeaurora.org> <1595869597-26049-2-git-send-email-sanm@codeaurora.org> <20200727192050.GD3191083@google.com> <cd5c6c99-d8ee-da59-1abf-e64e5f7f6f8f@codeaurora.org>
+Date:   Wed, 12 Aug 2020 09:57:56 +0300
+Message-ID: <87v9honyff.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200720203506.3883129-1-linus.walleij@linaro.org> <20200721083228.GA283099@ravnborg.org>
-In-Reply-To: <20200721083228.GA283099@ravnborg.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Aug 2020 08:48:42 +0200
-Message-ID: <CACRpkdbuihAwvsx4QmV6PnVM5aDFMiaR9h-8aBF8EzXRGZ1XNA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v1] dt-bindings: backlight: Add Kinetic KTD253 bindings
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:32 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> > +description: |
-> > +  The Kinetic Technologies KTD253 is a white LED backlight that is
-> > +  controlled by a single GPIO line. If you just turn on the backlight
-> > +  it goes to maximum backlight then you can set the level of backlight
-> > +  using pulses on the enable wire.
+"Sandeep Maheswaram (Temp)" <sanm@codeaurora.org> writes:
+
+> Hi Felipe,
 >
-> No $ref for common.yaml?
+> On 7/28/2020 12:50 AM, Matthias Kaehlcke wrote:
+>> On Mon, Jul 27, 2020 at 10:36:36PM +0530, Sandeep Maheswaram wrote:
+>>> Add interconnect support in dwc3-qcom driver to vote for bus
+>>> bandwidth.
+>>>
+>>> This requires for two different paths - from USB to
+>>> DDR. The other is from APPS to USB.
+>>>
+>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Please ack if you are ok with this patch.
 
-Since this is a backlight, and we do not have common bindings for,
-backlight I first looked into using the LED bindings in
-../common.yaml, but that has several problems, it cannot really
-be used for backlight. Backlight doesn't have "triggers",
-patterns, flash properties, the function is also pretty much
-evident.
+What's the plan to get this upstream? Should I take dwc3-qcom patch and
+ignore the rest? Is there a hard-dependency on something else?
 
-So I will look into creating a new common for backlight.
+=2D-=20
+balbi
 
-Yours,
-Linus Walleij
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8zkvYACgkQzL64meEa
+mQbfthAArA2X5kasW3EQ1RHkC0s8Kj6X9CHWtuc7UnHOJu2ulKa5ARoXPQN8p1fd
+mY/t/GcAZzZDppRMumqRnFEqTzNlpMMjnW9drd2F6mwo5+posxbLnaeSRf+xDS5D
+/08z/fpkE5t6HVPqU/WihWTVuprRcxWVxmToP1YxYvXwfOEU/6cJfgCi2CsXp0nm
+BM7FVGkMaU6aMfB/Alp34QvT81VxTr7Ex3NJpiyHvJRsp1AT1hzTxlX7BUjj15gZ
+Qp4l/6w7OG8kqQISj/08k7ljq990ldyc+P1oHpXxF8AAUUonZHnWLzWKgpMTcfNN
+ZpqrmdHWQrtduSz8eMCOA8Sho/kM+XGkPor/p8UGV+PtArIQ392n/+/fNcWwkh8x
+yvxieFM5LoTIIEpMX9FxxMtGS0HI/n0X/AziPonfpykW1EjwvxXAutBVN7tCq+Jk
+m4aLWJzTAvCkqzZm2BvInrLJvYpRNWkHvh149FEVDENh4rTWpO9lhpOjHvmJ/2M+
+pwakvMKM2KsmKNaxTW+uVWaNe10hQZ97LN66FcaqP7omOSoXeYaC8V2vjlUSEvEH
+PVOE797mwB+vU3yiS5DyZXBinpbucGTZ7yw8Z0A6Ud/vNWAdTBEX3sBFOu8mjBSF
+z4Ji6yAJe14TzrCZSblilGQ+vOkhlAauiOTDt200wHiJgMKU7NQ=
+=km0q
+-----END PGP SIGNATURE-----
+--=-=-=--
