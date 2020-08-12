@@ -2,155 +2,96 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA7AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D237EC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7731A20771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC275204EC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 07:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zdy95b1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgHLH25 (ORCPT
+        id S1726803AbgHLHac (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 03:28:57 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:44566 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgHLH24 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 03:28:56 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5564120003C;
-        Wed, 12 Aug 2020 09:28:54 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 45412200002;
-        Wed, 12 Aug 2020 09:28:54 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3092B2030A;
-        Wed, 12 Aug 2020 09:28:54 +0200 (CEST)
-Date:   Wed, 12 Aug 2020 10:28:54 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 11/17] clk: imx: Add blk_ctrl combo driver
-Message-ID: <20200812072854.4r4d6cz5cprezlof@fsr-ub1664-175>
-References: <1596024483-21482-1-git-send-email-abel.vesa@nxp.com>
- <1596024483-21482-12-git-send-email-abel.vesa@nxp.com>
- <d44e88a1408add6491897a8793b57ee0090fa4c6.camel@pengutronix.de>
- <20200730085508.ddxhb4rjnzwooh2z@fsr-ub1664-175>
- <3f4fd963bdf58e61715524fdb246481fb2b2d137.camel@pengutronix.de>
+        Wed, 12 Aug 2020 03:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgHLHab (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 03:30:31 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65176C06174A
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 00:30:31 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id b11so617438lfe.10
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 00:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5FdXAIZx+ZP41PS8ejWt0zp2dMev1+Pg53fxOJb49go=;
+        b=zdy95b1kTPcTbrYCuGrt2C7Mi8xpkU0SHcP3cHovIvD8Rf8PcG/9Y4VLbg39S9gweq
+         FxEP/lmv6XHHGIgWcfar5m/IGWRMciwaw2f62Xezz5t/KZZ1tU9gOdsRk2p+FOQ+vKUb
+         9P2pGawIOuIANgF0+HWyVLwfTgOpI31SsDgCWY0rjzD1XpQ6R2NmtxWpnDO3JGXpcUaw
+         2MXLfuQl5U7csaDC7/5zEvjZX+YywjdEWnPa+z7gF5q4zFjRxTGoJM4huW5c6humymcO
+         r4BbIxlPHUQOk9R+nJdV4AAUKhqpeiHazJbNaf+Atp+blNAiOqI2RwVZ8M47yqPt7YQy
+         NT3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5FdXAIZx+ZP41PS8ejWt0zp2dMev1+Pg53fxOJb49go=;
+        b=h/+XHIQuqASn40IvlGk/L6Upq+Kz0124TSCgJINJdCTy3FENZINvwtJpUC4C/9n4+2
+         dbaOWHYW1lFMNW9FNWqGNAgn6sRMvVrbBklWHlw8AKpvUtoTv27xTokSW+T/rbSYUvlD
+         xL4+hJnrw/4zXNsd4VieE90liS6sPS6Gt2uLSpxKWbwcDs76o6BOl+P2g4r9Ps43tLz7
+         GfFg1s5H6N4oqSjvspvHc6aIuJ8XH28eGjIXRCZS6vePyb6OPTdz2VxTMidMvMp7pWpN
+         LYUqdElnYlVkJ+vvKvciAvgeKbeY+5WvBS2fuMfUvs/tt76Pk4J4Jjp7Dipl6dm0VjND
+         DoQg==
+X-Gm-Message-State: AOAM530p3JzUFalJIKWO+EGpJGE55lFCPPrmhwgwqvFCFUpVZS/yhNtg
+        K2O/bLSEtcrgo2w0BMmGBLT5TokhuNk8jgi0RM5uLQ==
+X-Google-Smtp-Source: ABdhPJz4sufS9uL7t6Eocg+3nINh6YsIEewzxgjPWMWJmSeXpCf0IVIfT6TSWwDe2md+cFp4whCdIXttT1Jknix5buY=
+X-Received: by 2002:a19:cb53:: with SMTP id b80mr5027209lfg.77.1597217428378;
+ Wed, 12 Aug 2020 00:30:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f4fd963bdf58e61715524fdb246481fb2b2d137.camel@pengutronix.de>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20200720203506.3883129-1-linus.walleij@linaro.org> <20200721112841.jxocq26yxhwy3gag@holly.lan>
+In-Reply-To: <20200721112841.jxocq26yxhwy3gag@holly.lan>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Aug 2020 09:30:17 +0200
+Message-ID: <CACRpkdZF5i8e100UG5aM_WmMRXvfugjB8KOr+AzXVnMJxJhkvA@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v1] dt-bindings: backlight: Add Kinetic KTD253 bindings
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-30 11:39:22, Philipp Zabel wrote:
-> On Thu, 2020-07-30 at 11:55 +0300, Abel Vesa wrote:
-> > On 20-07-29 14:46:28, Philipp Zabel wrote:
-> > > Hi Abel,
-> > > 
-> > > On Wed, 2020-07-29 at 15:07 +0300, Abel Vesa wrote:
-> > > > On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
-> > 
-> > [...]
-> > 
-> > > > +
-> > > > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
-> > > > +				  unsigned long id, bool assert)
-> > > > +{
-> > > > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
-> > > > +			struct imx_blk_ctrl_drvdata, rcdev);
-> > > > +	unsigned int offset = drvdata->rst_hws[id].offset;
-> > > > +	unsigned int shift = drvdata->rst_hws[id].shift;
-> > > > +	unsigned int mask = drvdata->rst_hws[id].mask;
-> > > > +	void __iomem *reg_addr = drvdata->base + offset;
-> > > > +	unsigned long flags;
-> > > > +	u32 reg;
-> > > > +
-> > > > +	if (assert) {
-> > > > +		pm_runtime_get_sync(rcdev->dev);
-> > > > +		spin_lock_irqsave(&drvdata->lock, flags);
-> > > > +		reg = readl(reg_addr);
-> > > > +		writel(reg & ~(mask << shift), reg_addr);
-> > > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> > > > +	} else {
-> > > > +		spin_lock_irqsave(&drvdata->lock, flags);
-> > > > +		reg = readl(reg_addr);
-> > > > +		writel(reg | (mask << shift), reg_addr);
-> > > > +		spin_unlock_irqrestore(&drvdata->lock, flags);
-> > > > +		pm_runtime_put(rcdev->dev);
-> > > 
-> > > This still has the issue of potentially letting exclusive reset control
-> > > users break the device usage counter.
-> > > 
-> > > Also shared reset control users start with deassert(), and you end probe
-> > > with pm_runtime_put(), so the first shared reset control user that
-> > > deasserts its reset will decrement the dev->power.usage_count to -1 ?
-> > > For multiple resets being initially deasserted this would decrement
-> > > multiple times.
-> > > 
-> > > I think you'll have to track the (number of) asserted reset bits in this
-> > > reset controller and limit when to call pm_runtime_get/put_sync().
-> > > 
-> > 
-> > Yes, you're right.
-> > 
-> > I'll add a mask, and for each assert, the according bit will get set, and 
-> > for each deasssert the same bit will get cleared.
-> 
-> > And when the mask has at least one bit set, the pm_runtime_get gets called
-> 
-> ^ When the mask was 0 before but now has a bit set.
-> 
-> > and when the mask is 0, the pm_runtime_put_sync will be called.
-> 
-> ^ When the mask had a bit set but now is 0.
-> 
-> > Does that sound OK ?
-> 
-> And the mask starts out as 0, as after the pm_runtime_put() in probe all
-> reset lines are deasserted?
-> 
+On Tue, Jul 21, 2020 at 1:28 PM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
 
-Yes, that is correct.
+> I'm a bit sceptical of having a max-brightness in the DT and a driver
+> defined lookup table in the driver itself. That doesn't make a whole lot
+> of sense to me since the maximum brightness here is basically relies on
+> knowing what scale the Linux driver has opted to implement in its tables.
 
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int imx_blk_ctrl_reset_reset(struct reset_controller_dev *rcdev,
-> > > > +					   unsigned long id)
-> > > > +{
-> > > > +	imx_blk_ctrl_reset_set(rcdev, id, true);
-> > > > +	return imx_blk_ctrl_reset_set(rcdev, id, false);
-> > > 
-> > > Does this work for all peripherals? Are there none that require the
-> > > reset line to be asserted for a certain number of bus clocks or similar?
-> > 
-> > As of now, there is no user that calls reset. All the users call the assert
-> > and then deassert. As for the number of clocks for reset, I'll try to have a
-> > chat to the HW design team and then come back with the information.
-> 
-> Ok. If this is not required or can't be guaranteed to work, it may be
-> better to just leave it out.
-> 
-> regards
-> Philipp
+That's a good point.
+
+> I think there are two options here.
+>
+> 1. Throw away the brightness table in the driver and expose the hardware
+>    steps directly (maybe using allowing properties such as
+>    max-brightness = 24 if the top 8 values cannot be distinguished
+>    visually).
+
+I think I will opt for this. It makes most sense given how we use the
+device tree to restrict maximum brightness, and that is definitely
+related to the hardware max brightness.
+
+Thanks Daniel!
+Linus Walleij
