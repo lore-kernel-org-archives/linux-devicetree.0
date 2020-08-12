@@ -2,94 +2,105 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63420C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DC1C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCC5207F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6772076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:40:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yDBDdIyN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F/Mcb8Ga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgHLNiR (ORCPT
+        id S1727873AbgHLNkq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728101AbgHLNiP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 09:38:15 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F98C06174A
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 06:38:14 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id t14so1978993wmi.3
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 06:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U6a+d3dtYp0KjTU5EEF1X/oH34jCVu+NBd+4qq9Ixtw=;
-        b=yDBDdIyN79nLSMZt2ii6ECd0ccqcb4C9/zsl/VF4QcmYRhUqFZTNGn8S1O05yLbG8m
-         ubDQCxhglZD3VIDoqHNTs9nrCaRyzEAwfy56sy+jta0zY4ozoKLFQi8y/RL6LbyXtsg7
-         vPPzvQUdqo40z1n1oftLgNHQDjSWftJjjBDsQhvTEzJKLV/UljBn1O8TgzytjsFt9w8U
-         TJcSCoUGsmpvlQAouUYl2WNa4NJG9STXIifpmKWhao4D+DxMBSRLDd4A1cuJ2pp1KVzb
-         6SjO2F73k6YQ1HGycCizuxtmTBUcGfkSqURV3MFuAbgx20pDncLVyrW2c/POdaOxoRFd
-         /XpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U6a+d3dtYp0KjTU5EEF1X/oH34jCVu+NBd+4qq9Ixtw=;
-        b=radLQuZoRd6z0xKjRGulLPgL9JrtwjKSpPZ3rkHQiqs4leku5JhZUinAXtbR9cvzWI
-         8hGhGHJoa9S7TqJW4y1EmS15PMx8kE22zCzyCTxqC+/Sjl6HB32R81gycMkP75yMGJZK
-         bGfPGNoS9CfSwz/LPfP+2tcEXfzf3c3FxxP5gfS72zRkrzvyX1zdrNOQWvG797H8AI6F
-         xqaOFq44NWL/3+ebshzWC4/abR6ls8GaWu45zU8Ct1/ML1TvBh6KnNoBX/qJeLMBTy4k
-         SLZdPU5CoRn3GSZUoYu/Z5spHEcqOLweTMkqi7hYVu9vNKKlzzHVdKB/mU1WYnFf9nK+
-         xJOg==
-X-Gm-Message-State: AOAM533ZeNscsef1VuxKiQFddr716fPr+oJhrqXxDdhoheO/AX3feHyX
-        sC8kXsTdVTF6mAH3z0yr5RS6TlS7/hrBuE/IJ6fOdg==
-X-Google-Smtp-Source: ABdhPJwqMh6ofIFWi0PgnalLBz97O6pS4TLZaTLUZpUxWvbz7fQU77ZzO8rJnHikMk86N01F3K2+jUdwRSWt3HpDtNI=
-X-Received: by 2002:a1c:3dd6:: with SMTP id k205mr8592936wma.21.1597239491828;
- Wed, 12 Aug 2020 06:38:11 -0700 (PDT)
+        Wed, 12 Aug 2020 09:40:46 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48764 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbgHLNkp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 09:40:45 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CDeUSq006226;
+        Wed, 12 Aug 2020 08:40:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597239630;
+        bh=XZyI6ATGBEktft+tTBs7WYlJW2zc+4f4sVgdedX/G20=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=F/Mcb8GazliPQqaXlMW6cM3evNmFx+Sfnu52qdjTgeHputFkdrLdPq257hLfk6SAD
+         qVow87pmGQfp1N0wa2DOMsW++6lS1XnBopJyD739JpmwEfZNnigelMrmLZrCRdL1Lx
+         65f9s+qi/7AoCRa/J9HxgfjNA2LgMzIhEhAWObc4=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CDeUtj057289
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 08:40:30 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
+ Aug 2020 08:40:30 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 12 Aug 2020 08:40:30 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CDeUem095297;
+        Wed, 12 Aug 2020 08:40:30 -0500
+Date:   Wed, 12 Aug 2020 08:40:30 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v6 00/13] irqchip: ti,sci-intr/inta: Update the dt
+ bindings to accept different interrupt parents
+Message-ID: <20200812134030.pxkxsj4427pawv66@akan>
+References: <20200806074826.24607-1-lokeshvutla@ti.com>
 MIME-Version: 1.0
-References: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
- <20200806223134.42748-1-konradybcio@gmail.com>
-In-Reply-To: <20200806223134.42748-1-konradybcio@gmail.com>
-From:   Amit Pundir <amit.pundir@linaro.org>
-Date:   Wed, 12 Aug 2020 19:07:35 +0530
-Message-ID: <CAMi1Hd2P47PWjnRaACE9oyxRpZZwFwTamwCCxufN6qW+8SKFrA@mail.gmail.com>
-Subject: Re:
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dt <devicetree@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200806074826.24607-1-lokeshvutla@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 7 Aug 2020 at 04:02, Konrad Dybcio <konradybcio@gmail.com> wrote:
->
-> Subject: Re: [PATCH v4] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
->
-> >// This removed_region is needed to boot the device
-> >               // TODO: Find out the user of this reserved memory
-> >               removed_region: memory@88f00000 {
->
-> This region seems to belong to the Trust Zone. When Linux tries to access it, TZ bites and shuts the device down.
+On 13:18-20200806, Lokesh Vutla wrote:
+> Hi Marc,
+> 	This is continuation of the RFC patches[0] regarding the driver
+> updates to support for following interrupt parent connection:
+> - INTR -> INTR
+> - INTA -> GICv3
+> The current existing driver assumes that INTR is always connected to
+> GICv3 and INTA is always connected to INTR.
+> 
+> As discussed this change breaks the DT backward compatibility but it
+> allows to not depend on TISCI firmware properties in DT node. IMHO, this
+> will ensure that any future changes will not effect DT properties.
+> 
+> This series depends on the the new Yaml bindings for common TISCI[1].
+> 
+> [0] https://lore.kernel.org/linux-arm-kernel/20190923042405.26064-1-lokeshvutla@ti.com/
+> [1] https://patchwork.kernel.org/patch/11676843/
 
-That is totally possible. Plus it falls right in between TZ and QSEE
-reserved-memory regions. However, I do not find any credible source
-of information which can confirm this. So I'm hesitant to update the
-TODO item in the above comment.
 
->
-> Konrad
+Marc,
+Noticed that Bjorn's merges seem all done, and checked if the series
+applies to irq/base-5.9 (but I am not entirely sure where you want the
+series to go to) - but anyways, I have acked the dts series if you are
+planning on picking it up in 5.9 - does'nt conflict in master or next-20200812
+
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
