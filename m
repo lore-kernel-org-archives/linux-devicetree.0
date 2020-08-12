@@ -2,83 +2,124 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582C7C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16445C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 20:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B35221E2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597262273;
-	bh=pl35spFWyZayApUk4yBF5pGkVHHLMwU3D8GZ3RO9ML4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RZ940O9Y0QJdC/Zbac72DldjdODFWManOhirBtzYN9aXT8kj9ME22LsrYFizEoQuj
-	 nZzGFIoaZGd9ocyAzauOKZBh8d21WySyhQmsF5Vm4O9h1t46LnVFnrcatR2TXLq4rY
-	 Ya4mA7NOgKHrLqv+RHGkowru4gbTN6nXIYF2vcX0=
+	by mail.kernel.org (Postfix) with ESMTP id E4B0C2080C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 20:00:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="IlNtlpm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgHLT5u (ORCPT
+        id S1727031AbgHLUAU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:57:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42672 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgHLT5u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:57:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id j8so4315276ioe.9;
-        Wed, 12 Aug 2020 12:57:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kab3fJEGlaryZqDRGGlxJtcNETlXr7INQvI/406t8ks=;
-        b=EAPArnwhFis36563pJCNjGeQEWWNzY4Tfv2Vll8NHzCQrmhwXtJF4MUGWHjMmHLEyG
-         3jwuMuDlkssikY6JH52JGrC6H9t2Pvf0M5R8JzyknNBGt5KI0ihsrmhaxoigUJ0T3RVb
-         BbDmS5Ip/K2K9aRG+R3AVCJNTmWTqkp6viO6KC8dOXKSliE1uRsmU1ZII2mz0KC1U/Xo
-         pAQAsTjW4RpxaTOtjhdckb0GyT2f5NP52z73/Mv5MrCorMeXrFrpn61LmzBnH+xA+q79
-         fnKP1ICHQ0ER4Ejs6OmvLkVJG8dbhz5czftMo9JPkOc5qUkQjQNdyscPDIiOpjW+8sRG
-         9Stg==
-X-Gm-Message-State: AOAM530/Y5sRhxojVCg3FkhUaEDsRbwwYEu31b/+blBM8V27Q5f2hDOm
-        fJhfxE8jdsW9xakqjECTXg==
-X-Google-Smtp-Source: ABdhPJwzpL961/Irwkpqn3yX+BNDUPZybfwlzFyzjc/fzyX1p6PXT4P353J1oWl99TjZkpU5dwnvxA==
-X-Received: by 2002:a02:a905:: with SMTP id n5mr1230537jam.64.1597262269251;
-        Wed, 12 Aug 2020 12:57:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id s26sm1426908ioc.13.2020.08.12.12.57.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:57:48 -0700 (PDT)
-Received: (nullmailer pid 2605750 invoked by uid 1000);
-        Wed, 12 Aug 2020 19:57:47 -0000
-Date:   Wed, 12 Aug 2020 13:57:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     vishwa@linux.ibm.com, andy.shevchenko@gmail.com,
-        robh+dt@kernel.org, linux-leds@vger.kernel.org, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmurphy@ti.com, jacek.anaszewski@gmail.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: leds: pca955x: Add IBM
- implementation compatible string
-Message-ID: <20200812195747.GA2605701@bogus>
-References: <20200803145055.5203-1-eajames@linux.ibm.com>
- <20200803145055.5203-2-eajames@linux.ibm.com>
+        Wed, 12 Aug 2020 16:00:20 -0400
+Received: from mout.gmx.net ([212.227.17.21]:49737 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbgHLUAT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 16:00:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597262395;
+        bh=KtVP+9CoE4x+P4vIm7WdD2oTdBMHgUjg2pO7nFUsGy4=;
+        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
+         CC:From;
+        b=IlNtlpm9OvaMM5ly6CLvZ7pQXLwCegnuqg5V5ukfCW1CpTOPLBuUhZab8AUTKS3CD
+         REEUQ3yi7TUrVXEMQ3SmlH5d2yYh2pa/xxu1J3QzlyV50hF7WWatiAdyM9PiKqSwpE
+         h8ouvPU1jf+4AQKIz87eyv+3SdU6W6Y38VM0Kw88=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from frank-s9 ([37.60.0.210]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M8hVB-1k1qJ80Cen-004kFf; Wed, 12
+ Aug 2020 21:59:55 +0200
+Date:   Wed, 12 Aug 2020 21:59:48 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <f65aeebb6c372a7138e496a30ce39f879d4e24ed.camel@pengutronix.de>
+References: <20200812093726.10123-1-wenbin.mei@mediatek.com> <20200812093726.10123-4-wenbin.mei@mediatek.com> <f65aeebb6c372a7138e496a30ce39f879d4e24ed.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803145055.5203-2-eajames@linux.ibm.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 3/3] mmc: mediatek: add optional module reset property
+Reply-to: frank-w@public-files.de
+To:     linux-mediatek@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+From:   Frank Wunderlich <frank-w@public-files.de>
+Message-ID: <68A53B8B-6646-4A99-B1E3-FAC3D550D67E@public-files.de>
+X-Provags-ID: V03:K1:vDQU52f3FqwgkLuBMaKcXThRs6qVswcU8BOJ+WZ5ghW9KrzJQ1q
+ e/SI6LMvfIkwUCO3/Wa8qTqwpiEn9lGtWcc9VzeTHsed9ct4Dp0qg03i8ENLNZiOYuppXS3
+ ZiDR5ZvJxbjcXUiwqK0mToyPDSNFJiguxIaXWS8y+YN3e8zyjGVErKWEl4V8Q8Zlj94L71v
+ hnzH1BLS79HezmS/FRhuA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p59SumFpprs=:+LkbvK2TZ5bPPW/pQ57ycF
+ KG042IfHbwc7KkexS9WFbMK9ExAb4XlLmIpi4dX782ilxvnR6KUFDPpQv+YTkTSzhBIMFSdVQ
+ XPXdJIpjGZ/hsMEgsFZyhzzkFX/GY1kJoKoXzkWtR+eraeXeaFhTSdyJwSPZj3H2epYSnSq1E
+ zjUaE9qExDhoVFCbdGKwaiOBrz2h3vL47DxR+DCfUWh4/rBAOclwEJi0d0MIFCas5lTYyDKSG
+ 4fE/fVQo2JZH7p1vWTjhtgzsKbhp7QUK8KY4ApxhEWmisboUpBJb319hO6HbdjiOFYA9xNEGH
+ cWSyRsIhtxEBSN+cLY0e1i0/+MsgqhWwG54eDlnREaSIkppaFu6T6DgoNH4m7hjPP4Jg3XsD5
+ 4JylB5HsNJ9kvv+z8a0GlsdG7LL2Sy5+dDWlFFFAH1/Y+AwGCJvDKO7I24lScCA3SYfiRLZDg
+ 61vP+yiNYGZvtiM+JuXFqk8S/jaRSe+djJ7iK0HY4ElLwCERqcnU43CpCEJETSSKWlb6P9qFP
+ 4QIEbFeaB7wsm1rMJLUzJiHH2lxRQyH4Tj3Pr73aoraUYX+pRFx9USxD8wmgJAHm0hL0ptOVf
+ /J/SHCxjvUEwb6/xMVRj8UKFt10O4XgEUKWjRaQWqLcTaGXM1onIyxLfhqkFCFhht1i6BYmvL
+ HzB/PhSNM7Rm8yMnBHYKZibOWZ+rCfay/E/mxRtmzDDZQtctMX6A3k/7vdtVtGG/soBvkkKTm
+ tg7RCMPpl4KgisQhE7J06WE2bAfVwIHmi6qlNW1CFFMVbospYfkZ9PcsdnBcgfzZHMMkIfPQj
+ doiqLJcqSfPpVD0uBel1xSE6T0TfQfNPn/isQkOpnc29STKUXACLihS+NQwwHFqiOB6tbZIX/
+ QUajC1d+Y1WVtHT0oeT94ri7yUbcICFJhmgCbrAS+7XEe001AeqnXu7NUG4yvhiZ7z9T/RSMq
+ CTfZVSCW63NVtLGpW5ddHx+oBBOqIxySXSEk6RPxSCK3hzarM7HLDrIlL2zyzFEZvwDr6l0BY
+ I6Io4W+mXq0Wltlb62S+62kbxK3AmUE80+HAz63dCn3RPOELM+xHWZosQabWterLIFoAIg1cF
+ WTpsk2hyc5f5ZnhHjN3xxZojUh9aA+rnsWpuQCdL+ebWEmtu35yDAj9Fwb6oS8XSV3oeRRVpb
+ AizB3FlyrWu4+Qg1pPxSowX5p8j+XUXiHPeCL3Mp3YvXWBxKfkHQgE5LzDNc+0Zn0ndnQjzhk
+ 6RN/8UrtKW8Up6jlr9NsdQssHELKNKedLkFum7A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 03 Aug 2020 09:50:54 -0500, Eddie James wrote:
-> IBM created an implementation of the PCA9552 on a PIC16F
-> microcontroller. Document the new compatible string for this device.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Tested with these 2 changes below too=2E
 
-Acked-by: Rob Herring <robh@kernel.org>
+Am 12=2E August 2020 14:08:19 MESZ schrieb Philipp Zabel <p=2Ezabel@pengut=
+ronix=2Ede>:
+
+>> +	if (!IS_ERR(host->reset)) {
+>> +		reset_control_assert(host->reset);
+>> +		usleep_range(10, 50);
+>> +		reset_control_deassert(host->reset);
+>> +	}
+>> +
+>
+>This should be:
+>
+>	if (host->reset) {
+>		reset_control_assert(host->reset);
+>		usleep_range(10, 50);
+>		reset_control_deassert(host->reset);
+>	}
+>
+
+>> +	host->reset =3D devm_reset_control_get_optional_exclusive(&pdev->dev,
+>> +								"hrst");
+>> +	if (PTR_ERR(host->reset) =3D=3D -EPROBE_DEFER)
+>> +		return PTR_ERR(host->reset);
+>> +
+>
+>This should be:
+>
+>	host->reset =3D devm_reset_control_get_optional_exclusive(&pdev->dev,
+>								"hrst");
+>	if (IS_ERR(host->reset))
+>		return PTR_ERR(host->reset);
+>
+
+>With these two changes,
+>
+>Reviewed-by: Philipp Zabel <p=2Ezabel@pengutronix=2Ede>
+
+regards Frank
