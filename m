@@ -7,103 +7,94 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DE9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F284BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 937DE2076B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23D72076B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597249569;
-	bh=kMZuwehiqkSfssO8mzJoJtOdm+ZzVmlTtm/bLXigl/8=;
+	s=default; t=1597249608;
+	bh=6GeFowFwyF1Id1omR15S7XrREvUVZ76ncyOGmrAlumw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tD4JmRReITnVjeMHP8WAJCG0+b7ovGTHBpeBXn56iRLeqCLqfvRZ/+cxV8eOnj7C4
-	 +bQJFLlvHCT7pP5fdAAtW0osoyGRFeghwhcfrxKkbk48hTIa54b6PzQwQ/0ASovjyR
-	 KZmGR/VltTunv0Oi5/nsLD9JPYcLfk+TsDQsDdxg=
+	b=vgVAg1zilh7TkQM315juLNW4TFtdvv1OzUOiorP9BGl0xiINLmUIBKj125PjyFeVw
+	 /k9qlXQKtrwzZWRO5jOBGtFx5S6BLKX0spmu5CVKzlgOuAJHu4+HnY/K5SiknZ29Qx
+	 EFVeEasHc9ayBtIshOSPpmsLHvv9eF+jZ39WOGDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726459AbgHLQ0J (ORCPT
+        id S1726394AbgHLQ0s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:26:09 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42477 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgHLQ0I (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 12:26:08 -0400
-Received: by mail-il1-f194.google.com with SMTP id t13so2312102ile.9;
-        Wed, 12 Aug 2020 09:26:08 -0700 (PDT)
+        Wed, 12 Aug 2020 12:26:48 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40321 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgHLQ0r (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 12:26:47 -0400
+Received: by mail-il1-f193.google.com with SMTP id x1so2309194ilp.7;
+        Wed, 12 Aug 2020 09:26:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xT4SACgf5ifSMoS9uK+2nXefsvRA+9v+8cofR3WoWzc=;
-        b=eFCSk9QX9TN5MGrgx57WS82IdgYflcoYhf7Je0a5lwTSg1Vq+MruTthtwWnAPtxZK7
-         fhn15DR0ksxIE0v5E+AEc6IZ89/V0iRHC4gpr8/tUyBTqZ4OAF8wM8C/ENocDzyRArZi
-         bXPXbi/dziJoKAC8if+h99fEIJGh6xasMu0P2tJNt2MPse6ijAey4+UowIra+pUJ1+fx
-         Owfvs85ML0PwO13lbuxH7Laqn7lvi/LGuXndYM6j3P7NZnyRQfnhs8rqPXKo82mvNRyS
-         JD4J7jCEs+VS3eExi9y+Kv49rIVgZ16zDiRqie/fHGxrXTOj3qHPc+Hw3lP+X9kYqOu8
-         BvRA==
-X-Gm-Message-State: AOAM530EslWbVj3WXu35bk6R4zm/Wpo4gxY5u3F29ZWW7WCO4grD3stu
-        9E/NpMYTH9Guu5VVRjRhHQ==
-X-Google-Smtp-Source: ABdhPJxhvNiEn01QPTStOSaoRMJBQMRWM+MEiL+Bc4h8Pvco/4kQQxQ01omTeuR5kwXN7ubmYfG9+w==
-X-Received: by 2002:a92:5b1c:: with SMTP id p28mr452119ilb.133.1597249567760;
-        Wed, 12 Aug 2020 09:26:07 -0700 (PDT)
+        bh=5XENcqp5NrNjQoSRzJJCCLGVKZPXfg/pQnllGIbHBK8=;
+        b=DHKH9OYxsZHtjM3DgTzit+SAhhcZ7wpb05GjBsgTPiBB/7GuCuBIDUYBCDRf75RGcg
+         V2RvPdPaJISS5KV57T88mIbsp/qjfTI16cNuxR/0zfGx17fnAfVPaGuURs0tJufQV//X
+         Nwdb4Yq8M7/NYsSF+mCtZw6BHTIuPvcN3sPYvFiD+b2Q50I9I716Efg0BX++lzW/AjEm
+         WXbkgWBgbJsWMvgEBK14inSeAjkbDApHE7Dac/JEMfIRdz2dZB1VW74tY16MulUUmR98
+         qYN1SFOdIqzdBoehQ2OLw03gTPsCPZ7yduRfzHSSQww5/nw+8RJ8fPHUAwog01fWcmtj
+         jjDA==
+X-Gm-Message-State: AOAM532wcG3n/h4YmGvcluSzJO8tjyZm/6JNxs4JjoOGdtqslsuz4Q1Q
+        QvHfnXt9MmkgtFhwliUDug==
+X-Google-Smtp-Source: ABdhPJzw3ALSwlMKyv/dYVMNM2FITk24C3hhy/zhgjPboTGUxsrWp7MleX8TrJ+Qm1QYD5emSx5wCw==
+X-Received: by 2002:a92:40cb:: with SMTP id d72mr481292ill.116.1597249606463;
+        Wed, 12 Aug 2020 09:26:46 -0700 (PDT)
 Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id k18sm1185733ioh.50.2020.08.12.09.26.05
+        by smtp.gmail.com with ESMTPSA id t26sm1327563ilb.80.2020.08.12.09.26.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 09:26:06 -0700 (PDT)
-Received: (nullmailer pid 2319809 invoked by uid 1000);
-        Wed, 12 Aug 2020 16:26:04 -0000
-Date:   Wed, 12 Aug 2020 10:26:04 -0600
+        Wed, 12 Aug 2020 09:26:46 -0700 (PDT)
+Received: (nullmailer pid 2320844 invoked by uid 1000);
+        Wed, 12 Aug 2020 16:26:43 -0000
+Date:   Wed, 12 Aug 2020 10:26:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Hector Yuan <hector.yuan@mediatek.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mediatek@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>,
-        wsd_upstream@mediatek.com, Li Yang <leoyang.li@nxp.com>,
-        Olof Johansson <olof@lixom.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v1 2/2] dt-bindings: cpufreq: add  MediaTek cpufreq
- bindings
-Message-ID: <20200812162604.GA2319433@bogus>
-References: <1596716320-19811-1-git-send-email-hector.yuan@mediatek.com>
- <1596716320-19811-3-git-send-email-hector.yuan@mediatek.com>
+To:     Swapnil Jakhade <sjakhade@cadence.com>
+Cc:     kishon@ti.com, jsarha@ti.com, vkoul@kernel.org,
+        tomi.valkeinen@ti.com, yamonkar@cadence.com, mparab@cadence.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nsekhar@ti.com
+Subject: Re: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
+ PHY bindings for generic use
+Message-ID: <20200812162643.GA2320575@bogus>
+References: <1596795165-13341-1-git-send-email-sjakhade@cadence.com>
+ <1596795165-13341-8-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596716320-19811-3-git-send-email-hector.yuan@mediatek.com>
+In-Reply-To: <1596795165-13341-8-git-send-email-sjakhade@cadence.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 06 Aug 2020 20:18:40 +0800, Hector Yuan wrote:
-> From: "Hector.Yuan" <hector.yuan@mediatek.com>
+On Fri, 07 Aug 2020 12:12:45 +0200, Swapnil Jakhade wrote:
+> Torrent PHY can be used in different multi-link multi-protocol
+> configurations including protocols other than DisplayPort also,
+> such as PCIe, USB, SGMII, QSGMII etc. Update the bindings to have
+> support for these configurations.
 > 
-> Add devicetree bindings for MediaTek HW driver.
-> 
-> Signed-off-by: Hector.Yuan <hector.yuan@mediatek.com>
+> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
 > ---
->  .../bindings/cpufreq/cpufreq-mediatek-hw.yaml      |   56 ++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek-hw.yaml
+>  .../bindings/phy/phy-cadence-torrent.yaml     | 76 ++++++++++++++-----
+>  1 file changed, 58 insertions(+), 18 deletions(-)
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek-hw.example.dt.yaml: example-0: cpufreq@11bc00:reg:0: [0, 1162256, 0, 140] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek-hw.example.dt.yaml: example-0: cpufreq@11bc00:reg:1: [0, 1162400, 0, 140] is too long
+Error: Documentation/devicetree/bindings/phy/phy-cadence-torrent.example.dts:93.38-39 syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [scripts/Makefile.lib:330: Documentation/devicetree/bindings/phy/phy-cadence-torrent.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1334: dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1341854
+See https://patchwork.ozlabs.org/patch/1342193
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
