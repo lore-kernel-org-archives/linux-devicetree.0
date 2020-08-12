@@ -2,127 +2,88 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D44C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46752C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E512080C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AED207DA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:35:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H+evZaNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHLN1x (ORCPT
+        id S1726946AbgHLNfy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:27:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:59765 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHLN1w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 09:27:52 -0400
-Received: from [192.168.1.155] ([77.7.70.104]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N2SXX-1kq4Il39SR-013vZ2; Wed, 12 Aug 2020 15:27:48 +0200
-Subject: Re: [Q] devicetree overlays
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAGngYiVa9v9jGPNu4W+KHUnvemKU-BVE89-XNLcWOmoZjAPMTg@mail.gmail.com>
- <24f1687c-043a-a15e-0be4-8392e7b5c96b@metux.net>
- <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <1acc987a-d844-fca7-77eb-cf1d466f35c1@metux.net>
-Date:   Wed, 12 Aug 2020 15:27:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 12 Aug 2020 09:35:54 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60222 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgHLNfy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 09:35:54 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CDZbXJ076654;
+        Wed, 12 Aug 2020 08:35:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597239337;
+        bh=+3KjysjgDnQun6KmKoQY+S7HvBruWe30VC1weKongEw=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=H+evZaNIKo6ovj4qWGGSuqcD8WYkZZtzjk8BgF91uBditcKwVuH8Hp/Q/9zogHeZp
+         5SaPZbl1zrkim+wiQ+FOZQM0ekc4EBLfqpsse5wfBIPQuus4HDjsVQCrbdljon7aB0
+         zmjDAYERH7xO6QpxGJV3Whw4n+AZ9TEEAfkU5FC0=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CDZb0P050322
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 12 Aug 2020 08:35:37 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
+ Aug 2020 08:35:37 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 12 Aug 2020 08:35:37 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CDZawf085951;
+        Wed, 12 Aug 2020 08:35:36 -0500
+Date:   Wed, 12 Aug 2020 08:35:36 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v6 11/13] arm64: dts: k3-j721e: ti-sci-inta/intr: Update
+ to latest bindings
+Message-ID: <20200812133536.nivuk3ol5txuiqww@akan>
+References: <20200806074826.24607-1-lokeshvutla@ti.com>
+ <20200806074826.24607-12-lokeshvutla@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiVokqYkEiQTcqAMnvif3qEWkPOb1cAk+4rvwgxBKZ5Ukw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:MIsNc+6wckw0bhN3I+OPYIOG5NscHslgh+KIMp0EpXcmxLAo2UV
- PKF2oEMIqd5jUQCZwGV8YWpxNVDXZeqQOuagMgN1gyJULvjaMozkci2csfUQJNFf8qb7eBN
- 8/tGYAIAEe2/vwvK6LXg7ieiP8b91P73Zw4WOl4zHTWsSqMm6l+f+SZZCjNUR4IqSASFFqT
- yr1N4kJ7TGdZupAN628tw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ThtyLd1Fmwg=:tr/DyrIjMkrSSj6ONl15vD
- pq1HzKpqmn8sK/RxSFegjJtb9HSxrF4XYetGjWW8YEPtbfP/jZRiPUPW5TCvQ/JD7lwMZlbTW
- kQyAdFpMT9F+Vel9LRUE23hQgkK04chUPOvWpD8HMYT8MZuGlR8U6zthqTwku7NcqbZgUtUrA
- +C+KiwY0FyDNc0AGqQDWqYa6P2bUK0XH8p/f0+9+XXqLNP0y/Tv9uVVr3O73KJdkR8SRdwFOM
- 2CBk1gpshPvN6ImcinftK9eK5CFWYflmccc+L+XfMe6YWT3rEgvDdlFvfk7oQwiNw4aswK/h7
- 71ShuQemhmuWq89d9nWaS0VzMqB7G8AQPmw5DNIzE65b8UQL/nuLzPZJNXhu1Drv61G5nobqu
- iwV+ZJrQao1+mfNl1u32BNAvPi3qBk2NHA5WxBa+9Ej3zclh0oBqgewJcZRkdYa8EGc3VSJxv
- /7Go6fL5zF21pU7vvh9XMg5qhxougwlGFiavyZOi54lfRt/FZNQIHT1C02NlEJYcjqFhoH23B
- 3yJGj4reee2NCerYuZThDNrIT63YkqixJOe4iJbdg+GW9il4JbkxD/fD3efW1I2p8E5gTZU3B
- GZoYQ9N50wNwb2ReWyE9IKFWdd/iMrZWApumMJrJhwRuF5NX5The6z7fCUk0syTqBN7dhwWA9
- ByksmrF8LxZYgTuLWx8B5+9lcsO/1o4pkv9At32hAW7rB0AV9Wpb2EZETXVYak4K0sf4J+oa9
- VzCV3VzcnbIZEuteK3AmNC4TleZEDWjY+WkggDlBrDqqc3EWT3TeUdTat39jFhc/DGBnMlwO9
- dNGtrZgB5LiPMVVukFtJLUlDYSwFlQc8pYXr9KTakiHIMmW+TdPAjtVXhEVdW5+SpICDY3C
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200806074826.24607-12-lokeshvutla@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 07.08.20 16:17, Sven Van Asbroeck wrote:
-
-Hi,
-
-> I believe you're asking: "how do I associate device tree nodes to
-> devices on a dynamically discoverable bus such as USB or PCI" right ?
+On 13:18-20200806, Lokesh Vutla wrote:
+> Update the INTA and INTR dt nodes to the latest DT bindings.
 > 
-> I believe that already exists. You can describe the _expected_ pci or
-> usb topology in the
-> devicetree. If a device gets detected in a spot on the bus described
-> in the tree, that
-> snippet will be automatically associated with this device.
-> 
-> How to for usb:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/usb/usb-device.txt?h=v5.8
-> 
-> How to for pci:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/pci.txt?h=v5.8
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-Thanks, that looks good.
-
-But I've still got another problem: how can I use DT along w/ ACPI ?
-
-The scenario goes like this:
-
-* machine boots and probes normally w/ ACPI
-* device is detected via USB, PCI, DMI, etc -> driver gets active
-* driver loads (or carries) a DT snippet
-* devices on the bus are instantiated via this DT snippet
-
-(driver could also be some udev vodoo)
-
-Example a:
-
-* generic usb i2c dongle w/ some i2c devices attached behind it
-* config (or DT snippet) somewhere in the FS
-
-Example b:
-
-* x86 board driver (eg. apu2/3/4), probed via DMI
-* just instantiates a bunch of generic drivers and wires up
-  devices (gpio, leds, keys, ...)
-
-
-Do you think we can already do that ?
-Otherwise, what has to be done to achieve that ?	
-
-
---mtx
+Acked-by: Nishanth Menon <nm@ti.com>
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
