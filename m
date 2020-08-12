@@ -2,269 +2,204 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD96BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186C1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA2620781
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RRZmS/K4"
+	by mail.kernel.org (Postfix) with ESMTP id F34CE207F7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 15:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHLPPU (ORCPT
+        id S1726477AbgHLPSK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 11:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbgHLPPT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 11:15:19 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84CC6C061387
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 08:15:19 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u128so1180954pfb.6
-        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 08:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rhn3sqAjMO7fHW50VMJNtuaUppNZfZWxCntk8JftCgQ=;
-        b=RRZmS/K4r4bVHEUwf8n+9+7Ir4gT7POq7veOwiR/I9olsAHAhQKduUFHS1xvULIqMQ
-         QYZYafxj5Yph4zoWUZjHGyki2EPuKQx7c7Lgn59Rqg+qdkOgqjx1z61Kg1yKQCJIZhSV
-         B8NNy7735o8SLwnR4TEt8i/O05/V4RpgsJlOk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rhn3sqAjMO7fHW50VMJNtuaUppNZfZWxCntk8JftCgQ=;
-        b=FDjkkmj9v/Ld0Iv8idhfW8RNDPwB2U1cVfHcKU1rAwyQXjLlzulAmTq8v/0WMzfyG4
-         Z9kG5tKSDVK7Khi20qIeoo2BjuN+B3kjvwqcKJCc54RBYsyp8lMPy21/njX0WRH+hOi+
-         EEbm9kx2YIFhj0ZlMoGW4Q+6thHDJi+dyLWXdWNgcvUcCaBznut6SzhdFN2F/ov/nles
-         hd37af62Jo3j/S35/8/CaDcTkgVYUMDSk0NbwY+XAgWqWwRQkBXGb/x8qXtAcMBh3j5P
-         BQ0apn6ZevLFTk4cu7GVELE46lQCxQDhkMpcIzTefAx//tCOZd8jrwKtfuR9W2NBj1rN
-         EnSg==
-X-Gm-Message-State: AOAM532Qf+f/Jn+LDgN/IwBcJvCcum4A6xwPyYekOZ2C7JCforGGOwUb
-        sM1s45pHMTc18SpvSx5++6Fatw==
-X-Google-Smtp-Source: ABdhPJxH5BXx5vyPzseYMN/ZVukUoNGb3kc6hqCOuQZoIR/oTI0axPEFwCYRnee1zW2Uc3NQcQKRiw==
-X-Received: by 2002:aa7:93a6:: with SMTP id x6mr30835pff.37.1597245318477;
-        Wed, 12 Aug 2020 08:15:18 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id h18sm2825713pfo.21.2020.08.12.08.15.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2020 08:15:17 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 08:15:16 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     sbhanu@codeaurora.org
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, rnayak@codeaurora.org,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for
- eMMC and SDcard
-Message-ID: <20200812151516.GA2995789@google.com>
-References: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
- <20200724171018.GZ3191083@google.com>
- <7ffcb56e9e6723f4bae687e0f491cb93@codeaurora.org>
- <20200727191029.GA3191083@google.com>
- <e83f559bb8691cd602f35e3bd739e5c4@codeaurora.org>
- <20200811170855.GK3191083@google.com>
- <be51df4466bc92574555bc762ff002d5@codeaurora.org>
+        Wed, 12 Aug 2020 11:18:10 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:38193 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgHLPSI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 11:18:08 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1D0541BF20B;
+        Wed, 12 Aug 2020 15:18:03 +0000 (UTC)
+Date:   Wed, 12 Aug 2020 17:18:02 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
+        Conor Culhane <conor.culhane@silvaco.com>,
+        <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 3/4] i3c: master: svc: Add Silvaco I3C master driver
+Message-ID: <20200812171802.295b08d8@xps13>
+In-Reply-To: <20200812141312.3331-3-miquel.raynal@bootlin.com>
+References: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+        <20200812141312.3331-3-miquel.raynal@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <be51df4466bc92574555bc762ff002d5@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 04:26:08PM +0530, sbhanu@codeaurora.org wrote:
-> On 2020-08-11 22:38, Matthias Kaehlcke wrote:
-> > On Tue, Jul 28, 2020 at 04:49:05PM +0530, sbhanu@codeaurora.org wrote:
-> > > On 2020-07-28 00:40, Matthias Kaehlcke wrote:
-> > > > Hi,
-> > > >
-> > > > On Mon, Jul 27, 2020 at 12:20:38PM +0530, sbhanu@codeaurora.org wrote:
-> > > > > On 2020-07-24 22:40, Matthias Kaehlcke wrote:
-> > > > > > Hi Shaik,
-> > > > > >
-> > > > > > On Tue, Jul 21, 2020 at 04:16:21PM +0530, Shaik Sajida Bhanu wrote:
-> > > > > > > From: Pradeep P V K <ppvk@codeaurora.org>
-> > > > > > >
-> > > > > > > Add the bandwidth domain supporting performance state and
-> > > > > > > the corresponding OPP tables for the sdhc device on sc7180.
-> > > > > > >
-> > > > > > > Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> > > > > > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> > > > > > > ---
-> > > > > > >
-> > > > > > > Changes since V1:
-> > > > > > > 	- Incorporated review comments by Bjorn Andersson.
-> > > > > > > ---
-> > > > > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
-> > > > > > >  1 file changed, 15 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > index 68f9894..d78a066 100644
-> > > > > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > > > @@ -684,6 +684,9 @@
-> > > > > > >  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-> > > > > > >  					<&gcc GCC_SDCC1_AHB_CLK>;
-> > > > > > >  			clock-names = "core", "iface";
-> > > > > > > +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
-> > > > > > > +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
-> > > > > > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
-> > > > > > >  			power-domains = <&rpmhpd SC7180_CX>;
-> > > > > > >  			operating-points-v2 = <&sdhc1_opp_table>;
-> > > > > > >
-> > > > > > > @@ -704,11 +707,15 @@
-> > > > > > >  				opp-100000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <100000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_low_svs>;
-> > > > > > > +					opp-peak-kBps = <100000 100000>;
-> > > > > > > +					opp-avg-kBps = <100000 50000>;
-> > > > > > >  				};
-> > > > > > >
-> > > > > > >  				opp-384000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <384000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_svs_l1>;
-> > > > > > > +					opp-peak-kBps = <600000 900000>;
-> > > > > > > +					opp-avg-kBps = <261438 300000>;
-> > > > > > >  				};
-> > > > > > >  			};
-> > > > > > >  		};
-> > > > > > > @@ -2476,6 +2483,10 @@
-> > > > > > >  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-> > > > > > >  					<&gcc GCC_SDCC2_AHB_CLK>;
-> > > > > > >  			clock-names = "core", "iface";
-> > > > > > > +
-> > > > > > > +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
-> > > > > > > +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
-> > > > > > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
-> > > > > > >  			power-domains = <&rpmhpd SC7180_CX>;
-> > > > > > >  			operating-points-v2 = <&sdhc2_opp_table>;
-> > > > > > >
-> > > > > > > @@ -2489,11 +2500,15 @@
-> > > > > > >  				opp-100000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <100000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_low_svs>;
-> > > > > > > +					opp-peak-kBps = <160000 100000>;
-> > > > > > > +					opp-avg-kBps = <80000 50000>;
-> > > > > > >  				};
-> > > > > > >
-> > > > > > >  				opp-202000000 {
-> > > > > > >  					opp-hz = /bits/ 64 <202000000>;
-> > > > > > >  					required-opps = <&rpmhpd_opp_svs_l1>;
-> > > > > > > +					opp-peak-kBps = <200000	120000>;
-> > > > > > > +					opp-avg-kBps = <100000 60000>;
-> > > > > > >  				};
-> > > > > > >  			};
-> > > > > > >  		};
-> > > > > >
-> > > > > > Does the sdhci-msm driver actually have BW scaling support at this
-> > > > > > point?
-> > > > > >
-> > > > >
-> > > > > yes
-> > > > >
-> > > > > > There is commit 4ece9795be56 ("mmc: sdhci-msm: Add interconnect
-> > > > > > bandwidth scaling support"), whose commit message says "make sure
-> > > > > > interconnect driver is ready before handling interconnect scaling.".
-> > > > > >
-> > > > > > I haven't seen any patch adding the scaling support (supposedly by
-> > > > > > adding dev_pm_opp_set_bw() calls?). Did I miss it? If not it seems
-> > > > > > it would make sense to post it in a series together with this patch,
-> > > > > > as far as I can tell this patch alone does nothing in practical terms.
-> > > > > >
-> > > > > > grep sdhc /sys/kernel/debug/interconnect/interconnect_summary
-> > > > > >   8804000.sdhci                          0            0            0
-> > > > > >   7c4000.sdhci                           0            0            0
-> > > > > >   7c4000.sdhci                           0            0            0
-> > > > > >   8804000.sdhci                          0            0            0
-> > > > > >   ...
-> > > > >
-> > > > > "mmc: sdhci-msm: Use OPP API to set clk/perf
-> > > > > state"(https://lkml.org/lkml/2020/4/8/425) and "mmc: sdhci-msm: Add
-> > > > > interconnect bandwidth scaling
-> > > > > support"(https://lkml.org/lkml/2020/3/12/60)
-> > > > > with these two patches scaling will be supported for sdhci-msm driver.
-> > > >
-> > > > Are you testing with exactly these patches or with the ones that landed
-> > > > upstream? At least the second one changed substantially
-> > > >
-> > > > > the values  in  grep sdhc
-> > > > > /sys/kernel/debug/interconnect/interconnect_summary will be zero
-> > > > > during
-> > > > > device is in suspend state...
-> > > >
-> > > > Yes, I forgot to mention that I started MMC IO before looking at
-> > > > 'interconnect_summary'.
-> > > >
-> > > > > and the values in  grep sdhc
-> > > > > /sys/kernel/debug/interconnect/interconnect_summary during device in
-> > > > > resume
-> > > > > state will be like the following::
-> > > > >
-> > > > > cicalhost / # cat
-> > > > > /sys/kernel/debug/interconnect/interconnect_summary | grep
-> > > > > sdh
-> > > > >   8804000.sdhci                          0        60000       120000
-> > > > >   7c4000.sdhci                           0       300000       900000
-> > > > >   7c4000.sdhci                           0       300000       900000
-> > > > >   8804000.sdhci                          0        60000       120000
-> > > > >   8804000.sdhci                          0       100000       200000
-> > > > >   7c4000.sdhci                           0       261438       600000
-> > > > >   8804000.sdhci                          0        60000       120000
-> > > >
-> > > > On my system the bandwidth is never set:
-> > > >
-> > > > 3.590152] sdhci_msm 7c4000.sdhci: DBG: old/new frequencies (384000000
-> > > > Hz) are same, nothing to do
-> > > > https://elixir.bootlin.com/linux/v5.7.8/source/drivers/opp/core.c#L847
-> > > >
-> > > > This happens every time, even after the bandwith is set to 0. The
-> > > > problem
-> > > > seems to be that opp_table->clk doesn't change for target_freq = 0.
-> > > >
-> > > > My system is based on v5.4, so it is possible that my kernel is missing
-> > > > some
-> > > > relevant patch from upstream.
-> > > Hi matthias,
-> > > 
-> > > In order to aviod confusion this patch is continuation of the below
-> > > patch::
-> > > "mmc: sdhci-msm: Add interconnect bandwidth scaling support"
-> > > (https://lkml.org/lkml/2020/6/9/160).
-> > 
-> > My kernel contains this patch.
-> > 
-> > As you told me in private, the patch "opp: Fix dev_pm_opp_set_rate()
-> > to not return early" (https://patchwork.kernel.org/patch/11707003/) is
-> > needed, which fixes exactly the problem I described.
-> > 
-> > It seems the tree you tested was not based on the maintainer tree or
-> > upstream,
-> > please make that clear when someone reports issues. Since you said it
-> > works
-> > for you I wasted time trying to chase down a missing patch which did not
-> > exist
-> > (yet).
-> 
-> 
-> Hi Matthis,
-> 
-> Can you confirm from your end the issue that you reported got fixed
-> with Rajendra patch or not. Once you confirm, I can ask Bjorn to pull
-> this dt change.
+Hi Conor, Rajeev,
 
-Yes, the issue is fixed with Rajendra's patch
+> +static int svc_i3c_master_handle_ibi(struct svc_i3c_master *master,
+> +				     struct i3c_dev_desc *dev)
+> +{
+> +	struct svc_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
+> +	struct i3c_ibi_slot *slot;
+> +	unsigned int count;
+> +	u32 mdatactrl;
+> +	int ret = 0;
+> +	u8 *buf;
+> +
+> +	spin_lock(&master->ibi.lock);
+> +
+> +	slot = i3c_generic_ibi_get_free_slot(data->ibi_pool);
+> +	if (!slot) {
+> +		ret = -ENOSPC;
+> +		goto unlock;
+> +	}
+> +
+> +	slot->len = 0;
+> +	buf = slot->data;
+> +	while (readl(master->regs + SVC_I3C_MSTATUS) & SVC_I3C_MINT_RXPEND) {
+> +		mdatactrl = readl(master->regs + SVC_I3C_MDATACTRL);
+> +		count = SVC_I3C_MDATACTRL_RXCOUNT(mdatactrl);
+> +		readsl(master->regs + SVC_I3C_MRDATAB, buf, count);
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
+After discussing with Boris, I have a question about the design: is
+there a way to differentiate, from a software point of view, from the
+data coming as "IBI" and "regular data"?
+
+Let's say the master initiates a read.
+The moment after, an IBI is triggered.
+The hanlde_ibi() helper is called to read the IBI payload.
+While the IBI interrupted the read operation, it also interrupted the
+master dequeuing process of the bytes already in the FIFO. From a
+software perspective, we might end up reading a "regular byte" from the
+handle_ibi() helper expecting an "IBI byte".
+
+Is there some kind of double queue feature which I missed? Or perhaps a
+way to discriminate the origin of the data?
+
+> +		slot->len += count;
+> +		buf += count;
+> +	}
+> +
+> +	i3c_master_queue_ibi(dev, slot);
+> +
+> +unlock:
+> +	spin_unlock(&master->ibi.lock);
+> +	svc_i3c_master_emit_stop(master);
+> +	svc_i3c_master_flush_fifo(master);
+> +
+> +	return ret;
+> +}
+> +
+> +static void svc_i3c_master_ack_ibi(struct svc_i3c_master *master,
+> +				   bool mandatory_byte)
+> +{
+> +	unsigned int ibi_ack_nack;
+> +
+> +	ibi_ack_nack = SVC_I3C_MCTRL_REQUEST_IBI_ACKNACK;
+> +	if (mandatory_byte)
+> +		ibi_ack_nack |= SVC_I3C_MCTRL_IBIRESP_ACK_WITH_BYTE;
+> +	else
+> +		ibi_ack_nack |= SVC_I3C_MCTRL_IBIRESP_ACK_WITHOUT_BYTE;
+> +
+> +	writel(ibi_ack_nack, master->regs + SVC_I3C_MCTRL);
+> +}
+> +
+> +static void svc_i3c_master_nack_ibi(struct svc_i3c_master *master)
+> +{
+> +	writel(SVC_I3C_MCTRL_REQUEST_IBI_ACKNACK |
+> +	       SVC_I3C_MCTRL_IBIRESP_NACK,
+> +	       master->regs + SVC_I3C_MCTRL);
+> +}
+> +
+> +static irqreturn_t svc_i3c_master_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct svc_i3c_master *master = (struct svc_i3c_master *)dev_id;
+> +	u32 active = readl(master->regs + SVC_I3C_MINTMASKED);
+> +	u32 status = readl(master->regs + SVC_I3C_MSTATUS);
+> +	unsigned int ibitype = SVC_I3C_MSTATUS_IBITYPE(status);
+> +	unsigned int ibiaddr = SVC_I3C_MSTATUS_IBIADDR(status);
+> +	struct i3c_dev_desc *dev;
+> +	bool rdata;
+> +
+> +	if (active & SVC_I3C_MINT_SLVSTART) {
+> +		writel(SVC_I3C_MINT_SLVSTART, master->regs + SVC_I3C_MSTATUS);
+> +		writel(SVC_I3C_MCTRL_REQUEST_AUTO_IBI |
+> +		       SVC_I3C_MCTRL_IBIRESP_MANUAL,
+> +		       master->regs + SVC_I3C_MCTRL);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	if (!(active & SVC_I3C_MINT_IBIWON))
+> +		return IRQ_NONE;
+> +
+> +	writel(SVC_I3C_MINT_IBIWON, master->regs + SVC_I3C_MSTATUS);
+> +
+> +	switch (ibitype) {
+> +	case SVC_I3C_MSTATUS_IBITYPE_IBI:
+> +		dev = svc_i3c_master_dev_from_addr(master, ibiaddr);
+> +		if (WARN_ON(!dev)) {
+> +			svc_i3c_master_nack_ibi(master);
+> +			break;
+> +		}
+> +
+> +		rdata = dev->info.bcr & I3C_BCR_IBI_PAYLOAD;
+> +		svc_i3c_master_ack_ibi(master, rdata);
+> +		if (rdata) {
+> +			svc_i3c_master_disable_interrupts(master);
+> +			return IRQ_WAKE_THREAD;
+> +		}
+> +
+> +		break;
+> +	case SVC_I3C_MSTATUS_IBITYPE_MASTER_REQUEST:
+> +		svc_i3c_master_nack_ibi(master);
+> +		break;
+> +	case SVC_I3C_MSTATUS_IBITYPE_HOT_JOIN:
+> +		svc_i3c_master_ack_ibi(master, false);
+> +		queue_work(master->base.wq, &master->hj_work);
+> +		break;
+> +	default:
+> +		return IRQ_NONE;
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t svc_i3c_master_threaded_handler(int irq, void *dev_id)
+> +{
+> +	struct svc_i3c_master *master = (struct svc_i3c_master *)dev_id;
+> +	u32 status = readl(master->regs + SVC_I3C_MSTATUS);
+> +	unsigned int ibiaddr = SVC_I3C_MSTATUS_IBIADDR(status);
+> +	struct i3c_dev_desc *dev;
+> +
+> +	dev = svc_i3c_master_dev_from_addr(master, ibiaddr);
+> +	if (WARN_ON(!dev)) {
+> +		svc_i3c_master_emit_stop(master);
+> +		svc_i3c_master_flush_fifo(master);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	svc_i3c_master_handle_ibi(master, dev);
+> +	svc_i3c_master_enable_interrupts(master,
+> +					 SVC_I3C_MINT_SLVSTART |
+> +					 SVC_I3C_MINT_IBIWON);
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+Thanks,
+Miquèl
