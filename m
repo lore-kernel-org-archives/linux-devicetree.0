@@ -2,105 +2,127 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DC1C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F64CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6772076C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F/Mcb8Ga"
+	by mail.kernel.org (Postfix) with ESMTP id 582F0206B2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgHLNkq (ORCPT
+        id S1726468AbgHLN4p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 09:40:46 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48764 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHLNkp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 09:40:45 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07CDeUSq006226;
-        Wed, 12 Aug 2020 08:40:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597239630;
-        bh=XZyI6ATGBEktft+tTBs7WYlJW2zc+4f4sVgdedX/G20=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=F/Mcb8GazliPQqaXlMW6cM3evNmFx+Sfnu52qdjTgeHputFkdrLdPq257hLfk6SAD
-         qVow87pmGQfp1N0wa2DOMsW++6lS1XnBopJyD739JpmwEfZNnigelMrmLZrCRdL1Lx
-         65f9s+qi/7AoCRa/J9HxgfjNA2LgMzIhEhAWObc4=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07CDeUtj057289
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 12 Aug 2020 08:40:30 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 12
- Aug 2020 08:40:30 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 12 Aug 2020 08:40:30 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07CDeUem095297;
-        Wed, 12 Aug 2020 08:40:30 -0500
-Date:   Wed, 12 Aug 2020 08:40:30 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-CC:     Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v6 00/13] irqchip: ti,sci-intr/inta: Update the dt
- bindings to accept different interrupt parents
-Message-ID: <20200812134030.pxkxsj4427pawv66@akan>
-References: <20200806074826.24607-1-lokeshvutla@ti.com>
+        Wed, 12 Aug 2020 09:56:45 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:44600 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbgHLN4o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 09:56:44 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id DEF02FB04;
+        Wed, 12 Aug 2020 15:56:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id d1YLBnojmT0o; Wed, 12 Aug 2020 15:56:38 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 8DD1A45770; Wed, 12 Aug 2020 15:56:37 +0200 (CEST)
+Date:   Wed, 12 Aug 2020 15:56:37 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Swapnil Jakhade <sjakhade@cadence.com>, airlied@linux.ie,
+        daniel@ffwll.ch, Laurent.pinchart@ideasonboard.com,
+        robh+dt@kernel.org, a.hajda@samsung.com, narmstrong@baylibre.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mparab@cadence.com,
+        yamonkar@cadence.com, praneeth@ti.com, nsekhar@ti.com,
+        jsarha@ti.com, sandor.yu@nxp.com
+Subject: Re: [PATCH v8 0/3] drm: Add support for Cadence MHDP DPI/DP bridge
+ and J721E wrapper.
+Message-ID: <20200812135637.GA107602@bogon.m.sigxcpu.org>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <20200812083937.GA8816@bogon.m.sigxcpu.org>
+ <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200806074826.24607-1-lokeshvutla@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13:18-20200806, Lokesh Vutla wrote:
-> Hi Marc,
-> 	This is continuation of the RFC patches[0] regarding the driver
-> updates to support for following interrupt parent connection:
-> - INTR -> INTR
-> - INTA -> GICv3
-> The current existing driver assumes that INTR is always connected to
-> GICv3 and INTA is always connected to INTR.
+Hi,
+On Wed, Aug 12, 2020 at 01:47:42PM +0300, Tomi Valkeinen wrote:
+> Hi Guido,
 > 
-> As discussed this change breaks the DT backward compatibility but it
-> allows to not depend on TISCI firmware properties in DT node. IMHO, this
-> will ensure that any future changes will not effect DT properties.
+> On 12/08/2020 11:39, Guido Günther wrote:
+> > Hi,
+> > On Thu, Aug 06, 2020 at 01:34:29PM +0200, Swapnil Jakhade wrote:
+> >> This patch series adds new DRM bridge driver for Cadence MHDP DPI/DP
+> >> bridge. The Cadence Display Port IP is also referred as MHDP (Mobile High
+> >> Definition Link, High-Definition Multimedia Interface, Display Port).
+> >> Cadence Display Port complies with VESA DisplayPort (DP) and embedded
+> >> Display Port (eDP) standards.
+> > 
+> > Is there any relation to the cadence mhdp ip core used inthe imx8mq:
+> > 
+> >     https://lore.kernel.org/dri-devel/cover.1590982881.git.Sandor.yu@nxp.com/
+> > 
+> > It looks very similar in several places so should that use the same driver?
+> > Cheers,
+> >  -- Guido
 > 
-> This series depends on the the new Yaml bindings for common TISCI[1].
+> Interesting.
 > 
-> [0] https://lore.kernel.org/linux-arm-kernel/20190923042405.26064-1-lokeshvutla@ti.com/
-> [1] https://patchwork.kernel.org/patch/11676843/
+> So the original Cadence DP patches for TI SoCs did create a common driver with Rockchip's older mhdp
+> driver. And looks like the IMX series points to an early version of that patch ("drm/rockchip:
+> prepare common code for cdns and rk dpi/dp driver").
+> 
+> We gave up on that as the IPs did have differences and the firmwares used were apparently quite
+> different. The end result was very difficult to maintain, especially as (afaik) none of the people
+> involved had relevant Rockchip HW.
+
+Is the `struct mhdp_platform_ops` a leftover from that? Can that be dropped?
+
+> The idea was to get a stable DP driver for TI SoCs ready and upstream, and then carefully try to
+> create common parts with Rockchip's driver in small pieces.
+
+I wonder how imx8 would best blend into this? First thing will likely be
+to upstream the phy code in driveres/phy/ so a modified version of this bridge
+driver could call into that, then go and look for common patterns.
+
+> If the Rockchip and IMX mhdp have the same IP and same firmware, then they obviously should share
+> code as done in the series you point to.
+
+I'm pretty sure they use different firmware though - the imx8mq
+additionally supports HDMI with a different firmware on the same IP core
+(13.4 and 13.5 in the imx8mq ref manual).
+
+> Perhaps Cadence can clarify the differences between IMX, TI and
+> Rockchip IPs and FWs?
+
+That would be great!
+ -- Guido
 
 
-Marc,
-Noticed that Bjorn's merges seem all done, and checked if the series
-applies to irq/base-5.9 (but I am not entirely sure where you want the
-series to go to) - but anyways, I have acked the dts series if you are
-planning on picking it up in 5.9 - does'nt conflict in master or next-20200812
+> I'm worried that if there are IP differences, even if not great ones, and if the FWs are different
+> and developed separately, it'll be a constant "fix X for SoC A, and accidentally break Y for SoC B
+> and C", especially if too much code is shared.
+> 
+> In the long run I'm all for a single driver (or large shared parts), but I'm not sure if we should
+> start with that approach.
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+
+
+
+> 
+>  Tomi
+> 
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
