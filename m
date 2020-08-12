@@ -2,102 +2,95 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CD4C433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E22C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7B1206B5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC512076B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 06:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpYvDBU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgHLGkz (ORCPT
+        id S1726718AbgHLGs4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 02:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59100 "EHLO
+        Wed, 12 Aug 2020 02:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbgHLGkw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 02:40:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708F6C06174A
-        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 23:40:52 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k5kRH-0007HF-PD; Wed, 12 Aug 2020 08:40:43 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1k5kRF-00072c-Ph; Wed, 12 Aug 2020 08:40:41 +0200
-Date:   Wed, 12 Aug 2020 08:40:41 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com
-Subject: Re: [PATCH v6 1/2] Add DT bindings YAML schema for PWM fan
- controller of LGM SoC
-Message-ID: <20200812064041.e75p5neq7wcg5dag@pengutronix.de>
-References: <cover.1595926036.git.rahul.tanwar@linux.intel.com>
- <e61e6a05353f6242f5450da130b042f195ac7620.1595926036.git.rahul.tanwar@linux.intel.com>
- <20200731181944.GB516550@bogus>
- <e50f198d-42d4-28b1-d32c-32f4b1bbcb0b@linux.intel.com>
+        with ESMTP id S1726629AbgHLGs4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 02:48:56 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF62C06174A
+        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 23:48:56 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id m22so1020660ljj.5
+        for <devicetree@vger.kernel.org>; Tue, 11 Aug 2020 23:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J31UG4xZfaTIfqQug3jDowpRaMecAJvi+cR7RWW/6Kc=;
+        b=VpYvDBU0f25AQ9m3GDVHoUNKGkkDhwbrnVrRQGv9qnG12eXf4IY7Tpb4nKzyaA5GnR
+         AHtuTeNxArmL+axuWPrSumZ/XebgP77RRcTE+GQkB8i0oVWOsRSw3z0wBHwftrhm/jFP
+         CvNNCuSx/bwusMpWV+mV9dc66XOoA5fxPM26P+c7ZZjLqGy7wW5QVw4vw9fqIqUTa5cF
+         PSVEIwmtvgOvsay+aDb9WpoGr6AwxjmjiR43zYa7iWp4i2u/PL9XMjOAPLVij/0Pn1yV
+         +mULTLZ5F3Go7VxJFDc79NuukaGuX283qR5QhEyWTK2QvmhsNtuRRq7Luw33QF6WG0Zs
+         U7Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J31UG4xZfaTIfqQug3jDowpRaMecAJvi+cR7RWW/6Kc=;
+        b=LmLta2sXx6lBWLxVljEummR+eQgwq7fhpSZot9K7cf3yc7hbbYTPNuUYFhT1QisX0d
+         cMse4sQcn94CUMn7F8NpafiOHewIprg8GxHklFX0lTV+5VohpPQAgisH9OIJOQ4g4ATq
+         FKIF/390fjo7nOKSrrjMNuocRZyGJxyIjzM8NvDtFit9hC1iE5OsCY1OByxfBLpjLeH4
+         KJ76/UE+i17DnwA/RvLVzjzbB7rjiitnJ0QLckcR8ttBe9PSNhEQrG+hpzYjWakDTZA4
+         KtitdXPo6rwHRdlsSboOKu9hU1XRPqaIeNdSVBrkF/Ul5yIgFFt1en0IngPzcEKq3NRF
+         KJdA==
+X-Gm-Message-State: AOAM533YX94VCvH+YkNmuFtD2Q3XNK++wkTpJKCoH4u8SLnuX+kaH4T0
+        dS/HJb4f+Q4WXV3/CyXF9pZMECyjKabhUnXynBgApw==
+X-Google-Smtp-Source: ABdhPJxHxwmcGrskpI/3oFiCVwxSZLG0pwpgInuuMV19jZuo3wuyU4iLrgAO3cTWdJQBKcHLd6uIZH9VRx2ad2MKIIE=
+X-Received: by 2002:a2e:8144:: with SMTP id t4mr4977361ljg.100.1597214934520;
+ Tue, 11 Aug 2020 23:48:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5u42du46nfyz3lys"
-Content-Disposition: inline
-In-Reply-To: <e50f198d-42d4-28b1-d32c-32f4b1bbcb0b@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200720203506.3883129-1-linus.walleij@linaro.org> <20200721083228.GA283099@ravnborg.org>
+In-Reply-To: <20200721083228.GA283099@ravnborg.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 12 Aug 2020 08:48:42 +0200
+Message-ID: <CACRpkdbuihAwvsx4QmV6PnVM5aDFMiaR9h-8aBF8EzXRGZ1XNA@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v1] dt-bindings: backlight: Add Kinetic KTD253 bindings
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jul 21, 2020 at 10:32 AM Sam Ravnborg <sam@ravnborg.org> wrote:
 
---5u42du46nfyz3lys
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > +description: |
+> > +  The Kinetic Technologies KTD253 is a white LED backlight that is
+> > +  controlled by a single GPIO line. If you just turn on the backlight
+> > +  it goes to maximum backlight then you can set the level of backlight
+> > +  using pulses on the enable wire.
+>
+> No $ref for common.yaml?
 
-Hello Rahul,
+Since this is a backlight, and we do not have common bindings for,
+backlight I first looked into using the LED bindings in
+../common.yaml, but that has several problems, it cannot really
+be used for backlight. Backlight doesn't have "triggers",
+patterns, flash properties, the function is also pretty much
+evident.
 
-On Wed, Aug 12, 2020 at 11:49:14AM +0800, Tanwar, Rahul wrote:
-> Our PWM controller is actually a PWM fan controller dedicated for
-> controlling fan. I am looking for some suggestions from you on how
-> to handle fan related optional properties in such a scenario.
->=20
-> Should i create a separate child node for fan with PWM node being
-> the parent? Is that what you are suggesting? Thanks.
+So I will look into creating a new common for backlight.
 
-What is the problem of just using pwm-fan?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5u42du46nfyz3lys
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8zjuYACgkQwfwUeK3K
-7AmRFgf9Hj3Ye4VVPi0Zsv+m8e6Jx6F1XgWaK/KLQ5sBH32RoBdkOarZFf2pqcsN
-LbNgvrLiCRQWOmo3VdslgqmS8hefjaGsJOsromvz80sh864KQhe9BxjiFjqSGjAd
-E9EG1i2kE/zKS9p0Hb41juerIOHns9LoztpCPGUO/CajGa3fFXRHJ0jcACYciXtH
-swWCJysH3jPl7Bfxx6nf8/sg038vALQObFwI8166gtk2cT5UzrwqVIpR0EGw4dbE
-5Enm9XTReWqzwd0VDPGAPmtnbfUS0EiOVmEsBNh7OxbMk0Tmv1jFngaOohkRkZiD
-OqTOL7Gq7DvyN+UfWmLG8C8xmXjIpA==
-=jsAe
------END PGP SIGNATURE-----
-
---5u42du46nfyz3lys--
+Yours,
+Linus Walleij
