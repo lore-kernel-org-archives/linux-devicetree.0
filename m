@@ -2,110 +2,97 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A89BC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BE4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36AC92076B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1D220838
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 10:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bboj5vOX"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="F9oHOFd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgHLKWy (ORCPT
+        id S1726525AbgHLKd7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 06:22:54 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:51162 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726453AbgHLKWx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 06:22:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597227773; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=qdWJj+YFiq/6Q8Qq5gxz1zII2UH/kdDISNfbcizm23s=; b=Bboj5vOXHg2XdQydQZdOi4dk0ClxLu/Dctg9boKQvLWKw02wo6Xi5t9SXxcKcEhgIeQfRBXU
- I+1Epranjxerj82KmEQRheIH5bsyHe5rPwY+COph2oDswLCL+z5EOygn9zpE/lFccvsADRa/
- FjPeMRdmVsX6PrjCQ1kJ+onW0b8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f33c2fc247ccc308cc5e621 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 12 Aug 2020 10:22:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1D706C43391; Wed, 12 Aug 2020 10:22:52 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EDB26C433C6;
-        Wed, 12 Aug 2020 10:22:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EDB26C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, john.stultz@linaro.org,
-        amit.pundir@linaro.org, tdas@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH] arm64: dts: sdm845: Fixup OPP table for all qup devices
-Date:   Wed, 12 Aug 2020 15:52:10 +0530
-Message-Id: <1597227730-16477-1-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 12 Aug 2020 06:33:59 -0400
+Received: from mout.gmx.net ([212.227.17.21]:55981 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbgHLKd6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 06:33:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597228421;
+        bh=kyxDKOrNtFwAET7ssBuwQAdW/EMV3Yiruqvshw/MQC8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=F9oHOFd2NE49uWlyTBzMzsO0oF/XRpAZ+oojzB4cv+rcTAaknj3nNAdioxWIXyE5K
+         fRs17zeH8O3XXiVG2KtZ3d+SQkt3yBESKsjN/l5voxMCdsdPOtQjXKSa1pWP2xBOSi
+         AHEzJVMgNHbMMrQpL1vTOBIbpsmi9BCaVUh2JTEE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.41.139] ([185.53.41.139]) by web-mail.gmx.net
+ (3c-app-gmx-bap56.server.lan [172.19.172.126]) (via HTTP); Wed, 12 Aug 2020
+ 12:33:41 +0200
+MIME-Version: 1.0
+Message-ID: <trinity-a4a4e709-ca8d-4867-8f90-d0ddbfca05cb-1597228420620@3c-app-gmx-bap56>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Wenbin Mei <wenbin.mei@mediatek.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Wenbin Mei <wenbin.mei@mediatek.com>,
+        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        stable@vger.kernel.org
+Subject: Aw: [PATCH 2/3] arm64: dts: mt7622: add reset node for mmc device
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 12 Aug 2020 12:33:41 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20200812093726.10123-3-wenbin.mei@mediatek.com>
+References: <20200812093726.10123-1-wenbin.mei@mediatek.com>
+ <20200812093726.10123-3-wenbin.mei@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:gfeTfH9cl5G8lIBSMXcX0ttEubv7Ajx1wwPT2iBKRJ8x3w1qe/q3Aq2pU6G5w045XTeaU
+ X3ie2/s10R6kks7/xbD1Thbuozc+5ABCC2Am3V7c0VHKbNgHXHKbBPCnlOP3yA6NpDTgQGfnLfXq
+ mt68050gHBqeVdojky2SpvZFPnuyuXuTIKNpYZQDJlmALzYVzEsr7oh5nBHW3UOVkKg9+6w/Yd7C
+ mosrh9PR2Acwn92c2U2/n4y7rw6QPDbkY6e14wwmYMzPyk45sRS9ZKLVepc6Kb+jqmWobwfkqN7j
+ Zk=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6zVhbMh56Ig=:LxG6KCEOEFw5ug8YyG4aUq
+ I+jIPz9C525zCUaVy4FFHPQrjwvKyfNMVhdvoNAxO76lVanL4HNBm+m2p6TG4qr1wYnRk20f/
+ ppp/o0zMRE4hRqy0nzwabB6XZjhs8iOj7iXl1FjT+atnR3DK6LvDSef+2nZKrAhrsgc1y6TtW
+ rQJ4Glp5O2TaYSJv4vwZlMJT10hIPMxPDSspftOdzccie4sIdOWD03Y6nouD6rbdqpD6QfCS8
+ 3a9K9GqPy9XTqO0THuFMFkBCjBGSGSv/gOc5N+4v0BqrF2CUmS7727+FbOXnBLX5G7Fnc3c0z
+ URfCQ1gYwVCVU7g7VlQZSAyKjXDosXZJdPzJHgnpZB1esDMQjk4szyd6Fj3OiFR4BnW4Ylzdp
+ EESsEPaiOwz1hOkfwJmnrhmIqch1bBhtFKzbXw+P6xMspti9EQAaHAr+hR5MyqCdDdjXPm3SR
+ uHW5qbD2yIiwmCVxwq4sNXPwxj7wbgYJerkmBUy0Sfi5MAiKrm8sefwdJXxGO7Go9eWSM2HLi
+ R3wE2hz33osl8exD//FrrkQitMLMrHexG7/6cOxFEZc1JTUXpnLdIOxLMMe5rCcWdi/zKiRut
+ ggVUvJ162ZiXRbjBBpCIEaO2Qcf/mGKWRUDa+yGGCprJ9ERmqs6kh8XFXmoxGG3hDoE3ePiLc
+ St+5o7ZXfgAdZQElB2i0R6/B+ExcHvo8wclRPylKghS3nXR+p3QK8eiWju9YQ1vWk6qc=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This OPP table was based on the clock VDD-FMAX tables seen in
-downstream code, however it turns out the downstream clock
-driver does update these tables based on later/production
-rev of the chip and whats seen in the tables belongs to an
-early engineering rev of the SoC.
-Fix up the OPP tables such that it now matches with the
-production rev of sdm845 SoC.
+> Gesendet: Mittwoch, 12. August 2020 um 11:37 Uhr
+> Von: "Wenbin Mei" <wenbin.mei@mediatek.com>
+> Betreff: [PATCH 3/3] mmc: mediatek: add optional module reset property
 
-Fixes: 13cadb34e593 ("arm64: dts: sdm845: Add OPP table for all qup
-devices")
-Reported-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+> This patch adds a optional reset management for msdc.
+> Sometimes the bootloader does not bring msdc register
+> to default state, so need reset the msdc controller.
+>
+> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 2884577..eca81cf 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1093,8 +1093,8 @@
- 		qup_opp_table: qup-opp-table {
- 			compatible = "operating-points-v2";
- 
--			opp-19200000 {
--				opp-hz = /bits/ 64 <19200000>;
-+			opp-50000000 {
-+				opp-hz = /bits/ 64 <50000000>;
- 				required-opps = <&rpmhpd_opp_min_svs>;
- 			};
- 
-@@ -1107,6 +1107,11 @@
- 				opp-hz = /bits/ 64 <100000000>;
- 				required-opps = <&rpmhpd_opp_svs>;
- 			};
-+
-+			opp-128000000 {
-+				opp-hz = /bits/ 64 <128000000>;
-+				required-opps = <&rpmhpd_opp_nom>;
-+			};
- 		};
- 
- 		qupv3_id_0: geniqup@8c0000 {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks for posting the fix to Mainline
+same as 3/3, dts-patch is also needed for fixing eMMC-Issue on R64
 
+Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
+Tested-By: Frank Wunderlich <frank-w@public-files.de>
+
+and it needs to be fixed at least for 5.4+, so adding stable-CC
+
+Cc: stable@vger.kernel.org
