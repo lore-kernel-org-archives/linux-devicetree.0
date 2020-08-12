@@ -2,126 +2,193 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47C5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D43C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 17:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B13208A9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 16:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597251311;
-	bh=+Qq0r3tZBpXH6/hyJ9N4U7WQyG0GUKKaknsYk9p7VTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EHPBX+9i+Z235kMShpTr0Nc2ntaApfMC6mWzTySkVaNW3t+SZVkoGEN3IPP1cQuCM
-	 Y4pgU8eP6zIJx8grsdxrMs7x84kZrv3Ks1uPTnJQCNVbwYVRViNgNp1uBbWlNGc8iz
-	 oE1rh9L3IGhLBcupbuuRQ7+VQ9PCS+xTiDFLE7/I=
+	by mail.kernel.org (Postfix) with ESMTP id 2328E2076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 17:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgHLQzK (ORCPT
+        id S1726394AbgHLRN5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 12:55:10 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41874 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgHLQzJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 12:55:09 -0400
-Received: by mail-io1-f67.google.com with SMTP id g19so3535069ioh.8;
-        Wed, 12 Aug 2020 09:55:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OnKPv+qr/0SKiO3J0pJxrPNLJqM+U78LQKFRagi2BS8=;
-        b=W1hYnLkSXMsfW64lgGhp2VN9bUv+079Ih4IkLphG0jJ8sV2Ie3NpXMUacYO9bgYj9w
-         glKILNvJ8ZxqjUIXQgzYfWsCUz8rZqbCT0FJaBVQ3rsO2rpMZXWMGQjkDsLWge0tdMgC
-         Txg6eczopNwOpnH2Z+SlAZJyMq1/ha3Iglct2XS++Rx6pXctFUEbFJ7R8oOxb3CYGS/B
-         XF6xZAtQ3pTq8NyOJSPFhwHdngu/7Ssw6jKoV/3PqOA54BNjxZfY7C4R3lpOAU/O3vjw
-         lhT5kMTCWeg+uaU7VdkAmtfHxEYzjZXoHf7Zw/87OgxoYNfa0bWh51U0ErrLUIaLf5Wf
-         Gq+g==
-X-Gm-Message-State: AOAM5315w+uXU/ytLKJoLSQWRqXeo3CpdFt1WT0bXWL0bP3mg4BWBW0V
-        cVqMQtafpAiqUgOk8/kIyg==
-X-Google-Smtp-Source: ABdhPJwYwyFOnVugtnOVfg8AgmEVYg3C6rf+Hwcjg8rs7FalCUYOI3v0RNnferAdv8WDFYik34UcAQ==
-X-Received: by 2002:a6b:7e41:: with SMTP id k1mr718192ioq.130.1597251308230;
-        Wed, 12 Aug 2020 09:55:08 -0700 (PDT)
-Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id a9sm1236374iol.9.2020.08.12.09.55.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 09:55:07 -0700 (PDT)
-Received: (nullmailer pid 2363799 invoked by uid 1000);
-        Wed, 12 Aug 2020 16:55:04 -0000
-Date:   Wed, 12 Aug 2020 10:55:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [RESEND v7, PATCH 1/7] dt-bindings: mediatek: add rdma_fifo_size
- description for mt8183 display
-Message-ID: <20200812165504.GA2361465@bogus>
-References: <1596855231-5782-1-git-send-email-yongqiang.niu@mediatek.com>
- <1596855231-5782-2-git-send-email-yongqiang.niu@mediatek.com>
+        Wed, 12 Aug 2020 13:13:57 -0400
+Received: from smtprelay0172.hostedemail.com ([216.40.44.172]:33518 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725872AbgHLRN5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 13:13:57 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 9308C18029144;
+        Wed, 12 Aug 2020 17:13:55 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: place34_20016de26fed
+X-Filterd-Recvd-Size: 6706
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 12 Aug 2020 17:13:52 +0000 (UTC)
+Message-ID: <305f0df155e89e0c626b8f7366c4ab5f6741aedd.camel@perches.com>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date:   Wed, 12 Aug 2020 10:13:51 -0700
+In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596855231-5782-2-git-send-email-yongqiang.niu@mediatek.com>
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Aug 08, 2020 at 10:53:45AM +0800, Yongqiang Niu wrote:
-> rdma fifo size may be different even in same SOC, add this
-> property to the corresponding rdma
-> 
-> Change-Id: I67635ec7f3f59cf4cbc7737285e5e28ff0ab71c9
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,disp.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> index b91e709..e6bbe32 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> @@ -66,6 +66,11 @@ Required properties (DMA function blocks):
->    argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
->    for details.
->  
-> +Optional properties (RDMA function blocks):
-> +- mediatek,rdma_fifo_size: rdma fifo size may be different even in same SOC, add this
+Perhaps these trivial bits on top:
+---
+ drivers/staging/hikey9xx/hi6421-spmi-pmic.c     |  5 +++--
+ drivers/staging/hikey9xx/hi6421v600-regulator.c |  6 +++---
+ drivers/staging/hikey9xx/hisi-spmi-controller.c | 21 +++++++++++++--------
+ 3 files changed, 19 insertions(+), 13 deletions(-)
 
-mediatek,rdma-fifo-size
+diff --git a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+index 76766e7b8bf9..9d73458ca65a 100644
+--- a/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
++++ b/drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+@@ -99,7 +99,7 @@ int hi6421_spmi_pmic_write(struct hi6421_spmi_pmic *pmic, int reg, u32 val)
+ EXPORT_SYMBOL(hi6421_spmi_pmic_write);
+ 
+ int hi6421_spmi_pmic_rmw(struct hi6421_spmi_pmic *pmic, int reg,
+-			  u32 mask, u32 bits)
++			 u32 mask, u32 bits)
+ {
+ 	unsigned long flags;
+ 	u32 data;
+@@ -130,7 +130,8 @@ static irqreturn_t hi6421_spmi_irq_handler(int irq, void *data)
+ 		hi6421_spmi_pmic_write(pmic, (i + pmic->irq_addr), pending);
+ 
+ 		/* solve powerkey order */
+-		if ((i == HISI_IRQ_KEY_NUM) && ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
++		if ((i == HISI_IRQ_KEY_NUM) &&
++		    ((pending & HISI_IRQ_KEY_VALUE) == HISI_IRQ_KEY_VALUE)) {
+ 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_DOWN]);
+ 			generic_handle_irq(pmic->irqs[HISI_IRQ_KEY_UP]);
+ 			pending &= (~HISI_IRQ_KEY_VALUE);
+diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+index 29ef6bcadd84..82635ff54a74 100644
+--- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
++++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
+@@ -227,7 +227,7 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
+ 
+ 	ret = of_property_read_u32(np, "reg", &rdesc->enable_reg);
+ 	if (ret) {
+-		dev_err(dev, "missing reg property\nn");
++		dev_err(dev, "missing reg property\n");
+ 		return ret;
+ 	}
+ 
+@@ -303,13 +303,13 @@ static int hi6421_spmi_dt_parse(struct platform_device *pdev,
+ 	 */
+ 	rdesc->vsel_mask = (1 << (fls(rdesc->n_voltages) - 1)) - 1;
+ 
+-	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x",
++	dev_dbg(dev, "voltage selector settings: reg: 0x%x, mask: 0x%x\n",
+ 		rdesc->vsel_reg, rdesc->vsel_mask);
+ 
+ 	return 0;
+ }
+ 
+-static struct regulator_ops hi6421_spmi_ldo_rops = {
++static const struct regulator_ops hi6421_spmi_ldo_rops = {
+ 	.is_enabled = hi6421_spmi_regulator_is_enabled,
+ 	.enable = hi6421_spmi_regulator_enable,
+ 	.disable = hi6421_spmi_regulator_disable,
+diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+index 583df10cbf1a..513d962b8bce 100644
+--- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
++++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+@@ -102,7 +102,7 @@ static int spmi_controller_wait_for_done(struct device *dev,
+ 			return 0;
+ 		}
+ 		udelay(1);
+-	}  while(timeout--);
++	} while (timeout--);
+ 
+ 	dev_err(dev, "%s: timeout, status 0x%x\n", __func__, status);
+ 	return -ETIMEDOUT;
+@@ -121,7 +121,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+ 
+ 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+ 		dev_err(&ctrl->dev,
+-			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
++			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+ 			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+ 		return  -EINVAL;
+ 	}
+@@ -137,7 +137,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+ 		op_code = SPMI_CMD_EXT_REG_READ_L;
+ 		break;
+ 	default:
+-		dev_err(&ctrl->dev, "invalid read cmd 0x%x", opc);
++		dev_err(&ctrl->dev, "invalid read cmd 0x%x\n", opc);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -157,7 +157,10 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+ 		goto done;
+ 
+ 	for (i = 0; bc > i * SPMI_PER_DATAREG_BYTE; i++) {
+-		data = readl(spmi_controller->base + chnl_ofst + SPMI_SLAVE_OFFSET * slave_id + SPMI_APB_SPMI_RDATA0_BASE_ADDR + i * SPMI_PER_DATAREG_BYTE);
++		data = readl(spmi_controller->base + chnl_ofst +
++			     SPMI_SLAVE_OFFSET * slave_id +
++			     SPMI_APB_SPMI_RDATA0_BASE_ADDR +
++			     i * SPMI_PER_DATAREG_BYTE);
+ 		data = be32_to_cpu((__be32)data);
+ 		if ((bc - i * SPMI_PER_DATAREG_BYTE) >> 2) {
+ 			memcpy(buf, &data, sizeof(data));
+@@ -194,7 +197,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+ 
+ 	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+ 		dev_err(&ctrl->dev,
+-			"spmi_controller supports 1..%d bytes per trans, but:%ld requested",
++			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+ 			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+ 		return  -EINVAL;
+ 	}
+@@ -210,7 +213,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+ 		op_code = SPMI_CMD_EXT_REG_WRITE_L;
+ 		break;
+ 	default:
+-		dev_err(&ctrl->dev, "invalid write cmd 0x%x", opc);
++		dev_err(&ctrl->dev, "invalid write cmd 0x%x\n", opc);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -234,8 +237,10 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+ 		}
+ 
+ 		writel((u32)cpu_to_be32(data),
+-		       spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_WDATA0_BASE_ADDR + SPMI_PER_DATAREG_BYTE * i);
+-	};
++		       spmi_controller->base + chnl_ofst +
++		       SPMI_APB_SPMI_WDATA0_BASE_ADDR +
++		       SPMI_PER_DATAREG_BYTE * i);
++	}
+ 
+ 	/* Start the transaction */
+ 	writel(cmd, spmi_controller->base + chnl_ofst + SPMI_APB_SPMI_CMD_BASE_ADDR);
 
-What's the range/set of valid values?
 
-> +  property to the corresponding rdma
-> +  the value is the Max value which defined in hardware data sheet.
-> +
->  Examples:
->  
->  mmsys: clock-controller@14000000 {
-> @@ -207,3 +212,12 @@ od@14023000 {
->  	power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
->  	clocks = <&mmsys CLK_MM_DISP_OD>;
->  };
-> +
-> +rdma1: rdma@1400c000 {
-
-Does a new property really need a whole new example?
-
-> +	compatible = "mediatek,mt8183-disp-rdma";
-> +	reg = <0 0x1400c000 0 0x1000>;
-> +	interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-> +	power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +	clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-> +	mediatek,rdma_fifo_size = <2048>;
-> +};
-> -- 
-> 1.8.1.1.dirty
