@@ -2,174 +2,81 @@ Return-Path: <SRS0=vVuV=BW=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12884C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 12:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9858C433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38162065C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 12:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE89420885
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 13:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X795UlL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHLMuA (ORCPT
+        id S1727941AbgHLNCi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 08:50:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:57955 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgHLMuA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 08:50:00 -0400
-IronPort-SDR: F7Tu8HzgYkcAnAe1UfHmyX/HLrHwK++DIAZGlL1ANdIeEh8XWgLEyeT9gXP6NXzgRjOnZ3IuQU
- CWtj4GJTyljw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9710"; a="171987071"
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="171987071"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2020 05:49:59 -0700
-IronPort-SDR: NSPy78gSBXDDNkFrYpL64aVOWVgXqj2+RxWSASPm6eLfKgZ0F1p9iI5yvAYCDqXflgUNQiaUYv
- fA5N5lFTUs3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,304,1592895600"; 
-   d="scan'208";a="398825863"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 12 Aug 2020 05:49:56 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 12 Aug 2020 15:49:55 +0300
-Date:   Wed, 12 Aug 2020 15:49:55 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tobias Schramm <t.schramm@manjaro.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/4] usb: typec: Add
- typec_port_register_altmodes_from_fwnode()
-Message-ID: <20200812124955.GB1169992@kuha.fi.intel.com>
-References: <20200714113617.10470-1-hdegoede@redhat.com>
- <20200714113617.10470-3-hdegoede@redhat.com>
- <20200727130528.GB883641@kuha.fi.intel.com>
- <469f369a-73f4-c348-b9ee-1662956f45be@redhat.com>
- <20200811143833.GC627773@kuha.fi.intel.com>
- <6c223f20-cf63-392e-f694-869cb231c46d@redhat.com>
+        Wed, 12 Aug 2020 09:02:38 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:1258 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727834AbgHLNCg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 09:02:36 -0400
+X-UUID: 1a18e545231d48dea80c2630aff1cb3e-20200812
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=dbv5n9ZrV/hPISdod9P90491MauUYffRqU2Ok68U9Ok=;
+        b=X795UlL2rDDAnNhYxp0U2S1K4MQwtDBOHV90pNs379VlgeDxGLnugetWomkAzyfWVi/RcHZSZdLv7GU1kkQIhjH+JPGdB+ZjSR3LdOlQoipSCAlwvIu8J2imkdHoJej766PcsQgpfGhr9VCOw5RmgjAsNoYypv8ASmfLs08S9zo=;
+X-UUID: 1a18e545231d48dea80c2630aff1cb3e-20200812
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <wenbin.mei@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1241049186; Wed, 12 Aug 2020 21:02:34 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 12 Aug 2020 21:02:31 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 12 Aug 2020 21:02:31 +0800
+From:   Wenbin Mei <wenbin.mei@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, Wenbin Mei <wenbin.mei@mediatek.com>
+Subject: [v2,1/3] mmc: dt-bindings: Add resets/reset-names for Mediatek MMC bindings
+Date:   Wed, 12 Aug 2020 21:01:27 +0800
+Message-ID: <20200812130129.13519-2-wenbin.mei@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200812130129.13519-1-wenbin.mei@mediatek.com>
+References: <20200812130129.13519-1-wenbin.mei@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c223f20-cf63-392e-f694-869cb231c46d@redhat.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 10:36:32AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 8/11/20 4:38 PM, Heikki Krogerus wrote:
-> > Hi,
-> > 
-> > > > > +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
-> > > > > +	const struct typec_altmode_ops *ops, void *drvdata,
-> > > > > +	struct typec_altmode **altmodes, size_t n,
-> > > > > +	struct fwnode_handle *fwnode)
-> > > > > +{
-> > > > > +	struct fwnode_handle *altmodes_node, *child;
-> > > > > +	struct typec_altmode_desc desc;
-> > > > > +	struct typec_altmode *alt;
-> > > > > +	size_t index = 0;
-> > > > > +	u32 svid, vdo;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	altmodes_node = fwnode_get_named_child_node(fwnode, "altmodes");
-> > > > > +	if (!altmodes_node)
-> > > > > +		return;
-> > > > 
-> > > > Do we need that? Why not just make the sub-nodes describing the
-> > > > alternate modes direct children of the connector node instead of
-> > > > grouping them under a special sub-node?
-> > > 
-> > > If you envision how this will look in e.g. DTS sources then I think
-> > > you will see that this grouping keeps the DTS source code more
-> > > readable. Grouping things together like this is somewhat normal in
-> > > devicetree files. E.g. PMIC's or other regulator providers typical
-> > > have a "regulators" node grouping all their regulators; and also the OF
-> > > graph bindings which are used in the USB-connector node start with a
-> > > "ports" parent / grouping node.
-> > > 
-> > > > If the child node of the connector has device properties "svid" and
-> > > > "vdo" then it is an alt mode that the connector supports, and it can't
-> > > > be anything else, no?
-> > > 
-> > > If you want to get rid of the altmodes parent/grouping node, then the
-> > > usual way to do this would be to add a compatible string to the nodes,
-> > > rather then check for the existence of some properties.
-> > 
-> > I'm looking at this from ACPI PoW. We do not have compatible string in
-> > ACPI (and in case you are wondering, the _HID PRP0001 is not a
-> > reliable solution for that).
-> 
-> Note my main use-case for this is the ACPI case too, remember the
-> infamous drivers/platform/x86/intel_cht_int33fe_typec.c that is my
-> main consumer for this patch. Although there the info is lacking in ACPI
-> so I need to inject it with c-code.
-> 
-> > If you wish to group the altmodes under a subnode, then that's fine, but
-> > the "altmodes" node will need to be optional, just like the "ports"
-> > OF-graph node is optional. So we need to be able to support systems
-> > where the alternate mode subnodes are directly under the connector as
-> > well.
-> 
-> So for the ports case, AFAIK not having a ports subnode to group them
-> is only used in the case there are no other type of subnodes.
-> 
-> With the existing usb-connector devicetree-bindings we will have both
-> ports subnodes and altmode subnodes. The usb-connector devicetree-bindings
-> already specify that the port subnodes *must* be grouped together under
-> a single ports subnode (for usb-connector nodes).
-> 
-> So it seems logical and much cleaner to me to also group the altmodes
-> together under an altmodes subnode. This also solves the problem of
-> having to due heuristics to tell different kinds of subnodes apart.
-> 
-> Question: why do you write: "we need to be able to support systems
-> where the alternate mode subnodes are directly under the connector as
-> well" are there already systems out there (or on their way) which
-> contain ACPI table which contain a fwnode adhering to the usb-connector
-> bindings + having subnodes which set a svid + vdo ?
+QWRkIGRlc2NyaXB0aW9uIGZvciByZXNldHMvcmVzZXQtbmFtZXMuDQoNClNpZ25lZC1vZmYtYnk6
+IFdlbmJpbiBNZWkgPHdlbmJpbi5tZWlAbWVkaWF0ZWsuY29tPg0KLS0tDQogRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9tdGstc2QudHh0IHwgMiArKw0KIDEgZmlsZSBjaGFu
+Z2VkLCAyIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tbWMvbXRrLXNkLnR4dA0KaW5kZXggOGE1MzJmNDQ1M2YyLi4xNWQ0MjU5NWEzZjMg
+MTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1z
+ZC50eHQNCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNk
+LnR4dA0KQEAgLTQ5LDYgKzQ5LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCiAJCSAgICAgZXJy
+b3IgY2F1c2VkIGJ5IHN0b3AgY2xvY2soZmlmbyBmdWxsKQ0KIAkJICAgICBWYWxpZCByYW5nZSA9
+IFswOjB4N10uIGlmIG5vdCBwcmVzZW50LCBkZWZhdWx0IHZhbHVlIGlzIDAuDQogCQkgICAgIGFw
+cGxpZWQgdG8gY29tcGF0aWJsZSAibWVkaWF0ZWssbXQyNzAxLW1tYyIuDQorLSByZXNldHM6IFBo
+YW5kbGUgYW5kIHJlc2V0IHNwZWNpZmllciBwYWlyIHRvIHNvZnRyZXNldCBsaW5lIG9mIE1TREMg
+SVAuDQorLSByZXNldC1uYW1lczogc2hvdWxkIGJlICJocnN0Ii4NCiANCiBFeGFtcGxlczoNCiBt
+bWMwOiBtbWNAMTEyMzAwMDAgew0KLS0gDQoyLjE4LjANCg==
 
-There are indeed platforms on their way, but I'll see if I can still
-influence what goes into the ACPI tables of those platforms.
-
-> Because unless such systems already exist I don't see why we need to
-> be able to support them ?  New systems can use whatever scheme we
-> can come-up with and unless existing systems already have what we
-> need, except for the altmodes grouping node, then we will need some
-> translating code which generates the expected swnodes anyways and
-> then the translator can easily inject the grouping node.
-> 
-> So I do not see why we would " need to be able to support systems
-> where the alternate mode subnodes are directly under the connector as
-> well" ?
-> 
-> If you insist I can make the altmodes node optional and simply
-> skip any child nodes which do not have both a svid and a vdo
-> property, but having the subnode (and then logging an error on
-> missing svid or vdo props) seems cleaner to me.
-
-I'm trying to get the way the USB Type-C connectors are described
-in ACPI (including the alternate modes) documented somewhere. I think
-I already mentioned that to you already. There is now a discussion
-with our Windows folks how to move forward with that. In any case,
-additional nodes like that "altmodes" node are really problematic in
-Windows because of way they handle the nodes, and to be honest, I
-don't see any way I could convince those guys to accept it.
-
-But all that is really not your problem. I have now a feeling that the
-way we will end up describing the alternate modes in ACPI will not be
-compatible with DT :-(. So I guess we can just go ahead with this, and
-then add support for ACPI later?
-
-thanks,
-
--- 
-heikki
