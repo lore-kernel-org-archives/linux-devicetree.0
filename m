@@ -6,83 +6,82 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BDAC433E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEAFC433E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE82B2087C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7195B206DA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 19:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597259758;
-	bh=sKd9CcqWKzpCbjJUlDS4CnVVNx2pwjfTUwMJeBJ3upI=;
+	s=default; t=1597259863;
+	bh=Q5SpP0sjQmKIxQdN1KL19bioUF9hEcSFZl9Xa6CyrZ0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pzbi8LIrSaUhZxygH6ZeK9vD48Gp9bCFNQbYM8yiag4j75+BEeRApM1nFrpFscliP
-	 vzTDp/FUcec/d23u9kFEDY3W/1FSIYLapmJqZwMAIy6O9xXV+nzOduL+hy7CVIcYy2
-	 QZ8x9FKiOuarmNKcqTag3TCZqmzGKDNtehqdbbOA=
+	b=bgXQmLwHVDTdBBoa7d/JB7vkTXnQlPEQlxo2bsiy5digNhd11scLR0cY2c4lFkp/w
+	 5gOhHL71smvSH9MWRAMN9lYWxTLKsGUYZrtB95h8aAkyTIYrHrXQZQzDqm/LgOI7Vc
+	 PD8wac+MQGX1HLs0h3HzSX4IKBtyZQUy4zcFJSBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHLTP6 (ORCPT
+        id S1726596AbgHLTRn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 15:15:58 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38165 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgHLTP6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:15:58 -0400
-Received: by mail-io1-f66.google.com with SMTP id h4so4242701ioe.5;
-        Wed, 12 Aug 2020 12:15:57 -0700 (PDT)
+        Wed, 12 Aug 2020 15:17:43 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39117 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbgHLTRm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 15:17:42 -0400
+Received: by mail-io1-f67.google.com with SMTP id z6so4236773iow.6;
+        Wed, 12 Aug 2020 12:17:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6bmFd3LE8loSA5iYwsZ25NXI7nulgcJ7a63PMeV4Enk=;
-        b=T1mpUpked1p9tNfUO7Ho0udc5QEOlpQH39dNJVomj2LSaELfFqglSBG+lYxzl4+L1u
-         UI3R9LX0SggSpy3AUb4WRjKFwVci/rckwpw4sVfh+YrocxMfIBmM8UB/ROV0TzAWZeh+
-         JLqg3Nkw51D+cXxhjMUB4J/mfPwlQi7p5gaM4mG61oaGXKw4zKLRsG+KucnTQU9QKs3A
-         iLhbjyoZ58K+knZFy5pbpZBHHbBAXr8FLI1ObMAhdtE4GNFdqqKgQOjI+4V8WXSOdp1s
-         DuIcyicMs+kq3NCDwNa9Mwnu/wIDcA3cXIcUKlKAWcei6SkCg+ywuh+12TL9FIQ//Wr0
-         ljzQ==
-X-Gm-Message-State: AOAM5326EVIqNpxTDy9fJxzqZi52XvIKSX+LRq3FOZ0s3qHF/4IHyAJN
-        yLTvkyGH3lB3USiG5CthxysolM0=
-X-Google-Smtp-Source: ABdhPJzkhDTUp4fGr5JcbsYvPTSvZvi/175AnF5oJtPz3FsfaL7w+r2SZ9PQIgIgkpvwJ+rK87Tchw==
-X-Received: by 2002:a02:3e13:: with SMTP id s19mr993711jas.95.1597259757344;
-        Wed, 12 Aug 2020 12:15:57 -0700 (PDT)
+        bh=vr7JJj3Y9GiAlYzvS0+5aTL0iogN2guoGVxaz2usNJw=;
+        b=IDWFXRWPEdxdvvLiERhBXnfHf3giY6BH6XBIR2L6MDTFCgz2Yl3Fb+te+B5pqvevyn
+         2gDx9m6ZxpX+KNU+RZ9qBhNJtxqCDWdYHYyC0c1gJroTatvp7dHzDzDtoVl66HiMoLYy
+         pXV2rHpY3r63dWZfJqD877k/bfccjVprMGIxuOi+N5DKVWWgHXxg1JgvWojReaK/prLZ
+         AUjtBplc1BRN1qSuDgChLoXD/MDN3J02s/UY1xugS+TklrKouZPk7TUcnxnKY0jjhCYy
+         F7sl7gz0sqRwYQNK6VdD23MnGWpKCEVJEIOxlnwPMjJepIGXYh35S6oIOCCB81lkWfkK
+         BMxw==
+X-Gm-Message-State: AOAM532Ubj7ruE+YkO/QKe2+4ki7noroVVyGxR7aut46JiHN34XNH1ZA
+        K1jP/4YgAA9gbcpYMpdGBg==
+X-Google-Smtp-Source: ABdhPJxKxxPnwqRVYO+YsLSkOXYLymeOGqqn5pXYeKm702C03Xpk9n/t2XJ36W4WDKO1aokbNYZANA==
+X-Received: by 2002:a02:bb82:: with SMTP id g2mr1048806jan.54.1597259862191;
+        Wed, 12 Aug 2020 12:17:42 -0700 (PDT)
 Received: from xps15 ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id x12sm1468420ile.14.2020.08.12.12.15.55
+        by smtp.gmail.com with ESMTPSA id z9sm1462109ilm.78.2020.08.12.12.17.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 12:15:56 -0700 (PDT)
-Received: (nullmailer pid 2549586 invoked by uid 1000);
-        Wed, 12 Aug 2020 19:15:54 -0000
-Date:   Wed, 12 Aug 2020 13:15:54 -0600
+        Wed, 12 Aug 2020 12:17:41 -0700 (PDT)
+Received: (nullmailer pid 2552036 invoked by uid 1000);
+        Wed, 12 Aug 2020 19:17:40 -0000
+Date:   Wed, 12 Aug 2020 13:17:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, linux-renesas-soc@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com,
-        roman.kovalivskyi@globallogic.com, dave.stevenson@raspberrypi.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        hverkuil-cisco@xs4all.nl, robh+dt@kernel.org
-Subject: Re: [PATCH v4 3/4] dt-bindings: media: ov5647: Document
- clock-noncontinuous
-Message-ID: <20200812191554.GA2549533@bogus>
-References: <20200810215543.113206-1-jacopo+renesas@jmondi.org>
- <20200810215543.113206-4-jacopo+renesas@jmondi.org>
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, linux-usb@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org, shawnguo@kernel.org
+Subject: Re: [PATCH v3 1/4] doc: dt-binding: ci-hdrc-usb2: add property for
+ samsung picophy
+Message-ID: <20200812191740.GA2551988@bogus>
+References: <20200724060532.3878-1-peter.chen@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810215543.113206-4-jacopo+renesas@jmondi.org>
+In-Reply-To: <20200724060532.3878-1-peter.chen@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Aug 2020 23:55:42 +0200, Jacopo Mondi wrote:
-> From: Jacopo Mondi <jacopo@jmondi.org>
+On Fri, 24 Jul 2020 14:05:29 +0800, Peter Chen wrote:
+> Add two parameters which are used to tune USB signal for samsung picophy,
+> which is used at imx7d, imx8mm, and imx8mn.
 > 
-> Document the optional clock-noncontinuous endpoint property that
-> allows enabling MIPI CSI-2 non-continuous clock operations.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> Reviewed-by: Jun Li <jun.li@nxp.com>
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
 > ---
->  Documentation/devicetree/bindings/media/i2c/ov5647.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+> Changes for v3:
+> - Changing propery name to indicate it is a samsung phy
+> - Add property range and default value.
+> 
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
