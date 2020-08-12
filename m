@@ -4,112 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA37C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1B1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3D1207DA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A2120855
+	for <linux-devicetree@archiver.kernel.org>; Wed, 12 Aug 2020 14:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgHLODn (ORCPT
+        id S1726696AbgHLONS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 10:03:43 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:17492 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726540AbgHLODK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 12 Aug 2020 10:03:10 -0400
-X-IronPort-AV: E=Sophos;i="5.76,304,1592838000"; 
-   d="scan'208";a="54444344"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 12 Aug 2020 23:03:09 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 7D1734007553;
-        Wed, 12 Aug 2020 23:03:06 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marian-Cristian Rotariu 
-        <marian-cristian.rotariu.rb@bp.renesas.com>
-Subject: [PATCH 6/9] arm64: dts: renesas: r8a774e1: Populate HDMI encoder node
-Date:   Wed, 12 Aug 2020 15:02:14 +0100
-Message-Id: <20200812140217.24251-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 12 Aug 2020 10:13:18 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:63699 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgHLONR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 10:13:17 -0400
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id AEFA1240009;
+        Wed, 12 Aug 2020 14:13:14 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
+        Conor Culhane <conor.culhane@silvaco.com>,
+        <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 2/4] dt-bindings: i3c: Describe Silvaco master binding
+Date:   Wed, 12 Aug 2020 16:13:10 +0200
+Message-Id: <20200812141312.3331-2-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+References: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Silvaco provide a dual-role I3C master.
 
-Populate HDMI node properties in R8A774E1 SoC dtsi.
+Description is rather simple: it needs a register mapping, three
+clocks and an interrupt.
 
-Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index 4b57c1ea762c..79efcd73cc46 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -2601,22 +2601,32 @@
- 		};
- 
- 		hdmi0: hdmi@fead0000 {
-+			compatible = "renesas,r8a774e1-hdmi",
-+				     "renesas,rcar-gen3-hdmi";
- 			reg = <0 0xfead0000 0 0x10000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 729>,
-+				 <&cpg CPG_CORE R8A774E1_CLK_HDMI>;
-+			clock-names = "iahb", "isfr";
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 729>;
- 			status = "disabled";
- 
--			/* placeholder */
--
- 			ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
- 				port@0 {
- 					reg = <0>;
-+					dw_hdmi0_in: endpoint {
-+						remote-endpoint = <&du_out_hdmi0>;
-+					};
- 				};
- 				port@1 {
- 					reg = <1>;
- 				};
- 				port@2 {
-+					/* HDMI sound */
- 					reg = <2>;
- 				};
- 			};
-@@ -2650,6 +2660,7 @@
- 				port@1 {
- 					reg = <1>;
- 					du_out_hdmi0: endpoint {
-+						remote-endpoint = <&dw_hdmi0_in>;
- 					};
- 				};
- 				port@2 {
+Changes in v2:
+* Updated Rob's tool and fixed the mistake reported.
+* Updated the vendor prefix.
+
+ .../bindings/i3c/silvaco,i3c-master.yaml      | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+
+diff --git a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+new file mode 100644
+index 000000000000..63731e8a9068
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/i3c/silvaco,i3c-master.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Silvaco I3C master
++
++maintainers:
++  - Conor Culhane <conor.culhane@silvaco.com>
++
++properties:
++  compatible:
++    const: silvaco,i3c-master
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-names:
++    description: |
++      There are three clocks:
++        pclk:     System clock
++        fast_clk: Fast clock (for the bus)
++        slow_clk: Slow clock (for other events)
++
++    items:
++      - const: pclk
++      - const: fast_clk
++      - const: slow_clk
++
++  clocks:
++    minItems: 3
++    maxItems: 3
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clock-names
++  - clocks
++
++examples:
++  - |
++    i3c-master@a0000000 {
++        compatible = "silvaco,i3c-master";
++        clocks = <&zynqmp_clk 71>, <&fclk>, <&sclk>;
++        clock-names = "pclk", "fast_clk", "slow_clk";
++        interrupt-parent = <&gic>;
++        interrupts = <0 89 4>;
++        reg = <0xa0000000 0x1000>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
 -- 
-2.17.1
+2.20.1
 
