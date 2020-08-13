@@ -5,198 +5,98 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AB1C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B7AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 138082078B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86854206B2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YoMMQhWR"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ObWFK6Bt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgHMSak (ORCPT
+        id S1726603AbgHMTF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMSak (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 14:30:40 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1125CC061757
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 11:30:40 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so2994365plr.7
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 11:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pM9K305gwu8RlzAPQvohHtve+36DV7y7hr4S9W7Zm3Y=;
-        b=YoMMQhWR9TeO1U0zCVSFy6Foz723aPw27dBj+vjMRJdGoPZvXr47oDHsP+QEi0u+ql
-         M/zsf/PFuPAB3OjbQWHqg7L6nEszjqBgocL3Nr1RcofM7qL0OyCKXty0iDp4kAhXwTBC
-         hzvIMmhFkPH1l17BZVR4wqb6qjwTDSd7QMBNo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pM9K305gwu8RlzAPQvohHtve+36DV7y7hr4S9W7Zm3Y=;
-        b=lMk0XjbbqU1pffZqkKYhw3aB23R090Cx1S9s20JxDYgYM58hoMsmhQwzA2Pl60i4gi
-         QQt0MO4tUYk2DyW744dm4s9A/8Z2aCqd71PQofDMULcCsjp0m4eTAKoRDy2HLz9tNc1y
-         aluSDjrtsDWozLDcFZbC8wB2+IzfwlckU0yd3rTfxzqVAqOYU4KeBJ07TasgjvcxH1Xu
-         86Eqn6AhmImV/ABNyZHqQx6NIrgYYx98u6eUC5rP/AW3Ot//Nd6ziF9wDq4sw+AItpSl
-         CLJUIkzI8xMtPQ8w8iIAuKcjejzbv4Txi9wlMhp56LfrfhDrUKz0KioyQlu0A9UZVO8N
-         DtRg==
-X-Gm-Message-State: AOAM530YcVtF6ONbJIYfBny66/s9K2WXcRVIrT9vAJNv+o7ie0I0ftid
-        9dgV9327S3E+21tvu5y8yTWd1w==
-X-Google-Smtp-Source: ABdhPJwfUsLTxn6iHL5pLE4vvpb0tGBo8GEBl2HKgqY8vZ6GoQ1i3GnogQaDyl8Rh3qoKuJwPWiJ4w==
-X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr6421314pjk.101.1597343437308;
-        Thu, 13 Aug 2020 11:30:37 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id z9sm6231843pgh.94.2020.08.13.11.30.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 11:30:36 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for CPU thermal zones
-Date:   Thu, 13 Aug 2020 11:30:33 -0700
-Message-Id: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+        Thu, 13 Aug 2020 15:05:27 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:13190 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726253AbgHMTF0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Aug 2020 15:05:26 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07DJ3Fu2010457
+        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 12:05:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=GNih2j3ESRfeoRwPAnR3qqb1b7HSoqwKZbqqay1L3wk=;
+ b=ObWFK6Bt4aH+67+3l0KseY92Gs3MZMoiEMruq5dxbtMCBFFDbqXMTN8P/njQq8sysfhe
+ YRHTyOyUP/psFw3/xcmOq6ItEh2QqzBlT5tGSm54IYfJ7ArHVL/vi1ZcTGAbDAqzdlWl
+ 8H46mPuISzUw5RDpbUdTibBTpe2RotIGGys= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by m0001303.ppops.net with ESMTP id 32v0kk3f6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 12:05:25 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 13 Aug 2020 12:04:46 -0700
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id 0844D4EFB4C25; Thu, 13 Aug 2020 12:04:39 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, Sai Dasari <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] ARM: dts: aspeed: tiogapass: Remove vuart
+Date:   Thu, 13 Aug 2020 12:04:30 -0700
+Message-ID: <20200813190431.3331026-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-13_16:2020-08-13,2020-08-13 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxscore=0 mlxlogscore=702 malwarescore=0 phishscore=0 adultscore=0
+ spamscore=0 impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008130134
+X-FB-Internal: deliver
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 'sustainable_power' attribute provides an estimate of the sustained
-power that can be dissipated at the desired control temperature. One
-could argue that this value is not necessarily the same for all devices
-with the same SoC, which may have different form factors or thermal
-designs. However there are reasons to specify a (default) value at SoC
-level for SC7180: most importantly, if no value is specified at all the
-power_allocator thermal governor (aka 'IPA') estimates a value, using the
-minimum power of all cooling devices of the zone, which can result in
-overly aggressive thermal throttling. For most devices an approximate
-conservative value should be more useful than the minimum guesstimate
-of power_allocator. Devices that need a different value can overwrite
-it in their <device>.dts. Also the thermal zones for SC7180 have a high
-level of granularity (essentially one for each function block), which
-makes it more likely that the default value just works for many devices.
+Removed vuart for facebook tiogapass platform as it uses uart2 and
+uart3 pin with aspeed uart routing feature.
 
-The values correspond to 1901 MHz for the big cores, and 1804 MHz for
-the small cores. The values were determined by limiting the CPU
-frequencies to different max values and launching a bunch of processes
-that cause high CPU load ('while true; do true; done &' is simple and
-does a good job). A frequency is deemed sustainable if the CPU
-temperatures don't rise (consistently) above the second trip point
-('control temperature', 95 degC in this case). Once the highest
-sustainable frequency is found, the sustainable power can be calculated
-by multiplying the energy consumption per core at this frequency (which
-can be found in /sys/kernel/debug/energy_model/) with the number of
-cores that are specified as cooling devices.
-
-The sustainable frequencies were determined at room temperature
-on a device without heat sink or other passive cooling elements.
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
-If maintainers think 'sustainable_power' should be specified at
-device level (with which I conceptually agree) I'm fine with
-doing that, just seemed it could be useful to have a reasonable
-'default' at SoC level in this case.
+ arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 5 -----
+ 1 file changed, 5 deletions(-)
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index d46b3833e52f..23f84639d6b9 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -3320,6 +3320,7 @@ cpu0-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 1>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu0_alert0: trip-point0 {
-@@ -3368,6 +3369,7 @@ cpu1-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 2>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu1_alert0: trip-point0 {
-@@ -3416,6 +3418,7 @@ cpu2-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 3>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu2_alert0: trip-point0 {
-@@ -3464,6 +3467,7 @@ cpu3-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 4>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu3_alert0: trip-point0 {
-@@ -3512,6 +3516,7 @@ cpu4-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 5>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu4_alert0: trip-point0 {
-@@ -3560,6 +3565,7 @@ cpu5-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 6>;
-+			sustainable-power = <768>;
- 
- 			trips {
- 				cpu5_alert0: trip-point0 {
-@@ -3608,6 +3614,7 @@ cpu6-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 9>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu6_alert0: trip-point0 {
-@@ -3648,6 +3655,7 @@ cpu7-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 10>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu7_alert0: trip-point0 {
-@@ -3688,6 +3696,7 @@ cpu8-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 11>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu8_alert0: trip-point0 {
-@@ -3728,6 +3737,7 @@ cpu9-thermal {
- 			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 12>;
-+			sustainable-power = <1202>;
- 
- 			trips {
- 				cpu9_alert0: trip-point0 {
--- 
-2.28.0.220.ged08abb693-goog
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/a=
+rm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 2d44d9ad4e40..e6ad821a8635 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -82,11 +82,6 @@ &lpc_ctrl {
+ 	status =3D "okay";
+ };
+=20
+-&vuart {
+-	// VUART Host Console
+-	status =3D "okay";
+-};
+-
+ &uart1 {
+ 	// Host Console
+ 	status =3D "okay";
+--=20
+2.24.1
 
