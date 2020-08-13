@@ -2,281 +2,120 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9E6C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3259C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4580020791
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862C32074D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726048AbgHMJAp (ORCPT
+        id S1726587AbgHMJF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:00:45 -0400
-Received: from mailout11.rmx.de ([94.199.88.76]:55934 "EHLO mailout11.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgHMJAo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:00:44 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout11.rmx.de (Postfix) with ESMTPS id 4BS0sL0SHbz3yh7;
-        Thu, 13 Aug 2020 11:00:38 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BS0rx2VMHz2TTPD;
-        Thu, 13 Aug 2020 11:00:17 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.79) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 13 Aug
- 2020 11:00:17 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Rob Herring <robh@kernel.org>
-CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Christian Eggers <ceggers@arri.de>
-Subject: [PATCH v3] dt-bindings: at25: convert the binding document to yaml
-Date:   Thu, 13 Aug 2020 10:59:59 +0200
-Message-ID: <20200813085959.15946-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200812200602.GA2612803@bogus>
-References: <20200812200602.GA2612803@bogus>
+        Thu, 13 Aug 2020 05:05:29 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:44821 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgHMJF2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 05:05:28 -0400
+Received: by mail-oo1-f65.google.com with SMTP id g1so1065809oop.11;
+        Thu, 13 Aug 2020 02:05:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2AvIhR4VMBCPleNB4MD/t7+rUWOqAWwlH0ujr1BxGlw=;
+        b=ARde/XfI66VeOmJdsynQQ/WH4TLxMDPByoINkPLaJVOhIuy/fLUcv2GYe/Vso3zGZT
+         KY3BtooINHlOXZ6JF+5wPIKq/hgMuZiWvAgxDsCjQjJVnZ5bmxe40TRTwE20e5bmaiUK
+         lalU0G+mI9nv+VgdThATprdSF1VkhYjB41IdHJqFrlEDc0OuBWBWRjShad9cDhTDke0w
+         /E9as2FbDbv7/qbIqOwUPj8S2RMMxhTktdSc5JhIGJOefnEtNspb2G1XkwvUo1Ayi6yt
+         YHZwS44PgnDypE+6akbvdgru5qGGZjSPXiKRDcOPgRi5/17ni9LGiya04NxFLfsYejnl
+         yI9g==
+X-Gm-Message-State: AOAM532gyL3ElfAzS0bdPiIMafdx24lByKofjNvH8eauj5vk3zcCJWOg
+        C+d2bPHaKgnZmzr1FubIxHB4GTBsSzbiMlEHiJk=
+X-Google-Smtp-Source: ABdhPJyUVskr8e/cEyjDxvkGzZdvsxqJxwiGe6jUX0tZXjbkklpncAUVA0TsyDuRFcZ55z9cv4D0LKrgJqG/ccdMfWs=
+X-Received: by 2002:a4a:6c13:: with SMTP id q19mr3744544ooc.11.1597309527049;
+ Thu, 13 Aug 2020 02:05:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.79]
-X-RMX-ID: 20200813-110017-4BS0rx2VMHz2TTPD-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Aug 2020 11:05:14 +0200
+Message-ID: <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1 bindings
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the binding document for at25 EEPROMs from txt to yaml.
+Hi Prabhakar, Laurent, Kieran,
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
-On Wednesday, 12 August 2020, 22:06:02 CEST, Rob Herring wrote:
-> > +This file has been moved to at25.yaml.
-> 
-> We only do this to save updating a bunch of references and there aren't
-> any, so just remove the file.
-file removed.
+On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> index 51cd4d162770..67cded5ad827 100644
+> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> @@ -10,6 +10,7 @@ Required Properties:
+>      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
+>      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
+>      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
+> +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
+>      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+>      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+>      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> @@ -75,6 +76,7 @@ corresponding to each DU output.
+>   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
+>   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
+>   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
+> + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
 
-> I'd just fix it up, but this wouldn't apply for me on Linus' current
-> master. Please rebase and resend (You can want til rc1 if you want
-> because that's what I'll ultimately apply it too).
-This was my fault. I forgot to revert my previous patch ("dt-bindings: at25: fix
-syntax error in example code"). So v2 was created from a wrong base.
+As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
+instead of port 2?
 
-I'll be unavailable until August, 23.
+I know we did it the same for R-Car M3-N and RZ/G2N.
+But my main worry is adding support for R-Car H3-N later.
 
-regards
-Christian
+>   R8A7779 (R-Car H1)     DPAD 0         DPAD 1         -              -
+>   R8A7790 (R-Car H2)     DPAD 0         LVDS 0         LVDS 1         -
+>   R8A7791 (R-Car M2-W)   DPAD 0         LVDS 0         -              -
 
- .../devicetree/bindings/eeprom/at25.txt       |  45 ------
- .../devicetree/bindings/eeprom/at25.yaml      | 129 ++++++++++++++++++
- 2 files changed, 129 insertions(+), 45 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/eeprom/at25.txt
- create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
+Apart from that:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
-deleted file mode 100644
-index fcacd97abd0a..000000000000
---- a/Documentation/devicetree/bindings/eeprom/at25.txt
-+++ /dev/null
-@@ -1,45 +0,0 @@
--EEPROMs (SPI) compatible with Atmel at25.
--
--Required properties:
--- compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
--  Example "<vendor>,<type>" values:
--    "anvo,anv32e61w"
--    "microchip,25lc040"
--    "st,m95m02"
--    "st,m95256"
--
--- reg : chip select number
--- spi-max-frequency : max spi frequency to use
--- pagesize : size of the eeprom page
--- size : total eeprom size in bytes
--- address-width : number of address bits (one of 8, 9, 16, or 24).
--  For 9 bits, the MSB of the address is sent as bit 3 of the instruction
--  byte, before the address byte.
--
--Optional properties:
--- spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
--- spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
--- read-only : this parameter-less property disables writes to the eeprom
--- wp-gpios : GPIO to which the write-protect pin of the chip is connected
--
--Obsolete legacy properties can be used in place of "size", "pagesize",
--"address-width", and "read-only":
--- at25,byte-len : total eeprom size in bytes
--- at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
--- at25,page-size : size of the eeprom page
--
--Additional compatible properties are also allowed.
--
--Example:
--	eeprom@0 {
--		compatible = "st,m95256", "atmel,at25";
--		reg = <0>
--		spi-max-frequency = <5000000>;
--		spi-cpha;
--		spi-cpol;
--		wp-gpios = <&gpio1 3 0>;
--
--		pagesize = <64>;
--		size = <32768>;
--		address-width = <16>;
--	};
-diff --git a/Documentation/devicetree/bindings/eeprom/at25.yaml b/Documentation/devicetree/bindings/eeprom/at25.yaml
-new file mode 100644
-index 000000000000..9810619a2b5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/eeprom/at25.yaml
-@@ -0,0 +1,129 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/eeprom/at25.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: SPI EEPROMs compatible with Atmel's AT25
-+
-+maintainers:
-+  - Christian Eggers <ceggers@arri.de>
-+
-+properties:
-+  $nodename:
-+    pattern: "^eeprom@[0-9a-f]{1,2}$"
-+
-+  # There are multiple known vendors who manufacture EEPROM chips compatible
-+  # with Atmel's AT25. The compatible string requires two items where the
-+  # 'vendor' and 'model' parts of the first are the actual chip and the second
-+  # item is fixed to "atmel,at25". Some existing bindings only have the
-+  # "atmel,at25" part and should be fixed by somebody who knows vendor and
-+  # product.
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - anvo,anv32e61w
-+              - atmel,at25256B
-+              - fujitsu,mb85rs1mt
-+              - fujitsu,mb85rs64
-+              - microchip,at25160bn
-+              - microchip,25lc040
-+              - st,m95m02
-+              - st,m95256
-+
-+          - const: atmel,at25
-+
-+      # Please don't use this alternative for new bindings.
-+      - items:
-+          - const: atmel,at25
-+
-+  reg:
-+    description:
-+      Chip select number.
-+
-+  spi-max-frequency: true
-+
-+  pagesize:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    enum: [1, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
-+    description:
-+      Size of the eeprom page.
-+
-+  size:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Total eeprom size in bytes.
-+
-+  address-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [ 8, 9, 16, 24 ]
-+    description:
-+      Number of address bits.
-+      For 9 bits, the MSB of the address is sent as bit 3 of the instruction
-+      byte, before the address byte.
-+
-+  spi-cpha: true
-+
-+  spi-cpol: true
-+
-+  read-only:
-+    description:
-+      Disable writes to the eeprom.
-+    type: boolean
-+
-+  wp-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO to which the write-protect pin of the chip is connected.
-+
-+  # Deprecated: at25,byte-len, at25,addr-mode, at25,page-size
-+  at25,byte-len:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+       Total eeprom size in bytes. Deprecated, use "size" property instead.
-+    deprecated: true
-+
-+  at25,addr-mode:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+       Addr-mode flags, as defined in include/linux/spi/eeprom.h.
-+       Deprecated, use "address-width" property instead.
-+    deprecated: true
-+
-+  at25,page-size:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Size of the eeprom page. Deprecated, use "pagesize" property instead.
-+    deprecated: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - spi-max-frequency
-+  - pagesize
-+  - size
-+  - address-width
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        eeprom@0 {
-+            compatible = "st,m95256", "atmel,at25";
-+            reg = <0>;
-+            spi-max-frequency = <5000000>;
-+            spi-cpha;
-+            spi-cpol;
-+            wp-gpios = <&gpio1 3 0>;
-+
-+            pagesize = <64>;
-+            size = <32768>;
-+            address-width = <16>;
-+        };
-+    };
+{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Christian Eggers
-Embedded software developer
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
