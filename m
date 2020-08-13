@@ -2,81 +2,89 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D531CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6665C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEAB20838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A328A20781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:27:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="XU2DRv/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbgHMJY4 (ORCPT
+        id S1726053AbgHMJ1y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:24:56 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45145 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgHMJY4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 05:24:56 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o21so4428901oie.12;
-        Thu, 13 Aug 2020 02:24:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K2+R75esT4rg+9Q69N4PN4XprjvYqnCLaYjRU7gitVI=;
-        b=Lt1FbXitR6VvRlcLn9T3ddDNZY8h5z8tWbgPfxbPqC92UzBtw7P+rwu2o/FKY07+k0
-         SMCqIxM1GvIV32AIl16wX2Ai1wzYcJLyrD24NBHxA0yoKhjY1tAucZVck+dLrjIZ4QHh
-         U/SzkGZ8rjVkLCDCVANuHscU/gpbV8RHyyBA4BNplPGq6B2fwsxS+92iDqQu/1nxU1UQ
-         IcCKv1+Z84UZApNjMM/zZDcR1AbVticCI9uerVpFcIMn8TTxKpKhvud5uQAh4earIJm8
-         GaKplqDArmS3cNKZ7GrvlbMpoalT1UrItBNnddEBiSTNp8V2eheWCN3AUp7V5Bhti8YG
-         7KDw==
-X-Gm-Message-State: AOAM533x57f30JHcHZ7qljUBzPjNb6ETLGzlrSJkIJF825sYWgH343gt
-        /99OMPTYpbpNsJ0phCG7uh5jDQ17LGBHaDdpvt4=
-X-Google-Smtp-Source: ABdhPJyQAPXa1JCJaKReMCGblv6NvclKyotZYAsP+48uXjpDLQsArnOJHXUliVf83LKCg86s5omnpltMY723KSYHpww=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr2473696oie.153.1597310695064;
- Thu, 13 Aug 2020 02:24:55 -0700 (PDT)
+        Thu, 13 Aug 2020 05:27:54 -0400
+Received: from mout.gmx.net ([212.227.17.20]:48673 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgHMJ1x (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:27:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597310848;
+        bh=QQgcAqFsQMdctRYRQQkFM4/FaAdJSbAly6eNGHWh7JY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=XU2DRv/M7Qr/SvQ4xb30m4g28JCoCIPLm6mmgWJQR0UE8+iK6wvgOkE9T31svAh8K
+         RCM9gAi7SG7BudQpY4+Hx3Ya6rgtF4G/3PewRpJ3m/6UDmlrxu1hWkgpRfK0RXpV+Q
+         Qg73xMfvZy9980EHBipZMpFjdr6MaV+TdayPqbMk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.75.75.198] ([185.75.75.198]) by web-mail.gmx.net
+ (3c-app-gmx-bap04.server.lan [172.19.172.74]) (via HTTP); Thu, 13 Aug 2020
+ 11:27:28 +0200
 MIME-Version: 1.0
-References: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200812150048.27721-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200812150048.27721-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 13 Aug 2020 11:24:43 +0200
-Message-ID: <CAMuHMdU_B63Ukx7bU-HBqEKg5qFMOvy5BVp3u3ztbcL8EUFWLw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: r8a7742: Add QSPI support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <trinity-ba9f3a8a-4588-48d3-8131-ce2a7ab5403e-1597310848667@3c-app-gmx-bap04>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Wenbin Mei <wenbin.mei@mediatek.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: Aw: [v4, 0/3] mmc: mediatek: add optional reset property mmc:
+ mediatek: add optional module reset property arm64: dts: mt7622: add reset
+ node for mmc device Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
+ arch/arm64/boot/dts/mediatek/mt7622.d
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 13 Aug 2020 11:27:28 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <20200813090618.28009-1-wenbin.mei@mediatek.com>
+References: <20200813090618.28009-1-wenbin.mei@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:mXGJHHF88bG10JaMCy6eru/9VAgIE4rI2I0CB2gNmVZ1v9dYAOF3QLGE1FofnG1OstrvN
+ KvylGzK5GMDiyOno6TRQVoetCMIsdujumuFaURvjxwPLw8J7eEtyRWW3TZU9CuRo/nCSWvDCvfnQ
+ sXHdssRZ8ti/DhpGRn4ubmTmP/ocOwo5VUKfORmwt0Qt1Em77zg2+Q2YV39v0nL5niPDaUFYr4Lz
+ K54oLCH6eOWM5iwr+NTcggvyefPblhKiFYN7HZRzUbTXTbgax995RoUe60r5+xPg/qFizEKdpO5Q
+ iQ=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Vw33wiRjJGk=:p++MCWCwlhii3JRTH6pCA8
+ 8WIzt/TEIBJ4unZ8aragxwA2U3wg1XZGiKYnR3e8b5VPNV9nl9lmhde0bBDjMUj4DTYCU5bs6
+ qXoBZzlmOem/1Vf3EGxPlO7vxCPlomiH6fbc7U1XmRHSB/NQvCSXqRfcjIqW5AVPBxmX1hqie
+ x0zo8kAjNmj8AbHm/kxvLTCfrn4/YaaHl70652fQ10Me84Bmn5sCjB5c8zFrALc+xInNN4JN2
+ su1uyZTasOqQKH3/VZWJVOBuiOpM7Kqo1WXaxZXWfcDUWiCKf1sGDd9IdG0GRFWT0BOF78dPZ
+ Y8qE3JrkBuPgwccKNEIki/hgqALwb/ecmyONQ3HRRbv7PHexLQBrtX1CsgjHYFw3OSsdNIMOw
+ fdSDZw0b3vaJlJ66fe82fQKsbp4TI29F1JphoESRDJXL5uLQllHTpu7OowVRxirjcFgi1Tk4C
+ wOrOdyDkLjxLGuAMm4t5bYmg7sJjlMq2MMb4siJDaExN+tcQckr3daXZY27FJ1OaiBseKY0A/
+ laQy6hITzbHX/QgdJvIrTXRp/CR7MqPiuH5sm45RmDycUtJGWhK2mDfaaPH3yfp2fUspmKwPj
+ 3gYuoFUdOKkI4+QxUpdzrMK1fKMHYpsNTN154qKFFAIfmnvTeUj8seEb/qeEUylk0h+KEX7ov
+ XTaLna95HIosfil7jXgStJ0WRVqvgX3II4ftvv0azxnR9cI+U37ORAN+MQxiJoi3MGVg=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 5:02 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add QSPI DT node to R8A7742 SoC dtsi.
+Hi,
+
+it looks like you still miss a blank line between subject and your text in cover-letter
+
+regards Frank
+
+> Betreff: [v4, 0/3] mmc: mediatek: add optional reset property mmc: mediatek: add optional module reset property arm64: dts: mt7622: add reset node for mmc device Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 2 ++ drivers/mmc/host/mtk-sd.c | 13 +++++++++++++ 3 files changed, 17 insertions(+)
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> --
+> 2.18.0
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
