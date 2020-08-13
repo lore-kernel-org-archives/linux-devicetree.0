@@ -2,145 +2,162 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDB7C433EA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 01:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9552DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 02:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCDE220829
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 01:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dZzlVRMc"
+	by mail.kernel.org (Postfix) with ESMTP id 6CD36206B2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 02:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597286094;
+	bh=TAz5cCcHd4yqMqBvYJKy8U8P7gsxoLPKhwjFOZLWDIM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mh3DUACjSbUslR+Qho7mhEDnURJVLeeV6GXy8CltbR891dlzCDkl4snsVqTkcAxAO
+	 RUmTPDocyjJ1AfFAWaA1zWp1gUBo26fciVf/XMg+HpdIMSdSXO8i9xgxmejWSdPBgc
+	 7Vfo0pJwQoyS3Tiu+BBj15DAZJgxTZPntnxrN0iI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgHMB3p (ORCPT
+        id S1726531AbgHMCex (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 12 Aug 2020 21:29:45 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57532 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgHMB3o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Aug 2020 21:29:44 -0400
-Received: from pendragon.lan (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B365618A7;
-        Thu, 13 Aug 2020 03:29:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597282178;
-        bh=0MJXmtEOSfpT4GzXXxLVyhw31wcTrvCIzdjEpjQWjNk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dZzlVRMcHkAb4fmN8TC0XiOkuHDGuIQYiBNpK7YZNR+BQ3tfjp6Oq48krhKi4c1qO
-         iEa8of+G1SEOwj4gn/q2d70+DZCQUtwp6eSzwyljt0VH5AxcEse7x4sKR7MCZc+aDc
-         fjLRwPER1qBBPUv++hD6PfGhtFXgioZPZoPJxY6I=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        Stefan Agner <stefan@agner.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-Subject: [PATCH 8/8] drm: mxsfb: Add support for the bus-width DT property
-Date:   Thu, 13 Aug 2020 04:29:10 +0300
-Message-Id: <20200813012910.13576-9-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200813012910.13576-1-laurent.pinchart@ideasonboard.com>
-References: <20200813012910.13576-1-laurent.pinchart@ideasonboard.com>
+        Wed, 12 Aug 2020 22:34:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgHMCex (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Aug 2020 22:34:53 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0315206B2
+        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 02:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597286092;
+        bh=TAz5cCcHd4yqMqBvYJKy8U8P7gsxoLPKhwjFOZLWDIM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u7NISzl7Yli6ona7KYhrl0rknhFMDrmUOybIArIa6PNnCnIAIG6LDNNLDcnEZt2CL
+         zvG2etBn5SPemQrpFB2II8E+Wayl7PnVBh4BHb1KmsY+Hh1mzgA04DWjTszDIo4QBq
+         Uc6ti+9tlAAzLatF/CIOjO3CgHWgIn8ASZ/tuvjQ=
+Received: by mail-oi1-f175.google.com with SMTP id a24so3743286oia.6
+        for <devicetree@vger.kernel.org>; Wed, 12 Aug 2020 19:34:52 -0700 (PDT)
+X-Gm-Message-State: AOAM53221GFEglji9Q3OaC7rgFMnWYeePHAVYOAUBOKAW22fudPgQo76
+        GQ9/GA1WJRWPCldDly/4Za6Nnzfsw/LFQ+Kv+w==
+X-Google-Smtp-Source: ABdhPJywFKo5UazHL3R0/K51u8Ssfvgo/4jzjVgwnfimP3//6zmigP5vJq0Ak/mfqsro52gy1NdAYAbs4OnuvkCvHeo=
+X-Received: by 2002:aca:90a:: with SMTP id 10mr519961oij.106.1597286092087;
+ Wed, 12 Aug 2020 19:34:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1596631695.git.robin.murphy@arm.com> <91284e754802c37c303556a1cffbb46f0aebbd1f.1596631695.git.robin.murphy@arm.com>
+In-Reply-To: <91284e754802c37c303556a1cffbb46f0aebbd1f.1596631695.git.robin.murphy@arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 12 Aug 2020 20:34:41 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLcyhVRsdiPY_-F55aeE5kpVun12aMXqz=53fYMbYGuMQ@mail.gmail.com>
+Message-ID: <CAL_JsqLcyhVRsdiPY_-F55aeE5kpVun12aMXqz=53fYMbYGuMQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf: Add Arm CMN-600 DT binding
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        tuanphan@os.amperecomputing.com, tsahee@amazon.com,
+        harb@amperecomputing.com, james.yang@arm.com,
+        "Saidi, Ali" <alisaidi@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A new bus-width DT property has been introduced in the bindings to allow
-overriding the bus width. Support it.
+On Wed, Aug 5, 2020 at 6:57 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> Document the requirements for the CMN-600 DT binding. The internal
+> topology is almost entirely discoverable by walking a tree of ID
+> registers, but sadly both the starting point for that walk and the
+> exact format of those registers are configuration-dependent and not
+> discoverable from some sane fixed location. Oh well.
+>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  .../devicetree/bindings/perf/arm-cmn.yaml     | 57 +++++++++++++++++++
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 26 ++++++++++++++++++++++++++
- drivers/gpu/drm/mxsfb/mxsfb_drv.h |  2 ++
- drivers/gpu/drm/mxsfb/mxsfb_kms.c |  8 ++++++--
- 3 files changed, 34 insertions(+), 2 deletions(-)
+arm,cmn.yaml
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 8c549c3931af..fab3aae8cf73 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -95,10 +95,36 @@ static int mxsfb_attach_bridge(struct mxsfb_drm_private *mxsfb)
- {
- 	struct drm_device *drm = mxsfb->drm;
- 	struct drm_connector_list_iter iter;
-+	struct device_node *ep;
- 	struct drm_panel *panel;
- 	struct drm_bridge *bridge;
-+	u32 bus_width = 0;
- 	int ret;
- 
-+	ep = of_graph_get_endpoint_by_regs(drm->dev->of_node, 0, 0);
-+	if (!ep)
-+		return -ENODEV;
-+
-+	of_property_read_u32(ep, "bus-width", &bus_width);
-+	of_node_put(ep);
-+
-+	switch (bus_width) {
-+	case 16:
-+		mxsfb->bus_format = MEDIA_BUS_FMT_RGB565_1X16;
-+		break;
-+	case 18:
-+		mxsfb->bus_format = MEDIA_BUS_FMT_RGB666_1X18;
-+		break;
-+	case 24:
-+		mxsfb->bus_format = MEDIA_BUS_FMT_RGB888_1X24;
-+		break;
-+	case 0:
-+		break;
-+	default:
-+		DRM_DEV_ERROR(drm->dev, "Invalid bus-width %u", bus_width);
-+		return -ENODEV;
-+	}
-+
- 	ret = drm_of_find_panel_or_bridge(drm->dev->of_node, 0, 0, &panel,
- 					  &bridge);
- 	if (ret)
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-index 399d23e91ed1..c4f7a8a0c891 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-@@ -32,6 +32,8 @@ struct mxsfb_drm_private {
- 	struct clk			*clk_axi;
- 	struct clk			*clk_disp_axi;
- 
-+	u32				bus_format;
-+
- 	struct drm_device		*drm;
- 	struct {
- 		struct drm_plane	primary;
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_kms.c b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
-index b721b8b262ce..6d512f346918 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_kms.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
-@@ -50,11 +50,15 @@ static void mxsfb_set_formats(struct mxsfb_drm_private *mxsfb)
- {
- 	struct drm_device *drm = mxsfb->drm;
- 	const u32 format = mxsfb->crtc.primary->state->fb->format->format;
--	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
-+	u32 bus_format;
- 	u32 ctrl, ctrl1;
- 
--	if (mxsfb->connector->display_info.num_bus_formats)
-+	if (mxsfb->bus_format)
-+		bus_format = mxsfb->bus_format;
-+	else if (mxsfb->connector->display_info.num_bus_formats)
- 		bus_format = mxsfb->connector->display_info.bus_formats[0];
-+	else
-+		bus_format = MEDIA_BUS_FMT_RGB888_1X24;
- 
- 	DRM_DEV_DEBUG_DRIVER(drm->dev, "Using bus_format: 0x%08X\n",
- 			     bus_format);
--- 
-Regards,
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/arm-cmn.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/perf/arm-cmn.yaml b/Documentation/devicetree/bindings/perf/arm-cmn.yaml
+> new file mode 100644
+> index 000000000000..167491787088
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/perf/arm-cmn.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Laurent Pinchart
+Dual license new bindings: (GPL-2.0-only OR BSD-2-Clause)
 
+> +# Copyright 2020 Arm Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/perf/arm-cmn.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Arm CMN (Coherent Mesh Network) Performance Monitors
+> +
+> +maintainers:
+> +  - Robin Murphy <robin.murphy@arm.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: arm,cmn-600
+> +
+> +  reg:
+> +    items:
+> +      - description: Physical address of the base (PERIPHBASE) and
+> +          size (up to 64MB) of the configuration address space.
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      - description: Overflow interrupt for DTC0
+> +      - description: Overflow interrupt for DTC1
+> +      - description: Overflow interrupt for DTC2
+> +      - description: Overflow interrupt for DTC3
+> +    description: One interrupt for each DTC domain implemented must
+> +      be specified, in order. DTC0 is always present.
+> +
+> +  arm,root-node :
+
+extra space       ^
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Offset from PERIPHBASE of the configuration
+> +      discovery node (see TRM definition of ROOTNODEBASE).
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - arm,root-node
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    pmu@50000000 {
+> +        compatible = "arm,cmn-600";
+> +        reg = <0x50000000 0x4000000>;
+> +        /* 4x2 mesh with one DTC, and CFG node at 0,1,1,0 */
+> +        interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> +        arm,root-node = <0x104000>;
+> +    };
+> +...
+> --
+> 2.28.0.dirty
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
