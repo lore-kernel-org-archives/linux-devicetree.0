@@ -2,136 +2,152 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0002C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 11:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2A4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 11:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C80F20715
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 11:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9320E20791
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 11:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bNUdBuTw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqSSJl1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgHMLTJ (ORCPT
+        id S1726709AbgHMLV1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 07:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41150 "EHLO
+        Thu, 13 Aug 2020 07:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgHMLTI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 07:19:08 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 274DCC061757
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 04:19:08 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w25so5714542ljo.12
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 04:19:08 -0700 (PDT)
+        with ESMTP id S1726100AbgHMLVZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 07:21:25 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44291C061383;
+        Thu, 13 Aug 2020 04:21:25 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id e14so3122038ybf.4;
+        Thu, 13 Aug 2020 04:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qcVxyjLOc1XVQD85n/+izIou9HNM43cYVLg/SeyZZMI=;
-        b=bNUdBuTwV/3TZ/Z2ohABO3rXzw8ixSfjeDWsfXjjDrX20nyzrlw+kFWqi3ovJUynzQ
-         T1jyIFdxNfWCxLqjjyxSHXr5s0oW5LxFuvCml7jlfGz/Es56tr8LGQJ0Ayd8iqZPt9ZY
-         PsDEcqKEmN8WW+xd7XLaSVnCibx6LBsuymT1hEUj+XD/gGeGo2ourVChPri6ZJkqQOVR
-         ceDCAPqSkGUMysZ8x4Jtlz5llwNp3sqtR86ChhD8zQbr6L7twY6lDI+UEQ3DiEXxQa/F
-         8Qku+cOjt+2i4dOy7CD3axyIFL6EvdiknM+KuArG/9J4BcsypOjwY3z7KRAA02hS0wBv
-         06Ng==
+        bh=0SrbfwtjCL+Ch70ZV12lTDvT9PgGCIle5pOe2njGh38=;
+        b=uqSSJl1QBhCjyTIGGHPmllHzdNyHwp5crRG08NLkDMIuGqMzYtAS9sZ9UmerNqbuC8
+         RoVhDM8VWhxNtjfUpiP1IJs09F00r59FavT3pGpMyD0stSqPf5tuZ2Sqp55V7YMz7/k/
+         fMrtqojnocJHva2BoZ/XPyQXoSI3DnuL383sQhJhO+ehsq0xQlS7ZTJIfID6quVv8KPo
+         JBX+FSPxQwb1qeD0jnC1k96eXtgIGnXv4YnnYUcy48Qq64qLQedxvBaVZnBGEftXhQoj
+         RmeEz+SnUkpI6Ful0FLbfd0ugGEirEBWRPIgTvV7f/0NmNLGaxjV+a/uupC9fWTwrvaJ
+         0xnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qcVxyjLOc1XVQD85n/+izIou9HNM43cYVLg/SeyZZMI=;
-        b=d53jpoRi1dfMks3p6lQhnCFbNPcpoqUnC080PGjcRBLDL3qBH9O0seJyqX2tntUVWb
-         h63PV8bqPyyAGHWUG3mgfzrpRn0qVOhbMSiqU8YkGLFJ57GJ3ZEfm4XdkqRZVh1ywvbk
-         MaGRjS+XuqduSorheyveQ9UZ678ykGMjaSBdM/tEttcFWyFE4X3Kf7yWJLW4iCd1lh5s
-         YSJkewALAKUGZJhOu6kKdH9UaHPd2EJc40FEYC4f6RwI/OWbpL1dkVg4ekqwqDyrlVcR
-         QdfWpxKgY50qGchBZBMXLHbxZM3plkLw8tx1NoplNRrT2XYQeZvXahLCOObcTFOLHsFS
-         cCFw==
-X-Gm-Message-State: AOAM533vnemFgEl7w4IqoUGI2vWXpzqL3F4zp/0IwzsMxZMbhueKANYI
-        VLquTIJZHNHE1w5Wp5IfWQgriZpuZYWUhdVWcnmohA==
-X-Google-Smtp-Source: ABdhPJzYfGbMEn7r8RSAZZZ27h0Qx8uCYkmnUIyQdLzHLY2mY0DXgQIKq5PcNQCWG8lcb6/k/8aEZqf77v7vU/NmbRA=
-X-Received: by 2002:a05:651c:91:: with SMTP id 17mr1857137ljq.173.1597317546530;
- Thu, 13 Aug 2020 04:19:06 -0700 (PDT)
+        bh=0SrbfwtjCL+Ch70ZV12lTDvT9PgGCIle5pOe2njGh38=;
+        b=Tv78kA6FEBegQ/JtteKmLI4iZuTL+dU6laAgmx9ZNRijkzrNEOHsqkrcRQitlaf+0n
+         IFGQ6pA21FP4sVzAhHWA9TlOOC/09Z1IgbPOLO5PBLGrtYZ9d0BzoljbKQ92xlidCAuO
+         LlpdwZcXMrSLQpflm6lE/9g78qXtuZ9QxHroz0BjWuKqDlrJ5nx3Sve5EYaAcymJx9H7
+         bHwQLJ+eKrpgVwepneYXfxdM81jzMVrW0C4npdSPUGTwhPmgegN2F771S5nToVXKFdVC
+         NC921g14vhv0qvY6urskyz6TMMGaQwsRgCeZY2cPtlU4c9GeVKnaOavlOee49HqkaqBS
+         LeJQ==
+X-Gm-Message-State: AOAM5317o7iUJbZ/3QZfUfom0znBjxAKXvp3mulF99xl6za7Oe3+pcQ2
+        PflkzKMzeYhijAqbVG9SeFDU2GKwnYmjT49/lG4=
+X-Google-Smtp-Source: ABdhPJxx5+KUKPX1w0oAy96kpCKRHE3RSshStqR59IK1IKnc/G77Uin05ciyk051/7IYQ6oWt+QgwrIFPasAmhFEqe4=
+X-Received: by 2002:a25:c743:: with SMTP id w64mr5638674ybe.127.1597317684356;
+ Thu, 13 Aug 2020 04:21:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200725181404.18951-1-ansuelsmth@gmail.com> <20200725181404.18951-2-ansuelsmth@gmail.com>
- <CAHLCerMc8yUjh9qwUCa=jMZHs18GC4qeS3rqT1_6K90QJd=nVA@mail.gmail.com> <006f01d66fe1$e6c0d450$b4427cf0$@gmail.com>
-In-Reply-To: <006f01d66fe1$e6c0d450$b4427cf0$@gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 13 Aug 2020 16:48:55 +0530
-Message-ID: <CAP245DWuMh6Bkv7P4Y6mV3n59KFyCGKoy7e00E9d9ijR_rr1WA@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 1/7] drivers: thermal: tsens: Add VER_0 tsens version
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
+ <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
+ <20200813105910.GB6057@pendragon.ideasonboard.com> <CA+V-a8sRQ_R4UGkSjrZ7Rq5nUqTwPtbvuuT0t69mM8M8ZeTkRQ@mail.gmail.com>
+ <20200813111123.GD6057@pendragon.ideasonboard.com>
+In-Reply-To: <20200813111123.GD6057@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 13 Aug 2020 12:20:58 +0100
+Message-ID: <CA+V-a8toVwB+_=RmQ4DjhRaTyHoMOPHW2a42NTEUqW+FSv1tmg@mail.gmail.com>
+Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1 bindings
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 6:48 PM <ansuelsmth@gmail.com> wrote:
->
->
->
-> > -----Messaggio originale-----
-> > Da: Amit Kucheria <amit.kucheria@linaro.org>
+Hi Laurent,
 
-> >
-> > >                         if (IS_ERR(priv->rf[i]))
-> > >                                 return PTR_ERR(priv->rf[i]);
-> > >                 }
-> > > @@ -775,12 +800,80 @@ int __init init_common(struct tsens_priv
-> > *priv)
-> > >                         goto err_put_device;
-> > >         }
+On Thu, Aug 13, 2020 at 12:11 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Aug 13, 2020 at 12:08:58PM +0100, Lad, Prabhakar wrote:
+> > On Thu, Aug 13, 2020 at 11:59 AM Laurent Pinchart wrote:
+> > > On Thu, Aug 13, 2020 at 11:38:03AM +0100, Lad, Prabhakar wrote:
+> > >> On Thu, Aug 13, 2020 at 10:05 AM Geert Uytterhoeven wrote:
+> > >>> On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar wrote:
+> > >>>> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > >>>>
+> > >>>> Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
+> > >>>>
+> > >>>> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > >>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >>>> ---
+> > >>>>  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
+> > >>>>  1 file changed, 2 insertions(+)
+> > >>>>
+> > >>>> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > >>>> index 51cd4d162770..67cded5ad827 100644
+> > >>>> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > >>>> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > >>>> @@ -10,6 +10,7 @@ Required Properties:
+> > >>>>      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
+> > >>>>      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
+> > >>>>      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
+> > >>>> +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
+> > >>>>      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+> > >>>>      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+> > >>>>      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> > >>>> @@ -75,6 +76,7 @@ corresponding to each DU output.
+> > >>>>   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
+> > >>>>   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
+> > >>>>   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
+> > >>>> + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
+> > >>>
+> > >>> As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
+> > >>> instead of port 2?
+> > >>>
+> > >>> I know we did it the same for R-Car M3-N and RZ/G2N.
+> > >>> But my main worry is adding support for R-Car H3-N later.
 > > >
-> > > -       priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
-> > > -                                                    priv->fields[TSENS_EN]);
-> > > -       if (IS_ERR(priv->rf[TSENS_EN])) {
-> > > -               ret = PTR_ERR(priv->rf[TSENS_EN]);
-> > > -               goto err_put_device;
-> > > +       if (tsens_version(priv) >= VER_0_1) {
-> > > +               priv->rf[TSENS_EN] = devm_regmap_field_alloc(
-> > > +                       dev, priv->srot_map, priv->fields[TSENS_EN]);
-> > > +               if (IS_ERR(priv->rf[TSENS_EN])) {
-> > > +                       ret = PTR_ERR(priv->rf[TSENS_EN]);
-> > > +                       goto err_put_device;
-> > > +               }
-> > > +
-> > > +               priv->rf[SENSOR_EN] = devm_regmap_field_alloc(
-> > > +                       dev, priv->srot_map, priv->fields[SENSOR_EN]);
-> > > +               if (IS_ERR(priv->rf[SENSOR_EN])) {
-> > > +                       ret = PTR_ERR(priv->rf[SENSOR_EN]);
-> > > +                       goto err_put_device;
-> > > +               }
-> > > +               priv->rf[INT_EN] = devm_regmap_field_alloc(
-> > > +                       dev, priv->tm_map, priv->fields[INT_EN]);
-> > > +               if (IS_ERR(priv->rf[INT_EN])) {
-> > > +                       ret = PTR_ERR(priv->rf[INT_EN]);
-> > > +                       goto err_put_device;
-> > > +               }
-> > > +       } else {
-> >
-> > Let's not create two big sections with if-else for 8960 and everything
-> > else. For example, what is wrong with using common code for TSENS_EN?
-> >
-> > If the concern is memory wasted trying to allocate fields not present
-> > on this older platform, perhaps consider adding a check in the loop to
-> > break early in case of 8960?
-> >
+> > > Why should we do so ? The port number here isn't tied to the DU channel
+> > > number. It only identifies the output port. Many DUs can route DU
+> > > channel outputs to different output ports.
+> > >
+> > The binding document (renesas,du.txt) does state that "The following
+> > table lists for each supported model the port number corresponding to
+> > each DU output.", hence the confusion.
 >
-> About TSENS_EN the old platform doesn't have SROT so I need to use TM_MAP.
-> Should I set the srot map to match the tm map so we can use the common function?
-> Aside from this problem, I will try to remove the big if-else.
+> It can be a bit confusing indeed. "DU output" here refers to the output
+> of the whoel DU, made of individual DU channels. Each DU channel is
+> listed as a DU device in the datasheet, and collectively they are the DU
+> device that Linux handles.
+>
+Thanks for the clarification, that clears up the confusion.
 
-Ick. I guess srot_map and tm_map pointing to the same region is the
-lesser of two evils? It makes it so this will be constrained to a
-single place in init_common().
+Cheers,
+Prabhakar
