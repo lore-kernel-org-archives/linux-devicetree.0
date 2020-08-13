@@ -2,204 +2,262 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C91C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C0DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEF92074D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="auibEEpP"
+	by mail.kernel.org (Postfix) with ESMTP id 6BB8520768
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597312714;
+	bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jtDgrHtQrVLVnMgqJFkrC1AMWsbxIKwAZoOI1iWRo5HNdu/Ii2FtBTggopD8gZUvy
+	 cC2ottwYq6GxSukpBsk6xSsOnlsxYq4jf/5BaJYtDjSOfyxrmg5GFaQaYfDuFf1PHs
+	 4Tdn0f4gAu7tYa2wBgMUU8O4hWNITD3J52pmIqqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgHMJyi (ORCPT
+        id S1726100AbgHMJ6d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:54:38 -0400
-Received: from mail-am6eur05on2045.outbound.protection.outlook.com ([40.107.22.45]:24256
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726106AbgHMJyi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:54:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xy8KfdhiY2mHZFxIDIKF5EtaEkTojK+bn/JWAk/1tTOOxeYfKhOsA2jUUFv/F9FGk/szhZ1oY+xKNBs4/ITg6G56EvSsa1ln2D0U5Li268EXLxdsyryuRo82kBVU9oEkYyMJojesZk5AIKJagsKR/mginXJTKkNgSciwVUCr4vL1rVEmSpUUo5WJ/GYng3Vl1liChM5R12VuGDTblt79aY/cE+KTA9LTMQAJGI4bNtBDTtWiqNr5azPeR+SDjNj3nUs9alMv3+dYjeElYsCUzhemp6QyhCpzE6y9rZwOQSXOdx27IcixLlJ8mq4SsOAh/1O+BfD+T70ojkyged1MHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pCwkf6vGRZLoX+PMO/ZRRK7fzGlQKkiWqE/uAuiAeZY=;
- b=PTcVH3uLz7sFYAQ/w6Yev1qkNmyaDATT6qtYs3Nk06xseP5m3hWu4QxXF3BHA+K7RdV/iPt65bGEqMJk1peiUUyPQYOAAgUxlfteyO5mCKl1j+INu/hwAA+wZb5vHLHPlv/gSkSFnTMxJAfjxvoX52mD/udO06S6nRfu9djj9tmG/u0I/X/pap2OZJvAF9tTRQe3QFKY33ckMKf+0LtsyCrg+5Sp4QGLwUvmGmY5MKPO4Sz91deL7net2guGpS6D+tcj2elEFX/bIzAuBumKjUfbgwzTkswOr/iG4YnKRA4G8rAk+znrBrTnwXXK3v/Q8lnM4N6nkGheVBpO+UbH0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pCwkf6vGRZLoX+PMO/ZRRK7fzGlQKkiWqE/uAuiAeZY=;
- b=auibEEpP8hqKjP9FKzU4hZ8kwud/CObjbtGfmuoekBU4JVujzyy9prSXprS3jWkYC6f36muxPUliKW/SELHsp5riQYUd+/+JpMDRwb8bmBs/pHUmFwIqnfwCnVjU1l7lht7EffnnPXDHfgNGP2qGTCVG5sGjqNG/HhBc1v0LxVw=
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
- by DB6PR0401MB2472.eurprd04.prod.outlook.com (2603:10a6:4:36::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 13 Aug
- 2020 09:54:33 +0000
-Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::2d61:d6fe:3c2:3e14]) by DB8PR04MB6523.eurprd04.prod.outlook.com
- ([fe80::2d61:d6fe:3c2:3e14%3]) with mapi id 15.20.3261.024; Thu, 13 Aug 2020
- 09:54:33 +0000
-From:   Jun Li <jun.li@nxp.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Peter Chen <peter.chen@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Horia Geanta <horia.geanta@nxp.com>
-Subject: RE: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core device
- to pass data
-Thread-Topic: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core device
- to pass data
-Thread-Index: AQHWU3qPod3u7KLfuUW6rq9H7arWKakU/oyAgAAAsRCAIQe6kA==
-Date:   Thu, 13 Aug 2020 09:54:32 +0000
-Message-ID: <DB8PR04MB6523EE64FD4AC189E5D42A4989430@DB8PR04MB6523.eurprd04.prod.outlook.com>
-References: <1594028699-1055-1-git-send-email-jun.li@nxp.com>
- <1594028699-1055-2-git-send-email-jun.li@nxp.com> <87r1t2oabc.fsf@kernel.org>
- <VE1PR04MB6528BF081AA2B4AE64C8F00F89760@VE1PR04MB6528.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB6528BF081AA2B4AE64C8F00F89760@VE1PR04MB6528.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f8ee29f5-452e-4fa6-8a16-08d83f6ee150
-x-ms-traffictypediagnostic: DB6PR0401MB2472:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0401MB2472127F75D0906C1FD1EBCB89430@DB6PR0401MB2472.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5i3rhAw5K4oRGUbGi4zB/avsNoe3LKDYxLl9vFFx9bO5e+AoAAUeo18aZAEfxWif0aTuIhJKyR3E9QSrE05ZpL8bYDjGlsvOd3NgDnqrkW5MBPC9yCz6mDrRMZ6RBW6O0xJe+5pqP15w3DxbJJcUhrKQscHF7lW2A7a8Ohe9dShISuzHCP75eWYwIwwswWRZAGCJAhUVrTw7koIq1J6MxKk9x2ZEPJMrt8Br9jHXEqZE0vKW4vI0YEgu/eXKkt/2W6rt2qRhMC1nEzAmYAPYh/gP9Asvc1OQX8Y2wh/pF4OWHO4B7mE+wQfxcofhLxlCTl2QFGBo7UUXcD9W12MLXA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(55016002)(71200400001)(33656002)(54906003)(8936002)(6506007)(4326008)(86362001)(316002)(52536014)(9686003)(110136005)(53546011)(478600001)(83380400001)(186003)(5660300002)(26005)(66556008)(64756008)(66476007)(7696005)(76116006)(44832011)(2906002)(7416002)(66446008)(8676002)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: OqJPBRP2+4QK9J1YAeULgkgUyvcjPMBf9g4lsEiqIyLXgVQ/nRKMaWdkUDwcPQ9iHpaPl0VZ36qDVBowWxfPa0H//b1mZeUiW1sJWL+cnQNLRCxHWJh0p29SiRdVn1KW40tCli5E7c+TQwzX2j+tDbD5bA0CX3kiY+bMCE45hRvckOX5zY5IiP1OletseOg3Ivtj/kxK5lZFDUY0vxJwaI3dakhTJqmflxT+WzKKTdryL5ekbdL2lOqoQWUmteiBecLJxwyb7G1BA25RhFy8UFQ9ue0U4Y47y+LjfQlvenQYSauBzME7tu5TjaKJ3pEC9Dxi0srPzF+mH/BCmmg1JW/xPS+DtVJ3bI7KCrMbao/ZvGX/juYm2RJ03wG5vplNvcwWk7AOEt+rH0TpgS3GRIrA/D6rodd3J8r/ubgY1TN42yarrx7VwnVVPbsIyL5sznHhkmf4x7guqacdduCmHnj77D2gmdu5ZCII7q8jxlNli1S/wlAhFiJKPwtFVXna6zRmAwaV129stf7QWWmgbs+ODyVTVEcnuBmfQ5dtO3KrC9IPXeTUYCSJiozYAWkpb5Xhb4mSms832QLgs1p40JPTDwBYnGxLf0/zyu3FgfCm9B4LfvkM7YWRs+JfwLMHsEmN/F71SB4GfD88dL05uQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Aug 2020 05:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726048AbgHMJ6d (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:58:33 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8385206A4;
+        Thu, 13 Aug 2020 09:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597312712;
+        bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XfTzQarbNsyDPeTzjsFu2xl1etxDXCqda8LvDEXpdjegidj0Xgsr2kj27WVGm6slM
+         o8qXDSNIz8t27fK7IrRxoLEY5xrWvi+vTNigaxxqamJKt4vRAGMO9Ag7XojLkptG8B
+         OIGlea/1wskhl5ANMK5MBT5wraJ2/dxIfgFnj16o=
+Date:   Thu, 13 Aug 2020 11:58:23 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+Message-ID: <20200813115823.70f9016a@coco.lan>
+In-Reply-To: <20200813075827.GH4354@dell>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+        <20200813075827.GH4354@dell>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6523.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8ee29f5-452e-4fa6-8a16-08d83f6ee150
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 09:54:33.0200
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OZdaB7CtFSLF9D9jUi7jBEfTebUunWna7vh4K7V27z1ZTDOFHy+qxN7bCsSnUjBr
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2472
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Lee,
 
-> -----Original Message-----
-> From: Jun Li
-> Sent: Thursday, July 23, 2020 5:58 PM
-> To: Felipe Balbi <balbi@kernel.org>; shawnguo@kernel.org; robh+dt@kernel.=
-org
-> Cc: gregkh@linuxfoundation.org; s.hauer@pengutronix.de; kernel@pengutroni=
-x.de;
-> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>; linux-usb@vger.kern=
-el.org;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; Peter C=
-hen
-> <peter.chen@nxp.com>; Anson Huang <anson.huang@nxp.com>; Peng Fan
-> <peng.fan@nxp.com>; Horia Geanta <horia.geanta@nxp.com>
-> Subject: RE: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core dev=
-ice to
-> pass data
->=20
->=20
->=20
-> > -----Original Message-----
-> > From: Felipe Balbi <balbif@gmail.com> On Behalf Of Felipe Balbi
-> > Sent: Thursday, July 23, 2020 5:22 PM
-> > To: Jun Li <jun.li@nxp.com>; shawnguo@kernel.org; robh+dt@kernel.org
-> > Cc: gregkh@linuxfoundation.org; s.hauer@pengutronix.de;
-> > kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx
-> > <linux-imx@nxp.com>; linux-usb@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > Peter Chen <peter.chen@nxp.com>; Anson Huang <anson.huang@nxp.com>;
-> > Peng Fan <peng.fan@nxp.com>; Horia Geanta <horia.geanta@nxp.com>
-> > Subject: Re: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core
-> > device to pass data
-> >
-> >
-> > Hi,
-> >
-> > Li Jun <jun.li@nxp.com> writes:
-> > > In case dwc3 has SoC specific customizations, dwc3 glue driver can
-> > > base on compatible string and pass it via platform data to dwc3 core
-> > > driver; and pass xhci private data further to xhci-plat like quirks.
-> > >
-> > > Signed-off-by: Li Jun <jun.li@nxp.com>
-> > > ---
-> > >  drivers/usb/dwc3/core.h | 5 +++++
-> > >  drivers/usb/dwc3/host.c | 9 +++++++++
-> > >  2 files changed, 14 insertions(+)
-> > >
-> > > diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h index
-> > > 0b8ea8c..3146697 100644
-> > > --- a/drivers/usb/dwc3/core.h
-> > > +++ b/drivers/usb/dwc3/core.h
-> > > @@ -29,6 +29,7 @@
-> > >  #include <linux/ulpi/interface.h>
-> > >
-> > >  #include <linux/phy/phy.h>
-> > > +#include "../host/xhci-plat.h"
-> > >
-> > >  #define DWC3_MSG_MAX	500
-> > >
-> > > @@ -924,6 +925,10 @@ struct dwc3_scratchpad_array {
-> > >  	__le64	dma_adr[DWC3_MAX_HIBER_SCRATCHBUFS];
-> > >  };
-> > >
-> > > +struct dwc3_platform_data {
-> > > +	struct xhci_plat_priv *xhci_priv;
-> > > +};
-> >
-> > why? We should rely on properties, no?
->=20
-> My v1 patch was adding new property directly, considering Rob has objecti=
-on on that
-> way if I understand correctly, also there is suggestion on use compatible=
- string
-> to set quirks, I changed to add platform data to pass SoC level quirks, I=
- think
-> this also can be used to extend other special handling for glue layer dri=
-ver, so
-> should I go back to use properties?
-> Hope an agreement can be made on adding new properties/quirks.
-'
-Hi Felipe,
+Em Thu, 13 Aug 2020 08:58:27 +0100
+Lee Jones <lee.jones@linaro.org> escreveu:
 
-Could you please point me how I can move forward on this, thanks a lot.
+> On Wed, 12 Aug 2020, Mauro Carvalho Chehab wrote:
+>=20
+> > Hi Greg,
+> >=20
+> > This patch series is part of a work I'm doing in order to be able to su=
+pport
+> > a HiKey 970 board that I recently got on my hands.
+> >=20
+> > I received some freedback from Mark and from Jonathan on a first
+> > attempt I made to upstream this.
+> >=20
+> > I'm opting to submit it via staging, because I had to start from the
+> > patch that originally added this driver on a 4.9 Kernel tree:
+> >=20
+> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> >=20
+> > In order to preserve the original SOB from the driver's author.
+> >=20
+> > The patches following it are on the standard way: one patch per
+> > logical change.
+> >=20
+> > This is part of a bigger work whose goal is to have upstream support
+> > for USB and DRM/KMS on such boards.=20
+> >=20
+> > I suspect that, maybe except for the DT part, those 3 specific drivers
+> > are more or less ready to be moved from staging, but the other
+> > drivers that are also part of this attempt aren't ready. Specially the
+> > DRM driver has some bugs that came from the OOT version.
+> >=20
+> > So, my current plan is to submit those drivers to staging for 5.9
+> > and move the ones that are ok out of staging on Kernel 5.10. =20
+>=20
+> What a mess.  This is no way to upstream a new driver.
+>=20
+> Firstly, could you please add versioning to your submissions.  I know
+> this at least version 2.  Were there previous submissions?  Is this
+> the latest?
 
-Li Jun
+Yeah, that's the second attempt. The first one was:
+
+	https://lore.kernel.org/lkml/176043f329dfa9889f014feec04e7e1553077873.1597=
+160086.git.mchehab+huawei@kernel.org/T/#u
+
+I was in doubt about adding a v2 in this specific case or not,=20
+since I ended submitting it to the staging tree.
+
+> Secondly and more importantly, you have submitted what looks like a
+> new driver (bearing in mind that I'm only concerning myself with the
+> MFD related changes), then in the same submission you are adding and
+> removing large chunks.  Please just submit the new driver, on its own
+> as a single patch, complete with its associated Makefile and Kconfig
+> changes.
+
+I can't do like that because I'm not the author of the original patch that
+added the driver.
+
+The original patch came from the 96board's android-kernel based 4.9 tree:
+
+	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+
+> What are your reasons for submitting this via Staging?=20
+
+The main reason is to preserve both the patch authorship and its
+history.
+
+After the original patch, I wrote several incremental changes cleaning
+up the original driver and stripping parts of it that aren't needed.
+
+By preserving the history, if someone wants to restore some removed
+functionality, it is just a matter of reverting a patch.
+
+For example, the original driver had its own sysfs interface for
+debugging the regulator driver.=20
+
+This is not needed for it to work. Also, the right interface for such=20
+things is via configfs. Yet, someone could think on restoring such=20
+feat and start from the existing code, instead of coming with=20
+something else from scratch.
+
+> Is it not ready yet?=20
+
+=46rom my side, I believe that, after my changes, the code now meets
+upstream requirements, maybe except for DT (and the parsing code).
+There are a few things at the DT properties on this driver that could=20
+be named on a different (more standard way).=20
+
+Yet, I'm not a regular contributor for mfd/regulator/spmi. So,
+I may have missed something.
+
+> Are the resultant components not at a high enough level of
+> quality or enablement to go straight into the subsystems, which is
+> more typical?  From an MFD perspective, I would be reviewing the
+> driver as a whole when (if) it moves from Staging into MFD anyway, so
+> why are you jumping through hoops with this additional, seemingly
+> superfluous step?
+
+I'm OK if this gets reviewed by MFD people only after moving it out of
+staging. Assuming that this would be merged for Kernel 5.10, I'll
+likely send a patch moving it out of staging for 5.11. Then,
+you can do a comprehensive review.
+
+> Finally, the subject of authorship is often a contentious one, but
+> this is a problem you need to work out with the original author, not
+> something that should require special handing by upstream.  You have a
+> couple of choices, but bear in mind that upstreaming a non-suitable
+> driver then bringing it up to standard is not one of them.
 >=20
-> Thanks
-> Li Jun
+> 1. Keep the original author's authorship and SoB, make your changes
+>    and get them to review to ensure they are still happy about being
+>    associated with the resultant code.  Ensure you mention all of the
+>    changes you make in the commit message and follow-up by adding your
+>    own SoB.
 >=20
-> >
-> > --
-> > balbi
+> 2. This is the contentious bit.  If you've made enough changes, there
+>    is an argument for you to adopt authorship.  You should discuss
+>    with the original author whether they are happy for you to retain
+>    their SoB.  My suggestion is always try to keep the SoB as a bare
+>    minimum to preserve patch history and out of pure courtesy.
+
+It is not only the above. Both the original author and anyone
+touching the code should comply with applicable internal policies.
+
+=46rom my experience, dealing with such things takes a lot more of time
+then coding, as it require talking with legal departments on different
+continents, and with developers and with their bosses in order to be
+able to do things like that.=20
+
+This can also be a very frustrating process. During almost 20 years of
+being the media maintainer, I've seen several cases where trying to
+enforce a folded initial patch caused devs to receive NACKS, preventing=20
+them so submit otherwise good stuff.
+
+So, at the media subsystem, I'm perfectly fine if someone starts from=20
+the original OOT driver, preserving its original authorships. We're
+also dealing there with the patches sent to drivers/staging/media.
+
+I'm not saying that other subsystem maintainers should do the same.
+Dealing with staging is time consuming, and I completely understand
+that most maintainers prefer to stay out of it ;-)
+
+-=20
+
+Since when staging tree started, if someone has to start from the
+original patch, such things can be merged at staging. Then,
+incremental patches are applied at the top until it reaches what's
+required to be promoted.
+
+That's said, there's no hush to have those drivers out of staging.
+My end goal is to have DRM/KMS and USB support for Hikey 970.=20
+
+The patchsets I have so far are at:
+
+	https://github.com/mchehab/linux/commits/hikey970/to_upstream-2.0-v1.1
+
+(this branch has the v1 of my patchset)
+
+Porting this driver is part of such effort. While this driver is
+on a good situation, the other ones may require some time to
+mature.
+
+The DRM/KMS driver for example, is not ready to be merged outside=20
+staging, as it carries several bugs that came from the original
+driver and are present at the official tree at 96boards. For example,
+there is a a very dirty hack that enforces the HDMI chipset to
+only work with a limited set of resolutions that are known to work:
+
+	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
+/hisilicon/kirin9xx/hdmi/adv7535.c#L869
+
+It also has problems reading the frequencies via EDID interface.
+Due to that, the driver fakes an EDID table:
+
+	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
+/hisilicon/kirin9xx/hdmi/adv7535.c#L463
+
+It sounds to me that some clocks are not properly set for a random
+resolution, but fixing it is not trivial and requires deep knowledge
+about how the display registers should be tuned to better support
+resolutions. The current settings cause underflows with 1080p,
+which in turn makes the display driver to (silently) stop working.
+
+So, in summary, I believe that some drivers from my port will
+require being at staging for a while. While I was planning to
+do that on my next patch submission, placing the PM drivers
+there won't make much difference from my side, as I'll need to
+be submitting patches anyway moving drivers out of staging as
+they become ready.
+
+Thanks,
+Mauro
