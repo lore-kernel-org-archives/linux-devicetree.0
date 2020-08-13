@@ -2,107 +2,215 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26C5C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A68C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5DDD2080C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC182080C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:39:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SrTFxT3q"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y8aOEZwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgHMJjZ (ORCPT
+        id S1726533AbgHMJjz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:39:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:19739 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726567AbgHMJjY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 05:39:24 -0400
-X-UUID: a7d4b970477849eca539b4bccef075c0-20200813
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=9httdLSXqot72Vjp5bmV2MlVnnvkCGEnLIRNKAXrnXo=;
-        b=SrTFxT3qdkEGPYMd6KeWC1B8BX/H1WUcWOSHZOIAKgockix1oC/IM79XExTtzyGLgb0xMC4SmRivgMNjI7yaxP6UpqRCMuevgDcJYJKaoqB43bfDzJ78ph77HPaDfWpZ8IwZXuBHFGw+y4Z+AU9nvXmU4bQ6/vlOD40H6DDhEss=;
-X-UUID: a7d4b970477849eca539b4bccef075c0-20200813
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <wenbin.mei@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 481167448; Thu, 13 Aug 2020 17:39:20 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 13 Aug 2020 17:39:17 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 13 Aug 2020 17:39:17 +0800
-From:   Wenbin Mei <wenbin.mei@mediatek.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        Wenbin Mei <wenbin.mei@mediatek.com>, <stable@vger.kernel.org>
-Subject: [RESEND,v4,3/3] mmc: mediatek: add optional module reset property
-Date:   Thu, 13 Aug 2020 17:38:11 +0800
-Message-ID: <20200813093811.28606-4-wenbin.mei@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200813093811.28606-1-wenbin.mei@mediatek.com>
-References: <20200813093811.28606-1-wenbin.mei@mediatek.com>
+        Thu, 13 Aug 2020 05:39:55 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38598 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgHMJjy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 05:39:54 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07D9dZQd070040;
+        Thu, 13 Aug 2020 04:39:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597311575;
+        bh=rZEumhrIkKKM9dbtiYQsEtPLv1wJRa51pymiLJTtqG4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Y8aOEZwIJEAMzV0FFwB/xJ1A6Wagw5XGJKfLz7J3cjzM9YClqUadgli2BOwpBT9/R
+         7rBlYllXGqNhnoDi9X7fPSSNBFg/ATr1RNhXAeJ1D3JTYf/ebtQWWTkepoUI6m19Vc
+         Fz/3/O7zqkYdR+eCrSVK4DQ6Hp9uYw+ja8oDu+Jo=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07D9dZSf122124
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Aug 2020 04:39:35 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 13
+ Aug 2020 04:39:34 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 13 Aug 2020 04:39:34 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07D9dVVt068509;
+        Thu, 13 Aug 2020 04:39:32 -0500
+Subject: Re: [PATCH v6 00/13] irqchip: ti,sci-intr/inta: Update the dt
+ bindings to accept different interrupt parents
+To:     Lokesh Vutla <lokeshvutla@ti.com>, Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Vinod <vkoul@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+References: <20200806074826.24607-1-lokeshvutla@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <31a0d207-cafa-8524-0364-b0bc55db6f6d@ti.com>
+Date:   Thu, 13 Aug 2020 12:41:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200806074826.24607-1-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBmaXhzIGVNTUMtQWNjZXNzIG9uIG10NzYyMi9CcGktNjQuDQpCZWZvcmUgd2Ug
-Z290IHRoZXNlIEVycm9ycyBvbiBtb3VudGluZyBlTU1DIGlvbiBSNjQ6DQpbICAgNDguNjY0OTI1
-XSBibGtfdXBkYXRlX3JlcXVlc3Q6IEkvTyBlcnJvciwgZGV2IG1tY2JsazAsIHNlY3RvciAyMDQ4
-MDAgb3AgMHgxOihXUklURSkNCmZsYWdzIDB4ODAwIHBoeXNfc2VnIDEgcHJpbyBjbGFzcyAwDQpb
-ICAgNDguNjc2MDE5XSBCdWZmZXIgSS9PIGVycm9yIG9uIGRldiBtbWNibGswcDEsIGxvZ2ljYWwg
-YmxvY2sgMCwgbG9zdCBzeW5jIHBhZ2Ugd3JpdGUNCg0KVGhpcyBwYXRjaCBhZGRzIGEgb3B0aW9u
-YWwgcmVzZXQgbWFuYWdlbWVudCBmb3IgbXNkYy4NClNvbWV0aW1lcyB0aGUgYm9vdGxvYWRlciBk
-b2VzIG5vdCBicmluZyBtc2RjIHJlZ2lzdGVyDQp0byBkZWZhdWx0IHN0YXRlLCBzbyBuZWVkIHJl
-c2V0IHRoZSBtc2RjIGNvbnRyb2xsZXIuDQoNCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4g
-IyB2NS40Kw0KRml4ZXM6IDk2NjU4MGFkMjM2ZSAoIm1tYzogbWVkaWF0ZWs6IGFkZCBzdXBwb3J0
-IGZvciBNVDc2MjIgU29DIikNClNpZ25lZC1vZmYtYnk6IFdlbmJpbiBNZWkgPHdlbmJpbi5tZWlA
-bWVkaWF0ZWsuY29tPg0KVGVzdGVkLWJ5OiBGcmFuayBXdW5kZXJsaWNoIDxmcmFuay13QHB1Ymxp
-Yy1maWxlcy5kZT4NCi0tLQ0KIGRyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMgfCAxMyArKysrKysr
-KysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMgYi9kcml2ZXJzL21tYy9ob3N0L210ay1zZC5jDQpp
-bmRleCAzOWU3ZmM1NGM0MzguLmZjOTdkNWJmM2EyMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbW1j
-L2hvc3QvbXRrLXNkLmMNCisrKyBiL2RyaXZlcnMvbW1jL2hvc3QvbXRrLXNkLmMNCkBAIC0yMiw2
-ICsyMiw3IEBADQogI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc3Bp
-bmxvY2suaD4NCiAjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQorI2luY2x1ZGUgPGxpbnV4
-L3Jlc2V0Lmg+DQogDQogI2luY2x1ZGUgPGxpbnV4L21tYy9jYXJkLmg+DQogI2luY2x1ZGUgPGxp
-bnV4L21tYy9jb3JlLmg+DQpAQCAtNDM0LDYgKzQzNSw3IEBAIHN0cnVjdCBtc2RjX2hvc3Qgew0K
-IAlzdHJ1Y3QgbXNkY19zYXZlX3BhcmEgc2F2ZV9wYXJhOyAvKiB1c2VkIHdoZW4gZ2F0ZSBIQ0xL
-ICovDQogCXN0cnVjdCBtc2RjX3R1bmVfcGFyYSBkZWZfdHVuZV9wYXJhOyAvKiBkZWZhdWx0IHR1
-bmUgc2V0dGluZyAqLw0KIAlzdHJ1Y3QgbXNkY190dW5lX3BhcmEgc2F2ZWRfdHVuZV9wYXJhOyAv
-KiB0dW5lIHJlc3VsdCBvZiBDTUQyMS9DTUQxOSAqLw0KKwlzdHJ1Y3QgcmVzZXRfY29udHJvbCAq
-cmVzZXQ7DQogfTsNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19tbWNfY29tcGF0aWJsZSBt
-dDgxMzVfY29tcGF0ID0gew0KQEAgLTE1MTYsNiArMTUxOCwxMiBAQCBzdGF0aWMgdm9pZCBtc2Rj
-X2luaXRfaHcoc3RydWN0IG1zZGNfaG9zdCAqaG9zdCkNCiAJdTMyIHZhbDsNCiAJdTMyIHR1bmVf
-cmVnID0gaG9zdC0+ZGV2X2NvbXAtPnBhZF90dW5lX3JlZzsNCiANCisJaWYgKGhvc3QtPnJlc2V0
-KSB7DQorCQlyZXNldF9jb250cm9sX2Fzc2VydChob3N0LT5yZXNldCk7DQorCQl1c2xlZXBfcmFu
-Z2UoMTAsIDUwKTsNCisJCXJlc2V0X2NvbnRyb2xfZGVhc3NlcnQoaG9zdC0+cmVzZXQpOw0KKwl9
-DQorDQogCS8qIENvbmZpZ3VyZSB0byBNTUMvU0QgbW9kZSwgY2xvY2sgZnJlZSBydW5uaW5nICov
-DQogCXNkcl9zZXRfYml0cyhob3N0LT5iYXNlICsgTVNEQ19DRkcsIE1TRENfQ0ZHX01PREUgfCBN
-U0RDX0NGR19DS1BETik7DQogDQpAQCAtMjI3Myw2ICsyMjgxLDExIEBAIHN0YXRpYyBpbnQgbXNk
-Y19kcnZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJaWYgKElTX0VSUiho
-b3N0LT5zcmNfY2xrX2NnKSkNCiAJCWhvc3QtPnNyY19jbGtfY2cgPSBOVUxMOw0KIA0KKwlob3N0
-LT5yZXNldCA9IGRldm1fcmVzZXRfY29udHJvbF9nZXRfb3B0aW9uYWxfZXhjbHVzaXZlKCZwZGV2
-LT5kZXYsDQorCQkJCQkJCQkiaHJzdCIpOw0KKwlpZiAoSVNfRVJSKGhvc3QtPnJlc2V0KSkNCisJ
-CXJldHVybiBQVFJfRVJSKGhvc3QtPnJlc2V0KTsNCisNCiAJaG9zdC0+aXJxID0gcGxhdGZvcm1f
-Z2V0X2lycShwZGV2LCAwKTsNCiAJaWYgKGhvc3QtPmlycSA8IDApIHsNCiAJCXJldCA9IC1FSU5W
-QUw7DQotLSANCjIuMTguMA0K
+Hi Lokesh,
+
+On 06/08/2020 10.48, Lokesh Vutla wrote:
+> Hi Marc,
+> 	This is continuation of the RFC patches[0] regarding the driver
+> updates to support for following interrupt parent connection:
+> - INTR -> INTR
+> - INTA -> GICv3
+> The current existing driver assumes that INTR is always connected to
+> GICv3 and INTA is always connected to INTR.
+>=20
+> As discussed this change breaks the DT backward compatibility but it
+> allows to not depend on TISCI firmware properties in DT node. IMHO, thi=
+s
+> will ensure that any future changes will not effect DT properties.
+
+Just to note:
+this series will demand new sysfw (with ABI 3.0+) to boot (well, to have
+usable intr/inta). Sysfw ABI 3.0 carries other non compatible changes
+affecting DMA on am654: TR mode channels for servicing peripherals will
+fail at request time since the channel OES offset value is different
+compared to older sysfw ABI.
+
+The good news is that other channels are _not_ affected by this, so
+packet mode channels and mem2mem TR channel pairs will work just fine -
+as you have tested it already w/ NFS boot.
+We do not have upstream users for TR mode channels for peripherals, it
+is only in my local branch for audio.
+
+I can send a patch for UDMA to be picked up by Marc on top of this
+series to avoid this, if it is OK with Marc to pick it up.
+
+The change is well isolated away from the rest of the driver, so it
+should be safe (famous last words?)
+
+- P=C3=A9ter
+
+> This series depends on the the new Yaml bindings for common TISCI[1].
+>=20
+> [0] https://lore.kernel.org/linux-arm-kernel/20190923042405.26064-1-lok=
+eshvutla@ti.com/
+> [1] https://patchwork.kernel.org/patch/11676843/
+>=20
+> Tested with: (There is a build error on Today's master while building d=
+tbs. So I enabled
+> 	      only the TI specific components for building DTBS).
+> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
+ller/ti,sci-intr.yaml"
+>   v8make dt_binding_check
+> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
+ller/ti,sci-inta.yaml"
+>   v8make dt_binding_check
+> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
+ller/ti,sci-intr.yaml"
+>   v8make dtbs_check
+> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
+ller/ti,sci-inta.yaml"
+>   v8make dtbs_check
+> - v8make allmodconfig
+>=20
+> Changes since v5:
+> - Rebased on latest master.
+> - Collected Reviewed-by from Rob.
+> - Included DT changes in the same series so that everything can be merg=
+ed in a single go.
+>   Without DT changes, there are regressions for DMA and other consumer =
+peripherals so suggestion
+>   is to merge everthing in a single go. DT changes apply cleanly on nex=
+t and Linus's master
+>   without any merge conflicts.
+>=20
+> Changes since v4:
+> - Fixed Rob's comment on INTR and INTA yaml documentation
+> - Collected Reviewed-by's and Acked-by's
+>=20
+> Changes since v3:
+> - Hardcode param_count based on parent instead of reading it from DT.
+> - Drop storing TISCI device id in platform device id field.
+>=20
+> Changes since v2:
+> - Fixed comments from Rob
+> - Fixed DT schema warnings.
+>=20
+> Changes since v1:
+> - Rebased on top of latest Linux master
+> - Dropped DT patches.
+>=20
+> Lokesh Vutla (13):
+>   firmware: ti_sci: Drop the device id to resource type translation
+>   firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
+>   firmware: ti_sci: Add support for getting resource with subtype
+>   dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage
+>     of gic as parent
+>   dt-bindings: irqchip: Convert ti,sci-intr bindings to yaml
+>   irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
+>   dt-bindings: irqchip: ti,sci-inta: Update docs to support different
+>     parent.
+>   dt-bindings: irqchip: Convert ti,sci-inta bindings to yaml
+>   irqchip/ti-sci-inta: Do not store TISCI device id in platform device
+>     id field
+>   irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
+>   arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
+>   arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
+>   arm64: dts: k3-am65: Update the RM resource types
+>=20
+>  .../interrupt-controller/ti,sci-inta.txt      |  66 --------
+>  .../interrupt-controller/ti,sci-inta.yaml     |  98 +++++++++++
+>  .../interrupt-controller/ti,sci-intr.txt      |  82 ---------
+>  .../interrupt-controller/ti,sci-intr.yaml     | 102 ++++++++++++
+>  MAINTAINERS                                   |   4 +-
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  36 ++--
+>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  12 +-
+>  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |   8 +-
+>  .../arm64/boot/dts/ti/k3-am654-base-board.dts |   4 +-
+>  .../dts/ti/k3-j721e-common-proc-board.dts     |  10 +-
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     |  43 ++---
+>  .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  12 +-
+>  drivers/firmware/ti_sci.c                     | 155 ++++++++----------=
+
+>  drivers/irqchip/irq-ti-sci-inta.c             |  95 +++++++++--
+>  drivers/irqchip/irq-ti-sci-intr.c             | 152 ++++++++++-------
+>  include/linux/soc/ti/ti_sci_protocol.h        |  13 ++
+>  16 files changed, 516 insertions(+), 376 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-control=
+ler/ti,sci-inta.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-control=
+ler/ti,sci-inta.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-control=
+ler/ti,sci-intr.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-control=
+ler/ti,sci-intr.yaml
+>=20
+
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
