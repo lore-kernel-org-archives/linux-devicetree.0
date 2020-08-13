@@ -2,215 +2,204 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A68C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C91C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC182080C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEF92074D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y8aOEZwI"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="auibEEpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHMJjz (ORCPT
+        id S1726131AbgHMJyi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:39:55 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38598 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMJjy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 05:39:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07D9dZQd070040;
-        Thu, 13 Aug 2020 04:39:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597311575;
-        bh=rZEumhrIkKKM9dbtiYQsEtPLv1wJRa51pymiLJTtqG4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Y8aOEZwIJEAMzV0FFwB/xJ1A6Wagw5XGJKfLz7J3cjzM9YClqUadgli2BOwpBT9/R
-         7rBlYllXGqNhnoDi9X7fPSSNBFg/ATr1RNhXAeJ1D3JTYf/ebtQWWTkepoUI6m19Vc
-         Fz/3/O7zqkYdR+eCrSVK4DQ6Hp9uYw+ja8oDu+Jo=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07D9dZSf122124
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Aug 2020 04:39:35 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 13
- Aug 2020 04:39:34 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 13 Aug 2020 04:39:34 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07D9dVVt068509;
-        Thu, 13 Aug 2020 04:39:32 -0500
-Subject: Re: [PATCH v6 00/13] irqchip: ti,sci-intr/inta: Update the dt
- bindings to accept different interrupt parents
-To:     Lokesh Vutla <lokeshvutla@ti.com>, Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Vinod <vkoul@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>
-References: <20200806074826.24607-1-lokeshvutla@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <31a0d207-cafa-8524-0364-b0bc55db6f6d@ti.com>
-Date:   Thu, 13 Aug 2020 12:41:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200806074826.24607-1-lokeshvutla@ti.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 13 Aug 2020 05:54:38 -0400
+Received: from mail-am6eur05on2045.outbound.protection.outlook.com ([40.107.22.45]:24256
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726106AbgHMJyi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Aug 2020 05:54:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xy8KfdhiY2mHZFxIDIKF5EtaEkTojK+bn/JWAk/1tTOOxeYfKhOsA2jUUFv/F9FGk/szhZ1oY+xKNBs4/ITg6G56EvSsa1ln2D0U5Li268EXLxdsyryuRo82kBVU9oEkYyMJojesZk5AIKJagsKR/mginXJTKkNgSciwVUCr4vL1rVEmSpUUo5WJ/GYng3Vl1liChM5R12VuGDTblt79aY/cE+KTA9LTMQAJGI4bNtBDTtWiqNr5azPeR+SDjNj3nUs9alMv3+dYjeElYsCUzhemp6QyhCpzE6y9rZwOQSXOdx27IcixLlJ8mq4SsOAh/1O+BfD+T70ojkyged1MHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pCwkf6vGRZLoX+PMO/ZRRK7fzGlQKkiWqE/uAuiAeZY=;
+ b=PTcVH3uLz7sFYAQ/w6Yev1qkNmyaDATT6qtYs3Nk06xseP5m3hWu4QxXF3BHA+K7RdV/iPt65bGEqMJk1peiUUyPQYOAAgUxlfteyO5mCKl1j+INu/hwAA+wZb5vHLHPlv/gSkSFnTMxJAfjxvoX52mD/udO06S6nRfu9djj9tmG/u0I/X/pap2OZJvAF9tTRQe3QFKY33ckMKf+0LtsyCrg+5Sp4QGLwUvmGmY5MKPO4Sz91deL7net2guGpS6D+tcj2elEFX/bIzAuBumKjUfbgwzTkswOr/iG4YnKRA4G8rAk+znrBrTnwXXK3v/Q8lnM4N6nkGheVBpO+UbH0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pCwkf6vGRZLoX+PMO/ZRRK7fzGlQKkiWqE/uAuiAeZY=;
+ b=auibEEpP8hqKjP9FKzU4hZ8kwud/CObjbtGfmuoekBU4JVujzyy9prSXprS3jWkYC6f36muxPUliKW/SELHsp5riQYUd+/+JpMDRwb8bmBs/pHUmFwIqnfwCnVjU1l7lht7EffnnPXDHfgNGP2qGTCVG5sGjqNG/HhBc1v0LxVw=
+Received: from DB8PR04MB6523.eurprd04.prod.outlook.com (2603:10a6:10:10f::26)
+ by DB6PR0401MB2472.eurprd04.prod.outlook.com (2603:10a6:4:36::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 13 Aug
+ 2020 09:54:33 +0000
+Received: from DB8PR04MB6523.eurprd04.prod.outlook.com
+ ([fe80::2d61:d6fe:3c2:3e14]) by DB8PR04MB6523.eurprd04.prod.outlook.com
+ ([fe80::2d61:d6fe:3c2:3e14%3]) with mapi id 15.20.3261.024; Thu, 13 Aug 2020
+ 09:54:33 +0000
+From:   Jun Li <jun.li@nxp.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Peter Chen <peter.chen@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Horia Geanta <horia.geanta@nxp.com>
+Subject: RE: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core device
+ to pass data
+Thread-Topic: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core device
+ to pass data
+Thread-Index: AQHWU3qPod3u7KLfuUW6rq9H7arWKakU/oyAgAAAsRCAIQe6kA==
+Date:   Thu, 13 Aug 2020 09:54:32 +0000
+Message-ID: <DB8PR04MB6523EE64FD4AC189E5D42A4989430@DB8PR04MB6523.eurprd04.prod.outlook.com>
+References: <1594028699-1055-1-git-send-email-jun.li@nxp.com>
+ <1594028699-1055-2-git-send-email-jun.li@nxp.com> <87r1t2oabc.fsf@kernel.org>
+ <VE1PR04MB6528BF081AA2B4AE64C8F00F89760@VE1PR04MB6528.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB6528BF081AA2B4AE64C8F00F89760@VE1PR04MB6528.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f8ee29f5-452e-4fa6-8a16-08d83f6ee150
+x-ms-traffictypediagnostic: DB6PR0401MB2472:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0401MB2472127F75D0906C1FD1EBCB89430@DB6PR0401MB2472.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5i3rhAw5K4oRGUbGi4zB/avsNoe3LKDYxLl9vFFx9bO5e+AoAAUeo18aZAEfxWif0aTuIhJKyR3E9QSrE05ZpL8bYDjGlsvOd3NgDnqrkW5MBPC9yCz6mDrRMZ6RBW6O0xJe+5pqP15w3DxbJJcUhrKQscHF7lW2A7a8Ohe9dShISuzHCP75eWYwIwwswWRZAGCJAhUVrTw7koIq1J6MxKk9x2ZEPJMrt8Br9jHXEqZE0vKW4vI0YEgu/eXKkt/2W6rt2qRhMC1nEzAmYAPYh/gP9Asvc1OQX8Y2wh/pF4OWHO4B7mE+wQfxcofhLxlCTl2QFGBo7UUXcD9W12MLXA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6523.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(55016002)(71200400001)(33656002)(54906003)(8936002)(6506007)(4326008)(86362001)(316002)(52536014)(9686003)(110136005)(53546011)(478600001)(83380400001)(186003)(5660300002)(26005)(66556008)(64756008)(66476007)(7696005)(76116006)(44832011)(2906002)(7416002)(66446008)(8676002)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: OqJPBRP2+4QK9J1YAeULgkgUyvcjPMBf9g4lsEiqIyLXgVQ/nRKMaWdkUDwcPQ9iHpaPl0VZ36qDVBowWxfPa0H//b1mZeUiW1sJWL+cnQNLRCxHWJh0p29SiRdVn1KW40tCli5E7c+TQwzX2j+tDbD5bA0CX3kiY+bMCE45hRvckOX5zY5IiP1OletseOg3Ivtj/kxK5lZFDUY0vxJwaI3dakhTJqmflxT+WzKKTdryL5ekbdL2lOqoQWUmteiBecLJxwyb7G1BA25RhFy8UFQ9ue0U4Y47y+LjfQlvenQYSauBzME7tu5TjaKJ3pEC9Dxi0srPzF+mH/BCmmg1JW/xPS+DtVJ3bI7KCrMbao/ZvGX/juYm2RJ03wG5vplNvcwWk7AOEt+rH0TpgS3GRIrA/D6rodd3J8r/ubgY1TN42yarrx7VwnVVPbsIyL5sznHhkmf4x7guqacdduCmHnj77D2gmdu5ZCII7q8jxlNli1S/wlAhFiJKPwtFVXna6zRmAwaV129stf7QWWmgbs+ODyVTVEcnuBmfQ5dtO3KrC9IPXeTUYCSJiozYAWkpb5Xhb4mSms832QLgs1p40JPTDwBYnGxLf0/zyu3FgfCm9B4LfvkM7YWRs+JfwLMHsEmN/F71SB4GfD88dL05uQ==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6523.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8ee29f5-452e-4fa6-8a16-08d83f6ee150
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Aug 2020 09:54:33.0200
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OZdaB7CtFSLF9D9jUi7jBEfTebUunWna7vh4K7V27z1ZTDOFHy+qxN7bCsSnUjBr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0401MB2472
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lokesh,
 
-On 06/08/2020 10.48, Lokesh Vutla wrote:
-> Hi Marc,
-> 	This is continuation of the RFC patches[0] regarding the driver
-> updates to support for following interrupt parent connection:
-> - INTR -> INTR
-> - INTA -> GICv3
-> The current existing driver assumes that INTR is always connected to
-> GICv3 and INTA is always connected to INTR.
+> -----Original Message-----
+> From: Jun Li
+> Sent: Thursday, July 23, 2020 5:58 PM
+> To: Felipe Balbi <balbi@kernel.org>; shawnguo@kernel.org; robh+dt@kernel.=
+org
+> Cc: gregkh@linuxfoundation.org; s.hauer@pengutronix.de; kernel@pengutroni=
+x.de;
+> festevam@gmail.com; dl-linux-imx <linux-imx@nxp.com>; linux-usb@vger.kern=
+el.org;
+> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; Peter C=
+hen
+> <peter.chen@nxp.com>; Anson Huang <anson.huang@nxp.com>; Peng Fan
+> <peng.fan@nxp.com>; Horia Geanta <horia.geanta@nxp.com>
+> Subject: RE: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core dev=
+ice to
+> pass data
 >=20
-> As discussed this change breaks the DT backward compatibility but it
-> allows to not depend on TISCI firmware properties in DT node. IMHO, thi=
-s
-> will ensure that any future changes will not effect DT properties.
+>=20
+>=20
+> > -----Original Message-----
+> > From: Felipe Balbi <balbif@gmail.com> On Behalf Of Felipe Balbi
+> > Sent: Thursday, July 23, 2020 5:22 PM
+> > To: Jun Li <jun.li@nxp.com>; shawnguo@kernel.org; robh+dt@kernel.org
+> > Cc: gregkh@linuxfoundation.org; s.hauer@pengutronix.de;
+> > kernel@pengutronix.de; festevam@gmail.com; dl-linux-imx
+> > <linux-imx@nxp.com>; linux-usb@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > Peter Chen <peter.chen@nxp.com>; Anson Huang <anson.huang@nxp.com>;
+> > Peng Fan <peng.fan@nxp.com>; Horia Geanta <horia.geanta@nxp.com>
+> > Subject: Re: [PATCH v2 1/5] usb: dwc3: add platform data to dwc3 core
+> > device to pass data
+> >
+> >
+> > Hi,
+> >
+> > Li Jun <jun.li@nxp.com> writes:
+> > > In case dwc3 has SoC specific customizations, dwc3 glue driver can
+> > > base on compatible string and pass it via platform data to dwc3 core
+> > > driver; and pass xhci private data further to xhci-plat like quirks.
+> > >
+> > > Signed-off-by: Li Jun <jun.li@nxp.com>
+> > > ---
+> > >  drivers/usb/dwc3/core.h | 5 +++++
+> > >  drivers/usb/dwc3/host.c | 9 +++++++++
+> > >  2 files changed, 14 insertions(+)
+> > >
+> > > diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h index
+> > > 0b8ea8c..3146697 100644
+> > > --- a/drivers/usb/dwc3/core.h
+> > > +++ b/drivers/usb/dwc3/core.h
+> > > @@ -29,6 +29,7 @@
+> > >  #include <linux/ulpi/interface.h>
+> > >
+> > >  #include <linux/phy/phy.h>
+> > > +#include "../host/xhci-plat.h"
+> > >
+> > >  #define DWC3_MSG_MAX	500
+> > >
+> > > @@ -924,6 +925,10 @@ struct dwc3_scratchpad_array {
+> > >  	__le64	dma_adr[DWC3_MAX_HIBER_SCRATCHBUFS];
+> > >  };
+> > >
+> > > +struct dwc3_platform_data {
+> > > +	struct xhci_plat_priv *xhci_priv;
+> > > +};
+> >
+> > why? We should rely on properties, no?
+>=20
+> My v1 patch was adding new property directly, considering Rob has objecti=
+on on that
+> way if I understand correctly, also there is suggestion on use compatible=
+ string
+> to set quirks, I changed to add platform data to pass SoC level quirks, I=
+ think
+> this also can be used to extend other special handling for glue layer dri=
+ver, so
+> should I go back to use properties?
+> Hope an agreement can be made on adding new properties/quirks.
+'
+Hi Felipe,
 
-Just to note:
-this series will demand new sysfw (with ABI 3.0+) to boot (well, to have
-usable intr/inta). Sysfw ABI 3.0 carries other non compatible changes
-affecting DMA on am654: TR mode channels for servicing peripherals will
-fail at request time since the channel OES offset value is different
-compared to older sysfw ABI.
+Could you please point me how I can move forward on this, thanks a lot.
 
-The good news is that other channels are _not_ affected by this, so
-packet mode channels and mem2mem TR channel pairs will work just fine -
-as you have tested it already w/ NFS boot.
-We do not have upstream users for TR mode channels for peripherals, it
-is only in my local branch for audio.
-
-I can send a patch for UDMA to be picked up by Marc on top of this
-series to avoid this, if it is OK with Marc to pick it up.
-
-The change is well isolated away from the rest of the driver, so it
-should be safe (famous last words?)
-
-- P=C3=A9ter
-
-> This series depends on the the new Yaml bindings for common TISCI[1].
+Li Jun
 >=20
-> [0] https://lore.kernel.org/linux-arm-kernel/20190923042405.26064-1-lok=
-eshvutla@ti.com/
-> [1] https://patchwork.kernel.org/patch/11676843/
+> Thanks
+> Li Jun
 >=20
-> Tested with: (There is a build error on Today's master while building d=
-tbs. So I enabled
-> 	      only the TI specific components for building DTBS).
-> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
-ller/ti,sci-intr.yaml"
->   v8make dt_binding_check
-> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
-ller/ti,sci-inta.yaml"
->   v8make dt_binding_check
-> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
-ller/ti,sci-intr.yaml"
->   v8make dtbs_check
-> - DT_SCHEMA_FILES=3D"Documentation/devicetree/bindings/interrupt-contro=
-ller/ti,sci-inta.yaml"
->   v8make dtbs_check
-> - v8make allmodconfig
->=20
-> Changes since v5:
-> - Rebased on latest master.
-> - Collected Reviewed-by from Rob.
-> - Included DT changes in the same series so that everything can be merg=
-ed in a single go.
->   Without DT changes, there are regressions for DMA and other consumer =
-peripherals so suggestion
->   is to merge everthing in a single go. DT changes apply cleanly on nex=
-t and Linus's master
->   without any merge conflicts.
->=20
-> Changes since v4:
-> - Fixed Rob's comment on INTR and INTA yaml documentation
-> - Collected Reviewed-by's and Acked-by's
->=20
-> Changes since v3:
-> - Hardcode param_count based on parent instead of reading it from DT.
-> - Drop storing TISCI device id in platform device id field.
->=20
-> Changes since v2:
-> - Fixed comments from Rob
-> - Fixed DT schema warnings.
->=20
-> Changes since v1:
-> - Rebased on top of latest Linux master
-> - Dropped DT patches.
->=20
-> Lokesh Vutla (13):
->   firmware: ti_sci: Drop the device id to resource type translation
->   firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
->   firmware: ti_sci: Add support for getting resource with subtype
->   dt-bindings: irqchip: ti,sci-intr: Update bindings to drop the usage
->     of gic as parent
->   dt-bindings: irqchip: Convert ti,sci-intr bindings to yaml
->   irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
->   dt-bindings: irqchip: ti,sci-inta: Update docs to support different
->     parent.
->   dt-bindings: irqchip: Convert ti,sci-inta bindings to yaml
->   irqchip/ti-sci-inta: Do not store TISCI device id in platform device
->     id field
->   irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
->   arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
->   arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
->   arm64: dts: k3-am65: Update the RM resource types
->=20
->  .../interrupt-controller/ti,sci-inta.txt      |  66 --------
->  .../interrupt-controller/ti,sci-inta.yaml     |  98 +++++++++++
->  .../interrupt-controller/ti,sci-intr.txt      |  82 ---------
->  .../interrupt-controller/ti,sci-intr.yaml     | 102 ++++++++++++
->  MAINTAINERS                                   |   4 +-
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  36 ++--
->  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  12 +-
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |   8 +-
->  .../arm64/boot/dts/ti/k3-am654-base-board.dts |   4 +-
->  .../dts/ti/k3-j721e-common-proc-board.dts     |  10 +-
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     |  43 ++---
->  .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  12 +-
->  drivers/firmware/ti_sci.c                     | 155 ++++++++----------=
-
->  drivers/irqchip/irq-ti-sci-inta.c             |  95 +++++++++--
->  drivers/irqchip/irq-ti-sci-intr.c             | 152 ++++++++++-------
->  include/linux/soc/ti/ti_sci_protocol.h        |  13 ++
->  16 files changed, 516 insertions(+), 376 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/ti,sci-inta.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/ti,sci-inta.yaml
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/ti,sci-intr.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/ti,sci-intr.yaml
->=20
-
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+> >
+> > --
+> > balbi
