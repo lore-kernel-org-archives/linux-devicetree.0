@@ -2,120 +2,244 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49812C433EA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1103EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA7D20885
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F4A2078D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="noSnxdy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHMHvJ (ORCPT
+        id S1726144AbgHMH6g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:51:09 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38760 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgHMHvJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 03:51:09 -0400
-Received: by mail-ot1-f65.google.com with SMTP id q9so4110499oth.5;
-        Thu, 13 Aug 2020 00:51:08 -0700 (PDT)
+        Thu, 13 Aug 2020 03:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgHMH6c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 03:58:32 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF08C061384
+        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 00:58:32 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 9so3891138wmj.5
+        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 00:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=nCffN1/O4aEsIe0h4ncOW5dmW5XEiYRGz9MDUW3tvf8=;
+        b=noSnxdy7tWQADOLjLI6p/s/XwaJfmFMakXQjc8oYZdIfK9UdVAUnV8VA+ZuTkrl0ld
+         vKNKCyg9ODvaJSrrGyU6Rn9tW4pWLmdj8+IBK5mvl0GIylT9l9KLmriF/+F8TN6RM356
+         B5EQ+VxZgf0yRD2ZKTPx5RjTHjrMFT4nJDCeKZRMKLGyp7W7W0dV4LACfLVLnkqybeIo
+         BJxnDuhlwRgrtrdenFPRVksbuhzsaTEzOUKf/4+8vonVt8At7t3sVLKttbLb7SOMbu9Q
+         tNmKWsmtdW0cNsGzRBlgNuz7BKpvf8bCHyiAqoRr24e0aj02mdf3+ohWgBhQ7P9mzJVE
+         GEeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eU62SrftExeZEPFtSlHLsBRzbUkLx1KNOgZc6VKFeBQ=;
-        b=RKVY0mqqakUrEXk4TORV8A5/ZSMY0dexhKfXyaOKBp8tYT6+lN9tMY1gCu59dMSnI/
-         6Av5sXCLtCtfska6KBUfoUvPLN8QSlHGcwX+BKv8ZNWhNtirhMGElzBnWp56J7vtBCeA
-         RTsTm+tpM0JqO6hs1Zx9oL0KiDPnHu2wr8nXIFBaGz9jqMUEyZCYMyj21d8ckpZmX8IH
-         sIyh51oPoVvqSR3qDoGMDZJhbXuz4s9KHdaT9j4oPeIaqxws0OL9u53GcL8uZhE7hrov
-         ikjJM0LMxR/OG4BC9tZAySXGXWwQpPbcG9j3oyJJCCrBhecUJhWEIB5ZPymwSBlP+imO
-         EXuw==
-X-Gm-Message-State: AOAM531KpbVTNZA6DQGhlLakjE36ZGk11NQSWXrXhgb2m/BrbDAUDZAN
-        GTNNlK5/qceLxjH+paJhJQLuqYhFPre+GsLWPoc=
-X-Google-Smtp-Source: ABdhPJzAAKS8g3t/W5mSJd2Vboc2FEvoNvVXoru7u4kNP7jabPCwVCki2JjTk/fEfMzVv8QAFC24k07bLAU2LYhSK+k=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2990956ote.107.1597305067462;
- Thu, 13 Aug 2020 00:51:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=nCffN1/O4aEsIe0h4ncOW5dmW5XEiYRGz9MDUW3tvf8=;
+        b=gdY051NrGjRCM4t8KKGGKdYmozrv+mf7BqBkclZox/piEngpzevBDTcFwOT19ei8to
+         X6kkQnAKhU/zcQ+BHRImR9QBNI71HOQ2vnbVQfMqQcV1ehHzZmVsLEMKumOm0rVj1QAf
+         XzzkNeGzq2FXgFcsXQf+awBwpFqb8WRwhsSS5UJ9OBe+QcXiiCA2J8mEHk2BPwkrli7c
+         1ixTmBA1PXYf7CGI1A/nTF75aJOrVjhw6VFj8/YSz67CplN4J2ycWLjUq6e/Utq8c3Md
+         ULhwD2en7GklY7Y92aqMWf9KBJGdLy4COfQpX213CQsXwUKD4RhKMPBEH6mCcrQjIpeX
+         9jYA==
+X-Gm-Message-State: AOAM530XHTYVtxEQKXRIAeLDDSQ+Ii4tLJ62DTFstCtinkRejZjXQl0B
+        Cd4CozBcFK4WBSXVG/P/+CMHUA==
+X-Google-Smtp-Source: ABdhPJyV6AY2xx7rwwOFCQ7bw3e71FK+Fkwy3fGO25tAeZ2PyRSgLKsdPeeqoOxndoTFWiSse347Lg==
+X-Received: by 2002:a1c:3b89:: with SMTP id i131mr3211258wma.30.1597305510518;
+        Thu, 13 Aug 2020 00:58:30 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id b2sm7616298wmj.47.2020.08.13.00.58.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 00:58:29 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 08:58:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Wei Xu <xuwei5@hisilicon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
+Message-ID: <20200813075827.GH4354@dell>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200812203618.2656699-1-robh@kernel.org>
-In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 13 Aug 2020 09:50:55 +0200
-Message-ID: <CAMuHMdVXvSRF-G_TYu4P+Bqa2FZJWsUCyzqFur3Rb-tBExfbsw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-rtc@vger.kernel.org,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-input@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1597247164.git.mchehab+huawei@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 12 Aug 2020, Mauro Carvalho Chehab wrote:
 
-On Wed, Aug 12, 2020 at 10:36 PM Rob Herring <robh@kernel.org> wrote:
-> Clean-up incorrect indentation, extra spaces, long lines, and missing
-> EOF newline in schema files. Most of the clean-ups are for list
-> indentation which should always be 2 spaces more than the preceding
-> keyword.
->
-> Found with yamllint (which I plan to integrate into the checks).
+> Hi Greg,
+> 
+> This patch series is part of a work I'm doing in order to be able to support
+> a HiKey 970 board that I recently got on my hands.
+> 
+> I received some freedback from Mark and from Jonathan on a first
+> attempt I made to upstream this.
+> 
+> I'm opting to submit it via staging, because I had to start from the
+> patch that originally added this driver on a 4.9 Kernel tree:
+> 
+> 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> 
+> In order to preserve the original SOB from the driver's author.
+> 
+> The patches following it are on the standard way: one patch per
+> logical change.
+> 
+> This is part of a bigger work whose goal is to have upstream support
+> for USB and DRM/KMS on such boards. 
+> 
+> I suspect that, maybe except for the DT part, those 3 specific drivers
+> are more or less ready to be moved from staging, but the other
+> drivers that are also part of this attempt aren't ready. Specially the
+> DRM driver has some bugs that came from the OOT version.
+> 
+> So, my current plan is to submit those drivers to staging for 5.9
+> and move the ones that are ok out of staging on Kernel 5.10.
 
-> Signed-off-by: Rob Herring <robh@kernel.org>
+What a mess.  This is no way to upstream a new driver.
 
-Thanks for your patch!
+Firstly, could you please add versioning to your submissions.  I know
+this at least version 2.  Were there previous submissions?  Is this
+the latest?
 
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-clocks.yaml
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-clocks.yaml
-> @@ -24,9 +24,9 @@ properties:
->        - const: renesas,r8a7778-cpg-clocks # R-Car M1
->        - const: renesas,r8a7779-cpg-clocks # R-Car H1
->        - items:
-> -        - enum:
-> -            - renesas,r7s72100-cpg-clocks # RZ/A1H
-> -        - const: renesas,rz-cpg-clocks    # RZ/A1
-> +          - enum:
-> +              - renesas,r7s72100-cpg-clocks # RZ/A1H
-> +          - const: renesas,rz-cpg-clocks    # RZ/A1
+Secondly and more importantly, you have submitted what looks like a
+new driver (bearing in mind that I'm only concerning myself with the
+MFD related changes), then in the same submission you are adding and
+removing large chunks.  Please just submit the new driver, on its own
+as a single patch, complete with its associated Makefile and Kconfig
+changes.
 
-This change breaks alignment of the comments at the end of each line.
+What are your reasons for submitting this via Staging?  Is it not
+ready yet?  Are the resultant components not at a high enough level of
+quality or enablement to go straight into the subsystems, which is
+more typical?  From an MFD perspective, I would be reviewing the
+driver as a whole when (if) it moves from Staging into MFD anyway, so
+why are you jumping through hoops with this additional, seemingly
+superfluous step?
 
->        - const: renesas,sh73a0-cpg-clocks  # SH-Mobile AG5
+Finally, the subject of authorship is often a contentious one, but
+this is a problem you need to work out with the original author, not
+something that should require special handing by upstream.  You have a
+couple of choices, but bear in mind that upstreaming a non-suitable
+driver then bringing it up to standard is not one of them.
 
-(I only checked the files I care about)
+1. Keep the original author's authorship and SoB, make your changes
+   and get them to review to ensure they are still happy about being
+   associated with the resultant code.  Ensure you mention all of the
+   changes you make in the commit message and follow-up by adding your
+   own SoB.
 
-If you don't update commit  e0fe7fc6f2ca0781 ("dt-bindings: Whitespace
-clean-ups in schema files"), I can send a patch after v5.9-rc1.
+2. This is the contentious bit.  If you've made enough changes, there
+   is an argument for you to adopt authorship.  You should discuss
+   with the original author whether they are happy for you to retain
+   their SoB.  My suggestion is always try to keep the SoB as a bare
+   minimum to preserve patch history and out of pure courtesy.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+> Mauro Carvalho Chehab (41):
+>   staging: spmi: hisi-spmi-controller: coding style fixup
+>   staging: spmi: hisi-spmi-controller: fix it to probe successfully
+>   staging: spmi: hisi-spmi-controller: fix a typo
+>   staging: spmi: hisi-spmi-controller: adjust whitespaces at defines
+>   staging: spmi: hisi-spmi-controller: use le32 macros where needed
+>   staging: spmi: hisi-spmi-controller: add debug when values are
+>     read/write
+>   staging: spmi: hisi-spmi-controller: fix the dev_foo() logic
+>   staging: spmi: hisi-spmi-controller: add it to the building system
+>   staging: spmi: hisi-spmi-controller: do some code cleanups
+>   staging: mfd: hi6421-spmi-pmic: get rid of unused code
+>   staging: mfd: hi6421-spmi-pmic: deal with non-static functions
+>   staging: mfd: hi6421-spmi-pmic: get rid of the static vars
+>   staging: mfd: hi6421-spmi-pmic: cleanup hi6421-spmi-pmic.h header
+>   staging: mfd: hi6421-spmi-pmic: change the binding logic
+>   staging: mfd: hi6421-spmi-pmic: get rid of unused OF properties
+>   staging: mfd: hi6421-spmi-pmic: cleanup OF properties
+>   staging: mfd: hi6421-spmi-pmic: change namespace on its functions
+>   staging: mfd: hi6421-spmi-pmic: fix some coding style issues
+>   staging: mfd: hi6421-spmi-pmic: add it to the building system
+>   staging: mfd: hi6421-spmi-pmic: cleanup the code
+>   staging: regulator: hi6421v600-regulator: get rid of unused code
+>   staging: regulator: hi6421v600-regulator: port it to upstream
+>   staging: regulator: hi6421v600-regulator: coding style fixups
+>   staging: regulator: hi6421v600-regulator: change the binding logic
+>   staging: regulator: hi6421v600-regulator: cleanup struct
+>     hisi_regulator
+>   staging: regulator: hi6421v600-regulator: cleanup debug messages
+>   staging: regulator: hi6421v600-regulator: use shorter names for OF
+>     properties
+>   staging: regulator: hi6421v600-regulator: better handle modes
+>   staging: regulator: hi6421v600-regulator: change namespace
+>   staging: regulator: hi6421v600-regulator: convert to use get/set
+>     voltage_sel
+>   staging: regulator: hi6421v600-regulator: don't use usleep_range for
+>     off_on_delay
+>   staging: regulator: hi6421v600-regulator: add a driver-specific debug
+>     macro
+>   staging: regulator: hi6421v600-regulator: initialize ramp_delay
+>   staging: regulator: hi6421v600-regulator: cleanup DT settings
+>   staging: regulator: hi6421v600-regulator: fix some coding style issues
+>   staging: regulator: hi6421v600-regulator: add it to the building
+>     system
+>   staging: regulator: hi6421v600-regulator: code cleanup
+>   staging: hikey9xx: add a TODO list
+>   MAINTAINERS: add an entry for HiSilicon 6421v600 drivers
+>   dt: document HiSilicon SPMI controller and mfd/regulator properties
+>   dt: hisilicon: add support for the PMIC found on Hikey 970
+> 
+> Mayulong (3):
+>   staging: spmi: add Hikey 970 SPMI controller driver
+>   staging: mfd: add a PMIC driver for HiSilicon 6421 SPMI version
+>   staging: regulator: add a regulator driver for HiSilicon 6421v600 SPMI
+>     PMIC
+> 
+>  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 +++++++
+>  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++
+>  MAINTAINERS                                   |   6 +
+>  .../boot/dts/hisilicon/hi3670-hikey970.dts    |  16 +-
+>  .../boot/dts/hisilicon/hikey970-pmic.dtsi     | 200 ++++++++
+>  drivers/staging/Kconfig                       |   2 +
+>  drivers/staging/Makefile                      |   1 +
+>  drivers/staging/hikey9xx/Kconfig              |  35 ++
+>  drivers/staging/hikey9xx/Makefile             |   5 +
+>  drivers/staging/hikey9xx/TODO                 |   5 +
+>  drivers/staging/hikey9xx/hi6421-spmi-pmic.c   | 381 ++++++++++++++
+>  .../staging/hikey9xx/hi6421v600-regulator.c   | 479 ++++++++++++++++++
+>  .../staging/hikey9xx/hisi-spmi-controller.c   | 351 +++++++++++++
+>  include/linux/mfd/hi6421-spmi-pmic.h          |  68 +++
+>  14 files changed, 1773 insertions(+), 12 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
+>  create mode 100644 drivers/staging/hikey9xx/Kconfig
+>  create mode 100644 drivers/staging/hikey9xx/Makefile
+>  create mode 100644 drivers/staging/hikey9xx/TODO
+>  create mode 100644 drivers/staging/hikey9xx/hi6421-spmi-pmic.c
+>  create mode 100644 drivers/staging/hikey9xx/hi6421v600-regulator.c
+>  create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
+>  create mode 100644 include/linux/mfd/hi6421-spmi-pmic.h
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
