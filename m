@@ -8,181 +8,100 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6801C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CE9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0F4F20774
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88FF820791
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scDYOzoz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsyVyGGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgHMSCv (ORCPT
+        id S1726567AbgHMSRU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 14:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47112 "EHLO
+        Thu, 13 Aug 2020 14:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHMSCu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 14:02:50 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D61C061757;
-        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id g19so7131350ejc.9;
-        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
+        with ESMTP id S1726167AbgHMSRT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 14:17:19 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCABC061757;
+        Thu, 13 Aug 2020 11:17:19 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id jp10so7220582ejb.0;
+        Thu, 13 Aug 2020 11:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
-        b=scDYOzozLAVzFpo2tbfIot2rR9/9IltAD0tuAFuZ7Q71nxeQbbQNCj22+aLiCqCYPQ
-         InGoDHYkp1iGqDUMlAuLtnqGrF2877ip1R9rbaQtVY7ZEHNotMQOeppIeqM/PtfskRMU
-         KvVpOm/lImRYi24xXHTpTqfuFjxCnrXVmFy36Hxa5+6bg5DIFQn4EIKo2SFkDYS3cFR0
-         IlgXGiudJyvnzZqs9lkCGMFd2GHvaVbMNAzKHXl7FxW5q1b5y5IH+w2iRy3ZVWO+xnx4
-         nm6tNRw9wlSmmNKr1mgK7BhWW7ucPcSE5m2hYkdNbbQ+i6zy5zNkZ6zEhSyYA2YD0fhe
-         BoHg==
+        bh=eHl87Tk9sNCP3OVqberPWxWI3WHAWf0EaAib5QaPo5Y=;
+        b=EsyVyGGa6ULP6GtzdOZBejj4tSea3XXh3+39K0aPLizW8EUzwetXOW0zugIPEBSY8R
+         Q+JclRuxd9CBSKJ/lt2P3SVzhdLyEKP5ntcIftzfhQtU2RCG7wn8r8PY6mAMmZr+kwUj
+         EHfx5QKuqYeHxCzqN8vxSGOVMFBV7QLvdjZvO/9BQpPFq85YWFNcssUeNAgHHK/qhY6y
+         vgeu9J9F32aXNszrBxQB9UyCyqlPyOHRegYdI7zNwbQlQBEZ5NjiToHAmYrgb9x5PVbQ
+         xJ2CzJ1bYZQQl7yM9gQqaFmtM7oJzOnCl5qL1e6spdXyhkfCwrM/hUkOjn2uKNjsgvkr
+         lJoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
-        b=cz4Agg23y1egc/4VYvSCljm7v2PzW5ebxhZbLCPKwHxmwRoMPN6q6A8KhzUj54UJpj
-         q91ZD4kpzYnfiD8Bj7fLF97/mWfWTdEUa9aijmchyeWWgZdUn+7x7+dRgNtqq6OLMY66
-         2RyQnV2hr02H8/u7OFuHKlW8xoRcWLY00hrhD7m8pegxGlOcTDETMIed+1dcLESILdii
-         X55wO8MDJv3g2oObO35Zud4l/vHXNQfSoyfUtMlCSKRgAY11vqlUFosl8rwmFWn4GO2c
-         aROPsJ3vzIhDY7tKefCdcrpIvjSMAK/AJ2EKQiS3Z22g6dU9N9gCGjvFGNHROojM/MJX
-         erKA==
-X-Gm-Message-State: AOAM533gUpEm55gVwg4+HWmsyUjn/pxitYnUYjYFUTMQnMHlepSsaPAC
-        7ccBxjRih+qUelJQGzi2q30=
-X-Google-Smtp-Source: ABdhPJxM58xedodB7DOsuuj57AwE9aKU+sUl+gC9XA4qMAErBNxt/zB0UcR4VAT9G/tRXl9btm+U4Q==
-X-Received: by 2002:a17:906:7f0e:: with SMTP id d14mr5917864ejr.400.1597341768898;
-        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
+        bh=eHl87Tk9sNCP3OVqberPWxWI3WHAWf0EaAib5QaPo5Y=;
+        b=oYxtihHJNlkwXZjokANBrBHqErZ9Jl7XzljctoDq70v17w4lyEk+O5iikqY/xKAlcj
+         +2iu9JHM29URu6SPmK5HjwkfHZaFNTEaQut0ubJdUTRJiSaaOd0pEMa7ncILBml8JW2R
+         ZERVCnLqx8/MBX0hR32RYnAyjtrF1b6DjpDy/P6AufozIMgkFlmmwo965wNPLce6flp9
+         LYqTQ3UR2KUwK+OCw56ADyqDhdfCxoeJN+IMUO3mJf2PTfTqi329XEFoess1iXkO4Miv
+         PwPMM7u21EAovsdG2L2fAXMX2IPCnEay5OYa+HY4EaLFmKY+Ji7q0XnLRGEgN7pKlRhr
+         20mA==
+X-Gm-Message-State: AOAM531JwqOF2XAZ2e7rRUjV/LrUxESBImwkZsLWNGv45wO5ppBSoMsd
+        SO0+6Gy/U1S8MLGewktkjZE=
+X-Google-Smtp-Source: ABdhPJzYEM+kZDPWxa4+yFv0i/r3XjVFOzaNT+lmp/cSEMTvsbpUCv35HJzUQYAzXmZw+t8Jdw14KQ==
+X-Received: by 2002:a17:906:938f:: with SMTP id l15mr4597829ejx.539.1597342638224;
+        Thu, 13 Aug 2020 11:17:18 -0700 (PDT)
 Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id ci27sm5131051ejc.23.2020.08.13.11.02.47
+        by smtp.gmail.com with ESMTPSA id w18sm4887647ejf.37.2020.08.13.11.17.17
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
+        Thu, 13 Aug 2020 11:17:17 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: rockchip: update cpu supplies on rk3288
-Date:   Thu, 13 Aug 2020 20:02:41 +0200
-Message-Id: <20200813180241.14660-1-jbx6244@gmail.com>
+Subject: [PATCH] arm64: dts: rockchip: fix cpu-supply for rk3328-evb
+Date:   Thu, 13 Aug 2020 20:17:11 +0200
+Message-Id: <20200813181711.15906-1-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The use of cpu0-supply for cpu0 alone is deprecated,
-so add cpu-supply to each cpu separately and
-update all existing rk3288 boards that use this property.
+The property cpu-supply should be added to each cpu separately,
+so fix that for rk3328-evb.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm/boot/dts/rk3288-miqi.dts     | 14 +++++++++++++-
- arch/arm/boot/dts/rk3288-popmetal.dts | 14 +++++++++++++-
- arch/arm/boot/dts/rk3288-r89.dts      | 14 +++++++++++++-
- arch/arm/boot/dts/rk3288-vyasa.dts    | 14 +++++++++++++-
- 4 files changed, 52 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-miqi.dts b/arch/arm/boot/dts/rk3288-miqi.dts
-index 213c9eb84..8a3992105 100644
---- a/arch/arm/boot/dts/rk3288-miqi.dts
-+++ b/arch/arm/boot/dts/rk3288-miqi.dts
-@@ -81,7 +81,19 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+index 1969dab84..a48767931 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -70,6 +70,18 @@
+ 	cpu-supply = <&vdd_arm>;
  };
  
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
 +&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_arm>;
 +};
 +
 +&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_arm>;
 +};
 +
 +&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
++	cpu-supply = <&vdd_arm>;
++};
++
  &emmc {
-diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
-index 6a5194039..160ed8b93 100644
---- a/arch/arm/boot/dts/rk3288-popmetal.dts
-+++ b/arch/arm/boot/dts/rk3288-popmetal.dts
-@@ -103,7 +103,19 @@
- };
- 
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
- &emmc {
-diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
-index a258c7ae5..e5ba901c7 100644
---- a/arch/arm/boot/dts/rk3288-r89.dts
-+++ b/arch/arm/boot/dts/rk3288-r89.dts
-@@ -91,7 +91,19 @@
- };
- 
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
- &gmac {
-diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index 1a20854a1..aa50f8ed4 100644
---- a/arch/arm/boot/dts/rk3288-vyasa.dts
-+++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -125,7 +125,19 @@
- };
- 
- &cpu0 {
--	cpu0-supply = <&vdd_cpu>;
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_cpu>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_cpu>;
- };
- 
- &emmc {
+ 	bus-width = <8>;
+ 	cap-mmc-highspeed;
 -- 
 2.11.0
 
