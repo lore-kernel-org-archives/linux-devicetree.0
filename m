@@ -2,262 +2,166 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C0DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAF5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB8520768
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 09:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597312714;
-	bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jtDgrHtQrVLVnMgqJFkrC1AMWsbxIKwAZoOI1iWRo5HNdu/Ii2FtBTggopD8gZUvy
-	 cC2ottwYq6GxSukpBsk6xSsOnlsxYq4jf/5BaJYtDjSOfyxrmg5GFaQaYfDuFf1PHs
-	 4Tdn0f4gAu7tYa2wBgMUU8O4hWNITD3J52pmIqqI=
+	by mail.kernel.org (Postfix) with ESMTP id 163C220781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgQJdDhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgHMJ6d (ORCPT
+        id S1726244AbgHMKAk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 05:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgHMJ6d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 05:58:33 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8385206A4;
-        Thu, 13 Aug 2020 09:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597312712;
-        bh=9RgQzuhqlRmtPEcH71/uI/W3vda4Hj2yojosYlaMzQc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XfTzQarbNsyDPeTzjsFu2xl1etxDXCqda8LvDEXpdjegidj0Xgsr2kj27WVGm6slM
-         o8qXDSNIz8t27fK7IrRxoLEY5xrWvi+vTNigaxxqamJKt4vRAGMO9Ag7XojLkptG8B
-         OIGlea/1wskhl5ANMK5MBT5wraJ2/dxIfgFnj16o=
-Date:   Thu, 13 Aug 2020 11:58:23 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, devel@driverdev.osuosl.org,
-        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 00/44] SPMI patches needed by Hikey 970
-Message-ID: <20200813115823.70f9016a@coco.lan>
-In-Reply-To: <20200813075827.GH4354@dell>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <20200813075827.GH4354@dell>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 13 Aug 2020 06:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgHMKAk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 06:00:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48665C061757;
+        Thu, 13 Aug 2020 03:00:40 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 2so2543687pjx.5;
+        Thu, 13 Aug 2020 03:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lr+XPSui9MVitN/YHK0a7wRgaRs8jhxh1g6LAoEgFFI=;
+        b=mgQJdDhFJsY+4ZZX7nEd7PUwFxnI/GND9MTZddYsJCzitgcZ8MJKOwXL8SWS8NZDjY
+         R3WQ0U7ZX6RWtqId3eSKxzrexiVUkm2RMXbUo5ZS1MN3yIse3C5RWZVhXDKYtP/GuldE
+         mgF1hswi5xwPoWYi3izh0o7+NrQ5IYVWkka5O99Ga5km9xVUt8hYGWD0FOWJj10lyO0b
+         8B1ajYPiFpCYyMoGEfYJOVJdE8b9GuCrYYoF6wwfPEJq+HWjmJLHJGB7GhGKLpDXgCtg
+         cdp0MyDny9Xmw6tbbDHfgqlm6hkES9WGQrf1WUbgF4aHv7BGVPCOlR7iJy1eubUGuXiv
+         tFJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lr+XPSui9MVitN/YHK0a7wRgaRs8jhxh1g6LAoEgFFI=;
+        b=GDjo2O1wdhWqYcaZvuVzIuHGKODOOGhWimoklPRQOXXNReBJjSwiDuvg1WO0ARkmp/
+         VvJ6+ZUAkaHLavrYVnlmbyafrhdp3g9vWHy74KZwfjGPLNVti54oQJXXVL0ZC+sSl3bU
+         +5sQKG1IqfBblAVLedikSnvu36oPbFsGPDVbGaTWx1K8vH/anv6F6/8DC6u39a1zzSqC
+         c96zWOTZ/FD53H31DeDf4elNdmT9/8GDOfuS6JVFQBaqkIuqcK5pGNbnO3cvBU/agq+m
+         BcucrvB7hC/OBRg1yVraZMM6kFigHPHLMq10dcMiDBFto9AuYkuADEhH6HYOD6JjNBDy
+         lAHQ==
+X-Gm-Message-State: AOAM531guplY+wkgjDHeGbw4p/96/5cv773OZ6et45RdIR8qOzazcLDo
+        89vMdHtUJdM4LTaZos8tQ4BLHUrPOLzZNxgcmA+HwaKO1Kw=
+X-Google-Smtp-Source: ABdhPJz38GeLmThoezC6lraEWn1MkImxxv3Tn3zbkSqQi3x5qtMSX50ThTooPvM8JHxj3dDmc1o23Vd8TYq7Iec2SNE=
+X-Received: by 2002:a17:902:d3cb:: with SMTP id w11mr3178004plb.255.1597312839745;
+ Thu, 13 Aug 2020 03:00:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+References: <20200810065128.3324-3-fengping.yu@mediatek.com> <20200813005509.GU1665100@dtor-ws>
+In-Reply-To: <20200813005509.GU1665100@dtor-ws>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 13 Aug 2020 13:00:24 +0300
+Message-ID: <CAHp75VfKckoK4facC3nMDLLUYUtd5Y66+E5xgkVpVYfyTTa9Hg@mail.gmail.com>
+Subject: Re: [PATCH v17 2/3] drivers: input: keyboard: Add mtk keypad driver
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Fengping Yu <fengping.yu@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
+On Thu, Aug 13, 2020 at 3:57 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Mon, Aug 10, 2020 at 02:51:28PM +0800, Fengping Yu wrote:
+> > From: "fengping.yu" <fengping.yu@mediatek.com>
+> >
+> > This patch adds matrix keypad support for Mediatek SoCs.
 
-Em Thu, 13 Aug 2020 08:58:27 +0100
-Lee Jones <lee.jones@linaro.org> escreveu:
+...
 
-> On Wed, 12 Aug 2020, Mauro Carvalho Chehab wrote:
->=20
-> > Hi Greg,
-> >=20
-> > This patch series is part of a work I'm doing in order to be able to su=
-pport
-> > a HiKey 970 board that I recently got on my hands.
-> >=20
-> > I received some freedback from Mark and from Jonathan on a first
-> > attempt I made to upstream this.
-> >=20
-> > I'm opting to submit it via staging, because I had to start from the
-> > patch that originally added this driver on a 4.9 Kernel tree:
-> >=20
-> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> >=20
-> > In order to preserve the original SOB from the driver's author.
-> >=20
-> > The patches following it are on the standard way: one patch per
-> > logical change.
-> >=20
-> > This is part of a bigger work whose goal is to have upstream support
-> > for USB and DRM/KMS on such boards.=20
-> >=20
-> > I suspect that, maybe except for the DT part, those 3 specific drivers
-> > are more or less ready to be moved from staging, but the other
-> > drivers that are also part of this attempt aren't ready. Specially the
-> > DRM driver has some bugs that came from the OOT version.
-> >=20
-> > So, my current plan is to submit those drivers to staging for 5.9
-> > and move the ones that are ok out of staging on Kernel 5.10. =20
->=20
-> What a mess.  This is no way to upstream a new driver.
->=20
-> Firstly, could you please add versioning to your submissions.  I know
-> this at least version 2.  Were there previous submissions?  Is this
-> the latest?
+> > +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
+> > +{
+> > +     struct mtk_keypad *keypad = dev_id;
+> > +     unsigned short *keycode = keypad->input_dev->keycode;
+> > +     DECLARE_BITMAP(new_state, MTK_KPD_NUM_BITS);
+> > +     DECLARE_BITMAP(change, MTK_KPD_NUM_BITS);
+> > +     int bit_nr;
+> > +     int pressed;
+> > +     unsigned short code;
+> > +
+> > +     regmap_bulk_read(keypad->regmap, MTK_KPD_MEM,
+> > +                     new_state, MTK_KPD_NUM_MEMS);
+> > +
+> > +     bitmap_xor(change, new_state, keypad->keymap_state, MTK_KPD_NUM_BITS);
+> > +
+> > +     for_each_set_bit(bit_nr, change, MTK_KPD_NUM_BITS) {
+>
+> Should we be explicit:
+>
+>                 if (bit_nr % 32 >= 16) // or "if ((bit_nr / 16) % 2)"
+>                         continue;
+>
+> so that we sure we do not trip over garbage (if any) in the unused
+> bits?
 
-Yeah, that's the second attempt. The first one was:
+Shouldn't we rather rely on the fact that bitmap API explicitly takes
+a bit number as an argument. What garbage are you thinking of?
+If you are talking about gaps, then probably existing
+for_each_set_clump8() or free size analogue (not yet in upstream,
+though) should be used instead?
 
-	https://lore.kernel.org/lkml/176043f329dfa9889f014feec04e7e1553077873.1597=
-160086.git.mchehab+huawei@kernel.org/T/#u
+> > +             /* 1: not pressed, 0: pressed */
+> > +             pressed = !test_bit(bit_nr, new_state);
+> > +             dev_dbg(&keypad->input_dev->dev, "%s",
+> > +                     pressed ? "pressed" : "released");
+> > +
+> > +             /* 32bit register only use low 16bit as keypad mem register */
+> > +             code = keycode[bit_nr - 16 * (BITS_TO_U32(bit_nr) - 1)];
+>
+> This will give index of 16 for (0,0).
 
-I was in doubt about adding a v2 in this specific case or not,=20
-since I ended submitting it to the staging tree.
+I was also puzzled by this in one of the review rounds, but I don't
+remember what was the explanation.
 
-> Secondly and more importantly, you have submitted what looks like a
-> new driver (bearing in mind that I'm only concerning myself with the
-> MFD related changes), then in the same submission you are adding and
-> removing large chunks.  Please just submit the new driver, on its own
-> as a single patch, complete with its associated Makefile and Kconfig
-> changes.
+> Is this what we want? Hmm, this is
+> all weird... I think we need:
+>
+>                 row = bit_nr / 32;
+>                 col = bit_nr % 32;
+>                 if (col > 15)
+>                         continue;
+>
+>                 // set row_shift in probe() as:
+>                 // keypad_data->row_shift =
+>                 //              get_count_order(keypad_data->n_cols);
+>                 code = keycode[MATRIX_SCAN_CODE(row, col,
+>                                                 keypad_data->row_shift)];
+>
+> This will properly unpack the keymap built by
+> matrix_keypad_build_keymap().
+>
+> > +
+> > +             input_report_key(keypad->input_dev, code, pressed);
+> > +             input_sync(keypad->input_dev);
+> > +
+> > +             dev_dbg(&keypad->input_dev->dev,
+> > +                     "report Linux keycode = %d\n", code);
+> > +     }
+> > +
+> > +     bitmap_copy(keypad->keymap_state, new_state, MTK_KPD_NUM_BITS);
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
 
-I can't do like that because I'm not the author of the original patch that
-added the driver.
-
-The original patch came from the 96board's android-kernel based 4.9 tree:
-
-	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-
-> What are your reasons for submitting this via Staging?=20
-
-The main reason is to preserve both the patch authorship and its
-history.
-
-After the original patch, I wrote several incremental changes cleaning
-up the original driver and stripping parts of it that aren't needed.
-
-By preserving the history, if someone wants to restore some removed
-functionality, it is just a matter of reverting a patch.
-
-For example, the original driver had its own sysfs interface for
-debugging the regulator driver.=20
-
-This is not needed for it to work. Also, the right interface for such=20
-things is via configfs. Yet, someone could think on restoring such=20
-feat and start from the existing code, instead of coming with=20
-something else from scratch.
-
-> Is it not ready yet?=20
-
-=46rom my side, I believe that, after my changes, the code now meets
-upstream requirements, maybe except for DT (and the parsing code).
-There are a few things at the DT properties on this driver that could=20
-be named on a different (more standard way).=20
-
-Yet, I'm not a regular contributor for mfd/regulator/spmi. So,
-I may have missed something.
-
-> Are the resultant components not at a high enough level of
-> quality or enablement to go straight into the subsystems, which is
-> more typical?  From an MFD perspective, I would be reviewing the
-> driver as a whole when (if) it moves from Staging into MFD anyway, so
-> why are you jumping through hoops with this additional, seemingly
-> superfluous step?
-
-I'm OK if this gets reviewed by MFD people only after moving it out of
-staging. Assuming that this would be merged for Kernel 5.10, I'll
-likely send a patch moving it out of staging for 5.11. Then,
-you can do a comprehensive review.
-
-> Finally, the subject of authorship is often a contentious one, but
-> this is a problem you need to work out with the original author, not
-> something that should require special handing by upstream.  You have a
-> couple of choices, but bear in mind that upstreaming a non-suitable
-> driver then bringing it up to standard is not one of them.
->=20
-> 1. Keep the original author's authorship and SoB, make your changes
->    and get them to review to ensure they are still happy about being
->    associated with the resultant code.  Ensure you mention all of the
->    changes you make in the commit message and follow-up by adding your
->    own SoB.
->=20
-> 2. This is the contentious bit.  If you've made enough changes, there
->    is an argument for you to adopt authorship.  You should discuss
->    with the original author whether they are happy for you to retain
->    their SoB.  My suggestion is always try to keep the SoB as a bare
->    minimum to preserve patch history and out of pure courtesy.
-
-It is not only the above. Both the original author and anyone
-touching the code should comply with applicable internal policies.
-
-=46rom my experience, dealing with such things takes a lot more of time
-then coding, as it require talking with legal departments on different
-continents, and with developers and with their bosses in order to be
-able to do things like that.=20
-
-This can also be a very frustrating process. During almost 20 years of
-being the media maintainer, I've seen several cases where trying to
-enforce a folded initial patch caused devs to receive NACKS, preventing=20
-them so submit otherwise good stuff.
-
-So, at the media subsystem, I'm perfectly fine if someone starts from=20
-the original OOT driver, preserving its original authorships. We're
-also dealing there with the patches sent to drivers/staging/media.
-
-I'm not saying that other subsystem maintainers should do the same.
-Dealing with staging is time consuming, and I completely understand
-that most maintainers prefer to stay out of it ;-)
-
--=20
-
-Since when staging tree started, if someone has to start from the
-original patch, such things can be merged at staging. Then,
-incremental patches are applied at the top until it reaches what's
-required to be promoted.
-
-That's said, there's no hush to have those drivers out of staging.
-My end goal is to have DRM/KMS and USB support for Hikey 970.=20
-
-The patchsets I have so far are at:
-
-	https://github.com/mchehab/linux/commits/hikey970/to_upstream-2.0-v1.1
-
-(this branch has the v1 of my patchset)
-
-Porting this driver is part of such effort. While this driver is
-on a good situation, the other ones may require some time to
-mature.
-
-The DRM/KMS driver for example, is not ready to be merged outside=20
-staging, as it carries several bugs that came from the original
-driver and are present at the official tree at 96boards. For example,
-there is a a very dirty hack that enforces the HDMI chipset to
-only work with a limited set of resolutions that are known to work:
-
-	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
-/hisilicon/kirin9xx/hdmi/adv7535.c#L869
-
-It also has problems reading the frequencies via EDID interface.
-Due to that, the driver fakes an EDID table:
-
-	https://github.com/96boards-hikey/linux/blob/hikey970-v4.9/drivers/gpu/drm=
-/hisilicon/kirin9xx/hdmi/adv7535.c#L463
-
-It sounds to me that some clocks are not properly set for a random
-resolution, but fixing it is not trivial and requires deep knowledge
-about how the display registers should be tuned to better support
-resolutions. The current settings cause underflows with 1080p,
-which in turn makes the display driver to (silently) stop working.
-
-So, in summary, I believe that some drivers from my port will
-require being at staging for a while. While I was planning to
-do that on my next patch submission, placing the PM drivers
-there won't make much difference from my side, as I'll need to
-be submitting patches anyway moving drivers out of staging as
-they become ready.
-
-Thanks,
-Mauro
+-- 
+With Best Regards,
+Andy Shevchenko
