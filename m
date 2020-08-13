@@ -2,166 +2,117 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAF5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169D2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 163C220781
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61D120781
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgQJdDhF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Et1S1Eyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgHMKAk (ORCPT
+        id S1726072AbgHMKDT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:00:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgHMKAk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 06:00:40 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48665C061757;
-        Thu, 13 Aug 2020 03:00:40 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 2so2543687pjx.5;
-        Thu, 13 Aug 2020 03:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lr+XPSui9MVitN/YHK0a7wRgaRs8jhxh1g6LAoEgFFI=;
-        b=mgQJdDhFJsY+4ZZX7nEd7PUwFxnI/GND9MTZddYsJCzitgcZ8MJKOwXL8SWS8NZDjY
-         R3WQ0U7ZX6RWtqId3eSKxzrexiVUkm2RMXbUo5ZS1MN3yIse3C5RWZVhXDKYtP/GuldE
-         mgF1hswi5xwPoWYi3izh0o7+NrQ5IYVWkka5O99Ga5km9xVUt8hYGWD0FOWJj10lyO0b
-         8B1ajYPiFpCYyMoGEfYJOVJdE8b9GuCrYYoF6wwfPEJq+HWjmJLHJGB7GhGKLpDXgCtg
-         cdp0MyDny9Xmw6tbbDHfgqlm6hkES9WGQrf1WUbgF4aHv7BGVPCOlR7iJy1eubUGuXiv
-         tFJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lr+XPSui9MVitN/YHK0a7wRgaRs8jhxh1g6LAoEgFFI=;
-        b=GDjo2O1wdhWqYcaZvuVzIuHGKODOOGhWimoklPRQOXXNReBJjSwiDuvg1WO0ARkmp/
-         VvJ6+ZUAkaHLavrYVnlmbyafrhdp3g9vWHy74KZwfjGPLNVti54oQJXXVL0ZC+sSl3bU
-         +5sQKG1IqfBblAVLedikSnvu36oPbFsGPDVbGaTWx1K8vH/anv6F6/8DC6u39a1zzSqC
-         c96zWOTZ/FD53H31DeDf4elNdmT9/8GDOfuS6JVFQBaqkIuqcK5pGNbnO3cvBU/agq+m
-         BcucrvB7hC/OBRg1yVraZMM6kFigHPHLMq10dcMiDBFto9AuYkuADEhH6HYOD6JjNBDy
-         lAHQ==
-X-Gm-Message-State: AOAM531guplY+wkgjDHeGbw4p/96/5cv773OZ6et45RdIR8qOzazcLDo
-        89vMdHtUJdM4LTaZos8tQ4BLHUrPOLzZNxgcmA+HwaKO1Kw=
-X-Google-Smtp-Source: ABdhPJz38GeLmThoezC6lraEWn1MkImxxv3Tn3zbkSqQi3x5qtMSX50ThTooPvM8JHxj3dDmc1o23Vd8TYq7Iec2SNE=
-X-Received: by 2002:a17:902:d3cb:: with SMTP id w11mr3178004plb.255.1597312839745;
- Thu, 13 Aug 2020 03:00:39 -0700 (PDT)
+        Thu, 13 Aug 2020 06:03:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46346 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMKDT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 06:03:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07DA3AxV013498;
+        Thu, 13 Aug 2020 05:03:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597312990;
+        bh=/AO2wK7pWlJylET/IzLEhd/kD3jlI7C4dYt61mYsxA0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Et1S1EypeJpYpFQxQxHP3L+7/GHGy22pcqlO6Kp9dcCx4HQ1JGCxa/jnhsd3uq2ND
+         3VCA0IyaSTIvz1xOhMG4ESrYIQlq03Vi7ZT8mFblITZpCSOXlneLy1/9pBiuwR6Yep
+         dMXzJc7aFgWi60mwhMquYqIulBHlDCFvSAqAJrVI=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07DA3AQT043840;
+        Thu, 13 Aug 2020 05:03:10 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 13
+ Aug 2020 05:03:10 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 13 Aug 2020 05:03:10 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07DA35db063204;
+        Thu, 13 Aug 2020 05:03:06 -0500
+Subject: Re: [PATCH v6 00/13] irqchip: ti,sci-intr/inta: Update the dt
+ bindings to accept different interrupt parents
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Vinod <vkoul@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+References: <20200806074826.24607-1-lokeshvutla@ti.com>
+ <31a0d207-cafa-8524-0364-b0bc55db6f6d@ti.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <26dffb1a-8e1b-db7f-dde6-98af607799f5@ti.com>
+Date:   Thu, 13 Aug 2020 15:33:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200810065128.3324-3-fengping.yu@mediatek.com> <20200813005509.GU1665100@dtor-ws>
-In-Reply-To: <20200813005509.GU1665100@dtor-ws>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 13 Aug 2020 13:00:24 +0300
-Message-ID: <CAHp75VfKckoK4facC3nMDLLUYUtd5Y66+E5xgkVpVYfyTTa9Hg@mail.gmail.com>
-Subject: Re: [PATCH v17 2/3] drivers: input: keyboard: Add mtk keypad driver
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Fengping Yu <fengping.yu@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <31a0d207-cafa-8524-0364-b0bc55db6f6d@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 3:57 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Mon, Aug 10, 2020 at 02:51:28PM +0800, Fengping Yu wrote:
-> > From: "fengping.yu" <fengping.yu@mediatek.com>
-> >
-> > This patch adds matrix keypad support for Mediatek SoCs.
+On 8/13/20 3:11 PM, Peter Ujfalusi wrote:
+> Hi Lokesh,
+> 
+> On 06/08/2020 10.48, Lokesh Vutla wrote:
+>> Hi Marc,
+>> 	This is continuation of the RFC patches[0] regarding the driver
+>> updates to support for following interrupt parent connection:
+>> - INTR -> INTR
+>> - INTA -> GICv3
+>> The current existing driver assumes that INTR is always connected to
+>> GICv3 and INTA is always connected to INTR.
+>>
+>> As discussed this change breaks the DT backward compatibility but it
+>> allows to not depend on TISCI firmware properties in DT node. IMHO, this
+>> will ensure that any future changes will not effect DT properties.
+> 
+> Just to note:
+> this series will demand new sysfw (with ABI 3.0+) to boot (well, to have
+> usable intr/inta). Sysfw ABI 3.0 carries other non compatible changes
+> affecting DMA on am654: TR mode channels for servicing peripherals will
+> fail at request time since the channel OES offset value is different
+> compared to older sysfw ABI.
+> 
+> The good news is that other channels are _not_ affected by this, so
+> packet mode channels and mem2mem TR channel pairs will work just fine -
+> as you have tested it already w/ NFS boot.
+> We do not have upstream users for TR mode channels for peripherals, it
+> is only in my local branch for audio.
+> 
+> I can send a patch for UDMA to be picked up by Marc on top of this
+> series to avoid this, if it is OK with Marc to pick it up.
+This series is already straddling too many subsystems, I would not
+complicate this any further.
 
-...
+Moreover, since there are no upstream users for TR mode peripheral
+channels those changes can wait, right?
 
-> > +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
-> > +{
-> > +     struct mtk_keypad *keypad = dev_id;
-> > +     unsigned short *keycode = keypad->input_dev->keycode;
-> > +     DECLARE_BITMAP(new_state, MTK_KPD_NUM_BITS);
-> > +     DECLARE_BITMAP(change, MTK_KPD_NUM_BITS);
-> > +     int bit_nr;
-> > +     int pressed;
-> > +     unsigned short code;
-> > +
-> > +     regmap_bulk_read(keypad->regmap, MTK_KPD_MEM,
-> > +                     new_state, MTK_KPD_NUM_MEMS);
-> > +
-> > +     bitmap_xor(change, new_state, keypad->keymap_state, MTK_KPD_NUM_BITS);
-> > +
-> > +     for_each_set_bit(bit_nr, change, MTK_KPD_NUM_BITS) {
->
-> Should we be explicit:
->
->                 if (bit_nr % 32 >= 16) // or "if ((bit_nr / 16) % 2)"
->                         continue;
->
-> so that we sure we do not trip over garbage (if any) in the unused
-> bits?
-
-Shouldn't we rather rely on the fact that bitmap API explicitly takes
-a bit number as an argument. What garbage are you thinking of?
-If you are talking about gaps, then probably existing
-for_each_set_clump8() or free size analogue (not yet in upstream,
-though) should be used instead?
-
-> > +             /* 1: not pressed, 0: pressed */
-> > +             pressed = !test_bit(bit_nr, new_state);
-> > +             dev_dbg(&keypad->input_dev->dev, "%s",
-> > +                     pressed ? "pressed" : "released");
-> > +
-> > +             /* 32bit register only use low 16bit as keypad mem register */
-> > +             code = keycode[bit_nr - 16 * (BITS_TO_U32(bit_nr) - 1)];
->
-> This will give index of 16 for (0,0).
-
-I was also puzzled by this in one of the review rounds, but I don't
-remember what was the explanation.
-
-> Is this what we want? Hmm, this is
-> all weird... I think we need:
->
->                 row = bit_nr / 32;
->                 col = bit_nr % 32;
->                 if (col > 15)
->                         continue;
->
->                 // set row_shift in probe() as:
->                 // keypad_data->row_shift =
->                 //              get_count_order(keypad_data->n_cols);
->                 code = keycode[MATRIX_SCAN_CODE(row, col,
->                                                 keypad_data->row_shift)];
->
-> This will properly unpack the keymap built by
-> matrix_keypad_build_keymap().
->
-> > +
-> > +             input_report_key(keypad->input_dev, code, pressed);
-> > +             input_sync(keypad->input_dev);
-> > +
-> > +             dev_dbg(&keypad->input_dev->dev,
-> > +                     "report Linux keycode = %d\n", code);
-> > +     }
-> > +
-> > +     bitmap_copy(keypad->keymap_state, new_state, MTK_KPD_NUM_BITS);
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Sekhar
