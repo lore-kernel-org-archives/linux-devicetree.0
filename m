@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABE9C433ED
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C05C433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 554D7206A4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CD520838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mdz7ome6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoBDyM+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHMVeo (ORCPT
+        id S1726862AbgHMVfI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:34:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
+        Thu, 13 Aug 2020 17:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgHMVen (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 17:34:43 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A90E9C061757;
-        Thu, 13 Aug 2020 14:34:42 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b11so3788310lfe.10;
-        Thu, 13 Aug 2020 14:34:42 -0700 (PDT)
+        with ESMTP id S1726773AbgHMVeo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 17:34:44 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31599C061757;
+        Thu, 13 Aug 2020 14:34:44 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m15so3794365lfp.7;
+        Thu, 13 Aug 2020 14:34:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1VKJz7as6Cnf5+ugS7B5We4tFvmDh5J1LQ5Ei+QN204=;
-        b=Mdz7ome6uGBEDSOOYK1DK2qGkJ2LyKmz4CprA4KNemfPR/vk6ZmCuWZkqa595YZzfe
-         jAT/sVUAp9PADvR4NTiGN/uTzi4qDigHCn0/13Km49+msRgSlVVeG7ngq563LxXT/x8G
-         wOCdx+vBhsF1l2OTpSh4HBUbc6RmpcXspSoXTgPMo56wVA2KGEgqLtxDNkxE4mNB0wkX
-         Q6ouuCT+pW8M+ZX9cNkVakyjE9HYnpfLQnfyA9rsEnE22sVxL5Ow5b+3rk3L9WuvwR3i
-         WiWuS4c4TktAPdapjBdDosIq1VNKRqk02/Xzpbr8E8y6fHFvgMXkWeMaY40eqwmKR5e5
-         QJqg==
+        bh=YV+mrC5kiC7QQYV/FBFX4qMy1dVded4Mn/XHB6H0W0I=;
+        b=VoBDyM+tte4MJ8a9yQorB2SaOnVDp2m49O31ggdeuUOxgsZx/NdLhq0Lqoaza/aDu2
+         wG8TmQIstDiqk4lLJajdCpj/ybwYDk3jrTLNqAHricGuQR0o/oByfcj9Yd41TH/oSmap
+         +oxIDH2XqJptS6rFqsY+gUp8ePI5Q2uZg6sjDTbgGYxN9fkBU1XaFHdjLGeShR6F3pn+
+         fTDl2QL2bkosXZrtZMUpaByw39DtX7+wv4AwWdxVfssNHPUiq9+hvFd++KOFL8xFkS1a
+         1zv7MOcU4SBPk7RdhyN1k0e+7k2OwVXzKppK9kH6YOYUSjk9fXfNLuUzQ08QIP4G0DbH
+         BLeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1VKJz7as6Cnf5+ugS7B5We4tFvmDh5J1LQ5Ei+QN204=;
-        b=euIsVOHvsSNbFIonFC+ovGHwD7QUAH9aVHykVbDmrlWcj4guKi/GeuXRvWGcJmqGDn
-         vU6vNmXwuv6ZX5U83JPm3JcZSX+xMQyH4pn0ZqIfUgFUBZC1/rhRuAOA+Xx3i8nETOBi
-         AtnXE82/Yb+idobRMdNfyJGK09R1RoRojkgxs2ZjkFSUwJ3iHZEaP6z7t16KoV+2xESI
-         5NX4bg6lao+8A01Ou9Mmi6fw8MrG0FPDScTmRms9qU7T+hTbm9o78bdERBsnn1r6dMS9
-         48B76UAqknrxqSg7tG2BAvfdvXR5Y2iiOhi42o1f+evS5GK/Ghf/Qu7fGdFJHhfhF/p5
-         KS0A==
-X-Gm-Message-State: AOAM531HaRXijLz+eAVx37PnGRKccE602PmeFZl8dF8i+U+FAPErtlXz
-        BVJr2Dx5m+ebUeJ7K8gKkAU=
-X-Google-Smtp-Source: ABdhPJw39bedeZ+5oHMO7WQ2X8ddte3dC4UDJEKwhsoj6tIuzTJAAHfXFj8f5zPPVwpuQi3ZMdrYbg==
-X-Received: by 2002:ac2:546f:: with SMTP id e15mr3217327lfn.133.1597354480140;
-        Thu, 13 Aug 2020 14:34:40 -0700 (PDT)
+        bh=YV+mrC5kiC7QQYV/FBFX4qMy1dVded4Mn/XHB6H0W0I=;
+        b=mex+ij+MbQJA7twT+a/OYgVEkKOWiNiAYMNysEiMFc62PMrPtDYqXAl+7I1j8ql7LM
+         OeLjOaBF1CuuAzIdl9uvlEYTiKMY7ZCakMZbh+9s/xTXu/GouM5+9jyX34C69ZQ2I06Y
+         lkq/4axaYdQKYb7wFhiezgdKGw/bgk0+0GxgpJssDiFfczy+PDwgzhnA3zvKek0zGn5P
+         FNcNziSl1c16wJ1vMWMDsw+6HUhu/komppWVB7zhOC2AXTFJsBmuLwYvwxBk3a2bWtOv
+         vtWLkNX2zwzu54yrw/jmuGBUFa3jg3anmeG8m66jX8VAn7O3Z+af349YoXUFGgdlix7M
+         /kHA==
+X-Gm-Message-State: AOAM532NmcbQgbxhiQbpObTgAT8oaFb2nxoJSxTRCs2g39OkloOm49sy
+        lDeYuNzGzjOjqXD2M0LLWJQ7jacm
+X-Google-Smtp-Source: ABdhPJwXiz7uILUNUhDvRcL8o6/prwxG95Ifu0ZfXuChgZ6XNpf2ZV/Dw7EJODy4vNJYOdKNnPjysg==
+X-Received: by 2002:a19:8452:: with SMTP id g79mr3227883lfd.29.1597354482652;
+        Thu, 13 Aug 2020 14:34:42 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id j2sm1345309ljb.98.2020.08.13.14.34.38
+        by smtp.gmail.com with ESMTPSA id j2sm1345309ljb.98.2020.08.13.14.34.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 14:34:39 -0700 (PDT)
+        Thu, 13 Aug 2020 14:34:41 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -75,9 +75,9 @@ Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         John Stultz <john.stultz@linaro.org>,
         Vinay Simha BN <simhavcs@gmail.com>,
         linux-tegra@vger.kernel.org
-Subject: [PATCH v3 08/10] power: supply: smb347-charger: Replace mutex with IRQ disable/enable
-Date:   Fri, 14 Aug 2020 00:34:07 +0300
-Message-Id: <20200813213409.24222-9-digetx@gmail.com>
+Subject: [PATCH v3 10/10] ARM: tegra: nexus7: Add SMB347 battery charger
+Date:   Fri, 14 Aug 2020 00:34:09 +0300
+Message-Id: <20200813213409.24222-11-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200813213409.24222-1-digetx@gmail.com>
 References: <20200813213409.24222-1-digetx@gmail.com>
@@ -88,130 +88,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Let's simply disable/enable IRQ rather than use a mutex that protects from
-racing with the interrupt handler. The result of this patch is that it's a
-bit easier now to follow the driver's code.
+From: David Heidelberg <david@ixit.cz>
 
-Tested-by: David Heidelberg <david@ixit.cz>
+SMB347 is a battery charger controller which is found on the Nexus 7
+device.
+
+Signed-off-by: David Heidelberg <david@ixit.cz>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/power/supply/smb347-charger.c | 38 ++++++++++++++-------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ .../tegra30-asus-nexus7-grouper-common.dtsi   | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
-index 335b6ee494e4..ec68ab2bce27 100644
---- a/drivers/power/supply/smb347-charger.c
-+++ b/drivers/power/supply/smb347-charger.c
-@@ -16,7 +16,6 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/i2c.h>
--#include <linux/mutex.h>
- #include <linux/power_supply.h>
- #include <linux/power/smb347-charger.h>
- #include <linux/regmap.h>
-@@ -122,7 +121,6 @@
+diff --git a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+index e2d5fbacf9b4..903457292c04 100644
+--- a/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
++++ b/arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+@@ -2,6 +2,7 @@
  
- /**
-  * struct smb347_charger - smb347 charger instance
-- * @lock: protects concurrent access to online variables
-  * @dev: pointer to device
-  * @regmap: pointer to driver regmap
-  * @mains: power_supply instance for AC/DC power
-@@ -134,7 +132,6 @@
-  * @pdata: pointer to platform data
-  */
- struct smb347_charger {
--	struct mutex		lock;
- 	struct device		*dev;
- 	struct regmap		*regmap;
- 	struct power_supply	*mains;
-@@ -243,11 +240,9 @@ static int smb347_update_ps_status(struct smb347_charger *smb)
- 	if (smb->pdata->use_usb)
- 		usb = !(val & IRQSTAT_E_USBIN_UV_STAT);
+ #include <dt-bindings/input/gpio-keys.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/power/summit,smb347-charger.h>
+ #include <dt-bindings/thermal/thermal.h>
  
--	mutex_lock(&smb->lock);
- 	ret = smb->mains_online != dc || smb->usb_online != usb;
- 	smb->mains_online = dc;
- 	smb->usb_online = usb;
--	mutex_unlock(&smb->lock);
+ #include "tegra30.dtsi"
+@@ -919,9 +920,24 @@ nct72: temperature-sensor@4c {
+ 			#thermal-sensor-cells = <1>;
+ 		};
  
- 	return ret;
- }
-@@ -263,13 +258,7 @@ static int smb347_update_ps_status(struct smb347_charger *smb)
-  */
- static bool smb347_is_ps_online(struct smb347_charger *smb)
- {
--	bool ret;
--
--	mutex_lock(&smb->lock);
--	ret = smb->usb_online || smb->mains_online;
--	mutex_unlock(&smb->lock);
--
--	return ret;
-+	return smb->usb_online || smb->mains_online;
- }
- 
- /**
-@@ -303,14 +292,13 @@ static int smb347_charging_set(struct smb347_charger *smb, bool enable)
- 		return 0;
- 	}
- 
--	mutex_lock(&smb->lock);
- 	if (smb->charging_enabled != enable) {
- 		ret = regmap_update_bits(smb->regmap, CMD_A, CMD_A_CHG_ENABLED,
- 					 enable ? CMD_A_CHG_ENABLED : 0);
- 		if (!ret)
- 			smb->charging_enabled = enable;
- 	}
--	mutex_unlock(&smb->lock);
+-		battery@55 {
++		fuel-gauge@55 {
+ 			compatible = "ti,bq27541";
+ 			reg = <0x55>;
++			power-supplies = <&power_supply>;
++			monitored-battery = <&battery_cell>;
++		};
 +
- 	return ret;
- }
- 
-@@ -995,9 +983,9 @@ static int smb347_get_charging_status(struct smb347_charger *smb,
- 	return status;
- }
- 
--static int smb347_get_property(struct power_supply *psy,
--			       enum power_supply_property prop,
--			       union power_supply_propval *val)
-+static int smb347_get_property_locked(struct power_supply *psy,
-+				      enum power_supply_property prop,
-+				      union power_supply_propval *val)
- {
- 	struct smb347_charger *smb = power_supply_get_drvdata(psy);
- 	int ret;
-@@ -1064,6 +1052,21 @@ static int smb347_get_property(struct power_supply *psy,
- 	return 0;
- }
- 
-+static int smb347_get_property(struct power_supply *psy,
-+			       enum power_supply_property prop,
-+			       union power_supply_propval *val)
-+{
-+	struct smb347_charger *smb = power_supply_get_drvdata(psy);
-+	struct i2c_client *client = to_i2c_client(smb->dev);
-+	int ret;
++		power_supply: charger@6a {
++			compatible = "summit,smb347";
++			reg = <0x6a>;
 +
-+	disable_irq(client->irq);
-+	ret = smb347_get_property_locked(psy, prop, val);
-+	enable_irq(client->irq);
++			interrupt-parent = <&gpio>;
++			interrupts = <TEGRA_GPIO(V, 1) IRQ_TYPE_EDGE_BOTH>;
 +
-+	return ret;
-+}
++			summit,enable-charge-control = <SMB3XX_CHG_ENABLE_PIN_ACTIVE_LOW>;
++			summit,enable-usb-charging;
 +
- static enum power_supply_property smb347_properties[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_CHARGE_TYPE,
-@@ -1273,7 +1276,6 @@ static int smb347_probe(struct i2c_client *client,
++			monitored-battery = <&battery_cell>;
+ 		};
+ 	};
  
- 	i2c_set_clientdata(client, smb);
+@@ -1011,6 +1027,12 @@ backlight: backlight {
+ 		default-brightness-level = <15>;
+ 	};
  
--	mutex_init(&smb->lock);
- 	smb->dev = &client->dev;
- 	smb->id = id->driver_data;
- 
++	battery_cell: battery-cell {
++		compatible = "simple-battery";
++		constant-charge-current-max-microamp = <1800000>;
++		operating-range-celsius = <0 45>;
++	};
++
+ 	/* PMIC has a built-in 32KHz oscillator which is used by PMC */
+ 	clk32k_in: clock@0 {
+ 		compatible = "fixed-clock";
 -- 
 2.27.0
 
