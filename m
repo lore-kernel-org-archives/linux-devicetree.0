@@ -2,138 +2,134 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB72C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DBAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB7D20885
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720B020829
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:35:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBBT5t5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbgHMTYG (ORCPT
+        id S1726486AbgHMTfE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:24:06 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20347 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgHMTYG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:24:06 -0400
-IronPort-SDR: Vh+1QL47bfs3S+rUGk+Pi3Nl67JKZcuCLd3l+mOTLa+1gopswg/KW8do0dPtyUYjIOiqOf2E39
- cBQufKb/ICvg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="215837426"
-X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
-   d="scan'208";a="215837426"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 12:24:06 -0700
-IronPort-SDR: Fehaz2vLakIic6YHnUUPe8Kft9srLmKl1amhJaYg1WGwqaEvsIFm8ySGgypQyUWFGWUrdxXTf3
- +aaVM8vqpCgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
-   d="scan'208";a="325514344"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2020 12:24:04 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1k6IpW-008VE7-V6; Thu, 13 Aug 2020 22:24:02 +0300
-Date:   Thu, 13 Aug 2020 22:24:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, wan.ahmad.zainie.wan.mohamad@intel.com,
-        lakshmi.bai.raja.subramanian@intel.com
-Subject: Re: [PATCH v3 1/2] pwm: Add PWM driver for Intel Keem Bay
-Message-ID: <20200813192402.GI1891694@smile.fi.intel.com>
-References: <1597334646-21087-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1597334646-21087-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597334646-21087-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Thu, 13 Aug 2020 15:35:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbgHMTfE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 15:35:04 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567BDC061757;
+        Thu, 13 Aug 2020 12:35:04 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id kq25so7433158ejb.3;
+        Thu, 13 Aug 2020 12:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=12087FTp/9siWmAQYdka9CL+BX7dl2z7W64nVKUq+mY=;
+        b=tBBT5t5o2REJgDO4g+TrwhTLSetN55ivpIQFldh6ISQntwzdiBKYqnJxQH5O9o4+CR
+         DHui/QjNFZbzkEZQMxIvtUp+mrz3nMQCrLHivjoFbxWpf6W+OqMwXS17teRDeRA6u5kT
+         4e0RgfFQiCS1tuB7wXdr3iK9YKx7sT0jsODiIzf0GtKyemv+f7XpDkyxYQG9rN6/+7lS
+         egVZtnjLpyT0lvDRpHQVB6ONg7Ydnybksd21728Cw+WlQDTUHIKi4kAZhFp6Tlf6AdKH
+         E3cF0aDwhHoXp7FaDSnIf19s9m7aYOMnYJN6gBi+t4gjyfmvoIz6/6uT1azYh8XyQq0C
+         W64Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=12087FTp/9siWmAQYdka9CL+BX7dl2z7W64nVKUq+mY=;
+        b=MR8EmkKrTj5IX4nSEJuZ7dsxtbfdfSw2nD6k4orA/CBfaCoSfbelAgDDDB5UFTeBTc
+         8TPlc0chRFi9qGb2JWjk8EqRL20XquQoPUUC7V6nRZEPippLhyjed+FHl/uXy4wV+h5S
+         n11/bwna3qv9nvLltZz+jAUSjsQW1DdhlMerFwAdSEx+zSEByAo1NolQD3SXnqrKbkBT
+         aYK4JFIYT4gavy9x4WKXjuxamcrTVs3O6vPevV07jTkxNIy9NRNslcDkEG+0iD/+C9uL
+         qGq/XkNTUj1W1N+8MrOg8rRoPuMKtAjWchCxfXQWdJiJ7hux7yPPpBsCZwxsh1bPz8j0
+         XXvA==
+X-Gm-Message-State: AOAM532JraNDtvq9ETp5WuyDnTpPwocQUwg9TkwhrNS0+SLASDAKQR5e
+        eZFAk0XfKtGKkQKX+2oF4gNHI2JiqHQ=
+X-Google-Smtp-Source: ABdhPJzxzJWAiaIXjEwIoz/ywgVFx1eH/wgrFrgxLMsQw0GYqiJify07ZgB3889gG5pzyXz6wyQ0/w==
+X-Received: by 2002:a17:906:1a54:: with SMTP id j20mr6601465ejf.102.1597347302920;
+        Thu, 13 Aug 2020 12:35:02 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id d9sm4120603edt.20.2020.08.13.12.35.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Aug 2020 12:35:02 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] ARM: dts: rockchip: rename and label gpio-led subnodes part 3
+Date:   Thu, 13 Aug 2020 21:34:54 +0200
+Message-Id: <20200813193455.19772-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:04:05AM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
-> From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
-> 
-> Enable PWM support for the Intel Keem Bay SoC.
+Current dts files with 'gpio-led' nodes were manually verified.
+In order to automate this process leds-gpio.txt
+has been converted to yaml. With this conversion a check
+for pattern properties was added. In part 3 rename and label
+gpio-led subnodes with pinctrl. To make things equal to other
+dts files move pinctrl below the compatible property.
 
-...
+Fix with help of the following rules:
 
-> +static inline void keembay_pwm_update_bits(struct keembay_pwm *priv, u32 mask,
-> +					   u32 val, u32 offset)
-> +{
-> +	u32 buff, tmp;
+1: Add nodename in the preferred form.
 
-> +	void __iomem *address;
+2: Always add a label that ends with '_led' to prevent conflicts
+   with other labels such as 'power' and 'mmc'
 
-No need to have this. Just use calc in place.
+3: If leds need pinctrl add a label that ends with '_led_pin'
+   also to prevent conflicts with other labels.
 
-> +	address = priv->base + offset;
+patternProperties:
+  # The first form is preferred, but fall back to just 'led'
+  # anywhere in the node name to at least catch some child nodes.
+  "(^led-[0-9a-f]$|led)":
 
-> +	buff = readl(address);
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/
+leds-gpio.yaml
 
-> +	tmp = buff & ~mask;
-> +	tmp |= FIELD_PREP(mask, val);
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3036-kylin.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-One line and one variable less:
-
-	buff = (buff & ~mask) | FIELD_PREP(...);
-
-But shouldn't be u32_replace_bits() instead?
-
-> +	writel(tmp, address);
-> +}
-
-...
-
-> +	 * high time = clock rate * duty cycle / NSEC_PER_SEC
-> +	 * low time =  clock rate * (period - duty cycle) / NSEC_PER_SEC
-
-> +	 * e.g. For period 50000ns, duty cycle 30000ns, and clock rate 500MHz:
-> +	 * high time = (500000000 * 30000) / 1000000000 = 0x3A98
-> +	 * low time = (500000000 * 20000) / 1000000000 = 0x2710
-
-Please, replace all multipliers to physical units
-	... 50us ... 30us ...
-	... 500MHz * 30us = 0x3a98
-	...and so on.
-
-> +	 * Value written to KMB_PWM_HIGHLOW_OFFSET = 0x3A982710
-
-...
-
-> +	priv->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(priv->clk)) {
-
-> +		if (PTR_ERR(priv->clk) != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get clock: %pe", priv->clk);
-> +
-> +		return PTR_ERR(priv->clk);
-
-return dev_err_probe(...);
-
-> +	}
-
-...
-
-> +	ret = pwmchip_add(&priv->chip);
-> +	if (ret < 0) {
-
-' < 0' makes any sense?
-
-> +		dev_err(dev, "Failed to add PWM chip: %pe\n", ERR_PTR(ret));
-> +		return ret;
-> +	}
-
+diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
+index 7154b827e..bf808cda6 100644
+--- a/arch/arm/boot/dts/rk3036-kylin.dts
++++ b/arch/arm/boot/dts/rk3036-kylin.dts
+@@ -15,12 +15,12 @@
+ 
+ 	leds: gpio-leds {
+ 		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&work_led_pin>;
+ 
+ 		work_led: led-0 {
+ 			gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
+ 			label = "kylin:red:led";
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&led_ctl>;
+ 		};
+ 	};
+ 
+@@ -367,7 +367,7 @@
+ 
+ &pinctrl {
+ 	leds {
+-		led_ctl: led-ctl {
++		work_led_pin: work-led-pin {
+ 			rockchip,pins = <2 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.11.0
 
