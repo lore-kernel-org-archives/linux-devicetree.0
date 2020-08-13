@@ -2,110 +2,101 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509BCC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 13:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D905C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 13:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5FB207DA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 13:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597324784;
-	bh=SknD/q4aQWNYq5Nk/fIPKkA97wOWHoR/XOtsWCarsUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vBM+dce5uFqCOUB3mZM4f1bQPZMV/HD2okWbK3dvRHDinZ7IoJBsWSjMd//LEaJ1y
-	 YDTN1WXL1S1CGb+Od56/6BJQyAvH48kIzODVsuCR6Q6RO/FsHZAk5DxZ6xfWbrlGWR
-	 I4KJrnOQMvH3slcBTYhyFPWK4z07UKUYGN2HwVBc=
+	by mail.kernel.org (Postfix) with ESMTP id 1838B20791
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 13:54:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agccP1KP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgHMNTn (ORCPT
+        id S1726142AbgHMNy6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 09:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgHMNTn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:19:43 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D15620774;
-        Thu, 13 Aug 2020 13:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597324782;
-        bh=SknD/q4aQWNYq5Nk/fIPKkA97wOWHoR/XOtsWCarsUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KyQtPDjjhE0RUI+jOnEFEBNw/+u3ZIzQvrcfs2bqJcSclzMEqquyp5iHRtp1RNgLN
-         0GHvoyF53tu5IMoeKYfshHf8pzTzkTlYFu4UrJiZttWR4h8heT83viHSVM3LlABhmz
-         fUatW3ekpHN47Oz+hbzPT5iwPkIrwjnHUHdfpCyU=
-Date:   Thu, 13 Aug 2020 14:19:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        iommu@lists.linux-foundation.org, freedreno@lists.freedesktop.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Douglas Anderson <dianders@chromium.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hanna Hawa <hannah@marvell.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 00/13] iommu/arm-smmu: Add Adreno SMMU specific
- implementation
-Message-ID: <20200813131933.GC10256@willie-the-truck>
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+        Thu, 13 Aug 2020 09:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgHMNy6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 09:54:58 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E4EC061757;
+        Thu, 13 Aug 2020 06:54:57 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id a5so5368624wrm.6;
+        Thu, 13 Aug 2020 06:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Sf/SftiD46KRmjklcq1t9/LS42BB5ZSQCo3saQVqHK4=;
+        b=agccP1KPb72z/gkb04zLo4qeG+xd1UJrYMzK6+6w2B5gLm7docgWCP89TW72fBpoDC
+         gK3gYReadqOvxeO3T3OBj/myfHOMgMIXdtASuHjb+Mo8O81lOlagy1/PmU1qOF52zfjk
+         zQgRoDH8U9pV24TmfiDp1egqvLvJRcU9M1NOM0MBFNh+uuh75gvtvbV4X9DCFQCPc8hI
+         6rupc6mD5ELdrBa9CKbNWdrjC5wMPQXnLkH4lUH6vw3WoITYNcI+/7JvJYML5FXe5U4b
+         ak5dCSGmE3XPBAyu25fDau+VFmXGAXBLylk/PE17rShq8CfrErx4lRoDYwVDOweHf7kd
+         lHZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Sf/SftiD46KRmjklcq1t9/LS42BB5ZSQCo3saQVqHK4=;
+        b=GR3VvZ6i1d6wUNpKqivzk/cwcJRFRGvWqT1O86+M0BUmLyvuGMMKeiq5UQ99+0+53k
+         i4O4OtCzKLB/TgRsPwE2TTNP0LEL9e+h9RS91O4XhE53F8xay9jb8R6XBp3JTPtXIvxL
+         aMpVLgaZ2cdP7mQMTL/8HcysLhA41IRVi4jpz1Weoxn+eroZ8+/3gfJvi6mrWO7a9hCw
+         oAYh2WevVAWYtCcyKcTh81ARef5EFhMYvF8v3BJ8Ynl5YaCr+BTunSQoq6bVJmqxIq9n
+         +K9t+ZcPNsxcSDNpMzSyiTQAbfIpe1dJgckrvpJzsWPJX+B6sLJyMf/MBuxNm7i16Tq8
+         LpBA==
+X-Gm-Message-State: AOAM5331GCq0qX33tKv/V2w0E/79QLWd8TTE7yZC4XqrxGM7R1ipsTRr
+        wVx65u1H7x/weg8pWSeIK+g=
+X-Google-Smtp-Source: ABdhPJyMDNz+ijdz996HXAu4epKQmW0kjeI+dQKGPU5iYnfmtaSci40eu1LwseA1AoxXvZNnOWVDuA==
+X-Received: by 2002:adf:e504:: with SMTP id j4mr4292799wrm.205.1597326893217;
+        Thu, 13 Aug 2020 06:54:53 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.117.232])
+        by smtp.gmail.com with ESMTPSA id z8sm9339432wmf.42.2020.08.13.06.54.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 06:54:52 -0700 (PDT)
+Subject: Re: [v4,0/3] mmc: mediatek: add optional reset property mmc:
+ mediatek: add optional module reset property arm64: dts: mt7622: add reset
+ node for mmc device Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 2 ++ drivers/mmc/host/mtk-sd.c |
+ 13 +++++++++++++ 3 files changed, 17 insertions(+)
+To:     Wenbin Mei <wenbin.mei@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+References: <20200813090618.28009-1-wenbin.mei@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <195c7bfc-38e4-8d5e-af79-cc3f00b552a4@gmail.com>
+Date:   Thu, 13 Aug 2020 15:54:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200813090618.28009-1-wenbin.mei@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 04:26:44PM -0600, Jordan Crouse wrote:
-> This series adds an Adreno SMMU implementation to arm-smmu to allow GPU hardware
-> pagetable switching.
+It would be good to provide a list of the changes, so that one can easily 
+understand what's the difference between v3 and v4. On a quick glimpse I didn't 
+see any changes.
+
+Regards,
+Matthias
+
+On 13/08/2020 11:06, Wenbin Mei wrote:
+> --
+> 2.18.0
 > 
-> The Adreno GPU has built in capabilities to switch the TTBR0 pagetable during
-> runtime to allow each individual instance or application to have its own
-> pagetable.  In order to take advantage of the HW capabilities there are certain
-> requirements needed of the SMMU hardware.
-
-"capabilities" is a polite way of putting it ;)
-
-Anyway, modulo two design comments, I think this is about as nice as we're
-going to get this. Thanks for persevering, and sorry that you have to deal
-with such dreadful hardware.
-
-Hopefully the next version will be the one, although I'd like Robin to take
-a quick look as well if he gets a chance.
-
-Will
