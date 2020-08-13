@@ -2,143 +2,115 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8140C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 05:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B1CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 06:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42A920656
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 05:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D457320656
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 06:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597297272;
-	bh=bQZJ0csaHLc3qhSl2N9bDL/Th0k3IbfW8GP+TvkeLZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VVP2g05Vi7Qr25N7NioLz0DUCIdX4yB4YQi/noCpLF0OGPWVqTtAYGMXM/DDqFR59
-	 pE+pxiCoYahCv7YGg40/8Swrm3IWuzKlNjAU/Cu/ygDDswXhjCn0U0NiPh0DtcxOo6
-	 v63jjm3jwhKBdHN4Q/5+TT2uFk76/Hcp1pVjnKuI=
+	s=default; t=1597298609;
+	bh=c2JkQY/iLy3UWqdaj6GyTFr2kN3ZzRXR970lGVv3ZKY=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=AfupeVfWoF5ApMq0pzDon71cVoKUCLgMCGdt6G8AHT0IyEqmWClaHWvvGcFG1CvcI
+	 60dpmIY5c86o9Unpzyho8V2oF3j5JnOw2wSLmsuRTNL2XF7rHQE3zsxNB5GKDOQIHv
+	 F8Nk5RI41Ej1ChZnF9SQ3txiQmxXCEEV2+rGnmDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgHMFkz (ORCPT
+        id S1726249AbgHMGD3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 01:40:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgHMFkz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 01:40:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BF7D20639;
-        Thu, 13 Aug 2020 05:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597297254;
-        bh=bQZJ0csaHLc3qhSl2N9bDL/Th0k3IbfW8GP+TvkeLZE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hUSp26TN0+hTBL4DvZdAHU5esUKHk4ITr7+3w3yRFw9xYlGbHsd+ezWa3042ogmUv
-         ZYIAkMK4F967W2t2M767YWQRhS3m4Ot4F0KywCwBiv8X2T0D8QDEmKtpmDGfN6EOPm
-         eC1+4cDs9k6dH4LbxS5aLOZhLhLFU9a2V2ozcX8E=
-Date:   Thu, 13 Aug 2020 07:40:52 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Al Cooper <al.cooper@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] usb: Add Kconfig and Makefile changes to build
- brcmstb-usb-pinmap
-Message-ID: <20200813054052.GB1353152@kroah.com>
-References: <20200812202018.49046-1-alcooperx@gmail.com>
- <20200812202018.49046-4-alcooperx@gmail.com>
+        Thu, 13 Aug 2020 02:03:29 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40296 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbgHMGD2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 02:03:28 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a14so3272332edx.7;
+        Wed, 12 Aug 2020 23:03:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Khf/VMAB3uYm/74V7OIX0V2t5P5w/qRvI1RZJAgPegY=;
+        b=QmEBrRnajjGNj0+5CakUMQDv3Nu5Ws9t5L4iLCjYNHhL+Tf7AOI9yN0K/+vC9lN1Ug
+         KJnjb9HLGsZZNCxhHKYuNABYBhHFJBIHHQh4B+4qb9SYeld4k3YwmRPD2Tq6Wa6Ao0iD
+         rsj6/r+6N/fFrZHIwDZCje5eh/lVxQEFcMS+t83PVNbvg3SZiaSUi0bh++9PVzXOt9p9
+         iFjvSoGE2pj/ck+d5kv0nf7IV8cVYxKjXaiup0forc0WzksKUHKi9qEtJWNCDsJwkODM
+         OqwDYw58vCiG4FRl4TRut5EfRo5URZsKcFW4eoOxoHHt6Mp0dBgjGkyCO0VVPyI6RUXf
+         2wiQ==
+X-Gm-Message-State: AOAM533KQuaK+6ltN/RstGHnMhiryMSpzVqr+R6pO3gi5lO8XOweEGFM
+        4feLTax3QRoO06HkeuQqkcw=
+X-Google-Smtp-Source: ABdhPJwOzOwEmTFJgDCy1OB+MdFnxkfB3YGk5CkSfIdGYb4ISCePBiIc2MZsVy2En9mkEJjWvft70Q==
+X-Received: by 2002:a50:d697:: with SMTP id r23mr3155650edi.223.1597298606788;
+        Wed, 12 Aug 2020 23:03:26 -0700 (PDT)
+Received: from pi3 ([194.230.155.117])
+        by smtp.googlemail.com with ESMTPSA id pj19sm3027363ejb.66.2020.08.12.23.03.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2020 23:03:26 -0700 (PDT)
+Date:   Thu, 13 Aug 2020 08:03:24 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 08/11] extcon: ptn5150: Check current USB mode when
+ probing
+Message-ID: <20200813060324.GA16245@pi3>
+References: <20200812162958.6180-1-krzk@kernel.org>
+ <20200812162958.6180-8-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200812202018.49046-4-alcooperx@gmail.com>
+In-Reply-To: <20200812162958.6180-8-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 04:20:18PM -0400, Al Cooper wrote:
-> From: Al Cooper <al.cooper@broadcom.com>
+On Wed, Aug 12, 2020 at 06:29:55PM +0200, Krzysztof Kozlowski wrote:
+> When machine boots up, the USB could be already in OTG mode.  In such
+> case there will be no interrupt coming to ptn5150 device and driver will
+> report default state of nothing connected.  Detection of USB connection
+> would happen on first unplug of the cable.
 > 
-> Add Kconfig and Makefile changes to build brcmstb-usb-pinmap and
-> update MAINTAINERS for the new driver.
-
-This can be part of the previous patch, or at least the Kconfig and
-Makefile changes should be there so that we build the code when we add
-it.
-
-> refs #SWLINUX-5537
-
-What is this?
-
+> Factor out code for checking current connection mode and call it right
+> after probe so the existing USB mode will be properly reported.
 > 
-> Signed-off-by: Al Cooper <al.cooper@broadcom.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  MAINTAINERS               | 8 ++++++++
->  drivers/usb/host/Kconfig  | 4 ++++
->  drivers/usb/host/Makefile | 1 +
->  3 files changed, 13 insertions(+)
+>  drivers/extcon/extcon-ptn5150.c | 93 ++++++++++++++++++---------------
+>  1 file changed, 50 insertions(+), 43 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f0569cf304ca..3a44ac61899b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3527,6 +3527,14 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
->  F:	drivers/usb/host/ehci-brcm.*
+> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+> index a57fef384a29..bbb185378e4b 100644
+> --- a/drivers/extcon/extcon-ptn5150.c
+> +++ b/drivers/extcon/extcon-ptn5150.c
+> @@ -5,6 +5,7 @@
+>  // Based on extcon-sm5502.c driver
+>  // Copyright (c) 2018-2019 by Vijai Kumar K
+>  // Author: Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>
+> +// Copyright (c) 2020 Krzysztof Kozlowski <krzk@kernel.org>
 >  
-> +BROADCOM BRCMSTB USB PIN MAP DRIVER
-> +M:	Al Cooper <alcooperx@gmail.com>
-> +L:	linux-usb@vger.kernel.org
-> +L:	bcm-kernel-feedback-list@broadcom.com
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> +F:	drivers/usb/host/brcmstb-usb-pinmap.c
-> +
->  BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
->  M:	Al Cooper <alcooperx@gmail.com>
->  L:	linux-kernel@vger.kernel.org
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index 1cb3004ea7b2..9c285053bb0c 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -109,12 +109,16 @@ endif # USB_XHCI_HCD
->  config USB_EHCI_BRCMSTB
->         tristate
+>  #include <linux/err.h>
+>  #include <linux/i2c.h>
+> @@ -83,12 +84,50 @@ static const struct regmap_config ptn5150_regmap_config = {
+>  	.max_register	= PTN5150_REG_END,
+>  };
 >  
-> +config BRCM_USB_PINMAP
-> +       tristate
+> +static void ptn5150_check_state(struct ptn5150_info *info)
+> +{
+> +	unsigned int port_status, reg_data, vbus;
+> +	int ret;
 > +
->  config USB_BRCMSTB
->  	tristate "Broadcom STB USB support"
->  	depends on (ARCH_BRCMSTB && PHY_BRCM_USB) || COMPILE_TEST
->  	select USB_OHCI_HCD_PLATFORM if USB_OHCI_HCD
->  	select USB_EHCI_BRCMSTB if USB_EHCI_HCD
->  	select USB_XHCI_PLATFORM if USB_XHCI_HCD
-> +	select BRCM_USB_PINMAP
->  	help
->  	  Enables support for XHCI, EHCI and OHCI host controllers
->  	  found in Broadcom STB SoC's.
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index bc731332fed9..0e63ef94790d 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -90,3 +90,4 @@ obj-$(CONFIG_USB_HCD_BCMA)	+= bcma-hcd.o
->  obj-$(CONFIG_USB_HCD_SSB)	+= ssb-hcd.o
->  obj-$(CONFIG_USB_FOTG210_HCD)	+= fotg210-hcd.o
->  obj-$(CONFIG_USB_MAX3421_HCD)	+= max3421-hcd.o
-> +obj-$(CONFIG_BRCM_USB_PINMAP)	+= brcmstb-usb-pinmap.o
+> +	ret = regmap_read(info->regmap, PTN5150_REG_CC_STATUS, &reg_data);
+> +	if (ret) {
+> +		dev_err(info->dev, "failed to read CC STATUS %d\n", ret);
+> +		mutex_unlock(&info->mutex);
 
-Shouldn't this driver be in usb/misc/ with other drivers like this?  Why
-host?
+There is a double mutex unlock here, I'll send a v2.
 
-Wait, why is this a separate driver at all?  Why not just build it into
-the USB_BRCMSTB driver?
-
-thanks,
-
-greg k-h
+Best regards,
+Krzysztof
