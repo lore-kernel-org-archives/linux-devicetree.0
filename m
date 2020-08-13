@@ -2,201 +2,114 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37CBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 15:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919CAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 16:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1E7A20791
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 15:49:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LKuthNgy"
+	by mail.kernel.org (Postfix) with ESMTP id 5E0B02078D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 16:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgHMPtn (ORCPT
+        id S1726546AbgHMQG2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 11:49:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgHMPtn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 11:49:43 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2779DC061757
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 08:49:42 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y6so2808205plt.3
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 08:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QisyeHY3ZHMM3TerX6llGGeWvEX6TJlY7NstZgbx+iA=;
-        b=LKuthNgyTESR2Nb5oycvHkDmSlKMH02vcClqoGbLB+Q3J0FfgdtV/KW/wYLum4WUiZ
-         OfVxpFSYY5d8YHZ3+iqoHu/a+DIQeHox5ug7EO6gbNtt/HujRCr9O0uZruzuirhrVqMC
-         7tXN7EGsBqpcLjldCm3M1WB/akMnXU8vn394U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QisyeHY3ZHMM3TerX6llGGeWvEX6TJlY7NstZgbx+iA=;
-        b=bo8z8aa+h5Ds2qIL1fT1tTQAfWmQsIx2fbDSu7eDyKxhmQMPa6YgTVIkff1llWL1/3
-         kGjbeV1tjmqLaumDrmoVhyFLhHYn6+ViFkYXxv4oIKaModq/+2TreV21eqR6TO8xGK1i
-         qg2uWDzVpJNxBl7MZgpBM7xzjOYKphDh8M1xiLgFd2zHW+gWpR+uGBs53CnGTvQm7jij
-         oGbSPr+kCJ4953lHBL1vnm6LYY7f2p5d/gnHrWPdtq/e+JO5Jf4xwWNKDATvSWtaRYYm
-         ZY1V9LyVnX57N0+M20TZtg/J2kzRWIM2gMF7Kn1yVOtoT5XpZsmZysNtSBRZSW4QP5Om
-         f0vQ==
-X-Gm-Message-State: AOAM5319iMk71j+Wla0J+bLsfgh/GgmEdP8eC/8FtGg5cXy9NHfOmpgd
-        5brh2uhlggHyZY/nRVvMIadElA==
-X-Google-Smtp-Source: ABdhPJz1M1P1S51YzM2m55MEu1bwSyYnt8Ac/RYg3NEhBAQvrxXf7zaV/15+/gOI8U5pzir/Bpl51Q==
-X-Received: by 2002:a17:90a:6d96:: with SMTP id a22mr5449139pjk.165.1597333782100;
-        Thu, 13 Aug 2020 08:49:42 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id b185sm6329480pfg.71.2020.08.13.08.49.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 08:49:40 -0700 (PDT)
-Date:   Thu, 13 Aug 2020 08:49:39 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v2 1/3] usb: dwc3: core: Host wake up support from system
- suspend
-Message-ID: <20200813154939.GB2995789@google.com>
-References: <1594235417-23066-1-git-send-email-sanm@codeaurora.org>
- <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1594235417-23066-2-git-send-email-sanm@codeaurora.org>
+        Thu, 13 Aug 2020 12:06:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:58407 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbgHMQG2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Aug 2020 12:06:28 -0400
+IronPort-SDR: W4AhPJqObnHcKsEPTA/nh9xn3m86tGuvrEe1h2wRUd6kys3gUCIwapwkP5PMInIhVPSADkzhFe
+ hF85zVq7V38g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="133778905"
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="133778905"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 09:06:25 -0700
+IronPort-SDR: lL/mnoN1yKIf023OJeY4X2w9mxUrz372TA0rvUmKxb6qyP3kYtEJ9eBxCVLAaq82+BHzteZWCR
+ fFcKDy6dZhjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
+   d="scan'208";a="439824466"
+Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
+  by orsmga004.jf.intel.com with ESMTP; 13 Aug 2020 09:06:23 -0700
+From:   vineetha.g.jaya.kumaran@intel.com
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com,
+        andriy.shevchenko@intel.com, lakshmi.bai.raja.subramanian@intel.com
+Subject: [PATCH v3 0/2] Add PWM support for Intel Keem Bay SoC
+Date:   Fri, 14 Aug 2020 00:04:04 +0800
+Message-Id: <1597334646-21087-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 12:40:15AM +0530, Sandeep Maheswaram wrote:
-> Avoiding phy powerdown in host mode so that it can be wake up by devices.
-> Added need_phy_for_wakeup flag to distinugush resume path and hs_phy_flags
-> to check connection status and set phy mode and  configure interrupts.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/core.c | 47 ++++++++++++++++++++++++++++++++++++++++-------
->  drivers/usb/dwc3/core.h |  2 ++
->  2 files changed, 42 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 25c686a7..eb7c225 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -31,12 +31,14 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/of.h>
->  #include <linux/usb/otg.h>
-> +#include <linux/usb/hcd.h>
->  
->  #include "core.h"
->  #include "gadget.h"
->  #include "io.h"
->  
->  #include "debug.h"
-> +#include "../host/xhci.h"
->  
->  #define DWC3_DEFAULT_AUTOSUSPEND_DELAY	5000 /* ms */
->  
-> @@ -1627,10 +1629,36 @@ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
->  	return ret;
->  }
->  
-> +static void dwc3_set_phy_speed_flags(struct dwc3 *dwc)
-> +{
-> +
-> +	int i, num_ports;
-> +	u32 reg;
-> +	struct usb_hcd	*hcd = platform_get_drvdata(dwc->xhci);
-> +	struct xhci_hcd	*xhci_hcd = hcd_to_xhci(hcd);
-> +
-> +	dwc->hs_phy_flags &= ~(PHY_MODE_USB_HOST_HS | PHY_MODE_USB_HOST_LS);
-> +
-> +	reg = readl(&xhci_hcd->cap_regs->hcs_params1);
-> +
-> +	num_ports = HCS_MAX_PORTS(reg);
-> +	for (i = 0; i < num_ports; i++) {
-> +		reg = readl(&xhci_hcd->op_regs->port_status_base + i * 0x04);
-> +		if (reg & PORT_PE) {
-> +			if (DEV_HIGHSPEED(reg) || DEV_FULLSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_HS;
-> +			else if (DEV_LOWSPEED(reg))
-> +				dwc->hs_phy_flags |= PHY_MODE_USB_HOST_LS;
-> +		}
-> +	}
-> +	phy_set_mode(dwc->usb2_generic_phy, dwc->hs_phy_flags);
-> +}
-> +
->  static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  {
->  	unsigned long	flags;
->  	u32 reg;
-> +	struct usb_hcd  *hcd = platform_get_drvdata(dwc->xhci);
->  
->  	switch (dwc->current_dr_role) {
->  	case DWC3_GCTL_PRTCAP_DEVICE:
-> @@ -1643,9 +1671,12 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
->  		dwc3_core_exit(dwc);
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
-> +		dwc3_set_phy_speed_flags(dwc);
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			dwc3_core_exit(dwc);
-> -			break;
-> +			if (usb_wakeup_enabled_descendants(hcd->self.root_hub))
-> +				dwc->need_phy_for_wakeup = true;
-> +			else
-> +				dwc->need_phy_for_wakeup = false;
->  		}
->  
->  		/* Let controller to suspend HSPHY before PHY driver suspends */
-> @@ -1705,11 +1736,13 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
->  		break;
->  	case DWC3_GCTL_PRTCAP_HOST:
->  		if (!PMSG_IS_AUTO(msg)) {
-> -			ret = dwc3_core_init_for_resume(dwc);
-> -			if (ret)
-> -				return ret;
-> -			dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> -			break;
-> +			if (!dwc->need_phy_for_wakeup) {
-> +				ret = dwc3_core_init_for_resume(dwc);
-> +				if (ret)
-> +					return ret;
-> +				dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
-> +				break;
-> +			}
->  		}
->  		/* Restore GUSB2PHYCFG bits that were modified in suspend */
->  		reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
-> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-> index 013f42a..5367d510e 100644
-> --- a/drivers/usb/dwc3/core.h
-> +++ b/drivers/usb/dwc3/core.h
-> @@ -1094,6 +1094,8 @@ struct dwc3 {
->  	struct phy		*usb3_generic_phy;
->  
->  	bool			phys_ready;
-> +	bool                    need_phy_for_wakeup;
-> +	unsigned int            hs_phy_flags;
->  
->  	struct ulpi		*ulpi;
->  	bool			ulpi_ready;
+From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
-Should this include a check for the 'wakeup-source' DT attribute as in
-xhci-mtk.c, to make wakeup support optional?
+Hi,
+
+This patch set enables support for PWM on the Intel Keem Bay SoC.
+Keem Bay is an ARM based SoC, and the GPIO module allows
+configuration of 6 PWM outputs. Patch 1 adds the PWM driver and
+Patch 2 is for the required Device Tree bindings documentation.
+
+This driver was tested on the Keem Bay evaluation module board.
+
+Thank you.
+
+Best regards,
+Vineetha
+
+Changes since v2:
+-Include documentation about HW limitation/behaviour
+-Use hex values for KMB_PWM_COUNT_MAX
+-Redefine register macros
+-Utilize FIELD_GET/FIELD_PREP for calculating pwm_l/h_count and pwm_count
+-Round up duty cycle/period values
+-Get current hardware state in .apply instead of cached values
+-Do a polarity check before .enabled
+-Round high time/low time to closest value
+-Set enable bit in KMB_PWM_LEADIN_OFFSET to 0 in probe
+-Correct the naming for MODULE_ALIAS
+-Add additionalProperties: false in DT bindings
+
+Changes since v1:
+-Updated licensing info, "clocks" property and example in DT bindings
+-Updated name of DT bindings document to match compatible string
+-Removed 1 patch for addition of new sysfs attribute "count"
+-Added support for COMPILE_TEST in Kconfig
+-Updated naming of defines and regmap attribute
+-Updated calculation of waveform high time and low time
+-Added range checking for waveform high/low time
+-Implemented .get_state
+-Removed register writes for lead-in and count values (left to default)
+-Updated register access to single-access
+-Folded keembay_pwm_enable/disable_channel, keembay_pwm_config_period/duty_cycle,
+ and keembay_pwm_config into keembay_pwm_apply
+-Updated error messages/error codes
+-Removed pwm_disable from keembay_pwm_remove
+-Removed clk_prepare/clk_enable/clk_disable from driver
+
+Lai, Poey Seng (1):
+  pwm: Add PWM driver for Intel Keem Bay
+
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
+
+ .../devicetree/bindings/pwm/intel,keembay-pwm.yaml |  47 ++++
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-keembay.c                          | 236 +++++++++++++++++++++
+ 4 files changed, 293 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-keembay.c
+
+-- 
+1.9.1
+
