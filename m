@@ -3,118 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02052C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49812C433EA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0AFD2078B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA7D20885
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 07:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgHMHtX (ORCPT
+        id S1726529AbgHMHvJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 03:49:23 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:39081 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgHMHtX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 03:49:23 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07D7n8FD1028958, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07D7n8FD1028958
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 13 Aug 2020 15:49:08 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 13 Aug 2020 15:49:08 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 13 Aug 2020 15:49:08 +0800
-Received: from localhost.localdomain (172.21.252.101) by
- RTEXMB01.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Thu, 13 Aug 2020 15:49:08 +0800
-From:   TY Chang <tychang@realtek.com>
-To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
-CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 0/9] pinctrl: update realtek DHC pinctrl driver
-Date:   Thu, 13 Aug 2020 15:48:59 +0800
-Message-ID: <20200813074908.889-1-tychang@realtek.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 13 Aug 2020 03:51:09 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38760 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbgHMHvJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 03:51:09 -0400
+Received: by mail-ot1-f65.google.com with SMTP id q9so4110499oth.5;
+        Thu, 13 Aug 2020 00:51:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eU62SrftExeZEPFtSlHLsBRzbUkLx1KNOgZc6VKFeBQ=;
+        b=RKVY0mqqakUrEXk4TORV8A5/ZSMY0dexhKfXyaOKBp8tYT6+lN9tMY1gCu59dMSnI/
+         6Av5sXCLtCtfska6KBUfoUvPLN8QSlHGcwX+BKv8ZNWhNtirhMGElzBnWp56J7vtBCeA
+         RTsTm+tpM0JqO6hs1Zx9oL0KiDPnHu2wr8nXIFBaGz9jqMUEyZCYMyj21d8ckpZmX8IH
+         sIyh51oPoVvqSR3qDoGMDZJhbXuz4s9KHdaT9j4oPeIaqxws0OL9u53GcL8uZhE7hrov
+         ikjJM0LMxR/OG4BC9tZAySXGXWwQpPbcG9j3oyJJCCrBhecUJhWEIB5ZPymwSBlP+imO
+         EXuw==
+X-Gm-Message-State: AOAM531KpbVTNZA6DQGhlLakjE36ZGk11NQSWXrXhgb2m/BrbDAUDZAN
+        GTNNlK5/qceLxjH+paJhJQLuqYhFPre+GsLWPoc=
+X-Google-Smtp-Source: ABdhPJzAAKS8g3t/W5mSJd2Vboc2FEvoNvVXoru7u4kNP7jabPCwVCki2JjTk/fEfMzVv8QAFC24k07bLAU2LYhSK+k=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2990956ote.107.1597305067462;
+ Thu, 13 Aug 2020 00:51:07 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200812203618.2656699-1-robh@kernel.org>
+In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 13 Aug 2020 09:50:55 +0200
+Message-ID: <CAMuHMdVXvSRF-G_TYu4P+Bqa2FZJWsUCyzqFur3Rb-tBExfbsw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-rtc@vger.kernel.org,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-input@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andreas,
+Hi Rob,
 
-This series update Realtek DHC pinctrl driver with the following details:
+On Wed, Aug 12, 2020 at 10:36 PM Rob Herring <robh@kernel.org> wrote:
+> Clean-up incorrect indentation, extra spaces, long lines, and missing
+> EOF newline in schema files. Most of the clean-ups are for list
+> indentation which should always be 2 spaces more than the preceding
+> keyword.
+>
+> Found with yamllint (which I plan to integrate into the checks).
 
-* add missed pins
-* add pin configuration feature
-* add realtek DHC pinctrl documentation
-* fix the warnings checked by running scripts/checkpatch.pl
-* move realtek DHC pinctrl driver to realtek directory
-* add suspend/resume callback function
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Changelog:
-v3
--add specific pin configurations for specific pins of rtd1295
--descibe specific pin configurations in rtd1295 documentation
--describe pins property in rtd1195 and rtd1295 documentation
--fix pinmux function name in device tree
+Thanks for your patch!
 
-v2
--remove realtek,rtd-pinctrl.yaml documentation
--add device tree binding rtd1195 documentation
--add deivce tree binding rtd1295 documentation
--fix the errors running 'make dt_binding_check'
--document the pin settings
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-clocks.yaml
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-clocks.yaml
+> @@ -24,9 +24,9 @@ properties:
+>        - const: renesas,r8a7778-cpg-clocks # R-Car M1
+>        - const: renesas,r8a7779-cpg-clocks # R-Car H1
+>        - items:
+> -        - enum:
+> -            - renesas,r7s72100-cpg-clocks # RZ/A1H
+> -        - const: renesas,rz-cpg-clocks    # RZ/A1
+> +          - enum:
+> +              - renesas,r7s72100-cpg-clocks # RZ/A1H
+> +          - const: renesas,rz-cpg-clocks    # RZ/A1
 
-Cc: Andreas Färber <afaerber@suse.de>
+This change breaks alignment of the comments at the end of each line.
 
+>        - const: renesas,sh73a0-cpg-clocks  # SH-Mobile AG5
 
-TY Chang (9):
-  pinctrl: realtek: rtd1295: Add missed pins.
-  pinctrl: realtek: rtd1295: Add pin configs.
-  pinctrl: realtek: rtd1195: Add missed pins and pin configs.
-  dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1195
-  dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
-  arm64: dts: realtek: rtd129x: fix SDIO pinctrl node
-  pinctrl: realtek: DHC: Fix pinctrl driver coding style according to
-    checkpatch.pl.
-  pinctrl: realtek: DHC: Move pinctrl drivers to realtek directory and
-    rename.
-  pinctrl: realtek: DHC: Add suspend/resume callback function.
+(I only checked the files I care about)
 
- .../pinctrl/realtek,rtd1195-pinctrl.yaml      | 133 +++
- .../pinctrl/realtek,rtd1295-pinctrl.yaml      | 192 ++++
- arch/arm64/boot/dts/realtek/rtd129x.dtsi      |   2 +-
- drivers/pinctrl/Kconfig                       |  10 +-
- drivers/pinctrl/Makefile                      |   2 +-
- drivers/pinctrl/pinctrl-rtd119x.c             | 383 --------
- drivers/pinctrl/realtek/Kconfig               |  14 +
- drivers/pinctrl/realtek/Makefile              |   3 +
- drivers/pinctrl/realtek/pinctrl-rtd.c         | 694 +++++++++++++++
- .../pinctrl/{ => realtek}/pinctrl-rtd1195.h   | 490 +++++++---
- .../pinctrl/{ => realtek}/pinctrl-rtd1295.h   | 840 +++++++++++++++---
- 11 files changed, 2129 insertions(+), 634 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1195-pinctrl.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
- delete mode 100644 drivers/pinctrl/pinctrl-rtd119x.c
- create mode 100644 drivers/pinctrl/realtek/Kconfig
- create mode 100644 drivers/pinctrl/realtek/Makefile
- create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd.c
- rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1195.h (64%)
- rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1295.h (61%)
+If you don't update commit  e0fe7fc6f2ca0781 ("dt-bindings: Whitespace
+clean-ups in schema files"), I can send a patch after v5.9-rc1.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.28.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
