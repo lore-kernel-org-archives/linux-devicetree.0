@@ -2,218 +2,222 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C660C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 12:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4B9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC3D20791
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 12:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8239D20791
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 12:55:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="rwOU+opn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDjvd4jR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgHMMsv (ORCPT
+        id S1726142AbgHMMzE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 08:48:51 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:55101 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgHMMsu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 08:48:50 -0400
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E85EB22FEB;
-        Thu, 13 Aug 2020 14:48:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1597322927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W3vsjuvtvKT05YvkX0b8P6sF+NlkwEsgM58H+1oBK6A=;
-        b=rwOU+opncGQLQ8CB7DULYAEAfu7G3J8X0kNwzPp3NY2oAmvd0WSPslI3nhuZbB8DpQcz9V
-        vpshEvLJT3yhczSeHq56ajcmcCsSA7Fg/iTG6UFbU2T1j+m0MxbgtQmqhxNWp0PQUyOAHN
-        VhNlzng+qV5L15lPqzJXwNVV13QsL+E=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v8 01/13] mfd: add simple regmap based I2C driver
-Date:   Thu, 13 Aug 2020 14:48:20 +0200
-Message-Id: <20200813124832.17349-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200813124832.17349-1-michael@walle.cc>
-References: <20200813124832.17349-1-michael@walle.cc>
+        Thu, 13 Aug 2020 08:55:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgHMMzC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 08:55:02 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E34C061757;
+        Thu, 13 Aug 2020 05:55:02 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id x2so3225762ybf.12;
+        Thu, 13 Aug 2020 05:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=75NAxvaDs5TZCdspioaGSmnreFOKWfDZk5QjErLtQWo=;
+        b=CDjvd4jRQ4l4RbEGS7kLoVz83KH2o2s7f6rdC0YEkG0f8Va0KUGU5njmNmvWD0j9O2
+         RfANcDqb2X+yWziaXZEzlqOWhHgeTL5f/SXl5lb/HJJBolKmL8PtCbAybApFYU+4oNy+
+         lnxF35PhN+5FMSGJj7yvZ7+IaMhqk+Zr8Er4UrJAtC1B6RMdi44Rt0whIC9p5hiRDI5t
+         RfaFR/cw7Y4b7tmBtWDoizH2xMs4738luDMcpqysPS53DKQksGYxvXrMEIOO6EKOPvsf
+         ii3XQiL+ZlfdLla0STQiINsAwKKJAMkoTsBMKTHQiS4jiBtGJI7vp72c0zujwo8S7HEC
+         Lxdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=75NAxvaDs5TZCdspioaGSmnreFOKWfDZk5QjErLtQWo=;
+        b=pQ3fxRiFz/MNTGAP4wzAT1dLR12EBDDoDzr1Xn13iatBmTT7Kc8N0iXbdQ/5pmxIWA
+         Q232MDbEPhWLndhwp3Hx1NVilBSzpsCgTIl2wZPP0Qut35qY1MEyCb3M3a6ilNA+jAlV
+         sqbZ4XmpNurUON0t39OBzOpBd87/16GTZqY+DCDu5LO73A5g8crgZGmD1NGhGF8toKs6
+         kEyQ0fyheNpnNPXBk8tzoZRM90YfI0AuOVjkgrjqP/h24oyVNN16ZDUocKjo6q2At/bo
+         3LTy6Q9PWyplTaAqYtAlhjK4SF11KBMxF/ieQ2huj7f9uEIyanJxf3ohYcd4XRJYnB6k
+         XrEA==
+X-Gm-Message-State: AOAM530oeceWO/0FA1vHeHY5fZT1xeIRTZfQ0XqClBt1UA6KJCTBnyRg
+        jLEx+BcX2PYRwPsTVoY2RBC82UVl36ZPrKgpisjf2krQ
+X-Google-Smtp-Source: ABdhPJyorRbchJgGCyTLDbB3eJQXWKepkgtINQSgf1E6LPJzQ0rtraBZ92Kn14p9F4+c7jW6VIEg4dj5p7BbrEEtpHs=
+X-Received: by 2002:a25:6ad6:: with SMTP id f205mr6436845ybc.76.1597323301408;
+ Thu, 13 Aug 2020 05:55:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-8-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200811112638.GF6054@pendragon.ideasonboard.com>
+In-Reply-To: <20200811112638.GF6054@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 13 Aug 2020 13:54:35 +0100
+Message-ID: <CA+V-a8sVA9r3_yrM6z7EX-XGp1d6Wy-6LjWsO7Td93C-236jvg@mail.gmail.com>
+Subject: Re: [PATCH 7/7] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are I2C devices which contain several different functions but
-doesn't require any special access functions. For these kind of drivers
-an I2C regmap should be enough.
+Hi Laurent,
 
-Create an I2C driver which creates an I2C regmap and enumerates its
-children. If a device wants to use this as its MFD core driver, it has
-to add an individual compatible string. It may provide its own regmap
-configuration.
+Thank you for the review.
 
-Subdevices can use dev_get_regmap() on the parent to get their regmap
-instance.
+On Tue, Aug 11, 2020 at 12:26 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> Thank you for the patch.
+>
+> On Fri, Aug 07, 2020 at 06:49:54PM +0100, Lad Prabhakar wrote:
+> > The iwg21d comes with a 7" capacitive touch screen, therefore
+> > add support for it.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > ---
+> >  arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 84 +++++++++++++++++++++++++
+> >  1 file changed, 84 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > index b3461a61a4bf..cf59fd61e422 100644
+> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > @@ -30,6 +30,7 @@
+> >
+> >  /dts-v1/;
+> >  #include "r8a7742-iwg21m.dtsi"
+> > +#include <dt-bindings/pwm/pwm.h>
+> >
+> >  / {
+> >       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+> > @@ -52,6 +53,50 @@
+> >               clock-frequency = <26000000>;
+> >       };
+> >
+> > +     lcd_backlight: backlight {
+> > +             compatible = "pwm-backlight";
+> > +             pwms = <&tpu 2 5000000 0>;
+> > +             brightness-levels = <0 4 8 16 32 64 128 255>;
+> > +             pinctrl-0 = <&backlight_pins>;
+> > +             pinctrl-names = "default";
+> > +             default-brightness-level = <7>;
+> > +             enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
+>
+> It's actually a power supply, not an enable GPIO, but it doesn't matter
+> much, I don't think there's a need to declare a regulator just for the
+> sake of it.
+>
+Agreed will leave it as is.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-Changes since v7:
- - none
+> > +     };
+> > +
+> > +     lvds-receiver {
+> > +             compatible = "ti,ds90cf384a", "lvds-decoder";
+> > +             powerdown-gpios = <&gpio5 28 GPIO_ACTIVE_LOW>;
+>
+> This should be handled as a shared power supply, as it's also needed for
+> the touch screen. Biju has sent patches for the iwg20d that fixes a
+> probe issue due to that problem, I think you can just copy the fix.
+>
+Done.
 
-Changes since v6:
- - added SIMPLE_MFD_I2C help text
- - revised description in module header
+> > +
+> > +             ports {
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <0>;
+> > +
+> > +                     port@0 {
+> > +                             reg = <0>;
+> > +                             lvds_receiver_in: endpoint {
+> > +                                     remote-endpoint = <&lvds0_out>;
+> > +                             };
+> > +                     };
+> > +                     port@1 {
+> > +                             reg = <1>;
+> > +                             lvds_receiver_out: endpoint {
+> > +                                     remote-endpoint = <&panel_in>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> > +     panel {
+> > +             compatible = "edt,etm0700g0dh6";
+> > +             backlight = <&lcd_backlight>;
+> > +
+> > +             port {
+> > +                     panel_in: endpoint {
+> > +                             remote-endpoint = <&lvds_receiver_out>;
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> >       reg_1p5v: 1p5v {
+> >               compatible = "regulator-fixed";
+> >               regulator-name = "1P5V";
+> > @@ -129,12 +174,31 @@
+> >               VDDIO-supply = <&reg_3p3v>;
+> >               VDDD-supply = <&reg_1p5v>;
+> >       };
+> > +
+> > +     touch: touchpanel@38 {
+> > +             compatible = "edt,edt-ft5406";
+> > +             reg = <0x38>;
+> > +             interrupt-parent = <&gpio0>;
+> > +             interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
+>
+> Should the reset GPIO also be wired ? It seems to be shared with the
+> audio codec though, which is annoying.
+>
+Done.
 
-Changes since v5:
- - removed "select MFD_CORE" in Kconfig
- - removed help text in Kconfig, we assume that the users of this
-   driver will have a "select MFD_SIMPLE_MFD_I2C". Instead added
-   a small description to the driver itself.
- - removed "struct simple_mfd_i2c_config" and use regmap_config
-   directly
- - changed builtin_i2c_driver() to module_i2c_driver(), added
-   MODULE_ boilerplate
- - cleaned up the included files
+> > +     };
+> >  };
+> >
+> >  &cmt0 {
+> >       status = "okay";
+> >  };
+> >
+> > +&du {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&gpio0 {
+> > +     touch-interrupt {
+> > +             gpio-hog;
+> > +             gpios = <24 GPIO_ACTIVE_LOW>;
+> > +             input;
+> > +     };
+>
+> Is this needed, or does requesting the interrupt in the touch screen
+> driver configured the GPIO to an input automatically ?
+>
+Yes this is needed, the touch driver does not configure the pin as
+GPIO input without this touch doesn't work.
 
-Changes since v4:
- - new patch. Lee, please bear with me. I didn't want to delay the
-   new version (where a lot of remarks on the other patches were
-   addressed) even more, just because we haven't figured out how
-   to deal with the MFD part. So for now, I've included this one.
-
- drivers/mfd/Kconfig          | 12 ++++++++
- drivers/mfd/Makefile         |  1 +
- drivers/mfd/simple-mfd-i2c.c | 56 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 69 insertions(+)
- create mode 100644 drivers/mfd/simple-mfd-i2c.c
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 33df0837ab41..6e1a38944d28 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1162,6 +1162,18 @@ config MFD_SI476X_CORE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called si476x-core.
- 
-+config MFD_SIMPLE_MFD_I2C
-+	tristate
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  This driver creates a single register map with the intention for it
-+	  to be shared by all sub-devices.
-+
-+	  Once the register map has been successfully initialised, any
-+	  sub-devices represented by child nodes in Device Tree will be
-+	  subsequently registered.
-+
- config MFD_SM501
- 	tristate "Silicon Motion SM501"
- 	depends on HAS_DMA
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index a60e5f835283..78d24a3e7c9e 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -264,3 +264,4 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
- obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
- 
- obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-+obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
-diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
-new file mode 100644
-index 000000000000..09b40ebfdf07
---- /dev/null
-+++ b/drivers/mfd/simple-mfd-i2c.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Simple MFD - I2C
-+ *
-+ * This driver creates a single register map with the intention for it to be
-+ * shared by all sub-devices.  Children can use their parent's device structure
-+ * (dev.parent) in order reference it.
-+ *
-+ * Once the register map has been successfully initialised, any sub-devices
-+ * represented by child nodes in Device Tree will be subsequently registered.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+
-+static const struct regmap_config simple_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int simple_mfd_i2c_probe(struct i2c_client *i2c)
-+{
-+	const struct regmap_config *config;
-+	struct regmap *regmap;
-+
-+	config = device_get_match_data(&i2c->dev);
-+	if (!config)
-+		config = &simple_regmap_config;
-+
-+	regmap = devm_regmap_init_i2c(i2c, config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	return devm_of_platform_populate(&i2c->dev);
-+}
-+
-+static const struct of_device_id simple_mfd_i2c_of_match[] = {
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, simple_mfd_i2c_of_match);
-+
-+static struct i2c_driver simple_mfd_i2c_driver = {
-+	.probe_new = simple_mfd_i2c_probe,
-+	.driver = {
-+		.name = "simple-mfd-i2c",
-+		.of_match_table = simple_mfd_i2c_of_match,
-+	},
-+};
-+module_i2c_driver(simple_mfd_i2c_driver);
-+
-+MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-+MODULE_DESCRIPTION("Simple MFD - I2C driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
-
+Cheers,
+Prabhakar
