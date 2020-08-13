@@ -2,166 +2,149 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8247EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D25C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA9720885
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D105F2087C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNS4k3f8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0Vgyqpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHMVGm (ORCPT
+        id S1726522AbgHMVec (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47200 "EHLO
+        Thu, 13 Aug 2020 17:34:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgHMVGm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 17:06:42 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06FDC061757;
-        Thu, 13 Aug 2020 14:06:41 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id di22so5234365edb.12;
-        Thu, 13 Aug 2020 14:06:41 -0700 (PDT)
+        with ESMTP id S1726467AbgHMVeb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 17:34:31 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648A3C061757;
+        Thu, 13 Aug 2020 14:34:31 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m22so7788931ljj.5;
+        Thu, 13 Aug 2020 14:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+gLOU84cNZ1Rsv9wlF/Os7yUvEemIY9BKWifplza2eo=;
-        b=jNS4k3f8ykYnmD9ITW7ZunOE98hIMfSzbPtNgq+BZKcF20oIA2vvdnzXo0Dqe8LKMv
-         zZY+cvju5QczSdb1vhNLAXoN7Buqr2r+CyTmkjUzgacqIDlROMU9moTuByRJbIfeZS9v
-         F2P5CUveZY+bL9kEZllnBEbKbeRGqoWCj96lkBrgdVn/iIC+LHfmpk1DzhjaB2aFHigQ
-         F1TaI8nYyfptWXpGoqvvmZkoIDF6AyLCfsXtHO7bv/RhnTwwXLPeJ6m85TpjuVuhh2GN
-         i2+MwV9u4e2Jm3aOD/SMn97JlKzOx4VkE07vPE/UNyG9kFmdmOxfZ2DlWbcygLvDdFMF
-         dnkQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IThCDjeYxkkM18VbuagJbEDKwOsjCUD5KwOfUA5QrWc=;
+        b=L0Vgyqpru8kmueUsI4cVMqp6htGxBMqzWsqUuXQPNeZvPK2y2MuDiHPu7qelLmRmJK
+         cRLvokXPeEs+Pfbmq9vu/zr+xclqXoYNjOW9fYWfk8QFVFr1fQv8YHM3lUv2VI7vkuj1
+         Dwc4gvPB9j9wy9nknQao6OgKHG4wTJjzIm/8qL3pvBRgBIYqPdRu1Bt3Er7id/8frVh5
+         nPSlN9IzzY/2Rsx18Kp72B/98RCIh1+du2sII5gzZAqO39vsRo5Pre3ANx0dWIemEFU1
+         znZNYXeLliGeOzNQCt7tK2jmIUKvykrEaOEmAd9mGcfJ3/L/9wEXlkUYam/C5UbztUgc
+         AoOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+gLOU84cNZ1Rsv9wlF/Os7yUvEemIY9BKWifplza2eo=;
-        b=aB99V1P6KWA5glJjLfV7zstjELDepwlvj56Th3ZfPvLH9tErGJxkTKgOFOXGF3hsYg
-         U98WlhKed2FplXSy62dZ4fQT+30jJZXth1hZMpbjyMaLSWImXpyIf+QXhi5z/mtQ2XmH
-         Fbc6CD/HVsvLSJLJSweSXGWQg7AUPNPblEKtIxoWJruvTFFTgwVwzXOBK+BVdZn8RU0U
-         3Y3xIdddSYP/foEDdoE4cdISKpTqfTNzao8XJgkiJYsi63KSdaLF1CVPdqIzetXTTrEq
-         IyxWoR8V0KUWqv0h0Rtdw0/8eHu4eJaJq4+TOIOBCOPdwjBUwlAE5BwJybcAn9nM0BsX
-         jlew==
-X-Gm-Message-State: AOAM531ca9PFj4v3TwJg3pveyHpoWp7sohVXxOLnBIsM1FHpFgdiBsLy
-        AkqOluJE8czA8c+5EdzKejTT1Nec
-X-Google-Smtp-Source: ABdhPJzttsJSWh60Ibgg2g1tvpFePaIBzCCg/vnZY/xvcyo9FfeT8ZSFEck51B7BPzqUJcwCWYjODg==
-X-Received: by 2002:a05:6402:12d0:: with SMTP id k16mr6693516edx.199.1597352800389;
-        Thu, 13 Aug 2020 14:06:40 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:542e:b60d:359c:ac79? ([2a01:110f:b59:fd00:542e:b60d:359c:ac79])
-        by smtp.gmail.com with ESMTPSA id a19sm5123757ejg.116.2020.08.13.14.06.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2020 14:06:39 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dt-bindings: leds: Add DT binding for Richtek RT8515
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     linux-leds@vger.kernel.org, newbytee@protonmail.com,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org
-References: <20200812090711.2644688-1-linus.walleij@linaro.org>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <e8d27b57-ac17-29e4-0e43-b72d7447d43a@gmail.com>
-Date:   Thu, 13 Aug 2020 23:06:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        bh=IThCDjeYxkkM18VbuagJbEDKwOsjCUD5KwOfUA5QrWc=;
+        b=qUGyPZI5VfvZt0p0MZvVXIOjeZTO/KL00rYjQNbKjJUcwFOlqcbUYkp+irRh8jbzE+
+         Cd/Zigocw9EwvEJeq5wMLGyQQ1Li9hEf/eknefQ/WLEAbV5pphuIWa7Rt7DpnrDbMVFM
+         QeQwZQO5XZmExhXE7OQ+/Y22OhKf4PiHTr/5aO3tggoN0zbTYOpUIGf4EuSB30jc5JYE
+         NskWsF9+s5J50H17JxXVlLKy1BvgcL9pHA0NavaOTIvXoes71AICy98X80g6U1ci161c
+         97snsOyZxhwN7Xf5V5+YWtOoiukH/Z6/BHDHAeVyNAp83sWMnQL8kQPboECN+cMJfH9s
+         zcaw==
+X-Gm-Message-State: AOAM530kYap4jnrACXaMXuCkn4H44psHmsJWjBy0xhrKKv5HKGupgtsy
+        Iqd+Wkm3vM8D/4APxrfKUok=
+X-Google-Smtp-Source: ABdhPJy7yIGjPYA4/SOFJxhPGBV9c3CsJJwXuYU/XrKIbhdrF8Hoz43SP8lvuUwkYMhr8W94+XKQFw==
+X-Received: by 2002:a2e:92d0:: with SMTP id k16mr2736517ljh.70.1597354469716;
+        Thu, 13 Aug 2020 14:34:29 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id j2sm1345309ljb.98.2020.08.13.14.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 14:34:29 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Heidelberg <david@ixit.cz>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Bruce E . Robertson" <bruce.e.robertson@intel.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH v3 00/10] Summit SMB3xx driver & device-tree
+Date:   Fri, 14 Aug 2020 00:33:59 +0300
+Message-Id: <20200813213409.24222-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200812090711.2644688-1-linus.walleij@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus,
+We gathered existing patches, fixed and improved what we could and
+final result is an working charging driver with device-tree support
+for Nexus 7.
 
-On 8/12/20 11:07 AM, Linus Walleij wrote:
-> Add a YAML devicetree binding for the Richtek RT8515
-> dual channel flash/torch LED driver.
-> 
-> Cc: newbytee@protonmail.com
-> Cc: Stephan Gerhold <stephan@gerhold.net>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->   .../bindings/leds/richtek,rt8515.yaml         | 54 +++++++++++++++++++
->   1 file changed, 54 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/richtek,rt8515.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/richtek,rt8515.yaml b/Documentation/devicetree/bindings/leds/richtek,rt8515.yaml
-> new file mode 100644
-> index 000000000000..579ef8a2e40a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/richtek,rt8515.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/richtek,rt8515.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Richtek RT8515 1.5A dual channel LED driver
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +description: |
-> +  The Richtek RT8515 is a dual channel (two mode) LED driver that
-> +  supports driving a white LED in flash or torch mode.
-> +
-> +properties:
-> +  compatible:
-> +    const: richtek,rt8515
-> +
-> +  enf-gpios:
-> +    maxItems: 1
-> +    description: A connection to the 'ENF' (enable flash) pin.
-> +
-> +  ent-gpios:
-> +    maxItems: 1
-> +    description: A connection to the 'ENT' (enable torch) pin.
-> +
-> +  led:
-> +    type: object
-> +    $ref: common.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - ent-gpios
-> +  - enf-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    led-controller {
-> +        compatible = "richtek,rt8515";
-> +        enf-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
-> +        ent-gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
-> +
-> +        led {
-> +            function = LED_FUNCTION_FLASH;
-> +            color = <LED_COLOR_ID_WHITE>;
-> +            flash-max-timeout-us = <250000>;
+At this moment charging works with:
+ - Nexus 7 2012 (grouper and tilapia)
+ - Nexus 7 2013 (flo and deb)
+ - ... and there are more devices equipped with these chargers.
 
-Constraints for this property are needed above.
+Changelog:
 
-> +        };
-> +    };
-> 
+v3: - The uint32 type now isn't specified for standard units in the SMB
+      DT binding because standard units already have a type.
+      Thanks to Rob Herring for the suggestion!
+
+    - The battery binding changes are rebased on top of the new battery.yaml
+
+    - The new battery temperature DT properties now have shorter names
+      and use <min max> format. Thanks to Rob Herring for the suggestion!
+
+    - Added new patch that adds SMB charger node to the new Nexus 7 2012
+      device-tree which has been merged into v5.9 kernel.
+
+v2: - Addressed v1 review comments from Rob Herring and Sebastian Reichel
+      by moving out common battery properties from the charger node into the
+      battery-cell node.
+
+    - power_supply_register() of the SMB driver converted to resource-managed
+      API variant.
+
+    - Improved DT property names of the SMB binding by making them to follow
+      the generic power-supply naming scheme (-microvolts at the end, etc).
+
+David Heidelberg (7):
+  dt-bindings: power: supply: Add device-tree binding for Summit SMB3xx
+  power: supply: smb347-charger: Use resource-managed API
+  power: supply: smb347-charger: Implement device-tree support
+  power: supply: smb347-charger: Support SMB345 and SMB358
+  power: supply: smb347-charger: Remove virtual smb347-battery
+  ARM: dts: qcom: apq8064-nexus7: Add SMB345 battery charger
+  ARM: tegra: nexus7: Add SMB347 battery charger
+
+Dmitry Osipenko (3):
+  dt-bindings: battery: Add temperature properties
+  power: supply: Support battery temperature device-tree properties
+  power: supply: smb347-charger: Replace mutex with IRQ disable/enable
+
+ .../bindings/power/supply/battery.yaml        |  24 +
+ .../power/supply/summit,smb347-charger.yaml   | 152 +++++
+ .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts |  24 +
+ .../tegra30-asus-nexus7-grouper-common.dtsi   |  24 +-
+ drivers/power/supply/Kconfig                  |   6 +-
+ drivers/power/supply/power_supply_core.c      |  19 +
+ drivers/power/supply/smb347-charger.c         | 565 +++++++++---------
+ .../dt-bindings/power/summit,smb347-charger.h |  19 +
+ include/linux/power_supply.h                  |   6 +
+ 9 files changed, 568 insertions(+), 271 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+ create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
 
 -- 
-Best regards,
-Jacek Anaszewski
+2.27.0
+
