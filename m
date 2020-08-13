@@ -2,101 +2,138 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B7AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB72C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86854206B2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ObWFK6Bt"
+	by mail.kernel.org (Postfix) with ESMTP id DCB7D20885
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 19:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgHMTF1 (ORCPT
+        id S1726305AbgHMTYG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 15:05:27 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:13190 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726253AbgHMTF0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 15:05:26 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07DJ3Fu2010457
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 12:05:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=GNih2j3ESRfeoRwPAnR3qqb1b7HSoqwKZbqqay1L3wk=;
- b=ObWFK6Bt4aH+67+3l0KseY92Gs3MZMoiEMruq5dxbtMCBFFDbqXMTN8P/njQq8sysfhe
- YRHTyOyUP/psFw3/xcmOq6ItEh2QqzBlT5tGSm54IYfJ7ArHVL/vi1ZcTGAbDAqzdlWl
- 8H46mPuISzUw5RDpbUdTibBTpe2RotIGGys= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 32v0kk3f6p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <devicetree@vger.kernel.org>; Thu, 13 Aug 2020 12:05:25 -0700
-Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 13 Aug 2020 12:04:46 -0700
-Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
-        id 0844D4EFB4C25; Thu, 13 Aug 2020 12:04:39 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Vijay Khemka <vijaykhemka@fb.com>
-Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
-To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-CC:     <vijaykhemka@fb.com>, Sai Dasari <sdasari@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] ARM: dts: aspeed: tiogapass: Remove vuart
-Date:   Thu, 13 Aug 2020 12:04:30 -0700
-Message-ID: <20200813190431.3331026-1-vijaykhemka@fb.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 13 Aug 2020 15:24:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:20347 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbgHMTYG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Aug 2020 15:24:06 -0400
+IronPort-SDR: Vh+1QL47bfs3S+rUGk+Pi3Nl67JKZcuCLd3l+mOTLa+1gopswg/KW8do0dPtyUYjIOiqOf2E39
+ cBQufKb/ICvg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="215837426"
+X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
+   d="scan'208";a="215837426"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 12:24:06 -0700
+IronPort-SDR: Fehaz2vLakIic6YHnUUPe8Kft9srLmKl1amhJaYg1WGwqaEvsIFm8ySGgypQyUWFGWUrdxXTf3
+ +aaVM8vqpCgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
+   d="scan'208";a="325514344"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 13 Aug 2020 12:24:04 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1k6IpW-008VE7-V6; Thu, 13 Aug 2020 22:24:02 +0300
+Date:   Thu, 13 Aug 2020 22:24:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     vineetha.g.jaya.kumaran@intel.com
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, wan.ahmad.zainie.wan.mohamad@intel.com,
+        lakshmi.bai.raja.subramanian@intel.com
+Subject: Re: [PATCH v3 1/2] pwm: Add PWM driver for Intel Keem Bay
+Message-ID: <20200813192402.GI1891694@smile.fi.intel.com>
+References: <1597334646-21087-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+ <1597334646-21087-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-13_16:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- mlxscore=0 mlxlogscore=702 malwarescore=0 phishscore=0 adultscore=0
- spamscore=0 impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130134
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597334646-21087-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Removed vuart for facebook tiogapass platform as it uses uart2 and
-uart3 pin with aspeed uart routing feature.
+On Fri, Aug 14, 2020 at 12:04:05AM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
+> From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
+> 
+> Enable PWM support for the Intel Keem Bay SoC.
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 5 -----
- 1 file changed, 5 deletions(-)
+...
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/a=
-rm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index 2d44d9ad4e40..e6ad821a8635 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -82,11 +82,6 @@ &lpc_ctrl {
- 	status =3D "okay";
- };
-=20
--&vuart {
--	// VUART Host Console
--	status =3D "okay";
--};
--
- &uart1 {
- 	// Host Console
- 	status =3D "okay";
---=20
-2.24.1
+> +static inline void keembay_pwm_update_bits(struct keembay_pwm *priv, u32 mask,
+> +					   u32 val, u32 offset)
+> +{
+> +	u32 buff, tmp;
+
+> +	void __iomem *address;
+
+No need to have this. Just use calc in place.
+
+> +	address = priv->base + offset;
+
+> +	buff = readl(address);
+
+> +	tmp = buff & ~mask;
+> +	tmp |= FIELD_PREP(mask, val);
+
+One line and one variable less:
+
+	buff = (buff & ~mask) | FIELD_PREP(...);
+
+But shouldn't be u32_replace_bits() instead?
+
+> +	writel(tmp, address);
+> +}
+
+...
+
+> +	 * high time = clock rate * duty cycle / NSEC_PER_SEC
+> +	 * low time =  clock rate * (period - duty cycle) / NSEC_PER_SEC
+
+> +	 * e.g. For period 50000ns, duty cycle 30000ns, and clock rate 500MHz:
+> +	 * high time = (500000000 * 30000) / 1000000000 = 0x3A98
+> +	 * low time = (500000000 * 20000) / 1000000000 = 0x2710
+
+Please, replace all multipliers to physical units
+	... 50us ... 30us ...
+	... 500MHz * 30us = 0x3a98
+	...and so on.
+
+> +	 * Value written to KMB_PWM_HIGHLOW_OFFSET = 0x3A982710
+
+...
+
+> +	priv->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(priv->clk)) {
+
+> +		if (PTR_ERR(priv->clk) != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get clock: %pe", priv->clk);
+> +
+> +		return PTR_ERR(priv->clk);
+
+return dev_err_probe(...);
+
+> +	}
+
+...
+
+> +	ret = pwmchip_add(&priv->chip);
+> +	if (ret < 0) {
+
+' < 0' makes any sense?
+
+> +		dev_err(dev, "Failed to add PWM chip: %pe\n", ERR_PTR(ret));
+> +		return ret;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
