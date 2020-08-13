@@ -2,148 +2,190 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D005FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22073C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3CE20791
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCB920791
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 10:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sa5APNLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHMKbf convert rfc822-to-8bit (ORCPT
+        id S1726131AbgHMKia (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 06:31:35 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:35289 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726048AbgHMKbf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 06:31:35 -0400
-Received: from [37.161.87.136] (port=46755 helo=[192.168.42.162])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1k6AW9-000FlW-5k; Thu, 13 Aug 2020 12:31:29 +0200
-Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org
-References: <20200812203618.2656699-1-robh@kernel.org>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <d5808e9c-07fe-1c28-b9a6-a16abe9df458@lucaceresoli.net>
-Date:   Thu, 13 Aug 2020 12:31:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 13 Aug 2020 06:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbgHMKia (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 06:38:30 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21134C061757;
+        Thu, 13 Aug 2020 03:38:30 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id i10so3030184ybt.11;
+        Thu, 13 Aug 2020 03:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZMZSesP5yzJziVUDR23hWsW+wrdDKjDsymbEjLFqlsQ=;
+        b=sa5APNLzKf8++yFtOdgr0UmEUTQkjLHKmS98JuZjQU8iiXX9W5fsI/pxHxvkQp/pre
+         L1wPQ8UHos5VVPsod04HhKTtIHOLqCwGOMlyfvXCcfcYtXAd05//mXXnj+9Nr9O79lig
+         Gmg5K5MyoBIiiK++bUONSQhbZz3DX0telXDWdsqeEvvcmoILrHlY/SnhCJIMArT17mfw
+         Rf3FgbdozoaaWJpGB9uqw7ZTRP2fGpvxNJCXU52ayjvkDrIsZAC3ZDEurBGTgXoxpL4I
+         2nTC1uKgB/j8/gZ5YLYOkzCNzufavMKERpimxZM9fsOm3Zqt4weTSFvTBDax4QRTAziy
+         xivw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZMZSesP5yzJziVUDR23hWsW+wrdDKjDsymbEjLFqlsQ=;
+        b=pNsY2mFodD2LeRnMlanKT0HMO9EMo2CMsP3hkPzQ/PV73wOVCaXNeqffivTlo/Qjm4
+         6LHdztjWCxMqExzsiKCvqcx9TVWB7//MB06fwiEO+4/IiPU5qla1s6TrRymj533R02jn
+         HAowrkrC2bCUeC7F0VbgTJXByPCT3c2HCiF4wCZIx9tmV/Ptd/dok4ngS8QxgLT+xpRg
+         mbVBdsy4E2kzGLZHD/RguT984Pwk4oI0y+vEJc9mrlGIXxq/llCxigalDqGyEdEXedyc
+         CL6FK4VH+jL8LKpr6nNUKDxL8mp4QaL0Dll8n+kIsCg95GxnmC3qycwcIHeWzE/qjOZT
+         d3yA==
+X-Gm-Message-State: AOAM5315XcLBk7geYmV12EB8A8JnsbRTNm2p5oDBU7d3s+AGtHtUtwjl
+        TwxsH26jqF9zuJbEXEPoZsGc+HA+9fzBtT6fG1U=
+X-Google-Smtp-Source: ABdhPJxlD8cvv3MGdWdeGBFCofqNyFiyRzL6aLDFdKQMT546vAVCQ0J4+sbcoOKuURBKl4JSRx8EFeWSlvxap8nxl8c=
+X-Received: by 2002:a25:6ad6:: with SMTP id f205mr5654937ybc.76.1597315109361;
+ Thu, 13 Aug 2020 03:38:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdV4Tp=kz57pAJk0u5hVpbiEdVzTWDvK+F1AZ5TjGmLbMQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 13 Aug 2020 11:38:03 +0100
+Message-ID: <CA+V-a8svAuDx51vuTCH4w5g0oF9qf8sWAEjMDMm+0+9u-UQhQw@mail.gmail.com>
+Subject: Re: [PATCH 1/9] dt-bindings: display: renesas,du: Document r8a774e1 bindings
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Geert,
 
-On 12/08/20 22:36, Rob Herring wrote:
-> Clean-up incorrect indentation, extra spaces, long lines, and missing
-> EOF newline in schema files. Most of the clean-ups are for list
-> indentation which should always be 2 spaces more than the preceding
-> keyword.
-> 
-> Found with yamllint (which I plan to integrate into the checks).
+Thank you for the review.
 
-[...]
+On Thu, Aug 13, 2020 at 10:05 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar, Laurent, Kieran,
+>
+> On Wed, Aug 12, 2020 at 4:02 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > Document the RZ/G2H (a.k.a. r8a774e1) SoC in the R-Car DU bindings.
+> >
+> > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > index 51cd4d162770..67cded5ad827 100644
+> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > @@ -10,6 +10,7 @@ Required Properties:
+> >      - "renesas,du-r8a774a1" for R8A774A1 (RZ/G2M) compatible DU
+> >      - "renesas,du-r8a774b1" for R8A774B1 (RZ/G2N) compatible DU
+> >      - "renesas,du-r8a774c0" for R8A774C0 (RZ/G2E) compatible DU
+> > +    - "renesas,du-r8a774e1" for R8A774E1 (RZ/G2H) compatible DU
+> >      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+> >      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+> >      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> > @@ -75,6 +76,7 @@ corresponding to each DU output.
+> >   R8A774A1 (RZ/G2M)      DPAD 0         HDMI 0         LVDS 0         -
+> >   R8A774B1 (RZ/G2N)      DPAD 0         HDMI 0         LVDS 0         -
+> >   R8A774C0 (RZ/G2E)      DPAD 0         LVDS 0         LVDS 1         -
+> > + R8A774E1 (RZ/G2H)      DPAD 0         HDMI 0         LVDS 0         -
+>
+> As LVDS 0 is the fourth channel (DU3), should it be listed under port 3
+> instead of port 2?
+>
+> I know we did it the same for R-Car M3-N and RZ/G2N.
+> But my main worry is adding support for R-Car H3-N later.
+>
+I do agree too, with the below diff I tested the LVDS output on RZ/G2N
+Rev2 board and things work fine. But only thing it doesn't explain is
+why does LVDS work on DU2 for G2[H/N] boards :D
 
-> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-> index 3d4e1685cc55..28c6461b9a9a 100644
-> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
-> @@ -95,10 +95,10 @@ allOf:
->        # Devices without builtin crystal
->        properties:
->          clock-names:
-> -            minItems: 1
-> -            maxItems: 2
-> -            items:
-> -              enum: [ xin, clkin ]
-> +          minItems: 1
-> +          maxItems: 2
-> +          items:
-> +            enum: [ xin, clkin ]
->          clocks:
->            minItems: 1
->            maxItems: 2
+Geert, Laurent, Kieran If you agree with the below changes I shall
+post a proper patch fixing it for RZ/G2[HN]
 
-Thanks for noticing, LGTM.
+diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+index d661724fc28a..0b087d287202 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
+@@ -2540,8 +2540,8 @@
+                                                remote-endpoint =
+<&dw_hdmi0_in>;
+                                        };
+                                };
+-                               port@2 {
+-                                       reg = <2>;
++                               port@3 {
++                                       reg = <3>;
+                                        du_out_lvds0: endpoint {
+                                                remote-endpoint = <&lvds0_in>;
+                                        };
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+index 3e67cf70f040..419d81c7763e 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+@@ -153,7 +153,7 @@ static const struct rcar_du_device_info
+rcar_du_r8a774b1_info = {
+                },
+                [RCAR_DU_OUTPUT_LVDS0] = {
+                        .possible_crtcs = BIT(0),
+-                       .port = 2,
++                       .port = 3,
+                },
+        },
+        .num_lvds = 1,
 
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
-> index d7dac16a3960..36dc7b56a453 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
-> @@ -33,8 +33,8 @@ properties:
->      $ref: /schemas/types.yaml#/definitions/uint32
->  
->    touchscreen-min-pressure:
-> -    description: minimum pressure on the touchscreen to be achieved in order for the
-> -                 touchscreen driver to report a touch event.
-> +    description: minimum pressure on the touchscreen to be achieved in order
-> +      for the touchscreen driver to report a touch event.
-
-Out of personal taste, I find the original layout more pleasant and
-readable. This third option is also good, especially for long descriptions:
-
-  description:
-    minimum pressure on the touchscreen to be achieved in order for the
-    touchscreen driver to report a touch event.
-
-At first glance yamllint seems to support exactly these two by default:
-
-> With indentation: {spaces: 4, check-multi-line-strings: true}
-> 
-> the following code snippet would PASS:
-> 
-> Blaise Pascal:
->     Je vous écris une longue lettre parce que
->     je n'ai pas le temps d'en écrire une courte.
-> 
-> the following code snippet would PASS:
-> 
-> Blaise Pascal: Je vous écris une longue lettre parce que
->                je n'ai pas le temps d'en écrire une courte.
-> 
-> the following code snippet would FAIL:
-> 
-> Blaise Pascal: Je vous écris une longue lettre parce que
->   je n'ai pas le temps d'en écrire une courte.
-> 
-(https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.indentation)
+Cheers,
+Prabhakar
 
 
--- 
-Luca
-
+> >   R8A7779 (R-Car H1)     DPAD 0         DPAD 1         -              -
+> >   R8A7790 (R-Car H2)     DPAD 0         LVDS 0         LVDS 1         -
+> >   R8A7791 (R-Car M2-W)   DPAD 0         LVDS 0         -              -
+>
+> Apart from that:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> {oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
