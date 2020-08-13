@@ -2,121 +2,95 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11EDC433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 16:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1267C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 16:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8282078D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 16:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27F420774
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 16:55:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoW/ZUUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgHMQGc (ORCPT
+        id S1726174AbgHMQzJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 12:06:32 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58407 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgHMQGb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 12:06:31 -0400
-IronPort-SDR: BDSThFSJU/6IJdMf85KaGH4BvM6pLmud/YhRwfGxrw61Mdk9cR1QB2ebYL+AEdBzsRR31MAFc+
- Te88E0ojgR0w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="133778947"
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="133778947"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 09:06:30 -0700
-IronPort-SDR: trsjl8VS3wBXiAnbGFjfz8TtplCrLWq48FhsSh4GC4iqHWVYT6cF6sPxOn9lTKjl0BZf6gjboZ
- 9aw8jE/ffUkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,308,1592895600"; 
-   d="scan'208";a="439824515"
-Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
-  by orsmga004.jf.intel.com with ESMTP; 13 Aug 2020 09:06:28 -0700
-From:   vineetha.g.jaya.kumaran@intel.com
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com,
-        andriy.shevchenko@intel.com, lakshmi.bai.raja.subramanian@intel.com
-Subject: [PATCH v3 2/2] dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
-Date:   Fri, 14 Aug 2020 00:04:06 +0800
-Message-Id: <1597334646-21087-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1597334646-21087-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-References: <1597334646-21087-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Thu, 13 Aug 2020 12:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHMQzI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 12:55:08 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6385EC061757;
+        Thu, 13 Aug 2020 09:55:08 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t6so3037499pjr.0;
+        Thu, 13 Aug 2020 09:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=o2XD1ciiB6iwDPUOkRnbFCRHBk6RWiKB7lZfaPUZ4wI=;
+        b=eoW/ZUUe+BSnLxPURAXSBeAAFZ6CRNXvj2/WrdFHl7vkZuHNs35rkY4Ks+gvo+cHJY
+         SeLycLwcuO4emt/PdyKZuVMigNpIynJ3u23d8qsGamSBRCOnPdvCu4g1D8HgBGjsiOpn
+         +LtpwK/rKLUB3Y1pqRMMTvFIq6qCJ0PyolVI0A8OgGucDdVrfwL07x6MI1MWiEXnjt2t
+         z6OjhpTc9082zdbIOMaxPSPNa0beiN9GY5MlS6jwFuIrZGBvhdxCzpysHqyLhwejJH20
+         ERczqSzee2Krfev+lpaF8hv+0bpQzehK0ol4FFBSJxa6a3iGcvVAvycnWqsSxYgdgu+l
+         HZGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o2XD1ciiB6iwDPUOkRnbFCRHBk6RWiKB7lZfaPUZ4wI=;
+        b=dmDkDR/CKudNUGkPWiGigm8LukeFfT+dX6QhR0/uuI+GQiXPsRPwpjJGxixEoXqOer
+         kPeYlV1e93f/4AX/MNIoE+UePCRlf/X6spdQgkoX1EO2nB109I+uoWg1PaJYJY2klepF
+         7R+jddivDBBTpHFa3NNOBfPbWwsuunIOjUTQhrNzzLLhsFMC5ZazE4R2/un9pJS+0yTL
+         QHmq+P3UsEwKnM+2cyCtLpZNSSWURSQ+jwZCzDypWZRJLpUhhToumJbw18/ygijIzdwE
+         LJUQ0+wED5UlserDNdjlZs7qXbQ4gNJrHdfC/enAa/PeBdupN7+9hNSJG7lILJjseDBe
+         QQuQ==
+X-Gm-Message-State: AOAM531y09BiFWAsPINv2r7RyMlVtKwSsJFzNDT9WowIqRPLsgGw0gOk
+        UNgHr8ezLj90BYYl3Pv7xIhaTcoP
+X-Google-Smtp-Source: ABdhPJxMPkV5VaA7NGqB+TNKD/dPV9Kt5tDjT2CQpuPqGmqILmIhYxPCXILWSF7FzGTNXpwLYPKQXg==
+X-Received: by 2002:a17:902:7b89:: with SMTP id w9mr4704147pll.175.1597337707472;
+        Thu, 13 Aug 2020 09:55:07 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j13sm6387086pfn.166.2020.08.13.09.55.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Aug 2020 09:55:06 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 01/14] mips: dts: brcm: allow including header files
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200812063129.361862-1-noltari@gmail.com>
+ <20200812063129.361862-2-noltari@gmail.com>
+Message-ID: <9db7f3b8-286e-6ca4-b0c0-0392a366c3ba@gmail.com>
+Date:   Thu, 13 Aug 2020 09:55:04 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
+MIME-Version: 1.0
+In-Reply-To: <20200812063129.361862-2-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
-Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
----
- .../devicetree/bindings/pwm/intel,keembay-pwm.yaml | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+On 8/11/2020 11:31 PM, Álvaro Fernández Rojas wrote:
+> Change /include/ with #include in order to be able to include header files
+> from dt-bindings.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-new file mode 100644
-index 00000000..a374334
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 Intel Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/intel,keembay-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Keem Bay PWM Device Tree Bindings
-+
-+maintainers:
-+  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - intel,keembay-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+required:
-+ - compatible
-+ - reg
-+ - clocks
-+ - '#pwm-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #define KEEM_BAY_A53_GPIO
-+
-+    pwm@203200a0 {
-+      compatible = "intel,keembay-pwm";
-+      reg = <0x203200a0 0xe8>;
-+      clocks = <&scmi_clk KEEM_BAY_A53_GPIO>;
-+      #pwm-cells = <2>;
-+    };
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-1.9.1
-
+Florian
