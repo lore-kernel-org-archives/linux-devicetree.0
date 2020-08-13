@@ -5,92 +5,184 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF17C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 17:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6801C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A1020716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 17:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F4F20774
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 18:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+x3NSPq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="scDYOzoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgHMRZD (ORCPT
+        id S1726249AbgHMSCv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 13:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41306 "EHLO
+        Thu, 13 Aug 2020 14:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgHMRZD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 13:25:03 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EEAC061757;
-        Thu, 13 Aug 2020 10:25:00 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id v22so4805843edy.0;
-        Thu, 13 Aug 2020 10:25:00 -0700 (PDT)
+        with ESMTP id S1726167AbgHMSCu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 14:02:50 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D61C061757;
+        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id g19so7131350ejc.9;
+        Thu, 13 Aug 2020 11:02:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=rSB8VVTvzJbQ2bhhJZj7hUI5mv93QDUUshAlmirOUtA=;
-        b=c+x3NSPqjwWvDSgs3rLRPS/myd6Ky3FgX8yuOwAPAlleEeiEqEEE2tzOl7fzjJdE0s
-         ssTQzwyAAb/RTFFgEMmqaFKMCO0NUfqOd8PyxwW1BGvOkxKw1Xg/BMarEPevtrCgoTjG
-         9xLki6fJBLkST2VXBNEGooWW+HkDoBg8z12yDZ1/oy2hhxZxLGfIM1fNzAW6u0l/lY1q
-         E8fjSh7idIZSivlQ+rotSlpY9Noh2AV1JD9muDoBsHv96F6rNVy8Z0w7jDj2tLxezKnl
-         Lc7kCFAO+/F7qi8rXbXyeOKPKAeFrrMZrVms4BW5RfUB9R51Tasq78gG82x/UEhPBUqK
-         YYHA==
+        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
+        b=scDYOzozLAVzFpo2tbfIot2rR9/9IltAD0tuAFuZ7Q71nxeQbbQNCj22+aLiCqCYPQ
+         InGoDHYkp1iGqDUMlAuLtnqGrF2877ip1R9rbaQtVY7ZEHNotMQOeppIeqM/PtfskRMU
+         KvVpOm/lImRYi24xXHTpTqfuFjxCnrXVmFy36Hxa5+6bg5DIFQn4EIKo2SFkDYS3cFR0
+         IlgXGiudJyvnzZqs9lkCGMFd2GHvaVbMNAzKHXl7FxW5q1b5y5IH+w2iRy3ZVWO+xnx4
+         nm6tNRw9wlSmmNKr1mgK7BhWW7ucPcSE5m2hYkdNbbQ+i6zy5zNkZ6zEhSyYA2YD0fhe
+         BoHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rSB8VVTvzJbQ2bhhJZj7hUI5mv93QDUUshAlmirOUtA=;
-        b=gul+f4AcuZYSeeBTQoRXsam7OkdEeALQoUbnKSkp5hrpAx7Fvi4uuDMmfpqFRSCYmm
-         3RlXfPvUOdJ/7ikC+sIlp0tCUQ85MhZgxfG+52DDPSkGGj+Z7WANY200ZAYJPfOMsM2h
-         od/aLJN/Kj0aIFr4dm+OF1m1GRp0wbg+nUPODcAUEhMTJ+6es9eqOxoChEdj/iJVy3Kl
-         Acu2dAmoM/4VpoD+GLBb3mSbtuO9s4l87viXDQdAaFk80+bZXneeUu5ymCLx3poVa48h
-         Pb63fKLBLxF7KctFK4K1eqZOAGf3HhuIXIVUNLR1zEcXWG+3BSG9l8tFQ3idmTZAHYfA
-         i9Qg==
-X-Gm-Message-State: AOAM530yVNIHqHwZrDN9ZVGWY5MIsvuPrAyX2cimNXslka9QfpvVSLRI
-        davbxWFVzJq/nhLj8jTcdvA=
-X-Google-Smtp-Source: ABdhPJwUpMviHhcDaq2Pfp/b+cSasXXDYlD4c2EJfbiFFCF9FcIzkMU6r1RZW7EUcBCrymI+g2F1TQ==
-X-Received: by 2002:aa7:cdc4:: with SMTP id h4mr5532080edw.252.1597339499335;
-        Thu, 13 Aug 2020 10:24:59 -0700 (PDT)
+        bh=k+X7I3Dm91g0VsSZVIvYnQK6r71BRXtlbeCFbFsrk64=;
+        b=cz4Agg23y1egc/4VYvSCljm7v2PzW5ebxhZbLCPKwHxmwRoMPN6q6A8KhzUj54UJpj
+         q91ZD4kpzYnfiD8Bj7fLF97/mWfWTdEUa9aijmchyeWWgZdUn+7x7+dRgNtqq6OLMY66
+         2RyQnV2hr02H8/u7OFuHKlW8xoRcWLY00hrhD7m8pegxGlOcTDETMIed+1dcLESILdii
+         X55wO8MDJv3g2oObO35Zud4l/vHXNQfSoyfUtMlCSKRgAY11vqlUFosl8rwmFWn4GO2c
+         aROPsJ3vzIhDY7tKefCdcrpIvjSMAK/AJ2EKQiS3Z22g6dU9N9gCGjvFGNHROojM/MJX
+         erKA==
+X-Gm-Message-State: AOAM533gUpEm55gVwg4+HWmsyUjn/pxitYnUYjYFUTMQnMHlepSsaPAC
+        7ccBxjRih+qUelJQGzi2q30=
+X-Google-Smtp-Source: ABdhPJxM58xedodB7DOsuuj57AwE9aKU+sUl+gC9XA4qMAErBNxt/zB0UcR4VAT9G/tRXl9btm+U4Q==
+X-Received: by 2002:a17:906:7f0e:: with SMTP id d14mr5917864ejr.400.1597341768898;
+        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
 Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u4sm4369408edy.18.2020.08.13.10.24.58
+        by smtp.gmail.com with ESMTPSA id ci27sm5131051ejc.23.2020.08.13.11.02.47
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Aug 2020 10:24:58 -0700 (PDT)
+        Thu, 13 Aug 2020 11:02:48 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: rockchip: rk3066a: add label to cpu@1
-Date:   Thu, 13 Aug 2020 19:24:50 +0200
-Message-Id: <20200813172451.13754-1-jbx6244@gmail.com>
+Subject: [PATCH] ARM: dts: rockchip: update cpu supplies on rk3288
+Date:   Thu, 13 Aug 2020 20:02:41 +0200
+Message-Id: <20200813180241.14660-1-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add label to cpu@1 for later use.
+The use of cpu0-supply for cpu0 alone is deprecated,
+so add cpu-supply to each cpu separately and
+update all existing rk3288 boards that use this property.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm/boot/dts/rk3066a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288-miqi.dts     | 14 +++++++++++++-
+ arch/arm/boot/dts/rk3288-popmetal.dts | 14 +++++++++++++-
+ arch/arm/boot/dts/rk3288-r89.dts      | 14 +++++++++++++-
+ arch/arm/boot/dts/rk3288-vyasa.dts    | 14 +++++++++++++-
+ 4 files changed, 52 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index b599394d1..252750c97 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -36,7 +36,7 @@
- 			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 		};
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			next-level-cache = <&L2>;
+diff --git a/arch/arm/boot/dts/rk3288-miqi.dts b/arch/arm/boot/dts/rk3288-miqi.dts
+index 213c9eb84..8a3992105 100644
+--- a/arch/arm/boot/dts/rk3288-miqi.dts
++++ b/arch/arm/boot/dts/rk3288-miqi.dts
+@@ -81,7 +81,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &emmc {
+diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
+index 6a5194039..160ed8b93 100644
+--- a/arch/arm/boot/dts/rk3288-popmetal.dts
++++ b/arch/arm/boot/dts/rk3288-popmetal.dts
+@@ -103,7 +103,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &emmc {
+diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
+index a258c7ae5..e5ba901c7 100644
+--- a/arch/arm/boot/dts/rk3288-r89.dts
++++ b/arch/arm/boot/dts/rk3288-r89.dts
+@@ -91,7 +91,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &gmac {
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index 1a20854a1..aa50f8ed4 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -125,7 +125,19 @@
+ };
+ 
+ &cpu0 {
+-	cpu0-supply = <&vdd_cpu>;
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
+ };
+ 
+ &emmc {
 -- 
 2.11.0
 
