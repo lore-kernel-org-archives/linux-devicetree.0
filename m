@@ -2,332 +2,172 @@ Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA621C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224CFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 22:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B8720716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 21:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050BF20771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 22:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgHMVvx (ORCPT
+        id S1726467AbgHMWCd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 17:51:53 -0400
-Received: from mga14.intel.com ([192.55.52.115]:13808 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgHMVvw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 17:51:52 -0400
-IronPort-SDR: PrCdGF8eZiwnwjhu74zgspZ8TxEmf1ZU9eLgYNY5onCjFwbejv3cagDcL6Pb6M5bgsntFv8Ja2
- Y+guZEYGyHkw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9712"; a="153553388"
-X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
-   d="scan'208";a="153553388"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2020 14:51:44 -0700
-IronPort-SDR: WHiAJcC6V5/1UKgPBNm0v5NhI153Z8EbLUzGeX58DO/Ia0vOUPNtJ7oJvft4+6j9L4kYxr4jmQ
- JCZASHaczk1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,309,1592895600"; 
-   d="scan'208";a="327699273"
-Received: from chenghao-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.42.17])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Aug 2020 14:51:42 -0700
-Date:   Fri, 14 Aug 2020 00:51:41 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Masahisa Kojima <masahisa.kojima@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ardb@kernel.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
-Subject: Re: [PATCH v5 1/2] tpm: tis: add support for MMIO TPM on SynQuacer
-Message-ID: <20200813215141.GB5941@linux.intel.com>
-References: <20200728031433.3370-1-masahisa.kojima@linaro.org>
- <20200728031433.3370-2-masahisa.kojima@linaro.org>
+        Thu, 13 Aug 2020 18:02:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgHMWCd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 18:02:33 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD3EC061757;
+        Thu, 13 Aug 2020 15:02:33 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id DA3A9634C87;
+        Fri, 14 Aug 2020 01:01:47 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1k6LIB-0001jd-Hd; Fri, 14 Aug 2020 01:01:47 +0300
+Date:   Fri, 14 Aug 2020 01:01:47 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, luca@lucaceresoli.net,
+        leonl@leopardimaging.com, robh+dt@kernel.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] media: i2c: imx274: Add IMX274 power on and off
+ sequence
+Message-ID: <20200813220147.GJ840@valkosipuli.retiisi.org.uk>
+References: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
+ <1595264494-2400-3-git-send-email-skomatineni@nvidia.com>
+ <20200731162611.GB6401@valkosipuli.retiisi.org.uk>
+ <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728031433.3370-2-masahisa.kojima@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 12:14:31PM +0900, Masahisa Kojima wrote:
-> When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
-> window that is backed by the SPI command sequencer in the SPI bus
-> controller. This arrangement has the limitation that only byte size
-> accesses are supported, and so we'll need to provide a separate module
-> that take this into account.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
-> ---
->  drivers/char/tpm/Kconfig             |  12 ++
->  drivers/char/tpm/Makefile            |   1 +
->  drivers/char/tpm/tpm_tis_synquacer.c | 208 +++++++++++++++++++++++++++
->  3 files changed, 221 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_tis_synquacer.c
-> 
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index 58b4c573d176..a18c314da211 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
->  	  If you have a H1 secure module running Cr50 firmware on SPI bus,
->  	  say Yes and it will be accessible from within Linux.
->  
-> +config TCG_TIS_SYNQUACER
-> +	tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface (MMIO - SynQuacer)"
-> +	depends on ARCH_SYNQUACER
-> +	select TCG_TIS_CORE
-> +	help
-> +	  If you have a TPM security chip that is compliant with the
-> +	  TCG TIS 1.2 TPM specification (TPM1.2) or the TCG PTP FIFO
-> +	  specification (TPM2.0) say Yes and it will be accessible from
-> +	  within Linux on Socionext SynQuacer platform.
-> +	  To compile this driver as a module, choose  M here;
-> +	  the module will be called tpm_tis_synquacer.
-> +
->  config TCG_TIS_I2C_ATMEL
->  	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
->  	depends on I2C
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 9567e5197f74..84db4fb3a9c9 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -21,6 +21,7 @@ tpm-$(CONFIG_EFI) += eventlog/efi.o
->  tpm-$(CONFIG_OF) += eventlog/of.o
->  obj-$(CONFIG_TCG_TIS_CORE) += tpm_tis_core.o
->  obj-$(CONFIG_TCG_TIS) += tpm_tis.o
-> +obj-$(CONFIG_TCG_TIS_SYNQUACER) += tpm_tis_synquacer.o
->  
->  obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
->  tpm_tis_spi-y := tpm_tis_spi_main.o
-> diff --git a/drivers/char/tpm/tpm_tis_synquacer.c b/drivers/char/tpm/tpm_tis_synquacer.c
-> new file mode 100644
-> index 000000000000..e47bdd272704
-> --- /dev/null
-> +++ b/drivers/char/tpm/tpm_tis_synquacer.c
-> @@ -0,0 +1,208 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Linaro Ltd.
-> + *
-> + * This device driver implements MMIO TPM on SynQuacer Platform.
-> + */
-> +#include <linux/acpi.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/kernel.h>
-> +#include "tpm.h"
-> +#include "tpm_tis_core.h"
-> +
-> +/*
-> + * irq > 0 means: use irq $irq;
-> + * irq = 0 means: autoprobe for an irq;
-> + * irq = -1 means: no irq support
-> + */
-> +struct tpm_tis_synquacer_info {
-> +	struct resource res;
-> +	int irq;
-> +};
-> +
-> +struct tpm_tis_synquacer_phy {
-> +	struct tpm_tis_data priv;
-> +	void __iomem *iobase;
-> +};
-> +
-> +static inline struct tpm_tis_synquacer_phy *to_tpm_tis_tcg_phy(struct tpm_tis_data *data)
-> +{
-> +	return container_of(data, struct tpm_tis_synquacer_phy, priv);
-> +}
-> +
-> +static int tpm_tis_synquacer_read_bytes(struct tpm_tis_data *data, u32 addr,
-> +					u16 len, u8 *result)
-> +{
-> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> +
-> +	while (len--)
-> +		*result++ = ioread8(phy->iobase + addr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tpm_tis_synquacer_write_bytes(struct tpm_tis_data *data, u32 addr,
-> +					 u16 len, const u8 *value)
-> +{
-> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> +
-> +	while (len--)
-> +		iowrite8(*value++, phy->iobase + addr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tpm_tis_synquacer_read16_bw(struct tpm_tis_data *data,
-> +				       u32 addr, u16 *result)
-> +{
-> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> +
-> +	/*
-> +	 * Due to the limitation of SPI controller on SynQuacer,
-> +	 * 16/32 bits access must be done in byte-wise and descending order.
-> +	 */
-> +	*result = (ioread8(phy->iobase + addr + 1) << 8) |
-> +		  (ioread8(phy->iobase + addr));
-> +
-> +	return 0;
-> +}
-> +
-> +static int tpm_tis_synquacer_read32_bw(struct tpm_tis_data *data,
-> +				       u32 addr, u32 *result)
-> +{
-> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> +
-> +	/*
-> +	 * Due to the limitation of SPI controller on SynQuacer,
-> +	 * 16/32 bits access must be done in byte-wise and descending order.
-> +	 */
-> +	*result = (ioread8(phy->iobase + addr + 3) << 24) |
-> +		  (ioread8(phy->iobase + addr + 2) << 16) |
-> +		  (ioread8(phy->iobase + addr + 1) << 8) |
-> +		  (ioread8(phy->iobase + addr));
-> +
-> +	return 0;
-> +}
-> +
-> +static int tpm_tis_synquacer_write32_bw(struct tpm_tis_data *data,
-> +					u32 addr, u32 value)
-> +{
-> +	struct tpm_tis_synquacer_phy *phy = to_tpm_tis_tcg_phy(data);
-> +
-> +	/*
-> +	 * Due to the limitation of SPI controller on SynQuacer,
-> +	 * 16/32 bits access must be done in byte-wise and descending order.
-> +	 */
-> +	iowrite8(value >> 24, phy->iobase + addr + 3);
-> +	iowrite8(value >> 16, phy->iobase + addr + 2);
-> +	iowrite8(value >> 8, phy->iobase + addr + 1);
-> +	iowrite8(value, phy->iobase + addr);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct tpm_tis_phy_ops tpm_tcg_bw = {
-> +	.read_bytes	= tpm_tis_synquacer_read_bytes,
-> +	.write_bytes	= tpm_tis_synquacer_write_bytes,
-> +	.read16		= tpm_tis_synquacer_read16_bw,
-> +	.read32		= tpm_tis_synquacer_read32_bw,
-> +	.write32	= tpm_tis_synquacer_write32_bw,
-> +};
-> +
-> +static int tpm_tis_synquacer_init(struct device *dev,
-> +				  struct tpm_tis_synquacer_info *tpm_info)
-> +{
-> +	struct tpm_tis_synquacer_phy *phy;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(struct tpm_tis_synquacer_phy), GFP_KERNEL);
-> +	if (phy == NULL)
-> +		return -ENOMEM;
-> +
-> +	phy->iobase = devm_ioremap_resource(dev, &tpm_info->res);
-> +	if (IS_ERR(phy->iobase))
-> +		return PTR_ERR(phy->iobase);
-> +
-> +	return tpm_tis_core_init(dev, &phy->priv, tpm_info->irq, &tpm_tcg_bw,
-> +				 ACPI_HANDLE(dev));
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(tpm_tis_synquacer_pm, tpm_pm_suspend, tpm_tis_resume);
-> +
-> +static int tpm_tis_synquacer_probe(struct platform_device *pdev)
-> +{
-> +	struct tpm_tis_synquacer_info tpm_info = {};
-> +	struct resource *res;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (res == NULL) {
-> +		dev_err(&pdev->dev, "no memory resource defined\n");
-> +		return -ENODEV;
-> +	}
-> +	tpm_info.res = *res;
-> +
-> +	tpm_info.irq = -1;
-> +
-> +	return tpm_tis_synquacer_init(&pdev->dev, &tpm_info);
-> +}
-> +
-> +static int tpm_tis_synquacer_remove(struct platform_device *pdev)
-> +{
-> +	struct tpm_chip *chip = dev_get_drvdata(&pdev->dev);
-> +
-> +	tpm_chip_unregister(chip);
-> +	tpm_tis_remove(chip);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id tis_synquacer_of_platform_match[] = {
-> +	{.compatible = "socionext,synquacer-tpm-mmio"},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, tis_synquacer_of_platform_match);
-> +#endif
-> +
-> +#ifdef CONFIG_ACPI
-> +static const struct acpi_device_id tpm_synquacer_acpi_tbl[] = {
-> +	{ "SCX0009" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, tpm_synquacer_acpi_tbl);
-> +#endif
-> +
-> +static struct platform_driver tis_synquacer_drv = {
-> +	.probe = tpm_tis_synquacer_probe,
-> +	.remove = tpm_tis_synquacer_remove,
-> +	.driver = {
-> +		.name		= "tpm_tis_synquacer",
-> +		.pm		= &tpm_tis_synquacer_pm,
-> +		.of_match_table = of_match_ptr(tis_synquacer_of_platform_match),
-> +		.acpi_match_table = ACPI_PTR(tpm_synquacer_acpi_tbl),
-> +	},
-> +};
-> +
-> +static int __init tpm_tis_synquacer_module_init(void)
-> +{
-> +	int rc;
-> +
-> +	rc = platform_driver_register(&tis_synquacer_drv);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit tpm_tis_synquacer_module_exit(void)
-> +{
-> +	platform_driver_unregister(&tis_synquacer_drv);
-> +}
-> +
-> +module_init(tpm_tis_synquacer_module_init);
-> +module_exit(tpm_tis_synquacer_module_exit);
-> +MODULE_DESCRIPTION("TPM MMIO Driver for Socionext SynQuacer platform");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.20.1
-> 
+Hi Sowjanya,
 
-I find this appropriate now. I cannot test it in run-time but since it
-cannot break anything else in the TPM stack, it has no risk of causing
-issues to the Linux ecosystem at large.
+On Fri, Jul 31, 2020 at 09:34:15AM -0700, Sowjanya Komatineni wrote:
+> 
+> On 7/31/20 9:26 AM, Sakari Ailus wrote:
+> > Hi Sowjanya,
+> > 
+> > Thanks for the patch.
+> > 
+> > On Mon, Jul 20, 2020 at 10:01:34AM -0700, Sowjanya Komatineni wrote:
+> > > IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
+> > > and VDDL digital io 1.2V supply which are optional based on camera
+> > > module design.
+> > > 
+> > > IMX274 also need external 24Mhz clock and is optional based on
+> > > camera module design.
+> > The sensor appears to be able to use other frequencies, too. Could you
+> > check in the driver the frequency is correct? This should be found in DT
+> > bindings, too.
+> 
+> External input clock is not in DT. So added it as part of this series.
+> 
+> We are mostly using 24Mhz I/P with IMX274 on designs we have and also on
+> leopard module which has onboard XTAL for 24Mhz
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Yes. This information still should be found in DT as the xtal isn't part of
+the sensor.
 
-/Jarkko
+> 
+> > > This patch adds support for IMX274 power on and off to enable and
+> > > disable these supplies and external clock.
+> > > 
+> > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > > ---
+> > >   drivers/media/i2c/imx274.c | 132 +++++++++++++++++++++++++++++++++++++++++++--
+> > >   1 file changed, 129 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
+> > > index 55869ff..7157b1d 100644
+> > > --- a/drivers/media/i2c/imx274.c
+> > > +++ b/drivers/media/i2c/imx274.c
+> > > @@ -19,6 +19,7 @@
+> > >   #include <linux/module.h>
+> > >   #include <linux/of_gpio.h>
+> > >   #include <linux/regmap.h>
+> > > +#include <linux/regulator/consumer.h>
+> > >   #include <linux/slab.h>
+> > >   #include <linux/v4l2-mediabus.h>
+> > >   #include <linux/videodev2.h>
+> > > @@ -131,6 +132,15 @@
+> > >   #define IMX274_TABLE_WAIT_MS			0
+> > >   #define IMX274_TABLE_END			1
+> > > +/* regulator supplies */
+> > > +static const char * const imx274_supply_names[] = {
+> > > +	"VDDL",  /* IF (1.2V) supply */
+> > > +	"VDIG",  /* Digital Core (1.8V) supply */
+> > > +	"VANA",  /* Analog (2.8V) supply */
+> > > +};
+> > > +
+> > > +#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
+> > Please use ARRAY_SIZE() directly.
+> > 
+> > > +
+> > >   /*
+> > >    * imx274 I2C operation related structure
+> > >    */
+> > > @@ -501,6 +511,8 @@ struct imx274_ctrls {
+> > >    * @frame_rate: V4L2 frame rate structure
+> > >    * @regmap: Pointer to regmap structure
+> > >    * @reset_gpio: Pointer to reset gpio
+> > > + * @supplies: imx274 analog and digital supplies
+> > > + * @inck: input clock to imx274
+> > >    * @lock: Mutex structure
+> > >    * @mode: Parameters for the selected readout mode
+> > >    */
+> > > @@ -514,6 +526,8 @@ struct stimx274 {
+> > >   	struct v4l2_fract frame_interval;
+> > >   	struct regmap *regmap;
+> > >   	struct gpio_desc *reset_gpio;
+> > > +	struct regulator *supplies[IMX274_NUM_SUPPLIES];
+> > > +	struct clk *inck;
+> > >   	struct mutex lock; /* mutex lock for operations */
+> > >   	const struct imx274_mode *mode;
+> > >   };
+> > > @@ -767,6 +781,99 @@ static void imx274_reset(struct stimx274 *priv, int rst)
+> > >   	usleep_range(IMX274_RESET_DELAY1, IMX274_RESET_DELAY2);
+> > >   }
+> > > +/*
+> > > + * imx274_power_on - Function called to power on the sensor
+> > > + * @imx274: Pointer to device structure
+> > > + */
+> > > +static int imx274_power_on(struct device *dev)
+> > > +{
+> > > +	struct i2c_client *client = to_i2c_client(dev);
+> > > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > > +	struct stimx274 *imx274 = to_imx274(sd);
+> > > +	int i, ret;
+> > > +
+> > > +	ret = clk_prepare_enable(imx274->inck);
+> > > +	if (ret) {
+> > > +		dev_err(&imx274->client->dev,
+> > > +			"Failed to enable input clock: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > Could you use regulator_bulk_enable() instead? Same for disable.
+> 
+> Using regulator_bulk_enable() makes these regulators mandatory.
+
+How? regulator_bulk_enable() simply does call regulator_enable() on all the
+regulators.
+
+-- 
+Sakari Ailus
