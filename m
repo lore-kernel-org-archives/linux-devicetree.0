@@ -5,170 +5,108 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E872C433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCA9C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDA3720885
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBA22065C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O76nyJuh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2JVY4wn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgHNP1e (ORCPT
+        id S1726974AbgHNPrz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46644 "EHLO
+        Fri, 14 Aug 2020 11:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbgHNP1c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 11:27:32 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76C4C061384;
-        Fri, 14 Aug 2020 08:27:31 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id kr4so4565608pjb.2;
-        Fri, 14 Aug 2020 08:27:31 -0700 (PDT)
+        with ESMTP id S1726652AbgHNPry (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 11:47:54 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73319C061384;
+        Fri, 14 Aug 2020 08:47:54 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id c16so10381599ejx.12;
+        Fri, 14 Aug 2020 08:47:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=H3Sj2RA4VzKEVF5wDfAwtb0zeDgeFHLqIYqBkdSYJfs=;
-        b=O76nyJuh6dYc3AfGQiI2e4GIdFCY3x7gmOVCCsTTQV0lAgkJw+1y/MMb5FedAKzsuo
-         aj/CwOywfjMuI8YUACO2TJpCrLKyOhQbe/Wa8j5jqTkaU4ckLZolvTt1GHcpR2QKdxry
-         j/zzN5BU+cbWzQ6Lk7AAcl9CQE49t8MsuQDTQJqSItqVZa2gSO5BGYVfSxIeUXCpQ1xR
-         0KlwM4wclq7JMyAFpH2Pa3zn0ZM4CrUryyzn30NfR6jJhlyMyhKlhHzBOjt8eqQaoLjh
-         e3gnB4ho7UILB7rgWRwLuy7oBJ/FhpprDcMUDGoPhyE9Kt2nhy41OA2NfYNHW2KgSk3q
-         aIOQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tSUWel2LD1uzLrzrGMirAq4Y0+/ttrm/EqnWacwxu/Q=;
+        b=L2JVY4wn3bmai0Fo5r88GmoNsAL9Gv9NjZPPMwuOvHmR+/Mz+jIiEumfYPWTuQSpWV
+         jGEc1zOxWbax8tKIXwOIb5sAO8URKnBKAgFTg4aOrF1t3aLHu88VMfQ9Ixkhu1SBpIai
+         NZ0hB2d/9fitUUiMP8N5hvSecTj7o4JKaq0J7YBtBcn+0Tw1xb4pJKAc/3fHih9K8inJ
+         9cPtdC70+Sxrvo8gmlCQ+6/v0z/KVd/dhh82jYLsEqIqeCzah3iuRSMt1JXl3F+qXeX3
+         av3S9nrOHluDOQcJz0KE32pvSvkilq/sjUV0Lr6cBfHbVyeFnxsHONG5ncP07TODFPe2
+         h7FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=H3Sj2RA4VzKEVF5wDfAwtb0zeDgeFHLqIYqBkdSYJfs=;
-        b=Bs84XP1lrwRV8xJP7RZJduyWFXlNHNHtI9d6pf/bZBEN26kw8hie+6867td7dnI69E
-         EikQzsEWNML0DsxRloya0h+HCjdx2ihxRVoZycSpwsNMLyO0T0Mg0NzslNW8Fd2gGN8y
-         Tq1w4PJ6ibBJvnroX3GdCjEs/wggPhOwPHE8sqDon/Nl1iirjkfTu6DldJwRAcCUmcXD
-         ThQamZ+FuiO2aEOpOjfxDLt2KLnfLdjTtpLhzF84yqGh6w2BdaepF+dheBAKLt9k+dgh
-         IzZglDf8SSkKjLRz7IsDKAzxZPeJNWXOj2g+pvZczXogus6Jp2n6KbC7vzCHp/prPeOl
-         Yoaw==
-X-Gm-Message-State: AOAM533de9J8dAPZbC/BWjozZVzbsFVRuC+b/NTV+UI9FQX4GKB0uS7M
-        3rtglpzSv7nBiP0pEJXXlxmfz14Scuj/nA==
-X-Google-Smtp-Source: ABdhPJy07YWFlf32d911u1V/Z3Dit1CKk0fwAUiZ1rNlw48UgAyEdE/vzK+F1KnB6yLxG345YBvwng==
-X-Received: by 2002:a17:90b:2092:: with SMTP id hb18mr2805438pjb.118.1597418851374;
-        Fri, 14 Aug 2020 08:27:31 -0700 (PDT)
-Received: from localhost.localdomain ([123.110.251.91])
-        by smtp.gmail.com with ESMTPSA id e29sm9746680pfj.92.2020.08.14.08.27.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Aug 2020 08:27:30 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org
-Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/2] regulator: rt4801: Add DT binding documentation
-Date:   Fri, 14 Aug 2020 23:27:04 +0800
-Message-Id: <1597418824-15906-2-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597418824-15906-1-git-send-email-u0084500@gmail.com>
-References: <1597418824-15906-1-git-send-email-u0084500@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tSUWel2LD1uzLrzrGMirAq4Y0+/ttrm/EqnWacwxu/Q=;
+        b=PwtFh9UzJntwDDrf2B39C7gCcBnGGOsC4mw9oEkifGqP//r876d+XKGTlqanQoqrsl
+         b6mTbG9s12Oo2w9IzEzdcVZ/nIFQOmKvi2+SzhmVdO6lvv2uGgA6pdWnb6J5V5VMzIei
+         jYjLY28UazH1kcbfFqvnVXCeLhrMm87qKy7MSGsXKygEpnh4DUvRRCX5vo5ooZyxfQ7f
+         kCiWcOhMc14IEojM4rA3dOldkzwRNwYnq7b97IBVM7XQDhoh340Znht/aOu1jrPM8j7W
+         txtZWR7TNtNGsH7/mSsz33YJoSwcQminb690+c6uvjFZ63Cngroe1k7K6ZU7E9okcm6p
+         1kGA==
+X-Gm-Message-State: AOAM533ChTMjVs2a0oUJ/NEr8+5iDN3mhH1dGMHi15jcctmLVjNBhdMG
+        fEWnHS+GmmjWTHh2PCJe7rI=
+X-Google-Smtp-Source: ABdhPJzXH4+elQwzA7ASy8tfMldGnQqYaAIS+EFDQon3MKoIMj9ZM/a7kqtFnkn7XBY7aRsAcwcM2Q==
+X-Received: by 2002:a17:907:7287:: with SMTP id dt7mr2913733ejc.224.1597420073067;
+        Fri, 14 Aug 2020 08:47:53 -0700 (PDT)
+Received: from localhost.localdomain (abag79.neoplus.adsl.tpnet.pl. [83.6.170.79])
+        by smtp.googlemail.com with ESMTPSA id lc10sm6998252ejb.22.2020.08.14.08.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 08:47:52 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     ~postmarketos/upstreaming@lists.sr.ht
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: kitakami: Temporarily disable SDHCI1
+Date:   Fri, 14 Aug 2020 17:47:49 +0200
+Message-Id: <20200814154749.257837-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+There is an issue with Kitakami eMMCs dying when a quirk
+isn't addressed. Until that happens, disable it.
 
-Add a devicetree binding documentation for the rt4801 regulator driver.
-
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- .../regulator/richtek,rt4801-regulator.yaml        | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+This supersides my previous "mmc: host: msm: Add optional full power cycle property."
+series in which I incorrectly addressed the issue NOT solving the cause.
 
-diff --git a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-new file mode 100644
-index 00000000..28d30e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/richtek,rt4801-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Richtek RT4801 Display Bias regulators
-+
-+maintainers:
-+  - ChiYuan Huang <cy_huang@richtek.com>
-+
-+description: |
-+  Regulator nodes should be named to DSVP and DSVN. The
-+  definition for each of these nodes is defined using the standard
-+  binding for regulators at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+  Datasheet is available at
-+  https://www.richtek.com/assets/product_file/RT4801H/DS4801H-00.pdf
-+
-+#The valid names for RT4801 regulator nodes are:
-+#DSVP, DSVN
-+
-+properties:
-+  compatible:
-+    enum:
-+      - richtek,rt4801
-+
-+  reg:
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: GPIOs to use to enable DSVP/DSVN regulator.
-+      The first one is ENP to enable DSVP, and second one is ENM to enable DSVN.
-+      Number of GPIO in the array list could be 1 or 2.
-+      If only one gpio is specified, only one gpio used to control ENP/ENM.
-+      Else both are spefied, DSVP/DSVN could be controlled individually.
-+      Othersie, this property not specified. treat both as always-on regulator.
-+    minItems: 1
-+    maxItems: 2
-+
-+patternProperties:
-+  "^DSV(P|N)$":
-+    type: object
-+    $ref: regulator.yaml#
-+    description:
-+      Properties for single display bias regulator.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties:
-+  - enable-gpios
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        rt4801@73 {
-+            compatible = "richtek,rt4801";
-+            reg = <0x73>;
-+            enable-gpios = <&gpio26 2 0>, <&gpio26 3 0>;
-+
-+            dsvp: DSVP {
-+                regulator-name = "rt4801,dsvp";
-+                regulator-min-microvolt = <4000000>;
-+                regulator-max-microvolt = <6000000>;
-+                regulator-boot-on;
-+            };
-+            dsvn: DSVN {
-+                regulator-name = "rt4801,dsvn";
-+                regulator-min-microvolt = <4000000>;
-+                regulator-max-microvolt = <6000000>;
-+                regulator-boot-on;
-+            };
-+
-+        };
-+    };
+ arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+index 30cb3aa7d734..5496590dee33 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+@@ -428,7 +428,12 @@ pmi8994_bby: boost-bypass {
+ };
+ 
+ &sdhc1 {
+-	status = "okay";
++	/* There is an issue with the eMMC causing permanent
++	 * damage to the card if a quirk isn't addressed.
++	 * Until it's fixed, disable the MMC so as not to brick
++	 * devices.
++	 */
++	status = "disabled";
+ 
+ 	/* Downstream pushes 2.95V to the sdhci device,
+ 	 * but upstream driver REALLY wants to make vmmc 1.8v
 -- 
-2.7.4
+2.28.0
 
