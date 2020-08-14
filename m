@@ -2,85 +2,128 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC612C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC87C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C446220838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECEE2068E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnog6K1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgHNNgb (ORCPT
+        id S1727870AbgHNNmJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:36:31 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:43810 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbgHNNga (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:36:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id CA88FFB02;
-        Fri, 14 Aug 2020 15:36:27 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2sdFtjjeNwml; Fri, 14 Aug 2020 15:36:24 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 02B6E4576F; Fri, 14 Aug 2020 15:36:23 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Fri, 14 Aug 2020 09:42:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgHNNmE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 09:42:04 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC02C061384;
+        Fri, 14 Aug 2020 06:42:03 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so9969627eje.7;
+        Fri, 14 Aug 2020 06:42:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7cQQ4WDJLZ/zyyhzDTf2NVjGL+CUR2rrNdCZgGLo0+Y=;
+        b=Fnog6K1MdRWWZtiu+ypFiEBOhpVW3EW05Ey5nakDXOk8IAy1f0MCrPzJZuIicFAPcY
+         MACz7l0yLcDjDVizhVO21w0pApYX7bfckrzaUn1vMxqP701Ubo0Bc3gMcLDRmEn3G2m/
+         4ZytHNfqyvZQVEhYiQMmrMbP7YE70dtGemCcsMUgrlJ3dhlyKIudAEqJc+OM4xTVFMhw
+         GOHYkt4Cle7ZWk9waEgvhj6Gbh9EYOSDrYMGFhr3viRptAGiTp+pIJXuhAXE7A2PVgGe
+         bRr6sjqeEJXL4JZqFGD2m490RmEqGZYJbZ61qstdpQBxXgiWtkBozzrxbx+ky8ngWb+f
+         dSJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7cQQ4WDJLZ/zyyhzDTf2NVjGL+CUR2rrNdCZgGLo0+Y=;
+        b=IRFrs2qsv0wLHXpdxhsejCWfCCQTz6dIYrVNb1ZoU1LbfguLWIOpzKLgF3SVBNlO+c
+         GTBNtfggEjQGQr+vHsJ6nj0pQTyCq8aMdMV6HPkwNEwlu8KJBOJz80M7HXcH/RTpChLi
+         sIop98OVgYQVPuptuSJqd7j25NbaM25UyaxOQEbuzqke05Ijm/9SvXW9JzEevlYaX+ct
+         A+Eyt+L/vAqc2Ph12uDClWhW9IDA8FI4RRWXyPH7oMlOUbjUm3Nb0tx9XR307VJPo+Wt
+         Gq81iN8mx6Q7nXaFKUzirPqN8TEz8E8g4yqM3jK6yp34G9CjXBfS9KCZiAZkFFEksszF
+         ypng==
+X-Gm-Message-State: AOAM532yUtXozgGH9JOWa9B5J2xlVf2kkMgOFlOxVQh1Pq/Tp//1lA+n
+        s5PSmInR20Gu4UDToo9IoV0=
+X-Google-Smtp-Source: ABdhPJwmx7QSSyTVXTxqs3pecv1pGcO68Xfu47xoxRvm+0c6cpjsx3ArTyeaxJ2TKDBQiKwMYroClA==
+X-Received: by 2002:a17:906:ca5a:: with SMTP id jx26mr2348450ejb.62.1597412522437;
+        Fri, 14 Aug 2020 06:42:02 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-87-0-192-118.retail.telecomitalia.it. [87.0.192.118])
+        by smtp.googlemail.com with ESMTPSA id s2sm6767118ejd.17.2020.08.14.06.41.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 06:42:01 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: Add mantix vendor prefix
-Date:   Fri, 14 Aug 2020 15:36:21 +0200
-Message-Id: <b5f80625269a03a27828e3e6f22f316806c39d68.1597412076.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597412076.git.agx@sigxcpu.org>
-References: <cover.1597412076.git.agx@sigxcpu.org>
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v6 0/8]  Add support for ipq8064 tsens
+Date:   Fri, 14 Aug 2020 15:41:14 +0200
+Message-Id: <20200814134123.14566-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add prefix for Mantix Display Technology Co.,Ltd.
+This patchset convert msm8960 to reg_filed, use int_common instead 
+of a custom function and fix wrong tsens get_temp function for msm8960.
+Ipq8064 SoCs tsens driver is based on 8960 tsens driver. Ipq8064 needs
+to be registered as a gcc child as the tsens regs on this platform are
+shared with the controller.
+This is based on work and code here
+https://git.linaro.org/people/amit.kucheria/kernel.git/log/?h=wrk3/tsens-8960-breakage
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+v6:
+* Fix spelling error (can't find the problem with variable misallignment)
+* Rework big if-else
+* Remove extra comments
+* Add description about different interrupts
+v5:
+* Conver driver to use reg_fiedl
+* Use init_common 
+* Drop custom set_trip and set_interrupt
+* Use common set_trip and set_interrupt
+* Fix bad get_temp function
+* Add missing hardcoded slope
+v4:
+* Fix compilation error and warning reported by the bot
+v3:
+* Change driver to register as child instead of use phandle
+v2:
+* Fix dt-bindings problems
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 2baee2c817c1a..59d4c8b068c4d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -611,6 +611,8 @@ patternProperties:
-     description: Linux Automation GmbH
-   "^macnica,.*":
-     description: Macnica Americas
-+  "^mantix,.*":
-+    description: Mantix Display Technology Co.,Ltd.
-   "^mapleboard,.*":
-     description: Mapleboard.org
-   "^marvell,.*":
+Ansuel Smith (8):
+  drivers: thermal: tsens: use get_temp for tsens_valid
+  drivers: thermal: tsens: Add VER_0 tsens version
+  drivers: thermal: tsens: Convert msm8960 to reg_field
+  drivers: thermal: tsens: Use init_common for msm8960
+  drivers: thermal: tsens: Fix wrong get_temp for msm8960
+  drivers: thermal: tsens: Change calib_backup name for msm8960
+  drivers: thermal: tsens: Add support for ipq8064-tsens
+  dt-bindings: thermal: tsens: Document ipq8064 bindings
+
+ .../bindings/thermal/qcom-tsens.yaml          |  50 ++++-
+ drivers/thermal/qcom/tsens-8960.c             | 172 +++++++++++-------
+ drivers/thermal/qcom/tsens.c                  | 130 +++++++++++--
+ drivers/thermal/qcom/tsens.h                  |   7 +-
+ 4 files changed, 270 insertions(+), 89 deletions(-)
+
 -- 
-2.26.2
+2.27.0
 
