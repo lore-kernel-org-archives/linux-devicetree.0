@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D85C433E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84D3C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4C82087D
+	by mail.kernel.org (Postfix) with ESMTP id 9EAB0221E2
 	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgHNMKZ (ORCPT
+        id S1728264AbgHNMK0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:10:25 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38512 "EHLO inva020.nxp.com"
+        Fri, 14 Aug 2020 08:10:26 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55312 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728162AbgHNMKC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1728161AbgHNMKC (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 14 Aug 2020 08:10:02 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 28A1D1A0B91;
-        Fri, 14 Aug 2020 14:10:01 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1B0EE1A03F1;
-        Fri, 14 Aug 2020 14:10:01 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5D18D2030E;
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6104D2001AE;
         Fri, 14 Aug 2020 14:10:00 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D20D200DF0;
+        Fri, 14 Aug 2020 14:10:00 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9310C2030E;
+        Fri, 14 Aug 2020 14:09:59 +0200 (CEST)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Mike Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -44,9 +44,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 16/17] arm64: dts: imx8mp: Add media_blk_ctrl node
-Date:   Fri, 14 Aug 2020 15:09:25 +0300
-Message-Id: <1597406966-13740-17-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v2 15/17] arm64: dts: imx8mp: Add audio_blk_ctrl node
+Date:   Fri, 14 Aug 2020 15:09:24 +0300
+Message-Id: <1597406966-13740-16-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
 References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
@@ -56,7 +56,7 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some of the features of the media_ctrl will be used by some
+Some of the features of the audio_ctrl will be used by some
 different drivers in a way those drivers will know best, so adding the
 syscon compatible we allow those to do just that. Only the resets
 and the clocks are registered bit the clk-blk-ctrl driver.
@@ -67,32 +67,32 @@ Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
  1 file changed, 16 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index dede0ae..2d6d213 100644
+index daa1769..dede0ae 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
 @@ -736,6 +736,22 @@
  			};
  		};
  
-+		aips4: bus@32c00000 {
-+			compatible = "simple-bus";
-+			reg = <0x32c00000 0x400000>;
++		aips5: bus@30c00000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			reg = <0x30c00000 0x400000>;
 +			#address-cells = <1>;
 +			#size-cells = <1>;
 +			ranges;
 +
-+			media_blk_ctrl: clock-controller@32ec0000 {
-+				compatible = "fsl,imx8mp-media-blk-ctrl", "syscon";
-+				reg = <0x32ec0000 0x10000>;
++			audio_blk_ctrl: clock-controller@30e20000 {
++				compatible = "fsl,imx8mp-audio-blk-ctrl", "syscon";
++				reg = <0x30e20000 0x50C>;
 +
 +				#clock-cells = <1>;
 +				#reset-cells = <1>;
 +			};
 +		};
 +
- 		aips5: bus@30c00000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			reg = <0x30c00000 0x400000>;
+ 		gic: interrupt-controller@38800000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x38800000 0x10000>,
 -- 
 2.7.4
 
