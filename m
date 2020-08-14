@@ -2,115 +2,123 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A17C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 17:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 18:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBC22177B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 17:57:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jTz58Y+g"
+	by mail.kernel.org (Postfix) with ESMTP id 77F412078D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 18:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597428434;
+	bh=NFHdc3BmdYFhz2nyKu8dvV6vT2C/XFArO5mCzwNmMDQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bvn+YhRnnmMGZC7oys2zNKaBO57g+52ClnVQo3DsFXxHLvjU+QzHIJLEge7PyQ/aR
+	 542sdaP5//Qsd0uEQF5iqIq5J57Cp2cjkMNrIKHO6mhsBoGa7RalrHmL8F0TXDi2Js
+	 N3lP8Kv1qLoOkrWyLCP22ZwR+1Wi99dtnLSF7kWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgHNR46 (ORCPT
+        id S1727838AbgHNSHO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 13:56:58 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:64124 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726782AbgHNR46 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 13:56:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597427818; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=XT+q1w9uiKS96sq/j8DMN65NAPFFypW3SJhmAiivFh4=;
- b=jTz58Y+gviauXalOFfId/qKpMyJrn0jSq3sde/vZUoLtyhPgZso4ybbhqAFHTQ/tk2C08a7A
- evjjqJr5MXJNAuu1wCC/mMqotEg6dNJkH+cxdJt742GS9oJScVfZ4o9b37Lo/s1bMfIZOeew
- heX+CbuulRQ1HEzezqMU8XAmqeQ=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f36d066c85a1092b0a9d129 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 17:56:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CB347C43395; Fri, 14 Aug 2020 17:56:53 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 14 Aug 2020 14:07:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726297AbgHNSHN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 14:07:13 -0400
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EC35C433C9;
-        Fri, 14 Aug 2020 17:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA94720829
+        for <devicetree@vger.kernel.org>; Fri, 14 Aug 2020 18:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597428433;
+        bh=NFHdc3BmdYFhz2nyKu8dvV6vT2C/XFArO5mCzwNmMDQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LmkbNPlxnz2KVY3YlDjhBA55pnVQFQlSw1VT7g0JJYThgl0KHUNHxqblsQSxuMVTm
+         jQMNdT6F/fnJKUXTo6gn145yoYAsEM/zEEB+OQ3/yxmIlo52Wve+fWHgBaZcC+PWCz
+         t0rGc6tECvGfbLPtQXACIs5iWdo5G9wjTap3p0qw=
+Received: by mail-oo1-f52.google.com with SMTP id j19so2099045oor.2
+        for <devicetree@vger.kernel.org>; Fri, 14 Aug 2020 11:07:12 -0700 (PDT)
+X-Gm-Message-State: AOAM533Egeb0vzVlfHyYg91Jva2G0GLzE8BDQFkhA68TDz3IvQ/SFHQr
+        afPfeNRnbsC5fX4jRagvvEQYfXmB1Svo3P5HjA==
+X-Google-Smtp-Source: ABdhPJxmP2s5JfYVm3WEANrKwTUJbyRcbOd7ARe5undwm96kyX2D2gaV83wWWuqAjTXDbKGMvwTgDcWr+VmwZhsA9hE=
+X-Received: by 2002:a4a:330b:: with SMTP id q11mr2519520ooq.50.1597428432155;
+ Fri, 14 Aug 2020 11:07:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Aug 2020 10:56:52 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        robdclark@gmail.com, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org, seanpaul@chromium.org, daniel@ffwll.ch,
-        Guenter Roeck <groeck@chromium.org>,
-        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
-        freedreno@lists.freedesktop.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Subject: Re: [Freedreno] [PATCH v10 2/5] drm/msm/dp: add displayPort driver
- support
-In-Reply-To: <324d61b6-fc26-03ea-f8af-ff74a9767da2@linaro.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-3-tanmay@codeaurora.org>
- <324d61b6-fc26-03ea-f8af-ff74a9767da2@linaro.org>
-Message-ID: <db6a4104ba9fc00edaf5542693ac6bd9@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200814034854.460830-1-nico@fluxnic.net> <20200814034854.460830-2-nico@fluxnic.net>
+In-Reply-To: <20200814034854.460830-2-nico@fluxnic.net>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 14 Aug 2020 12:07:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKTJgo8y1Zq=tyM=tTCXaVdu9o09SBiMNdz-OtXOMkkgg@mail.gmail.com>
+Message-ID: <CAL_JsqKTJgo8y1Zq=tyM=tTCXaVdu9o09SBiMNdz-OtXOMkkgg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: i3c: MIPI I3C Host Controller Interface
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+        Nicolas Pitre <npitre@baylibre.com>,
+        Laura Nixon <laura.nixon@team.mipi.org>,
+        Robert Gough <robert.gough@intel.com>,
+        Matthew Schnoor <matthew.schnoor@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-14 10:12, Dmitry Baryshkov wrote:
-> Hello,
-> 
-> On 12/08/2020 07:42, Tanmay Shah wrote:
->> From: Chandan Uddaraju <chandanu@codeaurora.org>
-> 
-> [skipped]
-> 
->> +		} else if ((dp_parser_check_prefix("ctrl", clk_name) ||
->> +			   dp_parser_check_prefix("stream", clk_name))  &&
->> +			   ctrl_clk_index < ctrl_clk_count) {
->> +			struct dss_clk *clk =
->> +				&ctrl_power->clk_config[ctrl_clk_index];
->> +			strlcpy(clk->clk_name, clk_name, sizeof(clk->clk_name));
->> +			ctrl_clk_index++;
->> +
->> +			if (!strncmp(clk_name, "ctrl_link",
->> +					strlen("ctrl_link")) ||
->> +					!strncmp(clk_name, "stream_pixel",
->> +					strlen("ctrl_pixel")))
-> 
-> This should be "stream_pixel", I believe. I don't like macros, but
-> most probably it would help here. Also function/brace alignment could
-> be better (sorry, it really hides the issue here).
-> 
+On Thu, Aug 13, 2020 at 9:49 PM Nicolas Pitre <nico@fluxnic.net> wrote:
+>
+> From: Nicolas Pitre <npitre@baylibre.com>
+>
+> The MIPI I3C HCI (Host Controller Interface) specification defines
+> a common software driver interface to support compliant MIPI I3C
+> host controller hardware implementations from multiple vendors.
+>
+> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> ---
+>  .../devicetree/bindings/i3c/mipi-i3c-hci.txt      | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt
 
-Thanks for reviews and good catch!! I completely missed it when I 
-renamed "ctrl_pixel".
-Use of "stream_pixel" is very limited. So, instead of macros direct name 
-is used.
-Fixing function and brace alignment sounds good idea insted.
+Bindings should be in schema format now.
 
-> 
+> diff --git a/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt
+> new file mode 100644
+> index 0000000000..8de7d7ac6a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt
+> @@ -0,0 +1,15 @@
+> +MIPI I3C Host Controller Interface
+> +----------------------------------
+> +
+> +Required properties:
+> +- compatible : "mipi-i3c-hci"
 
->> +				clk->type = DSS_CLK_PCLK;
->> +			else
->> +				clk->type = DSS_CLK_AHB;
->> +		}
->> +	}
+A register interface (or protocol) spec is never complete enough to
+capture all the details about a specific h/w implementation. One just
+has to go look at AHCI, EHCI, OHCI, XHCI, UFS, 8250, etc. bindings.
+Let's not start with pretending that here. Fine for this to be a
+fallback, but it must have a compatible for a specific implementation.
+
+Also, which version of the spec does this compatible correspond to? Or
+are there not HCI differences in the spec versions you mention in the
+cover letter?
+
+> +- reg : Should contain 1 register range (address and length)
+> +- interrupts : HCI interrupt
+> +
+> +Example:
+> +
+> +       mipi_i3c_hci@0xa0000000 {
+
+i3c@a0000000
+
+
+> +               compatible = "mipi-i3c-hci";
+> +               reg = <0xa0000000 0x2000>;
+> +               interrupts = <89>;
+> +       };
+> --
+> 2.26.2
+>
