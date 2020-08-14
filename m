@@ -2,288 +2,159 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2440EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 14:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703ABC433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 14:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEFA2207DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 14:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3C2208B3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 14:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597416700;
+	bh=2azDCJAW0WmwzjFoNP1+Xf1baXp64Ykp/VUpBlKju0s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SNdObkYDilRwi7OKHXU4loXF2ZL/ordVHbxuutjN5JVz4tucQa1ryfVDQPmUeZBYv
+	 stwahnPn+xOnbqpk94V66eCPzVGOekQXDqY/j9ZRhXyT+LNeR//vghoWdKOPIaW8Ic
+	 6GPS1MdR1+pr9BYFphU25DDnPpJZgVS8/C2DVcIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgHNOca (ORCPT
+        id S1727911AbgHNOvj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 10:32:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44202 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728066AbgHNOca (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 10:32:30 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 3F35029AA79
-Subject: Re: [PATCH 06/13] ARM: dts: omap4-panda-common: Add CMA pools and
- enable IPU & DSP
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernelci-results@groups.io
-References: <20200709231954.1973-1-s-anna@ti.com>
- <20200709231954.1973-7-s-anna@ti.com>
- <3e44fc46-07ac-6103-5c4d-8c7389453b87@collabora.com>
-Message-ID: <f6ec1fd3-f42b-9284-44dc-e754e02ee86e@collabora.com>
-Date:   Fri, 14 Aug 2020 15:32:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 14 Aug 2020 10:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbgHNOvi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 10:51:38 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C6E208B3;
+        Fri, 14 Aug 2020 14:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597416697;
+        bh=2azDCJAW0WmwzjFoNP1+Xf1baXp64Ykp/VUpBlKju0s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bjfRL+mBKQdeXNIPuXX+sib3fYs2/XZWJHPOjPd4x196xwXtWkEnxkwGCGKCP+vXy
+         CxGeqKP68MgYI300g+hNTJd4uQCvZb/zOsnBdJ/cEKlyynKbLGyhuMbkA+R9Y9MLDY
+         rajai6Sqx8HGb8L035zTD4t0BSpxCLooD+BQeHTA=
+Received: by mail-ot1-f54.google.com with SMTP id t7so7776444otp.0;
+        Fri, 14 Aug 2020 07:51:36 -0700 (PDT)
+X-Gm-Message-State: AOAM531YqcS4MUxvcGOYChGHRoRMcVsEFsDHYR5LbkHA90TiOSl6Dmh8
+        R/b9TCtT0vzAo6TEwQr7L0CGI1coatN8YZannA==
+X-Google-Smtp-Source: ABdhPJzAQOVgwIRLTeJz+4kS8jI7uSM4yy2bV/QUkiEz2152JH8sgfiQxJMSY+wk4abg95jsoFr6h5Ymz6ZJoeFhB2g=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr1995774ote.107.1597416696235;
+ Fri, 14 Aug 2020 07:51:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3e44fc46-07ac-6103-5c4d-8c7389453b87@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200812203618.2656699-1-robh@kernel.org> <d5808e9c-07fe-1c28-b9a6-a16abe9df458@lucaceresoli.net>
+In-Reply-To: <d5808e9c-07fe-1c28-b9a6-a16abe9df458@lucaceresoli.net>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 14 Aug 2020 08:51:24 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKekx0VO4NROwLrgrU8+L584HaLHM9i3kCZvU+g5myeGw@mail.gmail.com>
+Message-ID: <CAL_JsqKekx0VO4NROwLrgrU8+L584HaLHM9i3kCZvU+g5myeGw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/08/2020 06:31, Guillaume Tucker wrote:
-> On 10/07/2020 00:19, Suman Anna wrote:
->> The CMA reserved memory nodes have been added for the IPU and DSP
->> remoteproc devices on all the OMAP4-based Panda boards. These nodes
->> are assigned to the respective rproc device nodes, and both the
->> IPU and DSP remote processors are enabled for all these boards.
->>
->> The current CMA pools and sizes are defined statically for each device.
->> The starting addresses are fixed to meet current dependencies on the
->> remote processor firmwares, and will go away when the remote-side
->> code has been improved to gather this information runtime during
->> its initialization.
->>
->> An associated pair of the rproc node and its CMA node can be disabled
->> later on if there is no use-case defined to use that remote processor.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->>  arch/arm/boot/dts/omap4-panda-common.dtsi | 30 +++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
->> index 55ea8b6189af..ef79028fc95f 100644
->> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->> @@ -12,6 +12,26 @@ memory@80000000 {
->>  		reg = <0x80000000 0x40000000>; /* 1 GB */
->>  	};
->>  
->> +	reserved-memory {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		dsp_memory_region: dsp-memory@98000000 {
->> +			compatible = "shared-dma-pool";
->> +			reg = <0x98000000 0x800000>;
->> +			reusable;
->> +			status = "okay";
->> +		};
->> +
->> +		ipu_memory_region: ipu-memory@98800000 {
->> +			compatible = "shared-dma-pool";
->> +			reg = <0x98800000 0x7000000>;
->> +			reusable;
->> +			status = "okay";
->> +		};
->> +	};
->> +
->>  	chosen {
->>  		stdout-path = &uart3;
->>  	};
->> @@ -571,3 +591,13 @@ hdmi_out: endpoint {
->>  		};
->>  	};
->>  };
->> +
->> +&dsp {
->> +	status = "okay";
->> +	memory-region = <&dsp_memory_region>;
->> +};
->> +
->> +&ipu {
->> +	status = "okay";
->> +	memory-region = <&ipu_memory_region>;
->> +};
->>
-> 
-> This appears to be causing some BUG alert messages:
-> 
->   BUG: Bad page state in process swapper/0  pfn:9c801
-> 
-> as reported on kernelci.org:
-> 
->   https://kernelci.org/test/case/id/5f326c6661360154c452c1c9/
-> 
-> I've run a bisection and it landed on this commit.  If you fix it
-> with another patch, please add:
-> 
->   Reported-by: "kernelci.org bot" <bot@kernelci.org>
+On Thu, Aug 13, 2020 at 4:31 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>
+> Hi Rob,
+>
+> On 12/08/20 22:36, Rob Herring wrote:
+> > Clean-up incorrect indentation, extra spaces, long lines, and missing
+> > EOF newline in schema files. Most of the clean-ups are for list
+> > indentation which should always be 2 spaces more than the preceding
+> > keyword.
+> >
+> > Found with yamllint (which I plan to integrate into the checks).
+>
+> [...]
+>
+> > diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> > index 3d4e1685cc55..28c6461b9a9a 100644
+> > --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> > +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+> > @@ -95,10 +95,10 @@ allOf:
+> >        # Devices without builtin crystal
+> >        properties:
+> >          clock-names:
+> > -            minItems: 1
+> > -            maxItems: 2
+> > -            items:
+> > -              enum: [ xin, clkin ]
+> > +          minItems: 1
+> > +          maxItems: 2
+> > +          items:
+> > +            enum: [ xin, clkin ]
+> >          clocks:
+> >            minItems: 1
+> >            maxItems: 2
+>
+> Thanks for noticing, LGTM.
+>
+> [...]
+>
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> > index d7dac16a3960..36dc7b56a453 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+> > @@ -33,8 +33,8 @@ properties:
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> >
+> >    touchscreen-min-pressure:
+> > -    description: minimum pressure on the touchscreen to be achieved in order for the
+> > -                 touchscreen driver to report a touch event.
+> > +    description: minimum pressure on the touchscreen to be achieved in order
+> > +      for the touchscreen driver to report a touch event.
+>
+> Out of personal taste, I find the original layout more pleasant and
+> readable. This third option is also good, especially for long descriptions:
+>
+>   description:
+>     minimum pressure on the touchscreen to be achieved in order for the
+>     touchscreen driver to report a touch event.
+>
+> At first glance yamllint seems to support exactly these two by default:
+>
+> > With indentation: {spaces: 4, check-multi-line-strings: true}
 
+Turning on check-multi-line-strings results in 10K+ warnings, so no.
 
-This was bisected again automatically on mainline, see the report
-below.  Is anyone available to take a look, or could the patch be
-reverted?
+The other issue is the style ruamel.yaml wants to write out is as the
+patch does above. This matters when doing some scripted
+transformations where we read in the files and write them back out. I
+can somewhat work around that by first doing a pass with no changes
+and then another pass with the actual changes, but that's completely
+scriptable. Hopefully, ruamel learns to preserve the style better.
 
-Thanks,
-Guillaume
-
-On 14/08/2020 15:22, KernelCI bot wrote:
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-> mainline/master bisection: baseline.dmesg.alert on panda
-> 
-> Summary:
->   Start:      a1d21081a60d Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
->   Plain log:  https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-omap4-panda.txt
->   HTML log:   https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-omap4-panda.html
->   Result:     b4778e787fe9 ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
-> 
-> Checks:
->   revert:     PASS
->   verify:     PASS
-> 
-> Parameters:
->   Tree:       mainline
->   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->   Branch:     master
->   Target:     panda
->   CPU arch:   arm
->   Lab:        lab-collabora
->   Compiler:   gcc-8
->   Config:     multi_v7_defconfig+CONFIG_SMP=n
->   Test case:  baseline.dmesg.alert
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1
-> Author: Suman Anna <s-anna@ti.com>
-> Date:   Thu Jul 9 18:19:47 2020 -0500
-> 
->     ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
->     
->     The CMA reserved memory nodes have been added for the IPU and DSP
->     remoteproc devices on all the OMAP4-based Panda boards. These nodes
->     are assigned to the respective rproc device nodes, and both the
->     IPU and DSP remote processors are enabled for all these boards.
->     
->     The current CMA pools and sizes are defined statically for each device.
->     The starting addresses are fixed to meet current dependencies on the
->     remote processor firmwares, and will go away when the remote-side
->     code has been improved to gather this information runtime during
->     its initialization.
->     
->     An associated pair of the rproc node and its CMA node can be disabled
->     later on if there is no use-case defined to use that remote processor.
->     
->     Signed-off-by: Suman Anna <s-anna@ti.com>
->     Signed-off-by: Tony Lindgren <tony@atomide.com>
-> 
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> index 55ea8b6189af..ef79028fc95f 100644
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> @@ -12,6 +12,26 @@
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
->  	};
->  
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		dsp_memory_region: dsp-memory@98000000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x98000000 0x800000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-> +
-> +		ipu_memory_region: ipu-memory@98800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x98800000 0x7000000>;
-> +			reusable;
-> +			status = "okay";
-> +		};
-> +	};
-> +
->  	chosen {
->  		stdout-path = &uart3;
->  	};
-> @@ -571,3 +591,13 @@
->  		};
->  	};
->  };
-> +
-> +&dsp {
-> +	status = "okay";
-> +	memory-region = <&dsp_memory_region>;
-> +};
-> +
-> +&ipu {
-> +	status = "okay";
-> +	memory-region = <&ipu_memory_region>;
-> +};
-> -------------------------------------------------------------------------------
-> 
-> 
-> Git bisection log:
-> 
-> -------------------------------------------------------------------------------
-> git bisect start
-> # good: [e4cbce4d131753eca271d9d67f58c6377f27ad21] Merge tag 'sched-core-2020-08-03' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect good e4cbce4d131753eca271d9d67f58c6377f27ad21
-> # bad: [a1d21081a60dfb7fddf4a38b66d9cef603b317a9] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> git bisect bad a1d21081a60dfb7fddf4a38b66d9cef603b317a9
-> # bad: [47ec5303d73ea344e84f46660fff693c57641386] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> git bisect bad 47ec5303d73ea344e84f46660fff693c57641386
-> # bad: [e4a7b2dc35d9582c253cf5e6d6c3605aabc7284d] Merge tag 'leds-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds
-> git bisect bad e4a7b2dc35d9582c253cf5e6d6c3605aabc7284d
-> # bad: [74858abbb1032222f922487fd1a24513bbed80f9] Merge tag 'cap-checkpoint-restore-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux
-> git bisect bad 74858abbb1032222f922487fd1a24513bbed80f9
-> # bad: [2f3fbfdaf77f3ac417d0511fac221f76af79f6fc] Merge tag 'arm-dt-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> git bisect bad 2f3fbfdaf77f3ac417d0511fac221f76af79f6fc
-> # bad: [c6e2e454baef6080ef89c2b6488e708d5fa0f052] Merge tag 'qcom-arm64-for-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into arm/dt
-> git bisect bad c6e2e454baef6080ef89c2b6488e708d5fa0f052
-> # bad: [3502e079c6bcff95f5c34eecb5c1d9ad1379ae0d] Merge tag 'tegra-for-5.9-arm-dt' of git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux into arm/dt
-> git bisect bad 3502e079c6bcff95f5c34eecb5c1d9ad1379ae0d
-> # bad: [39a85f6d91a1a827985ce44a346a99f68167d0ee] Merge tag 'v5.8-next-dts64' of git://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux into arm/dt
-> git bisect bad 39a85f6d91a1a827985ce44a346a99f68167d0ee
-> # good: [dfe2a4cf8e2f4c1f53877aa6cb38eda102a14681] Merge tag 'uniphier-dt64-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier into arm/dt
-> git bisect good dfe2a4cf8e2f4c1f53877aa6cb38eda102a14681
-> # bad: [75f66813e081d2bd718d931ee50334c12a9e4492] Replace HTTP links with HTTPS ones: OMAP DEVICE TREE SUPPORT
-> git bisect bad 75f66813e081d2bd718d931ee50334c12a9e4492
-> # good: [9ae60ac13fc847d7175587290a1a9aa2aac091b0] ARM: dts: omap4: Update the DSP node
-> git bisect good 9ae60ac13fc847d7175587290a1a9aa2aac091b0
-> # bad: [3026ce47498dfdc92966d8d66f10afabf7190c46] ARM: dts: omap5: Add DSP and IPU nodes
-> git bisect bad 3026ce47498dfdc92966d8d66f10afabf7190c46
-> # good: [691eb1805fcfc1a2ede06aec6a4d85d312961146] ARM: dts: omap4: Add aliases for rproc nodes
-> git bisect good 691eb1805fcfc1a2ede06aec6a4d85d312961146
-> # bad: [7f7d771c00bf65d18a3e30e983b4061a418efbf4] ARM: dts: omap4-panda-common:: Add system timers to DSP and IPU
-> git bisect bad 7f7d771c00bf65d18a3e30e983b4061a418efbf4
-> # bad: [b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1] ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
-> git bisect bad b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1
-> # first bad commit: [b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1] ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
-> -------------------------------------------------------------------------------
-
-
+Rob
