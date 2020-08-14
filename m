@@ -2,120 +2,61 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A72C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA5CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A7522BF5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:43:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WFnQ7f8g"
+	by mail.kernel.org (Postfix) with ESMTP id 4ACAF20866
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgHNNmK (ORCPT
+        id S1727074AbgHNN47 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgHNNmI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 09:42:08 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C52E5C061384;
-        Fri, 14 Aug 2020 06:42:07 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a26so9996207ejc.2;
-        Fri, 14 Aug 2020 06:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xh728BF/eYFLr8qT6FFw5npDjKdJyvTy3InaLGSMaVo=;
-        b=WFnQ7f8gIKGQFFMYBNfchwpC7MnYBe4OE7NDeZ+dKvCoYAiVynrCr7CwfbmfaJUXkp
-         TfzGfnUAneDOlZbVgnOtSgmwH489FdElTxWDbTmWA47YlGw1p/Hr60mST86drPvqO0kK
-         6cI7kKjg+3yXEPETjq9e18Qlf+97Kcr9Wia0SV6SJhAECM1qwSvuk+JwIcSV40XmxoCQ
-         DUcAyiUUnS5LO/e5fSyTRl5cEVYw0V9FmQel4WZja1D2qumGRP/ySLjvU55jOjKbpOHm
-         P9+1bi5CfhSVKYDdD995ABrZ9Mz6SRH5hVrg0bmcQDzQP3Tjn3d6scBtiKexDN0/Fzeb
-         Z3jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xh728BF/eYFLr8qT6FFw5npDjKdJyvTy3InaLGSMaVo=;
-        b=toxHWG878YoCqBrE84Ezq3mwMMMBWC6TkO/JELJpzNqplJW+zmwf2IEmN+iK0AO/g4
-         ekHAfSNU5NgDCkJo+Zjlf4d5FrTO8dmiMWqZ2/b6DJHLBtqBBFkrFbeD9UcUoqOxk2+2
-         8dzmBcOVB7H2flDu90h3FIW1bvvZnSvgVJ/QLVZU0svIAjQZ7nCXRxIGSwfnDI8MvWvH
-         IXMV5fjocUQhrJKN1B/pK7MPD6fvR2ihcBkzLbqozMu4JgKU/29GX5WQZqm1ic7/Wrh6
-         cZLnlQtmBW31TIcMwDLOIWafps+yzM0E2eLOPqhGqDA8VMSyBs3OxyCSI5PaUIl9mnge
-         2R+w==
-X-Gm-Message-State: AOAM532HtiaBTR+OTMEF9xjk/WtV+rDO+VWY2x94TYqf6RxzwDRRG9TA
-        LvdZEjUNRM4OT2rqmRJSXh4=
-X-Google-Smtp-Source: ABdhPJysV33cH4agZBarQgQREVnggrouAFSA9tLnaRmEbLAq8W3Fqry1fWlMNSBYFMWuh1GL60/gtw==
-X-Received: by 2002:a17:906:8286:: with SMTP id h6mr2369540ejx.341.1597412526421;
-        Fri, 14 Aug 2020 06:42:06 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-87-0-192-118.retail.telecomitalia.it. [87.0.192.118])
-        by smtp.googlemail.com with ESMTPSA id s2sm6767118ejd.17.2020.08.14.06.42.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 06:42:05 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v6 1/8] drivers: thermal: tsens: use get_temp for tsens_valid
-Date:   Fri, 14 Aug 2020 15:41:15 +0200
-Message-Id: <20200814134123.14566-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200814134123.14566-1-ansuelsmth@gmail.com>
-References: <20200814134123.14566-1-ansuelsmth@gmail.com>
+        Fri, 14 Aug 2020 09:56:59 -0400
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:52232 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbgHNN47 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:56:59 -0400
+Received: from [188.210.212.0] (helo=[192.168.0.104])
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1k6aCW-0003dh-C5; Fri, 14 Aug 2020 14:56:56 +0100
+Subject: Re: [PATCH 0/3] pinctrl: mcp23s08: Fixups for mcp23x17
+To:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <26d33248-c07b-db2c-2989-3ca14aea7896@codethink.co.uk>
+Date:   Fri, 14 Aug 2020 14:56:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Use the driver get_temp function instead of force to use the generic get
-temp function. This is needed as tsens v0 version use a custom function
-to get the real temperature.
+On 14/08/2020 11:03, Thomas Preston wrote:
+> I'm in the process of adding a device tree overlay for the PiFace
+> Digital Raspberry Pi daughter board [0]. It's an mcp23s17 SPI GPIO port
+> expander. In doing so, I noticed some errors with the mcp23s08 driver.
+[snip]
+> They're quite trivial and backwards compatible, although I might be
+> wrong about "interrupt-controller". Can someone please confirm?
+[snip]
+> [0] https://github.com/raspberrypi/linux/pull/3794
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/thermal/qcom/tsens.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Actually I think I'm wrong about the interrupt-controller changes in 
+patches 0002 and 0003.
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 9af6f71ab640..9fe9a2b26705 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -580,7 +580,6 @@ int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp)
- {
- 	struct tsens_priv *priv = s->priv;
- 	int hw_id = s->hw_id;
--	u32 temp_idx = LAST_TEMP_0 + hw_id;
- 	u32 valid_idx = VALID_0 + hw_id;
- 	u32 valid;
- 	int ret;
-@@ -600,9 +599,9 @@ int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp)
- 	}
- 
- 	/* Valid bit is set, OK to read the temperature */
--	*temp = tsens_hw_to_mC(s, temp_idx);
-+	ret = priv->ops->get_temp(s, temp);
- 
--	return 0;
-+	return ret;
- }
- 
- int get_temp_common(const struct tsens_sensor *s, int *temp)
--- 
-2.27.0
+I think Patch 0001 fixups are fine still.
 
+Sorry for the noise!
