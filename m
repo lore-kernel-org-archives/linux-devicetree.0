@@ -4,121 +4,158 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 18:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69FAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 18:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F412078D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 18:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE5E20866
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 18:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597428434;
-	bh=NFHdc3BmdYFhz2nyKu8dvV6vT2C/XFArO5mCzwNmMDQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bvn+YhRnnmMGZC7oys2zNKaBO57g+52ClnVQo3DsFXxHLvjU+QzHIJLEge7PyQ/aR
-	 542sdaP5//Qsd0uEQF5iqIq5J57Cp2cjkMNrIKHO6mhsBoGa7RalrHmL8F0TXDi2Js
-	 N3lP8Kv1qLoOkrWyLCP22ZwR+1Wi99dtnLSF7kWQ=
+	s=default; t=1597429295;
+	bh=byesp7nJC1JbkmKEenD/7UKydY3gVcGD/Yd1EnJiwqM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hM8hKEGcJ/dufiXp/tcHMJCc8Dh2FT0eNUBOy6mgVcdZdJL0bwATg/Yb09ihRq4J3
+	 nTMOGw2x+cpBhNVdg0+GsxxZkbaj2dvpIkdLg8ZuyIXnhGgZPODLziOroMLCVl+gvA
+	 MEqi/JxtSM/F8CYOP0OjTPZcwmW8bs82D6Lj4kCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgHNSHO (ORCPT
+        id S1726772AbgHNSVf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 14:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        Fri, 14 Aug 2020 14:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbgHNSHN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 14:07:13 -0400
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726700AbgHNSVe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 14:21:34 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA94720829
-        for <devicetree@vger.kernel.org>; Fri, 14 Aug 2020 18:07:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD83720768;
+        Fri, 14 Aug 2020 18:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597428433;
-        bh=NFHdc3BmdYFhz2nyKu8dvV6vT2C/XFArO5mCzwNmMDQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LmkbNPlxnz2KVY3YlDjhBA55pnVQFQlSw1VT7g0JJYThgl0KHUNHxqblsQSxuMVTm
-         jQMNdT6F/fnJKUXTo6gn145yoYAsEM/zEEB+OQ3/yxmIlo52Wve+fWHgBaZcC+PWCz
-         t0rGc6tECvGfbLPtQXACIs5iWdo5G9wjTap3p0qw=
-Received: by mail-oo1-f52.google.com with SMTP id j19so2099045oor.2
-        for <devicetree@vger.kernel.org>; Fri, 14 Aug 2020 11:07:12 -0700 (PDT)
-X-Gm-Message-State: AOAM533Egeb0vzVlfHyYg91Jva2G0GLzE8BDQFkhA68TDz3IvQ/SFHQr
-        afPfeNRnbsC5fX4jRagvvEQYfXmB1Svo3P5HjA==
-X-Google-Smtp-Source: ABdhPJxmP2s5JfYVm3WEANrKwTUJbyRcbOd7ARe5undwm96kyX2D2gaV83wWWuqAjTXDbKGMvwTgDcWr+VmwZhsA9hE=
-X-Received: by 2002:a4a:330b:: with SMTP id q11mr2519520ooq.50.1597428432155;
- Fri, 14 Aug 2020 11:07:12 -0700 (PDT)
+        s=default; t=1597429293;
+        bh=byesp7nJC1JbkmKEenD/7UKydY3gVcGD/Yd1EnJiwqM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q5bgXLAMQS3eLaGcePUfo7IoWRuJ2XUPL4ofLAMGlhZ3P61+/LIe0qetWIwrXjkfX
+         oQATgwk2XtAoVUe+jm8yexzVZuUEhGmIP192I6nMPURrdXlDwLFjlS52/Ai2z8s7xl
+         CFaHfpMdciMh6nyG+khp0JNtEhU5hY3pLWQkzXG8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k6eKZ-002Dom-QY; Fri, 14 Aug 2020 19:21:31 +0100
 MIME-Version: 1.0
-References: <20200814034854.460830-1-nico@fluxnic.net> <20200814034854.460830-2-nico@fluxnic.net>
-In-Reply-To: <20200814034854.460830-2-nico@fluxnic.net>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 14 Aug 2020 12:07:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKTJgo8y1Zq=tyM=tTCXaVdu9o09SBiMNdz-OtXOMkkgg@mail.gmail.com>
-Message-ID: <CAL_JsqKTJgo8y1Zq=tyM=tTCXaVdu9o09SBiMNdz-OtXOMkkgg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: i3c: MIPI I3C Host Controller Interface
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
-        Nicolas Pitre <npitre@baylibre.com>,
-        Laura Nixon <laura.nixon@team.mipi.org>,
-        Robert Gough <robert.gough@intel.com>,
-        Matthew Schnoor <matthew.schnoor@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 14 Aug 2020 19:21:31 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-mips@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v4 1/5] of_address: Add bus type match for pci ranges
+ parser
+In-Reply-To: <20200728153708.1296374-2-jiaxun.yang@flygoat.com>
+References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+ <20200728153708.1296374-2-jiaxun.yang@flygoat.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <889508bae5da3c55690a7adbd101a5cd@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, robh+dt@kernel.org, frowand.list@gmail.com, linux-mips@vger.kernel.org, robh@kernel.org, tsbogend@alpha.franken.de, chenhc@lemote.com, paulburton@kernel.org, arnd@arndb.de, natechancellor@gmail.com, ndesaulniers@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 9:49 PM Nicolas Pitre <nico@fluxnic.net> wrote:
->
-> From: Nicolas Pitre <npitre@baylibre.com>
->
-> The MIPI I3C HCI (Host Controller Interface) specification defines
-> a common software driver interface to support compliant MIPI I3C
-> host controller hardware implementations from multiple vendors.
->
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> ---
->  .../devicetree/bindings/i3c/mipi-i3c-hci.txt      | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt
+Hi all,
 
-Bindings should be in schema format now.
+On 2020-07-28 16:36, Jiaxun Yang wrote:
+> So the parser can be used to parse range property of ISA bus.
+> 
+> As they're all using PCI-like method of range property, there is no 
+> need
+> start a new parser.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> diff --git a/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt
-> new file mode 100644
-> index 0000000000..8de7d7ac6a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.txt
-> @@ -0,0 +1,15 @@
-> +MIPI I3C Host Controller Interface
-> +----------------------------------
-> +
-> +Required properties:
-> +- compatible : "mipi-i3c-hci"
+This patch, although it looks correct, breaks the RK3399-based
+systems, as they miss the (now required) 'device_type = "pci";'
+property.
 
-A register interface (or protocol) spec is never complete enough to
-capture all the details about a specific h/w implementation. One just
-has to go look at AHCI, EHCI, OHCI, XHCI, UFS, 8250, etc. bindings.
-Let's not start with pretending that here. Fine for this to be a
-fallback, but it must have a compatible for a specific implementation.
+We can fix the in-tree DT, but that's not really an option
+if someone relies on the DT being provided by the firmware
+(I for one definitely do).
 
-Also, which version of the spec does this compatible correspond to? Or
-are there not HCI differences in the spec versions you mention in the
-cover letter?
+I came up with the following hack, which solves the issue for
+me. Definitely not my finest hour, but I really need this box
+to keep going. I will post a patch fixing the DT separately.
 
-> +- reg : Should contain 1 register range (address and length)
-> +- interrupts : HCI interrupt
-> +
-> +Example:
-> +
-> +       mipi_i3c_hci@0xa0000000 {
+Thanks,
 
-i3c@a0000000
+         M.
+
+ From ceef5fd9c4d2005eb577505c68868ebe527c098f Mon Sep 17 00:00:00 2001
+ From: Marc Zyngier <maz@kernel.org>
+Date: Fri, 14 Aug 2020 19:10:12 +0100
+Subject: [PATCH] of: address: Workaround broken DTs missing the 
+'device_type =
+  "pci"' property
+
+Recent changes to the PCI bus parsing made it mandatory for
+device trees nodes describing a PCI controller to have the
+'device_type = "pci"' property for the node to be matched.
+
+Although this is compliant with the specification, it breaks
+existing device-trees that have been working fine for years
+(the Rockchip rk3399-based systems being a prime example of
+such breakage).
+
+In order to paper over the blunder, let's also match nodes
+that have the "linux,pci-domain" property, as they are
+pretty likely to be PCI nodes. This fixes the issue for
+systems such as the above platforms.
+
+Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges 
+parser")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+  drivers/of/address.c | 5 ++++-
+  1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 590493e04b01..712e03781a2a 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -134,9 +134,12 @@ static int of_bus_pci_match(struct device_node *np)
+   	 * "pciex" is PCI Express
+  	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+  	 * "ht" is hypertransport
++	 * "linux,pci-domain" is a workaround for broken device trees
++	 * lacking the required "device_type" property.
+  	 */
+  	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
+-		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
++		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
++		of_find_property(np, "linux,pci-domain", NULL);
+  }
+
+  static void of_bus_pci_count_cells(struct device_node *np,
+-- 
+2.27.0
 
 
-> +               compatible = "mipi-i3c-hci";
-> +               reg = <0xa0000000 0x2000>;
-> +               interrupts = <89>;
-> +       };
-> --
-> 2.26.2
->
+-- 
+Jazz is not dead. It just smells funny...
