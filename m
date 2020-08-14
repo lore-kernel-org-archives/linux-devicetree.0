@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F3CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD59C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41DCA20866
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744CC20781
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PlEsuu+j"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hWUtprF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgHNKyW (ORCPT
+        id S1727905AbgHNKy3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:54:22 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:16970 "EHLO m43-7.mailgun.net"
+        Fri, 14 Aug 2020 06:54:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57956 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgHNKyQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:54:16 -0400
+        id S1727899AbgHNKy0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:54:26 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597402456; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1597402466; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=nCH3fkRafQ9VwSLtujXNJZmDOIO0wNhCE6GsUU1wexM=; b=PlEsuu+jtKgzw9xzk/cR8NNPRWF9LedrRH680lgVsZw2wXsSvTNNjT/2bIarLZFvKqhN3XOH
- VgAGllq7myUJmMHXlE3+eFhSaQREiyikvIIonwT2SPmLp922Gnvjc+q3n/QicV3rMG2HAia1
- SXzdpgL4+23w1qkR2u4Fn4IaqW0=
+ bh=MFq5q/nvUA4Da5minLQ/5WQKxE6K5fjxfakeD/Ulegg=; b=hWUtprF2F636TxumT4jZtNZaMms40Huv2tK74mz24NyEQZc2GQV1HENEbtxOlIpx3itTcgte
+ PIJkRBOQhnJ3G8zbz5RFXbn/hrKkXD3Aeszfg3mzJD4WfQHV/YNGrNmVMuWwa+/OIghbMd3i
+ S3uby4bkx8GQTbbYw1MBZNn4lcI=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f366d4c2b87d66049900679 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 10:54:04
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f366d5e91f8def8b233a085 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 10:54:22
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 25167C433A0; Fri, 14 Aug 2020 10:54:04 +0000 (UTC)
+        id C94E9C433CA; Fri, 14 Aug 2020 10:54:21 +0000 (UTC)
 Received: from rohkumar-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1C62DC433AD;
-        Fri, 14 Aug 2020 10:53:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1C62DC433AD
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AED2CC4339C;
+        Fri, 14 Aug 2020 10:54:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AED2CC4339C
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
 From:   Rohit kumar <rohitkr@codeaurora.org>
@@ -54,11 +54,10 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Ajit Pandey <ajitp@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v6 03/12] ASoC: qcom: lpass-platform: Replace card->dev with component->dev
-Date:   Fri, 14 Aug 2020 16:22:59 +0530
-Message-Id: <1597402388-14112-4-git-send-email-rohitkr@codeaurora.org>
+Cc:     Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v6 06/12] ASoC: qcom: lpass-cpu: fix concurrency issue
+Date:   Fri, 14 Aug 2020 16:23:02 +0530
+Message-Id: <1597402388-14112-7-git-send-email-rohitkr@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
 References: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
@@ -67,35 +66,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
+i2sctl register value is set to 0 during hw_free(). This
+impacts any ongoing concurrent session on the same i2s
+port. As trigger() stop already resets enable bit to 0,
+there is no need of explicit hw_free. Removing it to
+fix the issue.
 
-We are allocating dma memory for component->dev but trying to mmap
-such memory for substream->pcm->card->dev. Replace device argument
-in mmap with component->dev to fix this.
-
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+Fixes: 80beab8e1d86 ("ASoC: qcom: Add LPASS CPU DAI driver")
 Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
 Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/lpass-platform.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ sound/soc/qcom/lpass-cpu.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/sound/soc/qcom/lpass-platform.c b/sound/soc/qcom/lpass-platform.c
-index 01179bc..3697f4e 100644
---- a/sound/soc/qcom/lpass-platform.c
-+++ b/sound/soc/qcom/lpass-platform.c
-@@ -400,9 +400,8 @@ static int lpass_platform_pcmops_mmap(struct snd_soc_component *component,
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 
--	return dma_mmap_coherent(substream->pcm->card->dev, vma,
--			runtime->dma_area, runtime->dma_addr,
--			runtime->dma_bytes);
-+	return dma_mmap_coherent(component->dev, vma, runtime->dma_area,
-+				 runtime->dma_addr, runtime->dma_bytes);
+diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+index 6b86f16..5d84f63 100644
+--- a/sound/soc/qcom/lpass-cpu.c
++++ b/sound/soc/qcom/lpass-cpu.c
+@@ -266,21 +266,6 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
+ 	return 0;
  }
  
- static irqreturn_t lpass_dma_interrupt_handler(
+-static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
+-		struct snd_soc_dai *dai)
+-{
+-	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+-	int ret;
+-
+-	ret = regmap_write(drvdata->lpaif_map,
+-			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
+-			   0);
+-	if (ret)
+-		dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
+-
+-	return ret;
+-}
+-
+ static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
+ 		struct snd_soc_dai *dai)
+ {
+@@ -350,7 +335,6 @@ const struct snd_soc_dai_ops asoc_qcom_lpass_cpu_dai_ops = {
+ 	.startup	= lpass_cpu_daiops_startup,
+ 	.shutdown	= lpass_cpu_daiops_shutdown,
+ 	.hw_params	= lpass_cpu_daiops_hw_params,
+-	.hw_free	= lpass_cpu_daiops_hw_free,
+ 	.prepare	= lpass_cpu_daiops_prepare,
+ 	.trigger	= lpass_cpu_daiops_trigger,
+ };
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
 is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
