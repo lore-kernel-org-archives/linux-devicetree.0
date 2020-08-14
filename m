@@ -2,385 +2,164 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36250C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1C2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED5AC20774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597422106;
-	bh=LRsp/btt9UOyYtJvFlQ9n7bPsWOsc4kVvQpIJUQ/QV4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jTtkQw752ytkWbF/U25Atv35BoSPNn+oE2BhWfM58E9nNkgUxNWZWoQP5y0TPMLNP
-	 2/SPDnfCQ27O6+3QDmTGfj2kOzCf07gokHSKxmIbrOZh05zdRcchqNup9PI8QzoNJS
-	 YKY4IA8rC+0rA60GHs5NQtecGwRCr0rknlEgU/Dk=
+	by mail.kernel.org (Postfix) with ESMTP id AB30B20791
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgHNQVo (ORCPT
+        id S1728129AbgHNQa2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:21:44 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36394 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbgHNQVk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 12:21:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id t15so11366655iob.3;
-        Fri, 14 Aug 2020 09:21:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0Uqq7tktnOIzY70fK71Kwoupw6rg0Xh+PHkqkEn55dI=;
-        b=hPyRrQUa8nKvJLs0DU3Zs/BOLEFj6eR32WCOz/dYT7TiYoOvlwIiaLqTnBEOumEsNN
-         hflZEE56d4LEb0nHg+LgpFqTgVN816fAx0xfuFGdSdbB6DR1Ity0A9cy1jGAhVZoCgcv
-         2NPi6564MvZ1XOqMddEeMYkH/HN6UG4yNZkgVC8NprUxSGFDJDL6bjcN2hzdZobkO3gz
-         +N//Tsh3CoUZFt6a7aMbFPVAu7S3IiM2bZXpo0F83f9AroxJHwJdYryIchfiplE4uu6G
-         rivig5HFi0Jfg8KBKSZZBeY4su1WDbWt1gLy2hnev7LWO6HzDJnPT+aYkCcVP5s6G6CP
-         Lqkg==
-X-Gm-Message-State: AOAM530LIh4cAKddyiY/HZlBCA0YDOtX//nvosAVgiG05mbsPYuyJjfB
-        m+pibAVxt4lP6yBs4dFyvl8L2Q1xJg==
-X-Google-Smtp-Source: ABdhPJzl6JdfMZmFkvnYgZbdJ7IxH3P6rtqXgWXEvuArMjkhKb9KFnlCEzkZqQj7Fx7d3gPWlXrvaQ==
-X-Received: by 2002:a5e:dd44:: with SMTP id u4mr2737958iop.192.1597422097247;
-        Fri, 14 Aug 2020 09:21:37 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id a16sm2968913ilp.23.2020.08.14.09.21.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 09:21:36 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: Remove more cases of 'allOf' containing a '$ref'
-Date:   Fri, 14 Aug 2020 10:21:34 -0600
-Message-Id: <20200814162134.2284874-1-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 14 Aug 2020 12:30:28 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58597 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728099AbgHNQa1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 12:30:27 -0400
+Received: from [37.160.38.175] (port=40734 helo=[192.168.42.162])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1k6cay-0001mB-F9; Fri, 14 Aug 2020 18:30:20 +0200
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+References: <20200812203618.2656699-1-robh@kernel.org>
+ <d5808e9c-07fe-1c28-b9a6-a16abe9df458@lucaceresoli.net>
+ <CAL_JsqKekx0VO4NROwLrgrU8+L584HaLHM9i3kCZvU+g5myeGw@mail.gmail.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <f1963eb9-283f-e903-2a3a-4f324d71d418@lucaceresoli.net>
+Date:   Fri, 14 Aug 2020 18:30:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqKekx0VO4NROwLrgrU8+L584HaLHM9i3kCZvU+g5myeGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Another wack-a-mole pass of killing off unnecessary 'allOf + $ref'
-usage.
+Hi,
 
-json-schema versions draft7 and earlier have a weird behavior in that
-any keywords combined with a '$ref' are ignored (silently). The correct
-form was to put a '$ref' under an 'allOf'. This behavior is now changed
-in the 2019-09 json-schema spec and '$ref' can be mixed with other
-keywords. The json-schema library doesn't yet support this, but the
-tooling now does a fixup for this and either way works.
+On 14/08/20 16:51, Rob Herring wrote:
+> On Thu, Aug 13, 2020 at 4:31 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 12/08/20 22:36, Rob Herring wrote:
+>>> Clean-up incorrect indentation, extra spaces, long lines, and missing
+>>> EOF newline in schema files. Most of the clean-ups are for list
+>>> indentation which should always be 2 spaces more than the preceding
+>>> keyword.
+>>>
+>>> Found with yamllint (which I plan to integrate into the checks).
+>>
+>> [...]
+>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>>> index 3d4e1685cc55..28c6461b9a9a 100644
+>>> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>>> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.yaml
+>>> @@ -95,10 +95,10 @@ allOf:
+>>>        # Devices without builtin crystal
+>>>        properties:
+>>>          clock-names:
+>>> -            minItems: 1
+>>> -            maxItems: 2
+>>> -            items:
+>>> -              enum: [ xin, clkin ]
+>>> +          minItems: 1
+>>> +          maxItems: 2
+>>> +          items:
+>>> +            enum: [ xin, clkin ]
+>>>          clocks:
+>>>            minItems: 1
+>>>            maxItems: 2
+>>
+>> Thanks for noticing, LGTM.
+>>
+>> [...]
+>>
+>>> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+>>> index d7dac16a3960..36dc7b56a453 100644
+>>> --- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+>>> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.yaml
+>>> @@ -33,8 +33,8 @@ properties:
+>>>      $ref: /schemas/types.yaml#/definitions/uint32
+>>>
+>>>    touchscreen-min-pressure:
+>>> -    description: minimum pressure on the touchscreen to be achieved in order for the
+>>> -                 touchscreen driver to report a touch event.
+>>> +    description: minimum pressure on the touchscreen to be achieved in order
+>>> +      for the touchscreen driver to report a touch event.
+>>
+>> Out of personal taste, I find the original layout more pleasant and
+>> readable. This third option is also good, especially for long descriptions:
+>>
+>>   description:
+>>     minimum pressure on the touchscreen to be achieved in order for the
+>>     touchscreen driver to report a touch event.
+>>
+>> At first glance yamllint seems to support exactly these two by default:
+>>
+>>> With indentation: {spaces: 4, check-multi-line-strings: true}
+> 
+> Turning on check-multi-line-strings results in 10K+ warnings, so no.
+> 
+> The other issue is the style ruamel.yaml wants to write out is as the
+> patch does above. This matters when doing some scripted
+> transformations where we read in the files and write them back out. I
+> can somewhat work around that by first doing a pass with no changes
+> and then another pass with the actual changes, but that's completely
+> scriptable. Hopefully, ruamel learns to preserve the style better.
 
-This has been a constant source of review comments, so let's change this
-treewide so everyone copies the simpler syntax.
+Kind of sad, but I understand the reason as far as my understanding of
+the yaml world allows. Thanks for the explanation.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/display/brcm,bcm2835-hdmi.yaml   |  3 +-
- .../bindings/iio/adc/qcom,spmi-vadc.yaml      |  3 +-
- .../interrupt-controller/mti,gic.yaml         | 28 ++++++------
- .../bindings/media/i2c/dongwoon,dw9768.yaml   | 43 +++++++++----------
- .../bindings/pci/ti,j721e-pci-ep.yaml         |  3 +-
- .../bindings/pci/ti,j721e-pci-host.yaml       |  3 +-
- .../bindings/sound/maxim,max98390.yaml        |  6 +--
- .../bindings/sound/nvidia,tegra186-dspk.yaml  |  3 +-
- .../bindings/sound/nvidia,tegra210-dmic.yaml  |  3 +-
- .../bindings/sound/nvidia,tegra210-i2s.yaml   |  3 +-
- .../bindings/sound/ti,j721e-cpb-audio.yaml    |  6 +--
- .../sound/ti,j721e-cpb-ivi-audio.yaml         | 15 +++----
- 12 files changed, 49 insertions(+), 70 deletions(-)
+[For idt,versaclock5.yaml, plus an overview of whole patch]
+Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-index 52b3cdac0bdf..f54b4e4808f0 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
-@@ -32,8 +32,7 @@ properties:
-       - const: hdmi
- 
-   ddc:
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
-     description: >
-       Phandle of the I2C controller used for DDC EDID probing
- 
-diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-index a6ac289d98da..0ca992465a21 100644
---- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-@@ -97,8 +97,7 @@ patternProperties:
-             input signal is multiplied. For example, <1 3> indicates the signal is scaled
-             down to 1/3 of its value before ADC measurement.
-             If property is not found default value depending on chip will be used.
--        allOf:
--          - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-         oneOf:
-           - items:
-               - const: 1
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-index 9f0eb3addac4..ce6aaff15214 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-@@ -42,14 +42,13 @@ properties:
-       Specifies the list of CPU interrupt vectors to which the GIC may not
-       route interrupts. This property is ignored if the CPU is started in EIC
-       mode.
--    allOf:
--      - $ref: /schemas/types.yaml#definitions/uint32-array
--      - minItems: 1
--        maxItems: 6
--        uniqueItems: true
--        items:
--          minimum: 2
--          maximum: 7
-+    $ref: /schemas/types.yaml#definitions/uint32-array
-+    minItems: 1
-+    maxItems: 6
-+    uniqueItems: true
-+    items:
-+      minimum: 2
-+      maximum: 7
- 
-   mti,reserved-ipi-vectors:
-     description: |
-@@ -57,13 +56,12 @@ properties:
-       It accepts two values: the 1st is the starting interrupt and the 2nd is
-       the size of the reserved range. If not specified, the driver will
-       allocate the last (2 * number of VPEs in the system).
--    allOf:
--      - $ref: /schemas/types.yaml#definitions/uint32-array
--      - items:
--          - minimum: 0
--            maximum: 254
--          - minimum: 2
--            maximum: 254
-+    $ref: /schemas/types.yaml#definitions/uint32-array
-+    items:
-+      - minimum: 0
-+        maximum: 254
-+      - minimum: 2
-+        maximum: 254
- 
-   timer:
-     type: object
-diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-index cb96e95d7e81..21864ab86ec4 100644
---- a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-@@ -38,39 +38,36 @@ properties:
-   dongwoon,aac-mode:
-     description:
-       Indication of AAC mode select.
--    allOf:
--      - $ref: "/schemas/types.yaml#/definitions/uint32"
--      - enum:
--          - 1    #  AAC2 mode(operation time# 0.48 x Tvib)
--          - 2    #  AAC3 mode(operation time# 0.70 x Tvib)
--          - 3    #  AAC4 mode(operation time# 0.75 x Tvib)
--          - 5    #  AAC8 mode(operation time# 1.13 x Tvib)
--        default: 2
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    enum:
-+      - 1    #  AAC2 mode(operation time# 0.48 x Tvib)
-+      - 2    #  AAC3 mode(operation time# 0.70 x Tvib)
-+      - 3    #  AAC4 mode(operation time# 0.75 x Tvib)
-+      - 5    #  AAC8 mode(operation time# 1.13 x Tvib)
-+    default: 2
- 
-   dongwoon,aac-timing:
-     description:
-       Number of AAC Timing count that controlled by one 6-bit period of
-       vibration register AACT[5:0], the unit of which is 100 us.
--    allOf:
--      - $ref: "/schemas/types.yaml#/definitions/uint32"
--      - default: 0x20
--        minimum: 0x00
--        maximum: 0x3f
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    default: 0x20
-+    minimum: 0x00
-+    maximum: 0x3f
- 
-   dongwoon,clock-presc:
-     description:
-       Indication of VCM internal clock dividing rate select, as one multiple
-       factor to calculate VCM ring periodic time Tvib.
--    allOf:
--      - $ref: "/schemas/types.yaml#/definitions/uint32"
--      - enum:
--          - 0    #  Dividing Rate -  2
--          - 1    #  Dividing Rate -  1
--          - 2    #  Dividing Rate -  1/2
--          - 3    #  Dividing Rate -  1/4
--          - 4    #  Dividing Rate -  8
--          - 5    #  Dividing Rate -  4
--        default: 1
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+    enum:
-+      - 0    #  Dividing Rate -  2
-+      - 1    #  Dividing Rate -  1
-+      - 2    #  Dividing Rate -  1/2
-+      - 3    #  Dividing Rate -  1/4
-+      - 4    #  Dividing Rate -  8
-+      - 5    #  Dividing Rate -  4
-+    default: 1
- 
- required:
-   - compatible
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-index cfe25cface21..b3c3d0c3c390 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-@@ -31,8 +31,7 @@ properties:
-   ti,syscon-pcie-ctrl:
-     description: Phandle to the SYSCON entry required for configuring PCIe mode
-                  and link speed.
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   power-domains:
-     maxItems: 1
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-index d7b60487c6c3..8200ba00bc09 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -31,8 +31,7 @@ properties:
-   ti,syscon-pcie-ctrl:
-     description: Phandle to the SYSCON entry required for configuring PCIe mode
-       and link speed.
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   power-domains:
-     maxItems: 1
-diff --git a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-index 9c2e3effa0c0..fea9a1b6619a 100644
---- a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-+++ b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-@@ -18,16 +18,14 @@ properties:
-     description: I2C address of the device.
- 
-   maxim,temperature_calib:
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/uint32
-     description: The calculated temperature data was measured while doing the calibration.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-     minimum: 0
-     maximum: 65535
- 
-   maxim,r0_calib:
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/uint32
-     description: This is r0 calibration data which was measured in factory mode.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-     minimum: 1
-     maximum: 8388607
- 
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-index e620c77d0728..2f2fcffa65cb 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
-@@ -48,8 +48,7 @@ properties:
- 
-   sound-name-prefix:
-     pattern: "^DSPK[1-9]$"
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/string
-+    $ref: /schemas/types.yaml#/definitions/string
-     description:
-       Used as prefix for sink/source names of the component. Must be a
-       unique string among multiple instances of the same component.
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
-index 1c14e83f67c7..8689d9f18c11 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
-@@ -49,8 +49,7 @@ properties:
- 
-   sound-name-prefix:
-     pattern: "^DMIC[1-9]$"
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/string
-+    $ref: /schemas/types.yaml#/definitions/string
-     description:
-       used as prefix for sink/source names of the component. Must be a
-       unique string among multiple instances of the same component.
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
-index 795797001843..9bbf18153d63 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
-@@ -67,8 +67,7 @@ properties:
- 
-   sound-name-prefix:
-     pattern: "^I2S[1-9]$"
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/string
-+    $ref: /schemas/types.yaml#/definitions/string
-     description:
-       Used as prefix for sink/source names of the component. Must be a
-       unique string among multiple instances of the same component.
-diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
-index 6f2be6503401..d52cfbeb2d07 100644
---- a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
-+++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
-@@ -37,13 +37,11 @@ properties:
- 
-   ti,cpb-mcasp:
-     description: phandle to McASP used on CPB
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   ti,cpb-codec:
-     description: phandle to the pcm3168a codec used on the CPB
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   clocks:
-     items:
-diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
-index e0b88470a502..bb780f621628 100644
---- a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
-+++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
-@@ -50,28 +50,23 @@ properties:
- 
-   ti,cpb-mcasp:
-     description: phandle to McASP used on CPB
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   ti,cpb-codec:
-     description: phandle to the pcm3168a codec used on the CPB
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   ti,ivi-mcasp:
-     description: phandle to McASP used on IVI
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   ti,ivi-codec-a:
-     description: phandle to the pcm3168a-A codec on the expansion board
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   ti,ivi-codec-b:
-     description: phandle to the pcm3168a-B codec on the expansion board
--    allOf:
--      - $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
- 
-   clocks:
-     items:
 -- 
-2.25.1
-
+Luca
