@@ -1,88 +1,222 @@
-Return-Path: <SRS0=2LfR=BX=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D9AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 22:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16684C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 00:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77A1220855
-	for <linux-devicetree@archiver.kernel.org>; Thu, 13 Aug 2020 22:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45A62078B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 00:07:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vW8RyoKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgHMWrC (ORCPT
+        id S1726684AbgHNAHG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 18:47:02 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:45724 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726205AbgHMWrC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 13 Aug 2020 18:47:02 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 7AB1F634C87;
-        Fri, 14 Aug 2020 01:46:19 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1k6LzH-0001kc-9J; Fri, 14 Aug 2020 01:46:19 +0300
-Date:   Fri, 14 Aug 2020 01:46:19 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Eugen Hristev <eugen.hristev@microchip.com>
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: csi2dc: add bindings for
- microchip csi2dc
-Message-ID: <20200813224619.GN840@valkosipuli.retiisi.org.uk>
-References: <20200703074416.55272-1-eugen.hristev@microchip.com>
- <20200703074416.55272-2-eugen.hristev@microchip.com>
+        Thu, 13 Aug 2020 20:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbgHNAHF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 20:07:05 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD61DC061757;
+        Thu, 13 Aug 2020 17:07:04 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id m15so3945672lfp.7;
+        Thu, 13 Aug 2020 17:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GzwPBWKoPZ93pmT563Pm8pvnNRCDr3XhtwSAAffNp+g=;
+        b=vW8RyoKXC5N6mmAV8wm0TZ8yPsu/Ji7O2Cn13Bd79Cd42Pb5GaNBLUjJmyc6waWyzc
+         WazNsjrYQQwh6Zxn9fuMfDsIoixjwivKaTv+9Grqarjo4WpmNZHX/sJgxqpZtvPKZhju
+         lzlD8dkqJaUA5Tmm3q2mWvRg2plL3Pge0W20QBJCUc3AsZ44Yv6owL1CZmziVOdpkAh8
+         BnFXQ4/nhwNwSOS0aN3cIsQtrs9S3F6sp57UTuCX0ZE+ohNxhsUTSgxCUzDfrXSs4xo9
+         Fn80+b2XW/Wg0Nh1Gcqgr01NUljvYVRy2AxyZnTDSIreIwxQ8SoYZYBnpe2TrObBw42u
+         9eLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GzwPBWKoPZ93pmT563Pm8pvnNRCDr3XhtwSAAffNp+g=;
+        b=hxJgylNaIxDps05nbI/RGEMlnwaHJ6Xdlb4ZFZnSjv/h29LsuzCUh/1szozzDHzo77
+         CkuiKq5+8g1hqt0VWeaYacP82e79CShNwg0Yr5oeCxRZmsjUwBZ83pj8/4YjNrCYYD+r
+         Z8pcRW2/MLIk/Go11VaN0lTecmzNrrPTmZs3IRM6zaG/+oX+n9VKgDdvVcf3CIi9jUY0
+         1Oic9eIPeuz/i4tu8D+6DXDvZQcu/BTQacXlA8RUhdoplyMauUCL+HgOjqDFnOQuL2TF
+         krH1JTKJd6r6P+lP6cTSwiKPj14ZAml/7GG6P7HWqAUIgZbqa+K4oV9jkIi/R4hUc3Pu
+         vk1w==
+X-Gm-Message-State: AOAM53263UcSZSCbIqY5KUxQ4y6jaRm10gnYAGTxTw0Vf9+8TgYnrjol
+        C6YMKEET/G2DBU68aBnal6M=
+X-Google-Smtp-Source: ABdhPJyzug7TO+hMI9vCnuMuqXozGMwz0dka1d8pWNh3nWAb7JbR6TfWED153vnUZj7rM65tQ/DdRw==
+X-Received: by 2002:a19:8295:: with SMTP id e143mr425088lfd.95.1597363623205;
+        Thu, 13 Aug 2020 17:07:03 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.07.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2020 17:07:02 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v5 02/36] clk: tegra: Remove Memory Controller lock
+Date:   Fri, 14 Aug 2020 03:05:47 +0300
+Message-Id: <20200814000621.8415-3-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200814000621.8415-1-digetx@gmail.com>
+References: <20200814000621.8415-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200703074416.55272-2-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Eugen,
+The shared Memory Controller lock isn't needed since the time when
+Memory Clock was made read-only. The lock could be removed safely now.
+Hence let's remove it, this will help a tad to make further patches
+cleaner.
 
-On Fri, Jul 03, 2020 at 10:44:13AM +0300, Eugen Hristev wrote:
-> Add bindings documentation for microchip CSI2 Demultiplexer controller.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/clk/tegra/clk-divider.c  | 4 ++--
+ drivers/clk/tegra/clk-tegra114.c | 6 ++----
+ drivers/clk/tegra/clk-tegra124.c | 7 ++-----
+ drivers/clk/tegra/clk-tegra20.c  | 3 +--
+ drivers/clk/tegra/clk-tegra30.c  | 3 +--
+ drivers/clk/tegra/clk.h          | 2 +-
+ 6 files changed, 9 insertions(+), 16 deletions(-)
 
-...
-
-> +  port@1:
-> +    type: object
-> +    description:
-> +      Output port node, single endpoint, describing the output pad.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +      reg:
-> +        const: 1
-> +
-> +    patternProperties:
-> +      "^endpoint@[0-9a-f]$":
-> +        type: object
-> +
-> +        properties:
-> +          reg:
-> +            enum: [0, 1, 2, 3]
-> +            description: virtual channel for the endpoint
-
-Unless you need this right now I'd just hard code this to zero in the
-driver. You can't have more endpoints for active devices anyway, can you?
-
+diff --git a/drivers/clk/tegra/clk-divider.c b/drivers/clk/tegra/clk-divider.c
+index 38daf483ddf1..56adb01638cc 100644
+--- a/drivers/clk/tegra/clk-divider.c
++++ b/drivers/clk/tegra/clk-divider.c
+@@ -177,10 +177,10 @@ static const struct clk_div_table mc_div_table[] = {
+ };
+ 
+ struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
+-				  void __iomem *reg, spinlock_t *lock)
++				  void __iomem *reg)
+ {
+ 	return clk_register_divider_table(NULL, name, parent_name,
+ 					  CLK_IS_CRITICAL,
+ 					  reg, 16, 1, CLK_DIVIDER_READ_ONLY,
+-					  mc_div_table, lock);
++					  mc_div_table, NULL);
+ }
+diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
+index bc9e47a4cb60..ca8d9737d301 100644
+--- a/drivers/clk/tegra/clk-tegra114.c
++++ b/drivers/clk/tegra/clk-tegra114.c
+@@ -134,7 +134,6 @@ static DEFINE_SPINLOCK(pll_d_lock);
+ static DEFINE_SPINLOCK(pll_d2_lock);
+ static DEFINE_SPINLOCK(pll_u_lock);
+ static DEFINE_SPINLOCK(pll_re_lock);
+-static DEFINE_SPINLOCK(emc_lock);
+ 
+ static struct div_nmp pllxc_nmp = {
+ 	.divm_shift = 0,
+@@ -1050,10 +1049,9 @@ static __init void tegra114_periph_clk_init(void __iomem *clk_base,
+ 			       ARRAY_SIZE(mux_pllmcp_clkm),
+ 			       CLK_SET_RATE_NO_REPARENT,
+ 			       clk_base + CLK_SOURCE_EMC,
+-			       29, 3, 0, &emc_lock);
++			       29, 3, 0, NULL);
+ 
+-	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC,
+-				    &emc_lock);
++	clk = tegra_clk_register_mc("mc", "emc_mux", clk_base + CLK_SOURCE_EMC);
+ 	clks[TEGRA114_CLK_MC] = clk;
+ 
+ 	clk = tegra_clk_register_periph_gate("mipi-cal", "clk_m", 0, clk_base,
+diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra124.c
+index e931319dcc9d..0c956e14b9ca 100644
+--- a/drivers/clk/tegra/clk-tegra124.c
++++ b/drivers/clk/tegra/clk-tegra124.c
+@@ -126,7 +126,6 @@ static DEFINE_SPINLOCK(pll_d_lock);
+ static DEFINE_SPINLOCK(pll_e_lock);
+ static DEFINE_SPINLOCK(pll_re_lock);
+ static DEFINE_SPINLOCK(pll_u_lock);
+-static DEFINE_SPINLOCK(emc_lock);
+ static DEFINE_SPINLOCK(sor0_lock);
+ 
+ /* possible OSC frequencies in Hz */
+@@ -1050,8 +1049,7 @@ static __init void tegra124_periph_clk_init(void __iomem *clk_base,
+ 					     periph_clk_enb_refcnt);
+ 	clks[TEGRA124_CLK_DSIB] = clk;
+ 
+-	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
+-				    &emc_lock);
++	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
+ 	clks[TEGRA124_CLK_MC] = clk;
+ 
+ 	/* cml0 */
+@@ -1518,8 +1516,7 @@ static void __init tegra124_132_clock_init_post(struct device_node *np)
+ 				  tegra124_reset_deassert);
+ 	tegra_add_of_provider(np, of_clk_src_onecell_get);
+ 
+-	clks[TEGRA124_CLK_EMC] = tegra_clk_register_emc(clk_base, np,
+-							&emc_lock);
++	clks[TEGRA124_CLK_EMC] = tegra_clk_register_emc(clk_base, np, NULL);
+ 
+ 	tegra_register_devclks(devclks, ARRAY_SIZE(devclks));
+ 
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index 3efc651b42e3..2f8b6de4198f 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -802,8 +802,7 @@ static void __init tegra20_periph_clk_init(void)
+ 
+ 	clks[TEGRA20_CLK_EMC] = clk;
+ 
+-	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
+-				    NULL);
++	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
+ 	clks[TEGRA20_CLK_MC] = clk;
+ 
+ 	/* dsi */
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 37244a7e68c2..88e8c485f8ae 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -1042,8 +1042,7 @@ static void __init tegra30_periph_clk_init(void)
+ 
+ 	clks[TEGRA30_CLK_EMC] = clk;
+ 
+-	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC,
+-				    NULL);
++	clk = tegra_clk_register_mc("mc", "emc", clk_base + CLK_SOURCE_EMC);
+ 	clks[TEGRA30_CLK_MC] = clk;
+ 
+ 	/* cml0 */
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index 6b565f6b5f66..5ed8b95d331c 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -136,7 +136,7 @@ struct clk *tegra_clk_register_divider(const char *name,
+ 		unsigned long flags, u8 clk_divider_flags, u8 shift, u8 width,
+ 		u8 frac_width, spinlock_t *lock);
+ struct clk *tegra_clk_register_mc(const char *name, const char *parent_name,
+-				  void __iomem *reg, spinlock_t *lock);
++				  void __iomem *reg);
+ 
+ /*
+  * Tegra PLL:
 -- 
-Sakari Ailus
+2.27.0
+
