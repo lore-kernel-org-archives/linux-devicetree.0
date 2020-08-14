@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C58C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CB7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACCD02068E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C992068E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mib0AldJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="As6zWn+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgHNNmR (ORCPT
+        id S1728574AbgHNNmk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 09:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58648 "EHLO
+        Fri, 14 Aug 2020 09:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728101AbgHNNmM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 09:42:12 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D09BC061384;
-        Fri, 14 Aug 2020 06:42:11 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id t10so9965325ejs.8;
-        Fri, 14 Aug 2020 06:42:11 -0700 (PDT)
+        with ESMTP id S1728518AbgHNNmf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 09:42:35 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61736C061384;
+        Fri, 14 Aug 2020 06:42:35 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id bs17so6854768edb.1;
+        Fri, 14 Aug 2020 06:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5h+RCIRVJpQHfbahCZeVcIadWa9PrkkZS82RzJ9FbQs=;
-        b=Mib0AldJ7qsLE5e88f0cpzE2Rf1+uWt6LtZgvjAQNZmZuXZ1YVwKfD+BzqUV7n1caE
-         JdtHzzIK94gulTCui7Np5JBpf962ZLQKUSgxIZSlNYVR5iuGAGlYLA9hv+07bTFWqtQK
-         84QQUu6B1HO64SgkqY53qJdSxEYxwabgs3Luh0bQa2gCYInUgBA85yEQQ0YeVzjatUoB
-         ArBB5NQ12Gw9Wmp9Gnj+RYnLBHStNs3iN02SgoGAXp5RZdTlESduOzt+uxFve7r2jGF4
-         zRhxNylAMfiJepbuq7cGzjEor3UNxOnkYA9VOZXf2y1LEsewnSXWAD8sPZp5J5MC/u90
-         xYaQ==
+        bh=I1za5GysOPtWQWJ7AUT6812STRUOq3UcNXr5lCeanqY=;
+        b=As6zWn+lPgGK3H5ouPqVtJISYiJHkGaSP0kZgo2tzD2ckwBRA2wjKeTRD8SWHFvsBq
+         au/4tzWcqFBOdux4Iph663HiXld6/YRFz8RhqUYVy2d2E6KAG0fm5ivr0kP/EDyWV6Kh
+         xcKO7z0auD2OY97WcYgqHeo+69uSmppRswCeFWD9JMwCvvr0Dc9xx4oR3qy/yLFJxY//
+         6K/jnolLRKdQr7WkluFA+BzAZfLzYvVWcpgZnWSezeXxPnKXclHMqJfsyutSggLXDLla
+         0Z2jzQMyilnVjH/BAGAEYkdjMYrRax9URc1ZDotI7VziKPPEf9wbHgzVOSFBbYYIvF1w
+         QJHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5h+RCIRVJpQHfbahCZeVcIadWa9PrkkZS82RzJ9FbQs=;
-        b=oixcQD9bZwD6latVmfbXdepBl68Jx7nQTGlEimYmDSxwBdvjIm5ul1eNlON7LqjGO/
-         GMttqOJWZ+nOSOkwAHEz71QCFtYERsahUKQYBzvIw98GWXJ6E3lee7ZZi+H3F3Q02r9K
-         1gU2OqZhnI0jyonD+FUlkI8rjAxR8nJNVd8rsb3yo0ZS7C6ojM6fp6qxfxBJrc2Fwkn0
-         j94KN7BFK1C8IqiUVOk2cHN3i+0l/ii3HYzOji739OeQTKnGKICKRLMmHO5C5Yu+UwXj
-         UdyomHTEhVh5ghqE6w9N65SGpsPXa1Yvhbx0PesSbBJDg9RHof7mP2qQACQLYTPRDJ0P
-         GMjQ==
-X-Gm-Message-State: AOAM533Gj7hrRhPG7xhUU4BB+DJwpwamDdBRxgjaUkFRkumRFXDd9jwa
-        q6wQIiMmOaY1LOcRz0p81mE=
-X-Google-Smtp-Source: ABdhPJz78nZAwLSIYCaf8ulAm9IC0gKR/R4HmxfmWNPCtx8/ln1kSlQQSgu2wGrkyAJog8XHfPeaOw==
-X-Received: by 2002:a17:906:ae12:: with SMTP id le18mr2492237ejb.38.1597412530124;
-        Fri, 14 Aug 2020 06:42:10 -0700 (PDT)
+        bh=I1za5GysOPtWQWJ7AUT6812STRUOq3UcNXr5lCeanqY=;
+        b=l9GcM05NsA0HSFVlLlNcPRJgM1KRYvJzzOGWeTTl5MjKfP9T6fJ28vidcN9SrVpD0e
+         IK3LnKKXkZVeHv1mVNwevFa+0/ICYsag2NchNdKf6KScijax0CCYCrQ2fgotHOnT4t5K
+         X4ZjmC9h6B+TlogtUoCDPkcvJ8wNOu6n5S75J8sjEy9TPrBvzlRHD2+YZyQFiOvW27tN
+         WIMY0H025Z6PJ1EepH5bSBEDOcdOCikHBrMek1he1IRO5HIonZ7sUovZpqx6vOUXEXAz
+         f9c1u/0jq8YbGkMtMWksC+NQxFZAA6ZRALHa8ZlwbRwWXMTBUREGXtQgUtIh8C+1e647
+         qfag==
+X-Gm-Message-State: AOAM532osppnIWGaFwr53VPzdi4Zqq8BpzEX9RduTb0WPG76CkR/ELC/
+        RyfWa8TeRxvgw6xybqGhPDA=
+X-Google-Smtp-Source: ABdhPJx2k4MG7iEdVDeslT347UjBp7bBF1b+NBY5vchoCRwvt/GaIrHGb9TuxYB1CjKzALDpeMrufw==
+X-Received: by 2002:a50:ee0a:: with SMTP id g10mr2172023eds.289.1597412554058;
+        Fri, 14 Aug 2020 06:42:34 -0700 (PDT)
 Received: from Ansuel-XPS.localdomain (host-87-0-192-118.retail.telecomitalia.it. [87.0.192.118])
-        by smtp.googlemail.com with ESMTPSA id s2sm6767118ejd.17.2020.08.14.06.42.08
+        by smtp.googlemail.com with ESMTPSA id s2sm6767118ejd.17.2020.08.14.06.42.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 06:42:09 -0700 (PDT)
+        Fri, 14 Aug 2020 06:42:33 -0700 (PDT)
 From:   Ansuel Smith <ansuelsmth@gmail.com>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Amit Kucheria <amitk@kernel.org>,
@@ -70,9 +70,9 @@ Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v6 2/8] drivers: thermal: tsens: Add VER_0 tsens version
-Date:   Fri, 14 Aug 2020 15:41:16 +0200
-Message-Id: <20200814134123.14566-3-ansuelsmth@gmail.com>
+Subject: [RFC PATCH v6 8/8] dt-bindings: thermal: tsens: Document ipq8064 bindings
+Date:   Fri, 14 Aug 2020 15:41:22 +0200
+Message-Id: <20200814134123.14566-9-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200814134123.14566-1-ansuelsmth@gmail.com>
 References: <20200814134123.14566-1-ansuelsmth@gmail.com>
@@ -83,226 +83,100 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VER_0 is used to describe device based on tsens version before v0.1.
-These device are devices based on msm8960 for example apq8064 or
-ipq806x.
+Document the use of bindings used for msm8960 tsens based devices.
+msm8960 use the same gcc regs and is set as a child of the qcom gcc.
 
 Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/thermal/qcom/tsens.c | 122 +++++++++++++++++++++++++++++++----
- drivers/thermal/qcom/tsens.h |   7 +-
- 2 files changed, 114 insertions(+), 15 deletions(-)
+ .../bindings/thermal/qcom-tsens.yaml          | 50 ++++++++++++++++---
+ 1 file changed, 43 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 9fe9a2b26705..965c4799918a 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -516,6 +516,15 @@ static irqreturn_t tsens_irq_thread(int irq, void *data)
- 			dev_dbg(priv->dev, "[%u] %s: no violation:  %d\n",
- 				hw_id, __func__, temp);
- 		}
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+index d7be931b42d2..9d480e3943a2 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -19,6 +19,11 @@ description: |
+ properties:
+   compatible:
+     oneOf:
++      - description: msm9860 TSENS based
++        items:
++          - enum:
++            - qcom,ipq8064-tsens
 +
-+		if (tsens_version(priv) < VER_0_1) {
-+			/* Constraint: There is only 1 interrupt control register for all
-+			 * 11 temperature sensor. So monitoring more than 1 sensor based
-+			 * on interrupts will yield inconsistent result. To overcome this
-+			 * issue we will monitor only sensor 0 which is the master sensor.
-+			 */
-+			break;
-+		}
- 	}
+       - description: v0.1 of TSENS
+         items:
+           - enum:
+@@ -85,12 +90,18 @@ properties:
+       Number of cells required to uniquely identify the thermal sensors. Since
+       we have multiple sensors this is set to 1
  
- 	return IRQ_HANDLED;
-@@ -531,6 +540,13 @@ static int tsens_set_trips(void *_sensor, int low, int high)
- 	int high_val, low_val, cl_high, cl_low;
- 	u32 hw_id = s->hw_id;
++required:
++  - compatible
++  - interrupts
++  - "#thermal-sensor-cells"
++
+ allOf:
+   - if:
+       properties:
+         compatible:
+           contains:
+             enum:
++              - qcom,ipq8064-tsens
+               - qcom,msm8916-tsens
+               - qcom,msm8974-tsens
+               - qcom,msm8976-tsens
+@@ -111,17 +122,42 @@ allOf:
+         interrupt-names:
+           minItems: 2
  
-+	if (tsens_version(priv) < VER_0_1) {
-+		/* Pre v0.1 IP had a single register for each type of interrupt
-+		 * and thresholds
-+		 */
-+		hw_id = 0;
-+	}
+-required:
+-  - compatible
+-  - reg
+-  - "#qcom,sensors"
+-  - interrupts
+-  - interrupt-names
+-  - "#thermal-sensor-cells"
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,tsens-v0_1
++              - qcom,tsens-v1
++              - qcom,tsens-v2
 +
- 	dev_dbg(dev, "[%u] %s: proposed thresholds: (%d:%d)\n",
- 		hw_id, __func__, low, high);
++    then:
++      required:
++        - reg
++        - interrupt-names
++        - "#qcom,sensors"
  
-@@ -584,18 +600,21 @@ int get_temp_tsens_valid(const struct tsens_sensor *s, int *temp)
- 	u32 valid;
- 	int ret;
+ additionalProperties: false
  
--	ret = regmap_field_read(priv->rf[valid_idx], &valid);
--	if (ret)
--		return ret;
--	while (!valid) {
--		/* Valid bit is 0 for 6 AHB clock cycles.
--		 * At 19.2MHz, 1 AHB clock is ~60ns.
--		 * We should enter this loop very, very rarely.
--		 */
--		ndelay(400);
-+	/* VER_0 doesn't have VALID bit */
-+	if (tsens_version(priv) >= VER_0_1) {
- 		ret = regmap_field_read(priv->rf[valid_idx], &valid);
- 		if (ret)
- 			return ret;
-+		while (!valid) {
-+			/* Valid bit is 0 for 6 AHB clock cycles.
-+			 * At 19.2MHz, 1 AHB clock is ~60ns.
-+			 * We should enter this loop very, very rarely.
-+			 */
-+			ndelay(400);
-+			ret = regmap_field_read(priv->rf[valid_idx], &valid);
-+			if (ret)
-+				return ret;
-+		}
- 	}
- 
- 	/* Valid bit is set, OK to read the temperature */
-@@ -763,6 +782,10 @@ int __init init_common(struct tsens_priv *priv)
- 		goto err_put_device;
- 	}
- 
-+	/* VER_0 have only tm_map */
-+	if (!priv->srot_map)
-+		priv->srot_map = priv->tm_map;
+ examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    // Example msm9860 based SoC (ipq8064):
++    gcc: clock-controller {
 +
- 	if (tsens_version(priv) > VER_0_1) {
- 		for (i = VER_MAJOR; i <= VER_STEP; i++) {
- 			priv->rf[i] = devm_regmap_field_alloc(dev, priv->srot_map,
-@@ -781,6 +804,10 @@ int __init init_common(struct tsens_priv *priv)
- 		ret = PTR_ERR(priv->rf[TSENS_EN]);
- 		goto err_put_device;
- 	}
-+	/* in VER_0 TSENS need to be explicitly enabled */
-+	if (tsens_version(priv) == VER_0)
-+		regmap_field_write(priv->rf[TSENS_EN], 1);
++           /* ... */
 +
- 	ret = regmap_field_read(priv->rf[TSENS_EN], &enabled);
- 	if (ret)
- 		goto err_put_device;
-@@ -803,6 +830,61 @@ int __init init_common(struct tsens_priv *priv)
- 		goto err_put_device;
- 	}
- 
-+	priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->tm_map,
-+						     priv->fields[TSENS_EN]);
-+	if (IS_ERR(priv->rf[TSENS_EN])) {
-+		ret = PTR_ERR(priv->rf[TSENS_EN]);
-+		goto err_put_device;
-+	}
++           tsens: thermal-sensor {
++                compatible = "qcom,ipq8064-tsens";
 +
-+	priv->rf[TSENS_SW_RST] = devm_regmap_field_alloc(
-+		dev, priv->tm_map, priv->fields[TSENS_EN]);
-+	if (IS_ERR(priv->rf[TSENS_EN])) {
-+		ret = PTR_ERR(priv->rf[TSENS_EN]);
-+		goto err_put_device;
-+	}
++                 nvmem-cells = <&tsens_calib>, <&tsens_calsel>;
++                 nvmem-cell-names = "calib", "calib_sel";
++                 interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
 +
-+	priv->rf[LOW_INT_CLEAR_0] = devm_regmap_field_alloc(
-+		dev, priv->tm_map, priv->fields[LOW_INT_CLEAR_0]);
-+	if (IS_ERR(priv->rf[LOW_INT_CLEAR_0])) {
-+		ret = PTR_ERR(priv->rf[LOW_INT_CLEAR_0]);
-+		goto err_put_device;
-+	}
++                 #thermal-sensor-cells = <1>;
++          };
++    };
 +
-+	priv->rf[UP_INT_CLEAR_0] = devm_regmap_field_alloc(
-+		dev, priv->tm_map, priv->fields[UP_INT_CLEAR_0]);
-+	if (IS_ERR(priv->rf[UP_INT_CLEAR_0])) {
-+		ret = PTR_ERR(priv->rf[UP_INT_CLEAR_0]);
-+		goto err_put_device;
-+	}
-+
-+	/* VER_0 require to set MIN and MAX THRESH */
-+	if (tsens_version(priv) < VER_0_1) {
-+		priv->rf[MIN_THRESH_0] = devm_regmap_field_alloc(
-+			dev, priv->tm_map, priv->fields[MIN_THRESH_0]);
-+		if (IS_ERR(priv->rf[MIN_THRESH_0])) {
-+			ret = PTR_ERR(priv->rf[MIN_THRESH_0]);
-+			goto err_put_device;
-+		}
-+
-+		priv->rf[MAX_THRESH_0] = devm_regmap_field_alloc(
-+			dev, priv->tm_map, priv->fields[MAX_THRESH_0]);
-+		if (IS_ERR(priv->rf[MAX_THRESH_0])) {
-+			ret = PTR_ERR(priv->rf[MAX_THRESH_0]);
-+			goto err_put_device;
-+		}
-+
-+		regmap_field_write(priv->rf[MIN_THRESH_0], 0);
-+		regmap_field_write(priv->rf[MAX_THRESH_0], 120000);
-+	}
-+
-+	priv->rf[TRDY] =
-+		devm_regmap_field_alloc(dev, priv->tm_map, priv->fields[TRDY]);
-+	if (IS_ERR(priv->rf[TRDY])) {
-+		ret = PTR_ERR(priv->rf[TRDY]);
-+		goto err_put_device;
-+	}
-+
- 	/* This loop might need changes if enum regfield_ids is reordered */
- 	for (j = LAST_TEMP_0; j <= UP_THRESH_15; j += 16) {
- 		for (i = 0; i < priv->feat->max_sensors; i++) {
-@@ -856,7 +938,11 @@ int __init init_common(struct tsens_priv *priv)
- 	}
- 
- 	spin_lock_init(&priv->ul_lock);
--	tsens_enable_irq(priv);
-+
-+	/* VER_0 interrupt doesn't need to be enabled */
-+	if (tsens_version(priv) >= VER_0_1)
-+		tsens_enable_irq(priv);
-+
- 	tsens_debug_init(op);
- 
- err_put_device:
-@@ -952,10 +1038,18 @@ static int tsens_register_irq(struct tsens_priv *priv, char *irqname,
- 		if (irq == -ENXIO)
- 			ret = 0;
- 	} else {
--		ret = devm_request_threaded_irq(&pdev->dev, irq,
--						NULL, thread_fn,
--						IRQF_ONESHOT,
--						dev_name(&pdev->dev), priv);
-+		/* VER_0 interrupt is TRIGGER_RISING, VER_0_1 and up is ONESHOT */
-+		if (tsens_version(priv) > VER_0)
-+			ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
-+							thread_fn, IRQF_ONESHOT,
-+							dev_name(&pdev->dev),
-+							priv);
-+		else
-+			ret = devm_request_threaded_irq(&pdev->dev, irq,
-+							thread_fn, NULL,
-+							IRQF_TRIGGER_RISING,
-+							dev_name(&pdev->dev),
-+							priv);
- 		if (ret)
- 			dev_err(&pdev->dev, "%s: failed to get irq\n",
- 				__func__);
-diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index 59d01162c66a..f1120791737c 100644
---- a/drivers/thermal/qcom/tsens.h
-+++ b/drivers/thermal/qcom/tsens.h
-@@ -25,7 +25,8 @@ struct tsens_priv;
- 
- /* IP version numbers in ascending order */
- enum tsens_ver {
--	VER_0_1 = 0,
-+	VER_0 = 0,
-+	VER_0_1,
- 	VER_1_X,
- 	VER_2_X,
- };
-@@ -441,6 +442,10 @@ enum regfield_ids {
- 	CRIT_THRESH_14,
- 	CRIT_THRESH_15,
- 
-+	/* VER_0 MIN MAX THRESH */
-+	MIN_THRESH_0,
-+	MAX_THRESH_0,
-+
- 	/* WATCHDOG */
- 	WDOG_BARK_STATUS,
- 	WDOG_BARK_CLEAR,
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     // Example 1 (legacy: for pre v1 IP):
 -- 
 2.27.0
 
