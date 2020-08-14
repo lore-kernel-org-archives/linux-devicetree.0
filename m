@@ -2,156 +2,214 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B275DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB80C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 17:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FACB2078D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB87D2224D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 17:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="We/FVSeW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWgJmUCe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgHNQrL (ORCPT
+        id S1728227AbgHNRFr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
+        Fri, 14 Aug 2020 13:05:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgHNQrG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 12:47:06 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30578C061384;
-        Fri, 14 Aug 2020 09:47:06 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g6so10566397ljn.11;
-        Fri, 14 Aug 2020 09:47:06 -0700 (PDT)
+        with ESMTP id S1728203AbgHNRFq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 13:05:46 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30386C061384
+        for <devicetree@vger.kernel.org>; Fri, 14 Aug 2020 10:05:46 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id s9so5177976lfs.4
+        for <devicetree@vger.kernel.org>; Fri, 14 Aug 2020 10:05:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZmnQ4vUhgXM2is2ULbt6oEQrTJKTXGTCE402XB71Dck=;
-        b=We/FVSeWrjP0+MIiJxhGwCzfNF3FWjWCzWB0nN5SzPgQeyXr9kou5Fg1G6xwmODZ9W
-         zExpR2CW8OFInlbyttpitOEdHHPVzSF71HNvUTn4l1VP6YEPQPc5pGgNRcbcYUfYDWJN
-         HUsiKIWEGgsiYUuz/OVIsK2RGGZwLMlO9vQWI+c3/aaEXs+0qdGtpf9rVeFD6fG7WeDf
-         G1HKVVIYwVUN0QPDX+ccBKdcifMjTU2ihgqzA/QrFXkLPvkeW19oC7PqU9s4PagQK27z
-         ewemK3ELH1ss9E0v2Qlqb6QFRu43KeADbn7yTJQVw00RXb8KL7qPH6taCW/IERgVRHJz
-         g9+A==
+        bh=8+3+utw2qoRZvLkLueDeqTz6MAU6wAFy/JkEJxDI190=;
+        b=ZWgJmUCeihHACbWSIyHdS2NjmGo8wzQS/+58lG4r5mWLm1gQC1nYxuKqBjHlBt4RRE
+         LlB2pub5ZH77qfJALXBdntKeIM5bZNGksNs0tUjbtOgWMrXftXIyPNho2DFZuIe37v+N
+         WdIouqpi54ottOqyWtTG+nEmeuhTcfdLH4ngm9XT9+Ddx0Rb7Mvw1osKqoZxU0xSDLxd
+         N20VI1G+tCE04FOKIviXBz/Hd9sfpoP11wGv8qFO1MTVACWSXi3++1UqBonAp/9Q/Wpy
+         dR2Bz71icKsujFWb6KuQr26VCZqwvCasATC1iCKC2hrgYejXnjoiq2yMiKkGstTF09/G
+         zw2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ZmnQ4vUhgXM2is2ULbt6oEQrTJKTXGTCE402XB71Dck=;
-        b=f7ro3F+b05bEuDvCo6+tbhx5QOGIMrsVYJ6mi+3gbpJRQclznO/sW8mBnsoZ29xSjB
-         qiqNVO/wucws44bXDWSs4NqO9IrA1XpFnYb5EY4GiurGfiKa9vkFbmt0lvtnv4Kt3W+g
-         G3PMioEEPUBU05cTcSk6kS50VTWsOtDkpJaRkdA09ThhMrbpIK3nUgE8/cWYRCvX/lM3
-         0JlQ/bb7BHnQWjLY8MXyZztAmN+3LNAkY5iog9J72TT4TLn6AZTo8w9WFOHJyGP/98TR
-         fPj+TMs5L5pqkBVdVC5XD42oYkwWXecESqrlhclysT4dj2bVs/FdU7rRzIY93LDEeClH
-         20hA==
-X-Gm-Message-State: AOAM530Z/lI4xWDCNgAFfmgq9b2m/hzUySYJ1vm/qfBiDRwKuHFXighM
-        nTHm85AWa/WKHOW3F6ZDCDFlmG0y5Sc=
-X-Google-Smtp-Source: ABdhPJxRFdX8dMKX0zpz4P0YHR+SyK3OD8HyoKXvo125A32O6XK/VTWaU2KYfAdlkk4oum8Xf4i2FQ==
-X-Received: by 2002:a05:651c:106a:: with SMTP id y10mr1705452ljm.296.1597423624384;
-        Fri, 14 Aug 2020 09:47:04 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id v23sm1992608lfa.5.2020.08.14.09.47.02
+        bh=8+3+utw2qoRZvLkLueDeqTz6MAU6wAFy/JkEJxDI190=;
+        b=gs4BVdkKTLlyEs3DAEuiTpwxDJT+ipzX0/Pa7NF0+racyI2Dsp5Lerlxx1CkFn843u
+         X8kx03rUHUv4uVQnD04c/WxCpKTbyRAhsiOdAHX4x6lcwhkN6HGr4mkAhTLtBqlc6dRw
+         rc25zfUplHcKbzH+a+IfPJsZ+fW4EogfMYtDMMWinkYoUy9gSV4+rVidd4roLOZAsIpu
+         nw+A0Yn2MTcCDYvCDX0693Y0TToGR/v23M3YVXnAucgBgabVwksy98SeCasKt61A2XTN
+         P2wlchCb9GbyzxOby3RrQwJVFB3Tal4D8jS00vvcZoXF3jSYZXCH6gcw/VXOY6baOAAg
+         7KJA==
+X-Gm-Message-State: AOAM5322TBPsbK0ADo/bvFK5Yb+RrwKXo7bdlcRYe1bhjETv+tfDwXEe
+        2ZrzZTfaar+xRwKEkKDQCUhVIw==
+X-Google-Smtp-Source: ABdhPJzaklkyPmJ9zd43OPheLnHOE8PZBUWYTxxslFUIk7wE8Tgst5f8HCTE8QoQCCHx2a6NzMJ0AQ==
+X-Received: by 2002:ac2:5dc1:: with SMTP id x1mr1622219lfq.217.1597424744650;
+        Fri, 14 Aug 2020 10:05:44 -0700 (PDT)
+Received: from [192.168.43.7] ([188.162.64.200])
+        by smtp.gmail.com with ESMTPSA id m64sm2056913lfd.0.2020.08.14.10.05.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2020 09:47:03 -0700 (PDT)
-Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
- building OPP table
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200814000621.8415-1-digetx@gmail.com>
- <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
- <20200814000621.8415-14-digetx@gmail.com>
- <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
-Date:   Fri, 14 Aug 2020 19:47:02 +0300
+        Fri, 14 Aug 2020 10:05:43 -0700 (PDT)
+Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
+To:     Tanmay Shah <tanmay@codeaurora.org>, swboyd@chromium.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, robdclark@gmail.com
+Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
+        seanpaul@chromium.org, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        khsieh@codeaurora.org, Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>
+References: <20200812044223.19279-1-tanmay@codeaurora.org>
+ <20200812044223.19279-4-tanmay@codeaurora.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
+Date:   Fri, 14 Aug 2020 20:05:41 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200812044223.19279-4-tanmay@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-14.08.2020 05:02, Chanwoo Choi пишет:
-> Hi Dmitry,
-> 
-> I add the minor comment. Except of some comments, it looks good to me.
 
-Hello, Chanwoo! Thank you for the review!
+On 12/08/2020 07:42, Tanmay Shah wrote:
+ > From: Chandan Uddaraju <chandanu@codeaurora.org>
+ >
+ > Add the needed DP PLL specific files to support
+ > display port interface on msm targets.
 
-...
->> +struct tegra_devfreq_soc_data {
->> +	const char *mc_compatible;
->> +};
->> +
->> +static const struct tegra_devfreq_soc_data tegra30_soc = {
->> +	.mc_compatible = "nvidia,tegra30-mc",
->> +};
->> +
->> +static const struct tegra_devfreq_soc_data tegra124_soc = {
->> +	.mc_compatible = "nvidia,tegra124-mc",
->> +};
-.
->> +	soc_data = of_device_get_match_data(&pdev->dev);
-> 
-> I think that better to check whether 'soc_data' is not NULL.
+[skipped]
 
-It's a quite common misconception among kernel developers that
-of_device_get_match_data() may "accidentally" return NULL, but it
-couldn't if every driver's of_match[] entry has a non-NULL .data field
-and because the OF-matching already happened at the driver's probe-time
-[1], which is the case of this driver.
+ > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h 
+b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+ > new file mode 100644
+ > index 000000000000..475ba6ed59ab
+ > --- /dev/null
+ > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+ > @@ -0,0 +1,98 @@
+ > +/* SPDX-License-Identifier: GPL-2.0-only */
+ > +/*
+ > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+ > + */
+ > +
+ > +#ifndef __DP_PLL_10NM_H
+ > +#define __DP_PLL_10NM_H
+ > +
+ > +#include "dp_pll.h"
+ > +#include "dp_reg.h"
+ > +
+ > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
+ > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
+ > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
+ > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
+ > +
+ > +#define NUM_DP_CLOCKS_MAX            6
+ > +
+ > +#define DP_PHY_PLL_POLL_SLEEP_US        500
+ > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
+ > +
+ > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
+ > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
+ > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
+ > +
+ > +struct dp_pll_vco_clk {
+ > +    struct clk_hw hw;
+ > +    unsigned long    rate;        /* current vco rate */
+ > +    u64        min_rate;    /* min vco rate */
+ > +    u64        max_rate;    /* max vco rate */
+ > +    void        *priv;
+ > +};
+ > +
+ > +struct dp_pll_db {
 
-[1] https://elixir.bootlin.com/linux/v5.8/source/drivers/of/device.c#L189
+This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for 
+example, will use slightly different structure.
 
-Hence the NULL-checking is unnecessary.
+ > +    struct msm_dp_pll *base;
+ > +
+ > +    int id;
+ > +    struct platform_device *pdev;
+ > +
+ > +    /* private clocks: */
+ > +    bool fixed_factor_clk[NUM_DP_CLOCKS_MAX];
+ > +    struct clk_hw *hws[NUM_DP_CLOCKS_MAX];
 
-When I first encountered the of_device_get_match_data(), I was also
-thinking that adding the NULL-checks is a good idea, but later on
-somebody pointed out to me (maybe Thierry) that it's unnecessary to do.
+Then these two fields can use exact number of clocks rather than 
+NUM_DP_CLOCKS_MAX.
 
->> +
->> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
->> +	if (IS_ERR(mc))
->> +		return PTR_ERR(mc);
-> 
-> You better to add error log.
+ > +    u32 num_hws;
+ > +
+ > +    /* lane and orientation settings */
+ > +    u8 lane_cnt;
+ > +    u8 orientation;
+ > +
+ > +    /* COM PHY settings */
+ > +    u32 hsclk_sel;
+ > +    u32 dec_start_mode0;
+ > +    u32 div_frac_start1_mode0;
+ > +    u32 div_frac_start2_mode0;
+ > +    u32 div_frac_start3_mode0;
+ > +    u32 integloop_gain0_mode0;
+ > +    u32 integloop_gain1_mode0;
+ > +    u32 vco_tune_map;
+ > +    u32 lock_cmp1_mode0;
+ > +    u32 lock_cmp2_mode0;
+ > +    u32 lock_cmp3_mode0;
+ > +    u32 lock_cmp_en;
+ > +
+ > +    /* PHY vco divider */
+ > +    u32 phy_vco_div;
+ > +    /*
+ > +     * Certain pll's needs to update the same vco rate after resume in
+ > +     * suspend/resume scenario. Cached the vco rate for such plls.
+ > +     */
+ > +    unsigned long    vco_cached_rate;
+ > +    u32        cached_cfg0;
+ > +    u32        cached_cfg1;
+ > +    u32        cached_outdiv;
+ > +
+ > +    uint32_t index;
+ > +};
+ > +
+ > +static inline struct dp_pll_vco_clk *to_dp_vco_hw(struct clk_hw *hw)
+ > +{
+ > +    return container_of(hw, struct dp_pll_vco_clk, hw);
+ > +}
+ > +
+ > +#define to_msm_dp_pll(vco) ((struct msm_dp_pll *)vco->priv)
+ > +
+ > +#define to_dp_pll_db(x)    ((struct dp_pll_db *)x->priv)
+ > +
+ > +int dp_vco_set_rate_10nm(struct clk_hw *hw, unsigned long rate,
+ > +                unsigned long parent_rate);
+ > +unsigned long dp_vco_recalc_rate_10nm(struct clk_hw *hw,
+ > +                unsigned long parent_rate);
+ > +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
+ > +                unsigned long *parent_rate);
+ > +int dp_vco_prepare_10nm(struct clk_hw *hw);
+ > +void dp_vco_unprepare_10nm(struct clk_hw *hw);
+ > +
+ > +int msm_dp_pll_10nm_init(struct msm_dp_pll *dp_pll, int id);
+ > +void msm_dp_pll_10nm_deinit(struct msm_dp_pll *dp_pll);
 
-In practice we should get only -EPROBE_DEFER here ever. I'll consider
-adding the message in the next revision, at least just for consistency.
-
-Thanks!
-
-...
->>  static const struct of_device_id tegra_devfreq_of_match[] = {
->> -	{ .compatible = "nvidia,tegra30-actmon" },
->> -	{ .compatible = "nvidia,tegra124-actmon" },
->> +	{ .compatible = "nvidia,tegra30-actmon",  .data = &tegra30_soc, },
->> +	{ .compatible = "nvidia,tegra124-actmon", .data = &tegra124_soc, },
->>  	{ },
->>  };
+These functions don't seem to be used outside of dp_pll_10nm. What about 
+making them static?
 
 
+-- 
+With best wishes
+Dmitry
