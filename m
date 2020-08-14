@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91D1C433EA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 02:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C56EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 02:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949D52087C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 02:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BFD820715
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 02:42:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZ5AfjFt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSjYyuU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHNClp (ORCPT
+        id S1726929AbgHNCmK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 22:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42092 "EHLO
+        Thu, 13 Aug 2020 22:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgHNClo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 22:41:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E6C9C061757;
-        Thu, 13 Aug 2020 19:41:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mw10so3702703pjb.2;
-        Thu, 13 Aug 2020 19:41:44 -0700 (PDT)
+        with ESMTP id S1726664AbgHNCmK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 22:42:10 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D090C061757;
+        Thu, 13 Aug 2020 19:42:09 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d4so3694386pjx.5;
+        Thu, 13 Aug 2020 19:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kKA+x0uy5NlO00Iqox0wh7pVzFT+/CgBiD5qZahgaMc=;
-        b=OZ5AfjFtazVgCqyUoQKl0fVe4Zv1HBrkEcINpNZ4TF+rbwR3vfDA9C9hHNqhcfyovd
-         hZ0VTlsSUQGx3HzvF866Vm87XoGiPc05zzEE8XuM080SPnyPJg7B7rLW8KmgJ70BHHF4
-         zuSCrRo/Feri8CzJPWbSPNyKWMQRNkaZqHnQXvB4FIe1sWs2HoP3IZfCaJ3jHHjohB91
-         R7iNeBNBpJM8lEn6KPKCMvKuUiUHWOk6KDMEIgZjNiiA8cPE9SSyOHHs45CBiftnkt2D
-         cxK4wqvStzkpHkn2HCgopkUqnND6mu/tHLkHdk8vgl6ZBEIWrRjfD7ip/MJGFtVsGphZ
-         sXNg==
+        bh=/RMbEO1wS6ve28JkP/1VJiMbFcTiFM9NBrI4zgQscQM=;
+        b=WSjYyuU3IicqTzGKZ+qyMjOajK0Y+CUj5/an3UNid9VEFQQQ/GpitZqkA4Xu71HuQ8
+         uyDetJmFxIA+LZ4XKMdbTacXBdQ0BS3SOFEr+zfj8Vs4H+aqeVXRsK6JQK/JbDEBN6KL
+         KRMXnTA5bzHXH18nGWyEk4Oe0sZ/kKopVL4uPgbxwS47tJ5mL4kSYON0DOcpPgu4ncj3
+         JPOGnNh3/vssv6qpnjwMjU1C0PCegmTgZmDWFyDlNeNIQ2ThNiwnKSOI0nCAg2qqb6AX
+         sLmkxHWNJBh1RrM51cityB+EYPnBq7MWoZfATphAbQy5D3+kK4PBubVAY2hgGHqvs2Xq
+         TPhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kKA+x0uy5NlO00Iqox0wh7pVzFT+/CgBiD5qZahgaMc=;
-        b=DYyRChiRKaV+5B5LJo3tkU2omyqzLCEtbOhXBc+sSrGZkooXE5I+vi2y39i1BgI0ON
-         5lKBwSVNb+v+VVO1x0HLELrddFqvygSlbml8rZQgznmkqCvE28UsKbVxukxd70vQL9C4
-         Dnz+e+ihPN+pZFlcs2tBljULB9hxRNT6YoqqYXLNJRw4/+GnXMOxLONa2KXaGeYTRJZj
-         erev6XWhjY2EF/oup+wmLqa+0zSwYr+QSBrsbSKIhjkfuaZUhc6I/Fyj6NNW/P4fELoI
-         K1MjRB/kR7E5LgdSfXjEj+eMlb5viEDYM33NGvDBgeUyB/5aDUgo5iWxtJ9hGnHsHRtu
-         NFTg==
-X-Gm-Message-State: AOAM531ytrF2RMv4j+auf3L+s/0sXzyho4Ilq3gaCkpynJok8A9LpIeZ
-        GCl+pfhmlAgbB5fxt+tui6c=
-X-Google-Smtp-Source: ABdhPJxRU2uTcC7U1hC33YEDToytochFsUhJDPj0RKliYV1Cr2UAtF1I/WVfqPUwtN3PZCCpa2huaw==
-X-Received: by 2002:a17:90a:2207:: with SMTP id c7mr557865pje.206.1597372903537;
-        Thu, 13 Aug 2020 19:41:43 -0700 (PDT)
+        bh=/RMbEO1wS6ve28JkP/1VJiMbFcTiFM9NBrI4zgQscQM=;
+        b=tRNafEInAB3MERGu9lVdOpYuq3usjoa99/z0Sj38c9TiKyMv8ZSlS2LbLd9jPyOwc0
+         2Jk+Y36p4T2uRY82k79yD8GYji0gSv/Je4fvzD3yTGlQsMAf/khwy+wPv+XkMchlgQsI
+         4PDSC1kxk4hELy6fXGuB16glyAYk1b1ETK5qHwtKIty4ahtAxqCa3V5dDOS6iI7Duuju
+         HvuTNgoNlYGrAwtfeusFft9FFvdM8zDNH+YGpFq5CPQ/YCB2o9jN3753cKMDvzwo77PF
+         6ra3jUFYNAUmfOhNvcI7VZdx/M8PmpSrMMzkNMJq526isUqV1qh8cY/6JkDAt2U9TNuG
+         D/kA==
+X-Gm-Message-State: AOAM530W9mQN3kMWHMTaq/OmNC7qj4K7rW9At2+PgVd9apmntBl1dIqG
+        CaGKiY74lx+8Y8WNIXcWsCY=
+X-Google-Smtp-Source: ABdhPJx2Hm4qJq+ws1Wzuo6A7am1wv6hPi7gD/YHP4Z3vqtJe3/ztGrQUEPhXJiyo9idH9IbGNEomw==
+X-Received: by 2002:a17:902:b701:: with SMTP id d1mr562133pls.92.1597372929283;
+        Thu, 13 Aug 2020 19:42:09 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id e8sm7219856pfd.34.2020.08.13.19.41.41
+        by smtp.gmail.com with ESMTPSA id x136sm7189060pfc.28.2020.08.13.19.42.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 19:41:42 -0700 (PDT)
+        Thu, 13 Aug 2020 19:42:08 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linux-arm-msm@vger.kernel.org
@@ -72,14 +72,14 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Joerg Roedel <joro@8bytes.org>,
         linux-arm-kernel@lists.infradead.org,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Herring <robh@kernel.org>,
         Rob Clark <robdclark@chromium.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 10/19] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
-Date:   Thu, 13 Aug 2020 19:41:05 -0700
-Message-Id: <20200814024114.1177553-11-robdclark@gmail.com>
+Subject: [PATCH 17/19] arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+Date:   Thu, 13 Aug 2020 19:41:12 -0700
+Message-Id: <20200814024114.1177553-18-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200810222657.1841322-1-jcrouse@codeaurora.org>
 References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
@@ -92,34 +92,28 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-devices depend on unique features such as split pagetables,
-different stall/halt requirements and other settings. Identify them
-with a compatible string so that they can be identified in the
-arm-smmu implementation specific code.
+Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+split pagetables and per-instance pagetables for drm/msm.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index 503160a7b9a0..5ec5d0d691f6 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -40,6 +40,10 @@ properties:
-               - qcom,sm8150-smmu-500
-               - qcom,sm8250-smmu-500
-           - const: arm,mmu-500
-+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-+        items:
-+          - const: qcom,adreno-smmu
-+          - const: qcom,smmu-v2
-       - description: Marvell SoCs implementing "arm,mmu-500"
-         items:
-           - const: marvell,ap806-smmu-500
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2884577dcb77..6a9adaa401a9 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -4058,7 +4058,7 @@ opp-257000000 {
+ 		};
+ 
+ 		adreno_smmu: iommu@5040000 {
+-			compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
++			compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
+ 			reg = <0 0x5040000 0 0x10000>;
+ 			#iommu-cells = <1>;
+ 			#global-interrupts = <2>;
 -- 
 2.26.2
 
