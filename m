@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF874C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D2CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1A5208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB41220B1F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgHNMJ7 (ORCPT
+        id S1728180AbgHNMKG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:09:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55164 "EHLO inva021.nxp.com"
+        Fri, 14 Aug 2020 08:10:06 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55418 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgHNMJ5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:09:57 -0400
+        id S1728163AbgHNMKD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 08:10:03 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D83B0200CF2;
-        Fri, 14 Aug 2020 14:09:55 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DCB81200251;
+        Fri, 14 Aug 2020 14:10:01 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CB851200251;
-        Fri, 14 Aug 2020 14:09:55 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D9969200DB2;
+        Fri, 14 Aug 2020 14:10:01 +0200 (CEST)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1E0CD203B6;
-        Fri, 14 Aug 2020 14:09:55 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2A8C62030E;
+        Fri, 14 Aug 2020 14:10:01 +0200 (CEST)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Mike Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -44,9 +44,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 09/17] arm64: dts: Remove imx-hdmimix-reset header file
-Date:   Fri, 14 Aug 2020 15:09:18 +0300
-Message-Id: <1597406966-13740-10-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v2 17/17] arm64: dts: imx8mp: Add hdmi_blk_ctrl node
+Date:   Fri, 14 Aug 2020 15:09:26 +0300
+Message-Id: <1597406966-13740-18-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
 References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
@@ -56,25 +56,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The hdmi BLK_CTRL ids have been moved to imx8mp-reset.h
+Some of the features of the hdmi_ctrl will be used by some
+different drivers in a way those drivers will know best, so adding the
+syscon compatible we allow those to do just that. Only the resets
+and the clocks are registered bit the clk-blk-ctrl driver.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 9de2aa1..daa1769 100644
+index 2d6d213..5503edd 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -4,6 +4,7 @@
-  */
+@@ -750,6 +750,14 @@
+ 				#clock-cells = <1>;
+ 				#reset-cells = <1>;
+ 			};
++
++			hdmi_blk_ctrl: clock-controller@32fc0000 {
++				compatible = "fsl,imx8mp-hdmi-blk-ctrl", "syscon";
++				reg = <0x32fc0000 0x1000>;
++
++				#clock-cells = <1>;
++				#reset-cells = <1>;
++			};
+ 		};
  
- #include <dt-bindings/clock/imx8mp-clock.h>
-+#include <dt-bindings/reset/imx8mp-reset.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 		aips5: bus@30c00000 {
 -- 
 2.7.4
 
