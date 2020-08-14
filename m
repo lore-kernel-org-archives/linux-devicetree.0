@@ -2,118 +2,187 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11846C433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E22FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5EAC206A4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C1920708
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:54:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="USSgOmET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgHNKcM (ORCPT
+        id S1727838AbgHNKxz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:32:12 -0400
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:46766 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726012AbgHNKcM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:32:12 -0400
-Received: from [188.210.212.0] (helo=localhost.localdomain)
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1k6WZD-000572-4N; Fri, 14 Aug 2020 11:04:07 +0100
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Fri, 14 Aug 2020 06:53:55 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:16970 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727843AbgHNKxx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:53:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597402432; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=x7wA4+lvojLjr8mShenRnk8ElOYsHwhXwXEZ2cLlr/Q=; b=USSgOmET0T1dULPhdk8gsZm2zmci8JsbLPpg7yace3AP82/qJOqSYJlcHE8v6EWTLFFxCSYR
+ vsIhNWfJ+avZgeXJ1xHhQZxnlOSF7w0AImsWanTp2Kqg20ec0bjRcO+GNTOgUbqfCVxJZq6X
+ r5em3dqcGCgPp68c6MeARzPq0Qo=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f366d36440a07969a0a9c0d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 10:53:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B7057C43391; Fri, 14 Aug 2020 10:53:41 +0000 (UTC)
+Received: from rohkumar-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rohitkr)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 971E4C433C6;
+        Fri, 14 Aug 2020 10:53:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 971E4C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
+From:   Rohit kumar <rohitkr@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     thomas.preston@codethink.co.uk
-Subject: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
-Date:   Fri, 14 Aug 2020 11:03:55 +0100
-Message-Id: <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Cc:     Ajit Pandey <ajitp@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v6 01/12] ASoC: qcom: Add common array to initialize soc based core clocks
+Date:   Fri, 14 Aug 2020 16:22:57 +0530
+Message-Id: <1597402388-14112-2-git-send-email-rohitkr@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
+References: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-- Fix a typo where mcp23x17 configs are referred to as mcp23x16.
-- Fix precious range to include INTCAP{A,B}, which clear on read.
-- Fix precious range to include GPIOB, which clears on read.
-- Fix volatile range to include GPIOB, to fix debugfs registers
-  reporting different values than `gpioget gpiochip2 {0..15}`.
+From: Ajit Pandey <ajitp@codeaurora.org>
 
-Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+LPASS variants have their own soc specific clocks that needs to be
+enabled for MI2S audio support. Added a common variable in drvdata to
+initialize such clocks using bulk clk api. Such clock names is
+defined in variants specific data and needs to fetched during init.
+
+Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
+Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/pinctrl/pinctrl-mcp23s08.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ sound/soc/qcom/lpass-apq8016.c | 39 +++++++++++++++++++--------------------
+ sound/soc/qcom/lpass.h         | 10 +++++++---
+ 2 files changed, 26 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index 42b12ea14d6b..0138638276e7 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -87,7 +87,7 @@ const struct regmap_config mcp23x08_regmap = {
- };
- EXPORT_SYMBOL_GPL(mcp23x08_regmap);
+diff --git a/sound/soc/qcom/lpass-apq8016.c b/sound/soc/qcom/lpass-apq8016.c
+index b3610d0..8210e37 100644
+--- a/sound/soc/qcom/lpass-apq8016.c
++++ b/sound/soc/qcom/lpass-apq8016.c
+@@ -161,32 +161,27 @@ static int apq8016_lpass_free_dma_channel(struct lpass_data *drvdata, int chan)
+ static int apq8016_lpass_init(struct platform_device *pdev)
+ {
+ 	struct lpass_data *drvdata = platform_get_drvdata(pdev);
++	struct lpass_variant *variant = drvdata->variant;
+ 	struct device *dev = &pdev->dev;
+-	int ret;
++	int ret, i;
  
--static const struct reg_default mcp23x16_defaults[] = {
-+static const struct reg_default mcp23x17_defaults[] = {
- 	{.reg = MCP_IODIR << 1,		.def = 0xffff},
- 	{.reg = MCP_IPOL << 1,		.def = 0x0000},
- 	{.reg = MCP_GPINTEN << 1,	.def = 0x0000},
-@@ -98,23 +98,23 @@ static const struct reg_default mcp23x16_defaults[] = {
- 	{.reg = MCP_OLAT << 1,		.def = 0x0000},
+-	drvdata->pcnoc_mport_clk = devm_clk_get(dev, "pcnoc-mport-clk");
+-	if (IS_ERR(drvdata->pcnoc_mport_clk)) {
+-		dev_err(dev, "error getting pcnoc-mport-clk: %ld\n",
+-			PTR_ERR(drvdata->pcnoc_mport_clk));
+-		return PTR_ERR(drvdata->pcnoc_mport_clk);
+-	}
+ 
+-	ret = clk_prepare_enable(drvdata->pcnoc_mport_clk);
++	drvdata->clks = devm_kcalloc(dev, variant->num_clks,
++				     sizeof(*drvdata->clks), GFP_KERNEL);
++	drvdata->num_clks = variant->num_clks;
++
++	for (i = 0; i < drvdata->num_clks; i++)
++		drvdata->clks[i].id = variant->clk_name[i];
++
++	ret = devm_clk_bulk_get(dev, drvdata->num_clks, drvdata->clks);
+ 	if (ret) {
+-		dev_err(dev, "Error enabling pcnoc-mport-clk: %d\n", ret);
++		dev_err(dev, "Failed to get clocks %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-	drvdata->pcnoc_sway_clk = devm_clk_get(dev, "pcnoc-sway-clk");
+-	if (IS_ERR(drvdata->pcnoc_sway_clk)) {
+-		dev_err(dev, "error getting pcnoc-sway-clk: %ld\n",
+-			PTR_ERR(drvdata->pcnoc_sway_clk));
+-		return PTR_ERR(drvdata->pcnoc_sway_clk);
+-	}
+-
+-	ret = clk_prepare_enable(drvdata->pcnoc_sway_clk);
++	ret = clk_bulk_prepare_enable(drvdata->num_clks, drvdata->clks);
+ 	if (ret) {
+-		dev_err(dev, "Error enabling pcnoc_sway_clk: %d\n", ret);
++		dev_err(dev, "apq8016 clk_enable failed\n");
+ 		return ret;
+ 	}
+ 
+@@ -197,8 +192,7 @@ static int apq8016_lpass_exit(struct platform_device *pdev)
+ {
+ 	struct lpass_data *drvdata = platform_get_drvdata(pdev);
+ 
+-	clk_disable_unprepare(drvdata->pcnoc_mport_clk);
+-	clk_disable_unprepare(drvdata->pcnoc_sway_clk);
++	clk_bulk_disable_unprepare(drvdata->num_clks, drvdata->clks);
+ 
+ 	return 0;
+ }
+@@ -219,6 +213,11 @@ static struct lpass_variant apq8016_data = {
+ 	.wrdma_reg_stride	= 0x1000,
+ 	.wrdma_channel_start	= 5,
+ 	.wrdma_channels		= 2,
++	.clk_name		= (const char*[]) {
++				   "pcnoc-mport-clk",
++				   "pcnoc-sway-clk",
++				  },
++	.num_clks		= 2,
+ 	.dai_driver		= apq8016_lpass_cpu_dai_driver,
+ 	.num_dai		= ARRAY_SIZE(apq8016_lpass_cpu_dai_driver),
+ 	.dai_osr_clk_names	= (const char *[]) {
+diff --git a/sound/soc/qcom/lpass.h b/sound/soc/qcom/lpass.h
+index bd19ec5..450020e 100644
+--- a/sound/soc/qcom/lpass.h
++++ b/sound/soc/qcom/lpass.h
+@@ -51,9 +51,9 @@ struct lpass_data {
+ 	/* used it for handling interrupt per dma channel */
+ 	struct snd_pcm_substream *substream[LPASS_MAX_DMA_CHANNELS];
+ 
+-	/* 8016 specific */
+-	struct clk *pcnoc_mport_clk;
+-	struct clk *pcnoc_sway_clk;
++	/* SOC specific clock list */
++	struct clk_bulk_data *clks;
++	int num_clks;
+ 
  };
  
--static const struct regmap_range mcp23x16_volatile_range = {
-+static const struct regmap_range mcp23x17_volatile_range = {
- 	.range_min = MCP_INTF << 1,
--	.range_max = MCP_GPIO << 1,
-+	.range_max = (MCP_GPIO << 1) + 1,
+@@ -89,6 +89,10 @@ struct lpass_variant {
+ 	int num_dai;
+ 	const char * const *dai_osr_clk_names;
+ 	const char * const *dai_bit_clk_names;
++
++	/* SOC specific clocks configuration */
++	const char **clk_name;
++	int num_clks;
  };
  
--static const struct regmap_access_table mcp23x16_volatile_table = {
--	.yes_ranges = &mcp23x16_volatile_range,
-+static const struct regmap_access_table mcp23x17_volatile_table = {
-+	.yes_ranges = &mcp23x17_volatile_range,
- 	.n_yes_ranges = 1,
- };
- 
--static const struct regmap_range mcp23x16_precious_range = {
--	.range_min = MCP_GPIO << 1,
--	.range_max = MCP_GPIO << 1,
-+static const struct regmap_range mcp23x17_precious_range = {
-+	.range_min = MCP_INTCAP << 1,
-+	.range_max = (MCP_GPIO << 1) + 1,
- };
- 
--static const struct regmap_access_table mcp23x16_precious_table = {
--	.yes_ranges = &mcp23x16_precious_range,
-+static const struct regmap_access_table mcp23x17_precious_table = {
-+	.yes_ranges = &mcp23x17_precious_range,
- 	.n_yes_ranges = 1,
- };
- 
-@@ -124,10 +124,10 @@ const struct regmap_config mcp23x17_regmap = {
- 
- 	.reg_stride = 2,
- 	.max_register = MCP_OLAT << 1,
--	.volatile_table = &mcp23x16_volatile_table,
--	.precious_table = &mcp23x16_precious_table,
--	.reg_defaults = mcp23x16_defaults,
--	.num_reg_defaults = ARRAY_SIZE(mcp23x16_defaults),
-+	.volatile_table = &mcp23x17_volatile_table,
-+	.precious_table = &mcp23x17_precious_table,
-+	.reg_defaults = mcp23x17_defaults,
-+	.num_reg_defaults = ARRAY_SIZE(mcp23x17_defaults),
- 	.cache_type = REGCACHE_FLAT,
- 	.val_format_endian = REGMAP_ENDIAN_LITTLE,
- };
+ /* register the platform driver from the CPU DAI driver */
 -- 
-2.26.2
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
