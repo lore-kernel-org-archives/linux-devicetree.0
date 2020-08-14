@@ -2,64 +2,68 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E106C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 00:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE36C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 00:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DAE2078B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 00:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47CB2078B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 00:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQhlHeLx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V83dDb2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHNAHD (ORCPT
+        id S1726639AbgHNAsw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 13 Aug 2020 20:07:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgHNAHC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 20:07:02 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0B5C061757;
-        Thu, 13 Aug 2020 17:07:02 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id v15so3938299lfg.6;
-        Thu, 13 Aug 2020 17:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Oci6ZvenIfCUV+1S+AkheVmNIZMQwAhafWey7aektgA=;
-        b=iQhlHeLx1aWG1gtpBGYysHbZ/PV+4j4N9vGWyKy1fHBWqCCRWPmkuNhY2pQkvr8A9D
-         xFUJXHDnOYKh8xLPZPnzFxuaZkDDtGjU1N1uH0tOrnOvN6XOJkK4rAxBio7A8l5brgiz
-         kxBdICFa7K+JymQqhz3MBg78T2b2l0RBvXJHxMNm9uvbQfVR44gZ4DAY5gTG9Cl2VHDp
-         S5qmqYTQNorGYUrKuWofCIJ686oX1Kc1/MNidAYi4vJsJKA++Elu2B1T9wcIcr6eYdSs
-         6IBrKWke153uOo+xScLoNOQlADaHrhYyOGK+ECSTqDdGNyd0Nq3gLNgRY+B+Y2gKmnun
-         qEAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Oci6ZvenIfCUV+1S+AkheVmNIZMQwAhafWey7aektgA=;
-        b=B7Osmu0nZr0Y1X80OvKEZQnBdvgCuDVHNiAOO3O0+Z6QkEsVyzGD8fVwdLMs4MjnJW
-         gPV+1Nfqegnthsuc/pGLIyqgO7KVxymDS8akUAlLqsDJzwLqlIIMktDT4sI5mT43gyc5
-         gOOC1HIjTkIk42UVA0kgjXN67vm4y9cQacDGfGvUrh+Z6Wm/ocXSNU0MQY37jy0zC+Pq
-         u44uA9rfuV41BgsUFhyExYwCne86VvFzxc3kdbnG+yHKX+WgyKRI6yIE3WUKmNtuAyIe
-         u1/julA4PLMBmVdAmDeMDrTx9Ai1NAe42oNEu4A5hpn/blmU5xbZ3hoGTUMLeVOIpITk
-         UC7g==
-X-Gm-Message-State: AOAM530kCVyuo1Jxl9ovKRQsyevG8q220XX2LU+DRdacQOSLV0iT5OeZ
-        mkEVN+C5fMBXtHEJtQqCx0c=
-X-Google-Smtp-Source: ABdhPJzNloVP09snvdQkyGDrXZJUMn+kRHX128D7Jb4C6GCWlixokjAg1tr/qpTj97IEsubFf26TCw==
-X-Received: by 2002:a19:7ec3:: with SMTP id z186mr3302520lfc.3.1597363620834;
-        Thu, 13 Aug 2020 17:07:00 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id c17sm1504450lfr.23.2020.08.13.17.06.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2020 17:07:00 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        Thu, 13 Aug 2020 20:48:52 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:44299 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgHNAsw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 13 Aug 2020 20:48:52 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200814004847epoutp018789e081b3085e746b96c21d23ea747b~q-Ae7CEUR0246402464epoutp01g
+        for <devicetree@vger.kernel.org>; Fri, 14 Aug 2020 00:48:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200814004847epoutp018789e081b3085e746b96c21d23ea747b~q-Ae7CEUR0246402464epoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597366128;
+        bh=e4Xon6lpxSkKHbuO67+S1JkH0bpnqs6utJMAst9eaWQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=V83dDb2d69JHn7xuocrwp79il8KJhEnIrV4IBGMh+3b4LTwSgO27VDHzODIIaDAM/
+         tCQK0IJrXJMxp0mwO5pAb5ikB2W3disLYVyoXAB1YdRiykRvC3UI3KEa3KSFPeAKDm
+         v/pLJtm9xY632E5wBJaIFXGajG6Y2vrB8Yb2ivIg=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200814004847epcas1p202f4fea01ce691ab260db05de02f09b2~q-AedKpw52393723937epcas1p2v;
+        Fri, 14 Aug 2020 00:48:47 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BSPvK1nW3zMqYkY; Fri, 14 Aug
+        2020 00:48:45 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        96.06.29173.D6FD53F5; Fri, 14 Aug 2020 09:48:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200814004844epcas1p1b1a40e6e5106231df3abc92e5e5d5158~q-Ab9aMUX2057120571epcas1p1Y;
+        Fri, 14 Aug 2020 00:48:44 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200814004844epsmtrp1d8e5fc0929ed11503a5c137a56580896~q-Ab8g-tE1694616946epsmtrp1C;
+        Fri, 14 Aug 2020 00:48:44 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-ca-5f35df6d4f8f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B7.47.08303.C6FD53F5; Fri, 14 Aug 2020 09:48:44 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200814004844epsmtip2e3561dec68fbdd0d219f8de608946601~q-AbqMUbS0941709417epsmtip2a;
+        Fri, 14 Aug 2020 00:48:44 +0000 (GMT)
+Subject: Re: [PATCH v5 12/36] PM / devfreq: tegra20: Use MC timings for
+ building OPP table
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,202 +72,134 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Peter De Schrijver <pdeschrijver@nvidia.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
         Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
         Mikko Perttunen <cyndis@kapsi.fi>
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v5 00/36] Introduce memory interconnect for NVIDIA Tegra SoCs
-Date:   Fri, 14 Aug 2020 03:05:45 +0300
-Message-Id: <20200814000621.8415-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <784f000f-17fd-550d-382c-1f9c11ce808b@samsung.com>
+Date:   Fri, 14 Aug 2020 10:00:45 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200814000621.8415-13-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJJsWRmVeSWpSXmKPExsWy7bCmvm7ufdN4g3eTOCzefXrKajH/yDlW
+        i9UfHzNaXPn6ns1i+t5NbBYtsxaxWJxtesNucXnXHDaLz71HGC06v8xis7h4ytXiduMKNotJ
+        a6cyWrTuPcJu8e/aRhaLn7vmsTgIeLy/0crusXPWXXaPS+f+MHtsWtXJ5nHn2h42j/vdx5k8
+        epvfsXn0bVnF6PF5k1wAZ1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5i
+        bqqtkotPgK5bZg7QG0oKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XUgpScAssCveLE3OLS
+        vHS95PxcK0MDAyNToMKE7IwVV54xFfQLVfyac5mpgfEkXxcjJ4eEgInEh/MTWLoYuTiEBHYw
+        SsyZ2cUE4XxilNi5qgkq85lRYtbsD0wwLc9v7WeHSOxilJjYeB+q5T2jxPsVG9hAqoQFYiS2
+        L9jPCpIQETjCLLG68zgjSIJZYAajxJ09yiA2m4CWxP4XN8Aa+AUUJa7+eAxWwytgJ7G7+zsz
+        iM0ioCrx9vYrsBpRgTCJk9taoGoEJU7OfMICYnMKmEk839fOBjFfXOLWk/lMELa8xPa3c5gh
+        zv7PIdH0IhjCdpFYt2EPC4QtLPHq+BZ2CFtK4mV/G5RdLbHy5BE2kAckBDoYJbbsv8AKkTCW
+        2L90MtACDqAFmhLrd+lDhBUldv6eC/Ujn8S7rz2sICUSArwSHW1CECXKEpcf3IWGoqTE4vZO
+        tgmMSrOQfDMLyQezkHwwC2HZAkaWVYxiqQXFuempxYYFxsjRvYkRnMa1zHcwTnv7Qe8QIxMH
+        4yFGCQ5mJRFe5svG8UK8KYmVValF+fFFpTmpxYcYTYHhO5FZSjQ5H5hJ8kriDU2NjI2NLUwM
+        zUwNDZXEeR/eUogXEkhPLEnNTk0tSC2C6WPi4JRqYOKW2qRwNUCq8/XZJSvl7c+tWSi6XWDB
+        8rtXKtI2ehUV7N9yuvPPf3nf5JWiP1+3f85d5ZV1eltVOcNbqVCfKQ9PHJUqTIx6myTswLgx
+        uLH1DuvHp5leMhOf16lxHJue1qEj+Oh/o9uNfVuvrM+ez7zVf4vPPeaOztV556SPL/mcUPmn
+        1rQ8Y/ZzTubaDJ3/brJscjxT17+cYrKS2d83z7bMwe/+zsuPvPijZlg8Yk9hnJD2ITdlVnHG
+        2oqHdrJbys6Inbc8dXTruUtiR8QuiRkvLjW0+Pzs7K6o92t9101hauG2NljHVCag/NpwTtH0
+        ZepSzFKH3Z7dfnT1x7PAfrezSh+2+XzKvlrW8nirXpASS3FGoqEWc1FxIgC+/a0abAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCSvG7OfdN4g7nnNS3efXrKajH/yDlW
+        i9UfHzNaXPn6ns1i+t5NbBYtsxaxWJxtesNucXnXHDaLz71HGC06v8xis7h4ytXiduMKNotJ
+        a6cyWrTuPcJu8e/aRhaLn7vmsTgIeLy/0crusXPWXXaPS+f+MHtsWtXJ5nHn2h42j/vdx5k8
+        epvfsXn0bVnF6PF5k1wAZxSXTUpqTmZZapG+XQJXxoorz5gK+oUqfs25zNTAeJKvi5GTQ0LA
+        ROL5rf3sXYxcHEICOxglZt8+zAKRkJSYdvEocxcjB5AtLHH4cDFEzVtGid4jm5hBaoQFYiS2
+        L9jPCpIQETjGLLHp9GkmEIdZYAajxJ8NG9lBqoQEtjBKdD5jA7HZBLQk9r+4AWbzCyhKXP3x
+        mBHE5hWwk9jd/R1sKouAqsTb26/AakQFwiR2LnnMBFEjKHFy5hOw6zgFzCSe72sHq2EWUJf4
+        M+8SM4QtLnHryXwmCFteYvvbOcwTGIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYsMMpL
+        LdcrTswtLs1L10vOz93ECI5oLa0djHtWfdA7xMjEwXiIUYKDWUmEl/mycbwQb0piZVVqUX58
+        UWlOavEhRmkOFiVx3q+zFsYJCaQnlqRmp6YWpBbBZJk4OKUamDYIzTkUVrH0YNyv26VXfJ+F
+        hiw3kkhZ7vZHTieDY3bSGt5Wu3cHDHhTHIxCjx19/135YfyRBflBzV+178u+Ebx1MPLa8q9N
+        bU9PLntbHXpvvV5i+W4tFc/fMwOE7zg2Mpkd+Rq1n8njC6flRb3r3AuXz9mVkOUqXPP11Zzs
+        j1/MzLYGRtyZv8vo4K/tOe/u+T488P5HVkGS3JPjJR0FQUGxnzf/WqLPzsJRxXV0zZ+X12/X
+        RUcYLHxssd6trf6SWvuaSZFsjWcmioYpR2zT/q4W18tkVp/g9Uq/WDF89hxl+7/BU9JzpHq7
+        eRcsDmOJ1XisYf1PqHvOGrVpf/dsVk54VNOZozlrotCroqxpZ5VYijMSDbWYi4oTAUv9ZlFX
+        AwAA
+X-CMS-MailID: 20200814004844epcas1p1b1a40e6e5106231df3abc92e5e5d5158
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200814000944epcas1p4da08e1a6b03c80013a997fdc856a9486
+References: <20200814000621.8415-1-digetx@gmail.com>
+        <CGME20200814000944epcas1p4da08e1a6b03c80013a997fdc856a9486@epcas1p4.samsung.com>
+        <20200814000621.8415-13-digetx@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Hi Dmitry,
 
-This series brings initial support for memory interconnect to Tegra20 and
-Tegra30 SoCs.
+On 8/14/20 9:05 AM, Dmitry Osipenko wrote:
+> The clk_round_rate() won't be usable for building OPP table once
+> interconnect support will be added to the EMC driver because that CLK API
+> function limits the rounded rate based on the clk rate that is imposed by
+> active clk-users, and thus, the rounding won't work as expected if
+> interconnect will set the minimum EMC clock rate before devfreq driver is
+> loaded. The struct tegra_mc contains memory timings which could be used by
+> the devfreq driver for building up OPP table instead of rounding clock
+> rate, this patch implements this idea.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra20-devfreq.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+> index 6469dc69c5e0..a985f24098f5 100644
+> --- a/drivers/devfreq/tegra20-devfreq.c
+> +++ b/drivers/devfreq/tegra20-devfreq.c
+> @@ -123,8 +123,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  {
+>  	struct tegra_devfreq *tegra;
+>  	struct tegra_mc *mc;
+> -	unsigned long max_rate;
+> -	unsigned long rate;
+> +	unsigned int i;
+>  	int err;
+>  
+>  	mc = tegra_get_memory_controller();
+> @@ -135,6 +134,11 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> +	if (!mc->num_timings) {
+> +		dev_info(&pdev->dev, "memory controller has no timings\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+>  	if (!tegra)
+>  		return -ENOMEM;
+> @@ -151,12 +155,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  
+>  	tegra->regs = mc->regs;
+>  
+> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+> -
+> -	for (rate = 0; rate <= max_rate; rate++) {
+> -		rate = clk_round_rate(tegra->emc_clock, rate);
+> -
+> -		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+> +	for (i = 0; i < mc->num_timings; i++) {
+> +		err = dev_pm_opp_add(&pdev->dev, mc->timings[i].rate, 0);
+>  		if (err) {
+>  			dev_err(&pdev->dev, "failed to add opp: %d\n", err);
+>  			goto remove_opps;
+> 
 
-For the starter only display controllers are getting interconnect API
-support, others could be supported later on. The display controllers
-have the biggest demand for interconnect API right now because dynamic
-memory frequency scaling can't be done safely without taking into account
-bandwidth requirement from the displays.
-
-Changelog:
-
-v5: - The devfreq drivers now won't probe if memory timings aren't specified
-      in a device-tree, like was suggested by Chanwoo Choi in a review comment
-      to v4. Initially I wanted to always probe the driver even with a single
-      fixed memory freq, but after a closer look turned out it can't be done
-      easily for Tegra20 driver.
-
-    - The "interconnect: Relax requirement in of_icc_get_from_provider()"
-      patch was already applied, hence one less patch in comparison to v4.
-
-    - Renamed display interconnect paths in accordance to the names that
-      were used by Thierry Reding in one of his recent patches that supposed
-      to update the Host1x's DT binding.
-
-    - Added acks from Chanwoo Choi.
-
-    - Added clarifying comment to tegra_mc_icc_set() about why it's a dummy
-      function, this is done in a response to the review comment made by
-      Georgi Djakov to v4.
-
-v4: - All drivers that use interconnect API now select it in the Kconfig in
-      order to properly express the build dependency.
-
-    - The IS_ENABLED(CONFIG_INTERCONNECT) is dropped now from all patches.
-
-    - Added MODULE_AUTHOR() to the modularized drivers, for completeness.
-
-    - Added missed TEGRA_MC Kconfig dependency for the Tegra20 EMC driver.
-
-    - Added more acks from Rob Herring that I accidentally missed to add in v3.
-
-v3: - Added acks from Rob Herring that were given to some of the v2 patches.
-
-    - Specified name of the TRM documentation chapter in the patch
-      "dt-bindings: host1x: Document new interconnect properties", which was
-      suggested by Rob Herring in the review comment to v2.
-
-    - Added patches that allow EMC drivers to be compiled as a loadable kernel
-      modules. This came up during of the v2 review when Georgi Djakov pointed
-      out that interconnect-core could be compiled as a kernel module. Please
-      note that the Tegra124 EMC driver is compile-tested only, I don't have
-      Tegra124 HW.
-
-    - In the review comment to [1] Stephen Boyd suggested that it will be
-      better not to make changes to clk API, which was needed in order to
-      avoid clashing of the interconnect driver with the devfreq in regards
-      to memory clk-rate rounding.
-
-      [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200330231617.17079-3-digetx@gmail.com/
-
-      Stephen Boyd suggested that instead we should provide OPP table via DT.
-      I tried to investigate whether this could be done and turned out
-      it's a bit complicated. Technically it should be doable, but:
-
-        1. For now we don't fully support voltage scaling of the CORE regulator
-           and so OPP table in the DT isn't really needed today. We can
-           generate table from the memory timings, which is what Tegra devfreq
-           drivers already do.
-
-        2. The OPP table should be defined in the DT for the Memory Controller
-           node and then its usage somehow should be shared by both interconnect
-           and devfreq drivers. It's not obvious what's the best way to do it.
-
-      So, it will be much better to postpone the DT OPP table addition
-      until these questions are resolved. We can infer OPPs from the
-      memory timings and we could get the memory rates from the memory
-      driver directly, avoiding the problems induced by the clk API usage.
-      This idea is implemented in v3, see these patches:
-
-        PM / devfreq: tegra20: Use MC timings for building OPP table
-        PM / devfreq: tegra30: Use MC timings for building OPP table
-
-v2: - Instead of a single dma-mem interconnect path, the paths are now
-      defined per memory client.
-
-    - The EMC provider now uses #interconnect-cells=<0>.
-
-    - Dropped Tegra124 because there is no enough information about how to
-      properly calculate required EMC clock rate for it and I don't have
-      hardware for testing. Somebody else will have to work on it.
-
-    - Moved interconnect providers code into drivers/memory/tegra/*.
-
-    - Added "Create tegra20-devfreq device" patch because interconnect
-      is not very usable without the devfreq memory auto-scaling since
-      memory freq will be fixed to the display's requirement.
-
-Dmitry Osipenko (36):
-  clk: Export clk_hw_reparent()
-  clk: tegra: Remove Memory Controller lock
-  clk: tegra: Export Tegra20 EMC kernel symbols
-  memory: tegra20-emc: Make driver modular
-  memory: tegra30-emc: Make driver modular
-  memory: tegra124-emc: Make driver modular
-  memory: tegra124-emc: Use devm_platform_ioremap_resource
-  soc/tegra: fuse: Export tegra_read_ram_code()
-  memory: tegra20-emc: Initialize MC timings
-  PM / devfreq: tegra20: Silence deferred probe error
-  PM / devfreq: tegra30: Silence deferred probe error
-  PM / devfreq: tegra20: Use MC timings for building OPP table
-  PM / devfreq: tegra30: Use MC timings for building OPP table
-  PM / devfreq: tegra20: Add error messages to tegra_devfreq_target()
-  PM / devfreq: tegra30: Add error messages to tegra_devfreq_target()
-  PM / devfreq: tegra20: Adjust clocks conversion ratio and polling
-    interval
-  PM / devfreq: tegra20: Relax Kconfig dependency
-  dt-bindings: memory: tegra20: mc: Document new interconnect property
-  dt-bindings: memory: tegra20: emc: Document new interconnect property
-  dt-bindings: memory: tegra30: mc: Document new interconnect property
-  dt-bindings: memory: tegra30: emc: Document new interconnect property
-  dt-bindings: host1x: Document new interconnect properties
-  dt-bindings: memory: tegra20: Add memory client IDs
-  dt-bindings: memory: tegra30: Add memory client IDs
-  ARM: tegra: Add interconnect properties to Tegra20 device-tree
-  ARM: tegra: Add interconnect properties to Tegra30 device-tree
-  memory: tegra-mc: Register as interconnect provider
-  memory: tegra20-emc: Use devm_platform_ioremap_resource
-  memory: tegra20-emc: Continue probing if timings are missing in
-    device-tree
-  memory: tegra20-emc: Register as interconnect provider
-  memory: tegra20-emc: Create tegra20-devfreq device
-  memory: tegra30-emc: Continue probing if timings are missing in
-    device-tree
-  memory: tegra30-emc: Register as interconnect provider
-  drm/tegra: dc: Support memory bandwidth management
-  drm/tegra: dc: Tune up high priority request controls for Tegra20
-  drm/tegra: dc: Extend debug stats with total number of events
-
- .../display/tegra/nvidia,tegra20-host1x.txt   |  68 +++++
- .../memory-controllers/nvidia,tegra20-emc.txt |   2 +
- .../memory-controllers/nvidia,tegra20-mc.txt  |   3 +
- .../nvidia,tegra30-emc.yaml                   |   6 +
- .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
- arch/arm/boot/dts/tegra20.dtsi                |  22 +-
- arch/arm/boot/dts/tegra30.dtsi                |  23 +-
- drivers/clk/clk.c                             |   1 +
- drivers/clk/tegra/clk-divider.c               |   4 +-
- drivers/clk/tegra/clk-tegra114.c              |   6 +-
- drivers/clk/tegra/clk-tegra124-emc.c          |  63 ++--
- drivers/clk/tegra/clk-tegra124.c              |   8 +-
- drivers/clk/tegra/clk-tegra20-emc.c           |   3 +
- drivers/clk/tegra/clk-tegra20.c               |   3 +-
- drivers/clk/tegra/clk-tegra30.c               |   3 +-
- drivers/clk/tegra/clk.h                       |  14 +-
- drivers/devfreq/Kconfig                       |   2 +-
- drivers/devfreq/tegra20-devfreq.c             |  50 +--
- drivers/devfreq/tegra30-devfreq.c             | 110 +++++--
- drivers/gpu/drm/tegra/Kconfig                 |   1 +
- drivers/gpu/drm/tegra/dc.c                    | 289 +++++++++++++++++-
- drivers/gpu/drm/tegra/dc.h                    |  13 +
- drivers/gpu/drm/tegra/drm.c                   |  19 ++
- drivers/gpu/drm/tegra/plane.c                 |   1 +
- drivers/gpu/drm/tegra/plane.h                 |   4 +-
- drivers/memory/tegra/Kconfig                  |   9 +-
- drivers/memory/tegra/mc.c                     | 121 ++++++++
- drivers/memory/tegra/mc.h                     |   8 +
- drivers/memory/tegra/tegra124-emc.c           |  36 ++-
- drivers/memory/tegra/tegra20-emc.c            | 222 ++++++++++++--
- drivers/memory/tegra/tegra30-emc.c            | 156 ++++++++--
- drivers/soc/tegra/fuse/tegra-apbmisc.c        |   2 +
- include/dt-bindings/memory/tegra20-mc.h       |  53 ++++
- include/dt-bindings/memory/tegra30-mc.h       |  67 ++++
- include/linux/clk/tegra.h                     |  11 +
- include/soc/tegra/emc.h                       |  16 -
- include/soc/tegra/mc.h                        |   3 +
- 37 files changed, 1228 insertions(+), 199 deletions(-)
- delete mode 100644 include/soc/tegra/emc.h
+Ackded-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 -- 
-2.27.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
