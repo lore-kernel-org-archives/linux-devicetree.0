@@ -2,261 +2,385 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273D7C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36250C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E6C20829
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="UzOLknhX"
+	by mail.kernel.org (Postfix) with ESMTP id ED5AC20774
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 16:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597422106;
+	bh=LRsp/btt9UOyYtJvFlQ9n7bPsWOsc4kVvQpIJUQ/QV4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jTtkQw752ytkWbF/U25Atv35BoSPNn+oE2BhWfM58E9nNkgUxNWZWoQP5y0TPMLNP
+	 2/SPDnfCQ27O6+3QDmTGfj2kOzCf07gokHSKxmIbrOZh05zdRcchqNup9PI8QzoNJS
+	 YKY4IA8rC+0rA60GHs5NQtecGwRCr0rknlEgU/Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHNQCl (ORCPT
+        id S1728342AbgHNQVo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 12:02:41 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:51476 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgHNQCj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 12:02:39 -0400
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Aug 2020 12:02:36 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=5875; q=dns/txt; s=axis-central1;
-  t=1597420958; x=1628956958;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Wlkm85miuh5Ubj0O9GpEOx4iAJ2QCuLhxi0fh2VaIPQ=;
-  b=UzOLknhXsV7g7+2K3nnfFYEUSEqnwEIV1fWc49gw0bKvogpswYR+SwaZ
-   Nu4SEKBg6lCRGs4D3TTMqYxkarD1X9cciJ86yD8s+ui4AxkHEjssHJ2cW
-   VIgZUi+v6JPVzctMVFX6lJvOW5DhchIpE+2iqemAHKJ9XThxyQAP2CWvK
-   iI93+x1ZzXe/k9wKvbnwrhTIDop7BC+ILKejYLVJFdjB8Zoqab4TZH6LW
-   w+OQJgtVJQ/m9VevpJyWWlWbghI65RYLlb6s6XLRqUu6xy9DiJpNEyNoL
-   JZkncf7f+x2xR9f2j4pwzyyJ+YrAJz7aVdHeALAeJ+3zWlH8bFyAIerXw
-   A==;
-IronPort-SDR: Y6dBNiK6gqbk+f47HBq+NTLa04lL5naTNkiBigGNHgHYnNFFIaEfw15Zf4X/TejBBRHPT92741
- jKHPHWASfgHTo9Hnocqvq8b9TrOr4LEFuZNgGhSbj6iP+gZKr83Uj/uTPBvOfsu2GGXL5JMyU0
- ft/DinMEqmIufuV5wz3JVwYKoX8FEj8yeTEQs8NalTNnb0cqOGhoudP+ISzuo3jx4GHFaAPZko
- 8T9mflhEnRqZCd97hAh1P4W2rXW/fwAFplnxiJISScGk3OAzAm9ptdgfiVBkCfh6GrbA5dNB9i
- LaU=
-X-IronPort-AV: E=Sophos;i="5.76,312,1592863200"; 
-   d="scan'208";a="11476347"
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <lee.jones@linaro.org>
-CC:     <kernel@axis.com>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <oliver@schinagl.nl>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH 2/2] pwm: Add GPIO PWM driver
-Date:   Fri, 14 Aug 2020 17:55:13 +0200
-Message-ID: <20200814155513.31936-2-vincent.whitchurch@axis.com>
+        Fri, 14 Aug 2020 12:21:44 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36394 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbgHNQVk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 12:21:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id t15so11366655iob.3;
+        Fri, 14 Aug 2020 09:21:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0Uqq7tktnOIzY70fK71Kwoupw6rg0Xh+PHkqkEn55dI=;
+        b=hPyRrQUa8nKvJLs0DU3Zs/BOLEFj6eR32WCOz/dYT7TiYoOvlwIiaLqTnBEOumEsNN
+         hflZEE56d4LEb0nHg+LgpFqTgVN816fAx0xfuFGdSdbB6DR1Ity0A9cy1jGAhVZoCgcv
+         2NPi6564MvZ1XOqMddEeMYkH/HN6UG4yNZkgVC8NprUxSGFDJDL6bjcN2hzdZobkO3gz
+         +N//Tsh3CoUZFt6a7aMbFPVAu7S3IiM2bZXpo0F83f9AroxJHwJdYryIchfiplE4uu6G
+         rivig5HFi0Jfg8KBKSZZBeY4su1WDbWt1gLy2hnev7LWO6HzDJnPT+aYkCcVP5s6G6CP
+         Lqkg==
+X-Gm-Message-State: AOAM530LIh4cAKddyiY/HZlBCA0YDOtX//nvosAVgiG05mbsPYuyJjfB
+        m+pibAVxt4lP6yBs4dFyvl8L2Q1xJg==
+X-Google-Smtp-Source: ABdhPJzl6JdfMZmFkvnYgZbdJ7IxH3P6rtqXgWXEvuArMjkhKb9KFnlCEzkZqQj7Fx7d3gPWlXrvaQ==
+X-Received: by 2002:a5e:dd44:: with SMTP id u4mr2737958iop.192.1597422097247;
+        Fri, 14 Aug 2020 09:21:37 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.249])
+        by smtp.googlemail.com with ESMTPSA id a16sm2968913ilp.23.2020.08.14.09.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 09:21:36 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: Remove more cases of 'allOf' containing a '$ref'
+Date:   Fri, 14 Aug 2020 10:21:34 -0600
+Message-Id: <20200814162134.2284874-1-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200814155513.31936-1-vincent.whitchurch@axis.com>
-References: <20200814155513.31936-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a software PWM which toggles a GPIO from a high-resolution timer.
+Another wack-a-mole pass of killing off unnecessary 'allOf + $ref'
+usage.
 
-This will naturally not be as accurate or as efficient as a hardware
-PWM, but it is useful in some cases.  I have for example used it for
-evaluating LED brightness handling (via leds-pwm) on a board where the
-LED was just hooked up to a GPIO, and for a simple verification of the
-timer frequency on another platform.
+json-schema versions draft7 and earlier have a weird behavior in that
+any keywords combined with a '$ref' are ignored (silently). The correct
+form was to put a '$ref' under an 'allOf'. This behavior is now changed
+in the 2019-09 json-schema spec and '$ref' can be mixed with other
+keywords. The json-schema library doesn't yet support this, but the
+tooling now does a fixup for this and either way works.
 
-Since high-resolution timers are used, sleeping gpio chips are not
-supported and are rejected in the probe function.
+This has been a constant source of review comments, so let's change this
+treewide so everyone copies the simpler syntax.
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-While preparing this driver for posting, I found a pwm-gpio driver posted to
-the lists way back in 2015 by Olliver Schinagl:
+ .../bindings/display/brcm,bcm2835-hdmi.yaml   |  3 +-
+ .../bindings/iio/adc/qcom,spmi-vadc.yaml      |  3 +-
+ .../interrupt-controller/mti,gic.yaml         | 28 ++++++------
+ .../bindings/media/i2c/dongwoon,dw9768.yaml   | 43 +++++++++----------
+ .../bindings/pci/ti,j721e-pci-ep.yaml         |  3 +-
+ .../bindings/pci/ti,j721e-pci-host.yaml       |  3 +-
+ .../bindings/sound/maxim,max98390.yaml        |  6 +--
+ .../bindings/sound/nvidia,tegra186-dspk.yaml  |  3 +-
+ .../bindings/sound/nvidia,tegra210-dmic.yaml  |  3 +-
+ .../bindings/sound/nvidia,tegra210-i2s.yaml   |  3 +-
+ .../bindings/sound/ti,j721e-cpb-audio.yaml    |  6 +--
+ .../sound/ti,j721e-cpb-ivi-audio.yaml         | 15 +++----
+ 12 files changed, 49 insertions(+), 70 deletions(-)
 
- https://lore.kernel.org/linux-pwm/1445895161-2317-8-git-send-email-o.schinagl@ultimaker.com/
-
-This driver was developed independently, but since both drivers are trivial
-they are quite similar.  The main difference I see (apart from the usage of
-newer APIs and DT schemas) is that this driver only supports one PWM per
-instance, which makes for simpler code.  I also reject sleeping GPIO chips
-explicitly while that driver uses gpio_set_value_cansleep() from a hrtimer,
-which is a no-no.
-
- drivers/pwm/Kconfig    |  10 ++++
- drivers/pwm/Makefile   |   1 +
- drivers/pwm/pwm-gpio.c | 123 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 134 insertions(+)
- create mode 100644 drivers/pwm/pwm-gpio.c
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 7dbcf6973d33..20e4fda82e61 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -181,6 +181,16 @@ config PWM_FSL_FTM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-fsl-ftm.
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+index 52b3cdac0bdf..f54b4e4808f0 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+@@ -32,8 +32,7 @@ properties:
+       - const: hdmi
  
-+config PWM_GPIO
-+	tristate "GPIO PWM support"
-+	depends on OF && GPIOLIB
-+	help
-+	  Generic PWM framework driver for a software PWM toggling a GPIO pin
-+	  from kernel high-resolution timers.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-gpio.
-+
- config PWM_HIBVT
- 	tristate "HiSilicon BVT PWM support"
- 	depends on ARCH_HISI || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 2c2ba0a03557..2e045f063cd1 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
-+obj-$(CONFIG_PWM_GPIO)		+= pwm-gpio.o
- obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
- obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
-diff --git a/drivers/pwm/pwm-gpio.c b/drivers/pwm/pwm-gpio.c
-new file mode 100644
-index 000000000000..e579aca0f937
---- /dev/null
-+++ b/drivers/pwm/pwm-gpio.c
-@@ -0,0 +1,123 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright (C) 2020 Axis Communications AB */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/platform_device.h>
-+#include <linux/hrtimer.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/pwm.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+
-+struct pwm_gpio {
-+	struct pwm_chip chip;
-+	struct hrtimer hrtimer;
-+	struct gpio_desc *gpio;
-+	ktime_t on_interval;
-+	ktime_t off_interval;
-+	bool invert;
-+	bool on;
-+};
-+
-+static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *hrtimer)
-+{
-+	struct pwm_gpio *gpwm = container_of(hrtimer, struct pwm_gpio, hrtimer);
-+	bool newon = !gpwm->on;
-+
-+	gpwm->on = newon;
-+	gpiod_set_value(gpwm->gpio, newon ^ gpwm->invert);
-+
-+	hrtimer_forward_now(hrtimer, newon ? gpwm->on_interval : gpwm->off_interval);
-+
-+	return HRTIMER_RESTART;
-+}
-+
-+static int pwm_gpio_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			  const struct pwm_state *state)
-+{
-+	struct pwm_gpio *gpwm = container_of(chip, struct pwm_gpio, chip);
-+
-+	hrtimer_cancel(&gpwm->hrtimer);
-+
-+	if (!state->enabled) {
-+		gpiod_set_value(gpwm->gpio, 0);
-+		return 0;
-+	}
-+
-+	gpwm->on_interval = ns_to_ktime(state->duty_cycle);
-+	gpwm->off_interval = ns_to_ktime(state->period - state->duty_cycle);
-+	gpwm->invert = state->polarity == PWM_POLARITY_INVERSED;
-+
-+	gpwm->on = !!gpwm->on_interval;
-+	gpiod_set_value(gpwm->gpio, gpwm->on ^ gpwm->invert);
-+
-+	if (gpwm->on_interval && gpwm->off_interval)
-+		hrtimer_start(&gpwm->hrtimer, gpwm->on_interval, HRTIMER_MODE_REL);
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_gpio_ops = {
-+	.owner = THIS_MODULE,
-+	.apply = pwm_gpio_apply,
-+};
-+
-+static int pwm_gpio_probe(struct platform_device *pdev)
-+{
-+	struct pwm_gpio *gpwm;
-+	int ret;
-+
-+	gpwm = devm_kzalloc(&pdev->dev, sizeof(*gpwm), GFP_KERNEL);
-+	if (!gpwm)
-+		return -ENOMEM;
-+
-+	gpwm->gpio = devm_gpiod_get(&pdev->dev, NULL, GPIOD_OUT_LOW);
-+	if (IS_ERR(gpwm->gpio))
-+		return PTR_ERR(gpwm->gpio);
-+
-+	if (gpiod_cansleep(gpwm->gpio))
-+		return -EINVAL;
-+
-+	gpwm->chip.dev = &pdev->dev;
-+	gpwm->chip.ops = &pwm_gpio_ops;
-+	gpwm->chip.base = pdev->id;
-+	gpwm->chip.npwm = 1;
-+
-+	hrtimer_init(&gpwm->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	gpwm->hrtimer.function = pwm_gpio_timer;
-+
-+	ret = pwmchip_add(&gpwm->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, gpwm);
-+
-+	return 0;
-+}
-+
-+static int pwm_gpio_remove(struct platform_device *pdev)
-+{
-+	struct pwm_gpio *gpwm = platform_get_drvdata(pdev);
-+
-+	return pwmchip_remove(&gpwm->chip);
-+}
-+
-+static const struct of_device_id pwm_gpio_dt_ids[] = {
-+	{ .compatible = "pwm-gpio", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pwm_gpio_dt_ids);
-+
-+static struct platform_driver pwm_gpio_driver = {
-+	.driver = {
-+		.name = "pwm-gpio",
-+		.of_match_table = pwm_gpio_dt_ids,
-+	},
-+	.probe = pwm_gpio_probe,
-+	.remove = pwm_gpio_remove,
-+};
-+
-+module_platform_driver(pwm_gpio_driver);
-+
-+MODULE_LICENSE("GPL v2");
+   ddc:
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+     description: >
+       Phandle of the I2C controller used for DDC EDID probing
+ 
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+index a6ac289d98da..0ca992465a21 100644
+--- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+@@ -97,8 +97,7 @@ patternProperties:
+             input signal is multiplied. For example, <1 3> indicates the signal is scaled
+             down to 1/3 of its value before ADC measurement.
+             If property is not found default value depending on chip will be used.
+-        allOf:
+-          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        $ref: /schemas/types.yaml#/definitions/uint32-array
+         oneOf:
+           - items:
+               - const: 1
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+index 9f0eb3addac4..ce6aaff15214 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+@@ -42,14 +42,13 @@ properties:
+       Specifies the list of CPU interrupt vectors to which the GIC may not
+       route interrupts. This property is ignored if the CPU is started in EIC
+       mode.
+-    allOf:
+-      - $ref: /schemas/types.yaml#definitions/uint32-array
+-      - minItems: 1
+-        maxItems: 6
+-        uniqueItems: true
+-        items:
+-          minimum: 2
+-          maximum: 7
++    $ref: /schemas/types.yaml#definitions/uint32-array
++    minItems: 1
++    maxItems: 6
++    uniqueItems: true
++    items:
++      minimum: 2
++      maximum: 7
+ 
+   mti,reserved-ipi-vectors:
+     description: |
+@@ -57,13 +56,12 @@ properties:
+       It accepts two values: the 1st is the starting interrupt and the 2nd is
+       the size of the reserved range. If not specified, the driver will
+       allocate the last (2 * number of VPEs in the system).
+-    allOf:
+-      - $ref: /schemas/types.yaml#definitions/uint32-array
+-      - items:
+-          - minimum: 0
+-            maximum: 254
+-          - minimum: 2
+-            maximum: 254
++    $ref: /schemas/types.yaml#definitions/uint32-array
++    items:
++      - minimum: 0
++        maximum: 254
++      - minimum: 2
++        maximum: 254
+ 
+   timer:
+     type: object
+diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
+index cb96e95d7e81..21864ab86ec4 100644
+--- a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
++++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
+@@ -38,39 +38,36 @@ properties:
+   dongwoon,aac-mode:
+     description:
+       Indication of AAC mode select.
+-    allOf:
+-      - $ref: "/schemas/types.yaml#/definitions/uint32"
+-      - enum:
+-          - 1    #  AAC2 mode(operation time# 0.48 x Tvib)
+-          - 2    #  AAC3 mode(operation time# 0.70 x Tvib)
+-          - 3    #  AAC4 mode(operation time# 0.75 x Tvib)
+-          - 5    #  AAC8 mode(operation time# 1.13 x Tvib)
+-        default: 2
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    enum:
++      - 1    #  AAC2 mode(operation time# 0.48 x Tvib)
++      - 2    #  AAC3 mode(operation time# 0.70 x Tvib)
++      - 3    #  AAC4 mode(operation time# 0.75 x Tvib)
++      - 5    #  AAC8 mode(operation time# 1.13 x Tvib)
++    default: 2
+ 
+   dongwoon,aac-timing:
+     description:
+       Number of AAC Timing count that controlled by one 6-bit period of
+       vibration register AACT[5:0], the unit of which is 100 us.
+-    allOf:
+-      - $ref: "/schemas/types.yaml#/definitions/uint32"
+-      - default: 0x20
+-        minimum: 0x00
+-        maximum: 0x3f
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    default: 0x20
++    minimum: 0x00
++    maximum: 0x3f
+ 
+   dongwoon,clock-presc:
+     description:
+       Indication of VCM internal clock dividing rate select, as one multiple
+       factor to calculate VCM ring periodic time Tvib.
+-    allOf:
+-      - $ref: "/schemas/types.yaml#/definitions/uint32"
+-      - enum:
+-          - 0    #  Dividing Rate -  2
+-          - 1    #  Dividing Rate -  1
+-          - 2    #  Dividing Rate -  1/2
+-          - 3    #  Dividing Rate -  1/4
+-          - 4    #  Dividing Rate -  8
+-          - 5    #  Dividing Rate -  4
+-        default: 1
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    enum:
++      - 0    #  Dividing Rate -  2
++      - 1    #  Dividing Rate -  1
++      - 2    #  Dividing Rate -  1/2
++      - 3    #  Dividing Rate -  1/4
++      - 4    #  Dividing Rate -  8
++      - 5    #  Dividing Rate -  4
++    default: 1
+ 
+ required:
+   - compatible
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+index cfe25cface21..b3c3d0c3c390 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+@@ -31,8 +31,7 @@ properties:
+   ti,syscon-pcie-ctrl:
+     description: Phandle to the SYSCON entry required for configuring PCIe mode
+                  and link speed.
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   power-domains:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+index d7b60487c6c3..8200ba00bc09 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+@@ -31,8 +31,7 @@ properties:
+   ti,syscon-pcie-ctrl:
+     description: Phandle to the SYSCON entry required for configuring PCIe mode
+       and link speed.
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   power-domains:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+index 9c2e3effa0c0..fea9a1b6619a 100644
+--- a/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
++++ b/Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+@@ -18,16 +18,14 @@ properties:
+     description: I2C address of the device.
+ 
+   maxim,temperature_calib:
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/uint32
+     description: The calculated temperature data was measured while doing the calibration.
++    $ref: /schemas/types.yaml#/definitions/uint32
+     minimum: 0
+     maximum: 65535
+ 
+   maxim,r0_calib:
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/uint32
+     description: This is r0 calibration data which was measured in factory mode.
++    $ref: /schemas/types.yaml#/definitions/uint32
+     minimum: 1
+     maximum: 8388607
+ 
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+index e620c77d0728..2f2fcffa65cb 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+@@ -48,8 +48,7 @@ properties:
+ 
+   sound-name-prefix:
+     pattern: "^DSPK[1-9]$"
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/string
++    $ref: /schemas/types.yaml#/definitions/string
+     description:
+       Used as prefix for sink/source names of the component. Must be a
+       unique string among multiple instances of the same component.
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+index 1c14e83f67c7..8689d9f18c11 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+@@ -49,8 +49,7 @@ properties:
+ 
+   sound-name-prefix:
+     pattern: "^DMIC[1-9]$"
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/string
++    $ref: /schemas/types.yaml#/definitions/string
+     description:
+       used as prefix for sink/source names of the component. Must be a
+       unique string among multiple instances of the same component.
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+index 795797001843..9bbf18153d63 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+@@ -67,8 +67,7 @@ properties:
+ 
+   sound-name-prefix:
+     pattern: "^I2S[1-9]$"
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/string
++    $ref: /schemas/types.yaml#/definitions/string
+     description:
+       Used as prefix for sink/source names of the component. Must be a
+       unique string among multiple instances of the same component.
+diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
+index 6f2be6503401..d52cfbeb2d07 100644
+--- a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
++++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
+@@ -37,13 +37,11 @@ properties:
+ 
+   ti,cpb-mcasp:
+     description: phandle to McASP used on CPB
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   ti,cpb-codec:
+     description: phandle to the pcm3168a codec used on the CPB
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   clocks:
+     items:
+diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
+index e0b88470a502..bb780f621628 100644
+--- a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
++++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
+@@ -50,28 +50,23 @@ properties:
+ 
+   ti,cpb-mcasp:
+     description: phandle to McASP used on CPB
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   ti,cpb-codec:
+     description: phandle to the pcm3168a codec used on the CPB
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   ti,ivi-mcasp:
+     description: phandle to McASP used on IVI
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   ti,ivi-codec-a:
+     description: phandle to the pcm3168a-A codec on the expansion board
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   ti,ivi-codec-b:
+     description: phandle to the pcm3168a-B codec on the expansion board
+-    allOf:
+-      - $ref: /schemas/types.yaml#/definitions/phandle
++    $ref: /schemas/types.yaml#/definitions/phandle
+ 
+   clocks:
+     items:
 -- 
 2.25.1
 
