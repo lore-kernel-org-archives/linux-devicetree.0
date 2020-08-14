@@ -2,104 +2,103 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321FCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 19:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623F9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 20:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAB9E20675
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 19:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350B620768
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 20:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597434519;
-	bh=49/ymVCFq5phy1rc2KbPcsV+yZ5d4kVWmjeUsVuKKwM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bwOwc61qzOqGfvN/Z6036otVtKdOGnsh4kTxd+SmUderz4biOuYBbZiJN6YZt9H2f
-	 vOUm0frUGAosp0bogw79XA8O5myMiN6m0fwMm4WrEEuiZiyXSwjOn00KlzS1OWFmNn
-	 f1AINJly5/MDc78bxU5OqmGcWNGaslHBNnyElrm8=
+	s=default; t=1597436234;
+	bh=dE/nZhvxWYeZCBydsXwZUXsRq+k+LkliB7aNsno/FDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mG8E90+UYUWm8UvseRw4LJbIkGuAb8oL9YeUxQhzARErv1P3oQ/yn849TYv7oj+ZA
+	 1NsA481qPwEKcHozMlqXYwLsraM0BU+0Vrj62S3YZGg9hgXK5zMLFDOYIBu0jiw/Zj
+	 FpDi8dJnrdlkgi5p3wEJgiWJTM+Aq+lzYTg+z1Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHNTsi (ORCPT
+        id S1727828AbgHNURN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 15:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgHNTsh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 15:48:37 -0400
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2720C20675;
-        Fri, 14 Aug 2020 19:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597434517;
-        bh=49/ymVCFq5phy1rc2KbPcsV+yZ5d4kVWmjeUsVuKKwM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y8/6CtNT/RWvMjmzXMLlevAkc4kqUJrzX5zkk8gjW5JhvpJ1jn74alNArmaoGUwtV
-         BTjZ9v6pwhmIEORFU0lvPU4YQGGPs7aJeMb/EghGAS//amBYgvRyHv4Wog+/ny2Ozf
-         i02tv8PtaXecGpHXvZP0PZMyZYXhfHMrfssd4K1g=
-Received: by mail-ot1-f41.google.com with SMTP id k12so8517192otr.1;
-        Fri, 14 Aug 2020 12:48:37 -0700 (PDT)
-X-Gm-Message-State: AOAM530unYJ5UX9X5Kyz15gs69EIT6ECcpWz6Ykk624Rw2rtQYu0sgma
-        44y1gDkl0ruVMtWOOvsc1x9Ywo/SZaLph3GqCQ==
-X-Google-Smtp-Source: ABdhPJxrQSww6LTRkLkSM1un20zusfbbOrIU5xOzV9SZrRPaqPenXR84qBQ/ArA6cwl1NcJXao8AjghrDjG7SZuEgLo=
-X-Received: by 2002:a05:6830:1d8e:: with SMTP id y14mr3111218oti.129.1597434516538;
- Fri, 14 Aug 2020 12:48:36 -0700 (PDT)
+        Fri, 14 Aug 2020 16:17:13 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45650 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgHNURL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 16:17:11 -0400
+Received: by mail-il1-f195.google.com with SMTP id k4so9483379ilr.12;
+        Fri, 14 Aug 2020 13:17:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FNoeq/3cmPqVA+RIc35kN62jsibVvRZS7HT9CMV2TpI=;
+        b=EMj8QtEfFDFURBmWLITfDvCjZGo5MS61u7qQjb6ICX7bE8LU06xtX6IWww5Wbkqc8T
+         LaUdKk62D7OkRy6ctveDKvicyVC2fjLckzxd7eCQtfEfJV4Mu3T5I/vI2b4X9xIIrpOj
+         4rXJN5VSSNdx4RFM+9F1OE/jjElanpV40aUphnwNlhv6+MNVT/xjdLAYiC6uvC2b1l6U
+         /W2QJ2PBLLTnwWbrCpC6uafucogPe7OUIe/ElcyBmgli+XComwUGF+IEY1L6JHHqzndL
+         f5cB/vEltX6IZprnp3HReXdJg/fYzmjC7e4YTd3PcLULAMq+7jcG6v9l/JIfIYTXOl6X
+         RgWg==
+X-Gm-Message-State: AOAM530QWPlUmlNXTTmmEtgL4VUT8C++pcHFcmsYAEmV4M6+DKJGQen+
+        Xo9CqkB09KWz1fi/Kse4Tg==
+X-Google-Smtp-Source: ABdhPJx7cbnCdcYvPSQ4Xc47+5JkFamz29Xm/VhyWl5MfiI+mx8d4VSx2QHQtGasdNGDyDgJPkxgug==
+X-Received: by 2002:a92:d786:: with SMTP id d6mr3892576iln.144.1597436230765;
+        Fri, 14 Aug 2020 13:17:10 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id l5sm4883891ilj.88.2020.08.14.13.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 13:17:09 -0700 (PDT)
+Received: (nullmailer pid 2668367 invoked by uid 1000);
+        Fri, 14 Aug 2020 20:17:08 -0000
+Date:   Fri, 14 Aug 2020 14:17:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     mauro.chehab@huawei.com, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linuxarm@huawei.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 43/44] dt: document HiSilicon SPMI controller and
+ mfd/regulator properties
+Message-ID: <20200814201708.GA2665752@bogus>
+References: <cover.1597247164.git.mchehab+huawei@kernel.org>
+ <da65a508d01aa2092999d0ce7e9c061ccfd24036.1597247164.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200813114344.67730-1-colin.king@canonical.com>
-In-Reply-To: <20200813114344.67730-1-colin.king@canonical.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 14 Aug 2020 13:48:25 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+hBnFui6fOoY9jv4YFYX7MdiPhdA_dWHiFrMzLXJOYbw@mail.gmail.com>
-Message-ID: <CAL_Jsq+hBnFui6fOoY9jv4YFYX7MdiPhdA_dWHiFrMzLXJOYbw@mail.gmail.com>
-Subject: Re: [PATCH][V2] of/address: check for invalid range.cpu_addr
-To:     Colin King <colin.king@canonical.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da65a508d01aa2092999d0ce7e9c061ccfd24036.1597247164.git.mchehab+huawei@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 5:43 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Currently invalid CPU addresses are not being sanity checked resulting in
-> SATA setup failure on a SynQuacer SC2A11 development machine. The original
-> check was removed by and earlier commit, so add a sanity check back in
-> to avoid this regression.
->
-> Fixes: 7a8b64d17e35 ("of/address: use range parser for of_dma_get_range")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Wed, 12 Aug 2020 17:56:53 +0200, Mauro Carvalho Chehab wrote:
+> Add documentation for the properties needed by the HiSilicon
+> 6421v600 driver, and by the SPMI controller used to access
+> the chipset.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/of/address.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 590493e04b01..6ffbf7b99e92 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -985,6 +985,10 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->                         /* Don't error out as we'd break some existing DTs */
->                         continue;
->                 }
-> +               if (range.cpu_addr == OF_BAD_ADDR) {
-> +                       pr_err("Translation of CPU address failed on node (%pOF)\n", node);
-> +                       continue;
-> +               }
->                 dma_offset = range.cpu_addr - range.bus_addr;
->
->                 /* Take lower and upper limits */
-> --
->
-> V2: print message using pr_err and don't print range.cpu_addr as it's always
->     going to be OF_BAD_ADDR so the information is pointless.
+>  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 ++++++++++++++++++
+>  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
+>  2 files changed, 236 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+> 
 
-Shouldn't we print the bus_addr like the original message did?
-Otherwise, we don't really know what entry is problematic.
 
-Rob
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: example-0: spmi@fff24000:reg:0: [0, 4294066176, 0, 4096] is too long
+
+
+See https://patchwork.ozlabs.org/patch/1343770
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
