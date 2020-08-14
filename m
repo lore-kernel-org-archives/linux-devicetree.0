@@ -2,108 +2,82 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698DAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0173FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4230E2087D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:53:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s0qDed3u"
+	by mail.kernel.org (Postfix) with ESMTP id D662620855
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 13:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgHNMxq (ORCPT
+        id S1728613AbgHNNga (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:53:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgHNMxq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 08:53:46 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E412BC061384;
-        Fri, 14 Aug 2020 05:53:45 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id k23so10586043iom.10;
-        Fri, 14 Aug 2020 05:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Rxr2HOJk0RRDA2bOpilICbe69ukX1fuRKFSU2tquDY=;
-        b=s0qDed3uTBLS4odQuLtuuh+t8K5AWMi/mAMpAn/B5PeEjlvmrSCLCkJ6ExwisRILLU
-         7tT9mFwbrKiJF0i0uA8sbX5feTgMpCHemcs9JQ7+gRf7M6g3Pr/49BxcRKwICQsYgAKZ
-         hfoAWr65skbQpob2Uy8e7pAvstUsuNLbchRLZHk1cKfs9O/tRLE7xVVj6LwitMUAxwEK
-         C/4Q5G62XzqUZBa4dM35UusZufVZBeahMbtPtovXt2snazXl9vhbhJUndr9dVc/4MXkC
-         2Floc1JE61RI3kUcHDo3M7vKPyR6ng3nHfPvE+wOEqz0h0hX26po2VrsCuJ6mo2K10XO
-         Blcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Rxr2HOJk0RRDA2bOpilICbe69ukX1fuRKFSU2tquDY=;
-        b=aLmXmNXwb7pZ2zDsUrSDJwtPFj+CRLFSMgZO45d2+WmNbSm5uHntefDtlONBORNRkv
-         hYlituS4lty8tS3Fdo0upsGQo6bWw48wYSZEqwbtvhG6ZSvBjBqX91u3A9QioQ4lRDOK
-         OgZQLjoYg3mzFM5ALUo0bI257L8+WLGtUxXVme3Zn9zGUfx7rfahu6o+59Yi6mK11v+J
-         yTb9gTyEqn7IbUoaxrqrb3Dqr1J5kNQHG1fNl3qIk6U9ZnML9YFqHLSA5GVrFZnq5vxL
-         TBlfDukeGOfi8ZgS+IIHYa2BvVSdta4iBHgHqyJlVWwvYBFUxrGKas1th3GO/Gs1V+W+
-         xoag==
-X-Gm-Message-State: AOAM531nJqS3LLpGwulz2lDswmkvBqj9EjG26cQyuho7hB6NvkLodurP
-        OTrqsJ3pw0AbdWkfC3CN6d2aCx0wraNZEA==
-X-Google-Smtp-Source: ABdhPJxn6SfKpF4YZCV4SR0ky34lRBEFE4/R5fTuf+UcUTdeqjiAxdAkHk5jWuJPvML/LtYCLTVLyA==
-X-Received: by 2002:a5d:9d8a:: with SMTP id 10mr2123198ion.195.1597409624729;
-        Fri, 14 Aug 2020 05:53:44 -0700 (PDT)
-Received: from aford-IdeaCentre-A730.lan ([2601:448:8400:9e8:7d86:99d6:a568:98e8])
-        by smtp.gmail.com with ESMTPSA id u25sm4142216iob.51.2020.08.14.05.53.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2020 05:53:44 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: logicpd-som-lv-baseboard: Fix broken audio
-Date:   Fri, 14 Aug 2020 07:53:38 -0500
-Message-Id: <20200814125338.2428209-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 14 Aug 2020 09:36:30 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:43782 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgHNNga (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 09:36:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 1E861FB07;
+        Fri, 14 Aug 2020 15:36:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id q6Zfzkg2jRDO; Fri, 14 Aug 2020 15:36:24 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id EC786457CC; Fri, 14 Aug 2020 15:36:23 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
+Date:   Fri, 14 Aug 2020 15:36:20 +0200
+Message-Id: <cover.1597412076.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Older versions of U-Boot would pinmux the whole board, but as
-the bootloader got updated, it started to only pinmux the pins
-it needed, and expected Linux to configure what it needed.
+The panel uses a Focaltech FT8006p, the touch part is handled by the already
+existing edt-ft5x06. It can be found in e.g. the Librem 5.
 
-Unfortunately this caused an issue with the audio, because the
-mcbsp2 pins were configured in the device tree but never
-referenced by the driver. When U-Boot stopped muxing the audio
-pins, the audio died.
+This series is against next-20200814.
 
-This patch adds the references to the associate the pin controller
-with the mcbsp2 driver which makes audio operate again.
+Guido Günther (3):
+  dt-bindings: vendor-prefixes: Add mantix vendor prefix
+  dt-bindings: Add Mantix MLAF057WE51-X panel bindings
+  drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
 
-Fixes: 5cb8b0fa55a9 ("ARM: dts: Move most of logicpd-som-lv-37xx-devkit.dts to logicpd-som-lv-baseboard.dtsi")
+ .../display/panel/mantix,mlaf057we51-x.yaml   |  73 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ drivers/gpu/drm/panel/Kconfig                 |  11 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-mantix-mlaf057we51.c  | 362 ++++++++++++++++++
+ 6 files changed, 456 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-
-diff --git a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-index 79e9e24328b9..395e05f10d36 100644
---- a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-+++ b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
-@@ -51,6 +51,8 @@
- 
- &mcbsp2 {
- 	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcbsp2_pins>;
- };
- 
- &charger {
 -- 
-2.25.1
+2.26.2
 
