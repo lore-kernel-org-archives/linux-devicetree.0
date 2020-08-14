@@ -2,199 +2,140 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC663C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73005C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1CC4221E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB1B214F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 12:24:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmuBuatk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgHNMME (ORCPT
+        id S1727892AbgHNMYx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 08:12:04 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:38180 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728060AbgHNMJv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 08:09:51 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C4DB71A0446;
-        Fri, 14 Aug 2020 14:09:49 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B79781A040B;
-        Fri, 14 Aug 2020 14:09:49 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 134C32030E;
-        Fri, 14 Aug 2020 14:09:49 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>, devicetree@vger.kernel.org
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 01/17] dt-bindings: clocks: imx8mp: Rename audiomix ids clocks to audio_blk_ctrl
-Date:   Fri, 14 Aug 2020 15:09:10 +0300
-Message-Id: <1597406966-13740-2-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 14 Aug 2020 08:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgHNMYx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 14 Aug 2020 08:24:53 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC3BC061384;
+        Fri, 14 Aug 2020 05:24:52 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id r13so3825931iln.0;
+        Fri, 14 Aug 2020 05:24:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+ElKAxCeMvixaBaV/Xg1XsAoLBeStHXgmdlK4qT1ov0=;
+        b=UmuBuatkkwEwvgUfEv6/w63/3OCnNwI7xb9n+XWRFZz7KhkL482mphJyRk77LfKVV+
+         bThdCpXxP/BRhA+TmwEMkQ4PSHxoHRXsEwhNaWYFbJ/q6br1R+g8cvaEKrvWLasoCpBu
+         jsbF0u7He0pkqpc7zios3+iy3xUlDi0L/JLHU2blIuXRPM0uTHaQ4WezpWG3i+5DhT12
+         UUkq5pz6VNusQqZdmS3AQIdAmAvp75esvbeNyesAODYo2Xk5+QJNlEZwsEXwnbs1isGc
+         Qmn/7eA8Xr6W1XpOIoZ43rSqWIscKEiATMmLJpu4wdAFhls12nThTi+5Fx1R3jOZRYgO
+         xUlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+ElKAxCeMvixaBaV/Xg1XsAoLBeStHXgmdlK4qT1ov0=;
+        b=SfQzjYP7KVLYjz4/tGyUMXgnQfEhP82/zBG7D20LcyziXqt4wJOaiPvGXZtxa82gJY
+         vqe4F7aSPVOjCgGLSZQ4lWBGC/4mlt+3AXN3/McEQ2eKSeq8a57MuQqy0+NxEWz8n9xW
+         8RZnVLh4TV3Ysi8uwO8PliBQ0szQUZwxQIQA/fA7K6K48mFfR+KywptJQR9c8hqwisLM
+         Aq4M2yM6umRJ5TJf1Xq1RqyjXhg+zNXfBO/z+vTeNn9Um1CdM90N8gcSEjGdGGhX3CZe
+         Jh5cysjpTnUsIuWyirwc7vwfn5UVzHC1efq7l7K+DhoU/Lz4vTEWC1FM4zGdWV/qBnLw
+         A9IQ==
+X-Gm-Message-State: AOAM533P/xgQV93f7XJxRNLgqCfIdpQNTCIvuLXwPix8uRj1sQs0na4b
+        DjSm/u2QZIqhJ+wRFShSw3xAkE44Lbr5gg==
+X-Google-Smtp-Source: ABdhPJyXw6rmXo0vyOBADbFcQVkJOtIX8FrppQIOUxhUfffQSdqcSTWDL4Y9sPLD6OOU6pQFk2WDXA==
+X-Received: by 2002:a92:980f:: with SMTP id l15mr2341987ili.56.1597407891965;
+        Fri, 14 Aug 2020 05:24:51 -0700 (PDT)
+Received: from aford-IdeaCentre-A730.lan ([2601:448:8400:9e8:7d86:99d6:a568:98e8])
+        by smtp.gmail.com with ESMTPSA id i191sm607349ild.69.2020.08.14.05.24.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2020 05:24:51 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: logicpd-som-lv-baseboard: Fix missing video
+Date:   Fri, 14 Aug 2020 07:24:41 -0500
+Message-Id: <20200814122441.2425966-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the reference manual the actual name is Audio BLK_CTRL.
-Lets make it more obvious here by renaming from audiomix to audio_blk_ctrl.
+A previous commit removed the panel-dpi driver, which made the
+SOM-LV video stop working because it relied on the DPI driver
+for setting video timings.  Now that the simple-panel driver is
+available in omap2plus, this patch migrates the SOM-LV dev kits
+to use a similar panel and remove the manual timing requirements.
+A similar patch was already done and applied to the Torpedo family.
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
----
- include/dt-bindings/clock/imx8mp-clock.h | 120 +++++++++++++++----------------
- 1 file changed, 60 insertions(+), 60 deletions(-)
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
 
-diff --git a/include/dt-bindings/clock/imx8mp-clock.h b/include/dt-bindings/clock/imx8mp-clock.h
-index 7a23f28..6008f32 100644
---- a/include/dt-bindings/clock/imx8mp-clock.h
-+++ b/include/dt-bindings/clock/imx8mp-clock.h
-@@ -324,66 +324,66 @@
+Signed-off-by: Adam Ford <aford173@gmail.com>
+
+diff --git a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
+index 100396f6c2fe..79e9e24328b9 100644
+--- a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
++++ b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
+@@ -102,35 +102,18 @@ video_reg: video_reg {
+ 		regulator-max-microvolt = <3300000>;
+ 	};
  
- #define IMX8MP_CLK_END				313
+-	lcd0: display@0 {
+-		compatible = "panel-dpi";
+-		label = "28";
+-		status = "okay";
+-		/* default-on; */
++	lcd0: display {
++		/* This isn't the exact LCD, but the timings meet spec */
++		compatible = "logicpd,type28";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&lcd_enable_pin>;
+-		enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd INI */
++		backlight = <&bl>;
++		enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
+ 		port {
+ 			lcd_in: endpoint {
+ 				remote-endpoint = <&dpi_out>;
+ 			};
+ 		};
+-
+-		panel-timing {
+-			clock-frequency = <9000000>;
+-			hactive = <480>;
+-			vactive = <272>;
+-			hfront-porch = <3>;
+-			hback-porch = <2>;
+-			hsync-len = <42>;
+-			vback-porch = <3>;
+-			vfront-porch = <2>;
+-			vsync-len = <11>;
+-			hsync-active = <1>;
+-			vsync-active = <1>;
+-			de-active = <1>;
+-			pixelclk-active = <0>;
+-		};
+ 	};
  
--#define IMX8MP_CLK_AUDIOMIX_SAI1_IPG		0
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK1		1
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK2		2
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK3		3
--#define IMX8MP_CLK_AUDIOMIX_SAI2_IPG		4
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK1		5
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK2		6
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK3		7
--#define IMX8MP_CLK_AUDIOMIX_SAI3_IPG		8
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK1		9
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK2		10
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK3		11
--#define IMX8MP_CLK_AUDIOMIX_SAI5_IPG		12
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK1		13
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK2		14
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK3		15
--#define IMX8MP_CLK_AUDIOMIX_SAI6_IPG		16
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1		17
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK2		18
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK3		19
--#define IMX8MP_CLK_AUDIOMIX_SAI7_IPG		20
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK1		21
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK2		22
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK3		23
--#define IMX8MP_CLK_AUDIOMIX_ASRC_IPG		24
--#define IMX8MP_CLK_AUDIOMIX_PDM_IPG		25
--#define IMX8MP_CLK_AUDIOMIX_SDMA2_ROOT		26
--#define IMX8MP_CLK_AUDIOMIX_SDMA3_ROOT		27
--#define IMX8MP_CLK_AUDIOMIX_SPBA2_ROOT		28
--#define IMX8MP_CLK_AUDIOMIX_DSP_ROOT		29
--#define IMX8MP_CLK_AUDIOMIX_DSPDBG_ROOT		30
--#define IMX8MP_CLK_AUDIOMIX_EARC_IPG		31
--#define IMX8MP_CLK_AUDIOMIX_OCRAMA_IPG		32
--#define IMX8MP_CLK_AUDIOMIX_AUD2HTX_IPG		33
--#define IMX8MP_CLK_AUDIOMIX_EDMA_ROOT		34
--#define IMX8MP_CLK_AUDIOMIX_AUDPLL_ROOT		35
--#define IMX8MP_CLK_AUDIOMIX_MU2_ROOT		36
--#define IMX8MP_CLK_AUDIOMIX_MU3_ROOT		37
--#define IMX8MP_CLK_AUDIOMIX_EARC_PHY		38
--#define IMX8MP_CLK_AUDIOMIX_PDM_ROOT		39
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK1_SEL	40
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK2_SEL	41
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK1_SEL	42
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK2_SEL	43
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK1_SEL	44
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK2_SEL	45
--#define IMX8MP_CLK_AUDIOMIX_SAI4_MCLK1_SEL	46
--#define IMX8MP_CLK_AUDIOMIX_SAI4_MCLK2_SEL	47
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK1_SEL	48
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK2_SEL	49
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1_SEL	50
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK2_SEL	51
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK1_SEL	52
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK2_SEL	53
--#define IMX8MP_CLK_AUDIOMIX_PDM_SEL		54
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL	55
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL		56
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS	57
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT		58
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_IPG		0
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK1		1
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK2		2
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK3		3
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_IPG		4
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK1		5
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK2		6
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK3		7
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_IPG		8
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK1		9
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK2		10
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK3		11
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_IPG		12
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK1		13
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK2		14
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK3		15
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_IPG		16
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK1		17
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK2		18
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK3		19
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_IPG		20
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK1		21
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK2		22
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK3		23
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_ASRC_IPG		24
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_PDM_IPG		25
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SDMA2_ROOT		26
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SDMA3_ROOT		27
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SPBA2_ROOT		28
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_DSP_ROOT		29
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_DSPDBG_ROOT		30
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_EARC_IPG		31
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_OCRAMA_IPG		32
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_AUD2HTX_IPG		33
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_EDMA_ROOT		34
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_AUDPLL_ROOT		35
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_MU2_ROOT		36
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_MU3_ROOT		37
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_EARC_PHY		38
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_PDM_ROOT		39
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK1_SEL	40
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI1_MCLK2_SEL	41
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK1_SEL	42
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI2_MCLK2_SEL	43
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK1_SEL	44
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI3_MCLK2_SEL	45
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI4_MCLK1_SEL	46
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI4_MCLK2_SEL	47
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK1_SEL	48
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI5_MCLK2_SEL	49
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK1_SEL	50
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI6_MCLK2_SEL	51
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK1_SEL	52
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI7_MCLK2_SEL	53
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_PDM_SEL		54
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL_REF_SEL	55
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL		56
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL_BYPASS	57
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_SAI_PLL_OUT		58
- 
--#define IMX8MP_CLK_AUDIOMIX_END			59
-+#define IMX8MP_CLK_AUDIO_BLK_CTRL_END			59
- 
- #endif
+ 	bl: backlight {
 -- 
-2.7.4
+2.25.1
 
