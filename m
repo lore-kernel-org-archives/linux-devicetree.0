@@ -2,108 +2,81 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D3FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FEFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FD120768
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="SKjifFVd"
+	by mail.kernel.org (Postfix) with ESMTP id 331CA2074D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 15:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597420540;
+	bh=zoa+ut1WbMyFnWgB8xhbbBgiPvLBJ5ASa6+HjTkjJeA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NVun6MCS5J6eN96WrAQvFnE5dP3XQx/IQhtNW+2DXYZb+gSMfEQMgDvrdftnO7eu2
+	 cCNKevbpjbBhlWkQ78UTtMFaeG2cdOB3MOoTLnyDZwyaFCfqJTF21NUm89qXx4/xWk
+	 Tga0Suj2NoHg6X6zVmKCjU7LaUrOTJoW5/JleguE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgHNPz2 (ORCPT
+        id S1727830AbgHNPzj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 11:55:28 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:42238 "EHLO smtp1.axis.com"
+        Fri, 14 Aug 2020 11:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgHNPz1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 11:55:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1098; q=dns/txt; s=axis-central1;
-  t=1597420528; x=1628956528;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MOupmaCWPWAeM7cgobGOhUOVQpVTqyeE6uDsh4v6ifM=;
-  b=SKjifFVdqc/uh84XbRWtg8hwogtkXJxQqKx1Zw4Av1MJA1q9kxCjDM7L
-   +rs1RJ9TjZ1p1weQevusWWeD1POfpqo5OXLoXT5ONzF4NEIOgr+mqVGdH
-   TYUf/QFkrXmuq6wzL/sdiwlcj+JhkHOCE9SFpmOhbGb4lg3WQ17IL/PZ1
-   JrSIo4gkBMvu+07Dp0vBTqqfnrPXvWkpRI2WVBWnTSdLI8Vc5yzheppPm
-   IMRokb3UYzZI7TnBzJqiwrcCU1JTuw2QVjDxp5CKiuB7ywtnhnUyzYdiN
-   MBHSED1nikzVruTYAgwf/uRSLlYAkqVUBVvGTxYk4pbtNST1QgG2HKUVX
-   A==;
-IronPort-SDR: lt/OsbVRpvjg6loYeMUc4eV/Wqrr7htK0Mcvk3ewZPb0iAQMOa6mjq7leRvN3dBuCfIKb5uxi+
- 5G87csv5vO2qOhRDk6rtbsBL+G2856U97Xlc4632Wh/ctplDIthJgaTPv3qT1rBqeLkrmK3Po9
- 0dlJkPhpyvx+kie7ZvhfrkNwv/dQgYPKtCDk8hKBPu3vVld2iiqIPrQnXJ4U6oNP+GcEuP416i
- y9rmkKOPl3oK4VoIyiLIWw99dqgrOOBxQgY1IaPXGskCMNhOfinBn9XvKDi9ZEz4unmhfs/ErB
- GFs=
-X-IronPort-AV: E=Sophos;i="5.76,312,1592863200"; 
-   d="scan'208";a="11813477"
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <lee.jones@linaro.org>
-CC:     <kernel@axis.com>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <oliver@schinagl.nl>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH 1/2] dt-bindings: pwm: Add pwm-gpio
-Date:   Fri, 14 Aug 2020 17:55:12 +0200
-Message-ID: <20200814155513.31936-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.25.1
+        id S1726285AbgHNPzh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 11:55:37 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87E9520768;
+        Fri, 14 Aug 2020 15:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597420535;
+        bh=zoa+ut1WbMyFnWgB8xhbbBgiPvLBJ5ASa6+HjTkjJeA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ktAcEr0h9wBlewT2JRHzwBHJHhvjfoOjpsgwy8Kogce6wyc4D0FayGMDsLWYQ4U7E
+         d7sCDHHEpcLeS6qlKJdso617e951RzH0pmAfwOUhRu6tJfZyZfqvX8YjTR1iIWwDTe
+         IlysCOkzGFNHfdPTb3lUP1E8dkI3gswkIeyJqG48=
+Received: by mail-qk1-f173.google.com with SMTP id b14so8770174qkn.4;
+        Fri, 14 Aug 2020 08:55:35 -0700 (PDT)
+X-Gm-Message-State: AOAM532XvmnV/tqwcZVZWm9tFJAO8aFZGKRSo44+/57KJTLB65S6Rv+T
+        vsJ8XmS8EhHzfiaI37OJcwVh78J+NazOSuVUIg==
+X-Google-Smtp-Source: ABdhPJzQn5hvqDdVbAUx/i7n0mBCBw6qmaHAQRSOghi9ECkbVZ+694cX3OUNz/opcd5rfswo01laJxkQkN1JbM64SZo=
+X-Received: by 2002:a37:84c:: with SMTP id 73mr2596374qki.464.1597420534748;
+ Fri, 14 Aug 2020 08:55:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <eb2abaa7fc97a6e700a7c4ed37182820803414c3.camel@microchip.com> <4bcbacfb4b117dfde38a57541dd37b02b887a318.camel@microchip.com>
+In-Reply-To: <4bcbacfb4b117dfde38a57541dd37b02b887a318.camel@microchip.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 14 Aug 2020 09:55:19 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKeXDB-4N1_-EutEKiH34cDcXE6tkaGY8Gc4WB-xcVjFA@mail.gmail.com>
+Message-ID: <CAL_JsqKeXDB-4N1_-EutEKiH34cDcXE6tkaGY8Gc4WB-xcVjFA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/2] dt-bindings: PCI: microchip: Add Microchip
+ PolarFire host binding
+To:     Daire McNamara <Daire.McNamara@microchip.com>
+Cc:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add bindings for the pwm-gpio driver.
+On Fri, Aug 7, 2020 at 7:23 AM <Daire.McNamara@microchip.com> wrote:
+>
+>
+> Add device tree bindings for the Microchip PolarFire PCIe controller
+> when configured in host (Root Complex) mode.
+>
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  .../bindings/pci/microchip,pcie-host.yaml     | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
- .../devicetree/bindings/pwm/pwm-gpio.yaml     | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-new file mode 100644
-index 000000000000..51941cd03955
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-@@ -0,0 +1,29 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GPIO-based PWM
-+
-+maintainers:
-+  - Vincent Whitchurch <vincent.whitchurch@axis.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - pwm-gpio
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+  gpio:
-+    maxItems: 1
-+    description: GPIO to toggle.
-+
-+required:
-+  - compatible
-+  - "#pwm-cells"
-+  - gpio
-+
-+additionalProperties: false
--- 
-2.25.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
