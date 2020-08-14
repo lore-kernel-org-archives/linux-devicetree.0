@@ -2,49 +2,48 @@ Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20853C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2BFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019A620708
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C205A20781
+	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 10:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QBEyf4Km"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O4Z2CsgB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgHNKzl (ORCPT
+        id S1727857AbgHNKxv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 06:55:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55647 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgHNKyM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 06:54:12 -0400
+        Fri, 14 Aug 2020 06:53:51 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:27407 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727074AbgHNKxu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Aug 2020 06:53:50 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597402452; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=+p4L5HepHVfNwEYZ4Wgv6SMrX9rmY/Y0hwfHhSk9YaY=; b=QBEyf4KmBdsedw65xx3lF0hOBjcLMysvqvQuAcfJAJGCr096kmX4xkG2mj4ZPnmcSUlbGWDs
- P1pWCyb/GzFIQldL/obRG1pelfWy5USoBOHkQGs646YRZu1XdHHAFPCxQ3jhPSW6Hi61FmAS
- 9jzVh4dpczBqCw6EwFCLEEYKZeY=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1597402430; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=rlS6jtvmdtc8gXzY+6308pLXZafr54hh4AT7H4tFc6g=; b=O4Z2CsgBst+o/NMowb4TlRVOnixHHCMw/bcCYL4WGLLbuKu14Ws8p96uLAltggxwFWfI3s/s
+ VxGNH/wIqRr/MjQxqBYCDs0JlE5fC2JZfJLtVe594SDC6DXfUuSdmFVyMrmMLblfxvoF67Hb
+ Kz8oIAzaYx8x5rnf3r7wUmsybo8=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f366d52d96d28d61e34e229 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 10:54:10
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5f366d2ed48d4625ca4fdb2b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 10:53:34
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 34D65C433CA; Fri, 14 Aug 2020 10:54:10 +0000 (UTC)
+        id 31F11C43391; Fri, 14 Aug 2020 10:53:34 +0000 (UTC)
 Received: from rohkumar-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 362B5C4339C;
-        Fri, 14 Aug 2020 10:54:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 362B5C4339C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8FE86C433C6;
+        Fri, 14 Aug 2020 10:53:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FE86C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
 From:   Rohit kumar <rohitkr@codeaurora.org>
@@ -55,48 +54,58 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v6 04/12] ASoC: qcom: lpass-platform: fix memory leak
-Date:   Fri, 14 Aug 2020 16:23:00 +0530
-Message-Id: <1597402388-14112-5-git-send-email-rohitkr@codeaurora.org>
+Subject: [PATCH v6 00/12]  ASoC: qcom: Add support for SC7180 lpass variant
+Date:   Fri, 14 Aug 2020 16:22:56 +0530
+Message-Id: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
-References: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-lpass_pcm_data is never freed. Free it in close
-ops to avoid memory leak.
+This patch chain add audio support for SC7180 soc by doing the required
+modification in existing common lpass-cpu/lpass-platform driver.
+This also fixes some concurrency issue.
 
-Fixes: 022d00ee0b55 ("ASoC: lpass-platform: Fix broken pcm data usage")
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/qcom/lpass-platform.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This patch series is already tested by Srinivas on Dragon Board 410c.
+Changes since v5:
+        - Fixed remove api in lpass-sc7180.c
+        - Addressed comments by Rob in yaml Documentation.
 
-diff --git a/sound/soc/qcom/lpass-platform.c b/sound/soc/qcom/lpass-platform.c
-index 3697f4e..315feda 100644
---- a/sound/soc/qcom/lpass-platform.c
-+++ b/sound/soc/qcom/lpass-platform.c
-@@ -61,7 +61,7 @@ static int lpass_platform_pcmops_open(struct snd_soc_component *component,
- 	int ret, dma_ch, dir = substream->stream;
- 	struct lpass_pcm_data *data;
- 
--	data = devm_kzalloc(soc_runtime->dev, sizeof(*data), GFP_KERNEL);
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
- 
-@@ -118,6 +118,7 @@ static int lpass_platform_pcmops_close(struct snd_soc_component *component,
- 	if (v->free_dma_channel)
- 		v->free_dma_channel(drvdata, data->dma_ch);
- 
-+	kfree(data);
- 	return 0;
- }
- 
+Ajit Pandey (4):
+  ASoC: qcom: Add common array to initialize soc based core clocks
+  ASoC: qcom: lpass-platform: Replace card->dev with component->dev
+  include: dt-bindings: sound: Add sc7180-lpass bindings header
+  ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
+
+Rohit kumar (8):
+  ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
+  ASoC: qcom: lpass-platform: fix memory leak
+  ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
+  ASoC: qcom: lpass-cpu: fix concurrency issue
+  dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
+  ASoC: qcom: lpass-cpu: Use platform_get_resource
+  ASoC: qcom: lpass-platform: Use platform_get_irq
+  dt-bindings: sound: lpass-cpu: Move to yaml format
+
+ .../devicetree/bindings/sound/qcom,lpass-cpu.txt   |  79 --------
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 189 ++++++++++++++++++
+ include/dt-bindings/sound/sc7180-lpass.h           |  10 +
+ sound/soc/qcom/Kconfig                             |   5 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/lpass-apq8016.c                     |  86 ++++++--
+ sound/soc/qcom/lpass-cpu.c                         | 204 ++++++++++---------
+ sound/soc/qcom/lpass-ipq806x.c                     |  67 +++++++
+ sound/soc/qcom/lpass-lpaif-reg.h                   | 157 ++++++++-------
+ sound/soc/qcom/lpass-platform.c                    | 155 +++++++++++----
+ sound/soc/qcom/lpass-sc7180.c                      | 216 +++++++++++++++++++++
+ sound/soc/qcom/lpass.h                             |  63 +++++-
+ 12 files changed, 934 insertions(+), 299 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
+ create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
+ create mode 100644 sound/soc/qcom/lpass-sc7180.c
+
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
 is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
