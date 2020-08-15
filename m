@@ -2,239 +2,287 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ED0C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9913DC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0752053B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZS0e8CPj"
+	by mail.kernel.org (Postfix) with ESMTP id 7E0732053B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgHOWA1 (ORCPT
+        id S1729297AbgHOWBv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
+        Sat, 15 Aug 2020 18:01:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbgHOVvf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:51:35 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D422EC02B8E4
-        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 04:45:27 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id 185so12554296ljj.7
-        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 04:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5kWxC8Q2TEsOvsKTGoT0rCit1An1OvXbLIdlQ6bd9Xs=;
-        b=ZS0e8CPjP36nUfDoaFcR/gSeh9MJeNUD3mEmkDjX5vrf2ZC5SX2Nm17xCI9sns7sGO
-         fQRiNyUy5ermFlaOZxi1TsUSVDW7nLZ6oyGj6VKZ60cewZW650VGIUyhUvuYoVpFu2Hd
-         7G0C9NCqROSsIQS6uMoYtBYF3CrjL1qiVKuMo3iR0rTxUzPxSKHLcAlTjKqAnFFsepvJ
-         GLk/Dsc2y3pQ5h9H/RS3E6TLLJ6q03JFZA/vQs06i/jRe5DpH24PHLKIPyI82EosvniK
-         AS20iIrPyh4qNM+mFTzaDa+tsovJSpucty7obPIPRELyjiQloHSM/P9trWlYgmESLLQQ
-         kD2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5kWxC8Q2TEsOvsKTGoT0rCit1An1OvXbLIdlQ6bd9Xs=;
-        b=iJiWVM0N/WngMyywKWiSmnsx8siWuVLBPSNLPIh+GmiuJLN/UrhDMD2G43u7JpT/BM
-         hsMxQA0W/UD4EbK896sn5/HYIAT8DtQXgTj5PjMPNK3R8aLypfHbBCDg/cWGKzHuA14X
-         Q/B49RWW1duZSgjIfvhyao0qWg/t4mwnISygq5xOrSJ3ugN6fJm3CllUGhuJrVwNesO/
-         DmDsyPE7HBquTKI2rLXCByEGeC+ElSJBA52EU90RV5MRl70yve9WBNh4qbXkBhKTm5dY
-         qhR1D0ZSSjKQqAeuIP1OhhTJCoQopAXRSDo1/fXEIO6tfbmpBMqoSFtNciDQgVb6peuc
-         MGvg==
-X-Gm-Message-State: AOAM531YrCaBdwUdcW41Ctym+AwI4u96KWHpzWA/9X/sF/uOw39PH2pp
-        0ESe9iZ9k1Pf9kCcytcx3w8sbFI4awYaNg==
-X-Google-Smtp-Source: ABdhPJxCubHTocMX6RPP0TdHWoKCqAKVAzmoybFXXugys1W9NRplxlI5higWH1CbHPi3zmZY3Rsgow==
-X-Received: by 2002:a2e:8717:: with SMTP id m23mr3471731lji.245.1597491920894;
-        Sat, 15 Aug 2020 04:45:20 -0700 (PDT)
-Received: from [192.168.43.7] ([94.25.229.189])
-        by smtp.gmail.com with ESMTPSA id o1sm2361694ljc.3.2020.08.15.04.45.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 04:45:20 -0700 (PDT)
-Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-To:     Tanmay Shah <tanmay@codeaurora.org>
-Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        robdclark@gmail.com, linux-kernel@vger.kernel.org,
-        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
-        daniel@ffwll.ch, airlied@linux.ie, aravindh@codeaurora.org,
-        abhinavk@codeaurora.org, khsieh@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
- <f6b330778c07abd3003da9acab4d3398@codeaurora.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <28b1f678-ab8f-cf6a-af9f-fcd79131bdc1@linaro.org>
-Date:   Sat, 15 Aug 2020 14:45:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        with ESMTP id S1728747AbgHOVvZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:51:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B6FC03B3C6
+        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 00:50:49 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k6qxZ-0008Au-Ql; Sat, 15 Aug 2020 09:50:37 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1k6qxW-0005H6-Cf; Sat, 15 Aug 2020 09:50:34 +0200
+Date:   Sat, 15 Aug 2020 09:50:32 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, kernel@axis.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, oliver@schinagl.nl
+Subject: Re: [PATCH 2/2] pwm: Add GPIO PWM driver
+Message-ID: <20200815075032.k2xyw75l56sbl7nx@pengutronix.de>
+References: <20200814155513.31936-1-vincent.whitchurch@axis.com>
+ <20200814155513.31936-2-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
-In-Reply-To: <f6b330778c07abd3003da9acab4d3398@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rf5behupqocofi63"
+Content-Disposition: inline
+In-Reply-To: <20200814155513.31936-2-vincent.whitchurch@axis.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15/08/2020 02:22, Tanmay Shah wrote:
-> On 2020-08-14 10:05, Dmitry Baryshkov wrote:
->> On 12/08/2020 07:42, Tanmay Shah wrote:
->>> From: Chandan Uddaraju <chandanu@codeaurora.org>
->>>
->>> Add the needed DP PLL specific files to support
->>> display port interface on msm targets.
->>
->> [skipped]
->>
->>> diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h 
->>> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>> new file mode 100644
->>> index 000000000000..475ba6ed59ab
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>> @@ -0,0 +1,98 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-only */
->>> +/*
->>> + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
->>> + */
->>> +
->>> +#ifndef __DP_PLL_10NM_H
->>> +#define __DP_PLL_10NM_H
->>> +
->>> +#include "dp_pll.h"
->>> +#include "dp_reg.h"
->>> +
->>> +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->>> +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->>> +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->>> +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->>> +
->>> +#define NUM_DP_CLOCKS_MAX            6
->>> +
->>> +#define DP_PHY_PLL_POLL_SLEEP_US        500
->>> +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->>> +
->>> +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->>> +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->>> +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->>> +
->>> +struct dp_pll_vco_clk {
->>> +    struct clk_hw hw;
->>> +    unsigned long    rate;        /* current vco rate */
->>> +    u64        min_rate;    /* min vco rate */
->>> +    u64        max_rate;    /* max vco rate */
->>> +    void        *priv;
->>> +};
->>> +
->>> +struct dp_pll_db {
->>
->> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
->> example, will use slightly different structure.
->>
-> 
-> Sure, it sounds good. I will give it try. Thanks!
-> 
->>> +    struct msm_dp_pll *base;
->>> +
->>> +    int id;
->>> +    struct platform_device *pdev;
->>> +
->>> +    /* private clocks: */
->>> +    bool fixed_factor_clk[NUM_DP_CLOCKS_MAX];
->>> +    struct clk_hw *hws[NUM_DP_CLOCKS_MAX];
->>
->> Then these two fields can use exact number of clocks rather than
->> NUM_DP_CLOCKS_MAX.
->>
-> 
-> I didn't get this. I think NUM_DP_CLOCKS_MAX is doing same?
 
-Not exactly. We'd need fixed_factor_clk[4] for 10nm rather than 6. It's 
-not that important, just a small nitpick.
+--rf5behupqocofi63
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
->>> +    u32 num_hws;
->>> +
->>> +    /* lane and orientation settings */
->>> +    u8 lane_cnt;
->>> +    u8 orientation;
->>> +
->>> +    /* COM PHY settings */
->>> +    u32 hsclk_sel;
->>> +    u32 dec_start_mode0;
->>> +    u32 div_frac_start1_mode0;
->>> +    u32 div_frac_start2_mode0;
->>> +    u32 div_frac_start3_mode0;
->>> +    u32 integloop_gain0_mode0;
->>> +    u32 integloop_gain1_mode0;
->>> +    u32 vco_tune_map;
->>> +    u32 lock_cmp1_mode0;
->>> +    u32 lock_cmp2_mode0;
->>> +    u32 lock_cmp3_mode0;
->>> +    u32 lock_cmp_en;
->>> +
->>> +    /* PHY vco divider */
->>> +    u32 phy_vco_div;
->>> +    /*
->>> +     * Certain pll's needs to update the same vco rate after resume in
->>> +     * suspend/resume scenario. Cached the vco rate for such plls.
->>> +     */
->>> +    unsigned long    vco_cached_rate;
->>> +    u32        cached_cfg0;
->>> +    u32        cached_cfg1;
->>> +    u32        cached_outdiv;
->>> +
->>> +    uint32_t index;
->>> +};
->>> +
->>> +static inline struct dp_pll_vco_clk *to_dp_vco_hw(struct clk_hw *hw)
->>> +{
->>> +    return container_of(hw, struct dp_pll_vco_clk, hw);
->>> +}
->>> +
->>> +#define to_msm_dp_pll(vco) ((struct msm_dp_pll *)vco->priv)
->>> +
->>> +#define to_dp_pll_db(x)    ((struct dp_pll_db *)x->priv)
->>> +
->>> +int dp_vco_set_rate_10nm(struct clk_hw *hw, unsigned long rate,
->>> +                unsigned long parent_rate);
->>> +unsigned long dp_vco_recalc_rate_10nm(struct clk_hw *hw,
->>> +                unsigned long parent_rate);
->>> +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
->>> +                unsigned long *parent_rate);
->>> +int dp_vco_prepare_10nm(struct clk_hw *hw);
->>> +void dp_vco_unprepare_10nm(struct clk_hw *hw);
->>> +
->>> +int msm_dp_pll_10nm_init(struct msm_dp_pll *dp_pll, int id);
->>> +void msm_dp_pll_10nm_deinit(struct msm_dp_pll *dp_pll);
->>
->> These functions don't seem to be used outside of dp_pll_10nm. What
->> about making them static?
-> 
-> I can't declare static to "init" and "deinit" as they are exported to 
-> dp_pll.c.
-> Rest of them I can move to dp_pll_10nm and then define static.
+On Fri, Aug 14, 2020 at 05:55:13PM +0200, Vincent Whitchurch wrote:
+> Add a software PWM which toggles a GPIO from a high-resolution timer.
+>=20
+> This will naturally not be as accurate or as efficient as a hardware
+> PWM, but it is useful in some cases.  I have for example used it for
+> evaluating LED brightness handling (via leds-pwm) on a board where the
+> LED was just hooked up to a GPIO, and for a simple verification of the
+> timer frequency on another platform.
+>=20
+> Since high-resolution timers are used, sleeping gpio chips are not
+> supported and are rejected in the probe function.
+>=20
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-Please exuse me for not being exact enough. Of course I meant 
-dp_vco_FOO_10nm() functions, not init/exit.
+Nice idea. IMHO this can serve as example about what we expect from pwm
+drivers. There is some improvement necessary however to reach that
+state.
 
-BTW: as I'm looking onto 7nm dp pll, which naming would you prefer?
+> ---
+> While preparing this driver for posting, I found a pwm-gpio driver posted=
+ to
+> the lists way back in 2015 by Olliver Schinagl:
+>=20
+>  https://lore.kernel.org/linux-pwm/1445895161-2317-8-git-send-email-o.sch=
+inagl@ultimaker.com/
+>=20
+> This driver was developed independently, but since both drivers are trivi=
+al
+> they are quite similar.  The main difference I see (apart from the usage =
+of
+> newer APIs and DT schemas) is that this driver only supports one PWM per
+> instance, which makes for simpler code.  I also reject sleeping GPIO chips
+> explicitly while that driver uses gpio_set_value_cansleep() from a hrtime=
+r,
+> which is a no-no.
+>=20
+>  drivers/pwm/Kconfig    |  10 ++++
+>  drivers/pwm/Makefile   |   1 +
+>  drivers/pwm/pwm-gpio.c | 123 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 134 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-gpio.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 7dbcf6973d33..20e4fda82e61 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -181,6 +181,16 @@ config PWM_FSL_FTM
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-fsl-ftm.
+> =20
+> +config PWM_GPIO
+> +	tristate "GPIO PWM support"
+> +	depends on OF && GPIOLIB
+> +	help
+> +	  Generic PWM framework driver for a software PWM toggling a GPIO pin
+> +	  from kernel high-resolution timers.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-gpio.
+> +
+>  config PWM_HIBVT
+>  	tristate "HiSilicon BVT PWM support"
+>  	depends on ARCH_HISI || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 2c2ba0a03557..2e045f063cd1 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CRC)		+=3D pwm-crc.o
+>  obj-$(CONFIG_PWM_CROS_EC)	+=3D pwm-cros-ec.o
+>  obj-$(CONFIG_PWM_EP93XX)	+=3D pwm-ep93xx.o
+>  obj-$(CONFIG_PWM_FSL_FTM)	+=3D pwm-fsl-ftm.o
+> +obj-$(CONFIG_PWM_GPIO)		+=3D pwm-gpio.o
+>  obj-$(CONFIG_PWM_HIBVT)		+=3D pwm-hibvt.o
+>  obj-$(CONFIG_PWM_IMG)		+=3D pwm-img.o
+>  obj-$(CONFIG_PWM_IMX1)		+=3D pwm-imx1.o
+> diff --git a/drivers/pwm/pwm-gpio.c b/drivers/pwm/pwm-gpio.c
+> new file mode 100644
+> index 000000000000..e579aca0f937
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-gpio.c
+> @@ -0,0 +1,123 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright (C) 2020 Axis Communications AB */
+> +
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/hrtimer.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/pwm.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +
+> +struct pwm_gpio {
+> +	struct pwm_chip chip;
+> +	struct hrtimer hrtimer;
+> +	struct gpio_desc *gpio;
+> +	ktime_t on_interval;
+> +	ktime_t off_interval;
+> +	bool invert;
+> +	bool on;
+> +};
+> +
+> +static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *hrtimer)
+> +{
+> +	struct pwm_gpio *gpwm =3D container_of(hrtimer, struct pwm_gpio, hrtime=
+r);
+> +	bool newon =3D !gpwm->on;
+> +
+> +	gpwm->on =3D newon;
+> +	gpiod_set_value(gpwm->gpio, newon ^ gpwm->invert);
+> +
+> +	hrtimer_forward_now(hrtimer, newon ? gpwm->on_interval : gpwm->off_inte=
+rval);
 
-We can have separate DP_PLL_10nm/DP_PLL_7nm namespaces (as DSI PLLs do) 
-or I can override only a set of constants (like downstream driver does).
+If I understand correct this adds the new interval on top of "now" and
+not on top of the previous timestamp where an edge was expected. Would
+it make sense to change that?
 
--- 
-With best wishes
-Dmitry
+> +
+> +	return HRTIMER_RESTART;
+> +}
+> +
+> +static int pwm_gpio_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			  const struct pwm_state *state)
+> +{
+> +	struct pwm_gpio *gpwm =3D container_of(chip, struct pwm_gpio, chip);
+> +
+> +	hrtimer_cancel(&gpwm->hrtimer);
+> +
+> +	if (!state->enabled) {
+> +		gpiod_set_value(gpwm->gpio, 0);
+> +		return 0;
+> +	}
+> +
+> +	gpwm->on_interval =3D ns_to_ktime(state->duty_cycle);
+> +	gpwm->off_interval =3D ns_to_ktime(state->period - state->duty_cycle);
+> +	gpwm->invert =3D state->polarity =3D=3D PWM_POLARITY_INVERSED;
+> +
+> +	gpwm->on =3D !!gpwm->on_interval;
+> +	gpiod_set_value(gpwm->gpio, gpwm->on ^ gpwm->invert);
+> +
+> +	if (gpwm->on_interval && gpwm->off_interval)
+> +		hrtimer_start(&gpwm->hrtimer, gpwm->on_interval, HRTIMER_MODE_REL);
+
+Ideally the currently running period is completed before a period with
+the new configuration starts. Would be nice switch only on the next
+period end if the current configuration is enabled.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops pwm_gpio_ops =3D {
+> +	.owner =3D THIS_MODULE,
+> +	.apply =3D pwm_gpio_apply,
+
+Usually a .get_state callback is nice. Does it make sense to do
+something like:
+
+	if (driver is up)
+		report current setting
+	else
+		val =3D gpio_get_value()
+		report(period=3D1, duty_cycle=3Dval, enabled=3Dval, polarity=3DNORMAL)
+
+?
+
+> +};
+> +
+> +static int pwm_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct pwm_gpio *gpwm;
+> +	int ret;
+> +
+> +	gpwm =3D devm_kzalloc(&pdev->dev, sizeof(*gpwm), GFP_KERNEL);
+> +	if (!gpwm)
+> +		return -ENOMEM;
+> +
+> +	gpwm->gpio =3D devm_gpiod_get(&pdev->dev, NULL, GPIOD_OUT_LOW);
+> +	if (IS_ERR(gpwm->gpio))
+> +		return PTR_ERR(gpwm->gpio);
+> +
+> +	if (gpiod_cansleep(gpwm->gpio))
+> +		return -EINVAL;
+> +
+> +	gpwm->chip.dev =3D &pdev->dev;
+> +	gpwm->chip.ops =3D &pwm_gpio_ops;
+> +	gpwm->chip.base =3D pdev->id;
+> +	gpwm->chip.npwm =3D 1;
+> +
+> +	hrtimer_init(&gpwm->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> +	gpwm->hrtimer.function =3D pwm_gpio_timer;
+> +
+> +	ret =3D pwmchip_add(&gpwm->chip);
+> +	if (ret < 0)
+> +		return ret;
+
+Error messages in the error paths please (preferably using
+dev_err_probe).
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--rf5behupqocofi63
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl83k8UACgkQwfwUeK3K
+7AmO4ggAlGQT0fMUFlmyKSdE6QjeZrDtyDSIyjZWS+PoicZ3xRQvF6X/Dvg4+QIL
+Q9+oSCx0gZqFUvqId/giJYlzbb+LtGkGbdrTJFHs0Fhd6HaUHO1JHqjlqGH2zuEx
+ZmvlkCPzr/b+HBK2uNz8PT/mk5RzOb31aQAjREgUXxRCNa2jaw1ec7KKso/uoez8
+w03RzCO4MEhLBBmBkhcWhVGNMaZ/5VosDaEJCpsPfuft8JI808Ek6hMQE0JIXn16
+AMqITGVdyZYloabrMy+8KkcJHSEDDN/WOqR0Kqq2IbLgBKngMBwyQ0dcGrV1jTuF
+wfbek89lLGGgn5gHuXOoVLkYVQuGNQ==
+=xFtm
+-----END PGP SIGNATURE-----
+
+--rf5behupqocofi63--
