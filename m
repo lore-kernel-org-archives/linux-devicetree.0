@@ -2,127 +2,137 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F9FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38AAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0F712053B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25D9204FD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:55:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JscczZiB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzvxEX87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbgHOVym (ORCPT
+        id S1729069AbgHOVzl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
+        Sat, 15 Aug 2020 17:55:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729093AbgHOVwc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:52:32 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E39EC03B3D2;
-        Sat, 15 Aug 2020 01:45:40 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h19so12311364ljg.13;
-        Sat, 15 Aug 2020 01:45:40 -0700 (PDT)
+        with ESMTP id S1729064AbgHOVwY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:52:24 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAADFC02B8DD;
+        Sat, 15 Aug 2020 04:24:47 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id t15so8665249edq.13;
+        Sat, 15 Aug 2020 04:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Jwsjl5Yl1LFkiTpIfV4FC2pCDY0RlfTGIWFy5618czY=;
-        b=JscczZiBHiR/E30j1ODTRjEZ1J6tzdLICchjfKYD9oDq4hBTSw16cEKX38WSL3gIRR
-         xrnOqDQrO6y6nSFgZXIXzbnTdDu/52bbdqMewnXiQwAXD4xwaQ5W/NwThRCamidnVbmi
-         +OlUdBEBVMhTn2wgmOeXl6eQAS5m7c4rvBo0DLKI2UIO242DkP5o4nz2udq02GRUsqvU
-         nz5Syvq8CziHecgVZN5uKOS2Z/hKrUDqLlYS/7A+CIhHbPQO7h7h90xHiEBwYg/VpZsi
-         Hk/phvDKEAzoetTrUL85EGK3C692AW4EDjNNzVdsvul0ZuYBcZUwoFMdM1I+OhdgZN87
-         3y0Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=/pYCqw4FJgQPrWvNgxirZK4mGQC6/Ct9Zlkxybe7NMM=;
+        b=BzvxEX870Xh3lvpFQLGjz7Veu4ygb9dXO7nfFMPyo3sDsJRvTHw6edfND4yqselsR6
+         URdlfuviGFFbRySestfN8PU7laLrFmG9iH1pfGTSdnXc1buyXBrCXETreK/M9kDopNRL
+         WJVCQYEx4kOiyuYGPpSZqor0EFIDiuRi3/MTukfQc2pS2hP1YDgE2bIJtcPaiDIi01jL
+         QPqZhDCVHMybZGVVBmfwQHHrGOI0OSwscrfWbmYsyGzHVVMqxiLtSfLKSqGFZsAisfLx
+         tTVZWR8KsVBWy7Ia/VM6l+oBsSYy/3YIzmJgrrbDQR/h1yyH9KRorvdwgkPpPE2JDYVL
+         C6Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Jwsjl5Yl1LFkiTpIfV4FC2pCDY0RlfTGIWFy5618czY=;
-        b=exEXvbWnvm/975OkswMu12dF470FkJxH/W2gACT96ituYQUvo4xznEJxaPEjqcp2hw
-         e5tx9r0Tfq8goRDeO493KT4dPz77mRmVv94IAsH4kvrBUGjZggPyiyJTIx/SWt+hbZaW
-         c2hCthKcuT1hjan4ZQpXgWal4Itk0wr238qLRrGLWt0+d/cgm933emLWn7bO58CPTH3U
-         R668z6UeSHR0inuw5bc8NcwNq9YDRce618SjXSZsZggby0haXDipZzJIBwWY/JxFneUq
-         pRhrIhtoD1ol6Z4w0Kk6Xkwb+xZfEVN3N7LLUmC3I5X9WENunrc0qCFjXREWT7g+Sffh
-         a7rQ==
-X-Gm-Message-State: AOAM530KkoUDm23CgyqT30bT/mFuRIe6+IQ03RnlBOPVAlKo/bcjcqH3
-        Iqprgt57QfFq/eRVtyKcCZk=
-X-Google-Smtp-Source: ABdhPJxfJPykrCx26X5MYrFKAvPWACW5EIexq2GfCBCd7z/Z++I/TIHakOXnD8XGsq3zFFne/FcS3Q==
-X-Received: by 2002:a2e:808f:: with SMTP id i15mr3244164ljg.151.1597481138853;
-        Sat, 15 Aug 2020 01:45:38 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:6e9:851e:a10b:7957:433d:a960? ([2a00:1fa0:6e9:851e:a10b:7957:433d:a960])
-        by smtp.gmail.com with ESMTPSA id f3sm2331191ljo.81.2020.08.15.01.45.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 01:45:38 -0700 (PDT)
-Subject: Re: [PATCH 3/5] arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <fcabccab-54fb-8b8a-7034-9b0da9d32339@gmail.com>
-Date:   Sat, 15 Aug 2020 11:45:23 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/pYCqw4FJgQPrWvNgxirZK4mGQC6/Ct9Zlkxybe7NMM=;
+        b=OIffgJTBsjrC1GSboDDtIOVZjK5FD2mzhQxbDp0NlZE5olvh6Tit2kqmRPGd/98u+m
+         klHuLeZofv4eEqWxqn0VbfN7jgcuFCp5tokk7GZ4xv7Ezbp4DIbhv/nymZddsnurTDTO
+         V+JQG2LCM00sK+MAkUKyHeTxabho6FPTbLMrpIXhkUjZ3XTivBE6Anasq73RT4pl0W7+
+         A57npQThcWfWTfF6WnxWRlNSTFuuAokC37CzkuuQ3AeItDwVwI7m9lI3hyTEdv/RJYSA
+         1tec1sc6rX0BTI/1ijNXuikEqm1sxVBx8nbs9dZohMUGWGqLAOFSZ9/Py1GibDc+9t1b
+         TDiQ==
+X-Gm-Message-State: AOAM530rJxbLOoF+KvFb1C30t4U2f6dU8p/CADc6kSGvDJg3caOkfw6h
+        Ok7/wEa/eSU71Jf0Ekt4VnQ=
+X-Google-Smtp-Source: ABdhPJzNUtJSkcac39yHBPS5OxPmkL38Y++peDytppNuvWlZm5hLmWf+eQB4YO0lfG/9XEr/QYT7Gg==
+X-Received: by 2002:a50:fd8d:: with SMTP id o13mr6673800edt.313.1597490685719;
+        Sat, 15 Aug 2020 04:24:45 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id g19sm9106505ejz.5.2020.08.15.04.24.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Aug 2020 04:24:45 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        sugar.zhang@rock-chips.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 1/2] ASoC: rockchip-spdif: add description for rk3308
+Date:   Sat, 15 Aug 2020 13:24:36 +0200
+Message-Id: <20200815112437.6662-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+A test with the command below shows that the compatible string
 
-On 14.08.2020 20:30, Lad Prabhakar wrote:
+"rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
 
-> Add PCIe EP nodes to R8A774A1 (RZ/G2M) SoC dtsi.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
->   arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 38 +++++++++++++++++++++++
->   1 file changed, 38 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> index a603d947970e..50e9ed16a36d 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> @@ -2369,6 +2369,44 @@
->   			status = "disabled";
->   		};
->   
-> +		pciec0_ep: pcie_ep@fe000000 {
+is already in use, but is not added to a document.
+The current fallback string "rockchip,rk3328-spdif" points to a data
+set enum RK_SPDIF_RK3366 in rockchip_spdif.c that is not used both
+in the mainline as in the manufacturer kernel.
+(Of the enum only RK_SPDIF_RK3288 is used.)
+So if the properties don't change we might as well use the first SoC
+in line as fallback string and add the description for rk3308 as:
 
-    Hyphens are preferred over underscores in the node/prop names.
+"rockchip,rk3308-spdif", "rockchip,rk3066-spdif"
 
-[...]> +		pciec1_ep: pcie_ep@ee800000 {
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
 
-    Ditto, should be "pci-ep@ee800000".
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+enum rk_spdif_type {
+	RK_SPDIF_RK3066,
+	RK_SPDIF_RK3188,
+	RK_SPDIF_RK3288,
+	RK_SPDIF_RK3366,
+};
 
-[...]
+static const struct of_device_id rk_spdif_match[] = {
+	{ .compatible = "rockchip,rk3066-spdif",
+	  .data = (void *)RK_SPDIF_RK3066 },
+	{ .compatible = "rockchip,rk3188-spdif",
+	  .data = (void *)RK_SPDIF_RK3188 },
+	{ .compatible = "rockchip,rk3228-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3288-spdif",
+	  .data = (void *)RK_SPDIF_RK3288 },
+	{ .compatible = "rockchip,rk3328-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3366-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3368-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{ .compatible = "rockchip,rk3399-spdif",
+	  .data = (void *)RK_SPDIF_RK3366 },
+	{},
+};
+---
+ Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-MBR, Sergei
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+index c46715265..26e986097 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+@@ -27,6 +27,7 @@ properties:
+           - enum:
+             - rockchip,rk3188-spdif
+             - rockchip,rk3288-spdif
++            - rockchip,rk3308-spdif
+           - const: rockchip,rk3066-spdif
+ 
+   reg:
+-- 
+2.11.0
+
