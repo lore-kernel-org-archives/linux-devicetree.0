@@ -2,218 +2,219 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F20C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B84C433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3C323B24
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149792311C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgHOVo5 (ORCPT
+        id S1726357AbgHOVpr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:44:57 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:47616 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgHOVo4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:44:56 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 1EC0D8053D;
-        Sat, 15 Aug 2020 23:08:03 +0200 (CEST)
-Date:   Sat, 15 Aug 2020 23:08:02 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: Add Mantix MLAF057WE51-X panel bindings
-Message-ID: <20200815210802.GA1242831@ravnborg.org>
-References: <cover.1597412076.git.agx@sigxcpu.org>
- <9345739df02b8b8630e7dccb61a80a7a7f692526.1597412076.git.agx@sigxcpu.org>
- <20200815083917.GA993113@ravnborg.org>
- <20200815164737.GA3640@bogon.m.sigxcpu.org>
+        Sat, 15 Aug 2020 17:45:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbgHOVpq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:45:46 -0400
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 17473C0045A0;
+        Sat, 15 Aug 2020 12:36:40 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 07FJYSqw067673;
+        Sat, 15 Aug 2020 21:34:28 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 07FJYSrC032346;
+        Sat, 15 Aug 2020 21:34:28 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 07FJYRmV032345;
+        Sat, 15 Aug 2020 21:34:27 +0200
+From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
+To:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        "Marc Kleine-Budde" <mkl@pengutronix.de>,
+        Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        David Miller <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>,
+        Pavel Pisa <ppisa@pikron.com>
+Subject: [PATCH v5 0/6] CTU CAN FD open-source IP core SocketCAN driver, PCI, platform integration and documentation
+Date:   Sat, 15 Aug 2020 21:33:28 +0200
+Message-Id: <cover.1597518433.git.ppisa@pikron.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200815164737.GA3640@bogon.m.sigxcpu.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8 a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8
-        a=6yzhs6WGAAAA:8 a=e5mUnYsNAAAA:8 a=XmuwC6Cl6KIseVqJuPgA:9
-        a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22 a=sptkURWiP4Gy88Gu7hUp:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=j5F3_G_i7ziBYwdlbqZG:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 07FJYSqw067673
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+        score=-0.497, required 6, autolearn=not spam, BAYES_00 -0.50,
+        KHOP_HELO_FCRDNS 0.00, SPF_HELO_NONE 0.00, SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1598124869.79909@3Roq+TfEvdk0QgMZURx0pw
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guido.
+From: Pavel Pisa <ppisa@pikron.com>
 
-On Sat, Aug 15, 2020 at 06:47:37PM +0200, Guido Günther wrote:
-> Hi Sam,
-> On Sat, Aug 15, 2020 at 10:39:17AM +0200, Sam Ravnborg wrote:
-> > Hi Guido.
-> > 
-> > On Fri, Aug 14, 2020 at 03:36:22PM +0200, Guido Günther wrote:
-> > > The panel uses a Focaltech FT8006p, the touch part is handled by the
-> > > already existing edt-ft5x06.
-> > > 
-> > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > 
-> > A few trivialities.
-> 
-> Thanks for having a look. One remark inline:
-> 
-> > 
-> > > ---
-> > >  .../display/panel/mantix,mlaf057we51-x.yaml   | 73 +++++++++++++++++++
-> > >  1 file changed, 73 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
-> > > new file mode 100644
-> > > index 0000000000000..349f3380ac940
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
-> > > @@ -0,0 +1,73 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/display/panel/mantix,mlaf057we51-x.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Mantix MLAF057WE51-X 5.7" 720x1440 TFT LCD panel
-> > > +
-> > > +maintainers:
-> > > +  - Guido Günther <agx@sigxcpu.org>
-> > > +
-> > > +description: |
-> > > +             Mantix MLAF057WE51 X is a 720x1440 TFT LCD panel
-> > > +             connected using a MIPI-DSI video interface.
-> > Indent text with two spaces only.
-> > And I have learned that '|' is only needed to preserve formatting - so
-> > it can be dropped.
-> > 
-> > > +
-> > > +allOf:
-> > > +  - $ref: panel-common.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - mantix,mlaf057we51-x
-> > This is a list - so needs an extra 2 spaces indent.
-> > See https://lore.kernel.org/linux-devicetree/f1963eb9-283f-e903-2a3a-4f324d71d418@lucaceresoli.net/T/#m65900317fb948f6c40e8fb521f2201fba3c301a7
-> > for examples where Rob fixes this.
-> 
-> Doesn't this only apply if the 'outer element' is a list too so e.g.:
-> 
->    - enum
->      - foo
-> 
-> trips up yamllint but
-> 
->    enum
->      - foo
-> 
-> doesn't. Since yamllint was happy i kept it as is (looking at your
-> reference suggests that too).
+This driver adds support for the CTU CAN FD open-source IP core.
+More documentation and core sources at project page
+(https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core).
+The core integration to Xilinx Zynq system as platform driver
+is available (https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top).
+Implementation on Intel FPGA based PCI Express board is available
+from project (https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd).
+The CTU CAN FD core emulation send for review for QEMU mainline.
+Development repository for QEMU emulation - ctu-canfd branch of
+  https://gitlab.fel.cvut.cz/canbus/qemu-canbus
 
-You are right, I missed that this was not a list (no '-' in front of
-enum).
-I would not be able to do this right without tool assistance.
+More about CAN bus related projects used and developed at CTU FEE
+on the guidepost page http://canbus.pages.fel.cvut.cz/ .
 
-	Sam
+Martin Jerabek (1):
+  can: ctucanfd: add support for CTU CAN FD open-source IP core - bus
+    independent part.
 
-> 
-> All the rest made sense and i fixed that for the upcoming v2.
-> Thanks for having a look!
->  -- Guido
-> 
-> > 
-> > > +
-> > > +  port: true
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +    description: DSI virtual channel
-> > > +
-> > > +  avdd-supply:
-> > > +    description: Positive analog power supply
-> > > +
-> > > +  avee-supply:
-> > > +    description: Negative analog power supply
-> > > +
-> > > +  vddi-supply:
-> > > +    description: 1.8V I/O voltage supply
-> > > +
-> > > +  reset-gpios:
-> > > +    description: GPIO used for the reset pin
-> > > +    maxItems: 1
-> > Use reset-gpios: true as we already have it in panel-common.yaml
-> > 
-> > > +
-> > > +  backlight:
-> > > +    description: Backlight used by the panel
-> > > +    $ref: "/schemas/types.yaml#/definitions/phandle"
-> > Use backlight from panel-common.yaml.
-> > 
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - avdd-supply
-> > > +  - avee-supply
-> > > +  - vddi-supply
-> > > +  - reset-gpios
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/gpio/gpio.h>
-> > > +
-> > > +    dsi {
-> > My personal preference is indent with 4 spaces in examples but there are
-> > no rules so feel free to ignore.
-> > > +      #address-cells = <1>;
-> > > +      #size-cells = <0>;
-> > > +      panel@0 {
-> > > +        compatible = "mantix,mlaf057we51-x";
-> > > +        reg = <0>;
-> > > +        avdd-supply = <&reg_avdd>;
-> > > +        avee-supply = <&reg_avee>;
-> > > +        vddi-supply = <&reg_1v8_p>;
-> > > +        reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
-> > > +        backlight = <&backlight>;
-> > > +      };
-> > > +    };
-> > I think we need an ampty line here.
-> > > +...
-> > > -- 
-> > > 2.26.2
-> > > 
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
+Pavel Pisa (5):
+  dt-bindings: vendor-prefix: add prefix for the Czech Technical
+    University in Prague.
+  dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
+  can: ctucanfd: CTU CAN FD open-source IP core - PCI bus support.
+  can: ctucanfd: CTU CAN FD open-source IP core - platform/SoC support.
+  docs: ctucanfd: CTU CAN FD open-source IP core documentation.
+
+The version 5 changes:
+  - sent at 2020-08-15
+  - correct Kconfig formatting according to Randy Dunlap
+  - silence warnings reported by make W=1 C=1 flags.
+    Changes suggested by Jakub Kicinski
+  - big thanks for core patch review by Pavel Machek
+    resulting in more readability and formating updates
+  - fix power management errors found by Pavel Machek
+  - removed comments from d-t bindings as suggested by Rob Herring
+  - selected ctu,ctucanfd-2 as alternative name to ctu,ctucanfd
+    which allows to bind to actual major HDL core sources version 2.x
+    if for some reason driver adaptation would not work on version
+    read from the core
+  - line length limit relaxed to 100 characters on some cases
+    where it helps to readability
+
+The version 4 changes:
+  - sent at 2020-08-04
+  - changes summary, 169 non-merge commits, 6 driver,
+    32 IP core sources enhancements and fixes, 58 tests
+    in master and about additional 30 iso-testbench
+    preparation branch.
+  - convert device-tree binding documentation to YAML
+  - QEMU model of CTU CAN FD IP core and generic extension
+    of QEMU CAN bus emulation developed by Jan Charvat.
+  - driver tested on QEMU emulated Malta big-endian MIPS
+    platform and big endian-support fixed.
+  - checkpatch from 5.4 kernel used to cleanup driver formatting
+  - header files generated from IP core IP-Xact description
+    updated to include protocol exception (pex) field.
+    Mechanism to set it from the driver is not provided yet.
+
+The version 3 changes:
+  - sent at 2019-12-21
+  - adapts device tree bindings documentation according to
+    Rob Herring suggestions.
+  - the driver has been separated to individual modules for core support,
+    PCI bus integration and platform, SoC integration.
+  - the FPGA design has been cleaned up and CAN protocol FSM redesigned
+    by Ondrej Ille (the core redesign has been reason to pause attempts to driver
+    submission)
+  - the work from February 2019 on core, test framework and driver
+    1601 commits in total, 436 commits in the core sources, 144 commits
+    in the driver, 151 documentation, 502 in tests.
+  - not all continuous integration tests updated for latest design version yet
+    https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core/pipelines
+  - Zynq hardware in the loop test show no issues for after driver PCI and platform
+    separation and latest VHDL sources updates.
+  - driver code has been periodically tested on 4.18.5-rt3 and 4.19 long term
+    stable kernels.
+  - test of the patches before submission is run on 5.4 kernel
+  - the core has been integrated by Jaroslav Beran <jara.beran@gmail.com>
+    into Intel FPGA based SoC used in the tester developed for Skoda auto
+    at Department of Measurement, Faculty of Electrical Engineering,
+    Czech Technical University https://meas.fel.cvut.cz/ . He has contributed
+    feedback and fixes to the project.
+
+The version 2 sent at 2019-02-27
+
+The version 1 sent at 2019-02-22
+
+Ondrej Ille has prepared the CTU CAN IP Core sources for new release.
+We are waiting with it for the driver review, our intention
+is to release IP when driver is reviewed and mainlined.
+
+DKMS CTU CAN FD driver build by OpenBuildService to ease integration
+into Debian systems when driver is not provided by the distribution
+
+https://build.opensuse.org/package/show/home:ppisa/ctu_can_fd
+
+Jan Charvat <charvj10@fel.cvut.cz> finished work to extend already
+mainlined QEMU SJA1000 and SocketCAN support to provide even CAN FD
+support and CTU CAN FD core support.
+
+  https://gitlab.fel.cvut.cz/canbus/qemu-canbus/-/tree/ctu-canfd
+
+The patches has been sent for review to QEMU mainlining list.
+
+Thanks in advance to all who help us to deliver the project into public.
+
+Thanks to all colleagues, reviewers and other providing feedback,
+infrastructure and enthusiasm and motivation for open-source work.
+
+Build infrastructure and hardware is provided by
+  Department of Control Engineering,
+  Faculty of Electrical Engineering,
+  Czech Technical University in Prague
+  https://dce.fel.cvut.cz/en
+
+ .../bindings/net/can/ctu,ctucanfd.yaml        |   63 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ .../ctu/FSM_TXT_Buffer_user.png               |  Bin 0 -> 174807 bytes
+ .../device_drivers/ctu/ctucanfd-driver.rst    |  634 ++++++++++
+ drivers/net/can/Kconfig                       |    1 +
+ drivers/net/can/Makefile                      |    1 +
+ drivers/net/can/ctucanfd/Kconfig              |   35 +
+ drivers/net/can/ctucanfd/Makefile             |   13 +
+ drivers/net/can/ctucanfd/ctu_can_fd.c         | 1105 +++++++++++++++++
+ drivers/net/can/ctucanfd/ctu_can_fd.h         |   87 ++
+ drivers/net/can/ctucanfd/ctu_can_fd_frame.h   |  189 +++
+ drivers/net/can/ctucanfd/ctu_can_fd_hw.c      |  790 ++++++++++++
+ drivers/net/can/ctucanfd/ctu_can_fd_hw.h      |  916 ++++++++++++++
+ drivers/net/can/ctucanfd/ctu_can_fd_pci.c     |  314 +++++
+ .../net/can/ctucanfd/ctu_can_fd_platform.c    |  142 +++
+ drivers/net/can/ctucanfd/ctu_can_fd_regs.h    |  971 +++++++++++++++
+ 16 files changed, 5263 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/ctu,ctucanfd.yaml
+ create mode 100644 Documentation/networking/device_drivers/ctu/FSM_TXT_Buffer_user.png
+ create mode 100644 Documentation/networking/device_drivers/ctu/ctucanfd-driver.rst
+ create mode 100644 drivers/net/can/ctucanfd/Kconfig
+ create mode 100644 drivers/net/can/ctucanfd/Makefile
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd.h
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_frame.h
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_hw.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_hw.h
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_pci.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_regs.h
+
+-- 
+2.20.1
+
