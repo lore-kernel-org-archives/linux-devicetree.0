@@ -2,69 +2,136 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31913C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B390C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F89E205CB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529180;
-	bh=dg40suD33AMMfclaLTXL5ubQPIsh39Ob4G9oMLihIbM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=qkYxFlEYW8T8OTX3TQbCeb1aKr1+iJGzICIE0B8O2vuQtPSyjqJXDDlwGRoV7Tzdp
-	 XX4gJq00ONGFaukR9PfknIB/Eq3O3SoxJKxHuF0F2TFNE/0VooU7Xn7wJZcyLXKwTW
-	 pPNLGBjmo8v7dsM3DwfHxwTUSbmWbvsWMTAN5FqM=
+	by mail.kernel.org (Postfix) with ESMTP id E77CA20639
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbgHOWGO (ORCPT
+        id S1728312AbgHOWHb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729917AbgHOWF3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:05:29 -0400
-Subject: Re: [GIT PULL] Devicetree fixes for v5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597504963;
-        bh=dg40suD33AMMfclaLTXL5ubQPIsh39Ob4G9oMLihIbM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xC1rfOw+tbkY1oC+g2HW7j+gR158ZCLFuxn9C91fhyf4cCMkMxiJ6lXsdoLIjahqg
-         sz1YY3S19tdnUM0q2WAXz34saKM+9/hH4x4U0tIouNE3KBDjYpT0lNo9wZEJSICZW7
-         ERgJ/tB2MA57iz7GjSLommqG9typfM1nzpgc2srU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200814194000.GA2591103@bogus>
-References: <20200814194000.GA2591103@bogus>
-X-PR-Tracked-List-Id: <devicetree.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200814194000.GA2591103@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.9
-X-PR-Tracked-Commit-Id: 5f0b06da5cde3f0a613308b89f0afea678559fdf
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b07175dc41babfec057f494d22a750af755297d8
-Message-Id: <159750496348.10263.11355887804950212073.pr-tracker-bot@kernel.org>
-Date:   Sat, 15 Aug 2020 15:22:43 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Sat, 15 Aug 2020 18:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728172AbgHOVun (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:50:43 -0400
+X-Greylist: delayed 348 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 15 Aug 2020 09:41:39 PDT
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA45AC0A3BF8
+        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 09:41:39 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4BTQsX1JBpzKmfP;
+        Sat, 15 Aug 2020 18:35:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id NKSNmlr3lftj; Sat, 15 Aug 2020 18:35:41 +0200 (CEST)
+From:   Hauke Mehrtens <hauke@hauke-m.de>
+To:     tsbogend@alpha.franken.de
+Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, james.hartley@sondrel.com,
+        rahulbedarkar89@gmail.com, wigyori@uid0.hu,
+        Hauke Mehrtens <hauke@hauke-m.de>
+Subject: [PATCH 3/3] MIPS: DTS: img: marduk: Add NXP SC16IS752IPW
+Date:   Sat, 15 Aug 2020 18:35:14 +0200
+Message-Id: <20200815163514.11631-3-hauke@hauke-m.de>
+In-Reply-To: <20200815163514.11631-1-hauke@hauke-m.de>
+References: <20200815163514.11631-1-hauke@hauke-m.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: *
+X-Rspamd-Score: 0.84 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 245BE182B
+X-Rspamd-UID: 3afc30
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pull request you sent on Fri, 14 Aug 2020 13:40:00 -0600:
+Add NXP SC16IS752IPW SPI-UART controller to device tree.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.9
+This controller drives 2 UARTs and 7 LEDs on the board.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b07175dc41babfec057f494d22a750af755297d8
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ arch/mips/boot/dts/img/pistachio_marduk.dts | 51 +++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-Thank you!
-
+diff --git a/arch/mips/boot/dts/img/pistachio_marduk.dts b/arch/mips/boot/dts/img/pistachio_marduk.dts
+index 633a41954cc0..f4965a484b72 100644
+--- a/arch/mips/boot/dts/img/pistachio_marduk.dts
++++ b/arch/mips/boot/dts/img/pistachio_marduk.dts
+@@ -46,6 +46,46 @@
+ 		regulator-max-microvolt = <1800000>;
+ 	};
+ 
++	/* EXT clock from ca8210 is fed to sc16is752 */
++	ca8210_ext_clk: ca8210-ext-clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <16000000>;
++		clock-output-names = "ca8210_ext_clock";
++	};
++
++	gpioleds {
++		compatible = "gpio-leds";
++		user1 {
++			label = "marduk:red:user1";
++			gpios = <&sc16is752 0 GPIO_ACTIVE_LOW>;
++		};
++		user2 {
++			label = "marduk:red:user2";
++			gpios = <&sc16is752 1 GPIO_ACTIVE_LOW>;
++		};
++		user3 {
++			label = "marduk:red:user3";
++			gpios = <&sc16is752 2 GPIO_ACTIVE_LOW>;
++		};
++		user4 {
++			label = "marduk:red:user4";
++			gpios = <&sc16is752 3 GPIO_ACTIVE_LOW>;
++		};
++		user5 {
++			label = "marduk:red:user5";
++			gpios = <&sc16is752 4 GPIO_ACTIVE_LOW>;
++		};
++		user6 {
++			label = "marduk:red:user6";
++			gpios = <&sc16is752 5 GPIO_ACTIVE_LOW>;
++		};
++		user7 {
++			label = "marduk:red:user7";
++			gpios = <&sc16is752 6 GPIO_ACTIVE_LOW>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "pwm-leds";
+ 		heartbeat {
+@@ -95,6 +135,17 @@
+ 		extclock-freq = <16000000>;
+ 		extclock-gpio = <2>;
+ 	};
++
++	sc16is752: sc16is752@1 {
++		compatible = "nxp,sc16is752";
++		reg = <1>;
++		clocks = <&ca8210_ext_clk>;
++		spi-max-frequency = <4000000>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
+ };
+ 
+ &spfi1 {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.20.1
+
