@@ -2,198 +2,139 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48BBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B36C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 717F820674
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529533;
-	bh=ghK4I1h/hl5658IIykG3IDEndmMPcQYGR5QUDL7wgmc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GIcOusAO4AZ04Uifv3+ZABZ4sz+6UjcoscJzBo0y1DZ18L5Jv2NUlEfUSwd2HjsZd
-	 DprheAoE1uIb/gwajqXHNPFcJYkV/N5tqe9ufFmO5eekiNL8Yt40cjjm7HHCGwTg1G
-	 iB7LKSFTWi53IeBfQ31XJwpI+a8Q3p/z7vp+3sGQ=
+	by mail.kernel.org (Postfix) with ESMTP id D859720657
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgHOWMM (ORCPT
+        id S1727994AbgHOWWW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:22:22 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:53894 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbgHOWK2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:10:28 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3BAE22EBF;
-        Sat, 15 Aug 2020 11:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597490563;
-        bh=ghK4I1h/hl5658IIykG3IDEndmMPcQYGR5QUDL7wgmc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lwUj1LTiJyeXK55xV/lUtdkVTfr0DvieDUZuSLrAF6DZ8R/HA5N71MJwG7nPKua0P
-         XN8+FLgUGcXPbi6i/MCranm+bgtLtOiBUJGe3yTgOhkKtl5mGsaqmriKXBsmDx338H
-         Qk13g3UnXJjZm3sQ9qnKs5RVQDD1IGu2zN6bkado=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k6uGn-002KBi-AX; Sat, 15 Aug 2020 12:22:41 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 15 Aug 2020 12:22:41 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
+        id S1726598AbgHOWWU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:22:20 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 609DCFB04;
+        Sat, 15 Aug 2020 18:26:00 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zdXwEJTZCE2k; Sat, 15 Aug 2020 18:25:59 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id AD998457CD; Sat, 15 Aug 2020 18:25:58 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 18:25:58 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH v4 1/5] of_address: Add bus type match for pci ranges
- parser
-In-Reply-To: <CAL_JsqKVhxu_cdo_umhY_SfuDhCC0G-AdsPAZpGB3eepOVFi-g@mail.gmail.com>
-References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
- <20200728153708.1296374-2-jiaxun.yang@flygoat.com>
- <889508bae5da3c55690a7adbd101a5cd@kernel.org>
- <CAL_JsqKVhxu_cdo_umhY_SfuDhCC0G-AdsPAZpGB3eepOVFi-g@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <34ac2d7c0770f9aa450aaa3905c82f52@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: robh+dt@kernel.org, jiaxun.yang@flygoat.com, frowand.list@gmail.com, linux-mips@vger.kernel.org, tsbogend@alpha.franken.de, chenhc@lemote.com, paulburton@kernel.org, arnd@arndb.de, natechancellor@gmail.com, ndesaulniers@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200815162558.GA2744@bogon.m.sigxcpu.org>
+References: <cover.1597412076.git.agx@sigxcpu.org>
+ <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
+ <20200815100230.GA1002374@ravnborg.org>
+ <20200815104022.GA5641@bogon.m.sigxcpu.org>
+ <20200815104651.GA1005928@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200815104651.GA1005928@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-14 23:51, Rob Herring wrote:
-> On Fri, Aug 14, 2020 at 12:21 PM Marc Zyngier <maz@kernel.org> wrote:
->> 
->> Hi all,
->> 
->> On 2020-07-28 16:36, Jiaxun Yang wrote:
->> > So the parser can be used to parse range property of ISA bus.
->> >
->> > As they're all using PCI-like method of range property, there is no
->> > need
->> > start a new parser.
->> >
->> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> > Reviewed-by: Rob Herring <robh@kernel.org>
->> 
->> This patch, although it looks correct, breaks the RK3399-based
->> systems, as they miss the (now required) 'device_type = "pci";'
->> property.
+Hi,
+On Sat, Aug 15, 2020 at 12:46:51PM +0200, Sam Ravnborg wrote:
+> On Sat, Aug 15, 2020 at 12:40:22PM +0200, Guido Günther wrote:
+> > Hi Sam,
+> > On Sat, Aug 15, 2020 at 12:02:30PM +0200, Sam Ravnborg wrote:
+> > > Hi Guido.
+> > > 
+> > > > +static int mantix_probe(struct mipi_dsi_device *dsi)
+> > > > +{
+> > > > +	struct device *dev = &dsi->dev;
+> > > > +	struct mantix *ctx;
+> > > > +	int ret;
+> > > > +
+> > > > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> > > > +	if (!ctx)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> > > > +	if (IS_ERR(ctx->reset_gpio)) {
+> > > > +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+> > > > +		return PTR_ERR(ctx->reset_gpio);
+> > > > +	}
+> > > > +
+> > > > +	mipi_dsi_set_drvdata(dsi, ctx);
+> > > > +	ctx->dev = dev;
+> > > > +
+> > > > +	dsi->lanes = 4;
+> > > > +	dsi->format = MIPI_DSI_FMT_RGB888;
+> > > > +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
+> > > > +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> > > > +
+> > > > +	ctx->avdd = devm_regulator_get(dev, "avdd");
+> > > > +	if (IS_ERR(ctx->avdd)) {
+> > > > +		ret = PTR_ERR(ctx->avdd);
+> > > > +		if (ret != -EPROBE_DEFER)
+> > > > +			DRM_DEV_ERROR(dev,
+> > > > +				      "Failed to request avdd regulator: %d\n",
+> > > > +				      ret);
+> > > > +		return ret;
+> > > > +	}
+> > > 
+> > > Consider to use the recently added dev_err_probe() here and below.
+> > > Note: Not part of drm-misc-next yet - but hopefully after -rc1
+> > > when a backmerge is done.
+> > 
+> > In fact I did decided against it since i was told that missing dev_* and
+> > DRM_* logging shouldn't be done. So is that o.k. nowadays?
+> s/missing/mixing/
 > 
-> Required since 1990 something...
-
-And yet... The fact that it has been broken from day-1 (3.5 years
-ago) shows how good we are at enforcing those requirements.
-
+> I often request that logging is consistent - so I recognize the
+> argument.
 > 
->> We can fix the in-tree DT, but that's not really an option
->> if someone relies on the DT being provided by the firmware
->> (I for one definitely do).
+> For panel/* I have not made up my mind what I think is the best
+> approach. The DRM_DEV_* and DRM_* logging do not add much value.
+> So I have been tempted several times to convert all logging in
+> panel/ to dev_* and pr_* (when no struct device * is available).
+> That would also avoid that we mix up logging.
 > 
-> Perhaps time to pay attention to schema errors:
+> We have drm_* logging - but they require a valid drm_device * which we
+> do not have in the the panel drivers. So they are ruled out here.
 > 
-> arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml:
-> pcie@f8000000: 'device_type' is a required property
+> Do you have any opinions/comments on this?
 
-As long as this isn't part of the normal build flow, these errors
-will get ignored. I don't even know how to trigger this validation,
-TBH.
-
-> (I thought dtc would also catch this, but there we look for
-> device_type and then do PCI checks like node name. I guess we needed
-> to check for either device_type or the node name...)
-
-That would be much better. At least this *does* run at build time.
-
-> 
->> I came up with the following hack, which solves the issue for
->> me. Definitely not my finest hour, but I really need this box
->> to keep going. I will post a patch fixing the DT separately.
->> 
->> Thanks,
->> 
->>          M.
->> 
->>  From ceef5fd9c4d2005eb577505c68868ebe527c098f Mon Sep 17 00:00:00 
->> 2001
->>  From: Marc Zyngier <maz@kernel.org>
->> Date: Fri, 14 Aug 2020 19:10:12 +0100
->> Subject: [PATCH] of: address: Workaround broken DTs missing the
->> 'device_type =
->>   "pci"' property
->> 
->> Recent changes to the PCI bus parsing made it mandatory for
->> device trees nodes describing a PCI controller to have the
->> 'device_type = "pci"' property for the node to be matched.
->> 
->> Although this is compliant with the specification, it breaks
->> existing device-trees that have been working fine for years
->> (the Rockchip rk3399-based systems being a prime example of
->> such breakage).
->> 
->> In order to paper over the blunder, let's also match nodes
->> that have the "linux,pci-domain" property, as they are
->> pretty likely to be PCI nodes. This fixes the issue for
->> systems such as the above platforms.
->> 
->> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges
->> parser")
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>   drivers/of/address.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/of/address.c b/drivers/of/address.c
->> index 590493e04b01..712e03781a2a 100644
->> --- a/drivers/of/address.c
->> +++ b/drivers/of/address.c
->> @@ -134,9 +134,12 @@ static int of_bus_pci_match(struct device_node 
->> *np)
->>          * "pciex" is PCI Express
->>          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
->>          * "ht" is hypertransport
->> +        * "linux,pci-domain" is a workaround for broken device trees
->> +        * lacking the required "device_type" property.
-> 
-> I would suggest looking for 'pci' or 'pcie' node name instead.
-> 
-> You should remove linux,pci-domain from rk3399 as it is pointless when
-> there's a single PCI host bridge.
-
-Indeed. I was clutching at straws here.
+I think for panel drivers DRM_* does not give any bonus so moving to
+{dev,pr}_* sounds good. I just wonder if other drm parts don't need
+`dev_drm_err_probe()` (or similar) anyway. But then maybe dyn_debug
+is enough nowadays to not need DRM_DEV_DEBUG_* either?
+Cheers,
+ -- Guido
 
 > 
-> The other option is fixup the live tree with of_add_property() in the
-> Rockchip PCI driver. Less likely to impact anyone else.
-
-That's actually a much better solution, thanks for pointing this out.
-At least I can shout about broken DTs while fixing it up, and the
-new fix is fairly neat.
-
-I'll post new patches shortly.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> 	Sam
+> 
