@@ -2,154 +2,239 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D91EC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ED0C433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E5923358
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0752053B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZS0e8CPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgHOWAM (ORCPT
+        id S1728842AbgHOWA1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
+        Sat, 15 Aug 2020 18:00:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbgHOVvf (ORCPT
+        with ESMTP id S1728831AbgHOVvf (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:51:35 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D325DC02B8F4;
-        Sat, 15 Aug 2020 06:05:14 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 39E75299A26
-Message-ID: <b318069fe873e456f18d07d11f5d165667c9b04a.camel@collabora.com>
-Subject: Re: [PATCH v9 00/11] Genericize DW MIPI DSI bridge and add i.MX 6
- driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Andrzej Hajda <a.hajda@samsung.com>, linux-imx@nxp.com,
-        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com
-Date:   Sat, 15 Aug 2020 10:05:00 -0300
-In-Reply-To: <87lfk3kaj4.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
-References: <20200609174959.955926-1-adrian.ratiu@collabora.com>
-         <c6f10db1-7f56-a156-36a1-125e764c8c1a@baylibre.com>
-         <87lfk3kaj4.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D422EC02B8E4
+        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 04:45:27 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 185so12554296ljj.7
+        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 04:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5kWxC8Q2TEsOvsKTGoT0rCit1An1OvXbLIdlQ6bd9Xs=;
+        b=ZS0e8CPjP36nUfDoaFcR/gSeh9MJeNUD3mEmkDjX5vrf2ZC5SX2Nm17xCI9sns7sGO
+         fQRiNyUy5ermFlaOZxi1TsUSVDW7nLZ6oyGj6VKZ60cewZW650VGIUyhUvuYoVpFu2Hd
+         7G0C9NCqROSsIQS6uMoYtBYF3CrjL1qiVKuMo3iR0rTxUzPxSKHLcAlTjKqAnFFsepvJ
+         GLk/Dsc2y3pQ5h9H/RS3E6TLLJ6q03JFZA/vQs06i/jRe5DpH24PHLKIPyI82EosvniK
+         AS20iIrPyh4qNM+mFTzaDa+tsovJSpucty7obPIPRELyjiQloHSM/P9trWlYgmESLLQQ
+         kD2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5kWxC8Q2TEsOvsKTGoT0rCit1An1OvXbLIdlQ6bd9Xs=;
+        b=iJiWVM0N/WngMyywKWiSmnsx8siWuVLBPSNLPIh+GmiuJLN/UrhDMD2G43u7JpT/BM
+         hsMxQA0W/UD4EbK896sn5/HYIAT8DtQXgTj5PjMPNK3R8aLypfHbBCDg/cWGKzHuA14X
+         Q/B49RWW1duZSgjIfvhyao0qWg/t4mwnISygq5xOrSJ3ugN6fJm3CllUGhuJrVwNesO/
+         DmDsyPE7HBquTKI2rLXCByEGeC+ElSJBA52EU90RV5MRl70yve9WBNh4qbXkBhKTm5dY
+         qhR1D0ZSSjKQqAeuIP1OhhTJCoQopAXRSDo1/fXEIO6tfbmpBMqoSFtNciDQgVb6peuc
+         MGvg==
+X-Gm-Message-State: AOAM531YrCaBdwUdcW41Ctym+AwI4u96KWHpzWA/9X/sF/uOw39PH2pp
+        0ESe9iZ9k1Pf9kCcytcx3w8sbFI4awYaNg==
+X-Google-Smtp-Source: ABdhPJxCubHTocMX6RPP0TdHWoKCqAKVAzmoybFXXugys1W9NRplxlI5higWH1CbHPi3zmZY3Rsgow==
+X-Received: by 2002:a2e:8717:: with SMTP id m23mr3471731lji.245.1597491920894;
+        Sat, 15 Aug 2020 04:45:20 -0700 (PDT)
+Received: from [192.168.43.7] ([94.25.229.189])
+        by smtp.gmail.com with ESMTPSA id o1sm2361694ljc.3.2020.08.15.04.45.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Aug 2020 04:45:20 -0700 (PDT)
+Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
+To:     Tanmay Shah <tanmay@codeaurora.org>
+Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        robdclark@gmail.com, linux-kernel@vger.kernel.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        daniel@ffwll.ch, airlied@linux.ie, aravindh@codeaurora.org,
+        abhinavk@codeaurora.org, khsieh@codeaurora.org,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>
+References: <20200812044223.19279-1-tanmay@codeaurora.org>
+ <20200812044223.19279-4-tanmay@codeaurora.org>
+ <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
+ <f6b330778c07abd3003da9acab4d3398@codeaurora.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <28b1f678-ab8f-cf6a-af9f-fcd79131bdc1@linaro.org>
+Date:   Sat, 15 Aug 2020 14:45:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f6b330778c07abd3003da9acab4d3398@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Neil,
-
-On Wed, 2020-07-01 at 09:35 +0300, Adrian Ratiu wrote:
-> Hi Neil,
+On 15/08/2020 02:22, Tanmay Shah wrote:
+> On 2020-08-14 10:05, Dmitry Baryshkov wrote:
+>> On 12/08/2020 07:42, Tanmay Shah wrote:
+>>> From: Chandan Uddaraju <chandanu@codeaurora.org>
+>>>
+>>> Add the needed DP PLL specific files to support
+>>> display port interface on msm targets.
+>>
+>> [skipped]
+>>
+>>> diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h 
+>>> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>>> new file mode 100644
+>>> index 000000000000..475ba6ed59ab
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
+>>> @@ -0,0 +1,98 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>> +/*
+>>> + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>> + */
+>>> +
+>>> +#ifndef __DP_PLL_10NM_H
+>>> +#define __DP_PLL_10NM_H
+>>> +
+>>> +#include "dp_pll.h"
+>>> +#include "dp_reg.h"
+>>> +
+>>> +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
+>>> +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
+>>> +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
+>>> +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
+>>> +
+>>> +#define NUM_DP_CLOCKS_MAX            6
+>>> +
+>>> +#define DP_PHY_PLL_POLL_SLEEP_US        500
+>>> +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
+>>> +
+>>> +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
+>>> +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
+>>> +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
+>>> +
+>>> +struct dp_pll_vco_clk {
+>>> +    struct clk_hw hw;
+>>> +    unsigned long    rate;        /* current vco rate */
+>>> +    u64        min_rate;    /* min vco rate */
+>>> +    u64        max_rate;    /* max vco rate */
+>>> +    void        *priv;
+>>> +};
+>>> +
+>>> +struct dp_pll_db {
+>>
+>> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
+>> example, will use slightly different structure.
+>>
 > 
-> On Mon, 29 Jun 2020, Neil Armstrong <narmstrong@baylibre.com> 
-> wrote:
-> > Hi Adrian, 
-> > 
-> > On 09/06/2020 19:49, Adrian Ratiu wrote: 
-> > > [Re-submitting to cc dri-devel, sorry about the noise]  Hello 
-> > > all,  v9 cleanly applies on top of latest next-20200609 tree. 
-> > > v9 does not depend on other patches as the last binding doc has 
-> > > been merged.   All feedback up to this point has been 
-> > > addressed. Specific details in individual patch changelogs. 
-> > > The biggest changes are the deprecation of the Synopsys DW 
-> > > bridge bind() API in favor of of_drm_find_bridge() and .attach 
-> > > callbacks, the addition of a TODO entry which outlines future 
-> > > planned bridge driver refactorings and a reordering of some 
-> > > i.MX 6 patches to appease checkpatch.   The idea behind the 
-> > > TODO is to get this regmap and i.MX 6 driver merged and then do 
-> > > the rest of refactorings in-tree because it's easier and the 
-> > > refactorings themselves are out-of-scope of this series which 
-> > > is adding i.MX 6 support and is quite big already, so please, 
-> > > if there are more refactoring ideas, let's add them to the TODO 
-> > > doc. :) I intend to tackle those after this series is merged to 
-> > > avoid two complex inter-dependent simultaneous series. 
-> > 
-> > This has been around here for a long time and you seem to have 
-> > addressed all the reviews. 
-> > 
-> > >  As always more testing is welcome especially on Rockchip and 
-> > > STM SoCs. 
-> > 
-> > It has been tested on STM, but I'd like a feedback on RK 
-> > platform before applying the bridge parts. 
-> > 
-> > Can the imx & stm patches be applied separately ? 
-> > 
+> Sure, it sounds good. I will give it try. Thanks!
 > 
-> Yes the IMX and STM patches can be applied separately, they just 
-> both depend on the common regmap patches.
+>>> +    struct msm_dp_pll *base;
+>>> +
+>>> +    int id;
+>>> +    struct platform_device *pdev;
+>>> +
+>>> +    /* private clocks: */
+>>> +    bool fixed_factor_clk[NUM_DP_CLOCKS_MAX];
+>>> +    struct clk_hw *hws[NUM_DP_CLOCKS_MAX];
+>>
+>> Then these two fields can use exact number of clocks rather than
+>> NUM_DP_CLOCKS_MAX.
+>>
 > 
+> I didn't get this. I think NUM_DP_CLOCKS_MAX is doing same?
 
-It's been a month so I think it's a good idea to go forward
-applying IMX and STM patches (probably with the usual
-rebase dance).
+Not exactly. We'd need fixed_factor_clk[4] for 10nm rather than 6. It's 
+not that important, just a small nitpick.
 
-As for Rockchip...
 
-> The binding API removal change which directly touches RK can also 
-> be applied separately, but unfortunately I do not have access to a 
-> RK board with a DSI display to test it (or the bridge regmap logic 
-> on RK btw...), I just "eye-balled" the RK code based on the public 
-> docs and it LGTM.
+>>> +    u32 num_hws;
+>>> +
+>>> +    /* lane and orientation settings */
+>>> +    u8 lane_cnt;
+>>> +    u8 orientation;
+>>> +
+>>> +    /* COM PHY settings */
+>>> +    u32 hsclk_sel;
+>>> +    u32 dec_start_mode0;
+>>> +    u32 div_frac_start1_mode0;
+>>> +    u32 div_frac_start2_mode0;
+>>> +    u32 div_frac_start3_mode0;
+>>> +    u32 integloop_gain0_mode0;
+>>> +    u32 integloop_gain1_mode0;
+>>> +    u32 vco_tune_map;
+>>> +    u32 lock_cmp1_mode0;
+>>> +    u32 lock_cmp2_mode0;
+>>> +    u32 lock_cmp3_mode0;
+>>> +    u32 lock_cmp_en;
+>>> +
+>>> +    /* PHY vco divider */
+>>> +    u32 phy_vco_div;
+>>> +    /*
+>>> +     * Certain pll's needs to update the same vco rate after resume in
+>>> +     * suspend/resume scenario. Cached the vco rate for such plls.
+>>> +     */
+>>> +    unsigned long    vco_cached_rate;
+>>> +    u32        cached_cfg0;
+>>> +    u32        cached_cfg1;
+>>> +    u32        cached_outdiv;
+>>> +
+>>> +    uint32_t index;
+>>> +};
+>>> +
+>>> +static inline struct dp_pll_vco_clk *to_dp_vco_hw(struct clk_hw *hw)
+>>> +{
+>>> +    return container_of(hw, struct dp_pll_vco_clk, hw);
+>>> +}
+>>> +
+>>> +#define to_msm_dp_pll(vco) ((struct msm_dp_pll *)vco->priv)
+>>> +
+>>> +#define to_dp_pll_db(x)    ((struct dp_pll_db *)x->priv)
+>>> +
+>>> +int dp_vco_set_rate_10nm(struct clk_hw *hw, unsigned long rate,
+>>> +                unsigned long parent_rate);
+>>> +unsigned long dp_vco_recalc_rate_10nm(struct clk_hw *hw,
+>>> +                unsigned long parent_rate);
+>>> +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
+>>> +                unsigned long *parent_rate);
+>>> +int dp_vco_prepare_10nm(struct clk_hw *hw);
+>>> +void dp_vco_unprepare_10nm(struct clk_hw *hw);
+>>> +
+>>> +int msm_dp_pll_10nm_init(struct msm_dp_pll *dp_pll, int id);
+>>> +void msm_dp_pll_10nm_deinit(struct msm_dp_pll *dp_pll);
+>>
+>> These functions don't seem to be used outside of dp_pll_10nm. What
+>> about making them static?
 > 
+> I can't declare static to "init" and "deinit" as they are exported to 
+> dp_pll.c.
+> Rest of them I can move to dp_pll_10nm and then define static.
 
-... I'll be getting some DSI hardware to help with the pending
-Rockchip issues, so we can tackle Rockchip as well. I'm quite sure
-we'll loop Heiko as well if needed :-)
+Please exuse me for not being exact enough. Of course I meant 
+dp_vco_FOO_10nm() functions, not init/exit.
 
-Cheers,
-Ezequiel
+BTW: as I'm looking onto 7nm dp pll, which naming would you prefer?
 
-> > Neil
-> > 
-> > > Big thank you to everyone who has contributed to this up to now,
-> > > Adrian
-> > > 
-> > > Adrian Ratiu (11):
-> > >   drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
-> > >   drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
-> > >   drm: bridge: dw_mipi_dsi: add dsi v1.01 support
-> > >   drm: bridge: dw_mipi_dsi: remove bind/unbind API
-> > >   dt-bindings: display: add i.MX6 MIPI DSI host controller doc
-> > >   ARM: dts: imx6qdl: add missing mipi dsi properties
-> > >   drm: imx: Add i.MX 6 MIPI DSI host platform driver
-> > >   drm: stm: dw-mipi-dsi: let the bridge handle the HW version check
-> > >   drm: bridge: dw-mipi-dsi: split low power cfg register into fields
-> > >   drm: bridge: dw-mipi-dsi: fix bad register field offsets
-> > >   Documentation: gpu: todo: Add dw-mipi-dsi consolidation plan
-> > > 
-> > >  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 112 +++
-> > >  Documentation/gpu/todo.rst                    |  25 +
-> > >  arch/arm/boot/dts/imx6qdl.dtsi                |   8 +
-> > >  drivers/gpu/drm/bridge/synopsys/Kconfig       |   1 +
-> > >  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 713 ++++++++++++------
-> > >  drivers/gpu/drm/imx/Kconfig                   |   8 +
-> > >  drivers/gpu/drm/imx/Makefile                  |   1 +
-> > >  drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
-> > >  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |   7 +-
-> > >  drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  16 +-
-> > >  10 files changed, 1059 insertions(+), 231 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> > >  create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
-> > > 
+We can have separate DP_PLL_10nm/DP_PLL_7nm namespaces (as DSI PLLs do) 
+or I can override only a set of constants (like downstream driver does).
 
+-- 
+With best wishes
+Dmitry
