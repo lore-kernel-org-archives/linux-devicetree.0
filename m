@@ -2,173 +2,127 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5898EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F9FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3811C2053B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F712053B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ir6oqEZm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JscczZiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgHOVyX (ORCPT
+        id S1729109AbgHOVym (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        Sat, 15 Aug 2020 17:54:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729085AbgHOVwf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:52:35 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC00C06136D;
-        Fri, 14 Aug 2020 20:14:39 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id m8so5474848pfh.3;
-        Fri, 14 Aug 2020 20:14:39 -0700 (PDT)
+        with ESMTP id S1729093AbgHOVwc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:52:32 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E39EC03B3D2;
+        Sat, 15 Aug 2020 01:45:40 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h19so12311364ljg.13;
+        Sat, 15 Aug 2020 01:45:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=H3Sj2RA4VzKEVF5wDfAwtb0zeDgeFHLqIYqBkdSYJfs=;
-        b=Ir6oqEZmnhfVikiaoGxUdicwSjlJCfEhYVtwKnK6KgBn+RuuHHWhbbgd6T7QbJplaR
-         h4E7nhaALfuNnlQJN8hhuYGYBLiF48VXcOMdMVUG5TNCmB3DteEgIiFuwwzBpMMNvEHh
-         gNUXFeE8YhmK9wdBwLdacRcWG/UwGM4KUiqU5lnpF2IRiUUugnlrUOFIf5vzQkHduzlx
-         6Io5Q18k0HwjWT29Pno161AkUm6G6YMu510yeB+NoJOk7uhIIskIkMqiUo/36TSGwb3C
-         Tz4iMX5XCD8f1Dh5XvlU3sb0DhPjsjBGm+9NupmK2cwcOKj++hFQOblciGN5YRKGMvON
-         qmtA==
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jwsjl5Yl1LFkiTpIfV4FC2pCDY0RlfTGIWFy5618czY=;
+        b=JscczZiBHiR/E30j1ODTRjEZ1J6tzdLICchjfKYD9oDq4hBTSw16cEKX38WSL3gIRR
+         xrnOqDQrO6y6nSFgZXIXzbnTdDu/52bbdqMewnXiQwAXD4xwaQ5W/NwThRCamidnVbmi
+         +OlUdBEBVMhTn2wgmOeXl6eQAS5m7c4rvBo0DLKI2UIO242DkP5o4nz2udq02GRUsqvU
+         nz5Syvq8CziHecgVZN5uKOS2Z/hKrUDqLlYS/7A+CIhHbPQO7h7h90xHiEBwYg/VpZsi
+         Hk/phvDKEAzoetTrUL85EGK3C692AW4EDjNNzVdsvul0ZuYBcZUwoFMdM1I+OhdgZN87
+         3y0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=H3Sj2RA4VzKEVF5wDfAwtb0zeDgeFHLqIYqBkdSYJfs=;
-        b=tNtW1kZdJwDeJkRW2Ph24/x5NjZSZtRwyqKk1kNbFIC4QD5TfB0DHKj378DEfcKUgV
-         0lmDSRuoCukq1TBl+eNYc2GIFLVA5BYZ1LV6EQqzaNLqErjv/89K9F39WgZVVJQKQbL8
-         zfjsfDBkyA1fhl+otll0K9jxgJfAvelhDWr7J/aHY2sUZU3WoPNugmLjtmLvqEqMRkoz
-         SvjD2PHPFnxDb80NTJedIaZXSlfYVB6Qltf9Y7TtrGbNf8tktXbXLk7a8KbD7POPW8RH
-         jhKlQE50Gb0OGyLRWmu5mlxDbucLoxvHhglqQ3aDzTnTz0QPqmWjWhJVjRzh9q3+qYnD
-         y/6A==
-X-Gm-Message-State: AOAM532zcYqx0D6fA9s1CchdrSJz+0aY638zmDO/ZFVFn5pyftXOiJ1J
-        Ny20lsiL/s6qfYaw3ES/VyE=
-X-Google-Smtp-Source: ABdhPJzBjd6pazJkdJ3/rjyy8EUV9uWsZT5JGvEuoh7T3zbM6egssAPtqnlhMF206sE4DJF5eifJig==
-X-Received: by 2002:aa7:9344:: with SMTP id 4mr3987520pfn.30.1597461278245;
-        Fri, 14 Aug 2020 20:14:38 -0700 (PDT)
-Received: from localhost.localdomain ([123.110.251.91])
-        by smtp.gmail.com with ESMTPSA id 196sm10981534pfc.178.2020.08.14.20.14.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Aug 2020 20:14:37 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org
-Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/3] regulator: rt4801: Add DT binding documentation
-Date:   Sat, 15 Aug 2020 11:14:21 +0800
-Message-Id: <1597461262-25878-2-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
-References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Jwsjl5Yl1LFkiTpIfV4FC2pCDY0RlfTGIWFy5618czY=;
+        b=exEXvbWnvm/975OkswMu12dF470FkJxH/W2gACT96ituYQUvo4xznEJxaPEjqcp2hw
+         e5tx9r0Tfq8goRDeO493KT4dPz77mRmVv94IAsH4kvrBUGjZggPyiyJTIx/SWt+hbZaW
+         c2hCthKcuT1hjan4ZQpXgWal4Itk0wr238qLRrGLWt0+d/cgm933emLWn7bO58CPTH3U
+         R668z6UeSHR0inuw5bc8NcwNq9YDRce618SjXSZsZggby0haXDipZzJIBwWY/JxFneUq
+         pRhrIhtoD1ol6Z4w0Kk6Xkwb+xZfEVN3N7LLUmC3I5X9WENunrc0qCFjXREWT7g+Sffh
+         a7rQ==
+X-Gm-Message-State: AOAM530KkoUDm23CgyqT30bT/mFuRIe6+IQ03RnlBOPVAlKo/bcjcqH3
+        Iqprgt57QfFq/eRVtyKcCZk=
+X-Google-Smtp-Source: ABdhPJxfJPykrCx26X5MYrFKAvPWACW5EIexq2GfCBCd7z/Z++I/TIHakOXnD8XGsq3zFFne/FcS3Q==
+X-Received: by 2002:a2e:808f:: with SMTP id i15mr3244164ljg.151.1597481138853;
+        Sat, 15 Aug 2020 01:45:38 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:6e9:851e:a10b:7957:433d:a960? ([2a00:1fa0:6e9:851e:a10b:7957:433d:a960])
+        by smtp.gmail.com with ESMTPSA id f3sm2331191ljo.81.2020.08.15.01.45.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Aug 2020 01:45:38 -0700 (PDT)
+Subject: Re: [PATCH 3/5] arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <fcabccab-54fb-8b8a-7034-9b0da9d32339@gmail.com>
+Date:   Sat, 15 Aug 2020 11:45:23 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200814173037.17822-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+Hello!
 
-Add a devicetree binding documentation for the rt4801 regulator driver.
+On 14.08.2020 20:30, Lad Prabhakar wrote:
 
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
----
- .../regulator/richtek,rt4801-regulator.yaml        | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+> Add PCIe EP nodes to R8A774A1 (RZ/G2M) SoC dtsi.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+>   arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 38 +++++++++++++++++++++++
+>   1 file changed, 38 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> index a603d947970e..50e9ed16a36d 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> @@ -2369,6 +2369,44 @@
+>   			status = "disabled";
+>   		};
+>   
+> +		pciec0_ep: pcie_ep@fe000000 {
 
-diff --git a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-new file mode 100644
-index 00000000..28d30e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/richtek,rt4801-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Richtek RT4801 Display Bias regulators
-+
-+maintainers:
-+  - ChiYuan Huang <cy_huang@richtek.com>
-+
-+description: |
-+  Regulator nodes should be named to DSVP and DSVN. The
-+  definition for each of these nodes is defined using the standard
-+  binding for regulators at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+  Datasheet is available at
-+  https://www.richtek.com/assets/product_file/RT4801H/DS4801H-00.pdf
-+
-+#The valid names for RT4801 regulator nodes are:
-+#DSVP, DSVN
-+
-+properties:
-+  compatible:
-+    enum:
-+      - richtek,rt4801
-+
-+  reg:
-+    maxItems: 1
-+
-+  enable-gpios:
-+    description: GPIOs to use to enable DSVP/DSVN regulator.
-+      The first one is ENP to enable DSVP, and second one is ENM to enable DSVN.
-+      Number of GPIO in the array list could be 1 or 2.
-+      If only one gpio is specified, only one gpio used to control ENP/ENM.
-+      Else both are spefied, DSVP/DSVN could be controlled individually.
-+      Othersie, this property not specified. treat both as always-on regulator.
-+    minItems: 1
-+    maxItems: 2
-+
-+patternProperties:
-+  "^DSV(P|N)$":
-+    type: object
-+    $ref: regulator.yaml#
-+    description:
-+      Properties for single display bias regulator.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties:
-+  - enable-gpios
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        rt4801@73 {
-+            compatible = "richtek,rt4801";
-+            reg = <0x73>;
-+            enable-gpios = <&gpio26 2 0>, <&gpio26 3 0>;
-+
-+            dsvp: DSVP {
-+                regulator-name = "rt4801,dsvp";
-+                regulator-min-microvolt = <4000000>;
-+                regulator-max-microvolt = <6000000>;
-+                regulator-boot-on;
-+            };
-+            dsvn: DSVN {
-+                regulator-name = "rt4801,dsvn";
-+                regulator-min-microvolt = <4000000>;
-+                regulator-max-microvolt = <6000000>;
-+                regulator-boot-on;
-+            };
-+
-+        };
-+    };
--- 
-2.7.4
+    Hyphens are preferred over underscores in the node/prop names.
 
+[...]> +		pciec1_ep: pcie_ep@ee800000 {
+
+    Ditto, should be "pci-ep@ee800000".
+
+[...]
+
+MBR, Sergei
