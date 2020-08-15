@@ -2,154 +2,211 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9092C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D14C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE4823BDE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:46:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jE3b9gKV"
+	by mail.kernel.org (Postfix) with ESMTP id BD04A2311C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgHOVpq (ORCPT
+        id S1726357AbgHOVt4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgHOVpn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:45:43 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA00C0045B9;
-        Sat, 15 Aug 2020 13:19:50 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 9so10130319wmj.5;
-        Sat, 15 Aug 2020 13:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zIzNxA4BRTbs45wz2IBTfdONSpn/S4dV1mOfjSjFesQ=;
-        b=jE3b9gKVGX5Fk2XQYlJoQ9uC/GrRVyBZX0DJDN3AJAxFJULHvvIK2ex9pvr+pWVW6X
-         LAWRom/Q6eGx5wTFkQlktCzOrPNhzZe8gzqy3MqtZPJHCAiANJNEqJ0+S5XkpNNE8wF+
-         Wj8zHZ3ogrzsnKSIzaGROnT3CG1Ex/QgqY8omexs3fKkR6brl1sorYPZBV7smPDL/i0O
-         BlTZe8jkjajnVX8J7XlB/Ba3+EXRCUisSGzot3/9ui6Qvqs1HLvdSjDqRKaz3sWe6WtU
-         lginAKDasczM0r5brn7c0fg6LVFVMjUdOMagynJngPDA9icPpat9jIBAKlyjyWpRAFDm
-         UDng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zIzNxA4BRTbs45wz2IBTfdONSpn/S4dV1mOfjSjFesQ=;
-        b=hroFIjWVC49WSCczv3jUJwcHI48AwHad776NJ/eSdYjeaTzXwewlqi6Q+513avOHez
-         6A2D0DpokAb8NiNxjIgxzAXIpvSxH2HrE8f5HvJ/dAd20vXZo9Gy2lyNLEMrjHJ4+UvN
-         lTtyFERjRmLWX8gqatz+eWSrY4B3JTDOgqDr0gZ6yPRiM+M5kUsMr9kv00aqO5E5AWbz
-         JWAuESZvE2SLlxhQCUHMBPR/83RyO41V1NKEgJ66nfXkqVYpGHudiruyzlBZtUIA5RVf
-         LDbeGw3AYZ9njmO3C1Lz6innsRaF97m2aSePOtn8vDfoW2KQ5c843hChr15iIN9CXwEO
-         KmMA==
-X-Gm-Message-State: AOAM530bbT+eQwmO2j/W0I5uSqUrytjtQplJ9NmBshEFhm8ZL5zRG3an
-        gu/ikh+kkhR+HSXOPEgTajR/5w6K6fbvfbIBUQ0=
-X-Google-Smtp-Source: ABdhPJyrGCbvhPVezyVJPPQnDejn5AGE+M7MmxTTrCOoiHRMgdeH5nxJu5TAlm48/n6OtYNzlDFZP/YcRo0XSEVEupY=
-X-Received: by 2002:a1c:e919:: with SMTP id q25mr7743939wmc.123.1597522787277;
- Sat, 15 Aug 2020 13:19:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200812044223.19279-1-tanmay@codeaurora.org> <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-In-Reply-To: <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 15 Aug 2020 13:20:35 -0700
-Message-ID: <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
-Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Tanmay Shah <tanmay@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        Sat, 15 Aug 2020 17:49:56 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:48008 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbgHOVt4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:49:56 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 86FA780539;
+        Sat, 15 Aug 2020 12:02:31 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 12:02:30 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, aravindh@codeaurora.org,
-        Abhinav Kumar <abhinavk@codeaurora.org>, khsieh@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200815100230.GA1002374@ravnborg.org>
+References: <cover.1597412076.git.agx@sigxcpu.org>
+ <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8 a=e5mUnYsNAAAA:8
+        a=2VR2e5HfQ1QhP8mth8gA:9 a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
->
-> On 12/08/2020 07:42, Tanmay Shah wrote:
->  > From: Chandan Uddaraju <chandanu@codeaurora.org>
->  >
->  > Add the needed DP PLL specific files to support
->  > display port interface on msm targets.
->
-> [skipped]
->
->  > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
-> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->  > new file mode 100644
->  > index 000000000000..475ba6ed59ab
->  > --- /dev/null
->  > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->  > @@ -0,0 +1,98 @@
->  > +/* SPDX-License-Identifier: GPL-2.0-only */
->  > +/*
->  > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
->  > + */
->  > +
->  > +#ifndef __DP_PLL_10NM_H
->  > +#define __DP_PLL_10NM_H
->  > +
->  > +#include "dp_pll.h"
->  > +#include "dp_reg.h"
->  > +
->  > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->  > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->  > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->  > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->  > +
->  > +#define NUM_DP_CLOCKS_MAX            6
->  > +
->  > +#define DP_PHY_PLL_POLL_SLEEP_US        500
->  > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->  > +
->  > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->  > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->  > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->  > +
->  > +struct dp_pll_vco_clk {
->  > +    struct clk_hw hw;
->  > +    unsigned long    rate;        /* current vco rate */
->  > +    u64        min_rate;    /* min vco rate */
->  > +    u64        max_rate;    /* max vco rate */
->  > +    void        *priv;
->  > +};
->  > +
->  > +struct dp_pll_db {
->
-> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
-> example, will use slightly different structure.
+Hi Guido.
 
-Note that sboyd has a WIP series to move all of the pll code out to a
-phy driver.  If there is work already happening on 7nm support, it
-might be better to go with the separate phy driver approach?  I'm
-still a bit undecided about whether to land the dp code initially with
-the pll stuff in drm, and then continue refactoring to move to
-separate phy driver upstream, or to strip out the pll code from the
-beginning.  If you/someone is working on 7nm support, then feedback
-about which approach is easier is welcome.
+> +static int mantix_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	struct mantix *ctx;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ctx->reset_gpio)) {
+> +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+> +		return PTR_ERR(ctx->reset_gpio);
+> +	}
+> +
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +	ctx->dev = dev;
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
+> +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> +
+> +	ctx->avdd = devm_regulator_get(dev, "avdd");
+> +	if (IS_ERR(ctx->avdd)) {
+> +		ret = PTR_ERR(ctx->avdd);
+> +		if (ret != -EPROBE_DEFER)
+> +			DRM_DEV_ERROR(dev,
+> +				      "Failed to request avdd regulator: %d\n",
+> +				      ret);
+> +		return ret;
+> +	}
 
-https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.org/
+Consider to use the recently added dev_err_probe() here and below.
+Note: Not part of drm-misc-next yet - but hopefully after -rc1
+when a backmerge is done.
 
-BR,
--R
+	Sam
+
+> +	ctx->avee = devm_regulator_get(dev, "avee");
+> +	if (IS_ERR(ctx->avee)) {
+> +		ret = PTR_ERR(ctx->avee);
+> +		if (ret != -EPROBE_DEFER)
+> +			DRM_DEV_ERROR(dev,
+> +				      "Failed to request avee regulator: %d\n",
+> +				      ret);
+> +		return ret;
+> +	}
+> +	ctx->vddi = devm_regulator_get(dev, "vddi");
+> +	if (IS_ERR(ctx->vddi)) {
+> +		ret = PTR_ERR(ctx->vddi);
+> +		if (ret != -EPROBE_DEFER)
+> +			DRM_DEV_ERROR(dev,
+> +				      "Failed to request vddi regulator: %d\n",
+> +				      ret);
+> +		return ret;
+> +	}
+> +
+> +	drm_panel_init(&ctx->panel, dev, &mantix_drm_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +
+> +	ret = drm_panel_of_backlight(&ctx->panel);
+> +	if (ret)
+> +		return ret;
+> +	drm_panel_add(&ctx->panel);
+> +
+> +	ret = mipi_dsi_attach(dsi);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(dev,
+> +			      "mipi_dsi_attach failed (%d). Is host ready?\n",
+> +			      ret);
+> +		drm_panel_remove(&ctx->panel);
+> +		return ret;
+> +	}
+> +
+> +	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
+> +		     default_mode.hdisplay, default_mode.vdisplay,
+> +		     drm_mode_vrefresh(&default_mode),
+> +		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+> +
+> +	return 0;
+> +}
+> +
+> +static void mantix_shutdown(struct mipi_dsi_device *dsi)
+> +{
+> +	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = drm_panel_unprepare(&ctx->panel);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to unprepare panel: %d\n",
+> +			      ret);
+> +
+> +	ret = drm_panel_disable(&ctx->panel);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to disable panel: %d\n",
+> +			      ret);
+> +}
+> +
+> +static int mantix_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct mantix *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	mantix_shutdown(dsi);
+> +
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to detach from DSI host: %d\n",
+> +			      ret);
+> +
+> +	drm_panel_remove(&ctx->panel);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mantix_of_match[] = {
+> +	{ .compatible = "mantix,mlaf057we51-x" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mantix_of_match);
+> +
+> +static struct mipi_dsi_driver mantix_driver = {
+> +	.probe	= mantix_probe,
+> +	.remove = mantix_remove,
+> +	.shutdown = mantix_shutdown,
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +		.of_match_table = mantix_of_match,
+> +	},
+> +};
+> +module_mipi_dsi_driver(mantix_driver);
+> +
+> +MODULE_AUTHOR("Guido Günther <agx@sigxcpu.org>");
+> +MODULE_DESCRIPTION("DRM driver for Mantix MLAF057WE51-X MIPI DSI panel");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.26.2
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
