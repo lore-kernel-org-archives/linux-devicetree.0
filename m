@@ -2,93 +2,198 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7151FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48BBC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33DCC2065C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717F820674
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597529465;
-	bh=8xrqG9ujM70SVswirhjHSCM1NcB46h4TexvLpDudO2g=;
+	s=default; t=1597529533;
+	bh=ghK4I1h/hl5658IIykG3IDEndmMPcQYGR5QUDL7wgmc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1L8giIfXhPQZQI/Wcuayig4o8LXCJIJX4DvtGIiPXX6suVcwVZm9Jqih3v4mbetu0
-	 zC56JuMhQlw6qzu0H1fr3wY/7jfCj5kl2KUiumq4tbySsPXYVnQ/mlY/tuK8uzi+R6
-	 DWWv6C/xktDyTGeGz2PDFMHNmlP+yF7+IFTIycQg=
+	b=GIcOusAO4AZ04Uifv3+ZABZ4sz+6UjcoscJzBo0y1DZ18L5Jv2NUlEfUSwd2HjsZd
+	 DprheAoE1uIb/gwajqXHNPFcJYkV/N5tqe9ufFmO5eekiNL8Yt40cjjm7HHCGwTg1G
+	 iB7LKSFTWi53IeBfQ31XJwpI+a8Q3p/z7vp+3sGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgHOWKw (ORCPT
+        id S1729085AbgHOWMM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:10:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
+        Sat, 15 Aug 2020 18:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729600AbgHOWKh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 15 Aug 2020 18:10:37 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        id S1729083AbgHOWK2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:10:28 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE6E123107;
-        Sat, 15 Aug 2020 09:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3BAE22EBF;
+        Sat, 15 Aug 2020 11:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597485342;
-        bh=8xrqG9ujM70SVswirhjHSCM1NcB46h4TexvLpDudO2g=;
+        s=default; t=1597490563;
+        bh=ghK4I1h/hl5658IIykG3IDEndmMPcQYGR5QUDL7wgmc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yAnn6BiR5U23ij/arHHrK8eelhARFK7/EUOlF3awlMLsxkoQEG9tZYQUnutq9i7MH
-         D18q6AwLGssk9detsPija+F+N9yue+RsxWHArtljHus9HQJvE2NliGwp1XGPCRSpMw
-         n2rx5a4v/01pNOLc3N1Isl2OON8WkrUFAo3yyNtY=
-Date:   Sat, 15 Aug 2020 11:55:36 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     mauro.chehab@huawei.com, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linuxarm@huawei.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 43/44] dt: document HiSilicon SPMI controller and
- mfd/regulator properties
-Message-ID: <20200815115536.6519a7f5@coco.lan>
-In-Reply-To: <20200814201708.GA2665752@bogus>
-References: <cover.1597247164.git.mchehab+huawei@kernel.org>
-        <da65a508d01aa2092999d0ce7e9c061ccfd24036.1597247164.git.mchehab+huawei@kernel.org>
-        <20200814201708.GA2665752@bogus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        b=lwUj1LTiJyeXK55xV/lUtdkVTfr0DvieDUZuSLrAF6DZ8R/HA5N71MJwG7nPKua0P
+         XN8+FLgUGcXPbi6i/MCranm+bgtLtOiBUJGe3yTgOhkKtl5mGsaqmriKXBsmDx338H
+         Qk13g3UnXJjZm3sQ9qnKs5RVQDD1IGu2zN6bkado=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k6uGn-002KBi-AX; Sat, 15 Aug 2020 12:22:41 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Sat, 15 Aug 2020 12:22:41 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v4 1/5] of_address: Add bus type match for pci ranges
+ parser
+In-Reply-To: <CAL_JsqKVhxu_cdo_umhY_SfuDhCC0G-AdsPAZpGB3eepOVFi-g@mail.gmail.com>
+References: <20200728153708.1296374-1-jiaxun.yang@flygoat.com>
+ <20200728153708.1296374-2-jiaxun.yang@flygoat.com>
+ <889508bae5da3c55690a7adbd101a5cd@kernel.org>
+ <CAL_JsqKVhxu_cdo_umhY_SfuDhCC0G-AdsPAZpGB3eepOVFi-g@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <34ac2d7c0770f9aa450aaa3905c82f52@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: robh+dt@kernel.org, jiaxun.yang@flygoat.com, frowand.list@gmail.com, linux-mips@vger.kernel.org, tsbogend@alpha.franken.de, chenhc@lemote.com, paulburton@kernel.org, arnd@arndb.de, natechancellor@gmail.com, ndesaulniers@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Em Fri, 14 Aug 2020 14:17:08 -0600
-Rob Herring <robh@kernel.org> escreveu:
-
-> On Wed, 12 Aug 2020 17:56:53 +0200, Mauro Carvalho Chehab wrote:
-> > Add documentation for the properties needed by the HiSilicon
-> > 6421v600 driver, and by the SPMI controller used to access
-> > the chipset.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 ++++++++++++++++++
-> >  .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
-> >  2 files changed, 236 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
-> >   
+On 2020-08-14 23:51, Rob Herring wrote:
+> On Fri, Aug 14, 2020 at 12:21 PM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> Hi all,
+>> 
+>> On 2020-07-28 16:36, Jiaxun Yang wrote:
+>> > So the parser can be used to parse range property of ISA bus.
+>> >
+>> > As they're all using PCI-like method of range property, there is no
+>> > need
+>> > start a new parser.
+>> >
+>> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> > Reviewed-by: Rob Herring <robh@kernel.org>
+>> 
+>> This patch, although it looks correct, breaks the RK3399-based
+>> systems, as they miss the (now required) 'device_type = "pci";'
+>> property.
 > 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.example.dt.yaml: example-0: spmi@fff24000:reg:0: [0, 4294066176, 0, 4096] is too long
+> Required since 1990 something...
 
-I was unable to find any way to solve this one. What's the proper
-way to set the length of the root reg on some example?
+And yet... The fact that it has been broken from day-1 (3.5 years
+ago) shows how good we are at enforcing those requirements.
+
+> 
+>> We can fix the in-tree DT, but that's not really an option
+>> if someone relies on the DT being provided by the firmware
+>> (I for one definitely do).
+> 
+> Perhaps time to pay attention to schema errors:
+> 
+> arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml:
+> pcie@f8000000: 'device_type' is a required property
+
+As long as this isn't part of the normal build flow, these errors
+will get ignored. I don't even know how to trigger this validation,
+TBH.
+
+> (I thought dtc would also catch this, but there we look for
+> device_type and then do PCI checks like node name. I guess we needed
+> to check for either device_type or the node name...)
+
+That would be much better. At least this *does* run at build time.
+
+> 
+>> I came up with the following hack, which solves the issue for
+>> me. Definitely not my finest hour, but I really need this box
+>> to keep going. I will post a patch fixing the DT separately.
+>> 
+>> Thanks,
+>> 
+>>          M.
+>> 
+>>  From ceef5fd9c4d2005eb577505c68868ebe527c098f Mon Sep 17 00:00:00 
+>> 2001
+>>  From: Marc Zyngier <maz@kernel.org>
+>> Date: Fri, 14 Aug 2020 19:10:12 +0100
+>> Subject: [PATCH] of: address: Workaround broken DTs missing the
+>> 'device_type =
+>>   "pci"' property
+>> 
+>> Recent changes to the PCI bus parsing made it mandatory for
+>> device trees nodes describing a PCI controller to have the
+>> 'device_type = "pci"' property for the node to be matched.
+>> 
+>> Although this is compliant with the specification, it breaks
+>> existing device-trees that have been working fine for years
+>> (the Rockchip rk3399-based systems being a prime example of
+>> such breakage).
+>> 
+>> In order to paper over the blunder, let's also match nodes
+>> that have the "linux,pci-domain" property, as they are
+>> pretty likely to be PCI nodes. This fixes the issue for
+>> systems such as the above platforms.
+>> 
+>> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges
+>> parser")
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/of/address.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> index 590493e04b01..712e03781a2a 100644
+>> --- a/drivers/of/address.c
+>> +++ b/drivers/of/address.c
+>> @@ -134,9 +134,12 @@ static int of_bus_pci_match(struct device_node 
+>> *np)
+>>          * "pciex" is PCI Express
+>>          * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+>>          * "ht" is hypertransport
+>> +        * "linux,pci-domain" is a workaround for broken device trees
+>> +        * lacking the required "device_type" property.
+> 
+> I would suggest looking for 'pci' or 'pcie' node name instead.
+> 
+> You should remove linux,pci-domain from rk3399 as it is pointless when
+> there's a single PCI host bridge.
+
+Indeed. I was clutching at straws here.
+
+> 
+> The other option is fixup the live tree with of_add_property() in the
+> Rockchip PCI driver. Less likely to impact anyone else.
+
+That's actually a much better solution, thanks for pointing this out.
+At least I can shout about broken DTs while fixing it up, and the
+new fix is fairly neat.
+
+I'll post new patches shortly.
 
 Thanks,
-Mauro
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
