@@ -1,211 +1,151 @@
-Return-Path: <SRS0=/1Tz=BY=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A8AC433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 23:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FEEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA1B320774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 14 Aug 2020 23:22:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MSmYb+MK"
+	by mail.kernel.org (Postfix) with ESMTP id 894E623133
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgHNXWu (ORCPT
+        id S1726025AbgHOVcX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 14 Aug 2020 19:22:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:26480 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726784AbgHNXWt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 14 Aug 2020 19:22:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597447368; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=cqB2KYoA6yVaX4oJso9WfBF09SwAmfmeiF0tTyQrqMw=;
- b=MSmYb+MKBGe61801KVdVyJIIMMjnfolD4zylmsdtPdKZtgwoVrcavYS+7cK2ecjxY5D0eo8D
- 7rknqVAyNPPm1gFzeBu2we19vTYBteKEAHG1AMYJiqiJBvxPmjP/dLkBKcnhGzHyGldnyKv/
- T76gOAde9e6WwdI4mjMKi9f9wno=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f371cbc4c787f237b9f2f98 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 14 Aug 2020 23:22:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5B673C43395; Fri, 14 Aug 2020 23:22:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64FAEC433C9;
-        Fri, 14 Aug 2020 23:22:35 +0000 (UTC)
+        Sat, 15 Aug 2020 17:32:23 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:52580 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbgHOVcX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 15 Aug 2020 17:32:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id D7615FB07;
+        Sat, 15 Aug 2020 23:16:29 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mz3qJxvJKjuI; Sat, 15 Aug 2020 23:16:28 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id AC104457CD; Sat, 15 Aug 2020 23:16:22 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] dt-bindings: Add Mantix MLAF057WE51-X panel bindings
+Date:   Sat, 15 Aug 2020 23:16:21 +0200
+Message-Id: <c171b488e883e26eaef7906c007a5cabcbf9e33d.1597526107.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1597526107.git.agx@sigxcpu.org>
+References: <cover.1597526107.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 14 Aug 2020 16:22:35 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     swboyd@chromium.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        robdclark@gmail.com, linux-kernel@vger.kernel.org,
-        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
-        daniel@ffwll.ch, airlied@linux.ie, aravindh@codeaurora.org,
-        abhinavk@codeaurora.org, khsieh@codeaurora.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>
-Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-In-Reply-To: <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
-Message-ID: <f6b330778c07abd3003da9acab4d3398@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-14 10:05, Dmitry Baryshkov wrote:
-> On 12/08/2020 07:42, Tanmay Shah wrote:
->> From: Chandan Uddaraju <chandanu@codeaurora.org>
->> 
->> Add the needed DP PLL specific files to support
->> display port interface on msm targets.
-> 
-> [skipped]
-> 
->> diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h 
->> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> new file mode 100644
->> index 000000000000..475ba6ed59ab
->> --- /dev/null
->> +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> @@ -0,0 +1,98 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (c) 2016-2020, The Linux Foundation. All rights 
->> reserved.
->> + */
->> +
->> +#ifndef __DP_PLL_10NM_H
->> +#define __DP_PLL_10NM_H
->> +
->> +#include "dp_pll.h"
->> +#include "dp_reg.h"
->> +
->> +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->> +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->> +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->> +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->> +
->> +#define NUM_DP_CLOCKS_MAX            6
->> +
->> +#define DP_PHY_PLL_POLL_SLEEP_US        500
->> +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->> +
->> +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->> +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->> +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->> +
->> +struct dp_pll_vco_clk {
->> +    struct clk_hw hw;
->> +    unsigned long    rate;        /* current vco rate */
->> +    u64        min_rate;    /* min vco rate */
->> +    u64        max_rate;    /* max vco rate */
->> +    void        *priv;
->> +};
->> +
->> +struct dp_pll_db {
-> 
-> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
-> example, will use slightly different structure.
-> 
+The panel uses a Focaltech FT8006p, the touch part is handled by the
+already existing edt-ft5x06.
 
-Sure, it sounds good. I will give it try. Thanks!
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ .../display/panel/mantix,mlaf057we51-x.yaml   | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
 
->> +    struct msm_dp_pll *base;
->> +
->> +    int id;
->> +    struct platform_device *pdev;
->> +
->> +    /* private clocks: */
->> +    bool fixed_factor_clk[NUM_DP_CLOCKS_MAX];
->> +    struct clk_hw *hws[NUM_DP_CLOCKS_MAX];
-> 
-> Then these two fields can use exact number of clocks rather than
-> NUM_DP_CLOCKS_MAX.
-> 
-
-I didn't get this. I think NUM_DP_CLOCKS_MAX is doing same?
-
->> +    u32 num_hws;
->> +
->> +    /* lane and orientation settings */
->> +    u8 lane_cnt;
->> +    u8 orientation;
->> +
->> +    /* COM PHY settings */
->> +    u32 hsclk_sel;
->> +    u32 dec_start_mode0;
->> +    u32 div_frac_start1_mode0;
->> +    u32 div_frac_start2_mode0;
->> +    u32 div_frac_start3_mode0;
->> +    u32 integloop_gain0_mode0;
->> +    u32 integloop_gain1_mode0;
->> +    u32 vco_tune_map;
->> +    u32 lock_cmp1_mode0;
->> +    u32 lock_cmp2_mode0;
->> +    u32 lock_cmp3_mode0;
->> +    u32 lock_cmp_en;
->> +
->> +    /* PHY vco divider */
->> +    u32 phy_vco_div;
->> +    /*
->> +     * Certain pll's needs to update the same vco rate after resume 
->> in
->> +     * suspend/resume scenario. Cached the vco rate for such plls.
->> +     */
->> +    unsigned long    vco_cached_rate;
->> +    u32        cached_cfg0;
->> +    u32        cached_cfg1;
->> +    u32        cached_outdiv;
->> +
->> +    uint32_t index;
->> +};
->> +
->> +static inline struct dp_pll_vco_clk *to_dp_vco_hw(struct clk_hw *hw)
->> +{
->> +    return container_of(hw, struct dp_pll_vco_clk, hw);
->> +}
->> +
->> +#define to_msm_dp_pll(vco) ((struct msm_dp_pll *)vco->priv)
->> +
->> +#define to_dp_pll_db(x)    ((struct dp_pll_db *)x->priv)
->> +
->> +int dp_vco_set_rate_10nm(struct clk_hw *hw, unsigned long rate,
->> +                unsigned long parent_rate);
->> +unsigned long dp_vco_recalc_rate_10nm(struct clk_hw *hw,
->> +                unsigned long parent_rate);
->> +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
->> +                unsigned long *parent_rate);
->> +int dp_vco_prepare_10nm(struct clk_hw *hw);
->> +void dp_vco_unprepare_10nm(struct clk_hw *hw);
->> +
->> +int msm_dp_pll_10nm_init(struct msm_dp_pll *dp_pll, int id);
->> +void msm_dp_pll_10nm_deinit(struct msm_dp_pll *dp_pll);
-> 
-> These functions don't seem to be used outside of dp_pll_10nm. What
-> about making them static?
-
-I can't declare static to "init" and "deinit" as they are exported to 
-dp_pll.c.
-Rest of them I can move to dp_pll_10nm and then define static.
+diff --git a/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+new file mode 100644
+index 0000000000000..937323cc9aaac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/mantix,mlaf057we51-x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mantix MLAF057WE51-X 5.7" 720x1440 TFT LCD panel
++
++maintainers:
++  - Guido Günther <agx@sigxcpu.org>
++
++description:
++  Mantix MLAF057WE51 X is a 720x1440 TFT LCD panel connected using
++  a MIPI-DSI video interface.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    enum:
++      - mantix,mlaf057we51-x
++
++  port: true
++  reg:
++    maxItems: 1
++    description: DSI virtual channel
++
++  avdd-supply:
++    description: Positive analog power supply
++
++  avee-supply:
++    description: Negative analog power supply
++
++  vddi-supply:
++    description: 1.8V I/O voltage supply
++
++  reset-gpios: true
++
++  backlight: true
++
++required:
++  - compatible
++  - reg
++  - avdd-supply
++  - avee-supply
++  - vddi-supply
++  - reset-gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        panel@0 {
++            compatible = "mantix,mlaf057we51-x";
++            reg = <0>;
++            avdd-supply = <&reg_avdd>;
++            avee-supply = <&reg_avee>;
++            vddi-supply = <&reg_1v8_p>;
++            reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
++            backlight = <&backlight>;
++        };
++    };
++
++...
+-- 
+2.26.2
 
