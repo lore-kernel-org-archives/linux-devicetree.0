@@ -2,126 +2,127 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A77C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F143C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B261F20774
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8542620658
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgHOWce (ORCPT
+        id S1728599AbgHOWdl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:32:34 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:34698 "EHLO
-        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728687AbgHOWcM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 18:32:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 1DF3A20160C9;
-        Sat, 15 Aug 2020 09:22:38 +0800 (HKT)
-X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
-Received: from mail.gtsys.com.hk ([127.0.0.1])
-        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tWeB-4u6BIjR; Sat, 15 Aug 2020 09:22:38 +0800 (HKT)
-Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id 0527820160B5;
-        Sat, 15 Aug 2020 09:22:38 +0800 (HKT)
-Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 01C47C019F4;
-        Sat, 15 Aug 2020 09:22:38 +0800 (HKT)
-Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id F1D3D20046C; Sat, 15 Aug 2020 09:22:37 +0800 (HKT)
-From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        Sat, 15 Aug 2020 18:33:41 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:50554 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728262AbgHOWdl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 18:33:41 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id CA97720022;
+        Sat, 15 Aug 2020 12:46:52 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 12:46:51 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 1/2] hwmon: shtc1: add support for device tree bindings
-Date:   Sat, 15 Aug 2020 09:22:26 +0800
-Message-Id: <20200815012227.32538-2-chris.ruehl@gtsys.com.hk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200815012227.32538-1-chris.ruehl@gtsys.com.hk>
-References: <20200815012227.32538-1-chris.ruehl@gtsys.com.hk>
+Subject: Re: [PATCH 3/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200815104651.GA1005928@ravnborg.org>
+References: <cover.1597412076.git.agx@sigxcpu.org>
+ <0a7539135cc46eec5636ca89f52695f4a1197841.1597412076.git.agx@sigxcpu.org>
+ <20200815100230.GA1002374@ravnborg.org>
+ <20200815104022.GA5641@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200815104022.GA5641@bogon.m.sigxcpu.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=8nJEP1OIZ-IA:10 a=T4MLU0igAHpipydq7w0A:9 a=wPNLvfGTeEIA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
+On Sat, Aug 15, 2020 at 12:40:22PM +0200, Guido Günther wrote:
+> Hi Sam,
+> On Sat, Aug 15, 2020 at 12:02:30PM +0200, Sam Ravnborg wrote:
+> > Hi Guido.
+> > 
+> > > +static int mantix_probe(struct mipi_dsi_device *dsi)
+> > > +{
+> > > +	struct device *dev = &dsi->dev;
+> > > +	struct mantix *ctx;
+> > > +	int ret;
+> > > +
+> > > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> > > +	if (!ctx)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> > > +	if (IS_ERR(ctx->reset_gpio)) {
+> > > +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+> > > +		return PTR_ERR(ctx->reset_gpio);
+> > > +	}
+> > > +
+> > > +	mipi_dsi_set_drvdata(dsi, ctx);
+> > > +	ctx->dev = dev;
+> > > +
+> > > +	dsi->lanes = 4;
+> > > +	dsi->format = MIPI_DSI_FMT_RGB888;
+> > > +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
+> > > +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> > > +
+> > > +	ctx->avdd = devm_regulator_get(dev, "avdd");
+> > > +	if (IS_ERR(ctx->avdd)) {
+> > > +		ret = PTR_ERR(ctx->avdd);
+> > > +		if (ret != -EPROBE_DEFER)
+> > > +			DRM_DEV_ERROR(dev,
+> > > +				      "Failed to request avdd regulator: %d\n",
+> > > +				      ret);
+> > > +		return ret;
+> > > +	}
+> > 
+> > Consider to use the recently added dev_err_probe() here and below.
+> > Note: Not part of drm-misc-next yet - but hopefully after -rc1
+> > when a backmerge is done.
+> 
+> In fact I did decided against it since i was told that missing dev_* and
+> DRM_* logging shouldn't be done. So is that o.k. nowadays?
+s/missing/mixing/
 
-Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
- v8: no change
+I often request that logging is consistent - so I recognize the
+argument.
 
- drivers/hwmon/shtc1.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+For panel/* I have not made up my mind what I think is the best
+approach. The DRM_DEV_* and DRM_* logging do not add much value.
+So I have been tempted several times to convert all logging in
+panel/ to dev_* and pr_* (when no struct device * is available).
+That would also avoid that we mix up logging.
 
-diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
-index a0078ccede03..7993a5ff8768 100644
---- a/drivers/hwmon/shtc1.c
-+++ b/drivers/hwmon/shtc1.c
-@@ -14,6 +14,7 @@
- #include <linux/err.h>
- #include <linux/delay.h>
- #include <linux/platform_data/shtc1.h>
-+#include <linux/of.h>
- 
- /* commands (high precision mode) */
- static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
-@@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
- 	enum shtcx_chips chip = id->driver_data;
- 	struct i2c_adapter *adap = client->adapter;
- 	struct device *dev = &client->dev;
-+	struct device_node *np = dev->of_node;
- 
- 	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
- 		dev_err(dev, "plain i2c transactions not supported\n");
-@@ -233,8 +235,14 @@ static int shtc1_probe(struct i2c_client *client,
- 	data->client = client;
- 	data->chip = chip;
- 
--	if (client->dev.platform_data)
--		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
-+	if (np) {
-+		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking-io");
-+		data->setup.high_precision = !of_property_read_bool(np, "sensicon,low-precision");
-+	} else {
-+		if (client->dev.platform_data)
-+			data->setup = *(struct shtc1_platform_data *)dev->platform_data;
-+	}
-+
- 	shtc1_select_command(data);
- 	mutex_init(&data->update_lock);
- 
-@@ -257,8 +265,19 @@ static const struct i2c_device_id shtc1_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, shtc1_id);
- 
-+static const struct of_device_id shtc1_of_match[] = {
-+	{ .compatible = "sensirion,shtc1" },
-+	{ .compatible = "sensirion,shtw1" },
-+	{ .compatible = "sensirion,shtc3" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, shtc1_of_match);
-+
- static struct i2c_driver shtc1_i2c_driver = {
--	.driver.name  = "shtc1",
-+	.driver = {
-+		.name = "shtc1",
-+		.of_match_table = shtc1_of_match,
-+	},
- 	.probe        = shtc1_probe,
- 	.id_table     = shtc1_id,
- };
--- 
-2.20.1
+We have drm_* logging - but they require a valid drm_device * which we
+do not have in the the panel drivers. So they are ruled out here.
 
+Do you have any opinions/comments on this?
+
+	Sam
