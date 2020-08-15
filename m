@@ -2,194 +2,218 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05A9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F20C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D32323B24
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="fNTr1AP6"
+	by mail.kernel.org (Postfix) with ESMTP id 5D3C323B24
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 21:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725984AbgHOVkt (ORCPT
+        id S1726213AbgHOVo5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 17:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHOVko (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:40:44 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B19D6C03D1CB
-        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 14:21:39 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id o2so5992403qvk.6
-        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 14:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fSOWg6njAo0BgaYAkW3ZI1XqUj8alLoYvs3NDMkiQSk=;
-        b=fNTr1AP6oXI+Z+vP9W7aopVeB8HKDdHLOWptbwzZzf+/9o4e6mmG8uiZAHNv0y6lWd
-         TKsz9faMxGXvwuzoRbAnGOoIYbSJyPMXzOYEK+lV18IhjpncKwKwQ3qgtQx489VgvIIk
-         bV8k8/td6zymhZdtoNTI/s85alwGZlxlKuuoKwfX0YLKhauRO7OAsvZGQxy4H9HiK/gF
-         om936XsMh9eYx5rV9G0o0B0JDW/Vi+f0NAamfu92QrPofwUL+C6vZgSUQrFzekLMBsX4
-         ECmKIQqHJ2Hr8gzkvG86aMVtpLDQCrCp5oL8QoB4sXL8MIRRVeRLoVQl20//6oJwB7TZ
-         Mu9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fSOWg6njAo0BgaYAkW3ZI1XqUj8alLoYvs3NDMkiQSk=;
-        b=LsKnx+uNwNj7U7xioAokAQVvZskBs1idXPniBYAXHfN8OReaLEqtU6olKw68FpXr+s
-         MT44+cjXIABmMmEqeYqtLfPMcGUi4tw2HKdjvRaND06pTpfzTaHE6V5iFLbkZXrrqyBL
-         IQbEpQddPHLeviymvg0xsYe2OMx0J2qdgl16s/+3xUND077A2kYYrIMKTqY9WMFekf67
-         +D/jiKus0KiaRZOxtk1McNzNwSDzj0QPz9ZEdiCqGfbibGoctcH1SUYaVD15tp0MDXdX
-         ahKvQVkJS2tQFgzR/8qky+CcU0QZPIoS+qAfiysGF3at4SjxmUXm1fDlykEtfEdUSknu
-         0Gbw==
-X-Gm-Message-State: AOAM531yj2YXK1oNm1cjkjUzP1mvj2/aNu26LZ8hwBJO+bi5MQmkqqR9
-        HeEBTm4wCIEpUGWtPdVddobSIQ==
-X-Google-Smtp-Source: ABdhPJx3XPsMq4FB0tV42kjhPB8zgg9seOaawRnu+HoLIebEV0cYDDmb+NOgtyoCPkyOwqIgewXCog==
-X-Received: by 2002:a0c:ea30:: with SMTP id t16mr8572128qvp.177.1597526497539;
-        Sat, 15 Aug 2020 14:21:37 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id 73sm2825144qtf.74.2020.08.15.14.21.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2020 14:21:37 -0700 (PDT)
-Subject: Re: [Freedreno] [PATCH v10 3/5] drm/msm/dp: add support for DP PLL
- driver
-To:     Rob Clark <robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>, khsieh@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
+        Sat, 15 Aug 2020 17:44:57 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:47616 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgHOVo4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:44:56 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 1EC0D8053D;
+        Sat, 15 Aug 2020 23:08:03 +0200 (CEST)
+Date:   Sat, 15 Aug 2020 23:08:02 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Vara Reddy <varar@codeaurora.org>, aravindh@codeaurora.org,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
- <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <1ea81fa2-1dc8-a0b9-aa32-3127e9354be2@marek.ca>
-Date:   Sat, 15 Aug 2020 17:21:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: Add Mantix MLAF057WE51-X panel bindings
+Message-ID: <20200815210802.GA1242831@ravnborg.org>
+References: <cover.1597412076.git.agx@sigxcpu.org>
+ <9345739df02b8b8630e7dccb61a80a7a7f692526.1597412076.git.agx@sigxcpu.org>
+ <20200815083917.GA993113@ravnborg.org>
+ <20200815164737.GA3640@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGtcfXodN1_HSdTcH402FdwTk15Nt6p3F=QYeSRhTc+hqw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200815164737.GA3640@bogon.m.sigxcpu.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8 a=gEfo2CItAAAA:8 a=VwQbUJbxAAAA:8
+        a=6yzhs6WGAAAA:8 a=e5mUnYsNAAAA:8 a=XmuwC6Cl6KIseVqJuPgA:9
+        a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=j5F3_G_i7ziBYwdlbqZG:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 8/15/20 4:20 PM, Rob Clark wrote:
-> On Fri, Aug 14, 2020 at 10:05 AM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
->>
->>
->> On 12/08/2020 07:42, Tanmay Shah wrote:
->>   > From: Chandan Uddaraju <chandanu@codeaurora.org>
->>   >
->>   > Add the needed DP PLL specific files to support
->>   > display port interface on msm targets.
->>
->> [skipped]
->>
->>   > diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h
->> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>   > new file mode 100644
->>   > index 000000000000..475ba6ed59ab
->>   > --- /dev/null
->>   > +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>   > @@ -0,0 +1,98 @@
->>   > +/* SPDX-License-Identifier: GPL-2.0-only */
->>   > +/*
->>   > + * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
->>   > + */
->>   > +
->>   > +#ifndef __DP_PLL_10NM_H
->>   > +#define __DP_PLL_10NM_H
->>   > +
->>   > +#include "dp_pll.h"
->>   > +#include "dp_reg.h"
->>   > +
->>   > +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->>   > +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->>   > +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->>   > +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->>   > +
->>   > +#define NUM_DP_CLOCKS_MAX            6
->>   > +
->>   > +#define DP_PHY_PLL_POLL_SLEEP_US        500
->>   > +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->>   > +
->>   > +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->>   > +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->>   > +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->>   > +
->>   > +struct dp_pll_vco_clk {
->>   > +    struct clk_hw hw;
->>   > +    unsigned long    rate;        /* current vco rate */
->>   > +    u64        min_rate;    /* min vco rate */
->>   > +    u64        max_rate;    /* max vco rate */
->>   > +    void        *priv;
->>   > +};
->>   > +
->>   > +struct dp_pll_db {
->>
->> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
->> example, will use slightly different structure.
-> 
-> Note that sboyd has a WIP series to move all of the pll code out to a
-> phy driver.  If there is work already happening on 7nm support, it
-> might be better to go with the separate phy driver approach?  I'm
-> still a bit undecided about whether to land the dp code initially with
-> the pll stuff in drm, and then continue refactoring to move to
-> separate phy driver upstream, or to strip out the pll code from the
-> beginning.  If you/someone is working on 7nm support, then feedback
-> about which approach is easier is welcome.
-> 
-> https://lore.kernel.org/dri-devel/20200611091919.108018-1-swboyd@chromium.org/
-> 
+Hi Guido.
 
-I have a sm8150/sm8250 (7nm) upstream kernel stack with DP enabled, and 
-I have done something similar, with the PLL driver in the QMP phy, 
-although not based on sboyd's series (along with some typec changes to 
-negotiate the DP alt mode and get HPD events, etc.). I don't think 
-having PLL in drm/msm makes sense, the drm/msm DP driver shouldn't need 
-to be aware of the DP PLL/PHY driver, it only needs to set the 
-link/pixel clock rates which are in dispcc (and those then have the PLL 
-clocks as a parent).
-
-FYI, since it sounds you are considering landing this: it is completely 
-broken, for example:
-- ioremap()'s to #define'd addresses in the PLL driver
-- main DP driver reading/writing to registers in the PHY region, but 
-getting the base address from devicetree was removed since earlier 
-revisions, so it just fails completely. Look at usb3_dp_com (for 
-example), which in dp_catalog_ctrl_usb_reset() would be used to 
-overwrite registers already being driven by the qmp phy driver - but now 
-the usb3_dp_com.base is never initialized.
-
--Jonathan
-
-> BR,
-> -R
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+On Sat, Aug 15, 2020 at 06:47:37PM +0200, Guido Günther wrote:
+> Hi Sam,
+> On Sat, Aug 15, 2020 at 10:39:17AM +0200, Sam Ravnborg wrote:
+> > Hi Guido.
+> > 
+> > On Fri, Aug 14, 2020 at 03:36:22PM +0200, Guido Günther wrote:
+> > > The panel uses a Focaltech FT8006p, the touch part is handled by the
+> > > already existing edt-ft5x06.
+> > > 
+> > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > 
+> > A few trivialities.
 > 
+> Thanks for having a look. One remark inline:
+> 
+> > 
+> > > ---
+> > >  .../display/panel/mantix,mlaf057we51-x.yaml   | 73 +++++++++++++++++++
+> > >  1 file changed, 73 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+> > > new file mode 100644
+> > > index 0000000000000..349f3380ac940
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+> > > @@ -0,0 +1,73 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/display/panel/mantix,mlaf057we51-x.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Mantix MLAF057WE51-X 5.7" 720x1440 TFT LCD panel
+> > > +
+> > > +maintainers:
+> > > +  - Guido Günther <agx@sigxcpu.org>
+> > > +
+> > > +description: |
+> > > +             Mantix MLAF057WE51 X is a 720x1440 TFT LCD panel
+> > > +             connected using a MIPI-DSI video interface.
+> > Indent text with two spaces only.
+> > And I have learned that '|' is only needed to preserve formatting - so
+> > it can be dropped.
+> > 
+> > > +
+> > > +allOf:
+> > > +  - $ref: panel-common.yaml#
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - mantix,mlaf057we51-x
+> > This is a list - so needs an extra 2 spaces indent.
+> > See https://lore.kernel.org/linux-devicetree/f1963eb9-283f-e903-2a3a-4f324d71d418@lucaceresoli.net/T/#m65900317fb948f6c40e8fb521f2201fba3c301a7
+> > for examples where Rob fixes this.
+> 
+> Doesn't this only apply if the 'outer element' is a list too so e.g.:
+> 
+>    - enum
+>      - foo
+> 
+> trips up yamllint but
+> 
+>    enum
+>      - foo
+> 
+> doesn't. Since yamllint was happy i kept it as is (looking at your
+> reference suggests that too).
+
+You are right, I missed that this was not a list (no '-' in front of
+enum).
+I would not be able to do this right without tool assistance.
+
+	Sam
+
+> 
+> All the rest made sense and i fixed that for the upcoming v2.
+> Thanks for having a look!
+>  -- Guido
+> 
+> > 
+> > > +
+> > > +  port: true
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +    description: DSI virtual channel
+> > > +
+> > > +  avdd-supply:
+> > > +    description: Positive analog power supply
+> > > +
+> > > +  avee-supply:
+> > > +    description: Negative analog power supply
+> > > +
+> > > +  vddi-supply:
+> > > +    description: 1.8V I/O voltage supply
+> > > +
+> > > +  reset-gpios:
+> > > +    description: GPIO used for the reset pin
+> > > +    maxItems: 1
+> > Use reset-gpios: true as we already have it in panel-common.yaml
+> > 
+> > > +
+> > > +  backlight:
+> > > +    description: Backlight used by the panel
+> > > +    $ref: "/schemas/types.yaml#/definitions/phandle"
+> > Use backlight from panel-common.yaml.
+> > 
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - avdd-supply
+> > > +  - avee-supply
+> > > +  - vddi-supply
+> > > +  - reset-gpios
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +
+> > > +    dsi {
+> > My personal preference is indent with 4 spaces in examples but there are
+> > no rules so feel free to ignore.
+> > > +      #address-cells = <1>;
+> > > +      #size-cells = <0>;
+> > > +      panel@0 {
+> > > +        compatible = "mantix,mlaf057we51-x";
+> > > +        reg = <0>;
+> > > +        avdd-supply = <&reg_avdd>;
+> > > +        avee-supply = <&reg_avee>;
+> > > +        vddi-supply = <&reg_1v8_p>;
+> > > +        reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
+> > > +        backlight = <&backlight>;
+> > > +      };
+> > > +    };
+> > I think we need an ampty line here.
+> > > +...
+> > > -- 
+> > > 2.26.2
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
