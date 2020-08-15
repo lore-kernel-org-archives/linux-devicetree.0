@@ -2,136 +2,172 @@ Return-Path: <SRS0=VFNs=BZ=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B390C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8B8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E77CA20639
-	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3773E20639
+	for <linux-devicetree@archiver.kernel.org>; Sat, 15 Aug 2020 22:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597529430;
+	bh=LWZ3gG05lyWwHbQNUP3ksCUHLVF4wFzI8rRKV3uiNak=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zaxTFhK8ruPbpujc8CNRj7rHYGZQvTuT92R44dVdElIcqHvXw3MQwdNj20R6eRdQt
+	 Yt7lHfxPn0hMXF95W/hj3bayYvbRWCp2W9nm+neK/KRvJqRnF0vJ9C+66ChnuQ8sIN
+	 M9cG5fIzCqOm+lYsBQapvdgYyesEaOhhjR7Joyag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgHOWHb (ORCPT
+        id S1729264AbgHOWK2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 15 Aug 2020 18:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgHOVun (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 15 Aug 2020 17:50:43 -0400
-X-Greylist: delayed 348 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 15 Aug 2020 09:41:39 PDT
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA45AC0A3BF8
-        for <devicetree@vger.kernel.org>; Sat, 15 Aug 2020 09:41:39 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Sat, 15 Aug 2020 18:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728715AbgHOWK1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 15 Aug 2020 18:10:27 -0400
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4BTQsX1JBpzKmfP;
-        Sat, 15 Aug 2020 18:35:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id NKSNmlr3lftj; Sat, 15 Aug 2020 18:35:41 +0200 (CEST)
-From:   Hauke Mehrtens <hauke@hauke-m.de>
-To:     tsbogend@alpha.franken.de
-Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, james.hartley@sondrel.com,
-        rahulbedarkar89@gmail.com, wigyori@uid0.hu,
-        Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH 3/3] MIPS: DTS: img: marduk: Add NXP SC16IS752IPW
-Date:   Sat, 15 Aug 2020 18:35:14 +0200
-Message-Id: <20200815163514.11631-3-hauke@hauke-m.de>
-In-Reply-To: <20200815163514.11631-1-hauke@hauke-m.de>
-References: <20200815163514.11631-1-hauke@hauke-m.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C87322E00;
+        Sat, 15 Aug 2020 03:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597460618;
+        bh=LWZ3gG05lyWwHbQNUP3ksCUHLVF4wFzI8rRKV3uiNak=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aPLmc5XIVhNgOz/dUkmBwJHhTub2jfiFdCUnXPgEVZvsfdM60xwqSPiHXUjZo/gZg
+         W13nLli/i5dcL9+RLLKwoyKEj/1rS4pFIGP+81I7TUivDsE3PPl0LwR+oPRQbUf2eR
+         Zq7320V1UEnYBmGlW09/3R0ltEf9DMa1/eUQy5SE=
+Received: by mail-ej1-f53.google.com with SMTP id o18so11890552eje.7;
+        Fri, 14 Aug 2020 20:03:38 -0700 (PDT)
+X-Gm-Message-State: AOAM532l65Y/ZcRSYu08JznzZJX4t0VbxK+0NyP7fgsbMXobqvSx6uR6
+        V4hyvhlOtaj5s/12iSBYqiYEfVXTgvT5G9IeYQ==
+X-Google-Smtp-Source: ABdhPJyt/63tP7h7Rcip1YksjvsGO7WzFuUVEIVYhoFntsd6TkK7JtmalTJjkuyszotatOlhPqyFfaDNHeccHlw5oaU=
+X-Received: by 2002:a17:906:7492:: with SMTP id e18mr5232063ejl.375.1597460616714;
+ Fri, 14 Aug 2020 20:03:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: *
-X-Rspamd-Score: 0.84 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 245BE182B
-X-Rspamd-UID: 3afc30
+References: <1597289564-17030-1-git-send-email-neal.liu@mediatek.com> <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
+In-Reply-To: <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 15 Aug 2020 11:03:24 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
+Message-ID: <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] soc: mediatek: add mt6779 devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add NXP SC16IS752IPW SPI-UART controller to device tree.
+Hi, Neal:
 
-This controller drives 2 UARTs and 7 LEDs on the board.
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8813=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8811:33=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> MediaTek bus fabric provides TrustZone security support and data
+> protection to prevent slaves from being accessed by unexpected
+> masters.
+> The security violation is logged and sent to the processor for
+> further analysis or countermeasures.
+>
+> Any occurrence of security violation would raise an interrupt, and
+> it will be handled by mtk-devapc driver. The violation
+> information is printed in order to find the murderer.
+>
+> Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> ---
 
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
----
- arch/mips/boot/dts/img/pistachio_marduk.dts | 51 +++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+[snip]
 
-diff --git a/arch/mips/boot/dts/img/pistachio_marduk.dts b/arch/mips/boot/dts/img/pistachio_marduk.dts
-index 633a41954cc0..f4965a484b72 100644
---- a/arch/mips/boot/dts/img/pistachio_marduk.dts
-+++ b/arch/mips/boot/dts/img/pistachio_marduk.dts
-@@ -46,6 +46,46 @@
- 		regulator-max-microvolt = <1800000>;
- 	};
- 
-+	/* EXT clock from ca8210 is fed to sc16is752 */
-+	ca8210_ext_clk: ca8210-ext-clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <16000000>;
-+		clock-output-names = "ca8210_ext_clock";
-+	};
-+
-+	gpioleds {
-+		compatible = "gpio-leds";
-+		user1 {
-+			label = "marduk:red:user1";
-+			gpios = <&sc16is752 0 GPIO_ACTIVE_LOW>;
-+		};
-+		user2 {
-+			label = "marduk:red:user2";
-+			gpios = <&sc16is752 1 GPIO_ACTIVE_LOW>;
-+		};
-+		user3 {
-+			label = "marduk:red:user3";
-+			gpios = <&sc16is752 2 GPIO_ACTIVE_LOW>;
-+		};
-+		user4 {
-+			label = "marduk:red:user4";
-+			gpios = <&sc16is752 3 GPIO_ACTIVE_LOW>;
-+		};
-+		user5 {
-+			label = "marduk:red:user5";
-+			gpios = <&sc16is752 4 GPIO_ACTIVE_LOW>;
-+		};
-+		user6 {
-+			label = "marduk:red:user6";
-+			gpios = <&sc16is752 5 GPIO_ACTIVE_LOW>;
-+		};
-+		user7 {
-+			label = "marduk:red:user7";
-+			gpios = <&sc16is752 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
- 	leds {
- 		compatible = "pwm-leds";
- 		heartbeat {
-@@ -95,6 +135,17 @@
- 		extclock-freq = <16000000>;
- 		extclock-gpio = <2>;
- 	};
-+
-+	sc16is752: sc16is752@1 {
-+		compatible = "nxp,sc16is752";
-+		reg = <1>;
-+		clocks = <&ca8210_ext_clk>;
-+		spi-max-frequency = <4000000>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
- };
- 
- &spfi1 {
--- 
-2.20.1
+> +/*
+> + * devapc_violation_irq - the devapc Interrupt Service Routine (ISR) wil=
+l dump
+> + *                        violation information including which master v=
+iolates
+> + *                        access slave.
+> + */
+> +static irqreturn_t devapc_violation_irq(int irq_number,
+> +                                       struct mtk_devapc_context *ctx)
+> +{
+> +       /*
+> +        * Mask slave's irq before clearing vio status.
+> +        * Must do it to avoid nested interrupt and prevent
+> +        * unexpected behavior.
+> +        */
+> +       mask_module_irq(ctx, true);
 
+I still don't understand why nested interrupt happen. If two CPU
+process different devapc interrupt at the same time, mask interrupt
+could not prevent these two CPU to sync vio dbg at the same time. As I
+know, in ARM CPU, only CPU0 process irq handler, and all devapc
+interrupt has the same priority, so why nested interrupt happen? Could
+you explain more detail about how nested interrupt happen?
+
+> +
+> +       while (devapc_sync_vio_dbg(ctx))
+> +               devapc_extract_vio_dbg(ctx);
+> +
+> +       /*
+> +        * Ensure that violation info are written
+> +        * before further operations
+> +        */
+> +       smp_mb();
+> +
+> +       clear_vio_status(ctx);
+> +       mask_module_irq(ctx, false);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+
+[snip]
+
+> +
+> +static int mtk_devapc_remove(struct platform_device *pdev)
+> +{
+> +       struct mtk_devapc_context *ctx =3D platform_get_drvdata(pdev);
+> +
+> +       stop_devapc(ctx);
+> +
+> +       if (ctx->infra_clk)
+
+This always true.
+
+Regards,
+Chun-Kuang.
+
+> +               clk_disable_unprepare(ctx->infra_clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver mtk_devapc_driver =3D {
+> +       .probe =3D mtk_devapc_probe,
+> +       .remove =3D mtk_devapc_remove,
+> +       .driver =3D {
+> +               .name =3D KBUILD_MODNAME,
+> +               .of_match_table =3D mtk_devapc_dt_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(mtk_devapc_driver);
+> +
+> +MODULE_DESCRIPTION("Mediatek Device APC Driver");
+> +MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
+> +MODULE_LICENSE("GPL");
+> --
+> 1.7.9.5
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
