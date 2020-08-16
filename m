@@ -2,103 +2,127 @@ Return-Path: <SRS0=yifd=B2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F96C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 07:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844C9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 07:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49ED0207DA
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 07:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="Tv9PqpD0"
+	by mail.kernel.org (Postfix) with ESMTP id 68D5A2053B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 07:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgHPHPs (ORCPT
+        id S1726361AbgHPHZ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 03:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgHPHPr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 03:15:47 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE12C061388
-        for <devicetree@vger.kernel.org>; Sun, 16 Aug 2020 00:15:47 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x5so10739774wmi.2
-        for <devicetree@vger.kernel.org>; Sun, 16 Aug 2020 00:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FtBZO3W76dH5HqtieBBm4KLqWKzxwPvD1yS5bD72/uQ=;
-        b=Tv9PqpD0aZ6UNSJgj1O53N4jT+f+cBlRK3digViLJWOOruHGl+DOne0XXq6dWCrMf9
-         4TovILfm2WaVWvkjRtpmhA7p06AOIIlFrK2MvwrpMHs929C4GbzUta9NMhWe+Wk24bBz
-         UeChrJYuUGwihUS6FUkgu9fV9MCK/s/b4QjDg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FtBZO3W76dH5HqtieBBm4KLqWKzxwPvD1yS5bD72/uQ=;
-        b=M/lQi17K38/u9qMuYE8ObwJXyEpJh6n+LyziGFRn2rn3JM6k1d+MmiG+UzR7qGCceq
-         Ughu3P64P1xMfdsWb5WhmpL5llQc3deBZGWvrZBb9XPrMy5c7zGUZYkxWYBST++TFN7e
-         udPLbuOkwxCkctIBZ6bYck5bOfBsVb1PBO0dA+JgjMyRiVJd5qSoz9UJPyeefd3pVbfM
-         HDZxDHJ0coFfLQ1xfa18GQSClkU+KqHoiMWQVFJNB20G0MzvxmtoVZ7G7JsCDGL4VYNJ
-         Q5dTpvg9hB9jBjAI5BZq3NcfyrP49YYFG3bYGJh8uoLBTSsOM+mNby8dmLjvbARpziwW
-         CGtg==
-X-Gm-Message-State: AOAM532dnq+Gdmnie2HfSKXQEAogt1qIU8V2cKVWuBKuTVloS0bPMnSi
-        m+qIYgcJmObix/Y/2qCEdkzQRw==
-X-Google-Smtp-Source: ABdhPJw3apQSDQ3q1kNRiwIe55rEalLr/+3xxpIw9eqmcO8PtC5QjgBkCzNSa6CctdLakF/q1+95DA==
-X-Received: by 2002:a7b:c38a:: with SMTP id s10mr10156297wmj.13.1597562145625;
-        Sun, 16 Aug 2020 00:15:45 -0700 (PDT)
-Received: from taos.konsulko.bg (lan.nucleusys.com. [92.247.61.126])
-        by smtp.gmail.com with ESMTPSA id d14sm26189487wre.44.2020.08.16.00.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 00:15:45 -0700 (PDT)
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-To:     jic23@kernel.org
-Cc:     linux-iio@vger.kernel.org,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: iio: chemical: add Atlas EZO Humidity module documentation
-Date:   Sun, 16 Aug 2020 10:15:39 +0300
-Message-Id: <20200816071540.31897-2-matt.ranostay@konsulko.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200816071540.31897-1-matt.ranostay@konsulko.com>
-References: <20200816071540.31897-1-matt.ranostay@konsulko.com>
+        Sun, 16 Aug 2020 03:25:27 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:42800 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgHPHZ0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 03:25:26 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 55E65804D0;
+        Sun, 16 Aug 2020 09:25:22 +0200 (CEST)
+Date:   Sun, 16 Aug 2020 09:25:20 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, Marek Vasut <marex@denx.de>,
+        devicetree@vger.kernel.org,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/8] dt-bindings: display: mxsfb: Add a bus-width
+ endpoint property
+Message-ID: <20200816072520.GD1201814@ravnborg.org>
+References: <20200813012910.13576-1-laurent.pinchart@ideasonboard.com>
+ <20200813012910.13576-4-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813012910.13576-4-laurent.pinchart@ideasonboard.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=P1BnusSwAAAA:8 a=e5mUnYsNAAAA:8
+        a=PxDKDgk4fiNqbnpnUVEA:9 a=CjuIK1q_8ugA:10 a=D0XLA9XvdZm18NrgonBM:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
----
- .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
- 1 file changed, 2 insertions(+)
+Hi Laurent.
 
-diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-index 46496dc250f2..f1130d613735 100644
---- a/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-+++ b/Documentation/devicetree/bindings/iio/chemical/atlas,sensor.yaml
-@@ -20,6 +20,7 @@ description: |
-     http://www.atlas-scientific.com/_files/_datasheets/_oem/RTD_oem_datasheet.pdf
-     http://www.atlas-scientific.com/_files/_datasheets/_probe/EZO_CO2_Datasheet.pdf
-     https://www.atlas-scientific.com/files/EZO_O2_datasheet.pdf
-+    https://www.atlas-scientific.com/files/EZO_HUM_Datasheet.pdf
- 
- properties:
-   compatible:
-@@ -31,6 +32,7 @@ properties:
-       - atlas,rtd-sm
-       - atlas,co2-ezo
-       - atlas,o2-ezo
-+      - atlas,hum-ezo
- 
-   reg:
-      maxItems: 1
--- 
-2.27.0
+On Thu, Aug 13, 2020 at 04:29:05AM +0300, Laurent Pinchart wrote:
+> When the PCB routes the display data signals in an unconventional way,
+> the output bus width may differ from the bus width of the connected
+> panel or encoder. For instance, when a 18-bit RGB panel has its R[5:0],
+> G[5:0] and B[5:0] signals connected to LCD_DATA[7:2], LCD_DATA[15:10]
+> and LCD_DATA[23:18], the output bus width is 24 instead of 18 when the
+> signals are routed to LCD_DATA[5:0], LCD_DATA[11:6] and LCD_DATA[17:12].
+> 
+> Add a bus-width property to describe this data routing.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
+Some general comments.
+We have the bus format - for example MEDIA_BUS_FMT_RGB666_1X18.
+I was under the impression that the bus format defined the wiring used,
+so for example the bus format would tell if on used 18 bits as above.
+So with the bus format available the bus-width is not needed.
+
+Today this detail is not expressed in DT but comes based on the
+compatible for the panel - so what this patch does is to add the bus
+format information to DT.
+
+But then to do so would we not need to have something so we can specify
+all relevant MEDIA_BUS_FMT's? bus-width will not cut it.
+
+Also the bus-width property (and data-shift property you accidentally
+reference) are both described in media/video-interfaces.txt.
+If we need bus-witdh - is it possible to re-use video-interfaces?
+It may need a conversion to yaml to get full validation, but a lot
+of .yaml files refer to the text file today so conversion can come later.
+
+	Sam
+
+
+> ---
+>  Documentation/devicetree/bindings/display/mxsfb.yaml | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mxsfb.yaml b/Documentation/devicetree/bindings/display/mxsfb.yaml
+> index ec6533b1d4a3..d15bb8edc29f 100644
+> --- a/Documentation/devicetree/bindings/display/mxsfb.yaml
+> +++ b/Documentation/devicetree/bindings/display/mxsfb.yaml
+> @@ -58,6 +58,18 @@ properties:
+>          type: object
+>  
+>          properties:
+> +          data-shift:
+> +            enum: [16, 18, 24]
+> +            description: |
+> +              The output bus width. This value overrides the configuration
+> +              derived from the connected device (encoder or panel). It should
+> +              only be specified when PCB routing of the data signals require a
+> +              different bus width on the LCDIF and the connected device. For
+> +              instance, when a 18-bit RGB panel has its R[5:0], G[5:0] and
+> +              B[5:0] signals connected to LCD_DATA[7:2], LCD_DATA[15:10] and
+> +              LCD_DATA[23:18] instead of LCD_DATA[5:0], LCD_DATA[11:6] and
+> +              LCD_DATA[17:12], bus-width should be set to 24.
+> +
+>            remote-endpoint:
+>              $ref: /schemas/types.yaml#/definitions/phandle
+>  
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
