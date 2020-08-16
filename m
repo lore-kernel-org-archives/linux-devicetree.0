@@ -2,169 +2,239 @@ Return-Path: <SRS0=yifd=B2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73806C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 09:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468EAC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 09:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8442067C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 09:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZF60OjM5"
+	by mail.kernel.org (Postfix) with ESMTP id 2688B206F4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 09:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597570063;
+	bh=vyaYKZtn/gjNKMZCuB+6vm9tSNJKQL8DxOgcCxLRYoY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oUMONVqHOsDIFpH7OqpfNmF5yPcKUs/969YT7zjOkt7tdCl7uCspMlVHU9LQxknAu
+	 IAJuqoC3imCY4V7IM3hafbvOnvtSFuw1leqpJyBoYoq1d+Njfp+ztaXMEi3nnchKyg
+	 E3NOWn5svLFoZxMEPZnL5jGH4Cvb1/pj3+6EfCLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgHPJRy (ORCPT
+        id S1729010AbgHPJ1m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 05:17:54 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:13505 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbgHPJRw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 05:17:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597569472; x=1629105472;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=0KiFD7MKYJeA21r8+YOIjXyPutiEhZpN89Zy2Fhpttg=;
-  b=ZF60OjM5ubDRZZi+iSITPnWcBtWZw/Fv6U8o+YkaS3ujh67GNG+T74M9
-   B20vlMwbfeIlw7+g/vH6efsskSwQYACDw3m66b3jTxKi0niOLyyRpkXF6
-   +yG8ALGXUf6OU7mt285fsZB2DlTkNMWaEoqJ6vGAg6gaeKvm39FUd/FBk
-   c=;
-X-IronPort-AV: E=Sophos;i="5.76,319,1592870400"; 
-   d="scan'208";a="60062486"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 16 Aug 2020 09:17:49 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 68A39A1C5B;
-        Sun, 16 Aug 2020 09:17:45 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 16 Aug 2020 09:17:44 +0000
-Received: from [192.168.3.188] (10.43.162.140) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 16 Aug
- 2020 09:17:35 +0000
-Subject: Re: [PATCH v9 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
- Labs Memory Controller EDAC
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <eitan@amazon.com>, <talel@amazon.com>
-References: <20200728095155.18506-1-talel@amazon.com>
- <20200728095155.18506-3-talel@amazon.com> <20200815183358.GE25814@zn.tnic>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <5d516c64-ecd8-6f36-5f95-6708fe0f3fd5@amazon.com>
-Date:   Sun, 16 Aug 2020 12:17:31 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 16 Aug 2020 05:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725986AbgHPJ1i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Aug 2020 05:27:38 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9754B2067C;
+        Sun, 16 Aug 2020 09:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597570058;
+        bh=vyaYKZtn/gjNKMZCuB+6vm9tSNJKQL8DxOgcCxLRYoY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GRq8hsCRXyHipm3CTTG25wEoq9JLSKszbcuJSJItwMRQ1B5ye2gQyBB0FJMyb8gIW
+         V+09GvAeN4JHvlQEo3oChVBT/fgLuOyvXP+qzPfE91Zs089A+OtaBdHMQGVw6eD6RN
+         xcg/PTGdOmVi6hz/76FFn9V2osCet0+Wl3aXFY6M=
+Date:   Sun, 16 Aug 2020 10:27:33 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
+Message-ID: <20200816102733.7fa1d3ce@archlinux>
+In-Reply-To: <20200810033806.15503-1-chris.ruehl@gtsys.com.hk>
+References: <20200810033806.15503-1-chris.ruehl@gtsys.com.hk>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200815183358.GE25814@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D32UWB004.ant.amazon.com (10.43.161.36) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, 10 Aug 2020 11:37:52 +0800
+Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
 
-On 8/15/2020 9:33 PM, Borislav Petkov wrote:
-> On Tue, Jul 28, 2020 at 12:51:55PM +0300, Talel Shenhar wrote:
->> +static void al_mc_edac_check(struct mem_ctl_info *mci)
->> +{
->> +     struct al_mc_edac *al_mc = mci->pvt_info;
->> +
->> +     if (al_mc->irq_ue <= 0)
->> +             handle_ue(mci);
->> +
->> +     if (al_mc->irq_ce <= 0)
->> +             handle_ce(mci);
->> +}
->> +
->> +static irqreturn_t al_mc_edac_irq_handler_ue(int irq, void *info)
->> +{
->> +     struct platform_device *pdev = info;
->> +     struct mem_ctl_info *mci = platform_get_drvdata(pdev);
->> +
->> +     if (handle_ue(mci))
->> +             return IRQ_HANDLED;
->> +     return IRQ_NONE;
->> +}
->> +
->> +static irqreturn_t al_mc_edac_irq_handler_ce(int irq, void *info)
->> +{
->> +     struct platform_device *pdev = info;
->> +     struct mem_ctl_info *mci = platform_get_drvdata(pdev);
->> +
->> +     if (handle_ce(mci))
->> +             return IRQ_HANDLED;
->> +     return IRQ_NONE;
->> +}
->> +
->> +static enum scrub_type al_mc_edac_get_scrub_mode(void __iomem *mmio_base)
->> +{
->> +     u32 ecccfg0;
->> +
->> +     ecccfg0 = readl(mmio_base + AL_MC_ECC_CFG);
->> +
->> +     if (FIELD_GET(AL_MC_ECC_CFG_SCRUB_DISABLED, ecccfg0))
->> +             return SCRUB_NONE;
->> +     else
->> +             return SCRUB_HW_SRC;
->> +}
->> +
->> +static void devm_al_mc_edac_free(void *data)
->> +{
->> +     edac_mc_free(data);
->> +}
->> +
->> +static void devm_al_mc_edac_del(void *data)
->> +{
->> +     edac_mc_del_mc(data);
->> +}
->  From a previous review:
->
-> I said:
->
->> Drop the "al_mc_edac_" prefix from most of the static functions. You can
->> leave it in the probe function or the IRQ handler so that it is visible
->> in stack traces but all those small functions don't need that prefix.
-> You replied with:
->
->> Shall be part of v7.
-> and yet it ain't part of any v<num>.
->
-> Why?
+Hi Chris,
 
-Thanks for taking a look.
+This will need a dt-binding maintainer review, but in the meantime...
 
- From cover letter:
+Look at the title for dt-bindings patches and match that format.
 
-- removed static function names prefix from internal functions (external
-   used function, such as devm/interrupts-handlers/probe, left with the
-   prefix to allow stack trace visibility)
+One question for Rob inline.   A quick grep suggests we are
+very inconsistent on whether we use the multiline block
+thing for description fields or not.
 
-As you can see, part of the functions got their prefix removed, e.g. 
-prepare_msg, handle_ce, handle_ue.
+Is it needed?
 
-I did take your advise for leaving prefix for having visibility for 
-functions being used outside. hence, some were left with the prefix.
+> Conversion of the ltc2632 to yaml format and name the file to
+> 'lltc,ltc2632.yaml'.
+> 
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> ---
+> v6:
+> Remove tab and drop unused label
+> Related patches already in linux-next.
+> [PATCH v5 1/3] iio: documentation ltc2632_chip_info add num_channels
+> linux-next commit: 6f1c9e0da9aae51177457731357ae8a2c8af27cd
+> PATCH v5 2/3] iio: DAC extension for ltc2634-12/10/8
+> linux-next commit: aefa5bc87c808dd08db2fc79ebdbf19ed4af7be2
+> 
+>  .../bindings/iio/dac/lltc,ltc2632.yaml        | 77 +++++++++++++++++++
+>  .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
+>  2 files changed, 77 insertions(+), 49 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+> new file mode 100644
+> index 000000000000..edf804d0aca2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/iio/dac/lltc,ltc2632.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Linear Technology LTC263x 12-/10-/8-Bit Rail-to-Rail DAC
+> +
+> +maintainers:
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +
+> +description: |
+> +  Bindings for the Linear Technology LTC2632/2634/2636 DAC
+> +  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/LTC263[246].pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - lltc,ltc2632-l12
+> +      - lltc,ltc2632-l10
+> +      - lltc,ltc2632-l8
+> +      - lltc,ltc2632-h12
+> +      - lltc,ltc2632-h10
+> +      - lltc,ltc2632-h8
+> +      - lltc,ltc2634-l12
+> +      - lltc,ltc2634-l10
+> +      - lltc,ltc2634-l8
+> +      - lltc,ltc2634-h12
+> +      - lltc,ltc2634-h10
+> +      - lltc,ltc2634-h8
+> +      - lltc,ltc2636-l12
+> +      - lltc,ltc2636-l10
+> +      - lltc,ltc2636-l8
+> +      - lltc,ltc2636-h12
+> +      - lltc,ltc2636-h10
+> +      - lltc,ltc2636-h8
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 2000000
+> +
+> +  vref-supply:
+> +    description:
+Does this need a | ?
 
-Let me know what you think.
+> +      Phandle to the external reference voltage supply. This should
+> +      only be set if there is an external reference voltage connected to the VREF
+> +      pin. If the property is not set the internal reference is used.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    vref: regulator-vref {
+> +        compatible = "regulator-fixed";
+> +        regulator-name = "vref-ltc2632";
+> +        regulator-min-microvolt = <1250000>;
+> +        regulator-max-microvolt = <1250000>;
+> +        regulator-always-on;
+> +    };
+> +
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      dac@0 {
+> +        compatible = "lltc,ltc2632";
+> +        reg = <0>;    /* CS0 */
+> +        spi-max-frequency = <1000000>;
+> +        vref-supply = <&vref>;
+> +      };
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt b/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> deleted file mode 100644
+> index 1ab9570cf219..000000000000
+> --- a/Documentation/devicetree/bindings/iio/dac/ltc2632.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -Linear Technology LTC2632/2634/2636 DAC
+> -
+> -Required properties:
+> - - compatible: Has to contain one of the following:
+> -	lltc,ltc2632-l12
+> -	lltc,ltc2632-l10
+> -	lltc,ltc2632-l8
+> -	lltc,ltc2632-h12
+> -	lltc,ltc2632-h10
+> -	lltc,ltc2632-h8
+> -	lltc,ltc2634-l12
+> -	lltc,ltc2634-l10
+> -	lltc,ltc2634-l8
+> -	lltc,ltc2634-h12
+> -	lltc,ltc2634-h10
+> -	lltc,ltc2634-h8
+> -	lltc,ltc2636-l12
+> -	lltc,ltc2636-l10
+> -	lltc,ltc2636-l8
+> -	lltc,ltc2636-h12
+> -	lltc,ltc2636-h10
+> -	lltc,ltc2636-h8
+> -
+> -Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
+> -apply. In particular, "reg" and "spi-max-frequency" properties must be given.
+> -
+> -Optional properties:
+> -	- vref-supply: Phandle to the external reference voltage supply. This should
+> -	  only be set if there is an external reference voltage connected to the VREF
+> -	  pin. If the property is not set the internal reference is used.
+> -
+> -Example:
+> -
+> -	vref: regulator-vref {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "vref-ltc2632";
+> -		regulator-min-microvolt = <1250000>;
+> -		regulator-max-microvolt = <1250000>;
+> -		regulator-always-on;
+> -	};
+> -
+> -	spi_master {
+> -		dac: ltc2632@0 {
+> -			compatible = "lltc,ltc2632-l12";
+> -			reg = <0>; /* CS0 */
+> -			spi-max-frequency = <1000000>;
+> -			vref-supply = <&vref>; /* optional */
+> -		};
+> -	};
 
->
-> --
-> Regards/Gruss,
->      Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
