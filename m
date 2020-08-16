@@ -2,139 +2,180 @@ Return-Path: <SRS0=yifd=B2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA232C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 15:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7F7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 17:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A551206F4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 15:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975B9208B3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 17:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fPIuVdan"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THsajkBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgHPP6f (ORCPT
+        id S1728059AbgHPRGh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 11:58:35 -0400
-Received: from mout.gmx.net ([212.227.15.18]:47669 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbgHPP6d (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Aug 2020 11:58:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597593486;
-        bh=7j6qXfPm5EI3jykDMS74HC6S0xyBwhkXpq11cquJsww=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=fPIuVdaniS5SKHac+UUsM6tcYRptyPNJ1EaPOylQ7Hf6WWs1vDa0tau+pf5mUkNEf
-         B3zHJmlAn3/WsvAfDWuvaNJ+6JM9vQDIWy3jp5/EHfPnF9hWC6BtZGIz5OB2FC/lOu
-         +LT8vkkufsyk0boPb12UGfCNHQWhihqY4QNIocIM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wLZ-1k10Bp1lgx-007SYI; Sun, 16
- Aug 2020 17:58:06 +0200
-Date:   Sun, 16 Aug 2020 17:57:51 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, rjones@gateworks.com,
-        leoyang.li@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine 2
- HD
-Message-ID: <20200816155751.GB103070@latitude>
-References: <20200815193336.21598-1-andreas@kemnade.info>
- <20200815193336.21598-3-andreas@kemnade.info>
- <20200816125247.GA103070@latitude>
- <20200816165058.3a17d97a@aktux>
+        Sun, 16 Aug 2020 13:06:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgHPRGg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 13:06:36 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1694C061786;
+        Sun, 16 Aug 2020 10:06:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g6so14895840ljn.11;
+        Sun, 16 Aug 2020 10:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+gW0MeUUnWtjGRnB3GIB/WuouXI03ogec5oC+V29aXA=;
+        b=THsajkBAG42CvgrWy6I1Je7Lx/8NmASsawcagk5GF0lskivIr6aFzS5ChY5lhYUZov
+         mDcnQKZWeglWiacSJ5Ycv1CnUteCPoZpZs8VZwSi1gGb7rI3F/puVLI/OS82UTppzPtb
+         EU5/JrYmZUI8Rx6Qt+XnNW4GQO/BDPrcjNx78xfPWHQnTA5MUI2Yn8SXKZ7AqQHIeCHm
+         DuRhBpiSoeRTISRh3ZgjUQ1oTSzgPa9HOXgtXyURcDrVe/rv2A1lPhus4S3n/l46SPon
+         Ks0UleO23P3swz0uDr31OaQx72gvLZdpuT3l5vfjo9CXRYTLQXn7Ve6kviAWMqPGCFeX
+         WAmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+gW0MeUUnWtjGRnB3GIB/WuouXI03ogec5oC+V29aXA=;
+        b=RxJcoa4Swu7L5bLcawu1WBCfqdc2UWtsigbff9zfghEb+wKMfuODH2r/c/fTO2D5Fg
+         ZkCMRttJl8aauo3YWTyxsGP9i+RrIM1ulY9zIoUA818VQCvHefd5iY6T4cHWklDgp3Qo
+         aWozP/MnHCJZ4FT+7x4Bxlc2cGobmCZ9ExhOwTvaO1qv+hAWQW6STMB7nFPcSbVMdlzZ
+         ByAGxL0vX4sD067quhiHSG5aUvYsO0aK1C/xI8up3+3322cClEAOPFo8ylDOloDv/tmp
+         +NKWbT83URlA18rpl33qDXfw3DD7R/fvWJH7DvRisKz/LHU9JItBr0OUYeTJp+AiRGuz
+         +bbw==
+X-Gm-Message-State: AOAM533pP3ZuToBmQjRmJsIOmlagPD0YRDjtQ5Bv8Yts7iqVhnwQ9bZQ
+        2Zdmmqh4jL5uKVB4O0SjUBw=
+X-Google-Smtp-Source: ABdhPJyNtcSHRXcoHCBFOUYMBtvctEp+pL4AFjbCfXAK5mX+sYqHMK321l2KNAO4FoTJLqe3YFcLcw==
+X-Received: by 2002:a2e:98d5:: with SMTP id s21mr5151864ljj.59.1597597594314;
+        Sun, 16 Aug 2020 10:06:34 -0700 (PDT)
+Received: from wasted.omprussia.ru ([2a00:1fa0:48fd:f54c:8335:c09f:7e7c:be7b])
+        by smtp.gmail.com with ESMTPSA id d6sm1320889lji.110.2020.08.16.10.06.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Aug 2020 10:06:33 -0700 (PDT)
+Subject: Re: [PATCH 2/3] MIPS: DTS: img: marduk: Add Cascoda CA8210 6LoWPAN
+To:     Hauke Mehrtens <hauke@hauke-m.de>, tsbogend@alpha.franken.de
+Cc:     linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, james.hartley@sondrel.com,
+        rahulbedarkar89@gmail.com, wigyori@uid0.hu
+References: <20200815163514.11631-1-hauke@hauke-m.de>
+ <20200815163514.11631-2-hauke@hauke-m.de>
+ <b6267d62-af3b-4d29-51b0-3a61d0fd2679@gmail.com>
+ <b094bf63-dd4e-e5e0-812c-957b1f11805a@hauke-m.de>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <5ed658c5-c5f8-8b06-82f8-0409901c6b40@gmail.com>
+Date:   Sun, 16 Aug 2020 20:06:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f+W+jCU1fRNres8c"
-Content-Disposition: inline
-In-Reply-To: <20200816165058.3a17d97a@aktux>
-X-Provags-ID: V03:K1:mT/FQPdide8zSxjSEqchlaAZFDs6iEhlej5xL6GKMHINDQfqMka
- +ZUp7H63mXXEpAunPeJiokUHEdf9lCJAumVPW2U1p4CjEpXOwqHl7Vx4QV6L5bvLnkFfUR5
- Ch2LtONaJELiVauqqbl38zfm81OsbxxMLxctrnwPOpQHsKkWcN6U6nyg/F3XvI8DyishTNy
- NfQrA6TTfDibB/5YzbtHw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w3+rXEc45eE=:7zvYNIT0IbAuDMZjIeuNp1
- LbHZsE9dHGw6nNCcGoKN3loSdbLwophUkjfiU0u60+Rt5nVD8kNjePPQ3oLC07YcUyXiLmEdL
- 3bwuBPC0eGaX5CBxFMcQmjDzX3wNFZJx294NyCDzOgzoMcO3RAI6Yp3O3Ab37xJy4FyyVs9+T
- 0uMhh73kuGZV6VYG12zecd/jSZEPrWUKk5uEX+kzKE5ziHze4jG+VvX5VAqAYXy7TFG/8ZU6e
- sozAdUTtVwwUY3qp9GpbT7b4UYY8jUsrrT5D6+A0HdPnW+e2AN8pttUN/D1ii0U+SIyexGJed
- fpcGQGMjdt2gowL8oB3cPOx/KkxS8z8u7RkYz2jJHlEPJcqFJE9DhsneeEOnvWfXJeh7mKgO5
- D9XYpDGfnuCuJHqjkl6BWafVPZBUYvBSzq34S/ni98YD5tyvsokTaBJjYlUIGRtF7PbRZkAkZ
- Zc7dL1hYIG3bZkBHELOLyqSH/jbJmFZeT27dCKyitEjLyjiLsPDf3NR4CY4LBkrR0P3t18RDs
- 6GKQFVIIdx8GlZeX2uLZ+JQommak9BA2LIhHn7WCF2z0v8qi6dyx03vNRJSfoE6XwzcIDflUX
- SANHSqnHffgE/7oI2SfZ4t9Y/D/MbQcy9e+quYDLTzIRO5l7O3HqQ6C5OsDKaXZYexub2moqY
- aVZF9rQ7xcbp2JwaFwTd+Zlrlu/YjDXXefa/aJ+J7YDqgN8n7uRt/Ng1FtU9ZfM1US735SfxB
- AudgktdTvY1uc2k/ic+P3AcK7g0IPbjBFej4Pa5xybaKlpLiyTash5UxXifpTNy1gwINSR/rA
- bBEMkcJAKrSkp5zUSPzuItyR0DDA46Y6rxLlSCJkHT4ysHsF913rwr0PZGYXgMP31qNkiHjuQ
- R+lu2SWK0hjYpY44OPULRGkwpDYHFJxcfjtSJJ7frJc+P0Td3i3GfgRqtq0L+RgVtPOnBAp9e
- J4s1llx5ntfoYB/mOgKqrmff8Qo1NiY/TdvtbbKzo89JWfpFBxWz5FhBmZTmj4flFCYX430BZ
- EWxYnxArSCBctDm2HZO7+laIbjcBHS5KH9AWczuMginfdUEY6NSLPVQnnESShPTwY4n3GGWJ/
- 2CK18fsFnxgnmW38ItmAS9ucAQ8CPl8roIcr0ybDR+VlDQ1Sz/swqA5bchuUsDulOEXzBpTJL
- jeFFUGTvi9XMAZbGatYuRN7gLw2jx/L52CKPoxN9qS55zbC3gX6wm9Jkk2XiIcx8eVRPosl14
- x11Vk4hOqgszUz8O9y6iHwIA275czjUukrLvqSQ==
+In-Reply-To: <b094bf63-dd4e-e5e0-812c-957b1f11805a@hauke-m.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 8/16/20 1:59 PM, Hauke Mehrtens wrote:
+ 
+> Thank you for the review Sergei.
 
---f+W+jCU1fRNres8c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   You're welcome. :-)
 
-On Sun, Aug 16, 2020 at 04:50:58PM +0200, Andreas Kemnade wrote:
-> Hi,
->=20
-> Seems that we have different hardware, so the first question is
-> first the most interesting thing: how much does the hw actually differ,
-> especially do they require different device trees?
->=20
-> Can you provide me a photo of your hardware?
-> Or is it a Shine 3?
+[...]
+>>> Add Cascoda CA8210 6LoWPAN controller to device tree.
+>>>
+>>> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+>>> ---
+>>>   arch/mips/boot/dts/img/pistachio_marduk.dts | 22 +++++++++++++++++++++
+>>>   1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/arch/mips/boot/dts/img/pistachio_marduk.dts
+>>> b/arch/mips/boot/dts/img/pistachio_marduk.dts
+>>> index ea11a21b133b..633a41954cc0 100644
+>>> --- a/arch/mips/boot/dts/img/pistachio_marduk.dts
+>>> +++ b/arch/mips/boot/dts/img/pistachio_marduk.dts
+>>> @@ -75,6 +75,28 @@
+>>>       VDD-supply = <&internal_dac_supply>;
+>>>   };
+>>>   +&spfi0 {
+>>> +    status = "okay";
+>>> +    pinctrl-0 = <&spim0_pins>, <&spim0_cs0_alt_pin>,
+>>> <&spim0_cs2_alt_pin>, <&spim0_cs3_alt_pin>, <&spim0_cs4_alt_pin>;
+>>> +    pinctrl-names = "default";
+>>> +
+>>> +    cs-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>, <&gpio0 2
+>>> GPIO_ACTIVE_HIGH>,
+>>> +            <&gpio1 12 GPIO_ACTIVE_HIGH>, <&gpio1 13 GPIO_ACTIVE_HIGH>;
+>>> +
+>>> +    ca8210: ca8210@0 {
+>>
+>>    The device nodes are supposed to have the generic names...
+> 
+> I am not referencing this, so I can also remove it:
+> 	ca8210@0 {
 
-It is a Shine 2HD
+   I said name, not label. :-)
 
->=20
-> Mine is at https://misc.andi.de1.cc/tolino2.jpg
+> Otherwise, would this be ok:
+> 	ieee802154: ca8210@0 {
+> 
+>>> +        status = "okay";
+> 
+> This status = "okay"; can be removed.
 
-Mine:
+   Yes, and probably even shpould be removed...
 
-https://raw.githubusercontent.com/wiki/neuschaefer/linux/Tolino-Shine2HD.jpg
+>>> +        compatible = "cascoda,ca8210";
+>>> +        reg = <0>;
+>>> +        spi-max-frequency = <4000000>;
+>>
+>>    Only 4MHz?
+> 
+> The vendor device tree also use 4MHz:
+> https://github.com/CreatorDev/openwrt/blob/ci40/target/linux/pistachio/dts/pistachio/pistachio_marduk.dts#L34
+> The device tree binding says "Maximum clock speed, should be *less than*
+> 4000000", it could even make sense to switch this to 3MHz.
+> https://www.kernel.org/doc/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
 
+   It just sounds too low SPI frequency, those a usually one order higher...
 
-It appears to be the next PCB revision (+4A3 instead of +4A2), but I
-think the PCB layout looks the same. The Realtek-based Wifi module is
-exactly where the CyberTan WC121 was.
+> I do not have the datasheet for the cascoda,ca8210.
+> 
+>>> +        spi-cpol;
+>>> +        reset-gpio = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+>>> +        irq-gpio = <&gpio2 12 GPIO_ACTIVE_HIGH>;
+>>> +        extclock-enable;
+>>> +        extclock-freq = <16000000>;
+>>> +        extclock-gpio = <2>;
+>>
+>>    Hm, strange spec for a GPIO prop, shouldn't they all be alike?
+> 
+> I am also getting this compile warning:
+> arch/mips/boot/dts/img/pistachio_marduk.dts:135.3-23: Warning
+> (gpios_property): /spi@18100f00/ca8210@0:extclock-gpio: cell 0 is not a
+> phandle reference
+> arch/mips/boot/dts/img/pistachio_marduk.dts:126.19-136.4: Warning
+> (gpios_property): /spi@18100f00/ca8210@0: Missing property '#gpio-cells'
+> in node /clk@18144000 or bad phandle (referred from extclock-gpio[0])
 
+     Expected. :-)
 
-Jonathan
+> I do not know how to fix this.
 
---f+W+jCU1fRNres8c
-Content-Type: application/pgp-signature; name="signature.asc"
+> The binding is defined here:
+> https://www.kernel.org/doc/Documentation/devicetree/bindings/net/ieee802154/ca8210.txt
 
------BEGIN PGP SIGNATURE-----
+   Have to fix the bindings somehow, "extclock-gpio" was a bad name...
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl85V3cACgkQCDBEmo7z
-X9udTRAAnqYWkdOI8tX0fQFUnKd/EwOkrg7Jrg5utNCvVidT3o0nRwjgEAc551f0
-LQSR2+dKjkr7EigcA9YYj0I3v0PJ1CgQuS/xK6mZ/D/YySVg3phF+wlNb8SJ5lcq
-9NRetjWtVTlNatzsADLncF/ZqoZlPo4llgjW0kt/+60mc7CPgtpsEE+9GsFnb/k4
-dw7aisPgGzoMPbbeTEDkPJl5Bik3WfjMAd002dsu/GnHLfEj+XDmI7CVLfz51bvz
-abkkvAYcAIcyPEcGfg714qK9nR1a7HuVGz3dV0A8ZeCTl0IRn1MDpR/6LZJT53y+
-HM1cIV1YfLPU4gEImoymX3pDvhE2DctceEzfw84ng/mhxLqzBGFm8qh5reihwva2
-TiOxZqcKTIMqqfV1nhRwSeahhX8eLoXkfAQ1jbKNCoLFZuvOsQpKkFetUDYXUYUE
-CTwqYrxe67UO3b8lBA82QAfg9fQBnKkczF5euZR3bsFChfoU1QDOGJDt3Si+LNkq
-ILFU9thdfyAH5qeRr4gKq7DecEZnGLz3+ql6/ePNrGwslIz2aicqTNW1Q09xwgxQ
-KerJAbQn+R+kLkLxkOL5+RgAd0VpZAivt62GkDztYRKAHXPtWv9iZDNRBzMfxEQu
-Wzd2yhpQ81slPry7HEM2J4zcy+VraDDvetO/6ZhQzvQXncXG47o=
-=ksBD
------END PGP SIGNATURE-----
+> Hauke
 
---f+W+jCU1fRNres8c--
+MBR, Sergei
