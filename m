@@ -2,196 +2,152 @@ Return-Path: <SRS0=yifd=B2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC1BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5793BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F46020829
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 297D02067C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:23:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wy7jjy9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgHPTHz (ORCPT
+        id S1726699AbgHPTXn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 15:07:55 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:25279 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725873AbgHPTHt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Aug 2020 15:07:49 -0400
-X-IronPort-AV: E=Sophos;i="5.76,321,1592838000"; 
-   d="scan'208";a="54478021"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 17 Aug 2020 04:07:48 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 107FF40062C7;
-        Mon, 17 Aug 2020 04:07:44 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 1/3] pinctrl: sh-pfc: r8a7790: Add CAN pins, groups and functions
-Date:   Sun, 16 Aug 2020 20:07:30 +0100
-Message-Id: <20200816190732.6905-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Sun, 16 Aug 2020 15:23:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgHPTXl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 15:23:41 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9181AC061786;
+        Sun, 16 Aug 2020 12:23:40 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id t15so10597542edq.13;
+        Sun, 16 Aug 2020 12:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OI2ilMyT/T1bEBIiLjqqyPUgBfPn1XCfDm/gphRm5kg=;
+        b=Wy7jjy9Gv9ZxM3v3dIC72o7hwek0w6VthWQA6+9Rhgr0UP6FbU6fRqt+unlz20F1Nl
+         ntLm4n3zhGJiyeQUS3OwrfN1eE5QJc/oJibwlek9/ZJrbfCv3rS7C1TyWoAC68wixtV+
+         2mO+VM2PXpe6Kx/PTnqvaw+Pi88NIAaopHQyUJQddN7fpxtPJyRUdOewpr1I8CTJXMX9
+         2Uj4Y3RpPkGK9QLSSTdWxSEGxqeW1Q95YbYYb1grTJG5NHI2253mPW5qIt+8jCrb+20V
+         vVp+/XNv+AfhZYgzTP+7yu2X6476i5Fj1qbCdA+FtmONj2OllsNzBIyaW9fzeSuQdt7I
+         lVHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OI2ilMyT/T1bEBIiLjqqyPUgBfPn1XCfDm/gphRm5kg=;
+        b=pDu/jf5+Scd6//TuLq8QgC5v6qhjz0NwNEnvLPfp3A7Nijl8G0/yVXZIAr4jS1on2G
+         V2eRnmyGMp6f70XoBc8klv17WKivLpHesTAk+ixD9FyIp7pi2HTiWhoDaMSFnnjUE2uZ
+         RC6yWNd1kZ2rUoAKddqKQYxRrft2yESfbKKjhnIXrfpxdNHgp+3hBKCmh4kxkfUZWD3W
+         CD1aVnq+8uaHl1KS2JJ/jvgd572zspfIaAv/spCGbf653ZNt2M++JbS3TorR+62VGVgx
+         7K2Wj02kT8zs4O6B4ZtIu13/+UIfki+mt+TEzDgBwFvUIUEJmhwIfe755Nj7sdwvPKrZ
+         Ze7A==
+X-Gm-Message-State: AOAM531iUV/ZmQrdQRZp+n4JRHV/uEqn4NH1tWvghPZhbWtJ942dSQiS
+        HD8u20o+NEC8lSH+bmNfx7g=
+X-Google-Smtp-Source: ABdhPJxKWoES0hitdZBraV7D3zk3EQ6vqSWM5VgAcaUp0prurr7PKW8o5uA2fGbnR0sfGdHRProVYw==
+X-Received: by 2002:a05:6402:7d5:: with SMTP id u21mr12493663edy.341.1597605819001;
+        Sun, 16 Aug 2020 12:23:39 -0700 (PDT)
+Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id dr21sm13649255ejc.112.2020.08.16.12.23.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Aug 2020 12:23:38 -0700 (PDT)
+Subject: Re: [PATCH 1/3] usb: dwc3: of-simple: Add compatible for rk3328
+To:     Cameron Nemo <cnemo@tutanota.com>,
+        Devicetree <devicetree@vger.kernel.org>,
+        Linux Arm Kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Rockchip <linux-rockchip@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     robh+dt@kernel.org, Heiko <heiko@sntech.de>, balbi@kernel.org,
+        gregkh@linuxfoundation.org
+References: <MEsGWB_--3-2@tutanota.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <4482f04a-d75d-6ede-acae-eb3fc7364130@gmail.com>
+Date:   Sun, 16 Aug 2020 21:23:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <MEsGWB_--3-2@tutanota.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add pins, groups and functions for the CAN0 and CAN1 interface.
+Hi Cameron,
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c | 86 +++++++++++++++++++++++++++-
- 1 file changed, 84 insertions(+), 2 deletions(-)
+Use plain text mode for patches.
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-index 39ba1e7cc1c3..0863c412b3e1 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-@@ -1871,6 +1871,68 @@ static const unsigned int avb_gmii_mux[] = {
- 	AVB_TX_EN_MARK, AVB_TX_ER_MARK, AVB_TX_CLK_MARK,
- 	AVB_COL_MARK,
- };
-+/* - CAN0 ----------------------------------------------------------------- */
-+static const unsigned int can0_data_pins[] = {
-+	/* CAN0 RX */
-+	RCAR_GP_PIN(1, 17),
-+	/* CAN0 TX */
-+	RCAR_GP_PIN(1, 19),
-+};
-+static const unsigned int can0_data_mux[] = {
-+	CAN0_RX_MARK,
-+	CAN0_TX_MARK,
-+};
-+static const unsigned int can0_data_b_pins[] = {
-+	/* CAN0 RXB */
-+	RCAR_GP_PIN(4, 5),
-+	/* CAN0 TXB */
-+	RCAR_GP_PIN(4, 4),
-+};
-+static const unsigned int can0_data_b_mux[] = {
-+	CAN0_RX_B_MARK,
-+	CAN0_TX_B_MARK,
-+};
-+static const unsigned int can0_data_c_pins[] = {
-+	/* CAN0 RXC */
-+	RCAR_GP_PIN(4, 26),
-+	/* CAN0 TXC */
-+	RCAR_GP_PIN(4, 23),
-+};
-+static const unsigned int can0_data_c_mux[] = {
-+	CAN0_RX_C_MARK,
-+	CAN0_TX_C_MARK,
-+};
-+static const unsigned int can0_data_d_pins[] = {
-+	/* CAN0 RXD */
-+	RCAR_GP_PIN(4, 26),
-+	/* CAN0 TXD */
-+	RCAR_GP_PIN(4, 18),
-+};
-+static const unsigned int can0_data_d_mux[] = {
-+	CAN0_RX_D_MARK,
-+	CAN0_TX_D_MARK,
-+};
-+/* - CAN1 ----------------------------------------------------------------- */
-+static const unsigned int can1_data_pins[] = {
-+	/* CAN1 RX */
-+	RCAR_GP_PIN(1, 22),
-+	/* CAN1 TX */
-+	RCAR_GP_PIN(1, 18),
-+};
-+static const unsigned int can1_data_mux[] = {
-+	CAN1_RX_MARK,
-+	CAN1_TX_MARK,
-+};
-+static const unsigned int can1_data_b_pins[] = {
-+	/* CAN1 RXB */
-+	RCAR_GP_PIN(4, 7),
-+	/* CAN1 TXB */
-+	RCAR_GP_PIN(4, 6),
-+};
-+static const unsigned int can1_data_b_mux[] = {
-+	CAN1_RX_B_MARK,
-+	CAN1_TX_B_MARK,
-+};
- /* - DU RGB ----------------------------------------------------------------- */
- static const unsigned int du_rgb666_pins[] = {
- 	/* R[7:2], G[7:2], B[7:2] */
-@@ -3946,7 +4008,7 @@ static const unsigned int vin3_clk_mux[] = {
- };
- 
- static const struct {
--	struct sh_pfc_pin_group common[290];
-+	struct sh_pfc_pin_group common[296];
- 	struct sh_pfc_pin_group automotive[1];
- } pinmux_groups = {
- 	.common = {
-@@ -3963,6 +4025,12 @@ static const struct {
- 		SH_PFC_PIN_GROUP(avb_mdio),
- 		SH_PFC_PIN_GROUP(avb_mii),
- 		SH_PFC_PIN_GROUP(avb_gmii),
-+		SH_PFC_PIN_GROUP(can0_data),
-+		SH_PFC_PIN_GROUP(can0_data_b),
-+		SH_PFC_PIN_GROUP(can0_data_c),
-+		SH_PFC_PIN_GROUP(can0_data_d),
-+		SH_PFC_PIN_GROUP(can1_data),
-+		SH_PFC_PIN_GROUP(can1_data_b),
- 		SH_PFC_PIN_GROUP(du_rgb666),
- 		SH_PFC_PIN_GROUP(du_rgb888),
- 		SH_PFC_PIN_GROUP(du_clk_out_0),
-@@ -4265,6 +4333,18 @@ static const char * const avb_groups[] = {
- 	"avb_gmii",
- };
- 
-+static const char * const can0_groups[] = {
-+	"can0_data",
-+	"can0_data_b",
-+	"can0_data_c",
-+	"can0_data_d",
-+};
-+
-+static const char * const can1_groups[] = {
-+	"can1_data",
-+	"can1_data_b",
-+};
-+
- static const char * const du_groups[] = {
- 	"du_rgb666",
- 	"du_rgb888",
-@@ -4706,13 +4786,15 @@ static const char * const vin3_groups[] = {
- };
- 
- static const struct {
--	struct sh_pfc_function common[55];
-+	struct sh_pfc_function common[57];
- 	struct sh_pfc_function automotive[1];
- } pinmux_functions = {
- 	.common = {
- 		SH_PFC_FUNCTION(audio_clk),
- 		SH_PFC_FUNCTION(avb),
- 		SH_PFC_FUNCTION(du),
-+		SH_PFC_FUNCTION(can0),
-+		SH_PFC_FUNCTION(can1),
- 		SH_PFC_FUNCTION(du0),
- 		SH_PFC_FUNCTION(du1),
- 		SH_PFC_FUNCTION(du2),
--- 
-2.17.1
+Before you introduce a new compatible string, your patch serie must
+change the documents first in version 2.
+See:
+
+dwc3.txt
+rockchip,dwc3.txt
+
+(TODO but not now) Both documents are in need for a conversion to yaml.
+
+Also sort nodes without reg alphabetically in rk3328-rock64.dts.
+
+&u2phy {}
+&uart2 {}
+&usb20_otg {}
+&usbdrd3 {}
+&usbdrd_dwc3 {}
+&usb_host0_ehci {}
+&usb_host0_ohci {}
+
+On 8/16/20 7:16 PM, Cameron Nemo wrote:
+> Add a compatible to be hooked into by the Rockchip rk3328 device tree.
+> 
+> The rk3399 compatible cannot be reused because the rk3328 SoCs may
+> require a specialized driver in the future, and old device trees must
+> remain commpatible with newer kernels.
+> 
+> Signed-off-by: Cameron Nemo <cnemo@tutanota.com>
+> ---
+> drivers/usb/dwc3/dwc3-of-simple.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+> index 7df115012935..54f38e434028 100644
+> --- a/drivers/usb/dwc3/dwc3-of-simple.c
+> +++ b/drivers/usb/dwc3/dwc3-of-simple.c
+> @@ -49,7 +49,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+> * Some controllers need to toggle the usb3-otg reset before trying to
+> * initialize the PHY, otherwise the PHY times out.
+> */
+> -	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
+
+> +	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
+> +	    of_device_is_compatible(np, "rockchip,rk3328-dwc3"))
+
+sort alphabetically.
+
+> simple->need_reset = true;
+> 
+> simple->resets = of_reset_control_array_get(np, false, true,
+> @@ -171,6 +172,7 @@ static const struct dev_pm_ops dwc3_of_simple_dev_pm_ops = {
+> };
+> 
+> static const struct of_device_id of_dwc3_simple_match[] = {
+> +	{ .compatible = "rockchip,rk3328-dwc3" },
+> { .compatible = "rockchip,rk3399-dwc3" },
+> { .compatible = "xlnx,zynqmp-dwc3" },
+> { .compatible = "cavium,octeon-7130-usb-uctl" },
+> --
+> 2.28.0
+> 
+> 
+> 
 
