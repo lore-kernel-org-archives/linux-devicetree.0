@@ -2,131 +2,273 @@ Return-Path: <SRS0=yifd=B2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FABC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 11:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B27EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 12:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64DB120760
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 11:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D380A207FB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 12:55:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Eqegr4SU"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gCcwTyQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbgHPLiw (ORCPT
+        id S1727930AbgHPMzU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 07:38:52 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37950 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgHPLf6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 07:35:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597577759; x=1629113759;
-  h=to:cc:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=4tTb9I93XH7QwyWX5/PO8LI1xvs2muBk6/ZVUvGSdWw=;
-  b=Eqegr4SUyWX8RP165xsaxM6ph2UfmFHW0tjP6qSvTDUN9X6tlamOlSUH
-   DlWfoPXlgqe96pd0xEMcnaDEXXKK2rF+lz5AZHncfstQ35U8um32K7cqU
-   u4G9X+BAcqz1Nw8u6aWXoFRwHjLTe8iIYX7ZujKF9MmjbyqmSwBfUsOiP
-   c=;
-X-IronPort-AV: E=Sophos;i="5.76,320,1592870400"; 
-   d="scan'208";a="67056199"
-Subject: Re: [PATCH v9 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna Labs
- Memory Controller EDAC
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 16 Aug 2020 11:35:56 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 576D228212D;
-        Sun, 16 Aug 2020 11:35:51 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 16 Aug 2020 11:35:50 +0000
-Received: from [192.168.3.188] (10.43.160.156) by EX13D01EUB001.ant.amazon.com
- (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 16 Aug
- 2020 11:35:42 +0000
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <hhhawa@amazon.com>,
-        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <eitan@amazon.com>
-References: <20200728095155.18506-1-talel@amazon.com>
- <20200728095155.18506-3-talel@amazon.com> <20200815183358.GE25814@zn.tnic>
- <5d516c64-ecd8-6f36-5f95-6708fe0f3fd5@amazon.com>
- <20200816112244.GG21914@zn.tnic>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <241ac8f0-964b-10d1-2d7b-eb9f435748a6@amazon.com>
-Date:   Sun, 16 Aug 2020 14:35:37 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sun, 16 Aug 2020 08:55:20 -0400
+Received: from mout.gmx.net ([212.227.15.18]:49983 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbgHPMzP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Aug 2020 08:55:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597582482;
+        bh=Ia4FWP2nK5MD+2PSWX4oQICJvy6/O83E4cXk0AAg0/Y=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=gCcwTyQCDwd1/w8Pt1jq1lrJd2IjnzlZVZKfXZRpsa5S+5Km+u8P8CqhdBUdoFZJc
+         A9oFxpru3QEN5TRJxrWu71GDc11ttkOe1Qur5hfYFPT5Az7xbsm/NLaEIYnXy39bGN
+         dnSbRVIw7AKzhlTXstMN/4JxQC+k5Z07jRwdRP7c=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1Ycr-1k5MVd2GSJ-0034nf; Sun, 16
+ Aug 2020 14:54:42 +0200
+Date:   Sun, 16 Aug 2020 14:54:41 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, marcel.ziswiler@toradex.com,
+        sebastien.szymanski@armadeus.com, rjones@gateworks.com,
+        leoyang.li@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        j.neuschaefer@gmx.net, letux-kernel@openphoenux.org
+Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine 2
+ HD
+Message-ID: <20200816125247.GA103070@latitude>
+References: <20200815193336.21598-1-andreas@kemnade.info>
+ <20200815193336.21598-3-andreas@kemnade.info>
 MIME-Version: 1.0
-In-Reply-To: <20200816112244.GG21914@zn.tnic>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.43.160.156]
-X-ClientProxiedBy: EX13D01UWA002.ant.amazon.com (10.43.160.74) To
- EX13D01EUB001.ant.amazon.com (10.43.166.194)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Content-Disposition: inline
+In-Reply-To: <20200815193336.21598-3-andreas@kemnade.info>
+X-Provags-ID: V03:K1:1RTQxrK+hy36BCZaHxUP0jZ+1j5TNtLnJOdYLY48Gz48YMrBHPY
+ PKcq0EtT12y6EOReemwcoHAE4ji8lLFnIj+WXyiXcN+vbww4r+tp/kDjuj8D/jR/rx1/8Nj
+ yC6nXFPMD0bk9+FWO8pedMb7hlQtpOGvbDw5BvlLRRaQI9Ib/nfMpIUltGncPvnHI6uX7cV
+ F1iOZlL6vSHye95vzG/vw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xnuX2zYEO6Q=:xHQWSUPObfA6uuyfBZmDZf
+ 2GRIGOJiKEhKICQlqYIp+5gRJqLNolQtZQoQzgcc4GsuyTmhzvPc6uneQKNoZcC0P7h7zMj6R
+ D6yySqhKWK0Z+od2cqUZa2bJmkjQO0kfIFYoq9UUYHv1WW/Wfcx7qPA24hH9Kc8+iw4iLLHDj
+ cJ86xcsvAxxSUyx5kAINTOG79W8q5+LvrXSbaw8KgP4pZraVrxqDTPOZWM3wsPNI8buKIe7i8
+ mUAV9BSf1M6GNZB1X36Kee8O5xk2KuZ66SMbApAEY8VyPHoQmbaTlubQle2pTlnoGG11Rm5Ti
+ t/P5e/SKlhw89l/Gu9pLhWFUTqq/sZ6sZRU9Q8XLPZCa1MeuRapdtUqY+F2uH34MZxCAZAVHJ
+ kwxI7JtK5yjfszptFoSUvsyitOy7A1STZ9YqSCrqq6tt/2bNC2jAG+vaZRh4wMM1xLEgJzBxe
+ aA7GbcdBpCHd/liH2PdNqHnAygnISKVNWXkmMzQZ/QYLRxtAHTM60X1m5CVyjRyVJ7+gP02VG
+ uZMVPmEnl6GJkLKgOiWFWkCbQLIaac3JMA3U0n5XNfxoBq2I9ogI4XYEPFDDrCSKfQ2owN5bs
+ ZislQc5KnDi56u6goBslQFw3v9kFATSa5aHDlxvFgdbSeUe3bSyqogXMxxY04g5gyFv75zkVs
+ li4Fye4mLxoR6ogFcY60b8nNOrfq2dxDdeiammzz8NBrP3fmpkMISyIt+eeI9+Q6LaxjM6+Ky
+ Sb7Y523GfCyXiOAWjltzU/AW/+t2gaVf1pHp+GhvxIlJg1PD6r1PTGl09GM11mLC9EJfzFsxX
+ 9zZ5noNmMkNkPmwEJVmZuprPlNsGeJBkUqOFo735m40S3COaYEMM/J7D4gf9juEK7oi/3Hp/2
+ 9E3vGX0NOxzsipVEKW+lByv1J6XaZX933WzwK6Ve3GrHIGrrtiOq8xEM2N1vFq4K6f5v2qVvp
+ 3jQYYkUHKX5GVE/sYYB6In+WLc3JjPKU3CefTZX+l4b1sXcSuUxVjV9hn2pkCtPjJwj1a8meA
+ /29gLSp9nvpg9ia+y1IGo4Sysq5pI3vqN+8Pdz/CzCQND7OX0718IY9wgBV1BhJTRTKpei3LT
+ 3EMjBYAMia/crBuRyl+kNLjHqB8o3WYxstQ14LZYUv+a9U1JqQC96nKhkBUu2pbx5giIZioVE
+ rwA/I43g+g9RlqfuYWNL5JQEeFByKrOupzSylHXWCglXLcwPvgVvzQ6nY7rDQnid22WBmAcy9
+ WKF4R4yWVS+wu5YQllt94iRCuPPJOV05bvYq/jA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 8/16/2020 2:22 PM, Borislav Petkov wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
->
->
->
-> On Sun, Aug 16, 2020 at 12:17:31PM +0300, Shenhar, Talel wrote:
->> Let me know what you think.
-> Well, devm_al_mc_edac_free() devm_al_mc_edac_del() look like useless
-> wrappers to me and can be removed and you can use edac_mc_del_mc() and
-> edac_mc_free() directly. But then you need to cast them in an ugly way
-> so that it builds:
->
->          ret = devm_add_action(&pdev->dev, (void (*)(void *data))edac_mc_free, mci);
->
-> I guess we can leave them as is and then lift them into the EDAC core if
-> someone else wants to do the same devm_* thing.
->
-> al_mc_edac_get_scrub_mode() doesn't need a prefix because it is used
-> only once and the compiler is simply inlining it so you can forget the
-> stack trace visibility:
->
-> $ readelf -s drivers/edac/al_mc_edac.ko | grep scrub
-> $
->
-> The others are fine, I guess, since they're function pointers and cannot be
-> inlined as such so you want them prefixed:
->
-> $ readelf -s drivers/edac/al_mc_edac.ko | grep al_mc_edac
->      23: 00000000     0 FILE    LOCAL  DEFAULT  ABS al_mc_edac.c
->      25: 00000000     4 FUNC    LOCAL  DEFAULT    1 devm_al_mc_edac_free
->      27: 00000004     4 FUNC    LOCAL  DEFAULT    1 devm_al_mc_edac_del
->      31: 00000124    24 FUNC    LOCAL  DEFAULT    1 al_mc_edac_irq_handler_ce
->      35: 00000260    24 FUNC    LOCAL  DEFAULT    1 al_mc_edac_irq_handler_ue
->      36: 00000278    56 FUNC    LOCAL  DEFAULT    1 al_mc_edac_check
->      37: 000002b0   680 FUNC    LOCAL  DEFAULT    1 al_mc_edac_probe
->      47: 00000000    20 FUNC    LOCAL  DEFAULT    3 al_mc_edac_driver_init
->      51: 00000000    12 FUNC    LOCAL  DEFAULT    5 al_mc_edac_driver_exit
->      53: 00000000   392 OBJECT  LOCAL  DEFAULT   16 al_mc_edac_of_match
->      59: 00000000   104 OBJECT  LOCAL  DEFAULT   20 al_mc_edac_driver
->      61: 00000000     0 FILE    LOCAL  DEFAULT  ABS al_mc_edac.mod.c
->      88: 00000000   392 OBJECT  GLOBAL DEFAULT   16 __mod_of__al_mc_edac_of_m
->
-> Thx.
-Thanks. shall be part of v10.
->
-> --
-> Regards/Gruss,
->      Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+--H+4ONPRPur6+Ovig
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Aug 15, 2020 at 09:33:36PM +0200, Andreas Kemnade wrote:
+> This adds a devicetree for the Tolino Shine 2 HD Ebook reader. It is based
+> on boards marked with "37NB-E60QF0+4A2". It is equipped with an i.MX6SL
+> SoC.
+>=20
+> Expected to work:
+> - Buttons
+> - Wifi
+> - Touchscreen
+> - LED
+> - uSD
+> - USB
+> - RTC
+>=20
+> Not working due to missing drivers:
+> - Backlight (requires NTXEC driver)
+> - EPD
+>=20
+> Not working due to unknown reasons:
+> - deep sleep (echo standby >/sys/power/state works),
+>   wakeup fails when imx_gpc_pre_suspend(true) was called.
+>=20
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Reason for RFC: The suspend trouble might be caused by bad devicetree.
+> But as the devicetree is already useful I decided to submit it.
+[...]
+> +++ b/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
+> @@ -0,0 +1,582 @@
+> +// SPDX-License-Identifier: (GPL-2.0)
+
+I don't think the parentheses are required when you don't have a logical
+operator (OR) in the SPDX expression.
+
+> +&i2c1 {
+> +	pinctrl-names =3D "default","sleep";
+> +	pinctrl-0 =3D <&pinctrl_i2c1>;
+> +	pinctrl-1 =3D <&pinctrl_i2c1_sleep>;
+> +	status =3D "okay";
+> +
+> +	/* TODO: embedded controller at 0x43 (driver missing) */
+
+Sorry for the delay, BTW. I'm still (slowly) working on v2.
+
+> +	ricoh619: pmic@32 {
+> +		compatible =3D "ricoh,rc5t619";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_ricoh_gpio>;
+> +		reg =3D <0x32>;
+> +		interrupt-parent =3D <&gpio5>;
+> +		interrupts =3D <11 IRQ_TYPE_EDGE_FALLING>;
+> +		system-power-controller;
+> +
+> +		regulators {
+
+How did you derive the regulator voltages?
+
+> +	pinctrl_hog: hoggrp {
+> +		fsl,pins =3D <
+> +			MX6SL_PAD_LCD_DAT0__GPIO2_IO20	0x79
+> +			MX6SL_PAD_LCD_DAT1__GPIO2_IO21	0x79
+> +			MX6SL_PAD_LCD_DAT2__GPIO2_IO22	0x79
+> +			MX6SL_PAD_LCD_DAT3__GPIO2_IO23	0x79
+> +			MX6SL_PAD_LCD_DAT4__GPIO2_IO24	0x79
+> +			MX6SL_PAD_LCD_DAT5__GPIO2_IO25	0x79
+> +			MX6SL_PAD_LCD_DAT6__GPIO2_IO26	0x79
+> +			MX6SL_PAD_LCD_DAT7__GPIO2_IO27	0x79
+> +			MX6SL_PAD_LCD_DAT8__GPIO2_IO28	0x79
+> +			MX6SL_PAD_LCD_DAT9__GPIO2_IO29	0x79
+> +			MX6SL_PAD_LCD_DAT10__GPIO2_IO30	0x79
+> +			MX6SL_PAD_LCD_DAT11__GPIO2_IO31	0x79
+> +			MX6SL_PAD_LCD_DAT12__GPIO3_IO00	0x79
+> +			MX6SL_PAD_LCD_DAT13__GPIO3_IO01	0x79
+> +			MX6SL_PAD_LCD_DAT14__GPIO3_IO02	0x79
+> +			MX6SL_PAD_LCD_DAT15__GPIO3_IO03	0x79
+> +			MX6SL_PAD_LCD_DAT16__GPIO3_IO04	0x79
+> +			MX6SL_PAD_LCD_DAT17__GPIO3_IO05	0x79
+> +			MX6SL_PAD_LCD_DAT18__GPIO3_IO06	0x79
+> +			MX6SL_PAD_LCD_DAT19__GPIO3_IO07	0x79
+> +			MX6SL_PAD_LCD_DAT20__GPIO3_IO08	0x79
+> +			MX6SL_PAD_LCD_DAT21__GPIO3_IO09	0x79
+> +			MX6SL_PAD_LCD_DAT22__GPIO3_IO10	0x79
+> +			MX6SL_PAD_LCD_DAT23__GPIO3_IO11	0x79
+> +			MX6SL_PAD_LCD_CLK__GPIO2_IO15		0x79
+> +			MX6SL_PAD_LCD_ENABLE__GPIO2_IO16	0x79
+> +			MX6SL_PAD_LCD_HSYNC__GPIO2_IO17	0x79
+> +			MX6SL_PAD_LCD_VSYNC__GPIO2_IO18	0x79
+> +			MX6SL_PAD_LCD_RESET__GPIO2_IO19	0x79
+> +			MX6SL_PAD_KEY_COL3__GPIO3_IO30		0x79
+> +			MX6SL_PAD_KEY_ROW7__GPIO4_IO07		0x79
+> +			MX6SL_PAD_ECSPI2_MOSI__GPIO4_IO13	0x79
+> +			MX6SL_PAD_KEY_COL5__GPIO4_IO02		0x79
+> +			MX6SL_PAD_KEY_ROW6__GPIO4_IO05		0x79
+> +		>;
+> +	};
+
+Why are there so many hogged pins? Will some of them receive a proper
+configuration once the EPDC driver is implemented?
+
+> +&snvs_rtc {
+> +	/* we are using the RTC in the PMIC, not disabled in imx6sl.dtsi */
+> +	status =3D "disabled";
+
+This comment sounds a bit ambiguous (and this potentially confusing). Perha=
+ps:
+
++	/* we are using the RTC in the PMIC, but this one is not disabled in imx6=
+sl.dtsi */
+
+Or even just:
+
++	/* we are using the RTC in the PMIC */
+
+> +&usdhc2 {
+> +	pinctrl-names =3D "default", "state_100mhz", "state_200mhz", "sleep";
+> +	pinctrl-0 =3D <&pinctrl_usdhc2>;
+> +	pinctrl-1 =3D <&pinctrl_usdhc2_100mhz>;
+> +	pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>;
+> +	pinctrl-3 =3D <&pinctrl_usdhc2_sleep>;
+> +	non-removable;
+> +	status =3D "okay";
+> +};
+
+IMHO, please add a comment saying what this MMC controller is connected
+to (internal storage?).
+
+> +
+> +&usdhc3 {
+> +	pinctrl-names =3D "default", "state_100mhz", "state_200mhz", "sleep";
+> +	pinctrl-0 =3D <&pinctrl_usdhc3>;
+> +	pinctrl-1 =3D <&pinctrl_usdhc3_100mhz>;
+> +	pinctrl-2 =3D <&pinctrl_usdhc3_200mhz>;
+> +	pinctrl-3 =3D <&pinctrl_usdhc3_sleep>;
+> +	vmmc-supply =3D <&reg_wifi>;
+> +	mmc-pwrseq =3D <&wifi_pwrseq>;
+> +	cap-power-off-card;
+> +	non-removable;
+> +	status =3D "okay";
+> +
+> +	/* CyberTan WC121 SDIO WiFi */
+> +};
+
+The HWCONFIG block from my Shine2HD reports RTL8189 as the Wifi chip
+(value 8 at offset 4), and kernel logs from the vendor kernel appear to
+agree that it's a realtek chip, at least (lines prefixed RTL871X).
+
+=46rom my experience with the CyberTan WC121, it has a Broadcom fullmac
+chip inside. Now I wonder where this discrepancy or variability comes
+=66rom.
+
+I guess the SDIO setup can deal with different chips (like Broadcom vs.
+Realtek) as long as the board has been designed to always use the same
+reset/power/etc. lines. I don't see any branching based on the 'Wifi'
+HWCONFIG entry in the vendor kernel, so I guess that's the case.
+
+In any case, it might be nice to also note the chip used inside the WLAN
+package (e.g. BCM43362), to make it easier for interested users to
+choose the right drivers.
+
+
+
+Kind regards,
+Jonathan Neusch=C3=A4fer
+
+--H+4ONPRPur6+Ovig
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl85LJEACgkQCDBEmo7z
+X9uWBA/+J9BFqZGeJiMiLVaVemfQQm435xVZPl+LrogqmM/KvNHcn3WDyWDaH4yr
+NLEQvNPdoXH1OGt0DHwrSPFpQCXyebKtcmWMybSKqYGKtJIsBxUAZThugqoWAcmI
+ifsaWMV3rvFsrdc1KPooYxyqTo2Mg6i6Xt5QFRvpYzgtnyhdfkKk0ihkdn7nwSf1
+DiXaFahOkddSp/0PevI1A8ftjDpTgBTvGl/uex1+VILgyAfWJiskZqX7QxlsSZk7
+urJwlNQUF1tcmKsPa9enSQqETrajVgqhVo5qy7dSpIhYKv/SRGSftFbII0nP54mr
+ERtwyZkCf3RIO+D/DWyubT282B4q7QqQRlkrcMXNoIDiXB1fCWAkO2fG9DEYH36R
+Xpv5wAntbyx332SYwJ4/P2l/6DpywwEfKeBStu1IK1rDYexS1y0uan1hbX0HwNZs
+JQUKeN7llxo8NuCoGI/S6ktfpxTNaz2KjGGmU0DFa1LGZIUXhpoDu0QPkQSidKtM
++wVng4mI9WuzR9xyHoHK9x8Zmii7G0lfosfiloJzq2b4hOc/wmtWoV5MKsNOaT36
+Q1KREnWsAUDXAdNmck8oI78RntpWwcO4YRGyiNYwCeszg6f742Ly7BDXFrBhIRMS
+k4s0kpPw4OfYljeRH/cQZZttTF4A1U3/USOHe6Jq0dR8L0NHkgI=
+=RA6Q
+-----END PGP SIGNATURE-----
+
+--H+4ONPRPur6+Ovig--
