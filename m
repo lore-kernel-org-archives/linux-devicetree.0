@@ -2,32 +2,32 @@ Return-Path: <SRS0=yifd=B2=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DA8C433E3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9315AC433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5125420866
-	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4BB20829
+	for <linux-devicetree@archiver.kernel.org>; Sun, 16 Aug 2020 19:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgHPTHn (ORCPT
+        id S1729545AbgHPTID (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 15:07:43 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:25279 "EHLO
+        Sun, 16 Aug 2020 15:08:03 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:45739 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725873AbgHPTHl (ORCPT
+        by vger.kernel.org with ESMTP id S1725873AbgHPTIB (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Aug 2020 15:07:41 -0400
+        Sun, 16 Aug 2020 15:08:01 -0400
 X-IronPort-AV: E=Sophos;i="5.76,321,1592838000"; 
-   d="scan'208";a="54478014"
+   d="scan'208";a="54478027"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 17 Aug 2020 04:07:38 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 17 Aug 2020 04:08:00 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C1874400618C;
-        Mon, 17 Aug 2020 04:07:35 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 30F2440062C7;
+        Mon, 17 Aug 2020 04:07:57 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Wolfgang Grandegger <wg@grandegger.com>,
@@ -42,40 +42,77 @@ Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 0/3] r8a7742 add CAN support
-Date:   Sun, 16 Aug 2020 20:07:29 +0100
-Message-Id: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/3] ARM: dts: r8a7742: Add CAN support
+Date:   Sun, 16 Aug 2020 20:07:32 +0100
+Message-Id: <20200816190732.6905-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200816190732.6905-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+Add the definitions for can0 and can1 to the r8a7742 SoC dtsi.
 
-This patch series adds CAN pins to r8a7790 PFC driver and
-adds CAN[01] nodes to r8a7742 SoC dtsi.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+ arch/arm/boot/dts/r8a7742.dtsi | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-patches applies on top of [1] (the PFC patch is dependant
-on top of patch [2])
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
-    renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
-[2] https://patchwork.kernel.org/patch/11670815/
-
-Cheers,
-Prabhakar
-
-Lad Prabhakar (3):
-  pinctrl: sh-pfc: r8a7790: Add CAN pins, groups and functions
-  dt-bindings: can: rcar_can: Add r8a7742 support
-  ARM: dts: r8a7742: Add CAN support
-
- .../devicetree/bindings/net/can/rcar_can.txt  |  3 +-
- arch/arm/boot/dts/r8a7742.dtsi                | 34 ++++++++
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c          | 86 ++++++++++++++++++-
- 3 files changed, 120 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+index 009827708bf4..0fc52b27ae64 100644
+--- a/arch/arm/boot/dts/r8a7742.dtsi
++++ b/arch/arm/boot/dts/r8a7742.dtsi
+@@ -36,6 +36,14 @@
+ 		clock-frequency = <0>;
+ 	};
+ 
++	/* External CAN clock */
++	can_clk: can {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -951,6 +959,32 @@
+ 			status = "disabled";
+ 		};
+ 
++		can0: can@e6e80000 {
++			compatible = "renesas,can-r8a7742",
++				     "renesas,rcar-gen2-can";
++			reg = <0 0xe6e80000 0 0x1000>;
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 916>,
++				 <&cpg CPG_CORE R8A7742_CLK_RCAN>, <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 916>;
++			status = "disabled";
++		};
++
++		can1: can@e6e88000 {
++			compatible = "renesas,can-r8a7742",
++				     "renesas,rcar-gen2-can";
++			reg = <0 0xe6e88000 0 0x1000>;
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 915>,
++				 <&cpg CPG_CORE R8A7742_CLK_RCAN>, <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			power-domains = <&sysc R8A7742_PD_ALWAYS_ON>;
++			resets = <&cpg 915>;
++			status = "disabled";
++		};
++
+ 		pwm0: pwm@e6e30000 {
+ 			compatible = "renesas,pwm-r8a7742", "renesas,pwm-rcar";
+ 			reg = <0 0xe6e30000 0 0x8>;
 -- 
 2.17.1
 
