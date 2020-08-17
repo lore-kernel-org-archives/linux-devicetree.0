@@ -7,87 +7,89 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCA7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2666FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E4A2072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D998F2072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597647663;
-	bh=g3IVMF+ZVvdBPOEwT/MiWL1aWCkOV5IH14nThQgHDgA=;
+	s=default; t=1597647699;
+	bh=koUbhmcCngnEsBNZcACvvTnhRk9fiKyQLj+P1iNgYWg=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sutKbf2ECocf/XXYWyM3OriAEJ1kgV3IcTCbfV++q2Oqr0zR1BUWkM6HEgUOuwRHm
-	 YSwBaN6hNQJXLZ/lKxoH7WzDy7WK7WvFGkWSue2kkVLH6YFgB9ZXi58RO32/PgPMgR
-	 MBLBpfSGipIw/y0CahW66wqNnSW1+05sRbBjm8T0=
+	b=Dpwu8j2EN5VpVWm0dJK07rbU8t3tCvBA/s93OqmagHVZp5svp/mgj9c3RFvByc/8v
+	 Ucn2Iyg67hI4LRRpdOQpnxUnwmKzT95VKauvzCHtP85uV/N9ngpc/RjQcPZh1qEo7a
+	 zjzZcaueYduz7mMye5+Z9Jbxpe1USCX0H1QdBp7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgHQHA4 (ORCPT
+        id S1726735AbgHQHBi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:00:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42014 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbgHQHAm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:00:42 -0400
+        id S1726265AbgHQHBb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:01:31 -0400
 Received: from localhost.localdomain (unknown [194.230.155.242])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4FB020758;
-        Mon, 17 Aug 2020 07:00:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA98420772;
+        Mon, 17 Aug 2020 07:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597647642;
-        bh=g3IVMF+ZVvdBPOEwT/MiWL1aWCkOV5IH14nThQgHDgA=;
+        s=default; t=1597647691;
+        bh=koUbhmcCngnEsBNZcACvvTnhRk9fiKyQLj+P1iNgYWg=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=UaO20VuITytOXCKqv7NKyiuFnOrG4/IND4PAavj1RfcaO5ChQUBjXRkcekkQR2LW/
-         s1nXg0rjVPYux+0fsZ2MWCJbvJN3MOZWhXHrP7Z5XpG0uzft2ozjPh7k9d3EGVE6aX
-         yLWq07GWHJJgCIkb30T58+Td+Jm8TN2Fw34756JQ=
+        b=CRb6neEmkLEgom4BTtEXtTyWG/70ZfUrnCle+07p2H3hV+fPg/WCKa4XRwdE30KAa
+         X8PSuen4KV7Y2InP2hs/CeaxKEUUlClUoYmehZzLynkWq60d/1+y08wBYjzgLUcBi5
+         LCeOPik3bX5jsdBOXEL/puXO4DmhV7hJCFnZCZG4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 12/13] extcon: ptn5150: Convert to .probe_new
-Date:   Mon, 17 Aug 2020 09:00:08 +0200
-Message-Id: <20200817070009.4631-13-krzk@kernel.org>
+        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 2/4] dt-bindings: arm: fsl: Add binding for Variscite Symphony board with VAR-SOM-MX8MM
+Date:   Mon, 17 Aug 2020 09:01:18 +0200
+Message-Id: <20200817070120.4937-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
-References: <20200817070009.4631-1-krzk@kernel.org>
+In-Reply-To: <20200817070120.4937-1-krzk@kernel.org>
+References: <20200817070120.4937-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 'struct i2c_device_id' argument of probe function is not used, so
-convert the driver to simpler 'probe_new' interface.
+Add a binding for the Variscite Symphony evaluation kit board with
+VAR-SOM-MX8MM System on Module.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/extcon/extcon-ptn5150.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-index 690d878c65f1..8ba706fad887 100644
---- a/drivers/extcon/extcon-ptn5150.c
-+++ b/drivers/extcon/extcon-ptn5150.c
-@@ -218,8 +218,7 @@ static int ptn5150_init_dev_type(struct ptn5150_info *info)
- 	return 0;
- }
+---
+
+Changes since v1:
+1. None
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index d8208aa56a3d..27f47ec279f4 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -345,6 +345,12 @@ properties:
+               - variscite,var-som-mx8mm   # i.MX8MM Variscite VAR-SOM-MX8MM module
+           - const: fsl,imx8mm
  
--static int ptn5150_i2c_probe(struct i2c_client *i2c,
--				 const struct i2c_device_id *id)
-+static int ptn5150_i2c_probe(struct i2c_client *i2c)
- {
- 	struct device *dev = &i2c->dev;
- 	struct device_node *np = i2c->dev.of_node;
-@@ -334,7 +333,7 @@ static struct i2c_driver ptn5150_i2c_driver = {
- 		.name	= "ptn5150",
- 		.of_match_table = ptn5150_dt_match,
- 	},
--	.probe	= ptn5150_i2c_probe,
-+	.probe_new	= ptn5150_i2c_probe,
- 	.id_table = ptn5150_i2c_id,
- };
- module_i2c_driver(ptn5150_i2c_driver);
++      - description: Variscite VAR-SOM-MX8MM based boards
++        items:
++          - const: variscite,var-som-mx8mm-symphony
++          - const: variscite,var-som-mx8mm
++          - const: fsl,imx8mm
++
+       - description: i.MX8MN based Boards
+         items:
+           - enum:
 -- 
 2.17.1
 
