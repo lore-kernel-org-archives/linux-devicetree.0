@@ -2,112 +2,62 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C28C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCFEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE8220772
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FD520829
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597647630;
+	bh=BByRPdtlmPBqiNYFQurdmSiKVxzMphseSv7+CP5W2Fw=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=r8W82Fs7x07rI9CbHRUjwUAuZkMSmU6tvFjCYWTFj8ry26tVD2RffQCoqlxSIF42d
+	 s7DCZyBkrb0sHf4TwiXDd5U+WFpmAf6xVsaADJNSOoeeqfK+w/ZgXdX4/x57RS7dEx
+	 WJoyf9GEwWAOdxvLR5VB4Q8RRZV8oqKbf4gKvNWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbgHQGwf (ORCPT
+        id S1726227AbgHQHAU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 02:52:35 -0400
-Received: from muru.com ([72.249.23.125]:40450 "EHLO muru.com"
+        Mon, 17 Aug 2020 03:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgHQGwe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 02:52:34 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 6795B80A3;
-        Mon, 17 Aug 2020 06:52:33 +0000 (UTC)
-Date:   Mon, 17 Aug 2020 09:53:00 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     "Andrew F . Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCHv4 0/6] Add initial genpd support for omap PRM driver
-Message-ID: <20200817065300.GD2994@atomide.com>
-References: <20200702154513.31859-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702154513.31859-1-tony@atomide.com>
+        id S1726220AbgHQHAS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:00:18 -0400
+Received: from localhost.localdomain (unknown [194.230.155.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94CC62078A;
+        Mon, 17 Aug 2020 07:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597647618;
+        bh=BByRPdtlmPBqiNYFQurdmSiKVxzMphseSv7+CP5W2Fw=;
+        h=From:To:Subject:Date:From;
+        b=EehskzrYLeh8tbHSTQM67ZrN76rYYsTKRoG2eA4WK2UOXYA9wYzgsk9kBZPDCAcrF
+         zsIP3qPpSN9nGkTHceVYsNSfL7gfheC3zO8mgzpj1vUDUj5GWT4u+LbdezjFaGmSA8
+         qfnC3wvZnQAoFJ/5FS4/2tV0J42BPHu0H2H5hIyA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+Date:   Mon, 17 Aug 2020 08:59:56 +0200
+Message-Id: <20200817070009.4631-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Santosh,
+Hi,
 
-* Tony Lindgren <tony@atomide.com> [200702 18:46]:
-> Hi all,
-> 
-> Here's v4 set of patches to add genpd support to the PRM (Power and Reset
-> Module) driver.
-> 
-> Initially we just add one hardware accelerator power domain for sgx,
-> and one interconnect instance for l4_abe. The rest of the SoC specific
-> domain data is probably best added one SoC at a time based on generated
-> data.
+Changes since v1:
+1. Mutex unlock fix in patch 8/13.
 
-Care to ack some of these patches? I'd like to get this into Linux next
-for v5.10 :)
-
-Regards,
-
-Tony
-
-
-> Changes since v3:
-> - Drop the unnecessary __maybe_unused as that's no longer needed
-> 
-> Changes since v2:
-> 
-> - Update binding to clarify a single power domain provider
-> 
-> - Unwrap generic domain configrations for __maybe_unused
-> 
-> Changes since v1:
-> 
-> - Dropped clocks from the binding and prm driver as there's no need
->   for them as pointed out by Tero
-> 
-> - Add checking for domain transition bit in pwrstst register as
->   pointed out by Tero
-> 
-> - Add omap_prm_domain_show_state() for CONFIG_DEBUG
-> 
-> 
-> Tony Lindgren (6):
->   dt-bindings: omap: Update PRM binding for genpd
->   soc: ti: omap-prm: Add basic power domain support
->   soc: ti: omap-prm: Configure sgx power domain for am3 and am4
->   soc: ti: omap-prm: Configure omap4 and 5 l4_abe power domain
->   ARM: dts: Configure am3 and am4 sgx for genpd and drop platform data
->   ARM: dts: Configure omap4 and 5 l4_abe for genpd and drop platform
->     data
-> 
->  .../devicetree/bindings/arm/omap/prm-inst.txt |   2 +
->  arch/arm/boot/dts/am33xx.dtsi                 |   2 +
->  arch/arm/boot/dts/am4372.dtsi                 |   2 +
->  arch/arm/boot/dts/omap4-l4-abe.dtsi           |   6 +-
->  arch/arm/boot/dts/omap4.dtsi                  |   6 +
->  arch/arm/boot/dts/omap5-l4-abe.dtsi           |   6 +-
->  arch/arm/boot/dts/omap5.dtsi                  |   6 +
->  arch/arm/mach-omap2/Kconfig                   |   1 +
->  .../omap_hwmod_33xx_43xx_interconnect_data.c  |  16 -
->  .../omap_hwmod_33xx_43xx_ipblock_data.c       |  40 ---
->  arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |   2 -
->  arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |   2 -
->  arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  33 ---
->  arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  31 --
->  drivers/soc/ti/omap_prm.c                     | 274 +++++++++++++++++-
->  15 files changed, 298 insertions(+), 131 deletions(-)
-> 
-> -- 
-> 2.27.0
-> 
+Best regards,
+Krzysztof
