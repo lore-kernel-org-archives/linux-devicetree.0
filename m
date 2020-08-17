@@ -2,99 +2,113 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C51C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39E1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D34205CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DA420674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ql+5PffL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tu3HPHWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgHQUOP (ORCPT
+        id S1726458AbgHQUPi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50160 "EHLO
+        Mon, 17 Aug 2020 16:15:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbgHQUOJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 16:14:09 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B80C061344;
-        Mon, 17 Aug 2020 13:14:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w25so18866125ljo.12;
-        Mon, 17 Aug 2020 13:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xsAai51rIb4zpMco9xIZ5n8l/j6uQ8HM/aDD4YTbjTU=;
-        b=Ql+5PffLCx1G0k/jst0OLoyNod+UKXLpkoTHsvO2UIaSMgueJIwuUYfs+rWXJI/gbc
-         UFP6fhCQgQ3YABIDnLFxMCTfgWELQAAtJjIK2uPjPPBmuHUcPc1lYYZ1C06EvZ7z+NXb
-         qXyOmYGpdCGzmmgOi7ckSmqXXlHGy3/vI+1YQuYYhPo7u+GHDpu0Ci/4bynUf0VhenC7
-         9j+W/CQrUYvx5GpXYWr5duYPujTuZkZTgvMDyk1oYkGKnGnnIGhsuKs86js4iIflN2Lp
-         rPIC21g1PvZDv2P6usjVV4i+Mq+qflIpIHzI7l6R8AamqnMPPwZXdulDh6jKCMU9PBeo
-         5owA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xsAai51rIb4zpMco9xIZ5n8l/j6uQ8HM/aDD4YTbjTU=;
-        b=Gwlxw6/EVfXO8qnhr7+IiRVAsmGcmih//tWTaqYDDh31kSWM/6XNR/S3hEZdjDBmYF
-         Rzb1Cf1JyBWukj4chYHYNFnG40eQaJSL9Olc0YJfeo5MqG2yD6YBuAU9JH3JO6V818ci
-         Y/8sC9zLpSJW5qrOasd+fopAO35G41F1XTnOBWBjpHe5gwKFyxQC+IJM83JsfgpRdMpv
-         JVpRK9afKS+tJGGAj6wJj+/xXYJfhhR+HbiUW3ms6vKJxHqv+iiQLDbLNdPk6eV23x+E
-         8BXI7fu9JyovhghPLtsd+LDA0PHziiPHuj5SZ7xaHcUIU+rL2SDgSRusukj6zK3hMfO4
-         H7gQ==
-X-Gm-Message-State: AOAM531FnngHGZnRvhzCl7L0C/jR5c88gfWmZGGVwHFZcdoOpD5+YF8U
-        99Tg3+VYbTHadzKeGGKCLlNbQsa0XnsHtnkB
-X-Google-Smtp-Source: ABdhPJykGHQPzT8NA4rxKSHmF2T84DBFXMgOY8u/Nt1GXu494jd/XQzBugXalclx80TpJNA1z53lxw==
-X-Received: by 2002:a2e:9516:: with SMTP id f22mr7666051ljh.24.1597695247494;
-        Mon, 17 Aug 2020 13:14:07 -0700 (PDT)
-Received: from wasted.omprussia.ru ([2a00:1fa0:44e:940:d3b7:2194:831f:16b4])
-        by smtp.gmail.com with ESMTPSA id c5sm5740883lfb.24.2020.08.17.13.14.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 13:14:06 -0700 (PDT)
-Subject: Re: [PATCH 2/3] dt-bindings: media: ov772x: Make bus-type mandatory
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        linux-renesas-soc@vger.kernel.org
-References: <20200817155910.255883-1-jacopo+renesas@jmondi.org>
- <20200817155910.255883-3-jacopo+renesas@jmondi.org>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <2a942333-695c-bd99-af63-7ac55682700b@gmail.com>
-Date:   Mon, 17 Aug 2020 23:14:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S1726228AbgHQUPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 16:15:38 -0400
+X-Greylist: delayed 934 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 17 Aug 2020 13:15:37 PDT
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F23C061389;
+        Mon, 17 Aug 2020 13:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=MQxwrtyOSC0pqe1VevhdSFunt/8xuDEPA6IOemddH4o=; b=Tu3HPHWaEXY96Wq4yxc3gzDq4d
+        m39dWE3VGFrwZ+xgRjkiplje1pfUG92mS0Nf9FEQq9/mCI6ldmIMUC+djq/pu/7CAIgVwOGLihIbc
+        Bs/8i/xz7FtV6zZTn9ZWhOZZJurqYSPdirLVVF14700DDi6oKYlNpZuiqrM9GuMrmQSM=;
+Received: from p5dcc3306.dip0.t-ipconnect.de ([93.204.51.6] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k7lXa-000549-1W; Mon, 17 Aug 2020 22:15:34 +0200
+Date:   Mon, 17 Aug 2020 22:15:32 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+Message-ID: <20200817221532.5d150648@aktux>
+In-Reply-To: <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
+References: <20200817133931.11785-1-aford173@gmail.com>
+        <20200817215953.59607c11@aktux>
+        <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200817155910.255883-3-jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 8/17/20 6:59 PM, Jacopo Mondi wrote:
+On Mon, 17 Aug 2020 15:02:27 -0500
+Adam Ford <aford173@gmail.com> wrote:
 
-> In order to establish required properties based on the selected
-> bus type, make the 'bus-type' property mandatory.
+> On Mon, Aug 17, 2020 at 2:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
+> >
+> > On Mon, 17 Aug 2020 08:39:31 -0500
+> > Adam Ford <aford173@gmail.com> wrote:
+> >  
+> > > The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+> > > depending on commercial or industrial temperature ratings.
+> > >
+> > > This patch expands the thermal information to include the limits of 90
+> > > and 105C for alert and critical.  It sets the coolings-cells for the
+> > > 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
+> > >
+> > > For boards who never use industrial temperatures, these can be
+> > > changed on their respective device trees with something like:
+> > >
+> > > &cpu_alert0 {
+> > >       temperature = <85000>; /* millicelsius */
+> > > };
+> > >
+> > > &cpu_crit {
+> > >       temperature = <90000>; /* millicelsius */
+> > > };
+> > >
+> > > OMAP3_THERMAL will need to be enabled.  It is off by default.
+> > >  
+> > hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
+> > got stuck somewhere. It still seems not to work. Shouldn't that patch
+> > be applied first?  
 > 
-> Binary compatibility with existing DTB is kept as the driver does not
-> enforce the property to be present, and shall fall-back to default
-> parallel bus configuration, which was the only supported bus type, if
-> the property is not specified.
+> I rebased the idle stuff, and now I get errors, so I haven't pushed it
+> yet.  I put a note that OMAP3_THERMAL is off by default, but this
+> patch would at least get the framing in there.  I know at least two of
+> us that use 1GHZ processors which are not supposed to run at that
+> speed above 90MHz, so the idea was to tolerate the higher current for
+> now, and when the idle stuff works, we'll enable the OMAP3_THERMAL by
+> default.
+> 
+yes, makes sense, so with this patch we have the choice to either
+optimize for low speeds and currents (by disabling OMAP3_THERMAL and
+1GHz) or high speeds (by enabling OMAP3_THERMAL and 1 Ghz).
 
-   Signed-off-by?
-
-[...]
-
-MBR, Sergei
+Regards,
+Andreas
