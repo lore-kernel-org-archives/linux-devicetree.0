@@ -2,172 +2,115 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F3FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE9FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3C6C20786
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9908F20786
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FEt/nY+X"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="roh64oPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgHQNmT (ORCPT
+        id S1728643AbgHQNor (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728665AbgHQNlj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 09:41:39 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46176C06134D
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 06:41:01 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v9so17526554ljk.6
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 06:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Oe4tacp/96y2oKOUNNpzoTA6Aq+PNNKI08nVOHEYABg=;
-        b=FEt/nY+X/hsm906RgF6Fdze5arGgWN3YHF2GKPU9D1DtvaC6ZsUtuNxJ4I4TIoLhnD
-         oGb1dgjjYJKHr4Y/pQKbEbEd9+rKWAFGryvnhZJ/djwJTmX32LQhtYY0q/hv/lqWWWr6
-         plE17wGz9J/ALORcLUnMpnKkxj9LqhMyNhqBmf9ZcssnjwIhwJKRztOXuua5qMK3RPAQ
-         2nrINQrPVjTcN8kdWVniIfV0Qi1r5KdxXPeqQgeyonA0d2nhWhse8SPyynJbkxf+7U8Y
-         Ck/F0WHCdm1WPLCrdjU+g+s6iRpzovkyRvXK7+UpdziWcy+wHoIPTXzAuw+PQ5paOsqn
-         jS1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Oe4tacp/96y2oKOUNNpzoTA6Aq+PNNKI08nVOHEYABg=;
-        b=ia/Zdji+YGReWZPfsoqdiuZQtw87Std5CVynwLuVsYB9GM2cLJqq8ecLAne9cQ+8Er
-         L/Jlb1gAK+LmwhsYou4gRWqbG2jUOPkJRFhj+KaigzXUNyhWlp00PKCsTHuAMKP7KVI9
-         lNyHiEVxRXjkFupx7iVIp7NBh5vOBCaxEOkah+6xLtQjU2fP7eUxhfHBNYIU2ta7Z7Pk
-         omJ4fp3N2xCZnfjVTiLu4xewcmrZ6TCHVh2BHEe6ZBG/PMPShv+ujlewT1n+7v5Cxv8W
-         oOnVSRY/ZuD/fNEF39BMek5nauA+dT0VOsNXRIUAraQV8eSprrDB+L7jCrI7P0MYcIsN
-         2rsQ==
-X-Gm-Message-State: AOAM532WvOp6XFDUjV/Jj+AgQfgf5RHWOeTkQERgX+mmJzTqILWmd+cW
-        tEHD+JGoMauYxBmQCAGVvS2wYg==
-X-Google-Smtp-Source: ABdhPJxqkSj3P2CKf96zF7I0D52GZMiFA8MAOzTaoTMYWs9Vbh1EaJBlV12xc7h1oMOynSV0zlzXeQ==
-X-Received: by 2002:a2e:a586:: with SMTP id m6mr7944732ljp.458.1597671659321;
-        Mon, 17 Aug 2020 06:40:59 -0700 (PDT)
-Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id g22sm3443791lja.29.2020.08.17.06.40.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Aug 2020 06:40:58 -0700 (PDT)
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        s-anna@ti.com
-Cc:     grzegorz.jaszczyk@linaro.org, robh+dt@kernel.org,
-        lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        praneeth@ti.com
-Subject: [PATCH v5 4/5] irqchip/irq-pruss-intc: Implement irq_{get,set}_irqchip_state ops
-Date:   Mon, 17 Aug 2020 15:40:12 +0200
-Message-Id: <1597671613-20879-5-git-send-email-grzegorz.jaszczyk@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597671613-20879-1-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1597671613-20879-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+        Mon, 17 Aug 2020 09:44:47 -0400
+Received: from mail-vi1eur05on2049.outbound.protection.outlook.com ([40.107.21.49]:47670
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728588AbgHQNoq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 09:44:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ebrYNN5NNAVzn3Apk9BswLV50smSxovJQcwOlQmh82rnE8RN2BmK+cbdg0OhY3/WvpZZVtF6xBihvjv+5Li5F/QST3iZKW4mdb3fqYdyzLf3OrPOZuN7U/gp6X0CCasYXnnu/IZYtGNGUvoP6C7i+2FdzsQSWOiunQLjzjVdXFN2JHkFr4/Ko11iOd2MrSi0bqC+P5UM16RZ2DlCZ9S6VmCGcAXAhzGmZUG8upAkN2KlNJkyfm9DUdnBNwhbnWDg+eT5qwH4vwbMz7kRVUpS6IJ+pmZULW5F7slFiHrqECmItb3FVJUiy5w6FeKq50/f7uN9Yf0GGvYWxv+HgPkPUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BWTGhFA9DJ+idcpI4wdhpwqIvT/5X6BPJEodIHsPS2M=;
+ b=B0U/Q3F/wspvpgHk+eO5Ym/pfzFV2aNBOLRg8IWzKJ447rLfFReB9JFvGcEtswUtH34NenU8N0O3yLVFCh9Nacfiz7gQILE7s9/2q2Wjkie9vVRKxoFPD/wWiMPTDwu1cmTVuWp2Rp31PNY6lmx3PryZctcF8Mwxi/7TSVqsZGWRM5geutp83zJLcpQ46P8QqbJVcrd/LQpRVdjltwwYjAL0eBkxJCFeC5o7B/WgFXxufcCHZo0Df+1GcxSGHnG4FpxQ78sKUBavB+ZZ4czOdbq5nRdxI8GwVgMKY9/7w7Zg8aotUPI/of4ZMh0dQ/OsjpJkqQpWPVCP5QHxIGcYXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BWTGhFA9DJ+idcpI4wdhpwqIvT/5X6BPJEodIHsPS2M=;
+ b=roh64oPASeLh2ZnkHOZC6u8Qtsd2UHQy5bK/sHA6+Aq9QVaAQL7mq8mfNFzsydUpiqPYYvDhk3XIxGsIeD6qdzwWFPgvAZXnhF+voD1yLKClf+8XBIOZSdKfqEhxT7xcrtbOCX0pLb2ABi64aDL5GVMMq7MWjge0GfcBAREaHkc=
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ (2603:10a6:803:11::14) by VI1PR04MB4174.eurprd04.prod.outlook.com
+ (2603:10a6:803:3d::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.20; Mon, 17 Aug
+ 2020 13:44:42 +0000
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c1a:39dd:a2d5:3d2f]) by VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c1a:39dd:a2d5:3d2f%7]) with mapi id 15.20.3283.027; Mon, 17 Aug 2020
+ 13:44:42 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: dts: imx7d-sdb: Add notes for audio sound card
+Thread-Topic: [PATCH] ARM: dts: imx7d-sdb: Add notes for audio sound card
+Thread-Index: AdZ0nG79T94FsqlQSjOjVmae9L0DEA==
+Date:   Mon, 17 Aug 2020 13:44:41 +0000
+Message-ID: <VI1PR0402MB3342CA1812DF86434FABE918E35F0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0b581c09-6b0e-440c-c679-08d842b3b1ba
+x-ms-traffictypediagnostic: VI1PR04MB4174:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB417456C0BDCF55211FAC05ABE35F0@VI1PR04MB4174.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3od7XLFWfx0ygVS0UezRVQvxrpqdWOXh8vX/DkCfTu92/utqTLBLesUMOweacHloAkHaSUCoetp+mfOfRAoIIoAzYa7N9sGCycQjMNSf3KennDyPQAe0ckDpCEaFGvFtT3HXwvO+Q4BmbGzZtIoWrFncA7LObN4KuMwJScrCwCBEoJJUv2gZi3EYHPSEGKqTd3ceBplrXkZhpoR4R/B/LXI2QZ8KqLG8Em33xajnaIZTYS2UJR4AUU2g8qlWsOKORa70CAH8BDTPVnQySAuTcyJYXKiZdmMO0IdePsiMvNsY9RGb8IX2sNDeZqIslOoQ0fQDgE8hr61q9kzhu2iwrg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3342.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(346002)(136003)(39860400002)(396003)(186003)(33656002)(26005)(76116006)(52536014)(2906002)(6506007)(71200400001)(478600001)(4326008)(54906003)(83380400001)(8676002)(558084003)(55016002)(6916009)(9686003)(86362001)(7696005)(66946007)(66476007)(64756008)(66446008)(66556008)(5660300002)(316002)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: brj1bJUqgSLp63k9jH5Uk/wP91ipsl22aVdJCQ3fkh5kE7wePefcXTpZmNVES8F+u5ASsAMKIXXWUXd1oGBkJlWxYuNNZyssxIO85EWrZC8Fizr8XeiZjjTvTezZ/vybX9sLbrPIrR9kVFEyGQr+IsLtlzSFG2sAVvbkBRKu0I+pepsH23ELlZo6M8T4JYM2vpCVBYUWrSuR5nrzUDOKoX4Aknzgl4z+oMXv7mkHOOZonXAGNpjM4/6bAqhy0iec3nrAuo/CLvGnojAFZOSjib6Bk9+jG63IRPArvjl1sEIo6ht8u9DYZ739EfBpNfWyTu9G0Aw8sek/1IiYVCI2ThOrN6H0MCcJpHsAMCg+GHuCTeEGMHTGx/eXYK/Or4Lt4qRFbvDEHrJNwhXHvcKdNhx9Dm3Y785sQjty+5I+DGE7XSKV9Jv2a1lABPbYhKiMeli6DrW8LnfH8rk36bsCGn8A4OA8QN9YsrpPZCBhmNa/PZKNa3rwz9iLkJSCSuGF6qbUV9kIRKqRQozrNmf9UQr99AFDYqXtkV27CZ1abMJY3KKHvzOAzuvczTKTE+eqflKY11pmGKOQdxZG4yf4LisQuzRnpe0DzIfQChwXvelcdIVI34/tJgsu6LYwip1YKEhKzaKrhP67zLjxDkpm4A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3342.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b581c09-6b0e-440c-c679-08d842b3b1ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2020 13:44:41.9313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C9xwmXyQzhShOyf7E7NqvtyMGg+rJBC43tOwD8a15kMUrwc3GQFhd0EwkmXZW/3SAHOTU75/2BbwTlkYwDGslQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4174
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
 
-This implements the irq_get_irqchip_state and irq_set_irqchip_state
-callbacks for the TI PRUSS INTC driver. The set callback can be used
-by drivers to "kick" a PRU by injecting a PRU system event.
+> > Configure the SAI device node, configure audio clock and pinctrl.
+> >
+> > Enable the audio sound card, which use the SAI1 and wm8960, and enable
+> > headphone detection.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+>=20
+> s/notes/nodes in subject?
 
-Example:
-     irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING, true);
+Yes.  Thanks for fixing it.
 
-Signed-off-by: David Lechner <david@lechnology.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Reviewed-by: Lee Jones <lee.jones@linaro.org>
----
-v4->v5:
-- No change.
-v3->v4:
-- Update commit message
-v2->v3:
-- Get rid of unnecessary pruss_intc_check_write() and use
-  pruss_intc_write_reg directly.
-v1->v2:
-- https://patchwork.kernel.org/patch/11069769/
----
- drivers/irqchip/irq-pruss-intc.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-index 1a72591..15f0407 100644
---- a/drivers/irqchip/irq-pruss-intc.c
-+++ b/drivers/irqchip/irq-pruss-intc.c
-@@ -9,6 +9,7 @@
-  * Copyright (C) 2019 David Lechner <david@lechnology.com>
-  */
- 
-+#include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
-@@ -319,6 +320,43 @@ static void pruss_intc_irq_relres(struct irq_data *data)
- 	module_put(THIS_MODULE);
- }
- 
-+static int pruss_intc_irq_get_irqchip_state(struct irq_data *data,
-+					    enum irqchip_irq_state which,
-+					    bool *state)
-+{
-+	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-+	u32 reg, mask, srsr;
-+
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+
-+	reg = PRU_INTC_SRSR(data->hwirq / 32);
-+	mask = BIT(data->hwirq % 32);
-+
-+	srsr = pruss_intc_read_reg(intc, reg);
-+
-+	*state = !!(srsr & mask);
-+
-+	return 0;
-+}
-+
-+static int pruss_intc_irq_set_irqchip_state(struct irq_data *data,
-+					    enum irqchip_irq_state which,
-+					    bool state)
-+{
-+	struct pruss_intc *intc = irq_data_get_irq_chip_data(data);
-+
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+
-+	if (state)
-+		pruss_intc_write_reg(intc, PRU_INTC_SISR, data->hwirq);
-+	else
-+		pruss_intc_write_reg(intc, PRU_INTC_SICR, data->hwirq);
-+
-+	return 0;
-+}
-+
- static struct irq_chip pruss_irqchip = {
- 	.name = "pruss-intc",
- 	.irq_ack = pruss_intc_irq_ack,
-@@ -326,6 +364,8 @@ static struct irq_chip pruss_irqchip = {
- 	.irq_unmask = pruss_intc_irq_unmask,
- 	.irq_request_resources = pruss_intc_irq_reqres,
- 	.irq_release_resources = pruss_intc_irq_relres,
-+	.irq_get_irqchip_state = pruss_intc_irq_get_irqchip_state,
-+	.irq_set_irqchip_state = pruss_intc_irq_set_irqchip_state,
- };
- 
- static int pruss_intc_validate_mapping(struct pruss_intc *intc, int event,
--- 
-2.7.4
-
+Best regards
+Wang shengjiu
