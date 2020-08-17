@@ -2,131 +2,112 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42619C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C28C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A7B20716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE8220772
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgHQGlj (ORCPT
+        id S1726196AbgHQGwf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 02:41:39 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:31915 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgHQGli (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 02:41:38 -0400
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 16 Aug 2020 23:41:38 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 16 Aug 2020 23:41:36 -0700
-Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 17 Aug 2020 12:11:12 +0530
-Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
-        id 435CC40A2; Mon, 17 Aug 2020 12:11:11 +0530 (IST)
-From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        rnayak@codeaurora.org, Pradeep P V K <ppvk@codeaurora.org>,
-        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-Subject: [PATCH V3] arm64: dts: qcom: sc7180: Add bandwidth votes for eMMC and SDcard
-Date:   Mon, 17 Aug 2020 12:11:04 +0530
-Message-Id: <1597646464-1863-1-git-send-email-sbhanu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 17 Aug 2020 02:52:35 -0400
+Received: from muru.com ([72.249.23.125]:40450 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgHQGwe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 02:52:34 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6795B80A3;
+        Mon, 17 Aug 2020 06:52:33 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 09:53:00 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     "Andrew F . Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCHv4 0/6] Add initial genpd support for omap PRM driver
+Message-ID: <20200817065300.GD2994@atomide.com>
+References: <20200702154513.31859-1-tony@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200702154513.31859-1-tony@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Pradeep P V K <ppvk@codeaurora.org>
+Hi Santosh,
 
-Add the bandwidth domain supporting performance state and
-the corresponding OPP tables for the sdhc device on sc7180.
+* Tony Lindgren <tony@atomide.com> [200702 18:46]:
+> Hi all,
+> 
+> Here's v4 set of patches to add genpd support to the PRM (Power and Reset
+> Module) driver.
+> 
+> Initially we just add one hardware accelerator power domain for sgx,
+> and one interconnect instance for l4_abe. The rest of the SoC specific
+> domain data is probably best added one SoC at a time based on generated
+> data.
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
----
+Care to ack some of these patches? I'd like to get this into Linux next
+for v5.10 :)
 
-This change is depends on the below patch series:
-https://lore.kernel.org/patchwork/patch/1278294/
+Regards,
 
-Change since V2:
-	- Included tag in the of innerconnect-cells for sdhc nodes in-tune with
-	  https://lore.kernel.org/patchwork/patch/1278294/
+Tony
 
-Changes since V1:
-	- Included Pradeep Pragalapati signoff.
-	- Removed dependency patch list as those patches already merged
-	  on linux-next.
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 68f9894..e5a7d88 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -684,6 +684,9 @@
- 			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
- 					<&gcc GCC_SDCC1_AHB_CLK>;
- 			clock-names = "core", "iface";
-+			interconnects = <&aggre1_noc MASTER_EMMC 0 &mc_virt SLAVE_EBI1 0>,
-+				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_EMMC_CFG 0>;
-+			interconnect-names = "sdhc-ddr","cpu-sdhc";
- 			power-domains = <&rpmhpd SC7180_CX>;
- 			operating-points-v2 = <&sdhc1_opp_table>;
- 
-@@ -704,11 +707,15 @@
- 				opp-100000000 {
- 					opp-hz = /bits/ 64 <100000000>;
- 					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <100000 100000>;
-+					opp-avg-kBps = <100000 50000>;
- 				};
- 
- 				opp-384000000 {
- 					opp-hz = /bits/ 64 <384000000>;
- 					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <600000 900000>;
-+					opp-avg-kBps = <261438 300000>;
- 				};
- 			};
- 		};
-@@ -2476,6 +2483,10 @@
- 			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
- 					<&gcc GCC_SDCC2_AHB_CLK>;
- 			clock-names = "core", "iface";
-+
-+			interconnects = <&aggre1_noc MASTER_SDCC_2 0 &mc_virt SLAVE_EBI1 0>,
-+				<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_SDCC_2 0>;
-+			interconnect-names = "sdhc-ddr","cpu-sdhc";
- 			power-domains = <&rpmhpd SC7180_CX>;
- 			operating-points-v2 = <&sdhc2_opp_table>;
- 
-@@ -2489,11 +2500,15 @@
- 				opp-100000000 {
- 					opp-hz = /bits/ 64 <100000000>;
- 					required-opps = <&rpmhpd_opp_low_svs>;
-+					opp-peak-kBps = <160000 100000>;
-+					opp-avg-kBps = <80000 50000>;
- 				};
- 
- 				opp-202000000 {
- 					opp-hz = /bits/ 64 <202000000>;
- 					required-opps = <&rpmhpd_opp_svs_l1>;
-+					opp-peak-kBps = <200000	120000>;
-+					opp-avg-kBps = <100000 60000>;
- 				};
- 			};
- 		};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+> Changes since v3:
+> - Drop the unnecessary __maybe_unused as that's no longer needed
+> 
+> Changes since v2:
+> 
+> - Update binding to clarify a single power domain provider
+> 
+> - Unwrap generic domain configrations for __maybe_unused
+> 
+> Changes since v1:
+> 
+> - Dropped clocks from the binding and prm driver as there's no need
+>   for them as pointed out by Tero
+> 
+> - Add checking for domain transition bit in pwrstst register as
+>   pointed out by Tero
+> 
+> - Add omap_prm_domain_show_state() for CONFIG_DEBUG
+> 
+> 
+> Tony Lindgren (6):
+>   dt-bindings: omap: Update PRM binding for genpd
+>   soc: ti: omap-prm: Add basic power domain support
+>   soc: ti: omap-prm: Configure sgx power domain for am3 and am4
+>   soc: ti: omap-prm: Configure omap4 and 5 l4_abe power domain
+>   ARM: dts: Configure am3 and am4 sgx for genpd and drop platform data
+>   ARM: dts: Configure omap4 and 5 l4_abe for genpd and drop platform
+>     data
+> 
+>  .../devicetree/bindings/arm/omap/prm-inst.txt |   2 +
+>  arch/arm/boot/dts/am33xx.dtsi                 |   2 +
+>  arch/arm/boot/dts/am4372.dtsi                 |   2 +
+>  arch/arm/boot/dts/omap4-l4-abe.dtsi           |   6 +-
+>  arch/arm/boot/dts/omap4.dtsi                  |   6 +
+>  arch/arm/boot/dts/omap5-l4-abe.dtsi           |   6 +-
+>  arch/arm/boot/dts/omap5.dtsi                  |   6 +
+>  arch/arm/mach-omap2/Kconfig                   |   1 +
+>  .../omap_hwmod_33xx_43xx_interconnect_data.c  |  16 -
+>  .../omap_hwmod_33xx_43xx_ipblock_data.c       |  40 ---
+>  arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |   2 -
+>  arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |   2 -
+>  arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  33 ---
+>  arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  31 --
+>  drivers/soc/ti/omap_prm.c                     | 274 +++++++++++++++++-
+>  15 files changed, 298 insertions(+), 131 deletions(-)
+> 
+> -- 
+> 2.27.0
+> 
