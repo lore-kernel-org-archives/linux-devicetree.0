@@ -2,109 +2,85 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E6BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EA4C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074062087D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39022087D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSek12SA"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="U2fujxzn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgHQDEV (ORCPT
+        id S1726739AbgHQDEn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:04:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgHQDES (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 23:04:18 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005FFC061385;
-        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id s14so824292plp.4;
-        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u2t9cZojup/XRAfOOohcGCISaz5vKpnzd7po0W7Brn4=;
-        b=mSek12SAv1BJ6ldCV8GbAcqWxHtmYqybitk2vnr8tEQJDg9njV0L2OK9MMFHwSVXB6
-         YnxwwLHYPWeXDaBxfiLBMJNil43M/nUv16OYieMI149G/rP1GXkdtR4wuNL8KZQK1V2h
-         72RLjJvdNFsND45+Dqdz59o/YGYH6O8TF7G1tsVJQrFcuVYfFm81Eughm0igkP+dKzc+
-         cwA9gKOIg45WjWBt8+BUkjutzNI6OoMVRcQgJd8iDr2OjsA6xlyj5Bn/JvToxwFtAjke
-         E6+ncpe2QToaQBOZ/pD5FoGq/pkTAwoXDkhjCfoQfizb44tH/JRrefhlaplYFbfTIMS2
-         pvCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u2t9cZojup/XRAfOOohcGCISaz5vKpnzd7po0W7Brn4=;
-        b=gmZ88t34LBisXCXakfD980N43vwkXMoxJ/XEnhMKXCXSCUuCFkD7X78pQNXlHYWmEO
-         VoMoowSiacjQxzjWGPW4UOtaXk6836vZtB8Pg/DxWDRPhH70KIgymSRzxodMk0YyAnrO
-         IhGTsIL3nabIJuys/o0LjVCDHzY/S0TlCNTdK30TOz0c5m9LW/ZRbusgY47ZfyDvR/dX
-         aa+zFM97tIW6FLkVdAZjUV22RbEIbvgPM2fsXvtxuSWbKDnjBbv37zuo/7fBwAFOItOP
-         JHItk2xHlmgj0gS7F5hV9x6k6unQQXLp0NWk28hQZ1mdoiZo4pIqCAhwDYUl4/kQ5eo2
-         kvag==
-X-Gm-Message-State: AOAM533SbKS+sPWP3nwzNYeKTpquim//SP31deq43QOCbwfhnajD7KQ/
-        L2jQ4BuuzfL5ngCq9sqRE2M=
-X-Google-Smtp-Source: ABdhPJwcOR2+1quyxWqjQQMMyinCGbyTuuXsCkvKpAd0p7fdGw5BaRkRa1UqMLxTq/Loy1rvyTeCgw==
-X-Received: by 2002:a17:90a:2081:: with SMTP id f1mr11353865pjg.174.1597633457296;
-        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
-Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
-        by smtp.gmail.com with ESMTPSA id n22sm14869939pjq.25.2020.08.16.20.04.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2020 20:04:16 -0700 (PDT)
-From:   Chris Healy <cphealy@gmail.com>
-X-Google-Original-From: Chris Healy <cphealy@gmail.com
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        linux@rempel-privat.de, davem@davemloft.net,
-        philippe.schenker@toradex.com, andrew@lunn.ch,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>
-Subject: [PATCH] ARM: dts: imx7d-zii-rmu2: fix rgmii phy-mode for ksz9031 phy
-Date:   Sun, 16 Aug 2020 20:04:01 -0700
-Message-Id: <20200817030401.3124855-1-cphealy@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Sun, 16 Aug 2020 23:04:43 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30617 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726424AbgHQDEm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 23:04:42 -0400
+X-UUID: 10613096b3cf44528ce0a95538465e74-20200817
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=2z0RtoXOILn4N4IkKnkfphbCO4iJTa65Gx/fuN7b5FE=;
+        b=U2fujxznu0nP4YK5Ob+w8kaMWpON9iHmgJaHPPPTgRzRUzNai9dsuzORSU34+X0YL7IE3tW6c7Fv1HmozwTUGE+QJwTJRSk4sP2ne3UcTx29EE7/+vDzQxpzuNaa3zM3ZgBNaYRSMibPT1taEjRuGbSQXp3mPSFHZWlN3Yrqe7Q=;
+X-UUID: 10613096b3cf44528ce0a95538465e74-20200817
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2128854509; Mon, 17 Aug 2020 11:04:40 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 17 Aug 2020 11:04:38 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 17 Aug 2020 11:04:37 +0800
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>
+CC:     <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <s-anna@ti.com>, <afd@ti.com>, <seiya.wang@mediatek.com>,
+        <stanley.chu@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <fan.chen@mediatek.com>, <yong.liang@mediatek.com>
+Subject: [v4,0/4] introduce TI reset controller for MT8192 SoC
+Date:   Mon, 17 Aug 2020 11:03:20 +0800
+Message-ID: <20200817030324.5690-1-crystal.guo@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chris Healy <cphealy@gmail.com>
-
-Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
-KSZ9031 PHY") the networking is broken on the imx7d-zii-rmu2 board.
-
-Fix it by switching to phy-mode = "rgmii-id".
-
-Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-Signed-off-by: Chris Healy <cphealy@gmail.com>
----
- arch/arm/boot/dts/imx7d-zii-rmu2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-index e5e20b07f184..7cb6153fc650 100644
---- a/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-+++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-@@ -58,7 +58,7 @@ &fec1 {
- 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
- 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
- 	assigned-clock-rates = <0>, <100000000>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&fec1_phy>;
- 	status = "okay";
- 
--- 
-2.26.2
+djQ6DQpmaXggdHlwb3Mgb24gdjMgY29tbWl0IG1lc3NhZ2UuDQoNCnYzOg0KMS4gcmV2ZXJ0IHYy
+IGNoYW5nZXMuDQoyLiBhZGQgJ3Jlc2V0LWR1cmF0aW9uLXVzJyBwcm9wZXJ0eSB0byBkZWNsYXJl
+IGEgbWluaW11bSBkZWxheSwNCndoaWNoIG5lZWRzIHRvIGJlIHdhaXRlZCBiZXR3ZWVuIGFzc2Vy
+dCBhbmQgZGVhc3NlcnQuDQozLiBhZGQgJ21lZGlhdGVrLGluZnJhLXJlc2V0JyB0byBjb21wYXRp
+YmxlLg0KDQoNCnYyIGNoYW5nZXM6DQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
+LzExNjk3MzcxLw0KMS4gYWRkICdhc3NlcnQtZGVhc3NlcnQtdG9nZXRoZXInIHByb3BlcnR5IHRv
+IGludHJvZHVjZSBhIG5ldyByZXNldCBoYW5kbGVyLA0Kd2hpY2ggYWxsb3dzIGRldmljZSB0byBk
+byBzZXJpYWxpemVkIGFzc2VydCBhbmQgZGVhc3NlcnQgb3BlcmF0aW9ucyBpbiBhIHNpbmdsZQ0K
+c3RlcCBieSAncmVzZXQnIG1ldGhvZC4NCjIuIGFkZCAndXBkYXRlLWZvcmNlJyBwcm9wZXJ0eSB0
+byBpbnRyb2R1Y2UgZm9yY2UtdXBkYXRlIG1ldGhvZCwgd2hpY2ggZm9yY2VzDQp0aGUgd3JpdGUg
+b3BlcmF0aW9uIGluIGNhc2UgdGhlIHJlYWQgYWxyZWFkeSBoYXBwZW5zIHRvIHJldHVybiB0aGUg
+Y29ycmVjdCB2YWx1ZS4NCjMuIGFkZCAnZ2VuZXJpYy1yZXNldCcgdG8gY29tcGF0aWJsZQ0KDQp2
+MSBjaGFuZ2VzOg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTY5MDUyMy8N
+Cmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTE2OTA1MjcvDQoNCkNyeXN0YWwg
+R3VvICg0KToNCiAgZHQtYmluZGluZzogcmVzZXQtY29udHJvbGxlcjogdGk6IGFkZCByZXNldC1k
+dXJhdGlvbi11cyBwcm9wZXJ0eQ0KICBkdC1iaW5kaW5nOiByZXNldC1jb250cm9sbGVyOiB0aTog
+YWRkICdtZWRpYXRlayxpbmZyYS1yZXNldCcgdG8NCiAgICBjb21wYXRpYmxlDQogIHJlc2V0LWNv
+bnRyb2xsZXI6IHRpOiBpbnRyb2R1Y2UgYSBuZXcgcmVzZXQgaGFuZGxlcg0KICBhcm02NDogZHRz
+OiBtdDgxOTI6IGFkZCBpbmZyYWNmZ19yc3Qgbm9kZQ0KDQogLi4uL2JpbmRpbmdzL3Jlc2V0L3Rp
+LXN5c2Nvbi1yZXNldC50eHQgICAgICAgIHwgIDYgKysrKysNCiBhcmNoL2FybTY0L2Jvb3QvZHRz
+L21lZGlhdGVrL210ODE5Mi5kdHNpICAgICAgfCAxMSArKysrKysrLQ0KIGRyaXZlcnMvcmVzZXQv
+cmVzZXQtdGktc3lzY29uLmMgICAgICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysrLS0N
+CiAzIGZpbGVzIGNoYW5nZWQsIDQwIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQoNCg==
 
