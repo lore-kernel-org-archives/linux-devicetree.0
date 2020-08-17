@@ -2,124 +2,92 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27538C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9EDC433F4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058AE2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VAMqIWBU"
+	by mail.kernel.org (Postfix) with ESMTP id 927B02072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597702252;
+	bh=wOKwKxI61xyGhvk3gR+YZ1rqMZruMPuo9REyDXaQ8hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O3ky23BUb1Ig3jPo5k7GOKk+T4HNvauYFR5JvqA9DnaCbORghv4Zmv4AtsJJmVaOK
+	 pj1iARAlThnD6YT0meOOkg046lqGndiLXmVVSN2tK0dtioNqtAXXnrG/CG2IVW9Y4k
+	 wO5SB6LBU6gtCrWCpoxDuoqOLTJJSJgHuOBs/KUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgHQWDW (ORCPT
+        id S1730166AbgHQWKv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbgHQWC7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 18:02:59 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3093AC061389;
-        Mon, 17 Aug 2020 15:02:59 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s15so8761259pgc.8;
-        Mon, 17 Aug 2020 15:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kKA+x0uy5NlO00Iqox0wh7pVzFT+/CgBiD5qZahgaMc=;
-        b=VAMqIWBU3E4H7weX9792RxhLwClzSja5Owo67Nir+n0DGErszZ85LILA8By5JjWhiq
-         pcpm3+G+LpRNVPPV7cxjVU/fGJYoWIhs26Mon4PQlXpZvrGvoIdy4PDNm9NQGR3eawWg
-         HCoe8VNzumSPyjn/aDXRmJIqqBPvnKaGmhs3h1Pbrq6xZAy5G7T0181+qv78O8LcN01v
-         ndtCFs5Y2cHk7rw9Kcshjp/R+oBiEEbyZZS5h78/o8S1/SuZE1ru05Bwnuzt4LwKtgbY
-         NUsPwV8l5p24osze87hLN0fWuICNpDdLPzSFaGqyBudeTIsD6ZTx2sSqK8QvxTpYrwnw
-         4Qlg==
+        Mon, 17 Aug 2020 18:10:51 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:39105 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729671AbgHQWKt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 18:10:49 -0400
+Received: by mail-il1-f196.google.com with SMTP id f12so8323602ils.6;
+        Mon, 17 Aug 2020 15:10:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kKA+x0uy5NlO00Iqox0wh7pVzFT+/CgBiD5qZahgaMc=;
-        b=ua/BHbLgDMUJsG6+LUZ7MMMqusSYsdW+SibYSSxveAkF6wS852Hnumf8hL6YmLs1Pa
-         JLPwSjp2l0SirG4rwErBAl7ZL0gh75jruomsNvO1yhl79BjGt9mzmcOp8tX3g8l+1ORZ
-         h1hVIxrdxnz5rV11NNylc17TXgCl2gcPJwrGn689DHpZjJtRhCMj+GLdeWtXg1lXM+gA
-         3dJBbQDf2Yhvdm9YrS9uJZB7IlweB/mUJLNayWjaGvNO6bquS/yU47VOLXBaqWYtxRHI
-         THsKlLkOFB5F20EoaNayeH0ALPaWzU8qRs4jJU2s3cfAVo/s30ca+5nRBFRT4yYTjo6u
-         3bXQ==
-X-Gm-Message-State: AOAM530qUjKtY5cEXg3tD4nly5L2n5o9mAtykHJiLS2O5VSfBAJhQu+6
-        owhct3OSgsvVvnMlBKrC/h8=
-X-Google-Smtp-Source: ABdhPJwRqI1VC8tNrq9d6HBXBZWWdKGzpiYCGqPx76mvvjUpcZ4iuBnTpueYAH+n+ifu5gdkS6wnNA==
-X-Received: by 2002:a63:1b12:: with SMTP id b18mr11343563pgb.21.1597701778691;
-        Mon, 17 Aug 2020 15:02:58 -0700 (PDT)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id x13sm18066264pga.30.2020.08.17.15.02.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FV71Do6+ddR98mWO5xKm3RuJ/5xQqaLemwdBMVqmXAo=;
+        b=etALAuzKtl6oUZGAQN88VeJ/mAmzI0YogCfUx+SpstWgqxsPpvgfcg6raHA5srguNo
+         tec5VUz84q3JQJ3xDmxxGoXqL+Qx/VNsd9TM0JUddkFHLpGQaIA6ZyJX9LQTIQ0CTNHe
+         bhHe1aWtzVd5zinLiZJtVyPbSDCltBZgrvL+RtsNPSGWw4zXwYTBOW8GachV09GrorBY
+         nvJ7ZqXiVQjDwiX0mz8JxhBMT6MrbQq8p7kw61ghkceZHXJ4rt1pyrQ0cT5l+P9BZSPu
+         +V5AR+AyENmZDUrJ4iLYkj3nUoSA6+wh7obqqu5fZOnVDcebtnpzH6IWc/AZWOM+uNMN
+         QzaA==
+X-Gm-Message-State: AOAM5300x34+bqm57343DhY41z34oilWWHga2mOrPRCRmH5pjpDDPikp
+        9fmYC4uIW4oya6JNpDpynw==
+X-Google-Smtp-Source: ABdhPJyB6SidyKz94Gaxsq4OtzXh2gXZ2ntCkmBG5Iud74qbldnH8x/in1Yz0oyzKaetuNZng0GE0g==
+X-Received: by 2002:a92:bad5:: with SMTP id t82mr15563469ill.22.1597702248443;
+        Mon, 17 Aug 2020 15:10:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id t16sm2865203ili.75.2020.08.17.15.10.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 15:02:57 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Herring <robh@kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
+        Mon, 17 Aug 2020 15:10:47 -0700 (PDT)
+Received: (nullmailer pid 1664783 invoked by uid 1000);
+        Mon, 17 Aug 2020 22:10:46 -0000
+Date:   Mon, 17 Aug 2020 16:10:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 10/20] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
-Date:   Mon, 17 Aug 2020 15:01:35 -0700
-Message-Id: <20200817220238.603465-11-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200817220238.603465-1-robdclark@gmail.com>
-References: <20200817220238.603465-1-robdclark@gmail.com>
+        Magnus Damm <magnus.damm@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/5] dt-bindings: pwm: renesas,pwm-rcar: Add r8a7742
+ support
+Message-ID: <20200817221046.GA1664753@bogus>
+References: <20200806183152.11809-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806183152.11809-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+On Thu, 06 Aug 2020 19:31:49 +0100, Lad Prabhakar wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-devices depend on unique features such as split pagetables,
-different stall/halt requirements and other settings. Identify them
-with a compatible string so that they can be identified in the
-arm-smmu implementation specific code.
-
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-index 503160a7b9a0..5ec5d0d691f6 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-@@ -40,6 +40,10 @@ properties:
-               - qcom,sm8150-smmu-500
-               - qcom,sm8250-smmu-500
-           - const: arm,mmu-500
-+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-+        items:
-+          - const: qcom,adreno-smmu
-+          - const: qcom,smmu-v2
-       - description: Marvell SoCs implementing "arm,mmu-500"
-         items:
-           - const: marvell,ap806-smmu-500
--- 
-2.26.2
-
+Acked-by: Rob Herring <robh@kernel.org>
