@@ -2,84 +2,107 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EC5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E972C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF5620716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3736620658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693282;
-	bh=X3datrFdG8X7UJG5QjAFvhXeRCHuT0716Ayil9LZ8zc=;
+	s=default; t=1597693558;
+	bh=AFRY6qmw8k/Fvb4oECFHqM2opKMoQZO1D/wIYL5UJEI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XmfjPAr26L1Yw8qkhjow66GIogv2nMbmuSyzdtVjRpRXc/ofXX8i2YZXzPd+FXRAX
-	 ERlFg4NMcjBlleaIVJl2UtPi0+mebvDjJnG/zJ+feqfua3ygreAstfINttxEv0C2bM
-	 tGz/+iTBPf8iXZ8sc3/CGH7e+BZRTeZcmTU32ROs=
+	b=unwHoitM6UV2VBZcje+FEHb5SxunNWXMZAnHSGk/zbgVc+KkQXM2qwzhEuBEKxp3G
+	 iHlRwnz0gO3pAJan02vHuAxtIrhF0B0zqMB79rLT8G4AnRwqG1w2bFP799Q0hAQg0A
+	 S7g894i/FpzLR0FqtBniVk2aGSzf3f/e0pHszU+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404265AbgHQTlT (ORCPT
+        id S2404372AbgHQTpp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:41:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44297 "EHLO
+        Mon, 17 Aug 2020 15:45:45 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41421 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbgHQTlO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:41:14 -0400
-Received: by mail-io1-f65.google.com with SMTP id v6so18739498iow.11;
-        Mon, 17 Aug 2020 12:41:13 -0700 (PDT)
+        with ESMTP id S2404369AbgHQTpl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:45:41 -0400
+Received: by mail-io1-f65.google.com with SMTP id g19so18833500ioh.8;
+        Mon, 17 Aug 2020 12:45:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=hLPrmS2NJ7VsWN+XXLJey6iV7KyNLRkPQhyYhJ663W8=;
-        b=ujP2ORDzxqQGOXBfuiVBseYw7S/YFGF3rL5aRdFJrZRvOLMizDyEd+myeLZZdtFtHn
-         HwWByQa+thSgaVhOeS9d3tqieUqe0mvnHoiIYj07kot0xCgbrBdSXnghvUi48PFOMuQw
-         UoFlqk/ZOto5B8dJfg2b7yohwtRSOSzrg8QUKbr1DEI70s0xdCmf72m4FsbF+hiVRx5U
-         squAIRxRYvINfJxk7+5aruJsJVAnI8W+5guj7rL4FT5Kf1LDVnA+oci4l8b0utbcGtba
-         O/zII66A5nxhZocbS4ATIXeDtP8Q4clDNwD2tZzw2/CipIjfxrqJIvDIKCYMlnlCa+rN
-         vbsA==
-X-Gm-Message-State: AOAM532NNoQ9ed7uom+d7Mjgu7HerTQzb4DMuBZ17Vn7AXDhnMINn2Zb
-        3N4D57+uXAt6cPbc3k1P0g==
-X-Google-Smtp-Source: ABdhPJzxM6ImTNHL4gOHTrB9xWUNIUlIDo7NCIfWLAKSs5BAbjVGvpKzl0Df18aazKXVcwjl5na3Ww==
-X-Received: by 2002:a02:770e:: with SMTP id g14mr15532405jac.94.1597693272622;
-        Mon, 17 Aug 2020 12:41:12 -0700 (PDT)
+        bh=9167b1zAfSDWY5dpby+m+hSASEzloHe7rPOI9rnQvoI=;
+        b=iDp1FWAT2kCePFOeuPKe/VOs1RYNiZbsPeCm4Ny83PCcKvx3Y1sdmf3M0MMGrMLPvm
+         vKxk9zACd6R+ZxJ8Di9PXyHiQc+feEJ1ay2Mbe4fa6+86joPUzezdNoCG/m899aqkisL
+         9AlKoE1nV/tcnfc28yLerb6IET6TILWcDQtGVyIONBtPgdQ5PvcHT7rTHlyhphgt3Ola
+         fk2Vxv0XndjRur6/JuZwvlxb2bCb/QhMAwSpC6jiORR+deSz311+QtqpitlEGc2sWD3M
+         ZptV78BRRpkqVJJiPueVuUamSRKzD3U7qcykNESCe0K9iPt1S4/MclHpyUiv+IIJ9usk
+         O7OQ==
+X-Gm-Message-State: AOAM533G9HSKgAa3VHZcZrz6v3FTwQCJCPJk2zxZ53k2JP0pJMZwivPZ
+        a2NMyBkpWStrZ1LRD4YCgoTOEelSeg==
+X-Google-Smtp-Source: ABdhPJy/Kg9h4YQFjm3/QHraZGHGwQWqnX/EVeFFvEUcAqfRDNDEvMiIk7cblt87y9uIOl6p98xH8Q==
+X-Received: by 2002:a5e:d514:: with SMTP id e20mr13493344iom.183.1597693540798;
+        Mon, 17 Aug 2020 12:45:40 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id c1sm10322232ilk.28.2020.08.17.12.41.10
+        by smtp.gmail.com with ESMTPSA id w13sm10186284ilj.70.2020.08.17.12.45.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:41:11 -0700 (PDT)
-Received: (nullmailer pid 1423992 invoked by uid 1000);
-        Mon, 17 Aug 2020 19:41:09 -0000
-Date:   Mon, 17 Aug 2020 13:41:09 -0600
+        Mon, 17 Aug 2020 12:45:40 -0700 (PDT)
+Received: (nullmailer pid 1431277 invoked by uid 1000);
+        Mon, 17 Aug 2020 19:45:39 -0000
+Date:   Mon, 17 Aug 2020 13:45:39 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jack Lo <jack.lo@gtsys.com.hk>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v8 2/2] devicetree: hwmon: shtc1: add sensirion,shtc1.yaml
-Message-ID: <20200817194109.GA1423962@bogus>
-References: <20200815012227.32538-1-chris.ruehl@gtsys.com.hk>
- <20200815012227.32538-3-chris.ruehl@gtsys.com.hk>
+To:     cy_huang <u0084500@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, cy_huang@richtek.com,
+        gene_chen@richtek.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] regulator: rt4801: Fix the dt-binding document for
+ dtc check.
+Message-ID: <20200817194539.GA1429240@bogus>
+References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+ <1597461262-25878-3-git-send-email-u0084500@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200815012227.32538-3-chris.ruehl@gtsys.com.hk>
+In-Reply-To: <1597461262-25878-3-git-send-email-u0084500@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 15 Aug 2020 09:22:27 +0800, Chris Ruehl wrote:
-> Add documentation for the newly added DTS support in the shtc1 driver.
-> To align with the drivers logic to have high precision by default
-> a boolean sensirion,low-precision is used to switch to low precision.
+On Sat, Aug 15, 2020 at 11:14:22AM +0800, cy_huang wrote:
+> From: ChiYuan Huang <cy_huang@richtek.com>
 > 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
->  .../bindings/hwmon/sensirion,shtc1.yaml       | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sensirion,shtc1.yaml
-> 
+> Fix the dt-binding document for dtc check.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This should be squashed into the prior patch.
+
+> 
+> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> ---
+>  .../devicetree/bindings/regulator/richtek,rt4801-regulator.yaml        | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+> index 28d30e2..fa075c6 100644
+> --- a/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.yaml
+> @@ -49,9 +49,6 @@ required:
+>    - compatible
+>    - reg
+>  
+> -additionalProperties:
+> -  - enable-gpios
+> -
+
+This should be:
+
+additionalProperties: false
+
+>  examples:
+>    - |
+>      i2c {
+> -- 
+> 2.7.4
+> 
