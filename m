@@ -2,120 +2,209 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AF7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06598C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3BA2078B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D580D2065D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 22:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EVAxOV8O"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U3OeiVB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgHQWvD (ORCPT
+        id S1727122AbgHQWyV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 18:51:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbgHQWvB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 18:51:01 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1947EC061343
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 15:51:01 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id r4so8287335pls.2
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 15:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=SQkF1er9CI/HdoW+CwMyTYmnG8SOeqdla6TOsxwwXL8=;
-        b=EVAxOV8OGoEBu6rnvdmhL7nV88zwX29yi/vbnC+n+vOBoGdfRXKTYRNxwwIeZ+BjCL
-         n00zv8FJcL4GNWB1T9HqvbiknMeFsz4MVl/oKDDvDv4xSzjhGPRsrR7FG1kxoxuIVabp
-         rL28hlM7qopNZnIsSx/06Xt488jLS5/+IANV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=SQkF1er9CI/HdoW+CwMyTYmnG8SOeqdla6TOsxwwXL8=;
-        b=I/vBDYKiqdLb92dCwDjblb22lwVRGMzkDVPNTyXjRi4OWSIVhpOv04ttijbyANHnyd
-         mrpHNqa0x9eN8GSQmX37OUU5XruI0VdtbroAvc11kCplep2nyXlTAA8+935H1maF69Eu
-         k7+Gye5/t8EyuVrHNEuajnWEO0I5X4Fc5lB5aToGdVBHaKqlTuB/GgoAZV3E1z64gUDn
-         oh3gYLtAnAJQG14LnJgMeoZJ0JJojzQ9hrRI323Rxp7Ju2H/+QIa0sPHL9c9bAvwrQS0
-         saKml7/UP+rdxqsn4MyDx2DzmHykDGp+C+ZjjCrDWW7Pf4Vl7HQP0E0Yi82DUag5UOxT
-         pDTw==
-X-Gm-Message-State: AOAM533qX91QW4LPARFVq7hgN+LsgU21g9xYAUntOyPTG47dbXBngVTs
-        cf0XCvcQSDev8OXjDRCV2sEzPg==
-X-Google-Smtp-Source: ABdhPJyJOVgzQkXpdtBDVbGzjM+WmdvtLlVBSbnc4J38wcBX/4/0hz901JkQfbgFaPFVLg8jtt6UJA==
-X-Received: by 2002:a17:90a:d252:: with SMTP id o18mr13953355pjw.146.1597704658834;
-        Mon, 17 Aug 2020 15:50:58 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id z23sm18201207pgv.57.2020.08.17.15.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 15:50:58 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200817224527.28532-1-tanmay@codeaurora.org>
-References: <20200817224527.28532-1-tanmay@codeaurora.org>
-Subject: Re: [PATCH v1] arm64: dts: qcom: sc7180: Add DisplayPort HPD pin dt node
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, robdclark@gmail.com, daniel@ffwll.ch,
-        airlied@linux.ie, aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        Mon, 17 Aug 2020 18:54:21 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:29997 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726903AbgHQWyV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 18:54:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597704859; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=vu19IE+drhJYfDfrja8WMcll5uQQXMQL97v+3OLllyw=; b=U3OeiVB5v5TzGXY/DAPmm8iQaKH2rZurvN+0mbTbWvpLjuHRpR9YCSPYh/F0hiddYOx0y0x6
+ 301zkAyUt8eqAhY1MYogSdFGBygPkog6j7lrJoBIvOYBMWtkY7v5DYr4JzVFroxnYh9kO7OU
+ AK5vbOPP00YCUn1bijNuLd1vHdY=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f3b0a8e2f4952907dc21fe2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 22:54:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7DBEDC43395; Mon, 17 Aug 2020 22:54:06 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 21A08C433CA;
+        Mon, 17 Aug 2020 22:54:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 21A08C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     swboyd@chromium.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
         khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>, devicetree@vger.kernel.org
-Date:   Mon, 17 Aug 2020 15:50:56 -0700
-Message-ID: <159770465685.2423498.15137387317243148552@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Subject: [PATCH v6] arm64: dts: qcom: sc7180: Add Display Port dt node
+Date:   Mon, 17 Aug 2020 15:53:00 -0700
+Message-Id: <20200817225300.2209-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tanmay Shah (2020-08-17 15:45:27)
-> This node defines alternate DP HPD functionality of GPIO.
->=20
-> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
-com/sc7180.dtsi
-> index bf2f2bb1aa79..9f97cf5dd9ab 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1457,6 +1457,20 @@ pinconf-sd-cd {
->                                         drive-strength =3D <2>;
->                                 };
->                         };
-> +
-> +                       dp_hot_plug_det: dp-hot-plug-det {
-> +                               pinmux {
-> +                                       pins =3D "gpio117";
-> +                                       function =3D "dp_hot";
-> +                               };
-> +
-> +                               config {
+Add DP device node on sc7180.
 
-The node name is usualy called pinconf. Please use that.
+Changes in v2:
 
-> +                                       pins =3D "gpio117";
-> +                                       bias-disable;
-> +                                       input-enable;
-> +                                       drive-strength =3D <2>;
+- Add assigned-clocks and assigned-clock-parents
+- Remove cell-index and pixel_rcg
+- Change compatible to qcom,sc7180-dp
 
-My understanding is that drive-strength doesn't do anything when the pin
-is input. So this line should be removed.
+Changes in v3:
+- Update commit text
+- Make DP child node of MDSS
+- Remove data-lanes property from SOC dts
+- Disable DP node in SOC dts
+- Assign DP to Port2 in MDP node
+- Add MDSS AHB clock in DP device node
 
-> +                               };
-> +                       };
->                 };
-> =20
->                 gpu: gpu@5000000 {
->
+Changes in v4:
+- Remove redundant reg-names property
+- Use IRQ flag instead had hard coded value.
+- Add link clock source in assigned-clocks list.
+
+Changes in v5:
+- Add OPP table and power-domains for DisplayPort
+
+Changes in v6:
+- Remove redundant IRQ flag
+
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+Co-developed-by: Kuogee Hsieh <khsieh@codeaurora.org>
+Signed-off-by: Kuogee Hsieh <khsieh@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 76 +++++++++++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217bb5bf..bf2f2bb1aa79 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2371,6 +2371,13 @@ dpu_intf1_out: endpoint {
+ 							remote-endpoint = <&dsi0_in>;
+ 						};
+ 					};
++
++					port@2 {
++						reg = <2>;
++						dpu_intf0_out: endpoint {
++							remote-endpoint = <&dp_in>;
++						};
++					};
+ 				};
+ 			};
+ 
+@@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
+ 
+ 				status = "disabled";
+ 			};
++
++			msm_dp: displayport-controller@ae90000 {
++				status = "disabled";
++				compatible = "qcom,sc7180-dp";
++
++				reg = <0 0x0ae90000 0 0x1400>;
++
++				interrupt-parent = <&mdss>;
++				interrupts = <12>;
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
++				clock-names = "core_iface", "core_aux", "ctrl_link",
++					      "ctrl_link_iface", "stream_pixel";
++				#clock-cells = <1>;
++				assigned-clocks = <&dispcc DISP_CC_MDSS_DP_LINK_CLK_SRC>,
++						  <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
++				assigned-clock-parents = <&msm_dp 0>, <&msm_dp 1>;
++
++				operating-points-v2 = <&dp_opp_table>;
++				power-domains = <&rpmhpd SC7180_CX>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					port@0 {
++						reg = <0>;
++						dp_in: endpoint {
++							remote-endpoint = <&dpu_intf0_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						dp_out: endpoint { };
++					};
++				};
++
++				dp_opp_table: dp-opp-table {
++					compatible = "operating-points-v2";
++
++					opp-160000000 {
++						opp-hz = /bits/ 64 <160000000>;
++						required-opps = <&rpmhpd_opp_low_svs>;
++					};
++
++					opp-270000000 {
++						opp-hz = /bits/ 64 <270000000>;
++						required-opps = <&rpmhpd_opp_svs>;
++					};
++
++					opp-540000000 {
++						opp-hz = /bits/ 64 <540000000>;
++						required-opps = <&rpmhpd_opp_svs_l1>;
++					};
++
++					opp-810000000 {
++						opp-hz = /bits/ 64 <810000000>;
++						required-opps = <&rpmhpd_opp_nom>;
++					};
++				};
++			};
+ 		};
+ 
+ 		dispcc: clock-controller@af00000 {
+@@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
+ 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+ 				 <&dsi_phy 0>,
+ 				 <&dsi_phy 1>,
+-				 <0>,
+-				 <0>;
++				 <&msm_dp 0>,
++				 <&msm_dp 1>;
+ 			clock-names = "bi_tcxo",
+ 				      "gcc_disp_gpll0_clk_src",
+ 				      "dsi0_phy_pll_out_byteclk",
+
+base-commit: 62975d27d647a40c58d3b96c29b911fc4f33c310
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
