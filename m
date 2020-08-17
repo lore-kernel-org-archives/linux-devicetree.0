@@ -2,99 +2,72 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55911C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A03C433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3110D20760
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689750;
-	bh=qiszeG2DETfNLk1h6LSV90irfUrBtYajyeWRmTxA694=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hnk6h9uzQmm8InttZd3nkBVVLBoLqf/fOHJEemNeVbmhjHnvq3iYEV5dVKcTAZnVM
-	 ZonyO4YKHNy3v1H3S2Bz0ZZkTO2USYPhCZ1FDmzrm7zxh8/G9ZLvYcvX0pQD6Tgb/k
-	 lljpKd6g3J6wlLNFoLyD6sNqBOXNw/a7UpR3tKPw=
+	by mail.kernel.org (Postfix) with ESMTP id 512DF204EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390756AbgHQSmF (ORCPT
+        id S2388039AbgHQSrB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:42:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50188 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:47:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35786 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730096AbgHQSlp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:41:45 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6055220578;
-        Mon, 17 Aug 2020 18:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597689704;
-        bh=qiszeG2DETfNLk1h6LSV90irfUrBtYajyeWRmTxA694=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lv2IgNnZkzv+mgS45C9KIxlOTvkSf7h5MH8+Iv2FkzTFNjx3mof2bkTNavcAtcIfL
-         e+cXrZwa+NHWgNQ1SFZ4cqU9Gk5AL4YjEN0uavWL8VEnpEfU1e8ISYgOdZmBq6HTfp
-         SUaGcskUd1ARRz1e73RekcSM0nCSqpLWRklimvOk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 2/2] MAINTAINERS: Add linux-mips mailing list to JZ47xx entries
-Date:   Mon, 17 Aug 2020 20:41:31 +0200
-Message-Id: <20200817184131.907-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817184131.907-1-krzk@kernel.org>
-References: <20200817184131.907-1-krzk@kernel.org>
+        id S2391607AbgHQSq6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:46:58 -0400
+IronPort-SDR: iM7JMPgDl1SMpaEYb0MNNo+9icdl3D11PMZ+vS//g1N4Spj5RZ1E+YUzrtijlZ2NtEiCjHSeme
+ Wb9ZisOhJZiw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="216296295"
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="216296295"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 11:46:56 -0700
+IronPort-SDR: es36+i1onmXPqW83f7u1/Q1fmWC0Un2m/tSACm7I0mIyVf6iSR9ZNsTqARmWaOvlBH2ZlSsai6
+ 37iELQbJqWrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,324,1592895600"; 
+   d="scan'208";a="292520047"
+Received: from martincl-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.45.150])
+  by orsmga003.jf.intel.com with ESMTP; 17 Aug 2020 11:46:53 -0700
+Date:   Mon, 17 Aug 2020 21:46:52 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Masahisa Kojima <masahisa.kojima@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ardb@kernel.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: Add SynQucer TPM MMIO as a trivial
+ device
+Message-ID: <20200817184652.GA44714@linux.intel.com>
+References: <20200728031433.3370-1-masahisa.kojima@linaro.org>
+ <20200728031433.3370-3-masahisa.kojima@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728031433.3370-3-masahisa.kojima@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The entries for JZ47xx SoCs and its drivers lacked MIPS mailing list.
-Only MTD NAND driver pointed linux-mtd.  Add linux-mips so the relevant
-patches will get attention of MIPS developers.
+On Tue, Jul 28, 2020 at 12:14:32PM +0900, Masahisa Kojima wrote:
+> Add a compatible string for the SynQuacer TPM to the binding for a
+> TPM exposed via a memory mapped TIS frame. The MMIO window behaves
+> slightly differently on this hardware, so it requires its own
+> identifier.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
----
-
-Changes since v1:
-1. Do not update DMA driver entry
-2. Add ack
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9ab3a7fd6451..33d0ea35d8b4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8583,11 +8583,13 @@ F:	samples/bpf/ibumad_user.c
- INGENIC JZ4780 NAND DRIVER
- M:	Harvey Hunt <harveyhuntnexus@gmail.com>
- L:	linux-mtd@lists.infradead.org
-+L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	drivers/mtd/nand/raw/ingenic/
- 
- INGENIC JZ47xx SoCs
- M:	Paul Cercueil <paul@crapouillou.net>
-+L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	arch/mips/boot/dts/ingenic/
- F:	arch/mips/include/asm/mach-jz4740/
--- 
-2.17.1
-
+/Jarkko
