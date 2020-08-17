@@ -2,87 +2,158 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6933C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AADC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B3D20758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4497B20772
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bbDHYbxC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="WtYTGKnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgHQF24 (ORCPT
+        id S1726650AbgHQFpg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:28:56 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35520 "EHLO m43-7.mailgun.net"
+        Mon, 17 Aug 2020 01:45:36 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:13562 "EHLO mail1.skidata.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbgHQF2z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:28:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597642134; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=54+oQH+CEQlOQzUWT+fCfANJA0KB5CGoWMMpbTEkZAw=; b=bbDHYbxCwnK4LAKZbm2lFcSVvxCm+9HV3GDQJ5APLf28dKxsytlR1jCMj5UqFAobdn+3hCw5
- 2WLB1pQEZS2zW40iHJHOUQTQqklXVwrHcZdGHZhngCkNuNZ17m+bD6BwfhX2fZ2UNxqLHvMU
- 0s0w6NMTshsVMIGSDSXiiyZfKyk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f3a1591d96d28d61ef97d61 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 05:28:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C39B2C433CA; Mon, 17 Aug 2020 05:28:48 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5BB77C433C6;
-        Mon, 17 Aug 2020 05:28:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5BB77C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kathirav@codeaurora.org
-Subject: [PATCH V2] arm64: dts: ipq8074: Use the A53 PMU compatible
-Date:   Mon, 17 Aug 2020 10:58:36 +0530
-Message-Id: <1597642116-15902-1-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S1726303AbgHQFpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:45:33 -0400
+X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Aug 2020 01:45:30 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1597643131; x=1629179131;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=VYLBjYz9lx/nrXI3opLlz8j0PHFlXG1/ZEX5YI80V6Y=;
+  b=WtYTGKnTmQpZ5x95Mjrtm4Z+2r4cq1cDd4zgMaFbUmYw5ZqfFVAKLzsI
+   qFMORePP4Gm3U+CNyiGicy7oL6ogX3Shsjcl+URUA6xGu8mcbahuL4oRU
+   fdgjOu+5nNVI7245a8TPs2fM4UieXVIEjfi4AE/b0FdGAqsqe8NYmkJUA
+   nthQDLkrZxTZRGIEMZtFqJBToNg7WTfD0bkcCUFGarDQUC0RzjpGkOC7O
+   KXoRR04L6AuDM8ODMnRS3mS2OTjVYsB03pJj3UZ4XOhPeDu9QO4hs1gvC
+   N/49SAq8YcLIyBj61grb/nqm4tfYDqlxVljsYtJAjXneGA++SmP9ykayO
+   Q==;
+IronPort-SDR: svI9QV3IU5oopAVv5yamxDgdlocA1iJY3YSUF4EoHghv0pgx7rr8qYaXkKz5Omkxq2uybaSfdj
+ 1dD7IDxYChlmXsW52gUikLfeYy0fDPtToSUvTzOiSLEDrAr1H5ycWGdiqrHMmlVmzVGFcjGjCn
+ vyiYzbUfXj4k21HYamaZ92VvdFf1lutJUyxZ0kD6RwOaFA6yq59RZ3P9gLdmKUd6AbU7Ummw4D
+ Y2lkzlC6cjdyZtDG5ddHSKZVBFRj2gbaypEpl+VvtyBmVS+EJKOQQZ0r5NVceKThI+XQuyf8Qn
+ 3/U=
+X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
+   d="scan'208";a="26161391"
+Date:   Mon, 17 Aug 2020 07:38:13 +0200
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+CC:     <mark.rutland@arm.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <catalin.marinas@arm.com>, <vkoul@kernel.org>,
+        <will.deacon@arm.com>, <shawnguo@kernel.org>, <festevam@gmail.com>,
+        <s.hauer@pengutronix.de>, <martin.fuzzey@flowbird.group>,
+        <u.kleine-koenig@pengutronix.de>, <dan.j.williams@intel.com>,
+        <matthias.schiffer@ew.tq-group.com>, <frieder.schrempf@kontron.de>,
+        <r.schwebel@pengutronix.de>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
+        <dmaengine@vger.kernel.org>, <linux-imx@nxp.com>
+Subject: Re: [PATCH v12 03/12] Revert "dmaengine: imx-sdma: refine to load
+ context only once"
+Message-ID: <20200817053813.GA551027@pcleri>
+References: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
+ <1597161231-32303-4-git-send-email-yibin.gong@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1597161231-32303-4-git-send-email-yibin.gong@nxp.com>
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-IPQ8074 has A53 cores, so lets use the corresponding PMU compatible.
+On Tue, Aug 11, 2020 at 11:53:42PM +0800, Robin Gong wrote:
+> This reverts commit ad0d92d7ba6aecbe2705907c38ff8d8be4da1e9c, because
+> in spi-imx case, burst length may be changed dynamically.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
-[V2]
-	- Rebased on v5.9-rc1
+Hi Robin,
+thanks for the pointer to this patch.
 
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As you suggested I've tested the two patches on my custom i.MX6DL
+board. Therefore please feel free to add:
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 96a5ec89b5f0..e4859c7f6208 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -67,7 +67,7 @@
- 	};
- 
- 	pmu {
--		compatible = "arm,armv8-pmuv3";
-+		compatible = "arm,cortex-a53-pmu";
- 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 	};
- 
+Tested-by: Richard Leitner <richard.leitner@skidata.com>
+
+regards;rl
+
+> ---
+>  drivers/dma/imx-sdma.c | 8 --------
+>  1 file changed, 8 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 270992c..d305b80 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -377,7 +377,6 @@ struct sdma_channel {
+>  	unsigned long			watermark_level;
+>  	u32				shp_addr, per_addr;
+>  	enum dma_status			status;
+> -	bool				context_loaded;
+>  	struct imx_dma_data		data;
+>  	struct work_struct		terminate_worker;
+>  };
+> @@ -984,9 +983,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
+>  	int ret;
+>  	unsigned long flags;
+>  
+> -	if (sdmac->context_loaded)
+> -		return 0;
+> -
+>  	if (sdmac->direction == DMA_DEV_TO_MEM)
+>  		load_address = sdmac->pc_from_device;
+>  	else if (sdmac->direction == DMA_DEV_TO_DEV)
+> @@ -1029,8 +1025,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
+>  
+>  	spin_unlock_irqrestore(&sdma->channel_0_lock, flags);
+>  
+> -	sdmac->context_loaded = true;
+> -
+>  	return ret;
+>  }
+>  
+> @@ -1069,7 +1063,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+>  	vchan_get_all_descriptors(&sdmac->vc, &head);
+>  	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+>  	vchan_dma_desc_free_list(&sdmac->vc, &head);
+> -	sdmac->context_loaded = false;
+>  }
+>  
+>  static int sdma_terminate_all(struct dma_chan *chan)
+> @@ -1337,7 +1330,6 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
+>  
+>  	sdmac->event_id0 = 0;
+>  	sdmac->event_id1 = 0;
+> -	sdmac->context_loaded = false;
+>  
+>  	sdma_set_channel_priority(sdmac, 0);
+>  
+> -- 
+> 2.7.4
+> 
+> 
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Richard Leitner
+Hardware R&D / Senior Embedded Linux Engineer
 
+SKIDATA | Driving Your Digital Future
+
+SKIDATA GmbH
+Untersbergstraße 40 | 5083 Grödig/Salzburg | Austria
+[t] +43-6246-888-4245 | [m] +43-664-88616370
+[w] www.skidata.com
